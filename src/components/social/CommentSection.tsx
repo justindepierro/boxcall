@@ -91,7 +91,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 className="w-8 h-8 rounded-full"
               />
             ) : (
-              <span className="text-sm font-medium text-gray-600">
+              <span className="text-sm font-medium text-text-secondary">
                 {(comment.user?.display_name || "U")[0].toUpperCase()}
               </span>
             )}
@@ -101,14 +101,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-sm text-gray-900">
+            <span className="font-medium text-sm text-text-primary">
               {comment.user?.display_name || "Anonymous"}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-text-muted">
               {new Date(comment.created_at).toLocaleDateString()}
             </span>
             {comment.is_edited && (
-              <span className="text-xs text-gray-400">(edited)</span>
+              <span className="text-xs text-text-muted">(edited)</span>
             )}
           </div>
 
@@ -117,7 +117,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows={3}
                 maxLength={1000}
               />
@@ -125,7 +125,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <button
                   onClick={handleEdit}
                   disabled={isSubmitting || !editContent.trim()}
-                  className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="px-3 py-1 bg-blue-600 text-text-inverse text-sm rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
@@ -134,14 +134,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     setIsEditing(false);
                     setEditContent(comment.content);
                   }}
-                  className="px-3 py-1 text-gray-600 text-sm hover:text-gray-800"
+                  className="px-3 py-1 text-text-secondary text-sm hover:text-gray-800"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-gray-700 whitespace-pre-wrap">
+            <p className="text-text-secondary whitespace-pre-wrap">
               {comment.content}
             </p>
           )}
@@ -160,7 +160,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {depth < maxDepth && onReply && (
               <button
                 onClick={() => onReply(comment)}
-                className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+                className="flex items-center gap-1 text-sm text-text-muted hover:text-text-secondary"
               >
                 <Reply className="w-4 h-4" />
                 Reply
@@ -171,20 +171,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
-                  className="p-1 text-gray-400 hover:text-gray-600 rounded"
+                  className="p-1 text-text-muted hover:text-text-secondary rounded"
                 >
                   <MoreVertical className="w-4 h-4" />
                 </button>
 
                 {showMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10">
+                  <div className="absolute right-0 top-full mt-1 bg-surface-primary border border-border rounded-lg shadow-lg py-1 z-10">
                     {canEdit && (
                       <button
                         onClick={() => {
                           setIsEditing(true);
                           setShowMenu(false);
                         }}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-surface-secondary w-full text-left"
                       >
                         <Edit2 className="w-4 h-4" />
                         Edit
@@ -298,17 +298,17 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   return (
     <div className="space-y-4">
       {/* Comment Form */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
+      <div className="bg-surface-primary border border-border rounded-lg p-4">
         <div className="flex gap-3">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-gray-600">U</span>
+              <span className="text-sm font-medium text-text-secondary">U</span>
             </div>
           </div>
 
           <div className="flex-1">
             {replyTo && (
-              <div className="mb-2 text-sm text-gray-600">
+              <div className="mb-2 text-sm text-text-secondary">
                 Replying to{" "}
                 <span className="font-medium">
                   {replyTo.user?.display_name || "User"}
@@ -318,7 +318,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                     setReplyTo(null);
                     setNewComment("");
                   }}
-                  className="ml-2 text-gray-400 hover:text-gray-600"
+                  className="ml-2 text-text-muted hover:text-text-secondary"
                 >
                   ×
                 </button>
@@ -337,7 +337,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             />
 
             <div className="flex justify-between items-center mt-2">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-text-muted">
                 {newComment.length}/1000 characters
               </span>
 
@@ -348,7 +348,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                       setNewComment("");
                       setReplyTo(null);
                     }}
-                    className="px-3 py-1 text-gray-600 text-sm hover:text-gray-800"
+                    className="px-3 py-1 text-text-secondary text-sm hover:text-gray-800"
                   >
                     Cancel
                   </button>
@@ -357,7 +357,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                 <button
                   onClick={handleSubmitComment}
                   disabled={isSubmitting || !newComment.trim()}
-                  className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-text-inverse text-sm rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "Posting..." : replyTo ? "Reply" : "Comment"}
@@ -383,7 +383,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             ))}
           </div>
         ) : comments.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-text-muted">
             <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
             <p>No comments yet. Be the first to share your thoughts!</p>
           </div>

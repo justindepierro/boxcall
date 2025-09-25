@@ -48,9 +48,9 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
   switch (type) {
     case "alert":
-      return `${baseStyles} surface-subtle dark:bg-red-900/20 border-red-400 dark:border-red-500`;
+      return `${baseStyles} surface-subtle dark:bg-surface-error/20 border-text-error dark:border-text-error`;
     case "confirm":
-      return `${baseStyles} surface-subtle dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
+      return `${baseStyles} surface-subtle dark:bg-surface-warning/20 border-text-warning dark:border-text-warning`;
     default:
       return `${baseStyles} surface-card elevation-modal border-subtle`;
   }
@@ -168,13 +168,13 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Header - Enhanced with display font and substantial styling */}
         {title && (
-          <div className="bc-card-padding border-b-2 border-subtle dark:border-gray-700">
+          <div className="bc-card-padding border-b-2 border-subtle dark:border-text-tertiary">
             <div className="flex items-center justify-between">
               <Typography
                 id="modal-title"
                 variant="headline-sm"
                 as="h3"
-                className={`${type === "alert" ? "text-red-900 dark:text-red-100" : ""} text-text-primary`}
+                className={`${type === "alert" ? "text-text-error dark:text-surface-error" : ""} text-text-primary`}
               >
                 {title}
               </Typography>
@@ -207,7 +207,7 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
         {/* Footer - Enhanced styling */}
         {footer && (
-          <div className="bc-card-padding border-t-2 border-subtle dark:border-gray-700 surface-subtle dark:bg-gray-900/50">
+          <div className="bc-card-padding border-t-2 border-subtle dark:border-text-tertiary surface-subtle dark:bg-surface-primary/50">
             {footer}
           </div>
         )}

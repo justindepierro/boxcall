@@ -37,7 +37,7 @@ export const ToolPalette: React.FC = () => {
     <div className="absolute left-3 right-3 top-3 z-20 pointer-events-none">
       <div className="mx-auto max-w-[1120px] pointer-events-auto flex flex-wrap items-center gap-4 panel-cupertino px-4 py-2">
         <div
-          className="flex items-center gap-2 pr-3 border-r border-slate-200"
+          className="flex items-center gap-2 pr-3 border-r border-border-light"
           aria-label="Primary tools"
         >
           <Btn
@@ -194,7 +194,7 @@ export const ToolPalette: React.FC = () => {
                 </span>
               }
             />
-            <div className="mx-1 w-px h-6 bg-slate-200" />
+            <div className="mx-1 w-px h-6 bg-border-light" />
             <select
               aria-label="Arrowhead"
               value={state.ui.drawArrowHead || "end"}
@@ -208,7 +208,7 @@ export const ToolPalette: React.FC = () => {
                     | "both",
                 })
               }
-              className="text-[12px] border border-slate-300 rounded px-2 py-1"
+              className="text-[12px] border border-border-light rounded px-2 py-1"
               title="Arrowhead"
             >
               <option value="none">Head: None</option>
@@ -223,7 +223,7 @@ export const ToolPalette: React.FC = () => {
               onChange={(e) =>
                 dispatch({ type: "SET_DRAW_COLOR", color: e.target.value })
               }
-              className="w-10 h-10 p-0 border border-slate-300 rounded"
+              className="w-10 h-10 p-0 border border-border-light rounded"
               title="Stroke color"
             />
             <input
@@ -242,13 +242,13 @@ export const ToolPalette: React.FC = () => {
               className="w-32"
               title="Stroke width"
             />
-            <span className="text-[12px] text-slate-700 w-9 text-right">
+            <span className="text-[12px] text-text-primary w-9 text-right">
               {state.ui.drawWidth || 3}px
             </span>
           </div>
         )}
         <div
-          className="ml-auto flex items-center gap-2 pr-3 border-r border-slate-200"
+          className="ml-auto flex items-center gap-2 pr-3 border-r border-border-light"
           aria-label="Align & distribute"
         >
           <Button
@@ -284,7 +284,7 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="chevron-right" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
+          <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
             size="sm"
             variant="ghost"
@@ -318,7 +318,7 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="chevron-down" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
+          <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
             size="sm"
             variant="ghost"
@@ -341,8 +341,8 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="grid" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
-          <span className="text-[11px] text-slate-700">Spacing</span>
+          <span className="mx-1 w-px h-6 bg-border-light" />
+          <span className="text-[11px] text-text-primary">Spacing</span>
           <input
             type="number"
             aria-label="Distribute spacing percent"
@@ -356,7 +356,7 @@ export const ToolPalette: React.FC = () => {
                 spacing: Number(e.target.value),
               })
             }
-            className="w-16 text-[12px] border border-slate-300 rounded px-2 py-1"
+            className="w-16 text-[12px] border border-border-light rounded px-2 py-1"
             title="Fixed spacing (%)"
           />
           <Button
@@ -394,7 +394,7 @@ export const ToolPalette: React.FC = () => {
           className="flex items-center gap-2 ml-auto"
           aria-label="Snap settings"
         >
-          <label className="flex items-center gap-1 text-[11px] text-slate-700">
+          <label className="flex items-center gap-1 text-[11px] text-text-primary">
             <input
               type="checkbox"
               checked={state.ui.snap}
@@ -409,7 +409,7 @@ export const ToolPalette: React.FC = () => {
             onChange={(e) =>
               dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })
             }
-            className="text-[11px] border border-slate-300 rounded px-2 py-1"
+            className="text-[11px] border border-border-light rounded px-2 py-1"
           >
             <option value={1}>1%</option>
             <option value={2}>2%</option>

@@ -90,9 +90,9 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   return [
     "w-full table-auto",
     "surface-card",
-    "text-text-primary dark:text-gray-100",
+    "text-text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
-    bordered && "border border-subtle dark:border-gray-700",
+    bordered && "border border-subtle dark:border-text-tertiary",
   ]
     .filter(Boolean)
     .join(" ");
@@ -104,10 +104,10 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     lg: "px-6 py-3",
   };
   return [
-    "border-b border-subtle dark:border-gray-700",
-    "surface-subtle dark:bg-gray-900",
+    "border-b border-subtle dark:border-text-tertiary",
+    "surface-subtle dark:bg-surface-tertiary",
     "text-left font-semibold",
-    "text-text-primary dark:text-gray-100",
+    "text-text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -126,8 +126,8 @@ const getCellStyles = (
     right: "text-right",
   };
   return [
-    "border-b border-subtle dark:border-gray-700",
-    "text-text-primary dark:text-gray-100",
+    "border-b border-subtle dark:border-text-tertiary",
+    "text-text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -142,7 +142,7 @@ const getRowStyles = (
     "transition-colors duration-200",
     hoverable && "surface-subtle-hover",
     isSelected && "surface-subtle dark:bg-navy-900/20",
-    striped && isEven && "surface-subtle dark:bg-gray-800",
+    striped && isEven && "surface-subtle dark:bg-surface-tertiary",
   ]
     .filter(Boolean)
     .join(" ");
@@ -152,7 +152,7 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
   if (!direction) {
     return (
       <svg
-        className="w-4 h-4 text-gray-400 dark:text-gray-500"
+        className="w-4 h-4 text-text-muted dark:text-text-muted"
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -186,7 +186,7 @@ const LoadingSpinner: React.FC = () => (
 const EmptyState: React.FC<{ message: string }> = ({ message }) => (
   <div className="flex flex-col items-center justify-center py-12">
     <svg
-      className="w-12 h-12 mb-4 text-gray-400 dark:text-gray-600"
+      className="w-12 h-12 mb-4 text-text-muted dark:text-text-secondary"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -328,7 +328,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           />
         </div>
       )}
-      <div className="overflow-x-auto border border-subtle dark:border-gray-700 rounded-lg">
+      <div className="overflow-x-auto border border-subtle dark:border-text-tertiary rounded-lg">
         <table className={getTableStyles(size, bordered)}>
           <thead>
             <tr>
@@ -341,7 +341,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       if (el) el.indeterminate = isIndeterminate;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded-sm border-gray-300 dark:border-gray-600 text-jade-600 focus:ring-jade-500"
+                    className="rounded-sm border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                   />
                 </th>
               )}
@@ -398,7 +398,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                           onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                           }
-                          className="rounded-sm border-gray-300 dark:border-gray-600 text-jade-600 focus:ring-jade-500"
+                          className="rounded-sm border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                         />
                       </td>
                     )}
@@ -426,7 +426,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       </div>
       {pagination && (
         <div className="flex items-center justify-between">
-          <div className="text-sm text-text-primary dark:text-gray-300">
+          <div className="text-sm text-text-primary dark:text-border-light">
             Showing {currentPage * pageSize + 1} to{" "}
             {Math.min(
               (currentPage + 1) * pageSize,
@@ -443,7 +443,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
             >
               Previous
             </Button>
-            <span className="text-sm text-text-primary dark:text-gray-300">
+            <span className="text-sm text-text-primary dark:text-border-light">
               Page {currentPage + 1} of {totalPages}
             </span>
             <Button

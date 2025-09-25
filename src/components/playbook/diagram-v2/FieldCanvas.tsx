@@ -2308,7 +2308,7 @@ export const FieldCanvas: React.FC<{
                           patch: { label: e.target.value },
                         })
                       }
-                      className="w-20 text-[12px] border border-slate-300 rounded px-2 py-1"
+                      className="w-20 text-[12px] border border-border-light rounded px-2 py-1"
                       title="Label"
                     />
                     <input
@@ -2322,13 +2322,13 @@ export const FieldCanvas: React.FC<{
                           patch: { color: e.target.value },
                         })
                       }
-                      className="w-9 h-9 p-0 border border-slate-300 rounded"
+                      className="w-9 h-9 p-0 border border-border-light rounded"
                       title="Color"
                     />
-                    <span className="mx-1 w-px h-5 bg-slate-200" />
+                    <span className="mx-1 w-px h-5 bg-border-light" />
                     <span
                       role="button"
-                      className="text-red-600 text-xs px-2 py-1 border border-red-200 rounded hover:bg-red-50 cursor-pointer select-none"
+                      className="text-text-error text-xs px-2 py-1 border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         dispatch({ type: "REMOVE_PLAYER", id: player.id });
@@ -2683,7 +2683,7 @@ export const FieldCanvas: React.FC<{
                               patch: { color: e.target.value },
                             })
                           }
-                          className="w-9 h-9 p-0 border border-slate-300 rounded"
+                          className="w-9 h-9 p-0 border border-border-light rounded"
                           title="Color"
                         />
                         <input
@@ -2727,7 +2727,7 @@ export const FieldCanvas: React.FC<{
                               },
                             })
                           }
-                          className="text-[12px] border border-slate-300 rounded px-2 py-1"
+                          className="text-[12px] border border-border-light rounded px-2 py-1"
                           title="Arrowhead"
                         >
                           <option value="none">None</option>
@@ -2741,10 +2741,10 @@ export const FieldCanvas: React.FC<{
                             : state.ui.drawWidth || 3}
                           px
                         </span>
-                        <span className="mx-1 w-px h-5 bg-slate-200" />
+                        <span className="mx-1 w-px h-5 bg-border-light" />
                         <span
                           role="button"
-                          className="text-red-600 text-xs px-2 py-1 border border-red-200 rounded hover:bg-red-50 cursor-pointer select-none"
+                          className="text-text-error text-xs px-2 py-1 border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
                           onClick={(e) => {
                             e.stopPropagation();
                             dispatch({ type: "DELETE_ANNOTATION", id: ann.id });
@@ -2976,7 +2976,7 @@ export const FieldCanvas: React.FC<{
                         }),
                       "ax-r"
                     )}
-                    <span className="w-px h-4 bg-slate-200 mx-1" />
+                    <span className="w-px h-4 bg-border-light mx-1" />
                     {/* Align Y */}
                     {btn(
                       "T",
@@ -3011,7 +3011,7 @@ export const FieldCanvas: React.FC<{
                         }),
                       "ay-b"
                     )}
-                    <span className="w-px h-4 bg-slate-200 mx-1" />
+                    <span className="w-px h-4 bg-border-light mx-1" />
                     {/* Distribute */}
                     {btn(
                       "H",

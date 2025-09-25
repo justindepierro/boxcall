@@ -27,7 +27,7 @@ const TeamsPage: React.FC = () => {
       {loading ? (
         <div className="container mx-auto p-6">
           <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
             <span className="ml-3 text-lg text-text-secondary">
               Loading teams...
             </span>
@@ -36,10 +36,10 @@ const TeamsPage: React.FC = () => {
       ) : error ? (
         <div className="container mx-auto p-6">
           <div className="text-center p-8">
-            <Typography variant="headline-lg" className="text-red-600 mb-4">
+            <Typography variant="headline-lg" className="text-error mb-4">
               Error Loading Teams
             </Typography>
-            <p className="text-red-500">{error}</p>
+            <p className="text-error">{error}</p>
           </div>
         </div>
       ) : (
@@ -77,11 +77,11 @@ const TeamsPage: React.FC = () => {
                     <div className="flex items-start justify-between">
                       <Typography
                         variant="headline-md"
-                        className="text-blue-600"
+                        className="text-text-primary"
                       >
                         {team.name}
                       </Typography>
-                      <span className="text-xs text-text-muted surface-subtle px-2 py-1 rounded">
+                      <span className="text-xs text-text-muted bg-surface-secondary px-2 py-1 rounded">
                         {team.season_year || "No Year"}
                       </span>
                     </div>

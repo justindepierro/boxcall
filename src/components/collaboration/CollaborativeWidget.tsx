@@ -121,7 +121,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       className={`
         relative
         ${className}
-        ${isActive ? "ring-2 ring-blue-500/50" : ""}
+        ${isActive ? "ring-2 ring-text-info/50" : ""}
         ${!isConnected ? "opacity-75" : ""}
       `}
       data-widget-id={widgetId}
@@ -134,7 +134,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
             {activeParticipants.slice(0, 3).map((participant) => (
               <div
                 key={participant.id}
-                className="w-6 h-6 rounded-full border-2 border-white bg-blue-600 flex items-center justify-center text-xs font-medium text-text-on-primary"
+                className="w-6 h-6 rounded-full border-2 border-surface-primary bg-text-info flex items-center justify-center text-xs font-medium text-text-on-primary"
                 title={participant.name}
               >
                 {participant.name.charAt(0).toUpperCase()}
@@ -142,7 +142,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
             ))}
           </div>
           {activeParticipants.length > 3 && (
-            <div className="w-6 h-6 rounded-full bg-surface-secondary border-2 border-white flex items-center justify-center text-xs font-medium text-text-secondary">
+            <div className="w-6 h-6 rounded-full bg-surface-secondary border-2 border-surface-primary flex items-center justify-center text-xs font-medium text-text-secondary">
               +{activeParticipants.length - 3}
             </div>
           )}
@@ -156,7 +156,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       {widgetCursors.map((cursor) => (
         <div
           key={cursor.userId}
-          className="absolute pointer-events-none w-3 h-3 bg-blue-500 rounded-full"
+          className="absolute pointer-events-none w-3 h-3 bg-text-info rounded-full"
           style={{
             left: cursor.widgetX || 0,
             top: cursor.widgetY || 0,
@@ -167,7 +167,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
 
       {/* Conflict resolution modal */}
       {conflictData && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="absolute inset-0 bg-text-primary/50 flex items-center justify-center z-50">
           <div className="bg-surface-primary rounded-lg p-6 max-w-md w-full mx-4">
             <Typography variant="headline-sm" as="h3" className="mb-4">
               Collaboration Conflict

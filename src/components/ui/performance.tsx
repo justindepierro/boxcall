@@ -23,10 +23,10 @@ export function LazyWrapper({
   const defaultFallback = (
     <div className="flex items-center justify-center p-8">
       <div className="animate-pulse flex space-x-4">
-        <div className="rounded-full bg-gray-300 h-10 w-10"></div>
+        <div className="rounded-full bg-border-light h-10 w-10"></div>
         <div className="flex-1 space-y-2 py-1">
-          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+          <div className="h-4 bg-border-light rounded w-3/4"></div>
+          <div className="h-4 bg-border-light rounded w-1/2"></div>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ export const lazyRoute = (
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading {componentName}...</p>
+              <p className="text-text-secondary">Loading {componentName}...</p>
             </div>
           </div>
         }
@@ -119,7 +119,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   if (hasError) {
     return (
       <div
-        className={`bg-gray-200 flex items-center justify-center text-gray-500 text-sm ${className}`}
+        className={`bg-border flex items-center justify-center text-text-secondary text-sm ${className}`}
         style={{ width, height }}
       >
         Failed to load image
@@ -131,7 +131,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     <div className={`relative overflow-hidden ${className}`}>
       {!isLoaded && placeholder === "blur" && (
         <div
-          className="absolute inset-0 bg-gray-200 animate-pulse"
+          className="absolute inset-0 bg-border animate-pulse"
           style={{ width, height }}
         />
       )}

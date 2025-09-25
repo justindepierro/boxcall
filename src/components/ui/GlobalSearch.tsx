@@ -220,7 +220,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     <div className={`relative ${className}`}>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name="search" className="h-4 w-4 text-gray-400" />
+          <Icon name="search" className="h-4 w-4 text-text-muted" />
         </div>
 
         <input
@@ -232,16 +232,16 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder="Search players, plays, formations..."
-          className="block w-80 pl-10 pr-10 py-2 text-sm border border-gray-300 rounded-lg
+          className="block w-80 pl-10 pr-10 py-2 text-sm border border-border-medium rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      placeholder-gray-400 transition-all duration-200
-                     bg-white hover:bg-gray-50 focus:bg-white"
+                     bg-surface-primary hover:bg-surface-secondary focus:bg-surface-primary"
         />
 
         {query && (
           <button
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
             type="button"
             aria-label="Clear search"
           >
@@ -254,17 +254,17 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       {isOpen && (query.length > 0 || isLoading) && (
         <div
           ref={resultsRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-surface-primary border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
         >
           {isLoading && (
-            <div className="px-4 py-3 text-center text-gray-500">
+            <div className="px-4 py-3 text-center text-text-muted">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto mb-2"></div>
               Searching...
             </div>
           )}
 
           {!isLoading && results.length === 0 && query.length >= 2 && (
-            <div className="px-4 py-3 text-center text-gray-500">
+            <div className="px-4 py-3 text-center text-text-muted">
               <Icon
                 name="search"
                 className="h-8 w-8 mx-auto mb-2 text-gray-300"
@@ -351,20 +351,20 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                       <div className="flex-1 min-w-0">
                         <Typography
                           variant="body-sm"
-                          className="text-gray-900 font-medium truncate"
+                          className="text-text-primary font-medium truncate"
                         >
                           {result.displayText}
                         </Typography>
                         <Typography
                           variant="body-xs"
-                          className="text-gray-500 truncate"
+                          className="text-text-muted truncate"
                         >
                           {result.subText}
                         </Typography>
                       </div>
                       <Icon
                         name="arrow-right"
-                        className="h-4 w-4 text-gray-400 flex-shrink-0"
+                        className="h-4 w-4 text-text-muted flex-shrink-0"
                       />
                     </div>
                   </button>
@@ -374,7 +374,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           )}
 
           {!isLoading && query.length < 2 && (
-            <div className="px-4 py-3 text-center text-gray-400">
+            <div className="px-4 py-3 text-center text-text-muted">
               Type at least 2 characters to search
             </div>
           )}

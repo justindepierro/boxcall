@@ -95,7 +95,7 @@ const PostItem: React.FC<PostItemProps> = ({
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-text-info to-text-primary flex items-center justify-center text-text-inverse font-semibold text-sm flex-shrink-0">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
@@ -117,7 +117,7 @@ const PostItem: React.FC<PostItemProps> = ({
                 {displayName}
               </Typography>
               {is_pinned && (
-                <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full text-xs font-medium">
+                <span className="inline-flex items-center gap-1 text-text-warning bg-surface-warning px-2 py-0.5 rounded-full text-xs font-medium">
                   <Icon name="star" size="sm" />
                   Pinned
                 </span>
@@ -147,8 +147,8 @@ const PostItem: React.FC<PostItemProps> = ({
             aria-label={is_pinned ? "Unpin post" : "Pin post"}
             className={
               is_pinned
-                ? "bg-amber-200 dark:bg-amber-600/30 border border-amber-300 dark:border-amber-500 text-amber-800 dark:text-amber-200"
-                : "border border-transparent text-text-secondary hover:text-text-primary"
+                ? "bg-surface-warning border border-text-warning text-text-warning"
+                : "text-text-secondary hover:text-text-primary"
             }
           >
             {is_pinned ? "Pinned" : "Pin"}
@@ -167,7 +167,7 @@ const PostItem: React.FC<PostItemProps> = ({
             size="xs"
             variant="link"
             onClick={() => setExpanded((e) => !e)}
-            className="mt-2 p-0 h-auto font-normal text-blue-600 hover:text-blue-700"
+            className="mt-2 p-0 h-auto font-normal text-text-info hover:text-text-info"
             aria-expanded={expanded}
           >
             {expanded ? "Show less" : "Read more"}
@@ -182,8 +182,8 @@ const PostItem: React.FC<PostItemProps> = ({
             type="button"
             size="xs"
             variant="ghost"
-            className={`text-text-secondary hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 ${
-              isLiked ? "text-red-600" : ""
+            className={`text-text-secondary hover:text-text-error hover:bg-surface-error p-2 ${
+              isLiked ? "text-text-error" : ""
             }`}
             onClick={() => onLike?.(id)}
             aria-label={isLiked ? "Unlike post" : "Like post"}
@@ -196,7 +196,7 @@ const PostItem: React.FC<PostItemProps> = ({
             type="button"
             size="xs"
             variant="ghost"
-            className="text-text-secondary hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-2"
+            className="text-text-secondary hover:text-text-info hover:bg-surface-info p-2"
             onClick={() => onComment?.(id)}
             aria-label="Comment on post"
           >
@@ -208,8 +208,8 @@ const PostItem: React.FC<PostItemProps> = ({
             type="button"
             size="xs"
             variant="ghost"
-            className={`text-text-secondary hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 p-2 ${
-              isShared ? "text-green-600" : ""
+            className={`text-text-secondary hover:text-text-success hover:bg-surface-success p-2 ${
+              isShared ? "text-text-success" : ""
             }`}
             onClick={() => onShare?.(id)}
             aria-label={isShared ? "Already shared" : "Share post"}
@@ -520,14 +520,14 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
               key={i}
               className="animate-pulse rounded border-subtle surface-card p-3"
             >
-              <div className="h-4 surface-subtle dark:bg-gray-600 rounded w-5/6 mb-2" />
-              <div className="h-4 surface-subtle dark:bg-gray-600 rounded w-2/3" />
+              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded w-5/6 mb-2" />
+              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded w-2/3" />
             </li>
           ))}
         </ul>
       )}
       {!!error && (
-        <div className="rounded border border-subtle dark:border-red-700 surface-subtle dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
+        <div className="rounded border border-text-error surface-subtle bg-surface-error p-4 text-sm text-text-error">
           Failed to load posts.
           <Button
             type="button"

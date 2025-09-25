@@ -5,7 +5,16 @@ import { Button } from "../../components/ui/Button";
 import ProfileCard from "../../components/dashboard/ProfileCard";
 
 /**
- * Player Dashboard Page - Only accessible by players
+ * Player Dashboa                  <span className="text-sm text-text-secondary">
+                    Leadership
+                  </span>
+                  <div className="flex items-center">
+                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
+                      <div
+                        className="bg-text-warning h-2 rounded-full"
+                        style={{ width: "88%" }}
+                      ></div>
+                    </div>Only accessible by players
  */
 const PlayerDashboardContent: React.FC = () => {
   return (
@@ -34,11 +43,8 @@ const PlayerDashboardContent: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
-              <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3">
-                <Icon
-                  name="target"
-                  className="text-blue-600 dark:text-blue-400"
-                />
+              <div className="bg-surface-info rounded-full p-3">
+                <Icon name="target" className="text-text-info" />
               </div>
               <div className="ml-4">
                 <Typography
@@ -60,11 +66,8 @@ const PlayerDashboardContent: React.FC = () => {
           </div>
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
-              <div className="bg-green-100 dark:bg-green-900 rounded-full p-3">
-                <Icon
-                  name="trophy"
-                  className="text-green-600 dark:text-green-400"
-                />
+              <div className="bg-surface-success rounded-full p-3">
+                <Icon name="trophy" className="text-text-success" />
               </div>
               <div className="ml-4">
                 <Typography
@@ -86,11 +89,8 @@ const PlayerDashboardContent: React.FC = () => {
           </div>
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
-              <div className="bg-purple-100 dark:bg-purple-900 rounded-full p-3">
-                <Icon
-                  name="star"
-                  className="text-purple-600 dark:text-purple-400"
-                />
+              <div className="bg-surface-info rounded-full p-3">
+                <Icon name="star" className="text-text-info" />
               </div>
               <div className="ml-4">
                 <Typography
@@ -112,11 +112,8 @@ const PlayerDashboardContent: React.FC = () => {
           </div>
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
-              <div className="bg-orange-100 dark:bg-orange-900 rounded-full p-3">
-                <Icon
-                  name="trending-up"
-                  className="text-orange-600 dark:text-orange-400"
-                />
+              <div className="bg-surface-warning rounded-full p-3">
+                <Icon name="trending-up" className="text-text-warning" />
               </div>
               <div className="ml-4">
                 <Typography
@@ -142,7 +139,7 @@ const PlayerDashboardContent: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Events */}
           <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-subtle dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-text-secondary">
               <Typography
                 variant="headline-sm"
                 as="h3"
@@ -154,7 +151,7 @@ const PlayerDashboardContent: React.FC = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-2">
+                  <div className="bg-surface-info rounded-full p-2">
                     <Icon name="calendar" size="sm" />
                   </div>
                   <div className="flex-1">
@@ -174,7 +171,7 @@ const PlayerDashboardContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="bg-green-100 dark:bg-green-900 rounded-full p-2">
+                  <div className="bg-surface-success rounded-full p-2">
                     <Icon name="flag" size="sm" />
                   </div>
                   <div className="flex-1">
@@ -194,7 +191,7 @@ const PlayerDashboardContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="bg-purple-100 dark:bg-purple-900 rounded-full p-2">
+                  <div className="bg-surface-info rounded-full p-2">
                     <Icon name="users" size="sm" />
                   </div>
                   <div className="flex-1">
@@ -219,7 +216,7 @@ const PlayerDashboardContent: React.FC = () => {
 
           {/* Recent Performance */}
           <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-subtle dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-text-secondary">
               <Typography
                 variant="headline-sm"
                 as="h3"
@@ -236,9 +233,9 @@ const PlayerDashboardContent: React.FC = () => {
                     Passing Accuracy
                   </span>
                   <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
                       <div
-                        className="bg-green-600 h-2 rounded-full"
+                        className="bg-text-success h-2 rounded-full"
                         style={{ width: "85%" }}
                       ></div>
                     </div>
@@ -256,9 +253,9 @@ const PlayerDashboardContent: React.FC = () => {
                     Speed & Agility
                   </span>
                   <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
                       <div
-                        className="bg-jade-600 h-2 rounded-full"
+                        className="bg-text-success h-2 rounded-full"
                         style={{ width: "78%" }}
                       ></div>
                     </div>
@@ -276,9 +273,9 @@ const PlayerDashboardContent: React.FC = () => {
                     Team Coordination
                   </span>
                   <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
                       <div
-                        className="bg-purple-600 h-2 rounded-full"
+                        className="bg-text-info h-2 rounded-full"
                         style={{ width: "92%" }}
                       ></div>
                     </div>
@@ -296,9 +293,9 @@ const PlayerDashboardContent: React.FC = () => {
                     Leadership
                   </span>
                   <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
                       <div
-                        className="bg-orange-600 h-2 rounded-full"
+                        className="bg-text-warning h-2 rounded-full"
                         style={{ width: "88%" }}
                       ></div>
                     </div>

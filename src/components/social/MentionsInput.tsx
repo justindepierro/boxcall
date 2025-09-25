@@ -107,12 +107,12 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="absolute z-10 w-full mt-1 bg-surface-primary border border-border-medium rounded-lg shadow-lg max-h-48 overflow-y-auto">
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center space-x-2"
+              className="w-full px-3 py-2 text-left hover:bg-surface-secondary flex items-center space-x-2"
             >
               {suggestion.avatar_url ? (
                 <img
@@ -122,13 +122,13 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
                 />
               ) : (
                 <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-text-secondary">
                     {suggestion.display_name.charAt(0).toUpperCase()}
                   </span>
                 </div>
               )}
               <span className="text-sm">{suggestion.display_name}</span>
-              <span className="text-xs text-gray-500 ml-auto">
+              <span className="text-xs text-text-muted ml-auto">
                 {suggestion.type}
               </span>
             </button>

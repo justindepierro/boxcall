@@ -25,6 +25,7 @@ export const ROUTES = {
   CONTACT: "/contact",
   DEV_DIAGNOSTICS: "/dev/diagnostics",
   COLLABORATIVE_DEMO: "/collaborative-demo",
+  DESIGN_SYSTEM: "/design-system",
 } as const;
 
 export const teamRoutes = {

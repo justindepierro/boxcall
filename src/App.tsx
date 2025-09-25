@@ -11,6 +11,7 @@ import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
 
 import { DesignSystemProvider } from "./components/design-system";
+import { AdvancedThemeProvider } from "./components/design-system/AdvancedThemeProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initWebVitals } from "./utils/performance/webVitals";
 /**
@@ -45,25 +46,27 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <DesignSystemProvider enableDevTools={import.meta.env.DEV}>
-        <DevModeProvider>
-          <div className="App">
-            <DevHealthCheck />
-            <AppGrid>
-              <DataRouterApp />
-            </AppGrid>
-            {showRQDevtools && (
-              <ReactQueryDevtools initialIsOpen={false} position="bottom" />
-            )}
-            {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
-            {import.meta.env.DEV && (
-              <ToggleQueryDevtools
-                onToggle={() => setShowRQDevtools((v) => !v)}
-              />
-            )}
-          </div>
-        </DevModeProvider>
-      </DesignSystemProvider>
+      <AdvancedThemeProvider enableShowcase={import.meta.env.DEV}>
+        <DesignSystemProvider enableDevTools={import.meta.env.DEV}>
+          <DevModeProvider>
+            <div className="App">
+              <DevHealthCheck />
+              <AppGrid>
+                <DataRouterApp />
+              </AppGrid>
+              {showRQDevtools && (
+                <ReactQueryDevtools initialIsOpen={false} position="bottom" />
+              )}
+              {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
+              {import.meta.env.DEV && (
+                <ToggleQueryDevtools
+                  onToggle={() => setShowRQDevtools((v) => !v)}
+                />
+              )}
+            </div>
+          </DevModeProvider>
+        </DesignSystemProvider>
+      </AdvancedThemeProvider>
     </ErrorBoundary>
   );
 }

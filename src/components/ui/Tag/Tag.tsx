@@ -28,18 +28,18 @@ const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
 // Semantic palette aligned with psychological system but lower elevation than Badge
 const variantStyles: Record<TagVariant, string> = {
   neutral:
-    "surface-subtle text-gray-700 dark:bg-gray-700/60 dark:text-gray-200 border border-subtle dark:border-gray-600",
-  info: "surface-subtle text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-subtle dark:border-blue-700",
+    "surface-subtle text-text-secondary dark:bg-surface-secondary dark:text-text-inverse border border-subtle dark:border-text-tertiary",
+  info: "surface-subtle text-text-info dark:bg-surface-info dark:text-text-info border border-subtle dark:border-text-info",
   success:
-    "surface-subtle text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-subtle dark:border-green-700",
+    "surface-subtle text-text-success dark:bg-surface-success dark:text-text-success border border-subtle dark:border-text-success",
   warning:
-    "surface-subtle text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border border-subtle dark:border-yellow-700",
+    "surface-subtle text-text-warning dark:bg-surface-warning dark:text-text-warning border border-subtle dark:border-text-warning",
   danger:
-    "surface-subtle text-red-700 dark:bg-red-900/40 dark:text-red-300 border border-subtle dark:border-red-700",
+    "surface-subtle text-text-error dark:bg-surface-error dark:text-text-error border border-subtle dark:border-text-error",
   accent:
     "surface-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 border border-subtle dark:border-jade-700",
   outline:
-    "bg-transparent text-text-secondary border border-gray-300 dark:border-gray-600 dark:text-gray-300",
+    "text-text-secondary border border-border-light dark:border-text-tertiary dark:text-border-light",
 };
 
 export const Tag: React.FC<TagProps> = ({

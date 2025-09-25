@@ -233,7 +233,7 @@ const DesignSystemDevTools: React.FC = () => {
   const metrics = getPerformanceMetrics();
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg text-xs font-mono z-50 max-w-sm">
+    <div className="fixed bottom-4 right-4 bg-black/80 text-text-inverse p-4 rounded-lg text-xs font-mono z-50 max-w-sm">
       <div className="font-bold mb-2">🎨 Design System DevTools</div>
       <div>Theme: {config.theme}</div>
       <div>Density: {config.density}</div>

@@ -256,15 +256,15 @@ export const AchievementAdminPage: React.FC = () => {
     <div className="max-w-7xl mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-text-primary">
             Achievement Management
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-text-secondary mt-2">
             Create and manage Xbox-style achievements for your users
           </p>
         </div>
         <div className="flex gap-4">
-          <label className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
+          <label className="inline-flex items-center px-4 py-2 border border-border-medium rounded-md shadow-sm text-sm font-medium text-text-secondary bg-surface-primary hover:bg-surface-secondary cursor-pointer">
             <Icon name="upload" className="w-4 h-4 mr-2" />
             Upload CSV/JSON
             <input
@@ -320,23 +320,23 @@ export const AchievementAdminPage: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-gray-600 text-sm mb-4">
+            <p className="text-text-secondary text-sm mb-4">
               {achievement.description}
             </p>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Category:</span>
+                <span className="text-text-muted">Category:</span>
                 <Badge variant="neutral">{achievement.category}</Badge>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Trigger:</span>
+                <span className="text-text-muted">Trigger:</span>
                 <span>
                   {achievement.trigger_target} ({achievement.trigger_count})
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Points:</span>
+                <span className="text-text-muted">Points:</span>
                 <span className="font-semibold text-jade-600">
                   {achievement.points}
                 </span>

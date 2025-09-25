@@ -27,9 +27,9 @@ interface ChipDef {
 
 // Small pill button styling aligned with existing inline chips in PlayCard
 const chipClass =
-  "group inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px] font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 hover:bg-slate-200 transition";
+  "group inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-secondary text-text-primary text-[11px] font-medium focus:outline-none focus:ring-2 focus:ring-text-info focus:ring-offset-1 hover:bg-surface-tertiary transition";
 const removeBtnClass =
-  "inline-flex items-center justify-center h-3 w-3 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-500 group-hover:text-slate-700";
+  "inline-flex items-center justify-center h-3 w-3 rounded focus:outline-none focus:ring-1 focus:ring-text-info text-text-secondary group-hover:text-text-primary";
 
 export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
   searchQuery,
@@ -180,7 +180,7 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
             onClick={chip.remove}
             aria-label={`Remove filter: ${chip.label}`}
             className={
-              removeBtnClass + " !p-0 !bg-transparent hover:!bg-transparent"
+              removeBtnClass + " !p-0 !bg-surface-primary/0 hover:!bg-surface-primary/0"
             }
           >
             ×

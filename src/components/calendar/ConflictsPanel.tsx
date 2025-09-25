@@ -72,7 +72,7 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
 
       <div className="space-y-1">
         {conflict.conflictingEvents.slice(0, 3).map((event, index) => (
-          <div key={index} className="bg-white/50 rounded px-2 py-1">
+          <div key={index} className="bg-surface-primary/50 rounded px-2 py-1">
             <Typography variant="caption" as="span" className="font-medium">
               {event.title}
             </Typography>

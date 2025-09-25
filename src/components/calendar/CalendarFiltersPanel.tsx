@@ -77,7 +77,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
+                    className="rounded border-border-medium text-jade-600 focus:ring-jade-500"
                     checked={filters.eventTypes?.includes(type) || false}
                     onChange={(e) => {
                       const newTypes = e.target.checked

@@ -100,8 +100,11 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-md w-full surface-card elevation-modal rounded-md p-6 mx-4">
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <Icon name="alert-triangle" className="h-6 w-6 text-red-600" />
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-surface-error mb-4">
+                <Icon
+                  name="alert-triangle"
+                  className="h-6 w-6 text-text-error"
+                />
               </div>
               <Typography
                 variant="headline-lg"
@@ -119,16 +122,16 @@ export class ErrorBoundary extends Component<Props, State> {
             {process.env.NODE_ENV === "development" && this.state.error && (
               <div className="mb-6 p-4 surface-subtle border border-subtle rounded-lg">
                 <details className="text-sm">
-                  <summary className="cursor-pointer font-medium text-red-800 mb-2">
+                  <summary className="cursor-pointer font-medium text-text-error mb-2">
                     <Icon
                       name="wrench"
                       aria-label="wrench"
-                      className="inline h-4 w-4 align-middle text-current"
+                      className="inline h-4 w-4 align-middle text-text-primary"
                     />{" "}
                     Error Details (Development Only)
                   </summary>
                   <div className="mt-2 p-3 surface-card border rounded text-xs font-mono">
-                    <div className="text-red-600 mb-2">
+                    <div className="text-text-error mb-2">
                       <strong>Message:</strong> {this.state.error.message}
                     </div>
                     <div className="text-text-secondary whitespace-pre-wrap">

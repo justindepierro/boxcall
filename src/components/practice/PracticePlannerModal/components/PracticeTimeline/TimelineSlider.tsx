@@ -31,7 +31,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
         <div>
           <Typography
             variant="body-md"
-            className="font-medium text-blue-800 flex items-center"
+            className="font-medium text-text-info flex items-center"
           >
             <Icon name="target" size="sm" className="mr-2" />
             Resize Block:{" "}
@@ -39,13 +39,13 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
               .replace("-", " ")
               .replace(/\b\w/g, (l) => l.toUpperCase())}
           </Typography>
-          <Typography variant="body-sm" className="text-blue-600">
+          <Typography variant="body-sm" className="text-text-info">
             Block starts at minute {selectedBlock.start}, currently{" "}
             {selectedBlock.duration} minutes
           </Typography>
           <Typography
             variant="body-xs"
-            className="text-blue-500 mt-1 flex items-center"
+            className="text-text-info mt-1 flex items-center"
           >
             <Icon name="info" size="xs" className="mr-1" />
             Press Space/Enter to save, Esc to cancel
@@ -67,7 +67,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
           <Typography
             variant="body-sm"
             as="label"
-            className="block font-medium text-blue-700 mb-2"
+            className="block font-medium text-text-info mb-2"
           >
             Duration: {sliderValue} minutes
           </Typography>
@@ -77,12 +77,12 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
             max={maxDuration}
             value={sliderValue}
             onChange={(e) => onSliderChange(parseInt(e.target.value))}
-            className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-3 bg-surface-info rounded-lg appearance-none cursor-pointer slider"
             style={{
-              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(sliderValue / maxDuration) * 100}%, #e5e7eb ${(sliderValue / maxDuration) * 100}%, #e5e7eb 100%)`,
+              background: `linear-gradient(to right, var(--color-text-info) 0%, var(--color-text-info) ${(sliderValue / maxDuration) * 100}%, var(--color-border) ${(sliderValue / maxDuration) * 100}%, var(--color-border) 100%)`,
             }}
           />
-          <div className="flex justify-between text-xs text-blue-600 mt-1">
+          <div className="flex justify-between text-xs text-text-info mt-1">
             <span>1 min</span>
             <span>{maxDuration} min max</span>
           </div>

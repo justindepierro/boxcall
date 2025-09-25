@@ -33,6 +33,7 @@ import {
   LazyTermsOfServicePage,
   LazyContactPage,
   LazyCollaborativeDemoPage,
+  LazyDesignSystemShowcase,
   LazyCalendarShellPage,
   LazyPlannerPage,
   RouteLoadingSpinner,
@@ -201,12 +202,12 @@ export const DataRouterApp: React.FC = () => {
                 loader: requireCoachOrAdminLoader,
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
-                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="min-h-screen bg-surface-secondary flex items-center justify-center">
                       <div className="text-center">
-                        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                        <h1 className="text-2xl font-bold text-text-primary mb-4">
                           Awards System
                         </h1>
-                        <p className="text-gray-600">
+                        <p className="text-text-secondary">
                           Coming soon! Award management for players and staff.
                         </p>
                       </div>
@@ -390,6 +391,16 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyContactPage />
+                  </Suspense>
+                ),
+              },
+              // Design System Showcase (dev only)
+              {
+                path: ROUTES.DESIGN_SYSTEM,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyDesignSystemShowcase />
                   </Suspense>
                 ),
               },

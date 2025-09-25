@@ -20,12 +20,12 @@ const reactionIcons: Record<ReactionType, React.ComponentType<any>> = {
 };
 
 const reactionColors: Record<ReactionType, string> = {
-  like: "text-blue-500",
-  love: "text-red-500",
-  laugh: "text-yellow-500",
-  wow: "text-purple-500",
-  sad: "text-gray-500",
-  angry: "text-orange-500",
+  like: "text-text-info",
+  love: "text-text-error",
+  laugh: "text-text-warning",
+  wow: "text-text-primary",
+  sad: "text-text-secondary",
+  angry: "text-text-warning",
 };
 
 export const ReactionButton: React.FC<ReactionButtonProps> = ({
@@ -86,9 +86,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
 
   if (!reactionSummary) {
     return (
-      <div
-        className={`${sizeClasses[size]} bg-gray-200 animate-pulse rounded`}
-      />
+      <div className={`${sizeClasses[size]} bg-border animate-pulse rounded`} />
     );
   }
 
@@ -103,7 +101,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
           className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
             userReaction
               ? `${reactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`
-              : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
           }`}
           disabled={isLoading}
         >
@@ -112,7 +110,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
               className: `${sizeClasses[size]} ${reactionColors[userReaction]}`,
             })
           ) : (
-            <Heart className={`${sizeClasses[size]} text-gray-400`} />
+            <Heart className={`${sizeClasses[size]} text-text-secondary`} />
           )}
           {showCount && totalCount > 0 && (
             <span className="text-sm font-medium">{totalCount}</span>
@@ -120,7 +118,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         </button>
 
         {showPicker && (
-          <div className="absolute bottom-full mb-2 left-0 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10">
+          <div className="absolute bottom-full mb-2 left-0 bg-surface-primary border border-border rounded-lg shadow-lg p-2 flex gap-1 z-10">
             {(Object.keys(reactionIcons) as ReactionType[]).map(
               (reactionType) => {
                 const Icon = reactionIcons[reactionType];
@@ -132,8 +130,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                     onClick={() => handleReaction(reactionType)}
                     className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
                       userReaction === reactionType
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-50"
+                        ? "bg-surface-secondary"
+                        : "hover:bg-surface-secondary"
                     }`}
                     disabled={isLoading}
                   >
@@ -161,8 +159,10 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   return (
     <button
       onClick={() => setShowPicker(!showPicker)}
-      className={`flex items-center gap-2 ${buttonSizeClasses[size]} border border-gray-300 rounded-lg transition-colors ${
-        userReaction ? "bg-gray-50 border-gray-400" : "hover:bg-gray-50"
+      className={`flex items-center gap-2 ${buttonSizeClasses[size]} border border-border-light rounded-lg transition-colors ${
+        userReaction
+          ? "bg-surface-secondary border-text-secondary"
+          : "hover:bg-surface-secondary"
       }`}
       disabled={isLoading}
     >
@@ -182,13 +182,13 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         </>
       ) : (
         <>
-          <Heart className={`${sizeClasses[size]} text-gray-400`} />
-          <span className="text-sm text-gray-500">React</span>
+          <Heart className={`${sizeClasses[size]} text-text-secondary`} />
+          <span className="text-sm text-text-muted">React</span>
         </>
       )}
 
       {showPicker && (
-        <div className="absolute top-full mt-2 left-0 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10">
+        <div className="absolute top-full mt-2 left-0 bg-surface-primary border border-border rounded-lg shadow-lg p-2 flex gap-1 z-10">
           {(Object.keys(reactionIcons) as ReactionType[]).map(
             (reactionType) => {
               const Icon = reactionIcons[reactionType];
@@ -200,8 +200,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                   onClick={() => handleReaction(reactionType)}
                   className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
                     userReaction === reactionType
-                      ? "bg-gray-100"
-                      : "hover:bg-gray-50"
+                      ? "bg-surface-secondary"
+                      : "hover:bg-surface-secondary"
                   }`}
                   disabled={isLoading}
                 >

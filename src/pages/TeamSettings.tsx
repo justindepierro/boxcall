@@ -140,14 +140,14 @@ export const TeamSettings: React.FC = () => {
 
         {/* Tab Navigation */}
         <div className="mb-6">
-          <div className="border-b border-gray-200">
+          <div className="border-b border-border">
             <nav className="-mb-px flex space-x-8">
               <button
                 onClick={() => setActiveTab("overview")}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === "overview"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-text-info text-text-info"
+                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
                 }`}
               >
                 Overview
@@ -156,8 +156,8 @@ export const TeamSettings: React.FC = () => {
                 onClick={() => setActiveTab("staff")}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === "staff"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-text-info text-text-info"
+                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
                 }`}
               >
                 Staff
@@ -166,8 +166,8 @@ export const TeamSettings: React.FC = () => {
                 onClick={() => setActiveTab("roster")}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === "roster"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-text-info text-text-info"
+                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
                 }`}
               >
                 Roster
@@ -176,8 +176,8 @@ export const TeamSettings: React.FC = () => {
                 onClick={() => setActiveTab("settings")}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === "settings"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-text-info text-text-info"
+                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
                 }`}
               >
                 Settings
@@ -200,14 +200,11 @@ export const TeamSettings: React.FC = () => {
             >
               View team statistics, performance metrics, and activity summaries.
             </Typography>
-            <div className="surface-subtle dark:bg-purple-900/20 border border-subtle dark:border-purple-800 rounded-lg p-4 inline-block">
-              <Typography
-                variant="body-sm"
-                className="text-purple-700 dark:text-purple-300"
-              >
+            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 inline-block">
+              <Typography variant="body-sm" className="text-text-info">
                 <Icon
                   name="wrench"
-                  className="inline h-4 w-4 align-middle text-current"
+                  className="inline h-4 w-4 align-middle text-text-info"
                 />{" "}
                 Coming Soon - Team analytics and insights
               </Typography>
@@ -255,13 +252,13 @@ export const TeamSettings: React.FC = () => {
 
             {/* Quick Add Player Form */}
             {showAddPlayerForm && (
-              <Card className="p-6 border-blue-200 bg-blue-50">
+              <Card className="p-6 border-text-info bg-surface-info">
                 <Typography variant="headline-sm" className="mb-4">
                   Add New Player
                 </Typography>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       First Name
                     </label>
                     <input
@@ -273,12 +270,12 @@ export const TeamSettings: React.FC = () => {
                           firstName: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                       placeholder="John"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Last Name
                     </label>
                     <input
@@ -290,12 +287,12 @@ export const TeamSettings: React.FC = () => {
                           lastName: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                       placeholder="Doe"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Jersey Number
                     </label>
                     <input
@@ -307,12 +304,12 @@ export const TeamSettings: React.FC = () => {
                           jerseyNumber: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                       placeholder="23"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Position
                     </label>
                     <select
@@ -323,7 +320,7 @@ export const TeamSettings: React.FC = () => {
                           position: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                     >
                       <option value="">Select Position</option>
                       <option value="QB">Quarterback</option>
@@ -359,7 +356,7 @@ export const TeamSettings: React.FC = () => {
             {/* Roster Grid */}
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-info mx-auto mb-4"></div>
                 <Typography variant="body-lg" color="muted">
                   Loading roster...
                 </Typography>
@@ -398,10 +395,10 @@ export const TeamSettings: React.FC = () => {
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-surface-info rounded-full flex items-center justify-center">
                           <Typography
                             variant="headline-sm"
-                            className="text-blue-600 font-bold"
+                            className="text-text-info font-bold"
                           >
                             {player.jersey_number || "?"}
                           </Typography>
@@ -419,10 +416,10 @@ export const TeamSettings: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex space-x-1">
-                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <button className="p-1 text-text-muted hover:text-text-secondary">
                           <Icon name="edit" className="h-4 w-4" />
                         </button>
-                        <button className="p-1 text-gray-400 hover:text-red-600">
+                        <button className="p-1 text-text-muted hover:text-text-error">
                           <Icon name="delete" className="h-4 w-4" />
                         </button>
                       </div>
@@ -430,14 +427,14 @@ export const TeamSettings: React.FC = () => {
 
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Status:</span>
+                        <span className="text-text-secondary">Status:</span>
                         <span
                           className={`px-2 py-1 rounded text-xs ${
                             player.status === "active"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-surface-success text-text-success"
                               : player.status === "inactive"
-                                ? "bg-gray-100 text-gray-800"
-                                : "bg-yellow-100 text-yellow-800"
+                                ? "bg-surface-secondary text-text-secondary"
+                                : "bg-surface-warning text-text-warning"
                           }`}
                         >
                           {player.status || "Unknown"}
@@ -445,7 +442,7 @@ export const TeamSettings: React.FC = () => {
                       </div>
                       {player.height_inches && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Height:</span>
+                          <span className="text-text-secondary">Height:</span>
                           <span>
                             {Math.floor(player.height_inches / 12)}'
                             {player.height_inches % 12}"
@@ -454,19 +451,19 @@ export const TeamSettings: React.FC = () => {
                       )}
                       {player.weight_pounds && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Weight:</span>
+                          <span className="text-text-secondary">Weight:</span>
                           <span>{player.weight_pounds} lbs</span>
                         </div>
                       )}
                       {player.graduation_year && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Class:</span>
+                          <span className="text-text-secondary">Class:</span>
                           <span>{player.graduation_year}</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="mt-4 pt-4 border-t border-border">
                       <Button variant="secondary" size="sm" className="w-full">
                         <Icon name="mail" className="h-4 w-4 mr-2" />
                         Invite to Boxcall
@@ -494,14 +491,11 @@ export const TeamSettings: React.FC = () => {
               administrators. Configure team settings, manage member roles, and
               customize your team's BoxCall experience.
             </Typography>
-            <div className="surface-subtle dark:bg-purple-900/20 border border-subtle dark:border-purple-800 rounded-lg p-4 inline-block">
-              <Typography
-                variant="body-sm"
-                className="text-purple-700 dark:text-purple-300"
-              >
+            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 inline-block">
+              <Typography variant="body-sm" className="text-text-info">
                 <Icon
                   name="wrench"
-                  className="inline h-4 w-4 align-middle text-current"
+                  className="inline h-4 w-4 align-middle text-text-info"
                 />{" "}
                 Coming Soon - Advanced team management and configuration tools
               </Typography>

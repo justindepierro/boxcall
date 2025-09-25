@@ -371,13 +371,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       className="rounded-md border border-subtle surface-card p-4 shadow-sm animate-pulse"
       aria-label={`Loading play placeholder ${idx + 1}`}
     >
-      <div className="h-4 w-1/3 bg-slate-200 rounded mb-3" />
-      <div className="h-3 w-1/2 bg-slate-100 rounded mb-2" />
-      <div className="h-3 w-2/5 bg-slate-100 rounded mb-4" />
+      <div className="h-4 w-1/3 bg-surface-secondary rounded mb-3" />
+      <div className="h-3 w-1/2 bg-surface-tertiary rounded mb-2" />
+      <div className="h-3 w-2/5 bg-surface-tertiary rounded mb-4" />
       <div className="flex gap-2">
-        <div className="h-6 w-14 bg-slate-100 rounded" />
-        <div className="h-6 w-10 bg-slate-100 rounded" />
-        <div className="h-6 w-16 bg-slate-100 rounded" />
+        <div className="h-6 w-14 bg-surface-tertiary rounded" />
+        <div className="h-6 w-10 bg-surface-tertiary rounded" />
+        <div className="h-6 w-16 bg-surface-tertiary rounded" />
       </div>
     </div>
   );
@@ -393,7 +393,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     }
     return (
       <div className="flex flex-col items-center gap-3">
-        <div className="text-xs text-slate-500">Adjust your criteria</div>
+        <div className="text-xs text-text-secondary">Adjust your criteria</div>
         <div className="flex gap-2">
           {searchQuery && (
             <Button
@@ -442,11 +442,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       )}
       {error && !loading && (
         <div
-          className="text-center p-10 border rounded-md border-red-200 bg-red-50"
+          className="text-center p-10 border rounded-md border-text-error bg-surface-error"
           role="alert"
         >
-          <p className="text-red-600 font-medium mb-3">Error loading plays</p>
-          <p className="text-xs text-red-500 mb-4">{error}</p>
+          <p className="text-text-error font-medium mb-3">
+            Error loading plays
+          </p>
+          <p className="text-xs text-text-error mb-4">{error}</p>
           <div className="flex justify-center">
             <Button size="sm" variant="secondary" onClick={() => refreshData()}>
               Retry
@@ -456,7 +458,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       )}
       {showEmpty && (
         <div className="text-center py-16">
-          <div className="text-slate-400 text-lg mb-4">
+          <div className="text-text-tertiary text-lg mb-4">
             {hasFilters
               ? selectedCategory && selectedSubcategory
                 ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
@@ -467,7 +469,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     : "No plays match your current filters"
               : "No plays in your playbook yet"}
           </div>
-          <p className="text-slate-500 text-sm mb-8">
+          <p className="text-text-secondary text-sm mb-8">
             {hasFilters
               ? "Refine or clear filters to broaden results"
               : "Create your first play or import existing plays to get started"}
@@ -482,12 +484,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             <Typography
               variant="headline-sm"
               as="h2"
-              className="text-slate-900"
+              className="text-text-primary"
             >
               {filteredPlays.length}{" "}
               {filteredPlays.length === 1 ? "Play" : "Plays"}
               {selectedCategory && (
-                <span className="text-slate-500 font-normal ml-2">
+                <span className="text-text-secondary font-normal ml-2">
                   in{" "}
                   {selectedCategory.charAt(0).toUpperCase() +
                     selectedCategory.slice(1).replace("-", " ")}
@@ -500,7 +502,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           {/* Bulk Selection Controls */}
           {enableBulkOperations && (
             <div className="flex items-center space-x-2">
-              <label className="flex items-center space-x-2 text-sm text-slate-600">
+              <label className="flex items-center space-x-2 text-sm text-text-secondary">
                 <input
                   type="checkbox"
                   checked={
@@ -508,7 +510,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     filteredPlays.every((p) => selectedPlayIds.has(p.id))
                   }
                   onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
+                  className="rounded border-border text-text-info focus:ring-text-accent"
                 />
                 <span>
                   {selectedPlayIds.size > 0
@@ -522,7 +524,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
         {/* Play Name Display Toggle */}
         <div className="flex items-center space-x-3">
-          <span className="text-sm text-slate-600">One-word calls</span>
+          <span className="text-sm text-text-secondary">One-word calls</span>
           <IconButton
             aria-label={
               showOneWordCalls
@@ -534,12 +536,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             size="sm"
           >
             {showOneWordCalls ? (
-              <Icon name="toggle-right" className="h-5 w-5 text-blue-600" />
+              <Icon name="toggle-right" className="h-5 w-5 text-text-info" />
             ) : (
-              <Icon name="toggle-left" className="h-5 w-5 text-slate-400" />
+              <Icon name="toggle-left" className="h-5 w-5 text-text-tertiary" />
             )}
           </IconButton>
-          <span className="text-sm text-slate-600">Full names</span>
+          <span className="text-sm text-text-secondary">Full names</span>
           <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
             <Button
               variant={density === "compact" ? "secondary" : "ghost"}

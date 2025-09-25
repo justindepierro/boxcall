@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { useAuth } from "../../app/auth-store";
 import { supabase } from "../../lib/supabase";
+import { sessionManager } from "../../utils/sessionManager";
 
 import type { ReactNode } from "react";
 
@@ -23,6 +24,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchUserProfile(session.user.id);
+        // Start session monitoring when user is authenticated
+        sessionManager.startMonitoring(
+          () => {
+            // Show warning before timeout
+            console.warn("Session will expire soon. Please save your work.");
+            // In a real app, you'd show a modal or toast notification
+          },
+          () => {
+            // Handle timeout
+            console.log("Session expired due to inactivity");
+            setUser(null);
+            setSession(null);
+            setProfile(null);
+          },
+          () => {
+            // Activity detected - could refresh session if needed
+            console.debug("User activity detected");
+          }
+        );
       }
     });
 
@@ -34,13 +54,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         await fetchUserProfile(session.user.id);
+        // Start session monitoring
+        sessionManager.startMonitoring(
+          () => console.warn("Session will expire soon"),
+          () => {
+            console.log("Session expired");
+            setUser(null);
+            setSession(null);
+            setProfile(null);
+          },
+          () => console.debug("Activity detected")
+        );
       } else {
+        // Stop session monitoring when logged out
+        sessionManager.stopMonitoring();
         setProfile(null);
       }
     });
 
     // Cleanup subscription on unmount
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      sessionManager.stopMonitoring();
+    };
   }, [setUser, setSession, setProfile, fetchUserProfile]);
   return <>{children}</>;
 };

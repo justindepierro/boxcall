@@ -83,12 +83,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`p-8 text-center ${className}`}>
         <Icon
           name="alert-triangle"
-          className="h-12 w-12 text-red-500 mx-auto mb-4"
+          className="h-12 w-12 text-text-error mx-auto mb-4"
         />
-        <Typography variant="headline-sm" className="text-red-700 mb-2">
+        <Typography variant="headline-sm" className="text-text-error mb-2">
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-red-600 mb-4">
+        <Typography variant="body-sm" className="text-text-error mb-4">
           {error}
         </Typography>
         <Button onClick={loadAnalytics} variant="secondary">
@@ -103,12 +103,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`p-8 text-center ${className}`}>
         <Icon
           name="bar-chart"
-          className="h-12 w-12 text-gray-400 mx-auto mb-4"
+          className="h-12 w-12 text-text-muted mx-auto mb-4"
         />
-        <Typography variant="headline-sm" className="text-gray-700 mb-2">
+        <Typography variant="headline-sm" className="text-text-secondary mb-2">
           No Analytics Data
         </Typography>
-        <Typography variant="body-sm" className="text-gray-600">
+        <Typography variant="body-sm" className="text-text-secondary">
           {playbookId
             ? "No plays found in this playbook yet."
             : "Select a playbook to view analytics."}
@@ -126,7 +126,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             <Icon name="bar-chart" className="h-6 w-6 text-jade-600 mr-2" />
             Advanced Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-gray-600 mt-1">
+          <Typography variant="body-sm" className="text-text-secondary mt-1">
             Performance insights and strategic analysis
           </Typography>
         </div>
@@ -185,56 +185,56 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-gray-600">
+          <Typography variant="body-sm" className="text-text-secondary">
             Total Plays
           </Typography>
-          <Typography variant="headline-lg" className="text-gray-900">
+          <Typography variant="headline-lg" className="text-text-primary">
             {analytics.totalPlays}
           </Typography>
         </div>
-        <Icon name="file" className="h-8 w-8 text-blue-600" />
+        <Icon name="file" className="h-8 w-8 text-text-info" />
       </div>
     </Card>
 
     <Card className="p-6">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-gray-600">
+          <Typography variant="body-sm" className="text-text-secondary">
             Avg Success Rate
           </Typography>
-          <Typography variant="headline-lg" className="text-gray-900">
+          <Typography variant="headline-lg" className="text-text-primary">
             {analytics.averageSuccessRate}%
           </Typography>
         </div>
-        <Icon name="target" className="h-8 w-8 text-green-600" />
+        <Icon name="target" className="h-8 w-8 text-text-success" />
       </div>
     </Card>
 
     <Card className="p-6">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-gray-600">
+          <Typography variant="body-sm" className="text-text-secondary">
             Avg Complexity
           </Typography>
-          <Typography variant="headline-lg" className="text-gray-900">
+          <Typography variant="headline-lg" className="text-text-primary">
             {analytics.averageComplexity}/10
           </Typography>
         </div>
-        <Icon name="zap" className="h-8 w-8 text-yellow-600" />
+        <Icon name="zap" className="h-8 w-8 text-text-warning" />
       </div>
     </Card>
 
     <Card className="p-6">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-gray-600">
+          <Typography variant="body-sm" className="text-text-secondary">
             Formations
           </Typography>
-          <Typography variant="headline-lg" className="text-gray-900">
+          <Typography variant="headline-lg" className="text-text-primary">
             {analytics.formationsCount}
           </Typography>
         </div>
-        <Icon name="grid" className="h-8 w-8 text-purple-600" />
+        <Icon name="grid" className="h-8 w-8 text-text-primary" />
       </div>
     </Card>
 
@@ -245,11 +245,11 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Typography>
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Low (1-3)</span>
+          <span className="text-sm text-text-secondary">Low (1-3)</span>
           <div className="flex items-center space-x-2">
-            <div className="w-24 bg-gray-200 rounded-full h-2">
+            <div className="w-24 bg-border rounded-full h-2">
               <div
-                className="bg-green-600 h-2 rounded-full"
+                className="bg-text-success h-2 rounded-full"
                 style={{
                   width: `${(analytics.complexityDistribution.low / analytics.totalPlays) * 100}%`,
                 }}
@@ -261,11 +261,11 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Medium (4-7)</span>
+          <span className="text-sm text-text-secondary">Medium (4-7)</span>
           <div className="flex items-center space-x-2">
-            <div className="w-24 bg-gray-200 rounded-full h-2">
+            <div className="w-24 bg-border rounded-full h-2">
               <div
-                className="bg-yellow-600 h-2 rounded-full"
+                className="bg-text-warning h-2 rounded-full"
                 style={{
                   width: `${(analytics.complexityDistribution.medium / analytics.totalPlays) * 100}%`,
                 }}
@@ -277,11 +277,11 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">High (8-10)</span>
+          <span className="text-sm text-text-secondary">High (8-10)</span>
           <div className="flex items-center space-x-2">
-            <div className="w-24 bg-gray-200 rounded-full h-2">
+            <div className="w-24 bg-border rounded-full h-2">
               <div
-                className="bg-red-600 h-2 rounded-full"
+                className="bg-text-error h-2 rounded-full"
                 style={{
                   width: `${(analytics.complexityDistribution.high / analytics.totalPlays) * 100}%`,
                 }}
@@ -304,7 +304,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         {analytics.topPerformingPlays.slice(0, 5).map((play, index) => (
           <div
             key={play.playId}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+            className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg"
           >
             <div className="flex items-center space-x-3">
               <Badge
@@ -317,7 +317,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 <Typography variant="body-sm" className="font-medium">
                   {play.playName}
                 </Typography>
-                <Typography variant="body-xs" className="text-gray-600">
+                <Typography variant="body-xs" className="text-text-secondary">
                   {play.formation} • {play.playType}
                 </Typography>
               </div>
@@ -325,11 +325,11 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
             <div className="text-right">
               <Typography
                 variant="body-sm"
-                className="font-medium text-green-700"
+                className="font-medium text-text-success"
               >
                 {play.successRate}%
               </Typography>
-              <Typography variant="body-xs" className="text-gray-600">
+              <Typography variant="body-xs" className="text-text-secondary">
                 {play.timesCalled} calls
               </Typography>
             </div>
@@ -376,17 +376,17 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
 
     <div className="space-y-3">
       <div className="flex justify-between">
-        <span className="text-sm text-gray-600">Total Plays</span>
+        <span className="text-sm text-text-secondary">Total Plays</span>
         <span className="font-medium">{formation.totalPlays}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-sm text-gray-600">Avg Complexity</span>
+        <span className="text-sm text-text-secondary">Avg Complexity</span>
         <span className="font-medium">{formation.averageComplexity}/10</span>
       </div>
     </div>
 
     <div className="mt-4">
-      <Typography variant="body-xs" className="text-gray-600 mb-2">
+      <Typography variant="body-xs" className="text-text-secondary mb-2">
         Personnel Usage
       </Typography>
       <div className="flex flex-wrap gap-1">
@@ -419,10 +419,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {Object.entries(analytics.situationalPerformance.byDown).map(
             ([down, stats]) => (
               <div key={down} className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">{down}</span>
+                <span className="text-sm text-text-secondary">{down}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-gray-500 ml-2">
+                  <span className="text-xs text-text-muted ml-2">
                     ({stats.called})
                   </span>
                 </div>
@@ -441,10 +441,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {Object.entries(analytics.situationalPerformance.byFieldPosition).map(
             ([position, stats]) => (
               <div key={position} className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">{position}</span>
+                <span className="text-sm text-text-secondary">{position}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-gray-500 ml-2">
+                  <span className="text-xs text-text-muted ml-2">
                     ({stats.called})
                   </span>
                 </div>
@@ -466,10 +466,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 key={personnel}
                 className="flex justify-between items-center"
               >
-                <span className="text-sm text-gray-600">{personnel}</span>
+                <span className="text-sm text-text-secondary">{personnel}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-gray-500 ml-2">
+                  <span className="text-xs text-text-muted ml-2">
                     ({stats.called})
                   </span>
                 </div>
@@ -496,8 +496,8 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           Success Rate Analysis
         </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <Typography variant="headline-md" className="text-green-700">
+          <div className="text-center p-4 bg-surface-success rounded-lg">
+            <Typography variant="headline-md" className="text-text-success">
               {analytics.topPerformingPlays.length > 0
                 ? Math.max(
                     ...analytics.topPerformingPlays.map((p) => p.successRate)
@@ -505,31 +505,31 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 : 0}
               %
             </Typography>
-            <Typography variant="body-xs" className="text-green-600">
+            <Typography variant="body-xs" className="text-text-success">
               Best Play
             </Typography>
           </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <Typography variant="headline-md" className="text-blue-700">
+          <div className="text-center p-4 bg-surface-info rounded-lg">
+            <Typography variant="headline-md" className="text-text-info">
               {analytics.averageSuccessRate.toFixed(1)}%
             </Typography>
-            <Typography variant="body-xs" className="text-blue-600">
+            <Typography variant="body-xs" className="text-text-info">
               Average
             </Typography>
           </div>
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
-            <Typography variant="headline-md" className="text-yellow-700">
+          <div className="text-center p-4 bg-surface-warning rounded-lg">
+            <Typography variant="headline-md" className="text-text-warning">
               {analytics.averageComplexity.toFixed(1)}/10
             </Typography>
-            <Typography variant="body-xs" className="text-yellow-600">
+            <Typography variant="body-xs" className="text-text-warning">
               Complexity
             </Typography>
           </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <Typography variant="headline-md" className="text-purple-700">
+          <div className="text-center p-4 bg-surface-secondary rounded-lg">
+            <Typography variant="headline-md" className="text-text-primary">
               {analytics.formationsCount}
             </Typography>
-            <Typography variant="body-xs" className="text-purple-600">
+            <Typography variant="body-xs" className="text-text-primary">
               Formations
             </Typography>
           </div>
@@ -543,8 +543,8 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         </Typography>
         <div className="space-y-3">
           {analytics.averageSuccessRate < 60 && (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <Typography variant="body-sm" className="text-yellow-800">
+            <div className="p-3 bg-surface-warning border border-text-warning rounded-lg">
+              <Typography variant="body-sm" className="text-text-warning">
                 <Icon name="alert-triangle" className="h-4 w-4 inline mr-2" />
                 Consider simplifying play calls - average success rate is below
                 60%.
@@ -552,16 +552,16 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
             </div>
           )}
           {analytics.averageComplexity > 7 && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <Typography variant="body-sm" className="text-red-800">
+            <div className="p-3 bg-surface-error border border-text-error rounded-lg">
+              <Typography variant="body-sm" className="text-text-error">
                 <Icon name="zap" className="h-4 w-4 inline mr-2" />
                 High complexity plays may be causing execution issues.
               </Typography>
             </div>
           )}
           {analytics.formationsCount < 3 && (
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <Typography variant="body-sm" className="text-blue-800">
+            <div className="p-3 bg-surface-info border border-text-info rounded-lg">
+              <Typography variant="body-sm" className="text-text-info">
                 <Icon name="grid" className="h-4 w-4 inline mr-2" />
                 Consider adding more formations for situational variety.
               </Typography>
@@ -569,8 +569,8 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           )}
           {analytics.topPerformingPlays.length > 0 &&
             analytics.topPerformingPlays[0].successRate > 80 && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <Typography variant="body-sm" className="text-green-800">
+              <div className="p-3 bg-surface-success border border-text-success rounded-lg">
+                <Typography variant="body-sm" className="text-text-success">
                   <Icon name="check-circle" className="h-4 w-4 inline mr-2" />
                   Excellent performance! Focus on replicating success patterns.
                 </Typography>

@@ -18,7 +18,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-text-primary/70 backdrop-blur-sm flex items-center justify-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="diagram-help-title"
@@ -44,7 +44,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
         </Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <section>
-            <h3 className="font-medium text-slate-700 mb-1">Navigation</h3>
+            <h3 className="font-medium text-text-secondary mb-1">Navigation</h3>
             <ul className="list-disc ml-5 space-y-1">
               <li>Space (hold): Pan temporarily</li>
               <li>Cmd/Ctrl + Mouse Wheel: Zoom at cursor</li>
@@ -53,7 +53,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
             </ul>
           </section>
           <section>
-            <h3 className="font-medium text-slate-700 mb-1">Selection</h3>
+            <h3 className="font-medium text-text-secondary mb-1">Selection</h3>
             <ul className="list-disc ml-5 space-y-1">
               <li>Click to select, Shift/Meta to multi-select</li>
               <li>Drag on empty canvas to marquee select</li>
@@ -61,7 +61,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
             </ul>
           </section>
           <section>
-            <h3 className="font-medium text-slate-700 mb-1">Editing</h3>
+            <h3 className="font-medium text-text-secondary mb-1">Editing</h3>
             <ul className="list-disc ml-5 space-y-1">
               <li>Alt + Drag: Duplicate selection</li>
               <li>Undo / Redo: Cmd/Ctrl + Z / Shift+Cmd/Ctrl + Z</li>
@@ -69,7 +69,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
             </ul>
           </section>
           <section>
-            <h3 className="font-medium text-slate-700 mb-1">
+            <h3 className="font-medium text-text-secondary mb-1">
               Routes & Drawing
             </h3>
             <ul className="list-disc ml-5 space-y-1">
@@ -82,7 +82,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
             </ul>
           </section>
           <section className="sm:col-span-2">
-            <h3 className="font-medium text-slate-700 mb-1">
+            <h3 className="font-medium text-text-secondary mb-1">
               Align & Distribute (with selection)
             </h3>
             <ul className="list-disc ml-5 space-y-1">

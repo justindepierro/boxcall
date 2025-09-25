@@ -49,12 +49,12 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Icon name="file" className="h-8 w-8 text-jade-600 mr-3" />
+              <Icon name="file" className="h-8 w-8 text-text-success mr-3" />
               <div className="flex flex-col">
                 <Typography
                   variant="headline-md"
                   as="h1"
-                  className="text-slate-900"
+                  className="text-text-primary"
                 >
                   {title}
                 </Typography>
@@ -90,12 +90,12 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               {onOpenSettings && (
                 <button
                   onClick={onOpenSettings}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-muted hover:bg-border transition-colors group"
                   title="Playbook Settings"
                 >
                   <Icon
                     name="settings"
-                    className="h-5 w-5 text-gray-600 group-hover:text-gray-700"
+                    className="h-5 w-5 text-text-secondary group-hover:text-text-secondary"
                   />
                 </button>
               )}
@@ -103,12 +103,12 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               {/* Weekly Challenges Trophy Icon */}
               <button
                 onClick={() => setShowChallenges(true)}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors group"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-secondary hover:bg-surface-tertiary transition-colors group"
                 title="Weekly Challenges"
               >
                 <Icon
                   name="trophy"
-                  className="h-5 w-5 text-purple-600 group-hover:text-purple-700"
+                  className="h-5 w-5 text-text-secondary group-hover:text-text-primary"
                 />
               </button>
             </div>

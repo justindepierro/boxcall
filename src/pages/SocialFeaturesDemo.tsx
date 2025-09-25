@@ -20,22 +20,22 @@ const SocialFeaturesDemo: React.FC = () => {
         <div className="absolute top-0 right-0">
           <NotificationsBell userId={demoUserId} />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">
           Social Features Demo
         </h1>
-        <p className="text-gray-600">
+        <p className="text-text-secondary">
           Experience the new social interactions in BoxCall
         </p>
       </div>
 
       {/* Demo Play Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+      <div className="bg-surface-primary border border-border rounded-lg p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-text-primary">
               Triple Option Play
             </h2>
-            <p className="text-gray-600 mt-1">
+            <p className="text-text-secondary mt-1">
               A classic triple option with multiple read options for the QB.
             </p>
           </div>
@@ -56,11 +56,11 @@ const SocialFeaturesDemo: React.FC = () => {
         </div>
 
         {/* Play visualization placeholder */}
-        <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center mb-4">
-          <span className="text-gray-500">Play Diagram Would Go Here</span>
+        <div className="bg-surface-muted rounded-lg h-48 flex items-center justify-center mb-4">
+          <span className="text-text-muted">Play Diagram Would Go Here</span>
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        <div className="flex items-center gap-4 text-sm text-text-muted">
           <span>Formation: Shotgun</span>
           <span>Personnel: 11 Personnel</span>
           <span>Play Type: Run</span>
@@ -68,8 +68,10 @@ const SocialFeaturesDemo: React.FC = () => {
       </div>
 
       {/* Comments Section */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Discussion</h3>
+      <div className="bg-surface-primary border border-border rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">
+          Discussion
+        </h3>
         <CommentSection
           contentType="play"
           contentId={demoPlayId}
@@ -79,17 +81,19 @@ const SocialFeaturesDemo: React.FC = () => {
       </div>
 
       {/* Team Profile Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+      <div className="bg-surface-primary border border-border rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-blue-600">BC</span>
+            <div className="w-16 h-16 bg-surface-info rounded-full flex items-center justify-center">
+              <span className="text-2xl font-bold text-text-info">BC</span>
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-text-primary">
                 BoxCall High School
               </h3>
-              <p className="text-gray-600">Varsity Football Team • Est. 2024</p>
+              <p className="text-text-secondary">
+                Varsity Football Team • Est. 2024
+              </p>
             </div>
           </div>
           <FollowButton
@@ -102,30 +106,34 @@ const SocialFeaturesDemo: React.FC = () => {
 
         <div className="mt-4 grid grid-cols-3 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold text-gray-900">24</div>
-            <div className="text-sm text-gray-600">Players</div>
+            <div className="text-2xl font-bold text-text-primary">24</div>
+            <div className="text-sm text-text-secondary">Players</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-gray-900">156</div>
-            <div className="text-sm text-gray-600">Followers</div>
+            <div className="text-2xl font-bold text-text-primary">156</div>
+            <div className="text-sm text-text-secondary">Followers</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-gray-900">89</div>
-            <div className="text-sm text-gray-600">Plays</div>
+            <div className="text-2xl font-bold text-text-primary">89</div>
+            <div className="text-sm text-text-secondary">Plays</div>
           </div>
         </div>
       </div>
 
       {/* User Profile Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+      <div className="bg-surface-primary border border-border rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-lg font-bold text-green-600">JD</span>
+            <div className="w-12 h-12 bg-surface-success rounded-full flex items-center justify-center">
+              <span className="text-lg font-bold text-text-success">JD</span>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">John Doe</h3>
-              <p className="text-gray-600">Head Coach • BoxCall High School</p>
+              <h3 className="text-lg font-semibold text-text-primary">
+                John Doe
+              </h3>
+              <p className="text-text-secondary">
+                Head Coach • BoxCall High School
+              </p>
             </div>
           </div>
           <FollowButton
@@ -136,7 +144,7 @@ const SocialFeaturesDemo: React.FC = () => {
           />
         </div>
 
-        <div className="mt-4 flex gap-4 text-sm text-gray-600">
+        <div className="mt-4 flex gap-4 text-sm text-text-secondary">
           <span>42 followers</span>
           <span>156 plays created</span>
           <span>23 game plans</span>
@@ -144,59 +152,65 @@ const SocialFeaturesDemo: React.FC = () => {
       </div>
 
       {/* Activity Feed */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-surface-primary border border-border rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">
           Recent Activity
         </h3>
         <ActivityFeed limit={10} />
       </div>
 
       {/* Feature Overview */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-4">
+      <div className="bg-gradient-to-r from-surface-info to-surface-secondary border border-text-info rounded-lg p-6">
+        <h3 className="text-xl font-semibold text-text-primary mb-4">
           ✨ New Social Features
         </h3>
         <div className="grid md:grid-cols-3 gap-6">
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">Reactions</h4>
-            <p className="text-gray-600 text-sm">
+            <h4 className="font-semibold text-text-primary mb-2">Reactions</h4>
+            <p className="text-text-secondary text-sm">
               Express yourself with likes, loves, laughs, and more on plays,
               comments, and content.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">Follow System</h4>
-            <p className="text-gray-600 text-sm">
+            <h4 className="font-semibold text-text-primary mb-2">
+              Follow System
+            </h4>
+            <p className="text-text-secondary text-sm">
               Follow your favorite teams, coaches, and players to stay updated
               on their activity.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">
+            <h4 className="font-semibold text-text-primary mb-2">
               Comments & Discussion
             </h4>
-            <p className="text-gray-600 text-sm">
+            <p className="text-text-secondary text-sm">
               Engage in meaningful discussions with threaded comments and
               replies.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">@Mentions</h4>
-            <p className="text-gray-600 text-sm">
+            <h4 className="font-semibold text-text-primary mb-2">@Mentions</h4>
+            <p className="text-text-secondary text-sm">
               Tag other users in comments to notify them and create engaging
               conversations.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">Notifications</h4>
-            <p className="text-gray-600 text-sm">
+            <h4 className="font-semibold text-text-primary mb-2">
+              Notifications
+            </h4>
+            <p className="text-text-secondary text-sm">
               Stay informed with real-time notifications for reactions, follows,
               mentions, and more.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-2">Activity Feed</h4>
-            <p className="text-gray-600 text-sm">
+            <h4 className="font-semibold text-text-primary mb-2">
+              Activity Feed
+            </h4>
+            <p className="text-text-secondary text-sm">
               Stay connected with a personalized feed of social activity from
               people you follow.
             </p>

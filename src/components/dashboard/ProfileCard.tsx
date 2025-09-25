@@ -96,7 +96,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   // Adaptive styling for high priority widgets
   const cardClassName = isHighPriority
-    ? "ring-2 ring-blue-200 ring-opacity-50"
+    ? "ring-2 ring-text-primary ring-opacity-50"
     : "";
 
   // Use unified role system
@@ -122,7 +122,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-3">
-        <Typography variant="headline-md" className="text-navy-800">
+        <Typography variant="headline-md" className="text-text-primary">
           Profile
         </Typography>
         {!isViewMode && (
@@ -130,7 +130,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             variant="ghost"
             size="sm"
             onClick={handleProfileEdit}
-            className="p-2 hover:bg-jade-50 rounded-lg"
+            className="p-2 hover:bg-surface-secondary rounded-lg"
             aria-label="Edit profile"
           >
             <Icon name="edit" size="sm" />
@@ -146,10 +146,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               variant="ghost"
               size="sm"
               onClick={() => navigate("/profile")}
-              className="w-16 h-16 p-0 rounded-lg bg-jade-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-jade-300"
+              className="w-16 h-16 p-0 rounded-lg bg-surface-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-text-primary"
               aria-label="View profile"
             >
-              <Typography variant="body-lg" className="font-bold text-jade-800">
+              <Typography
+                variant="body-lg"
+                className="font-bold text-text-primary"
+              >
                 {getInitials(displayName)}
               </Typography>
             </Button>
@@ -157,7 +160,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
+                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-border hover:bg-surface-secondary hover:border-border transition-colors"
                 aria-label="Edit profile picture"
                 onClick={handleProfileEdit}
               >
@@ -189,7 +192,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {/* Achievements Summary */}
         {achievements && (
           <div className="grid grid-cols-4 gap-3 pt-2">
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="bg-surface-secondary rounded-md p-2 text-center">
               <Typography variant="body-xs" className="text-text-muted">
                 Stickers
               </Typography>
@@ -197,7 +200,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.stickers}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="bg-surface-secondary rounded-md p-2 text-center">
               <Typography variant="body-xs" className="text-text-muted">
                 Medals
               </Typography>
@@ -205,7 +208,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.medals}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="bg-surface-secondary rounded-md p-2 text-center">
               <Typography variant="body-xs" className="text-text-muted">
                 Streak
               </Typography>
@@ -213,7 +216,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.streak}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="bg-surface-secondary rounded-md p-2 text-center">
               <Typography variant="body-xs" className="text-text-muted">
                 Points
               </Typography>

@@ -7,6 +7,7 @@ import type { Database } from "../types/database";
 import type { Session, User } from "@supabase/supabase-js";
 // User profile type from our database (main profiles table with role)
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
+import { checkRateLimit, recordFailedAuth, resetRateLimit } from "../utils/authRateLimit";
 interface AuthState {
   // Authentication state
   user: User | null;
@@ -63,6 +64,15 @@ export const useAuth = create<AuthState>()(
       setError: (error) => set({ error }),
       // Authentication methods - Real Supabase implementation
       signIn: async (email: string, password: string) => {
+        // Check client-side rate limiting
+        const rateLimitCheck = checkRateLimit(email);
+        if (!rateLimitCheck.allowed) {
+          const delaySeconds = Math.ceil(rateLimitCheck.delayMs / 1000);
+          const errorMsg = `Too many failed attempts. Please wait ${delaySeconds} seconds before trying again.`;
+          set({ error: errorMsg, loading: false });
+          return { success: false, error: errorMsg };
+        }
+
         set({ loading: true, error: null });
         try {
           const { data, error } = await supabase.auth.signInWithPassword({
@@ -76,10 +86,14 @@ export const useAuth = create<AuthState>()(
               status: error.status,
               details: error,
             });
+            // Record failed attempt for rate limiting
+            recordFailedAuth(email);
             set({ error: error.message, loading: false });
             return { success: false, error: error.message };
           }
           if (data.user && data.session) {
+            // Reset rate limiting on successful login
+            resetRateLimit(email);
             set({
               user: data.user,
               session: data.session,
@@ -94,11 +108,22 @@ export const useAuth = create<AuthState>()(
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : "Sign in failed";
+          // Record failed attempt for rate limiting
+          recordFailedAuth(email);
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
         }
       },
       signUp: async (email: string, password: string, userData) => {
+        // Check client-side rate limiting for signups too
+        const rateLimitCheck = checkRateLimit(email);
+        if (!rateLimitCheck.allowed) {
+          const delaySeconds = Math.ceil(rateLimitCheck.delayMs / 1000);
+          const errorMsg = `Too many attempts. Please wait ${delaySeconds} seconds before trying again.`;
+          set({ error: errorMsg, loading: false });
+          return { success: false, error: errorMsg };
+        }
+
         set({ loading: true, error: null });
         try {
           // Step 1: Create auth user
@@ -108,6 +133,8 @@ export const useAuth = create<AuthState>()(
               password,
             });
           if (authError) {
+            // Record failed attempt for rate limiting
+            recordFailedAuth(email);
             set({ error: authError.message, loading: false });
             return { success: false, error: authError.message };
           }

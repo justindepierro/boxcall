@@ -115,17 +115,17 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "label-lg": "font-sans text-sm font-semibold uppercase tracking-wide",
   "label-md": "font-sans text-xs font-semibold uppercase tracking-wide",
   button: "font-sans text-sm font-semibold",
-  caption: "font-sans text-xs text-text-secondary",
+  caption: "font-sans text-xs text-text-muted",
 };
-// Color class mappings - Updated with jade/navy system
+// Color class mappings - Updated to use semantic design system classes
 const colorClasses: Record<NonNullable<TypographyProps["color"]>, string> = {
-  primary: "text-jade-600 dark:text-jade-400", // Jade green for primary
-  secondary: "text-navy-600 dark:text-navy-400", // Navy blue for secondary
-  success: "text-green-600 dark:text-green-400", // Success green
-  warning: "text-yellow-600 dark:text-yellow-400", // Warning yellow
-  error: "text-red-600 dark:text-red-400", // Error red
-  muted: "text-gray-500 dark:text-gray-400", // Muted gray
-  inverse: "text-white dark:text-gray-900", // Inverse colors
+  primary: "text-text-primary", // Primary text color
+  secondary: "text-text-secondary", // Secondary text color
+  success: "text-success", // Success color
+  warning: "text-warning", // Warning color
+  error: "text-error", // Error color
+  muted: "text-text-muted", // Muted text color
+  inverse: "text-text-inverse", // Inverse text color
 };
 // Text alignment classes
 const alignClasses: Record<NonNullable<TypographyProps["align"]>, string> = {

@@ -47,7 +47,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
       </div>
 
       <div
-        className="flex border border-gray-300 rounded-lg overflow-hidden relative cursor-crosshair"
+        className="flex border border-border-medium rounded-lg overflow-hidden relative cursor-crosshair"
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       >

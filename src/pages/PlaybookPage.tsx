@@ -316,7 +316,7 @@ export default function PlaybookPage() {
       />
 
       {/* Full-width View Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-surface-primary border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <PlaybookViewTabs
             currentView={state.currentView}
@@ -336,7 +336,7 @@ export default function PlaybookPage() {
           <RecentActivityFeed activities={playbookStats.recentActivity} />
 
           {/* Filters */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="surface-card rounded-lg border border-border p-4">
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
@@ -345,7 +345,7 @@ export default function PlaybookPage() {
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="surface-card rounded-lg border border-border p-4">
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
@@ -355,7 +355,7 @@ export default function PlaybookPage() {
           )}
 
           {/* Action Buttons - Cleaned up */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="surface-card rounded-lg border border-border p-4">
             <div className="space-y-3">
               <Button
                 onClick={handleQuickNewPracticeScript}
@@ -392,7 +392,7 @@ export default function PlaybookPage() {
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="surface-card rounded-lg border border-border p-6">
             {state.currentView === "playbook" && (
               <PlayGrid
                 searchQuery={state.searchQuery}
@@ -407,7 +407,10 @@ export default function PlaybookPage() {
             {state.currentView === "practice-script" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <Typography variant="headline-md" className="text-gray-900">
+                  <Typography
+                    variant="headline-md"
+                    className="text-text-primary"
+                  >
                     Practice Scripts
                   </Typography>
                   <Button
@@ -423,15 +426,18 @@ export default function PlaybookPage() {
                 <div className="text-center py-12">
                   <Icon
                     name="file"
-                    className="h-16 w-16 text-gray-300 mx-auto mb-4"
+                    className="h-16 w-16 text-text-muted mx-auto mb-4"
                   />
                   <Typography
                     variant="headline-sm"
-                    className="text-gray-600 mb-2"
+                    className="text-text-secondary mb-2"
                   >
                     No Practice Scripts Yet
                   </Typography>
-                  <Typography variant="body-sm" className="text-gray-500 mb-6">
+                  <Typography
+                    variant="body-sm"
+                    className="text-text-muted mb-6"
+                  >
                     Create your first practice script to organize plays for
                     training sessions.
                   </Typography>
@@ -449,7 +455,10 @@ export default function PlaybookPage() {
             {state.currentView === "game-plan" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <Typography variant="headline-md" className="text-gray-900">
+                  <Typography
+                    variant="headline-md"
+                    className="text-text-primary"
+                  >
                     Game Plans
                   </Typography>
                   <Button onClick={handleQuickNewGamePlan} variant="primary">
@@ -462,15 +471,18 @@ export default function PlaybookPage() {
                 <div className="text-center py-12">
                   <Icon
                     name="target"
-                    className="h-16 w-16 text-gray-300 mx-auto mb-4"
+                    className="h-16 w-16 text-text-muted mx-auto mb-4"
                   />
                   <Typography
                     variant="headline-sm"
-                    className="text-gray-600 mb-2"
+                    className="text-text-secondary mb-2"
                   >
                     No Game Plans Yet
                   </Typography>
-                  <Typography variant="body-sm" className="text-gray-500 mb-6">
+                  <Typography
+                    variant="body-sm"
+                    className="text-text-muted mb-6"
+                  >
                     Create your first game plan to strategize plays for upcoming
                     matches.
                   </Typography>

@@ -82,17 +82,17 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const getActivityIcon = (type: ActivityType): React.ReactNode => {
     switch (type) {
       case "reaction_added":
-        return <Heart className="w-4 h-4 text-red-500" />;
+        return <Heart className="w-4 h-4 text-text-error" />;
       case "follow_started":
-        return <UserPlus className="w-4 h-4 text-blue-500" />;
+        return <UserPlus className="w-4 h-4 text-text-info" />;
       case "comment_posted":
-        return <MessageCircle className="w-4 h-4 text-green-500" />;
+        return <MessageCircle className="w-4 h-4 text-text-success" />;
       case "play_created":
-        return <Play className="w-4 h-4 text-purple-500" />;
+        return <Play className="w-4 h-4 text-text-primary" />;
       case "game_plan_created":
-        return <FileText className="w-4 h-4 text-orange-500" />;
+        return <FileText className="w-4 h-4 text-text-warning" />;
       default:
-        return <div className="w-4 h-4 bg-gray-300 rounded-full" />;
+        return <div className="w-4 h-4 bg-border-light rounded-full" />;
     }
   };
 
@@ -133,10 +133,10 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         {[...Array(5)].map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+              <div className="w-8 h-8 bg-border-light rounded-full"></div>
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+                <div className="h-4 bg-border-light rounded w-3/4"></div>
+                <div className="h-3 bg-border-light rounded w-1/2"></div>
               </div>
             </div>
           </div>
@@ -147,7 +147,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
   if (activities.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-text-muted">
         <div className="text-4xl mb-2">📭</div>
         <p>No activity yet</p>
       </div>
@@ -159,7 +159,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       {activities.map((activity) => (
         <div
           key={activity.id}
-          className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg"
+          className="flex items-start space-x-3 p-3 hover:bg-surface-secondary rounded-lg"
         >
           {/* Activity Icon */}
           <div className="flex-shrink-0 mt-1">
@@ -168,15 +168,15 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
           {/* Activity Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-gray-900">
+            <p className="text-sm text-text-primary">
               {formatActivityMessage(activity)}
             </p>
             {activity.content_title && (
-              <p className="text-sm text-blue-600 font-medium mt-1">
+              <p className="text-sm text-text-info font-medium mt-1">
                 "{activity.content_title}"
               </p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-text-muted mt-1">
               {formatTimeAgo(activity.created_at)}
             </p>
           </div>

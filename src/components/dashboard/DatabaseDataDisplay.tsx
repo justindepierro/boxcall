@@ -36,14 +36,17 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
-            <Typography variant="headline-sm" className="text-orange-800 mb-1">
+            <Typography
+              variant="headline-sm"
+              className="text-text-warning mb-1"
+            >
               Dev Mode Active - {devMode}
             </Typography>
-            <Typography variant="body-sm" className="text-orange-700 mb-3">
+            <Typography variant="body-sm" className="text-text-warning mb-3">
               Currently in <strong>{devMode}</strong> mode. Switch to production
               mode to see database data.
             </Typography>
-            <Typography variant="body-xs" className="text-orange-600">
+            <Typography variant="body-xs" className="text-text-warning">
               Open dev tools → Switch to "Production" mode to see your loaded
               demo data
             </Typography>
@@ -72,10 +75,10 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
-            <Typography variant="headline-sm" className="text-red-800 mb-1">
+            <Typography variant="headline-sm" className="text-text-error mb-1">
               Database Error
             </Typography>
-            <Typography variant="body-sm" className="text-red-600">
+            <Typography variant="body-sm" className="text-text-error">
               {error}
             </Typography>
           </div>
@@ -111,28 +114,31 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="bc-card-padding surface-card bg-gradient-to-r from-jade-50 to-blue-50 border-subtle">
+      <Card className="bc-card-padding surface-card bg-gradient-to-r from-surface-success to-surface-info border-subtle">
         <div className="flex items-center justify-between">
           <div>
-            <Typography variant="headline-md" className="text-jade-800 mb-1">
+            <Typography
+              variant="headline-md"
+              className="text-text-success800 mb-1"
+            >
               <Icon
                 name="party-popper"
-                className="inline h-4 w-4 align-middle text-current"
+                className="inline h-4 w-4 align-middle text-text-primary"
               />{" "}
               Demo Data Loaded Successfully!
             </Typography>
-            <Typography variant="body-md" className="text-jade-700">
+            <Typography variant="body-md" className="text-text-success700">
               Your BoxCall database is now populated with sample data
             </Typography>
           </div>
           <div className="text-right">
             <Typography
               variant="headline-lg"
-              className="text-jade-600 font-bold"
+              className="text-text-success600 font-bold"
             >
               {totalCount}
             </Typography>
-            <Typography variant="body-sm" className="text-jade-600">
+            <Typography variant="body-sm" className="text-text-success600">
               Total Items
             </Typography>
           </div>
@@ -197,7 +203,10 @@ export const DatabaseDataDisplay: React.FC = () => {
           {/* Selected Team Details */}
           {selectedTeam && (
             <div className="mt-4 p-4 surface-subtle border border-subtle rounded-lg">
-              <Typography variant="headline-sm" className="text-jade-900 mb-3">
+              <Typography
+                variant="headline-sm"
+                className="text-text-success900 mb-3"
+              >
                 {selectedTeam.name} Details
               </Typography>
               <div className="space-y-2">
@@ -226,10 +235,13 @@ export const DatabaseDataDisplay: React.FC = () => {
                   </Typography>
                 </div>
                 <div className="mt-3 pt-2 border-t border-subtle">
-                  <Typography variant="body-xs" className="text-jade-700">
+                  <Typography
+                    variant="body-xs"
+                    className="text-text-success700"
+                  >
                     <Icon
                       name="lightbulb"
-                      className="inline h-4 w-4 align-middle text-current"
+                      className="inline h-4 w-4 align-middle text-text-primary"
                     />{" "}
                     In a full app, selecting a team would switch your workspace
                     context, filter playbooks/plays, and update all data to this
@@ -244,7 +256,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         {/* Playbooks */}
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+            <div className="w-10 h-10 bg-surface-info rounded-lg flex items-center justify-center mr-3">
               <Icon name="book" size="md" color="info" />
             </div>
             <div>
@@ -272,8 +284,8 @@ export const DatabaseDataDisplay: React.FC = () => {
                   <span
                     className={`inline-block px-2 py-1 rounded text-xs ${
                       playbook.is_active
-                        ? "bg-green-100 text-green-700"
-                        : "surface-subtle text-gray-700"
+                        ? "bg-surface-success text-text-success"
+                        : "surface-subtle text-text-tertiary"
                     }`}
                   >
                     {playbook.is_active ? "Active" : "Inactive"}
@@ -287,7 +299,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         {/* Plays */}
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+            <div className="w-10 h-10 bg-surface-secondary rounded-lg flex items-center justify-center mr-3">
               <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
@@ -327,32 +339,32 @@ export const DatabaseDataDisplay: React.FC = () => {
 
       {/* Next Steps */}
       <Card className="bc-card-padding surface-card surface-subtle border-subtle">
-        <Typography variant="headline-sm" className="text-blue-800 mb-3">
+        <Typography variant="headline-sm" className="text-text-info mb-3">
           <Icon
             name="rocket"
-            className="inline h-4 w-4 align-middle text-current"
+            className="inline h-4 w-4 align-middle text-text-primary"
           />{" "}
           Next Steps
         </Typography>
         <div className="space-y-2">
-          <Typography variant="body-sm" className="text-blue-700">
+          <Typography variant="body-sm" className="text-text-info">
             • <strong>Try the Team Selector:</strong> Click on teams above to
             explore team details and selection functionality
           </Typography>
-          <Typography variant="body-sm" className="text-blue-700">
+          <Typography variant="body-sm" className="text-text-info">
             • <strong>Navigate to Playbook:</strong> Go to{" "}
             <strong>/playbook</strong> to see your plays in the playbook
             interface
           </Typography>
-          <Typography variant="body-sm" className="text-blue-700">
+          <Typography variant="body-sm" className="text-text-info">
             • <strong>Test Team Management:</strong> Use the loaded teams to
             test coaching workflows and team-specific features
           </Typography>
-          <Typography variant="body-sm" className="text-blue-700">
+          <Typography variant="body-sm" className="text-text-info">
             • <strong>Create Additional Plays:</strong> Use the PlayBuilder
             interface to add more plays to your playbooks
           </Typography>
-          <Typography variant="body-sm" className="text-blue-700">
+          <Typography variant="body-sm" className="text-text-info">
             • <strong>Full Authentication Flow:</strong> Test the complete login
             → use app → logout experience
           </Typography>

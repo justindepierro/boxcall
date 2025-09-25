@@ -10,16 +10,16 @@ import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
-  base: "block w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-gray-500 dark:placeholder-gray-400 disabled:surface-subtle dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-subtle dark:disabled:border-gray-600",
+  base: "block w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-text-secondary disabled:cursor-not-allowed disabled:border-subtle disabled:border-text-tertiary",
   statuses: {
     default:
-      "border-gray-300 dark:border-gray-600 focus:border-jade-600 dark:focus:border-blue-400 focus:ring-jade-500 dark:focus:ring-blue-400",
+      "border-border-light border-text-tertiary focus:border-text-info ring-text-info",
     error:
-      "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 surface-subtle dark:bg-red-900/20",
+      "border-text-error focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
     success:
-      "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 surface-subtle dark:bg-green-900/20",
+      "border-text-success focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
     warning:
-      "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 surface-subtle dark:bg-yellow-900/20",
+      "border-text-warning focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
   },
 };
 /**
@@ -131,7 +131,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const labelClasses = [
       "block",
       size === "sm" ? "text-xs" : "text-sm",
-      "font-medium text-gray-700 dark:text-gray-300",
+      "font-medium text-text-primary text-border-light",
       labelClassName,
     ]
       .filter(Boolean)
@@ -142,7 +142,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <label htmlFor={textareaId} className={labelClasses}>
             <Typography variant="label-md" color="error">
               {label}
-              {required && <span className="text-red-500 ml-1">*</span>}
+              {required && <span className="text-text-error ml-1">*</span>}
             </Typography>
           </label>
         )}

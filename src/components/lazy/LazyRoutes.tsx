@@ -45,6 +45,14 @@ export const LazyCollaborativeDemoPage = lazyRoute(
   "Collaborative Demo"
 );
 
+export const LazyDesignSystemShowcase = lazyRoute(
+  () =>
+    import("../design-system/DesignSystemShowcase").then((module) => ({
+      default: module.DesignSystemShowcase,
+    })),
+  "Design System"
+);
+
 export const LazyTeamBulletin = lazyRoute(
   () => import("../../pages/TeamBulletin"),
   "Team Bulletin"

@@ -144,11 +144,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     >
       <div className="space-y-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Icon name="plus" className="h-6 w-6 text-blue-600" />
+          <div className="p-2 bg-surface-secondary rounded-lg">
+            <Icon name="plus" className="h-6 w-6 text-text-primary" />
           </div>
           <div>
-            <Typography variant="body-lg" className="text-gray-600">
+            <Typography variant="body-lg" className="text-text-secondary">
               {existingPlay
                 ? "Update play details"
                 : "Add a new play to your playbook"}
@@ -167,7 +167,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               value={playName}
               onChange={(e) => setPlayName(e.target.value)}
               placeholder="e.g., Power Read, Slant Route, Zone Blitz"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
               required
             />
           </div>
@@ -181,7 +181,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               <select
                 value={formation}
                 onChange={(e) => setFormation(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
               >
                 <option value="">Select formation...</option>
                 {formations.map((f) => (
@@ -200,7 +200,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               <select
                 value={playType}
                 onChange={(e) => setPlayType(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
               >
                 <option value="">Select type...</option>
                 {playTypes.map((t) => (
@@ -222,9 +222,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               value={personnel}
               onChange={(e) => setPersonnel(e.target.value)}
               placeholder="e.g., 11 Personnel, 12 Personnel, Nickel"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
             />
-            <Typography variant="body-sm" className="text-gray-500 mt-1">
+            <Typography variant="body-sm" className="text-text-muted mt-1">
               Personnel grouping (e.g., 11 = 1 RB, 1 TE, 1 WR)
             </Typography>
           </div>
@@ -239,7 +239,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the play..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
             />
           </div>
         </form>

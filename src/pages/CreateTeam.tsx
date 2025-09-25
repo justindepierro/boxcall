@@ -401,7 +401,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolName: e.target.value })
                   }
                   placeholder="e.g., Burke Catholic High School"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -420,7 +420,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, teamName: e.target.value })
                   }
                   placeholder="e.g., Eagles"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -437,7 +437,7 @@ export const CreateTeam: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, sport: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                 >
                   <option value="Football">Football</option>
                   <option value="Basketball">Basketball</option>
@@ -459,13 +459,13 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {/* Season automatically set - shows current school year */}
-            <div className="mt-6 p-4 surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg">
+            <div className="mt-6 p-4 surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg">
               <div className="flex items-start gap-2">
                 <Icon name="info" size="sm" color="info" className="mt-0.5" />
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-blue-700 dark:text-blue-300 mb-1"
+                    className="font-medium text-text-info dark:text-text-info mb-1"
                   >
                     Season: {computeAcademicYear().display} School Year
                   </Typography>
@@ -492,13 +492,13 @@ export const CreateTeam: React.FC = () => {
             </Typography>
 
             {/* TODO: Implement school search/verification system */}
-            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
                 <Icon name="info" size="sm" color="info" className="mt-0.5" />
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-blue-700 dark:text-blue-300 mb-1"
+                    className="font-medium text-text-info dark:text-text-info mb-1"
                   >
                     School Verification Coming Soon
                   </Typography>
@@ -527,7 +527,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolName: e.target.value })
                   }
                   placeholder="e.g., Central High School"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -546,7 +546,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolDistrict: e.target.value })
                   }
                   placeholder="e.g., Central Independent School District"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                 />
               </div>
               <div className="md:col-span-2">
@@ -564,7 +564,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolAddress: e.target.value })
                   }
                   placeholder="e.g., 123 School Street"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -583,7 +583,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolCity: e.target.value })
                   }
                   placeholder="e.g., Austin"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -602,7 +602,7 @@ export const CreateTeam: React.FC = () => {
                     setFormData({ ...formData, schoolState: e.target.value })
                   }
                   placeholder="e.g., TX"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
               </div>
@@ -622,7 +622,7 @@ export const CreateTeam: React.FC = () => {
             </Typography>
 
             {/* TODO: Implement actual payment system */}
-            <div className="surface-subtle dark:bg-yellow-900/20 border border-subtle dark:border-yellow-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-surface-warning/20 border border-subtle dark:border-text-warning rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
                 <Icon
                   name="warning"
@@ -633,7 +633,7 @@ export const CreateTeam: React.FC = () => {
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-yellow-700 dark:text-yellow-300 mb-1"
+                    className="font-medium text-text-warning dark:text-text-warning mb-1"
                   >
                     Payment System Coming Soon
                   </Typography>
@@ -646,8 +646,8 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {isSuperAdmin && (
-              <div className="surface-subtle dark:bg-jade-900/20 border border-subtle dark:border-jade-800 rounded-lg p-4 mb-6">
-                <div className="flex items-center gap-2 text-jade-700 dark:text-jade-300">
+              <div className="surface-subtle dark:bg-surface-success/20 border border-subtle dark:border-text-success rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-2 text-text-success dark:text-text-success">
                   <Icon name="unlock" size="sm" />
                   <Typography variant="body-sm" className="font-medium">
                     Super Admin: Payment bypassed - unlimited access granted
@@ -699,34 +699,42 @@ export const CreateTeam: React.FC = () => {
                           <Icon name="check" size="xs" color="success" />1 Sub
                           Team (JV/Freshmen)
                         </span>
-                        <span className="text-green-600 font-medium">-$10</span>
+                        <span className="text-text-success font-medium">
+                          -$10
+                        </span>
                       </li>
                       <li className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <Icon name="check" size="xs" color="success" />1 Head
                           Coach Code
                         </span>
-                        <span className="text-green-600 font-medium">-$10</span>
+                        <span className="text-text-success font-medium">
+                          -$10
+                        </span>
                       </li>
                       <li className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <Icon name="check" size="xs" color="success" />4 Free
                           Coach Codes
                         </span>
-                        <span className="text-green-600 font-medium">-$40</span>
+                        <span className="text-text-success font-medium">
+                          -$40
+                        </span>
                       </li>
                       <li className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <Icon name="check" size="xs" color="success" />2 Free
                           Manager Codes
                         </span>
-                        <span className="text-green-600 font-medium">-$20</span>
+                        <span className="text-text-success font-medium">
+                          -$20
+                        </span>
                       </li>
                       <li className="border-t pt-2 mt-2 flex items-center justify-between font-medium">
-                        <span className="text-jade-700 dark:text-jade-300">
+                        <span className="text-text-success dark:text-text-success">
                           Total Savings:
                         </span>
-                        <span className="text-jade-600 font-bold">$80</span>
+                        <span className="text-text-success font-bold">$80</span>
                       </li>
                     </ul>
                   </div>

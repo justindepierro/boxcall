@@ -201,29 +201,29 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const getDisplayClasses = () => {
     const baseClasses = `
       inline-flex items-center gap-2 rounded transition-all duration-200 cursor-pointer
-      border-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600
+      border-2 border-surface-primary hover:border-border-light hover:border-text-tertiary
       ${sizeClasses[size]}
       ${className}
     `;
 
     if (isEditing) {
       if (validationResult.isValid) {
-        return `${baseClasses} bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600`;
+        return `${baseClasses} bg-surface-success border-text-success`;
       } else if (validationResult.level === "warning") {
-        return `${baseClasses} bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600`;
+        return `${baseClasses} bg-surface-warning border-text-warning`;
       } else {
-        return `${baseClasses} bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-600`;
+        return `${baseClasses} bg-surface-error border-text-error`;
       }
     }
 
-    return `${baseClasses} hover:bg-gray-50 dark:hover:bg-gray-800/50`;
+    return `${baseClasses} hover:bg-surface-secondary`;
   };
 
   const getTextClasses = () => {
     const baseClasses = "flex-1 truncate";
 
     if (!value && placeholder) {
-      return `${baseClasses} text-gray-400 dark:text-gray-500 italic`;
+      return `${baseClasses} text-text-secondary italic`;
     }
 
     return baseClasses;
@@ -231,17 +231,17 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
   const getInputClasses = () => {
     const baseClasses = `
-      flex-1 bg-transparent border-none outline-none p-0 m-0
-      text-inherit font-inherit leading-inherit
-      placeholder:text-gray-400 dark:placeholder:text-gray-500
+      flex-1 bg-surface-primary border-none outline-none p-0 m-0
+      text-text-primary font-inherit leading-inherit
+      placeholder:text-text-secondary
     `;
 
     if (validationResult.isValid) {
-      return `${baseClasses} text-green-700 dark:text-green-300`;
+      return `${baseClasses} text-text-success`;
     } else if (validationResult.level === "warning") {
-      return `${baseClasses} text-yellow-700 dark:text-yellow-300`;
+      return `${baseClasses} text-text-warning`;
     } else {
-      return `${baseClasses} text-red-700 dark:text-red-300`;
+      return `${baseClasses} text-text-error`;
     }
   };
 
@@ -251,8 +251,8 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
     const messageClasses =
       validationResult.level === "warning"
-        ? "text-yellow-600 dark:text-yellow-400"
-        : "text-red-600 dark:text-red-400";
+        ? "text-text-warning"
+        : "text-text-error";
 
     return (
       <div className={`text-xs mt-1 ${messageClasses}`}>
@@ -298,7 +298,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
           <>
             <span className={getTextClasses()}>{value || placeholder}</span>
             {icon && (
-              <span className="flex-shrink-0 text-gray-400 dark:text-gray-500">
+              <span className="flex-shrink-0 text-text-muted dark:text-text-muted">
                 {icon}
               </span>
             )}
@@ -306,7 +306,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
               <Icon
                 name="edit"
                 size="sm"
-                className="flex-shrink-0 text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="flex-shrink-0 text-text-muted dark:text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
               />
             )}
           </>

@@ -73,7 +73,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     document.body.setAttribute("data-density", uiDensity);
   }
   return (
-    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-fixed relative">
+    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-text-primary dark:via-text-primary dark:to-text-secondary bg-fixed relative">
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
 
       {/* App Header */}
@@ -108,13 +108,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {roleInfo.display}
                   </p>
                   {isDevMode && (
-                    <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-1.5 py-0.5 rounded font-medium">
+                    <span className="text-xs bg-surface-warning text-text-warning dark:bg-surface-warning dark:text-text-warning px-1.5 py-0.5 rounded font-medium">
                       DEV
                     </span>
                   )}
                 </div>
                 {isDevMode && currentRole !== profile?.role && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400 italic">
+                  <p className="text-xs text-text-warning dark:text-text-warning italic">
                     Simulating: {currentRole}
                   </p>
                 )}
@@ -126,7 +126,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <p>BoxCall v0.1.5</p>
               <p>Football Management</p>
               {isDevMode && (
-                <p className="text-amber-600 dark:text-amber-400 font-medium mt-1">
+                <p className="text-text-warning dark:text-text-warning font-medium mt-1">
                   Dev Mode:{" "}
                   {devMode
                     .replace(/_/g, " ")

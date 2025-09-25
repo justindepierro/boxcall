@@ -174,11 +174,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-slate-900 mb-2"
+          className="text-text-primary mb-2"
         >
           Import Plays from CSV
         </Typography>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-text-secondary">
           Upload your existing playbook data to get started quickly
         </p>
       </div>
@@ -186,8 +186,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       <div
         className={`relative placeholder-zone rounded-lg p-8 text-center transition-colors ${
           dragActive
-            ? "border-jade-400 surface-subtle"
-            : "border-slate-300 hover:border-slate-400"
+            ? "border-electric-400 surface-subtle"
+            : "border-border hover:border-border-light"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -200,15 +200,18 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               name="refresh-cw"
               className="h-12 w-12 text-jade-600 mx-auto animate-spin"
             />
-            <p className="text-slate-600">Processing your CSV file...</p>
+            <p className="text-text-secondary">Processing your CSV file...</p>
           </div>
         ) : (
           <div className="space-y-4">
-            <Icon name="upload" className="h-12 w-12 text-slate-400 mx-auto" />
+            <Icon
+              name="upload"
+              className="h-12 w-12 text-text-secondary mx-auto"
+            />
             <div>
-              <p className="text-slate-600">
+              <p className="text-text-secondary">
                 Drag and drop your CSV file here, or{" "}
-                <label className="text-jade-600 hover:text-jade-700 cursor-pointer font-medium">
+                <label className="text-text-accent hover:text-text-accent cursor-pointer font-medium">
                   browse to upload
                   <input
                     type="file"
@@ -218,7 +221,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                   />
                 </label>
               </p>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-text-tertiary mt-2">
                 Supports CSV files up to 10MB
               </p>
             </div>
@@ -230,17 +233,17 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="flex items-start">
           <Icon
             name="info"
-            className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+            className="h-5 w-5 text-text-info mt-0.5 mr-3 flex-shrink-0"
           />
           <div>
             <Typography
               variant="body-sm"
               as="h4"
-              className="font-medium text-blue-900 mb-1 tracking-tight"
+              className="font-medium text-text-primary mb-1 tracking-tight"
             >
               Expected CSV Format
             </Typography>
-            <p className="text-sm text-blue-800 mb-2">
+            <p className="text-sm text-text-secondary mb-2">
               Your CSV should include columns for: formation, play_name, p_type,
               personnel, one_word_play, etc.
             </p>
@@ -254,16 +257,19 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       {csvFile && (
         <div className="surface-subtle border border-subtle rounded-lg p-4">
           <div className="flex items-center">
-            <Icon name="check-circle" className="h-5 w-5 text-green-600 mr-3" />
+            <Icon
+              name="check-circle"
+              className="h-5 w-5 text-text-success mr-3"
+            />
             <div>
               <Typography
                 variant="body-sm"
                 as="p"
-                className="font-medium text-green-900"
+                className="font-medium text-text-primary"
               >
                 File uploaded: {csvFile.name}
               </Typography>
-              <p className="text-sm text-green-800">
+              <p className="text-sm text-text-secondary">
                 Ready to preview and import
               </p>
             </div>
@@ -287,8 +293,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     if (!parseResult) {
       return (
         <div className="text-center py-8">
-          <Icon name="error" className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <p className="text-slate-600">No data to preview</p>
+          <Icon
+            name="error"
+            className="h-12 w-12 text-text-error mx-auto mb-4"
+          />
+          <p className="text-text-secondary">No data to preview</p>
         </div>
       );
     }
@@ -301,11 +310,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <Typography
             variant="headline-sm"
             as="h3"
-            className="text-slate-900 mb-2"
+            className="text-text-primary mb-2"
           >
             Review Your Plays
           </Typography>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-text-secondary">
             Verify the imported data before adding to your playbook
           </p>
         </div>
@@ -316,7 +325,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography variant="headline-sm" as="p" className="mb-1">
               {summary.totalRows}
             </Typography>
-            <Typography variant="caption" className="text-slate-600">
+            <Typography variant="caption" className="text-text-secondary">
               Total Rows
             </Typography>
           </div>
@@ -324,11 +333,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-green-600 mb-1"
+              className="text-text-success mb-1"
             >
               {summary.validPlays}
             </Typography>
-            <Typography variant="caption" className="text-slate-600">
+            <Typography variant="caption" className="text-text-secondary">
               Valid Plays
             </Typography>
           </div>
@@ -336,11 +345,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-red-600 mb-1"
+              className="text-text-error mb-1"
             >
               {summary.invalidPlays}
             </Typography>
-            <Typography variant="caption" className="text-slate-600">
+            <Typography variant="caption" className="text-text-secondary">
               Invalid Plays
             </Typography>
           </div>
@@ -348,11 +357,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-amber-600 mb-1"
+              className="text-text-warning mb-1"
             >
               {summary.warnings}
             </Typography>
-            <Typography variant="caption" className="text-slate-600">
+            <Typography variant="caption" className="text-text-secondary">
               Warnings
             </Typography>
           </div>
@@ -364,28 +373,28 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <div className="flex items-start">
               <Icon
                 name="info"
-                className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+                className="h-5 w-5 text-text-info mt-0.5 mr-3 flex-shrink-0"
               />
               <div>
                 <Typography
                   variant="body-sm"
                   as="h4"
-                  className="font-medium text-blue-900 mb-1 tracking-tight"
+                  className="font-medium text-text-primary mb-1 tracking-tight"
                 >
                   Smart Column Mapping Applied
                 </Typography>
-                <p className="text-sm text-blue-800 mb-2">
+                <p className="text-sm text-text-secondary mb-2">
                   We automatically detected and mapped your columns:
                 </p>
-                <div className="text-xs text-blue-700 space-y-1">
+                <div className="text-xs text-text-secondary space-y-1">
                   {Object.entries(summary.suggestedMappings).map(
                     ([original, mapped]) => (
                       <div key={original}>
-                        <span className="font-mono bg-blue-100 px-1 rounded">
+                        <span className="font-mono bg-surface-secondary px-1 rounded">
                           {original}
                         </span>
                         {" → "}
-                        <span className="font-mono bg-blue-100 px-1 rounded">
+                        <span className="font-mono bg-surface-secondary px-1 rounded">
                           {mapped}
                         </span>
                       </div>
@@ -403,7 +412,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="body-sm"
               as="h4"
-              className="font-medium text-slate-900 tracking-tight"
+              className="font-medium text-text-primary tracking-tight"
             >
               Play Details
             </Typography>
@@ -413,34 +422,34 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <table className="w-full text-sm">
               <thead className="surface-subtle sticky top-0">
                 <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 w-8"></th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary w-8"></th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">
                     Personnel
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">
                     Formation
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">
                     Play Name
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">
                     Type
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">
                     Status
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 w-8">
+                  <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary w-8">
                     ...
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-border">
                 {previews.map((preview) => (
                   <React.Fragment key={preview.rowNumber}>
                     <tr
                       className={`${preview.isValid ? "surface-card" : "surface-subtle"} hover:surface-subtle`}
                     >
-                      <td className="px-3 py-2 text-xs text-slate-500">
+                      <td className="px-3 py-2 text-xs text-text-secondary">
                         {preview.rowNumber}
                       </td>
                       <td className="px-3 py-2 font-mono text-xs">
@@ -456,11 +465,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             preview.data.p_type === "Pass"
-                              ? "bg-blue-100 text-blue-800"
+                              ? "bg-surface-info text-text-info"
                               : preview.data.p_type === "Run"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-surface-success text-text-success"
                                 : preview.data.p_type === "RPO"
-                                  ? "bg-purple-100 text-purple-800"
+                                  ? "bg-surface-accent text-text-accent"
                                   : "surface-subtle text-text-primary"
                           }`}
                         >
@@ -472,18 +481,18 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                           {preview.isValid ? (
                             <Icon
                               name="check-circle"
-                              className="h-4 w-4 text-green-500"
+                              className="h-4 w-4 text-text-success"
                             />
                           ) : (
                             <Icon
                               name="error"
-                              className="h-4 w-4 text-red-500"
+                              className="h-4 w-4 text-text-error"
                             />
                           )}
                           {preview.warnings.length > 0 && (
                             <Icon
                               name="alert-triangle"
-                              className="h-4 w-4 text-amber-500"
+                              className="h-4 w-4 text-text-warning"
                             />
                           )}
                         </div>
@@ -518,7 +527,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                             {/* Additional Play Details */}
                             <div className="grid grid-cols-3 gap-4 text-xs">
                               <div>
-                                <span className="font-medium text-slate-600">
+                                <span className="font-medium text-text-secondary">
                                   Audible:
                                 </span>
                                 <span className="ml-1 font-mono">
@@ -526,7 +535,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                                 </span>
                               </div>
                               <div>
-                                <span className="font-medium text-slate-600">
+                                <span className="font-medium text-text-secondary">
                                   Protection:
                                 </span>
                                 <span className="ml-1 font-mono">
@@ -545,11 +554,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Errors */}
                             {preview.errors.length > 0 && (
-                              <div className="bg-red-100 border border-subtle rounded p-2">
-                                <p className="text-xs font-medium text-red-800 mb-1">
+                              <div className="bg-surface-error border border-subtle rounded p-2">
+                                <p className="text-xs font-medium text-text-error mb-1">
                                   Errors:
                                 </p>
-                                <ul className="text-xs text-red-700 space-y-1">
+                                <ul className="text-xs text-text-error space-y-1">
                                   {preview.errors.map((error, idx) => (
                                     <li key={idx}>• {error}</li>
                                   ))}
@@ -559,11 +568,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Warnings */}
                             {preview.warnings.length > 0 && (
-                              <div className="bg-amber-100 border border-subtle rounded p-2">
-                                <p className="text-xs font-medium text-amber-800 mb-1">
+                              <div className="bg-surface-warning border border-subtle rounded p-2">
+                                <p className="text-xs font-medium text-text-warning mb-1">
                                   Warnings:
                                 </p>
-                                <ul className="text-xs text-amber-700 space-y-1">
+                                <ul className="text-xs text-text-warning space-y-1">
                                   {preview.warnings.map((warning, idx) => (
                                     <li key={idx}>• {warning}</li>
                                   ))}
@@ -604,21 +613,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       <div>
         <Icon
           name="refresh-cw"
-          className="h-16 w-16 text-jade-600 mx-auto mb-4 animate-spin"
+          className="h-16 w-16 text-text-accent mx-auto mb-4 animate-spin"
         />
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-slate-900 mb-2"
+          className="text-text-primary mb-2"
         >
           Importing Plays...
         </Typography>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-text-secondary">
           Processing your CSV file and adding plays to the database
         </p>
       </div>
       <div className="surface-subtle rounded-lg p-4">
-        <p className="text-sm text-blue-800">
+        <p className="text-sm text-text-secondary">
           Please wait while we process your plays. This may take a moment for
           large files.
         </p>
@@ -633,16 +642,16 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <>
             <Icon
               name="check-circle"
-              className="h-16 w-16 text-green-600 mx-auto mb-4"
+              className="h-16 w-16 text-text-success mx-auto mb-4"
             />
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-slate-900 mb-2"
+              className="text-text-primary mb-2"
             >
               Import Complete!
             </Typography>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-text-secondary">
               Successfully imported {importResult.importedPlays} plays to your
               playbook
             </p>
@@ -651,16 +660,16 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <>
             <Icon
               name="error"
-              className="h-16 w-16 text-red-600 mx-auto mb-4"
+              className="h-16 w-16 text-text-error mx-auto mb-4"
             />
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-slate-900 mb-2"
+              className="text-text-primary mb-2"
             >
               Import Had Issues
             </Typography>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-text-secondary">
               {importResult?.importedPlays || 0} plays imported, but some errors
               occurred
             </p>
@@ -675,11 +684,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-green-600 mb-1"
+                className="text-text-success mb-1"
               >
                 {importResult.importedPlays}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">
+              <Typography variant="caption" className="text-text-secondary">
                 Plays Added
               </Typography>
             </div>
@@ -687,11 +696,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-blue-600 mb-1"
+                className="text-text-info mb-1"
               >
                 {importResult.totalRows}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">
+              <Typography variant="caption" className="text-text-secondary">
                 Total Rows
               </Typography>
             </div>
@@ -699,11 +708,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-red-600 mb-1"
+                className="text-text-error mb-1"
               >
                 {importResult.errors.length}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">
+              <Typography variant="caption" className="text-text-secondary">
                 Errors
               </Typography>
             </div>
@@ -711,11 +720,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-amber-600 mb-1"
+                className="text-text-warning mb-1"
               >
                 {importResult.warnings?.length || 0}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">
+              <Typography variant="caption" className="text-text-secondary">
                 Warnings
               </Typography>
             </div>

@@ -156,13 +156,13 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div className="bg-surface-primary border border-border rounded-lg shadow-sm">
       {/* Compact Header */}
-      <div className="px-3 py-2 border-b border-gray-200">
+      <div className="px-3 py-2 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Icon name="filter" className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Filters</span>
+            <Icon name="filter" className="h-4 w-4 text-text-muted" />
+            <span className="text-sm font-medium text-text-secondary">Filters</span>
             {activeFilters.length > 0 && (
               <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
                 {activeFilters.length}
@@ -173,7 +173,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {!showAddFilter && (
               <button
                 onClick={() => setShowAddFilter(true)}
-                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                className="p-1 text-text-muted hover:text-text-secondary hover:bg-surface-muted rounded"
                 title="Add filter"
               >
                 <Icon name="plus" className="h-3 w-3" />
@@ -194,7 +194,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Active Filters - Horizontal Layout */}
       {activeFilters.length > 0 && (
-        <div className="px-3 py-2 border-b border-gray-200">
+        <div className="px-3 py-2 border-b border-border">
           <div className="flex flex-wrap gap-1">
             {activeFilters.map((filter) => (
               <div
@@ -216,7 +216,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Compact Add Filter */}
       {showAddFilter && (
-        <div className="px-3 py-2 border-t border-gray-200">
+        <div className="px-3 py-2 border-t border-border">
           <div className="flex gap-2 items-end">
             <div className="flex-1 min-w-0">
               <select
@@ -229,7 +229,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-surface-primary"
               >
                 <option value="">Field...</option>
                 {FILTER_FIELDS.map((field) => (
@@ -252,7 +252,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           value: e.target.value,
                         }))
                       }
-                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-surface-primary"
                     >
                       <option value="">Value...</option>
                       {selectedField.options?.map(
@@ -279,7 +279,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         }))
                       }
                       placeholder="Value..."
-                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   )}
                 </div>
@@ -287,7 +287,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 <button
                   onClick={addFilter}
                   disabled={!newFilter.field || !newFilter.value}
-                  className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 bg-blue-600 text-text-inverse text-xs rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   Add
                 </button>
@@ -299,7 +299,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 setShowAddFilter(false);
                 setNewFilter({ field: "", operator: "equals", value: "" });
               }}
-              className="px-2 py-1 text-gray-500 hover:text-gray-700 text-xs"
+              className="px-2 py-1 text-text-muted hover:text-text-secondary text-xs"
             >
               ✕
             </button>

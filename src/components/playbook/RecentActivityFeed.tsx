@@ -46,17 +46,17 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
   const getActivityColor = (type: ActivityItem["type"]) => {
     switch (type) {
       case "created":
-        return "text-green-600";
+        return "text-text-success";
       case "updated":
-        return "text-blue-600";
+        return "text-text-info";
       case "duplicated":
-        return "text-purple-600";
+        return "text-text-primary";
       case "added_to_script":
-        return "text-orange-600";
+        return "text-text-warning";
       case "added_to_gameplan":
-        return "text-indigo-600";
+        return "text-text-primary";
       default:
-        return "text-gray-600";
+        return "text-text-tertiary";
     }
   };
 
@@ -99,22 +99,22 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}
+      className={`bg-surface-primary rounded-lg border border-border p-4 ${className}`}
     >
       <div className="flex items-center mb-4">
         <Icon name="activity" className="h-5 w-5 text-jade-600 mr-2" />
-        <Typography variant="headline-sm" className="text-gray-900">
+        <Typography variant="headline-sm" className="text-text-primary">
           Recent Activity
         </Typography>
       </div>
 
       {displayedActivities.length === 0 ? (
-        <div className="text-center py-6 text-gray-500">
+        <div className="text-center py-6 text-text-muted">
           <Icon
             name="activity"
-            className="h-8 w-8 mx-auto mb-2 text-gray-300"
+            className="h-8 w-8 mx-auto mb-2 text-border-light"
           />
-          <Typography variant="body-sm" className="text-gray-500">
+          <Typography variant="body-sm" className="text-text-muted">
             No recent activity
           </Typography>
         </div>
@@ -123,7 +123,7 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
           {displayedActivities.map((activity) => (
             <div key={activity.id} className="flex items-start space-x-3">
               <div
-                className={`flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center`}
+                className={`flex-shrink-0 w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center`}
               >
                 <Icon
                   name={getActivityIcon(activity.type)}
@@ -134,18 +134,18 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="body-sm"
-                    className="text-gray-900 font-medium truncate"
+                    className="text-text-primary font-medium truncate"
                   >
                     {activity.playName}
                   </Typography>
                   <Typography
                     variant="body-xs"
-                    className="text-gray-500 ml-2 flex-shrink-0"
+                    className="text-text-muted ml-2 flex-shrink-0"
                   >
                     {formatTimeAgo(activity.timestamp)}
                   </Typography>
                 </div>
-                <Typography variant="body-xs" className="text-gray-600">
+                <Typography variant="body-xs" className="text-text-secondary">
                   {getActivityLabel(activity.type)}
                   {activity.details && ` • ${activity.details}`}
                 </Typography>
@@ -156,8 +156,8 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
       )}
 
       {activities.length > maxItems && (
-        <div className="mt-4 pt-3 border-t border-gray-100">
-          <Typography variant="body-xs" className="text-gray-500 text-center">
+        <div className="mt-4 pt-3 border-t border-border-light">
+          <Typography variant="body-xs" className="text-text-muted text-center">
             +{activities.length - maxItems} more activities
           </Typography>
         </div>

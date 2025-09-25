@@ -14,9 +14,9 @@ import type {
   InputSizeConfig,
   InputStylesConfig,
 } from "./Input.types";
-// Input base styles configuration - Square, technical styling with jade/navy theme
+// Input base styles configuration - Square, technical styling with semantic design system
 const inputStyles: InputStylesConfig = {
-  base: "block w-full rounded-sm border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 surface-card text-text-primary placeholder-gray-500 dark:placeholder-gray-400 font-sans",
+  base: "block w-full rounded-sm border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-surface-primary text-text-primary placeholder-text-muted border-border font-sans",
   sizes: {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-3 text-sm",
@@ -33,17 +33,17 @@ const inputStyles: InputStylesConfig = {
   },
   statuses: {
     default:
-      "border-gray-300 dark:border-gray-600 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400",
+      "border-border focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)]",
     error:
-      "border-red-400 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 surface-subtle dark:bg-red-900/20",
+      "border-error focus:border-error focus:ring-error bg-surface-secondary",
     success:
-      "border-jade-400 dark:border-jade-500 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400 surface-subtle dark:bg-jade-900/20",
+      "border-success focus:border-success focus:ring-success bg-surface-secondary",
     warning:
-      "border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 surface-subtle dark:bg-yellow-900/20",
+      "border-warning focus:border-warning focus:ring-warning bg-surface-secondary",
   },
   focus: "focus:ring-2 focus:ring-offset-1",
   disabled:
-    "disabled:surface-subtle dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-subtle dark:disabled:border-gray-600",
+    "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:border-border",
 };
 // Size configuration
 const sizeConfig: InputSizeConfig = {
@@ -144,7 +144,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const labelClasses = [
       sizeConfig.label,
       size === "sm" ? "text-xs" : "text-sm",
-      "font-display font-medium text-gray-700 dark:text-gray-300", // Display font for labels
+      "font-display font-medium text-text-primary dark:text-border-light", // Display font for labels
       labelClassName,
     ]
       .filter(Boolean)
@@ -159,14 +159,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <label htmlFor={inputId} className={labelClasses}>
             <Typography variant="label-md" color="error">
               {label}
-              {required && <span className="text-red-500 ml-1">*</span>}
+              {required && <span className="text-text-error ml-1">*</span>}
             </Typography>
           </label>
         )}
         <div className="relative">
           {leftIcon && (
             <div
-              className={`${sizeConfig.icon} left-3 text-gray-400 dark:text-gray-500`}
+              className={`${sizeConfig.icon} left-3 text-text-secondary dark:text-text-secondary`}
             >
               {leftIcon}
             </div>
@@ -191,7 +191,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   onClick={togglePasswordVisibility}
                   size="xs"
                   variant="ghost"
-                  className="text-gray-400 hover:text-text-secondary dark:text-gray-500 dark:hover:text-text-secondary"
+                  className="text-text-secondary hover:text-text-primary dark:text-text-secondary dark:hover:text-text-primary"
                 >
                   {showPassword ? (
                     <svg
@@ -230,7 +230,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   )}
                 </IconButton>
               ) : rightIcon ? (
-                <div className="text-gray-400 dark:text-gray-500">
+                <div className="text-text-muted dark:text-text-muted">
                   {rightIcon}
                 </div>
               ) : null}

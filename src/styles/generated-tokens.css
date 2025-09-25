@@ -31,6 +31,16 @@
   --color-error-500: #ef4444;
   --color-error-600: #dc2626;
   --color-error-700: #b91c1c;
+  --color-electric-50: #f5f3ff;
+  --color-electric-100: #ede9fe;
+  --color-electric-200: #ddd6fe;
+  --color-electric-300: #c4b5fd;
+  --color-electric-400: #a78bfa;
+  --color-electric-500: #8b5cf6;
+  --color-electric-600: #7c3aed;
+  --color-electric-700: #6d28d9;
+  --color-electric-800: #5b21b6;
+  --color-electric-900: #4c1d95;
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
   --color-gray-200: #e5e7eb;
@@ -73,6 +83,8 @@
   --semantic-warning-bg: #fffbeb;
   --semantic-error: #ef4444;
   --semantic-error-bg: #fef2f2;
+  --semantic-electric: #7c3aed;
+  --semantic-electric-bg: #f5f3ff;
   --semantic-boxcall-brand: #047857;
   --semantic-coach-authority: #475569;
   --font-family-display: Bebas Neue, system-ui, sans-serif;

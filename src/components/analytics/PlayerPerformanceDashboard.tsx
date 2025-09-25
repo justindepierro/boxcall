@@ -73,13 +73,13 @@ export const PlayerPerformanceDashboard: React.FC<
         <div className="text-center">
           <Icon
             name="alert-triangle"
-            className="text-red-500 mx-auto mb-4"
+            className="text-text-error mx-auto mb-4"
             size="lg"
           />
           <Typography variant="headline-sm" className="mb-2">
             Error Loading Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-gray-600 mb-4">
+          <Typography variant="body-sm" className="text-text-secondary mb-4">
             {error}
           </Typography>
           <Button onClick={loadPerformanceData} variant="outline">
@@ -123,33 +123,33 @@ export const PlayerPerformanceDashboard: React.FC<
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-blue-600"
+              className="text-3xl font-bold text-text-info"
             >
               {overview.totalPlayers}
             </Typography>
-            <Typography variant="body-sm" className="text-gray-600">
+            <Typography variant="body-sm" className="text-text-secondary">
               Active Players
             </Typography>
           </div>
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-green-600"
+              className="text-3xl font-bold text-text-success"
             >
               {overview.topPerformers.length}
             </Typography>
-            <Typography variant="body-sm" className="text-gray-600">
+            <Typography variant="body-sm" className="text-text-secondary">
               Top Performers
             </Typography>
           </div>
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-orange-600"
+              className="text-3xl font-bold text-text-warning"
             >
               {overview.playersNeedingAttention.length}
             </Typography>
-            <Typography variant="body-sm" className="text-gray-600">
+            <Typography variant="body-sm" className="text-text-secondary">
               Need Attention
             </Typography>
           </div>
@@ -169,7 +169,10 @@ export const PlayerPerformanceDashboard: React.FC<
                   <Typography variant="headline-sm">{position}</Typography>
                   <Badge variant="neutral">{data.count} players</Badge>
                 </div>
-                <Typography variant="body-sm" className="text-gray-600 mb-1">
+                <Typography
+                  variant="body-sm"
+                  className="text-text-secondary mb-1"
+                >
                   Avg Rating: {data.averageRating.toFixed(1)}/10
                 </Typography>
                 <Typography variant="body-xs" className="text-sm">
@@ -190,7 +193,7 @@ export const PlayerPerformanceDashboard: React.FC<
           {overview.topPerformers.map((player, index) => (
             <div
               key={player.playerId}
-              className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+              className="flex items-center justify-between p-3 border rounded-lg hover:bg-surface-secondary cursor-pointer"
               onClick={() => setSelectedPlayer(player)}
             >
               <div className="flex items-center space-x-3">
@@ -199,7 +202,7 @@ export const PlayerPerformanceDashboard: React.FC<
                   <Typography variant="body-sm" className="font-medium">
                     {player.playerName}
                   </Typography>
-                  <Typography variant="body-xs" className="text-gray-600">
+                  <Typography variant="body-xs" className="text-text-secondary">
                     {player.position}
                   </Typography>
                 </div>
@@ -207,11 +210,11 @@ export const PlayerPerformanceDashboard: React.FC<
               <div className="text-right">
                 <Typography
                   variant="body-sm"
-                  className="font-bold text-green-600"
+                  className="font-bold text-text-success"
                 >
                   {player.averageRating}/10
                 </Typography>
-                <Typography variant="body-xs" className="text-gray-600">
+                <Typography variant="body-xs" className="text-text-secondary">
                   {player.totalActivities} activities
                 </Typography>
               </div>
@@ -230,16 +233,19 @@ export const PlayerPerformanceDashboard: React.FC<
             {overview.playersNeedingAttention.map((player) => (
               <div
                 key={player.playerId}
-                className="flex items-center justify-between p-3 border border-orange-200 rounded-lg bg-orange-50 cursor-pointer"
+                className="flex items-center justify-between p-3 border border-text-warning rounded-lg bg-surface-warning cursor-pointer"
                 onClick={() => setSelectedPlayer(player)}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon name="alert-triangle" className="text-orange-500" />
+                  <Icon name="alert-triangle" className="text-text-warning" />
                   <div>
                     <Typography variant="body-sm" className="font-medium">
                       {player.playerName}
                     </Typography>
-                    <Typography variant="body-xs" className="text-gray-600">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
                       {player.position}
                     </Typography>
                   </div>
@@ -247,7 +253,7 @@ export const PlayerPerformanceDashboard: React.FC<
                 <div className="text-right">
                   <Typography
                     variant="body-sm"
-                    className="font-bold text-orange-600"
+                    className="font-bold text-text-warning"
                   >
                     {player.averageRating}/10
                   </Typography>
@@ -285,10 +291,10 @@ export const PlayerPerformanceDashboard: React.FC<
                   key={index}
                   className={`p-3 rounded-lg border ${
                     alert.type === "critical"
-                      ? "border-red-200 bg-red-50"
+                      ? "border-text-error bg-surface-error"
                       : alert.type === "warning"
-                        ? "border-orange-200 bg-orange-50"
-                        : "border-blue-200 bg-blue-50"
+                        ? "border-text-warning bg-surface-warning"
+                        : "border-text-info bg-surface-info"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -298,10 +304,10 @@ export const PlayerPerformanceDashboard: React.FC<
                       }
                       className={
                         alert.type === "critical"
-                          ? "text-red-500"
+                          ? "text-text-error"
                           : alert.type === "warning"
-                            ? "text-orange-500"
-                            : "text-blue-500"
+                            ? "text-text-warning"
+                            : "text-text-info"
                       }
                     />
                     <Typography variant="body-sm">{alert.message}</Typography>
@@ -322,7 +328,7 @@ export const PlayerPerformanceDashboard: React.FC<
               {insights.recommendations.map((rec, index) => (
                 <div
                   key={index}
-                  className="p-3 border rounded-lg bg-blue-50 border-blue-200"
+                  className="p-3 border rounded-lg bg-surface-info border-text-info"
                 >
                   <Typography variant="body-sm">{rec}</Typography>
                 </div>
@@ -361,7 +367,10 @@ export const PlayerPerformanceDashboard: React.FC<
                           : "→"}
                       {Math.abs(trend.change)}
                     </Badge>
-                    <Typography variant="body-xs" className="text-gray-600">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
                       {trend.period}
                     </Typography>
                   </div>
@@ -396,7 +405,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   onClose,
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-surface-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
       <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -455,7 +464,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div>
                   <Typography
                     variant="body2"
-                    className="font-medium text-green-600 mb-1"
+                    className="font-medium text-text-success mb-1"
                   >
                     Strengths:
                   </Typography>
@@ -470,7 +479,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div>
                   <Typography
                     variant="body2"
-                    className="font-medium text-orange-600 mb-1"
+                    className="font-medium text-text-warning mb-1"
                   >
                     Weaknesses:
                   </Typography>
@@ -500,13 +509,13 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                     <Typography variant="body2" className="font-medium">
                       {performance.activity}
                     </Typography>
-                    <Typography variant="body2" className="text-gray-600">
+                    <Typography variant="body2" className="text-text-secondary">
                       {performance.date}
                     </Typography>
                     {performance.notes && (
                       <Typography
                         variant="body2"
-                        className="text-gray-500 italic"
+                        className="text-text-muted italic"
                       >
                         {performance.notes}
                       </Typography>

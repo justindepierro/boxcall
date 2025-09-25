@@ -81,21 +81,21 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     ${paddingLeft}
   `;
   if (item.divider) {
-    return `border-t border-subtle dark:border-gray-700 my-2`;
+    return `border-t border-subtle dark:border-text-tertiary my-2`;
   }
   if (item.disabled) {
-    return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
+    return `${baseStyles} text-text-tertiary dark:text-text-tertiary cursor-not-allowed`;
   }
   if (item.active) {
     // Strengthened active contrast (previously blue-50 background with blue-700 text could blend into light surfaces)
-    return `${baseStyles} bg-brand-navy text-white dark:bg-gray-700 dark:text-white border-r-2 border-brand-jade-dark`;
+    return `${baseStyles} bg-brand-navy text-white dark:bg-text-primary dark:text-surface-primary border-r-2 border-brand-jade-dark`;
   }
-  return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-gray-700 hover:text-text-primary dark:hover:text-text-inverse`;
+  return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-text-primary hover:text-text-primary dark:hover:text-text-primary`;
 };
 const getBadgeStyles = () => {
   return `
     ml-auto px-2 py-0.5 text-xs font-medium rounded-full
-    bg-jade-600 dark:bg-jade-600 text-white
+    bg-jade-600 dark:bg-jade-600 text-surface-primary
   `;
 };
 const SidebarItemComponent: React.FC<{
@@ -220,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Overlay */}
       {showOverlay && (
         <div
-          className="fixed inset-0 z-[60] bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70"
+          className="fixed inset-0 z-[60] bg-text-primary/50 dark:bg-text-primary/70"
           onClick={onClose}
         />
       )}
@@ -236,7 +236,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Header */}
         {header && (
-          <div className="px-4 py-4 border-b border-subtle dark:border-gray-700">
+          <div className="px-4 py-4 border-b border-subtle dark:border-text-tertiary">
             <div className="flex items-center justify-between">
               <div className="flex-1">{header}</div>
               <Button
@@ -282,7 +282,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         {/* Footer */}
         {footer && (
-          <div className="px-4 py-4 border-t border-subtle dark:border-gray-700">
+          <div className="px-4 py-4 border-t border-subtle dark:border-text-tertiary">
             {footer}
           </div>
         )}

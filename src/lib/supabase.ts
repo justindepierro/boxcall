@@ -4,7 +4,6 @@ import type { Database } from "../types/database";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 function createDevStub(): SupabaseClient<Database> {
   // Minimal stub to allow app startup without Supabase env in development.
@@ -51,10 +50,9 @@ function createDevStub(): SupabaseClient<Database> {
 
 let supabaseClient: SupabaseClient<Database>;
 
-if (supabaseUrl && (supabaseServiceKey || supabaseAnonKey)) {
-  // DEMO MODE: Use service role key to bypass RLS issues
-  const key = supabaseServiceKey || supabaseAnonKey;
-  supabaseClient = createClient<Database>(supabaseUrl, key);
+if (supabaseUrl && supabaseAnonKey) {
+  // Use only anon key for client-side operations - NEVER expose service role key
+  supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
 } else if (import.meta.env.DEV) {
   supabaseClient = createDevStub();
 } else {

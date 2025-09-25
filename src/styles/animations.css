@@ -1,6 +1,37 @@
 /* ===== MODERN MICRO-INTERACTIONS ===== */
 /* 2025 Design Trends - Glassmorphism, Subtle Motion, Performance */
 
+/* Tailwind Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes confidencePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 /* Glassmorphism Effects */
 .glass-effect {
   background: var(--glass-bg);

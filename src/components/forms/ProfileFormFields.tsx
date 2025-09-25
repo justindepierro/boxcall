@@ -21,11 +21,11 @@ export const FormField: React.FC<FormFieldProps> = ({
     w-full p-3 border rounded-lg transition-colors
     ${
       error
-        ? "border-red-500 focus:border-red-600"
-        : "border-subtle focus:border-jade-500"
+        ? "border-error focus:border-error"
+        : "border-border focus:border-text-primary"
     }
-    focus:outline-none focus:ring-2 focus:ring-jade-500/20
-    bg-white dark:bg-gray-800
+    focus:outline-none focus:ring-2 focus:ring-text-primary/20
+    bg-surface-primary
   `;
 
   const renderInput = () => {
@@ -90,7 +90,7 @@ export const FormField: React.FC<FormFieldProps> = ({
                       );
                     }
                   }}
-                  className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
+                  className="rounded border-border-medium text-jade-600 focus:ring-jade-500"
                 />
                 <Typography variant="body-sm">{option.label}</Typography>
               </label>

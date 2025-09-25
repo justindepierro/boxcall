@@ -20,29 +20,29 @@ export default function PlannerPage() {
   const progressPercentage = (completedTasks / totalTasks) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-text-primary">
             Weekly Planning Dashboard
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-text-secondary">
             Systematic planning tools for coaches to organize their week
           </p>
 
           {/* Progress Bar */}
-          <div className="mt-6 bg-white rounded-lg p-6 shadow-sm">
+          <div className="mt-6 bg-surface-primary rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-text-primary">
                 Weekly Planning Progress
               </h2>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-text-secondary">
                 {completedTasks}/{totalTasks} tasks completed
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full bg-border rounded-full h-3">
               <div
-                className="bg-green-600 h-3 rounded-full transition-all duration-300 ease-in-out"
+                className="bg-text-success h-3 rounded-full transition-all duration-300 ease-in-out"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
@@ -52,8 +52,8 @@ export default function PlannerPage() {
                   key={task}
                   className={`px-2 py-1 text-xs rounded-full ${
                     completed
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-600"
+                      ? "bg-surface-success text-text-success"
+                      : "bg-surface-secondary text-text-tertiary"
                   }`}
                 >
                   {task.replace(/([A-Z])/g, " $1").toLowerCase()}
@@ -68,14 +68,14 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Icon name="clock" size="lg" className="text-blue-600" />
+                <div className="p-2 bg-surface-info rounded-lg">
+                  <Icon name="clock" size="lg" className="text-text-info" />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Practice Schedule
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Plan your weekly practice schedule (Mon-Fri 3:00-6:30)
               </p>
             </div>
@@ -94,14 +94,14 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Icon name="file" size="lg" className="text-green-600" />
+                <div className="p-2 bg-surface-success rounded-lg">
+                  <Icon name="file" size="lg" className="text-text-success" />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Game Plan Maker
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Create detailed game plans for upcoming matches
               </p>
             </div>
@@ -120,18 +120,18 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-purple-100 rounded-lg">
+                <div className="p-2 bg-surface-primary rounded-lg">
                   <Icon
                     name="clipboard-list"
                     size="lg"
-                    className="text-purple-600"
+                    className="text-text-primary"
                   />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Practice Scripts
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Build and organize practice scripts for your team
               </p>
             </div>
@@ -150,18 +150,18 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-orange-100 rounded-lg">
+                <div className="p-2 bg-surface-warning rounded-lg">
                   <Icon
                     name="bar-chart"
                     size="lg"
-                    className="text-orange-600"
+                    className="text-text-warning"
                   />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Team Dashboard
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Update team announcements and important information
               </p>
             </div>
@@ -180,14 +180,14 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-indigo-100 rounded-lg">
-                  <Icon name="calendar" size="lg" className="text-indigo-600" />
+                <div className="p-2 bg-surface-info rounded-lg">
+                  <Icon name="calendar" size="lg" className="text-text-info" />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Calendar
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 View and manage your team's calendar events
               </p>
             </div>
@@ -206,14 +206,14 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Icon name="award" size="lg" className="text-yellow-600" />
+                <div className="p-2 bg-surface-warning rounded-lg">
+                  <Icon name="award" size="lg" className="text-text-warning" />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Helmet Stickers & Awards
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Give out awards and recognition to players and staff
               </p>
             </div>
@@ -232,14 +232,14 @@ export default function PlannerPage() {
           <Card className="p-6 flex flex-col">
             <div className="flex-1">
               <div className="flex items-center mb-4">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <Icon name="book" size="lg" className="text-red-600" />
+                <div className="p-2 bg-surface-error rounded-lg">
+                  <Icon name="book" size="lg" className="text-text-error" />
                 </div>
-                <h3 className="ml-3 text-lg font-medium text-gray-900">
+                <h3 className="ml-3 text-lg font-medium text-text-primary">
                   Playbook
                 </h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Manage your team's plays and formations
               </p>
             </div>

@@ -95,7 +95,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Business Hours */}
-          <div className="mt-8 p-4 surface-subtle dark:bg-gray-800 rounded-lg">
+          <div className="mt-8 p-4 surface-subtle dark:bg-surface-tertiary rounded-lg">
             <h3 className="font-medium mb-3 text-text-primary">
               Support Hours
             </h3>
@@ -133,7 +133,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
                 Name
               </Typography>
@@ -141,7 +141,7 @@ export const ContactPage: React.FC = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="Your full name"
               />
             </div>
@@ -150,7 +150,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
                 Email
               </Typography>
@@ -158,7 +158,7 @@ export const ContactPage: React.FC = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -167,14 +167,14 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
                 Subject
               </Typography>
               <select
                 id="subject"
                 name="subject"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
               >
                 <option value="">Select a topic</option>
                 <option value="support">Technical Support</option>
@@ -189,7 +189,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
                 Message
               </Typography>
@@ -197,7 +197,7 @@ export const ContactPage: React.FC = () => {
                 id="message"
                 name="message"
                 rows={6}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="Tell us how we can help..."
               />
             </div>
@@ -215,7 +215,7 @@ export const ContactPage: React.FC = () => {
 
       {/* FAQ Link */}
       <div className="mt-12 text-center">
-        <div className="surface-subtle dark:bg-gray-800 rounded-lg p-6">
+        <div className="surface-subtle dark:bg-surface-tertiary rounded-lg p-6">
           <Typography
             variant="headline-sm"
             as="h3"

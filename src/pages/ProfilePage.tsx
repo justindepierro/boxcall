@@ -108,20 +108,16 @@ export const ProfilePage: React.FC = () => {
   };
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
       </div>
     );
   }
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="text-red-600 mb-4"
-          >
+          <Typography variant="headline-md" as="h1" className="text-error mb-4">
             Profile Not Found
           </Typography>
           <p className="text-text-secondary">
@@ -132,10 +128,10 @@ export const ProfilePage: React.FC = () => {
     );
   }
   return (
-    <div className="min-h-screen surface-app">
+    <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="surface-card elevation-card rounded-lg p-6 mb-8">
+        <div className="bg-surface-primary border border-border rounded-lg p-6 mb-8">
           <Typography
             variant="headline-lg"
             className="flex items-center mb-2"
@@ -152,8 +148,8 @@ export const ProfilePage: React.FC = () => {
           <div
             className={`mb-6 p-4 rounded-lg border ${
               message.type === "success"
-                ? "surface-subtle border-subtle text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
-                : "surface-subtle border-subtle text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+                ? "bg-success-bg border-success text-success"
+                : "bg-error-bg border-error text-error"
             }`}
           >
             {message.text}
@@ -162,7 +158,7 @@ export const ProfilePage: React.FC = () => {
         {/* Profile Form */}
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {/* Basic Information */}
-          <div className="surface-card elevation-card rounded-lg p-6">
+          <div className="bg-surface-primary border border-border rounded-lg p-6">
             <Typography variant="headline-sm" as="h2" className="mb-4">
               Basic Information
             </Typography>
@@ -171,7 +167,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary mb-2"
                 >
                   Email Address
                 </Typography>
@@ -179,7 +175,7 @@ export const ProfilePage: React.FC = () => {
                   type="email"
                   value={profile.email || ""}
                   disabled
-                  className="surface-subtle dark:bg-gray-700"
+                  className="bg-surface-muted"
                 />
                 <p className="text-xs text-text-muted mt-1">
                   Email cannot be changed
@@ -189,7 +185,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary mb-2"
                 >
                   Display Name
                 </Typography>
@@ -206,7 +202,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary mb-2"
                 >
                   Full Name
                 </Typography>
@@ -223,7 +219,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary mb-2"
                 >
                   Phone Number
                 </Typography>
@@ -238,7 +234,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary mb-2"
                 >
                   Role
                 </Typography>
@@ -246,7 +242,7 @@ export const ProfilePage: React.FC = () => {
                   type="text"
                   value={profile.role || "Not specified"}
                   disabled
-                  className="surface-subtle dark:bg-gray-700 capitalize"
+                  className="bg-surface-muted capitalize"
                 />
                 <p className="text-xs text-text-muted mt-1">
                   Role is set by team administrators
@@ -281,7 +277,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-text-inverse font-sans"
+                className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-text-inverse font-sans"
               />
             </div>
           </div>

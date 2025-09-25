@@ -25,24 +25,24 @@ export const PlayerSidebar: React.FC = () => {
     : 0;
   return (
     <div data-testid="player-sidebar-root">
-      <div className="text-xs text-slate-500">Complexity: {complexity}</div>
-      <div className="text-xs text-slate-500">Players: {playersLength}</div>
-      <div className="text-xs text-slate-500">Routes: {routesLength}</div>
+      <div className="text-xs text-text-secondary">Complexity: {complexity}</div>
+      <div className="text-xs text-text-secondary">Players: {playersLength}</div>
+      <div className="text-xs text-text-secondary">Routes: {routesLength}</div>
       {playersLength > 0 && (
         <div>
-          <div className="text-[11px] font-semibold text-slate-600 mt-3 mb-1 flex items-center justify-between">
+          <div className="text-[11px] font-semibold text-text-primary mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>
-            <span className="text-[10px] font-normal text-slate-400">
+            <span className="text-[10px] font-normal text-text-tertiary">
               {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}
               {state.doc.players.filter((p) => p.side === "D").length} D
             </span>
           </div>
           {state.ui.selectedIds && state.ui.selectedIds.length > 1 && (
-            <div className="mb-2 p-2 rounded border border-amber-300 bg-amber-50/70 space-y-2">
-              <div className="text-[10px] font-medium text-amber-800 tracking-wide">
+            <div className="mb-2 p-2 rounded border border-text-warning bg-surface-warning/70 space-y-2">
+              <div className="text-[10px] font-medium text-text-warning tracking-wide">
                 {state.ui.selectedIds.length} selected – bulk edit
               </div>
-              <div className="text-[10px] text-amber-700">
+              <div className="text-[10px] text-text-warning">
                 Roles:{" "}
                 {Array.from(
                   new Set(
@@ -137,7 +137,7 @@ export const PlayerSidebar: React.FC = () => {
                         pending: true,
                       })
                     }
-                    className="text-[10px] text-red-600"
+                    className="text-[10px] text-text-error"
                   >
                     Delete Selected
                   </Button>
@@ -204,7 +204,7 @@ export const PlayerSidebar: React.FC = () => {
                 if (!group.length) return;
                 rendered.push(
                   <li key={cat.label + "_hdr"} className="mt-2 first:mt-0">
-                    <div className="text-[10px] font-semibold tracking-wide text-slate-500 px-1">
+                    <div className="text-[10px] font-semibold tracking-wide text-text-secondary px-1">
                       {cat.label}
                     </div>
                   </li>

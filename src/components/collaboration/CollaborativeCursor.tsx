@@ -37,15 +37,15 @@ export function CollaborativeCursor({
   const getCursorColor = (role: CollaborationUser["role"]) => {
     switch (role) {
       case "coach":
-        return "border-orange-500 bg-orange-500";
+        return "border-text-warning bg-text-warning";
       case "player":
-        return "border-blue-500 bg-blue-500";
+        return "border-text-info bg-text-info";
       case "parent":
-        return "border-pink-500 bg-pink-500";
+        return "border-text-tertiary bg-text-tertiary";
       case "admin":
-        return "border-purple-500 bg-purple-500";
+        return "border-text-primary bg-text-primary";
       default:
-        return "border-gray-500 bg-gray-500";
+        return "border-text-secondary bg-text-secondary";
     }
   };
 
@@ -76,7 +76,7 @@ export function CollaborativeCursor({
 
         {/* User label */}
         <div
-          className={`absolute left-5 top-0 px-2 py-1 rounded text-xs font-medium text-white whitespace-nowrap ${cursorColor
+          className={`absolute left-5 top-0 px-2 py-1 rounded text-xs font-medium text-surface-primary whitespace-nowrap ${cursorColor
             .replace("border-", "bg-")
             .replace("bg-", "bg-")}`}
         >

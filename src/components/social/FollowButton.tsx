@@ -69,10 +69,10 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
   if (!followSummary) {
     return (
       <div
-        className={`${buttonSizeClasses[size]} bg-gray-200 animate-pulse rounded-lg flex items-center gap-2`}
+        className={`${buttonSizeClasses[size]} bg-border animate-pulse rounded-lg flex items-center gap-2`}
       >
-        <div className={`${sizeClasses[size]} bg-gray-300 rounded`} />
-        <div className="h-4 bg-gray-300 rounded w-16" />
+        <div className={`${sizeClasses[size]} bg-border-light rounded`} />
+        <div className="h-4 bg-border-light rounded w-16" />
       </div>
     );
   }
@@ -85,8 +85,8 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
         onClick={handleFollowToggle}
         className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
           is_following
-            ? "text-green-600 bg-green-50 hover:bg-green-100"
-            : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+            ? "text-text-success bg-surface-success hover:bg-surface-success"
+            : "text-text-tertiary hover:text-text-primary hover:bg-surface-secondary"
         }`}
         disabled={isLoading}
         title={is_following ? "Unfollow" : "Follow"}
@@ -109,14 +109,14 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       onClick={handleFollowToggle}
       className={`flex items-center gap-2 ${buttonSizeClasses[size]} border rounded-lg font-medium transition-colors ${
         is_following
-          ? "border-green-300 bg-green-50 text-green-700 hover:bg-green-100"
-          : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+          ? "border-text-success bg-surface-success text-text-success hover:bg-surface-success"
+          : "border-border-light bg-surface-primary text-text-primary hover:bg-surface-secondary"
       }`}
       disabled={isLoading}
     >
       {isLoading ? (
         <div
-          className={`${sizeClasses[size]} border-2 border-current border-t-transparent rounded-full animate-spin`}
+          className={`${sizeClasses[size]} border-2 border-text-primary border-t-transparent rounded-full animate-spin`}
         />
       ) : is_following ? (
         <UserCheck className={sizeClasses[size]} />
@@ -127,7 +127,7 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       <span>{is_following ? "Following" : "Follow"}</span>
 
       {follower_count > 0 && (
-        <span className="flex items-center gap-1 text-sm text-gray-500 ml-1">
+        <span className="flex items-center gap-1 text-sm text-text-muted ml-1">
           <Users className="w-3 h-3" />
           {follower_count}
         </span>

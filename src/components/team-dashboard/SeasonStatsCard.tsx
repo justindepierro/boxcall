@@ -184,7 +184,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
       )}
       {!!results.length && (
         <ul
-          className="divide-y divide-gray-200 dark:divide-gray-700 text-sm"
+          className="divide-y divide-border text-sm"
           aria-label="Recent game results"
         >
           {results.slice(0, 5).map((r) => {
@@ -193,9 +193,9 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
             const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
             const color =
               outcome === "W"
-                ? "bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200"
+                ? "bg-surface-success text-text-success"
                 : outcome === "L"
-                  ? "bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-200"
+                  ? "bg-surface-error text-text-error"
                   : "surface-subtle text-text-primary";
             return (
               <li key={r.id} className="flex items-center justify-between py-1">
@@ -226,7 +226,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {!!errors.length && (
-              <div className="rounded border border-subtle dark:border-red-800 surface-subtle dark:bg-red-900/30 p-3 text-sm text-red-700 dark:text-red-300">
+              <div className="rounded border border-subtle border-text-error surface-subtle bg-surface-error p-3 text-sm text-text-error text-text-error">
                 <ul className="list-disc list-inside space-y-0.5">
                   {errors.map((er) => (
                     <li key={er}>{er}</li>

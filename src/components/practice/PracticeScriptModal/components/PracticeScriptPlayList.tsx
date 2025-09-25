@@ -50,7 +50,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
     <div className="space-y-4">
       {/* Play List */}
       {plays.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-muted">
           No plays added yet. Click "Add Play" to get started.
         </div>
       ) : (
@@ -137,7 +137,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
 
       {/* Add/Edit Play Form */}
       {(isAddingPlay || editingIndex !== null) && (
-        <div className="border border-subtle rounded-lg p-4 bg-gray-50">
+        <div className="border border-subtle rounded-lg p-4 bg-surface-secondary">
           <h4 className="font-medium mb-4">
             {isAddingPlay ? "Add New Play" : "Edit Play"}
           </h4>

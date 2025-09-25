@@ -157,7 +157,7 @@ export const DashboardCustomizationPanel: React.FC<
               placeholder="Layout name..."
               className="flex-1 px-3 py-2 bg-surface-app border border-subtle rounded-lg 
                          text-text-primary placeholder-text-muted focus:outline-none 
-                         focus:ring-2 focus:ring-jade-500 focus:border-transparent"
+                         focus:ring-2 focus:ring-jade-500 focus:border-text-info"
               onKeyDown={(e) => e.key === "Enter" && handleCreateLayout()}
             />
             <Button
@@ -217,7 +217,7 @@ export const DashboardCustomizationPanel: React.FC<
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-red-600 hover:text-red-700"
+                  className="text-text-error hover:text-text-error"
                   onClick={() => {
                     // TODO: Implement layout deletion
                     console.info("Delete layout:", layout.id);
@@ -256,7 +256,7 @@ export const DashboardCustomizationPanel: React.FC<
                   compactMode: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Compact mode</Typography>
@@ -272,7 +272,7 @@ export const DashboardCustomizationPanel: React.FC<
                   showWelcomeMessages: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Show welcome messages</Typography>
@@ -297,7 +297,7 @@ export const DashboardCustomizationPanel: React.FC<
                   enableNotifications: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Enable notifications</Typography>
@@ -313,7 +313,7 @@ export const DashboardCustomizationPanel: React.FC<
                   autoRefresh: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Auto-refresh dashboard</Typography>
@@ -337,7 +337,7 @@ export const DashboardCustomizationPanel: React.FC<
           }
           className="w-full px-3 py-2 bg-surface-app border border-subtle rounded-lg 
                      text-text-primary focus:outline-none focus:ring-2 focus:ring-jade-500 
-                     focus:border-transparent"
+                     focus:border-text-info"
           disabled={!personalizationSettings.autoRefresh}
         >
           <option value={60}>1 minute</option>
@@ -352,10 +352,7 @@ export const DashboardCustomizationPanel: React.FC<
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-text-primary/50" onClick={onClose} />
 
       {/* Panel */}
       <div
@@ -386,16 +383,16 @@ export const DashboardCustomizationPanel: React.FC<
 
         {/* Error Message */}
         {error && (
-          <div className="p-4 bg-red-50 border-b border-red-200">
+          <div className="p-4 bg-surface-error border-b border-text-error">
             <div className="flex items-center justify-between">
-              <Typography variant="body-sm" className="text-red-700">
+              <Typography variant="body-sm" className="text-text-error">
                 {error}
               </Typography>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearError}
-                className="text-red-700 hover:text-red-800"
+                className="text-text-error hover:text-text-error"
               >
                 <Icon name="close" size="sm" />
               </Button>
@@ -418,7 +415,7 @@ export const DashboardCustomizationPanel: React.FC<
                 className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${
                   activeTab === tab.id
                     ? "border-jade-500 text-jade-600"
-                    : "border-transparent text-text-muted hover:text-text-primary"
+                    : "border-border text-text-muted hover:text-text-primary"
                 }`}
               >
                 <Icon name={tab.icon} size="sm" />

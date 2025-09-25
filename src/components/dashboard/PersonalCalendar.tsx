@@ -119,7 +119,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   value={quickEventTitle}
                   onChange={(e) => setQuickEventTitle(e.target.value)}
                   placeholder="Event title..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:ring-jade-500 focus:border-jade-500"
                   onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
                 />
               </Typography>

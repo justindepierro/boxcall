@@ -85,7 +85,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
             </Typography>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-text-muted hover:text-text-secondary"
             >
               <Icon name="close" className="h-6 w-6" />
             </button>
@@ -93,7 +93,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Email Address *
               </label>
               <input
@@ -106,14 +106,14 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                     email: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="john.doe@school.edu"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   First Name
                 </label>
                 <input
@@ -125,12 +125,12 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                       firstName: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="John"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Last Name
                 </label>
                 <input
@@ -142,14 +142,14 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                       lastName: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Doe"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Role
               </label>
               <select
@@ -160,7 +160,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                     role: e.target.value as TeamRole,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {getRoleOptions().map((option) => (
                   <option key={option.value} value={option.value}>
@@ -171,7 +171,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Personal Message (Optional)
               </label>
               <textarea
@@ -183,7 +183,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                   }))
                 }
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={`Join our ${type === "staff" ? "coaching staff" : "team"}! We're excited to have you on board.`}
               />
             </div>

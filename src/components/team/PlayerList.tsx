@@ -109,7 +109,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -124,7 +124,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (

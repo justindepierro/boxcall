@@ -82,7 +82,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-6">
           <div className="flex items-center justify-between">
@@ -92,7 +92,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                 resetModal();
                 onClose();
               }}
-              className="p-2 hover:bg-gray-100 rounded-lg"
+              className="p-2 hover:bg-surface-muted rounded-lg"
             >
               <Icon name="close" className="h-5 w-5" />
             </button>
@@ -142,9 +142,9 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                   </Button>
                 </label>
 
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-text-secondary">
                   <p className="mb-2">Expected CSV format:</p>
-                  <div className="bg-gray-50 p-3 rounded text-left font-mono text-xs">
+                  <div className="bg-surface-secondary p-3 rounded text-left font-mono text-xs">
                     First Name,Last Name,Jersey
                     Number,Position,Grade,Height,Weight,Email
                     <br />
@@ -223,50 +223,50 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               )}
 
               {/* Preview Table */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="border border-border rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-surface-secondary">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Name
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Jersey
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Position
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Grade
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Height
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Weight
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-surface-primary divide-y divide-gray-200">
                       {csvData.slice(0, 10).map((player, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary">
                             {player.firstName} {player.lastName}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {player.jerseyNumber || "-"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {player.position || "-"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {player.grade || "-"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {player.height || "-"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {player.weight || "-"}
                           </td>
                         </tr>
@@ -275,7 +275,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                         <tr>
                           <td
                             colSpan={6}
-                            className="px-6 py-4 text-center text-sm text-gray-500"
+                            className="px-6 py-4 text-center text-sm text-text-muted"
                           >
                             ... and {csvData.length - 10} more players
                           </td>
@@ -303,7 +303,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
         {/* Footer */}
         {step === "preview" && (
-          <div className="p-6 bg-gray-50">
+          <div className="p-6 bg-surface-secondary">
             <div className="flex justify-end space-x-3">
               <Button
                 variant="secondary"

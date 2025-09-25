@@ -61,7 +61,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
         {searchQuery && (
           <button
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
             type="button"
             aria-label="Clear search"
           >

@@ -4,6 +4,11 @@ import { Typography } from "../../design-system";
 import { Button } from "../Button";
 import { Form, FormActions, FormField } from "../Form";
 import { Input } from "../Input";
+import {
+  validatePasswordStrength,
+  validatePasswordConfirmation,
+} from "../../../utils/passwordValidation";
+import { PasswordStrengthIndicator } from "./PasswordStrengthIndicator";
 export interface User {
   id: string;
   email: string;
@@ -86,8 +91,11 @@ export function LoginForm({
     }
     if (!formData.password) {
       errors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
+    } else {
+      const passwordValidation = validatePasswordStrength(formData.password);
+      if (!passwordValidation.isValid) {
+        errors.password = passwordValidation.message;
+      }
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -141,11 +149,8 @@ export function LoginForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
-          <Typography
-            variant="body-sm"
-            className="text-red-700 dark:text-red-400"
-          >
+        <div className="p-3 bg-error-bg border border-error rounded-lg">
+          <Typography variant="body-sm" className="text-error">
             {error}
           </Typography>
         </div>
@@ -157,14 +162,14 @@ export function LoginForm({
             <span className="mr-2">
               <Icon
                 name="link"
-                className="inline h-4 w-4 align-middle text-current"
+                className="inline h-4 w-4 align-middle text-text-primary"
               />
             </span>
             Continue with Google
           </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+              <div className="w-full border-t border-border-medium dark:border-text-tertiary" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 surface-card text-text-secondary">
@@ -206,12 +211,12 @@ export function LoginForm({
           type="checkbox"
           checked={formData.rememberMe}
           onChange={(e) => handleInputChange("rememberMe", e.target.checked)}
-          className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded"
+          className="h-4 w-4 text-text-primary focus:ring-text-primary border-border rounded"
           disabled={loading}
         />
         <label
           htmlFor="remember-me"
-          className="ml-2 block text-sm text-text-primary dark:text-gray-300"
+          className="ml-2 block text-sm text-text-primary dark:text-border-light"
         >
           Remember me
         </label>
@@ -254,14 +259,18 @@ export function SignupForm({
     }
     if (!formData.password) {
       errors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      errors.password =
-        "Password must contain uppercase, lowercase, and number";
+    } else {
+      const passwordValidation = validatePasswordStrength(formData.password);
+      if (!passwordValidation.isValid) {
+        errors.password = passwordValidation.message;
+      }
     }
-    if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
+    const confirmValidation = validatePasswordConfirmation(
+      formData.password,
+      formData.confirmPassword
+    );
+    if (!confirmValidation.isValid) {
+      errors.confirmPassword = confirmValidation.message;
     }
     if (!formData.acceptTerms) {
       errors.acceptTerms = "You must accept the terms and conditions" as never;
@@ -311,10 +320,10 @@ export function SignupForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-text-error rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-red-700 dark:text-red-400"
+            className="text-text-error dark:text-text-error"
           >
             {error}
           </Typography>
@@ -327,14 +336,14 @@ export function SignupForm({
             <span className="mr-2">
               <Icon
                 name="link"
-                className="inline h-4 w-4 align-middle text-current"
+                className="inline h-4 w-4 align-middle text-text-primary"
               />
             </span>
             Sign up with Google
           </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+              <div className="w-full border-t border-border-medium dark:border-text-tertiary" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 surface-card text-text-secondary">
@@ -379,7 +388,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-gray-700 text-text-primary"
+          className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-surface-secondary text-text-primary"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -405,6 +414,7 @@ export function SignupForm({
           disabled={loading}
           fullWidth
         />
+        <PasswordStrengthIndicator password={formData.password} />
       </FormField>
       {/* Confirm Password Field */}
       <FormField
@@ -430,19 +440,25 @@ export function SignupForm({
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded mt-1"
+            className="h-4 w-4 text-text-info focus:ring-jade-500 border-border-medium rounded mt-1"
             disabled={loading}
           />
           <label
             htmlFor="accept-terms"
-            className="ml-2 block text-sm text-text-primary dark:text-gray-300"
+            className="ml-2 block text-sm text-text-primary dark:text-border-light"
           >
             I agree to the{" "}
-            <a href="/terms" className="text-blue-600 hover:text-blue-500">
+            <a
+              href="/terms"
+              className="text-text-primary hover:text-text-secondary"
+            >
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="/privacy" className="text-blue-600 hover:text-blue-500">
+            <a
+              href="/privacy"
+              className="text-text-primary hover:text-text-secondary"
+            >
               Privacy Policy
             </a>
           </label>
@@ -450,7 +466,7 @@ export function SignupForm({
         {validationErrors.acceptTerms && (
           <Typography
             variant="caption"
-            className="text-red-600 dark:text-red-400"
+            className="text-text-error dark:text-text-error"
           >
             {validationErrors.acceptTerms}
           </Typography>
@@ -516,12 +532,8 @@ export function ResetPasswordForm({
         }
       >
         <div className="text-center py-8">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 mb-4">
-            <Icon
-              name="mail"
-              size="md"
-              className="text-green-700 dark:text-green-300"
-            />
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-success-bg mb-4">
+            <Icon name="mail" size="md" className="text-success" />
           </div>
           <Typography variant="body-md" color="muted">
             If an account with that email exists, you'll receive password reset
@@ -554,10 +566,10 @@ export function ResetPasswordForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-text-error rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-red-700 dark:text-red-400"
+            className="text-text-error dark:text-text-error"
           >
             {error}
           </Typography>

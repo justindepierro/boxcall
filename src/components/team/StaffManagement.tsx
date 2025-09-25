@@ -63,15 +63,15 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
   const getRoleColor = (role: TeamRole) => {
     switch (role) {
       case "head_coach":
-        return "bg-purple-100 text-purple-800";
+        return "bg-surface-primary text-text-primary";
       case "assistant_coach":
-        return "bg-blue-100 text-blue-800";
+        return "bg-surface-info text-text-info";
       case "coordinator":
-        return "bg-green-100 text-green-800";
+        return "bg-surface-success text-text-success";
       case "manager":
-        return "bg-orange-100 text-orange-800";
+        return "bg-surface-warning text-text-warning";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-surface-secondary text-text-secondary";
     }
   };
 
@@ -103,7 +103,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-info mx-auto mb-4"></div>
         <Typography variant="body-lg" color="muted">
           Loading staff...
         </Typography>
@@ -155,10 +155,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
             <Card key={member.id} className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-surface-info rounded-full flex items-center justify-center">
                     <Typography
                       variant="headline-sm"
-                      className="text-blue-600 font-bold"
+                      className="text-text-info font-bold"
                     >
                       {member.name
                         .split(" ")
@@ -179,10 +179,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   </div>
                 </div>
                 <div className="flex space-x-1">
-                  <button className="p-1 text-gray-400 hover:text-gray-600">
+                  <button className="p-1 text-text-muted hover:text-text-secondary">
                     <Icon name="edit" className="h-4 w-4" />
                   </button>
-                  <button className="p-1 text-gray-400 hover:text-red-600">
+                  <button className="p-1 text-text-muted hover:text-text-error">
                     <Icon name="delete" className="h-4 w-4" />
                   </button>
                 </div>
@@ -209,10 +209,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   <span
                     className={`px-2 py-1 rounded text-xs ${
                       member.status === "active"
-                        ? "bg-green-100 text-green-800"
+                        ? "bg-surface-success text-text-success"
                         : member.status === "pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
+                          ? "bg-surface-warning text-text-warning"
+                          : "bg-surface-secondary text-text-primary"
                     }`}
                   >
                     {member.status === "active"
@@ -233,7 +233,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 pt-4 border-t border-border">
                 <div className="flex space-x-2">
                   <Button variant="secondary" size="sm" className="flex-1">
                     <Icon name="mail" className="h-4 w-4 mr-2" />

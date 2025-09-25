@@ -46,21 +46,21 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
-        return "bg-blue-100 text-blue-800";
+        return "bg-surface-info text-text-info";
       case "Run":
-        return "bg-green-100 text-green-800";
+        return "bg-surface-success text-text-success";
       case "RPO":
-        return "bg-purple-100 text-purple-800";
+        return "bg-surface-accent text-text-accent";
       case "Play Action":
-        return "bg-orange-100 text-orange-800";
+        return "bg-surface-warning text-text-warning";
       default:
-        return "bg-slate-100 text-slate-800";
+        return "bg-surface-secondary text-text-secondary";
     }
   };
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return "text-green-600";
-    if (confidence >= 60) return "text-yellow-600";
-    return "text-red-600";
+    if (confidence >= 80) return "text-text-success";
+    if (confidence >= 60) return "text-text-warning";
+    return "text-text-error";
   };
   const phaseLabel = ((): string | null => {
     if (!play.install_phase) return null;
@@ -92,8 +92,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       <div
         className={`surface-card rounded-lg border transition-colors shadow-sm ${
           isSelected
-            ? "border-jade-600 ring-2 ring-blue-200"
-            : "border-subtle hover:border-slate-300"
+            ? "border-text-accent ring-2 ring-surface-info"
+            : "border-subtle hover:border-border-light"
         } ${isCompact ? "text-[13px]" : ""}`}
       >
         <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
@@ -116,7 +116,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 type="checkbox"
                 checked={Boolean(isSelected)}
                 onChange={(e) => onSelectionChange?.(play.id, e.target.checked)}
-                className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
+                className="rounded border-border text-text-info focus:ring-text-accent"
                 title="Select play"
               />
             </div>
@@ -129,14 +129,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     isCompact ? "text-base" : "text-lg"
                   } ${
                     showOneWordCalls && play.one_word_play
-                      ? "text-blue-600"
-                      : "text-slate-900"
+                      ? "text-text-info"
+                      : "text-text-primary"
                   } text-left`}
                 >
                   {displayName}
                 </h3>
                 {subtitleText && (
-                  <span className="shrink-0 text-[11px] text-slate-500 italic">
+                  <span className="shrink-0 text-[11px] text-text-secondary italic">
                     {subtitleText}
                   </span>
                 )}
@@ -153,12 +153,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {play.p_type}
                 </span>
                 {play.f_type && (
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-surface-secondary text-text-primary rounded-full text-[11px]">
                     {play.f_type}
                   </span>
                 )}
                 {phaseLabel && (
-                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-semibold tracking-wide uppercase">
+                  <span className="px-2 py-0.5 bg-surface-warning text-text-warning rounded-full text-[10px] font-semibold tracking-wide uppercase">
                     {phaseLabel}
                   </span>
                 )}
@@ -237,17 +237,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {play.p_type}
                 </span>
                 {play.personnel && (
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-surface-secondary text-text-primary rounded-full text-[11px]">
                     Personnel: {play.personnel}
                   </span>
                 )}
                 {phaseLabel && (
-                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-semibold uppercase">
+                  <span className="px-2 py-0.5 bg-surface-warning text-text-warning rounded-full text-[10px] font-semibold uppercase">
                     {phaseLabel}
                   </span>
                 )}
                 {play.one_word_play && !showOneWordCalls && (
-                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-surface-info text-text-info rounded-full text-[11px]">
                     Code: {play.one_word_play.toUpperCase()}
                   </span>
                 )}
@@ -265,7 +265,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 flex items-center mb-2"
+                    className="text-text-primary flex items-center mb-2"
                   >
                     <Icon name="target" className="h-4 w-4 mr-1" /> Formation
                   </Typography>
@@ -320,7 +320,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 flex items-center mb-2"
+                    className="text-text-primary flex items-center mb-2"
                   >
                     <Icon name="hash" className="h-4 w-4 mr-1" /> Play Details
                   </Typography>
@@ -379,7 +379,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 flex items-center mb-2"
+                    className="text-text-primary flex items-center mb-2"
                   >
                     Preferences
                   </Typography>
@@ -422,7 +422,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 flex items-center mb-2"
+                    className="text-text-primary flex items-center mb-2"
                   >
                     <Icon name="clock" className="h-4 w-4 mr-1" /> Usage & Stats
                   </Typography>
@@ -455,11 +455,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 mb-1"
+                    className="text-text-primary mb-1"
                   >
                     Notes
                   </Typography>
-                  <p className="text-sm text-slate-700 whitespace-pre-line">
+                  <p className="text-sm text-text-primary whitespace-pre-line">
                     {play.notes}
                   </p>
                 </div>
@@ -471,7 +471,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700"
+                    className="text-text-primary"
                   >
                     Tags & Roles
                   </Typography>
@@ -495,7 +495,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     .map((chip) => (
                       <span
                         key={chip}
-                        className="px-2 py-0.5 text-[11px] rounded bg-slate-100 text-slate-700"
+                        className="px-2 py-0.5 text-[11px] rounded bg-surface-secondary text-text-primary"
                       >
                         {chip}
                       </span>
@@ -504,7 +504,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     flags.players.length +
                     flags.flags.length >
                     8 && (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-text-secondary">
                       +
                       {flags.positions.length +
                         flags.players.length +
@@ -518,7 +518,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* Positions */}
                     <div>
-                      <div className="text-xs text-slate-500 mb-1">
+                      <div className="text-xs text-text-secondary mb-1">
                         Positions
                       </div>
                       <div className="flex flex-wrap gap-1">
@@ -570,7 +570,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     </div>
                     {/* Players */}
                     <div>
-                      <div className="text-xs text-slate-500 mb-1">Players</div>
+                      <div className="text-xs text-text-secondary mb-1">
+                        Players
+                      </div>
                       <div className="flex flex-wrap gap-1">
                         {flags.players.map((pl) => (
                           <Button
@@ -614,7 +616,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     </div>
                     {/* Flags */}
                     <div>
-                      <div className="text-xs text-slate-500 mb-1">Flags</div>
+                      <div className="text-xs text-text-secondary mb-1">
+                        Flags
+                      </div>
                       <div className="flex flex-wrap gap-1">
                         {flags.flags.map((fl) => (
                           <Button
@@ -666,11 +670,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-slate-700 mb-1"
+                    className="text-text-primary mb-1"
                   >
                     Add to Workflow
                   </Typography>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-text-secondary">
                     Build practice scripts and game plans from this play
                   </p>
                 </div>
@@ -680,7 +684,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     size="xs"
                     onClick={() => onAddToPracticeScript?.(play)}
                     title="Add this play to a practice script"
-                    className="surface-subtle hover:bg-blue-100 text-blue-700 border-transparent"
+                    className="surface-subtle hover:bg-surface-info text-text-info border-surface-primary"
                   >
                     <Icon name="calendar" className="h-3 w-3 mr-1" /> Practice
                     Script
@@ -690,7 +694,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     size="xs"
                     onClick={() => onAddToGamePlan?.(play)}
                     title="Add this play to a game plan"
-                    className="surface-subtle hover:bg-jade-100 text-jade-700 border-transparent"
+                    className="surface-subtle hover:bg-surface-success text-text-success border-surface-primary"
                   >
                     <Icon name="gamepad-2" className="h-3 w-3 mr-1" /> Game Plan
                   </Button>
