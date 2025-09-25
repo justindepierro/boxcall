@@ -64,11 +64,11 @@ const positionClasses = {
 };
 
 const variantClasses = {
-  default: "bg-gray-900 text-white border-gray-700",
-  info: "bg-navy-900 text-white border-navy-700",
-  success: "bg-jade-600 text-white border-jade-500",
-  warning: "bg-warning-600 text-white border-warning-500",
-  error: "bg-error-600 text-white border-error-500",
+  default: "bg-surface-inverse text-text-inverse border-border-medium",
+  info: "bg-navy-900 text-text-inverse border-navy-700",
+  success: "bg-jade-600 text-text-inverse border-jade-500",
+  warning: "bg-warning-600 text-text-inverse border-warning-500",
+  error: "bg-error-600 text-text-inverse border-error-500",
 };
 
 const arrowClasses = {

@@ -109,7 +109,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -124,7 +124,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (
@@ -166,7 +166,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}
-                className="border border-subtle dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="border border-subtle dark:border-border-medium rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 {/* Player Header */}
                 <div className="flex items-start justify-between mb-3">

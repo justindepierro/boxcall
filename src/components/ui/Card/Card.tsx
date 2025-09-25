@@ -18,7 +18,7 @@ const cardStyles: CardStylesConfig = {
     elevated:
       "bg-surface-primary shadow-lg border-border hover:animate-card-lift hover:shadow-xl", // Enhanced lift effect with smooth animation
     outlined:
-      "bg-transparent border-border hover:border-border hover:bg-surface-secondary/50", // Clean outlined
+      "bg-surface-primary border-border hover:border-border hover:bg-surface-secondary/50", // Clean outlined
     filled:
       "bg-surface-secondary/80 border-border hover:bg-surface-muted/80 hover:shadow-md", // Subtle filled
     accent:
@@ -115,9 +115,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
-              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-gray-700"></div>
+              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-surface-secondary"></div>
+              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-surface-secondary"></div>
+              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-surface-secondary"></div>
             </div>
           ) : (
             children

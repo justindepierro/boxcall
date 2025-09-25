@@ -138,8 +138,8 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           placeholder={placeholder}
           className="block w-full pl-10 pr-10 py-3 border-subtle rounded-lg 
                    focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
-                   placeholder-gray-500 text-sm transition-colors duration-200
-       surface-card shadow-sm hover:border-gray-400"
+                   placeholder-text-secondary text-sm transition-colors duration-200
+       surface-card shadow-sm hover:border-border-medium"
         />
 
         {searchQuery && (
@@ -178,7 +178,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   size="sm"
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
-                      ? "surface-subtle text-blue-700 dark:bg-blue-900/40"
+                      ? "surface-subtle text-text-info dark:bg-surface-info/40"
                       : "text-text-secondary surface-subtle-hover"
                   }`}
                 >

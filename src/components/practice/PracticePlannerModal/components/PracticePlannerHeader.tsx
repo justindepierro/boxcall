@@ -34,8 +34,8 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           <span
             className={`px-2 py-1 rounded text-xs font-medium flex items-center ${
               userRole === "head_coach"
-                ? "bg-blue-100 text-blue-800"
-                : "bg-green-100 text-green-800"
+                ? "bg-surface-info text-text-info"
+                : "bg-surface-success text-text-success"
             }`}
           >
             {userRole === "head_coach" ? (

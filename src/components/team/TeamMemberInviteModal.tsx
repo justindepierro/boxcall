@@ -76,7 +76,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50">
       <Card className="w-full max-w-md mx-4">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -106,7 +106,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                     email: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-focus-info"
                 placeholder="john.doe@school.edu"
               />
             </div>
@@ -125,7 +125,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                       firstName: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-focus-info"
                   placeholder="John"
                 />
               </div>
@@ -142,7 +142,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                       lastName: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-focus-info"
                   placeholder="Doe"
                 />
               </div>
@@ -160,7 +160,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                     role: e.target.value as TeamRole,
                   }))
                 }
-                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-focus-info"
               >
                 {getRoleOptions().map((option) => (
                   <option key={option.value} value={option.value}>

@@ -101,7 +101,7 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={`w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
+        className={`w-full p-3 border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-border-info ${className}`}
         rows={3}
       />
 

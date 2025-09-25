@@ -233,8 +233,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onKeyDown={handleKeyDown}
           placeholder="Search players, plays, formations..."
           className="block w-80 pl-10 pr-10 py-2 text-sm border border-border-medium rounded-lg
-                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                     placeholder-gray-400 transition-all duration-200
+                     focus:ring-2 focus:ring-focus-info focus:border-border-info
+                     placeholder-text-secondary transition-all duration-200
                      bg-surface-primary hover:bg-surface-secondary focus:bg-surface-primary"
         />
 
@@ -258,7 +258,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         >
           {isLoading && (
             <div className="px-4 py-3 text-center text-text-muted">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-info mx-auto mb-2"></div>
               Searching...
             </div>
           )}
@@ -267,7 +267,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
             <div className="px-4 py-3 text-center text-text-muted">
               <Icon
                 name="search"
-                className="h-8 w-8 mx-auto mb-2 text-gray-300"
+                className="h-8 w-8 mx-auto mb-2 text-text-muted"
               />
               No results found for "{query}"
             </div>
@@ -317,32 +317,32 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                   <button
                     key={getKey()}
                     onClick={() => handleResultSelect(result)}
-                    className={`w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none ${
-                      index === selectedIndex ? "bg-blue-50" : ""
+                    className={`w-full px-4 py-3 text-left hover:bg-surface-hover focus:bg-surface-hover focus:outline-none ${
+                      index === selectedIndex ? "bg-surface-info" : ""
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                           result.type === "player"
-                            ? "bg-blue-100"
+                            ? "bg-surface-info"
                             : result.type === "play"
-                              ? "bg-green-100"
+                              ? "bg-surface-success"
                               : result.type === "formation"
-                                ? "bg-orange-100"
-                                : "bg-purple-100"
+                                ? "bg-surface-warning"
+                                : "bg-surface-secondary"
                         }`}
                       >
                         <Typography
                           variant="body-sm"
                           className={`font-medium ${
                             result.type === "player"
-                              ? "text-blue-600"
+                              ? "text-text-info"
                               : result.type === "play"
-                                ? "text-green-600"
+                                ? "text-text-success"
                                 : result.type === "formation"
-                                  ? "text-orange-600"
-                                  : "text-purple-600"
+                                  ? "text-text-warning"
+                                  : "text-text-secondary"
                           }`}
                         >
                           {getIconText()}

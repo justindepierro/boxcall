@@ -335,8 +335,8 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                         insights.coachingEffectiveness.averageExecutionQuality /
                           2
                       )
-                        ? "text-yellow-400 fill-current"
-                        : "text-neutral-300"
+                        ? "text-text-warning fill-current"
+                        : "text-text-muted"
                     }`}
                   />
                 ))}
@@ -369,7 +369,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                       size="sm"
                       className="text-text-secondary mt-0.5 mr-2 flex-shrink-0"
                     />
-                    <Typography variant="body-xs" className="text-neutral-700">
+                    <Typography variant="body-xs" className="text-text-secondary">
                       {assessment}
                     </Typography>
                   </li>

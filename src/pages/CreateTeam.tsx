@@ -773,12 +773,12 @@ export const CreateTeam: React.FC = () => {
               </div>
 
               {/* Coach Account Option */}
-              <div className="border border-subtle rounded-lg p-6 surface-subtle dark:bg-gray-800">
+              <div className="border border-subtle rounded-lg p-6 surface-subtle dark:bg-surface-secondary">
                 <Typography variant="headline-md" className="mb-4">
                   Not Ready to Create a Team?
                 </Typography>
 
-                <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-4">
+                <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-border-info rounded-lg p-4 mb-4">
                   <Typography variant="body-md" className="font-medium mb-2">
                     Try our Coach Account
                   </Typography>
@@ -961,7 +961,7 @@ export const CreateTeam: React.FC = () => {
         )}
 
         {createError && (
-          <div className="mt-4 p-4 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+          <div className="mt-4 p-4 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-border-error rounded-lg text-sm text-red-700 dark:text-red-300">
             Error creating team: {createError}
           </div>
         )}
