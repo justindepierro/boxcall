@@ -23,8 +23,7 @@ export const FootballFieldCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { state: _state, dispatch: _dispatch } =
-    useContext(DiagramEditorContext);
+  const { state, dispatch } = useContext(DiagramEditorContext);
 
   const [transform, setTransform] = useState<CanvasTransform>({
     x: 0,
@@ -33,6 +32,7 @@ export const FootballFieldCanvas: React.FC = () => {
   });
 
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [displaySize, setDisplaySize] = useState({ width: 0, height: 0 });
 
   // NFL Field dimensions for playbook view (looking down the field)
   const FIELD_WIDTH = 53.333; // 53.333 yards (standard NFL field width)
@@ -49,7 +49,7 @@ export const FootballFieldCanvas: React.FC = () => {
   // Hash marks are 17.7 yards apart (8.85 yards from center to each hash)
   const HASH_MARK_SPACING = 17.7; // yards between hash marks
   const YARD_NUMBER_OFFSET = 9; // yards from sideline to top of yard numbers
-  const FIELD_PADDING = 20; // pixels of padding around the field
+  const FIELD_PADDING = 40; // pixels of padding around the field
 
   // Convert field coordinates to canvas coordinates
   // fieldX: 0 to FIELD_WIDTH (width of field, left to right)
@@ -249,6 +249,9 @@ export const FootballFieldCanvas: React.FC = () => {
     const displayWidth = canvas.clientWidth;
     const displayHeight = canvas.clientHeight;
 
+    // Update display size state
+    setDisplaySize({ width: displayWidth, height: displayHeight });
+
     // Set the canvas internal resolution to match display size for crisp rendering
     if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
       canvas.width = displayWidth;
@@ -323,7 +326,42 @@ export const FootballFieldCanvas: React.FC = () => {
           transformOrigin: "0 0",
         }}
       >
-        {/* SVG overlay for crisp vector elements */}
+        {/* Player circles and labels */}
+        {state.doc.players.map((player) => {
+          // Convert percentage coordinates to field coordinates
+          const fieldX = (player.x / 100) * FIELD_WIDTH;
+          const fieldY = (player.y / 100) * FIELD_HEIGHT - 2; // Shift up 2 yards
+
+          // Convert field coordinates to canvas coordinates
+          const canvasX = fieldX * (displaySize.width / FIELD_WIDTH);
+          const canvasY = fieldY * (displaySize.height / FIELD_HEIGHT);
+
+          return (
+            <g key={player.id}>
+              {/* Player oval */}
+              <ellipse
+                cx={canvasX}
+                cy={canvasY}
+                rx="10"
+                ry="8"
+                fill="#93C5FD"
+                stroke="#3B82F6"
+                strokeWidth="2"
+              />
+              {/* Player label */}
+              <text
+                x={canvasX}
+                y={canvasY + 4}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="bold"
+                fill="#1E40AF"
+              >
+                {player.label}
+              </text>
+            </g>
+          );
+        })}
       </svg>
 
       {/* Zoom controls */}

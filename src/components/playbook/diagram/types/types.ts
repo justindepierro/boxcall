@@ -262,15 +262,16 @@ export const createEmptyDocument = (): DiagramDocument => ({
     theme: "classic",
     hashLayout: "highschool",
   },
-  // Default 11 personnel 2x2 formation (LT LG C RG RT, QB shallow, RB deeper, X/Z outside, Y/H slots)
+  // Default 11 personnel 2x2 formation (LT LG C RG RT, QB shotgun, RB right, X/Z outside, Y/H slots)
   players: (() => {
     const back = 10;
     const forward = 30;
     const total = back + forward; // 40
     const losY = (forward / total) * 100; // percent from top (baseline reference)
-    const qbDepthYards = 0.5; // much closer per request
+    const qbDepthYards = 4.5; // shotgun depth
     const scalePctPerYard = 100 / total; // 2.5% per yard for 40 yard window
     const qbY = Math.min(99, losY + qbDepthYards * scalePctPerYard);
+    const qbX = 50; // center of field
     const lineXs = [42, 46, 50, 54, 58];
     const labels = ["LT", "LG", "C", "RG", "RT"] as const;
     const players = [
@@ -288,28 +289,28 @@ export const createEmptyDocument = (): DiagramDocument => ({
         label: "QB",
         role: "QB",
         side: "O" as const,
-        x: 50,
+        x: qbX,
         y: qbY,
         color: "#047857",
       },
-      // Running Back 4 yards behind QB
+      // Running Back to the right of QB
       {
         id: "RB",
         label: "RB",
         role: "RB",
         side: "O" as const,
-        x: 50,
-        y: Math.min(99, qbY + 4 * scalePctPerYard),
+        x: qbX + 8, // 8 units to the right of QB
+        y: qbY,
         color: "#92400e",
       },
-      // Outside Receivers X (left) and Z (right)
+      // Outside Receivers X (left) and Z (right) - personnel letters - wider and at LOS
       {
         id: "X",
         label: "X",
         role: "WR",
         side: "O" as const,
-        x: 25,
-        y: losY + 2 * scalePctPerYard,
+        x: 15, // Wider out
+        y: losY, // Aligned with ball/LOS
         color: "#2563eb",
       },
       {
@@ -317,18 +318,18 @@ export const createEmptyDocument = (): DiagramDocument => ({
         label: "Z",
         role: "WR",
         side: "O" as const,
-        x: 75,
-        y: losY + 2 * scalePctPerYard,
+        x: 85, // Wider out
+        y: losY, // Aligned with ball/LOS
         color: "#2563eb",
       },
-      // Slot Receivers Y (left slot) and H (right slot)
+      // Slot Receivers Y (left slot) and H (right slot) - split difference between wideouts and OT
       {
         id: "Y",
         label: "Y",
         role: "WR",
         side: "O" as const,
-        x: 38,
-        y: losY + 1 * scalePctPerYard,
+        x: 28, // Split between X(15) and LT(42)
+        y: losY + 1 * scalePctPerYard, // Behind O line, in front of QB
         color: "#1e3a8a",
       },
       {
@@ -336,8 +337,8 @@ export const createEmptyDocument = (): DiagramDocument => ({
         label: "H",
         role: "WR",
         side: "O" as const,
-        x: 62,
-        y: losY + 1 * scalePctPerYard,
+        x: 72, // Split between Z(85) and RT(58)
+        y: losY + 1 * scalePctPerYard, // Behind O line, in front of QB
         color: "#1e3a8a",
       },
     ];

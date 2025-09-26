@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { DiagramEditorProvider } from "./context/DiagramEditorProvider";
 import { ModernToolPalette } from "./components/ModernToolPalette";
 import { FootballFieldCanvas } from "./components/FootballFieldCanvas";
@@ -6,7 +6,6 @@ import { ShapeManipulator } from "./components/ShapeManipulator";
 import { PlayerPropertiesPanel } from "./components/PlayerPropertiesPanel";
 import { RoutePropertiesPanel } from "./components/RoutePropertiesPanel";
 import { useDiagramEditor } from "./context/useDiagramEditor";
-import type { DiagramPlayer } from "./types/types";
 import type { Play } from "../../../types/play";
 
 interface PlayDiagramBuilderProps {
@@ -14,7 +13,7 @@ interface PlayDiagramBuilderProps {
   onClose?: () => void;
 }
 
-const PlayDiagramContent: React.FC<{ play?: Play }> = ({ play }) => {
+const PlayDiagramContent: React.FC<{ play?: Play }> = ({ play: _play }) => {
   const { dispatch } = useDiagramEditor();
 
   // Keyboard shortcuts handler
@@ -99,216 +98,18 @@ const PlayDiagramContent: React.FC<{ play?: Play }> = ({ play }) => {
     [dispatch]
   );
 
-  // Save/Load functionality
-  const handleSave = useCallback(() => {
-    // This is a placeholder - in a real implementation you'd save to a backend or localStorage
-    console.log("Saving diagram...");
-    alert("Save functionality will be implemented soon!");
-  }, []);
-
-  const handleLoad = useCallback(() => {
-    // This is a placeholder - in a real implementation you'd load from a backend or localStorage
-    console.log("Loading diagram...");
-    alert("Load functionality will be implemented soon!");
-  }, []);
-
-  // Export functionality
-  const handleExport = useCallback((format: "png" | "svg" | "pdf") => {
-    // This is a placeholder implementation
-    // In a real implementation, you'd capture the canvas and generate the export
-    console.log(`Exporting diagram as ${format.toUpperCase()}`);
-
-    // For now, just show an alert
-    alert(
-      `Export functionality for ${format.toUpperCase()} will be implemented soon!`
-    );
-  }, []);
-
-  // Parse personnel string (e.g., "11 Personnel") and create DiagramPlayer objects
-  const generatePersonnelFromPlay = (playData: Play): DiagramPlayer[] => {
-    const personnel: DiagramPlayer[] = [];
-
-    // Always add QB
-    personnel.push({
-      id: "QB",
-      label: "QB",
-      role: "QB",
-      side: "O",
-      x: 50, // Center of field
-      y: 30, // Back of formation
-      color: "#047857",
-    });
-
-    // Parse personnel string (e.g., "11 Personnel" = 1 RB, 1 TE, 3 WR)
-    if (playData.personnel) {
-      const personnelMatch = playData.personnel.match(/^(\d)(\d)/);
-      if (personnelMatch) {
-        const rbCount = parseInt(personnelMatch[1]);
-        const teCount = parseInt(personnelMatch[2]);
-        const wrCount = 5 - rbCount - teCount; // Total 5 skill players
-
-        // Add RBs
-        for (let i = 0; i < rbCount; i++) {
-          personnel.push({
-            id: `RB${i + 1}`,
-            label: rbCount === 1 ? "RB" : `RB${i + 1}`,
-            role: "RB",
-            side: "O",
-            x: 45 + i * 5, // Spread out behind QB
-            y: 35,
-            color: "#1e3a8a",
-          });
-        }
-
-        // Add TEs
-        for (let i = 0; i < teCount; i++) {
-          personnel.push({
-            id: `TE${i + 1}`,
-            label: teCount === 1 ? "TE" : `TE${i + 1}`,
-            role: "TE",
-            side: "O",
-            x: 40 + i * 10,
-            y: 25,
-            color: "#7c3aed",
-          });
-        }
-
-        // Add WRs (X, Y, Z, A, B positions)
-        const wrPositions = [
-          { id: "X", x: 80, y: 20 },
-          { id: "Y", x: 70, y: 25 },
-          { id: "Z", x: 20, y: 25 },
-          { id: "A", x: 85, y: 15 },
-          { id: "B", x: 15, y: 15 },
-        ];
-
-        for (let i = 0; i < wrCount && i < wrPositions.length; i++) {
-          personnel.push({
-            id: wrPositions[i].id,
-            label: wrPositions[i].id,
-            role: "WR",
-            side: "O",
-            x: wrPositions[i].x,
-            y: wrPositions[i].y,
-            color: "#dc2626",
-          });
-        }
-      }
-    }
-
-    // Add offensive line (always 5)
-    const olPositions = [
-      { id: "LT", label: "LT", x: 35, y: 30 },
-      { id: "LG", label: "LG", x: 40, y: 30 },
-      { id: "C", label: "C", x: 50, y: 30 },
-      { id: "RG", label: "RG", x: 60, y: 30 },
-      { id: "RT", label: "RT", x: 65, y: 30 },
-    ];
-
-    olPositions.forEach((pos) => {
-      personnel.push({
-        id: pos.id,
-        label: pos.label,
-        role: "OL",
-        side: "O",
-        x: pos.x,
-        y: pos.y,
-        color: "#059669",
-      });
-    });
-
-    return personnel;
-  };
-
-  // Automatically populate personnel when play data is available
-  useEffect(() => {
-    if (play) {
-      const personnel = generatePersonnelFromPlay(play);
-
-      // Add each player to the diagram
-      personnel.forEach((player) => {
-        dispatch({ type: "ADD_PLAYER", player });
-      });
-    }
-  }, [play, dispatch]);
-
   return (
     <div className="w-full h-full bg-surface-primary flex flex-col">
-      {/* Header Toolbar */}
-      <div className="h-14 bg-surface-card border-b border-border flex items-center justify-between px-4 flex-shrink-0">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-lg font-semibold text-content-primary">
-            Play Diagram Builder
-          </h1>
-          {play && (
-            <span className="text-sm text-content-secondary bg-surface-secondary px-2 py-1 rounded">
-              {play.play_name}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => dispatch({ type: "UNDO" })}
-            className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
-            title="Undo (Ctrl+Z)"
-          >
-            ↶
-          </button>
-          <button
-            onClick={() => dispatch({ type: "REDO" })}
-            className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
-            title="Redo (Ctrl+Y)"
-          >
-            ↷
-          </button>
-          <div className="w-px h-6 bg-border mx-1"></div>
-          <button
-            onClick={handleSave}
-            className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
-          >
-            Save
-          </button>
-          <button
-            onClick={handleLoad}
-            className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
-          >
-            Load
-          </button>
-          <button className="px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-white rounded transition-colors relative group">
-            Export
-            <div className="absolute top-full right-0 mt-1 bg-surface-card border border-border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto min-w-32">
-              <button
-                onClick={() => handleExport("png")}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as PNG
-              </button>
-              <button
-                onClick={() => handleExport("svg")}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as SVG
-              </button>
-              <button
-                onClick={() => handleExport("pdf")}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as PDF
-              </button>
-            </div>
-          </button>
-        </div>
-      </div>
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden min-h-0">
         {/* Left Sidebar - Tools */}
-        <div className="w-16 bg-surface-card border-r border-border flex flex-col flex-shrink-0">
+        <div className="w-20 bg-surface-card border-r border-border flex flex-col flex-shrink-0">
           <ModernToolPalette />
         </div>
 
         {/* Main Canvas Area */}
-        <div className="flex-1 flex flex-col min-w-0 relative">
+        <div className="flex-1 flex flex-col min-w-0 relative ml-2">
           <ShapeManipulator zoom={1} panX={0} panY={0} snapToGrid={true}>
             <FootballFieldCanvas />
           </ShapeManipulator>

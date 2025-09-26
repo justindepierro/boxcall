@@ -65,6 +65,21 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
         return;
       }
 
+      // Handle add player tool
+      if (state.ui.tool === "add-player") {
+        const newPlayer = {
+          id: `player_${Date.now()}`,
+          label: "P",
+          role: "Player",
+          side: "O" as const,
+          x: canvasPoint.x,
+          y: canvasPoint.y,
+          color: "#047857",
+        };
+        dispatch({ type: "ADD_PLAYER", player: newPlayer });
+        return;
+      }
+
       // Handle selection/manipulation interactions (existing logic)
       // Check if clicking on a handle first
       if (selectedElements.length === 1) {

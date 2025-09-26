@@ -9,6 +9,32 @@ import type {
 // Removed unused imports
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
+
+const HISTORY_CAP = 100;
+
+function pushHistory(state: DiagramEditorState, nextDoc: typeof state.doc) {
+  const trimmed = state.history.slice(0, state.historyIndex + 1);
+  let newHistory = [...trimmed, nextDoc];
+  if (newHistory.length > HISTORY_CAP) {
+    const before = newHistory.length;
+    newHistory = newHistory.slice(newHistory.length - HISTORY_CAP);
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramHistory,
+      data: {
+        action: "cap-trim",
+        dropped: before - newHistory.length,
+        length: newHistory.length,
+        cap: HISTORY_CAP,
+      },
+    });
+  }
+  return {
+    ...state,
+    history: newHistory,
+    historyIndex: newHistory.length - 1,
+  };
+}
+
 export function reducer(
   state: DiagramEditorState,
   action: DiagramEditorAction
@@ -95,6 +121,21 @@ export function reducer(
     });
     return newState;
   }
+  if (action.type === "UNDO") {
+    if (state.historyIndex <= 0) return state;
+    const idx = state.historyIndex - 1;
+    const newState = {
+      ...state,
+      doc: state.history[idx],
+      historyIndex: idx,
+      dirty: true,
+    };
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramHistory,
+      data: { action: "undo", index: idx, length: state.history.length },
+    });
+    return newState;
+  }
   if (action.type === "TOGGLE_FIELD_FLAG") {
     const nextFieldVal = !state.doc.field[action.flag];
     let nextDocField: DiagramFieldConfig = {
@@ -161,6 +202,32 @@ export function reducer(
   }
   if (action.type === "MARK_SAVED") {
     return { ...state, dirty: false };
+  }
+  if (action.type === "ADD_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: [...state.doc.players, action.player],
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+  }
+  if (action.type === "UPDATE_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: state.doc.players.map((player) =>
+        player.id === action.id ? { ...player, ...action.patch } : player
+      ),
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+  }
+  if (action.type === "REMOVE_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: state.doc.players.filter((player) => player.id !== action.id),
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
   }
   return state;
 }

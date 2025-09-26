@@ -24,6 +24,131 @@ import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
 import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
+import { useDiagramEditor } from "../components/playbook/diagram/context/useDiagramEditor";
+
+interface DiagramBuilderHeaderProps {
+  play: Play;
+  onClose: () => void;
+}
+
+const DiagramBuilderHeader: React.FC<DiagramBuilderHeaderProps> = ({ play, onClose }) => {
+  const { dispatch } = useDiagramEditor();
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
+
+  const handleSave = useCallback(() => {
+    console.log("Saving diagram...");
+    alert("Save functionality will be implemented soon!");
+  }, []);
+
+  const handleLoad = useCallback(() => {
+    console.log("Loading diagram...");
+    alert("Load functionality will be implemented soon!");
+  }, []);
+
+  const handleExport = useCallback((format: "png" | "svg" | "pdf") => {
+    console.log(`Exporting diagram as ${format.toUpperCase()}`);
+    alert(`Export functionality for ${format.toUpperCase()} will be implemented soon!`);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-between">
+      <Typography
+        variant="headline-sm"
+        as="h3"
+        className="text-text-primary"
+      >
+        {`${play.formation}${play.f_dir ? ` ${play.f_dir}` : ''} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ''}`}
+      </Typography>
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => dispatch({ type: "UNDO" })}
+          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
+          title="Undo (Ctrl+Z)"
+        >
+          ↶
+        </button>
+        <button
+          onClick={() => dispatch({ type: "REDO" })}
+          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
+          title="Redo (Ctrl+Y)"
+        >
+          ↷
+        </button>
+        <div className="w-px h-6 bg-border mx-1"></div>
+        <button
+          onClick={handleSave}
+          className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
+        >
+          Save
+        </button>
+        <button
+          onClick={handleLoad}
+          className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
+        >
+          Load
+        </button>
+        <div className="relative export-dropdown">
+          <button
+            onClick={() => setShowExportDropdown(!showExportDropdown)}
+            className="px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-white rounded transition-colors"
+          >
+            Export
+          </button>
+          {showExportDropdown && (
+            <div className="absolute top-full right-0 mt-1 bg-surface-card border border-border rounded shadow-lg min-w-32 z-50">
+              <button
+                onClick={() => {
+                  handleExport("png");
+                  setShowExportDropdown(false);
+                }}
+                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
+              >
+                Export as PNG
+              </button>
+              <button
+                onClick={() => {
+                  handleExport("svg");
+                  setShowExportDropdown(false);
+                }}
+                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
+              >
+                Export as SVG
+              </button>
+              <button
+                onClick={() => {
+                  handleExport("pdf");
+                  setShowExportDropdown(false);
+                }}
+                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
+              >
+                Export as PDF
+              </button>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onClose}
+          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors ml-2"
+          title="Close"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -637,8 +762,8 @@ export default function PlaybookPage() {
         <Modal
           isOpen={!!diagramPlay}
           onClose={() => setDiagramPlay(null)}
-          title={`Diagram Builder - ${diagramPlay.play_name}`}
-          size="fullscreen"
+          headerContent={<DiagramBuilderHeader play={diagramPlay} onClose={() => setDiagramPlay(null)} />}
+          size="xl"
           type="default"
           closeOnBackdropClick={false}
           closeOnEscape={true}
