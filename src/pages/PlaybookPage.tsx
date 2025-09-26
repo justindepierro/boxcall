@@ -446,18 +446,6 @@ export default function PlaybookPage() {
       title="Playbook"
       subtitle="Create, manage, and organize your football plays"
       variant="dashboard"
-      actions={
-        <div className="flex items-center gap-3">
-          <Button onClick={handleOpenSettings} variant="secondary" size="sm">
-            <Icon name="settings" className="h-4 w-4 mr-2" />
-            Settings
-          </Button>
-          <Button onClick={handleOpenBuilder} variant="primary" size="sm">
-            <Icon name="plus" className="h-4 w-4 mr-2" />
-            New Play
-          </Button>
-        </div>
-      }
     >
       {/* Header Stats */}
       <PlaybookHeader
@@ -476,6 +464,8 @@ export default function PlaybookPage() {
           onViewChange={handleViewChange}
           currentTeamType={state.currentTeamType}
           onTeamTypeChange={handleTeamTypeChange}
+          onOpenSettings={handleOpenSettings}
+          onOpenBuilder={handleOpenBuilder}
         />
       </div>
 
