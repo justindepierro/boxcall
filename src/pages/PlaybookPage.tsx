@@ -308,6 +308,8 @@ export default function PlaybookPage() {
     dispatch({ type: "SET_SEARCH", query: q });
   const handleViewChange = (view: CoachingView) =>
     dispatch({ type: "SET_VIEW", view });
+  const handleTeamTypeChange = (teamType: "offense" | "defense" | "special-teams") =>
+    dispatch({ type: "SET_TEAM_TYPE", teamType });
   const handleFiltersChange = (filters: PlaybookState["advancedFilters"]) =>
     dispatch({ type: "SET_ADVANCED_FILTERS", filters });
   const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
@@ -472,6 +474,8 @@ export default function PlaybookPage() {
         <PlaybookViewTabs
           currentView={state.currentView}
           onViewChange={handleViewChange}
+          currentTeamType={state.currentTeamType}
+          onTeamTypeChange={handleTeamTypeChange}
         />
       </div>
 

@@ -47,6 +47,7 @@ export interface PlaybookMetricsState {
 
 export interface PlaybookUIState {
   currentView: CoachingView;
+  currentTeamType: "offense" | "defense" | "special-teams";
   showBuilder: boolean;
   showImport: boolean;
   showMobileFilters: boolean;
@@ -84,6 +85,7 @@ const initialState: PlaybookState = {
   diagramCoverage: 0,
   streakDays: 0,
   currentView: "playbook",
+  currentTeamType: "offense",
   showBuilder: false,
   showImport: false,
   showMobileFilters: false,
@@ -119,6 +121,7 @@ export type PlaybookAction =
   | { type: "ADD_RECENT_VIEW"; id: string; scope: "server" | "local" }
   | { type: "REMOVE_RECENT_VIEW"; id: string }
   | { type: "SET_VIEW"; view: CoachingView }
+  | { type: "SET_TEAM_TYPE"; teamType: "offense" | "defense" | "special-teams" }
   | { type: "SET_SHOW_BUILDER"; value: boolean }
   | { type: "SET_SHOW_IMPORT"; value: boolean }
   | { type: "SET_MOBILE_FILTERS"; value: boolean }
@@ -193,6 +196,8 @@ function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
     }
     case "SET_VIEW":
       return { ...state, currentView: action.view };
+    case "SET_TEAM_TYPE":
+      return { ...state, currentTeamType: action.teamType };
     case "SET_SHOW_BUILDER":
       return { ...state, showBuilder: action.value };
     case "SET_SHOW_IMPORT":
