@@ -442,8 +442,6 @@ export default function PlaybookPage() {
 
   return (
     <PageLayout
-      title="Playbook"
-      subtitle="Create, manage, and organize your football plays"
       variant="dashboard"
     >
       {/* Unified Header with Navigation */}
