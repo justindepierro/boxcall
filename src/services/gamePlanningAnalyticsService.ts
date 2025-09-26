@@ -262,7 +262,7 @@ export class GamePlanningAnalyticsService {
    * Generate optimization opportunities
    */
   private generateOptimizationOpportunities(
-    situations: GamePlanSituation[],
+    _situations: GamePlanSituation[],
     plays: GamePlanPlay[],
     analytics: GamePlanAnalytics[]
   ): PriorityOptimization[] {

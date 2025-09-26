@@ -18,6 +18,7 @@ export default [
       "src/routes/__tests__/loaderAuth.test.tsx",
       "src/utils/useErrorHandler.ts",
       "src/components/ui/Sidebar/Sidebar.legacy.backup.tsx",
+      "src/components/playbook/diagram/context/useDiagramEditor.tsx",
     ],
   },
   // Base configuration for all JS/TS files

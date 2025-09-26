@@ -16,7 +16,7 @@ export interface ModalProps {
   /** Modal content */
   children: ReactNode;
   /** Modal size */
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "fullscreen";
   /** Modal type for different styling */
   type?: "default" | "alert" | "confirm";
   /** Whether clicking the backdrop closes the modal */
@@ -40,6 +40,8 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
       return "max-w-lg w-full sm:max-w-2xl lg:max-w-3xl";
     case "xl":
       return "max-w-xl w-full sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl";
+    case "fullscreen":
+      return "w-screen h-screen max-w-none max-h-none";
     default:
       return "max-w-md w-full sm:max-w-lg";
   }
@@ -56,7 +58,7 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   }
 };
 const getBackdropStyles = () => {
-  return "bg-brand-navy/60 dark:bg-brand-navy-dark/80"; // Navy-tinted backdrop instead of gray
+  return "bg-brand-navy/80 dark:bg-brand-navy-dark/90"; // Darker navy-tinted backdrop
 };
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -143,8 +145,8 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
   const modalContent = (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4`}
-      style={{ zIndex, border: "4px solid red" }}
+      className={`fixed inset-0 z-[9999] ${size === "fullscreen" ? "p-4" : "flex items-center justify-center p-4"}`}
+      style={{ zIndex }}
     >
       {/* Backdrop */}
       <div
@@ -156,9 +158,9 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         ref={modalRef}
         className={`
-          relative w-full ${getModalSizeStyles(size)} ${getModalTypeStyles(type)}
+          relative ${size === "fullscreen" ? "w-full h-full" : `w-full ${getModalSizeStyles(size)}`}
+          ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
           transform transition-all duration-300 scale-100 opacity-100
-          max-h-[90vh] overflow-hidden flex flex-col
           ${className}
         `}
         role="dialog"

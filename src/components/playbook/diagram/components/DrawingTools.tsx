@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useDiagramEditor } from "../context/useDiagramEditor";
-import { ShapeEngine } from "../engine/ShapeEngine";
-import type { Point, DiagramElement } from "../engine/ShapeEngine";
+import type { Point } from "../engine/ShapeEngine";
 import {
   Minus,
   ArrowRight,
@@ -121,87 +120,6 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
       dispatch({ type: "SET_DRAW_WIDTH", width });
     },
     [dispatch]
-  );
-
-  const _createDrawingElement = useCallback(
-    (
-      tool: string,
-      startPoint: Point,
-      endPoint: Point
-    ): DiagramElement | null => {
-      const bounds = ShapeEngine.calculateRouteBounds([
-        { start: startPoint, end: endPoint },
-      ]);
-
-      switch (tool) {
-        case "line":
-          return ShapeEngine.createShapeElement(
-            "line",
-            {
-              x: Math.min(startPoint.x, endPoint.x),
-              y: Math.min(startPoint.y, endPoint.y),
-              width: Math.abs(endPoint.x - startPoint.x),
-              height: Math.abs(endPoint.y - startPoint.y),
-            },
-            {
-              stroke: state.ui.drawColor || "#000000",
-              strokeWidth: state.ui.drawWidth || 2,
-            }
-          );
-
-        case "arrow":
-          return ShapeEngine.createShapeElement("arrow", bounds, {
-            stroke: state.ui.drawColor || "#000000",
-            strokeWidth: state.ui.drawWidth || 2,
-          });
-
-        case "circle": {
-          const radius = ShapeEngine.distance(startPoint, endPoint) / 2;
-          return ShapeEngine.createShapeElement(
-            "circle",
-            {
-              x: startPoint.x - radius,
-              y: startPoint.y - radius,
-              width: radius * 2,
-              height: radius * 2,
-            },
-            {
-              stroke: state.ui.drawColor || "#000000",
-              strokeWidth: state.ui.drawWidth || 2,
-              fill: "transparent",
-            }
-          );
-        }
-
-        case "rectangle":
-          return ShapeEngine.createShapeElement(
-            "rectangle",
-            {
-              x: Math.min(startPoint.x, endPoint.x),
-              y: Math.min(startPoint.y, endPoint.y),
-              width: Math.abs(endPoint.x - startPoint.x),
-              height: Math.abs(endPoint.y - startPoint.y),
-            },
-            {
-              stroke: state.ui.drawColor || "#000000",
-              strokeWidth: state.ui.drawWidth || 2,
-              fill: "transparent",
-            }
-          );
-
-        case "zone":
-          // Create a zone shape (could be a polygon or special shape)
-          return ShapeEngine.createShapeElement("zone", bounds, {
-            fill: (state.ui.drawColor || "#3b82f6") + "40", // Add transparency
-            stroke: state.ui.drawColor || "#3b82f6",
-            strokeWidth: state.ui.drawWidth || 2,
-          });
-
-        default:
-          return null;
-      }
-    },
-    [state.ui.drawColor, state.ui.drawWidth]
   );
 
   // Drawing event handlers (would be used by parent component)

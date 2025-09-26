@@ -23,7 +23,8 @@ export const FootballFieldCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { state, dispatch } = useContext(DiagramEditorContext);
+  const { state: _state, dispatch: _dispatch } =
+    useContext(DiagramEditorContext);
 
   const [transform, setTransform] = useState<CanvasTransform>({
     x: 0,
@@ -34,17 +35,27 @@ export const FootballFieldCanvas: React.FC = () => {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   // NFL Field dimensions for playbook view (looking down the field)
-  const FIELD_WIDTH = 53.3; // 100 feet width (standard field width)
+  const FIELD_WIDTH = 53.333; // 53.333 yards (standard NFL field width)
   const FIELD_HEIGHT = 35; // 35 yards of field length (typical playbook view)
-  const PIXELS_PER_YARD = 15; // 15 pixels per yard for better visibility
 
-  const CANVAS_WIDTH = FIELD_WIDTH * PIXELS_PER_YARD;
-  const CANVAS_HEIGHT = FIELD_HEIGHT * PIXELS_PER_YARD;
+  // Canvas will be sized to fill the container, field will scale to fit
+  const CANVAS_WIDTH = 800; // Base canvas width for drawing
+  const CANVAS_HEIGHT = 525; // Base canvas height for drawing
+  const PIXELS_PER_YARD = Math.min(
+    CANVAS_WIDTH / FIELD_WIDTH,
+    CANVAS_HEIGHT / FIELD_HEIGHT
+  );
+
+  // Hash marks are 17.7 yards apart (8.85 yards from center to each hash)
+  const HASH_MARK_SPACING = 17.7; // yards between hash marks
+  const YARD_NUMBER_OFFSET = 9; // yards from sideline to top of yard numbers
+  const FIELD_PADDING = 20; // pixels of padding around the field
 
   // Convert field coordinates to canvas coordinates
   // fieldX: 0 to FIELD_WIDTH (width of field, left to right)
   // fieldY: 0 to FIELD_HEIGHT (length of field, top to bottom)
-  const fieldToCanvas = useCallback(
+  // @ts-expect-error - Utility function for future canvas interactions
+  const _fieldToCanvas = useCallback(
     (fieldX: number, fieldY: number): Point => {
       return {
         x: fieldX * PIXELS_PER_YARD,
@@ -57,7 +68,8 @@ export const FootballFieldCanvas: React.FC = () => {
   // Convert canvas coordinates to field coordinates
   // canvasX: 0 to CANVAS_WIDTH -> fieldX: 0 to FIELD_WIDTH
   // canvasY: 0 to CANVAS_HEIGHT -> fieldY: 0 to FIELD_HEIGHT
-  const canvasToField = useCallback(
+  // @ts-expect-error - Utility function for future canvas interactions
+  const _canvasToField = useCallback(
     (canvasX: number, canvasY: number): Point => {
       return {
         x: canvasX / PIXELS_PER_YARD,
@@ -69,77 +81,108 @@ export const FootballFieldCanvas: React.FC = () => {
 
   // Draw the football field (vertical orientation - looking down the field)
   const drawField = useCallback(
-    (ctx: CanvasRenderingContext2D) => {
-      // Clear canvas
-      ctx.fillStyle = "#2d5a27"; // Field green
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    (
+      ctx: CanvasRenderingContext2D,
+      displayWidth: number,
+      displayHeight: number
+    ) => {
+      // Clear entire canvas with background color
+      ctx.fillStyle = "#ECFDF5"; // jade-50 - very light green from design system
+      ctx.fillRect(0, 0, displayWidth, displayHeight);
 
-      // Draw end zones (small zones at top and bottom)
-      ctx.fillStyle = "#c41e3a"; // Team color
-      const END_ZONE_DEPTH = 3; // 3 yards for end zones
-      ctx.fillRect(0, 0, CANVAS_WIDTH, END_ZONE_DEPTH * PIXELS_PER_YARD); // Top end zone
-      ctx.fillRect(
-        0,
-        CANVAS_HEIGHT - END_ZONE_DEPTH * PIXELS_PER_YARD,
-        CANVAS_WIDTH,
-        END_ZONE_DEPTH * PIXELS_PER_YARD
-      ); // Bottom end zone
+      // Calculate field area with padding
+      const fieldWidth = displayWidth - FIELD_PADDING * 2;
+      const fieldHeight = displayHeight - FIELD_PADDING * 2;
+      const fieldX = FIELD_PADDING;
+      const fieldY = FIELD_PADDING;
 
-      // Draw yard lines (horizontal lines across the field)
-      ctx.strokeStyle = "#ffffff";
+      // Fill field area with green
+      ctx.fillStyle = "#ECFDF5"; // jade-50 - very light green from design system
+      ctx.fillRect(fieldX, fieldY, fieldWidth, fieldHeight);
+
+      // Calculate pixels per yard based on field size to fit field properly
+      const pixelsPerYard = Math.min(
+        fieldWidth / FIELD_WIDTH,
+        fieldHeight / FIELD_HEIGHT
+      );
+
+      // Draw yard lines and hash marks (horizontal lines across the field)
+      ctx.strokeStyle = "#A7F3D0"; // jade-200 - slightly darker green for lines
       ctx.lineWidth = 2;
       ctx.setLineDash([]);
 
-      for (let yard = 0; yard <= FIELD_HEIGHT; yard += 5) {
-        const y = yard * PIXELS_PER_YARD;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(CANVAS_WIDTH, y);
-        ctx.stroke();
+      for (let yard = 0; yard <= FIELD_HEIGHT; yard += 1) {
+        const y = fieldY + yard * pixelsPerYard;
+        const isMajorYardLine = yard % 5 === 0;
+        const isYardLine = yard % 1 === 0;
 
-        // Yard numbers (only show major yard lines)
-        if (yard > 0 && yard < FIELD_HEIGHT && yard % 10 === 0) {
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "16px Arial";
-          ctx.textAlign = "right";
-          ctx.fillText(yard.toString(), CANVAS_WIDTH - 10, y - 5);
+        if (isMajorYardLine) {
+          // Major yard lines (every 5 yards) - full width
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(fieldX, y);
+          ctx.lineTo(fieldX + fieldWidth, y);
+          ctx.stroke();
+
+          // Yard numbers (simple numbering from 0 to 35)
+          if (yard > 0 && yard < FIELD_HEIGHT && yard % 10 === 0) {
+            ctx.fillStyle = "#A7F3D0"; // jade-200 for numbers
+            ctx.font = "bold 14px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText(
+              yard.toString(),
+              fieldX + YARD_NUMBER_OFFSET * pixelsPerYard,
+              y - 5
+            ); // 9 yards from left sideline
+            ctx.textAlign = "right";
+            ctx.fillText(
+              yard.toString(),
+              fieldX + fieldWidth - YARD_NUMBER_OFFSET * pixelsPerYard,
+              y - 5
+            ); // 9 yards from right sideline
+          }
+        } else if (isYardLine) {
+          // Minor yard lines (every yard) - hash marks only
+          ctx.lineWidth = 1;
+          const hashLength = 8; // 8 pixels for hash marks
+          // Hash marks are 17.7 yards apart (8.85 yards from center to each hash)
+          const hashOffsetFromCenter = HASH_MARK_SPACING / 2; // 8.85 yards from center
+          const leftHashStart =
+            fieldX + fieldWidth / 2 - hashOffsetFromCenter * pixelsPerYard;
+          const rightHashStart =
+            fieldX + fieldWidth / 2 + hashOffsetFromCenter * pixelsPerYard;
+
+          // Left hash marks
+          ctx.beginPath();
+          ctx.moveTo(leftHashStart, y);
+          ctx.lineTo(leftHashStart + hashLength, y);
+          ctx.stroke();
+
+          // Right hash marks
+          ctx.beginPath();
+          ctx.moveTo(rightHashStart - hashLength, y);
+          ctx.lineTo(rightHashStart, y);
+          ctx.stroke();
         }
       }
 
-      // Draw hash marks (vertical lines at sidelines and middle)
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1;
-
-      // Sideline hashes (every 5 yards)
-      for (let yard = 5; yard < FIELD_HEIGHT; yard += 5) {
-        const y = yard * PIXELS_PER_YARD;
-        // Left sideline hash
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(2 * PIXELS_PER_YARD, y);
-        ctx.stroke();
-
-        // Right sideline hash
-        ctx.beginPath();
-        ctx.moveTo(CANVAS_WIDTH - 2 * PIXELS_PER_YARD, y);
-        ctx.lineTo(CANVAS_WIDTH, y);
-        ctx.stroke();
-      }
-
       // Draw goal lines
-      ctx.strokeStyle = "#ffffff";
+      ctx.strokeStyle = "#A7F3D0"; // jade-200
       ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(0, END_ZONE_DEPTH * PIXELS_PER_YARD);
-      ctx.lineTo(CANVAS_WIDTH, END_ZONE_DEPTH * PIXELS_PER_YARD);
-      ctx.moveTo(0, CANVAS_HEIGHT - END_ZONE_DEPTH * PIXELS_PER_YARD);
-      ctx.lineTo(
-        CANVAS_WIDTH,
-        CANVAS_HEIGHT - END_ZONE_DEPTH * PIXELS_PER_YARD
-      );
+      ctx.moveTo(fieldX, fieldY);
+      ctx.lineTo(fieldX + fieldWidth, fieldY);
+      ctx.moveTo(fieldX, fieldY + fieldHeight);
+      ctx.lineTo(fieldX + fieldWidth, fieldY + fieldHeight);
       ctx.stroke();
     },
-    [CANVAS_WIDTH, CANVAS_HEIGHT, FIELD_HEIGHT, PIXELS_PER_YARD]
+    [
+      FIELD_WIDTH,
+      FIELD_HEIGHT,
+      HASH_MARK_SPACING,
+      YARD_NUMBER_OFFSET,
+      FIELD_PADDING,
+    ]
   );
 
   // Zoom level functions
@@ -152,7 +195,7 @@ export const FootballFieldCanvas: React.FC = () => {
         : 0;
     const newIndex = Math.min(zoomLevels.length - 1, currentIndex + 1);
     setTransform((prev) => ({ ...prev, scale: zoomLevels[newIndex] }));
-  }, [transform.scale]);
+  }, [transform.scale, zoomLevels]);
 
   const zoomOut = useCallback(() => {
     const currentIndex =
@@ -161,14 +204,15 @@ export const FootballFieldCanvas: React.FC = () => {
         : 0;
     const newIndex = Math.max(0, currentIndex - 1);
     setTransform((prev) => ({ ...prev, scale: zoomLevels[newIndex] }));
-  }, [transform.scale]);
+  }, [transform.scale, zoomLevels]);
 
   const resetZoom = useCallback(() => {
     setTransform((prev) => ({ ...prev, scale: 1 }));
   }, []);
 
   // Handle wheel events for zoom (discrete levels: 1x, 2x, 5x, 10x)
-  const handleWheel = useCallback(
+  // @ts-expect-error - Utility function for future wheel zoom interactions
+  const _handleWheel = useCallback(
     (e: WheelEvent) => {
       e.preventDefault();
       const currentIndex =
@@ -201,8 +245,18 @@ export const FootballFieldCanvas: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Get the actual canvas dimensions (set by CSS)
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+
+    // Set the canvas internal resolution to match display size for crisp rendering
+    if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+      canvas.width = displayWidth;
+      canvas.height = displayHeight;
+    }
+
     // Clear the entire canvas first
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
 
     // Save context state
     ctx.save();
@@ -211,29 +265,26 @@ export const FootballFieldCanvas: React.FC = () => {
     ctx.scale(transform.scale, transform.scale);
     ctx.translate(transform.x, transform.y);
 
-    // Draw the field
-    drawField(ctx);
+    // Draw the field scaled to fit the canvas
+    drawField(ctx, displayWidth, displayHeight);
 
     // Restore context state
     ctx.restore();
-  }, [transform, drawField, CANVAS_WIDTH, CANVAS_HEIGHT]);
+  }, [transform, drawField]);
 
-  // Update transform to center the canvas when scale changes
+  // Update transform to fit the field within the container
   useEffect(() => {
     if (containerSize.width > 0 && containerSize.height > 0) {
-      const scaledWidth = CANVAS_WIDTH * transform.scale;
-      const scaledHeight = CANVAS_HEIGHT * transform.scale;
-
-      const centerX = (containerSize.width - scaledWidth) / 2;
-      const centerY = (containerSize.height - scaledHeight) / 2;
-
+      // The field will be drawn to fill the container, so no transform needed for positioning
+      // Just ensure we're at the origin with scale 1
       setTransform((prev) => ({
         ...prev,
-        x: centerX,
-        y: centerY,
+        x: 0,
+        y: 0,
+        scale: 1,
       }));
     }
-  }, [transform.scale, containerSize, CANVAS_WIDTH, CANVAS_HEIGHT]);
+  }, [containerSize]);
 
   // Get container dimensions
   useEffect(() => {
@@ -257,9 +308,7 @@ export const FootballFieldCanvas: React.FC = () => {
     >
       <canvas
         ref={canvasRef}
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
-        className="absolute inset-0 cursor-default"
+        className="absolute inset-0 w-full h-full cursor-default"
         style={{
           transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`,
           transformOrigin: "0 0",
@@ -268,9 +317,7 @@ export const FootballFieldCanvas: React.FC = () => {
 
       <svg
         ref={svgRef}
-        className="absolute inset-0 pointer-events-none"
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
+        className="absolute inset-0 w-full h-full pointer-events-none"
         style={{
           transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`,
           transformOrigin: "0 0",
@@ -280,22 +327,22 @@ export const FootballFieldCanvas: React.FC = () => {
       </svg>
 
       {/* Zoom controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2">
+      <div className="absolute top-4 right-6 flex flex-col gap-2 p-2 bg-surface-card/80 backdrop-blur-sm rounded-lg shadow-lg">
         <button
           onClick={zoomIn}
-          className="w-8 h-8 bg-surface-card rounded border border-border hover:bg-surface-secondary flex items-center justify-center"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center transition-colors"
         >
           <span className="text-sm font-bold">+</span>
         </button>
         <button
           onClick={zoomOut}
-          className="w-8 h-8 bg-surface-card rounded border border-border hover:bg-surface-secondary flex items-center justify-center"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center transition-colors"
         >
           <span className="text-sm font-bold">−</span>
         </button>
         <button
           onClick={resetZoom}
-          className="w-8 h-8 bg-surface-card rounded border border-border hover:bg-surface-secondary flex items-center justify-center text-xs"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center text-xs transition-colors"
         >
           1:1
         </button>

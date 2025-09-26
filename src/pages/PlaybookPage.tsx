@@ -22,7 +22,6 @@ import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcuts
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
-import type { TeamType } from "../components/playbook/TeamTypeToggle";
 import { Modal } from "../components/ui/Modal";
 import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
 
@@ -639,7 +638,7 @@ export default function PlaybookPage() {
           isOpen={!!diagramPlay}
           onClose={() => setDiagramPlay(null)}
           title={`Diagram Builder - ${diagramPlay.play_name}`}
-          size="xl"
+          size="fullscreen"
           type="default"
           closeOnBackdropClick={false}
           closeOnEscape={true}

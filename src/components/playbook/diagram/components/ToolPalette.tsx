@@ -430,7 +430,7 @@ export const ToolPalette: React.FC = () => {
           </Button>
           <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Align Top"
             className="w-11 h-11 p-0"
@@ -441,7 +441,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="chevron-up" />
           </Button>
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Align Middle"
             className="w-11 h-11 p-0"
@@ -452,7 +452,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="target" />
           </Button>
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Align Bottom"
             className="w-11 h-11 p-0"
@@ -464,7 +464,7 @@ export const ToolPalette: React.FC = () => {
           </Button>
           <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Distribute Horizontally (even)"
             className="w-11 h-11 p-0"
@@ -475,7 +475,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="grid" />
           </Button>
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Distribute Vertically (even)"
             className="w-11 h-11 p-0"
@@ -504,7 +504,7 @@ export const ToolPalette: React.FC = () => {
             title="Fixed spacing (%)"
           />
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Distribute Fixed Horizontally"
             className="w-11 h-11 p-0"
@@ -519,7 +519,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="arrow-left" />
           </Button>
           <Button
-            size={14}
+            size="md"
             variant="ghost"
             title="Distribute Fixed Vertically"
             className="w-11 h-11 p-0"
