@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
@@ -447,27 +446,21 @@ export default function PlaybookPage() {
       subtitle="Create, manage, and organize your football plays"
       variant="dashboard"
     >
-      {/* Header Stats */}
-      <PlaybookHeader
+      {/* Unified Header with Navigation */}
+      <PlaybookViewTabs
+        currentView={state.currentView}
+        onViewChange={handleViewChange}
+        currentTeamType={state.currentTeamType}
+        onTeamTypeChange={handleTeamTypeChange}
+        onOpenSettings={handleOpenSettings}
+        onOpenBuilder={handleOpenBuilder}
+        title="Playbook"
         playsCreated={state.playsCreated}
         diagramCoverage={state.diagramCoverage}
         streakDays={state.streakDays}
         searchQuery={state.searchQuery}
         onSearchChange={handleSearchChange}
-        onOpenSettings={handleOpenSettings}
       />
-
-      {/* Navigation Tabs - Integrated with Header */}
-      <div className="-mx-6 px-6 py-3">
-        <PlaybookViewTabs
-          currentView={state.currentView}
-          onViewChange={handleViewChange}
-          currentTeamType={state.currentTeamType}
-          onTeamTypeChange={handleTeamTypeChange}
-          onOpenSettings={handleOpenSettings}
-          onOpenBuilder={handleOpenBuilder}
-        />
-      </div>
 
       {/* Main Content - 2 Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
