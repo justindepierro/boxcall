@@ -10,16 +10,15 @@ import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
-  base: "block w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-text-secondary disabled:cursor-not-allowed disabled:border-subtle disabled:border-text-tertiary",
+  base: "block w-full rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-text-secondary disabled:cursor-not-allowed",
   statuses: {
-    default:
-      "border-border-light border-text-tertiary focus:border-text-info ring-text-info",
+    default: "focus:border-text-info ring-text-info",
     error:
-      "border-text-error focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
+      "focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
     success:
-      "border-text-success focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
+      "focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
     warning:
-      "border-text-warning focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
+      "focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
   },
 };
 /**

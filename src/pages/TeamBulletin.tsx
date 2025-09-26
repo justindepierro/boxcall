@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../components/layout/Layout";
+import { PageLayout } from "../components/layout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../app/auth-store";
@@ -151,65 +151,57 @@ export const TeamBulletin: React.FC = () => {
 
   if (loadingInitial) {
     return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <Typography variant="headline-lg" color="muted">
-              Loading team dashboard...
-            </Typography>
-          </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Typography variant="headline-lg" color="muted">
+            Loading team dashboard...
+          </Typography>
         </div>
-      </Layout>
+      </div>
     );
   }
 
   if (!teamData) {
     return (
-      <Layout>
-        <div className="py-6">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="surface-card elevation-card border-subtle rounded-lg p-8">
-              <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
-              <Typography variant="headline-lg" className="mb-2">
-                No Team Found
-              </Typography>
-              <Typography variant="body-lg" color="muted" className="mb-6">
-                {devMode === "blank_slate"
-                  ? "Create your first team or join an existing one to get started."
-                  : "This team doesn't exist or you don't have access to it."}
-              </Typography>
-              <div className="flex gap-3 justify-center">
-                <Button
-                  onClick={handleCreateTeam}
-                  variant="primary"
-                  className="px-6 py-2 rounded-lg font-medium flex items-center gap-2"
-                >
-                  Create Team
-                  {isSuperAdmin && (
-                    <Icon
-                      name="unlock"
-                      size="sm"
-                      className="text-text-primary"
-                    />
-                  )}
-                </Button>
-                <Button
-                  onClick={handleJoinTeam}
-                  variant="ghost"
-                  className="px-6 py-2 rounded-lg font-medium"
-                >
-                  Join Team
-                </Button>
-              </div>
-              {isSuperAdmin && (
-                <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">
-                  Super Admin: Unlimited team creation access
-                </div>
-              )}
+      <div className="py-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="surface-card elevation-card border-subtle rounded-lg p-8">
+            <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
+            <Typography variant="headline-lg" className="mb-2">
+              No Team Found
+            </Typography>
+            <Typography variant="body-lg" color="muted" className="mb-6">
+              {devMode === "blank_slate"
+                ? "Create your first team or join an existing one to get started."
+                : "This team doesn't exist or you don't have access to it."}
+            </Typography>
+            <div className="flex gap-3 justify-center">
+              <Button
+                onClick={handleCreateTeam}
+                variant="primary"
+                className="px-6 py-2 rounded-lg font-medium flex items-center gap-2"
+              >
+                Create Team
+                {isSuperAdmin && (
+                  <Icon name="unlock" size="sm" className="text-text-primary" />
+                )}
+              </Button>
+              <Button
+                onClick={handleJoinTeam}
+                variant="ghost"
+                className="px-6 py-2 rounded-lg font-medium"
+              >
+                Join Team
+              </Button>
             </div>
+            {isSuperAdmin && (
+              <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">
+                Super Admin: Unlimited team creation access
+              </div>
+            )}
           </div>
         </div>
-      </Layout>
+      </div>
     );
   }
 
@@ -217,7 +209,11 @@ export const TeamBulletin: React.FC = () => {
   const isCoach = userRole === "coach" || userRole === "head_coach";
 
   return (
-    <Layout>
+    <PageLayout
+      title={`${teamData.name} Bulletin`}
+      subtitle={`Season ${teamData.season} • ${teamData.memberCount} members`}
+      variant="dashboard"
+    >
       {/* Skip link for keyboard users */}
       <a
         href="#main-content"
@@ -360,7 +356,7 @@ export const TeamBulletin: React.FC = () => {
           </div>
         </main>
       </CollaborationProvider>
-    </Layout>
+    </PageLayout>
   );
 };
 export default TeamBulletin;

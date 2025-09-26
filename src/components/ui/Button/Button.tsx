@@ -26,23 +26,21 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset",
   },
   secondary: {
-    base: "text-text-primary border-2 border-border",
+    base: "text-text-primary bg-[var(--semantic-bg-secondary)]",
     hover:
-      "hover:bg-surface-secondary hover:text-text-primary hover:border-border",
+      "hover:bg-[var(--semantic-bg-muted)] hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200",
     active:
-      "active:bg-surface-muted active:text-text-primary active:border-border",
-    disabled:
-      "disabled:text-text-muted disabled:border-border disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "active:bg-[color:var(--color-gray-200)] active:translate-y-0 active:shadow-none",
+    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
+    focus: "focus:outline-none",
   },
   outline: {
-    base: "text-[var(--semantic-primary)] border border-[var(--semantic-primary)]",
+    base: "text-[var(--semantic-primary)]",
     hover:
-      "hover:bg-surface-secondary hover:text-[var(--semantic-primary-hover)] hover:border-[var(--semantic-primary-hover)]",
+      "hover:bg-surface-secondary hover:text-[var(--semantic-primary-hover)]",
     active:
-      "active:bg-surface-muted active:text-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
-    disabled:
-      "disabled:text-text-muted disabled:border-border disabled:cursor-not-allowed",
+      "active:bg-surface-muted active:text-[var(--semantic-primary-active)]",
+    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   gradient: {
@@ -55,9 +53,9 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-electric focus-ring-offset",
   },
   glass: {
-    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary border border-surface-primary/20",
-    hover: "hover:bg-surface-primary/20 hover:border-surface-primary/30",
-    active: "active:bg-surface-primary/30 active:border-surface-primary/40",
+    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary",
+    hover: "hover:bg-surface-primary/20",
+    active: "active:bg-surface-primary/30",
     disabled:
       "disabled:bg-surface-primary/5 disabled:text-text-muted disabled:border-surface-primary/10 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -65,21 +63,21 @@ const buttonVariants: ButtonStylesConfig = {
   ghost: {
     base: "text-[var(--semantic-text-primary)]",
     hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:border-[var(--semantic-border)]",
+      "hover:bg-[var(--semantic-bg-muted)] hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200",
     active:
-      "active:bg-[color:var(--color-gray-200)] active:border-[var(--semantic-border)]",
+      "active:bg-[color:var(--color-gray-200)] active:translate-y-0 active:shadow-none",
     disabled:
       "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+    focus: "focus:outline-none",
   },
   subtle: {
-    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)]",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)]",
     hover:
       "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
     active:
       "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
-      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:border-[var(--semantic-border)] disabled:cursor-not-allowed",
+      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   link: {
@@ -124,31 +122,25 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-    base: "text-surface-primary border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
-    hover:
-      "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
-    active:
-      "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
+    base: "text-surface-primary bg-[var(--semantic-error)]",
+    hover: "hover:bg-[color:var(--color-error-600)]",
+    active: "active:bg-[color:var(--color-error-700)]",
     disabled:
       "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-    base: "text-surface-primary border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
-    hover:
-      "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
-    active:
-      "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
+    base: "text-surface-primary bg-[color:var(--color-success-600)]",
+    hover: "hover:bg-[color:var(--color-success-700)]",
+    active: "active:bg-[color:var(--color-success-700)]",
     disabled:
       "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
-    base: "text-text-primary border bg-[color:var(--color-warning-600)] border-[color:var(--color-warning-600)]",
-    hover:
-      "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
-    active:
-      "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
+    base: "text-text-primary bg-[color:var(--color-warning-600)]",
+    hover: "hover:bg-[color:var(--color-warning-700)]",
+    active: "active:bg-[color:var(--color-warning-700)]",
     disabled:
       "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -317,7 +309,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={handleClick}
         style={{
           borderRadius: "var(--button-border-radius)",
-          boxShadow: "var(--button-shadow)",
         }}
         {...restProps}
       >
@@ -326,7 +317,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {iconPosition === "only" ? (
           <span className={sizeStyles.iconSize}>{icon}</span>
         ) : (
-          <span className="text-center leading-tight">{children}</span>
+          <span className="text-center leading-tight truncate">{children}</span>
         )}
         {renderIcon("right")}
       </button>

@@ -270,9 +270,7 @@ const PlayerDashboardContent: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">
-                  Leadership
-                </span>
+                <span className="text-sm text-text-secondary">Leadership</span>
                 <div className="flex items-center">
                   <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
                     <div

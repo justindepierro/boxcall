@@ -62,18 +62,15 @@ export default function PracticePlansPage() {
           <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
             <Icon name="file" className="h-12 w-12 text-text-muted" />
           </div>
-          <Typography
-            variant="headline-md"
-            className="text-text-primary mb-2"
-          >
+          <Typography variant="headline-md" className="text-text-primary mb-2">
             No Practice Scripts Yet
           </Typography>
           <Typography
             variant="body-lg"
             className="text-text-secondary mb-8 max-w-md mx-auto"
           >
-            Create your first practice script to organize plays for your
-            team's training sessions.
+            Create your first practice script to organize plays for your team's
+            training sessions.
           </Typography>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -102,10 +99,7 @@ export default function PracticePlansPage() {
             <Typography variant="headline-md" className="text-text-primary">
               Your Practice Scripts ({practiceScripts.length})
             </Typography>
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              variant="primary"
-            >
+            <Button onClick={() => setShowCreateModal(true)} variant="primary">
               <Icon name="plus" className="h-4 w-4 mr-2" />
               New Script
             </Button>
@@ -136,10 +130,7 @@ export default function PracticePlansPage() {
                       </Typography>
                     )}
                     {script.date && (
-                      <Typography
-                        variant="body-sm"
-                        className="text-text-muted"
-                      >
+                      <Typography variant="body-sm" className="text-text-muted">
                         {new Date(script.date).toLocaleDateString()}
                       </Typography>
                     )}

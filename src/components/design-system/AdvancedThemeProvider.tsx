@@ -7,9 +7,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   useColorTheme,
-  type ThemeConfig,
   type UseColorThemeReturn,
 } from "../../hooks/useColorTheme";
+import { useDesignSystem } from "./DesignSystemProvider";
 import type { TeamColors } from "../../lib/colorGeneration";
 
 interface AdvancedThemeContextType extends UseColorThemeReturn {
@@ -58,14 +58,9 @@ export function AdvancedThemeProvider({
   initialEmotion,
   enableShowcase = false,
 }: AdvancedThemeProviderProps) {
-  // Initialize with team colors if provided
-  const initialConfig: Partial<ThemeConfig> = {
-    teamColors: initialTeamColors,
-    context: initialContext,
-    emotion: initialEmotion,
-  };
+  const { config: designSystemConfig } = useDesignSystem();
 
-  const colorTheme = useColorTheme(initialConfig);
+  const colorTheme = useColorTheme();
 
   // Additional state for advanced theming
   const [teamColors, setTeamColors] = useState<TeamColors | null>(
@@ -113,24 +108,17 @@ export function AdvancedThemeProvider({
     });
   };
 
-  // Update context when internal state changes
+  // Update theme when design system config changes
   useEffect(() => {
-    if (currentContext) {
-      colorTheme.updateTheme({ context: currentContext });
-    }
-  }, [currentContext, colorTheme]);
-
-  useEffect(() => {
-    if (currentEmotion) {
-      colorTheme.updateTheme({ emotion: currentEmotion });
-    }
-  }, [currentEmotion, colorTheme]);
-
-  useEffect(() => {
-    if (teamColors) {
-      colorTheme.updateTheme({ teamColors });
-    }
-  }, [teamColors, colorTheme]);
+    const mode =
+      designSystemConfig.theme === "auto"
+        ? "auto"
+        : designSystemConfig.theme === "dark"
+          ? "dark"
+          : "light";
+    colorTheme.updateTheme({ mode });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [designSystemConfig.theme]);
 
   const contextValue: AdvancedThemeContextType = {
     ...colorTheme,

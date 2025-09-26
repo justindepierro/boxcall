@@ -154,211 +154,207 @@ export const ProfilePage: React.FC = () => {
           <Typography variant="headline-sm" as="h2" className="mb-4">
             Basic Information
           </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary mb-2"
-                >
-                  Email Address
-                </Typography>
-                <Input
-                  type="email"
-                  value={profile.email || ""}
-                  disabled
-                  className="bg-surface-muted"
-                />
-                <p className="text-xs text-text-muted mt-1">
-                  Email cannot be changed
-                </p>
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary mb-2"
-                >
-                  Display Name
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="How you'd like to be called"
-                  value={formData.display_name}
-                  onChange={(e) =>
-                    handleInputChange("display_name", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary mb-2"
-                >
-                  Full Name
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="Your full name"
-                  value={formData.full_name}
-                  onChange={(e) =>
-                    handleInputChange("full_name", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary mb-2"
-                >
-                  Phone Number
-                </Typography>
-                <Input
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary mb-2"
-                >
-                  Role
-                </Typography>
-                <Input
-                  type="text"
-                  value={profile.role || "Not specified"}
-                  disabled
-                  className="bg-surface-muted capitalize"
-                />
-                <p className="text-xs text-text-muted mt-1">
-                  Role is set by team administrators
-                </p>
-              </div>
-              <div className="md:col-span-2">
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-2"
-                >
-                  Address
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="Your address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary mb-2"
+              >
+                Email Address
+              </Typography>
+              <Input
+                type="email"
+                value={profile.email || ""}
+                disabled
+                className="bg-surface-muted"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                Email cannot be changed
+              </p>
             </div>
-            <div className="mt-6">
+            <div>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary mb-2"
+              >
+                Display Name
+              </Typography>
+              <Input
+                type="text"
+                placeholder="How you'd like to be called"
+                value={formData.display_name}
+                onChange={(e) =>
+                  handleInputChange("display_name", e.target.value)
+                }
+              />
+            </div>
+            <div>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary mb-2"
+              >
+                Full Name
+              </Typography>
+              <Input
+                type="text"
+                placeholder="Your full name"
+                value={formData.full_name}
+                onChange={(e) => handleInputChange("full_name", e.target.value)}
+              />
+            </div>
+            <div>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary mb-2"
+              >
+                Phone Number
+              </Typography>
+              <Input
+                type="tel"
+                placeholder="(555) 123-4567"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+              />
+            </div>
+            <div>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary mb-2"
+              >
+                Role
+              </Typography>
+              <Input
+                type="text"
+                value={profile.role || "Not specified"}
+                disabled
+                className="bg-surface-muted capitalize"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                Role is set by team administrators
+              </p>
+            </div>
+            <div className="md:col-span-2">
               <Typography
                 variant="body-sm"
                 as="label"
                 className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
-                Bio
+                Address
               </Typography>
-              <textarea
-                rows={4}
-                placeholder="Tell us about yourself..."
-                value={formData.bio}
-                onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+              <Input
+                type="text"
+                placeholder="Your address"
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
               />
             </div>
           </div>
-          {/* Account Security */}
-          <div className="surface-card elevation-card rounded-lg p-6">
-            <Typography variant="headline-sm" as="h2" className="mb-4">
-              Account Security
+          <div className="mt-6">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-primary dark:text-border-light mb-2"
+            >
+              Bio
             </Typography>
-            <div className="space-y-4">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-2"
-                >
-                  Password
-                </Typography>
-                <div className="flex items-center space-x-4">
-                  <Input
-                    type="password"
-                    value="••••••••••"
-                    disabled
-                    className="surface-subtle dark:bg-text-primary"
-                  />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handlePasswordChange}
-                  >
-                    Change Password
-                  </Button>
-                </div>
-                <p className="text-xs text-text-muted mt-1">
-                  A password reset link will be sent to your email
-                </p>
-              </div>
-            </div>
+            <textarea
+              rows={4}
+              placeholder="Tell us about yourself..."
+              value={formData.bio}
+              onChange={(e) => handleInputChange("bio", e.target.value)}
+              className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+            />
           </div>
-          {/* Actions */}
-          <div className="flex justify-between items-center">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => window.history.back()}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              loading={saving}
-              disabled={saving}
-            >
-              {saving ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </form>
-        {/* Account Info */}
-        <div className="mt-8 surface-subtle dark:bg-surface-secondary/50 rounded-lg p-6">
-          <Typography variant="headline-sm" as="h3" className="mb-3">
-            Account Information
+        </div>
+        {/* Account Security */}
+        <div className="surface-card elevation-card rounded-lg p-6">
+          <Typography variant="headline-sm" as="h2" className="mb-4">
+            Account Security
           </Typography>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="space-y-4">
             <div>
-              <span className="font-medium">Account Created:</span>{" "}
-              {profile.created_at
-                ? new Date(profile.created_at).toLocaleDateString()
-                : "Unknown"}
-            </div>
-            <div>
-              <span className="font-medium">Last Updated:</span>{" "}
-              {profile.updated_at
-                ? new Date(profile.updated_at).toLocaleDateString()
-                : "Never"}
-            </div>
-            <div>
-              <span className="font-medium">Role:</span>{" "}
-              <span className="capitalize">
-                {profile.role || "Not assigned"}
-              </span>
-            </div>
-            <div>
-              <span className="font-medium">User ID:</span>{" "}
-              <code className="text-xs surface-subtle dark:bg-text-primary px-2 py-1 rounded">
-                {profile.id.substring(0, 8)}...
-              </code>
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
+              >
+                Password
+              </Typography>
+              <div className="flex items-center space-x-4">
+                <Input
+                  type="password"
+                  value="••••••••••"
+                  disabled
+                  className="surface-subtle dark:bg-text-primary"
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handlePasswordChange}
+                >
+                  Change Password
+                </Button>
+              </div>
+              <p className="text-xs text-text-muted mt-1">
+                A password reset link will be sent to your email
+              </p>
             </div>
           </div>
         </div>
-      </PageLayout>
+        {/* Actions */}
+        <div className="flex justify-between items-center">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => window.history.back()}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={saving}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+      </form>
+      {/* Account Info */}
+      <div className="mt-8 surface-subtle dark:bg-surface-secondary/50 rounded-lg p-6">
+        <Typography variant="headline-sm" as="h3" className="mb-3">
+          Account Information
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <span className="font-medium">Account Created:</span>{" "}
+            {profile.created_at
+              ? new Date(profile.created_at).toLocaleDateString()
+              : "Unknown"}
+          </div>
+          <div>
+            <span className="font-medium">Last Updated:</span>{" "}
+            {profile.updated_at
+              ? new Date(profile.updated_at).toLocaleDateString()
+              : "Never"}
+          </div>
+          <div>
+            <span className="font-medium">Role:</span>{" "}
+            <span className="capitalize">{profile.role || "Not assigned"}</span>
+          </div>
+          <div>
+            <span className="font-medium">User ID:</span>{" "}
+            <code className="text-xs surface-subtle dark:bg-text-primary px-2 py-1 rounded">
+              {profile.id.substring(0, 8)}...
+            </code>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
   );
 };

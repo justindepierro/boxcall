@@ -22,12 +22,23 @@ import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcuts
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
+import type { TeamType } from "../components/playbook/TeamTypeToggle";
+import { Modal } from "../components/ui/Modal";
+import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
   const toast = useToast();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
+  const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
+
+  // Handle creating a diagram for a play
+  const handleCreateDiagram = useCallback((play: Play) => {
+    setDiagramPlay(play);
+    // TODO: Open diagram builder modal or navigate to diagram route
+    console.log("Creating diagram for play:", play);
+  }, []);
 
   // Load settings from localStorage or use defaults
   const loadSettings = () => {
@@ -311,19 +322,11 @@ export default function PlaybookPage() {
       variant="dashboard"
       actions={
         <div className="flex items-center gap-3">
-          <Button
-            onClick={handleOpenSettings}
-            variant="secondary"
-            size="sm"
-          >
+          <Button onClick={handleOpenSettings} variant="secondary" size="sm">
             <Icon name="settings" className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button
-            onClick={handleOpenBuilder}
-            variant="primary"
-            size="sm"
-          >
+          <Button onClick={handleOpenBuilder} variant="primary" size="sm">
             <Icon name="plus" className="h-4 w-4 mr-2" />
             New Play
           </Button>
@@ -340,37 +343,35 @@ export default function PlaybookPage() {
         onOpenSettings={handleOpenSettings}
       />
 
-      {/* Full-width View Tabs */}
-      <div className="bg-surface-primary border-b border-border -mx-6 mb-6">
-        <div className="px-6 py-4">
-          <PlaybookViewTabs
-            currentView={state.currentView}
-            onViewChange={handleViewChange}
-          />
-        </div>
+      {/* Navigation Tabs - Integrated with Header */}
+      <div className="-mx-6 px-6 py-3">
+        <PlaybookViewTabs
+          currentView={state.currentView}
+          onViewChange={handleViewChange}
+        />
       </div>
 
       {/* Main Content - 2 Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Sidebar - Controls */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Stats Dashboard */}
-          <PlaybookStatsDashboard stats={playbookStats} />
-
-          {/* Recent Activity */}
-          <RecentActivityFeed activities={playbookStats.recentActivity} />
-
-          {/* Filters */}
-          <div className="surface-card rounded-lg border border-border p-4">
+          {/* Filters - Moved to top */}
+          <div className="surface-card rounded-lg p-4">
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
             />
           </div>
 
+          {/* Stats Dashboard */}
+          <PlaybookStatsDashboard stats={playbookStats} />
+
+          {/* Recent Activity */}
+          <RecentActivityFeed activities={playbookStats.recentActivity} />
+
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <div className="surface-card rounded-lg border border-border p-4">
+            <div className="surface-card rounded-lg p-4">
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
@@ -378,46 +379,11 @@ export default function PlaybookPage() {
               />
             </div>
           )}
-
-          {/* Action Buttons - Cleaned up */}
-          <div className="surface-card rounded-lg border border-border p-4">
-            <div className="space-y-3">
-              <Button
-                onClick={handleQuickNewPracticeScript}
-                variant="secondary"
-                size="sm"
-                className="w-full justify-start"
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Practice Script
-              </Button>
-
-              <Button
-                onClick={handleQuickNewGamePlan}
-                variant="secondary"
-                size="sm"
-                className="w-full justify-start"
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Game Plan
-              </Button>
-
-              <Button
-                onClick={handleOpenBuilder}
-                variant="primary"
-                size="sm"
-                className="w-full justify-start"
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Play
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3">
-          <div className="surface-card rounded-lg border border-border p-6">
+          <div className="surface-card rounded-lg p-6">
             {state.currentView === "playbook" && (
               <PlayGrid
                 searchQuery={state.searchQuery}
@@ -426,6 +392,9 @@ export default function PlaybookPage() {
                 onAddToGamePlan={handleAddToGamePlan}
                 onEdit={handleEditPlay}
                 onDuplicate={handleDuplicatePlay}
+                onOpenBuilder={handleOpenBuilder}
+                onCreateDiagram={handleCreateDiagram}
+                refreshTrigger={state.refreshTrigger}
               />
             )}
 
@@ -663,6 +632,24 @@ export default function PlaybookPage() {
           },
         ]}
       />
+
+      {/* Diagram Builder Modal */}
+      {diagramPlay && (
+        <Modal
+          isOpen={!!diagramPlay}
+          onClose={() => setDiagramPlay(null)}
+          title={`Diagram Builder - ${diagramPlay.play_name}`}
+          size="xl"
+          type="default"
+          closeOnBackdropClick={false}
+          closeOnEscape={true}
+        >
+          <PlayDiagramBuilder
+            play={diagramPlay}
+            onClose={() => setDiagramPlay(null)}
+          />
+        </Modal>
+      )}
     </PageLayout>
   );
 }

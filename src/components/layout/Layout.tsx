@@ -77,10 +77,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
 
       {/* App Header */}
-      <AppHeader
-        onMenuToggle={() => toggleSidebar()}
-        sidebarOpen={sidebarOpen}
-      />
+      <AppHeader onMenuToggle={() => toggleSidebar()} />
 
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative pt-16">

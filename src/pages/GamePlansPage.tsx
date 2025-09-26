@@ -49,11 +49,7 @@ export default function GamePlansPage() {
             <Icon name="arrow-left" className="h-4 w-4 mr-2" />
             Back to Playbook
           </Button>
-          <Button
-            onClick={handleCreatePlan}
-            variant="primary"
-            size="sm"
-          >
+          <Button onClick={handleCreatePlan} variant="primary" size="sm">
             <Icon name="plus" className="h-4 w-4 mr-2" />
             New Plan
           </Button>
@@ -66,10 +62,7 @@ export default function GamePlansPage() {
           <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
             <Icon name="target" className="h-12 w-12 text-text-muted" />
           </div>
-          <Typography
-            variant="headline-md"
-            className="text-text-primary mb-2"
-          >
+          <Typography variant="headline-md" className="text-text-primary mb-2">
             No Game Plans Yet
           </Typography>
           <Typography

@@ -1,25 +1,37 @@
 import React from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
+import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
 
 export type PlaybookViewTabsProps = {
   currentView: CoachingView;
   onViewChange: (view: CoachingView) => void;
+  currentTeamType?: TeamType;
+  onTeamTypeChange?: (type: TeamType) => void;
 };
 
 export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   currentView,
   onViewChange,
+  currentTeamType,
+  onTeamTypeChange,
 }) => {
   return (
-    <div className="mt-4">
-      <div
-        role="tablist"
-        aria-label="Views"
-        className="surface-card rounded-lg shadow-sm border-subtle p-1 grid grid-cols-3 gap-1"
-      >
+    <div className="flex items-center justify-between w-full">
+      {/* Team Type Toggle - Left side */}
+      <div className="flex items-center">
+        {currentTeamType && onTeamTypeChange && (
+          <TeamTypeToggle
+            currentType={currentTeamType}
+            onTypeChange={onTeamTypeChange}
+          />
+        )}
+      </div>
+
+      {/* View Tabs - Right side */}
+      <div className="flex items-center space-x-1">
         <Button
           id="tab-playbook"
           role="tab"
@@ -27,11 +39,13 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           aria-selected={currentView === "playbook"}
           tabIndex={currentView === "playbook" ? 0 : -1}
           onClick={() => onViewChange("playbook")}
-          variant={currentView === "playbook" ? "primary" : "ghost"}
+          variant={currentView === "playbook" ? "secondary" : "ghost"}
           size="sm"
-          className="flex-1 flex items-center justify-center"
+          className="px-4 py-2"
+          icon={<Icon name="file" />}
+          iconPosition="left"
         >
-          <Icon name="file" className="h-4 w-4 mr-2" /> Playbook View
+          Playbook
         </Button>
         <Button
           id="tab-practice-script"
@@ -40,11 +54,13 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           aria-selected={currentView === "practice-script"}
           tabIndex={currentView === "practice-script" ? 0 : -1}
           onClick={() => onViewChange("practice-script")}
-          variant={currentView === "practice-script" ? "primary" : "ghost"}
+          variant={currentView === "practice-script" ? "secondary" : "ghost"}
           size="sm"
-          className="flex-1 flex items-center justify-center"
+          className="px-4 py-2"
+          icon={<Icon name="clock" />}
+          iconPosition="left"
         >
-          <Icon name="clock" className="h-4 w-4 mr-2" /> Practice Script View
+          Practice Scripts
         </Button>
         <Button
           id="tab-game-plan"
@@ -53,11 +69,13 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           aria-selected={currentView === "game-plan"}
           tabIndex={currentView === "game-plan" ? 0 : -1}
           onClick={() => onViewChange("game-plan")}
-          variant={currentView === "game-plan" ? "primary" : "ghost"}
+          variant={currentView === "game-plan" ? "secondary" : "ghost"}
           size="sm"
-          className="flex-1 flex items-center justify-center"
+          className="px-4 py-2"
+          icon={<Icon name="users" />}
+          iconPosition="left"
         >
-          <Icon name="users" className="h-4 w-4 mr-2" /> Game Plan View
+          Game Plans
         </Button>
       </div>
     </div>

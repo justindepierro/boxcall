@@ -137,7 +137,7 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
 
     if (!networkStatus.isOnline) {
       return (
-        <div className="mt-4 p-3 surface-subtle border border-subtle rounded-lg">
+        <div className="mt-4 p-3 surface-subtle rounded-lg">
           <Typography
             variant="body-sm"
             className="text-text-warning text-center"
@@ -154,7 +154,7 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
 
     if (networkStatus.isSlowConnection) {
       return (
-        <div className="mt-4 p-3 surface-subtle border border-subtle rounded-lg">
+        <div className="mt-4 p-3 surface-subtle rounded-lg">
           <Typography variant="body-sm" className="text-text-info text-center">
             <Icon
               name="clock"

@@ -106,7 +106,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center justify-between p-4 surface-card border border-subtle rounded-lg ${className}`}
+        className={`flex items-center justify-between p-4 surface-card rounded-lg ${className}`}
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>

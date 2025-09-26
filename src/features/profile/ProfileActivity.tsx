@@ -15,7 +15,7 @@ export const ProfileActivity: React.FC<ProfileActivityProps> = ({
     <div className="space-y-4">
       <Typography variant="headline-md">Recent Activity</Typography>
       {activities.map((activity) => (
-        <div key={activity.id} className="p-3 border rounded-md">
+        <div key={activity.id} className="p-3 rounded-md">
           <Typography variant="body-md">{activity.description}</Typography>
           <Typography variant="body-sm" color="muted">
             {activity.date}

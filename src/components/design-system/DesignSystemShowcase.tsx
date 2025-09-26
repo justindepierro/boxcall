@@ -61,14 +61,14 @@ export function DesignSystemShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="min-h-screen bg-primary p-8">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-text-primary">
+          <h1 className="text-4xl font-bold text-primary">
             🎨 BoxCall Design System Showcase
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+          <p className="text-lg text-secondary max-w-2xl mx-auto">
             Experience our industry-leading design system with AI-powered
             theming, advanced animations, and comprehensive accessibility
             support.
@@ -86,13 +86,13 @@ export function DesignSystemShowcase() {
 
         {/* Theme Controls */}
         <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             🎯 Dynamic Theming
           </h2>
 
           {/* Team Colors */}
           <div className="mb-8">
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <h3 className="text-lg font-medium mb-4 text-primary">
               Team Colors (AI-Generated)
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -131,7 +131,7 @@ export function DesignSystemShowcase() {
                             style={{ backgroundColor: generatedPalette.accent }}
                           />
                         </div>
-                        <span className="text-sm font-medium text-text-primary">
+                        <span className="text-sm font-medium text-primary">
                           {teamName.split(" ")[1]}
                         </span>
                       </div>
@@ -144,7 +144,7 @@ export function DesignSystemShowcase() {
 
           {/* Emotion Themes */}
           <div className="mb-8">
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <h3 className="text-lg font-medium mb-4 text-primary">
               Emotion Themes
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -185,7 +185,7 @@ export function DesignSystemShowcase() {
                   >
                     <div className="text-center space-y-2">
                       <span className="text-2xl">{icon}</span>
-                      <span className="text-sm font-medium text-text-primary">
+                      <span className="text-sm font-medium text-primary">
                         {label}
                       </span>
                     </div>
@@ -197,7 +197,7 @@ export function DesignSystemShowcase() {
 
           {/* Context Themes */}
           <div>
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <h3 className="text-lg font-medium mb-4 text-primary">
               Context Themes
             </h3>
             <div className="grid grid-cols-3 gap-4">
@@ -220,10 +220,10 @@ export function DesignSystemShowcase() {
                     }`}
                   >
                     <div className="text-center space-y-2">
-                      <span className="text-sm font-medium text-text-primary">
+                      <span className="text-sm font-medium text-primary">
                         {label}
                       </span>
-                      <span className="text-xs text-text-secondary">
+                      <span className="text-xs text-secondary">
                         {desc}
                       </span>
                     </div>
@@ -236,7 +236,7 @@ export function DesignSystemShowcase() {
 
         {/* Button Showcase */}
         <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             🔘 Advanced Button System
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -259,7 +259,7 @@ export function DesignSystemShowcase() {
           </div>
 
           <div className="mt-6 space-y-4">
-            <h3 className="text-lg font-medium text-text-primary">
+            <h3 className="text-lg font-medium text-primary">
               Interactive Features
             </h3>
             <div className="flex flex-wrap gap-4">
@@ -281,48 +281,48 @@ export function DesignSystemShowcase() {
 
         {/* Card Showcase */}
         <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             📋 Advanced Card System
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card variant="default" className="p-4">
               <h3 className="font-semibold mb-2">Default Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Standard card with subtle elevation.
               </p>
             </Card>
 
             <Card variant="glass" className="p-4">
               <h3 className="font-semibold mb-2">Glass Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Glassmorphism effect with backdrop blur.
               </p>
             </Card>
 
             <Card variant="elevated" className="p-4">
               <h3 className="font-semibold mb-2">Elevated Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Enhanced shadows and micro-animations.
               </p>
             </Card>
 
             <Card variant="outlined" className="p-4">
               <h3 className="font-semibold mb-2">Outlined Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Clean border with jade accent.
               </p>
             </Card>
 
             <Card variant="filled" className="p-4">
               <h3 className="font-semibold mb-2">Filled Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Background fill for emphasis.
               </p>
             </Card>
 
             <Card variant="accent" interactive className="p-4">
               <h3 className="font-semibold mb-2">Interactive Card</h3>
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-secondary">
                 Hover effects and animations.
               </p>
             </Card>
@@ -331,14 +331,14 @@ export function DesignSystemShowcase() {
 
         {/* Loading States */}
         <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             ⏳ Advanced Loading States
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Skeletons */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Skeleton Loading
               </h3>
               <div className="space-y-4">
@@ -354,7 +354,7 @@ export function DesignSystemShowcase() {
 
             {/* Empty States */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Contextual Empty States
               </h3>
               <div className="grid grid-cols-2 gap-4">
@@ -382,7 +382,7 @@ export function DesignSystemShowcase() {
 
           {/* Progressive Loading */}
           <div className="mt-8">
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <h3 className="text-lg font-medium mb-4 text-primary">
               Progressive Image Loading
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -428,7 +428,7 @@ export function DesignSystemShowcase() {
 
         {/* Color Palette Display */}
         <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             🎨 Current Color Palette
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -438,10 +438,10 @@ export function DesignSystemShowcase() {
                   className="h-16 w-full rounded-lg border-2 border-border"
                   style={{ backgroundColor: value }}
                 />
-                <span className="text-xs font-medium text-text-primary capitalize">
+                <span className="text-xs font-medium text-primary capitalize">
                   {key}
                 </span>
-                <span className="text-xs text-text-secondary font-mono">
+                <span className="text-xs text-secondary font-mono">
                   {value}
                 </span>
               </div>
@@ -451,13 +451,13 @@ export function DesignSystemShowcase() {
 
         {/* Real App Components Demo */}
         <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             🚀 Real App Components
           </h2>
           <div className="space-y-6">
             {/* Playbook Card Example */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Playbook Cards
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -467,23 +467,23 @@ export function DesignSystemShowcase() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h4 className="font-semibold text-text-primary">
+                      <h4 className="font-semibold text-primary">
                         Triple Option
                       </h4>
-                      <p className="text-sm text-text-secondary">
+                      <p className="text-sm text-secondary">
                         Classic QB read with multiple options
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-success text-text-success text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-success text-success text-xs rounded">
                         Run
                       </span>
-                      <span className="px-2 py-1 bg-surface-info text-text-info text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-info text-info text-xs rounded">
                         Popular
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-text-muted">
+                  <div className="flex items-center gap-4 text-sm text-muted">
                     <span>📈 89% Success</span>
                     <span>🏈 23 Uses</span>
                     <span>⭐ 4.8 Rating</span>
@@ -493,23 +493,23 @@ export function DesignSystemShowcase() {
                 <Card variant="glass" className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h4 className="font-semibold text-text-primary">
+                      <h4 className="font-semibold text-primary">
                         Slant Routes
                       </h4>
-                      <p className="text-sm text-text-secondary">
+                      <p className="text-sm text-secondary">
                         Timing-based passing concept
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-warning text-text-warning text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-warning text-warning text-xs rounded">
                         Pass
                       </span>
-                      <span className="px-2 py-1 bg-surface-error text-text-error text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-error text-error text-xs rounded">
                         Complex
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-text-muted">
+                  <div className="flex items-center gap-4 text-sm text-muted">
                     <span>📈 76% Success</span>
                     <span>🏈 12 Uses</span>
                     <span>⭐ 4.2 Rating</span>
@@ -520,48 +520,48 @@ export function DesignSystemShowcase() {
 
             {/* Team Stats Example */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Analytics Dashboard
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-text-success mb-1">
+                  <div className="text-2xl font-bold text-success mb-1">
                     89%
                   </div>
-                  <div className="text-sm text-text-secondary">
+                  <div className="text-sm text-secondary">
                     Completion Rate
                   </div>
-                  <div className="text-xs text-text-muted mt-1">
+                  <div className="text-xs text-muted mt-1">
                     +12% from last week
                   </div>
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-text-info mb-1">
+                  <div className="text-2xl font-bold text-info mb-1">
                     1,247
                   </div>
-                  <div className="text-sm text-text-secondary">Total Yards</div>
-                  <div className="text-xs text-text-muted mt-1">
+                  <div className="text-sm text-secondary">Total Yards</div>
+                  <div className="text-xs text-muted mt-1">
                     +89 from last game
                   </div>
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-text-warning mb-1">
+                  <div className="text-2xl font-bold text-warning mb-1">
                     23
                   </div>
-                  <div className="text-sm text-text-secondary">First Downs</div>
-                  <div className="text-xs text-text-muted mt-1">
+                  <div className="text-sm text-secondary">First Downs</div>
+                  <div className="text-xs text-muted mt-1">
                     +5 from last game
                   </div>
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-text-error mb-1">
+                  <div className="text-2xl font-bold text-error mb-1">
                     2
                   </div>
-                  <div className="text-sm text-text-secondary">Turnovers</div>
-                  <div className="text-xs text-text-muted mt-1">
+                  <div className="text-sm text-secondary">Turnovers</div>
+                  <div className="text-xs text-muted mt-1">
                     -1 from last game
                   </div>
                 </Card>
@@ -572,13 +572,13 @@ export function DesignSystemShowcase() {
 
         {/* Animation Showcase */}
         <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             ✨ Animation System
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Micro-interactions */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Micro-interactions
               </h3>
               <div className="space-y-4">
@@ -602,7 +602,7 @@ export function DesignSystemShowcase() {
                   interactive={true}
                   className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
                 >
-                  <p className="text-sm text-text-secondary">
+                  <p className="text-sm text-secondary">
                     Hover me for elevation effect
                   </p>
                 </Card>
@@ -611,12 +611,12 @@ export function DesignSystemShowcase() {
 
             {/* Page Transitions */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-text-primary">
+              <h3 className="text-lg font-medium mb-4 text-primary">
                 Page Transitions
               </h3>
               <div className="space-y-4">
                 <div className="p-4 bg-surface-muted rounded-lg">
-                  <p className="text-sm text-text-secondary mb-2">
+                  <p className="text-sm text-secondary mb-2">
                     Smooth fade transitions between pages
                   </p>
                   <div className="flex gap-2">
@@ -632,7 +632,7 @@ export function DesignSystemShowcase() {
                   </div>
                 </div>
                 <div className="p-4 bg-gradient-to-r from-electric-500/10 to-jade-500/10 rounded-lg">
-                  <p className="text-sm text-text-secondary">
+                  <p className="text-sm text-secondary">
                     Gradient animations and color transitions
                   </p>
                 </div>
@@ -643,48 +643,48 @@ export function DesignSystemShowcase() {
 
         {/* Performance Metrics */}
         <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-primary">
             📊 Performance Achievements
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-text-success mb-2">
+              <div className="text-3xl font-bold text-success mb-2">
                 1.8MB
               </div>
-              <div className="text-sm text-text-secondary mb-1">
+              <div className="text-sm text-secondary mb-1">
                 Bundle Size
               </div>
-              <div className="text-xs text-text-muted">
+              <div className="text-xs text-muted">
                 Down from 2.1MB (-14%)
               </div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold text-text-info mb-2">0.8s</div>
-              <div className="text-sm text-text-secondary mb-1">
+              <div className="text-3xl font-bold text-info mb-2">0.8s</div>
+              <div className="text-sm text-secondary mb-1">
                 First Contentful Paint
               </div>
-              <div className="text-xs text-text-muted">
+              <div className="text-xs text-muted">
                 Target: &lt;0.5s (Soon!)
               </div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold text-text-warning mb-2">
+              <div className="text-3xl font-bold text-warning mb-2">
                 98+
               </div>
-              <div className="text-sm text-text-secondary mb-1">
+              <div className="text-sm text-secondary mb-1">
                 Lighthouse Accessibility
               </div>
-              <div className="text-xs text-text-muted">WCAG AA Compliant</div>
+              <div className="text-xs text-muted">WCAG AA Compliant</div>
             </div>
           </div>
 
           <div className="mt-6 p-4 bg-surface-success/10 border border-surface-success rounded-lg">
-            <h4 className="font-semibold text-text-success mb-2">
+            <h4 className="font-semibold text-success mb-2">
               ✅ Zero Design Violations
             </h4>
-            <p className="text-sm text-text-secondary">
+            <p className="text-sm text-secondary">
               Eliminated 1,397 hardcoded Tailwind colors, replaced with semantic
               tokens for runtime theme switching
             </p>

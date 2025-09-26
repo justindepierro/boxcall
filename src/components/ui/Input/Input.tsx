@@ -16,7 +16,7 @@ import type {
 } from "./Input.types";
 // Input base styles configuration - Square, technical styling with semantic design system
 const inputStyles: InputStylesConfig = {
-  base: "block w-full rounded-sm border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-surface-primary text-text-primary placeholder-text-muted border-border font-sans",
+  base: "block w-full rounded-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)] bg-surface-primary text-text-primary placeholder-text-muted font-sans",
   sizes: {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-3 text-sm",
@@ -33,17 +33,14 @@ const inputStyles: InputStylesConfig = {
   },
   statuses: {
     default:
-      "border-border focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)]",
-    error:
-      "border-error focus:border-error focus:ring-error bg-surface-secondary",
-    success:
-      "border-success focus:border-success focus:ring-success bg-surface-secondary",
-    warning:
-      "border-warning focus:border-warning focus:ring-warning bg-surface-secondary",
+      "focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)]",
+    error: "focus:border-error focus:ring-error bg-surface-secondary",
+    success: "focus:border-success focus:ring-success bg-surface-secondary",
+    warning: "focus:border-warning focus:ring-warning bg-surface-secondary",
   },
   focus: "focus:ring-2 focus:ring-offset-1",
   disabled:
-    "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:border-border",
+    "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed",
 };
 // Size configuration
 const sizeConfig: InputSizeConfig = {

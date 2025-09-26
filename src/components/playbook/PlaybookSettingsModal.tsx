@@ -339,10 +339,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               {/* Personnel Configurations */}
               <div className="space-y-6">
                 {localSettings.personnelConfigurations?.map((config) => (
-                  <div
-                    key={config.id}
-                    className="border border-border rounded-lg p-4"
-                  >
+                  <div key={config.id} className="rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
                         <InlineEditableText
@@ -447,7 +444,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                                       { count: parseInt(e.target.value) || 1 }
                                     )
                                   }
-                                  className="w-16 px-2 py-1 border border-border-medium rounded"
+                                  className="w-16 px-2 py-1 rounded"
                                 />
                               </Typography>
                             </div>

@@ -156,17 +156,15 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
 
   return (
-    <div className="bg-surface-primary border border-border rounded-lg shadow-sm">
+    <div className="bg-surface-primary rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.1)]">
       {/* Compact Header */}
-      <div className="px-3 py-2 border-b border-border">
+      <div className="px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon name="filter" className="h-4 w-4 text-text-muted" />
-            <span className="text-sm font-medium text-text-secondary">
-              Filters
-            </span>
+            <span className="text-sm font-medium text-accent">Filters</span>
             {activeFilters.length > 0 && (
-              <span className="px-1.5 py-0.5 text-xs bg-surface-info text-text-info rounded-full">
+              <span className="px-1.5 py-0.5 text-xs bg-accent/10 text-accent rounded-full">
                 {activeFilters.length}
               </span>
             )}
@@ -196,12 +194,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Active Filters - Horizontal Layout */}
       {activeFilters.length > 0 && (
-        <div className="px-3 py-2 border-b border-border">
+        <div className="px-4 py-3">
           <div className="flex flex-wrap gap-1">
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-surface-error text-text-error text-xs rounded-full border border-border-error"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-surface-error text-text-error text-xs rounded-full"
               >
                 <span className="truncate max-w-32">{filter.label}</span>
                 <button
@@ -218,7 +216,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Compact Add Filter */}
       {showAddFilter && (
-        <div className="px-3 py-2 border-t border-border">
+        <div className="px-4 py-3">
           <div className="flex gap-2 items-end">
             <div className="flex-1 min-w-0">
               <select

@@ -279,6 +279,11 @@ export default {
             "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
         },
 
+        // Component-specific elevation classes
+        "elevation-card":
+          "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "elevation-button": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+
         // Functional UI System - "Work Boot Aesthetic"
         functional: {
           // Neutral grays for professional UI
@@ -318,6 +323,9 @@ export default {
           "text-muted": "var(--semantic-text-muted)",
           "text-inverse": "var(--semantic-text-inverse)",
           "text-brand": "var(--semantic-text-brand)",
+          "text-accent": "var(--semantic-text-accent)",
+          "text-accent-secondary": "var(--semantic-text-accent-secondary)",
+          "text-accent-electric": "var(--semantic-text-accent-electric)",
 
           "bg-primary": "var(--semantic-bg-primary)",
           "bg-secondary": "var(--semantic-bg-secondary)",
@@ -325,12 +333,16 @@ export default {
           "surface-primary": "var(--semantic-bg-primary)",
           "surface-secondary": "var(--semantic-bg-secondary)",
           "surface-muted": "var(--semantic-bg-muted)",
+          "surface-subtle": "var(--semantic-bg-secondary)",
+          "surface-card": "var(--semantic-bg-primary)",
           "surface-subtle-hover": "var(--semantic-surface-subtle-hover)",
           "surface-inverse": "var(--semantic-surface-inverse)",
 
           border: "var(--semantic-border)",
           "border-focus": "var(--semantic-border-focus)",
           "border-error": "var(--semantic-border-error)",
+          "border-subtle": "var(--semantic-border)",
+          "border-light": "var(--semantic-border)",
 
           success: "var(--semantic-success)",
           "success-bg": "var(--semantic-success-bg)",

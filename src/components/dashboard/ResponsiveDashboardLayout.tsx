@@ -4,9 +4,9 @@ import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import ProfileCard from "../dashboard/ProfileCard";
 import TeamFeeds from "../dashboard/TeamFeeds";
+import { GamePlanningAnalytics } from "../dashboard/analytics/GamePlanningAnalytics";
+import { AdaptiveContentWidget } from "../dashboard/AdaptiveContentWidget";
 import { Typography } from "../design-system";
-import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
-import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { useAdvancedTheme } from "../design-system/AdvancedThemeProvider";
@@ -33,10 +33,7 @@ import { useNavigate } from "react-router-dom";
  */
 export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, error } = useAuth();
-  const { items } = useMobileNavigation(
-    typeof window !== "undefined" ? window.location.pathname : "/"
-  );
-  const { isStepVisible } = useProgressiveLoading(4, 200);
+  const { isStepVisible } = useProgressiveLoading(6, 200);
   const theme = useAdvancedTheme();
   const navigate = useNavigate();
 
@@ -78,27 +75,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const userRole = profile.role || "player";
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* 
-        ============================================================================
-        WELCOME HEADER - Responsive across all breakpoints
-        ============================================================================ 
-      */}
-      <div className="responsive-welcome-header bg-gradient-to-r from-surface-primary to-surface-primary border-b border-border">
-        <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
-          <Typography variant="headline-md" className="text-text-primary">
-            Welcome back,{" "}
-            {profile.full_name?.split(" ")[0] ||
-              profile.display_name ||
-              user.email}
-            !
-          </Typography>
-          <Typography variant="body-sm" color="muted" className="mt-1">
-            Your command center awaits • Quote of the day coming soon
-          </Typography>
-        </div>
-      </div>
-
+    <>
       {/* 
         ============================================================================
         RESPONSIVE LAYOUT CONTAINER
@@ -158,6 +135,24 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               <DashboardCardSkeleton />
             )}
           </div>
+
+          {/* Game Planning Analytics */}
+          <div className="analytics-section">
+            {isStepVisible(4) ? (
+              <GamePlanningAnalytics teamId={user.id} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
+
+          {/* Adaptive Content Widget */}
+          <div className="adaptive-content-section">
+            {isStepVisible(5) ? (
+              <AdaptiveContentWidget />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
         </div>
 
         {/* Design System Showcase - Only show in dev mode */}
@@ -213,16 +208,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* 
-        ============================================================================
-        MOBILE BOTTOM NAVIGATION - Clean, single navigation system
-        ============================================================================ 
-      */}
-      <div className="mobile-bottom-nav lg:hidden">
-        <MobileBottomNavigation items={items} />
-      </div>
-    </div>
+    </>
   );
 };
 

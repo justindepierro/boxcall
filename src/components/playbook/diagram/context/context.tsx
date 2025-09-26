@@ -62,6 +62,24 @@ export function reducer(
     return routeReducer(state, action);
   }
   // Handle remaining actions directly
+  if (action.type === "SET_TOOL") {
+    return { ...state, ui: { ...state.ui, tool: action.tool } };
+  }
+  if (action.type === "SET_ROUTE_MODE") {
+    return { ...state, ui: { ...state.ui, routeMode: action.mode } };
+  }
+  if (action.type === "SET_DRAW_MODE") {
+    return { ...state, ui: { ...state.ui, drawMode: action.mode } };
+  }
+  if (action.type === "SET_DRAW_COLOR") {
+    return { ...state, ui: { ...state.ui, drawColor: action.color } };
+  }
+  if (action.type === "SET_DRAW_WIDTH") {
+    return { ...state, ui: { ...state.ui, drawWidth: action.width } };
+  }
+  if (action.type === "SET_DRAW_ARROW_HEAD") {
+    return { ...state, ui: { ...state.ui, drawArrowHead: action.arrowHead } };
+  }
   if (action.type === "REDO") {
     if (state.historyIndex >= state.history.length - 1) return state;
     const idx = state.historyIndex + 1;

@@ -60,6 +60,8 @@ export interface EditorToolState {
     | "route"
     | "draw"
     | "motion"
+    | "blocking"
+    | "ai-suggest"
     | "delete";
   routeMode?: "line" | "curve"; // how new route segments should be created
   drawMode?:
@@ -69,7 +71,10 @@ export interface EditorToolState {
     | "connector"
     | "curve"
     | "dashed"
-    | "dotted"; // drawing subtype
+    | "dotted"
+    | "zone"
+    | "pressure"
+    | "hot-route"; // drawing subtype
   drawColor?: string;
   drawWidth?: number;
   drawArrowHead?: "none" | "start" | "end" | "both";
@@ -107,6 +112,8 @@ export interface EditorToolState {
   inlineEdit?: { playerId: string; draft: string };
   // Grid overlay visibility
   showGridOverlay?: boolean;
+  // Formation selection
+  selectedFormation?: string;
 }
 
 export interface DiagramEditorState {
@@ -150,9 +157,12 @@ export type DiagramEditorAction =
   | { type: "ADD_PLAYER"; player: DiagramPlayer }
   | { type: "MOVE_PLAYER"; id: string; x: number; y: number }
   | { type: "ADD_ROUTE_SEGMENT"; playerId: string; segment: RouteSegment }
-  | { type: "SET_ZOOM"; zoom: number }
-  | { type: "PAN"; dx: number; dy: number }
-  | { type: "SET_VIEWPORT"; zoom?: number; panX?: number; panY?: number }
+  | { type: "SET_TOOL"; tool: EditorToolState["tool"] }
+  | { type: "SET_ROUTE_MODE"; mode: NonNullable<EditorToolState["routeMode"]> }
+  | { type: "SET_DRAW_MODE"; mode: NonNullable<EditorToolState["drawMode"]> }
+  | { type: "SET_DRAW_COLOR"; color: string }
+  | { type: "SET_DRAW_WIDTH"; width: number }
+  | { type: "SET_DRAW_ARROW_HEAD"; arrowHead: NonNullable<EditorToolState["drawArrowHead"]> }
   | { type: "SET_SNAP_PULSE"; enabled: boolean }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
   | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }

@@ -43,8 +43,6 @@ export interface TableProps<T extends TableRow = TableRow> {
   selectedRows?: string[];
   /** Selection change handler */
   onSelectionChange?: (selectedIds: string[]) => void;
-  /** Whether table has borders */
-  bordered?: boolean;
   /** Whether rows have alternating colors */
   striped?: boolean;
   /** Table size variant */
@@ -81,7 +79,7 @@ export interface TableProps<T extends TableRow = TableRow> {
   className?: string;
 }
 // Style functions converted to use Tailwind dark mode classes
-const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
+const getTableStyles = (size?: "sm" | "md" | "lg") => {
   const sizeStyles = {
     sm: "text-xs",
     md: "text-sm",
@@ -92,7 +90,6 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
     "surface-card",
     "text-text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
-    bordered && "border border-subtle dark:border-text-tertiary",
   ]
     .filter(Boolean)
     .join(" ");
@@ -208,7 +205,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
     selectable = false,
     selectedRows = [],
     onSelectionChange,
-    bordered = false,
     striped = false,
     size = "md",
     loading = false,
@@ -329,7 +325,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         </div>
       )}
       <div className="overflow-x-auto border border-subtle dark:border-text-tertiary rounded-lg">
-        <table className={getTableStyles(size, bordered)}>
+        <table className={getTableStyles(size)}>
           <thead>
             <tr>
               {selectable && (

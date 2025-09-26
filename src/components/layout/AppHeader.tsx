@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
-import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
 import { SidebarLogo } from "../ui/Logo";
 import { GlobalSearch } from "../ui/GlobalSearch";
@@ -9,7 +8,6 @@ import { NotificationBell } from "../ui/NotificationBell";
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
-  sidebarOpen: boolean;
 }
 
 /**
@@ -22,10 +20,7 @@ interface AppHeaderProps {
  * - Hamburger remains visible even when header is hidden
  * - Clean, modern design with backdrop blur
  */
-export const AppHeader: React.FC<AppHeaderProps> = ({
-  onMenuToggle,
-  sidebarOpen,
-}) => {
+export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -63,7 +58,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         className={`
           fixed top-0 left-0 right-0 z-[60] 
           bg-surface-card/90 dark:bg-surface-card/90 
-          backdrop-blur-md border-b border-subtle/50
+          backdrop-blur-md
+          shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]
           transition-transform duration-300 ease-out
           ${isVisible ? "translate-y-0" : "-translate-y-full"}
         `}
@@ -74,17 +70,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             variant="ghost"
             onClick={onMenuToggle}
             className="p-2 mr-3 hover:bg-surface-hover rounded-lg transition-colors"
-            aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+            aria-label="Open menu"
           >
-            {sidebarOpen ? (
-              <Icon name="close" size="md" className="text-text-primary" />
-            ) : (
-              <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
-                <div className="w-4 h-0.5 bg-text-primary"></div>
-                <div className="w-4 h-0.5 bg-text-primary"></div>
-                <div className="w-4 h-0.5 bg-text-primary"></div>
-              </div>
-            )}
+            <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
+              <div className="w-4 h-0.5 bg-text-primary"></div>
+              <div className="w-4 h-0.5 bg-text-primary"></div>
+              <div className="w-4 h-0.5 bg-text-primary"></div>
+            </div>
           </Button>
 
           {/* BoxCall Logo and Branding */}
@@ -137,17 +129,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           focus:outline-none focus:ring-2 focus:ring-jade-400 focus:ring-offset-2
           ${isVisible ? "opacity-0 pointer-events-none scale-75" : "opacity-100 pointer-events-auto scale-100"}
         `}
-        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+        aria-label="Open menu"
       >
-        {sidebarOpen ? (
-          <Icon name="close" size="md" />
-        ) : (
-          <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
-            <div className="w-4 h-0.5 bg-text-primary"></div>
-            <div className="w-4 h-0.5 bg-text-primary"></div>
-            <div className="w-4 h-0.5 bg-text-primary"></div>
-          </div>
-        )}
+        <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
+          <div className="w-4 h-0.5 bg-text-primary"></div>
+          <div className="w-4 h-0.5 bg-text-primary"></div>
+          <div className="w-4 h-0.5 bg-text-primary"></div>
+        </div>
       </Button>
     </>
   );

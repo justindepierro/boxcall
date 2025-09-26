@@ -71,12 +71,12 @@ export const ActionBar: React.FC<{
                 });
               }}
               disabled={multi}
-              className="w-24 text-xs border border-border-light rounded px-2 py-1 disabled:opacity-60"
+              className="w-24 text-xs rounded px-2 py-1 disabled:opacity-60"
               placeholder="Label"
               aria-label="Player label"
             />
             <select
-              className="text-xs border border-border-light rounded px-2 py-1"
+              className="text-xs rounded px-2 py-1"
               value={player.role || ""}
               onChange={(e) => {
                 const role = e.target.value;
@@ -121,7 +121,7 @@ export const ActionBar: React.FC<{
                       patch: { assignment },
                     });
                 }}
-                className="w-full text-xs border border-border-light rounded px-2 py-1"
+                className="w-full text-xs rounded px-2 py-1"
                 placeholder="Assignment / note"
                 aria-label="Assignment"
               />
@@ -148,7 +148,7 @@ export const ActionBar: React.FC<{
                         patch: { color: c },
                       });
                   }}
-                  className="p-0 w-5 h-5 rounded-full border border-border-light"
+                  className="p-0 w-5 h-5 rounded-full"
                   style={{ background: c }}
                 />
               ))}

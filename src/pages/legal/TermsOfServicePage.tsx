@@ -1,20 +1,14 @@
 import React from "react";
 
 import { Typography } from "../../components/design-system/Typography";
+import { PageLayout } from "../../components/layout/PageLayout";
 
 export const TermsOfServicePage: React.FC = () => {
   const lastUpdated = "August 4, 2025";
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <PageLayout title="Terms of Service" variant="detail">
       <div className="prose dark:prose-invert max-w-none">
-        <Typography
-          variant="headline-lg"
-          as="h1"
-          className="mb-2 text-text-primary"
-        >
-          Terms of Service
-        </Typography>
         <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
@@ -305,6 +299,6 @@ export const TermsOfServicePage: React.FC = () => {
           </div>
         </section>
       </div>
-    </div>
+    </PageLayout>
   );
 };

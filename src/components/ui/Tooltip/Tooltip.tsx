@@ -96,7 +96,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           role="tooltip"
           className={clsx(
             "pointer-events-none absolute z-50 px-2 py-1 rounded-md shadow-sm text-[11px] leading-tight font-medium",
-            "surface-inverse border border-text-tertiary/50 dark:border-text-tertiary/50",
+            "surface-inverse",
             placementStyles[resolvedPlacement.current],
             className
           )}
@@ -105,15 +105,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
           {content}
           <span
             className={clsx(
-              "absolute w-2 h-2 rotate-45 bg-surface-primary border border-text-tertiary/40 dark:border-text-tertiary/40",
+              "absolute w-2 h-2 rotate-45 bg-surface-primary",
               resolvedPlacement.current === "top" &&
-                "left-1/2 -translate-x-1/2 top-full border-t-0 border-l-0",
+                "left-1/2 -translate-x-1/2 top-full",
               resolvedPlacement.current === "bottom" &&
-                "left-1/2 -translate-x-1/2 bottom-full border-b-0 border-r-0",
+                "left-1/2 -translate-x-1/2 bottom-full",
               resolvedPlacement.current === "left" &&
-                "top-1/2 -translate-y-1/2 left-full border-l-0 border-b-0",
+                "top-1/2 -translate-y-1/2 left-full",
               resolvedPlacement.current === "right" &&
-                "top-1/2 -translate-y-1/2 right-full border-r-0 border-t-0"
+                "top-1/2 -translate-y-1/2 right-full"
             )}
             aria-hidden="true"
           />

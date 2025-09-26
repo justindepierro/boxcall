@@ -1,4 +1,5 @@
 // import React from "react"; // Not needed for React 17+
+import { PageLayout } from "../components/layout/PageLayout";
 import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDashboardLayout";
 
 /**
@@ -14,5 +15,13 @@ import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDas
  * - Progressive loading with skeletons
  */
 export default function DashboardPage() {
-  return <ResponsiveDashboardLayout />;
+  return (
+    <PageLayout
+      title="Dashboard"
+      subtitle="Your command center awaits • Quote of the day coming soon"
+      variant="dashboard"
+    >
+      <ResponsiveDashboardLayout />
+    </PageLayout>
+  );
 }

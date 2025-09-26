@@ -307,11 +307,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
               const canVote = canUserVote(vote);
 
               return (
-                <Card
-                  key={vote.id}
-                  variant="glass"
-                  className="p-4 border border-border-secondary"
-                >
+                <Card key={vote.id} variant="glass" className="p-4">
                   {/* Vote Header */}
                   <div className="mb-3">
                     <div className="flex items-start justify-between">

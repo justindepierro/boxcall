@@ -8,6 +8,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
+import { PageLayout } from "../components/layout/PageLayout";
 import { ROUTES, teamRoutes } from "../routes/paths";
 
 /**
@@ -891,7 +892,7 @@ export const CreateTeam: React.FC = () => {
   };
 
   return (
-    <div className="py-6">
+    <PageLayout title="Create Team" variant="form">
       <div className="max-w-4xl mx-auto">
         {/* Progress Bar */}
         {currentStep !== "intro" && currentStep !== "complete" && (
@@ -974,6 +975,6 @@ export const CreateTeam: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };

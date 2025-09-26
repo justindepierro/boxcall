@@ -49,9 +49,7 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
       : 0;
 
   return (
-    <div
-      className={`bg-surface-primary rounded-lg border border-border p-4 ${className}`}
-    >
+    <div className={`bg-surface-primary rounded-lg p-4 ${className}`}>
       <div className="flex items-center mb-4">
         <Icon name="bar-chart" className="h-5 w-5 text-jade-600 mr-2" />
         <Typography variant="headline-sm" className="text-text-primary">

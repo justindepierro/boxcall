@@ -15,7 +15,9 @@ const CoachManagementContent: React.FC = () => (
     subtitle="Manage coaching staff and permissions"
   >
     <div className="text-center py-12">
-      <p className="text-muted-foreground">Coach management functionality coming soon.</p>
+      <p className="text-muted-foreground">
+        Coach management functionality coming soon.
+      </p>
     </div>
   </PageLayout>
 );

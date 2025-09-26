@@ -147,9 +147,8 @@ export function LoginForm({
         </FormActions>
       }
     >
-      {/* Error Message */}
       {error && (
-        <div className="p-3 bg-error-bg border border-error rounded-lg">
+        <div className="p-3 bg-error-bg rounded-lg">
           <Typography variant="body-sm" className="text-error">
             {error}
           </Typography>
@@ -169,7 +168,7 @@ export function LoginForm({
           </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border-medium dark:border-text-tertiary" />
+              <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 surface-card text-text-secondary">
@@ -211,7 +210,7 @@ export function LoginForm({
           type="checkbox"
           checked={formData.rememberMe}
           onChange={(e) => handleInputChange("rememberMe", e.target.checked)}
-          className="h-4 w-4 text-text-primary focus:ring-text-primary border-border rounded"
+          className="h-4 w-4 text-text-primary focus:ring-text-primary rounded"
           disabled={loading}
         />
         <label
@@ -320,7 +319,7 @@ export function SignupForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-text-error rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-text-error dark:text-text-error"
@@ -343,7 +342,7 @@ export function SignupForm({
           </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border-medium dark:border-text-tertiary" />
+              <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 surface-card text-text-secondary">
@@ -388,7 +387,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-surface-secondary text-text-primary"
+          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-surface-secondary text-text-primary"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -440,7 +439,7 @@ export function SignupForm({
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-text-info focus:ring-jade-500 border-border-medium rounded mt-1"
+            className="h-4 w-4 text-text-info focus:ring-jade-500 rounded mt-1"
             disabled={loading}
           />
           <label
@@ -566,7 +565,7 @@ export function ResetPasswordForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-text-error rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-text-error dark:text-text-error"

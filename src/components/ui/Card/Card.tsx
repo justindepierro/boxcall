@@ -9,20 +9,18 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Modern glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-xl transition-all duration-200 border border-border bg-surface-primary/80 backdrop-blur-sm shadow-sm", // Modern glass effect
+  base: "rounded-xl transition-all duration-200 bg-surface-primary/80 backdrop-blur-sm shadow-sm", // Modern glass effect - removed border
   variants: {
     default:
-      "bg-surface-primary/90 border-border hover:shadow-md hover:border-border hover:bg-surface-primary/95", // Clean surface with subtle glass
+      "bg-surface-primary/90 hover:shadow-md hover:bg-surface-primary/95", // Clean surface with subtle glass
     glass:
-      "bg-surface-primary/70 border-surface-primary/20 backdrop-blur-md shadow-lg hover:bg-surface-primary/80 hover:shadow-xl", // Full glassmorphism
+      "bg-surface-primary/70 backdrop-blur-md shadow-lg hover:bg-surface-primary/80 hover:shadow-xl", // Full glassmorphism
     elevated:
-      "bg-surface-primary shadow-lg border-border hover:animate-card-lift hover:shadow-xl", // Enhanced lift effect with smooth animation
-    outlined:
-      "bg-surface-primary border-border hover:border-border hover:bg-surface-secondary/50", // Clean outlined
-    filled:
-      "bg-surface-secondary/80 border-border hover:bg-surface-muted/80 hover:shadow-md", // Subtle filled
+      "bg-surface-primary shadow-lg hover:animate-card-lift hover:shadow-xl", // Enhanced lift effect with smooth animation
+    outlined: "bg-surface-primary hover:bg-surface-secondary/50", // Clean outlined
+    filled: "bg-surface-secondary/80 hover:bg-surface-muted/80 hover:shadow-md", // Subtle filled
     accent:
-      "bg-gradient-to-br from-surface-primary to-surface-secondary/50 border-border hover:from-surface-secondary hover:to-surface-primary hover:shadow-electric-500/20", // Accent with electric glow hint
+      "bg-gradient-to-br from-surface-primary to-surface-secondary/50 hover:from-surface-secondary hover:to-surface-primary hover:shadow-electric-500/20", // Accent with electric glow hint
   },
   sizes: {
     sm: "p-3",

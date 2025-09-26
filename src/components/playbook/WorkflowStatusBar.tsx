@@ -73,7 +73,7 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-40 bg-surface-info border-t border-text-info px-4 py-3 transition-transform duration-300 ${
+      className={`fixed bottom-0 left-0 right-0 z-40 bg-surface-info/95 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_-4px_12px_rgba(0,0,0,0.15)] px-4 py-3 transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "translate-y-full"
       } ${className}`}
     >
@@ -81,28 +81,24 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <Icon
-                name="clipboard-list"
-                size="sm"
-                className="text-text-info"
-              />
-              <Typography
-                variant="body-sm"
-                className="font-medium text-text-info"
-              >
+              <Icon name="clipboard-list" size="sm" className="text-accent" />
+              <Typography variant="body-sm" className="font-medium text-accent">
                 Workflow Status
               </Typography>
             </div>
 
             <div className="flex items-center gap-4 text-sm">
-              <span className="text-text-info">
-                Practice Scripts: <span className="font-medium">Ready</span>
+              <span className="text-accent-secondary">
+                Practice Scripts:{" "}
+                <span className="font-medium text-accent">Ready</span>
               </span>
-              <span className="text-text-success">
-                Game Plans: <span className="font-medium">Ready</span>
+              <span className="text-accent-secondary">
+                Game Plans:{" "}
+                <span className="font-medium text-accent">Ready</span>
               </span>
-              <span className="text-text-primary">
-                PDF Export: <span className="font-medium">Available</span>
+              <span className="text-accent-secondary">
+                PDF Export:{" "}
+                <span className="font-medium text-accent">Available</span>
               </span>
             </div>
           </div>

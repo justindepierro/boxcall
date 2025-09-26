@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system/Typography";
 import Icon from "../ui/Icon/Icon";
 import type { Play as PlayType } from "../../types/play";
@@ -40,27 +39,37 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onSelectionChange,
   density = "comfortable",
 }) => {
-  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const isCompact = density === "compact";
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
-        return "bg-surface-info text-text-info";
+        // Electric purple background with white text for high contrast
+        return "bg-electric-600 text-white";
       case "Run":
-        return "bg-surface-success text-text-success";
+        // Jade green background with white text for high contrast
+        return "bg-jade-600 text-white";
       case "RPO":
-        return "bg-surface-accent text-text-accent";
+        // Navy background with light text for professional look
+        return "bg-navy-700 text-white";
       case "Play Action":
-        return "bg-surface-warning text-text-warning";
+        // Amber background with dark text for good contrast
+        return "bg-warning-500 text-gray-900";
       default:
-        return "bg-surface-secondary text-text-secondary";
+        // Neutral gray with good contrast
+        return "bg-gray-600 text-white";
     }
   };
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return "text-text-success";
-    if (confidence >= 60) return "text-text-warning";
-    return "text-text-error";
+    if (confidence >= 85)
+      return "text-white bg-jade-600 px-1.5 py-0.5 rounded font-semibold"; // High confidence - dark jade bg
+    if (confidence >= 70)
+      return "text-jade-800 bg-jade-100 px-1.5 py-0.5 rounded font-medium"; // Good confidence - light jade bg
+    if (confidence >= 60)
+      return "text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium"; // Medium confidence - light amber bg
+    if (confidence >= 50)
+      return "text-orange-800 bg-orange-100 px-1.5 py-0.5 rounded font-medium"; // Low-medium confidence - light orange bg
+    return "text-white bg-red-600 px-1.5 py-0.5 rounded font-semibold"; // Low confidence - red bg
   };
   const phaseLabel = ((): string | null => {
     if (!play.install_phase) return null;
@@ -76,9 +85,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const handleCreateDiagram = () => {
     if (onCreateDiagram) {
       onCreateDiagram(play);
-      return;
     }
-    navigate(`/playbook/diagram?playId=${play.id}`);
   };
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
@@ -153,12 +160,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {play.p_type}
                 </span>
                 {play.f_type && (
-                  <span className="px-2 py-0.5 bg-surface-secondary text-text-primary rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
                     {play.f_type}
                   </span>
                 )}
                 {phaseLabel && (
-                  <span className="px-2 py-0.5 bg-surface-warning text-text-warning rounded-full text-[10px] font-semibold tracking-wide uppercase">
+                  <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold tracking-wide uppercase border border-warning-600">
                     {phaseLabel}
                   </span>
                 )}
@@ -237,17 +244,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {play.p_type}
                 </span>
                 {play.personnel && (
-                  <span className="px-2 py-0.5 bg-surface-secondary text-text-primary rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
                     Personnel: {play.personnel}
                   </span>
                 )}
                 {phaseLabel && (
-                  <span className="px-2 py-0.5 bg-surface-warning text-text-warning rounded-full text-[10px] font-semibold uppercase">
+                  <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold uppercase border border-warning-600">
                     {phaseLabel}
                   </span>
                 )}
                 {play.one_word_play && !showOneWordCalls && (
-                  <span className="px-2 py-0.5 bg-surface-info text-text-info rounded-full text-[11px]">
+                  <span className="px-2 py-0.5 bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-[11px] font-medium">
                     Code: {play.one_word_play.toUpperCase()}
                   </span>
                 )}

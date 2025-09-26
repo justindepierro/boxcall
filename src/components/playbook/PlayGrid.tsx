@@ -560,7 +560,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       {/* Play Grid (virtualized when large) */}
       {!showEmpty &&
       (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        <div className="space-y-4" role="list">
+        <div className="space-y-6" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
               key={play.id}

@@ -19,7 +19,7 @@ const SkeletonBase: React.FC<SkeletonProps> = ({
   height = "1rem",
 }) => (
   <div
-    className={`animate-pulse bg-gradient-to-r from-border via-border-light to-border bg-[length:200%_100%] rounded ${className}`}
+    className={`animate-pulse bg-gradient-to-r from-border via-surface-muted to-border bg-[length:200%_100%] rounded ${className}`}
     style={{ width, height }}
   />
 );
@@ -59,7 +59,7 @@ export const DashboardCardSkeleton: React.FC = () => (
  * GamePlan Skeleton - Matches game plan card structure
  */
 export const GamePlanSkeleton: React.FC = () => (
-  <div className="bg-surface-primary rounded-lg border border-border p-6 shadow-sm animate-pulse">
+  <div className="bg-surface-primary rounded-lg p-6 shadow-sm animate-pulse">
     <div className="flex items-start justify-between mb-4">
       <div className="flex-1 space-y-2">
         {/* Plan name */}

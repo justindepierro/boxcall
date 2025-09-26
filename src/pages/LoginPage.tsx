@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { ProgressiveAuthFlow } from "../components/ui/Auth/ProgressiveAuthFlow";
+import { PageLayout } from "../components/layout/PageLayout";
 import { ROUTES } from "../routes/paths";
 
 /**
@@ -18,7 +19,11 @@ const LoginPage: React.FC = () => {
     navigate(ROUTES.DASHBOARD);
   };
 
-  return <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />;
+  return (
+    <PageLayout>
+      <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />
+    </PageLayout>
+  );
 };
 
 export default LoginPage;

@@ -106,7 +106,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                         >
                           {shortcut.description}
                         </Typography>
-                        <kbd className="px-2 py-1 bg-surface-primary border border-border-medium rounded text-xs font-mono text-text-secondary shadow-sm">
+                        <kbd className="px-2 py-1 bg-surface-primary rounded text-xs font-mono text-text-secondary shadow-sm">
                           {shortcut.key}
                         </kbd>
                       </div>

@@ -1,19 +1,13 @@
 import React from "react";
 import { Typography } from "../../components/design-system/Typography";
+import { PageLayout } from "../../components/layout/PageLayout";
 
 export const PrivacyPolicyPage: React.FC = () => {
   const lastUpdated = "August 4, 2025";
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <PageLayout title="Privacy Policy" variant="detail">
       <div className="prose dark:prose-invert max-w-none">
-        <Typography
-          variant="headline-lg"
-          as="h1"
-          className="mb-2 text-text-primary"
-        >
-          Privacy Policy
-        </Typography>
         <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
@@ -261,6 +255,6 @@ export const PrivacyPolicyPage: React.FC = () => {
           </div>
         </section>
       </div>
-    </div>
+    </PageLayout>
   );
 };

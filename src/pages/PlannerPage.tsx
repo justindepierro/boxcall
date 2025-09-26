@@ -58,197 +58,197 @@ export default function PlannerPage() {
         </div>
       </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Practice Schedule */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-info rounded-lg">
-                  <Icon name="clock" size="lg" className="text-text-info" />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Practice Schedule
-                </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Practice Schedule */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-info rounded-lg">
+                <Icon name="clock" size="lg" className="text-text-info" />
               </div>
-              <p className="text-text-secondary mb-4">
-                Plan your weekly practice schedule (Mon-Fri 3:00-6:30)
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Practice Schedule
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/calendar")}
-                variant="primary"
-                className="w-full"
-              >
-                Schedule Practices
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              Plan your weekly practice schedule (Mon-Fri 3:00-6:30)
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/calendar")}
+              variant="primary"
+              className="w-full"
+            >
+              Schedule Practices
+            </Button>
+          </div>
+        </Card>
 
-          {/* Game Plan Maker */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-success rounded-lg">
-                  <Icon name="file" size="lg" className="text-text-success" />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Game Plan Maker
-                </h3>
+        {/* Game Plan Maker */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-success rounded-lg">
+                <Icon name="file" size="lg" className="text-text-success" />
               </div>
-              <p className="text-text-secondary mb-4">
-                Create detailed game plans for upcoming matches
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Game Plan Maker
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/game-plans")}
-                variant="primary"
-                className="w-full"
-              >
-                Create Game Plan
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              Create detailed game plans for upcoming matches
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/game-plans")}
+              variant="primary"
+              className="w-full"
+            >
+              Create Game Plan
+            </Button>
+          </div>
+        </Card>
 
-          {/* Practice Scripts */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-primary rounded-lg">
-                  <Icon
-                    name="clipboard-list"
-                    size="lg"
-                    className="text-text-primary"
-                  />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Practice Scripts
-                </h3>
+        {/* Practice Scripts */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-primary rounded-lg">
+                <Icon
+                  name="clipboard-list"
+                  size="lg"
+                  className="text-text-primary"
+                />
               </div>
-              <p className="text-text-secondary mb-4">
-                Build and organize practice scripts for your team
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Practice Scripts
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/practice-plans")}
-                variant="primary"
-                className="w-full"
-              >
-                Create Practice Script
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              Build and organize practice scripts for your team
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/practice-plans")}
+              variant="primary"
+              className="w-full"
+            >
+              Create Practice Script
+            </Button>
+          </div>
+        </Card>
 
-          {/* Team Dashboard Updates */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-warning rounded-lg">
-                  <Icon
-                    name="bar-chart"
-                    size="lg"
-                    className="text-text-warning"
-                  />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Team Dashboard
-                </h3>
+        {/* Team Dashboard Updates */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-warning rounded-lg">
+                <Icon
+                  name="bar-chart"
+                  size="lg"
+                  className="text-text-warning"
+                />
               </div>
-              <p className="text-text-secondary mb-4">
-                Update team announcements and important information
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Team Dashboard
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/teams")}
-                variant="primary"
-                className="w-full"
-              >
-                Update Dashboard
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              Update team announcements and important information
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/teams")}
+              variant="primary"
+              className="w-full"
+            >
+              Update Dashboard
+            </Button>
+          </div>
+        </Card>
 
-          {/* Calendar Integration */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-info rounded-lg">
-                  <Icon name="calendar" size="lg" className="text-text-info" />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Calendar
-                </h3>
+        {/* Calendar Integration */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-info rounded-lg">
+                <Icon name="calendar" size="lg" className="text-text-info" />
               </div>
-              <p className="text-text-secondary mb-4">
-                View and manage your team's calendar events
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Calendar
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/calendar")}
-                variant="primary"
-                className="w-full"
-              >
-                Open Calendar
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              View and manage your team's calendar events
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/calendar")}
+              variant="primary"
+              className="w-full"
+            >
+              Open Calendar
+            </Button>
+          </div>
+        </Card>
 
-          {/* Helmet Stickers and Awards */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-warning rounded-lg">
-                  <Icon name="award" size="lg" className="text-text-warning" />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Helmet Stickers & Awards
-                </h3>
+        {/* Helmet Stickers and Awards */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-warning rounded-lg">
+                <Icon name="award" size="lg" className="text-text-warning" />
               </div>
-              <p className="text-text-secondary mb-4">
-                Give out awards and recognition to players and staff
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Helmet Stickers & Awards
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/awards")}
-                variant="primary"
-                className="w-full"
-              >
-                Manage Awards
-              </Button>
-            </div>
-          </Card>
+            <p className="text-text-secondary mb-4">
+              Give out awards and recognition to players and staff
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/awards")}
+              variant="primary"
+              className="w-full"
+            >
+              Manage Awards
+            </Button>
+          </div>
+        </Card>
 
-          {/* Playbook */}
-          <Card className="p-6 flex flex-col">
-            <div className="flex-1">
-              <div className="flex items-center mb-4">
-                <div className="p-2 bg-surface-error rounded-lg">
-                  <Icon name="book" size="lg" className="text-text-error" />
-                </div>
-                <h3 className="ml-3 text-lg font-medium text-text-primary">
-                  Playbook
-                </h3>
+        {/* Playbook */}
+        <Card className="p-6 flex flex-col">
+          <div className="flex-1">
+            <div className="flex items-center mb-4">
+              <div className="p-2 bg-surface-error rounded-lg">
+                <Icon name="book" size="lg" className="text-text-error" />
               </div>
-              <p className="text-text-secondary mb-4">
-                Manage your team's plays and formations
-              </p>
+              <h3 className="ml-3 text-lg font-medium text-text-primary">
+                Playbook
+              </h3>
             </div>
-            <div className="mt-auto">
-              <Button
-                onClick={() => navigate("/playbook")}
-                variant="primary"
-                className="w-full"
-              >
-                Open Playbook
-              </Button>
-            </div>
-          </Card>
-        </div>
+            <p className="text-text-secondary mb-4">
+              Manage your team's plays and formations
+            </p>
+          </div>
+          <div className="mt-auto">
+            <Button
+              onClick={() => navigate("/playbook")}
+              variant="primary"
+              className="w-full"
+            >
+              Open Playbook
+            </Button>
+          </div>
+        </Card>
+      </div>
     </PageLayout>
   );
 }

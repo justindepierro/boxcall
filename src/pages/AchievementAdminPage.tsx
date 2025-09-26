@@ -417,7 +417,10 @@ export const AchievementAdminPage: React.FC = () => {
               label="Trigger Target"
               value={formData.trigger_target}
               onChange={(value) =>
-                setFormData((prev) => ({ ...prev, trigger_target: value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  trigger_target: String(value),
+                }))
               }
               options={triggerTargetOptions}
             />

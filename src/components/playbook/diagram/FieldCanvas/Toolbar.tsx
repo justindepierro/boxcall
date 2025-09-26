@@ -14,19 +14,29 @@ export const Toolbar: React.FC<{
       icon: "pointer" as const,
       tooltip: "Select and move objects",
     },
-    { key: "line", label: "Line", icon: "pen-tool" as const, tooltip: "Draw a line" },
+    {
+      key: "line",
+      label: "Line",
+      icon: "pen-tool" as const,
+      tooltip: "Draw a line",
+    },
     {
       key: "arrow",
       label: "Arrow",
       icon: "arrow-right" as const,
       tooltip: "Draw an arrow",
     },
-    { key: "shape", label: "Shape", icon: "circle" as const, tooltip: "Draw a shape" },
+    {
+      key: "shape",
+      label: "Shape",
+      icon: "circle" as const,
+      tooltip: "Draw a shape",
+    },
     { key: "text", label: "Text", icon: "type" as const, tooltip: "Add text" },
   ];
   return (
     <nav
-      className="field-canvas-toolbar flex gap-2 p-3 bg-surface-primary rounded-lg shadow-lg border border-border-medium"
+      className="field-canvas-toolbar flex gap-2 p-3 bg-surface-primary rounded-lg shadow-lg"
       aria-label="Field Canvas Toolbar"
       style={{ minHeight: 56 }}
     >

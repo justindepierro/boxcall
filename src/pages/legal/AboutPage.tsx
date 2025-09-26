@@ -3,10 +3,11 @@ import React from "react";
 import { Typography } from "../../components/design-system/Typography";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { LogoIcon } from "../../components/ui/Logo";
+import { PageLayout } from "../../components/layout/PageLayout";
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <PageLayout variant="detail">
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
@@ -156,7 +157,7 @@ const AboutPage: React.FC = () => {
           </a>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

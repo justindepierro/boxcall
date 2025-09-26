@@ -8,6 +8,7 @@ import type { RosterPlayerView } from "../services/rosterService";
 import { RosterImportModal } from "../components/roster/RosterImportModal";
 import { StaffManagement } from "../components/team/StaffManagement";
 import { getActiveTeamId } from "../utils/activeTeam";
+import { PageLayout } from "../components/layout/PageLayout";
 
 /**
  * TeamSettings - Team configuration and management
@@ -126,67 +127,61 @@ export const TeamSettings: React.FC = () => {
   };
 
   return (
-    <div className="py-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <Typography variant="headline-xl" className="text-text-primary">
-            Team Settings
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mt-2">
-            Configure your team's profile, members, and preferences
-          </Typography>
+    <PageLayout
+      title="Team Settings"
+      subtitle="Configure your team's profile, members, and preferences"
+      variant="form"
+    >
+      {/* Tab Navigation */}
+      <div className="mb-6">
+        <div className="border-b border-border">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "overview"
+                  ? "border-text-info text-text-info"
+                  : "text-text-secondary hover:text-text-primary hover:border-border-light"
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("staff")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "staff"
+                  ? "border-text-info text-text-info"
+                  : "text-text-secondary hover:text-text-primary hover:border-border-light"
+              }`}
+            >
+              Staff
+            </button>
+            <button
+              onClick={() => setActiveTab("roster")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "roster"
+                  ? "border-text-info text-text-info"
+                  : "text-text-secondary hover:text-text-primary hover:border-border-light"
+              }`}
+            >
+              Roster
+            </button>
+            <button
+              onClick={() => setActiveTab("settings")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "settings"
+                  ? "border-text-info text-text-info"
+                  : "text-text-secondary hover:text-text-primary hover:border-border-light"
+              }`}
+            >
+              Settings
+            </button>
+          </nav>
         </div>
+      </div>
 
-        {/* Tab Navigation */}
-        <div className="mb-6">
-          <div className="border-b border-border">
-            <nav className="-mb-px flex space-x-8">
-              <button
-                onClick={() => setActiveTab("overview")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "overview"
-                    ? "border-text-info text-text-info"
-                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
-                }`}
-              >
-                Overview
-              </button>
-              <button
-                onClick={() => setActiveTab("staff")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "staff"
-                    ? "border-text-info text-text-info"
-                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
-                }`}
-              >
-                Staff
-              </button>
-              <button
-                onClick={() => setActiveTab("roster")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "roster"
-                    ? "border-text-info text-text-info"
-                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
-                }`}
-              >
-                Roster
-              </button>
-              <button
-                onClick={() => setActiveTab("settings")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "settings"
-                    ? "border-text-info text-text-info"
-                    : "text-text-secondary hover:text-text-primary hover:border-border-light"
-                }`}
-              >
-                Settings
-              </button>
-            </nav>
-          </div>
-        </div>
-
-        {/* Tab Content */}
+      {/* Tab Content */}
+      <div>
         {activeTab === "overview" && (
           <Card className="text-center py-12">
             <div className="text-6xl mb-4">📊</div>
@@ -503,14 +498,13 @@ export const TeamSettings: React.FC = () => {
           </Card>
         )}
       </div>
-
       {/* Roster Import Modal */}
       <RosterImportModal
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
         onImport={handleImportComplete}
       />
-    </div>
+    </PageLayout>
   );
 };
 export default TeamSettings;

@@ -10,7 +10,14 @@
  * - Design system consistency checks
  */
 
-import React, { createContext, useContext, useEffect, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useCallback,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 
 // Design system configuration
@@ -154,27 +161,32 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
   config: userConfig = {},
   enableDevTools = false,
 }) => {
-  // Merge user config with defaults
-  const config = useMemo(
-    () => ({
-      ...defaultConfig,
-      ...userConfig,
-    }),
-    [userConfig]
-  );
+  // Manage design system config with state
+  const [config, setConfig] = useState<DesignSystemConfig>(() => ({
+    ...defaultConfig,
+    ...userConfig,
+  }));
 
   // Component usage tracking
-  const trackUsage = (usage: ComponentUsage) => {
-    if (enableDevTools && process.env.NODE_ENV === "development") {
-      console.info("🎨 Design System Usage:", usage);
-    }
-  };
+  const trackUsage = useCallback(
+    (usage: ComponentUsage) => {
+      if (enableDevTools && process.env.NODE_ENV === "development") {
+        console.info("🎨 Design System Usage:", usage);
+      }
+    },
+    [enableDevTools]
+  );
 
   // Update configuration
-  const updateConfig = (updates: Partial<DesignSystemConfig>) => {
-    // In a real implementation, this would update global state
-    console.info("🎨 Design System Config Updated:", updates);
-  };
+  const updateConfig = useCallback(
+    (updates: Partial<DesignSystemConfig>) => {
+      setConfig((prev) => ({ ...prev, ...updates }));
+      if (enableDevTools && process.env.NODE_ENV === "development") {
+        console.info("🎨 Design System Config Updated:", updates);
+      }
+    },
+    [enableDevTools]
+  );
 
   // Apply design system classes to body
   useEffect(() => {
@@ -209,13 +221,16 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
     }
   }, [config.performance.enableBundleAnalysis, enableDevTools]);
 
-  const contextValue: DesignSystemContextType = {
-    config,
-    updateConfig,
-    trackUsage,
-    validateDesignToken,
-    getPerformanceMetrics,
-  };
+  const contextValue: DesignSystemContextType = useMemo(
+    () => ({
+      config,
+      updateConfig,
+      trackUsage,
+      validateDesignToken,
+      getPerformanceMetrics,
+    }),
+    [config, updateConfig, trackUsage]
+  );
 
   return (
     <DesignSystemContext.Provider value={contextValue}>

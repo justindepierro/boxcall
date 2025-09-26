@@ -3,24 +3,15 @@ import React from "react";
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui";
 import { Icon } from "../../components/ui/Icon/Icon";
+import { PageLayout } from "../../components/layout/PageLayout";
 
 export const ContactPage: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <Typography
-          variant="headline-lg"
-          as="h1"
-          className="mb-4 text-text-primary"
-        >
-          Contact Us
-        </Typography>
-        <p className="text-lg max-w-2xl mx-auto text-text-secondary">
-          Have questions about BoxCall? We're here to help coaches succeed.
-        </p>
-      </div>
-
+    <PageLayout
+      title="Contact Us"
+      subtitle="Have questions about BoxCall? We're here to help coaches succeed."
+      variant="detail"
+    >
       <div className="grid md:grid-cols-2 gap-12">
         {/* Contact Information */}
         <div>
@@ -234,6 +225,6 @@ export const ContactPage: React.FC = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };

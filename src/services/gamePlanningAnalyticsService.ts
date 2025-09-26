@@ -317,17 +317,31 @@ export class GamePlanningAnalyticsService {
   /**
    * Get situations data (with fallback for missing table)
    */
-  private async getSituationsData(_teamId: string): Promise<GamePlanSituation[]> {
+  private async getSituationsData(teamId: string): Promise<GamePlanSituation[]> {
     try {
+      // First get game plan IDs for this team
+      const { data: gamePlans, error: gamePlansError } = await supabase
+        .from('game_plans_enhanced')
+        .select('id')
+        .eq('team_id', teamId);
+
+      if (gamePlansError) throw gamePlansError;
+
+      if (!gamePlans || gamePlans.length === 0) {
+        return [];
+      }
+
+      const gamePlanIds = gamePlans.map(gp => gp.id);
+
       const { data, error } = await supabase
         .from('game_plan_situations')
         .select('*')
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .in('game_plan_id', gamePlanIds);
 
       if (error) throw error;
       return data || [];
     } catch {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       console.warn('Game plan situations table may not exist yet');
       return [];
     }
@@ -336,12 +350,41 @@ export class GamePlanningAnalyticsService {
   /**
    * Get plays data (with fallback for missing table)
    */
-  private async getPlaysData(_teamId: string): Promise<GamePlanPlay[]> {
+  private async getPlaysData(teamId: string): Promise<GamePlanPlay[]> {
     try {
+      // First get game plan IDs for this team
+      const { data: gamePlans, error: gamePlansError } = await supabase
+        .from('game_plans_enhanced')
+        .select('id')
+        .eq('team_id', teamId);
+
+      if (gamePlansError) throw gamePlansError;
+
+      if (!gamePlans || gamePlans.length === 0) {
+        return [];
+      }
+
+      const gamePlanIds = gamePlans.map(gp => gp.id);
+
+      // Get situation IDs for these game plans
+      const { data: situations, error: situationsError } = await supabase
+        .from('game_plan_situations')
+        .select('id')
+        .in('game_plan_id', gamePlanIds);
+
+      if (situationsError) throw situationsError;
+
+      if (!situations || situations.length === 0) {
+        return [];
+      }
+
+      const situationIds = situations.map(s => s.id);
+
       const { data, error } = await supabase
         .from('game_plan_plays')
         .select('*')
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .in('situation_id', situationIds);
 
       if (error) throw error;
       return data || [];
@@ -354,11 +397,26 @@ export class GamePlanningAnalyticsService {
   /**
    * Get analytics data (with fallback for missing table)
    */
-  private async getAnalyticsData(_teamId: string): Promise<GamePlanAnalytics[]> {
+  private async getAnalyticsData(teamId: string): Promise<GamePlanAnalytics[]> {
     try {
+      // First get game plan IDs for this team
+      const { data: gamePlans, error: gamePlansError } = await supabase
+        .from('game_plans_enhanced')
+        .select('id')
+        .eq('team_id', teamId);
+
+      if (gamePlansError) throw gamePlansError;
+
+      if (!gamePlans || gamePlans.length === 0) {
+        return [];
+      }
+
+      const gamePlanIds = gamePlans.map(gp => gp.id);
+
       const { data, error } = await supabase
         .from('game_plan_analytics')
         .select('*')
+        .in('game_plan_id', gamePlanIds)
         .order('execution_time', { ascending: false })
         .limit(100);
 

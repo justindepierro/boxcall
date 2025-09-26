@@ -44,15 +44,17 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   // Transform DatabasePlay[] to Play[] by adding missing required fields
   const transformedPlays = useMemo(() => {
-    return (allPlays || []).map((play): Play => ({
-      ...play,
-      confidence_base: 70, // default value
-      times_called: 0, // default value
-      times_successful: 0, // default value
-      created_by: "system", // default value
-      created_at: new Date(play.created_at),
-      updated_at: new Date(play.updated_at),
-    }));
+    return (allPlays || []).map(
+      (play): Play => ({
+        ...play,
+        confidence_base: 70, // default value
+        times_called: 0, // default value
+        times_successful: 0, // default value
+        created_by: "system", // default value
+        created_at: new Date(play.created_at),
+        updated_at: new Date(play.updated_at),
+      })
+    );
   }, [allPlays]);
 
   // Create search service instance for plays
@@ -245,7 +247,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder="Search players, plays, formations..."
-          className="block w-80 pl-10 pr-10 py-2 text-sm border border-border-medium rounded-lg
+          className="block w-80 pl-10 pr-10 py-2 text-sm rounded-lg
                      focus:ring-2 focus:ring-focus-info focus:border-border-info
                      placeholder-text-secondary transition-all duration-200
                      bg-surface-primary hover:bg-surface-secondary focus:bg-surface-primary"
@@ -267,7 +269,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       {isOpen && (query.length > 0 || isLoading) && (
         <div
           ref={resultsRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-surface-primary border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-surface-primary rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
         >
           {isLoading && (
             <div className="px-4 py-3 text-center text-text-muted">

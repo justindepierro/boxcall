@@ -48,7 +48,7 @@ export const DevHealthCheck: React.FC = () => {
   return (
     <div className="fixed top-4 right-4 z-50 max-w-sm">
       {status.errors.length > 0 ? (
-        <div className="surface-subtle border border-subtle rounded-lg p-3 shadow-sm">
+        <div className="surface-subtle rounded-lg p-3 shadow-sm">
           <Typography variant="label-md" color="error" className="mb-2">
             ⚠️ DEV HEALTH ISSUES
           </Typography>
@@ -61,7 +61,7 @@ export const DevHealthCheck: React.FC = () => {
           </div>
         </div>
       ) : isHealthy ? (
-        <div className="surface-subtle border border-subtle rounded-lg p-2 shadow-sm">
+        <div className="surface-subtle rounded-lg p-2 shadow-sm">
           <Typography
             variant="body-xs"
             color="success"
@@ -72,7 +72,7 @@ export const DevHealthCheck: React.FC = () => {
           </Typography>
         </div>
       ) : (
-        <div className="surface-subtle border border-subtle rounded-lg p-3 shadow-sm">
+        <div className="surface-subtle rounded-lg p-3 shadow-sm">
           <Typography
             variant="label-md"
             color="warning"

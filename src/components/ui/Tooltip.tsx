@@ -163,7 +163,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           <div
             ref={tooltipRef}
             className={`
-            fixed z-50 px-3 py-2 text-sm font-medium rounded-md border shadow-lg
+            fixed z-50 px-3 py-2 text-sm font-medium rounded-md shadow-lg
             pointer-events-none transition-all duration-150 ease-out
             ${variantClasses[variant]}
             ${positionClasses[position]}

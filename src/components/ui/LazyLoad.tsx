@@ -165,7 +165,7 @@ export const LazySection: React.FC<
 export const LazyCard: React.FC<Omit<LazyLoadProps, "fallback">> = (props) => (
   <LazyLoad
     fallback={
-      <div className="bg-surface-primary rounded-lg border border-border p-6 shadow-sm animate-pulse">
+      <div className="bg-surface-primary rounded-lg p-6 shadow-sm animate-pulse">
         <div className="space-y-3">
           <div className="h-4 bg-border rounded w-3/4" />
           <div className="h-4 bg-border rounded w-1/2" />

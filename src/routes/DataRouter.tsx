@@ -54,7 +54,6 @@ import {
   requireRolesLoader,
 } from "./loaderAuth";
 import RouteErrorElement from "./RouteErrorElement";
-import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 
 // Root wrapper so loaders run pre-render and providers are applied once
 const RootLayout: React.FC = () => (
@@ -271,12 +270,6 @@ export const DataRouterApp: React.FC = () => {
                     <LazyGamePlansPage />
                   </Suspense>
                 ),
-              },
-              // Lightweight diagram pane route (kept non-lazy like legacy)
-              {
-                path: "/playbook/diagram",
-                loader: requireAuthenticatedLoader,
-                element: <DiagramPaneRoute />,
               },
               {
                 path: ROUTES.BOXCALL,

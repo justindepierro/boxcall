@@ -52,7 +52,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
           onBlur={() => setIsFocused(false)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`block w-full pl-10 pr-10 py-2 text-sm border border-border rounded-lg
+          className={`block w-full pl-10 pr-10 py-2 text-sm rounded-lg
                      focus:ring-2 focus:ring-text-info focus:border-text-info
                      placeholder-text-secondary transition-all duration-200
                      ${isFocused ? "bg-surface-primary shadow-md" : "bg-surface-secondary hover:bg-surface-primary"}`}

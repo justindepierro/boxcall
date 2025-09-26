@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
+import { PageLayout } from "../components/layout/PageLayout";
 
 /**
  * Join Team Page
@@ -549,7 +550,7 @@ export const JoinTeam: React.FC = () => {
   };
 
   return (
-    <div className="py-6">
+    <PageLayout title="Join Team" variant="form">
       <div className="max-w-5xl mx-auto">
         {/* Back Navigation */}
         {currentStep !== "method" && currentStep !== "complete" && (
@@ -595,6 +596,6 @@ export const JoinTeam: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };
