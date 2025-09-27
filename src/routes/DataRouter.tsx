@@ -123,16 +123,19 @@ const DataRouterAppInner: React.FC = () => {
     const [hasTimedOut, setHasTimedOut] = useState(false);
 
     useEffect(() => {
-      // Set a timeout for auth initialization
+      // Only set timeout if we're still waiting for auth state (user is undefined)
+      // If user is already determined (truthy or null), don't use timeout
+      if (user !== undefined) return;
+
       const timeout = setTimeout(() => {
         console.warn("🔄 Auth initialization timed out, assuming not authenticated");
         setHasTimedOut(true);
         setIsInitializing(false);
         navigate(ROUTES.LOGIN, { replace: true });
-      }, 5000); // 5 second timeout
+      }, 3000); // Reduced to 3 seconds since login is now fast
 
       return () => clearTimeout(timeout);
-    }, [navigate]);
+    }, [user, navigate]);
 
     useEffect(() => {
       if (hasTimedOut) return; // Already handled by timeout
