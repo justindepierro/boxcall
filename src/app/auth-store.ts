@@ -177,15 +177,10 @@ export const useAuth = create<AuthState>()(
 
         set({ loading: true, error: null });
         try {
-          const { data, error } = await NetworkResilience.retryWithBackoff(
-            () => supabase.auth.signInWithPassword({
-              email,
-              password,
-            }),
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
-          );
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
           if (error) {
             console.error("🚨 Supabase signIn error:", error);
             console.error("🚨 Error details:", {
@@ -209,8 +204,8 @@ export const useAuth = create<AuthState>()(
               session: data.session,
               loading: false,
             });
-            // Fetch user profile
-            await get().fetchUserProfile(data.user.id);
+            // Fetch user profile asynchronously (don't block login on this)
+            get().fetchUserProfile(data.user.id);
             AuthMonitoring.recordSignInSuccess();
             AuthMonitoring.recordEvent("signin_success", data.user.id, { email });
             return { success: true };
