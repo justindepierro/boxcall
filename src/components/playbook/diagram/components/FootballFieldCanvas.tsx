@@ -23,7 +23,7 @@ export const FootballFieldCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { state, dispatch } = useContext(DiagramEditorContext);
+  const { state, dispatch: _dispatch } = useContext(DiagramEditorContext);
 
   const [transform, setTransform] = useState<CanvasTransform>({
     x: 0,

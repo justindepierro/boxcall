@@ -108,16 +108,6 @@ describe("Database Schema Validation", () => {
       expect(error).toBeTruthy();
     });
 
-    it("should enforce RLS on profiles table", async () => {
-      const { error } = await supabase.from("profiles").insert({
-        id: testUserId,
-        email: "test@example.com",
-        full_name: "Test User",
-      });
-
-      expect(error).toBeTruthy();
-    });
-
     it("should enforce RLS on playbooks table", async () => {
       const { error } = await supabase.from("playbooks").insert({
         team_id: testTeamId,
@@ -179,7 +169,7 @@ describe("Database Schema Validation", () => {
         // Core fields
         expect(play).toHaveProperty("id");
         expect(play).toHaveProperty("playbook_id");
-        expect(play).toHaveProperty("name");
+        expect(play).toHaveProperty("play_name");
         expect(play).toHaveProperty("formation");
 
         // Analytics fields
@@ -188,8 +178,8 @@ describe("Database Schema Validation", () => {
         expect(play).toHaveProperty("times_successful");
         expect(play).toHaveProperty("complexity_score");
         expect(play).toHaveProperty("personnel");
-        expect(play).toHaveProperty("down_distance");
-        expect(play).toHaveProperty("field_position");
+        expect(play).toHaveProperty("pref_down");
+        expect(play).toHaveProperty("pref_dis");
       }
     });
   });

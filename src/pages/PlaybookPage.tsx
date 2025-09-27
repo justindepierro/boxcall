@@ -24,13 +24,19 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
 import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
 import { useDiagramEditor } from "../components/playbook/diagram/context/useDiagramEditor";
+import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
+import { PracticeScriptBuilder } from "../components/playbook/PracticeScriptBuilder";
+import { useActiveTeamStore } from "../state/activeTeamStore";
 
 interface DiagramBuilderHeaderProps {
   play: Play;
   onClose: () => void;
 }
 
-const DiagramBuilderHeader: React.FC<DiagramBuilderHeaderProps> = ({ play, onClose }) => {
+const DiagramBuilderHeader: React.FC<DiagramBuilderHeaderProps> = ({
+  play,
+  onClose,
+}) => {
   const { dispatch } = useDiagramEditor();
   const [showExportDropdown, setShowExportDropdown] = useState(false);
 
@@ -46,17 +52,15 @@ const DiagramBuilderHeader: React.FC<DiagramBuilderHeaderProps> = ({ play, onClo
 
   const handleExport = useCallback((format: "png" | "svg" | "pdf") => {
     console.log(`Exporting diagram as ${format.toUpperCase()}`);
-    alert(`Export functionality for ${format.toUpperCase()} will be implemented soon!`);
+    alert(
+      `Export functionality for ${format.toUpperCase()} will be implemented soon!`
+    );
   }, []);
 
   return (
     <div className="flex items-center justify-between">
-      <Typography
-        variant="headline-sm"
-        as="h3"
-        className="text-text-primary"
-      >
-        {`${play.formation}${play.f_dir ? ` ${play.f_dir}` : ''} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ''}`}
+      <Typography variant="headline-sm" as="h3" className="text-text-primary">
+        {`${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`}
       </Typography>
       <div className="flex items-center space-x-2">
         <button
@@ -153,8 +157,17 @@ export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
   const toast = useToast();
   const navigate = useNavigate();
+  const { activeTeamId } = useActiveTeamStore();
   const [busy, setBusy] = useState(false);
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
+  const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
+    useState(false);
+  const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
+  const [suggestions, setSuggestions] = useState({
+    formations: [] as string[],
+    playNames: [] as string[],
+    personnel: [] as string[],
+  });
 
   // Handle creating a diagram for a play
   const handleCreateDiagram = useCallback((play: Play) => {
@@ -303,12 +316,11 @@ export default function PlaybookPage() {
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
   // Example handlers (replace with real logic as needed)
-  const handleSearchChange = (q: string) =>
-    dispatch({ type: "SET_SEARCH", query: q });
   const handleViewChange = (view: CoachingView) =>
     dispatch({ type: "SET_VIEW", view });
-  const handleTeamTypeChange = (teamType: "offense" | "defense" | "special-teams") =>
-    dispatch({ type: "SET_TEAM_TYPE", teamType });
+  const handleTeamTypeChange = (
+    teamType: "offense" | "defense" | "special-teams"
+  ) => dispatch({ type: "SET_TEAM_TYPE", teamType });
   const handleFiltersChange = (filters: PlaybookState["advancedFilters"]) =>
     dispatch({ type: "SET_ADVANCED_FILTERS", filters });
   const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
@@ -326,6 +338,18 @@ export default function PlaybookPage() {
   const handleEditPlay = (play: Play) => {
     setEditingPlay(play);
     setShowAddNewPlayModal(true);
+  };
+
+  const handleSavePlay = async (playId: string, updates: Partial<Play>) => {
+    try {
+      await PlaysService.updatePlay(playId, updates);
+      // Trigger a refresh of the playbook data
+      dispatch({ type: "INCREMENT_REFRESH" });
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Failed to save play:", error);
+      throw error; // Re-throw so the UI can show the error
+    }
   };
 
   const handleDuplicatePlay = (play: Play) => {
@@ -402,6 +426,19 @@ export default function PlaybookPage() {
     }
   };
 
+  // Practice Script Builder handlers
+  const handleOpenPracticeScriptBuilder = () => {
+    setEditingScript(null);
+    setShowPracticeScriptBuilder(true);
+  };
+
+  const handleSavePracticeScript = (script: any) => {
+    console.log("Practice script saved:", script);
+    setShowPracticeScriptBuilder(false);
+    setEditingScript(null);
+    // TODO: Refresh practice scripts list
+  };
+
   const handleQuickNewPracticeScript = useCallback(() => {
     navigate("/practice-plans");
   }, [navigate]);
@@ -440,10 +477,32 @@ export default function PlaybookPage() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleQuickNewPracticeScript, handleQuickNewGamePlan]);
 
+  // Load suggestions for inline editing
+  useEffect(() => {
+    const loadSuggestions = async () => {
+      try {
+        const [formations, playNames, personnel] = await Promise.all([
+          PlaysService.getUniqueFormations(),
+          PlaysService.getUniquePlayNames(),
+          PlaysService.getUniquePersonnel(),
+        ]);
+
+        setSuggestions({
+          formations,
+          playNames,
+          personnel,
+        });
+      } catch (error) {
+        console.error("Failed to load suggestions:", error);
+        // Continue with empty suggestions - the UI will still work
+      }
+    };
+
+    loadSuggestions();
+  }, []);
+
   return (
-    <PageLayout
-      variant="dashboard"
-    >
+    <PageLayout variant="dashboard">
       {/* Unified Header with Navigation */}
       <PlaybookViewTabs
         currentView={state.currentView}
@@ -456,8 +515,6 @@ export default function PlaybookPage() {
         playsCreated={state.playsCreated}
         diagramCoverage={state.diagramCoverage}
         streakDays={state.streakDays}
-        searchQuery={state.searchQuery}
-        onSearchChange={handleSearchChange}
       />
 
       {/* Main Content - 2 Column Layout */}
@@ -500,10 +557,14 @@ export default function PlaybookPage() {
                 onAddToPracticeScript={handleAddToPracticeScript}
                 onAddToGamePlan={handleAddToGamePlan}
                 onEdit={handleEditPlay}
+                onSave={handleSavePlay}
                 onDuplicate={handleDuplicatePlay}
                 onOpenBuilder={handleOpenBuilder}
                 onCreateDiagram={handleCreateDiagram}
                 refreshTrigger={state.refreshTrigger}
+                formationSuggestions={suggestions.formations}
+                playNameSuggestions={suggestions.playNames}
+                personnelSuggestions={suggestions.personnel}
               />
             )}
 
@@ -517,7 +578,7 @@ export default function PlaybookPage() {
                     Practice Scripts
                   </Typography>
                   <Button
-                    onClick={handleQuickNewPracticeScript}
+                    onClick={handleOpenPracticeScriptBuilder}
                     variant="primary"
                   >
                     <Icon name="plus" className="h-4 w-4 mr-2" />
@@ -525,33 +586,26 @@ export default function PlaybookPage() {
                   </Button>
                 </div>
 
-                {/* Placeholder for practice scripts list */}
-                <div className="text-center py-12">
-                  <Icon
-                    name="file"
-                    className="h-16 w-16 text-text-muted mx-auto mb-4"
+                {/* Practice Scripts List */}
+                {activeTeamId ? (
+                  <PracticeScriptList
+                    teamId={activeTeamId}
+                    onEditScript={(script) => {
+                      setEditingScript(script);
+                      setShowPracticeScriptBuilder(true);
+                    }}
+                    onCreateNew={handleOpenPracticeScriptBuilder}
                   />
-                  <Typography
-                    variant="headline-sm"
-                    className="text-text-secondary mb-2"
-                  >
-                    No Practice Scripts Yet
-                  </Typography>
-                  <Typography
-                    variant="body-sm"
-                    className="text-text-muted mb-6"
-                  >
-                    Create your first practice script to organize plays for
-                    training sessions.
-                  </Typography>
-                  <Button
-                    onClick={handleQuickNewPracticeScript}
-                    variant="primary"
-                  >
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    Create New Script
-                  </Button>
-                </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Typography
+                      variant="body"
+                      className="text-muted-foreground"
+                    >
+                      Please select a team to view practice scripts.
+                    </Typography>
+                  </div>
+                )}
               </div>
             )}
 
@@ -747,7 +801,12 @@ export default function PlaybookPage() {
         <Modal
           isOpen={!!diagramPlay}
           onClose={() => setDiagramPlay(null)}
-          headerContent={<DiagramBuilderHeader play={diagramPlay} onClose={() => setDiagramPlay(null)} />}
+          headerContent={
+            <DiagramBuilderHeader
+              play={diagramPlay}
+              onClose={() => setDiagramPlay(null)}
+            />
+          }
           size="xl"
           type="default"
           closeOnBackdropClick={false}
@@ -759,6 +818,18 @@ export default function PlaybookPage() {
           />
         </Modal>
       )}
+
+      {/* Practice Script Builder Modal */}
+      <PracticeScriptBuilder
+        script={editingScript}
+        teamId={activeTeamId || ""}
+        onSave={handleSavePracticeScript}
+        onCancel={() => {
+          setShowPracticeScriptBuilder(false);
+          setEditingScript(null);
+        }}
+        isOpen={showPracticeScriptBuilder}
+      />
     </PageLayout>
   );
 }

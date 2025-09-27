@@ -490,4 +490,82 @@ export class PlaysService {
       throw error;
     }
   }
+
+  /**
+   * Get unique formation values for suggestions
+   */
+  static async getUniqueFormations(): Promise<string[]> {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .select("formation")
+        .not("formation", "is", null)
+        .neq("formation", "")
+        .order("formation");
+
+      if (error) {
+        console.error("❌ Error getting unique formations:", error);
+        return [];
+      }
+
+      // Get unique values
+      const uniqueFormations = [...new Set(data.map(item => item.formation))];
+      return uniqueFormations.filter(Boolean);
+    } catch (error) {
+      console.error("❌ PlaysService.getUniqueFormations failed:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get unique play names for suggestions
+   */
+  static async getUniquePlayNames(): Promise<string[]> {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .select("play_name")
+        .not("play_name", "is", null)
+        .neq("play_name", "")
+        .order("play_name");
+
+      if (error) {
+        console.error("❌ Error getting unique play names:", error);
+        return [];
+      }
+
+      // Get unique values
+      const uniqueNames = [...new Set(data.map(item => item.play_name))];
+      return uniqueNames.filter(Boolean);
+    } catch (error) {
+      console.error("❌ PlaysService.getUniquePlayNames failed:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get unique personnel values for suggestions
+   */
+  static async getUniquePersonnel(): Promise<string[]> {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .select("personnel")
+        .not("personnel", "is", null)
+        .neq("personnel", "")
+        .order("personnel");
+
+      if (error) {
+        console.error("❌ Error getting unique personnel:", error);
+        return [];
+      }
+
+      // Get unique values
+      const uniquePersonnel = [...new Set(data.map(item => item.personnel))];
+      return uniquePersonnel.filter(Boolean);
+    } catch (error) {
+      console.error("❌ PlaysService.getUniquePersonnel failed:", error);
+      return [];
+    }
+  }
 }

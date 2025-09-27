@@ -9,12 +9,13 @@ import { AdaptiveContentWidget } from "../dashboard/AdaptiveContentWidget";
 import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { useAdvancedTheme } from "../design-system/AdvancedThemeProvider";
+import { useAdvancedTheme } from "../design-system/advanced-theme-hooks";
 import { Button } from "../ui/Button/Button";
 import Card from "../ui/Card/Card";
 import { Tooltip } from "../ui/Tooltip";
 import { ROUTES } from "../../routes/paths";
 import { useNavigate } from "react-router-dom";
+import { getActiveTeamId } from "../../utils/activeTeam";
 // Onboarding components removed during cleanup
 
 /**
@@ -36,6 +37,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const { isStepVisible } = useProgressiveLoading(6, 200);
   const theme = useAdvancedTheme();
   const navigate = useNavigate();
+
+  // Get the active team ID for analytics
+  const activeTeamId = getActiveTeamId();
 
   // Early returns for loading and error states
   if (loading) {
@@ -139,7 +143,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           {/* Game Planning Analytics */}
           <div className="analytics-section">
             {isStepVisible(4) ? (
-              <GamePlanningAnalytics teamId={user.id} />
+              <GamePlanningAnalytics teamId={activeTeamId} />
             ) : (
               <DashboardCardSkeleton />
             )}

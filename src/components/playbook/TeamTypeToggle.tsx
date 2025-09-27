@@ -11,7 +11,7 @@ export type TeamTypeToggleProps = {
 
 const teamTypeConfig = {
   offense: {
-    icon: "zap" as const,
+    icon: "sword" as const,
     label: "Offense",
     comingSoon: false,
   },

@@ -45,9 +45,13 @@ export {
 // Design system provider for consistency enforcement
 export {
   DesignSystemProvider,
+} from "./DesignSystemProvider";
+
+// Design system hooks
+export {
   useDesignSystem,
   withDesignSystem,
-} from "./DesignSystemProvider";
+} from "./design-system-hooks";
 
 // Spacing system
 export {

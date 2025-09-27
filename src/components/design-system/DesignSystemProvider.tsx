@@ -1,6 +1,12 @@
 /**
  * BoxCall Design System Provider
- * Enforces consistent design language across the entire application
+ * Enforces consistent design languageconst DesignSystemContext = createContext<DesignSystemContextType | null>(null);
+
+// Export context for use in hooks file
+export { DesignSystemContext };
+
+// Design token validation
+const validateDesignToken = (token: string): boolean => {ire application
  *
  * Features:
  * - Centralized theme management
@@ -12,13 +18,13 @@
 
 import React, {
   createContext,
-  useContext,
   useEffect,
   useMemo,
   useCallback,
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { useDesignSystem } from "./design-system-hooks";
 
 // Design system configuration
 interface DesignSystemConfig {
@@ -73,16 +79,8 @@ const defaultConfig: DesignSystemConfig = {
 
 const DesignSystemContext = createContext<DesignSystemContextType | null>(null);
 
-// Custom hook for using design system
-export const useDesignSystem = (): DesignSystemContextType => {
-  const context = useContext(DesignSystemContext);
-  if (!context) {
-    throw new Error(
-      "useDesignSystem must be used within a DesignSystemProvider"
-    );
-  }
-  return context;
-};
+// Export context for use in hooks file
+export { DesignSystemContext };
 
 // Design token validation
 const validateDesignToken = (token: string): boolean => {
@@ -262,29 +260,6 @@ const DesignSystemDevTools: React.FC = () => {
       </div>
     </div>
   );
-};
-
-// Higher-order component for design system compliance
-export const withDesignSystem = <P extends object>(
-  Component: React.ComponentType<P>,
-  componentName: string
-) => {
-  const WrappedComponent = (props: P) => {
-    const { trackUsage } = useDesignSystem();
-
-    useEffect(() => {
-      trackUsage({
-        component: componentName,
-        page: window.location.pathname,
-        timestamp: Date.now(),
-      });
-    }, [trackUsage]);
-
-    return <Component {...props} />;
-  };
-
-  WrappedComponent.displayName = `withDesignSystem(${componentName})`;
-  return WrappedComponent;
 };
 
 export default DesignSystemProvider;

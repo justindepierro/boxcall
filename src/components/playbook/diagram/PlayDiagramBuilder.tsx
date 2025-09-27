@@ -100,7 +100,6 @@ const PlayDiagramContent: React.FC<{ play?: Play }> = ({ play: _play }) => {
 
   return (
     <div className="w-full h-full bg-surface-primary flex flex-col">
-
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden min-h-0">
         {/* Left Sidebar - Tools */}

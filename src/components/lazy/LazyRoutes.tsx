@@ -8,7 +8,7 @@ import { Typography } from "../design-system/Typography";
  * Each page component is loaded only when the user navigates to it
  */
 import { Button } from "../ui";
-import { lazyRoute } from "../ui/performance";
+import { lazyRoute } from "../ui/performance-utils";
 
 // Lazy load all major page components
 export const LazyDashboardPage = lazyRoute(

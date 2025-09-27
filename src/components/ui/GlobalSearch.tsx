@@ -5,9 +5,10 @@ import { rosterService } from "../../services";
 import { PlaybookSearchService } from "../../services/playbookSearchService";
 import type { RosterPlayerView } from "../../services/rosterService";
 import type { Play } from "../../types/play";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getActiveTeamId } from "../../utils/activeTeam";
 import { useTeamsData } from "../../hooks/useTeamsData";
+import { usePlaybook } from "../../contexts/PlaybookContext";
 
 interface GlobalSearchProps {
   className?: string;
@@ -35,12 +36,22 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Get the current active team ID
   const teamId = getActiveTeamId();
 
   // Get plays data for search
   const { plays: allPlays } = useTeamsData();
+
+  // Conditionally use playbook context if available (when on playbook page)
+  let playbookContext: ReturnType<typeof usePlaybook> | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    playbookContext = usePlaybook();
+  } catch {
+    // Not within PlaybookProvider, that's fine
+  }
 
   // Transform DatabasePlay[] to Play[] by adding missing required fields
   const transformedPlays = useMemo(() => {
@@ -62,6 +73,37 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     () => new PlaybookSearchService(transformedPlays),
     [transformedPlays]
   );
+
+  // Determine search context based on current route
+  const getSearchContext = useMemo(() => {
+    const pathname = location.pathname;
+    if (pathname === "/playbook") {
+      return "playbook"; // Prioritize plays and formations
+    } else if (pathname.includes("/settings") && pathname.includes("roster")) {
+      return "roster"; // Prioritize players
+    } else if (pathname.includes("/team/") && pathname.includes("/settings")) {
+      return "team-settings"; // Prioritize players
+    }
+    return "general"; // No specific prioritization
+  }, [location.pathname]);
+
+  // Reorder results based on search context
+  const reorderResults = (results: SearchResult[], context: string) => {
+    if (context === "playbook") {
+      // Prioritize plays, then formations, then players
+      return results.sort((a, b) => {
+        const priorityOrder = { play: 0, formation: 1, player: 2, mention: 3 };
+        return priorityOrder[a.type] - priorityOrder[b.type];
+      });
+    } else if (context === "roster" || context === "team-settings") {
+      // Prioritize players, then plays, then formations
+      return results.sort((a, b) => {
+        const priorityOrder = { player: 0, play: 1, formation: 2, mention: 3 };
+        return priorityOrder[a.type] - priorityOrder[b.type];
+      });
+    }
+    return results; // General context - keep original order
+  };
 
   useEffect(() => {
     const searchAll = async () => {
@@ -146,7 +188,10 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         // This could be expanded later with a more complete Play type
         // For now, we'll skip player mentions
 
-        setResults(allResults);
+        // Reorder results based on current route context
+        const reorderedResults = reorderResults(allResults, getSearchContext);
+
+        setResults(reorderedResults);
       } catch (error) {
         console.error("Search error:", error);
         setResults([]);
@@ -157,15 +202,31 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
     const debounceTimer = setTimeout(searchAll, 300);
     return () => clearTimeout(debounceTimer);
-  }, [query, teamId, allPlays, searchService]);
+  }, [query, teamId, allPlays, searchService, getSearchContext]);
 
   useEffect(() => {
     setSelectedIndex(-1);
   }, [results]);
 
+  // Sync with playbook search when on playbook page
+  useEffect(() => {
+    if (
+      location.pathname === "/playbook" &&
+      playbookContext?.state.searchQuery !== undefined
+    ) {
+      setQuery(playbookContext.state.searchQuery);
+    }
+  }, [location.pathname, playbookContext?.state.searchQuery]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+    const newQuery = e.target.value;
+    setQuery(newQuery);
     setIsOpen(true);
+
+    // If on playbook page and playbook context is available, also update playbook search
+    if (location.pathname === "/playbook" && playbookContext) {
+      playbookContext.dispatch({ type: "SET_SEARCH", query: newQuery });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -229,6 +290,11 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     setIsOpen(false);
     setSelectedIndex(-1);
     inputRef.current?.focus();
+
+    // If on playbook page and playbook context is available, also clear playbook search
+    if (location.pathname === "/playbook" && playbookContext) {
+      playbookContext.dispatch({ type: "SET_SEARCH", query: "" });
+    }
   };
 
   return (

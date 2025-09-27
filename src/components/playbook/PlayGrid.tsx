@@ -64,6 +64,7 @@ interface PlayGridProps {
   selectedCategory?: string;
   selectedSubcategory?: string;
   onEdit?: (play: Play) => void;
+  onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
   onCreateDiagram?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
@@ -76,6 +77,10 @@ interface PlayGridProps {
   selectedPlayIds?: Set<string>;
   onPlaySelectionChange?: (playIds: Set<string>) => void;
   onOpenBuilder?: () => void;
+  // Suggestions for inline editing
+  formationSuggestions?: string[];
+  playNameSuggestions?: string[];
+  personnelSuggestions?: string[];
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -84,6 +89,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedCategory,
   selectedSubcategory,
   onEdit,
+  onSave,
   onDuplicate,
   onCreateDiagram,
   onAddToPracticeScript,
@@ -96,6 +102,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
   onOpenBuilder: _onOpenBuilder,
+  // Suggestions
+  formationSuggestions = [],
+  playNameSuggestions = [],
+  personnelSuggestions = [],
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -342,6 +352,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           play={play}
           showOneWordCalls={showOneWordCalls}
           onEdit={onEdit}
+          onSave={onSave}
           onDuplicate={onDuplicate}
           onCreateDiagram={onCreateDiagram}
           onAddToPracticeScript={onAddToPracticeScript}
@@ -349,12 +360,16 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
           density={density}
+          formationSuggestions={formationSuggestions}
+          playNameSuggestions={playNameSuggestions}
+          personnelSuggestions={personnelSuggestions}
         />
       </div>
     ),
     [
       showOneWordCalls,
       onEdit,
+      onSave,
       onDuplicate,
       onCreateDiagram,
       onAddToPracticeScript,
@@ -362,6 +377,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       selectedPlayIds,
       handlePlaySelect,
       density,
+      formationSuggestions,
+      playNameSuggestions,
+      personnelSuggestions,
     ]
   );
 
@@ -567,6 +585,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               play={play}
               showOneWordCalls={showOneWordCalls}
               onEdit={onEdit}
+              onSave={onSave}
               onDuplicate={onDuplicate}
               onCreateDiagram={onCreateDiagram}
               onAddToPracticeScript={onAddToPracticeScript}

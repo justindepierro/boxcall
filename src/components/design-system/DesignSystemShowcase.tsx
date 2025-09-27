@@ -12,7 +12,7 @@ import { Tooltip } from "../ui/Tooltip";
 import { ProgressiveImage } from "../ui/ProgressiveImage";
 import { LazyLoad } from "../ui/LazyLoad";
 import { DarkModeToggle } from "../ui/DarkModeToggle";
-import { useAdvancedTheme } from "./AdvancedThemeProvider";
+import { useAdvancedTheme } from "./advanced-theme-hooks";
 import { ColorGenerationService } from "../../lib/colorGeneration";
 import type { TeamColors } from "../../lib/colorGeneration";
 
@@ -223,9 +223,7 @@ export function DesignSystemShowcase() {
                       <span className="text-sm font-medium text-primary">
                         {label}
                       </span>
-                      <span className="text-xs text-secondary">
-                        {desc}
-                      </span>
+                      <span className="text-xs text-secondary">{desc}</span>
                     </div>
                   </button>
                 </Tooltip>
@@ -528,18 +526,14 @@ export function DesignSystemShowcase() {
                   <div className="text-2xl font-bold text-success mb-1">
                     89%
                   </div>
-                  <div className="text-sm text-secondary">
-                    Completion Rate
-                  </div>
+                  <div className="text-sm text-secondary">Completion Rate</div>
                   <div className="text-xs text-muted mt-1">
                     +12% from last week
                   </div>
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-info mb-1">
-                    1,247
-                  </div>
+                  <div className="text-2xl font-bold text-info mb-1">1,247</div>
                   <div className="text-sm text-secondary">Total Yards</div>
                   <div className="text-xs text-muted mt-1">
                     +89 from last game
@@ -547,9 +541,7 @@ export function DesignSystemShowcase() {
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-warning mb-1">
-                    23
-                  </div>
+                  <div className="text-2xl font-bold text-warning mb-1">23</div>
                   <div className="text-sm text-secondary">First Downs</div>
                   <div className="text-xs text-muted mt-1">
                     +5 from last game
@@ -557,9 +549,7 @@ export function DesignSystemShowcase() {
                 </Card>
 
                 <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-error mb-1">
-                    2
-                  </div>
+                  <div className="text-2xl font-bold text-error mb-1">2</div>
                   <div className="text-sm text-secondary">Turnovers</div>
                   <div className="text-xs text-muted mt-1">
                     -1 from last game
@@ -648,15 +638,9 @@ export function DesignSystemShowcase() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-success mb-2">
-                1.8MB
-              </div>
-              <div className="text-sm text-secondary mb-1">
-                Bundle Size
-              </div>
-              <div className="text-xs text-muted">
-                Down from 2.1MB (-14%)
-              </div>
+              <div className="text-3xl font-bold text-success mb-2">1.8MB</div>
+              <div className="text-sm text-secondary mb-1">Bundle Size</div>
+              <div className="text-xs text-muted">Down from 2.1MB (-14%)</div>
             </div>
 
             <div className="text-center">
@@ -664,15 +648,11 @@ export function DesignSystemShowcase() {
               <div className="text-sm text-secondary mb-1">
                 First Contentful Paint
               </div>
-              <div className="text-xs text-muted">
-                Target: &lt;0.5s (Soon!)
-              </div>
+              <div className="text-xs text-muted">Target: &lt;0.5s (Soon!)</div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold text-warning mb-2">
-                98+
-              </div>
+              <div className="text-3xl font-bold text-warning mb-2">98+</div>
               <div className="text-sm text-secondary mb-1">
                 Lighthouse Accessibility
               </div>

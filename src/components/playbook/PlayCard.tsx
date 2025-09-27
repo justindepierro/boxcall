@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
 import Icon from "../ui/Icon/Icon";
+import { InlineEditField } from "../ui/InlineEditField";
+import { InlineSelectField } from "../ui/InlineSelectField";
 import type { Play as PlayType } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {
@@ -17,6 +19,7 @@ interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
   onEdit?: (play: PlayType) => void;
+  onSave?: (playId: string, updates: Partial<PlayType>) => Promise<void>;
   onDuplicate?: (play: PlayType) => void;
   onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
@@ -25,11 +28,16 @@ interface PlayCardProps {
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
+  // Suggestions for inline editing
+  formationSuggestions?: string[];
+  playNameSuggestions?: string[];
+  personnelSuggestions?: string[];
 }
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
   showOneWordCalls = false,
   onEdit,
+  onSave,
   onDuplicate,
   onCreateDiagram,
   onAddToPracticeScript,
@@ -38,9 +46,107 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   isSelected = false,
   onSelectionChange,
   density = "comfortable",
+  // Suggestions
+  formationSuggestions = [],
+  playNameSuggestions = [],
+  personnelSuggestions = [],
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isCompact = density === "compact";
+  // Optimistic updates for smooth inline editing
+  const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
+  const [savingFields, setSavingFields] = useState<Set<string>>(new Set());
+
+  // Sync optimistic state with prop changes
+  useEffect(() => {
+    setOptimisticPlay(play);
+  }, [play]);
+
+  // Default suggestions if none provided
+  const defaultFormationSuggestions = [
+    "Shotgun",
+    "Pistol",
+    "Wildcat",
+    "Empty",
+    "Trips Right",
+    "Trips Left",
+    "Bunch Right",
+    "Bunch Left",
+    "Stack Right",
+    "Stack Left",
+  ];
+  const defaultPlayNameSuggestions = [
+    "Slant",
+    "Out",
+    "Fade",
+    "Post",
+    "Corner",
+    "Go Route",
+    "Screen",
+    "Draw",
+    "Inside Zone",
+    "Outside Zone",
+    "Power",
+    "Counter",
+  ];
+  const defaultPersonnelSuggestions = [
+    "11 Personnel",
+    "12 Personnel",
+    "21 Personnel",
+    "22 Personnel",
+    "10 Personnel",
+    "20 Personnel",
+    "01 Personnel",
+    "02 Personnel",
+  ];
+
+  const actualFormationSuggestions =
+    formationSuggestions.length > 0
+      ? formationSuggestions
+      : defaultFormationSuggestions;
+  const actualPlayNameSuggestions =
+    playNameSuggestions.length > 0
+      ? playNameSuggestions
+      : defaultPlayNameSuggestions;
+  const actualPersonnelSuggestions =
+    personnelSuggestions.length > 0
+      ? personnelSuggestions
+      : defaultPersonnelSuggestions;
+
+  // Normalization function for text fields
+  const normalizeValue = (value: string): string => {
+    return value
+      .trim()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
+  // Save handler for inline edits with optimistic updates
+  const handleInlineSave = async (
+    field: keyof PlayType,
+    value: string | number
+  ) => {
+    const fieldName = field as string;
+
+    // Optimistic update
+    setOptimisticPlay((prev) => ({ ...prev, [field]: value }));
+    setSavingFields((prev) => new Set(prev).add(fieldName));
+
+    try {
+      if (onSave) {
+        await onSave(play.id, { [field]: value });
+      }
+    } catch (error) {
+      // Revert optimistic update on error
+      setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
+      console.error(`Failed to save ${fieldName}:`, error);
+    } finally {
+      setSavingFields((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(fieldName);
+        return newSet;
+      });
+    }
+  };
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
@@ -87,6 +193,53 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       onCreateDiagram(play);
     }
   };
+
+  // Dropdown options for inline editing
+  const FORMATION_OPTIONS = [
+    { value: "Empty", label: "Empty" },
+    { value: "Shotgun", label: "Shotgun" },
+    { value: "Pistol", label: "Pistol" },
+    { value: "Wildcat", label: "Wildcat" },
+    { value: "Trips Right", label: "Trips Right" },
+    { value: "Trips Left", label: "Trips Left" },
+    { value: "Bunch Right", label: "Bunch Right" },
+    { value: "Bunch Left", label: "Bunch Left" },
+    { value: "Stack Right", label: "Stack Right" },
+    { value: "Stack Left", label: "Stack Left" },
+  ];
+
+  const PLAY_TYPE_OPTIONS = [
+    { value: "Pass", label: "Pass" },
+    { value: "Run", label: "Run" },
+    { value: "RPO", label: "RPO" },
+    { value: "Play Action", label: "Play Action" },
+  ];
+
+  const DIRECTION_OPTIONS = [
+    { value: "Left", label: "Left" },
+    { value: "Right", label: "Right" },
+    { value: "Middle", label: "Middle" },
+    { value: "Stretch", label: "Stretch" },
+  ];
+
+  const DOWN_OPTIONS = [
+    { value: "1st", label: "1st Down" },
+    { value: "2nd", label: "2nd Down" },
+    { value: "3rd", label: "3rd Down" },
+    { value: "4th", label: "4th Down" },
+  ];
+
+  const DISTANCE_OPTIONS = [
+    { value: "Short", label: "Short" },
+    { value: "Medium", label: "Medium" },
+    { value: "Long", label: "Long" },
+  ];
+
+  const HASH_OPTIONS = [
+    { value: "Left", label: "Left Hash" },
+    { value: "Right", label: "Right Hash" },
+    { value: "Middle", label: "Middle" },
+  ];
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
   const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
@@ -94,6 +247,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [newPlayer, setNewPlayer] = useState("");
   const [newPosition, setNewPosition] = useState("");
   const [showTagsEditor, setShowTagsEditor] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Derive isCompact from density prop
+  const isCompact = density === "compact";
+
   return (
     <>
       <div
@@ -155,13 +313,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 }`}
               >
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
                 >
-                  {play.p_type}
+                  {optimisticPlay.p_type}
                 </span>
-                {play.f_type && (
+                {optimisticPlay.f_type && (
                   <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
-                    {play.f_type}
+                    {optimisticPlay.f_type}
                   </span>
                 )}
                 {phaseLabel && (
@@ -170,9 +328,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   </span>
                 )}
                 <span
-                  className={`text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
+                  className={`text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
                 >
-                  {play.confidence_base}%
+                  {optimisticPlay.confidence_base}%
                 </span>
               </div>
             </div>
@@ -239,13 +397,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               {/* Overview bar */}
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
                 >
-                  {play.p_type}
+                  {optimisticPlay.p_type}
                 </span>
-                {play.personnel && (
+                {optimisticPlay.personnel && (
                   <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
-                    Personnel: {play.personnel}
+                    Personnel: {optimisticPlay.personnel}
                   </span>
                 )}
                 {phaseLabel && (
@@ -253,15 +411,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     {phaseLabel}
                   </span>
                 )}
-                {play.one_word_play && !showOneWordCalls && (
+                {optimisticPlay.one_word_play && !showOneWordCalls && (
                   <span className="px-2 py-0.5 bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-[11px] font-medium">
-                    Code: {play.one_word_play.toUpperCase()}
+                    Code: {optimisticPlay.one_word_play.toUpperCase()}
                   </span>
                 )}
                 <span
-                  className={`ml-auto text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
+                  className={`ml-auto text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
                 >
-                  Confidence {play.confidence_base}%
+                  Confidence {optimisticPlay.confidence_base}%
                 </span>
               </div>
 
@@ -276,49 +434,113 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Icon name="target" className="h-4 w-4 mr-1" /> Formation
                   </Typography>
-                  <dl className="space-y-1 text-sm">
-                    <div className="flex justify-between gap-2">
-                      <dt className="text-text-secondary">Base</dt>
-                      <dd className="text-text-primary">{play.formation}</dd>
+                  <dl className="space-y-2 text-sm">
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Base</dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.formation}
+                          options={FORMATION_OPTIONS}
+                          onSave={(value) =>
+                            handleInlineSave("formation", value)
+                          }
+                          placeholder="Select formation"
+                          isSaving={savingFields.has("formation")}
+                        />
+                      </dd>
                     </div>
-                    {play.f_type && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Type</dt>
-                        <dd className="text-text-primary">{play.f_type}</dd>
-                      </div>
-                    )}
-                    {play.f_dir && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Direction</dt>
-                        <dd className="text-text-primary">{play.f_dir}</dd>
-                      </div>
-                    )}
-                    {play.back_align && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Back Align</dt>
-                        <dd className="text-text-primary">{play.back_align}</dd>
-                      </div>
-                    )}
-                    {play.shift && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Shift</dt>
-                        <dd className="text-text-primary">{play.shift}</dd>
-                      </div>
-                    )}
-                    {play.motion && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Motion</dt>
-                        <dd className="text-text-primary">{play.motion}</dd>
-                      </div>
-                    )}
-                    {(play.ftag1 || play.ftag2) && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Tags</dt>
-                        <dd className="text-text-primary">
-                          {[play.ftag1, play.ftag2].filter(Boolean).join(", ")}
-                        </dd>
-                      </div>
-                    )}
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Type</dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.f_type || ""}
+                          onSave={(value) => handleInlineSave("f_type", value)}
+                          placeholder="Formation type"
+                          suggestions={actualFormationSuggestions}
+                          enableSuggestions={true}
+                          normalizeValue={normalizeValue}
+                          isSaving={savingFields.has("f_type")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Direction
+                      </dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.f_dir || ""}
+                          options={DIRECTION_OPTIONS}
+                          onSave={(value) => handleInlineSave("f_dir", value)}
+                          placeholder="Direction"
+                          allowEmpty={true}
+                          emptyLabel="None"
+                          isSaving={savingFields.has("f_dir")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Back Align
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.back_align || ""}
+                          onSave={(value) =>
+                            handleInlineSave("back_align", value)
+                          }
+                          placeholder="Backfield alignment"
+                          isSaving={savingFields.has("back_align")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Shift</dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.shift || ""}
+                          onSave={(value) => handleInlineSave("shift", value)}
+                          placeholder="Pre-snap shift"
+                          isSaving={savingFields.has("shift")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Motion
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.motion || ""}
+                          onSave={(value) => handleInlineSave("motion", value)}
+                          placeholder="Pre-snap motion"
+                          isSaving={savingFields.has("motion")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Tags</dt>
+                      <dd>
+                        <InlineEditField
+                          value={[optimisticPlay.ftag1, optimisticPlay.ftag2]
+                            .filter(Boolean)
+                            .join(", ")}
+                          onSave={(value) => {
+                            const tags = value
+                              .split(",")
+                              .map((t) => t.trim())
+                              .filter(Boolean);
+                            handleInlineSave("ftag1", tags[0] || "");
+                            if (tags[1]) handleInlineSave("ftag2", tags[1]);
+                          }}
+                          placeholder="Formation tags"
+                          isSaving={
+                            savingFields.has("ftag1") ||
+                            savingFields.has("ftag2")
+                          }
+                        />
+                      </dd>
+                    </div>
                   </dl>
                 </div>
 
@@ -331,53 +553,150 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Icon name="hash" className="h-4 w-4 mr-1" /> Play Details
                   </Typography>
-                  <dl className="space-y-1 text-sm">
-                    <div className="flex justify-between gap-2">
-                      <dt className="text-text-secondary">Core</dt>
-                      <dd className="text-text-primary">{play.play_name}</dd>
+                  <dl className="space-y-2 text-sm">
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Name</dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.play_name}
+                          onSave={(value) =>
+                            handleInlineSave("play_name", value)
+                          }
+                          placeholder="Play name"
+                          suggestions={actualPlayNameSuggestions}
+                          enableSuggestions={true}
+                          normalizeValue={normalizeValue}
+                          validation={(value) => {
+                            if (!value.trim()) return "Play name is required";
+                            return null;
+                          }}
+                          isSaving={savingFields.has("play_name")}
+                        />
+                      </dd>
                     </div>
-                    {play.protection && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Protection</dt>
-                        <dd className="text-text-primary">{play.protection}</dd>
-                      </div>
-                    )}
-                    {play.p_dir && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Direction</dt>
-                        <dd className="text-text-primary">{play.p_dir}</dd>
-                      </div>
-                    )}
-                    {(play.r_str || play.p_str) && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Strength</dt>
-                        <dd className="text-text-primary">
-                          {[play.r_str, play.p_str].filter(Boolean).join(", ")}
-                        </dd>
-                      </div>
-                    )}
-                    {(play.p_tag1 || play.p_tag2) && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Tags</dt>
-                        <dd className="text-text-primary">
-                          {[play.p_tag1, play.p_tag2]
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Type</dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.p_type}
+                          options={PLAY_TYPE_OPTIONS}
+                          onSave={(value) => handleInlineSave("p_type", value)}
+                          placeholder="Play type"
+                          isSaving={savingFields.has("p_type")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Personnel
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.personnel || ""}
+                          onSave={(value) =>
+                            handleInlineSave("personnel", value)
+                          }
+                          placeholder="Personnel (e.g., 11 Personnel)"
+                          suggestions={actualPersonnelSuggestions}
+                          enableSuggestions={true}
+                          normalizeValue={normalizeValue}
+                          isSaving={savingFields.has("personnel")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Protection
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.protection || ""}
+                          onSave={(value) =>
+                            handleInlineSave("protection", value)
+                          }
+                          placeholder="Pass protection scheme"
+                          isSaving={savingFields.has("protection")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Direction
+                      </dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.p_dir || ""}
+                          options={DIRECTION_OPTIONS}
+                          onSave={(value) => handleInlineSave("p_dir", value)}
+                          placeholder="Pass direction"
+                          allowEmpty={true}
+                          emptyLabel="None"
+                          isSaving={savingFields.has("p_dir")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Strength
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={[optimisticPlay.r_str, optimisticPlay.p_str]
                             .filter(Boolean)
                             .join(", ")}
-                        </dd>
-                      </div>
-                    )}
-                    {(play.check_into ||
-                      play.key_player1 ||
-                      play.key_player2) && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Keys</dt>
-                        <dd className="text-text-primary">
-                          {[play.check_into, play.key_player1, play.key_player2]
+                          onSave={(value) => {
+                            const strengths = value
+                              .split(",")
+                              .map((s) => s.trim())
+                              .filter(Boolean);
+                            handleInlineSave("r_str", strengths[0] || "");
+                            if (strengths[1])
+                              handleInlineSave("p_str", strengths[1]);
+                          }}
+                          placeholder="Run/Pass strength"
+                          isSaving={
+                            savingFields.has("r_str") ||
+                            savingFields.has("p_str")
+                          }
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Tags</dt>
+                      <dd>
+                        <InlineEditField
+                          value={[optimisticPlay.p_tag1, optimisticPlay.p_tag2]
                             .filter(Boolean)
                             .join(", ")}
-                        </dd>
-                      </div>
-                    )}
+                          onSave={(value) => {
+                            const tags = value
+                              .split(",")
+                              .map((t) => t.trim())
+                              .filter(Boolean);
+                            handleInlineSave("p_tag1", tags[0] || "");
+                            if (tags[1]) handleInlineSave("p_tag2", tags[1]);
+                          }}
+                          placeholder="Play tags"
+                          isSaving={
+                            savingFields.has("p_tag1") ||
+                            savingFields.has("p_tag2")
+                          }
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Code</dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.one_word_play || ""}
+                          onSave={(value) =>
+                            handleInlineSave("one_word_play", value)
+                          }
+                          placeholder="One-word call"
+                          isSaving={savingFields.has("one_word_play")}
+                        />
+                      </dd>
+                    </div>
                   </dl>
                 </div>
 
@@ -390,37 +709,84 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     Preferences
                   </Typography>
-                  <dl className="space-y-1 text-sm">
-                    {play.pref_down && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Down</dt>
-                        <dd className="text-text-primary">{play.pref_down}</dd>
-                      </div>
-                    )}
-                    {play.pref_dis && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Distance</dt>
-                        <dd className="text-text-primary">{play.pref_dis}</dd>
-                      </div>
-                    )}
-                    {play.pref_hash && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Hash</dt>
-                        <dd className="text-text-primary">{play.pref_hash}</dd>
-                      </div>
-                    )}
-                    {play.pref_cov && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Coverage</dt>
-                        <dd className="text-text-primary">{play.pref_cov}</dd>
-                      </div>
-                    )}
-                    {play.pref_front && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Front</dt>
-                        <dd className="text-text-primary">{play.pref_front}</dd>
-                      </div>
-                    )}
+                  <dl className="space-y-2 text-sm">
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Down</dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.pref_down || ""}
+                          options={DOWN_OPTIONS}
+                          onSave={(value) =>
+                            handleInlineSave("pref_down", value)
+                          }
+                          placeholder="Preferred down"
+                          allowEmpty={true}
+                          emptyLabel="Any"
+                          isSaving={savingFields.has("pref_down")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Distance
+                      </dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.pref_dis || ""}
+                          options={DISTANCE_OPTIONS}
+                          onSave={(value) =>
+                            handleInlineSave("pref_dis", value)
+                          }
+                          placeholder="Preferred distance"
+                          allowEmpty={true}
+                          emptyLabel="Any"
+                          isSaving={savingFields.has("pref_dis")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Hash</dt>
+                      <dd>
+                        <InlineSelectField
+                          value={optimisticPlay.pref_hash || ""}
+                          options={HASH_OPTIONS}
+                          onSave={(value) =>
+                            handleInlineSave("pref_hash", value)
+                          }
+                          placeholder="Preferred hash"
+                          allowEmpty={true}
+                          emptyLabel="Any"
+                          isSaving={savingFields.has("pref_hash")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">
+                        Coverage
+                      </dt>
+                      <dd>
+                        <InlineEditField
+                          value={optimisticPlay.pref_cov || ""}
+                          onSave={(value) =>
+                            handleInlineSave("pref_cov", value)
+                          }
+                          placeholder="Preferred coverage"
+                          isSaving={savingFields.has("pref_cov")}
+                        />
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
+                      <dt className="text-text-secondary font-medium">Front</dt>
+                      <dd>
+                        <InlineEditField
+                          value={play.pref_front || ""}
+                          onSave={(value) =>
+                            handleInlineSave("pref_front", value)
+                          }
+                          placeholder="Preferred defensive front"
+                        />
+                      </dd>
+                    </div>
                   </dl>
                 </div>
 
@@ -434,19 +800,25 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     <Icon name="clock" className="h-4 w-4 mr-1" /> Usage & Stats
                   </Typography>
                   <dl className="space-y-1 text-sm">
-                    <div className="flex justify-between gap-2">
-                      <dt className="text-text-secondary">Times Called</dt>
+                    <div className="grid grid-cols-[120px_1fr] gap-3">
+                      <dt className="text-text-secondary font-medium">
+                        Times Called
+                      </dt>
                       <dd className="text-text-primary">{play.times_called}</dd>
                     </div>
-                    <div className="flex justify-between gap-2">
-                      <dt className="text-text-secondary">Times Successful</dt>
+                    <div className="grid grid-cols-[120px_1fr] gap-3">
+                      <dt className="text-text-secondary font-medium">
+                        Times Successful
+                      </dt>
                       <dd className="text-text-primary">
                         {play.times_successful}
                       </dd>
                     </div>
                     {play.last_used_at && (
-                      <div className="flex justify-between gap-2">
-                        <dt className="text-text-secondary">Last Used</dt>
+                      <div className="grid grid-cols-[120px_1fr] gap-3">
+                        <dt className="text-text-secondary font-medium">
+                          Last Used
+                        </dt>
                         <dd className="text-text-primary">
                           {new Date(play.last_used_at).toLocaleDateString()}
                         </dd>
@@ -457,20 +829,22 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
 
               {/* Notes */}
-              {play.notes && (
-                <div className="surface-subtle rounded-md p-3">
-                  <Typography
-                    variant="label-lg"
-                    as="h4"
-                    className="text-text-primary mb-1"
-                  >
-                    Notes
-                  </Typography>
-                  <p className="text-sm text-text-primary whitespace-pre-line">
-                    {play.notes}
-                  </p>
-                </div>
-              )}
+              <div className="surface-subtle rounded-md p-3">
+                <Typography
+                  variant="label-lg"
+                  as="h4"
+                  className="text-text-primary mb-2"
+                >
+                  Notes
+                </Typography>
+                <InlineEditField
+                  value={play.notes || ""}
+                  onSave={(value) => handleInlineSave("notes", value)}
+                  placeholder="Add notes about this play..."
+                  type="textarea"
+                  rows={3}
+                />
+              </div>
 
               {/* Tags & Roles (summary + editor) */}
               <div className="surface-subtle rounded-md p-3">

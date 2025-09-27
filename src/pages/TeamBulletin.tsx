@@ -149,6 +149,26 @@ export const TeamBulletin: React.FC = () => {
     };
   }, [teamId]);
 
+  // If no teamId is provided, this is an error since the route should always include it
+  if (!teamId) {
+    return (
+      <PageLayout title="Team Bulletin" subtitle="Error loading team bulletin">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center max-w-md px-4">
+            <Typography variant="headline-lg" className="text-error mb-4">
+              Team Not Found
+            </Typography>
+            <Typography variant="body-lg" color="muted" className="mb-6">
+              Unable to load the team bulletin. Please select a team from the
+              teams page.
+            </Typography>
+            <Button onClick={() => navigate(ROUTES.TEAMS)}>View Teams</Button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   if (loadingInitial) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -222,7 +242,7 @@ export const TeamBulletin: React.FC = () => {
         Skip to main content
       </a>
       <CollaborationProvider
-        teamId={teamId || "demo-team"}
+        teamId={teamId}
         dashboardId="team-bulletin"
         user={{
           id: user?.id || "anonymous",
@@ -290,7 +310,7 @@ export const TeamBulletin: React.FC = () => {
                             "player"
                       }
                       userId={user?.id || "anonymous"}
-                      teamId={teamId || "demo-team"}
+                      teamId={teamId}
                     />
                   </React.Suspense>
                 </div>

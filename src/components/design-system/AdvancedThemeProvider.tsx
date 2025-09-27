@@ -4,12 +4,12 @@
  * emotion-based palettes, contextual schemes, and accessibility support
  */
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import {
   useColorTheme,
   type UseColorThemeReturn,
 } from "../../hooks/useColorTheme";
-import { useDesignSystem } from "./DesignSystemProvider";
+import { useDesignSystem } from "./design-system-hooks";
 import type { TeamColors } from "../../lib/colorGeneration";
 
 interface AdvancedThemeContextType extends UseColorThemeReturn {
@@ -42,6 +42,9 @@ interface AdvancedThemeContextType extends UseColorThemeReturn {
 const AdvancedThemeContext = createContext<AdvancedThemeContextType | null>(
   null
 );
+
+// Export context for use in hooks file
+export { AdvancedThemeContext };
 
 interface AdvancedThemeProviderProps {
   children: React.ReactNode;
@@ -140,25 +143,4 @@ export function AdvancedThemeProvider({
       {children}
     </AdvancedThemeContext.Provider>
   );
-}
-
-// Hook to use advanced theming
-export function useAdvancedTheme(): AdvancedThemeContextType {
-  const context = useContext(AdvancedThemeContext);
-  if (!context) {
-    throw new Error(
-      "useAdvancedTheme must be used within an AdvancedThemeProvider"
-    );
-  }
-  return context;
-}
-
-// Higher-order component for advanced theming
-export function withAdvancedTheme<P extends object>(
-  WrappedComponent: React.ComponentType<P & { theme: AdvancedThemeContextType }>
-) {
-  return function ThemedComponent(props: P) {
-    const theme = useAdvancedTheme();
-    return React.createElement(WrappedComponent, { ...props, theme });
-  };
 }

@@ -174,7 +174,7 @@ export const Modal: React.FC<ModalProps> = ({
           aria-labelledby={title ? "modal-title" : undefined}
           tabIndex={-1}
         >
-                    {/* Header - Enhanced with display font and substantial styling */}
+          {/* Header - Enhanced with display font and substantial styling */}
           {(title || headerContent) && (
             <div className="bc-card-padding border-b-2 border-subtle dark:border-text-tertiary">
               {headerContent ? (

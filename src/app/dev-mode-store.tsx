@@ -2,14 +2,10 @@
  * Minimal DevMode Provider
  * Replacement for the deleted dev-mode-store with essential functionality only
  */
-import React, {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-} from "react";
+import React, { createContext, useState, type ReactNode } from "react";
 
 import type { DevMode } from "./dev-mode-types";
+import { isValidDevMode } from "./dev-mode-utils";
 
 // Dev mode context
 interface DevModeContextType {
@@ -55,24 +51,5 @@ export const DevModeProvider: React.FC<DevModeProviderProps> = ({
   );
 };
 
-// Hook to use dev mode context
-export const useDevModeContext = () => {
-  const context = useContext(DevModeContext);
-  if (!context) {
-    throw new Error("useDevModeContext must be used within a DevModeProvider");
-  }
-  return context;
-};
-
-// Utility to validate dev mode
-function isValidDevMode(mode: string): boolean {
-  const validModes: DevMode[] = [
-    "production",
-    "blank_slate",
-    "test_as_head_coach",
-    "test_as_coach",
-    "test_as_player",
-    "test_as_family",
-  ];
-  return validModes.includes(mode as DevMode);
-}
+// Export context for use in hooks file
+export { DevModeContext };
