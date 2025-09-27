@@ -313,7 +313,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder="Search players, plays, formations..."
-          className="block w-80 pl-10 pr-10 py-2 text-sm rounded-lg
+          className="block w-80 pl-10 pr-10 py-2 text-sm rounded-lg border-none
                      focus:ring-2 focus:ring-focus-info focus:border-border-info
                      placeholder-text-secondary transition-all duration-200
                      bg-surface-primary hover:bg-surface-secondary focus:bg-surface-primary"

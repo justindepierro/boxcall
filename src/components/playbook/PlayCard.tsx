@@ -3,6 +3,7 @@ import { Typography } from "../design-system/Typography";
 import Icon from "../ui/Icon/Icon";
 import { InlineEditField } from "../ui/InlineEditField";
 import { InlineSelectField } from "../ui/InlineSelectField";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {
@@ -31,7 +32,6 @@ interface PlayCardProps {
   // Suggestions for inline editing
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
-  personnelSuggestions?: string[];
 }
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
@@ -45,15 +45,90 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Bulk Operations
   isSelected = false,
   onSelectionChange,
-  density = "comfortable",
+  density = "compact",
   // Suggestions
   formationSuggestions = [],
   playNameSuggestions = [],
-  personnelSuggestions = [],
 }) => {
   // Optimistic updates for smooth inline editing
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<Set<string>>(new Set());
+
+  // Formation field ordering for drag-and-drop
+  const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>([
+    "formation",
+    "f_dir",
+    "f_type",
+    "back_align",
+    "shift",
+    "motion",
+    "ftags",
+    "r_str",
+    "p_str",
+  ]);
+
+  // Formation field visibility
+  const [formationFieldVisibility, setFormationFieldVisibility] = useState<
+    Record<string, boolean>
+  >({
+    formation: true,
+    f_type: true,
+    f_dir: true,
+    back_align: true,
+    shift: true,
+    motion: true,
+    ftags: true,
+    r_str: true,
+    p_str: true,
+  });
+
+  // Play Details field ordering for drag-and-drop
+  const [playDetailsFieldOrder, setPlayDetailsFieldOrder] = useState<string[]>([
+    "play_name",
+    "p_dir",
+    "p_type",
+    "protection",
+    "ptags",
+    "one_word_play",
+  ]);
+
+  // Play Details field visibility
+  const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] = useState<
+    Record<string, boolean>
+  >({
+    play_name: true,
+    p_dir: true,
+    p_type: true,
+    protection: true,
+    ptags: true,
+    one_word_play: true,
+  });
+
+  // Toggle field visibility
+  const toggleFieldVisibility = (
+    fieldKey: string,
+    section: "formation" | "playDetails"
+  ) => {
+    if (section === "formation") {
+      setFormationFieldVisibility((prev) => ({
+        ...prev,
+        [fieldKey]: !prev[fieldKey],
+      }));
+    } else {
+      setPlayDetailsFieldVisibility((prev) => ({
+        ...prev,
+        [fieldKey]: !prev[fieldKey],
+      }));
+    }
+  };
+
+  // Get visible field order for display name
+  const visibleFormationFields = formationFieldOrder.filter(
+    (key) => formationFieldVisibility[key]
+  );
+  const visiblePlayDetailsFields = playDetailsFieldOrder.filter(
+    (key) => playDetailsFieldVisibility[key]
+  );
 
   // Sync optimistic state with prop changes
   useEffect(() => {
@@ -87,16 +162,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     "Power",
     "Counter",
   ];
-  const defaultPersonnelSuggestions = [
-    "11 Personnel",
-    "12 Personnel",
-    "21 Personnel",
-    "22 Personnel",
-    "10 Personnel",
-    "20 Personnel",
-    "01 Personnel",
-    "02 Personnel",
-  ];
 
   const actualFormationSuggestions =
     formationSuggestions.length > 0
@@ -106,10 +171,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     playNameSuggestions.length > 0
       ? playNameSuggestions
       : defaultPlayNameSuggestions;
-  const actualPersonnelSuggestions =
-    personnelSuggestions.length > 0
-      ? personnelSuggestions
-      : defaultPersonnelSuggestions;
 
   // Normalization function for text fields
   const normalizeValue = (value: string): string => {
@@ -133,7 +194,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
     try {
       if (onSave) {
+        console.log(`Saving ${fieldName}:`, value);
         await onSave(play.id, { [field]: value });
+        console.log(`Successfully saved ${fieldName}`);
+      } else {
+        console.warn(`No onSave function provided for ${fieldName}`);
+        // If no onSave, just keep the optimistic update
       }
     } catch (error) {
       // Revert optimistic update on error
@@ -147,6 +213,29 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       });
     }
   };
+
+  // Handle drag-and-drop reordering
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const items = Array.from(formationFieldOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setFormationFieldOrder(items);
+  };
+
+  // Handle drag-and-drop reordering for Play Details
+  const handlePlayDetailsDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const items = Array.from(playDetailsFieldOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setPlayDetailsFieldOrder(items);
+  };
+
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
@@ -208,6 +297,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     { value: "Stack Left", label: "Stack Left" },
   ];
 
+  const PERSONNEL_OPTIONS = [
+    { value: "10", label: "10 Personnel (1 RB, 0 TE)" },
+    { value: "11", label: "11 Personnel (1 RB, 1 TE)" },
+    { value: "12", label: "12 Personnel (1 RB, 2 TE)" },
+    { value: "13", label: "13 Personnel (1 RB, 3 TE)" },
+    { value: "20", label: "20 Personnel (2 RB, 0 TE)" },
+    { value: "21", label: "21 Personnel (2 RB, 1 TE)" },
+    { value: "22", label: "22 Personnel (2 RB, 2 TE)" },
+  ];
+
   const PLAY_TYPE_OPTIONS = [
     { value: "Pass", label: "Pass" },
     { value: "Run", label: "Run" },
@@ -240,8 +339,328 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     { value: "Right", label: "Right Hash" },
     { value: "Middle", label: "Middle" },
   ];
-  const displayName = getDisplayName(play, showOneWordCalls);
+  const displayName = getDisplayName(
+    play,
+    showOneWordCalls,
+    visibleFormationFields,
+    visiblePlayDetailsFields
+  );
   const subtitleText = getSubtitleText(play, showOneWordCalls);
+
+  // Formation field definitions for drag-and-drop
+  const formationFields = {
+    formation: {
+      label: "Base",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineSelectField
+          value={optimisticPlay.formation}
+          options={FORMATION_OPTIONS}
+          onSave={(value) => handleInlineSave("formation", value)}
+          placeholder="Select formation"
+          isSaving={savingFields.has("formation")}
+        />
+      ),
+    },
+    f_type: {
+      label: "Type",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.f_type || ""}
+          onSave={(value) => handleInlineSave("f_type", value)}
+          placeholder="Formation type"
+          suggestions={actualFormationSuggestions}
+          enableSuggestions={true}
+          normalizeValue={normalizeValue}
+          isSaving={savingFields.has("f_type")}
+        />
+      ),
+    },
+    f_dir: {
+      label: "Direction",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineSelectField
+          value={optimisticPlay.f_dir || ""}
+          options={DIRECTION_OPTIONS}
+          onSave={(value) => handleInlineSave("f_dir", value)}
+          placeholder="Direction"
+          allowEmpty={true}
+          emptyLabel="None"
+          isSaving={savingFields.has("f_dir")}
+        />
+      ),
+    },
+    back_align: {
+      label: "Back Align",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.back_align || ""}
+          onSave={(value) => handleInlineSave("back_align", value)}
+          placeholder="Backfield alignment"
+          isSaving={savingFields.has("back_align")}
+        />
+      ),
+    },
+    shift: {
+      label: "Shift",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.shift || ""}
+          onSave={(value) => handleInlineSave("shift", value)}
+          placeholder="Pre-snap shift"
+          isSaving={savingFields.has("shift")}
+        />
+      ),
+    },
+    motion: {
+      label: "Motion",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.motion || ""}
+          onSave={(value) => handleInlineSave("motion", value)}
+          placeholder="Pre-snap motion"
+          isSaving={savingFields.has("motion")}
+        />
+      ),
+    },
+    ftags: {
+      label: "Tags",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={[optimisticPlay.ftag1, optimisticPlay.ftag2]
+            .filter(Boolean)
+            .join(", ")}
+          onSave={(value) => {
+            const tags = value
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean);
+            handleInlineSave("ftag1", tags[0] || "");
+            if (tags[1]) handleInlineSave("ftag2", tags[1]);
+          }}
+          placeholder="Formation tags"
+          isSaving={savingFields.has("ftag1") || savingFields.has("ftag2")}
+        />
+      ),
+    },
+    r_str: {
+      label: "Run Strength",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.r_str || ""}
+          onSave={(value) => handleInlineSave("r_str", value)}
+          placeholder="Run strength"
+          isSaving={savingFields.has("r_str")}
+        />
+      ),
+    },
+    p_str: {
+      label: "Pass Strength",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.p_str || ""}
+          onSave={(value) => handleInlineSave("p_str", value)}
+          placeholder="Pass strength"
+          isSaving={savingFields.has("p_str")}
+        />
+      ),
+    },
+  };
+
+  // Play Details field definitions for drag-and-drop
+  const playDetailsFields = {
+    play_name: {
+      label: "Name",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.play_name}
+          onSave={(value) => handleInlineSave("play_name", value)}
+          placeholder="Play name"
+          suggestions={actualPlayNameSuggestions}
+          enableSuggestions={true}
+          normalizeValue={normalizeValue}
+          validation={(value) => {
+            if (!value.trim()) return "Play name is required";
+            return null;
+          }}
+          isSaving={savingFields.has("play_name")}
+        />
+      ),
+    },
+    p_dir: {
+      label: "Direction",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineSelectField
+          value={optimisticPlay.p_dir || ""}
+          options={DIRECTION_OPTIONS}
+          onSave={(value) => handleInlineSave("p_dir", value)}
+          placeholder="Pass direction"
+          allowEmpty={true}
+          emptyLabel="None"
+          isSaving={savingFields.has("p_dir")}
+        />
+      ),
+    },
+    p_type: {
+      label: "Type",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineSelectField
+          value={optimisticPlay.p_type}
+          options={PLAY_TYPE_OPTIONS}
+          onSave={(value) => handleInlineSave("p_type", value)}
+          placeholder="Play type"
+          isSaving={savingFields.has("p_type")}
+        />
+      ),
+    },
+    protection: {
+      label: "Protection",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.protection || ""}
+          onSave={(value) => handleInlineSave("protection", value)}
+          placeholder="Pass protection scheme"
+          isSaving={savingFields.has("protection")}
+        />
+      ),
+    },
+    ptags: {
+      label: "Tags",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={[optimisticPlay.p_tag1, optimisticPlay.p_tag2]
+            .filter(Boolean)
+            .join(", ")}
+          onSave={(value) => {
+            const tags = value
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean);
+            handleInlineSave("p_tag1", tags[0] || "");
+            if (tags[1]) handleInlineSave("p_tag2", tags[1]);
+          }}
+          placeholder="Play tags"
+          isSaving={savingFields.has("p_tag1") || savingFields.has("p_tag2")}
+        />
+      ),
+    },
+    one_word_play: {
+      label: "Code",
+      render: (
+        optimisticPlay: PlayType,
+        handleInlineSave: (
+          field: keyof PlayType,
+          value: string | number
+        ) => Promise<void>,
+        savingFields: Set<string>
+      ) => (
+        <InlineEditField
+          value={optimisticPlay.one_word_play || ""}
+          onSave={(value) => handleInlineSave("one_word_play", value)}
+          placeholder="One-word call"
+          isSaving={savingFields.has("one_word_play")}
+        />
+      ),
+    },
+  };
+
   const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
   const [newFlag, setNewFlag] = useState("");
   const [newPlayer, setNewPlayer] = useState("");
@@ -402,9 +821,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {optimisticPlay.p_type}
                 </span>
                 {optimisticPlay.personnel && (
-                  <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
-                    Personnel: {optimisticPlay.personnel}
-                  </span>
+                  <InlineSelectField
+                    value={optimisticPlay.personnel}
+                    options={PERSONNEL_OPTIONS}
+                    onSave={(value) => handleInlineSave("personnel", value)}
+                    placeholder="Select personnel"
+                    isSaving={savingFields.has("personnel")}
+                    className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium hover:bg-gray-200 transition-colors"
+                  />
                 )}
                 {phaseLabel && (
                   <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold uppercase border border-warning-600">
@@ -434,114 +858,92 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Icon name="target" className="h-4 w-4 mr-1" /> Formation
                   </Typography>
-                  <dl className="space-y-2 text-sm">
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Base</dt>
-                      <dd>
-                        <InlineSelectField
-                          value={optimisticPlay.formation}
-                          options={FORMATION_OPTIONS}
-                          onSave={(value) =>
-                            handleInlineSave("formation", value)
-                          }
-                          placeholder="Select formation"
-                          isSaving={savingFields.has("formation")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Type</dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.f_type || ""}
-                          onSave={(value) => handleInlineSave("f_type", value)}
-                          placeholder="Formation type"
-                          suggestions={actualFormationSuggestions}
-                          enableSuggestions={true}
-                          normalizeValue={normalizeValue}
-                          isSaving={savingFields.has("f_type")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Direction
-                      </dt>
-                      <dd>
-                        <InlineSelectField
-                          value={optimisticPlay.f_dir || ""}
-                          options={DIRECTION_OPTIONS}
-                          onSave={(value) => handleInlineSave("f_dir", value)}
-                          placeholder="Direction"
-                          allowEmpty={true}
-                          emptyLabel="None"
-                          isSaving={savingFields.has("f_dir")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Back Align
-                      </dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.back_align || ""}
-                          onSave={(value) =>
-                            handleInlineSave("back_align", value)
-                          }
-                          placeholder="Backfield alignment"
-                          isSaving={savingFields.has("back_align")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Shift</dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.shift || ""}
-                          onSave={(value) => handleInlineSave("shift", value)}
-                          placeholder="Pre-snap shift"
-                          isSaving={savingFields.has("shift")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Motion
-                      </dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.motion || ""}
-                          onSave={(value) => handleInlineSave("motion", value)}
-                          placeholder="Pre-snap motion"
-                          isSaving={savingFields.has("motion")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Tags</dt>
-                      <dd>
-                        <InlineEditField
-                          value={[optimisticPlay.ftag1, optimisticPlay.ftag2]
-                            .filter(Boolean)
-                            .join(", ")}
-                          onSave={(value) => {
-                            const tags = value
-                              .split(",")
-                              .map((t) => t.trim())
-                              .filter(Boolean);
-                            handleInlineSave("ftag1", tags[0] || "");
-                            if (tags[1]) handleInlineSave("ftag2", tags[1]);
-                          }}
-                          placeholder="Formation tags"
-                          isSaving={
-                            savingFields.has("ftag1") ||
-                            savingFields.has("ftag2")
-                          }
-                        />
-                      </dd>
-                    </div>
-                  </dl>
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="formation-fields">
+                      {(provided) => (
+                        <dl
+                          className="space-y-2 text-sm"
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {formationFieldOrder.map((fieldKey, index) => {
+                            const field =
+                              formationFields[
+                                fieldKey as keyof typeof formationFields
+                              ];
+                            if (!field) return null;
+                            return (
+                              <Draggable
+                                key={fieldKey}
+                                draggableId={fieldKey}
+                                index={index}
+                              >
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-md transition-colors ${
+                                      snapshot.isDragging
+                                        ? "bg-surface-hover shadow-lg"
+                                        : "hover:bg-surface-hover"
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div
+                                        {...provided.dragHandleProps}
+                                        className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary"
+                                      >
+                                        <Icon
+                                          name="grip-vertical"
+                                          className="h-4 w-4"
+                                        />
+                                      </div>
+                                      <dt
+                                        className={`font-medium ${formationFieldVisibility[fieldKey] ? "text-text-secondary" : "text-text-tertiary line-through"}`}
+                                      >
+                                        {field.label}
+                                      </dt>
+                                    </div>
+                                    <dd className="min-w-0">
+                                      {field.render(
+                                        optimisticPlay,
+                                        handleInlineSave,
+                                        savingFields
+                                      )}
+                                    </dd>
+                                    <button
+                                      onClick={() =>
+                                        toggleFieldVisibility(
+                                          fieldKey,
+                                          "formation"
+                                        )
+                                      }
+                                      className="p-1 rounded hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors"
+                                      title={
+                                        formationFieldVisibility[fieldKey]
+                                          ? "Hide from display name"
+                                          : "Show in display name"
+                                      }
+                                    >
+                                      <Icon
+                                        name={
+                                          formationFieldVisibility[fieldKey]
+                                            ? "eye"
+                                            : "eye-off"
+                                        }
+                                        className="h-4 w-4"
+                                      />
+                                    </button>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </dl>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 </div>
 
                 {/* Play details */}
@@ -553,151 +955,92 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Icon name="hash" className="h-4 w-4 mr-1" /> Play Details
                   </Typography>
-                  <dl className="space-y-2 text-sm">
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Name</dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.play_name}
-                          onSave={(value) =>
-                            handleInlineSave("play_name", value)
-                          }
-                          placeholder="Play name"
-                          suggestions={actualPlayNameSuggestions}
-                          enableSuggestions={true}
-                          normalizeValue={normalizeValue}
-                          validation={(value) => {
-                            if (!value.trim()) return "Play name is required";
-                            return null;
-                          }}
-                          isSaving={savingFields.has("play_name")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Type</dt>
-                      <dd>
-                        <InlineSelectField
-                          value={optimisticPlay.p_type}
-                          options={PLAY_TYPE_OPTIONS}
-                          onSave={(value) => handleInlineSave("p_type", value)}
-                          placeholder="Play type"
-                          isSaving={savingFields.has("p_type")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Personnel
-                      </dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.personnel || ""}
-                          onSave={(value) =>
-                            handleInlineSave("personnel", value)
-                          }
-                          placeholder="Personnel (e.g., 11 Personnel)"
-                          suggestions={actualPersonnelSuggestions}
-                          enableSuggestions={true}
-                          normalizeValue={normalizeValue}
-                          isSaving={savingFields.has("personnel")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Protection
-                      </dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.protection || ""}
-                          onSave={(value) =>
-                            handleInlineSave("protection", value)
-                          }
-                          placeholder="Pass protection scheme"
-                          isSaving={savingFields.has("protection")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Direction
-                      </dt>
-                      <dd>
-                        <InlineSelectField
-                          value={optimisticPlay.p_dir || ""}
-                          options={DIRECTION_OPTIONS}
-                          onSave={(value) => handleInlineSave("p_dir", value)}
-                          placeholder="Pass direction"
-                          allowEmpty={true}
-                          emptyLabel="None"
-                          isSaving={savingFields.has("p_dir")}
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">
-                        Strength
-                      </dt>
-                      <dd>
-                        <InlineEditField
-                          value={[optimisticPlay.r_str, optimisticPlay.p_str]
-                            .filter(Boolean)
-                            .join(", ")}
-                          onSave={(value) => {
-                            const strengths = value
-                              .split(",")
-                              .map((s) => s.trim())
-                              .filter(Boolean);
-                            handleInlineSave("r_str", strengths[0] || "");
-                            if (strengths[1])
-                              handleInlineSave("p_str", strengths[1]);
-                          }}
-                          placeholder="Run/Pass strength"
-                          isSaving={
-                            savingFields.has("r_str") ||
-                            savingFields.has("p_str")
-                          }
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Tags</dt>
-                      <dd>
-                        <InlineEditField
-                          value={[optimisticPlay.p_tag1, optimisticPlay.p_tag2]
-                            .filter(Boolean)
-                            .join(", ")}
-                          onSave={(value) => {
-                            const tags = value
-                              .split(",")
-                              .map((t) => t.trim())
-                              .filter(Boolean);
-                            handleInlineSave("p_tag1", tags[0] || "");
-                            if (tags[1]) handleInlineSave("p_tag2", tags[1]);
-                          }}
-                          placeholder="Play tags"
-                          isSaving={
-                            savingFields.has("p_tag1") ||
-                            savingFields.has("p_tag2")
-                          }
-                        />
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-                      <dt className="text-text-secondary font-medium">Code</dt>
-                      <dd>
-                        <InlineEditField
-                          value={optimisticPlay.one_word_play || ""}
-                          onSave={(value) =>
-                            handleInlineSave("one_word_play", value)
-                          }
-                          placeholder="One-word call"
-                          isSaving={savingFields.has("one_word_play")}
-                        />
-                      </dd>
-                    </div>
-                  </dl>
+                  <DragDropContext onDragEnd={handlePlayDetailsDragEnd}>
+                    <Droppable droppableId="play-details">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="space-y-2 text-sm"
+                        >
+                          {playDetailsFieldOrder.map((fieldKey, index) => {
+                            const field =
+                              playDetailsFields[
+                                fieldKey as keyof typeof playDetailsFields
+                              ];
+                            if (!field) return null;
+
+                            const isVisible =
+                              playDetailsFieldVisibility[fieldKey] !== false;
+
+                            return (
+                              <Draggable
+                                key={fieldKey}
+                                draggableId={fieldKey}
+                                index={index}
+                              >
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-md transition-colors ${
+                                      snapshot.isDragging
+                                        ? "bg-surface-hover shadow-lg"
+                                        : "hover:bg-surface-hover"
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div
+                                        {...provided.dragHandleProps}
+                                        className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary"
+                                      >
+                                        <Icon
+                                          name="grip-vertical"
+                                          className="h-4 w-4"
+                                        />
+                                      </div>
+                                      <dt
+                                        className={`font-medium ${isVisible ? "text-text-secondary" : "text-text-tertiary line-through"}`}
+                                      >
+                                        {field.label}
+                                      </dt>
+                                    </div>
+                                    <dd className="min-w-0">
+                                      {field.render(
+                                        optimisticPlay,
+                                        handleInlineSave,
+                                        savingFields
+                                      )}
+                                    </dd>
+                                    <button
+                                      onClick={() =>
+                                        toggleFieldVisibility(
+                                          fieldKey,
+                                          "playDetails"
+                                        )
+                                      }
+                                      className="p-1 rounded hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors"
+                                      title={
+                                        isVisible
+                                          ? "Hide from display name"
+                                          : "Show in display name"
+                                      }
+                                    >
+                                      <Icon
+                                        name={isVisible ? "eye" : "eye-off"}
+                                        className="h-4 w-4"
+                                      />
+                                    </button>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 </div>
 
                 {/* Preferences */}
@@ -799,7 +1142,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Icon name="clock" className="h-4 w-4 mr-1" /> Usage & Stats
                   </Typography>
-                  <dl className="space-y-1 text-sm">
+                  <dl className="space-y-2 text-sm">
                     <div className="grid grid-cols-[120px_1fr] gap-3">
                       <dt className="text-text-secondary font-medium">
                         Times Called
@@ -852,7 +1195,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-text-primary"
+                    className="text-text-primary mb-2"
                   >
                     Tags & Roles
                   </Typography>
@@ -1051,7 +1394,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <Typography
                     variant="label-lg"
                     as="h4"
-                    className="text-text-primary mb-1"
+                    className="text-text-primary mb-2"
                   >
                     Add to Workflow
                   </Typography>

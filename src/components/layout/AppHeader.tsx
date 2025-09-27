@@ -69,13 +69,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
           <Button
             variant="ghost"
             onClick={onMenuToggle}
-            className="p-2 mr-3 hover:bg-surface-hover rounded-lg transition-colors"
+            className="p-2 mr-3 bg-jade-600 hover:bg-jade-700 text-white rounded-lg transition-colors"
             aria-label="Open menu"
           >
             <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
-              <div className="w-4 h-0.5 bg-text-primary"></div>
-              <div className="w-4 h-0.5 bg-text-primary"></div>
-              <div className="w-4 h-0.5 bg-text-primary"></div>
+              <div className="w-4 h-0.5 bg-white"></div>
+              <div className="w-4 h-0.5 bg-white"></div>
+              <div className="w-4 h-0.5 bg-white"></div>
             </div>
           </Button>
 
@@ -117,13 +117,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
 
       {/* Persistent Hamburger - Always visible when header is hidden */}
       <Button
-        variant="primary"
+        variant="ghost"
         onClick={onMenuToggle}
         className={`
-          fixed top-4 left-4 z-[60] 
-          w-12 h-12 rounded-xl shadow-lg 
-          bg-jade-600 hover:bg-jade-700 dark:bg-jade-500 dark:hover:bg-jade-600
-          text-surface-primary border-0 
+          fixed top-4 left-4 z-[60]
+          p-2 rounded-lg shadow-lg
+          bg-jade-600 hover:bg-jade-700 text-white border-0
           transition-all duration-300 ease-out
           hover:scale-105 active:scale-95
           focus:outline-none focus:ring-2 focus:ring-jade-400 focus:ring-offset-2
@@ -132,9 +131,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
         aria-label="Open menu"
       >
         <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
-          <div className="w-4 h-0.5 bg-text-primary"></div>
-          <div className="w-4 h-0.5 bg-text-primary"></div>
-          <div className="w-4 h-0.5 bg-text-primary"></div>
+          <div className="w-4 h-0.5 bg-white"></div>
+          <div className="w-4 h-0.5 bg-white"></div>
+          <div className="w-4 h-0.5 bg-white"></div>
         </div>
       </Button>
     </>

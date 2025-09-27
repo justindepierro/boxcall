@@ -10,7 +10,7 @@ interface SelectOption {
 interface InlineSelectFieldProps {
   value: string;
   options: SelectOption[];
-  onSave: (value: string) => void;
+  onSave: (value: string) => Promise<void> | void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
@@ -50,9 +50,14 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
     setEditValue(value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    onSave(editValue);
+    try {
+      await onSave(editValue);
+    } catch (error) {
+      console.error("Failed to save select field:", error);
+      // Could add error handling here if needed
+    }
   };
 
   const handleCancel = () => {

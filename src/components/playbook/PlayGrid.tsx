@@ -80,7 +80,6 @@ interface PlayGridProps {
   // Suggestions for inline editing
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
-  personnelSuggestions?: string[];
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -105,7 +104,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Suggestions
   formationSuggestions = [],
   playNameSuggestions = [],
-  personnelSuggestions = [],
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -303,24 +301,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const disableVirtual =
     (import.meta as unknown as { env: Record<string, string> }).env
       ?.VITE_DISABLE_VIRTUAL_PLAYGRID === "true";
-  // Density mode state (comfortable default)
-  const [density, setDensity] = useState<"comfortable" | "compact">(() => {
-    try {
-      const v = localStorage.getItem("bc_playgrid_density");
-      return v === "compact" ? "compact" : "comfortable";
-    } catch {
-      return "comfortable";
-    }
-  });
-  const toggleDensity = () =>
-    setDensity(density === "comfortable" ? "compact" : "comfortable");
-  useEffect(() => {
-    try {
-      localStorage.setItem("bc_playgrid_density", density);
-    } catch {
-      // ignore persistence errors
-    }
-  }, [density]);
 
   // --- Dev-only render diagnostics (no state updates) ---
   if (process.env.NODE_ENV === "development") {
@@ -359,10 +339,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           onAddToGamePlan={onAddToGamePlan}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
-          density={density}
           formationSuggestions={formationSuggestions}
           playNameSuggestions={playNameSuggestions}
-          personnelSuggestions={personnelSuggestions}
         />
       </div>
     ),
@@ -376,10 +354,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       onAddToGamePlan,
       selectedPlayIds,
       handlePlaySelect,
-      density,
       formationSuggestions,
       playNameSuggestions,
-      personnelSuggestions,
     ]
   );
 
@@ -560,18 +536,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             )}
           </IconButton>
           <span className="text-sm text-text-secondary">Full names</span>
-          <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
-            <Button
-              variant={density === "compact" ? "secondary" : "ghost"}
-              size="xs"
-              onClick={toggleDensity}
-              aria-pressed={density === "compact"}
-              aria-label="Toggle density mode"
-              className="!h-auto px-2 py-1 text-xs"
-            >
-              {density === "compact" ? "Compact" : "Comfort"}
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -592,7 +556,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               onAddToGamePlan={onAddToGamePlan}
               isSelected={selectedPlayIds.has(play.id)}
               onSelectionChange={handlePlaySelect}
-              density={density}
             />
           ))}
         </div>

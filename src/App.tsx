@@ -13,6 +13,7 @@ import { DesignSystemProvider } from "./components/design-system/DesignSystemPro
 import { AdvancedThemeProvider } from "./components/design-system/AdvancedThemeProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initWebVitals } from "./utils/performance/webVitals";
+import DevPanel from "./components/dev/DevPanel";
 /**
  * App Component
  *
@@ -21,6 +22,7 @@ import { initWebVitals } from "./utils/performance/webVitals";
  */
 function App() {
   const [showRQDevtools, setShowRQDevtools] = useState(false);
+  const [showDevPanel, setShowDevPanel] = useState(false);
   // Initialize theme system
   useTheme();
 
@@ -56,12 +58,17 @@ function App() {
               {showRQDevtools && (
                 <ReactQueryDevtools initialIsOpen={false} position="bottom" />
               )}
+              <DevPanel isOpen={showDevPanel} onClose={() => setShowDevPanel(false)} />
               {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
               {import.meta.env.DEV && (
                 <ToggleQueryDevtools
                   onToggle={() => setShowRQDevtools((v) => !v)}
                 />
               )}
+              {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
+              <ToggleDevPanel
+                onToggle={() => setShowDevPanel((v) => !v)}
+              />
             </div>
           </DevModeProvider>
         </AdvancedThemeProvider>
@@ -74,6 +81,20 @@ function ToggleQueryDevtools({ onToggle }: { onToggle: () => void }) {
   useEffect(() => {
     function handler(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key === "`") {
+        e.preventDefault();
+        onToggle();
+      }
+    }
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onToggle]);
+  return null;
+}
+
+function ToggleDevPanel({ onToggle }: { onToggle: () => void }) {
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      if (e.ctrlKey && e.shiftKey && e.key === "D") {
         e.preventDefault();
         onToggle();
       }

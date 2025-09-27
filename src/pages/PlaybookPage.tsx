@@ -158,7 +158,6 @@ export default function PlaybookPage() {
   const toast = useToast();
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
-  const [busy, setBusy] = useState(false);
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
@@ -191,7 +190,7 @@ export default function PlaybookPage() {
           enableAutoTagging: true,
           showComplexity: true,
           theme: "auto",
-          gridDensity: "comfortable",
+          gridDensity: "compact",
           // Position names for all 11 players
           positionNames: {
             QB: "QB",
@@ -236,7 +235,7 @@ export default function PlaybookPage() {
       enableAutoTagging: true,
       showComplexity: true,
       theme: "auto",
-      gridDensity: "comfortable",
+      gridDensity: "compact",
       // Position names for all 11 players
       positionNames: {
         QB: "QB",
@@ -371,7 +370,6 @@ export default function PlaybookPage() {
   // Workflow handlers
   const handleAddToPracticeScript = async (play: Play) => {
     try {
-      setBusy(true);
       const teamId = "current-team"; // TODO: Get from context/auth
       const script = await PracticeScriptService.createQuickScript(
         play,
@@ -388,14 +386,11 @@ export default function PlaybookPage() {
     } catch (error) {
       console.error("Failed to add play to practice script:", error);
       toast.error("Failed to add play to practice script", "Please try again");
-    } finally {
-      setBusy(false);
     }
   };
 
   const handleAddToGamePlan = async (play: Play) => {
     try {
-      setBusy(true);
       const teamId = "current-team"; // TODO: Get from context/auth
       const gamePlan = await GamePlanService.createQuickGamePlan(
         "Quick Game Plan",
@@ -421,8 +416,6 @@ export default function PlaybookPage() {
     } catch (error) {
       console.error("Failed to add play to game plan:", error);
       toast.error("Failed to add play to game plan", "Please try again");
-    } finally {
-      setBusy(false);
     }
   };
 
@@ -564,7 +557,6 @@ export default function PlaybookPage() {
                 refreshTrigger={state.refreshTrigger}
                 formationSuggestions={suggestions.formations}
                 playNameSuggestions={suggestions.playNames}
-                personnelSuggestions={suggestions.personnel}
               />
             )}
 
@@ -656,12 +648,6 @@ export default function PlaybookPage() {
 
       {/* Sticky Workflow Status Bar */}
       <WorkflowStatusBar />
-
-      {busy && (
-        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-text-primary/70 text-text-inverse z-50">
-          Working…
-        </div>
-      )}
 
       {/* New Modals */}
       {showAddNewPlayModal && (

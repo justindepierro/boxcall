@@ -1,21 +1,3 @@
-/**
- * BoxCall Design System Provider
- * Enforces consistent design languageconst DesignSystemContext = createContext<DesignSystemContextType | null>(null);
-
-// Export context for use in hooks file
-export { DesignSystemContext };
-
-// Design token validation
-const validateDesignToken = (token: string): boolean => {ire application
- *
- * Features:
- * - Centralized theme management
- * - Design token validation
- * - Performance monitoring
- * - Accessibility enforcement
- * - Design system consistency checks
- */
-
 import React, {
   createContext,
   useEffect,
@@ -24,7 +6,22 @@ import React, {
   useState,
 } from "react";
 import type { ReactNode } from "react";
-import { useDesignSystem } from "./design-system-hooks";
+
+/**
+ * BoxCall Design System Provider
+ * Enforces consistent design language across the application
+ *
+ * Features:
+ * - Centralized theme management
+ * - Design token validation
+ * - Performance monitoring
+ * - Accessibility enforcement
+ */
+
+const DesignSystemContext = createContext<DesignSystemContextType | null>(null);
+
+// Export context for use in hooks file
+export { DesignSystemContext };
 
 // Design system configuration
 interface DesignSystemConfig {
@@ -67,7 +64,7 @@ interface PerformanceMetrics {
 // Default configuration
 const defaultConfig: DesignSystemConfig = {
   theme: "auto",
-  density: "comfortable",
+  density: "compact",
   motion: "enabled",
   glassmorphism: true,
   performance: {
@@ -76,11 +73,6 @@ const defaultConfig: DesignSystemConfig = {
     enableBundleAnalysis: false,
   },
 };
-
-const DesignSystemContext = createContext<DesignSystemContextType | null>(null);
-
-// Export context for use in hooks file
-export { DesignSystemContext };
 
 // Design token validation
 const validateDesignToken = (token: string): boolean => {
@@ -233,32 +225,7 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
   return (
     <DesignSystemContext.Provider value={contextValue}>
       {children}
-      {enableDevTools && process.env.NODE_ENV === "development" && (
-        <DesignSystemDevTools />
-      )}
     </DesignSystemContext.Provider>
-  );
-};
-
-// Development tools component
-const DesignSystemDevTools: React.FC = () => {
-  const { config, getPerformanceMetrics } = useDesignSystem();
-  const metrics = getPerformanceMetrics();
-
-  return (
-    <div className="fixed bottom-4 right-4 bg-text-primary/80 text-text-inverse p-4 rounded-lg text-xs font-mono z-50 max-w-sm">
-      <div className="font-bold mb-2">🎨 Design System DevTools</div>
-      <div>Theme: {config.theme}</div>
-      <div>Density: {config.density}</div>
-      <div>Motion: {config.motion}</div>
-      <div>Glassmorphism: {config.glassmorphism ? "✅" : "❌"}</div>
-      <div className="mt-2 pt-2 border-t border-text-inverse/20">
-        <div>Load Time: {metrics.loadTime.toFixed(0)}ms</div>
-        <div>LCP: {metrics.lcp.toFixed(0)}ms</div>
-        <div>FID: {metrics.fid.toFixed(2)}ms</div>
-        <div>CLS: {metrics.cls.toFixed(4)}</div>
-      </div>
-    </div>
   );
 };
 
