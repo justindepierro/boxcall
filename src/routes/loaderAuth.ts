@@ -4,6 +4,16 @@ import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
 import type { AppRole } from "./authorize";
 
+// Simple cache for auth checks to reduce database calls
+interface AuthCache {
+  user: { id: string; role: AppRole | null } | null;
+  timestamp: number;
+  ttl: number; // Time to live in milliseconds
+}
+
+let authCache: AuthCache | null = null;
+const AUTH_CACHE_TTL = 30000; // 30 seconds
+
 /**
  * requireTeamCoachLoader
  *
@@ -11,19 +21,32 @@ import type { AppRole } from "./authorize";
  * Redirects before component render to avoid UI flashes.
  */
 // Shared helper to resolve current user id and app role
-async function getCurrentUserWithRole(): Promise<{
+export async function getCurrentUserWithRole(): Promise<{
   id: string;
   role: AppRole | null;
 } | null> {
+  // Check cache first
+  if (authCache && (Date.now() - authCache.timestamp) < authCache.ttl) {
+    return authCache.user;
+  }
+
   const { data: authData } = await supabase.auth.getUser();
   const user = authData?.user ?? null;
-  if (!user) return null;
+  if (!user) {
+    authCache = { user: null, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
+    return null;
+  }
   const { data: profileRow } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
-  return { id: user.id, role: (profileRow?.role ?? null) as AppRole | null };
+  const userWithRole = { id: user.id, role: (profileRow?.role ?? null) as AppRole | null };
+  
+  // Cache the result
+  authCache = { user: userWithRole, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
+  
+  return userWithRole;
 }
 
 export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {

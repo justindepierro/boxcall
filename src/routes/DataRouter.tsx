@@ -1,9 +1,8 @@
-import React, { Suspense, useMemo, useEffect } from "react";
+import React, { Suspense, useMemo, useEffect, useState } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
-  Navigate,
   useNavigate,
 } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
@@ -60,9 +59,7 @@ const RootLayout: React.FC = () => (
   <>
     <ScrollToTop />
     <TeamParamSync />
-    <AuthProvider>
-      <Outlet />
-    </AuthProvider>
+    <Outlet />
   </>
 );
 
@@ -78,6 +75,14 @@ const AppShell: React.FC = () => (
 );
 
 export const DataRouterApp: React.FC = () => {
+  return (
+    <AuthProvider>
+      <DataRouterAppInner />
+    </AuthProvider>
+  );
+};
+
+const DataRouterAppInner: React.FC = () => {
   // Team Bulletin Redirect Component
   const TeamBulletinRedirectElement: React.FC = () => {
     const { user } = useAuth();
@@ -110,6 +115,62 @@ export const DataRouterApp: React.FC = () => {
     );
   };
 
+  // Root redirect component that handles authentication
+  const RootRedirectComponent: React.FC = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [isInitializing, setIsInitializing] = useState(true);
+    const [hasTimedOut, setHasTimedOut] = useState(false);
+
+    useEffect(() => {
+      // Set a timeout for auth initialization
+      const timeout = setTimeout(() => {
+        console.warn("🔄 Auth initialization timed out, assuming not authenticated");
+        setHasTimedOut(true);
+        setIsInitializing(false);
+        navigate(ROUTES.LOGIN, { replace: true });
+      }, 5000); // 5 second timeout
+
+      return () => clearTimeout(timeout);
+    }, [navigate]);
+
+    useEffect(() => {
+      if (hasTimedOut) return; // Already handled by timeout
+
+      // If we have a user, redirect to dashboard
+      if (user) {
+        console.log("🔄 RootRedirectComponent: User authenticated, redirecting to dashboard");
+        setIsInitializing(false);
+        navigate(ROUTES.DASHBOARD, { replace: true });
+      } else if (user === null) {
+        // User is explicitly null (not undefined), so auth check is complete
+        console.log("🔄 RootRedirectComponent: No user, redirecting to login");
+        setIsInitializing(false);
+        navigate(ROUTES.LOGIN, { replace: true });
+      }
+      // If user is undefined, we're still waiting for auth state
+    }, [user, navigate, hasTimedOut]);
+
+    if (isInitializing) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
+            <p className="font-medium text-text-secondary">
+              Loading BoxCall...
+            </p>
+            <p className="text-sm text-text-muted mt-2">
+              Checking authentication...
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // This should not be reached, but just in case
+    return null;
+  };
+
   // Role-gated non-team loaders created via factory
   const requirePlayerLoader = useMemo(() => requireRolesLoader(["player"]), []);
 
@@ -134,10 +195,10 @@ export const DataRouterApp: React.FC = () => {
           {
             element: <AppShell />,
             children: [
-              // Root redirect for convenience
+              // Root redirect with authentication check
               {
                 index: true,
-                element: <Navigate to={ROUTES.DASHBOARD} replace />,
+                element: <RootRedirectComponent />,
               },
 
               {
@@ -300,18 +361,12 @@ export const DataRouterApp: React.FC = () => {
               },
               {
                 path: ROUTES.TEAMS,
-                // loader: requireAuthenticatedLoader, // Temporarily disabled for demo
+                loader: requireAuthenticatedLoader,
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamsPage />
                   </Suspense>
                 ),
-              },
-              // Team bulletin redirect - handles /team-bulletin navigation
-              {
-                path: "/team-bulletin",
-                loader: requireAuthenticatedLoader,
-                element: <TeamBulletinRedirectElement />,
               },
               // Team bulletin - requires team membership
               {

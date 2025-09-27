@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./Button/Button";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { useDesignSystem } from "../design-system/design-system-hooks";
 
 /**
@@ -37,7 +37,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   const isAuto = config.theme === "auto";
 
   // Determine icon based on current state
-  const getIcon = () => {
+  const getIcon = (): IconName => {
     if (isAuto) return "monitor"; // System preference
     return isDark ? "sun" : "moon";
   };

@@ -60,8 +60,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     [currentRole]
   );
   const sidebarItems = useMemo(
-    () => toSidebarItems(navigationItems, currentRole, navigate),
-    [navigationItems, currentRole, navigate]
+    () => toSidebarItems(navigationItems, currentRole, (href: string) => {
+      navigate(href);
+      // Close sidebar after navigation
+      toggleSidebar();
+    }),
+    [navigationItems, currentRole, navigate, toggleSidebar]
   );
   const roleInfo = useMemo(
     () => getRoleDisplayInfo(currentRole),

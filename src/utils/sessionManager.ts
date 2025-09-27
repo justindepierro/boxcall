@@ -5,12 +5,14 @@ export interface SessionConfig {
   inactivityTimeout: number; // milliseconds
   sessionCheckInterval: number; // milliseconds
   warningTime: number; // milliseconds before timeout to show warning
+  refreshThreshold: number; // milliseconds before expiry to refresh session
 }
 
 const DEFAULT_CONFIG: SessionConfig = {
   inactivityTimeout: 2 * 60 * 60 * 1000, // 2 hours
   sessionCheckInterval: 60 * 1000, // 1 minute
   warningTime: 5 * 60 * 1000, // 5 minutes before timeout
+  refreshThreshold: 10 * 60 * 1000, // 10 minutes before expiry
 };
 
 class SessionManager {
@@ -91,8 +93,24 @@ class SessionManager {
   }
 
   private scheduleChecks(): void {
-    this.checkInterval = setInterval(() => {
+    this.checkInterval = setInterval(async () => {
       const timeUntilTimeout = this.getTimeUntilTimeout();
+
+      // Check if we need to refresh the session
+      const sessionInfo = await getSessionInfo();
+      if (sessionInfo?.timeUntilExpiry && sessionInfo.timeUntilExpiry <= this.config.refreshThreshold) {
+        try {
+          console.log("Auto-refreshing session before expiry");
+          const { data, error } = await supabase.auth.refreshSession();
+          if (error) {
+            console.error("Session refresh failed:", error);
+          } else if (data.session) {
+            console.log("Session refreshed successfully");
+          }
+        } catch (error) {
+          console.error("Session refresh error:", error);
+        }
+      }
 
       if (timeUntilTimeout <= 0) {
         // Session expired

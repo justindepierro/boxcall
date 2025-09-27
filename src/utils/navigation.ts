@@ -225,7 +225,7 @@ export const getNavigationItems = (
 export const toSidebarItems = (
   items: NavigationItem[],
   userRole?: UserRole | null | string,
-  navigate?: (path: string) => void
+  onNavigate?: (href: string) => void
 ): SidebarItem[] => {
   return items
     .filter((item) => {
@@ -248,16 +248,18 @@ export const toSidebarItems = (
       onClick: item.divider
         ? undefined
         : () => {
-            if (navigate) {
-              navigate(item.href);
+            // Use the provided navigation handler
+            if (onNavigate) {
+              onNavigate(item.href);
             } else {
+              // Fallback: use window.location for navigation
               window.location.href = item.href;
             }
           },
       divider: item.divider,
       badge: item.badge,
       children: item.children
-        ? toSidebarItems(item.children, userRole, navigate)
+        ? toSidebarItems(item.children, userRole, onNavigate)
         : undefined,
     }));
 };
