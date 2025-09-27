@@ -59,8 +59,13 @@ export function ProgressiveAuthFlow({
   };
 
   // Handle successful authentication
-  const handleAuthSuccess = () => {
-    transitionToStep("onboarding");
+  const handleAuthSuccess = (isNewUser = false) => {
+    if (isNewUser) {
+      transitionToStep("onboarding");
+    } else {
+      // For existing users, skip onboarding and go directly to success
+      onSuccess?.();
+    }
   };
 
   // Handle onboarding completion
@@ -72,7 +77,7 @@ export function ProgressiveAuthFlow({
   const handleLogin = async (credentials: any) => {
     const result = await signIn(credentials.email, credentials.password);
     if (result.success) {
-      handleAuthSuccess();
+      handleAuthSuccess(false); // Existing user login
     }
   };
 
@@ -84,7 +89,7 @@ export function ProgressiveAuthFlow({
       role: data.role,
     });
     if (result.success) {
-      handleAuthSuccess();
+      handleAuthSuccess(true); // New user signup
     }
   };
 
