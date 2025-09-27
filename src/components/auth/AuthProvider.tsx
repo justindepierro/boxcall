@@ -19,18 +19,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUser, setSession, setProfile, fetchUserProfile } = useAuth();
   useEffect(() => {
     console.log("🔐 AuthProvider: Starting auth initialization");
-    
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
-      console.log("🔐 AuthProvider: Session check result", { 
-        hasSession: !!session, 
+      console.log("🔐 AuthProvider: Session check result", {
+        hasSession: !!session,
         userId: session?.user?.id,
-        error: error?.message 
+        error: error?.message,
       });
-      
+
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         console.log("🔐 AuthProvider: User found, fetching profile");
         fetchUserProfile(session.user.id);

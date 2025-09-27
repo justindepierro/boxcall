@@ -128,7 +128,9 @@ const DataRouterAppInner: React.FC = () => {
       if (user !== undefined) return;
 
       const timeout = setTimeout(() => {
-        console.warn("🔄 Auth initialization timed out, assuming not authenticated");
+        console.warn(
+          "🔄 Auth initialization timed out, assuming not authenticated"
+        );
         setHasTimedOut(true);
         setIsInitializing(false);
         navigate(ROUTES.LOGIN, { replace: true });
@@ -142,7 +144,9 @@ const DataRouterAppInner: React.FC = () => {
 
       // If we have a user, redirect to dashboard
       if (user) {
-        console.log("🔄 RootRedirectComponent: User authenticated, redirecting to dashboard");
+        console.log(
+          "🔄 RootRedirectComponent: User authenticated, redirecting to dashboard"
+        );
         setIsInitializing(false);
         navigate(ROUTES.DASHBOARD, { replace: true });
       } else if (user === null) {

@@ -59,20 +59,20 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       const fetchUserTeams = async () => {
         try {
           const { data: memberships } = await supabase
-            .from('team_members')
-            .select('team_id')
-            .eq('user_id', profile.id)
-            .eq('status', 'active')
+            .from("team_members")
+            .select("team_id")
+            .eq("user_id", profile.id)
+            .eq("status", "active")
             .limit(1);
-          
+
           if (memberships && memberships.length > 0) {
             setActiveTeamId(memberships[0].team_id);
           }
         } catch (error) {
-          console.error('Error fetching user teams:', error);
+          console.error("Error fetching user teams:", error);
         }
       };
-      
+
       fetchUserTeams();
     }
   }, [profile?.id, activeTeamId, setActiveTeamId]);
@@ -89,11 +89,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     [currentRole, activeTeamId]
   );
   const sidebarItems = useMemo(
-    () => toSidebarItems(navigationItems, currentRole, (href: string) => {
-      navigate(href);
-      // Close sidebar after navigation
-      toggleSidebar();
-    }),
+    () =>
+      toSidebarItems(navigationItems, currentRole, (href: string) => {
+        navigate(href);
+        // Close sidebar after navigation
+        toggleSidebar();
+      }),
     [navigationItems, currentRole, navigate, toggleSidebar]
   );
   const roleInfo = useMemo(

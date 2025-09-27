@@ -58,7 +58,10 @@ function App() {
               {showRQDevtools && (
                 <ReactQueryDevtools initialIsOpen={false} position="bottom" />
               )}
-              <DevPanel isOpen={showDevPanel} onClose={() => setShowDevPanel(false)} />
+              <DevPanel
+                isOpen={showDevPanel}
+                onClose={() => setShowDevPanel(false)}
+              />
               {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
               {import.meta.env.DEV && (
                 <ToggleQueryDevtools
@@ -66,9 +69,7 @@ function App() {
                 />
               )}
               {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-              <ToggleDevPanel
-                onToggle={() => setShowDevPanel((v) => !v)}
-              />
+              <ToggleDevPanel onToggle={() => setShowDevPanel((v) => !v)} />
             </div>
           </DevModeProvider>
         </AdvancedThemeProvider>

@@ -100,3 +100,6 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 # ESLint cache
 .eslintcache
+
+*storybook.log
+storybook-static
