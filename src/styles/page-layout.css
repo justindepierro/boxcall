@@ -38,7 +38,14 @@
 
 /* Page variants */
 .page-dashboard .page-content {
-  /* Dashboard uses default spacing */
+  padding-top: 1rem; /* Reduce top padding for dashboard */
+  padding-bottom: var(--page-padding-y);
+  padding-left: var(--page-padding-x);
+  padding-right: var(--page-padding-x);
+}
+
+.page-dashboard .page-header {
+  margin-bottom: 1rem; /* Reduce header margin for dashboard */
 }
 
 .page-detail .page-content {
@@ -51,15 +58,19 @@
   margin: 0 auto;
 }
 
-.page-list .page-content {
-  /* List uses default spacing */
-}
-
 /* Mobile-first responsive adjustments */
 @media (max-width: 639px) {
   .page-layout {
     --page-padding-y: 1rem;
     --page-padding-x: 0.75rem;
+  }
+
+  .page-dashboard .page-content {
+    padding-top: 0.5rem; /* Even less top padding on mobile */
+  }
+
+  .page-dashboard .page-header {
+    margin-bottom: 0.75rem; /* Less header margin on mobile */
   }
 
   .page-header .flex {

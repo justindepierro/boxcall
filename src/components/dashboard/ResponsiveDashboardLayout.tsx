@@ -4,18 +4,9 @@ import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import ProfileCard from "../dashboard/ProfileCard";
 import TeamFeeds from "../dashboard/TeamFeeds";
-import { GamePlanningAnalytics } from "../dashboard/analytics/GamePlanningAnalytics";
-import { AdaptiveContentWidget } from "../dashboard/AdaptiveContentWidget";
 import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { useAdvancedTheme } from "../design-system/advanced-theme-hooks";
-import { Button } from "../ui/Button/Button";
-import Card from "../ui/Card/Card";
-import { Tooltip } from "../ui/Tooltip";
-import { ROUTES } from "../../routes/paths";
-import { useNavigate } from "react-router-dom";
-import { getActiveTeamId } from "../../utils/activeTeam";
 // Onboarding components removed during cleanup
 
 /**
@@ -34,12 +25,7 @@ import { getActiveTeamId } from "../../utils/activeTeam";
  */
 export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, error } = useAuth();
-  const { isStepVisible } = useProgressiveLoading(6, 200);
-  const theme = useAdvancedTheme();
-  const navigate = useNavigate();
-
-  // Get the active team ID for analytics
-  const activeTeamId = getActiveTeamId();
+  const { isStepVisible } = useProgressiveLoading(4, 200);
 
   // Early returns for loading and error states
   if (loading) {
@@ -139,78 +125,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               <DashboardCardSkeleton />
             )}
           </div>
-
-          {/* Game Planning Analytics */}
-          <div className="analytics-section">
-            {isStepVisible(4) ? (
-              <GamePlanningAnalytics teamId={activeTeamId} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
-
-          {/* Adaptive Content Widget */}
-          <div className="adaptive-content-section">
-            {isStepVisible(5) ? (
-              <AdaptiveContentWidget />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
         </div>
-
-        {/* Design System Showcase - Only show in dev mode */}
-        {import.meta.env.DEV && (
-          <div className="mt-8">
-            <Card variant="glass" className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <Typography variant="headline-md">
-                  🎨 Design System Preview
-                </Typography>
-                <Tooltip content="View full design system showcase">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(ROUTES.DESIGN_SYSTEM)}
-                  >
-                    View All
-                  </Button>
-                </Tooltip>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <Button variant="primary" size="sm">
-                  Primary
-                </Button>
-                <Button variant="gradient" size="sm">
-                  Gradient
-                </Button>
-                <Button variant="glass" size="sm">
-                  Glass
-                </Button>
-                <Button variant="success" size="sm">
-                  Success
-                </Button>
-              </div>
-
-              <div className="flex gap-4 text-sm">
-                <span>
-                  Theme:{" "}
-                  <strong>
-                    {theme.currentEmotion || theme.currentContext || "Default"}
-                  </strong>
-                </span>
-                <span>
-                  Mode: <strong>{theme.themeConfig.mode}</strong>
-                </span>
-                <span>
-                  Accessibility:{" "}
-                  <strong>{theme.themeConfig.accessibility}</strong>
-                </span>
-              </div>
-            </Card>
-          </div>
-        )}
       </div>
     </>
   );
