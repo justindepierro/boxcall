@@ -27,24 +27,35 @@ export async function getCurrentUserWithRole(): Promise<{
 } | null> {
   // Check cache first
   if (authCache && (Date.now() - authCache.timestamp) < authCache.ttl) {
+    console.log("getCurrentUserWithRole: Using cached result", authCache.user);
     return authCache.user;
   }
 
-  const { data: authData } = await supabase.auth.getUser();
+  console.log("getCurrentUserWithRole: Fetching fresh user data");
+  const { data: authData, error: authError } = await supabase.auth.getUser();
   const user = authData?.user ?? null;
+  console.log("getCurrentUserWithRole: Supabase auth result", { userId: user?.id, authError });
+  
   if (!user) {
+    console.log("getCurrentUserWithRole: No user found");
     authCache = { user: null, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
     return null;
   }
+  
+  console.log("getCurrentUserWithRole: Fetching profile for user", user.id);
   const { data: profileRow } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
+  
+  console.log("getCurrentUserWithRole: Profile result", { profileRow, error: profileRow ? null : "No profile found" });
+  
   const userWithRole = { id: user.id, role: (profileRow?.role ?? null) as AppRole | null };
   
   // Cache the result
   authCache = { user: userWithRole, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
+  console.log("getCurrentUserWithRole: Returning", userWithRole);
   
   return userWithRole;
 }

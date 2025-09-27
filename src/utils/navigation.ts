@@ -21,7 +21,8 @@ export interface NavigationItem {
  * Based on comprehensive requirements with role-based access
  */
 export const getNavigationItems = (
-  userRole?: UserRole | null | string
+  userRole?: UserRole | null | string,
+  activeTeamId?: string | null
 ): NavigationItem[] => {
   // Only log in development mode to reduce console noise
   if (process.env.NODE_ENV === "development") {
@@ -32,10 +33,11 @@ export const getNavigationItems = (
     );
   }
   // Dynamic team selection (persisted after creation)
-  let activeTeamId = "1";
+  const defaultTeamId = activeTeamId || "1";
+  let resolvedTeamId = defaultTeamId;
   try {
     const stored = localStorage.getItem("activeTeamId");
-    if (stored) activeTeamId = stored;
+    if (stored && stored !== "1") resolvedTeamId = stored;
   } catch {
     /* ignore */
   }
@@ -151,7 +153,7 @@ export const getNavigationItems = (
     id: "team-settings",
     label: "Team Settings",
     icon: "settings",
-    href: `/team/${activeTeamId}/settings`,
+    href: `/team/${resolvedTeamId}/settings`,
     description: "Manage team configuration and roster",
   });
   // Divider before utility pages
