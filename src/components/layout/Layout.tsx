@@ -55,33 +55,21 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Set active team to user's first team if not already set
   useEffect(() => {
     if (profile?.id && !activeTeamId) {
-      console.log("Layout: Setting active team for user", profile.id);
       // Fetch user's teams and set the first one as active
       const fetchUserTeams = async () => {
         try {
-          console.log("Layout: Fetching user teams...");
-          const { data: memberships, error } = await supabase
+          const { data: memberships } = await supabase
             .from('team_members')
             .select('team_id')
             .eq('user_id', profile.id)
             .eq('status', 'active')
             .limit(1);
           
-          console.log("Layout: Team memberships result:", { memberships, error });
-          
-          if (error) {
-            console.error("Layout: Error fetching team memberships:", error);
-            return;
-          }
-          
           if (memberships && memberships.length > 0) {
-            console.log("Layout: Setting active team to", memberships[0].team_id);
             setActiveTeamId(memberships[0].team_id);
-          } else {
-            console.log("Layout: No team memberships found");
           }
         } catch (error) {
-          console.error("Layout: Exception fetching user teams:", error);
+          console.error('Error fetching user teams:', error);
         }
       };
       
