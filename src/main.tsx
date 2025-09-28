@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { AppProviders } from "./app/providers.tsx";
+
 // Inject build metadata (defined at build time via Vite)
 declare const __BUILD_TIME__: string;
 window.__BUILD_META__ = {
