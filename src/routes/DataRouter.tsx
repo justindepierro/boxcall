@@ -20,7 +20,6 @@ import {
   LazyPracticePlansPage,
   LazyGamePlansPage,
   LazyProfilePage,
-  LazyTeamsPage,
   LazyCoachManagementPage,
   LazyPlayerDashboardPage,
   LazyAchievementAdminPage,
@@ -194,6 +193,10 @@ const DataRouterAppInner: React.FC = memo(() => {
             <LazyDesignSystemShowcase />
           </Suspense>
         ),
+      },
+      {
+        path: "/teams",
+        element: <LegacyTeamBulletinRedirect />,
       },
       {
         path: "/team-bulletin",
