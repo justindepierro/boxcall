@@ -94,7 +94,10 @@ export class AuthMonitoring {
       this.errors = this.errors.slice(-100);
     }
 
-    console.error(`🚨 Auth Error [${operation}]:`, error, metadata);
+    // Only log errors in development
+    if (import.meta.env.DEV) {
+      console.error(`🚨 Auth Error [${operation}]:`, error, metadata);
+    }
   }
 
   // Event tracking
@@ -111,7 +114,10 @@ export class AuthMonitoring {
       this.events = this.events.slice(-200);
     }
 
-    console.log(`📊 Auth Event [${event}]:`, metadata);
+    // Only log events in development
+    if (import.meta.env.DEV) {
+      console.log(`📊 Auth Event [${event}]:`, metadata);
+    }
   }
 
   // Get metrics

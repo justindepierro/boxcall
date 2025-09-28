@@ -8,7 +8,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../app/auth-store";
 import { useDesignSystem } from "../design-system/design-system-hooks";
-import { getSessionInfo, validateSession } from "../../utils/sessionManager";
 import { AuthMonitoring } from "../../utils/authMonitoring";
 
 interface AuthMonitorTabProps {}
@@ -61,11 +60,17 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
   // Get session info on mount and when session changes
   useEffect(() => {
     const updateSessionInfo = async () => {
-      const info = await getSessionInfo();
-      setSessionInfo(info);
+      // Use session data directly from auth store
+      setSessionInfo(session);
       if (session) {
-        const valid = await validateSession();
+        // Session is considered valid if it exists and has a valid access token
+        const hasValidToken = Boolean(session.access_token);
+        const notExpired =
+          !session.expires_at || session.expires_at > Date.now() / 1000;
+        const valid = hasValidToken && notExpired;
         setIsValidSession(valid);
+      } else {
+        setIsValidSession(false);
       }
     };
     updateSessionInfo();

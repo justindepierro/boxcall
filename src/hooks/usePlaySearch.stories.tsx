@@ -85,13 +85,11 @@ const PlaySearchDemo: React.FC<{
           />
 
           <div className="flex gap-2">
-            <Badge variant={loading ? "warning" : "secondary"}>
+            <Badge variant={loading ? "warning" : "neutral"}>
               {loading ? "Searching..." : "Ready"}
             </Badge>
-            {attemptedFuzzy && (
-              <Badge variant="info">Fuzzy Search Used</Badge>
-            )}
-            {error && <Badge variant="destructive">Error</Badge>}
+            {attemptedFuzzy && <Badge variant="info">Fuzzy Search Used</Badge>}
+            {error && <Badge variant="danger">Error</Badge>}
           </div>
         </div>
 
@@ -100,18 +98,18 @@ const PlaySearchDemo: React.FC<{
           {results && results.length > 0 ? (
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {results.map((play, index) => (
-                <Card key={play.id || index} className="p-3">
+                <Card key={play.play_id || index} className="p-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h5 className="font-medium">{play.name}</h5>
+                      <h5 className="font-medium">Play {play.play_id}</h5>
                       <p className="text-sm text-gray-600">
-                        {play.formation} • {play.play_type}
+                        {play.source} search • Rank: {play.rank || "N/A"}
                       </p>
                     </div>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => select?.(play)}
+                      onClick={() => select?.(play.play_id)}
                     >
                       Select
                     </Button>
@@ -132,7 +130,7 @@ const PlaySearchDemo: React.FC<{
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded">
-            <p className="text-sm text-red-800">Error: {error.message}</p>
+            <p className="text-sm text-red-800">Error: {error}</p>
           </div>
         )}
       </div>
@@ -157,9 +155,6 @@ export const WithCustomConfiguration: StoryObj = {
 
 export const WithPlaybookFilter: StoryObj = {
   render: () => (
-    <PlaySearchDemo
-      playbookId="playbook-123"
-      initialQuery="pass"
-    />
+    <PlaySearchDemo playbookId="playbook-123" initialQuery="pass" />
   ),
 };

@@ -24,7 +24,7 @@ import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
  * - Consistent experience across all breakpoints
  */
 export const ResponsiveDashboardLayout: React.FC = () => {
-  const { user, profile, loading, error } = useAuth();
+  const { user, profile, loading, profileLoading, error } = useAuth();
   const { isStepVisible } = useProgressiveLoading(4, 200);
 
   // Early returns for loading and error states
@@ -47,22 +47,64 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     );
   }
 
-  if (!user || !profile) {
+  if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center max-w-md px-4">
           <Typography variant="headline-lg" className="text-error mb-4">
-            Failed to load dashboard
+            Access Denied
           </Typography>
           <Typography variant="body-lg" color="muted">
-            User profile not found
+            Please log in to access the dashboard
           </Typography>
         </div>
       </div>
     );
   }
 
-  const userRole = profile.role || "player";
+  // Show loading while profile is being fetched, but with a timeout
+  if (!profile && profileLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-text-primary mb-4">
+            Loading Dashboard
+          </Typography>
+          <Typography variant="body-lg" color="muted">
+            Setting up your profile...
+          </Typography>
+          <div className="mt-4">
+            <PageLoadingSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have a user but no profile after loading is complete, create a basic profile
+  if (!profile && !loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-text-primary mb-4">
+            Welcome to BoxCall!
+          </Typography>
+          <Typography variant="body-lg" color="muted" className="mb-4">
+            Your profile is being set up. Please refresh the page or contact
+            support if this persists.
+          </Typography>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const userRole = profile?.role || "player";
 
   return (
     <>

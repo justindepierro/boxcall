@@ -7,7 +7,8 @@ Badges: TypeScript · React · Tailwind · Vite
 <div align="center">
   <img src="/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
 
-  **Professional football management platform built for coaches, by coaches**
+**Professional football management platform built for coaches, by coaches**
+
 </div>
 
 ## Status
@@ -19,6 +20,7 @@ See unified product & tech roadmap: [`docs/product/ROADMAP.md`](docs/product/ROA
 ## Quick Start
 
 **PERFORMANCE STATS**:
+
 - 📦 **Bundle**: 2.83MB total (975KB gzipped) - optimized for production
 - ⚡ **Build**: 8.64s with 41 optimized chunks
 - 🚀 **Ready**: Sub-100ms data loading with offline-first architecture

@@ -100,11 +100,17 @@ class RequestSecurity {
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:5175',
       'https://boxcall.com',
       // Add your production domains here
     ];
 
-    return allowedOrigins.includes(currentOrigin);
+    const isValid = allowedOrigins.includes(currentOrigin);
+    if (!isValid) {
+      console.warn(`🚨 Origin validation failed. Current origin: ${currentOrigin}, Allowed: ${allowedOrigins.join(', ')}`);
+    }
+
+    return isValid;
   }
 
   /**
@@ -209,11 +215,12 @@ export const getClientIdentifier = (): string => {
  * Check if request should be rate limited
  */
 export const checkRateLimit = (identifier?: string): { allowed: boolean; delayMs: number } => {
-  const clientId = identifier || getClientIdentifier();
-  const isLimited = authRateLimiter.isRateLimited(clientId);
+  // Normalize email identifiers to lowercase to match Supabase's email normalization
+  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  const isLimited = authRateLimiter.isRateLimited(normalizedId);
 
   if (isLimited) {
-    return { allowed: false, delayMs: authRateLimiter.getDelayMs(clientId) };
+    return { allowed: false, delayMs: authRateLimiter.getDelayMs(normalizedId) };
   }
 
   return { allowed: true, delayMs: 0 };
@@ -223,16 +230,18 @@ export const checkRateLimit = (identifier?: string): { allowed: boolean; delayMs
  * Record a failed auth attempt
  */
 export const recordFailedAuth = (identifier?: string): void => {
-  const clientId = identifier || getClientIdentifier();
-  authRateLimiter.recordFailedAttempt(clientId);
+  // Normalize email identifiers to lowercase to match Supabase's email normalization
+  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  authRateLimiter.recordFailedAttempt(normalizedId);
 };
 
 /**
  * Reset rate limiting on successful auth
  */
 export const resetRateLimit = (identifier?: string): void => {
-  const clientId = identifier || getClientIdentifier();
-  authRateLimiter.reset(clientId);
+  // Normalize email identifiers to lowercase to match Supabase's email normalization
+  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  authRateLimiter.reset(normalizedId);
 };
 
 // Export security utilities

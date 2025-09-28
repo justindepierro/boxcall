@@ -3,6 +3,34 @@ import { authorize } from "./authorize";
 import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
 import type { AppRole } from "./authorize";
+import type { AuthorizeInput } from "./authorize";
+
+/**
+ * Generic loader factory for creating authorization-based route loaders
+ *
+ * @param authorizeOptions - Options to pass to the authorize function
+ * @returns A loader function that performs authorization and redirects on failure
+ */
+export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile'>) {
+  return async function authLoader({ params }: LoaderFunctionArgs) {
+    const current = await getCurrentUserWithRole();
+    if (!current) throw redirect(ROUTES.LOGIN);
+
+    const res = await authorize({
+      profile: { id: current.id, role: current.role },
+      ...authorizeOptions,
+      // Merge teamId from params if not explicitly provided
+      teamId: authorizeOptions.teamId || params.teamId,
+    });
+
+    if (!res.allowed) {
+      if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
+      throw redirect(ROUTES.DASHBOARD);
+    }
+
+    return null;
+  };
+}
 
 // Simple cache for auth checks to reduce database calls
 interface AuthCache {
@@ -49,25 +77,9 @@ export async function getCurrentUserWithRole(): Promise<{
   return userWithRole;
 }
 
-export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "admin"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-
-  return null;
-}
+export const requireTeamCoachLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "admin"],
+});
 
 /**
  * requireTeamAnalyticsLoader
@@ -75,28 +87,10 @@ export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {
  * Pre-render gate for premium analytics route restricted to coach/admin roles
  * with an active "team_premium" subscription tier.
  */
-export async function requireTeamAnalyticsLoader({
-  params,
-}: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "admin"],
-    requiredTiers: ["team_premium"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-
-  return null;
-}
+export const requireTeamAnalyticsLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "admin"],
+  requiredTiers: ["team_premium"],
+});
 
 /**
  * requireAuthenticatedLoader
@@ -112,23 +106,9 @@ export async function requireAuthenticatedLoader() {
  * requireTeamMemberLoader
  * Pre-render gate for any team member (coach, player, family, admin) to avoid flashes on team pages.
  */
-export async function requireTeamMemberLoader({ params }: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "player", "family", "admin"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-  return null;
-}
+export const requireTeamMemberLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "player", "family", "admin"],
+});
 
 /**
  * requireRolesLoader
@@ -155,3 +135,4 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
 // Common role-gated loaders
 export const requireCoachOrAdminLoader = requireRolesLoader(["coach", "admin"]);
+export const requirePlayerLoader = requireRolesLoader(["player"]);

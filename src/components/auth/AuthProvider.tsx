@@ -21,17 +21,50 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log("🔐 AuthProvider: Starting auth initialization");
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
+    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
       console.log("🔐 AuthProvider: Session check result", {
         hasSession: !!session,
         userId: session?.user?.id,
         error: error?.message,
       });
 
-      setSession(session);
-      setUser(session?.user ?? null);
+      // If there's an error or no valid session, clear everything
+      if (error || !session) {
+        console.log("🔐 AuthProvider: No valid session, clearing auth state");
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        return;
+      }
 
-      if (session?.user) {
+      // Validate the session is still active
+      try {
+        const { data: userData, error: userError } =
+          await supabase.auth.getUser();
+        if (userError || !userData.user) {
+          console.log(
+            "🔐 AuthProvider: Session validation failed, clearing auth state"
+          );
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          return;
+        }
+      } catch {
+        console.log(
+          "🔐 AuthProvider: Session validation error, clearing auth state"
+        );
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        return;
+      }
+
+      setSession(session);
+      setUser(session.user);
+
+      if (session.user) {
         console.log("🔐 AuthProvider: User found, fetching profile");
         fetchUserProfile(session.user.id);
         // Start session monitoring when user is authenticated

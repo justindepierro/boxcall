@@ -244,24 +244,6 @@ export const useAppStore = create<AppStore>()(
   )
 );
 // Simple selectors that don't create new objects
-export const useAuth = () => {
-  const user = useAppStore((state) => state.user);
-  const isAuthenticated = useAppStore((state) => state.isAuthenticated);
-  const isLoading = useAppStore((state) => state.isLoading);
-  const setUser = useAppStore((state) => state.setUser);
-  const setAuthenticated = useAppStore((state) => state.setAuthenticated);
-  const setLoading = useAppStore((state) => state.setLoading);
-  const logout = useAppStore((state) => state.logout);
-  return {
-    user,
-    isAuthenticated,
-    isLoading,
-    setUser,
-    setAuthenticated,
-    setLoading,
-    logout,
-  };
-};
 export const useTeams = () => useAppStore((state) => state.teams);
 export const usePlayers = () => useAppStore((state) => state.players);
 export const useUI = () => {

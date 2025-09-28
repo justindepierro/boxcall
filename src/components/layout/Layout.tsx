@@ -47,6 +47,7 @@ interface LayoutProps {
  */
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
+  console.log("👤 Profile:", profile);
   const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
   const navigate = useNavigate();

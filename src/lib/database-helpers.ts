@@ -11,20 +11,158 @@ import type {
   TeamGoal,
   UserProfile,
 } from "../types/database";
-// Test connection and verify table access
-export async function testDatabaseConnection() {
+
+// Database operation configuration
+interface DatabaseOperationConfig {
+  maxRetries?: number;
+  baseDelay?: number;
+  maxDelay?: number;
+  timeout?: number;
+}
+
+// Default configuration for database operations
+const DEFAULT_DB_CONFIG: Required<DatabaseOperationConfig> = {
+  maxRetries: 3,
+  baseDelay: 1000, // 1 second
+  maxDelay: 10000, // 10 seconds
+  timeout: 30000, // 30 seconds
+};
+
+/**
+ * Generic database operation wrapper with retry logic and error handling
+ */
+export async function withDatabaseRetry<T>(
+  operation: () => Promise<T>,
+  config: DatabaseOperationConfig = {}
+): Promise<T> {
+  const { maxRetries, baseDelay, maxDelay, timeout } = { ...DEFAULT_DB_CONFIG, ...config };
+
+  let lastError: Error = new Error("Unknown error");
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Create a timeout promise
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error(`Database operation timed out after ${timeout}ms`)), timeout);
+      });
+
+      // Race between the operation and timeout
+      const result = await Promise.race([operation(), timeoutPromise]);
+      return result;
+
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      // Don't retry on certain errors
+      if (isNonRetryableError(lastError)) {
+        console.error(`❌ Non-retryable database error:`, lastError);
+        throw lastError;
+      }
+
+      if (attempt < maxRetries) {
+        const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+        console.warn(`⚠️ Database operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms:`, lastError.message);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  console.error(`❌ Database operation failed after ${maxRetries + 1} attempts:`, lastError);
+  throw lastError;
+}
+
+/**
+ * Check if an error is non-retryable (permanent failures)
+ */
+function isNonRetryableError(error: Error): boolean {
+  const message = error.message.toLowerCase();
+
+  // Authentication/permission errors
+  if (message.includes('permission denied') ||
+      message.includes('unauthorized') ||
+      message.includes('invalid credentials')) {
+    return true;
+  }
+
+  // Schema/validation errors
+  if (message.includes('violates') ||
+      message.includes('constraint') ||
+      message.includes('invalid input')) {
+    return true;
+  }
+
+  // Not found errors (for specific queries)
+  if (message.includes('not found') && !message.includes('network')) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Basic database connectivity test (no auth required)
+ * Tests if we can reach the database without authentication
+ */
+export async function testBasicDatabaseConnectivity(): Promise<boolean> {
   try {
-    // Test basic connection - check profiles table (no role column anymore)
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .select("id, full_name, email, is_active")
-      .limit(1)
-      .single();
-    if (profileError && profileError.code !== "PGRST116") {
-      console.error("Profile test failed:", profileError);
+    console.log("🔗 Testing basic database connectivity...");
+
+    // Test basic Supabase connection without requiring auth
+    // We'll try to access a public table or make a simple query
+    const { error } = await supabase
+      .from("teams")
+      .select("count", { count: 'exact', head: true });
+
+    if (error) {
+      // If we get a permission error, that's actually good - it means we can reach the DB
+      // but RLS is working as expected
+      if (error.code === "PGRST116" || error.message.includes("permission denied")) {
+        console.log("✅ Database reachable (RLS working as expected)");
+        return true;
+      }
+      throw error;
+    }
+
+    console.log("✅ Basic database connectivity confirmed");
+    return true;
+  } catch (error) {
+    console.error("❌ Basic database connectivity failed:", error);
+    return false;
+  }
+}
+
+/**
+ * Enhanced database connection test with retry logic
+ * Tests authenticated user's database access
+ */
+export async function testDatabaseConnection(): Promise<boolean> {
+  try {
+    console.log("🔗 Testing authenticated database connection...");
+
+    // Test basic connection - check current user's profile (respects RLS)
+    const connectionTest = await withDatabaseRetry(async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("No authenticated user found for database test");
+      }
+
+      const { error } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, is_active")
+        .eq("id", user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        throw error;
+      }
+
+      return true;
+    });
+
+    if (!connectionTest) {
       return false;
     }
-    // Profile check completed - connection working
+
     // Test only accessible tables (skip protected ones to avoid 500 errors)
     const testTables = [
       "teams",
@@ -39,22 +177,27 @@ export async function testDatabaseConnection() {
     const accessibleTables: string[] = [];
     const protectedCount: string[] = [];
 
-    for (const tableName of testTables) {
+    // Test tables with individual retry logic
+    const tableTests = testTables.map(async (tableName) => {
       try {
-        const { error } = await supabase.from(tableName).select("id").limit(1);
-        if (!error) {
-          accessibleTables.push(tableName);
-        } else if (
-          error.code === "PGRST116" ||
-          error.message.includes("permission denied")
-        ) {
-          protectedCount.push(tableName);
-        }
+        await withDatabaseRetry(async () => {
+          const { error } = await supabase.from(tableName).select("id").limit(1);
+          if (!error) {
+            accessibleTables.push(tableName);
+          } else if (
+            error.code === "PGRST116" ||
+            error.message.includes("permission denied")
+          ) {
+            protectedCount.push(tableName);
+          }
+        }, { maxRetries: 1 }); // Only retry once for table tests
       } catch {
         // Table doesn't exist or access denied
         protectedCount.push(tableName);
       }
-    }
+    });
+
+    await Promise.allSettled(tableTests);
 
     // Only log in development mode to reduce console noise
     if (import.meta.env.DEV) {
@@ -66,30 +209,97 @@ export async function testDatabaseConnection() {
       }
     }
 
+    console.log("✅ Database connection test completed successfully");
     return true;
   } catch (error) {
     console.error("❌ Database connection failed:", error);
     return false;
   }
 }
-// Helper functions for common operations
+// Helper functions for common operations with enhanced error handling
 export async function getCurrentUser() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  return await withDatabaseRetry(async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user;
+  });
 }
+
 export async function getUserProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
-  if (error) {
-    console.error("Error fetching user profile:", error);
+  try {
+    return await withDatabaseRetry(async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    });
+  } catch (error) {
+    console.error("❌ Error fetching user profile:", error);
     return null;
   }
-  return data;
+}
+
+/**
+ * Enhanced team operations with retry logic
+ */
+export async function getUserTeams(userId: string): Promise<Team[]> {
+  try {
+    return await withDatabaseRetry(async () => {
+      const { data, error } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("head_coach_id", userId);
+
+      if (error) {
+        throw error;
+      }
+
+      return data || [];
+    });
+  } catch (error) {
+    console.error("❌ Error fetching user teams:", error);
+    return [];
+  }
+}
+
+/**
+ * Enhanced team member operations
+ */
+export async function getTeamMembers(teamId: string): Promise<any[]> {
+  try {
+    return await withDatabaseRetry(async () => {
+      const { data, error } = await supabase
+        .from("team_members")
+        .select(`
+          *,
+          profiles:user_id (
+            id,
+            full_name,
+            display_name,
+            role,
+            avatar_url
+          )
+        `)
+        .eq("team_id", teamId);
+
+      if (error) {
+        throw error;
+      }
+
+      return data || [];
+    });
+  } catch (error) {
+    console.error("❌ Error fetching team members:", error);
+    return [];
+  }
 }
 export async function getTeams(): Promise<Team[]> {
   const { data, error } = await supabase

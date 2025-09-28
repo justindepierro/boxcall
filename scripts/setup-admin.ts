@@ -20,6 +20,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 
 async function setupAdmin() {
   const adminEmail = "justindepierro@gmail.com";
+  const adminPassword = "MiniCooper2010!";
 
   console.log("👑 SETTING UP ADMIN USER");
   console.log("========================\n");
@@ -44,16 +45,31 @@ async function setupAdmin() {
       // Ensure profile exists
       await ensureProfile(existingUser.id);
     } else {
-      console.log(
-        "❌ Admin user not found - please create manually in Supabase dashboard"
-      );
-      return;
+      console.log("🔄 Admin user not found - creating user...");
+
+      // Create the admin user
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        email: adminEmail,
+        password: adminPassword,
+        user_metadata: { role: "admin" },
+        email_confirm: true
+      });
+
+      if (createError) {
+        console.log("❌ Failed to create admin user:", createError.message);
+        return;
+      }
+
+      console.log(`✅ Admin user created: ${newUser.user.email} (${newUser.user.id})`);
+
+      // Ensure profile exists
+      await ensureProfile(newUser.user.id);
     }
 
     console.log("\n🎉 ADMIN SETUP COMPLETE");
     console.log("=======================");
     console.log(`Email: ${adminEmail}`);
-    console.log("Password: TempPass123! (change immediately)");
+    console.log(`Password: ${adminPassword}`);
     console.log("\n💡 Next: Test login at http://localhost:5173");
   } catch (err) {
     console.error("❌ Error:", (err as Error).message);

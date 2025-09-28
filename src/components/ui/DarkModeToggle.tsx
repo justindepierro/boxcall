@@ -89,9 +89,11 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
   const { config, updateConfig } = useDesignSystem();
 
   const themes = [
-    { value: "light", label: "Light", icon: "sun" },
-    { value: "dark", label: "Dark", icon: "moon" },
-    ...(showAuto ? [{ value: "auto", label: "Auto", icon: "monitor" }] : []),
+    { value: "light", label: "Light", icon: "sun" as IconName },
+    { value: "dark", label: "Dark", icon: "moon" as IconName },
+    ...(showAuto
+      ? [{ value: "auto", label: "Auto", icon: "monitor" as IconName }]
+      : []),
   ] as const;
 
   const containerClasses =

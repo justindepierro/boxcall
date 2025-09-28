@@ -21,8 +21,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { signIn, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "justindepierro@gmail.com",
+    password: "MiniCooper2010!",
   });
   const [validationErrors, setValidationErrors] = useState<{
     email?: string;
@@ -56,12 +56,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔐 Login form submitted", { email: formData.email });
     if (!validateForm()) {
+      console.log("❌ Form validation failed");
       return;
     }
+    console.log("✅ Form validation passed, attempting sign in...");
     const result = await signIn(formData.email, formData.password);
+    console.log("🔐 Sign in result:", result);
     if (result.success) {
+      console.log("✅ Login successful, calling onSuccess");
       onSuccess?.();
+    } else {
+      console.log("❌ Login failed:", result.error);
     }
   };
   return (

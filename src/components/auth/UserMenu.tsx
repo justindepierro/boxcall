@@ -88,7 +88,6 @@ export const UserMenu: React.FC = () => {
               </p>
             </div>
 
-            {/* Menu Items */}
             <Button
               onClick={() => {
                 setIsOpen(false);

@@ -4,7 +4,7 @@ import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
-import { testDatabaseConnection } from "./lib/database-helpers";
+import { testBasicDatabaseConnectivity } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
@@ -12,7 +12,6 @@ import { AppGrid } from "./components/AppGrid";
 import { DesignSystemProvider } from "./components/design-system/DesignSystemProvider";
 import { AdvancedThemeProvider } from "./components/design-system/AdvancedThemeProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { initWebVitals } from "./utils/performance/webVitals";
 import DevPanel from "./components/dev/DevPanel";
 /**
  * App Component
@@ -29,9 +28,7 @@ function App() {
   // Test database connection on app start
   useEffect(() => {
     const initBoxCall = async () => {
-      // Initialize performance monitoring
-      initWebVitals();
-      const connectionOk = await testDatabaseConnection();
+      const connectionOk = await testBasicDatabaseConnectivity();
       if (connectionOk) {
         // Connection successful
       } else {

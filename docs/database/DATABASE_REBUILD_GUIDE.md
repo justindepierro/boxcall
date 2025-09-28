@@ -17,14 +17,14 @@ This guide provides a systematic, step-by-step approach to completely rebuild th
 **Admin Account Credentials:**
 
 - **Email**: justindepierro@gmail.com
-- **Password**: wildcats65
+- **Password**: MiniCooper2010!
 
 **Setup Instructions:**
 
 1. After completing the database rebuild (all steps 1-14)
 2. Go to your Supabase dashboard → Authentication → Users
 3. Create a new user with the email above
-4. Set the password to "wildcats65"
+4. Set the password to "MiniCooper2010!"
 5. In the user metadata, add: `{"role": "admin"}`
 6. The user will be assigned admin role in the profiles table when they first log in
 

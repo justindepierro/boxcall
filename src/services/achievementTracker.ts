@@ -348,18 +348,14 @@ export class AchievementTracker {
         .eq('is_active', true)
         .then(({ data }) => data);
 
-      // If no definitions exist, initialize default achievements
+      // If no definitions exist, skip initialization for now (causing 403 errors)
       if (!definitions || definitions.length === 0) {
-        console.log('[Achievement] No achievement definitions found, initializing defaults...');
-        await this.initializeDefaultAchievements();
-        
-        // Re-fetch definitions after initialization
-        const { data: newDefinitions } = await supabase
-          .from('achievement_definitions')
-          .select('*')
-          .eq('is_active', true);
-        
-        definitions = newDefinitions || [];
+        console.log('[Achievement] No achievement definitions found, returning empty for blank slate mode');
+        return {
+          earned: [],
+          progress: [],
+          definitions: []
+        };
       }
 
       // For now, return empty earned achievements since we're transitioning to new system
