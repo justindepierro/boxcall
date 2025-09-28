@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
 import {
   BoxCallError,
@@ -101,7 +101,7 @@ const ErrorHandlerDemo = () => {
     try {
       localStorage.removeItem("boxcall_errors");
       setStoredErrors([]);
-    } catch (error) {
+    } catch {
       console.warn("Failed to clear errors");
     }
   };
@@ -543,7 +543,7 @@ export const ErrorQueueManagement: StoryObj = {
       try {
         localStorage.removeItem("boxcall_errors");
         setStoredErrors([]);
-      } catch (error) {
+      } catch {
         console.warn("Failed to clear errors");
       }
     };

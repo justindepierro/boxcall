@@ -13,15 +13,9 @@ BoxCall is a comprehensive team collaboration platform designed to streamline pl
 
 ## Key Documents
 
-### 📋 Current Status
+### 📋 Current Status & Planning
 
-- **[Unified Project Status](product/UNIFIED_PROJECT_STATUS.md)**: Comprehensive current state, technical architecture, and milestone progress
-- **[Current Project Status](CURRENT_PROJECT_STATUS.md)**: Detailed feature inventory and development tracking
-
-### 🗺️ Future Planning
-
-- **[Product Roadmap](product/PRODUCT_ROADMAP.md)**: 8-milestone path to v1.0 release
-- **[MVP Roadmap](MVP_ROADMAP.md)**: Detailed milestone breakdown with success criteria
+- **[Unified Roadmap & Status](product/ROADMAP.md)**: Comprehensive current state, technical architecture, milestone progress, and 8-milestone path to v1.0
 
 ### 📚 Technical Documentation
 

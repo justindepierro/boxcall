@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useProgressiveLoading } from "./useProgressiveLoading";
 import { Button } from "../components/ui/Button";

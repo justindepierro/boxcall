@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useContext } from "react";
 import { ToastProvider } from "../components/ui/Toast";
 import { ToastContext } from "./ToastContext";

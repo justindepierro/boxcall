@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EventForm } from "./EventForm";
 import type { CalendarEvent } from "../../../domain/calendar/types";
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PracticeScriptModal } from "./index";
 import type { PracticeScript } from "./types";
 

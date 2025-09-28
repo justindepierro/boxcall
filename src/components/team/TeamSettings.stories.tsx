@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TeamSettings } from "./TeamSettings";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 

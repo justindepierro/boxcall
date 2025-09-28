@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
 import { useCollaboration, useCollaborativeCursor } from "./useCollaboration";
 import { Button } from "../components/ui/Button";
