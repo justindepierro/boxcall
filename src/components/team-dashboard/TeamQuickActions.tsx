@@ -53,7 +53,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "calendar", // better semantic icon
     variant: "outline",
     requires: CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
-    to: "practice",
+    to: "practice-plans",
   },
   {
     id: "upload_film",

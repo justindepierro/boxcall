@@ -16,6 +16,7 @@ import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
+import { useRoles } from "../hooks/useRoles";
 
 // Collaboration components and provider
 import { SharedGoalTracker } from "../components/collaboration/SharedGoalTracker";
@@ -30,6 +31,7 @@ import { DashboardCardSkeleton } from "../components/ui/Skeleton";
 export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
+  const { roleContext } = useRoles();
   const { devMode } = useDevMode();
   const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
   const navigate = useNavigate();
@@ -149,20 +151,48 @@ export const TeamBulletin: React.FC = () => {
     };
   }, [teamId]);
 
-  // If no teamId is provided, this is an error since the route should always include it
+  const hasAnyTeam = (roleContext?.teamMemberships.length ?? 0) > 0;
+
   if (!teamId) {
+    if (!hasAnyTeam) {
+      return (
+        <PageLayout
+          title="Team Bulletin"
+          subtitle="Create or join a team to unlock your bulletin."
+        >
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center max-w-md px-4">
+              <Typography variant="headline-lg" className="mb-3">
+                Welcome to BoxCall
+              </Typography>
+              <Typography variant="body-lg" color="muted" className="mb-6">
+                You haven’t joined a team yet. Create one or request access to
+                start collaborating with your staff and players.
+              </Typography>
+              <div className="flex gap-3 justify-center">
+                <Button onClick={handleCreateTeam}>
+                  <Icon name="plus" size="sm" className="mr-2" /> Create Team
+                </Button>
+                <Button variant="outline" onClick={handleJoinTeam}>
+                  <Icon name="search" size="sm" className="mr-2" /> Find a Team
+                </Button>
+              </div>
+            </div>
+          </div>
+        </PageLayout>
+      );
+    }
+
     return (
-      <PageLayout title="Team Bulletin" subtitle="Error loading team bulletin">
+      <PageLayout title="Team Bulletin" subtitle="Choose a team from the switcher to view its bulletin.">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center max-w-md px-4">
-            <Typography variant="headline-lg" className="text-error mb-4">
-              Team Not Found
+            <Typography variant="headline-lg" className="mb-4">
+              Select a Team
             </Typography>
-            <Typography variant="body-lg" color="muted" className="mb-6">
-              Unable to load the team bulletin. Please select a team from the
-              teams page.
+            <Typography variant="body-lg" color="muted">
+              Use the team switcher in the header to choose which team’s bulletin you’d like to view.
             </Typography>
-            <Button onClick={() => navigate(ROUTES.TEAMS)}>View Teams</Button>
           </div>
         </div>
       </PageLayout>

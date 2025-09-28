@@ -11,6 +11,7 @@ import { checkRateLimit, recordFailedAuth, resetRateLimit, RequestSecurity } fro
 import { NetworkResilience } from "../utils/networkResilience";
 import { testDatabaseConnection } from "../lib/database-helpers";
 import { AuthMonitoring } from "../utils/authMonitoring";
+import { emitTelemetry } from "../lib/telemetry";
 
 // Profile cache to prevent redundant database calls
 interface ProfileCache {
@@ -219,6 +220,11 @@ export const useAuth = create<AuthState>()(
             AuthMonitoring.recordError("signIn", error.message, undefined, { email, status: error.status });
             const userFriendlyError = getAuthErrorMessage(error);
             set({ error: userFriendlyError, loading: false });
+            emitTelemetry("auth.signin.error", {
+              email,
+              message: userFriendlyError,
+              status: error.status,
+            });
             return { success: false, error: userFriendlyError };
           }
           if (data.user && data.session) {
@@ -233,6 +239,10 @@ export const useAuth = create<AuthState>()(
             get().fetchUserProfile(data.user.id);
             AuthMonitoring.recordSignInSuccess();
             AuthMonitoring.recordEvent("signin_success", data.user.id, { email });
+            emitTelemetry("auth.signin.success", {
+              userId: data.user.id,
+              email,
+            });
             return { success: true };
           }
           set({ loading: false });
@@ -245,6 +255,7 @@ export const useAuth = create<AuthState>()(
           AuthMonitoring.recordNetworkError();
           AuthMonitoring.recordError("signIn", errorMessage, undefined, { email });
           set({ error: errorMessage, loading: false });
+          emitTelemetry("auth.signin.exception", { email, message: errorMessage });
           return { success: false, error: errorMessage };
         }
       },
@@ -361,6 +372,10 @@ export const useAuth = create<AuthState>()(
 
           if (!authData.user) {
             set({ error: "Failed to create user account", loading: false });
+            emitTelemetry("auth.signup.error", {
+              email,
+              message: "Failed to create user account",
+            });
             return { success: false, error: "Failed to create user account" };
           }
 
@@ -394,6 +409,11 @@ export const useAuth = create<AuthState>()(
           }
           AuthMonitoring.recordSignUpSuccess();
           AuthMonitoring.recordEvent("signup_success", authData.user.id, { email, role: userData.role });
+          emitTelemetry("auth.signup.success", {
+            userId: authData.user.id,
+            email,
+            role: userData.role,
+          });
           return { success: true };
         } catch (error) {
           const errorMessage =
@@ -403,6 +423,11 @@ export const useAuth = create<AuthState>()(
           AuthMonitoring.recordNetworkError();
           AuthMonitoring.recordError("signUp", errorMessage, undefined, { email, role: userData.role });
           set({ error: errorMessage, loading: false });
+          emitTelemetry("auth.signup.exception", {
+            email,
+            role: userData.role,
+            message: errorMessage,
+          });
           return { success: false, error: errorMessage };
         }
       },
@@ -428,6 +453,7 @@ export const useAuth = create<AuthState>()(
           });
           // Clear profile cache on sign out
           profileCache.clear();
+          emitTelemetry("auth.signout", { userId });
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : "Sign out failed";

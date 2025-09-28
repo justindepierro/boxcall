@@ -5,6 +5,9 @@ import { SidebarLogo } from "../ui/Logo";
 import { GlobalSearch } from "../ui/GlobalSearch";
 import { UserMenu } from "../auth/UserMenu";
 import { NotificationBell } from "../ui/NotificationBell";
+import { TeamSwitcher } from "./TeamSwitcher";
+import { useActiveTeamStore } from "../../state/activeTeamStore";
+import { useRoles } from "../../hooks/useRoles";
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
@@ -23,6 +26,13 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { roleContext } = useRoles();
+  const { activeTeamId } = useActiveTeamStore();
+  const teams =
+    roleContext?.teamMemberships.map((tm) => ({
+      id: tm.teamId,
+      name: tm.teamName,
+    })) ?? [];
 
   useEffect(() => {
     let ticking = false;
@@ -97,8 +107,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
           <div className="flex-1" />
 
           {/* Global Search - Centered */}
-          <div className="flex items-center justify-center flex-1 max-w-md mx-4">
+          <div className="flex items-center justify-center flex-1 max-w-md mx-4 gap-3">
             <GlobalSearch />
+            <TeamSwitcher teams={teams} />
           </div>
 
           {/* Spacer */}

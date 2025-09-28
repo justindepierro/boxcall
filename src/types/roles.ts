@@ -73,6 +73,51 @@ export type Capability =
   | "settings.manage"
   | "settings.view";
 
+export const CAPABILITY_KEYS: Capability[] = [
+  "team.manage",
+  "team.settings",
+  "roster.manage",
+  "roster.view",
+  "playbook.manage",
+  "playbook.create",
+  "playbook.edit",
+  "playbook.view",
+  "calendar.manage",
+  "calendar.view",
+  "analytics.view",
+  "analytics.manage",
+  "profile.manage",
+  "profile.view",
+  "settings.manage",
+  "settings.view",
+];
+
+export type CapabilityFlags = {
+  [K in Capability]: boolean;
+};
+
+export const EMPTY_CAPABILITY_FLAGS: CapabilityFlags = CAPABILITY_KEYS.reduce(
+  (acc, key) => {
+    acc[key] = false;
+    return acc;
+  },
+  {} as CapabilityFlags
+);
+
+export function capabilityFlagsFromList(list: Capability[]): CapabilityFlags {
+  return list.reduce((acc, key) => {
+    acc[key] = true;
+    return acc;
+  }, { ...EMPTY_CAPABILITY_FLAGS });
+}
+
+export function capabilityListFromFlags(
+  flags: Partial<CapabilityFlags> | null | undefined
+): Capability[] {
+  if (!flags) return [];
+  return CAPABILITY_KEYS.filter((key) => Boolean(flags[key]));
+}
+
 // ============================================================================
 // COMPOSITE TYPES
 // ============================================================================

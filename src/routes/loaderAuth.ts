@@ -11,6 +11,8 @@ import type { AuthorizeInput } from "./authorize";
  * @param authorizeOptions - Options to pass to the authorize function
  * @returns A loader function that performs authorization and redirects on failure
  */
+const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
+
 export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile'>) {
   return async function authLoader({ params }: LoaderFunctionArgs) {
     const current = await getCurrentUserWithRole();
@@ -18,6 +20,7 @@ export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
+      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
       ...authorizeOptions,
       // Merge teamId from params if not explicitly provided
       teamId: authorizeOptions.teamId || params.teamId,
@@ -32,16 +35,6 @@ export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile
   };
 }
 
-// Simple cache for auth checks to reduce database calls
-interface AuthCache {
-  user: { id: string; role: AppRole | null } | null;
-  timestamp: number;
-  ttl: number; // Time to live in milliseconds
-}
-
-let authCache: AuthCache | null = null;
-const AUTH_CACHE_TTL = 30000; // 30 seconds
-
 /**
  * requireTeamCoachLoader
  *
@@ -52,28 +45,23 @@ const AUTH_CACHE_TTL = 30000; // 30 seconds
 export async function getCurrentUserWithRole(): Promise<{
   id: string;
   role: AppRole | null;
+  email: string | null;
 } | null> {
-  // Check cache first
-  if (authCache && (Date.now() - authCache.timestamp) < authCache.ttl) {
-    return authCache.user;
-  }
-
   const { data: authData } = await supabase.auth.getUser();
   const user = authData?.user ?? null;
   if (!user) {
-    authCache = { user: null, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
     return null;
   }
   const { data: profileRow } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, email")
     .eq("id", user.id)
     .single();
-  const userWithRole = { id: user.id, role: (profileRow?.role ?? null) as AppRole | null };
-  
-  // Cache the result
-  authCache = { user: userWithRole, timestamp: Date.now(), ttl: AUTH_CACHE_TTL };
-  
+  const userWithRole = {
+    id: user.id,
+    role: (profileRow?.role ?? null) as AppRole | null,
+    email: profileRow?.email ?? user.email ?? null,
+  };
   return userWithRole;
 }
 
@@ -89,7 +77,6 @@ export const requireTeamCoachLoader = createAuthLoader({
  */
 export const requireTeamAnalyticsLoader = createAuthLoader({
   allowedTeamRoles: ["coach", "admin"],
-  requiredTiers: ["team_premium"],
 });
 
 /**
@@ -121,6 +108,7 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
+      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
       requiredRoles: allowedRoles,
     });
 

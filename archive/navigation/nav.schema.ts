@@ -32,7 +32,7 @@ export const baseNav: NavTree = [
   {
     id: "team-bulletin",
     label: "Team Bulletin",
-    path: "/team-bulletin",
+    path: "/team/:teamId/bulletin",
     icon: "users",
   },
   { id: "calendar", label: "Calendar", path: "/calendar", icon: "calendar" },

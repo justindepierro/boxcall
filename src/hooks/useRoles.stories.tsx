@@ -24,12 +24,10 @@ const meta: Meta = {
 
 A comprehensive role-based access control (RBAC) system providing multiple hooks for managing user roles and permissions.
 
-## Available Hooks
-
 - \`useRoles()\` - Primary hook for accessing role context
 - \`useAppRole()\` - Get user's application-level role
 - \`useTeamRole(teamId)\` - Get user's role in a specific team
-- \`usePermissions(teamId?)\` - Check permissions with loading states
+- \`useTeamPermissions(teamId?)\` - Check permissions with loading states
 - \`useCapability(teamId, capability)\` - Check specific capabilities
 - \`useRoleGuard()\` - Role-based conditional rendering utilities
 - \`useRoleDisplayNames()\` - Get human-readable role names

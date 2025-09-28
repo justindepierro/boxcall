@@ -169,7 +169,7 @@ export function useTeamRole(teamId?: string): TeamRole | null {
 /**
  * Hook for checking permissions with automatic loading states
  */
-export function usePermissions(teamId?: string) {
+export function useTeamPermissions(teamId?: string) {
   const { getUIPermissions } = useRoles();
   const [permissions, setPermissions] = useState<UIPermissions | null>(null);
   const [loading, setLoading] = useState(false);

@@ -13,8 +13,8 @@ const tree: SidebarItem[] = [
     label: "Team",
     href: "/team",
     children: [
-      { id: "team-bulletin", label: "Bulletin", href: "/team/bulletin" },
-      { id: "team-settings", label: "Settings", href: "/team/settings" },
+      { id: "team-bulletin", label: "Bulletin", href: "/team/123/bulletin" },
+      { id: "team-settings", label: "Settings", href: "/team/123/settings" },
     ],
   },
   { id: "playbook", label: "Playbook", href: "/playbook" },
@@ -22,7 +22,7 @@ const tree: SidebarItem[] = [
 
 describe("nav.selectors", () => {
   it("computes deepest active item and expanded parents", () => {
-    const state = computeActiveState(tree, "/team/settings");
+    const state = computeActiveState(tree, "/team/123/settings");
     expect(state.activeId).toBe("team-settings");
     expect(state.pathIds).toEqual(["team", "team-settings"]);
     expect([...state.expandedIds]).toEqual(["team"]);
@@ -30,7 +30,7 @@ describe("nav.selectors", () => {
 
   it("treats parent prefixes as matches on boundaries", () => {
     expect(isActiveItem(tree[1], "/team")); // parent is active on index
-    expect(shouldExpand(tree[1]!, "/team/settings")).toBe(true);
+    expect(shouldExpand(tree[1]!, "/team/123/settings")).toBe(true);
   });
 
   it("returns null when no href matches", () => {

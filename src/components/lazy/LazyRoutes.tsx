@@ -63,10 +63,6 @@ export const LazyTeamBulletin = lazyRoute(
   "Team Bulletin"
 );
 
-export const LazyTeamsPage = lazyRoute(
-  () => import("../../pages/TeamsPage"),
-  "Teams"
-);
 
 export const LazyCreateTeam = lazyRoute(
   () =>
@@ -109,6 +105,16 @@ export const LazyPracticePlansPage = lazyRoute(
 export const LazyGamePlansPage = lazyRoute(
   () => import("../../pages/GamePlansPage"),
   "Game Plans"
+);
+
+export const LazyAwardsPage = lazyRoute(
+  () => import("../../pages/AwardsPage"),
+  "Awards"
+);
+
+export const LazyTemplatesPage = lazyRoute(
+  () => import("../../pages/TemplatesPage"),
+  "Templates"
 );
 
 export const LazyTeamSettings = lazyRoute(
@@ -183,10 +189,22 @@ export const LazyPracticeScriptModal = lazyRoute(
 
 // Loading component for lazy routes
 export const RouteLoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="text-text-secondary">Loading page...</p>
+  <div className="min-h-screen flex items-center justify-center bg-surface-app relative overflow-hidden">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,168,107,0.12),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(147,195,253,0.12),transparent_55%)]" />
+    <div className="relative z-10 text-center px-6 py-10 rounded-3xl shadow-2xl bg-surface-primary/90 backdrop-blur-md border border-surface-subtle max-w-sm w-full">
+      <div className="mx-auto mb-6 h-14 w-14 rounded-full bg-jade-100 text-jade-700 flex items-center justify-center">
+        <span className="text-2xl font-semibold">BC</span>
+      </div>
+      <p className="text-lg font-semibold text-text-primary">Preparing BoxCall</p>
+      <p className="text-sm text-text-muted mt-2">
+        Loading secure data and initializing your coaching workspace.
+      </p>
+      <div className="mt-6 flex items-center justify-center gap-2">
+        <span className="sr-only">Loading</span>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce [animation-delay:-0.32s]"></div>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce [animation-delay:-0.16s]"></div>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce"></div>
+      </div>
     </div>
   </div>
 );

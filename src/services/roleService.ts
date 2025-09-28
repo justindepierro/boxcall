@@ -17,10 +17,21 @@ import type {
 import {
   DEFAULT_TEAM_ROLE_CAPABILITIES,
   TEAM_ROLE_HIERARCHY,
+  capabilityListFromFlags,
 } from "../types/roles";
 import { supabase } from "../lib/supabase";
 
 export class RoleService {
+  private static normalizeCapabilities(value: unknown): Capability[] {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return value as Capability[];
+    }
+    if (typeof value === "object") {
+      return capabilityListFromFlags(value as Record<string, boolean>);
+    }
+    return [];
+  }
   // ============================================================================
   // ROLE CONTEXT MANAGEMENT
   // ============================================================================
@@ -78,7 +89,9 @@ export class RoleService {
           teamId: membership.team_id,
           teamName: teamNameMap.get(membership.team_id) || "Unknown Team",
           teamRole: membership.team_role as TeamRole,
-          capabilities: (membership.capabilities as Capability[]) || [],
+          capabilities: RoleService.normalizeCapabilities(
+            membership.capabilities
+          ),
           isActive: membership.status === "active",
           assignedAt: new Date(membership.assigned_at),
           roleNotes: membership.role_notes || undefined,
@@ -155,7 +168,11 @@ export class RoleService {
       }
 
       // Check explicit capabilities first
-      if (data.capabilities && data.capabilities.includes(capability)) {
+      const userCapabilities = RoleService.normalizeCapabilities(
+        data.capabilities
+      );
+
+      if (userCapabilities.includes(capability)) {
         return true;
       }
 
@@ -287,7 +304,9 @@ export class RoleService {
       };
 
       if (teamMembership && teamId) {
-        const capabilities = teamMembership.capabilities;
+        const capabilities = RoleService.normalizeCapabilities(
+          teamMembership.capabilities
+        );
 
         teamPermissions = {
           canManageTeam: capabilities.includes("team.manage"),

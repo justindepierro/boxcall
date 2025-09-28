@@ -4,6 +4,8 @@ import {
   RouterProvider,
   Outlet,
   useNavigate,
+  useLocation,
+  Navigate,
 } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 
@@ -33,10 +35,13 @@ import {
   LazyCalendarShellPage,
   LazyPlannerPage,
   RouteLoadingSpinner,
+  LazyAwardsPage,
+  LazyTemplatesPage,
+  LazyDesignSystemShowcase,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
-import { ROUTES } from "./paths";
+import { ROUTES, teamRoutes } from "./paths";
 import {
   requireTeamAnalyticsLoader,
   requireAuthenticatedLoader,
@@ -45,6 +50,8 @@ import {
   requirePlayerLoader,
 } from "./loaderAuth";
 import { Layout } from "../components/layout/Layout";
+import { useActiveTeamStore } from "../state/activeTeamStore";
+import { PlaybookProvider } from "../contexts/PlaybookContext";
 const RootLayout: React.FC = () => (
   <>
     <ScrollToTop />
@@ -60,50 +67,27 @@ const AuthenticatedLayout: React.FC = () => (
   </Layout>
 );
 
+const LegacyTeamBulletinRedirect: React.FC = () => {
+  const navigate = useNavigate();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
+
+  useEffect(() => {
+    if (activeTeamId) {
+      navigate(teamRoutes.bulletin(activeTeamId), { replace: true });
+    } else {
+      navigate(ROUTES.TEAMS, { replace: true });
+    }
+  }, [activeTeamId, navigate]);
+
+  return <RouteLoadingSpinner />;
+};
+
 // Root redirect component that handles authentication
 const RootRedirectComponent: React.FC = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [isInitializing, setIsInitializing] = useState(true);
-  const [hasTimedOut, setHasTimedOut] = useState(false);
+  const location = useLocation();
 
-  useEffect(() => {
-    // Only set timeout if we're still waiting for auth state (user is undefined)
-    // If user is already determined (truthy or null), don't use timeout
-    if (user !== undefined) return;
-
-    const timeout = setTimeout(() => {
-      console.warn(
-        "🔄 Auth initialization timed out, assuming not authenticated"
-      );
-      setHasTimedOut(true);
-      setIsInitializing(false);
-      navigate(ROUTES.LOGIN, { replace: true });
-    }, 3000); // Reduced to 3 seconds since login is now fast
-
-    return () => clearTimeout(timeout);
-  }, [user, navigate]);
-
-  useEffect(() => {
-    if (hasTimedOut) return; // Already handled by timeout
-
-    // If we have a user, redirect to dashboard
-    if (user) {
-      console.log(
-        "🔄 RootRedirectComponent: User authenticated, redirecting to dashboard"
-      );
-      setIsInitializing(false);
-      navigate(ROUTES.DASHBOARD, { replace: true });
-    } else if (user === null) {
-      // User is explicitly null (not undefined), so auth check is complete
-      console.log("🔄 RootRedirectComponent: No user, redirecting to login");
-      setIsInitializing(false);
-      navigate(ROUTES.LOGIN, { replace: true });
-    }
-    // If user is undefined, we're still waiting for auth state
-  }, [user, navigate, hasTimedOut]);
-
-  if (isInitializing) {
+  if (user === undefined) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -117,8 +101,18 @@ const RootRedirectComponent: React.FC = () => {
     );
   }
 
-  // This should not be reached, but just in case
-  return null;
+  if (user) {
+    if (location.pathname !== ROUTES.DASHBOARD) {
+      return <Navigate to={ROUTES.DASHBOARD} replace />;
+    }
+    return null;
+  }
+
+  if (location.pathname === ROUTES.LOGIN) {
+    return null;
+  }
+
+  return <Navigate to={ROUTES.LOGIN} replace />;
 };
 
 export const DataRouterApp: React.FC = () => {
@@ -193,6 +187,18 @@ const DataRouterAppInner: React.FC = memo(() => {
           </Suspense>
         ),
       },
+      {
+        path: "/design-system",
+        element: (
+          <Suspense fallback={<RouteLoadingSpinner />}>
+            <LazyDesignSystemShowcase />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/team-bulletin",
+        element: <LegacyTeamBulletinRedirect />,
+      },
       // Authenticated routes with layout
       {
         path: "/",
@@ -200,18 +206,14 @@ const DataRouterAppInner: React.FC = memo(() => {
         loader: requireAuthenticatedLoader,
         children: [
           {
+            index: true,
+            element: <Navigate to={ROUTES.DASHBOARD} replace />,
+          },
+          {
             path: "dashboard",
             element: (
               <Suspense fallback={<RouteLoadingSpinner />}>
                 <LazyDashboardPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "teams",
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTeamsPage />
               </Suspense>
             ),
           },
@@ -243,7 +245,9 @@ const DataRouterAppInner: React.FC = memo(() => {
             path: "playbook",
             element: (
               <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyPlaybookPage />
+                <PlaybookProvider>
+                  <LazyPlaybookPage />
+                </PlaybookProvider>
               </Suspense>
             ),
           },
@@ -331,6 +335,24 @@ const DataRouterAppInner: React.FC = memo(() => {
               </Suspense>
             ),
           },
+          {
+            path: "awards",
+            loader: requireCoachOrAdminLoader,
+            element: (
+              <Suspense fallback={<RouteLoadingSpinner />}>
+                <LazyAwardsPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: "templates",
+            loader: requireCoachOrAdminLoader,
+            element: (
+              <Suspense fallback={<RouteLoadingSpinner />}>
+                <LazyTemplatesPage />
+              </Suspense>
+            ),
+          },
         ],
       },
       // Team-specific routes
@@ -351,7 +373,9 @@ const DataRouterAppInner: React.FC = memo(() => {
             path: "playbook",
             element: (
               <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyPlaybookPage />
+                <PlaybookProvider>
+                  <LazyPlaybookPage />
+                </PlaybookProvider>
               </Suspense>
             ),
           },
@@ -417,8 +441,14 @@ const DataRouterAppInner: React.FC = memo(() => {
     return <RouteLoadingSpinner />;
   }
 
+  const spinner = <RouteLoadingSpinner />;
+
   return (
-    <RouterProvider router={router} fallbackElement={<RouteLoadingSpinner />} />
+    <RouterProvider
+      router={router}
+      fallbackElement={spinner}
+      hydrateFallbackElement={spinner}
+    />
   );
 });
 

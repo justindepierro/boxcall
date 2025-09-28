@@ -1,9 +1,9 @@
 import React, { useMemo, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
-import { useAuthProfile } from "../../app/auth-store";
+import { useAuthProfile, useAuthProfileLoading } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { supabase } from "../../lib/supabase";
 import type { Database } from "../../types/database";
@@ -16,10 +16,17 @@ import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
 import { AppHeader } from "./AppHeader";
+import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
+import { emitTelemetry } from "../../lib/telemetry";
+
+const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
+
+type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
+type ExtendedUserRole = UserRole | "super_admin";
 
 // Helper to get test role from dev mode
-const getTestRole = (devMode: DevMode): UserRole | null => {
+const getTestRole = (devMode: DevMode): ExtendedUserRole | null => {
   switch (devMode) {
     case "test_as_head_coach":
       return "admin";
@@ -33,8 +40,7 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
       return null;
   }
 };
-import { Footer } from "./Footer";
-type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -47,10 +53,12 @@ interface LayoutProps {
  */
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
+  const profileLoading = useAuthProfileLoading();
   console.log("👤 Profile:", profile);
   const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
   const navigate = useNavigate();
+  const location = useLocation();
   const { activeTeamId, setActiveTeamId } = useActiveTeamStore();
 
   // Set active team to user's first team if not already set
@@ -78,9 +86,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   }, [profile?.id, activeTeamId, setActiveTeamId]);
 
-  // Use profile role, or test role based on dev mode
-  const currentRole: UserRole | null =
-    devMode !== "production" ? getTestRole(devMode) : (profile?.role ?? null);
+  // Determine effective app role with dev-mode + super admin override
+  const baseRole: ExtendedUserRole | null = profile?.role ?? null;
+  const simulatedRole =
+    devMode !== "production" ? getTestRole(devMode) : baseRole;
+  const currentRole: ExtendedUserRole | null =
+    profile?.email === SUPER_ADMIN_EMAIL ? "super_admin" : simulatedRole;
 
   const isDevMode = devMode !== "production";
 
@@ -103,6 +114,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     [currentRole]
   );
 
+  const navigationLoading = profileLoading && !profile;
+
+  useEffect(() => {
+    emitTelemetry("navigation.view", { path: location.pathname });
+  }, [location.pathname]);
+
   // Set data-density attribute on body (once per render cycle)
   if (typeof document !== "undefined") {
     document.body.setAttribute("data-density", uiDensity);
@@ -122,6 +139,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
           showOverlay={true}
+          loading={navigationLoading && sidebarItems.length === 0}
           header={
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 flex items-center justify-center">

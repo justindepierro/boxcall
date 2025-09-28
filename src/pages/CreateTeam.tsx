@@ -10,6 +10,7 @@ import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 import { PageLayout } from "../components/layout/PageLayout";
 import { ROUTES, teamRoutes } from "../routes/paths";
+import { createTeamSchema } from "../schemas/createTeamSchema";
 
 /**
  * Create Team Page
@@ -95,6 +96,7 @@ export const CreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isSuperAdmin } = usePermissions();
+  const STORAGE_KEY = "boxcall:create-team-v1";
   // TEMPORARY: Universal access (any authenticated user) regardless of prior permission flags
   const universalAccess = true;
 
@@ -181,6 +183,40 @@ export const CreateTeam: React.FC = () => {
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved?.formData) {
+        setFormData((prev) => ({ ...prev, ...saved.formData }));
+      }
+      if (
+        saved?.currentStep &&
+        steps.some((step) => step.id === saved.currentStep)
+      ) {
+        setCurrentStep(saved.currentStep as CreationStep);
+      }
+    } catch (err) {
+      console.warn("CreateTeam: failed to restore draft", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ formData, currentStep })
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [formData, currentStep]);
+
+  useEffect(() => {
+    emitTelemetry("team.create.step", { step: currentStep });
+  }, [currentStep]);
+
   const handleNext = () => {
     const currentIndex = steps.findIndex((step) => step.id === currentStep);
     if (currentIndex < steps.length - 1) {
@@ -200,6 +236,18 @@ export const CreateTeam: React.FC = () => {
     setCreating(true);
     setCreateError(null);
     try {
+      const validation = createTeamSchema.safeParse(formData);
+      if (!validation.success) {
+        const message =
+          validation.error.issues[0]?.message || "Please review the form.";
+        setCreateError(message);
+        emitTelemetry("team.create.validation_error", {
+          message,
+          issues: validation.error.issues,
+        });
+        return;
+      }
+
       emitTelemetry("team.create.attempt", {
         universalAccess,
         super: isSuperAdmin,
@@ -211,59 +259,19 @@ export const CreateTeam: React.FC = () => {
         computeAcademicYear();
       if (!user?.id) throw new Error("User not authenticated");
       // Attempt insert including created_by (needed on production schema). If column doesn't exist locally, fallback.
-      const teamInsertRes = await supabase
+      const { data: teamInsert, error: teamErr } = await supabase
         .from("teams")
         .insert({
           name: teamNameCombined || "New Team",
           school_name: formData.schoolName || null,
           mascot: formData.teamName || null,
           season_year: seasonYear,
-          created_by: user.id, // Production schema requires this
         })
         .select("id")
         .single();
-      let teamInsert = teamInsertRes.data;
-      let teamErr = teamInsertRes.error;
-      // Attempt to include sport if migration applied; silent ignore if column missing.
-      if (!teamErr && formData.sport) {
-        const { error: sportErr } = await supabase
-          .from("teams")
-          .update({ sport: formData.sport })
-          .eq("id", teamInsert?.id || "")
-          .select("id")
-          .single();
-        if (
-          sportErr &&
-          /column .*sport.* does not exist/i.test(sportErr.message)
-        ) {
-          emitTelemetry("team.create.sport_column_missing", {
-            message: sportErr.message,
-          });
-        }
-      }
-      if (
-        teamErr &&
-        /created_by|column .* does not exist/i.test(teamErr.message)
-      ) {
-        // Retry without created_by for local dev schemas that haven't added the column
-        emitTelemetry("team.create.retry_without_created_by", {
-          reason: teamErr.message,
-        });
-        const retry = await supabase
-          .from("teams")
-          .insert({
-            name: teamNameCombined || "New Team",
-            school_name: formData.schoolName || null,
-            mascot: formData.teamName || null,
-            season_year: seasonYear,
-          })
-          .select("id")
-          .single();
-        teamInsert = retry.data;
-        teamErr = retry.error;
-      }
-      if (teamErr || !teamInsert)
+      if (teamErr || !teamInsert) {
         throw teamErr || new Error("Team insert failed");
+      }
       const newTeamId = teamInsert.id as string;
       // Insert membership (coach by default)
       if (user?.id) {
@@ -272,7 +280,7 @@ export const CreateTeam: React.FC = () => {
           .insert({
             team_id: newTeamId,
             user_id: user.id,
-            role: "coach",
+            team_role: "head_coach",
             status: "active",
           });
         if (memberErr) console.warn("team_members insert warning", memberErr);
@@ -290,6 +298,11 @@ export const CreateTeam: React.FC = () => {
         season_display: seasonDisplay,
         sport_ui: formData.sport,
       });
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
       setCurrentStep("complete");
     } catch (e) {
       const msg = (e as Error).message;

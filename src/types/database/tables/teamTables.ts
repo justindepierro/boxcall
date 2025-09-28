@@ -5,7 +5,7 @@
  * Updated for Role System Overhaul (Migration 999)
  */
 
-import type { TeamRole, Capability } from "../../roles";
+import type { TeamRole, CapabilityFlags } from "../../roles";
 
 export interface TeamTables {
   teams: {
@@ -14,51 +14,36 @@ export interface TeamTables {
       name: string;
       school_name: string | null;
       mascot: string | null;
-      colors_primary: string | null;
-      colors_secondary: string | null;
-      logo_url: string | null;
-      created_by: string;
-      subscription_tier: "free" | "coach" | "team_premium" | null;
-      subscription_expires_at: string | null;
-      team_code: string | null;
       season_year: number | null;
-      league_division: string | null;
       created_at: string | null;
       updated_at: string | null;
+      play_count: number | null;
+      last_backup_at: string | null;
+      backup_version: number | null;
     };
     Insert: {
       id?: string;
       name: string;
       school_name?: string | null;
       mascot?: string | null;
-      colors_primary?: string | null;
-      colors_secondary?: string | null;
-      logo_url?: string | null;
-      created_by: string;
-      subscription_tier?: "free" | "coach" | "team_premium" | null;
-      subscription_expires_at?: string | null;
-      team_code?: string | null;
       season_year?: number | null;
-      league_division?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
+      play_count?: number | null;
+      last_backup_at?: string | null;
+      backup_version?: number | null;
     };
     Update: {
       id?: string;
       name?: string;
       school_name?: string | null;
       mascot?: string | null;
-      colors_primary?: string | null;
-      colors_secondary?: string | null;
-      logo_url?: string | null;
-      created_by?: string;
-      subscription_tier?: "free" | "coach" | "team_premium" | null;
-      subscription_expires_at?: string | null;
-      team_code?: string | null;
       season_year?: number | null;
-      league_division?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
+      play_count?: number | null;
+      last_backup_at?: string | null;
+      backup_version?: number | null;
     };
   };
   // Updated team_members table with new role system
@@ -67,13 +52,11 @@ export interface TeamTables {
       id: string;
       team_id: string;
       user_id: string;
-      role: "player" | "coach" | "family" | "admin" | null; // Legacy field - kept for migration safety
       team_role: TeamRole; // New standardized team role
-      capabilities: Capability[]; // Granular permissions array
+      capabilities: CapabilityFlags; // Granular permissions map
       role_notes: string | null; // Optional role description
       assigned_at: string; // When role was assigned
       status: "active" | "inactive" | "pending" | null; // Updated to use status instead of is_active
-      permissions: Record<string, unknown> | null; // Legacy permissions field
       joined_at: string | null;
       invited_by: string | null;
     };
@@ -81,13 +64,11 @@ export interface TeamTables {
       id?: string;
       team_id: string;
       user_id: string;
-      role?: "player" | "coach" | "family" | "admin" | null; // Legacy field
       team_role?: TeamRole; // New standardized team role
-      capabilities?: Capability[]; // Granular permissions array
+      capabilities?: Partial<CapabilityFlags> | null; // Granular permissions map
       role_notes?: string | null;
       assigned_at?: string;
       status?: "active" | "inactive" | "pending" | null;
-      permissions?: Record<string, unknown> | null;
       joined_at?: string | null;
       invited_by?: string | null;
     };
@@ -95,13 +76,11 @@ export interface TeamTables {
       id?: string;
       team_id?: string;
       user_id?: string;
-      role?: "player" | "coach" | "family" | "admin" | null; // Legacy field
       team_role?: TeamRole; // New standardized team role
-      capabilities?: Capability[]; // Granular permissions array
+      capabilities?: Partial<CapabilityFlags> | null; // Granular permissions map
       role_notes?: string | null;
       assigned_at?: string;
       status?: "active" | "inactive" | "pending" | null;
-      permissions?: Record<string, unknown> | null;
       joined_at?: string | null;
       invited_by?: string | null;
     };

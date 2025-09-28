@@ -3,7 +3,6 @@ import type { Database } from "../types/database";
 import type {
   AppUserType,
   TeamRole as PermissionTeamRole,
-  SubscriptionTier as PermissionSubscriptionTier,
   Permission,
 } from "../types/permissions";
 import { canAccessTeamFeature, hasPermission } from "../types/permissions";
@@ -11,9 +10,6 @@ import type { AppRole, TeamRole } from "../types/roles";
 
 // Local type that includes legacy team role values for backward compatibility
 export type TeamMemberRole = TeamRole | "coach" | "admin";
-export type SubscriptionTier =
-  Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];
-
 export function isRoleAllowed(
   userRole: AppRole | null | undefined,
   allowed: NonNullable<AppRole>[]
@@ -162,19 +158,6 @@ export async function fetchTeamMembership(
   };
 }
 
-export async function fetchTeamSubscription(teamId: string): Promise<{
-  subscription_tier: SubscriptionTier;
-  subscription_expires_at: string | null;
-} | null> {
-  const { data, error } = await supabase
-    .from("teams")
-    .select("subscription_tier, subscription_expires_at")
-    .eq("id", teamId)
-    .single();
-  if (error || !data) return null;
-  return data;
-}
-
 // Super admin check helper (developer/admin panel access)
 export async function fetchSuperAdminStatus(
   userId: string,
@@ -197,7 +180,6 @@ export type AuthorizeInput = {
   teamId?: string;
   requiredRoles?: NonNullable<AppRole>[];
   allowedTeamRoles?: TeamMemberRole[];
-  requiredTiers?: NonNullable<SubscriptionTier>[];
   requiredPermissions?: Permission[];
   teamFeature?: "management" | "dashboard" | "playbooks" | "family_view";
 };
@@ -206,7 +188,6 @@ export type AuthorizeResult = {
   allowed: boolean;
   reason?: DenyReason;
   membership?: Awaited<ReturnType<typeof fetchTeamMembership>>;
-  subscription?: Awaited<ReturnType<typeof fetchTeamSubscription>>;
 };
 
 // Public union of deny reasons for guard UIs to reuse in type-safe switches
@@ -216,9 +197,6 @@ export type DenyReason =
   | "no_team"
   | "not_member"
   | "inactive_member"
-  | "subscription_missing"
-  | "subscription_tier"
-  | "subscription_expired"
   | "permission_denied";
 
 export async function authorize(
@@ -230,7 +208,6 @@ export async function authorize(
     teamId,
     requiredRoles,
     allowedTeamRoles,
-    requiredTiers,
     requiredPermissions,
     teamFeature,
   } = input;
@@ -253,7 +230,6 @@ export async function authorize(
     isSuperAdmin,
     teamId,
     allowedTeamRoles,
-    requiredTiers,
     requiredPermissions,
     teamFeature,
   });
@@ -262,7 +238,7 @@ export async function authorize(
     return teamResult;
   }
 
-  return { allowed: true, membership: teamResult.membership, subscription: teamResult.subscription };
+  return { allowed: true, membership: teamResult.membership };
 }
 
 /**
@@ -281,13 +257,12 @@ async function checkTeamRequirements({
   isSuperAdmin: boolean;
   teamId?: string;
   allowedTeamRoles?: TeamMemberRole[];
-  requiredTiers?: NonNullable<SubscriptionTier>[];
   requiredPermissions?: Permission[];
   teamFeature?: "management" | "dashboard" | "playbooks" | "family_view";
 }): Promise<AuthorizeResult> {
   // Check if any team constraints apply
   const needsTeam = Boolean(
-    teamFeature || allowedTeamRoles?.length || requiredTiers?.length || requiredPermissions?.length
+    teamFeature || allowedTeamRoles?.length || requiredPermissions?.length
   );
 
   if (!needsTeam) {
@@ -319,58 +294,20 @@ async function checkTeamRequirements({
   }
 
   // Check subscription requirements
-  const subscriptionResult = await checkSubscriptionRequirements(teamId, requiredTiers);
-  if (!subscriptionResult.allowed) {
-    return { ...subscriptionResult, membership };
-  }
-
   // Check permission/feature requirements
   const permissionResult = checkPermissionRequirements({
     profile,
     isSuperAdmin,
     membership,
-    subscription: subscriptionResult.subscription,
     requiredPermissions,
     teamFeature,
   });
 
   if (!permissionResult.allowed) {
-    return { ...permissionResult, membership, subscription: subscriptionResult.subscription };
+    return { ...permissionResult, membership };
   }
 
-  return { allowed: true, membership, subscription: subscriptionResult.subscription };
-}
-
-/**
- * Check subscription-related requirements
- */
-async function checkSubscriptionRequirements(
-  teamId: string,
-  requiredTiers?: NonNullable<SubscriptionTier>[]
-): Promise<{ allowed: boolean; reason?: DenyReason; subscription?: Awaited<ReturnType<typeof fetchTeamSubscription>> }> {
-  if (!requiredTiers || requiredTiers.length === 0) {
-    return { allowed: true };
-  }
-
-  const subscription = await fetchTeamSubscription(teamId);
-  if (!subscription) {
-    return { allowed: false, reason: "subscription_missing" };
-  }
-
-  // Check tier requirements
-  if (!subscription.subscription_tier || !requiredTiers.includes(subscription.subscription_tier as NonNullable<SubscriptionTier>)) {
-    return { allowed: false, reason: "subscription_tier", subscription };
-  }
-
-  // Check expiration
-  if (subscription.subscription_expires_at) {
-    const expirationDate = new Date(subscription.subscription_expires_at);
-    if (expirationDate < new Date()) {
-      return { allowed: false, reason: "subscription_expired", subscription };
-    }
-  }
-
-  return { allowed: true, subscription };
+  return { allowed: true, membership };
 }
 
 /**
@@ -380,14 +317,12 @@ function checkPermissionRequirements({
   profile,
   isSuperAdmin,
   membership,
-  subscription,
   requiredPermissions,
   teamFeature,
 }: {
   profile: { role?: AppRole | null };
   isSuperAdmin: boolean;
   membership?: Awaited<ReturnType<typeof fetchTeamMembership>>;
-  subscription?: Awaited<ReturnType<typeof fetchTeamSubscription>>;
   requiredPermissions?: Permission[];
   teamFeature?: "management" | "dashboard" | "playbooks" | "family_view";
 }): { allowed: boolean; reason?: DenyReason } {
@@ -402,8 +337,7 @@ function checkPermissionRequirements({
     : (profile.role as unknown as AppUserType) || "player";
   const teamRole: PermissionTeamRole | undefined =
     (membership?.role as unknown as PermissionTeamRole) || undefined;
-  const subscriptionTier: PermissionSubscriptionTier =
-    (subscription?.subscription_tier as PermissionSubscriptionTier) || "free";
+  const subscriptionTier: "free" = "free";
 
   // Check team feature access
   if (teamFeature) {
