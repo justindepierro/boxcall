@@ -54,6 +54,7 @@ export type ModularIconName =
   | "error"
   | "info"
   | "alert"
+  | "bell"
   | "tag"
   | "calendar"
   | "clock"
@@ -171,6 +172,7 @@ const iconLoaders: Record<ModularIconName, Loader> = {
   error: dynamicIconImports["alert-circle"],
   info: dynamicIconImports.info,
   alert: dynamicIconImports["alert-triangle"],
+  bell: dynamicIconImports.bell,
   tag: dynamicIconImports.tag,
   calendar: dynamicIconImports.calendar,
   clock: dynamicIconImports.clock,

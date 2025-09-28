@@ -61,7 +61,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
         }
         size={size}
         onClick={onClick}
-        className="cursor-pointer hover:scale-105 transition-transform"
+        className="cursor-pointer transition-colors"
       >
         <span className="flex items-center gap-1">
           {badgeInfo.icon}

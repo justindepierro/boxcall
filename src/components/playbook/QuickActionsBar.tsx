@@ -36,7 +36,7 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
                 }}
                 variant={action.variant || "secondary"}
                 size="sm"
-                className="shadow-lg hover:shadow-xl transition-shadow duration-200 min-w-[160px] justify-start"
+                className="transition-colors duration-200 min-w-[160px] justify-start"
                 title={
                   action.shortcut
                     ? `${action.label} (${action.shortcut})`
@@ -61,7 +61,7 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
         onClick={() => setIsExpanded(!isExpanded)}
         variant="primary"
         size="lg"
-        className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-200"
+        className="rounded-full w-14 h-14 transition-colors duration-200"
         title={isExpanded ? "Close quick actions" : "Quick actions"}
       >
         <Icon

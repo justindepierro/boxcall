@@ -160,7 +160,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-border hover:bg-surface-secondary hover:border-border transition-colors"
+                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full p-2 border border-border hover:bg-surface-secondary hover:border-border transition-colors"
                 aria-label="Edit profile picture"
                 onClick={handleProfileEdit}
               >
@@ -291,7 +291,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className="absolute -top-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
+              className="absolute -top-1 -right-1 bg-surface-primary rounded-full p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
               aria-label="Edit bio"
               onClick={handleProfileEdit}
             >
@@ -333,12 +333,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             size="sm"
             onClick={() => navigate("/profile")}
             aria-label="View full profile"
+            icon={<Icon name="user" size="xs" />}
+            iconPosition="left"
           >
-            <Icon name="user" size="xs" className="mr-2" /> View Profile
+            View Profile
           </Button>
           {!isViewMode && (
-            <Button variant="primary" size="sm" onClick={handleProfileEdit}>
-              <Icon name="edit" size="xs" className="mr-2" /> Edit
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleProfileEdit}
+              icon={<Icon name="edit" size="xs" />}
+              iconPosition="left"
+            >
+              Edit
             </Button>
           )}
         </div>

@@ -224,10 +224,10 @@ export const UnifiedSettingsPanel: React.FC = () => {
         {/* Toggle button */}
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center ${
+          className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center ${
             isOpen
-              ? "bg-text-error text-text-on-primary rotate-45"
-              : "bg-primary text-text-on-primary"
+              ? "bg-text-error hover:bg-text-error/90 text-text-on-primary rotate-45"
+              : "bg-primary hover:bg-primary/90 text-text-on-primary"
           }`}
           title={isOpen ? "Close Settings" : "Settings & Tools"}
         >

@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../../app/auth-store";
 import { PersonalCalendar } from "../dashboard/PersonalCalendar";
-import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
+import { PersonalFeed } from "../dashboard/PersonalFeed";
 import ProfileCard from "../dashboard/ProfileCard";
 import TeamFeeds from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
@@ -128,44 +128,44 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           ============================================================================ 
         */}
         <div className="responsive-content-grid">
-          {/* Toast demo removed */}
+          {/* Left Column (1/3) - Profile and Personal Feed */}
+          <div className="left-column">
+            {/* Profile Card */}
+            <div className="profile-section">
+              {isStepVisible(0) ? (
+                <ProfileCard
+                  profile={profile}
+                  userRole={userRole}
+                  onEditClick={() => {
+                    // TODO: Implement edit functionality
+                  }}
+                />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
 
-          {/* Profile Card */}
-          <div className="profile-section">
-            {isStepVisible(0) ? (
-              <ProfileCard
-                profile={profile}
-                userRole={userRole}
-                onEditClick={() => {
-                  // TODO: Implement edit functionality
-                }}
-              />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
+            {/* Personal Feed */}
+            <div className="personal-feed-section">
+              {isStepVisible(1) ? <PersonalFeed /> : <DashboardCardSkeleton />}
+            </div>
           </div>
 
-          {/* Trophy Shelf */}
-          <div className="trophy-section">
-            {isStepVisible(1) ? (
-              <PersonalTrophyShelf userId={user.id} userRole={userRole} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
+          {/* Right Column (2/3) - Team Feeds and Calendar */}
+          <div className="right-column">
+            {/* Team Feeds */}
+            <div className="feeds-section">
+              {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
+            </div>
 
-          {/* Team Feeds */}
-          <div className="feeds-section">
-            {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
-          </div>
-
-          {/* Calendar */}
-          <div className="calendar-section">
-            {isStepVisible(3) ? (
-              <PersonalCalendar userId={user.id} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
+            {/* Calendar */}
+            <div className="calendar-section">
+              {isStepVisible(3) ? (
+                <PersonalCalendar userId={user.id} />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
           </div>
         </div>
       </div>

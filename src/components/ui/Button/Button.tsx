@@ -14,71 +14,70 @@ import type {
 // Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base:
-      "text-text-inverse border" +
-      " bg-[var(--semantic-primary)] border-[var(--semantic-primary)]",
-    hover:
-      "hover:bg-[var(--semantic-primary-hover)] hover:border-[var(--semantic-primary-hover)]",
-    active:
-      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+    base: "text-text-inverse bg-[var(--semantic-primary)] transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-primary-hover)]",
+    active: "active:bg-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:bg-surface-muted disabled:border-border disabled:text-text-muted disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   secondary: {
-    base: "text-text-primary bg-[var(--semantic-bg-secondary)]",
-    hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200",
-    active:
-      "active:bg-[color:var(--color-gray-200)] active:translate-y-0 active:shadow-none",
-    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
-    focus: "focus:outline-none",
+    base: "text-text-primary bg-[var(--semantic-bg-secondary)] transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-bg-muted)]",
+    active: "active:bg-[color:var(--color-gray-200)]",
+    disabled:
+      "disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   outline: {
-    base: "text-[var(--semantic-primary)]",
-    hover:
-      "hover:bg-surface-secondary hover:text-[var(--semantic-primary-hover)]",
+    base: "text-[var(--semantic-primary)] border border-[var(--semantic-primary)] bg-transparent transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-primary)] hover:text-text-inverse",
     active:
-      "active:bg-surface-muted active:text-[var(--semantic-primary-active)]",
-    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)] active:text-text-inverse",
+    disabled:
+      "disabled:text-text-muted disabled:border-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   gradient: {
-    base: "text-surface-primary border-0 bg-gradient-to-r from-electric-600 to-electric-700",
-    hover:
-      "hover:from-electric-500 hover:to-electric-600 hover:shadow-lg hover:shadow-electric-500/25",
-    active: "active:from-electric-700 active:to-electric-800 active:scale-95",
+    base: "text-surface-primary bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
+    hover: "hover:from-electric-500 hover:to-electric-600",
+    active: "active:from-electric-700 active:to-electric-800",
     disabled:
-      "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:shadow-none",
-    focus: "focus-ring focus-ring-electric focus-ring-offset",
+      "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-electric-500 focus:ring-offset-2",
   },
   glass: {
-    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary",
+    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary transition-colors duration-200",
     hover: "hover:bg-surface-primary/20",
     active: "active:bg-surface-primary/30",
     disabled:
-      "disabled:bg-surface-primary/5 disabled:text-text-muted disabled:border-surface-primary/10 disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:bg-surface-primary/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-surface-primary focus:ring-offset-2",
   },
   ghost: {
-    base: "text-[var(--semantic-text-primary)]",
-    hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200",
-    active:
-      "active:bg-[color:var(--color-gray-200)] active:translate-y-0 active:shadow-none",
+    base: "text-[var(--semantic-text-primary)] bg-transparent transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-bg-muted)]",
+    active: "active:bg-[color:var(--color-gray-200)]",
     disabled:
-      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
-    focus: "focus:outline-none",
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   subtle: {
-    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)]",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] transition-colors duration-200",
     hover:
       "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
     active:
       "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
-      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   link: {
     base: "text-[var(--semantic-primary-hover)] p-0 h-auto",
@@ -248,12 +247,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       }
       onClick?.(event);
     };
-    // Build class string - Square, masculine styling with enhanced animations
+    // Build class string - Clean, minimal styling
     const baseClasses = [
-      // Base button styles - square, confident
-      "inline-flex items-center justify-center",
-      "font-sans", // radius via CSS var
-      "transition-square hover-lift active-press focus-square",
+      // Base button styles - clean and minimal
+      "inline-flex items-center justify-center flex-row flex-nowrap",
+      "font-sans rounded-md", // Clean rounded corners
       "focus:outline-none",
       "overflow-hidden", // Handle overflow gracefully
       // Variant styles
@@ -279,7 +277,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         return null;
       return (
         <span
-          className={`${sizeStyles.iconSize} ${
+          className={`inline-flex items-center ${sizeStyles.iconSize} flex-shrink-0 ${
             position === "left" && children
               ? "mr-2"
               : position === "right" && children
@@ -315,9 +313,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {renderLoadingSpinner()}
         {renderIcon("left")}
         {iconPosition === "only" ? (
-          <span className={sizeStyles.iconSize}>{icon}</span>
+          <span
+            className={`inline-flex items-center justify-center ${sizeStyles.iconSize}`}
+          >
+            {icon}
+          </span>
         ) : (
-          <span className="text-center leading-tight truncate">{children}</span>
+          <span className="inline-flex items-center leading-tight truncate min-w-0">
+            {children}
+          </span>
         )}
         {renderIcon("right")}
       </button>

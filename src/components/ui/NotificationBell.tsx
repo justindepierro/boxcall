@@ -40,7 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
       >
         <Icon
-          name={unreadCount > 0 ? "alert" : "message"}
+          name="bell"
           size="md"
           className={`text-text-secondary hover:text-text-primary transition-colors ${
             isAnimating ? "animate-pulse" : ""

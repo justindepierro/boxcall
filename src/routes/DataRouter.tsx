@@ -60,7 +60,9 @@ const LegacyTeamBulletinRedirect: React.FC = () => {
 };
 
 // Protected route wrapper
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -75,7 +77,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 // Authenticated layout with sidebar and global search
-const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
   <Layout>
     <ScrollToTop />
     <TeamParamSync />
@@ -95,79 +99,79 @@ export const DataRouterApp: React.FC = () => {
     <BrowserRouter>
       <Routes>
         {/* Root redirect */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             user ? (
               <Navigate to="/dashboard" replace />
             ) : (
               <Navigate to="/login" replace />
             )
-          } 
+          }
         />
 
         {/* Public routes */}
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyLoginPage />
             </Suspense>
-          } 
+          }
         />
-        
-        <Route 
-          path="/register" 
+
+        <Route
+          path="/register"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyCreateCoachAccount />
             </Suspense>
-          } 
+          }
         />
 
-        <Route 
-          path="/about" 
+        <Route
+          path="/about"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyAboutPage />
             </Suspense>
-          } 
+          }
         />
 
-        <Route 
-          path="/privacy" 
+        <Route
+          path="/privacy"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyPrivacyPolicyPage />
             </Suspense>
-          } 
+          }
         />
 
-        <Route 
-          path="/terms" 
+        <Route
+          path="/terms"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyTermsOfServicePage />
             </Suspense>
-          } 
+          }
         />
 
-        <Route 
-          path="/contact" 
+        <Route
+          path="/contact"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyContactPage />
             </Suspense>
-          } 
+          }
         />
 
-        <Route 
-          path="/design-system" 
+        <Route
+          path="/design-system"
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyDesignSystemShowcase />
             </Suspense>
-          } 
+          }
         />
 
         {/* Legacy redirects */}
@@ -175,8 +179,8 @@ export const DataRouterApp: React.FC = () => {
         <Route path="/team-bulletin" element={<LegacyTeamBulletinRedirect />} />
 
         {/* Protected routes with layout */}
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -185,11 +189,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -198,11 +202,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/create-team" 
+        <Route
+          path="/create-team"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -211,11 +215,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/join-team" 
+        <Route
+          path="/join-team"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -224,11 +228,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/playbook" 
+        <Route
+          path="/playbook"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -239,11 +243,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/practice-plans" 
+        <Route
+          path="/practice-plans"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -252,11 +256,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/game-plans" 
+        <Route
+          path="/game-plans"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -265,11 +269,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/coach-management" 
+        <Route
+          path="/coach-management"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -278,11 +282,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/player-dashboard" 
+        <Route
+          path="/player-dashboard"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -291,11 +295,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/achievement-admin" 
+        <Route
+          path="/achievement-admin"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -304,11 +308,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/analytics" 
+        <Route
+          path="/analytics"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -317,11 +321,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/social" 
+        <Route
+          path="/social"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -330,11 +334,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/calendar" 
+        <Route
+          path="/calendar"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -343,11 +347,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/planner" 
+        <Route
+          path="/planner"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -356,11 +360,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/boxcall" 
+        <Route
+          path="/boxcall"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -369,11 +373,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/awards" 
+        <Route
+          path="/awards"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -382,11 +386,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/templates" 
+        <Route
+          path="/templates"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -395,12 +399,12 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
         {/* Team-specific routes */}
-        <Route 
-          path="/team/:teamId/bulletin" 
+        <Route
+          path="/team/:teamId/bulletin"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -409,11 +413,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/playbook" 
+        <Route
+          path="/team/:teamId/playbook"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -424,11 +428,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/practice-plans" 
+        <Route
+          path="/team/:teamId/practice-plans"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -437,11 +441,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/game-plans" 
+        <Route
+          path="/team/:teamId/game-plans"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -450,11 +454,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/analytics" 
+        <Route
+          path="/team/:teamId/analytics"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -463,11 +467,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/social" 
+        <Route
+          path="/team/:teamId/social"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -476,11 +480,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/calendar" 
+        <Route
+          path="/team/:teamId/calendar"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -489,11 +493,11 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/team/:teamId/planner" 
+        <Route
+          path="/team/:teamId/planner"
           element={
             <ProtectedRoute>
               <AuthenticatedLayout>
@@ -502,7 +506,7 @@ export const DataRouterApp: React.FC = () => {
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>
-          } 
+          }
         />
 
         {/* Catch-all route */}

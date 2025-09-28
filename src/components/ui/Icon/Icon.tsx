@@ -69,6 +69,7 @@ export type IconName =
   | "error"
   | "info"
   | "alert"
+  | "bell"
   | "wrench"
   | "bug"
   | "camera"
@@ -215,6 +216,7 @@ export const Icon: React.FC<IconProps> = ({
       "error",
       "info",
       "alert",
+      "bell",
       "wrench",
       "bug",
       "target",

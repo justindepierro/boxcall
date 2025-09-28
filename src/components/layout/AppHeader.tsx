@@ -74,68 +74,63 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
           ${isVisible ? "translate-y-0" : "-translate-y-full"}
         `}
       >
-        <div className="flex items-center h-16 px-4">
-          {/* Hamburger Menu Button */}
-          <Button
-            variant="ghost"
-            onClick={onMenuToggle}
-            className="p-2 mr-3 bg-jade-600 hover:bg-jade-700 text-white rounded-lg transition-colors"
-            aria-label="Open menu"
-          >
-            <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
-              <div className="w-4 h-0.5 bg-white"></div>
-              <div className="w-4 h-0.5 bg-white"></div>
-              <div className="w-4 h-0.5 bg-white"></div>
-            </div>
-          </Button>
-
-          {/* BoxCall Logo and Branding */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 flex items-center justify-center">
-              <SidebarLogo />
-            </div>
-            <Typography
-              variant="headline-sm"
-              as="h1"
-              className="text-jade-600 dark:text-jade-400 font-bold tracking-tight"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16">
+            {/* Hamburger Menu Button */}
+            <Button
+              variant="primary"
+              onClick={onMenuToggle}
+              className="p-2 mr-3 bg-jade-600 hover:bg-jade-700 text-white rounded-lg transition-colors"
+              aria-label="Open menu"
             >
-              BoxCall
-            </Typography>
-          </div>
+              <div className="w-5 h-5 flex flex-col justify-center items-center space-y-1">
+                <div className="w-4 h-0.5 bg-white"></div>
+                <div className="w-4 h-0.5 bg-white"></div>
+                <div className="w-4 h-0.5 bg-white"></div>
+              </div>
+            </Button>
 
-          {/* Spacer */}
-          <div className="flex-1" />
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <SidebarLogo />
+              <Typography
+                variant="headline-md"
+                className="text-jade-600 dark:text-jade-400 font-bold tracking-tight"
+              >
+                BoxCall
+              </Typography>
+            </div>
 
-          {/* Global Search - Centered */}
-          <div className="flex items-center justify-center flex-1 max-w-md mx-4 gap-3">
-            <GlobalSearch />
-            <TeamSwitcher teams={teams} />
-          </div>
+            {/* Global Search - Centered */}
+            <div className="flex items-center justify-center flex-1 max-w-md mx-4 gap-3">
+              <GlobalSearch />
+              <TeamSwitcher teams={teams} />
+            </div>
 
-          {/* Spacer */}
-          <div className="flex-1" />
+            {/* Spacer */}
+            <div className="flex-1 max-w-xs" />
 
-          {/* User Actions - Right side */}
-          <div className="flex items-center space-x-2">
-            <NotificationBell
-              unreadCount={0} // TODO: Connect to actual notification count
-              onClick={() => console.log("Notifications clicked")}
-            />
-            <UserMenu />
+            {/* User Actions - Right side */}
+            <div className="flex items-center space-x-3">
+              <NotificationBell
+                unreadCount={0} // TODO: Connect to actual notification count
+                onClick={() => console.log("Notifications clicked")}
+              />
+              <UserMenu />
+            </div>
           </div>
         </div>
       </header>
 
       {/* Persistent Hamburger - Always visible when header is hidden */}
       <Button
-        variant="ghost"
+        variant="primary"
         onClick={onMenuToggle}
         className={`
           fixed top-4 left-4 z-[60]
-          p-2 rounded-lg shadow-lg
+          p-2 rounded-lg
           bg-jade-600 hover:bg-jade-700 text-white border-0
           transition-all duration-300 ease-out
-          hover:scale-105 active:scale-95
           focus:outline-none focus:ring-2 focus:ring-jade-400 focus:ring-offset-2
           ${isVisible ? "opacity-0 pointer-events-none scale-75" : "opacity-100 pointer-events-auto scale-100"}
         `}

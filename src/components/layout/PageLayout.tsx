@@ -1,6 +1,8 @@
 import React from "react";
 import clsx from "clsx";
 import { Typography } from "../design-system/Typography";
+import { CompactTrophyShelf } from "../dashboard/CompactTrophyShelf";
+import { useAuth } from "../../app/auth-store";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -38,10 +40,17 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
   return (
     <div className={layoutClasses}>
-      {(title || actions) && (
-        <PageHeader title={title} subtitle={subtitle} actions={actions} />
-      )}
-      <PageContent variant={variant}>{children}</PageContent>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {(title || actions) && (
+          <PageHeader
+            title={title}
+            subtitle={subtitle}
+            actions={actions}
+            variant={variant}
+          />
+        )}
+        <PageContent variant={variant}>{children}</PageContent>
+      </div>
     </div>
   );
 };
@@ -50,33 +59,51 @@ interface PageHeaderProps {
   title?: string;
   subtitle?: string;
   actions?: React.ReactNode;
+  variant?: "default" | "dashboard" | "detail" | "form" | "list";
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,
   actions,
-}) => (
-  <div className="page-header mb-6 md:mb-8">
-    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-      <div className="flex-1 min-w-0">
-        {title && (
-          <Typography variant="display-lg" className="text-text-primary mb-2">
-            {title}
-          </Typography>
+  variant,
+}) => {
+  const { user } = useAuth();
+
+  return (
+    <div className="page-header mb-6 md:mb-8 pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          {title && (
+            <Typography variant="display-lg" className="text-text-primary mb-2">
+              {title}
+            </Typography>
+          )}
+          {subtitle && (
+            <Typography variant="body-lg" className="text-text-secondary">
+              {subtitle}
+            </Typography>
+          )}
+        </div>
+
+        {/* Dashboard Trophy Shelf - Aligned with Team Feeds */}
+        {variant === "dashboard" && user && (
+          <div className="flex items-center gap-4 justify-end">
+            <CompactTrophyShelf userId={user.id} />
+            {actions && (
+              <div className="flex flex-col sm:flex-row gap-3">{actions}</div>
+            )}
+          </div>
         )}
-        {subtitle && (
-          <Typography variant="body-lg" className="text-text-secondary">
-            {subtitle}
-          </Typography>
+
+        {/* Regular Actions for Non-Dashboard Pages */}
+        {variant !== "dashboard" && actions && (
+          <div className="flex flex-col sm:flex-row gap-3">{actions}</div>
         )}
       </div>
-      {actions && (
-        <div className="flex flex-col sm:flex-row gap-3">{actions}</div>
-      )}
     </div>
-  </div>
-);
+  );
+};
 
 interface PageContentProps {
   children: React.ReactNode;
@@ -85,9 +112,11 @@ interface PageContentProps {
 
 const PageContent: React.FC<PageContentProps> = ({ children, variant }) => {
   const contentClasses = clsx("page-content", {
-    "space-y-6": variant === "dashboard",
+    "space-y-4":
+      variant === "dashboard" ||
+      variant ===
+        "list" /* Reduced from space-y-6 to space-y-4 for dashboard */,
     "max-w-4xl": variant === "detail" || variant === "form",
-    "space-y-4": variant === "list",
   });
 
   return <div className={contentClasses}>{children}</div>;

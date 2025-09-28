@@ -1,6 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../ui/Dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "../ui/Dropdown";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
@@ -29,16 +34,17 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
       <Button
         variant="primary"
         size="sm"
-        className="ml-4"
+        className="ml-4 whitespace-nowrap px-4 py-2 h-10 min-w-[140px]"
         onClick={() => navigate(ROUTES.CREATE_TEAM)}
+        icon={<Icon name="plus" size="sm" />}
+        iconPosition="left"
       >
-        <Icon name="plus" size="sm" className="mr-2" /> Create or Find Your Team
+        Create Team
       </Button>
     );
   }
 
-  const activeTeam =
-    teams.find((team) => team.id === activeTeamId) ?? teams[0];
+  const activeTeam = teams.find((team) => team.id === activeTeamId) ?? teams[0];
 
   return (
     <DropdownMenu>
