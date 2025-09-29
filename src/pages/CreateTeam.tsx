@@ -470,10 +470,20 @@ export const CreateTeam: React.FC = () => {
     setLoadingMessage("Connecting to database...");
     try {
       console.log("🔍 Attempting database select test...");
-      const { error: connectTest } = await supabase
+      
+      // Add timeout to database operation since it might hang too
+      const dbPromise = supabase
         .from("teams")
         .select("id")
         .limit(1);
+      
+      const dbTimeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Database select timeout")), 15000)
+      );
+      
+      const dbResult = await Promise.race([dbPromise, dbTimeoutPromise]) as { error: any };
+      const connectTest = dbResult.error;
+      
       console.log("📊 Database select result:", { error: connectTest });
 
       if (connectTest) {
@@ -484,10 +494,17 @@ export const CreateTeam: React.FC = () => {
       
     } catch (dbError) {
       console.error("❌ Database connectivity error:", dbError);
-      if (dbError instanceof Error) {
-        throw dbError;
+      
+      // If it's a timeout, we might still be able to proceed
+      if (dbError instanceof Error && dbError.message === "Database select timeout") {
+        console.warn("⚠️ Database select timed out, but proceeding with team creation anyway...");
+        console.log("🔄 Skipping connectivity test due to timeout");
+      } else {
+        if (dbError instanceof Error) {
+          throw dbError;
+        }
+        throw new Error("Unable to connect to database. Please check your internet connection and try again.");
       }
-      throw new Error("Unable to connect to database. Please check your internet connection and try again.");
     }
 
     // Create team name combining school and mascot
@@ -515,11 +532,22 @@ export const CreateTeam: React.FC = () => {
     
     console.log("🚀 About to start team insert operation...");
     const dbStart = performance.now();
-    const { data: teamInsert, error: teamErr } = await supabase
+    
+    // Add timeout to team insertion as well
+    const teamInsertPromise = supabase
       .from("teams")
       .insert(teamData)
       .select("id")
       .single();
+      
+    const insertTimeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Team insert timeout")), 20000)
+    );
+    
+    const insertResult = await Promise.race([teamInsertPromise, insertTimeoutPromise]) as { data: any, error: any };
+    const teamInsert = insertResult.data;
+    const teamErr = insertResult.error;
+    
     const dbDuration = performance.now() - dbStart;
     console.log(`🗄️ Team insert completed in ${dbDuration}ms`);
 
@@ -555,12 +583,22 @@ export const CreateTeam: React.FC = () => {
     console.log("👤 Adding team membership...");
     setLoadingMessage("Setting up your account...");
     const memberStart = performance.now();
-    const { error: memberErr } = await supabase.from("team_members").insert({
+    
+    // Add timeout to membership insertion
+    const memberInsertPromise = supabase.from("team_members").insert({
       team_id: newTeamId,
       user_id: authUser.id, // Use the authenticated user from session
       team_role: "head_coach",
       status: "active",
     });
+    
+    const memberTimeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Membership insert timeout")), 15000)
+    );
+    
+    const memberResult = await Promise.race([memberInsertPromise, memberTimeoutPromise]) as { error: any };
+    const memberErr = memberResult.error;
+    
     const memberDuration = performance.now() - memberStart;
     console.log(
       `👥 Membership insert completed in ${memberDuration}ms`
