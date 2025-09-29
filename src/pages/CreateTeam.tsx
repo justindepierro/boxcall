@@ -533,8 +533,16 @@ export const CreateTeam: React.FC = () => {
     console.log("🚀 About to start team insert operation...");
     const dbStart = performance.now();
     
-    // Add timeout to team insertion as well
-    const teamInsertPromise = supabase
+    // Create a fresh, clean Supabase client for this operation to avoid session issues
+    console.log("🔄 Creating fresh Supabase client for team insert...");
+    const { createClient } = await import("@supabase/supabase-js");
+    const freshClient = createClient(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY
+    );
+    
+    // Add timeout to team insertion using fresh client
+    const teamInsertPromise = freshClient
       .from("teams")
       .insert(teamData)
       .select("id")
