@@ -8,11 +8,12 @@ import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { MultiBadgeDisplay } from "../ui/MultiBadgeDisplay";
 import type { Profile } from "../../types/database";
 import { AchievementService } from "@services/achievementService";
 import { useAuth, useAuthProfile } from "../../app/auth-store";
 import { supabase } from "../../lib/supabase";
-import { Edit2, Save, X, Camera, User, Activity, Trophy } from "lucide-react";
+import { Edit2, Save, X, Camera, User } from "lucide-react";
 
 interface ProfileCardProps {
   profile?: Profile | null;
@@ -143,9 +144,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   // Use unified role system
   const userRole =
     userRoleProp || roleContext?.appRole || profile?.role || "player";
-  const isPlayer = userRole === "player";
-  const isCoach = userRole === "coach" || userRole === "admin";
-  const isFamily = userRole === "family";
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -247,16 +245,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </Typography>
             </Button>
             <div className="flex items-center space-x-2 mt-1">
-              {isCoach && <Trophy className="w-3 h-3 text-brand-primary" />}
-              {isPlayer && <Activity className="w-3 h-3 text-success" />}
-              {isFamily && <User className="w-3 h-3 text-brand-secondary" />}
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary font-medium"
-              >
-                {userRole.replace("_", " ").charAt(0).toUpperCase() +
-                  userRole.replace("_", " ").slice(1)}
-              </Typography>
+              <MultiBadgeDisplay
+                isAdmin={profile?.is_admin}
+                appRole={profile?.app_role || profile?.role || userRole}
+                subscriptionTier={profile?.subscription_tier}
+                size="sm"
+                layout="horizontal"
+              />
             </div>
           </div>
         </div>

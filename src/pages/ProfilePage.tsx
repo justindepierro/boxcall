@@ -5,6 +5,7 @@ import { Input } from "../components/ui/Input";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 import { PageLayout } from "../components/layout/PageLayout";
+import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
 import {
   Camera,
   User,
@@ -595,13 +596,14 @@ export const ProfilePage: React.FC = () => {
                 as="label"
                 className="block font-medium text-text-primary mb-2"
               >
-                Role
+                Role & Subscription
               </Typography>
-              <Input
-                type="text"
-                value={profile.app_role || profile.role || "Not specified"}
-                disabled
-                className="bg-surface-muted capitalize"
+              <MultiBadgeDisplay
+                isAdmin={profile.is_admin}
+                appRole={profile.app_role || profile.role}
+                subscriptionTier={profile.subscription_tier}
+                size="md"
+                layout="wrap"
               />
               <p className="text-xs text-text-muted mt-1">
                 Role is set by team administrators
@@ -1343,9 +1345,15 @@ export const ProfilePage: React.FC = () => {
           </div>
           <div>
             <span className="font-medium">Role:</span>{" "}
-            <span className="capitalize">
-              {profile.app_role || profile.role || "Not assigned"}
-            </span>
+            <div className="inline-flex items-center gap-2">
+              <MultiBadgeDisplay
+                isAdmin={profile.is_admin}
+                appRole={profile.app_role || profile.role}
+                subscriptionTier={profile.subscription_tier}
+                size="sm"
+                layout="horizontal"
+              />
+            </div>
           </div>
           <div>
             <span className="font-medium">User ID:</span>{" "}

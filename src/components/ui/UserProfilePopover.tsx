@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  User,
-  Activity,
+  Activity,   
   Trophy,
   Calendar,
   MapPin,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system/Typography";
+import { MultiBadgeDisplay } from "./MultiBadgeDisplay";
 
 interface UserProfilePopoverProps {
   userId: string;
@@ -28,6 +28,7 @@ interface PopoverProfile {
   role: string | null;
   app_role: string | null;
   is_admin: boolean | null;
+  subscription_tier: string | null;
   bio: string | null;
   position: string | null;
   jersey_number: number | null;
@@ -72,6 +73,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
               role,
               app_role,
               is_admin,
+              subscription_tier,
               bio,
               position,
               jersey_number,
@@ -142,31 +144,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     });
   };
 
-  const getRoleColor = (role: string | null) => {
-    switch (role) {
-      case "coach":
-      case "head_coach":
-      case "assistant_coach":
-        return "text-blue-600 bg-blue-50";
-      case "player":
-        return "text-green-600 bg-green-50";
-      case "family":
-      case "parent":
-        return "text-purple-600 bg-purple-50";
-      case "admin":
-        return "text-red-600 bg-red-50";
-      default:
-        return "text-gray-600 bg-gray-50";
-    }
-  };
 
-  const formatRole = (role: string | null) => {
-    if (!role) return "Member";
-    return role
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
 
   const getAvatarFallback = (name: string | null) => {
     if (!name) return "U";
@@ -271,11 +249,14 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                         profile.full_name ||
                         "Unknown User"}
                     </Typography>
-                    <div
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${getRoleColor(profile.app_role || profile.role)}`}
-                    >
-                      <User className="w-3 h-3 mr-1" />
-                      {formatRole(profile.app_role || profile.role)}
+                    <div className="mt-1">
+                      <MultiBadgeDisplay
+                        isAdmin={profile.is_admin}
+                        appRole={profile.app_role || profile.role}
+                        subscriptionTier={profile.subscription_tier}
+                        size="sm"
+                        layout="wrap"
+                      />
                     </div>
                   </div>
                 </div>
