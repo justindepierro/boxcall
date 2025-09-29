@@ -12,7 +12,10 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { ROUTES, teamRoutes } from "../routes/paths";
 import { createTeamSchema } from "../schemas/createTeamSchema";
 import { TeamOnboardingWizard } from "../components/onboarding/TeamOnboardingWizard";
-import { EnhancedInput, EnhancedSelect } from "../components/forms/EnhancedFormFields";
+import {
+  EnhancedInput,
+  EnhancedSelect,
+} from "../components/forms/EnhancedFormFields";
 
 /**
  * Create Team Page
@@ -138,50 +141,61 @@ export const CreateTeam: React.FC = () => {
   const [createdTeamId, setCreatedTeamId] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  const steps = useMemo(() => [
-    {
-      id: "intro" as const,
-      title: "Welcome",
-      description: "Let's get your team set up",
-    },
-    {
-      id: "team-info" as const,
-      title: "Team Information",
-      description: "School and team details",
-    },
-    {
-      id: "school-info" as const,
-      title: "School Details",
-      description: "Address and contact information",
-    },
-    {
-      id: "owner-info" as const,
-      title: "Team Owner",
-      description: "Person responsible for the account",
-    },
-    {
-      id: "coach-info" as const,
-      title: "Head Coach",
-      description: "Primary coaching contact",
-    },
-    {
-      id: "fallback-info" as const,
-      title: "Emergency Contact",
-      description: "Backup contact information",
-    },
-    {
-      id: "team-details" as const,
-      title: "Team Size",
-      description: "Expected team composition",
-    },
-    { id: "payment" as const, title: "Subscription", description: "Choose your plan" },
-    { id: "review" as const, title: "Review", description: "Confirm your information" },
-    {
-      id: "complete" as const,
-      title: "Complete",
-      description: "Team creation successful",
-    },
-  ], []);
+  const steps = useMemo(
+    () => [
+      {
+        id: "intro" as const,
+        title: "Welcome",
+        description: "Let's get your team set up",
+      },
+      {
+        id: "team-info" as const,
+        title: "Team Information",
+        description: "School and team details",
+      },
+      {
+        id: "school-info" as const,
+        title: "School Details",
+        description: "Address and contact information",
+      },
+      {
+        id: "owner-info" as const,
+        title: "Team Owner",
+        description: "Person responsible for the account",
+      },
+      {
+        id: "coach-info" as const,
+        title: "Head Coach",
+        description: "Primary coaching contact",
+      },
+      {
+        id: "fallback-info" as const,
+        title: "Emergency Contact",
+        description: "Backup contact information",
+      },
+      {
+        id: "team-details" as const,
+        title: "Team Size",
+        description: "Expected team composition",
+      },
+      {
+        id: "payment" as const,
+        title: "Subscription",
+        description: "Choose your plan",
+      },
+      {
+        id: "review" as const,
+        title: "Review",
+        description: "Confirm your information",
+      },
+      {
+        id: "complete" as const,
+        title: "Complete",
+        description: "Team creation successful",
+      },
+    ],
+    []
+  );
 
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
@@ -326,7 +340,10 @@ export const CreateTeam: React.FC = () => {
               <div className="w-20 h-20 mx-auto bg-gradient-to-br from-jade-500 to-emerald-600 rounded-full flex items-center justify-center mb-6">
                 <Icon name="trophy" size="xl" className="text-white" />
               </div>
-              <Typography variant="headline-xl" className="mb-4 bg-gradient-to-r from-jade-600 to-emerald-600 bg-clip-text text-transparent">
+              <Typography
+                variant="headline-xl"
+                className="mb-4 bg-gradient-to-r from-jade-600 to-emerald-600 bg-clip-text text-transparent"
+              >
                 Let's Build Your Championship Team
               </Typography>
               <Typography
@@ -334,8 +351,10 @@ export const CreateTeam: React.FC = () => {
                 color="muted"
                 className="mb-6 max-w-2xl mx-auto leading-relaxed"
               >
-                Welcome to BoxCall! We'll guide you through setting up your team in just a few steps. 
-                This takes about <strong className="text-jade-600">5 minutes</strong> and gets your team ready for success.
+                Welcome to BoxCall! We'll guide you through setting up your team
+                in just a few steps. This takes about{" "}
+                <strong className="text-jade-600">5 minutes</strong> and gets
+                your team ready for success.
               </Typography>
             </div>
 
@@ -343,13 +362,19 @@ export const CreateTeam: React.FC = () => {
             <div className="mb-8 flex items-center justify-center gap-2">
               <div className="flex items-center gap-1 px-3 py-1.5 bg-jade-50 dark:bg-jade-900/20 rounded-full border border-jade-200 dark:border-jade-800">
                 <Icon name="clock" size="xs" className="text-jade-600" />
-                <Typography variant="body-xs" className="text-jade-700 dark:text-jade-300 font-medium">
+                <Typography
+                  variant="body-xs"
+                  className="text-jade-700 dark:text-jade-300 font-medium"
+                >
                   ~5 minutes
                 </Typography>
               </div>
               <div className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-200 dark:border-blue-800">
                 <Icon name="users" size="xs" className="text-blue-600" />
-                <Typography variant="body-xs" className="text-blue-700 dark:text-blue-300 font-medium">
+                <Typography
+                  variant="body-xs"
+                  className="text-blue-700 dark:text-blue-300 font-medium"
+                >
                   7 simple steps
                 </Typography>
               </div>
@@ -376,10 +401,11 @@ export const CreateTeam: React.FC = () => {
                   Team Management
                 </Typography>
                 <Typography variant="body-sm" color="muted">
-                  Organize players, coaches, and staff with role-based permissions
+                  Organize players, coaches, and staff with role-based
+                  permissions
                 </Typography>
               </div>
-              
+
               <div className="group p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Icon name="calendar" size="md" className="text-white" />
@@ -391,7 +417,7 @@ export const CreateTeam: React.FC = () => {
                   Plan practices, games, and events with automated notifications
                 </Typography>
               </div>
-              
+
               <div className="group p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 mx-auto bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Icon name="trophy" size="md" className="text-white" />
@@ -407,31 +433,46 @@ export const CreateTeam: React.FC = () => {
 
             {/* What's Next Preview */}
             <div className="bg-gradient-to-r from-jade-50 to-emerald-50 dark:from-jade-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-jade-200 dark:border-jade-800">
-              <Typography variant="body-md" className="font-semibold mb-3 text-jade-800 dark:text-jade-200">
+              <Typography
+                variant="body-md"
+                className="font-semibold mb-3 text-jade-800 dark:text-jade-200"
+              >
                 Here's what we'll set up together:
               </Typography>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
                 <div className="flex items-center gap-2">
                   <Icon name="check" size="xs" className="text-jade-600" />
-                  <Typography variant="body-sm" className="text-jade-700 dark:text-jade-300">
+                  <Typography
+                    variant="body-sm"
+                    className="text-jade-700 dark:text-jade-300"
+                  >
                     Team & school information
                   </Typography>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="check" size="xs" className="text-jade-600" />
-                  <Typography variant="body-sm" className="text-jade-700 dark:text-jade-300">
+                  <Typography
+                    variant="body-sm"
+                    className="text-jade-700 dark:text-jade-300"
+                  >
                     Coaching staff contacts
                   </Typography>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="check" size="xs" className="text-jade-600" />
-                  <Typography variant="body-sm" className="text-jade-700 dark:text-jade-300">
+                  <Typography
+                    variant="body-sm"
+                    className="text-jade-700 dark:text-jade-300"
+                  >
                     Emergency contacts
                   </Typography>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="check" size="xs" className="text-jade-600" />
-                  <Typography variant="body-sm" className="text-jade-700 dark:text-jade-300">
+                  <Typography
+                    variant="body-sm"
+                    className="text-jade-700 dark:text-jade-300"
+                  >
                     Team size planning
                   </Typography>
                 </div>
@@ -454,39 +495,45 @@ export const CreateTeam: React.FC = () => {
                 Basic information to get your team set up in BoxCall
               </Typography>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <EnhancedInput
                 label="School Name"
                 value={formData.schoolName}
-                onChange={(value) => setFormData({ ...formData, schoolName: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, schoolName: value })
+                }
                 placeholder="e.g., Burke Catholic High School"
                 required
                 helperText="The official name of your school or organization"
                 validation={{
                   minLength: 2,
-                  message: "School name must be at least 2 characters"
+                  message: "School name must be at least 2 characters",
                 }}
               />
-              
+
               <EnhancedInput
                 label="Team Mascot"
                 value={formData.teamName}
-                onChange={(value) => setFormData({ ...formData, teamName: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, teamName: value })
+                }
                 placeholder="e.g., Eagles, Warriors, Tigers"
                 required
                 helperText="Your team's mascot or nickname"
                 validation={{
                   minLength: 2,
-                  message: "Team name must be at least 2 characters"
+                  message: "Team name must be at least 2 characters",
                 }}
               />
-              
+
               <div className="md:col-span-2">
                 <EnhancedSelect
                   label="Sport"
                   value={formData.sport}
-                  onChange={(value) => setFormData({ ...formData, sport: value })}
+                  onChange={(value) =>
+                    setFormData({ ...formData, sport: value })
+                  }
                   required
                   helperText="Select the primary sport for this team"
                   options={[
@@ -504,7 +551,7 @@ export const CreateTeam: React.FC = () => {
                     { value: "Lacrosse", label: "Lacrosse" },
                     { value: "Field Hockey", label: "Field Hockey" },
                     { value: "Softball", label: "Softball" },
-                    { value: "Other", label: "Other" }
+                    { value: "Other", label: "Other" },
                   ]}
                 />
               </div>

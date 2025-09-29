@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { Typography } from '../design-system/Typography';
-import { Icon } from '../ui/Icon/Icon';
+import React, { useState, useCallback } from "react";
+import { Typography } from "../design-system/Typography";
+import { Icon } from "../ui/Icon/Icon";
 
 interface EnhancedInputProps {
   label: string;
@@ -8,7 +8,7 @@ interface EnhancedInputProps {
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
-  type?: 'text' | 'email' | 'tel' | 'url';
+  type?: "text" | "email" | "tel" | "url";
   helperText?: string;
   maxLength?: number;
   validation?: {
@@ -31,84 +31,88 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
   onChange,
   placeholder,
   required = false,
-  type = 'text',
+  type = "text",
   helperText,
   maxLength,
   validation,
-  className = ''
+  className = "",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasBeenTouched, setHasBeenTouched] = useState(false);
 
-  const validateInput = useCallback((inputValue: string): ValidationState => {
-    const isEmpty = inputValue.trim() === '';
-    
-    if (isEmpty && required) {
+  const validateInput = useCallback(
+    (inputValue: string): ValidationState => {
+      const isEmpty = inputValue.trim() === "";
+
+      if (isEmpty && required) {
+        return {
+          isValid: false,
+          message: `${label} is required`,
+          isEmpty: true,
+        };
+      }
+
+      if (!isEmpty && validation) {
+        if (validation.minLength && inputValue.length < validation.minLength) {
+          return {
+            isValid: false,
+            message: `${label} must be at least ${validation.minLength} characters`,
+            isEmpty: false,
+          };
+        }
+
+        if (validation.pattern && !validation.pattern.test(inputValue)) {
+          return {
+            isValid: false,
+            message: validation.message || `${label} format is invalid`,
+            isEmpty: false,
+          };
+        }
+      }
+
+      // Type-specific validation
+      if (!isEmpty && type === "email") {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(inputValue)) {
+          return {
+            isValid: false,
+            message: "Please enter a valid email address",
+            isEmpty: false,
+          };
+        }
+      }
+
+      if (!isEmpty && type === "tel") {
+        const phonePattern = /^[+]?[\d\s\-().]{10,}$/;
+        if (!phonePattern.test(inputValue)) {
+          return {
+            isValid: false,
+            message: "Please enter a valid phone number",
+            isEmpty: false,
+          };
+        }
+      }
+
       return {
-        isValid: false,
-        message: `${label} is required`,
-        isEmpty: true
+        isValid: true,
+        message: "",
+        isEmpty,
       };
-    }
-
-    if (!isEmpty && validation) {
-      if (validation.minLength && inputValue.length < validation.minLength) {
-        return {
-          isValid: false,
-          message: `${label} must be at least ${validation.minLength} characters`,
-          isEmpty: false
-        };
-      }
-
-      if (validation.pattern && !validation.pattern.test(inputValue)) {
-        return {
-          isValid: false,
-          message: validation.message || `${label} format is invalid`,
-          isEmpty: false
-        };
-      }
-    }
-
-    // Type-specific validation
-    if (!isEmpty && type === 'email') {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(inputValue)) {
-        return {
-          isValid: false,
-          message: 'Please enter a valid email address',
-          isEmpty: false
-        };
-      }
-    }
-
-    if (!isEmpty && type === 'tel') {
-      const phonePattern = /^[+]?[\d\s\-().]{10,}$/;
-      if (!phonePattern.test(inputValue)) {
-        return {
-          isValid: false,
-          message: 'Please enter a valid phone number',
-          isEmpty: false
-        };
-      }
-    }
-
-    return {
-      isValid: true,
-      message: '',
-      isEmpty
-    };
-  }, [label, required, validation, type]);
+    },
+    [label, required, validation, type]
+  );
 
   const validationState = validateInput(value);
   const showValidation = hasBeenTouched && !isFocused;
   const showError = showValidation && !validationState.isValid;
-  const showSuccess = showValidation && validationState.isValid && !validationState.isEmpty;
+  const showSuccess =
+    showValidation && validationState.isValid && !validationState.isEmpty;
 
   const getInputBorderColor = () => {
-    if (isFocused) return 'border-jade-500 ring-2 ring-jade-500/20';
-    if (showError) return 'border-red-500';
-    if (showSuccess) return 'border-green-500';
-    return 'border-slate-300 dark:border-slate-600';
+    if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
+    if (showError) return "border-red-500";
+    if (showSuccess) return "border-green-500";
+    return "border-slate-300 dark:border-slate-600";
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,13 +122,13 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
   };
 
   const formatPlaceholder = () => {
-    if (!placeholder) return '';
-    
+    if (!placeholder) return "";
+
     switch (type) {
-      case 'email':
-        return placeholder || 'e.g., coach@school.edu';
-      case 'tel':
-        return placeholder || 'e.g., (555) 123-4567';
+      case "email":
+        return placeholder || "e.g., coach@school.edu";
+      case "tel":
+        return placeholder || "e.g., (555) 123-4567";
       default:
         return placeholder;
     }
@@ -142,12 +146,12 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </Typography>
-        
+
         {maxLength && (
-          <Typography 
-            variant="body-xs" 
+          <Typography
+            variant="body-xs"
             color="muted"
-            className={`text-right ${value.length > maxLength * 0.8 ? 'text-amber-600' : ''}`}
+            className={`text-right ${value.length > maxLength * 0.8 ? "text-amber-600" : ""}`}
           >
             {value.length}/{maxLength}
           </Typography>
@@ -195,24 +199,38 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
       <div className="min-h-[1.25rem]">
         {showError && (
           <div className="flex items-center gap-1.5">
-            <Icon name="alert-triangle" size="xs" className="text-red-500 mt-0.5" />
-            <Typography variant="body-xs" className="text-red-600 dark:text-red-400">
+            <Icon
+              name="alert-triangle"
+              size="xs"
+              className="text-red-500 mt-0.5"
+            />
+            <Typography
+              variant="body-xs"
+              className="text-red-600 dark:text-red-400"
+            >
               {validationState.message}
             </Typography>
           </div>
         )}
-        
+
         {showSuccess && !helperText && (
           <div className="flex items-center gap-1.5">
             <Icon name="check" size="xs" className="text-green-500 mt-0.5" />
-            <Typography variant="body-xs" className="text-green-600 dark:text-green-400">
+            <Typography
+              variant="body-xs"
+              className="text-green-600 dark:text-green-400"
+            >
               Looks good!
             </Typography>
           </div>
         )}
-        
+
         {helperText && !showError && (
-          <Typography variant="body-xs" color="muted" className="flex items-center gap-1.5">
+          <Typography
+            variant="body-xs"
+            color="muted"
+            className="flex items-center gap-1.5"
+          >
             <Icon name="info" size="xs" className="mt-0.5" />
             {helperText}
           </Typography>
@@ -240,13 +258,13 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
   options,
   required = false,
   helperText,
-  className = ''
+  className = "",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const getBorderColor = () => {
-    if (isFocused) return 'border-jade-500 ring-2 ring-jade-500/20';
-    return 'border-slate-300 dark:border-slate-600';
+    if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
+    return "border-slate-300 dark:border-slate-600";
   };
 
   return (
@@ -289,7 +307,11 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
       </div>
 
       {helperText && (
-        <Typography variant="body-xs" color="muted" className="flex items-center gap-1.5">
+        <Typography
+          variant="body-xs"
+          color="muted"
+          className="flex items-center gap-1.5"
+        >
           <Icon name="info" size="xs" className="mt-0.5" />
           {helperText}
         </Typography>

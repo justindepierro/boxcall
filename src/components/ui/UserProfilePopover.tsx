@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Activity,   
+  Activity,
   Trophy,
   Calendar,
   MapPin,
@@ -143,8 +143,6 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
       month: "long",
     });
   };
-
-
 
   const getAvatarFallback = (name: string | null) => {
     if (!name) return "U";

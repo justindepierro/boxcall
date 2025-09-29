@@ -1,26 +1,29 @@
 /**
  * Premium Feature Examples
- * 
+ *
  * Demonstrates how to use subscription-based feature gates
  * throughout the application using our permission system.
  */
 
-import React from 'react';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { useComprehensivePermissions as usePermissions, PremiumGate } from '../../hooks/useComprehensivePermissions';
-import { 
-  Crown, 
-  Lock, 
-  Zap, 
-  BarChart3, 
+import React from "react";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Badge } from "../ui/Badge";
+import {
+  useComprehensivePermissions as usePermissions,
+  PremiumGate,
+} from "../../hooks/useComprehensivePermissions";
+import {
+  Crown,
+  Lock,
+  Zap,
+  BarChart3,
   Download,
   Users,
   Video,
   Brain,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 
 /**
  * Premium Feature Card - Shows a feature with subscription gate
@@ -33,12 +36,12 @@ interface PremiumFeatureProps {
   requiresPremium?: boolean;
 }
 
-const PremiumFeature: React.FC<PremiumFeatureProps> = ({ 
-  title, 
-  description, 
-  icon, 
-  children, 
-  requiresPremium = true 
+const PremiumFeature: React.FC<PremiumFeatureProps> = ({
+  title,
+  description,
+  icon,
+  children,
+  requiresPremium = true,
 }) => {
   const { isPremium } = usePermissions();
 
@@ -46,16 +49,20 @@ const PremiumFeature: React.FC<PremiumFeatureProps> = ({
     <Card className="p-6">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            {icon}
-          </div>
+          <div className="p-2 bg-blue-100 rounded-lg">{icon}</div>
           <div>
             <h3 className="font-semibold text-gray-900">{title}</h3>
             <p className="text-sm text-gray-600">{description}</p>
           </div>
         </div>
         {requiresPremium && (
-          <Badge className={isPremium ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}>
+          <Badge
+            className={
+              isPremium
+                ? "bg-green-100 text-green-800"
+                : "bg-orange-100 text-orange-800"
+            }
+          >
             {isPremium ? (
               <>
                 <Crown className="w-3 h-3 mr-1" />
@@ -107,7 +114,7 @@ const AdvancedAnalytics: React.FC = () => {
       title="Advanced Analytics"
       description="Deep insights into team and player performance"
       icon={<BarChart3 className="w-5 h-5 text-blue-600" />}
-      requiresPremium={!can('canUseAdvancedStats')}
+      requiresPremium={!can("canUseAdvancedStats")}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-4">
@@ -144,7 +151,7 @@ const AIFeatures: React.FC = () => {
       title="AI-Powered Insights"
       description="Get intelligent suggestions and automated analysis"
       icon={<Brain className="w-5 h-5 text-purple-600" />}
-      requiresPremium={!can('canUseAIFeatures')}
+      requiresPremium={!can("canUseAIFeatures")}
     >
       <div className="space-y-4">
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border border-purple-200">
@@ -153,7 +160,8 @@ const AIFeatures: React.FC = () => {
             <span className="font-medium text-purple-900">AI Suggestion</span>
           </div>
           <p className="text-sm text-purple-800">
-            "Based on your team's performance, consider running more short passing plays in the red zone."
+            "Based on your team's performance, consider running more short
+            passing plays in the red zone."
           </p>
         </div>
         <Button variant="outline" className="w-full">
@@ -176,7 +184,7 @@ const VideoAnalysis: React.FC = () => {
       title="Video Analysis"
       description="Upload and analyze game footage with AI"
       icon={<Video className="w-5 h-5 text-red-600" />}
-      requiresPremium={!can('canAccessVideoAnalysis')}
+      requiresPremium={!can("canAccessVideoAnalysis")}
     >
       <div className="space-y-4">
         <div className="bg-gray-100 aspect-video rounded-lg flex items-center justify-center">
@@ -221,18 +229,30 @@ const TeamLimits: React.FC = () => {
           <p className="text-sm text-gray-600">Current subscription limits</p>
         </div>
       </div>
-      
+
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Max Teams</span>
-          <Badge className={isUnlimited ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}>
-            {isUnlimited ? 'Unlimited' : maxTeamsOwned}
+          <Badge
+            className={
+              isUnlimited
+                ? "bg-purple-100 text-purple-800"
+                : "bg-blue-100 text-blue-800"
+            }
+          >
+            {isUnlimited ? "Unlimited" : maxTeamsOwned}
           </Badge>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Max Players per Team</span>
-          <Badge className={maxPlayersPerTeam === -1 ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}>
-            {maxPlayersPerTeam === -1 ? 'Unlimited' : maxPlayersPerTeam}
+          <Badge
+            className={
+              maxPlayersPerTeam === -1
+                ? "bg-purple-100 text-purple-800"
+                : "bg-blue-100 text-blue-800"
+            }
+          >
+            {maxPlayersPerTeam === -1 ? "Unlimited" : maxPlayersPerTeam}
           </Badge>
         </div>
       </div>
@@ -257,10 +277,9 @@ export const PremiumFeaturesDemo: React.FC = () => {
           Premium Features
         </h1>
         <p className="text-gray-600">
-          {isPremium 
-            ? "You have access to all premium features!" 
-            : "Upgrade to unlock powerful features for your team"
-          }
+          {isPremium
+            ? "You have access to all premium features!"
+            : "Upgrade to unlock powerful features for your team"}
         </p>
       </div>
 
@@ -278,7 +297,8 @@ export const PremiumFeaturesDemo: React.FC = () => {
             Unlock All Premium Features
           </h3>
           <p className="text-purple-700 mb-4">
-            Get advanced analytics, AI insights, video analysis, and unlimited team management
+            Get advanced analytics, AI insights, video analysis, and unlimited
+            team management
           </p>
           <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8">
             <Crown className="w-4 h-4 mr-2" />
