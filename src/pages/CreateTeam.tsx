@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../app/auth-store";
@@ -98,6 +98,60 @@ function computeAcademicYear(date: Date = new Date()) {
   };
 }
 
+// Define steps outside component to prevent recreation on each render
+const TEAM_CREATION_STEPS = [
+  {
+    id: "intro" as const,
+    title: "Welcome",
+    description: "Let's get your team set up",
+  },
+  {
+    id: "team-info" as const,
+    title: "Team Information",
+    description: "School and team details",
+  },
+  {
+    id: "school-info" as const,
+    title: "School Details",
+    description: "Address and contact information",
+  },
+  {
+    id: "owner-info" as const,
+    title: "Team Owner",
+    description: "Person responsible for the account",
+  },
+  {
+    id: "coach-info" as const,
+    title: "Head Coach",
+    description: "Primary coaching contact",
+  },
+  {
+    id: "fallback-info" as const,
+    title: "Emergency Contact",
+    description: "Backup contact information",
+  },
+  {
+    id: "team-details" as const,
+    title: "Team Size",
+    description: "Expected team composition",
+  },
+  {
+    id: "payment" as const,
+    title: "Subscription",
+    description: "Choose your plan",
+  },
+  {
+    id: "review" as const,
+    title: "Review",
+    description: "Confirm your information",
+  },
+  {
+    id: "complete" as const,
+    title: "Complete",
+    description: "Team creation successful",
+  },
+] as const;
+
 export const CreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -145,61 +199,7 @@ export const CreateTeam: React.FC = () => {
   const [createdTeamId, setCreatedTeamId] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  const steps = useMemo(
-    () => [
-      {
-        id: "intro" as const,
-        title: "Welcome",
-        description: "Let's get your team set up",
-      },
-      {
-        id: "team-info" as const,
-        title: "Team Information",
-        description: "School and team details",
-      },
-      {
-        id: "school-info" as const,
-        title: "School Details",
-        description: "Address and contact information",
-      },
-      {
-        id: "owner-info" as const,
-        title: "Team Owner",
-        description: "Person responsible for the account",
-      },
-      {
-        id: "coach-info" as const,
-        title: "Head Coach",
-        description: "Primary coaching contact",
-      },
-      {
-        id: "fallback-info" as const,
-        title: "Emergency Contact",
-        description: "Backup contact information",
-      },
-      {
-        id: "team-details" as const,
-        title: "Team Size",
-        description: "Expected team composition",
-      },
-      {
-        id: "payment" as const,
-        title: "Subscription",
-        description: "Choose your plan",
-      },
-      {
-        id: "review" as const,
-        title: "Review",
-        description: "Confirm your information",
-      },
-      {
-        id: "complete" as const,
-        title: "Complete",
-        description: "Team creation successful",
-      },
-    ],
-    []
-  );
+  const steps = TEAM_CREATION_STEPS;
 
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
@@ -241,7 +241,7 @@ export const CreateTeam: React.FC = () => {
     } catch (err) {
       console.warn("CreateTeam: failed to restore draft", err);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [steps]); // Steps is now a stable reference to TEAM_CREATION_STEPS constant
 
   useEffect(() => {
     try {
@@ -334,10 +334,10 @@ export const CreateTeam: React.FC = () => {
             () =>
               reject(
                 new Error(
-                  "Team creation is taking longer than expected. Please try again."
+                  "Team creation is taking longer than expected. This might be a database connectivity issue. Please check your internet connection and try again."
                 )
               ),
-            30000
+            60000 // Increased to 60 seconds
           )
         );
 
@@ -353,7 +353,15 @@ export const CreateTeam: React.FC = () => {
         console.error("Failed to create team:", error);
         const message =
           error instanceof Error ? error.message : "Failed to create team";
-        setCreateError(message);
+        
+        // Add helpful debugging info
+        if (message.includes("taking longer than expected")) {
+          setCreateError(
+            `${message}\n\nDebugging tips:\n1. Check your internet connection\n2. Try again in a few moments\n3. Open browser console (F12) for detailed logs\n4. Run 'testDatabaseConnection()' in console for diagnostics`
+          );
+        } else {
+          setCreateError(message);
+        }
       } finally {
         setIsLoading(false);
         setLoadingMessage("Creating team...");
@@ -397,6 +405,36 @@ export const CreateTeam: React.FC = () => {
       super: isSuperAdmin,
     });
 
+    // Test database connectivity first
+    console.log("🔌 Testing database connectivity...");
+    setLoadingMessage("Connecting to database...");
+    try {
+      const { error: connectTest } = await supabase
+        .from("teams")
+        .select("id")
+        .limit(1);
+
+      if (connectTest) {
+        console.error("❌ Database connectivity test failed:", connectTest);
+        throw new Error(`Database connection failed: ${connectTest.message}`);
+      }
+      console.log("✅ Database connectivity confirmed");
+      
+      // Check user authentication status
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      if (authError || !authUser) {
+        throw new Error("Authentication required: Please sign in to create a team.");
+      }
+      console.log("✅ User authenticated:", authUser.id);
+      
+    } catch (dbError) {
+      console.error("❌ Database connectivity error:", dbError);
+      if (dbError instanceof Error) {
+        throw dbError;
+      }
+      throw new Error("Unable to connect to database. Please check your internet connection and try again.");
+    }
+
     // Create team name combining school and mascot
     const teamNameCombined =
       `${formData.schoolName.trim()} ${formData.teamName.trim()}`.trim();
@@ -406,22 +444,36 @@ export const CreateTeam: React.FC = () => {
     // Create the team record in Supabase
     console.log("🏗️ Creating team record in database...");
     setLoadingMessage("Creating your team...");
+    
+    const teamData = {
+      name: teamNameCombined || "New Team",
+      school_name: formData.schoolName || null,
+      mascot: formData.teamName || null,
+      season_year: seasonYear,
+    };
+    console.log("📊 Team data to insert:", teamData);
+    
     const dbStart = performance.now();
     const { data: teamInsert, error: teamErr } = await supabase
       .from("teams")
-      .insert({
-        name: teamNameCombined || "New Team",
-        school_name: formData.schoolName || null,
-        mascot: formData.teamName || null,
-        season_year: seasonYear,
-      })
+      .insert(teamData)
       .select("id")
       .single();
     console.log(`🗄️ Team insert completed in ${performance.now() - dbStart}ms`);
 
     if (teamErr || !teamInsert) {
       console.error("❌ Team insert failed:", teamErr);
-      throw teamErr || new Error("Team insert failed");
+      
+      // Check for specific database permission errors
+      if (teamErr?.code === "42501" || teamErr?.message?.includes("row-level security")) {
+        throw new Error("Database permission error: Your account doesn't have permission to create teams. Please contact support or check your authentication status.");
+      }
+      
+      if (teamErr?.message?.includes("duplicate") || teamErr?.code === "23505") {
+        throw new Error("A team with this name already exists. Please choose a different name.");
+      }
+      
+      throw teamErr || new Error("Team insert failed - unknown database error");
     }
 
     const newTeamId = teamInsert.id as string;
@@ -480,6 +532,48 @@ export const CreateTeam: React.FC = () => {
       setCurrentStep(steps[currentIndex - 1].id);
     }
   };
+
+  // Debug function to test database connectivity
+  const testDatabaseConnection = async () => {
+    console.log("🧪 Testing database connection...");
+    try {
+      const start = performance.now();
+      
+      // Test basic select
+      const { data: selectTest, error: selectError } = await supabase
+        .from("teams")
+        .select("id")
+        .limit(1);
+      
+      console.log(`📊 Select test: ${performance.now() - start}ms`, { data: selectTest, error: selectError });
+      
+      // Test insert permissions (without actually inserting)
+      const { error: insertTest } = await supabase
+        .from("teams")
+        .insert({
+          name: "Test Team (Will Not Insert)",
+          school_name: "Test School",
+          mascot: "Test Mascot",
+          season_year: 2025,
+        })
+        .select("id")
+        .single();
+        
+      console.log("🔒 Insert permissions test:", insertTest);
+      
+      // Test user auth
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      console.log("👤 Auth test:", { userId: authUser?.id, error: authError });
+      
+    } catch (error) {
+      console.error("❌ Database test failed:", error);
+    }
+  };
+
+  // Add to window for manual testing
+  if (typeof window !== 'undefined') {
+    (window as any).testDatabaseConnection = testDatabaseConnection;
+  }
 
   const handleResumeDraft = () => {
     try {
