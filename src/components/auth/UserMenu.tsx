@@ -53,7 +53,7 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
         size="sm"
-        className="gap-2 px-3 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-[160px]"
+        className="gap-2 px-4 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-[180px]"
         disabled={loading}
       >
         {/* Profile picture matching ProfileCard style */}
@@ -62,7 +62,7 @@ export const UserMenu: React.FC = () => {
             {getInitials(userName)}
           </Typography>
         </div>
-        <span className="hidden sm:inline-block font-medium truncate text-left min-w-0 max-w-[80px]">
+        <span className="hidden sm:inline-block font-medium truncate text-left min-w-0 max-w-[120px]">
           {userName}
         </span>
         <svg
@@ -82,10 +82,10 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-surface-card/95 backdrop-blur-md rounded-lg shadow-xl border border-border-medium/50 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
+        <div className="absolute right-0 mt-2 w-56 bg-surface-card/98 backdrop-blur-xl rounded-lg shadow-2xl border border-border-medium/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-3 border-b border-border-medium/50 bg-surface-subtle/30">
+            <div className="px-4 py-3 border-b border-border-medium/40 bg-surface-subtle/20">
               <Typography
                 variant="body-sm"
                 as="p"

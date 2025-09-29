@@ -11,6 +11,8 @@ import { Icon } from "../ui/Icon/Icon";
 import type { Profile } from "../../types/database";
 import { AchievementService } from "@services/achievementService";
 import { useAuth, useAuthProfile } from "../../app/auth-store";
+import { supabase } from "../../lib/supabase";
+import { Edit2, Save, X, Camera, User, Activity, Trophy } from "lucide-react";
 
 interface ProfileCardProps {
   profile?: Profile | null;
@@ -37,12 +39,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const ctx = useContext(DashboardContext);
   const authProfile = useAuthProfile();
   const profile = ctx?.profile ?? profileProp ?? authProfile;
-  const setProfile = ctx?.setProfile ?? (() => {});
-  const setAuthProfile = useAuth((s) => s.setProfile);
+
   const { roleContext } = useRoles(); // Use new unified role system
   const [editModalOpen, setEditModalOpen] = useState(false);
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
   const [showFullBio, setShowFullBio] = useState(false);
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [bioText, setBioText] = useState(profile?.bio || "");
+  const [isSavingBio, setIsSavingBio] = useState(false);
   const navigate = useNavigate();
 
   const [achievements, setAchievements] = useState<{
@@ -94,6 +98,43 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     }
   };
 
+  const handleBioSave = async () => {
+    if (!profile?.id) return;
+
+    setIsSavingBio(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ bio: bioText.trim() || null })
+        .eq("id", profile.id);
+
+      if (error) {
+        console.error("Error updating bio:", error);
+        return;
+      }
+
+      // Refresh profile data
+      const { fetchUserProfile } = useAuth.getState();
+      await fetchUserProfile(profile.id);
+
+      setIsEditingBio(false);
+    } catch (error) {
+      console.error("Error saving bio:", error);
+    } finally {
+      setIsSavingBio(false);
+    }
+  };
+
+  const handleBioCancel = () => {
+    setBioText(profile?.bio || "");
+    setIsEditingBio(false);
+  };
+
+  // Update bioText when profile changes
+  useEffect(() => {
+    setBioText(profile?.bio || "");
+  }, [profile?.bio]);
+
   // Adaptive styling for high priority widgets
   const cardClassName = isHighPriority
     ? "ring-2 ring-text-primary ring-opacity-50"
@@ -118,53 +159,75 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <Card
       variant="glass"
-      className={`compact-card h-full relative ${cardClassName}`}
+      className={`compact-card h-full relative overflow-hidden ${cardClassName}`}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between pb-3">
-        <Typography variant="headline-md" className="text-text-primary">
-          Profile
-        </Typography>
-        {!isViewMode && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleProfileEdit}
-            className="p-2 hover:bg-surface-secondary rounded-lg"
-            aria-label="Edit profile"
-          >
-            <Icon name="edit" size="sm" />
-          </Button>
-        )}
-      </div>
-      {/* Profile Content */}
-      <div className="space-y-3">
-        {/* Avatar & Name */}
-        <div className="flex items-center space-x-4">
-          <div className="relative">
+      {/* Enhanced Header with gradient background */}
+      <div className="relative bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 -mx-6 -mt-6 px-6 pt-6 pb-4 mb-4">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-brand-primary/5 rounded-full -mr-12 -mt-12"></div>
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <User className="w-5 h-5 text-brand-primary" />
+            <Typography
+              variant="headline-md"
+              className="text-text-primary font-bold"
+            >
+              Profile
+            </Typography>
+          </div>
+          {!isViewMode && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/profile")}
-              className="w-16 h-16 p-0 rounded-lg bg-surface-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-text-primary"
-              aria-label="View profile"
+              onClick={handleProfileEdit}
+              className="p-2 hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
+              aria-label="Edit profile"
             >
-              <Typography
-                variant="body-lg"
-                className="font-bold text-text-primary"
-              >
-                {getInitials(displayName)}
-              </Typography>
+              <Edit2 className="w-4 h-4" />
             </Button>
+          )}
+        </div>
+      </div>
+      {/* Profile Content */}
+      <div className="space-y-3">
+        {/* Enhanced Avatar & Name */}
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            {profile?.avatar_url ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/profile")}
+                className="w-16 h-16 p-0 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                aria-label="View profile"
+              >
+                <img
+                  src={profile.avatar_url}
+                  alt={`${displayName}'s avatar`}
+                  className="w-full h-full object-cover"
+                />
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/profile")}
+                className="w-16 h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                aria-label="View profile"
+              >
+                <Typography variant="body-lg" className="font-bold text-white">
+                  {getInitials(displayName)}
+                </Typography>
+              </Button>
+            )}
             {isOwnProfile && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full p-2 border border-border hover:bg-surface-secondary hover:border-border transition-colors"
+                className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200"
                 aria-label="Edit profile picture"
                 onClick={handleProfileEdit}
               >
-                <Icon name="plus" size="xs" />
+                <Camera className="w-3 h-3 text-brand-primary" />
               </Button>
             )}
           </div>
@@ -173,131 +236,200 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               variant="link"
               size="sm"
               onClick={() => navigate("/profile")}
-              className="text-left w-full"
+              className="text-left w-full p-0"
               aria-label="Open profile page"
             >
               <Typography
                 variant="body-lg"
-                className="font-semibold text-text-primary truncate hover:underline"
+                className="font-bold text-text-primary truncate hover:text-brand-primary transition-colors"
               >
                 {displayName}
               </Typography>
             </Button>
-            <Typography variant="body-sm" color="muted">
-              {userRole.replace("_", " ").toUpperCase()}
-            </Typography>
+            <div className="flex items-center space-x-2 mt-1">
+              {isCoach && <Trophy className="w-3 h-3 text-brand-primary" />}
+              {isPlayer && <Activity className="w-3 h-3 text-success" />}
+              {isFamily && <User className="w-3 h-3 text-brand-secondary" />}
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary font-medium"
+              >
+                {userRole.replace("_", " ").charAt(0).toUpperCase() +
+                  userRole.replace("_", " ").slice(1)}
+              </Typography>
+            </div>
           </div>
         </div>
 
-        {/* Achievements Summary */}
+        {/* Enhanced Achievements Summary */}
         {achievements && (
-          <div className="grid grid-cols-4 gap-3 pt-2">
-            <div className="bg-surface-secondary rounded-md p-2 text-center">
-              <Typography variant="body-xs" className="text-text-muted">
+          <div className="grid grid-cols-4 gap-2 pt-3">
+            <div className="bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-lg p-3 text-center border border-brand-primary/20">
+              <Typography
+                variant="body-xs"
+                className="text-brand-primary font-medium"
+              >
                 Stickers
               </Typography>
-              <Typography variant="body-sm" className="font-semibold">
+              <Typography
+                variant="body-sm"
+                className="font-bold text-brand-primary text-lg"
+              >
                 {achievements.stickers}
               </Typography>
             </div>
-            <div className="bg-surface-secondary rounded-md p-2 text-center">
-              <Typography variant="body-xs" className="text-text-muted">
+            <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-lg p-3 text-center border border-success/20">
+              <Typography
+                variant="body-xs"
+                className="text-success font-medium"
+              >
                 Medals
               </Typography>
-              <Typography variant="body-sm" className="font-semibold">
+              <Typography
+                variant="body-sm"
+                className="font-bold text-success text-lg"
+              >
                 {achievements.medals}
               </Typography>
             </div>
-            <div className="bg-surface-secondary rounded-md p-2 text-center">
-              <Typography variant="body-xs" className="text-text-muted">
+            <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-lg p-3 text-center border border-warning/20">
+              <Typography
+                variant="body-xs"
+                className="text-warning font-medium"
+              >
                 Streak
               </Typography>
-              <Typography variant="body-sm" className="font-semibold">
+              <Typography
+                variant="body-sm"
+                className="font-bold text-warning text-lg"
+              >
                 {achievements.streak}
               </Typography>
             </div>
-            <div className="bg-surface-secondary rounded-md p-2 text-center">
-              <Typography variant="body-xs" className="text-text-muted">
+            <div className="bg-gradient-to-br from-brand-secondary/10 to-brand-secondary/5 rounded-lg p-3 text-center border border-brand-secondary/20">
+              <Typography
+                variant="body-xs"
+                className="text-brand-secondary font-medium"
+              >
                 Points
               </Typography>
-              <Typography variant="body-sm" className="font-semibold">
+              <Typography
+                variant="body-sm"
+                className="font-bold text-brand-secondary text-lg"
+              >
                 {achievements.points}
               </Typography>
             </div>
           </div>
         )}
         {achLoading && (
-          <Typography variant="body-xs" color="muted">
-            Loading achievements…
-          </Typography>
-        )}
-        {/* Role-Specific Info */}
-        {isPlayer && (
-          <div className="text-xs text-text-secondary">
-            <Typography variant="body-sm" color="muted">
-              Player Profile
+          <div className="flex items-center justify-center py-4">
+            <div className="w-6 h-6 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
+            <Typography variant="body-xs" className="text-text-muted ml-2">
+              Loading achievements…
             </Typography>
           </div>
         )}
-        {isCoach && (
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <Icon name="crown" size="xs" color="navy" />
-              <Typography variant="body-sm" className="text-text-primary">
-                Coach
-              </Typography>
-            </div>
-          </div>
-        )}
-        {isFamily && (
-          <div className="flex items-center space-x-2">
-            <Icon name="users" size="xs" color="primary" />
-            <Typography variant="body-sm" className="text-text-primary">
-              Family Member
-            </Typography>
-          </div>
-        )}
-        {/* Bio */}
-        <div className="pt-2 relative">
-          {profile?.bio ? (
-            <>
+        {/* Enhanced Bio with Inline Editing */}
+        <div className="pt-4 relative">
+          <div className="bg-gradient-to-br from-brand-secondary/5 to-surface-card rounded-lg p-3 border border-brand-secondary/20">
+            <div className="flex items-center justify-between mb-2">
               <Typography
                 variant="body-sm"
-                className="text-text-secondary leading-relaxed"
+                className="font-semibold text-brand-secondary"
               >
-                {showFullBio
-                  ? profile.bio
-                  : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? "..." : ""}`}
+                About
               </Typography>
-              {profile.bio.length > 80 && (
+              {isOwnProfile && !isEditingBio && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowFullBio(!showFullBio)}
-                  className="p-0 h-auto text-xs text-jade-600 hover:text-jade-700 mt-1"
+                  onClick={() => setIsEditingBio(true)}
+                  className="p-1 hover:bg-brand-secondary/10 rounded-md transition-colors"
+                  aria-label="Edit bio"
                 >
-                  {showFullBio ? "Show less" : "Show more"}
+                  <Edit2 className="w-3 h-3 text-brand-secondary" />
                 </Button>
               )}
-            </>
-          ) : (
-            isOwnProfile && (
-              <Typography variant="body-sm" className="text-text-muted italic">
-                Add a bio to tell others about yourself...
-              </Typography>
-            )
-          )}
-          {isOwnProfile && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute -top-1 -right-1 bg-surface-primary rounded-full p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
-              aria-label="Edit bio"
-              onClick={handleProfileEdit}
-            >
-              <Icon name="plus" size="xs" />
-            </Button>
-          )}
+            </div>
+
+            {isEditingBio ? (
+              <div className="space-y-2">
+                <textarea
+                  value={bioText}
+                  onChange={(e) => setBioText(e.target.value)}
+                  placeholder="Tell others about yourself..."
+                  className="w-full p-2 text-sm bg-surface-primary border border-border-primary rounded-md focus:ring-2 focus:ring-brand-secondary focus:border-transparent resize-none"
+                  rows={3}
+                  maxLength={200}
+                />
+                <div className="flex items-center justify-between">
+                  <Typography variant="body-xs" className="text-text-muted">
+                    {bioText.length}/200
+                  </Typography>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleBioCancel}
+                      disabled={isSavingBio}
+                      className="p-1 hover:bg-error/10 rounded-md"
+                    >
+                      <X className="w-3 h-3 text-error" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleBioSave}
+                      disabled={isSavingBio}
+                      className="p-1 hover:bg-success/10 rounded-md"
+                    >
+                      {isSavingBio ? (
+                        <div className="w-3 h-3 border border-success/30 border-t-success rounded-full animate-spin" />
+                      ) : (
+                        <Save className="w-3 h-3 text-success" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                {profile?.bio ? (
+                  <>
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-secondary leading-relaxed"
+                    >
+                      {showFullBio
+                        ? profile.bio
+                        : `${profile.bio.slice(0, 120)}${profile.bio.length > 120 ? "..." : ""}`}
+                    </Typography>
+                    {profile.bio.length > 120 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowFullBio(!showFullBio)}
+                        className="p-0 h-auto text-xs text-brand-secondary hover:text-brand-secondary/80 mt-2"
+                      >
+                        {showFullBio ? "Show less" : "Show more"}
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <Typography
+                    variant="body-sm"
+                    className="text-text-muted italic"
+                  >
+                    {isOwnProfile
+                      ? "Click the edit icon to add a bio..."
+                      : "No bio added yet"}
+                  </Typography>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Profile Edit Modal */}
           {editModalOpen && profile && (
             <ProfileEditModal
@@ -308,9 +440,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 { ...profile } as { id: string; [key: string]: unknown }
               }
               mode="quick"
-              onProfileUpdate={(updatedProfile) => {
-                setProfile(updatedProfile as unknown as typeof profile);
-                setAuthProfile(updatedProfile as unknown as typeof profile);
+              onProfileUpdate={async (_updatedProfile) => {
+                // Use the auth store to properly refresh the profile and invalidate cache
+                const { fetchUserProfile } = useAuth.getState();
+                await fetchUserProfile(profile.id);
                 setEditModalOpen(false);
               }}
             />
@@ -318,7 +451,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         {/* Contact Info */}
         {profile?.phone && !isViewMode && (
-          <div className="flex items-center space-x-2 pt-2">
+          <div className="flex items-center space-x-2 pt-3 px-3 py-2 bg-surface-secondary/50 rounded-lg">
             <Icon name="phone" size="xs" color="navy" />
             <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
@@ -326,16 +459,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         )}
 
-        {/* Actions */}
-        <div className="pt-3 flex items-center justify-between">
+        {/* Enhanced Actions */}
+        <div className="pt-4 flex items-center space-x-2">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             onClick={() => navigate("/profile")}
             aria-label="View full profile"
-            icon={<Icon name="user" size="xs" />}
-            iconPosition="left"
+            className="flex-1 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 border-brand-primary/20"
           >
+            <User className="w-4 h-4 mr-2" />
             View Profile
           </Button>
           {!isViewMode && (
@@ -343,10 +476,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               variant="primary"
               size="sm"
               onClick={handleProfileEdit}
-              icon={<Icon name="edit" size="xs" />}
-              iconPosition="left"
+              className="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-md"
             >
-              Edit
+              <Edit2 className="w-4 h-4" />
             </Button>
           )}
         </div>

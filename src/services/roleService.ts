@@ -44,7 +44,7 @@ export class RoleService {
       // Get user's app-level role from profiles
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, app_role, is_admin")
         .eq("id", userId)
         .single();
 

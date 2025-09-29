@@ -3,6 +3,7 @@ import { Icon } from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system";
 import { Button } from "../../components/ui/Button/Button";
 import { Card } from "../../components/ui";
+import { UserAvatar } from "../../components/ui/UserAvatar";
 import {
   TeamMemberInviteModal,
   type TeamInvitation,
@@ -155,17 +156,12 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
             <Card key={member.id} className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-surface-info rounded-full flex items-center justify-center">
-                    <Typography
-                      variant="headline-sm"
-                      className="text-text-info font-bold"
-                    >
-                      {member.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </Typography>
-                  </div>
+                  <UserAvatar
+                    userId={member.id}
+                    name={member.name}
+                    role={member.role}
+                    size="lg"
+                  />
                   <div>
                     <Typography
                       variant="headline-sm"

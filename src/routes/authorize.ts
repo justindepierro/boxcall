@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { Database } from "../types/database";
+
 import type {
   AppUserType,
   TeamRole as PermissionTeamRole,
@@ -249,7 +249,7 @@ async function checkTeamRequirements({
   isSuperAdmin,
   teamId,
   allowedTeamRoles,
-  requiredTiers,
+
   requiredPermissions,
   teamFeature,
 }: {
@@ -332,9 +332,23 @@ function checkPermissionRequirements({
     return { allowed: true };
   }
 
+  // Convert AppRole to AppUserType for legacy permissions system
+  // TODO: Replace this mapping when permissions system is updated to use AppRole directly
+  const roleToAppUserType = (role: AppRole | null): AppUserType => {
+    if (!role) return "player";
+    switch (role) {
+      case "super_admin": return "super_admin";
+      case "admin": return "admin";
+      case "coach": return "coach";
+      case "player": return "player";
+      case "family": return "family";
+      default: return "player";
+    }
+  };
+
   const appUserType: AppUserType = isSuperAdmin
     ? "super_admin"
-    : (profile.role as unknown as AppUserType) || "player";
+    : roleToAppUserType(profile.role ?? null);
   const teamRole: PermissionTeamRole | undefined =
     (membership?.role as unknown as PermissionTeamRole) || undefined;
   const subscriptionTier: "free" = "free";

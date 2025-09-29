@@ -5,6 +5,7 @@ import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
+import { UserAvatar } from "../ui/UserAvatar";
 
 import type { TeamPlayer } from "../../types/team-management";
 
@@ -175,13 +176,26 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     <div className="w-12 h-12 surface-subtle0 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
-                    {/* Name and Level */}
+                    {/* Name and Level with UserAvatar */}
                     <div>
-                      <Typography variant="headline-sm" as="h3">
-                        {player.first_name} {player.last_name}
-                      </Typography>
+                      {player.user_id ? (
+                        <UserAvatar
+                          userId={player.user_id}
+                          name={`${player.first_name} ${player.last_name}`}
+                          role="player"
+                          size="sm"
+                          showName={true}
+                          showPopover={true}
+                          showOnHover={true}
+                          placement="bottom"
+                        />
+                      ) : (
+                        <Typography variant="headline-sm" as="h3">
+                          {player.first_name} {player.last_name}
+                        </Typography>
+                      )}
                       <span
-                        className={`inline-block px-2 py-1 font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
+                        className={`inline-block px-2 py-1 font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
                       >
                         <Typography variant="caption" as="span">
                           {getTeamLevelLabel(player.team_level)}

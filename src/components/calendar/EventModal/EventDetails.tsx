@@ -4,6 +4,7 @@ import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui";
 import Icon from "../../ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../../ui/Tag";
+import { UserAvatar } from "../../ui/UserAvatar";
 
 import type {
   CalendarEvent,
@@ -214,21 +215,36 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 comments.data.map((c) => (
                   <div
                     key={c.id}
-                    className="p-2 surface-subtle rounded border border-subtle"
+                    className="p-3 surface-subtle rounded border border-subtle"
                   >
-                    <Typography
-                      variant="caption"
-                      color="muted"
-                      className="mb-1"
-                    >
-                      {new Date(c.created_at).toLocaleString()} • {c.user_id}
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="text-text-primary whitespace-pre-wrap"
-                    >
-                      {c.body}
-                    </Typography>
+                    <div className="flex items-start gap-3">
+                      {/* User Avatar with Profile Popover */}
+                      <UserAvatar
+                        userId={c.user_id}
+                        size="sm"
+                        showName={true}
+                        showPopover={true}
+                        showOnHover={true}
+                        placement="bottom"
+                      />
+                      <div className="flex-1 min-w-0">
+                        {/* Timestamp */}
+                        <Typography
+                          variant="caption"
+                          color="muted"
+                          className="mb-2 block"
+                        >
+                          {new Date(c.created_at).toLocaleString()}
+                        </Typography>
+                        {/* Comment Body */}
+                        <Typography
+                          variant="body-sm"
+                          className="text-text-primary whitespace-pre-wrap"
+                        >
+                          {c.body}
+                        </Typography>
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (

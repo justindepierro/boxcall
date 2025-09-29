@@ -27,7 +27,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { roleContext } = useRoles();
-  const { activeTeamId } = useActiveTeamStore();
+  const { activeTeamId: _activeTeamId } = useActiveTeamStore();
   const teams =
     roleContext?.teamMemberships.map((tm) => ({
       id: tm.teamId,
@@ -91,7 +91,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
             </Button>
 
             {/* Logo */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <SidebarLogo />
               <Typography
                 variant="headline-md"
@@ -101,17 +101,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
               </Typography>
             </div>
 
-            {/* Global Search - Centered */}
-            <div className="flex items-center justify-center flex-1 max-w-md mx-4 gap-3">
+            {/* Left spacer */}
+            <div className="flex-1" />
+
+            {/* Global Search - Truly Centered */}
+            <div className="flex items-center justify-center gap-3">
               <GlobalSearch />
-              <TeamSwitcher teams={teams} />
             </div>
 
-            {/* Spacer */}
-            <div className="flex-1 max-w-xs" />
-
-            {/* User Actions - Right side */}
-            <div className="flex items-center space-x-3">
+            {/* Right side - TeamSwitcher and User Actions */}
+            <div className="flex-1 flex items-center justify-end gap-3">
+              <TeamSwitcher teams={teams} />
               <NotificationBell
                 unreadCount={0} // TODO: Connect to actual notification count
                 onClick={() => console.log("Notifications clicked")}

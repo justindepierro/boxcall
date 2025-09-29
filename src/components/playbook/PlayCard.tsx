@@ -16,6 +16,7 @@ import {
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
+import { UserAvatar } from "../ui/UserAvatar";
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -751,6 +752,18 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 >
                   {optimisticPlay.confidence_base}%
                 </span>
+                {/* Creator Information */}
+                {optimisticPlay.created_by && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] text-text-muted">by</span>
+                    <UserAvatar
+                      userId={optimisticPlay.created_by}
+                      size="xs"
+                      showName={false}
+                      showPopover={true}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             {/* Action Buttons - Mobile Touch-Optimized */}

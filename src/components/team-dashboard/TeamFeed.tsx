@@ -26,6 +26,7 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
+import { UserAvatar } from "../ui/UserAvatar";
 
 import type { TeamPostListItem } from "@services/postsService";
 
@@ -94,28 +95,43 @@ const PostItem: React.FC<PostItemProps> = ({
       {/* Post Header with Author Info */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
-          {/* Avatar */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-text-info to-text-primary flex items-center justify-center text-text-inverse font-semibold text-sm flex-shrink-0">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={`${displayName}'s avatar`}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              displayName.charAt(0).toUpperCase()
-            )}
-          </div>
-
-          {/* Author and Timestamp */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+          {/* User Avatar with Popover */}
+          {authorData?.id ? (
+            <UserAvatar
+              userId={authorData.id}
+              name={displayName}
+              avatarUrl={avatarUrl}
+              size="md"
+              showName={true}
+              showPopover={true}
+              showOnHover={true}
+              placement="bottom"
+            />
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-text-info to-text-primary flex items-center justify-center text-text-inverse font-semibold text-sm flex-shrink-0">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={`${displayName}'s avatar`}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  displayName.charAt(0).toUpperCase()
+                )}
+              </div>
               <Typography
                 variant="body-sm"
                 className="font-semibold text-text-primary truncate"
               >
                 {displayName}
               </Typography>
+            </div>
+          )}
+
+          {/* Timestamp and Pin Badge */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
               {is_pinned && (
                 <span className="inline-flex items-center gap-1 text-text-warning bg-surface-warning px-2 py-0.5 rounded-full text-xs font-medium">
                   <Icon name="star" size="sm" />
