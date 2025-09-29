@@ -16,6 +16,7 @@ import {
   EnhancedInput,
   EnhancedSelect,
 } from "../components/forms/EnhancedFormFields";
+import { AddressAutocomplete } from "../components/forms/AddressAutocomplete";
 
 /**
  * Create Team Page
@@ -217,7 +218,7 @@ export const CreateTeam: React.FC = () => {
     } catch (err) {
       console.warn("CreateTeam: failed to restore draft", err);
     }
-  }, [steps]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {
@@ -234,7 +235,46 @@ export const CreateTeam: React.FC = () => {
     emitTelemetry("team.create.step", { step: currentStep });
   }, [currentStep]);
 
+  // Pre-populate owner info with current user data
+  useEffect(() => {
+    if (user && !formData.ownerName && !formData.ownerEmail) {
+      setFormData((prev) => ({
+        ...prev,
+        ownerName: user.user_metadata?.full_name || "",
+        ownerEmail: user.email || "",
+      }));
+    }
+  }, [user, formData.ownerName, formData.ownerEmail]);
+
+  const validateCurrentStep = (): boolean => {
+    switch (currentStep) {
+      case "intro":
+        return true; // No validation needed
+      case "team-info":
+        return !!(formData.teamName && formData.sport && formData.season);
+      case "school-info":
+        return !!(formData.schoolName && formData.schoolAddress && formData.schoolCity && formData.schoolState && formData.schoolZip);
+      case "owner-info":
+        return !!(formData.ownerName && formData.ownerEmail && formData.ownerPhone && formData.ownerRole);
+      case "coach-info":
+        return !!(formData.coachName && formData.coachEmail && formData.coachPhone);
+      case "fallback-info":
+        return !!(formData.fallbackName && formData.fallbackEmail && formData.fallbackPhone && formData.fallbackRole);
+      case "team-details":
+        return formData.expectedPlayerCount > 0 && formData.coachingStaffCount > 0;
+      case "payment":
+        return true; // No validation needed for now
+      case "review":
+        return true; // Final validation happens in handleSubmit
+      default:
+        return true;
+    }
+  };
+
   const handleNext = () => {
+    if (!validateCurrentStep()) {
+      return; // Don't proceed if validation fails
+    }
     const currentIndex = steps.findIndex((step) => step.id === currentStep);
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1].id);
@@ -649,24 +689,28 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium mb-2"
-                >
-                  School Address *
-                </Typography>
-                <input
-                  type="text"
+                <AddressAutocomplete
+                  label="School Address"
                   value={formData.schoolAddress}
-                  onChange={(e) =>
-                    setFormData({ ...formData, schoolAddress: e.target.value })
-                  }
-                  placeholder="e.g., 123 School Street"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  onChange={(parsed) => {
+                    setFormData({
+                      ...formData,
+                      schoolAddress: parsed.street,
+                      schoolCity: parsed.city,
+                      schoolState: parsed.state,
+                      schoolZip: parsed.zip,
+                    });
+                  }}
+                  onAddressChange={(address) => {
+                    setFormData({ ...formData, schoolAddress: address });
+                  }}
+                  placeholder="Start typing your school address..."
                   required
+                  helperText="We'll auto-fill city, state, and ZIP when you select an address"
                 />
               </div>
+              
+              {/* Show parsed address components */}
               <div>
                 <Typography
                   variant="body-sm"
@@ -704,6 +748,407 @@ export const CreateTeam: React.FC = () => {
                   className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                   required
                 />
+              </div>
+              <div>
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
+                  ZIP Code *
+                </Typography>
+                <input
+                  type="text"
+                  value={formData.schoolZip}
+                  onChange={(e) =>
+                    setFormData({ ...formData, schoolZip: e.target.value })
+                  }
+                  placeholder="e.g., 78701"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case "owner-info":
+        return (
+          <div>
+            <Typography variant="headline-lg" className="mb-2">
+              Team Owner Information
+            </Typography>
+            <Typography variant="body-md" color="muted" className="mb-6">
+              The team owner is the primary account holder responsible for billing and team management.
+            </Typography>
+
+            {/* Default to Current User */}
+            <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <Icon name="check" size="sm" className="text-jade-600 mt-0.5" />
+                <div>
+                  <Typography variant="body-sm" className="font-medium text-jade-800 dark:text-jade-200 mb-1">
+                    You will be the team owner
+                  </Typography>
+                  <Typography variant="body-sm" color="muted">
+                    As the person creating this team, you'll automatically become the owner with full management access.
+                  </Typography>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Full Name <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.ownerName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ownerName: e.target.value })
+                  }
+                  placeholder="e.g., John Smith"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Email Address <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={formData.ownerEmail}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ownerEmail: e.target.value })
+                  }
+                  placeholder="owner@school.edu"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Phone Number <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={formData.ownerPhone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ownerPhone: e.target.value })
+                  }
+                  placeholder="(555) 123-4567"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Role/Title <span className="text-status-error">*</span>
+                </label>
+                <select
+                  value={formData.ownerRole}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ownerRole: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                >
+                  <option value="Head Coach">Head Coach</option>
+                  <option value="Athletic Director">Athletic Director</option>
+                  <option value="Principal">Principal</option>
+                  <option value="Assistant Principal">Assistant Principal</option>
+                  <option value="Team Manager">Team Manager</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Transfer Ownership - Coming Soon */}
+            <div className="mt-8 p-4 bg-surface-subtle border border-border-subtle rounded-lg">
+              <div className="flex items-start gap-3">
+                <Icon name="info" size="sm" className="text-blue-600 mt-0.5" />
+                <div>
+                  <Typography variant="body-sm" className="font-medium mb-1">
+                    Transfer Ownership (Coming Soon)
+                  </Typography>
+                  <Typography variant="body-sm" color="muted">
+                    Future feature: Transfer team ownership to another person via email invitation.
+                  </Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "coach-info":
+        return (
+          <div>
+            <Typography variant="headline-lg" className="mb-2">
+              Head Coach Information
+            </Typography>
+            <Typography variant="body-md" color="muted" className="mb-6">
+              Primary coaching contact for the team. This can be the same as the owner or different.
+            </Typography>
+
+            {/* Same as Owner Toggle */}
+            <div className="mb-6">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.coachEmail === formData.ownerEmail}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFormData({
+                        ...formData,
+                        coachName: formData.ownerName,
+                        coachEmail: formData.ownerEmail,
+                        coachPhone: formData.ownerPhone,
+                      });
+                    } else {
+                      setFormData({
+                        ...formData,
+                        coachName: "",
+                        coachEmail: "",
+                        coachPhone: "",
+                      });
+                    }
+                  }}
+                  className="w-4 h-4 text-jade-600 rounded focus:ring-jade-500"
+                />
+                <Typography variant="body-sm">
+                  Same as team owner
+                </Typography>
+              </label>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Full Name <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.coachName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, coachName: e.target.value })
+                  }
+                  placeholder="e.g., Coach Johnson"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Email Address <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={formData.coachEmail}
+                  onChange={(e) =>
+                    setFormData({ ...formData, coachEmail: e.target.value })
+                  }
+                  placeholder="coach@school.edu"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Phone Number <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={formData.coachPhone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, coachPhone: e.target.value })
+                  }
+                  placeholder="(555) 123-4567"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case "fallback-info":
+        return (
+          <div>
+            <Typography variant="headline-lg" className="mb-2">
+              Emergency Contact
+            </Typography>
+            <Typography variant="body-md" color="muted" className="mb-6">
+              A backup contact person for team communication and emergencies.
+            </Typography>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Full Name <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.fallbackName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fallbackName: e.target.value })
+                  }
+                  placeholder="e.g., Assistant Coach Smith"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Email Address <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={formData.fallbackEmail}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fallbackEmail: e.target.value })
+                  }
+                  placeholder="assistant@school.edu"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Phone Number <span className="text-status-error">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={formData.fallbackPhone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fallbackPhone: e.target.value })
+                  }
+                  placeholder="(555) 987-6543"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Role/Title <span className="text-status-error">*</span>
+                </label>
+                <select
+                  value={formData.fallbackRole}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fallbackRole: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  required
+                >
+                  <option value="Assistant Coach">Assistant Coach</option>
+                  <option value="Team Manager">Team Manager</option>
+                  <option value="Athletic Trainer">Athletic Trainer</option>
+                  <option value="Team Parent">Team Parent</option>
+                  <option value="Administrative Assistant">Administrative Assistant</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "team-details":
+        return (
+          <div>
+            <Typography variant="headline-lg" className="mb-2">
+              Team Size & Composition
+            </Typography>
+            <Typography variant="body-md" color="muted" className="mb-6">
+              Help us understand your team size to optimize your experience.
+            </Typography>
+
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Expected Number of Players
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={formData.expectedPlayerCount}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        expectedPlayerCount: parseInt(e.target.value) || 0 
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  />
+                  <Typography variant="body-xs" color="muted" className="mt-1">
+                    Typical high school football teams have 25-40 players
+                  </Typography>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Coaching Staff Count
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={formData.coachingStaffCount}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        coachingStaffCount: parseInt(e.target.value) || 0 
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  />
+                  <Typography variant="body-xs" color="muted" className="mt-1">
+                    Include head coach, assistants, and support staff
+                  </Typography>
+                </div>
+              </div>
+
+              {/* Team Composition Preview */}
+              <div className="bg-surface-subtle rounded-lg p-4">
+                <Typography variant="body-sm" className="font-medium mb-3">
+                  Team Overview
+                </Typography>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Icon name="users" size="sm" className="text-blue-600" />
+                    <div>
+                      <Typography variant="body-sm" className="font-medium">
+                        {formData.expectedPlayerCount} Players
+                      </Typography>
+                      <Typography variant="body-xs" color="muted">
+                        Team roster
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="user" size="sm" className="text-jade-600" />
+                    <div>
+                      <Typography variant="body-sm" className="font-medium">
+                        {formData.coachingStaffCount} Coaches
+                      </Typography>
+                      <Typography variant="body-xs" color="muted">
+                        Coaching staff
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1074,6 +1519,7 @@ export const CreateTeam: React.FC = () => {
             ) : (
               <Button
                 onClick={handleNext}
+                disabled={!validateCurrentStep()}
                 variant="primary"
                 size="sm"
                 icon={<Icon name="chevron-right" size="sm" />}
