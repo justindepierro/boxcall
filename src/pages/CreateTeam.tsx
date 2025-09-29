@@ -389,25 +389,52 @@ export const CreateTeam: React.FC = () => {
     console.log("🔐 Verifying authentication...");
     setLoadingMessage("Verifying your account...");
     
-    // Get fresh session from Supabase
+    // Get fresh session from Supabase with timeout
     console.log("🔍 Getting Supabase session...");
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    console.log("📋 Session result:", { hasSession: !!session, error: sessionError });
     
-    if (sessionError || !session) {
-      console.error("❌ No valid session:", sessionError);
-      throw new Error("Authentication required: Please sign out and sign back in to create a team.");
+    let session, sessionError, authUser;
+    
+    try {
+      // Add timeout to session call since it's hanging
+      const sessionPromise = supabase.auth.getSession();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Session timeout")), 10000)
+      );
+      
+      const sessionResult = await Promise.race([sessionPromise, timeoutPromise]) as { data: { session: any }, error: any };
+      session = sessionResult.data?.session;
+      sessionError = sessionResult.error;
+      
+      console.log("📋 Session result:", { hasSession: !!session, error: sessionError });
+      
+    } catch (timeoutError) {
+      console.warn("⚠️ Session call timed out, trying alternative auth method:", timeoutError);
+      
+      // Fallback to using the user from auth store
+      if (!user?.id) {
+        throw new Error("Authentication required: Session timeout and no user available. Please refresh the page and try again.");
+      }
+      
+      console.log("🔄 Using fallback user from auth store:", user.id);
+      authUser = user;
     }
     
-    const authUser = session.user;
-    if (!authUser?.id) {
-      throw new Error("User authentication failed: No user ID found.");
+    if (!authUser) {
+      if (sessionError || !session) {
+        console.error("❌ No valid session:", sessionError);
+        throw new Error("Authentication required: Please sign out and sign back in to create a team.");
+      }
+      
+      authUser = session.user;
+      if (!authUser?.id) {
+        throw new Error("User authentication failed: No user ID found.");
+      }
     }
     
-    console.log("✅ User authenticated with session:", {
+    console.log("✅ User authenticated:", {
       userId: authUser.id,
-      email: authUser.email,
-      role: authUser.role
+      email: authUser.email || 'Not available',
+      authMethod: session ? 'session' : 'fallback'
     });
 
     // Validate form data
