@@ -107,6 +107,10 @@ export const CreateTeam: React.FC = () => {
   const universalAccess = true;
 
   const [currentStep, setCurrentStep] = useState<CreationStep>("intro");
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Creating team...");
+  const [hasSavedDraft, setHasSavedDraft] = useState(false);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
   const initialAcademic = computeAcademicYear();
   const [formData, setFormData] = useState<TeamFormData>({
     teamName: "", // Mascot name (e.g., "Eagles")
@@ -137,7 +141,6 @@ export const CreateTeam: React.FC = () => {
 
   // If universal access is disabled in future, revert to permission gate above.
 
-  const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createdTeamId, setCreatedTeamId] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -205,15 +208,35 @@ export const CreateTeam: React.FC = () => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
+
       const saved = JSON.parse(raw);
-      if (saved?.formData) {
-        setFormData((prev) => ({ ...prev, ...saved.formData }));
-      }
-      if (
-        saved?.currentStep &&
-        steps.some((step) => step.id === saved.currentStep)
-      ) {
-        setCurrentStep(saved.currentStep as CreationStep);
+      if (!saved?.formData && !saved?.currentStep) return;
+
+      // Check if this is meaningful progress (not just intro step)
+      const hasProgress = saved.currentStep && saved.currentStep !== "intro";
+      const hasFormData =
+        saved.formData &&
+        Object.values(saved.formData).some(
+          (value) => value && String(value).trim() !== ""
+        );
+
+      if (hasProgress || hasFormData) {
+        setHasSavedDraft(true);
+        setShowResumePrompt(true);
+
+        // Show a brief notification about saved progress
+        console.log("📋 Found saved team creation progress!");
+
+        // Auto-restore if user was past intro step
+        if (hasProgress) {
+          if (saved.formData) {
+            setFormData((prev) => ({ ...prev, ...saved.formData }));
+          }
+          if (steps.some((step) => step.id === saved.currentStep)) {
+            setCurrentStep(saved.currentStep as CreationStep);
+          }
+          setShowResumePrompt(false); // Don't show prompt if auto-restoring
+        }
       }
     } catch (err) {
       console.warn("CreateTeam: failed to restore draft", err);
@@ -253,15 +276,37 @@ export const CreateTeam: React.FC = () => {
       case "team-info":
         return !!(formData.teamName && formData.sport && formData.season);
       case "school-info":
-        return !!(formData.schoolName && formData.schoolAddress && formData.schoolCity && formData.schoolState && formData.schoolZip);
+        return !!(
+          formData.schoolName &&
+          formData.schoolAddress &&
+          formData.schoolCity &&
+          formData.schoolState &&
+          formData.schoolZip
+        );
       case "owner-info":
-        return !!(formData.ownerName && formData.ownerEmail && formData.ownerPhone && formData.ownerRole);
+        return !!(
+          formData.ownerName &&
+          formData.ownerEmail &&
+          formData.ownerPhone &&
+          formData.ownerRole
+        );
       case "coach-info":
-        return !!(formData.coachName && formData.coachEmail && formData.coachPhone);
+        return !!(
+          formData.coachName &&
+          formData.coachEmail &&
+          formData.coachPhone
+        );
       case "fallback-info":
-        return !!(formData.fallbackName && formData.fallbackEmail && formData.fallbackPhone && formData.fallbackRole);
+        return !!(
+          formData.fallbackName &&
+          formData.fallbackEmail &&
+          formData.fallbackPhone &&
+          formData.fallbackRole
+        );
       case "team-details":
-        return formData.expectedPlayerCount > 0 && formData.coachingStaffCount > 0;
+        return (
+          formData.expectedPlayerCount > 0 && formData.coachingStaffCount > 0
+        );
       case "payment":
         return true; // No validation needed for now
       case "review":
@@ -271,14 +316,162 @@ export const CreateTeam: React.FC = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!validateCurrentStep()) {
       return; // Don't proceed if validation fails
     }
+
+    if (currentStep === "review") {
+      // Create the team
+      setIsLoading(true);
+      setCreateError(null);
+      setLoadingMessage("Creating team...");
+
+      try {
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () =>
+              reject(
+                new Error(
+                  "Team creation is taking longer than expected. Please try again."
+                )
+              ),
+            30000
+          )
+        );
+
+        const team = (await Promise.race([createTeam(), timeoutPromise])) as {
+          id: string;
+          name: string;
+        };
+        setCreatedTeamId(team.id);
+
+        // Navigate directly to team bulletin after successful creation
+        navigate(teamRoutes.bulletin(team.id));
+      } catch (error) {
+        console.error("Failed to create team:", error);
+        const message =
+          error instanceof Error ? error.message : "Failed to create team";
+        setCreateError(message);
+      } finally {
+        setIsLoading(false);
+        setLoadingMessage("Creating team...");
+      }
+      return;
+    }
+
     const currentIndex = steps.findIndex((step) => step.id === currentStep);
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1].id);
     }
+  };
+
+  const createTeam = async () => {
+    console.log("🚀 Starting team creation...");
+    const startTime = performance.now();
+
+    if (!user?.id) throw new Error("User not authenticated");
+
+    // Validate form data
+    console.log("📋 Validating form data...");
+    setLoadingMessage("Validating team information...");
+    const validationStart = performance.now();
+    const validation = createTeamSchema.safeParse(formData);
+    console.log(
+      `✅ Validation completed in ${performance.now() - validationStart}ms`
+    );
+
+    if (!validation.success) {
+      const message =
+        validation.error.issues[0]?.message || "Please review the form.";
+      emitTelemetry("team.create.validation_error", {
+        message,
+        issues: validation.error.issues,
+      });
+      throw new Error(message);
+    }
+
+    emitTelemetry("team.create.attempt", {
+      universalAccess,
+      super: isSuperAdmin,
+    });
+
+    // Create team name combining school and mascot
+    const teamNameCombined =
+      `${formData.schoolName.trim()} ${formData.teamName.trim()}`.trim();
+    const { startYear: seasonYear, display: seasonDisplay } =
+      computeAcademicYear();
+
+    // Create the team record in Supabase
+    console.log("🏗️ Creating team record in database...");
+    setLoadingMessage("Creating your team...");
+    const dbStart = performance.now();
+    const { data: teamInsert, error: teamErr } = await supabase
+      .from("teams")
+      .insert({
+        name: teamNameCombined || "New Team",
+        school_name: formData.schoolName || null,
+        mascot: formData.teamName || null,
+        season_year: seasonYear,
+      })
+      .select("id")
+      .single();
+    console.log(`🗄️ Team insert completed in ${performance.now() - dbStart}ms`);
+
+    if (teamErr || !teamInsert) {
+      console.error("❌ Team insert failed:", teamErr);
+      throw teamErr || new Error("Team insert failed");
+    }
+
+    const newTeamId = teamInsert.id as string;
+    console.log(`✅ Team created with ID: ${newTeamId}`);
+
+    // Insert membership (coach by default)
+    console.log("👤 Adding team membership...");
+    setLoadingMessage("Setting up your account...");
+    const memberStart = performance.now();
+    const { error: memberErr } = await supabase.from("team_members").insert({
+      team_id: newTeamId,
+      user_id: user.id,
+      team_role: "head_coach",
+      status: "active",
+    });
+    console.log(
+      `👥 Membership insert completed in ${performance.now() - memberStart}ms`
+    );
+
+    if (memberErr) {
+      console.warn("team_members insert warning", memberErr);
+    }
+
+    // Persist active team selection
+    try {
+      localStorage.setItem("activeTeamId", newTeamId);
+    } catch {
+      /* ignore localStorage errors */
+    }
+
+    // Emit success telemetry
+    emitTelemetry("team.create.success", {
+      teamId: newTeamId,
+      season_year: seasonYear,
+      season_display: seasonDisplay,
+      sport_ui: formData.sport,
+    });
+
+    // Clear the form data from storage since team is created
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore localStorage errors */
+    }
+
+    const totalTime = performance.now() - startTime;
+    console.log(`🎉 Team creation completed in ${totalTime}ms`);
+    setLoadingMessage("Redirecting to your team...");
+
+    return { id: newTeamId, name: teamNameCombined };
   };
 
   const handlePrevious = () => {
@@ -288,85 +481,69 @@ export const CreateTeam: React.FC = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (creating) return;
-    setCreating(true);
-    setCreateError(null);
+  const handleResumeDraft = () => {
     try {
-      const validation = createTeamSchema.safeParse(formData);
-      if (!validation.success) {
-        const message =
-          validation.error.issues[0]?.message || "Please review the form.";
-        setCreateError(message);
-        emitTelemetry("team.create.validation_error", {
-          message,
-          issues: validation.error.issues,
-        });
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        setShowResumePrompt(false);
         return;
       }
 
-      emitTelemetry("team.create.attempt", {
-        universalAccess,
-        super: isSuperAdmin,
+      const saved = JSON.parse(raw);
+      if (saved?.formData) {
+        setFormData((prev) => ({ ...prev, ...saved.formData }));
+      }
+      if (
+        saved?.currentStep &&
+        steps.some((step) => step.id === saved.currentStep)
+      ) {
+        setCurrentStep(saved.currentStep as CreationStep);
+      }
+
+      setShowResumePrompt(false);
+      console.log("✅ Resumed team creation from saved progress");
+    } catch (err) {
+      console.warn("Failed to resume draft:", err);
+      setShowResumePrompt(false);
+    }
+  };
+
+  const handleStartFresh = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      // Reset to initial state
+      setFormData({
+        teamName: "",
+        sport: "Football",
+        season: initialAcademic.display,
+        schoolName: "",
+        schoolDistrict: "",
+        schoolAddress: "",
+        schoolCity: "",
+        schoolState: "",
+        schoolZip: "",
+        ownerName: "",
+        ownerRole: "Head Coach",
+        ownerEmail: user?.email || "",
+        ownerPhone: "",
+        coachName: "",
+        coachEmail: "",
+        coachPhone: "",
+        fallbackName: "",
+        fallbackRole: "Assistant Coach",
+        fallbackEmail: "",
+        fallbackPhone: "",
+        expectedPlayerCount: 25,
+        coachingStaffCount: 3,
+        subscriptionTier: "team-basic",
+        paymentMethod: "",
       });
-      // Minimal required fields for teams table
-      const teamNameCombined =
-        `${formData.schoolName.trim()} ${formData.teamName.trim()}`.trim();
-      const { startYear: seasonYear, display: seasonDisplay } =
-        computeAcademicYear();
-      if (!user?.id) throw new Error("User not authenticated");
-      // Attempt insert including created_by (needed on production schema). If column doesn't exist locally, fallback.
-      const { data: teamInsert, error: teamErr } = await supabase
-        .from("teams")
-        .insert({
-          name: teamNameCombined || "New Team",
-          school_name: formData.schoolName || null,
-          mascot: formData.teamName || null,
-          season_year: seasonYear,
-        })
-        .select("id")
-        .single();
-      if (teamErr || !teamInsert) {
-        throw teamErr || new Error("Team insert failed");
-      }
-      const newTeamId = teamInsert.id as string;
-      // Insert membership (coach by default)
-      if (user?.id) {
-        const { error: memberErr } = await supabase
-          .from("team_members")
-          .insert({
-            team_id: newTeamId,
-            user_id: user.id,
-            team_role: "head_coach",
-            status: "active",
-          });
-        if (memberErr) console.warn("team_members insert warning", memberErr);
-      }
-      // Persist active team selection
-      try {
-        localStorage.setItem("activeTeamId", newTeamId);
-      } catch {
-        /* ignore */
-      }
-      setCreatedTeamId(newTeamId);
-      emitTelemetry("team.create.success", {
-        teamId: newTeamId,
-        season_year: seasonYear,
-        season_display: seasonDisplay,
-        sport_ui: formData.sport,
-      });
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch {
-        /* ignore */
-      }
-      setCurrentStep("complete");
-    } catch (e) {
-      const msg = (e as Error).message;
-      setCreateError(msg);
-      emitTelemetry("team.create.error", { error: msg });
-    } finally {
-      setCreating(false);
+      setCurrentStep("intro");
+      setShowResumePrompt(false);
+      setHasSavedDraft(false);
+      console.log("🗑️ Started fresh team creation");
+    } catch (err) {
+      console.warn("Failed to clear draft:", err);
     }
   };
 
@@ -518,6 +695,23 @@ export const CreateTeam: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Clear Progress Option */}
+            {hasSavedDraft && (
+              <div className="mt-8 pt-6 border-t border-border-subtle">
+                <div className="flex items-center justify-center">
+                  <Button
+                    onClick={handleStartFresh}
+                    variant="ghost"
+                    size="sm"
+                    icon={<Icon name="refresh-cw" size="xs" />}
+                    className="text-muted hover:text-foreground"
+                  >
+                    Clear saved progress and start fresh
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         );
 
@@ -709,7 +903,7 @@ export const CreateTeam: React.FC = () => {
                   helperText="We'll auto-fill city, state, and ZIP when you select an address"
                 />
               </div>
-              
+
               {/* Show parsed address components */}
               <div>
                 <Typography
@@ -779,7 +973,8 @@ export const CreateTeam: React.FC = () => {
               Team Owner Information
             </Typography>
             <Typography variant="body-md" color="muted" className="mb-6">
-              The team owner is the primary account holder responsible for billing and team management.
+              The team owner is the primary account holder responsible for
+              billing and team management.
             </Typography>
 
             {/* Default to Current User */}
@@ -787,11 +982,15 @@ export const CreateTeam: React.FC = () => {
               <div className="flex items-start gap-3">
                 <Icon name="check" size="sm" className="text-jade-600 mt-0.5" />
                 <div>
-                  <Typography variant="body-sm" className="font-medium text-jade-800 dark:text-jade-200 mb-1">
+                  <Typography
+                    variant="body-sm"
+                    className="font-medium text-jade-800 dark:text-jade-200 mb-1"
+                  >
                     You will be the team owner
                   </Typography>
                   <Typography variant="body-sm" color="muted">
-                    As the person creating this team, you'll automatically become the owner with full management access.
+                    As the person creating this team, you'll automatically
+                    become the owner with full management access.
                   </Typography>
                 </div>
               </div>
@@ -861,7 +1060,9 @@ export const CreateTeam: React.FC = () => {
                   <option value="Head Coach">Head Coach</option>
                   <option value="Athletic Director">Athletic Director</option>
                   <option value="Principal">Principal</option>
-                  <option value="Assistant Principal">Assistant Principal</option>
+                  <option value="Assistant Principal">
+                    Assistant Principal
+                  </option>
                   <option value="Team Manager">Team Manager</option>
                   <option value="Other">Other</option>
                 </select>
@@ -877,7 +1078,8 @@ export const CreateTeam: React.FC = () => {
                     Transfer Ownership (Coming Soon)
                   </Typography>
                   <Typography variant="body-sm" color="muted">
-                    Future feature: Transfer team ownership to another person via email invitation.
+                    Future feature: Transfer team ownership to another person
+                    via email invitation.
                   </Typography>
                 </div>
               </div>
@@ -892,7 +1094,8 @@ export const CreateTeam: React.FC = () => {
               Head Coach Information
             </Typography>
             <Typography variant="body-md" color="muted" className="mb-6">
-              Primary coaching contact for the team. This can be the same as the owner or different.
+              Primary coaching contact for the team. This can be the same as the
+              owner or different.
             </Typography>
 
             {/* Same as Owner Toggle */}
@@ -920,9 +1123,7 @@ export const CreateTeam: React.FC = () => {
                   }}
                   className="w-4 h-4 text-jade-600 rounded focus:ring-jade-500"
                 />
-                <Typography variant="body-sm">
-                  Same as team owner
-                </Typography>
+                <Typography variant="body-sm">Same as team owner</Typography>
               </label>
             </div>
 
@@ -1053,7 +1254,9 @@ export const CreateTeam: React.FC = () => {
                   <option value="Team Manager">Team Manager</option>
                   <option value="Athletic Trainer">Athletic Trainer</option>
                   <option value="Team Parent">Team Parent</option>
-                  <option value="Administrative Assistant">Administrative Assistant</option>
+                  <option value="Administrative Assistant">
+                    Administrative Assistant
+                  </option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -1083,9 +1286,9 @@ export const CreateTeam: React.FC = () => {
                     max="100"
                     value={formData.expectedPlayerCount}
                     onChange={(e) =>
-                      setFormData({ 
-                        ...formData, 
-                        expectedPlayerCount: parseInt(e.target.value) || 0 
+                      setFormData({
+                        ...formData,
+                        expectedPlayerCount: parseInt(e.target.value) || 0,
                       })
                     }
                     className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
@@ -1107,9 +1310,9 @@ export const CreateTeam: React.FC = () => {
                     max="20"
                     value={formData.coachingStaffCount}
                     onChange={(e) =>
-                      setFormData({ 
-                        ...formData, 
-                        coachingStaffCount: parseInt(e.target.value) || 0 
+                      setFormData({
+                        ...formData,
+                        coachingStaffCount: parseInt(e.target.value) || 0,
                       })
                     }
                     className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
@@ -1395,7 +1598,7 @@ export const CreateTeam: React.FC = () => {
             >
               {createError
                 ? "Team was created locally but an error occurred when finalizing setup. You can retry from dashboard."
-                : `Congratulations! Your team "${formData.schoolName} ${formData.teamName}" has been created and is ready to use.`}
+                : `Congratulations! Your team "${formData.schoolName} ${formData.teamName}" has been created and is ready to use. Your team bulletin is now active and ready for updates!`}
             </Typography>
             <div className="flex flex-col gap-4">
               <div className="flex gap-3 justify-center">
@@ -1416,13 +1619,489 @@ export const CreateTeam: React.FC = () => {
                   }
                   variant="ghost"
                   size="md"
+                  icon={<Icon name="inbox" size="sm" />}
                 >
-                  Skip to Dashboard
+                  Go to Team Bulletin
                 </Button>
               </div>
               <Typography variant="body-sm" color="muted" className="mt-2">
                 🎯 Recommended: Take 5 minutes to set up your team for success
               </Typography>
+            </div>
+          </div>
+        );
+
+      case "review":
+        return (
+          <div>
+            <Typography variant="headline-lg" className="mb-2">
+              Review & Confirm Team Information
+            </Typography>
+            <Typography variant="body-md" color="muted" className="mb-8">
+              Please review all information carefully. You can go back to edit
+              any section.
+            </Typography>
+
+            <div className="space-y-8">
+              {/* Team Information */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon name="trophy" size="sm" className="text-jade-600" />
+                    Team Information
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("team-info")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Team Name
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.teamName || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Sport
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.sport}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Season
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.season}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* School Information */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon name="map-pin" size="sm" className="text-blue-600" />
+                    School Information
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("school-info")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      School Name
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.schoolName || "Not specified"}
+                    </Typography>
+                  </div>
+                  {formData.schoolDistrict && (
+                    <div>
+                      <Typography
+                        variant="body-xs"
+                        color="muted"
+                        className="mb-1"
+                      >
+                        District
+                      </Typography>
+                      <Typography variant="body-sm" className="font-medium">
+                        {formData.schoolDistrict}
+                      </Typography>
+                    </div>
+                  )}
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Address
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {[
+                        formData.schoolAddress,
+                        formData.schoolCity,
+                        formData.schoolState,
+                        formData.schoolZip,
+                      ]
+                        .filter(Boolean)
+                        .join(", ") || "Not specified"}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Team Owner */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon name="user" size="sm" className="text-emerald-600" />
+                    Team Owner
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("owner-info")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Name
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.ownerName || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Role
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.ownerRole}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Email
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.ownerEmail || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Phone
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.ownerPhone || "Not specified"}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Head Coach */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon name="users" size="sm" className="text-amber-600" />
+                    Head Coach
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("coach-info")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Name
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.coachName || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Same as Owner
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.coachEmail === formData.ownerEmail
+                        ? "Yes"
+                        : "No"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Email
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.coachEmail || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Phone
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.coachPhone || "Not specified"}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon
+                      name="alert-triangle"
+                      size="sm"
+                      className="text-orange-600"
+                    />
+                    Emergency Contact
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("fallback-info")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Name
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.fallbackName || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Role
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.fallbackRole}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Email
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.fallbackEmail || "Not specified"}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-1"
+                    >
+                      Phone
+                    </Typography>
+                    <Typography variant="body-sm" className="font-medium">
+                      {formData.fallbackPhone || "Not specified"}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Team Composition */}
+              <div className="bg-surface-subtle rounded-xl p-6 border border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <Typography
+                    variant="headline-md"
+                    className="flex items-center gap-2"
+                  >
+                    <Icon
+                      name="bar-chart"
+                      size="sm"
+                      className="text-purple-600"
+                    />
+                    Team Composition
+                  </Typography>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setCurrentStep("team-details")}
+                    icon={<Icon name="edit" size="xs" />}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                      <Icon name="users" size="sm" className="text-blue-600" />
+                    </div>
+                    <div>
+                      <Typography variant="body-lg" className="font-semibold">
+                        {formData.expectedPlayerCount}
+                      </Typography>
+                      <Typography variant="body-xs" color="muted">
+                        Expected Players
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-jade-500/20 flex items-center justify-center">
+                      <Icon name="user" size="sm" className="text-jade-600" />
+                    </div>
+                    <div>
+                      <Typography variant="body-lg" className="font-semibold">
+                        {formData.coachingStaffCount}
+                      </Typography>
+                      <Typography variant="body-xs" color="muted">
+                        Coaching Staff
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subscription Summary */}
+              <div className="bg-gradient-to-br from-jade-50 to-emerald-50 dark:from-jade-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-jade-200 dark:border-jade-800">
+                <div className="flex items-center gap-2 mb-4">
+                  <Icon name="star" size="sm" className="text-jade-600" />
+                  <Typography
+                    variant="headline-md"
+                    className="text-jade-800 dark:text-jade-200"
+                  >
+                    Subscription Plan
+                  </Typography>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Typography
+                      variant="body-md"
+                      className="font-semibold mb-1"
+                    >
+                      Founders Pricing - Team Basic
+                    </Typography>
+                    <Typography variant="body-sm" color="muted">
+                      Complete team management platform
+                    </Typography>
+                  </div>
+                  <div className="text-right">
+                    <Typography
+                      variant="headline-md"
+                      className="text-jade-700 dark:text-jade-300 font-bold"
+                    >
+                      $199<span className="text-sm font-normal">/year</span>
+                    </Typography>
+                    <Typography
+                      variant="body-xs"
+                      className="text-jade-600 dark:text-jade-400"
+                    >
+                      Limited time offer
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Final Confirmation */}
+              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-white/20 dark:border-gray-700/30">
+                <div className="flex items-start gap-3">
+                  <Icon
+                    name="info"
+                    size="sm"
+                    className="text-blue-600 mt-0.5"
+                  />
+                  <div>
+                    <Typography variant="body-sm" className="font-medium mb-2">
+                      Ready to Create Your Team
+                    </Typography>
+                    <Typography variant="body-xs" color="muted">
+                      By clicking "Create Team" you confirm that all information
+                      is accurate and agree to our terms of service. You'll be
+                      able to modify team settings after creation.
+                    </Typography>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -1463,13 +2142,101 @@ export const CreateTeam: React.FC = () => {
   return (
     <PageLayout title="Create Team" variant="form">
       <div className="max-w-4xl mx-auto">
+        {/* Resume Draft Prompt */}
+        {showResumePrompt && (
+          <div className="mb-6 bg-gradient-to-r from-jade-50 to-emerald-50 dark:from-jade-900/20 dark:to-emerald-900/20 border border-jade-200 dark:border-jade-800 rounded-xl p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-jade-100 dark:bg-jade-900/30 flex items-center justify-center">
+                <Icon name="save" size="sm" className="text-jade-600" />
+              </div>
+              <div className="flex-1">
+                <Typography
+                  variant="headline-sm"
+                  className="mb-2 text-jade-800 dark:text-jade-200"
+                >
+                  Resume Your Team Creation
+                </Typography>
+                <Typography variant="body-sm" color="muted" className="mb-4">
+                  We found your saved progress! You can continue where you left
+                  off or start fresh.
+                </Typography>
+                {hasSavedDraft && (
+                  <div className="mb-4 p-3 bg-white/50 dark:bg-gray-900/50 rounded-lg border border-jade-200/50 dark:border-jade-800/50">
+                    <Typography
+                      variant="body-xs"
+                      color="muted"
+                      className="mb-2"
+                    >
+                      Saved progress includes:
+                    </Typography>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.teamName && (
+                        <div className="px-2 py-1 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded text-xs">
+                          Team: {formData.teamName}
+                        </div>
+                      )}
+                      {formData.schoolName && (
+                        <div className="px-2 py-1 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded text-xs">
+                          School: {formData.schoolName}
+                        </div>
+                      )}
+                      {formData.ownerName && (
+                        <div className="px-2 py-1 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded text-xs">
+                          Owner: {formData.ownerName}
+                        </div>
+                      )}
+                      {currentStep !== "intro" && (
+                        <div className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
+                          Step: {steps.find((s) => s.id === currentStep)?.title}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleResumeDraft}
+                    variant="primary"
+                    size="sm"
+                    icon={<Icon name="play" size="xs" />}
+                  >
+                    Continue Where I Left Off
+                  </Button>
+                  <Button
+                    onClick={handleStartFresh}
+                    variant="ghost"
+                    size="sm"
+                    icon={<Icon name="refresh-cw" size="xs" />}
+                  >
+                    Start Fresh
+                  </Button>
+                </div>
+              </div>
+              <Button
+                onClick={() => setShowResumePrompt(false)}
+                variant="ghost"
+                size="xs"
+                icon={<Icon name="close" size="xs" />}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Progress Bar */}
         {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <Typography variant="body-sm" color="muted">
-                Step {currentStepIndex + 1} of {steps.length}
-              </Typography>
+              <div className="flex items-center gap-3">
+                <Typography variant="body-sm" color="muted">
+                  Step {currentStepIndex + 1} of {steps.length}
+                </Typography>
+                {hasSavedDraft && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 rounded-full">
+                    <Icon name="save" size="xs" />
+                    <Typography variant="body-xs">Auto-saved</Typography>
+                  </div>
+                )}
+              </div>
               <Typography variant="body-sm" color="muted">
                 {Math.round(progress)}% Complete
               </Typography>
@@ -1506,15 +2273,15 @@ export const CreateTeam: React.FC = () => {
 
             {currentStep === "review" ? (
               <Button
-                onClick={handleSubmit}
-                disabled={creating}
+                onClick={handleNext}
+                disabled={isLoading}
                 variant="primary"
                 size="sm"
-                icon={!creating ? <Icon name="check" size="sm" /> : undefined}
+                icon={!isLoading ? <Icon name="check" size="sm" /> : undefined}
                 iconPosition="right"
-                loading={creating}
+                loading={isLoading}
               >
-                {creating ? "Creating..." : "Create Team"}
+                {isLoading ? loadingMessage : "Create Team"}
               </Button>
             ) : (
               <Button

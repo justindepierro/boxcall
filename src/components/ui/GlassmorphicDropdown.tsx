@@ -22,7 +22,8 @@ export const GlassmorphicDropdown: React.FC<GlassmorphicDropdownProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const widthClass = width === "full" ? "w-full" : width === "auto" ? "w-auto" : width;
+  const widthClass =
+    width === "full" ? "w-full" : width === "auto" ? "w-auto" : width;
 
   return (
     <div
@@ -53,7 +54,9 @@ interface GlassmorphicDropdownItemProps {
   icon?: React.ReactNode;
 }
 
-export const GlassmorphicDropdownItem: React.FC<GlassmorphicDropdownItemProps> = ({
+export const GlassmorphicDropdownItem: React.FC<
+  GlassmorphicDropdownItemProps
+> = ({
   children,
   onClick,
   isSelected = false,
@@ -70,7 +73,8 @@ export const GlassmorphicDropdownItem: React.FC<GlassmorphicDropdownItemProps> =
         "flex items-start gap-3",
         "border-b border-white/10 dark:border-gray-700/20",
         "hover:bg-white/60 dark:hover:bg-gray-800/60 hover:backdrop-blur-sm",
-        isSelected && "bg-jade-500/20 dark:bg-jade-400/20 backdrop-blur-sm border-jade-500/30 dark:border-jade-400/30",
+        isSelected &&
+          "bg-jade-500/20 dark:bg-jade-400/20 backdrop-blur-sm border-jade-500/30 dark:border-jade-400/30",
         isLast && "border-b-0",
         className
       )}
@@ -80,9 +84,7 @@ export const GlassmorphicDropdownItem: React.FC<GlassmorphicDropdownItemProps> =
           {icon}
         </div>
       )}
-      <div className="flex-1 min-w-0">
-        {children}
-      </div>
+      <div className="flex-1 min-w-0">{children}</div>
     </button>
   );
 };
@@ -92,16 +94,17 @@ interface GlassmorphicDropdownSeparatorProps {
   className?: string;
 }
 
-export const GlassmorphicDropdownSeparator: React.FC<GlassmorphicDropdownSeparatorProps> = ({
-  children,
-  className = "",
-}) => {
+export const GlassmorphicDropdownSeparator: React.FC<
+  GlassmorphicDropdownSeparatorProps
+> = ({ children, className = "" }) => {
   return (
-    <div className={cn(
-      "px-4 py-2 border-t border-white/20 dark:border-gray-700/30",
-      "bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm",
-      className
-    )}>
+    <div
+      className={cn(
+        "px-4 py-2 border-t border-white/20 dark:border-gray-700/30",
+        "bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm",
+        className
+      )}
+    >
       {children}
     </div>
   );
@@ -120,17 +123,16 @@ export const GlassmorphicInputWrapper: React.FC<GlassmorphicInputProps> = ({
   error = false,
 }) => {
   return (
-    <div className={cn(
-      "relative transition-all duration-200",
-      className
-    )}>
-      <div className={cn(
-        "absolute inset-0 rounded-lg backdrop-blur-sm opacity-0 transition-opacity duration-200",
-        "peer-focus:opacity-100",
-        error 
-          ? "bg-red-500/5 border border-red-500/20" 
-          : "bg-jade-500/5 border border-jade-500/20"
-      )} />
+    <div className={cn("relative transition-all duration-200", className)}>
+      <div
+        className={cn(
+          "absolute inset-0 rounded-lg backdrop-blur-sm opacity-0 transition-opacity duration-200",
+          "peer-focus:opacity-100",
+          error
+            ? "bg-red-500/5 border border-red-500/20"
+            : "bg-jade-500/5 border border-jade-500/20"
+        )}
+      />
       {children}
     </div>
   );

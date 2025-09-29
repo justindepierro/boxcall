@@ -4,7 +4,7 @@ This component provides retail-style address autocomplete functionality with sup
 
 - **Nominatim (OpenStreetMap)** ⭐ **RECOMMENDED** - FREE, no API key required!
 - **Google Places API** (requires API key and billing)
-- **MapBox Geocoding API** (requires API key and billing) 
+- **MapBox Geocoding API** (requires API key and billing)
 - **Mock addresses** (for development/testing)
 
 ## Quick Start
@@ -15,7 +15,7 @@ This component provides retail-style address autocomplete functionality with sup
 
 ```tsx
 <AddressAutocomplete
-  service="nominatim"  // This is now the default!
+  service="nominatim" // This is now the default!
   value={address}
   onChange={(parsed) => {
     setFormData({
@@ -26,7 +26,7 @@ This component provides retail-style address autocomplete functionality with sup
       zip: parsed.zip,
     });
   }}
-  countryCode="US"  // Optional: limit to specific country
+  countryCode="US" // Optional: limit to specific country
   label="Address"
   placeholder="Start typing an address..."
   required
@@ -34,6 +34,7 @@ This component provides retail-style address autocomplete functionality with sup
 ```
 
 **Pros:**
+
 - ✅ Completely free
 - ✅ No API key required
 - ✅ No billing or usage limits
@@ -41,6 +42,7 @@ This component provides retail-style address autocomplete functionality with sup
 - ✅ Respects user privacy
 
 **Cons:**
+
 - ⚠️ Slightly less accurate than Google for some addresses
 - ⚠️ Requires attribution to OpenStreetMap (included in component)
 
@@ -49,12 +51,14 @@ This component provides retail-style address autocomplete functionality with sup
 1. **Get API Key**: Visit [Google Cloud Console](https://console.cloud.google.com/)
 2. **Enable APIs**: Places API (new) and Geocoding API
 3. **Set Environment Variable**:
+
 ```bash
 # .env.local
 VITE_GOOGLE_PLACES_API_KEY=your_api_key_here
 ```
 
 4. **Use Component**:
+
 ```tsx
 <AddressAutocomplete
   service="google"
@@ -78,12 +82,14 @@ VITE_GOOGLE_PLACES_API_KEY=your_api_key_here
 
 1. **Get Access Token**: Visit [MapBox Account](https://account.mapbox.com/)
 2. **Set Environment Variable**:
+
 ```bash
 # .env.local
 VITE_MAPBOX_ACCESS_TOKEN=your_access_token_here
 ```
 
 3. **Use Component**:
+
 ```tsx
 <AddressAutocomplete
   service="mapbox"
@@ -123,30 +129,30 @@ Perfect for testing and development:
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current address value |
-| `onChange` | `(address: ParsedAddress) => void` | - | Called when address is selected |
-| `onAddressChange` | `(address: string) => void` | - | Called on every input change |
-| `service` | `"nominatim" \| "google" \| "mapbox" \| "mock"` | `"nominatim"` | Address service to use |
-| `countryCode` | `string` | `"US"` | ISO country code for filtering |
-| `placeholder` | `string` | `"Start typing an address..."` | Input placeholder |
-| `label` | `string` | - | Field label |
-| `helperText` | `string` | - | Helper text below input |
-| `error` | `string` | - | Error message |
-| `required` | `boolean` | `false` | Whether field is required |
-| `disabled` | `boolean` | `false` | Whether field is disabled |
-| `debounceMs` | `number` | `300` | Search debounce delay |
+| Prop              | Type                                            | Default                        | Description                     |
+| ----------------- | ----------------------------------------------- | ------------------------------ | ------------------------------- |
+| `value`           | `string`                                        | -                              | Current address value           |
+| `onChange`        | `(address: ParsedAddress) => void`              | -                              | Called when address is selected |
+| `onAddressChange` | `(address: string) => void`                     | -                              | Called on every input change    |
+| `service`         | `"nominatim" \| "google" \| "mapbox" \| "mock"` | `"nominatim"`                  | Address service to use          |
+| `countryCode`     | `string`                                        | `"US"`                         | ISO country code for filtering  |
+| `placeholder`     | `string`                                        | `"Start typing an address..."` | Input placeholder               |
+| `label`           | `string`                                        | -                              | Field label                     |
+| `helperText`      | `string`                                        | -                              | Helper text below input         |
+| `error`           | `string`                                        | -                              | Error message                   |
+| `required`        | `boolean`                                       | `false`                        | Whether field is required       |
+| `disabled`        | `boolean`                                       | `false`                        | Whether field is disabled       |
+| `debounceMs`      | `number`                                        | `300`                          | Search debounce delay           |
 
 ### ParsedAddress Type
 
 ```tsx
 interface ParsedAddress {
-  street: string;      // "123 Main St"
-  city: string;        // "Austin"
-  state: string;       // "TX"
-  zip: string;         // "78701"
-  formatted: string;   // "123 Main St, Austin, TX 78701, USA"
+  street: string; // "123 Main St"
+  city: string; // "Austin"
+  state: string; // "TX"
+  zip: string; // "78701"
+  formatted: string; // "123 Main St, Austin, TX 78701, USA"
 }
 ```
 
@@ -163,6 +169,7 @@ For production apps, we **strongly recommend Nominatim** because:
 ### Rate Limiting Best Practices
 
 While Nominatim is free, please be respectful:
+
 - ✅ Built-in 300ms debounce (adjustable)
 - ✅ Minimum 3 characters before search
 - ✅ Proper User-Agent header included
@@ -184,12 +191,13 @@ A: This is the fallback when the selected service fails. Check network and API k
 ### Debug Mode
 
 Enable debug logging:
+
 ```tsx
 <AddressAutocomplete
   service="nominatim"
   value={address}
   onChange={(parsed) => {
-    console.log('Address selected:', parsed);
+    console.log("Address selected:", parsed);
     setAddress(parsed);
   }}
   // ... other props
