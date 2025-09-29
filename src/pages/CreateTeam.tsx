@@ -390,7 +390,10 @@ export const CreateTeam: React.FC = () => {
     setLoadingMessage("Verifying your account...");
     
     // Get fresh session from Supabase
+    console.log("🔍 Getting Supabase session...");
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    console.log("📋 Session result:", { hasSession: !!session, error: sessionError });
+    
     if (sessionError || !session) {
       console.error("❌ No valid session:", sessionError);
       throw new Error("Authentication required: Please sign out and sign back in to create a team.");
@@ -415,8 +418,10 @@ export const CreateTeam: React.FC = () => {
     console.log(
       `✅ Validation completed in ${performance.now() - validationStart}ms`
     );
+    console.log("📊 Validation result:", { success: validation.success, data: validation.data });
 
     if (!validation.success) {
+      console.error("❌ Validation failed:", validation.error.issues);
       const message =
         validation.error.issues[0]?.message || "Please review the form.";
       emitTelemetry("team.create.validation_error", {
@@ -426,19 +431,23 @@ export const CreateTeam: React.FC = () => {
       throw new Error(message);
     }
 
+    console.log("🎯 Starting telemetry...");
     emitTelemetry("team.create.attempt", {
       universalAccess,
       super: isSuperAdmin,
     });
+    console.log("✅ Telemetry completed");
 
     // Test database connectivity (read-only test)
     console.log("🔌 Testing database connectivity...");
     setLoadingMessage("Connecting to database...");
     try {
+      console.log("🔍 Attempting database select test...");
       const { error: connectTest } = await supabase
         .from("teams")
         .select("id")
         .limit(1);
+      console.log("📊 Database select result:", { error: connectTest });
 
       if (connectTest) {
         console.error("❌ Database connectivity test failed:", connectTest);
@@ -455,10 +464,15 @@ export const CreateTeam: React.FC = () => {
     }
 
     // Create team name combining school and mascot
+    console.log("🏷️ Creating team name...");
     const teamNameCombined =
       `${formData.schoolName.trim()} ${formData.teamName.trim()}`.trim();
+    console.log("📝 Team name created:", teamNameCombined);
+    
+    console.log("📅 Computing academic year...");
     const { startYear: seasonYear, display: seasonDisplay } =
       computeAcademicYear();
+    console.log("📅 Academic year computed:", { seasonYear, seasonDisplay });
 
     // Create the team record in Supabase
     console.log("🏗️ Creating team record in database...");
