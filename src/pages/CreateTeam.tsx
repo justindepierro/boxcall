@@ -536,23 +536,68 @@ export const CreateTeam: React.FC = () => {
     // Create a fresh, clean Supabase client for this operation to avoid session issues
     console.log("🔄 Creating fresh Supabase client for team insert...");
     const { createClient } = await import("@supabase/supabase-js");
-    const freshClient = createClient(
+    const _freshClient = createClient(
       import.meta.env.VITE_SUPABASE_URL,
       import.meta.env.VITE_SUPABASE_ANON_KEY
     );
+    console.log("✅ Fresh Supabase client created successfully");
     
-    // Add timeout to team insertion using fresh client
-    const teamInsertPromise = freshClient
-      .from("teams")
-      .insert(teamData)
-      .select("id")
-      .single();
+    // Test the fresh client first with isolated connection
+    console.log("🧪 Testing fresh client with isolated connection...");
+    
+    // Log the exact URL and timing to help debug network issues
+    console.log("🔗 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+    console.log("🕐 Starting network request at:", new Date().toISOString());
+    
+    try {
+      // Create completely isolated client to test if this is an auth issue
+      const { createClient } = await import("@supabase/supabase-js");
+      const isolatedClient = createClient(
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_ANON_KEY,
+        {
+          auth: {
+            persistSession: false,
+            detectSessionInUrl: false,
+            autoRefreshToken: false,
+          }
+        }
+      );
       
+      console.log("🔍 Testing isolated client with simple count...");
+      console.log("📡 About to make network request - check Network tab in DevTools");
+      
+      const countTimeout = new Promise((_, reject) => 
+        setTimeout(() => {
+          console.log("⏰ Count timeout after 5 seconds");
+          reject(new Error('Isolated count timeout'));
+        }, 5000)
+      );
+      
+      const countPromise = isolatedClient.from("teams").select("*", { count: "exact", head: true });
+      console.log("🚀 Promise created, waiting for result...");
+      
+      const countResult = await Promise.race([countPromise, countTimeout]);
+      console.log("✅ Isolated client count result:", countResult);
+      
+    } catch (testError) {
+      console.error("❌ Isolated client test failed:", testError);
+      console.log("💡 Check the Network tab in DevTools to see if the request was made to Supabase");
+    }
+    
+    console.log("🚀 Starting team insert with direct HTTP API...");
+    
+    // Import and use direct HTTP approach to bypass Supabase client issues
+    const { createTeamDirectly } = await import("../utils/direct-api");
+    
+    console.log("⏱️ Starting direct HTTP team creation...");
+    const directInsertPromise = createTeamDirectly(teamData);
+    
     const insertTimeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error("Team insert timeout")), 20000)
     );
     
-    const insertResult = await Promise.race([teamInsertPromise, insertTimeoutPromise]) as { data: any, error: any };
+    const insertResult = await Promise.race([directInsertPromise, insertTimeoutPromise]) as { data: any, error: any };
     const teamInsert = insertResult.data;
     const teamErr = insertResult.error;
     
