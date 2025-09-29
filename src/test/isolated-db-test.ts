@@ -52,19 +52,19 @@ export async function testIsolatedDatabaseConnection() {
       setTimeout(() => reject(new Error('Insert timeout')), 10000)
     );
     
-    const insertResult = await Promise.race([insertPromise, insertTimeout]);
+    const insertResult = await Promise.race([insertPromise, insertTimeout]) as any;
     console.log('✅ Insert result:', insertResult);
     
     // Clean up
-    if (insertResult.data?.id) {
+    if (insertResult?.data?.id) {
       await testClient.from('teams').delete().eq('id', insertResult.data.id);
       console.log('✅ Cleanup completed');
     }
     
     return { success: true, message: 'All tests passed' };
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Isolation test failed:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error?.message || 'Unknown error' };
   }
 }
