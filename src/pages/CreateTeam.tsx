@@ -637,19 +637,26 @@ export const CreateTeam: React.FC = () => {
     setLoadingMessage("Setting up your account...");
     const memberStart = performance.now();
     
-    // Add timeout to membership insertion
-    const memberInsertPromise = supabase.from("team_members").insert({
+    // Use direct HTTP approach for membership as well
+    const { createTeamMembershipDirectly } = await import("../utils/direct-api");
+    
+    const membershipData = {
       team_id: newTeamId,
       user_id: authUser.id, // Use the authenticated user from session
       team_role: "head_coach",
       status: "active",
-    });
+    };
+    
+    console.log("📊 Membership data to insert:", membershipData);
+    
+    // Add timeout to membership insertion using direct HTTP
+    const memberInsertPromise = createTeamMembershipDirectly(membershipData);
     
     const memberTimeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error("Membership insert timeout")), 15000)
     );
     
-    const memberResult = await Promise.race([memberInsertPromise, memberTimeoutPromise]) as { error: any };
+    const memberResult = await Promise.race([memberInsertPromise, memberTimeoutPromise]) as { data: any, error: any };
     const memberErr = memberResult.error;
     
     const memberDuration = performance.now() - memberStart;
