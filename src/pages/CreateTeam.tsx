@@ -379,7 +379,27 @@ export const CreateTeam: React.FC = () => {
     console.log("🚀 Starting team creation...");
     const startTime = performance.now();
 
-    if (!user?.id) throw new Error("User not authenticated");
+    // First, ensure user is properly authenticated
+    console.log("🔐 Verifying authentication...");
+    setLoadingMessage("Verifying your account...");
+    
+    // Get fresh session from Supabase
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      console.error("❌ No valid session:", sessionError);
+      throw new Error("Authentication required: Please sign out and sign back in to create a team.");
+    }
+    
+    const authUser = session.user;
+    if (!authUser?.id) {
+      throw new Error("User authentication failed: No user ID found.");
+    }
+    
+    console.log("✅ User authenticated with session:", {
+      userId: authUser.id,
+      email: authUser.email,
+      role: authUser.role
+    });
 
     // Validate form data
     console.log("📋 Validating form data...");
@@ -405,7 +425,7 @@ export const CreateTeam: React.FC = () => {
       super: isSuperAdmin,
     });
 
-    // Test database connectivity first
+    // Test database connectivity (read-only test)
     console.log("🔌 Testing database connectivity...");
     setLoadingMessage("Connecting to database...");
     try {
@@ -419,13 +439,6 @@ export const CreateTeam: React.FC = () => {
         throw new Error(`Database connection failed: ${connectTest.message}`);
       }
       console.log("✅ Database connectivity confirmed");
-      
-      // Check user authentication status
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      if (authError || !authUser) {
-        throw new Error("Authentication required: Please sign in to create a team.");
-      }
-      console.log("✅ User authenticated:", authUser.id);
       
     } catch (dbError) {
       console.error("❌ Database connectivity error:", dbError);
@@ -466,12 +479,21 @@ export const CreateTeam: React.FC = () => {
       
       // Check for specific database permission errors
       if (teamErr?.code === "42501" || teamErr?.message?.includes("row-level security")) {
-        throw new Error("Database permission error: Your account doesn't have permission to create teams. Please contact support or check your authentication status.");
+        throw new Error("Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support.");
       }
       
       if (teamErr?.message?.includes("duplicate") || teamErr?.code === "23505") {
         throw new Error("A team with this name already exists. Please choose a different name.");
       }
+      
+      // Enhanced error reporting for debugging
+      const errorDetails = {
+        code: teamErr?.code,
+        message: teamErr?.message,
+        details: teamErr?.details,
+        hint: teamErr?.hint
+      };
+      console.error("📋 Detailed team insert error:", errorDetails);
       
       throw teamErr || new Error("Team insert failed - unknown database error");
     }
@@ -485,7 +507,7 @@ export const CreateTeam: React.FC = () => {
     const memberStart = performance.now();
     const { error: memberErr } = await supabase.from("team_members").insert({
       team_id: newTeamId,
-      user_id: user.id,
+      user_id: authUser.id, // Use the authenticated user from session
       team_role: "head_coach",
       status: "active",
     });
@@ -547,32 +569,105 @@ export const CreateTeam: React.FC = () => {
       
       console.log(`📊 Select test: ${performance.now() - start}ms`, { data: selectTest, error: selectError });
       
-      // Test insert permissions (without actually inserting)
-      const { error: insertTest } = await supabase
-        .from("teams")
-        .insert({
-          name: "Test Team (Will Not Insert)",
-          school_name: "Test School",
-          mascot: "Test Mascot",
-          season_year: 2025,
-        })
-        .select("id")
-        .single();
-        
-      console.log("🔒 Insert permissions test:", insertTest);
-      
-      // Test user auth
+      // Test user auth and session
+      const authStart = performance.now();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      console.log("👤 Auth test:", { userId: authUser?.id, error: authError });
+      
+      console.log(`👤 Auth test: ${performance.now() - authStart}ms`, { 
+        hasSession: !!session, 
+        sessionError,
+        userId: authUser?.id, 
+        userEmail: authUser?.email,
+        userRole: authUser?.role,
+        authError 
+      });
+      
+      // Test RLS policies by checking team_members (usually has better RLS setup)
+      const { data: memberTest, error: memberError } = await supabase
+        .from("team_members")
+        .select("id")
+        .limit(1);
+        
+      console.log("🔒 RLS policy test (team_members):", { data: memberTest, error: memberError });
+      
+      console.log("✅ Database diagnostics complete");
+      return {
+        success: true,
+        selectWorks: !selectError,
+        authWorks: !authError && !!authUser,
+        sessionValid: !sessionError && !!session,
+        rlsTest: !memberError
+      };
       
     } catch (error) {
       console.error("❌ Database test failed:", error);
+      return { success: false, error };
     }
   };
 
   // Add to window for manual testing
   if (typeof window !== 'undefined') {
     (window as any).testDatabaseConnection = testDatabaseConnection;
+    
+    // Add helper to check current auth status
+    (window as any).checkAuth = async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      console.log("🔍 Current Auth Status:", {
+        session: {
+          exists: !!session,
+          accessToken: session?.access_token ? "Present" : "Missing",
+          user: session?.user?.id,
+          error: sessionError
+        },
+        user: {
+          id: user?.id,
+          email: user?.email,
+          role: user?.role,
+          error: userError
+        }
+      });
+      
+      return { session, user, sessionError, userError };
+    };
+    
+    // Add helper to attempt a simple team creation test
+    (window as any).testTeamCreation = async () => {
+      try {
+        const testData = {
+          name: "Test Team " + Date.now(),
+          school_name: "Test School",
+          mascot: "Test Mascot",
+          season_year: new Date().getFullYear(),
+        };
+        
+        console.log("🧪 Attempting test team creation...", testData);
+        
+        const { data, error } = await supabase
+          .from("teams")
+          .insert(testData)
+          .select("id")
+          .single();
+          
+        if (error) {
+          console.error("❌ Test team creation failed:", error);
+          return { success: false, error };
+        }
+        
+        console.log("✅ Test team created successfully:", data);
+        
+        // Clean up the test team
+        await supabase.from("teams").delete().eq("id", data.id);
+        console.log("🧹 Test team cleaned up");
+        
+        return { success: true, data };
+      } catch (error) {
+        console.error("❌ Test team creation exception:", error);
+        return { success: false, error };
+      }
+    };
   }
 
   const handleResumeDraft = () => {
