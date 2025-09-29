@@ -331,20 +331,26 @@ export const CreateTeam: React.FC = () => {
         // Add timeout to prevent infinite loading
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(
-            () =>
+            () => {
+              console.error("🕐 Team creation timeout reached after 60 seconds");
               reject(
                 new Error(
                   "Team creation is taking longer than expected. This might be a database connectivity issue. Please check your internet connection and try again."
                 )
-              ),
+              );
+            },
             60000 // Increased to 60 seconds
           )
         );
 
+        console.log("🏁 Starting Promise.race with createTeam() and timeout...");
+        const raceStart = performance.now();
         const team = (await Promise.race([createTeam(), timeoutPromise])) as {
           id: string;
           name: string;
         };
+        console.log(`🏆 Promise.race completed in ${performance.now() - raceStart}ms`);
+        
         setCreatedTeamId(team.id);
 
         // Navigate directly to team bulletin after successful creation
@@ -466,19 +472,22 @@ export const CreateTeam: React.FC = () => {
     };
     console.log("📊 Team data to insert:", teamData);
     
+    console.log("🚀 About to start team insert operation...");
     const dbStart = performance.now();
     const { data: teamInsert, error: teamErr } = await supabase
       .from("teams")
       .insert(teamData)
       .select("id")
       .single();
-    console.log(`🗄️ Team insert completed in ${performance.now() - dbStart}ms`);
+    const dbDuration = performance.now() - dbStart;
+    console.log(`🗄️ Team insert completed in ${dbDuration}ms`);
 
     if (teamErr || !teamInsert) {
       console.error("❌ Team insert failed:", teamErr);
       
       // Check for specific database permission errors
       if (teamErr?.code === "42501" || teamErr?.message?.includes("row-level security")) {
+        console.error("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
         throw new Error("Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support.");
       }
       
@@ -511,12 +520,16 @@ export const CreateTeam: React.FC = () => {
       team_role: "head_coach",
       status: "active",
     });
+    const memberDuration = performance.now() - memberStart;
     console.log(
-      `👥 Membership insert completed in ${performance.now() - memberStart}ms`
+      `👥 Membership insert completed in ${memberDuration}ms`
     );
 
     if (memberErr) {
-      console.warn("team_members insert warning", memberErr);
+      console.warn("⚠️ team_members insert warning:", memberErr);
+      // Don't fail the entire operation for membership errors
+    } else {
+      console.log("✅ Team membership created successfully");
     }
 
     // Persist active team selection
