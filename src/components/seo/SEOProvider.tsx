@@ -16,8 +16,18 @@ interface SEOProviderProps {
   children: ReactNode;
 }
 
+// Safe hook to get location if we're in a router context
+const useSafeLocation = () => {
+  try {
+    return useLocation();
+  } catch {
+    // Return a fallback if we're not in a router context
+    return { pathname: '/', search: '', hash: '', state: null, key: 'default' };
+  }
+};
+
 export const SEOProvider: React.FC<SEOProviderProps> = ({ children }) => {
-  const location = useLocation();
+  const location = useSafeLocation();
 
   // Set up basic meta tags and structured data
   useEffect(() => {
