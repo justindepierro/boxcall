@@ -12,31 +12,16 @@ import { securityConfig, createSecurityHeaders } from '../utils/security';
  */
 export function useSecurity() {
   useEffect(() => {
-    // Apply meta CSP tag for client-side enforcement
-    const existingCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-    if (!existingCSP) {
-      const meta = document.createElement('meta');
-      meta.httpEquiv = securityConfig.csp.reportOnly 
-        ? 'Content-Security-Policy-Report-Only' 
-        : 'Content-Security-Policy';
-      
-      const cspValue = Object.entries(securityConfig.csp.directives)
-        .map(([key, values]) => {
-          if (values.length === 0) return key;
-          return `${key} ${values.join(' ')}`;
-        })
-        .join('; ');
-      
-      meta.content = cspValue;
-      document.head.appendChild(meta);
-      
-      console.log('🔒 Security headers applied:', {
-        mode: securityConfig.csp.reportOnly ? 'report-only' : 'enforce',
-        csp: cspValue
+    // Note: CSP should be set via HTTP headers on the server
+    // Meta tag CSP is ignored by browsers for security reasons
+    if (import.meta.env.DEV) {
+      console.log('🔒 Security configuration loaded (CSP should be set via server headers):', {
+        reportOnly: securityConfig.csp.reportOnly,
+        directives: securityConfig.csp.directives
       });
     }
 
-    // Security event listeners
+    // Security event listeners for CSP violations (if CSP is set via server headers)
     const handleSecurityViolation = (event: SecurityPolicyViolationEvent) => {
       console.warn('🚫 CSP Violation:', {
         directive: event.violatedDirective,
