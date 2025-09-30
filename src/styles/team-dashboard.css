@@ -22,70 +22,115 @@
   background: linear-gradient(to right, #00a86b, #34d399);
 }
 
-/* Hero Section Cards Styling */
+/* Modern Hero Section Cards */
 .dashboard-hero-section .card,
 .dashboard-hero-section [class*="card"],
 .dashboard-hero-section .collaborative-widget {
   height: 100%;
-  min-height: 240px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease-in-out;
+  min-height: 220px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
   overflow: hidden;
   position: relative;
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
+  background: white;
 }
 
 .dashboard-hero-section .card:hover,
 .dashboard-hero-section [class*="card"]:hover,
 .dashboard-hero-section .collaborative-widget:hover {
-  border-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
-/* Specific card styling with subtle gradients */
-/* Team Goals Card - Green Theme */
+/* Clean card themes with subtle accents */
+/* Team Goals Card */
 .collaboration-goals,
 .collaboration-goals .collaborative-widget,
 .collaboration-goals .shared-goal-tracker,
 .collaboration-goals [data-testid*="card"] {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%) !important;
-  border-left: 3px solid #10b981 !important;
+  background: white !important;
+  border-top: 3px solid #059669 !important;
 }
 
-/* Team Decisions Card - Blue Theme */
+.collaboration-goals::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+  z-index: 1;
+}
+
+/* Team Decisions Card */
 .collaboration-vote,
 .collaboration-vote .collaborative-widget,
 .collaboration-vote .team-vote-widget,
 .collaboration-vote [data-testid*="card"] {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%) !important;
-  border-left: 3px solid #3b82f6 !important;
+  background: white !important;
+  border-top: 3px solid #2563eb !important;
 }
 
-/* Season Stats Card - Yellow Theme */
+.collaboration-vote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  z-index: 1;
+}
+
+/* Season Stats Card */
 .dashboard-hero-section .season-stats-container,
 .dashboard-hero-section .season-stats-container .bc-card-padding {
-  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%) !important;
-  border-left: 3px solid #f59e0b !important;
+  background: white !important;
+  border-top: 3px solid #d97706 !important;
 }
 
-/* Trophy Case Card - Orange Theme */
+.dashboard-hero-section .season-stats-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+  z-index: 1;
+}
+
+/* Trophy Case Card */
 .dashboard-hero-section .trophy-case-container,
 .dashboard-hero-section .trophy-case-container [class*="card"] {
-  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 50%, #fdba74 100%) !important;
-  border-left: 3px solid #ea580c !important;
+  background: white !important;
+  border-top: 3px solid #dc2626 !important;
 }
 
-/* Minimal typography */
+.dashboard-hero-section .trophy-case-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+  z-index: 1;
+}
+
+/* Typography system */
 .dashboard-hero-section h3,
 .dashboard-hero-section .card-title,
 .dashboard-hero-section [data-testid*="headline"] {
-  font-size: 1rem !important;
+  font-size: 0.95rem !important;
   font-weight: 600 !important;
-  color: rgb(30 41 59) !important;
+  color: #1f2937 !important;
   margin-bottom: 0.75rem !important;
   display: flex !important;
   align-items: center !important;
@@ -94,27 +139,30 @@
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   line-height: 1.4 !important;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  position: relative;
+  z-index: 2;
 }
 
-/* Body text optimization */
 .dashboard-hero-section p,
 .dashboard-hero-section .text-text-secondary,
 .dashboard-hero-section .text-text-muted {
-  font-size: 0.875rem !important;
-  line-height: 1.4 !important;
+  font-size: 0.85rem !important;
+  line-height: 1.5 !important;
   margin-bottom: 0.5rem !important;
-  color: rgb(75 85 99) !important;
+  color: #6b7280 !important;
 }
 
-/* Card content structure with better proportions */
+/* Content structure */
 .dashboard-hero-section .card-content {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 1.25rem;
   gap: 0.75rem;
+  position: relative;
+  z-index: 2;
 }
 
 .dashboard-hero-section .card-body {
@@ -128,27 +176,74 @@
 .dashboard-hero-section .card-actions {
   margin-top: auto;
   padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
 }
 
-/* Action buttons styling - more minimal */
+/* Modern action buttons */
 .dashboard-hero-section .card-actions button {
   width: 100%;
-  font-size: 0.875rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
   padding: 0.75rem 1rem !important;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: none;
-  background: rgba(0, 0, 0, 0.8) !important;
-  color: white !important;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb !important;
+  color: #374151 !important;
 }
 
 .dashboard-hero-section .card-actions button:hover {
-  background: rgba(0, 0, 0, 0.9) !important;
-  transform: translateY(-1px);
+  background: #f3f4f6 !important;
+  border-color: #d1d5db;
+  transform: none;
 }
 
-/* Compact stats grid */
+/* Colored action buttons per card */
+.collaboration-goals .card-actions button {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #059669 !important;
+}
+
+.collaboration-goals .card-actions button:hover {
+  background: #dcfce7 !important;
+  border-color: #86efac !important;
+}
+
+.collaboration-vote .card-actions button {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #2563eb !important;
+}
+
+.collaboration-vote .card-actions button:hover {
+  background: #dbeafe !important;
+  border-color: #93c5fd !important;
+}
+
+.dashboard-hero-section .season-stats-container .card-actions button {
+  background: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #d97706 !important;
+}
+
+.dashboard-hero-section .season-stats-container .card-actions button:hover {
+  background: #fef3c7 !important;
+  border-color: #fcd34d !important;
+}
+
+.dashboard-hero-section .trophy-case-container .card-actions button {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #dc2626 !important;
+}
+
+.dashboard-hero-section .trophy-case-container .card-actions button:hover {
+  background: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+}
+
+/* Clean stats grid */
 .dashboard-hero-section .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -159,28 +254,28 @@
 .dashboard-hero-section .stats-grid > div {
   text-align: center;
   padding: 0.75rem 0.5rem;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
 }
 
 .dashboard-hero-section .stats-grid .stat-value {
   font-size: 1.25rem !important;
   font-weight: 700;
   line-height: 1.2;
-  color: rgb(17 24 39);
+  color: #111827;
 }
 
 .dashboard-hero-section .stats-grid .stat-label {
-  font-size: 0.75rem !important;
+  font-size: 0.7rem !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 0.25rem;
-  opacity: 0.7;
+  color: #6b7280;
   font-weight: 500;
 }
 
-/* Responsive adjustments */
+/* Enhanced responsive design */
 @media (max-width: 1279px) {
   .dashboard-hero-section .card,
   .dashboard-hero-section [class*="card"],
@@ -195,7 +290,7 @@
   
   .dashboard-hero-section h3,
   .dashboard-hero-section .card-title {
-    font-size: 0.95rem !important;
+    font-size: 0.9rem !important;
   }
   
   .dashboard-hero-section p,
@@ -204,56 +299,57 @@
   }
 }
 
-/* Collaborative Widget Content Improvements */
-.dashboard-hero-section .shared-goal-tracker .collaborative-widget,
-.dashboard-hero-section .team-vote-widget .collaborative-widget {
-  padding: 1rem !important;
-}
-
-/* Goal Tracker specific improvements */
-.dashboard-hero-section .shared-goal-tracker .bg-surface-secondary {
-  background-color: rgb(248 250 252) !important;
+/* Fix filter buttons in collaborative widgets */
+.dashboard-hero-section .bg-surface-secondary {
+  background-color: #f8fafc !important;
   border-radius: 6px;
+  padding: 0.25rem;
 }
 
-.dashboard-hero-section .shared-goal-tracker button {
+.dashboard-hero-section .bg-surface-secondary button {
   font-size: 0.75rem !important;
-  padding: 0.25rem 0.75rem !important;
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
-/* Vote Widget specific improvements */
-.dashboard-hero-section .team-vote-widget .text-text-muted {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+/* Clean list styles */
+.dashboard-hero-section ol,
+.dashboard-hero-section ul {
+  margin: 0;
+  padding-left: 1.25rem;
 }
 
-.dashboard-hero-section .team-vote-widget button {
-  font-size: 0.875rem !important;
-  padding: 0.5rem 1rem !important;
-}
-
-/* Compact spacing for better readability */
-.dashboard-hero-section .collaborative-widget p,
-.dashboard-hero-section .collaborative-widget div:not(.flex) {
-  margin-bottom: 0.5rem;
+.dashboard-hero-section li {
+  margin-bottom: 0.375rem;
+  font-size: 0.85rem;
   line-height: 1.4;
+  color: #6b7280;
 }
 
-.dashboard-hero-section .collaborative-widget .flex {
-  gap: 0.5rem;
-  align-items: center;
+/* Progress indicators */
+.dashboard-hero-section .bg-border-secondary {
+  background-color: #e5e7eb !important;
 }
 
-/* Season Stats compactness */
-.dashboard-hero-section .bc-card-padding .grid {
-  gap: 0.75rem !important;
+.dashboard-hero-section .bg-primary {
+  background-color: #2563eb !important;
 }
 
-.dashboard-hero-section .bc-card-padding .grid > div {
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 6px;
-  border: 1px solid rgba(245, 158, 11, 0.2);
+/* Collaborative Widget Content Improvements - Removed problematic overrides */
+
+/* Enhanced visual hierarchy */
+.dashboard-hero-section .surface-card {
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.dashboard-main-content .surface-card {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
 }
 
 .dashboard-main-content {
@@ -263,17 +359,16 @@
 
 /* Enhanced visual hierarchy */
 .dashboard-hero-section .surface-card {
-  border: 1px solid #d1fae5;
-  background: linear-gradient(to bottom right, white, #ecfdf5);
-  transition: all 0.3s ease;
-  overflow: hidden; /* Prevent card content overflow */
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.15s ease;
+  overflow: hidden;
 }
 
 .dashboard-main-content .surface-card {
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  overflow: hidden; /* Prevent card content overflow */
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
 }
 
 /* Card hover effects for better interactivity */
