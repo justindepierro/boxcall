@@ -1,166 +1,149 @@
-/* Team Dashboard Enhanced Styles */
+/* Team Dashboard Modern Styles */
 
 .team-dashboard-container {
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .dashboard-hero-section {
   position: relative;
-  margin-bottom: 2rem;
-  overflow: hidden; /* Prevent content overflow */
+  margin-bottom: 3rem;
+  overflow: hidden;
 }
 
-.dashboard-hero-section::after {
-  content: "";
-  position: absolute;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6rem;
-  height: 2px;
-  background: linear-gradient(to right, #00a86b, #34d399);
-}
-
-/* Modern Hero Section Cards */
+/* Modern Card Foundation */
 .dashboard-hero-section .card,
 .dashboard-hero-section [class*="card"],
-.dashboard-hero-section .collaborative-widget {
-  height: 100%;
-  min-height: 220px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
+.dashboard-hero-section .collaborative-widget,
+.dashboard-hero-section .surface-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
-  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  background: white;
+  min-height: 280px;
+  backdrop-filter: blur(8px);
 }
 
 .dashboard-hero-section .card:hover,
 .dashboard-hero-section [class*="card"]:hover,
-.dashboard-hero-section .collaborative-widget:hover {
-  border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
+.dashboard-hero-section .collaborative-widget:hover,
+.dashboard-hero-section .surface-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }
 
-/* Clean card themes with subtle accents */
-/* Team Goals Card */
+/* Subtle Card Accents - Modern Approach */
 .collaboration-goals,
 .collaboration-goals .collaborative-widget,
-.collaboration-goals .shared-goal-tracker,
-.collaboration-goals [data-testid*="card"] {
-  background: white !important;
-  border-top: 3px solid #059669 !important;
+.collaboration-goals .shared-goal-tracker {
+  position: relative;
 }
 
 .collaboration-goals::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+  height: 4px;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-radius: 16px 16px 0 0;
   z-index: 1;
 }
 
-/* Team Decisions Card */
 .collaboration-vote,
 .collaboration-vote .collaborative-widget,
-.collaboration-vote .team-vote-widget,
-.collaboration-vote [data-testid*="card"] {
-  background: white !important;
-  border-top: 3px solid #2563eb !important;
+.collaboration-vote .team-vote-widget {
+  position: relative;
 }
 
 .collaboration-vote::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  height: 4px;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  border-radius: 16px 16px 0 0;
   z-index: 1;
 }
 
-/* Season Stats Card */
-.dashboard-hero-section .season-stats-container,
-.dashboard-hero-section .season-stats-container .bc-card-padding {
-  background: white !important;
-  border-top: 3px solid #d97706 !important;
+.season-stats-container {
+  position: relative;
 }
 
-.dashboard-hero-section .season-stats-container::before {
-  content: '';
+.season-stats-container::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+  height: 4px;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  border-radius: 16px 16px 0 0;
   z-index: 1;
 }
 
-/* Trophy Case Card */
-.dashboard-hero-section .trophy-case-container,
-.dashboard-hero-section .trophy-case-container [class*="card"] {
-  background: white !important;
-  border-top: 3px solid #dc2626 !important;
+.trophy-case-container {
+  position: relative;
 }
 
-.dashboard-hero-section .trophy-case-container::before {
-  content: '';
+.trophy-case-container::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+  height: 4px;
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  border-radius: 16px 16px 0 0;
   z-index: 1;
 }
 
-/* Typography system */
+/* Modern Typography System */
 .dashboard-hero-section h3,
 .dashboard-hero-section .card-title,
 .dashboard-hero-section [data-testid*="headline"] {
-  font-size: 0.95rem !important;
-  font-weight: 600 !important;
-  color: #1f2937 !important;
-  margin-bottom: 0.75rem !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin-bottom: 0.5rem !important;
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
   line-height: 1.4 !important;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f3f4f6;
   position: relative;
   z-index: 2;
+  padding-top: 0.5rem;
+  letter-spacing: -0.025em;
 }
 
 .dashboard-hero-section p,
 .dashboard-hero-section .text-text-secondary,
 .dashboard-hero-section .text-text-muted {
-  font-size: 0.85rem !important;
-  line-height: 1.5 !important;
-  margin-bottom: 0.5rem !important;
-  color: #6b7280 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  margin-bottom: 0.75rem !important;
+  color: #64748b !important;
+  font-weight: 400;
 }
 
-/* Content structure */
-.dashboard-hero-section .card-content {
+/* Content Structure */
+.dashboard-hero-section .card-content,
+.dashboard-hero-section .p-6 {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1.25rem;
-  gap: 0.75rem;
+  padding: 1.5rem !important;
+  gap: 1rem;
   position: relative;
   z-index: 2;
 }
@@ -179,206 +162,195 @@
   border-top: 1px solid #f3f4f6;
 }
 
-/* Modern action buttons */
+/* Modern Action Buttons */
+.dashboard-hero-section .card-actions {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
 .dashboard-hero-section .card-actions button {
   width: 100%;
-  font-size: 0.85rem !important;
-  font-weight: 500 !important;
-  padding: 0.75rem 1rem !important;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb !important;
-  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  padding: 0.875rem 1.25rem !important;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+  background: #f8fafc !important;
+  color: #475569 !important;
+  letter-spacing: -0.025em;
+  position: relative;
+  overflow: hidden;
 }
 
 .dashboard-hero-section .card-actions button:hover {
-  background: #f3f4f6 !important;
-  border-color: #d1d5db;
-  transform: none;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Colored action buttons per card */
-.collaboration-goals .card-actions button {
-  background: #f0fdf4 !important;
-  border-color: #bbf7d0 !important;
-  color: #059669 !important;
+.dashboard-hero-section .card-actions button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.collaboration-goals .card-actions button:hover {
-  background: #dcfce7 !important;
-  border-color: #86efac !important;
-}
-
-.collaboration-vote .card-actions button {
-  background: #eff6ff !important;
-  border-color: #bfdbfe !important;
-  color: #2563eb !important;
-}
-
-.collaboration-vote .card-actions button:hover {
-  background: #dbeafe !important;
-  border-color: #93c5fd !important;
-}
-
-.dashboard-hero-section .season-stats-container .card-actions button {
-  background: #fffbeb !important;
-  border-color: #fde68a !important;
-  color: #d97706 !important;
-}
-
-.dashboard-hero-section .season-stats-container .card-actions button:hover {
-  background: #fef3c7 !important;
-  border-color: #fcd34d !important;
-}
-
-.dashboard-hero-section .trophy-case-container .card-actions button {
-  background: #fef2f2 !important;
-  border-color: #fecaca !important;
-  color: #dc2626 !important;
-}
-
-.dashboard-hero-section .trophy-case-container .card-actions button:hover {
-  background: #fee2e2 !important;
-  border-color: #fca5a5 !important;
-}
-
-/* Clean stats grid */
+/* Enhanced Stats Grid */
 .dashboard-hero-section .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  margin: 1rem 0;
+  gap: 1rem;
+  margin: 1.5rem 0;
 }
 
 .dashboard-hero-section .stats-grid > div {
   text-align: center;
-  padding: 0.75rem 0.5rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #f1f5f9;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.dashboard-hero-section .stats-grid > div:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard-hero-section .stats-grid .stat-value {
-  font-size: 1.25rem !important;
-  font-weight: 700;
+  font-size: 1.5rem !important;
+  font-weight: 800;
   line-height: 1.2;
-  color: #111827;
+  color: #1e293b;
+  letter-spacing: -0.025em;
 }
 
 .dashboard-hero-section .stats-grid .stat-label {
-  font-size: 0.7rem !important;
+  font-size: 0.75rem !important;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.25rem;
-  color: #6b7280;
-  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  color: #64748b;
+  font-weight: 600;
 }
 
-/* Enhanced responsive design */
+/* Enhanced Responsive Design */
 @media (max-width: 1279px) {
   .dashboard-hero-section .card,
   .dashboard-hero-section [class*="card"],
   .dashboard-hero-section .collaborative-widget {
-    min-height: 200px;
-    margin-bottom: 1.25rem;
+    min-height: 260px;
+    margin-bottom: 0;
   }
-  
-  .dashboard-hero-section .card-content {
-    padding: 1rem;
+
+  .dashboard-hero-section .card-content,
+  .dashboard-hero-section .p-6 {
+    padding: 1.25rem !important;
   }
-  
+
   .dashboard-hero-section h3,
   .dashboard-hero-section .card-title {
-    font-size: 0.9rem !important;
+    font-size: 1rem !important;
   }
-  
+
   .dashboard-hero-section p,
   .dashboard-hero-section .text-text-secondary {
-    font-size: 0.8rem !important;
+    font-size: 0.875rem !important;
   }
 }
 
-/* Fix filter buttons in collaborative widgets */
-.dashboard-hero-section .bg-surface-secondary {
-  background-color: #f8fafc !important;
-  border-radius: 6px;
-  padding: 0.25rem;
-}
-
-.dashboard-hero-section .bg-surface-secondary button {
-  font-size: 0.75rem !important;
-  padding: 0.375rem 0.75rem !important;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-/* Clean list styles */
+/* Modern List Styling */
 .dashboard-hero-section ol,
 .dashboard-hero-section ul {
   margin: 0;
-  padding-left: 1.25rem;
+  padding-left: 0;
+  list-style: none;
 }
 
 .dashboard-hero-section li {
-  margin-bottom: 0.375rem;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  color: #6b7280;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #64748b;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+  padding-left: 1.5rem;
 }
 
-/* Progress indicators */
+.dashboard-hero-section li:last-child {
+  border-bottom: none;
+}
+
+.dashboard-hero-section ol li::before {
+  content: counter(list-counter);
+  counter-increment: list-counter;
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-hero-section ol {
+  counter-reset: list-counter;
+}
+
+/* Filter Button Improvements */
+.dashboard-hero-section .bg-surface-secondary {
+  background-color: #f1f5f9 !important;
+  border-radius: 8px;
+  padding: 0.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard-hero-section .bg-surface-secondary button {
+  font-size: 0.8rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* Progress Bar Enhancements */
 .dashboard-hero-section .bg-border-secondary {
-  background-color: #e5e7eb !important;
+  background-color: #e2e8f0 !important;
+  border-radius: 8px;
 }
 
 .dashboard-hero-section .bg-primary {
-  background-color: #2563eb !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%) !important;
+  border-radius: 8px;
 }
 
-/* Collaborative Widget Content Improvements - Removed problematic overrides */
+/* Final Polish and Cohesion */
 
-/* Enhanced visual hierarchy */
-.dashboard-hero-section .surface-card {
-  border: 1px solid #e5e7eb;
-  background: white;
-  transition: all 0.15s ease;
-  overflow: hidden;
-}
-
+/* Remove any outdated styling overrides */
+.team-dashboard-container .surface-card,
 .dashboard-main-content .surface-card {
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  border-radius: 16px;
 }
 
-.dashboard-main-content {
-  position: relative;
-  overflow: hidden; /* Prevent content overflow */
-}
-
-/* Enhanced visual hierarchy */
-.dashboard-hero-section .surface-card {
-  border: 1px solid #e5e7eb;
-  background: white;
-  transition: all 0.15s ease;
-  overflow: hidden;
-}
-
-.dashboard-main-content .surface-card {
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
-}
-
-/* Card hover effects for better interactivity */
 .team-dashboard-container .surface-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
 }
 
-/* Text overflow prevention for all cards */
+/* Global text overflow prevention with modern approach */
 .team-dashboard-container .surface-card h1,
 .team-dashboard-container .surface-card h2,
 .team-dashboard-container .surface-card h3,
@@ -387,15 +359,47 @@
 .team-dashboard-container .surface-card h6 {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
   max-width: 100%;
 }
 
-/* Button text overflow prevention */
 .team-dashboard-container button {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Icon Enhancement */
+.dashboard-hero-section .icon,
+.dashboard-hero-section svg {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-hero-section .card:hover .icon,
+.dashboard-hero-section .card:hover svg {
+  opacity: 1;
+}
+
+/* Enhanced accessibility and focus states */
+.dashboard-hero-section button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Smooth transitions for all interactive elements */
+.dashboard-hero-section *:not(svg):not(path) {
+  transition-property: color, background-color, border-color, transform, box-shadow, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Final layout optimization */
+.dashboard-hero-section {
+  margin-bottom: 3rem;
+  position: relative;
+  isolation: isolate;
 }
 
 .team-dashboard-container button > span {

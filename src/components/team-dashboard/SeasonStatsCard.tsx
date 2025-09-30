@@ -94,7 +94,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
     stats?.win_pct != null ? (stats.win_pct * 100).toFixed(1) + "%" : "-";
 
   return (
-    <Card className="bc-card-padding h-full flex flex-col" aria-label="Season statistics">
+    <Card
+      className="bc-card-padding h-full flex flex-col"
+      aria-label="Season statistics"
+    >
       <div className="flex items-center justify-between mb-4">
         <Typography variant="headline-md" className="text-text-primary">
           Season Stats

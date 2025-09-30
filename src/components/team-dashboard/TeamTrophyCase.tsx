@@ -13,9 +13,11 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
     <Card className="p-6 surface-card border-subtle card-overflow-safe h-full flex flex-col">
       <div className="flex items-center gap-2 mb-3 icon-text-safe">
         <Icon name="award" size="md" className="flex-shrink-0" />
-        <Typography variant="headline-md" className="text-truncate">Team Trophy Case</Typography>
+        <Typography variant="headline-md" className="text-truncate">
+          Team Trophy Case
+        </Typography>
       </div>
-      
+
       <div className="flex-1">
         <Typography
           variant="body-sm"
@@ -32,7 +34,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
           <li className="text-truncate">Track academic achievements</li>
         </ol>
       </div>
-      
+
       <div className="card-actions mt-auto pt-3">
         <Button
           variant="primary"

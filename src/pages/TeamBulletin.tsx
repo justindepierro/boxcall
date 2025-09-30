@@ -379,13 +379,13 @@ const TeamBulletin: React.FC = React.memo(() => {
             {/* Enhanced Team Dashboard Layout */}
             <div className="team-dashboard-container">
               {/* Hero Stats Row */}
-              <div className="dashboard-hero-section mb-8">
-                {/* Mobile/Tablet: Stack vertically */}
-                <div className="grid grid-cols-1 gap-6 xl:hidden">
+              <div className="dashboard-hero-section mb-12">
+                {/* Mobile/Tablet: Stack vertically with improved spacing */}
+                <div className="grid grid-cols-1 gap-8 xl:hidden">
                   <div className="trophy-case-container">
                     <TeamTrophyCase teamId={teamId || ""} />
                   </div>
-                  
+
                   {/* Team Goals & Progress */}
                   <div
                     className="collaboration-goals"
@@ -398,7 +398,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                       )}
                     </React.Suspense>
                   </div>
-                  
+
                   {/* Team Decisions */}
                   <div
                     className="collaboration-vote"
@@ -423,7 +423,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                       />
                     </React.Suspense>
                   </div>
-                  
+
                   {/* Season Stats */}
                   <div className="season-stats-container">
                     <SeasonStatsCard
@@ -433,8 +433,8 @@ const TeamBulletin: React.FC = React.memo(() => {
                   </div>
                 </div>
 
-                {/* Desktop: 4-column layout */}
-                <div className="hidden xl:grid xl:grid-cols-4 gap-6">
+                {/* Desktop: Enhanced 4-column layout with better gaps */}
+                <div className="hidden xl:grid xl:grid-cols-4 gap-8">
                   <div className="xl:col-span-1 trophy-case-container">
                     <TeamTrophyCase teamId={teamId || ""} />
                   </div>
@@ -637,7 +637,9 @@ const TeamBulletin: React.FC = React.memo(() => {
                             <span className="text-truncate">Team Roster</span>
                           </Typography>
                           <div className="text-xs text-text-secondary bg-slate-100 px-2 py-1 rounded-full flex-shrink-0 badge-safe">
-                            <span className="text-truncate">{teamData?.memberCount || 0} members</span>
+                            <span className="text-truncate">
+                              {teamData?.memberCount || 0} members
+                            </span>
                           </div>
                         </div>
                         <div className="max-h-64 overflow-y-auto">

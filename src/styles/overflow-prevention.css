@@ -166,12 +166,12 @@ th {
   .rounded-full span {
     max-width: 6rem;
   }
-  
+
   td,
   th {
     max-width: 120px;
   }
-  
+
   .tooltip,
   [role="tooltip"] {
     max-width: 200px;
@@ -182,17 +182,17 @@ th {
   .rounded-full span {
     max-width: 4rem;
   }
-  
+
   td,
   th {
     max-width: 80px;
   }
-  
+
   .tooltip,
   [role="tooltip"] {
     max-width: 150px;
   }
-  
+
   /* More aggressive truncation on very small screens */
   button span {
     max-width: 8rem;
