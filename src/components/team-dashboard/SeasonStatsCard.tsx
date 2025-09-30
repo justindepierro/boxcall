@@ -94,21 +94,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
     stats?.win_pct != null ? (stats.win_pct * 100).toFixed(1) + "%" : "-";
 
   return (
-    <Card className="bc-card-padding" aria-label="Season statistics">
+    <Card className="bc-card-padding h-full flex flex-col" aria-label="Season statistics">
       <div className="flex items-center justify-between mb-4">
         <Typography variant="headline-md" className="text-text-primary">
           Season Stats
         </Typography>
-        {canLog && (
-          <Button
-            size="sm"
-            variant="primary"
-            onClick={() => setOpen(true)}
-            ref={triggerRef}
-          >
-            Log Game
-          </Button>
-        )}
       </div>
       {statsLoading && (
         <div className="text-sm text-text-muted">Loading stats...</div>
@@ -218,6 +208,21 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
           })}
         </ul>
       )}
+
+      {/* Action Button */}
+      {canLog && (
+        <div className="card-actions mt-auto pt-3">
+          <Button
+            variant="primary"
+            onClick={() => setOpen(true)}
+            ref={triggerRef}
+            className="w-full"
+          >
+            Log Game
+          </Button>
+        </div>
+      )}
+
       {open && (
         <Modal
           isOpen={open}

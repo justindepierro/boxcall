@@ -168,7 +168,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
       className="shared-goal-tracker"
       mockCollaboration={mockCollaboration}
     >
-      <Card variant="glass" className="h-full p-3">
+      <Card variant="glass" className="h-full p-3 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Typography variant="headline-sm" as="h3">
@@ -199,23 +199,11 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
                 Team
               </Button>
             </div>
-
-            {/* Create Goal Button */}
-            {(userRole === "coach" || userRole === "player") && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setIsCreatingGoal(true)}
-              >
-                <Icon name="plus" size="xs" />
-                New Goal
-              </Button>
-            )}
           </div>
         </div>
 
-        {/* Goals List */}
-        <div className="space-y-3 mb-4">
+        {/* Goals List - Flex grow to fill space */}
+        <div className="space-y-3 mb-4 flex-1 overflow-y-auto">
           {filteredGoals.length === 0 ? (
             <div className="text-center py-8">
               <Icon
@@ -319,6 +307,20 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
             </span>
           </div>
         </div>
+
+        {/* Action Button */}
+        {(userRole === "coach" || userRole === "player") && (
+          <div className="card-actions mt-auto pt-3">
+            <Button
+              variant="primary"
+              onClick={() => setIsCreatingGoal(true)}
+              className="w-full"
+            >
+              <Icon name="plus" size="xs" />
+              New Goal
+            </Button>
+          </div>
+        )}
 
         {/* Create Goal Modal Placeholder */}
         {isCreatingGoal && (

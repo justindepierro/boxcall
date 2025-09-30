@@ -259,26 +259,16 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
       className="team-vote-widget"
       mockCollaboration={mockCollaboration}
     >
-      <Card variant="glass" className="h-full p-3">
+      <Card variant="glass" className="h-full p-3 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Typography variant="headline-sm" as="h3">
             Team Decisions
           </Typography>
-          {canCreateVote && (
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setIsCreatingVote(true)}
-            >
-              <Icon name="plus" size="xs" />
-              New Vote
-            </Button>
-          )}
         </div>
 
-        {/* Active Votes */}
-        <div className="space-y-4">
+        {/* Active Votes - Flex grow to fill space */}
+        <div className="space-y-4 flex-1 overflow-y-auto">
           {localVotes.length === 0 ? (
             <div className="text-center py-8">
               <Icon
@@ -429,6 +419,20 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
             })
           )}
         </div>
+
+        {/* Action Button */}
+        {canCreateVote && (
+          <div className="card-actions mt-auto pt-3">
+            <Button
+              variant="primary"
+              onClick={() => setIsCreatingVote(true)}
+              className="w-full"
+            >
+              <Icon name="plus" size="xs" />
+              New Vote
+            </Button>
+          </div>
+        )}
 
         {/* Create Vote Modal Placeholder */}
         {isCreatingVote && (

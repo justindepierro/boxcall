@@ -382,7 +382,9 @@ const TeamBulletin: React.FC = React.memo(() => {
               <div className="dashboard-hero-section mb-8">
                 {/* Mobile/Tablet: Stack vertically */}
                 <div className="grid grid-cols-1 gap-6 xl:hidden">
-                  <TeamTrophyCase teamId={teamId || ""} />
+                  <div className="trophy-case-container">
+                    <TeamTrophyCase teamId={teamId || ""} />
+                  </div>
                   
                   {/* Team Goals & Progress */}
                   <div
@@ -423,15 +425,17 @@ const TeamBulletin: React.FC = React.memo(() => {
                   </div>
                   
                   {/* Season Stats */}
-                  <SeasonStatsCard
-                    teamId={teamId || ""}
-                    userRole={userRole}
-                  />
+                  <div className="season-stats-container">
+                    <SeasonStatsCard
+                      teamId={teamId || ""}
+                      userRole={userRole}
+                    />
+                  </div>
                 </div>
 
                 {/* Desktop: 4-column layout */}
                 <div className="hidden xl:grid xl:grid-cols-4 gap-6">
-                  <div className="xl:col-span-1">
+                  <div className="xl:col-span-1 trophy-case-container">
                     <TeamTrophyCase teamId={teamId || ""} />
                   </div>
                   <div className="xl:col-span-1">
@@ -472,7 +476,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                       </React.Suspense>
                     </div>
                   </div>
-                  <div className="xl:col-span-1">
+                  <div className="xl:col-span-1 season-stats-container">
                     <SeasonStatsCard
                       teamId={teamId || ""}
                       userRole={userRole}
