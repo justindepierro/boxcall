@@ -12,6 +12,8 @@
 @import "./styles/page-layout.css";
 /* Responsive dashboard layout */
 @import "./styles/responsive-dashboard.css";
+/* Team dashboard enhanced styles */
+@import "./styles/team-dashboard.css";
 /* Import animation system */
 @import "./styles/animations.css";
 

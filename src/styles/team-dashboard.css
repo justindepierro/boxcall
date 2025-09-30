@@ -1,0 +1,233 @@
+/* Team Dashboard Enhanced Styles */
+
+.team-dashboard-container {
+  position: relative;
+}
+
+.dashboard-hero-section {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.dashboard-hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6rem;
+  height: 2px;
+  background: linear-gradient(to right, #00a86b, #34d399);
+}
+
+.dashboard-main-content {
+  position: relative;
+}
+
+/* Enhanced visual hierarchy */
+.dashboard-hero-section .surface-card {
+  border: 1px solid #d1fae5;
+  background: linear-gradient(to bottom right, white, #ecfdf5);
+  transition: all 0.3s ease;
+}
+
+.dashboard-main-content .surface-card {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Card hover effects for better interactivity */
+.team-dashboard-container .surface-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Team activity header styling */
+.team-activity-header {
+  transition: all 0.3s ease;
+}
+
+.team-activity-header:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved spacing for collaboration widgets */
+.collaboration-goals,
+.collaboration-vote,
+.collaboration-progress {
+  height: 100%;
+  min-height: 280px;
+}
+
+/* Sticky sidebar positioning with safe spacing */
+.sticky {
+  position: sticky;
+  top: 1.5rem;
+}
+
+/* Quick actions styling improvements */
+.quick-actions-card {
+  background: linear-gradient(to bottom right, #f8fafc, white);
+  transition: all 0.3s ease;
+}
+
+.quick-actions-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Roster card improvements */
+.roster-card {
+  max-height: 20rem;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.roster-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.roster-card::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.roster-card::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.roster-card::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Enhanced card transitions */
+.dashboard-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+/* Progress sharing and collaboration widget improvements */
+.collaboration-section {
+  background: linear-gradient(to right, #ecfdf5, #f0fdf4);
+  border-radius: 0.5rem;
+  padding: 4px;
+  transition: all 0.3s ease;
+}
+
+.collaboration-section .surface-card {
+  background: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar widget enhancements */
+.calendar-widget {
+  transition: all 0.3s ease;
+}
+
+.calendar-widget:hover {
+  transform: translateY(-2px);
+}
+
+/* Team engagement stats styling */
+.team-activity-header .flex.gap-4 > div {
+  transition: all 0.2s ease;
+}
+
+.team-activity-header .flex.gap-4 > div:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1279px) {
+  .team-dashboard-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .sticky {
+    position: static;
+  }
+
+  /* Stack order adjustments for mobile */
+  .xl\:col-span-3.order-2.xl\:order-1 {
+    order: 1;
+  }
+
+  .xl\:col-span-6.order-1.xl\:order-2 {
+    order: 2;
+  }
+
+  .xl\:col-span-3.order-3 {
+    order: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero-section .grid,
+  .dashboard-main-content .grid {
+    gap: 1rem;
+  }
+
+  /* Mobile-first team activity header */
+  .team-activity-header {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .team-activity-header .flex.gap-4 {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Adjust collaboration widgets for mobile */
+  .collaboration-goals,
+  .collaboration-vote,
+  .collaboration-progress {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero-section::after {
+    width: 4rem;
+  }
+
+  .team-activity-header {
+    padding: 0.75rem;
+  }
+
+  .collaboration-goals,
+  .collaboration-vote,
+  .collaboration-progress {
+    min-height: 200px;
+  }
+}
+
+/* Focus states for accessibility */
+.team-dashboard-container [role="region"]:focus-within,
+.team-dashboard-container .surface-card:focus-within {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .team-dashboard-container .sticky {
+    position: static !important;
+  }
+
+  .team-dashboard-container .shadow-lg,
+  .team-dashboard-container .shadow-md,
+  .team-dashboard-container .shadow-sm {
+    box-shadow: none !important;
+  }
+}
