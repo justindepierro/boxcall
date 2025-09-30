@@ -5,6 +5,7 @@ import { Input } from "../components/ui/Input";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 import { PageLayout } from "../components/layout/PageLayout";
+import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
 import {
   Camera,
@@ -401,11 +402,10 @@ export const ProfilePage: React.FC = () => {
   };
   if (loading) {
     return (
-      <PageLayout>
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
-        </div>
-      </PageLayout>
+      <LoadingScreen
+        title="Loading Profile"
+        subtitle="Fetching your profile information and settings..."
+      />
     );
   }
   if (!profile) {

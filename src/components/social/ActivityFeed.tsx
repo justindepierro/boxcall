@@ -32,40 +32,63 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const loadActivities = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
+      // First, fetch activity data without the join
+      let activityQuery = supabase
         .from("activity_feed")
-        .select(
-          `
-          *,
-          actor:profiles(display_name, avatar_url)
-        `
-        )
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(limit);
 
       if (userId) {
-        query = query.or(
+        activityQuery = activityQuery.or(
           `actor_id.eq.${userId},mentioned_user_id.eq.${userId}`
         );
       }
 
-      const { data, error } = await query;
+      const { data: activities, error: activityError } = await activityQuery;
 
-      if (error) throw error;
+      if (activityError) throw activityError;
+
+      if (!activities || activities.length === 0) {
+        setActivities([]);
+        return;
+      }
+
+      // Get unique actor IDs
+      const actorIds = [
+        ...new Set(activities.map((a) => a.actor_id).filter(Boolean)),
+      ];
+
+      // Fetch profiles for these actors
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, display_name, avatar_url")
+        .in("id", actorIds);
+
+      if (profileError) {
+        console.warn("Failed to load profiles:", profileError);
+      }
+
+      // Create a map of profiles by ID
+      const profileMap = new Map();
+      (profiles || []).forEach((profile) => {
+        profileMap.set(profile.id, profile);
+      });
 
       // Transform the data to match our interface
-      const transformedActivities: ActivityItem[] = (data || []).map(
-        (item) => ({
+      const transformedActivities: ActivityItem[] = activities.map((item) => {
+        const actorProfile = profileMap.get(item.actor_id);
+        return {
           id: item.id,
-          activity_type: item.activity_type,
-          actor_name: item.actor?.display_name || "Unknown User",
-          actor_avatar: item.actor?.avatar_url,
-          content_type: item.content_type,
-          content_title: item.metadata?.content_title,
+          activity_type: item.action_type || item.activity_type,
+          actor_name: actorProfile?.display_name || "Unknown User",
+          actor_avatar: actorProfile?.avatar_url,
+          content_type: item.target_type || item.content_type,
+          content_title: item.content || item.metadata?.content_title,
           created_at: item.created_at,
           metadata: item.metadata,
-        })
-      );
+        };
+      });
 
       setActivities(transformedActivities);
     } catch (error) {

@@ -18,6 +18,8 @@ import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
 import { useRoles } from "../hooks/useRoles";
 
+import { LoadingScreen } from "../components/ui/LoadingScreen";
+
 // Collaboration components and provider
 import { SharedGoalTracker } from "../components/collaboration/SharedGoalTracker";
 import { TeamVoteWidget } from "../components/collaboration/TeamVoteWidget";
@@ -76,10 +78,26 @@ const TeamBulletin: React.FC = React.memo(() => {
     };
   });
 
+  const [isTeamDataLoading, setIsTeamDataLoading] = useState(true);
+
   const loadingInitial = useMemo(
     () => !user || !profile || !teamId,
     [user, profile, teamId]
   );
+
+  // Check if we're still loading role context or team membership
+  const isRoleContextLoading = !roleContext && user && profile;
+  const { isLoading: isMembershipLoading } = useTeamMembershipRole(
+    teamId,
+    profile?.id
+  );
+
+  // Comprehensive loading state
+  const isLoading =
+    loadingInitial ||
+    isRoleContextLoading ||
+    isMembershipLoading ||
+    isTeamDataLoading;
 
   const handleCreateTeam = useCallback(() => {
     console.info("team.create.attempt", {
@@ -97,7 +115,12 @@ const TeamBulletin: React.FC = React.memo(() => {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!teamId) return;
+      if (!teamId) {
+        setIsTeamDataLoading(false);
+        return;
+      }
+
+      setIsTeamDataLoading(true);
 
       try {
         type TeamRow = {
@@ -114,6 +137,7 @@ const TeamBulletin: React.FC = React.memo(() => {
           .single<TeamRow>();
         if (error) {
           console.warn("team.fetch.error", error);
+          setIsTeamDataLoading(false);
           return;
         }
         let memberCount = 0;
@@ -150,6 +174,10 @@ const TeamBulletin: React.FC = React.memo(() => {
         }
       } catch {
         // ignore team fetch failure
+      } finally {
+        if (!cancelled) {
+          setIsTeamDataLoading(false);
+        }
       }
     })();
     return () => {
@@ -198,6 +226,19 @@ const TeamBulletin: React.FC = React.memo(() => {
     };
   }, [profile?.role, userRole, user?.id, teamId]);
 
+  // Show loading screen while any data is loading
+  if (isLoading) {
+    const subtitle =
+      [
+        isRoleContextLoading && "Checking team access...",
+        isMembershipLoading && "Validating membership...",
+        isTeamDataLoading && "Loading team information...",
+        loadingInitial && "Initializing...",
+      ].filter(Boolean)[0] || "Please wait...";
+
+    return <LoadingScreen title="Loading Team Dashboard" subtitle={subtitle} />;
+  }
+
   if (!teamId) {
     if (!hasAnyTeam) {
       return (
@@ -245,18 +286,6 @@ const TeamBulletin: React.FC = React.memo(() => {
           </div>
         </div>
       </PageLayout>
-    );
-  }
-
-  if (loadingInitial) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Typography variant="headline-lg" color="muted">
-            Loading team dashboard...
-          </Typography>
-        </div>
-      </div>
     );
   }
 

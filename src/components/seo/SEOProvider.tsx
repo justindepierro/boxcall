@@ -22,7 +22,7 @@ const useSafeLocation = () => {
     return useLocation();
   } catch {
     // Return a fallback if we're not in a router context
-    return { pathname: '/', search: '', hash: '', state: null, key: 'default' };
+    return { pathname: "/", search: "", hash: "", state: null, key: "default" };
   }
 };
 

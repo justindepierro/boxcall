@@ -10,6 +10,7 @@ import { Modal } from "../components/ui/Modal/Modal";
 import Icon from "../components/ui/Icon/Icon";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { PageLayout } from "../components/layout/PageLayout";
+import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { useAuth } from "../app/auth-store";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import {
@@ -240,9 +241,10 @@ export function PracticePlanner() {
   }
   if (loading) {
     return (
-      <div className="min-h-screen surface-app flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-      </div>
+      <LoadingScreen
+        title="Loading Practice Planner"
+        subtitle="Setting up your practice schedules and templates..."
+      />
     );
   }
   return (

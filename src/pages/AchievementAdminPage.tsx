@@ -9,6 +9,7 @@ import { Badge } from "../components/ui/Badge";
 import type { BadgeVariant } from "../components/ui/Badge/Badge";
 import { Icon } from "../components/ui/Icon";
 import { Modal } from "../components/ui/Modal";
+import { LoadingScreen } from "../components/ui/LoadingScreen";
 
 interface AchievementFormData {
   name: string;
@@ -246,9 +247,10 @@ export const AchievementAdminPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-      </div>
+      <LoadingScreen
+        title="Loading Achievements"
+        subtitle="Fetching achievement definitions and settings..."
+      />
     );
   }
 

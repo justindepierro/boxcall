@@ -9,7 +9,7 @@ import { useAriaAttributes } from "../../hooks/useAccessibility";
 import { ARIA_LABELS } from "../../config/accessibility";
 
 interface AccessibleInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label: string;
   error?: string;
   hint?: string;

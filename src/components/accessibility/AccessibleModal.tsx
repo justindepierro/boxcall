@@ -216,5 +216,3 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
   // Render modal in portal
   return createPortal(modalContent, document.body);
 };
-
-

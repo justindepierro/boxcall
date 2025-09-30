@@ -14,7 +14,10 @@ import {
   useA11yTesting,
 } from "../../hooks/useAccessibility";
 import { accessibilityConfig } from "../../config/accessibility";
-import { AccessibilityContext, type AccessibilityContextType } from "../../hooks/useAccessibilityContext";
+import {
+  AccessibilityContext,
+  type AccessibilityContextType,
+} from "../../hooks/useAccessibilityContext";
 
 interface AccessibilityProviderProps {
   children: ReactNode;
@@ -218,7 +221,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
           </a>
         </div>
       )}
-      
+
       {/* Screen Reader Announcer */}
       <div
         ref={announcementRef}
@@ -227,7 +230,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         className="sr-only"
         role="status"
       />
-      
+
       {children}
       {enableTesting && violations.length > 0 && (
         <div
