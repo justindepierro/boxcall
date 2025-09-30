@@ -51,7 +51,9 @@ export class RoleService {
         .single();
 
       if (profileError) {
-        console.error("Error fetching user profile:", profileError);
+        if (import.meta.env.DEV) {
+          console.warn("⚠️ RoleService: User profile not found (common in development):", profileError.message);
+        }
         throw new Error("Failed to fetch user profile");
       }
 
@@ -73,7 +75,9 @@ export class RoleService {
         .eq("status", "active");
 
       if (memberError) {
-        console.error("Error fetching team memberships:", memberError);
+        if (import.meta.env.DEV) {
+          console.warn("⚠️ RoleService: Team memberships not found (common in development):", memberError.message);
+        }
         throw new Error("Failed to fetch team memberships");
       }
 
@@ -91,7 +95,9 @@ export class RoleService {
           .in("id", teamIds);
 
         if (teamsError) {
-          console.error("Error fetching team names:", teamsError);
+          if (import.meta.env.DEV) {
+            console.warn("⚠️ RoleService: Team names not available:", teamsError.message);
+          }
           // Continue without team names rather than failing completely
         } else {
           teams = teamsData || [];
@@ -125,7 +131,9 @@ export class RoleService {
         lastUpdated: new Date(),
       };
     } catch (error) {
-      console.error("RoleService.getUserRoleContext error:", error);
+      if (import.meta.env.DEV) {
+        console.warn("⚠️ RoleService: Using fallback role due to database setup issues:", error);
+      }
       // Return safe fallback
       return {
         appRole: "player",
