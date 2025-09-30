@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
@@ -12,6 +13,12 @@ import { Icon } from "../../ui/Icon/Icon";
  * - Analytics and performance tracking
  */
 export const CoachQuickActions: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleManageRoster = () => {
+    navigate("/team/settings?tab=roster");
+  };
+
   return (
     <div className="space-y-tight">
       <Button
@@ -31,6 +38,15 @@ export const CoachQuickActions: React.FC = () => {
       >
         <Icon name="file" size={14} className="mr-2" />
         Build Practice Script
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="w-full justify-start"
+        onClick={handleManageRoster}
+      >
+        <Icon name="users" size={14} className="mr-2" />
+        Manage Roster
       </Button>
       <Button
         variant="ghost"

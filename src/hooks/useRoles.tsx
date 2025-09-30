@@ -70,6 +70,8 @@ export function RoleProvider({ children }: RoleProviderProps) {
     }
 
     console.log("🔄 useRoles: Starting role refresh for user:", user.id);
+    // Clear cache to force fresh data
+    RoleService.clearRoleCache(user.id);
     setLoading(true);
     setError(null);
 
@@ -134,6 +136,16 @@ export function RoleProvider({ children }: RoleProviderProps) {
     getUserTeamRole,
     isCoach,
   };
+
+  // Development helpers
+  if (import.meta.env.DEV) {
+    (window as any).BoxCallDebug = {
+      ...(window as any).BoxCallDebug,
+      refreshRoles,
+      clearRoleCache: () => RoleService.clearRoleCache(),
+      getRoleContext: () => roleContext,
+    };
+  }
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
 }

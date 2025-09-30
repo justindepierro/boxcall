@@ -34,6 +34,28 @@ export const TeamSettings: React.FC = () => {
     lastName: "",
     jerseyNumber: "",
     position: "",
+    classYear: "",
+    heightInches: "",
+    weightPounds: "",
+    email: "",
+  });
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(
+    null
+  );
+  const [deletingPlayer, setDeletingPlayer] = useState<RosterPlayerView | null>(
+    null
+  );
+  const [editPlayerData, setEditPlayerData] = useState({
+    firstName: "",
+    lastName: "",
+    jerseyNumber: "",
+    position: "",
+    classYear: "",
+    heightInches: "",
+    weightPounds: "",
+    email: "",
   });
 
   // Get the active team ID
@@ -94,36 +116,284 @@ export const TeamSettings: React.FC = () => {
   };
 
   const handleImportComplete = async (players: any[]) => {
-    // TODO: Implement actual roster import logic
     console.log("Importing players:", players);
-    await loadRoster(); // Refresh roster after import
+
+    try {
+      setLoading(true);
+      let successCount = 0;
+      let errorCount = 0;
+      const errors: string[] = [];
+
+      for (const player of players) {
+        try {
+          // Map CSV data to our player format
+          const playerData = {
+            team_id: teamId,
+            first_name: player.firstName || player["First Name"] || "",
+            last_name: player.lastName || player["Last Name"] || "",
+            primary_position: player.position || player["Position"] || "RB",
+            jersey_number:
+              player.jerseyNumber || player["Jersey Number"]
+                ? parseInt(player.jerseyNumber || player["Jersey Number"], 10)
+                : undefined,
+            height_inches:
+              player.height || player["Height"]
+                ? parseInt(player.height || player["Height"], 10)
+                : undefined,
+            weight_pounds:
+              player.weight || player["Weight"]
+                ? parseInt(player.weight || player["Weight"], 10)
+                : undefined,
+            class_year: player.grade || player["Grade"] || undefined,
+            email_address: player.email || player["Email"] || undefined,
+          };
+
+          // Validate required fields
+          if (!playerData.first_name.trim() || !playerData.last_name.trim()) {
+            errors.push(
+              `Player ${playerData.first_name} ${playerData.last_name}: First and last name are required`
+            );
+            errorCount++;
+            continue;
+          }
+
+          // Check for jersey number conflicts
+          if (playerData.jersey_number) {
+            const isAvailable = await rosterService.checkJerseyNumberAvailable(
+              teamId,
+              playerData.jersey_number
+            );
+            if (!isAvailable) {
+              errors.push(
+                `Player ${playerData.first_name} ${playerData.last_name}: Jersey number ${playerData.jersey_number} is already taken`
+              );
+              errorCount++;
+              continue;
+            }
+          }
+
+          await rosterService.createPlayer(playerData);
+          successCount++;
+        } catch (error) {
+          console.error(`Failed to import player:`, player, error);
+          errors.push(
+            `Player ${player.firstName || player["First Name"] || "Unknown"}: ${error instanceof Error ? error.message : "Unknown error"}`
+          );
+          errorCount++;
+        }
+      }
+
+      // Show results
+      if (successCount > 0) {
+        console.log(`✅ Successfully imported ${successCount} players`);
+      }
+      if (errorCount > 0) {
+        console.warn(`⚠️ Failed to import ${errorCount} players:`, errors);
+      }
+
+      await loadRoster(); // Refresh roster after import
+    } catch (error) {
+      console.error("Failed to import roster:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddPlayer = () => {
     setShowAddPlayerForm(true);
   };
 
-  const handleSavePlayer = async () => {
-    // TODO: Implement actual player creation logic
-    console.log("Adding player:", newPlayerData);
-    setShowAddPlayerForm(false);
+  const resetPlayerForm = () => {
     setNewPlayerData({
       firstName: "",
       lastName: "",
       jerseyNumber: "",
       position: "",
+      classYear: "",
+      heightInches: "",
+      weightPounds: "",
+      email: "",
     });
-    await loadRoster(); // Refresh roster after adding
+    setSaveError(null);
+  };
+
+  const handleSavePlayer = async () => {
+    try {
+      setSaving(true);
+      setSaveError(null);
+
+      // Validate required fields
+      if (!newPlayerData.firstName.trim() || !newPlayerData.lastName.trim()) {
+        setSaveError("First name and last name are required");
+        return;
+      }
+
+      if (!newPlayerData.position) {
+        setSaveError("Position is required");
+        return;
+      }
+
+      // Validate jersey number if provided
+      let jerseyNumber: number | undefined;
+      if (newPlayerData.jerseyNumber.trim()) {
+        jerseyNumber = parseInt(newPlayerData.jerseyNumber.trim(), 10);
+        if (isNaN(jerseyNumber) || jerseyNumber < 0 || jerseyNumber > 99) {
+          setSaveError("Jersey number must be between 0 and 99");
+          return;
+        }
+
+        // Check if jersey number is available
+        const isAvailable = await rosterService.checkJerseyNumberAvailable(
+          teamId,
+          jerseyNumber
+        );
+        if (!isAvailable) {
+          setSaveError(`Jersey number ${jerseyNumber} is already taken`);
+          return;
+        }
+      }
+
+      // Parse optional numeric fields
+      const heightInches = newPlayerData.heightInches.trim()
+        ? parseInt(newPlayerData.heightInches.trim(), 10)
+        : undefined;
+      const weightPounds = newPlayerData.weightPounds.trim()
+        ? parseInt(newPlayerData.weightPounds.trim(), 10)
+        : undefined;
+
+      // Create player data object
+      const playerData = {
+        team_id: teamId,
+        first_name: newPlayerData.firstName.trim(),
+        last_name: newPlayerData.lastName.trim(),
+        email_address: newPlayerData.email.trim() || undefined,
+        primary_position: newPlayerData.position,
+        jersey_number: jerseyNumber,
+        class_year: (newPlayerData.classYear as any) || undefined,
+        height_inches: heightInches,
+        weight_pounds: weightPounds,
+      };
+
+      await rosterService.createPlayer(playerData);
+
+      setShowAddPlayerForm(false);
+      resetPlayerForm();
+      await loadRoster(); // Refresh roster after adding
+    } catch (error) {
+      console.error("Failed to add player:", error);
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to add player"
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditPlayer = (player: RosterPlayerView) => {
+    // Extract first name and last name from the player ID (since we don't have them in the view)
+    // For now, we'll use placeholders. In a real implementation, you'd get these from the database
+    setEditPlayerData({
+      firstName: "", // Would come from database
+      lastName: "", // Would come from database
+      jerseyNumber: player.jersey_number?.toString() || "",
+      position: player.position || "",
+      classYear: player.class_year || "",
+      heightInches: player.height_inches?.toString() || "",
+      weightPounds: player.weight_pounds?.toString() || "",
+      email: "", // Would come from database
+    });
+    setEditingPlayer(player);
+  };
+
+  const handleDeletePlayer = (player: RosterPlayerView) => {
+    setDeletingPlayer(player);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingPlayer) return;
+
+    try {
+      await rosterService.deletePlayer(deletingPlayer.id);
+      await loadRoster(); // Refresh roster after deletion
+      setDeletingPlayer(null);
+    } catch (error) {
+      console.error("Failed to delete player:", error);
+      // Could add error handling here
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeletingPlayer(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingPlayer) return;
+
+    try {
+      setSaving(true);
+      setSaveError(null);
+
+      // Validate jersey number if provided
+      let jerseyNumber: number | undefined;
+      if (editPlayerData.jerseyNumber.trim()) {
+        jerseyNumber = parseInt(editPlayerData.jerseyNumber.trim(), 10);
+        if (isNaN(jerseyNumber) || jerseyNumber < 0 || jerseyNumber > 99) {
+          setSaveError("Jersey number must be between 0 and 99");
+          return;
+        }
+
+        // Check if jersey number is available (excluding current player)
+        const isAvailable = await rosterService.checkJerseyNumberAvailable(
+          teamId,
+          jerseyNumber,
+          editingPlayer.id
+        );
+        if (!isAvailable) {
+          setSaveError(`Jersey number ${jerseyNumber} is already taken`);
+          return;
+        }
+      }
+
+      // Parse optional numeric fields
+      const heightInches = editPlayerData.heightInches.trim()
+        ? parseInt(editPlayerData.heightInches.trim(), 10)
+        : undefined;
+      const weightPounds = editPlayerData.weightPounds.trim()
+        ? parseInt(editPlayerData.weightPounds.trim(), 10)
+        : undefined;
+
+      // Create update data object
+      const updateData = {
+        primary_position: editPlayerData.position || undefined,
+        jersey_number: jerseyNumber,
+        class_year: (editPlayerData.classYear as any) || undefined,
+        height_inches: heightInches,
+        weight_pounds: weightPounds,
+        // Note: first_name, last_name, email would be updated here if available
+      };
+
+      await rosterService.updatePlayer(editingPlayer.id, updateData);
+
+      setEditingPlayer(null);
+      await loadRoster(); // Refresh roster after updating
+    } catch (error) {
+      console.error("Failed to update player:", error);
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to update player"
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPlayer(null);
+    setSaveError(null);
   };
 
   const handleCancelAddPlayer = () => {
     setShowAddPlayerForm(false);
-    setNewPlayerData({
-      firstName: "",
-      lastName: "",
-      jerseyNumber: "",
-      position: "",
-    });
+    resetPlayerForm();
   };
 
   return (
@@ -251,10 +521,19 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-sm" className="mb-4">
                   Add New Player
                 </Typography>
+
+                {saveError && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <Typography variant="body-sm" className="text-red-700">
+                      {saveError}
+                    </Typography>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-1">
-                      First Name
+                      First Name *
                     </label>
                     <input
                       type="text"
@@ -267,11 +546,12 @@ export const TeamSettings: React.FC = () => {
                       }
                       className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                       placeholder="John"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Last Name
+                      Last Name *
                     </label>
                     <input
                       type="text"
@@ -284,6 +564,7 @@ export const TeamSettings: React.FC = () => {
                       }
                       className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                       placeholder="Doe"
+                      required
                     />
                   </div>
                   <div>
@@ -291,7 +572,9 @@ export const TeamSettings: React.FC = () => {
                       Jersey Number
                     </label>
                     <input
-                      type="text"
+                      type="number"
+                      min="0"
+                      max="99"
                       value={newPlayerData.jerseyNumber}
                       onChange={(e) =>
                         setNewPlayerData((prev) => ({
@@ -305,7 +588,7 @@ export const TeamSettings: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Position
+                      Position *
                     </label>
                     <select
                       value={newPlayerData.position}
@@ -316,6 +599,7 @@ export const TeamSettings: React.FC = () => {
                         }))
                       }
                       className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                      required
                     >
                       <option value="">Select Position</option>
                       <option value="QB">Quarterback</option>
@@ -330,6 +614,84 @@ export const TeamSettings: React.FC = () => {
                       <option value="P">Punter</option>
                     </select>
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Class Year
+                    </label>
+                    <select
+                      value={newPlayerData.classYear}
+                      onChange={(e) =>
+                        setNewPlayerData((prev) => ({
+                          ...prev,
+                          classYear: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                    >
+                      <option value="">Select Class</option>
+                      <option value="freshman">Freshman</option>
+                      <option value="sophomore">Sophomore</option>
+                      <option value="junior">Junior</option>
+                      <option value="senior">Senior</option>
+                      <option value="graduate">Graduate</option>
+                      <option value="redshirt">Redshirt</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Height (inches)
+                    </label>
+                    <input
+                      type="number"
+                      min="48"
+                      max="96"
+                      value={newPlayerData.heightInches}
+                      onChange={(e) =>
+                        setNewPlayerData((prev) => ({
+                          ...prev,
+                          heightInches: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                      placeholder="72"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Weight (lbs)
+                    </label>
+                    <input
+                      type="number"
+                      min="80"
+                      max="400"
+                      value={newPlayerData.weightPounds}
+                      onChange={(e) =>
+                        setNewPlayerData((prev) => ({
+                          ...prev,
+                          weightPounds: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                      placeholder="175"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={newPlayerData.email}
+                      onChange={(e) =>
+                        setNewPlayerData((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                      placeholder="player@email.com"
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-end space-x-3">
                   <Button onClick={handleCancelAddPlayer} variant="secondary">
@@ -339,10 +701,13 @@ export const TeamSettings: React.FC = () => {
                     onClick={handleSavePlayer}
                     variant="primary"
                     disabled={
-                      !newPlayerData.firstName || !newPlayerData.lastName
+                      !newPlayerData.firstName ||
+                      !newPlayerData.lastName ||
+                      !newPlayerData.position ||
+                      saving
                     }
                   >
-                    Add Player
+                    {saving ? "Adding..." : "Add Player"}
                   </Button>
                 </div>
               </Card>
@@ -411,10 +776,18 @@ export const TeamSettings: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex space-x-1">
-                        <button className="p-1 text-text-muted hover:text-text-secondary">
+                        <button
+                          className="p-1 text-text-muted hover:text-text-secondary"
+                          onClick={() => handleEditPlayer(player)}
+                          title="Edit player"
+                        >
                           <Icon name="edit" className="h-4 w-4" />
                         </button>
-                        <button className="p-1 text-text-muted hover:text-text-error">
+                        <button
+                          className="p-1 text-text-muted hover:text-text-error"
+                          onClick={() => handleDeletePlayer(player)}
+                          title="Delete player"
+                        >
                           <Icon name="delete" className="h-4 w-4" />
                         </button>
                       </div>
@@ -504,6 +877,181 @@ export const TeamSettings: React.FC = () => {
         onClose={() => setShowImportModal(false)}
         onImport={handleImportComplete}
       />
+
+      {/* Delete Confirmation Modal */}
+      {deletingPlayer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="flex items-center mb-4">
+              <Icon name="delete" className="h-6 w-6 text-red-500 mr-3" />
+              <Typography variant="headline-sm" className="text-text-primary">
+                Delete Player
+              </Typography>
+            </div>
+            <Typography variant="body-md" className="text-text-secondary mb-6">
+              Are you sure you want to delete this player? This action cannot be
+              undone.
+            </Typography>
+            <div className="flex justify-end space-x-3">
+              <Button onClick={handleCancelDelete} variant="secondary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                variant="primary"
+                className="bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
+              >
+                Delete Player
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Player Modal */}
+      {editingPlayer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center mb-4">
+              <Icon name="edit" className="h-6 w-6 text-blue-500 mr-3" />
+              <Typography variant="headline-sm" className="text-text-primary">
+                Edit Player
+              </Typography>
+            </div>
+
+            {saveError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <Typography variant="body-sm" className="text-red-700">
+                  {saveError}
+                </Typography>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1">
+                  Jersey Number
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="99"
+                  value={editPlayerData.jerseyNumber}
+                  onChange={(e) =>
+                    setEditPlayerData((prev) => ({
+                      ...prev,
+                      jerseyNumber: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                  placeholder="23"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1">
+                  Position
+                </label>
+                <select
+                  value={editPlayerData.position}
+                  onChange={(e) =>
+                    setEditPlayerData((prev) => ({
+                      ...prev,
+                      position: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                >
+                  <option value="">Select Position</option>
+                  <option value="QB">Quarterback</option>
+                  <option value="RB">Running Back</option>
+                  <option value="WR">Wide Receiver</option>
+                  <option value="TE">Tight End</option>
+                  <option value="OL">Offensive Line</option>
+                  <option value="DL">Defensive Line</option>
+                  <option value="LB">Linebacker</option>
+                  <option value="DB">Defensive Back</option>
+                  <option value="K">Kicker</option>
+                  <option value="P">Punter</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1">
+                  Class Year
+                </label>
+                <select
+                  value={editPlayerData.classYear}
+                  onChange={(e) =>
+                    setEditPlayerData((prev) => ({
+                      ...prev,
+                      classYear: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                >
+                  <option value="">Select Class</option>
+                  <option value="freshman">Freshman</option>
+                  <option value="sophomore">Sophomore</option>
+                  <option value="junior">Junior</option>
+                  <option value="senior">Senior</option>
+                  <option value="graduate">Graduate</option>
+                  <option value="redshirt">Redshirt</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1">
+                  Height (inches)
+                </label>
+                <input
+                  type="number"
+                  min="48"
+                  max="96"
+                  value={editPlayerData.heightInches}
+                  onChange={(e) =>
+                    setEditPlayerData((prev) => ({
+                      ...prev,
+                      heightInches: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                  placeholder="72"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1">
+                  Weight (lbs)
+                </label>
+                <input
+                  type="number"
+                  min="80"
+                  max="400"
+                  value={editPlayerData.weightPounds}
+                  onChange={(e) =>
+                    setEditPlayerData((prev) => ({
+                      ...prev,
+                      weightPounds: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
+                  placeholder="175"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <Button onClick={handleCancelEdit} variant="secondary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveEdit}
+                variant="primary"
+                disabled={saving}
+              >
+                {saving ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 };

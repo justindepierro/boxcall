@@ -1,0 +1,299 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Card, Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
+import { Typography } from "../design-system";
+import { rosterService } from "../../services";
+import type { RosterPlayerView } from "../../services/rosterService";
+import { getActiveTeamId } from "../../utils/activeTeam";
+
+/**
+ * RosterQuickAdd - Dashboard widget for quick roster management
+ *
+ * Features:
+ * - Display recent roster additions
+ * - Quick add single player
+ * - Navigate to full roster management
+ * - Show roster count and status
+ */
+export const RosterQuickAdd: React.FC = () => {
+  const navigate = useNavigate();
+  const [recentPlayers, setRecentPlayers] = useState<RosterPlayerView[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [quickAddData, setQuickAddData] = useState({
+    firstName: "",
+    lastName: "",
+    position: "",
+    jerseyNumber: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  const teamId = getActiveTeamId();
+
+  useEffect(() => {
+    loadRosterData();
+  }, []);
+
+  const loadRosterData = async () => {
+    try {
+      setLoading(true);
+      const roster = await rosterService.listByTeam(teamId);
+      setTotalCount(roster.length);
+      // Get 3 most recent players
+      setRecentPlayers(roster.slice(-3).reverse());
+    } catch (error) {
+      console.error("Failed to load roster data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuickAdd = async () => {
+    if (
+      !quickAddData.firstName.trim() ||
+      !quickAddData.lastName.trim() ||
+      !quickAddData.position
+    ) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const jerseyNumber = quickAddData.jerseyNumber.trim()
+        ? parseInt(quickAddData.jerseyNumber.trim(), 10)
+        : undefined;
+
+      const playerData = {
+        team_id: teamId,
+        first_name: quickAddData.firstName.trim(),
+        last_name: quickAddData.lastName.trim(),
+        primary_position: quickAddData.position,
+        jersey_number: jerseyNumber,
+      };
+
+      await rosterService.createPlayer(playerData);
+
+      // Reset form and close
+      setQuickAddData({
+        firstName: "",
+        lastName: "",
+        position: "",
+        jerseyNumber: "",
+      });
+      setShowQuickAdd(false);
+
+      // Refresh data
+      await loadRosterData();
+    } catch (error) {
+      console.error("Failed to add player:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleManageRoster = () => {
+    navigate("/team/settings?tab=roster");
+  };
+
+  if (loading) {
+    return (
+      <Card className="p-6">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="space-y-2">
+            <div className="h-3 bg-gray-200 rounded"></div>
+            <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <Icon name="users" className="h-5 w-5 text-text-info" />
+          <Typography variant="headline-sm" className="text-text-primary">
+            Team Roster
+          </Typography>
+        </div>
+        <Typography variant="body-sm" className="text-text-secondary">
+          {totalCount} players
+        </Typography>
+      </div>
+
+      {!showQuickAdd ? (
+        <>
+          {/* Recent Players */}
+          {recentPlayers.length > 0 ? (
+            <div className="space-y-2 mb-4">
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary mb-2"
+              >
+                Recent additions:
+              </Typography>
+              {recentPlayers.map((player) => (
+                <div
+                  key={player.id}
+                  className="flex items-center space-x-3 p-2 bg-surface-subtle rounded"
+                >
+                  <div className="w-8 h-8 bg-surface-info rounded-full flex items-center justify-center">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-info font-medium"
+                    >
+                      {player.jersey_number || "?"}
+                    </Typography>
+                  </div>
+                  <div className="flex-1">
+                    <Typography variant="body-sm" className="text-text-primary">
+                      Player {player.id.slice(0, 8)}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className="text-text-secondary"
+                    >
+                      {player.position || "Position TBD"}
+                    </Typography>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-4 mb-4">
+              <Typography variant="body-sm" className="text-text-secondary">
+                No players added yet
+              </Typography>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="space-y-2">
+            <Button
+              variant="primary"
+              size="sm"
+              className="w-full"
+              onClick={() => setShowQuickAdd(true)}
+            >
+              <Icon name="plus" className="h-4 w-4 mr-2" />
+              Quick Add Player
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full"
+              onClick={handleManageRoster}
+            >
+              <Icon name="settings" className="h-4 w-4 mr-2" />
+              Manage Full Roster
+            </Button>
+          </div>
+        </>
+      ) : (
+        /* Quick Add Form */
+        <div className="space-y-3">
+          <Typography variant="body-sm" className="text-text-secondary mb-3">
+            Add a new player quickly:
+          </Typography>
+
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="text"
+              placeholder="First Name"
+              value={quickAddData.firstName}
+              onChange={(e) =>
+                setQuickAddData((prev) => ({
+                  ...prev,
+                  firstName: e.target.value,
+                }))
+              }
+              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={quickAddData.lastName}
+              onChange={(e) =>
+                setQuickAddData((prev) => ({
+                  ...prev,
+                  lastName: e.target.value,
+                }))
+              }
+              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <select
+              value={quickAddData.position}
+              onChange={(e) =>
+                setQuickAddData((prev) => ({
+                  ...prev,
+                  position: e.target.value,
+                }))
+              }
+              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+            >
+              <option value="">Position</option>
+              <option value="QB">QB</option>
+              <option value="RB">RB</option>
+              <option value="WR">WR</option>
+              <option value="TE">TE</option>
+              <option value="OL">OL</option>
+              <option value="DL">DL</option>
+              <option value="LB">LB</option>
+              <option value="DB">DB</option>
+              <option value="K">K</option>
+              <option value="P">P</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Jersey #"
+              min="0"
+              max="99"
+              value={quickAddData.jerseyNumber}
+              onChange={(e) =>
+                setQuickAddData((prev) => ({
+                  ...prev,
+                  jerseyNumber: e.target.value,
+                }))
+              }
+              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+            />
+          </div>
+
+          <div className="flex space-x-2 pt-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1"
+              onClick={() => setShowQuickAdd(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              className="flex-1"
+              onClick={handleQuickAdd}
+              disabled={
+                !quickAddData.firstName ||
+                !quickAddData.lastName ||
+                !quickAddData.position ||
+                saving
+              }
+            >
+              {saving ? "Adding..." : "Add"}
+            </Button>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+};
