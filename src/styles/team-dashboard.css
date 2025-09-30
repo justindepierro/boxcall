@@ -2,11 +2,13 @@
 
 .team-dashboard-container {
   position: relative;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .dashboard-hero-section {
   position: relative;
   margin-bottom: 2rem;
+  overflow: hidden; /* Prevent content overflow */
 }
 
 .dashboard-hero-section::after {
@@ -20,8 +22,154 @@
   background: linear-gradient(to right, #00a86b, #34d399);
 }
 
+/* Hero Section Cards Styling */
+.dashboard-hero-section .card,
+.dashboard-hero-section [class*="card"],
+.dashboard-hero-section .collaborative-widget,
+.shared-goal-tracker,
+.team-vote-widget {
+  height: 100%;
+  min-height: 280px;
+  border: 1px solid rgb(226 232 240);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+}
+
+.dashboard-hero-section .card:hover,
+.dashboard-hero-section [class*="card"]:hover,
+.dashboard-hero-section .collaborative-widget:hover {
+  border-color: rgb(148 163 184);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transform: translateY(-1px);
+}
+
+/* Distinct card types with color coding and better spacing */
+.collaboration-goals .collaborative-widget,
+.collaboration-goals [class*="card"] {
+  background: linear-gradient(135deg, rgb(240 253 244) 0%, rgb(220 252 231) 100%);
+  border-left: 4px solid rgb(16 185 129);
+}
+
+.collaboration-vote .collaborative-widget,
+.collaboration-vote [class*="card"] {
+  background: linear-gradient(135deg, rgb(239 246 255) 0%, rgb(219 234 254) 100%);
+  border-left: 4px solid rgb(59 130 246);
+}
+
+/* Season Stats Card specific styling */
+.dashboard-hero-section .bc-card-padding {
+  background: linear-gradient(135deg, rgb(255 251 235) 0%, rgb(254 240 138) 100%);
+  border-left: 4px solid rgb(245 158 11);
+}
+
+/* Trophy Case specific styling */
+.dashboard-hero-section .trophy-case {
+  background: linear-gradient(135deg, rgb(255 247 237) 0%, rgb(254 215 170) 100%);
+  border-left: 4px solid rgb(234 88 12);
+}
+
+/* Card header improvements for all hero cards */
+.dashboard-hero-section h3,
+.dashboard-hero-section .card-title,
+.dashboard-hero-section [data-testid*="headline"] {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: rgb(30 41 59) !important;
+  margin-bottom: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  border-bottom: 1px solid rgb(226 232 240);
+  padding-bottom: 0.5rem;
+}
+
+/* Improve content spacing within cards */
+.dashboard-hero-section .collaborative-widget > *,
+.dashboard-hero-section .bc-card-padding > * {
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-hero-section .collaborative-widget > *:last-child,
+.dashboard-hero-section .bc-card-padding > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive adjustments for mobile spacing */
+@media (max-width: 1279px) {
+  .dashboard-hero-section .card,
+  .dashboard-hero-section [class*="card"],
+  .dashboard-hero-section .collaborative-widget {
+    min-height: 220px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-hero-section h3,
+  .dashboard-hero-section .card-title {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Collaborative Widget Content Improvements */
+.dashboard-hero-section .shared-goal-tracker .collaborative-widget,
+.dashboard-hero-section .team-vote-widget .collaborative-widget {
+  padding: 1rem !important;
+}
+
+/* Goal Tracker specific improvements */
+.dashboard-hero-section .shared-goal-tracker .bg-surface-secondary {
+  background-color: rgb(248 250 252) !important;
+  border-radius: 6px;
+}
+
+.dashboard-hero-section .shared-goal-tracker button {
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+/* Vote Widget specific improvements */
+.dashboard-hero-section .team-vote-widget .text-text-muted {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.dashboard-hero-section .team-vote-widget button {
+  font-size: 0.875rem !important;
+  padding: 0.5rem 1rem !important;
+}
+
+/* Compact spacing for better readability */
+.dashboard-hero-section .collaborative-widget p,
+.dashboard-hero-section .collaborative-widget div:not(.flex) {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.dashboard-hero-section .collaborative-widget .flex {
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Season Stats compactness */
+.dashboard-hero-section .bc-card-padding .grid {
+  gap: 0.75rem !important;
+}
+
+.dashboard-hero-section .bc-card-padding .grid > div {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
 .dashboard-main-content {
   position: relative;
+  overflow: hidden; /* Prevent content overflow */
 }
 
 /* Enhanced visual hierarchy */
@@ -29,12 +177,14 @@
   border: 1px solid #d1fae5;
   background: linear-gradient(to bottom right, white, #ecfdf5);
   transition: all 0.3s ease;
+  overflow: hidden; /* Prevent card content overflow */
 }
 
 .dashboard-main-content .surface-card {
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  overflow: hidden; /* Prevent card content overflow */
 }
 
 /* Card hover effects for better interactivity */
@@ -44,13 +194,82 @@
   transition: all 0.3s ease;
 }
 
+/* Text overflow prevention for all cards */
+.team-dashboard-container .surface-card h1,
+.team-dashboard-container .surface-card h2,
+.team-dashboard-container .surface-card h3,
+.team-dashboard-container .surface-card h4,
+.team-dashboard-container .surface-card h5,
+.team-dashboard-container .surface-card h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Button text overflow prevention */
+.team-dashboard-container button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-dashboard-container button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Icon container fixes */
+.team-dashboard-container .flex.items-center {
+  min-width: 0; /* Allow flex items to shrink below content size */
+}
+
+.team-dashboard-container .flex.items-center > * {
+  flex-shrink: 0; /* Prevent icons from shrinking */
+}
+
+.team-dashboard-container .flex.items-center > span:last-child,
+.team-dashboard-container .flex.items-center > div:last-child {
+  flex-shrink: 1; /* Allow text content to shrink */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 /* Team activity header styling */
 .team-activity-header {
   transition: all 0.3s ease;
+  overflow: hidden; /* Prevent overflow */
 }
 
 .team-activity-header:hover {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Team engagement stats with proper text handling */
+.team-activity-header .flex.gap-4 > div {
+  transition: all 0.2s ease;
+  overflow: hidden; /* Prevent badge overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.team-activity-header .flex.gap-4 > div:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.team-activity-header .flex.gap-4 > div span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 8rem; /* Limit badge text width */
 }
 
 /* Improved spacing for collaboration widgets */
@@ -59,6 +278,7 @@
 .collaboration-progress {
   height: 100%;
   min-height: 280px;
+  overflow: hidden; /* Prevent widget overflow */
 }
 
 /* Sticky sidebar positioning with safe spacing */
@@ -67,14 +287,32 @@
   top: 1.5rem;
 }
 
-/* Quick actions styling improvements */
+/* Quick actions styling improvements with overflow protection */
 .quick-actions-card {
   background: linear-gradient(to bottom right, #f8fafc, white);
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .quick-actions-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Quick action buttons with proper text handling */
+.quick-actions-card button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  overflow: hidden;
+  padding-right: 0.75rem; /* Ensure padding for text */
+}
+
+.quick-actions-card button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Roster card improvements */
@@ -103,9 +341,23 @@
   background: #94a3b8;
 }
 
+/* Roster item text overflow prevention */
+.roster-card .flex.items-center {
+  min-width: 0;
+}
+
+.roster-card .flex.items-center > span,
+.roster-card .flex.items-center > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
 /* Enhanced card transitions */
 .dashboard-card {
   transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .dashboard-card:hover {
@@ -119,31 +371,52 @@
   border-radius: 0.5rem;
   padding: 4px;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .collaboration-section .surface-card {
   background: white;
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 /* Calendar widget enhancements */
 .calendar-widget {
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .calendar-widget:hover {
   transform: translateY(-2px);
 }
 
-/* Team engagement stats styling */
-.team-activity-header .flex.gap-4 > div {
-  transition: all 0.2s ease;
+/* Calendar content text overflow prevention */
+.calendar-widget .surface-card {
+  overflow: hidden;
 }
 
-.team-activity-header .flex.gap-4 > div:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transform: scale(1.05);
+.calendar-widget button,
+.calendar-widget .flex.items-center {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Trophy case text handling */
+.team-dashboard-container .surface-card ol li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  padding-right: 0.5rem;
+}
+
+/* Member count badge styling */
+.roster-card .bg-slate-100 {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Responsive adjustments */

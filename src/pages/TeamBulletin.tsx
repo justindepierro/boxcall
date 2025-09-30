@@ -380,50 +380,99 @@ const TeamBulletin: React.FC = React.memo(() => {
             <div className="team-dashboard-container">
               {/* Hero Stats Row */}
               <div className="dashboard-hero-section mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  <div className="md:col-span-1">
+                {/* Mobile/Tablet: Stack vertically */}
+                <div className="grid grid-cols-1 gap-6 xl:hidden">
+                  <TeamTrophyCase teamId={teamId || ""} />
+                  
+                  {/* Team Goals & Progress */}
+                  <div
+                    className="collaboration-goals"
+                    role="region"
+                    aria-label="Team Goals"
+                  >
+                    <React.Suspense fallback={<DashboardCardSkeleton />}>
+                      {collaborationProps && (
+                        <SharedGoalTracker {...collaborationProps} />
+                      )}
+                    </React.Suspense>
+                  </div>
+                  
+                  {/* Team Decisions */}
+                  <div
+                    className="collaboration-vote"
+                    role="region"
+                    aria-label="Team Decisions"
+                  >
+                    <React.Suspense fallback={<DashboardCardSkeleton />}>
+                      <TeamVoteWidget
+                        widgetId="team-bulletin-team-vote"
+                        userRole={
+                          profile?.role === "admin"
+                            ? "coach"
+                            : (userRole as "coach" | "player" | "family") ||
+                              "player"
+                        }
+                        userId={user?.id || "anonymous"}
+                        userName={
+                          profile?.display_name ||
+                          profile?.full_name ||
+                          "Team Member"
+                        }
+                      />
+                    </React.Suspense>
+                  </div>
+                  
+                  {/* Season Stats */}
+                  <SeasonStatsCard
+                    teamId={teamId || ""}
+                    userRole={userRole}
+                  />
+                </div>
+
+                {/* Desktop: 4-column layout */}
+                <div className="hidden xl:grid xl:grid-cols-4 gap-6">
+                  <div className="xl:col-span-1">
                     <TeamTrophyCase teamId={teamId || ""} />
                   </div>
-                  <div className="md:col-span-2 lg:col-span-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
-                      {/* Collaboration Widgets */}
-                      <div
-                        className="collaboration-goals h-full"
-                        role="region"
-                        aria-label="Team Goals"
-                      >
-                        <React.Suspense fallback={<DashboardCardSkeleton />}>
-                          {collaborationProps && (
-                            <SharedGoalTracker {...collaborationProps} />
-                          )}
-                        </React.Suspense>
-                      </div>
-                      <div
-                        className="collaboration-vote h-full"
-                        role="region"
-                        aria-label="Team Decisions"
-                      >
-                        <React.Suspense fallback={<DashboardCardSkeleton />}>
-                          <TeamVoteWidget
-                            widgetId="team-bulletin-team-vote"
-                            userRole={
-                              profile?.role === "admin"
-                                ? "coach"
-                                : (userRole as "coach" | "player" | "family") ||
-                                  "player"
-                            }
-                            userId={user?.id || "anonymous"}
-                            userName={
-                              profile?.display_name ||
-                              profile?.full_name ||
-                              "Team Member"
-                            }
-                          />
-                        </React.Suspense>
-                      </div>
+                  <div className="xl:col-span-1">
+                    <div
+                      className="collaboration-goals h-full"
+                      role="region"
+                      aria-label="Team Goals"
+                    >
+                      <React.Suspense fallback={<DashboardCardSkeleton />}>
+                        {collaborationProps && (
+                          <SharedGoalTracker {...collaborationProps} />
+                        )}
+                      </React.Suspense>
                     </div>
                   </div>
-                  <div className="md:col-span-3 lg:col-span-1">
+                  <div className="xl:col-span-1">
+                    <div
+                      className="collaboration-vote h-full"
+                      role="region"
+                      aria-label="Team Decisions"
+                    >
+                      <React.Suspense fallback={<DashboardCardSkeleton />}>
+                        <TeamVoteWidget
+                          widgetId="team-bulletin-team-vote"
+                          userRole={
+                            profile?.role === "admin"
+                              ? "coach"
+                              : (userRole as "coach" | "player" | "family") ||
+                                "player"
+                          }
+                          userId={user?.id || "anonymous"}
+                          userName={
+                            profile?.display_name ||
+                            profile?.full_name ||
+                            "Team Member"
+                          }
+                        />
+                      </React.Suspense>
+                    </div>
+                  </div>
+                  <div className="xl:col-span-1">
                     <SeasonStatsCard
                       teamId={teamId || ""}
                       userRole={userRole}
@@ -438,20 +487,20 @@ const TeamBulletin: React.FC = React.memo(() => {
                   {/* Left Sidebar - Quick Actions & Tools */}
                   <aside className="xl:col-span-3 order-2 xl:order-1">
                     <div className="sticky top-6 space-y-6">
-                      <Card className="bc-card-padding quick-actions-card border-slate-200 shadow-sm">
+                      <Card className="bc-card-padding quick-actions-card border-slate-200 shadow-sm card-overflow-safe">
                         <Typography
                           as="h2"
                           variant="headline-md"
-                          className="mb-4 text-text-primary flex items-center gap-2"
+                          className="mb-4 text-text-primary flex items-center gap-2 icon-text-safe"
                         >
-                          <div className="p-1.5 bg-jade-100 rounded-lg">
+                          <div className="p-1.5 bg-jade-100 rounded-lg flex-shrink-0">
                             <Icon
                               name="zap"
                               size="sm"
                               className="text-jade-600"
                             />
                           </div>
-                          Quick Actions
+                          <span className="text-truncate">Quick Actions</span>
                         </Typography>
                         <TeamQuickActions
                           teamId={teamId || ""}
@@ -492,25 +541,25 @@ const TeamBulletin: React.FC = React.memo(() => {
                   {/* Center - Team Activity Feed */}
                   <main className="xl:col-span-6 order-1 xl:order-2">
                     <div className="space-y-6">
-                      <div className="team-activity-header bg-gradient-to-r from-jade-50 to-emerald-50 rounded-xl p-6 border border-jade-100">
+                      <div className="team-activity-header bg-gradient-to-r from-jade-50 to-emerald-50 rounded-xl p-6 border border-jade-100 card-overflow-safe">
                         <div className="text-center lg:text-left">
                           <Typography
                             variant="headline-lg"
-                            className="text-text-primary mb-2 flex items-center justify-center lg:justify-start gap-3"
+                            className="text-text-primary mb-2 flex items-center justify-center lg:justify-start gap-3 icon-text-safe"
                           >
-                            <div className="p-2 bg-jade-100 rounded-lg">
+                            <div className="p-2 bg-jade-100 rounded-lg flex-shrink-0">
                               <Icon
                                 name="users"
                                 size="lg"
                                 className="text-jade-600"
                               />
                             </div>
-                            Team Hub
+                            <span className="text-truncate">Team Hub</span>
                           </Typography>
                           <Typography
                             variant="body-lg"
                             color="muted"
-                            className="mb-4"
+                            className="mb-4 text-truncate-2"
                           >
                             Stay connected with your team's latest updates,
                             achievements, and announcements
@@ -518,33 +567,33 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                           {/* Team engagement stats */}
                           <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-sm">
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-jade-200">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-jade-200 badge-safe">
                               <Icon
                                 name="message"
                                 size="xs"
-                                className="text-jade-500"
+                                className="text-jade-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary">
+                              <span className="text-text-secondary text-truncate">
                                 12 new posts
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-emerald-200">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-emerald-200 badge-safe">
                               <Icon
                                 name="award"
                                 size="xs"
-                                className="text-emerald-500"
+                                className="text-emerald-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary">
+                              <span className="text-text-secondary text-truncate">
                                 3 achievements
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-blue-200">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-blue-200 badge-safe">
                               <Icon
                                 name="calendar"
                                 size="xs"
-                                className="text-blue-500"
+                                className="text-blue-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary">
+                              <span className="text-text-secondary text-truncate">
                                 2 upcoming events
                               </span>
                             </div>
@@ -567,24 +616,24 @@ const TeamBulletin: React.FC = React.memo(() => {
                         <TeamCalendar teamId={teamId || ""} />
                       </div>
 
-                      <Card className="bc-card-padding roster-card border-slate-200 shadow-sm">
-                        <div className="flex items-center justify-between mb-4">
+                      <Card className="bc-card-padding roster-card border-slate-200 shadow-sm card-overflow-safe">
+                        <div className="flex items-center justify-between mb-4 icon-text-safe">
                           <Typography
                             as="h2"
                             variant="headline-md"
-                            className="text-text-primary flex items-center gap-2"
+                            className="text-text-primary flex items-center gap-2 icon-text-safe flex-1 min-w-0"
                           >
-                            <div className="p-1.5 bg-blue-100 rounded-lg">
+                            <div className="p-1.5 bg-blue-100 rounded-lg flex-shrink-0">
                               <Icon
                                 name="users"
                                 size="sm"
                                 className="text-blue-600"
                               />
                             </div>
-                            Team Roster
+                            <span className="text-truncate">Team Roster</span>
                           </Typography>
-                          <div className="text-xs text-text-secondary bg-slate-100 px-2 py-1 rounded-full">
-                            {teamData?.memberCount || 0} members
+                          <div className="text-xs text-text-secondary bg-slate-100 px-2 py-1 rounded-full flex-shrink-0 badge-safe">
+                            <span className="text-truncate">{teamData?.memberCount || 0} members</span>
                           </div>
                         </div>
                         <div className="max-h-64 overflow-y-auto">

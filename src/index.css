@@ -14,6 +14,8 @@
 @import "./styles/responsive-dashboard.css";
 /* Team dashboard enhanced styles */
 @import "./styles/team-dashboard.css";
+/* Overflow prevention global styles */
+@import "./styles/overflow-prevention.css";
 /* Import animation system */
 @import "./styles/animations.css";
 
@@ -557,6 +559,111 @@ body,
 
   .backdrop-blur-xs {
     backdrop-filter: blur(2px);
+  }
+
+  /* Text overflow prevention utilities */
+  .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .text-truncate-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .text-truncate-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  /* Button overflow prevention */
+  .btn-overflow-safe {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-overflow-safe span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  /* Flex container overflow prevention */
+  .flex-safe {
+    min-width: 0;
+  }
+
+  .flex-safe > * {
+    min-width: 0;
+  }
+
+  /* Card content overflow prevention */
+  .card-overflow-safe {
+    overflow: hidden;
+  }
+
+  .card-overflow-safe h1,
+  .card-overflow-safe h2,
+  .card-overflow-safe h3,
+  .card-overflow-safe h4,
+  .card-overflow-safe h5,
+  .card-overflow-safe h6 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .card-overflow-safe p {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Icon and text combination overflow prevention */
+  .icon-text-safe {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .icon-text-safe > :first-child {
+    flex-shrink: 0;
+  }
+
+  .icon-text-safe > :last-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  /* Badge overflow prevention */
+  .badge-safe {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .badge-safe span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 8rem;
   }
 
   /* Confidence animations */
