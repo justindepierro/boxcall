@@ -18,7 +18,7 @@ import "./styles/density.css";
 // Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
 import "./dev/contrastDebug";
 import { initWebVitals } from "./telemetry/initWebVitals";
-if (process.env.NODE_ENV === "production") initWebVitals();
+if (import.meta.env.PROD) initWebVitals();
 // Opportunistic route prefetch (opt-in via env)
 import { initRoutePrefetch } from "./routes/prefetch";
 if (import.meta.env.VITE_PREFETCH_ROUTES === "true") {

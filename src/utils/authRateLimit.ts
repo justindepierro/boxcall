@@ -84,7 +84,7 @@ class RequestSecurity {
     return {
       ...headers,
       'X-Requested-With': 'XMLHttpRequest',
-      'X-Client-Version': process.env.REACT_APP_VERSION || '1.0.0',
+      'X-Client-Version': import.meta.env.VITE_APP_VERSION || '1.0.0',
       'X-Client-Platform': 'web',
     };
   }

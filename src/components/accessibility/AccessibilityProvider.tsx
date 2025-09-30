@@ -23,7 +23,7 @@ interface AccessibilityProviderProps {
 
 export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   children,
-  enableTesting = process.env.NODE_ENV === "development",
+  enableTesting = import.meta.env.DEV,
 }) => {
   const {
     announce,

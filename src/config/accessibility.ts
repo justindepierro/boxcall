@@ -55,7 +55,7 @@ export const accessibilityConfig: AccessibilityConfig = {
   colorContrast: {
     minRatio: 4.5, // WCAG AA standard
     enhancedRatio: 7.0, // WCAG AAA standard
-    checkContrast: process.env.NODE_ENV === 'development',
+    checkContrast: import.meta.env.DEV,
   },
   
   keyboardNavigation: {

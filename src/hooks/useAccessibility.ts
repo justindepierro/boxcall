@@ -244,7 +244,7 @@ export function useA11yTesting() {
   const [violations] = useState<any[]>([]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (!import.meta.env.DEV) return;
 
     // In a real implementation, you would integrate with axe-core
     // For now, we'll just provide a placeholder

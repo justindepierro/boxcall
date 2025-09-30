@@ -77,7 +77,7 @@ export interface SEOConfig {
 export const seoConfig: SEOConfig = {
   site: {
     name: 'BoxCall',
-    url: process.env.VITE_APP_URL || 'https://boxcall.app',
+    url: import.meta.env.VITE_APP_URL || 'https://boxcall.app',
     description: 'Professional football coaching platform for teams, players, and coaches',
     logo: '/logo-512.png',
     favicon: '/favicon.svg',
@@ -123,32 +123,30 @@ export const seoConfig: SEOConfig = {
 
   structuredData: {
     organization: {
-      '@type': 'Organization',
       name: 'BoxCall',
-      url: process.env.VITE_APP_URL || 'https://boxcall.app',
-      logo: `${process.env.VITE_APP_URL || 'https://boxcall.app'}/logo-512.png`,
-      sameAs: [
-        'https://twitter.com/BoxCallApp',
-        'https://facebook.com/BoxCallApp',
-        'https://linkedin.com/company/boxcall',
-      ],
+      url: import.meta.env.VITE_APP_URL || 'https://boxcall.app',
+      logo: `${import.meta.env.VITE_APP_URL || 'https://boxcall.app'}/logo-512.png`,
+      description: 'Professional football coaching platform',
+      contactPoint: {
+        telephone: '+1-555-BOXCALL',
+        contactType: 'customer service',
+        email: 'support@boxcall.app',
+      },
     },
     website: {
-      '@type': 'WebSite',
+      url: import.meta.env.VITE_APP_URL || 'https://boxcall.app',
       name: 'BoxCall',
-      url: process.env.VITE_APP_URL || 'https://boxcall.app',
       potentialAction: {
-        '@type': 'SearchAction',
-        target: `${process.env.VITE_APP_URL || 'https://boxcall.app'}/search?q={search_term_string}`,
+        target: `${import.meta.env.VITE_APP_URL || 'https://boxcall.app'}/search?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
       },
     },
   },
-
   analytics: {
-    googleAnalyticsId: process.env.VITE_GA_MEASUREMENT_ID,
-    googleTagManagerId: process.env.VITE_GTM_ID,
-    facebookPixelId: process.env.VITE_FACEBOOK_PIXEL_ID,
-    microsoftClarityId: process.env.VITE_CLARITY_ID,
+    googleAnalyticsId: import.meta.env.VITE_GA_MEASUREMENT_ID,
+    googleTagManagerId: import.meta.env.VITE_GTM_ID,
+    facebookPixelId: import.meta.env.VITE_FACEBOOK_PIXEL_ID,
+    microsoftClarityId: import.meta.env.VITE_CLARITY_ID,
   },
 };
 
