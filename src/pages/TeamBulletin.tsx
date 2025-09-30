@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { PageLayout } from "../components/layout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -28,7 +28,7 @@ import { CollaborationProvider } from "../components/collaboration/Collaboration
 import { DashboardCardSkeleton } from "../components/ui/Skeleton";
 
 // Team Bulletin Page (modular layout version)
-export const TeamBulletin: React.FC = () => {
+const TeamBulletin: React.FC = React.memo(() => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
   const { roleContext } = useRoles();
@@ -37,7 +37,7 @@ export const TeamBulletin: React.FC = () => {
   const navigate = useNavigate();
   const { data: membershipRole } = useTeamMembershipRole(teamId, profile?.id);
 
-  function computeAcademicYearDisplay(baseYear?: number) {
+  const computeAcademicYearDisplay = useCallback((baseYear?: number) => {
     if (typeof baseYear === "number" && !isNaN(baseYear)) {
       return `${baseYear}-${baseYear + 1}`;
     }
@@ -45,7 +45,7 @@ export const TeamBulletin: React.FC = () => {
     const startYear =
       now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
     return `${startYear}-${startYear + 1}`;
-  }
+  }, []);
 
   interface TeamData {
     id: string;
@@ -61,38 +61,44 @@ export const TeamBulletin: React.FC = () => {
     logo_url?: string | null;
   }
 
-  const buildMockTeam = (): TeamData => ({
-    id: teamId || "unknown",
-    name: "BoxCall Dev Team",
-    season: computeAcademicYearDisplay(),
-    colors: { primary: "#00A86B", secondary: "#1E3A8A" },
-    logo: "eagle",
-    record: { wins: 8, losses: 2 },
-    nextGame: "Friday vs. Central Lions",
-    memberCount: 35,
+  const [teamData, setTeamData] = useState<TeamData | null>(() => {
+    if (devMode === "blank_slate") return null;
+    // Create initial mock team data
+    return {
+      id: teamId || "unknown",
+      name: "BoxCall Dev Team",
+      season: "2025-2026", // Default season
+      colors: { primary: "#00A86B", secondary: "#1E3A8A" },
+      logo: "eagle",
+      record: { wins: 8, losses: 2 },
+      nextGame: "Friday vs. Central Lions",
+      memberCount: 35,
+    };
   });
 
-  const [teamData, setTeamData] = useState<TeamData | null>(
-    devMode === "blank_slate" ? null : buildMockTeam()
+  const loadingInitial = useMemo(
+    () => !user || !profile || !teamId,
+    [user, profile, teamId]
   );
-  const loadingInitial = !user || !profile || !teamId;
 
-  const handleCreateTeam = () => {
+  const handleCreateTeam = useCallback(() => {
     console.info("team.create.attempt", {
       isSuperAdmin,
       canCreateTeamUnlimited,
     });
     navigate(ROUTES.CREATE_TEAM);
-  };
-  const handleJoinTeam = () => {
+  }, [isSuperAdmin, canCreateTeamUnlimited, navigate]);
+
+  const handleJoinTeam = useCallback(() => {
     console.info("team.join.attempt");
     navigate(ROUTES.JOIN_TEAM);
-  };
+  }, [navigate]);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       if (!teamId) return;
+
       try {
         type TeamRow = {
           id: string;
@@ -149,9 +155,48 @@ export const TeamBulletin: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [teamId]);
+  }, [teamId, computeAcademicYearDisplay]);
 
-  const hasAnyTeam = (roleContext?.teamMemberships.length ?? 0) > 0;
+  const hasAnyTeam = useMemo(
+    () => (roleContext?.teamMemberships.length ?? 0) > 0,
+    [roleContext?.teamMemberships.length]
+  );
+
+  // Memoize computed values that are used in multiple places
+  const userRole = membershipRole || profile?.role || "player";
+  const isCoach = userRole === "coach" || userRole === "head_coach";
+
+  // Memoized props to prevent child re-renders
+  const teamHeaderProps = useMemo(
+    () => ({
+      headingId: "team-dashboard-heading",
+      teamId,
+      teamName: teamData?.name || "",
+      seasonDisplay: teamData?.season || "",
+      record: teamData?.record || { wins: 0, losses: 0 },
+      memberCount: teamData?.memberCount || 0,
+      nextGame: teamData?.nextGame || "",
+      schoolName: teamData?.school_name,
+      mascot: teamData?.mascot,
+      isCoach,
+      logoUrl: teamData?.logo_url || undefined,
+      userRole,
+    }),
+    [teamId, teamData, isCoach, userRole]
+  );
+
+  const collaborationProps = useMemo(() => {
+    if (!teamId) return null;
+    return {
+      widgetId: "team-bulletin-shared-goals",
+      userRole:
+        profile?.role === "admin"
+          ? ("coach" as const)
+          : (userRole as "coach" | "player" | "family") || ("player" as const),
+      userId: user?.id || "anonymous",
+      teamId: teamId,
+    };
+  }, [profile?.role, userRole, user?.id, teamId]);
 
   if (!teamId) {
     if (!hasAnyTeam) {
@@ -184,14 +229,18 @@ export const TeamBulletin: React.FC = () => {
     }
 
     return (
-      <PageLayout title="Team Bulletin" subtitle="Choose a team from the switcher to view its bulletin.">
+      <PageLayout
+        title="Team Bulletin"
+        subtitle="Choose a team from the switcher to view its bulletin."
+      >
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center max-w-md px-4">
             <Typography variant="headline-lg" className="mb-4">
               Select a Team
             </Typography>
             <Typography variant="body-lg" color="muted">
-              Use the team switcher in the header to choose which team’s bulletin you’d like to view.
+              Use the team switcher in the header to choose which team’s
+              bulletin you’d like to view.
             </Typography>
           </div>
         </div>
@@ -255,9 +304,6 @@ export const TeamBulletin: React.FC = () => {
     );
   }
 
-  const userRole = membershipRole || profile.role || "player";
-  const isCoach = userRole === "coach" || userRole === "head_coach";
-
   return (
     <PageLayout
       title={`${teamData.name} Bulletin`}
@@ -292,19 +338,7 @@ export const TeamBulletin: React.FC = () => {
           className="py-2"
         >
           <div className="px-3 sm:px-4 lg:px-6">
-            <TeamBulletinHeader
-              headingId="team-dashboard-heading"
-              teamId={teamId}
-              teamName={teamData.name}
-              seasonDisplay={teamData.season}
-              record={teamData.record}
-              memberCount={teamData.memberCount}
-              nextGame={teamData.nextGame}
-              schoolName={teamData.school_name}
-              mascot={teamData.mascot}
-              isCoach={isCoach}
-              logoUrl={teamData.logo_url || undefined}
-            />
+            <TeamBulletinHeader {...teamHeaderProps} />
 
             {/* Team Collaboration Hub Section */}
             <div className="mb-6">
@@ -331,17 +365,9 @@ export const TeamBulletin: React.FC = () => {
                   aria-label="Team Goals"
                 >
                   <React.Suspense fallback={<DashboardCardSkeleton />}>
-                    <SharedGoalTracker
-                      widgetId="team-bulletin-shared-goals"
-                      userRole={
-                        profile?.role === "admin"
-                          ? "coach"
-                          : (userRole as "coach" | "player" | "family") ||
-                            "player"
-                      }
-                      userId={user?.id || "anonymous"}
-                      teamId={teamId}
-                    />
+                    {collaborationProps && (
+                      <SharedGoalTracker {...collaborationProps} />
+                    )}
                   </React.Suspense>
                 </div>
 
@@ -408,5 +434,9 @@ export const TeamBulletin: React.FC = () => {
       </CollaborationProvider>
     </PageLayout>
   );
-};
+});
+
+TeamBulletin.displayName = "TeamBulletin";
+
+export { TeamBulletin };
 export default TeamBulletin;

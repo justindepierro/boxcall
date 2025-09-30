@@ -21,8 +21,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { signIn, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
-    email: "justindepierro@gmail.com",
-    password: "MiniCooper2010!",
+    email: import.meta.env.DEV ? "justindepierro@gmail.com" : "",
+    password: import.meta.env.DEV
+      ? import.meta.env.VITE_DEV_PASSWORD || ""
+      : "",
   });
   const [validationErrors, setValidationErrors] = useState<{
     email?: string;

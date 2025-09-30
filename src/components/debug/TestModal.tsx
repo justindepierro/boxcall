@@ -5,13 +5,10 @@ import { Button } from "../ui";
 export const TestModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  console.info("TestModal render - isOpen:", isOpen);
-
   return (
     <div className="p-4">
       <Button
         onClick={() => {
-          console.info("Test button clicked, opening modal");
           setIsOpen(true);
         }}
         variant="primary"
@@ -23,7 +20,6 @@ export const TestModal: React.FC = () => {
         <Modal
           isOpen={true}
           onClose={() => {
-            console.info("Test modal closing");
             setIsOpen(false);
           }}
           title="Test Modal"

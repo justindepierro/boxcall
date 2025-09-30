@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useRef,
   useState,
+  useEffect,
 } from "react";
 import { useToast } from "../hooks/useToast";
 
@@ -15,6 +16,7 @@ interface UndoItem<T> {
   restore: (payload: T) => Promise<void> | void; // how to undo
   expiresAt: number;
   label: string;
+  timeoutId?: ReturnType<typeof setTimeout>; // for cleanup
 }
 
 interface UndoQueueContextValue {
@@ -74,14 +76,31 @@ export const UndoQueueProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         duration: ttl,
       });
-      // Auto-expire removal
-      setTimeout(() => {
+
+      // Auto-expire removal with cleanup tracking
+      const timeoutId = setTimeout(() => {
         queueRef.current = queueRef.current.filter((q) => q.id !== id);
         forceRender((x) => x + 1);
       }, ttl + 250);
+
+      // Store timeout for potential cleanup
+      queueRef.current[queueRef.current.length - 1].timeoutId = timeoutId;
     },
     [addToast]
   );
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      // Clear all pending timeouts to prevent memory leaks
+      queueRef.current.forEach((item) => {
+        if (item.timeoutId) {
+          clearTimeout(item.timeoutId);
+        }
+      });
+      queueRef.current = [];
+    };
+  }, []);
 
   return (
     <UndoQueueContext.Provider value={{ pushUndo }}>

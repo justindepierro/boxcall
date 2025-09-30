@@ -40,20 +40,23 @@ export class RoleService {
    * Get complete user role context (app role + team memberships)
    */
   static async getUserRoleContext(userId: string): Promise<UserRoleContext> {
+    console.log("🔍 RoleService: getUserRoleContext started for user:", userId);
     try {
-      // Get user's app-level role from profiles
+      // Get user profile
+      console.log("🔍 RoleService: Fetching user profile");
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role, app_role, is_admin")
+        .select("role")
         .eq("id", userId)
         .single();
 
       if (profileError) {
         console.error("Error fetching user profile:", profileError);
-        throw new Error("Failed to fetch user role context");
+        throw new Error("Failed to fetch user profile");
       }
 
-      // Get user's team memberships with new role fields
+      // Get user's team memberships
+      console.log("🔍 RoleService: Fetching team memberships for user:", userId);
       const { data: memberships, error: memberError } = await supabase
         .from("team_members")
         .select(
@@ -74,12 +77,28 @@ export class RoleService {
         throw new Error("Failed to fetch team memberships");
       }
 
-      // Get team names separately for now (can be optimized later)
+      console.log("🔍 RoleService: Team memberships result:", memberships);
+
+      // Get team names separately
       const teamIds = (memberships || []).map((m) => m.team_id);
-      const { data: teams } = await supabase
-        .from("teams")
-        .select("id, name")
-        .in("id", teamIds);
+      console.log("🔍 RoleService: Team IDs to fetch:", teamIds);
+      
+      let teams: any[] = [];
+      if (teamIds.length > 0) {
+        const { data: teamsData, error: teamsError } = await supabase
+          .from("teams")
+          .select("id, name")
+          .in("id", teamIds);
+
+        if (teamsError) {
+          console.error("Error fetching team names:", teamsError);
+          // Continue without team names rather than failing completely
+        } else {
+          teams = teamsData || [];
+        }
+      }
+
+      console.log("🔍 RoleService: Teams data:", teams);
 
       const teamNameMap = new Map(teams?.map((t) => [t.id, t.name]) || []);
 
@@ -97,6 +116,8 @@ export class RoleService {
           roleNotes: membership.role_notes || undefined,
         })
       );
+      
+      console.log("🔍 RoleService: Final team memberships:", teamMemberships);
       return {
         appRole: profile.role,
         teamMemberships,

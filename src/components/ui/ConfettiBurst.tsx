@@ -34,6 +34,12 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
   const [visible, setVisible] = useState(open && !prefersReduced);
   const timerRef = useRef<number | null>(null);
 
+  // Memoize particles array to prevent regeneration on every render
+  const particles = useMemo(
+    () => Array.from({ length: particleCount }, (_, i) => i),
+    [particleCount]
+  );
+
   useEffect(() => {
     if (prefersReduced) {
       setVisible(false);
@@ -56,8 +62,6 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
   }, [open, durationMs, onClose, prefersReduced]);
 
   if (!visible) return null;
-
-  const particles = Array.from({ length: particleCount }, (_, i) => i);
 
   return (
     <div

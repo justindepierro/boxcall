@@ -17,17 +17,9 @@ export class TeamValidationService {
    * Validate team creation form data
    */
   static validateTeamForm(formData: any): ValidationResult {
-    console.log("📋 Validating form data...");
-    const validationStart = performance.now();
-    
     const validation = createTeamSchema.safeParse(formData);
-    
-    console.log(`✅ Validation completed in ${performance.now() - validationStart}ms`);
-    console.log("📊 Validation result:", { success: validation.success, data: validation.data });
 
     if (!validation.success) {
-      console.error("❌ Form validation failed:", validation.error.issues);
-      
       // Convert Zod errors to a more usable format
       const fieldErrors: Record<string, string> = {};
       const errors: Record<string, string[]> = {};

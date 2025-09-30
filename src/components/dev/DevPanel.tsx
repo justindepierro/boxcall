@@ -9,6 +9,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../app/auth-store";
 import { useDesignSystem } from "../design-system/design-system-hooks";
 import { AuthMonitoring } from "../../utils/authMonitoring";
+import { PerformanceDashboard } from "./PerformanceDashboard";
 
 interface AuthMonitorTabProps {}
 
@@ -368,7 +369,7 @@ type TabType =
 
 const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
-  const { config, getPerformanceMetrics, updateConfig } = useDesignSystem();
+  const { config, updateConfig } = useDesignSystem();
   const [activeTab, setActiveTab] = useState<TabType>("design-system");
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ width: 600, height: 400 });
@@ -452,8 +453,6 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
   }, [isResizing, handleResizeMouseMove, handleMouseUp]);
 
   if (!isOpen || !isAuthorized) return null;
-
-  const metrics = getPerformanceMetrics();
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: "design-system", label: "Design System", icon: "🎨" },
@@ -565,32 +564,8 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
         {activeTab === "auth" && <AuthMonitorTab />}
 
         {activeTab === "performance" && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-text-primary">
-              Performance Metrics
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <strong>Load Time:</strong> {metrics.loadTime.toFixed(0)}ms
-              </div>
-              <div>
-                <strong>LCP:</strong> {metrics.lcp.toFixed(0)}ms
-              </div>
-              <div>
-                <strong>FID:</strong> {metrics.fid.toFixed(2)}ms
-              </div>
-              <div>
-                <strong>CLS:</strong> {metrics.cls.toFixed(4)}
-              </div>
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={() => console.table(metrics)}
-                className="px-3 py-1 bg-surface-secondary rounded text-sm hover:bg-surface-hover"
-              >
-                Log to Console
-              </button>
-            </div>
+          <div className="p-4">
+            <PerformanceDashboard />
           </div>
         )}
 

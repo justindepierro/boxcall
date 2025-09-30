@@ -103,6 +103,22 @@ export class DashboardService {
       // Transform the data with proper type handling
       const userTeams: UserTeamData[] = [];
 
+      // Get member counts for all teams in a single query to avoid N+1
+      const { data: memberCounts } = await supabase
+        .from("team_members")
+        .select("team_id")
+        .in("team_id", teamIds)
+        .eq("status", "active");
+
+      // Group member counts by team_id
+      const memberCountMap = new Map<string, number>();
+      if (memberCounts) {
+        memberCounts.forEach(member => {
+          const teamId = member.team_id;
+          memberCountMap.set(teamId, (memberCountMap.get(teamId) || 0) + 1);
+        });
+      }
+
       for (const membership of memberships) {
         const typedMembership = membership as unknown as TeamMember;
         const team = teams.find(
@@ -110,17 +126,10 @@ export class DashboardService {
         );
         if (!team) continue;
 
-        // Get member count for each team
-        const { count } = await supabase
-          .from("team_members")
-          .select("*", { count: "exact", head: true })
-          .eq("team_id", typedMembership.team_id)
-          .eq("status", "active");
-
         userTeams.push({
           team: team as unknown as Team,
           membership: membership as unknown as TeamMember,
-          memberCount: count || 0,
+          memberCount: memberCountMap.get(typedMembership.team_id) || 0,
         });
       }
 

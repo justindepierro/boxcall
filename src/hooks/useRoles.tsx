@@ -62,16 +62,25 @@ export function RoleProvider({ children }: RoleProviderProps) {
   const [error, setError] = useState<string | null>(null);
 
   const refreshRoles = useCallback(async () => {
+    console.log("🔄 useRoles: refreshRoles called, user:", user?.id);
     if (!user?.id) {
+      console.log("🔄 useRoles: No user ID, setting roleContext to null");
       setRoleContext(null);
       return;
     }
 
+    console.log("🔄 useRoles: Starting role refresh for user:", user.id);
     setLoading(true);
     setError(null);
 
     try {
+      console.log("🔄 useRoles: Calling RoleService.getUserRoleContext");
       const context = await RoleService.getUserRoleContext(user.id);
+      console.log("🔄 useRoles: Got role context:", context);
+      console.log(
+        "🔄 useRoles: Team memberships count:",
+        context?.teamMemberships?.length
+      );
       setRoleContext(context);
     } catch (err) {
       console.error("Error refreshing roles:", err);

@@ -6,7 +6,10 @@ import { AppProviders } from "./app/providers.tsx";
 // Inject build metadata (defined at build time via Vite)
 declare const __BUILD_TIME__: string;
 window.__BUILD_META__ = {
-  buildTime: __BUILD_TIME__,
+  buildTime:
+    typeof __BUILD_TIME__ !== "undefined"
+      ? __BUILD_TIME__
+      : new Date().toISOString(),
   mode: import.meta.env.MODE,
 };
 import "./index.css";

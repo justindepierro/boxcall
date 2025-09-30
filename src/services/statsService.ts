@@ -8,36 +8,86 @@ export interface SeasonStats {
   games_played: number;
   wins: number;
   losses: number;
-  pf_total: number;
-  pa_total: number;
+  ties: number;
+  points_for: number;
+  points_against: number;
   win_pct: number | null;
 }
 
-const STATS_COLUMNS =
-  "team_id, season_year, games_played, wins, losses, pf_total, pa_total, win_pct" as const;
-
+// Calculate team stats from game_results instead of using season_stats view
 export async function getSeasonStats(
   teamId: string
 ): Promise<SeasonStats | null> {
   if (!teamId) return null;
-  const { data, error, status } = await supabase
-    .from("season_stats")
-    .select(STATS_COLUMNS)
-    .eq("team_id", teamId)
-    .order("season_year", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (error) {
-    const pgErr = error as PostgrestError;
-    if (status === 404 || pgErr?.code === "42P01") {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn(
-          "season_stats view not found (likely migrations pending) – returning null"
-        );
+  
+  try {
+    // Get all game results for the team  
+    const { data: games, error } = await supabase
+      .from("game_results")
+      .select("our_score, opponent_score, result, game_date")
+      .eq("team_id", teamId);
+    
+    if (error) {
+      const pgErr = error as PostgrestError;
+      if (pgErr?.code === "42P01") {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn(
+            "game_results table not found (likely migrations pending) – returning null"
+          );
+        }
+        return null;
       }
-      return null;
+      throw error;
     }
-    throw error;
+
+    if (!games || games.length === 0) {
+      // Return default stats if no games
+      const currentYear = new Date().getFullYear();
+      return {
+        team_id: teamId,
+        season_year: currentYear,
+        games_played: 0,
+        wins: 0,
+        losses: 0,
+        ties: 0,
+        points_for: 0,
+        points_against: 0,
+        win_pct: null
+      };
+    }
+
+    // Calculate stats from game results
+    const stats = games.reduce((acc, game) => {
+      acc.games_played++;
+      acc.points_for += game.our_score || 0;
+      acc.points_against += game.opponent_score || 0;
+      
+      if (game.result === 'win') acc.wins++;
+      else if (game.result === 'loss') acc.losses++;
+      else if (game.result === 'tie') acc.ties++;
+      
+      return acc;
+    }, {
+      games_played: 0,
+      wins: 0,
+      losses: 0,
+      ties: 0,
+      points_for: 0,
+      points_against: 0
+    });
+
+    const win_pct = stats.games_played > 0 ? stats.wins / stats.games_played : null;
+    const currentYear = new Date().getFullYear();
+
+    return {
+      team_id: teamId,
+      season_year: currentYear,
+      ...stats,
+      win_pct
+    };
+    
+  } catch (unexpectedError) {
+    console.error("❌ Unexpected error in getSeasonStats:", unexpectedError);
+    return null;
   }
-  return data ?? null;
 }

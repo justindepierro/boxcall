@@ -10,17 +10,11 @@ export interface TeamPostListItem {
   likes_count: number;
   comments_count: number;
   shares_count: number;
-  author: {
-    id: string;
-    display_name: string | null;
-    full_name: string | null;
-    avatar_url: string | null;
-  }[];
 }
 
-// Narrow column list (avoid SELECT *)
+// Simplified column list without joins to avoid RLS issues
 const POST_COLUMNS =
-  "id, team_id, author_id, content, created_at, is_pinned, likes_count, comments_count, shares_count, author:profiles(id, display_name, full_name, avatar_url)" as const;
+  "id, team_id, author_id, content, created_at, is_pinned, likes_count, comments_count, shares_count" as const;
 
 export async function listTeamPosts(
   teamId: string

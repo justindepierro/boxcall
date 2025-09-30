@@ -58,14 +58,6 @@ export const getNavigationItems = (
       href: resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.TEAMS,
       description: "Team-specific feed, announcements, and quick actions",
     },
-    // Teams - Available to everyone
-    {
-      id: "teams",
-      label: "Teams",
-      icon: "users",
-      href: ROUTES.TEAMS,
-      description: "View and manage your teams",
-    },
   ];
   // BoxCall - Coaches and super_admin only (premium feature)
   if (

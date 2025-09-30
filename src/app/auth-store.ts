@@ -739,10 +739,23 @@ const stopSessionRefresh = () => {
   }
 };
 
+let isInitializing = false;
+
 // Initialize auth state on app start with improved error handling
 const initializeAuth = async () => {
+  // Prevent double initialization
+  if (isInitializing) {
+    console.log("🔐 Auth initialization already in progress, skipping...");
+    return;
+  }
+  
+  isInitializing = true;
+  
   try {
     console.log("🔐 Initializing auth state...");
+    
+    // Set loading to true at the start of initialization
+    useAuth.setState({ loading: true, error: null });
 
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -769,6 +782,7 @@ const initializeAuth = async () => {
 
       // Fetch user profile with error handling
       try {
+        console.log("🔐 Starting user profile fetch...");
         await useAuth.getState().fetchUserProfile(session.user.id);
         console.log("✅ User profile loaded successfully");
       } catch (profileError) {
@@ -781,6 +795,7 @@ const initializeAuth = async () => {
 
       // Test authenticated database connection
       try {
+        console.log("🔐 Starting database connection test...");
         const dbConnectionOk = await testDatabaseConnection();
         if (dbConnectionOk) {
           console.log("✅ Authenticated database connection verified");
@@ -792,8 +807,14 @@ const initializeAuth = async () => {
         // Don't fail auth init if DB test fails
       }
 
+      console.log("🔐 Starting session refresh monitoring...");
       // Start session refresh monitoring
       startSessionRefresh();
+      
+      console.log("✅ Auth initialization completed successfully");
+      
+      // Ensure loading is definitely false at the end
+      useAuth.setState({ loading: false });
     } else {
       console.log("🔐 No session found on app start");
       AuthMonitoring.recordEvent("auth_init_success", undefined, { hasSession: false });
@@ -808,6 +829,8 @@ const initializeAuth = async () => {
       loading: false,
       error: "Authentication initialization failed. Please refresh the page."
     });
+  } finally {
+    isInitializing = false;
   }
 };
 
@@ -818,6 +841,12 @@ initializeAuth();
 supabase.auth.onAuthStateChange(async (event, session) => {
   console.log(`🔐 Auth state changed: ${event}`, session?.user?.id || 'no user');
 
+  // Don't process auth state changes during initialization
+  if (isInitializing) {
+    console.log("🔐 Skipping auth state change during initialization");
+    return;
+  }
+
   try {
     switch (event) {
       case 'SIGNED_IN':
@@ -826,6 +855,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
           useAuth.setState({
             user: session.user,
             session: session,
+            loading: false, // Ensure loading is false when signed in
             error: null
           });
 

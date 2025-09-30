@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { supabase } from "../../../lib/supabase";
 import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
 import { Button } from "../../ui/Button"; // Import the shared Button component
+import { Icon } from "../../ui/Icon/Icon";
 
 // Removed old inline edit button import usage after redesign
 
@@ -20,6 +22,8 @@ export interface TeamBulletinHeaderProps {
   logoUrl?: string | null;
   /** Optional id for main heading to support aria-labelledby on main */
   headingId?: string;
+  /** User's role in this team */
+  userRole?: string;
 }
 
 export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
@@ -34,10 +38,15 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   isCoach,
   logoUrl,
   headingId,
+  userRole,
 }) => {
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [localLogo, setLocalLogo] = useState<string | null>(logoUrl || null);
+
+  // Check if user is team owner/head coach who can access settings
+  const canAccessSettings = userRole === "head_coach" || userRole === "coach";
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || !e.target.files[0] || !teamId) return;
@@ -177,6 +186,17 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               {memberCount}
             </Typography>
           </div>
+          {canAccessSettings && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate(`/team/${teamId}/settings`)}
+              icon={<Icon name="settings" size="sm" />}
+              className="ml-4"
+            >
+              Team Settings
+            </Button>
+          )}
         </div>
       </div>
     </div>

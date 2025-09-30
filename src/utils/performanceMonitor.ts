@@ -1,0 +1,279 @@
+/**
+ * Performance Monitoring System
+ * 
+ * Comprehensive Real User Monitoring (RUM) for tracking app performance
+ * Measures Core Web Vitals, component performance, and custom metrics
+ */
+
+// Core Web Vitals tracking
+interface WebVitalsMetric {
+  name: string;
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  timestamp: number;
+}
+
+interface PerformanceMetrics {
+  // Core Web Vitals
+  LCP?: WebVitalsMetric; // Largest Contentful Paint
+  FID?: WebVitalsMetric; // First Input Delay
+  CLS?: WebVitalsMetric; // Cumulative Layout Shift
+  FCP?: WebVitalsMetric; // First Contentful Paint
+  TTFB?: WebVitalsMetric; // Time to First Byte
+  
+  // Custom metrics
+  navigationTiming?: PerformanceTiming;
+  memoryUsage?: MemoryInfo;
+  bundleLoadTime?: number;
+  routeChangeTime?: number;
+}
+
+class PerformanceMonitor {
+  private metrics: PerformanceMetrics = {};
+  private observers: PerformanceObserver[] = [];
+  private isEnabled: boolean;
+
+  constructor() {
+    this.isEnabled = !import.meta.env.DEV && 'performance' in window;
+    
+    if (this.isEnabled) {
+      this.initializeMonitoring();
+    }
+  }
+
+  private initializeMonitoring() {
+    // Initialize Web Vitals monitoring
+    this.initWebVitals();
+    
+    // Initialize navigation timing
+    this.trackNavigationTiming();
+    
+    // Initialize memory monitoring
+    this.trackMemoryUsage();
+    
+    // Track performance entries
+    this.initPerformanceObserver();
+  }
+
+  private initWebVitals() {
+    // Dynamic import to avoid blocking bundle
+    import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+      onCLS((metric) => this.recordMetric('CLS', metric));
+      onFID((metric) => this.recordMetric('FID', metric));
+      onFCP((metric) => this.recordMetric('FCP', metric));
+      onLCP((metric) => this.recordMetric('LCP', metric));
+      onTTFB((metric) => this.recordMetric('TTFB', metric));
+    }).catch(() => {
+      // Fallback if web-vitals is not available
+      console.warn('Web Vitals monitoring not available');
+    });
+  }
+
+  private recordMetric(name: string, metric: any) {
+    const rating = this.getRating(name, metric.value);
+    const webVitalsMetric: WebVitalsMetric = {
+      name,
+      value: metric.value,
+      rating,
+      timestamp: Date.now(),
+    };
+
+    this.metrics[name as keyof PerformanceMetrics] = webVitalsMetric;
+    
+    // Report to analytics service
+    this.reportMetric(webVitalsMetric);
+  }
+
+  private getRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
+    const thresholds: Record<string, [number, number]> = {
+      CLS: [0.1, 0.25],
+      FID: [100, 300],
+      FCP: [1800, 3000],
+      LCP: [2500, 4000],
+      TTFB: [800, 1800],
+    };
+
+    const [good, poor] = thresholds[name] || [0, 0];
+    
+    if (value <= good) return 'good';
+    if (value <= poor) return 'needs-improvement';
+    return 'poor';
+  }
+
+  private trackNavigationTiming() {
+    if ('performance' in window && 'timing' in performance) {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          this.metrics.navigationTiming = performance.timing;
+          this.calculateBundleLoadTime();
+        }, 0);
+      });
+    }
+  }
+
+  private calculateBundleLoadTime() {
+    const timing = performance.timing;
+    if (timing) {
+      const bundleLoadTime = timing.loadEventEnd - timing.navigationStart;
+      this.metrics.bundleLoadTime = bundleLoadTime;
+      
+      this.reportMetric({
+        name: 'bundleLoadTime',
+        value: bundleLoadTime,
+        rating: bundleLoadTime < 3000 ? 'good' : bundleLoadTime < 5000 ? 'needs-improvement' : 'poor',
+        timestamp: Date.now(),
+      });
+    }
+  }
+
+  private trackMemoryUsage() {
+    if ('memory' in performance) {
+      setInterval(() => {
+        this.metrics.memoryUsage = (performance as any).memory;
+      }, 30000); // Check every 30 seconds
+    }
+  }
+
+  private initPerformanceObserver() {
+    try {
+      // Long Tasks observer
+      const longTaskObserver = new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+          if (entry.duration > 50) {
+            this.reportMetric({
+              name: 'longTask',
+              value: entry.duration,
+              rating: 'poor',
+              timestamp: Date.now(),
+            });
+          }
+        });
+      });
+      longTaskObserver.observe({ entryTypes: ['longtask'] });
+      this.observers.push(longTaskObserver);
+
+      // Resource timing observer
+      const resourceObserver = new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+          const resource = entry as PerformanceResourceTiming;
+          if (resource.duration > 1000) { // Resources taking > 1s
+            this.reportMetric({
+              name: 'slowResource',
+              value: resource.duration,
+              rating: 'needs-improvement',
+              timestamp: Date.now(),
+            });
+          }
+        });
+      });
+      resourceObserver.observe({ entryTypes: ['resource'] });
+      this.observers.push(resourceObserver);
+
+    } catch (error) {
+      console.warn('Performance Observer not supported:', error);
+    }
+  }
+
+  // Track route changes
+  trackRouteChange(routeName: string) {
+    const startTime = performance.now();
+    
+    return () => {
+      const routeChangeTime = performance.now() - startTime;
+      this.metrics.routeChangeTime = routeChangeTime;
+      
+      this.reportMetric({
+        name: 'routeChange',
+        value: routeChangeTime,
+        rating: routeChangeTime < 200 ? 'good' : routeChangeTime < 500 ? 'needs-improvement' : 'poor',
+        timestamp: Date.now(),
+      });
+    };
+  }
+
+  // Track component render performance
+  trackComponentRender(componentName: string) {
+    const startTime = performance.now();
+    
+    return () => {
+      const renderTime = performance.now() - startTime;
+      
+      if (import.meta.env.DEV) {
+        console.info(`⚡ ${componentName} render: ${renderTime.toFixed(2)}ms`);
+      }
+      
+      if (renderTime > 16) { // Components taking > 1 frame (16ms)
+        this.reportMetric({
+          name: 'componentRender',
+          value: renderTime,
+          rating: renderTime < 16 ? 'good' : renderTime < 50 ? 'needs-improvement' : 'poor',
+          timestamp: Date.now(),
+        });
+      }
+    };
+  }
+
+  // Report metrics to analytics service
+  private reportMetric(metric: WebVitalsMetric) {
+    if (!this.isEnabled) return;
+
+    // In production, send to your analytics service
+    if (!import.meta.env.DEV) {
+      // Example: Send to Google Analytics, DataDog, etc.
+      // gtag('event', metric.name, {
+      //   custom_map: { metric_value: 'value' },
+      //   value: metric.value,
+      //   metric_rating: metric.rating
+      // });
+      
+      console.info(`📊 Performance Metric: ${metric.name} = ${metric.value}ms (${metric.rating})`);
+    }
+  }
+
+  // Get current metrics snapshot
+  getMetrics(): PerformanceMetrics {
+    return { ...this.metrics };
+  }
+
+  // Cleanup observers
+  disconnect() {
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+  }
+}
+
+// Global performance monitor instance
+export const performanceMonitor = new PerformanceMonitor();
+
+// React hook for component performance tracking
+export const useComponentPerformance = (componentName: string) => {
+  if (!import.meta.env.DEV) {
+    const endTracking = performanceMonitor.trackComponentRender(componentName);
+    
+    return () => {
+      endTracking();
+    };
+  }
+  
+  return () => {}; // No-op in development
+};
+
+// React hook for route performance tracking
+export const useRoutePerformance = (routeName: string) => {
+  if (!import.meta.env.DEV) {
+    const endTracking = performanceMonitor.trackRouteChange(routeName);
+    
+    return () => {
+      endTracking();
+    };
+  }
+  
+  return () => {}; // No-op in development
+};
+
+// Cleanup on page unload
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    performanceMonitor.disconnect();
+  });
+}

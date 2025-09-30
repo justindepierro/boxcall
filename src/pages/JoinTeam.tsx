@@ -218,11 +218,11 @@ export const JoinTeam: React.FC = () => {
                   type="button"
                   variant={method.primary ? "primary" : "outline"}
                   onClick={() => handleMethodSelect(method.id)}
-                  className={`p-6 h-auto w-full justify-start text-left rounded-lg ${
+                  className={
                     method.primary
-                      ? ""
-                      : "border-subtle dark:border-text-tertiary bg-surface-primary"
-                  }`}
+                      ? "p-6 h-auto w-full justify-start text-left rounded-lg"
+                      : "p-6 h-auto w-full justify-start text-left rounded-lg border-subtle dark:border-text-tertiary bg-surface-primary"
+                  }
                 >
                   <div className="flex items-start gap-4">
                     <Icon

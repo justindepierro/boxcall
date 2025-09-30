@@ -67,6 +67,40 @@ export class TeamCreationService {
       // So we skip the connectivity test and proceed directly to team creation
       console.log("🔄 Skipping connectivity test, proceeding with team creation");
 
+      // Check for duplicate teams before creating
+      console.log("🔍 Checking for duplicate teams...");
+      progress.setLoadingMessage("Checking for similar teams...");
+      
+      try {
+        const { TeamDuplicatePreventionService } = await import('./teamDuplicatePreventionService');
+        const duplicateCheck = await TeamDuplicatePreventionService.checkForDuplicates(
+          formData.teamName,
+          formData.schoolName,
+          formData.schoolDistrict,
+          formData.schoolCity,
+          formData.schoolState
+        );
+        
+        if (duplicateCheck.isDuplicate) {
+          console.error("🚨 Duplicate team detected:", duplicateCheck.warningMessage);
+          throw new Error(duplicateCheck.warningMessage || "A very similar team already exists. Please contact support.");
+        }
+        
+        if (duplicateCheck.requiresApproval) {
+          console.warn("⚠️ Similar team found:", duplicateCheck.warningMessage);
+          // For now, we'll allow creation but log it
+          emitTelemetry("team.create.similar_team_warning", {
+            similar_teams_count: duplicateCheck.similarTeams.length,
+            highest_similarity: duplicateCheck.similarTeams[0]?.similarityScore || 0
+          });
+        }
+        
+        console.log("✅ Duplicate check passed");
+      } catch (duplicateError) {
+        console.warn("⚠️ Duplicate check failed, proceeding anyway:", duplicateError);
+        // Don't fail team creation if duplicate check fails
+      }
+
       // Create team name
       console.log("🏷️ Creating team name...");
       progress.setLoadingMessage("Creating team...");
