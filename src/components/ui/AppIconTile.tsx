@@ -40,18 +40,21 @@ export const AppIconTile = memo<AppIconTileProps>(
         )}
 
         {/* App Icon - iPhone Style - Centered */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center w-24 h-24">
           {/* Icon Container with Gradient */}
           <div
-            className={`relative w-24 h-24 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95 flex items-center justify-center`}
+            className={`absolute inset-0 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95`}
           >
             {/* Shine effect overlay */}
             <div className="absolute inset-0 rounded-[26px] bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
+          </div>
 
-            {/* Icon - Perfectly centered */}
+          {/* Icon - Absolutely centered with z-index */}
+          <div className="relative z-10 flex items-center justify-center">
             <Icon
               name={icon}
-              className="w-12 h-12 text-white drop-shadow-lg relative z-10"
+              className="!w-12 !h-12 text-white drop-shadow-lg flex-shrink-0"
+              aria-hidden="true"
             />
           </div>
 

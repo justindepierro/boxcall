@@ -109,8 +109,8 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(
           <div className="absolute inset-0 flex items-center justify-center">
             <Icon
               name={getPlayIcon(play.p_type)}
-              size="xl"
               className="w-20 h-20 text-white drop-shadow-lg"
+              aria-hidden="true"
             />
           </div>
 
