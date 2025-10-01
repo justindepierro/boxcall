@@ -8,7 +8,7 @@ import React, {
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
-import { PlayCard } from "./PlayCard";
+import { PlayCard } from "./PlayCard.v2";
 import { Virtuoso } from "react-virtuoso";
 import { Button } from "../ui/Button/Button";
 import { telemetry } from "../../telemetry/dispatcher";
@@ -88,11 +88,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedCategory,
   selectedSubcategory,
   onEdit,
-  onSave,
+  onSave: _onSave, // Not used in V2 (no inline editing)
   onDuplicate,
   onCreateDiagram,
-  onAddToPracticeScript,
-  onAddToGamePlan,
+  onAddToPracticeScript: _onAddToPracticeScript, // Not used in V2
+  onAddToGamePlan: _onAddToGamePlan, // Not used in V2
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
   onPlayCountChange,
   refreshTrigger = 0,
@@ -102,8 +102,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   onPlaySelectionChange,
   onOpenBuilder: _onOpenBuilder,
   // Suggestions
-  formationSuggestions = [],
-  playNameSuggestions = [],
+  formationSuggestions: _formationSuggestions = [], // Not used in V2
+  playNameSuggestions: _playNameSuggestions = [], // Not used in V2
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -332,46 +332,38 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           play={play}
           showOneWordCalls={showOneWordCalls}
           onEdit={onEdit}
-          onSave={onSave}
           onDuplicate={onDuplicate}
           onCreateDiagram={onCreateDiagram}
-          onAddToPracticeScript={onAddToPracticeScript}
-          onAddToGamePlan={onAddToGamePlan}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
-          formationSuggestions={formationSuggestions}
-          playNameSuggestions={playNameSuggestions}
         />
       </div>
     ),
     [
       showOneWordCalls,
       onEdit,
-      onSave,
       onDuplicate,
       onCreateDiagram,
-      onAddToPracticeScript,
-      onAddToGamePlan,
       selectedPlayIds,
       handlePlaySelect,
-      formationSuggestions,
-      playNameSuggestions,
     ]
   );
 
-  // --- Skeleton Loading State ---
+  // --- Skeleton Loading State - Aurora Design ---
   const SkeletonCard: React.FC<{ idx: number }> = ({ idx }) => (
     <div
-      className="rounded-md border border-subtle surface-card p-4 shadow-sm animate-pulse"
+      className="backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-[28px] border-2 border-white/20 p-4 shadow-sm animate-pulse"
       aria-label={`Loading play placeholder ${idx + 1}`}
     >
-      <div className="h-4 w-1/3 bg-surface-secondary rounded mb-3" />
-      <div className="h-3 w-1/2 bg-surface-tertiary rounded mb-2" />
-      <div className="h-3 w-2/5 bg-surface-tertiary rounded mb-4" />
-      <div className="flex gap-2">
-        <div className="h-6 w-14 bg-surface-tertiary rounded" />
-        <div className="h-6 w-10 bg-surface-tertiary rounded" />
-        <div className="h-6 w-16 bg-surface-tertiary rounded" />
+      {/* Gradient accent bar */}
+      <div className="h-1 bg-gradient-to-r from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-full mb-4" />
+      {/* Title skeleton */}
+      <div className="h-5 w-1/3 bg-slate-200 dark:bg-slate-700 rounded-lg mb-3" />
+      {/* Badges skeleton */}
+      <div className="flex gap-2 mb-2">
+        <div className="h-6 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+        <div className="h-6 w-12 bg-slate-200 dark:bg-slate-700 rounded-full" />
+        <div className="h-7 w-7 bg-slate-200 dark:bg-slate-700 rounded-full" />
       </div>
     </div>
   );
@@ -549,11 +541,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               play={play}
               showOneWordCalls={showOneWordCalls}
               onEdit={onEdit}
-              onSave={onSave}
               onDuplicate={onDuplicate}
               onCreateDiagram={onCreateDiagram}
-              onAddToPracticeScript={onAddToPracticeScript}
-              onAddToGamePlan={onAddToGamePlan}
               isSelected={selectedPlayIds.has(play.id)}
               onSelectionChange={handlePlaySelect}
             />
