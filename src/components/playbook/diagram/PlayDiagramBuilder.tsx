@@ -105,12 +105,13 @@ const FieldSettingsPanel: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+    <div className="space-y-6">
+      {/* Field Slice Section */}
+      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
           Field Slice
         </Typography>
-        <div className="mt-3 space-y-3">
+        <div className="space-y-3">
           {(Object.keys(fieldSlicePresets) as Array<
             keyof typeof fieldSlicePresets
           >).map((key) => {
@@ -118,7 +119,7 @@ const FieldSettingsPanel: React.FC = () => {
             return (
               <label
                 key={key}
-                className="flex items-center gap-2 text-sm text-text-secondary"
+                className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors"
               >
                 <input
                   type="radio"
@@ -126,109 +127,110 @@ const FieldSettingsPanel: React.FC = () => {
                   value={key}
                   checked={activePreset === key}
                   onChange={() => handlePresetChange(key)}
-                  className="accent-jade-600"
+                  className="h-4 w-4 text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
                 />
-                {preset.label}
+                <span>{preset.label}</span>
               </label>
             );
           })}
         </div>
       </div>
 
-      <div className="border-t border-slate-800 pt-4">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+      {/* Display Options Section */}
+      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
           Display
         </Typography>
-        <div className="mt-3 space-y-2">
-          <label className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
             <input
               type="checkbox"
               checked={field.showPlayerLabels}
               onChange={() => toggleFlag("showPlayerLabels")}
-              className="accent-jade-600"
+              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
-            Show Player Labels
+            <span>Show Player Labels</span>
           </label>
-          <label className="flex items-center gap-2 text-sm text-text-secondary">
+          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
             <input
               type="checkbox"
               checked={field.showDefensePlayers}
               onChange={() => toggleFlag("showDefensePlayers")}
-              className="accent-jade-600"
+              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
-            Show Defense
+            <span>Show Defense</span>
           </label>
-          <label className="flex items-center gap-2 text-sm text-text-secondary">
+          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
             <input
               type="checkbox"
               checked={field.showRedZone ?? false}
               onChange={() => toggleFlag("showRedZone")}
-              className="accent-jade-600"
+              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
-            Highlight Red Zone
+            <span>Highlight Red Zone</span>
           </label>
         </div>
       </div>
 
-      <div className="border-t border-slate-800 pt-4 space-y-3">
-        <div>
-          <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
-            Ball Hash
-          </Typography>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
-            {[
-              { id: "left", label: "Left" },
-              { id: "middle", label: "Middle" },
-              { id: "right", label: "Right" },
-            ].map((option) => (
-              <button
-                key={option.id}
-                onClick={() =>
-                  dispatch({
-                    type: "SET_BALL_HASH",
-                    hash: option.id as DiagramFieldConfig["ballHash"],
-                  })
-                }
-                className={`rounded-md border px-2 py-1 text-xs transition-colors ${
-                  field.ballHash === option.id
-                    ? "border-jade-500 bg-emerald-50 text-jade-800"
-                    : "border-slate-700 bg-slate-900 text-slate-300 hover:border-jade-600"
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+      {/* Ball Hash Section */}
+      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+          Ball Hash
+        </Typography>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { id: "left", label: "Left" },
+            { id: "middle", label: "Middle" },
+            { id: "right", label: "Right" },
+          ].map((option) => (
+            <button
+              key={option.id}
+              onClick={() =>
+                dispatch({
+                  type: "SET_BALL_HASH",
+                  hash: option.id as DiagramFieldConfig["ballHash"],
+                })
+              }
+              className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
+                field.ballHash === option.id
+                  ? "border-jade-500 bg-jade-500/20 text-jade-100 shadow-lg shadow-jade-500/25"
+                  : "border-slate-700 bg-slate-900/60 text-slate-300 hover:border-jade-600 hover:bg-slate-800/80"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
+      </div>
 
-        <div>
-          <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
-            Hash Layout
-          </Typography>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-            {[
-              { id: "highschool", label: "HS" },
-              { id: "college", label: "NCAA" },
-              { id: "nfl", label: "NFL" },
-            ].map((option) => (
-              <button
-                key={option.id}
-                onClick={() =>
-                  dispatch({
-                    type: "SET_FIELD_HASH_LAYOUT",
-                    layout: option.id as NonNullable<DiagramFieldConfig["hashLayout"]>,
-                  })
-                }
-                className={`rounded-md border px-3 py-1 transition-colors ${
-                  field.hashLayout === option.id
-                    ? "border-jade-500 bg-emerald-50 text-jade-800"
-                    : "border-slate-700 bg-slate-900 text-slate-300 hover:border-jade-600"
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+      {/* Hash Layout Section */}
+      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+          Hash Layout
+        </Typography>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { id: "highschool", label: "HS" },
+            { id: "college", label: "NCAA" },
+            { id: "nfl", label: "NFL" },
+          ].map((option) => (
+            <button
+              key={option.id}
+              onClick={() =>
+                dispatch({
+                  type: "SET_FIELD_HASH_LAYOUT",
+                  layout: option.id as NonNullable<DiagramFieldConfig["hashLayout"]>,
+                })
+              }
+              className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
+                field.hashLayout === option.id
+                  ? "border-jade-500 bg-jade-500/20 text-jade-100 shadow-lg shadow-jade-500/25"
+                  : "border-slate-700 bg-slate-900/60 text-slate-300 hover:border-jade-600 hover:bg-slate-800/80"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -236,9 +238,8 @@ const FieldSettingsPanel: React.FC = () => {
 };
 
 const DiagramCanvas: React.FC = () => {
-  const { state } = useDiagramEditor();
   return (
-    <div className="relative flex-1 overflow-hidden rounded-aurora bg-slate-900/40 border border-slate-800">
+    <div className="relative flex-1 overflow-hidden rounded-[28px] bg-slate-900/40 border border-slate-800 shadow-inner">
       <ShapeManipulator
         zoom={1}
         panX={0}
@@ -335,45 +336,48 @@ const DiagramTopBar: React.FC<{
   onChange: (updates: Partial<DiagramMetadata>) => void;
 }> = ({ formState, onChange }) => {
   return (
-    <div className="flex flex-wrap items-center gap-4 bg-slate-900/90 border-b border-slate-800 px-5 py-4">
-      <div className="flex flex-col gap-1 min-w-[220px]">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+    <div className="flex flex-wrap items-center gap-4 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 backdrop-blur-xl border-b border-slate-800/60 px-6 py-5 shadow-lg">
+      <div className="flex flex-col gap-1.5 min-w-[220px]">
+        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Play Name
         </Typography>
         <Input
           size="sm"
           value={formState.play_name}
           onChange={(e) => onChange({ play_name: e.target.value })}
+          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1 min-w-[180px]">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+      <div className="flex flex-col gap-1.5 min-w-[180px]">
+        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Formation
         </Typography>
         <Input
           size="sm"
           value={formState.formation}
           onChange={(e) => onChange({ formation: e.target.value })}
+          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1 min-w-[160px]">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+      <div className="flex flex-col gap-1.5 min-w-[160px]">
+        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Personnel
         </Typography>
         <Input
           size="sm"
           value={formState.personnel ?? ""}
           onChange={(e) => onChange({ personnel: e.target.value })}
+          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1 min-w-[150px]">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+      <div className="flex flex-col gap-1.5 min-w-[150px]">
+        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Play Type
         </Typography>
         <select
           value={formState.p_type ?? ""}
           onChange={(e) => onChange({ p_type: e.target.value })}
-          className="rounded-sm border border-slate-700 bg-slate-900 text-sm text-slate-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-jade-500"
+          className="rounded-lg border border-slate-700/50 bg-slate-800/60 text-sm text-slate-100 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500 transition-colors"
         >
           <option value="">Select type</option>
           {playTypeOptions.map((opt) => (
@@ -383,14 +387,15 @@ const DiagramTopBar: React.FC<{
           ))}
         </select>
       </div>
-      <div className="flex flex-col gap-1 min-w-[150px]">
-        <Typography variant="label-lg" className="text-xs tracking-[0.2em]">
+      <div className="flex flex-col gap-1.5 min-w-[150px]">
+        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
           VS Front
         </Typography>
         <Input
           size="sm"
           value={formState.pref_front ?? ""}
           onChange={(e) => onChange({ pref_front: e.target.value })}
+          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
     </div>
@@ -470,25 +475,34 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
   const canSave = state.dirty || dirtyMetadata;
 
   return (
-    <div className="flex h-full w-full bg-slate-950 text-slate-100">
-      <aside className="hidden lg:block w-64 border-r border-slate-800 bg-slate-900/70 px-5 py-6 overflow-y-auto">
-        <Typography variant="headline-sm" className="mb-4 text-slate-200">
-          Field Settings
-        </Typography>
+    <div className="flex h-full w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      {/* Sidebar - Field Settings */}
+      <aside className="hidden lg:block w-72 border-r border-slate-800/60 bg-slate-900/50 backdrop-blur-xl px-6 py-8 overflow-y-auto">
+        <div className="mb-6">
+          <Typography variant="headline-sm" className="text-slate-100 font-semibold">
+            Field Settings
+          </Typography>
+          <Typography variant="caption" className="text-slate-400 mt-1">
+            Configure field view and display options
+          </Typography>
+        </div>
         <FieldSettingsPanel />
       </aside>
 
+      {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         <DiagramTopBar formState={formState} onChange={handleMetadataChange} />
 
-        <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-hidden">
-          <div className="flex flex-1 gap-4 min-h-0">
+        <div className="flex-1 flex flex-col gap-5 px-6 py-5 overflow-hidden">
+          <div className="flex flex-1 gap-5 min-h-0">
             <div className="flex-1 flex flex-col min-w-0">
               <DiagramCanvas />
             </div>
-            <div className="hidden xl:block w-72 space-y-4">
-              <Card className="p-4 space-y-4 bg-slate-900/80 border border-slate-800">
-                <Typography variant="caption" className="uppercase tracking-[0.2em] text-slate-400">
+            
+            {/* Properties Panel - Desktop */}
+            <div className="hidden xl:block w-80 space-y-4">
+              <Card className="p-5 space-y-5 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl shadow-xl">
+                <Typography variant="caption" className="uppercase tracking-[0.2em] text-slate-400 font-semibold">
                   Properties
                 </Typography>
                 <PlayerPropertiesPanel />
@@ -497,24 +511,42 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 border border-slate-800 rounded-aurora px-4 py-3">
+          {/* Bottom Toolbar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl px-5 py-4 shadow-xl">
             <ModernToolPalette orientation="horizontal" className="bg-transparent p-0" />
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={handleUndo}>
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleUndo}
+                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+              >
                 <Icon name="undo" size="sm" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleRedo}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleRedo}
+                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+              >
                 <Icon name="refresh-cw" size="sm" />
               </Button>
+              <div className="h-5 w-px bg-slate-700" />
               <Button
                 variant="gradient"
                 size="sm"
                 onClick={handleSave}
                 disabled={!canSave || saving}
+                className="shadow-lg shadow-jade-500/25"
               >
                 {saving ? "Saving…" : "Save Diagram"}
               </Button>
-              <Button variant="ghost" size="sm" onClick={onClose}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onClose}
+                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+              >
                 Close
               </Button>
             </div>

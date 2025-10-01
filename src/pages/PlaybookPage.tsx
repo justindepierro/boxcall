@@ -30,6 +30,7 @@ import type { DiagramDocument } from "../components/playbook/diagram/types/types
 import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
 import { PracticeScriptBuilder } from "../components/playbook/PracticeScriptBuilder";
 import { useActiveTeamStore } from "../state/activeTeamStore";
+import { AuroraTile } from "../components/ui/AuroraTile";
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -423,12 +424,61 @@ export default function PlaybookPage() {
         streakDays={state.streakDays}
       />
 
+      {/* Aurora Hero Tiles */}
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <AuroraTile
+            title="New Play"
+            description="Create a new play with our step-by-step builder or draw your own diagram."
+            icon="plus"
+            accentOverlayClass="bg-gradient-to-br from-emerald-100 via-green-50 to-jade-100 dark:from-emerald-900/40 dark:via-green-900/30 dark:to-jade-900/40"
+            glowClassName="bg-emerald-400/40 dark:bg-emerald-500/30"
+            statusBadge="Create"
+            footnote={`${state.playsCreated} plays`}
+            onOpen={handleOpenBuilder}
+          />
+          
+          <AuroraTile
+            title="Practice Script"
+            description="Build a structured practice plan with drills, timing, and play sequences."
+            icon="clock"
+            accentOverlayClass="bg-gradient-to-br from-violet-100 via-purple-50 to-blue-100 dark:from-violet-900/40 dark:via-purple-900/30 dark:to-blue-900/40"
+            glowClassName="bg-violet-400/40 dark:bg-violet-500/30"
+            statusBadge="Schedule"
+            footnote="Quick start"
+            onOpen={handleQuickNewPracticeScript}
+          />
+          
+          <AuroraTile
+            title="Game Plan"
+            description="Strategize plays for upcoming matches organized by situation and priority."
+            icon="target"
+            accentOverlayClass="bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 dark:from-amber-900/40 dark:via-orange-900/30 dark:to-yellow-900/40"
+            glowClassName="bg-amber-400/40 dark:bg-amber-500/30"
+            statusBadge="Strategy"
+            footnote="Plan ahead"
+            onOpen={handleQuickNewGamePlan}
+          />
+          
+          <AuroraTile
+            title="Diagram Coverage"
+            description={`${state.diagramCoverage}% of your plays have visual diagrams for easy review.`}
+            icon="grid"
+            accentOverlayClass="bg-gradient-to-br from-indigo-100 via-blue-50 to-cyan-100 dark:from-indigo-900/40 dark:via-blue-900/30 dark:to-cyan-900/40"
+            glowClassName="bg-indigo-400/40 dark:bg-indigo-500/30"
+            statusBadge="Progress"
+            footnote={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} diagrams`}
+            onOpen={() => {}}
+          />
+        </div>
+      </div>
+
       {/* Main Content - 2 Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8">
         {/* Left Sidebar - Controls */}
         <div className="lg:col-span-1 space-y-6">
           {/* Filters - Moved to top */}
-          <div className="surface-card rounded-lg p-4">
+          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
@@ -436,14 +486,18 @@ export default function PlaybookPage() {
           </div>
 
           {/* Stats Dashboard */}
-          <PlaybookStatsDashboard stats={playbookStats} />
+          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+            <PlaybookStatsDashboard stats={playbookStats} />
+          </div>
 
           {/* Recent Activity */}
-          <RecentActivityFeed activities={playbookStats.recentActivity} />
+          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+            <RecentActivityFeed activities={playbookStats.recentActivity} />
+          </div>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <div className="surface-card rounded-lg p-4">
+            <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
@@ -455,7 +509,7 @@ export default function PlaybookPage() {
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3">
-          <div className="surface-card rounded-lg p-6">
+          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-8 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
             {state.currentView === "playbook" && (
               <PlayGrid
                 searchQuery={state.searchQuery}
@@ -616,6 +670,18 @@ export default function PlaybookPage() {
                   );
                 } else {
                   toast.error("Failed to process play", error.message);
+                }
+              } else if (typeof error === 'object' && error !== null) {
+                // Check for PostgREST schema cache errors
+                const err = error as { code?: string; message?: string };
+                if (err.code === 'PGRST204' || err.message?.includes('schema cache')) {
+                  toast.error(
+                    "Database schema cache error",
+                    "Please reload the page. If the issue persists, contact support."
+                  );
+                  console.error("💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md");
+                } else {
+                  toast.error("Failed to process play", err.message || "Please try again");
                 }
               } else {
                 toast.error("Failed to process play", "Please try again");

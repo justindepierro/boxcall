@@ -59,7 +59,13 @@ let supabaseClient: SupabaseClient<Database>;
 if (supabaseUrl && supabaseAnonKey) {
   // Use only anon key for client-side operations - NEVER expose service role key
   console.log('✅ Creating real Supabase client');
-  supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
+  supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  });
 } else if (import.meta.env.DEV) {
   console.log('⚠️ Using Supabase dev stub - environment variables missing');
   supabaseClient = createDevStub();

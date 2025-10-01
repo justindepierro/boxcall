@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
@@ -641,7 +642,7 @@ export const ProfilePage: React.FC = () => {
               className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
             />
           </div>
-        </div>
+        </Card>
 
         {/* Athletic Information - Only show for players */}
         {profile.app_role === "player" && (
@@ -768,7 +769,7 @@ export const ProfilePage: React.FC = () => {
                 </select>
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Coaching Information - Show for coaches and admins */}
@@ -776,7 +777,7 @@ export const ProfilePage: React.FC = () => {
           profile.app_role === "free_coach" ||
           profile.app_role === "head_coach" ||
           profile.is_admin) && (
-        <Card className="p-8">
+          <Card className="p-8">
             <Typography
               variant="headline-sm"
               as="h2"
@@ -892,7 +893,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Emergency Contact Information - Enhanced */}
@@ -951,14 +952,14 @@ export const ProfilePage: React.FC = () => {
               <ValidationError error={validationErrors.emergency_phone} />
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Coaching Information - Only show for coaches */}
         {(profile.app_role === "coach" ||
           profile.app_role === "free_coach" ||
           profile.app_role === "head_coach" ||
           profile.is_admin) && (
-        <Card className="relative overflow-hidden p-8">
+          <Card className="relative overflow-hidden p-8">
           <div className="absolute top-0 right-0 w-20 h-20 bg-aurora-emerald rounded-full -mr-10 -mt-10 opacity-60"></div>
             <Typography
               variant="headline-sm"
@@ -1144,7 +1145,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Social Media Links - Enhanced */}
@@ -1265,7 +1266,7 @@ export const ProfilePage: React.FC = () => {
               />
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Account Security */}
         <Card className="p-6">
@@ -1301,7 +1302,8 @@ export const ProfilePage: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
+        </Card>
+        
         {/* Actions */}
         <div className="flex justify-between items-center">
           <Button

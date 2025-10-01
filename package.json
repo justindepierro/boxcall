@@ -38,6 +38,7 @@
     "db:demo": "tsx scripts/setup-demo.ts",
     "db:setup": "npm run db:schema && npm run db:admin && npm run db:demo",
     "db:drop-script": "tsx scripts/generate-drop-script.ts",
+    "db:reload-cache": "tsx scripts/reload-schema-cache.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
