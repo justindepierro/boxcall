@@ -24,17 +24,17 @@ export const AppIconTile = memo<AppIconTileProps>(({
     <button
       type="button"
       onClick={onOpen}
-      className={`group relative flex flex-col items-center gap-3 transition-transform duration-200 active:scale-95 ${className}`}
+      className={`group relative flex flex-col items-center gap-3 p-4 transition-transform duration-200 active:scale-95 ${className}`}
       aria-label={title}
     >
-      {/* App Icon - iPhone Style - Larger */}
+      {/* App Icon - iPhone Style - Larger with overflow space */}
       <div className="relative">
         {/* Icon Container with Gradient */}
         <div
-          className={`relative w-24 h-24 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg overflow-hidden transition-all duration-200 group-hover:scale-110 group-active:scale-95`}
+          className={`relative w-24 h-24 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95`}
         >
           {/* Shine effect overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent" />
+          <div className="absolute inset-0 rounded-[26px] bg-gradient-to-tr from-transparent via-white/20 to-transparent" />
           
           {/* Icon - Larger */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -55,18 +55,10 @@ export const AppIconTile = memo<AppIconTileProps>(({
         )}
       </div>
 
-      {/* App Name - Better wrapping */}
+      {/* App Name - Better wrapping with proper spacing */}
       <div className="text-center w-[100px]">
         <div 
-          className="text-sm font-semibold text-slate-900 dark:text-white leading-tight"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            wordBreak: 'break-word',
-            minHeight: '2.5rem',
-          }}
+          className="text-sm font-semibold text-slate-900 dark:text-white leading-tight line-clamp-2"
         >
           {title}
         </div>

@@ -73,11 +73,11 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
   };
 
   return (
-    <div className="relative group flex flex-col items-center w-full max-w-[160px] mx-auto">
+    <div className="relative flex flex-col items-center w-full max-w-[180px] mx-auto p-4">
       {/* Selection Checkbox - Top Left Corner */}
       {onSelectionChange && (
         <label 
-          className="absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+          className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
           onClick={(e) => e.stopPropagation()}
         >
           <input
@@ -89,7 +89,7 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
         </label>
       )}
 
-      {/* App Icon Container - Increased to 140px */}
+      {/* App Icon Container - Increased to 140px with proper overflow */}
       <button
         onClick={() => onClick?.(play)}
         className={`relative w-[140px] h-[140px] rounded-[32px] bg-gradient-to-br ${getTypeGradient(play.p_type)} shadow-lg hover:shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 ${
@@ -148,25 +148,17 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
         )}
       </button>
 
-      {/* Play Name Label - Below Icon with better wrapping */}
-      <div className="mt-3 w-full px-2">
+      {/* Play Name Label - Below Icon with better wrapping and spacing */}
+      <div className="mt-4 w-full px-2">
         <p 
-          className="text-sm font-bold text-slate-900 dark:text-white text-center leading-tight"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            wordBreak: 'break-word',
-            minHeight: '2.5rem',
-          }}
+          className="text-sm font-bold text-slate-900 dark:text-white text-center leading-tight line-clamp-2"
           title={displayName}
         >
           {truncatedName}
         </p>
         
         {/* Subtitle - One-word call or play type */}
-        <p className="text-xs text-slate-500 dark:text-slate-400 text-center mt-1 truncate">
+        <p className="text-xs text-slate-500 dark:text-slate-400 text-center mt-1.5 truncate">
           {showOneWordCalls && play.one_word_play 
             ? (play.formation || play.p_type)
             : play.one_word_play 

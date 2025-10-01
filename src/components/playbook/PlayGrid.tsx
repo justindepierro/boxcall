@@ -581,22 +581,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
       {/* Play Grid - Conditional Rendering based on view mode */}
       {!showEmpty && viewMode === 'grid' ? (
-        /* App Icon Grid View - Better spacing for larger icons */
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8 py-8 px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4">
           {filteredPlays.map((play) => (
-            <PlayCardAppIcon
-              key={play.id}
-              play={play}
-              showOneWordCalls={showOneWordCalls}
-              onClick={(p) => setSelectedPlay(p)}
-              isSelected={selectedPlayIds.has(play.id)}
-              onSelectionChange={handlePlaySelect}
-            />
+            <div key={play.id} className="flex items-start justify-center">
+              <PlayCardAppIcon
+                play={play}
+                showOneWordCalls={showOneWordCalls}
+                onClick={(p) => setSelectedPlay(p)}
+                isSelected={selectedPlayIds.has(play.id)}
+                onSelectionChange={handlePlaySelect}
+              />
+            </div>
           ))}
         </div>
       ) : !showEmpty &&
       (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        /* List View - Non-virtualized */
         <div className="space-y-6" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
@@ -612,7 +611,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           ))}
         </div>
       ) : !showEmpty ? (
-        /* List View - Virtualized */
         <div
           style={{ height: "calc(100vh - 320px)" }}
           aria-label="Play list"
