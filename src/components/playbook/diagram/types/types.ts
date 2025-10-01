@@ -244,7 +244,8 @@ export type DiagramEditorAction =
   | { type: "APPLY_FORMATION"; formation: string }
   | { type: "UNDO" }
   | { type: "REDO" }
-  | { type: "MARK_SAVED" };
+  | { type: "MARK_SAVED" }
+  | { type: "SET_FIELD_SLICE"; slice: Partial<Pick<DiagramFieldConfig, "backYards" | "forwardYards" | "losYards">> };
 
 export const createEmptyDocument = (): DiagramDocument => ({
   version: 1,

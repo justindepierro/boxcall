@@ -22,136 +22,14 @@ import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
-import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
-import { useDiagramEditor } from "../components/playbook/diagram/context/useDiagramEditor";
+import {
+  PlayDiagramBuilder,
+  type DiagramMetadata,
+} from "../components/playbook/diagram/PlayDiagramBuilder";
+import type { DiagramDocument } from "../components/playbook/diagram/types/types";
 import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
 import { PracticeScriptBuilder } from "../components/playbook/PracticeScriptBuilder";
 import { useActiveTeamStore } from "../state/activeTeamStore";
-
-interface DiagramBuilderHeaderProps {
-  play: Play;
-  onClose: () => void;
-}
-
-const DiagramBuilderHeader: React.FC<DiagramBuilderHeaderProps> = ({
-  play,
-  onClose,
-}) => {
-  const { dispatch } = useDiagramEditor();
-  const [showExportDropdown, setShowExportDropdown] = useState(false);
-
-  const handleSave = useCallback(() => {
-    console.log("Saving diagram...");
-    alert("Save functionality will be implemented soon!");
-  }, []);
-
-  const handleLoad = useCallback(() => {
-    console.log("Loading diagram...");
-    alert("Load functionality will be implemented soon!");
-  }, []);
-
-  const handleExport = useCallback((format: "png" | "svg" | "pdf") => {
-    console.log(`Exporting diagram as ${format.toUpperCase()}`);
-    alert(
-      `Export functionality for ${format.toUpperCase()} will be implemented soon!`
-    );
-  }, []);
-
-  return (
-    <div className="flex items-center justify-between">
-      <Typography variant="headline-sm" as="h3" className="text-text-primary">
-        {`${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`}
-      </Typography>
-      <div className="flex items-center space-x-2">
-        <button
-          onClick={() => dispatch({ type: "UNDO" })}
-          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
-          title="Undo (Ctrl+Z)"
-        >
-          ↶
-        </button>
-        <button
-          onClick={() => dispatch({ type: "REDO" })}
-          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors"
-          title="Redo (Ctrl+Y)"
-        >
-          ↷
-        </button>
-        <div className="w-px h-6 bg-border mx-1"></div>
-        <button
-          onClick={handleSave}
-          className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
-        >
-          Save
-        </button>
-        <button
-          onClick={handleLoad}
-          className="px-3 py-1.5 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded border border-border transition-colors"
-        >
-          Load
-        </button>
-        <div className="relative export-dropdown">
-          <button
-            onClick={() => setShowExportDropdown(!showExportDropdown)}
-            className="px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-white rounded transition-colors"
-          >
-            Export
-          </button>
-          {showExportDropdown && (
-            <div className="absolute top-full right-0 mt-1 bg-surface-card border border-border rounded shadow-lg min-w-32 z-50">
-              <button
-                onClick={() => {
-                  handleExport("png");
-                  setShowExportDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as PNG
-              </button>
-              <button
-                onClick={() => {
-                  handleExport("svg");
-                  setShowExportDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as SVG
-              </button>
-              <button
-                onClick={() => {
-                  handleExport("pdf");
-                  setShowExportDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary first:rounded-t last:rounded-b"
-              >
-                Export as PDF
-              </button>
-            </div>
-          )}
-        </div>
-        <button
-          onClick={onClose}
-          className="p-1.5 text-content-secondary hover:text-content-primary hover:bg-surface-secondary rounded transition-colors ml-2"
-          title="Close"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
-};
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -350,6 +228,41 @@ export default function PlaybookPage() {
       throw error; // Re-throw so the UI can show the error
     }
   };
+
+  const handleSaveDiagram = useCallback(
+    async ({ doc, metadata }: { doc: DiagramDocument; metadata: DiagramMetadata }) => {
+      if (!diagramPlay) return;
+      const updates: Partial<Play> = {
+        play_name: metadata.play_name,
+        formation: metadata.formation,
+        diagram_url: JSON.stringify(doc),
+      };
+      if (metadata.p_type) updates.p_type = metadata.p_type;
+      if (metadata.personnel !== undefined) updates.personnel = metadata.personnel;
+      if (metadata.pref_front !== undefined) updates.pref_front = metadata.pref_front;
+
+      try {
+        await PlaysService.updatePlay(diagramPlay.id, updates);
+        dispatch({ type: "INCREMENT_REFRESH" });
+        setDiagramPlay((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...updates,
+                diagram_url: updates.diagram_url,
+                updated_at: new Date(),
+              }
+            : prev
+        );
+        toast.success("Diagram saved", metadata.play_name);
+      } catch (error) {
+        console.error("Failed to save diagram:", error);
+        toast.error("Failed to save diagram", "Please try again");
+        throw error;
+      }
+    },
+    [diagramPlay, dispatch, toast]
+  );
 
   const handleDuplicatePlay = (play: Play) => {
     // Create a copy of the play with a modified name
@@ -787,13 +700,8 @@ export default function PlaybookPage() {
         <Modal
           isOpen={!!diagramPlay}
           onClose={() => setDiagramPlay(null)}
-          headerContent={
-            <DiagramBuilderHeader
-              play={diagramPlay}
-              onClose={() => setDiagramPlay(null)}
-            />
-          }
-          size="xl"
+          title={`${diagramPlay.play_name} Diagram`}
+          size="fullscreen"
           type="default"
           closeOnBackdropClick={false}
           closeOnEscape={true}
@@ -801,6 +709,7 @@ export default function PlaybookPage() {
           <PlayDiagramBuilder
             play={diagramPlay}
             onClose={() => setDiagramPlay(null)}
+            onSave={handleSaveDiagram}
           />
         </Modal>
       )}

@@ -39,6 +39,28 @@ export function reducer(
   state: DiagramEditorState,
   action: DiagramEditorAction
 ): DiagramEditorState {
+  if (action.type === "INIT") {
+    const doc = {
+      ...action.doc,
+      meta:
+        action.doc.meta ?? {
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+    };
+    return {
+      doc,
+      ui: {
+        ...state.ui,
+        tool: "select",
+        routeMode: undefined,
+        drawMode: undefined,
+      },
+      dirty: false,
+      history: [doc],
+      historyIndex: 0,
+    };
+  }
   if (
     [
       "START_ANNOTATION",
@@ -202,6 +224,17 @@ export function reducer(
   }
   if (action.type === "MARK_SAVED") {
     return { ...state, dirty: false };
+  }
+  if (action.type === "SET_FIELD_SLICE") {
+    const nextDoc = {
+      ...state.doc,
+      field: {
+        ...state.doc.field,
+        ...action.slice,
+      },
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
   }
   if (action.type === "ADD_PLAYER") {
     const nextDoc = {

@@ -18,6 +18,7 @@ interface ToolButtonProps {
   isActive: boolean;
   onClick: () => void;
   shortcut?: string;
+  sizeClass: string;
 }
 
 const ToolButton: React.FC<ToolButtonProps> = ({
@@ -26,10 +27,11 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   isActive,
   onClick,
   shortcut,
+  sizeClass,
 }) => (
   <button
     onClick={onClick}
-    className={`group relative w-12 h-12 rounded-lg border transition-all duration-200 flex items-center justify-center ${
+    className={`group relative ${sizeClass} rounded-lg border transition-all duration-200 flex items-center justify-center ${
       isActive
         ? "bg-primary border-primary text-primary-foreground shadow-lg"
         : "bg-surface-card border-border hover:border-primary/50 hover:bg-surface-secondary text-content-primary"
@@ -40,7 +42,15 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   </button>
 );
 
-export const ModernToolPalette: React.FC = () => {
+interface ModernToolPaletteProps {
+  orientation?: "vertical" | "horizontal";
+  className?: string;
+}
+
+export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
+  orientation = "vertical",
+  className = "",
+}) => {
   const { state, dispatch } = useDiagramEditor();
 
   const tools = [
@@ -127,8 +137,20 @@ export const ModernToolPalette: React.FC = () => {
     },
   ];
 
+  const containerClasses =
+    orientation === "vertical"
+      ? "flex flex-col gap-1 p-2 bg-surface-card"
+      : "flex flex-wrap gap-1 p-2 bg-surface-card items-center";
+  const separator =
+    orientation === "vertical" ? (
+      <div className="h-px w-full bg-border my-2" />
+    ) : (
+      <div className="w-px h-10 bg-border mx-2" />
+    );
+  const buttonSizeClass = orientation === "vertical" ? "w-12 h-12" : "w-11 h-11";
+
   return (
-    <div className="flex flex-col gap-1 p-2 bg-surface-card">
+    <div className={`${containerClasses} ${className}`}>
       {/* Main Tools */}
       {tools.map((tool) => (
         <ToolButton
@@ -138,11 +160,12 @@ export const ModernToolPalette: React.FC = () => {
           shortcut={tool.shortcut}
           isActive={state.ui.tool === tool.id}
           onClick={tool.action}
+          sizeClass={buttonSizeClass}
         />
       ))}
 
       {/* Separator */}
-      <div className="h-px bg-border my-2"></div>
+      {separator}
 
       {/* Drawing Tools */}
       {drawingTools.map((tool) => (
@@ -153,11 +176,12 @@ export const ModernToolPalette: React.FC = () => {
           shortcut={tool.shortcut}
           isActive={state.ui.tool === "draw" && state.ui.drawMode === tool.id}
           onClick={tool.action}
+          sizeClass={buttonSizeClass}
         />
       ))}
 
       {/* Separator */}
-      <div className="h-px bg-border my-2"></div>
+      {separator}
 
       {/* Quick Actions */}
       <ToolButton
@@ -169,6 +193,7 @@ export const ModernToolPalette: React.FC = () => {
             dispatch({ type: "REMOVE_PLAYER", id: player.id });
           });
         }}
+        sizeClass={buttonSizeClass}
       />
     </div>
   );
