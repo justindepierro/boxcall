@@ -4,6 +4,8 @@ import { Icon, type IconName } from "./Icon/Icon";
 export interface AppIconTileProps {
   title: string;
   subtitle?: string;
+  topLabel?: string; // Text above icon
+  bottomLabel?: string; // Text below icon (replaces subtitle if both provided)
   icon: IconName;
   onOpen: () => void;
   gradient: string;
@@ -12,7 +14,17 @@ export interface AppIconTileProps {
 }
 
 export const AppIconTile = memo<AppIconTileProps>(
-  ({ title, subtitle, icon, onOpen, gradient, badge, className = "" }) => {
+  ({ 
+    title, 
+    subtitle, 
+    topLabel,
+    bottomLabel,
+    icon, 
+    onOpen, 
+    gradient, 
+    badge, 
+    className = "" 
+  }) => {
     return (
       <button
         type="button"
@@ -20,6 +32,13 @@ export const AppIconTile = memo<AppIconTileProps>(
         className={`group relative flex flex-col items-center justify-center gap-3 p-4 transition-transform duration-200 active:scale-95 ${className}`}
         aria-label={title}
       >
+        {/* Top Label - Optional text above icon */}
+        {topLabel && (
+          <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+            {topLabel}
+          </div>
+        )}
+
         {/* App Icon - iPhone Style - Centered */}
         <div className="relative flex items-center justify-center">
           {/* Icon Container with Gradient */}
@@ -46,12 +65,19 @@ export const AppIconTile = memo<AppIconTileProps>(
           )}
         </div>
 
-        {/* App Name - Better wrapping with proper spacing */}
+        {/* Bottom Label - Optional text below icon */}
+        {bottomLabel && (
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
+            {bottomLabel}
+          </div>
+        )}
+
+        {/* App Name - Below everything */}
         <div className="text-center w-[100px]">
           <div className="text-sm font-semibold text-slate-900 dark:text-white leading-tight line-clamp-2">
             {title}
           </div>
-          {subtitle && (
+          {subtitle && !bottomLabel && (
             <div className="text-xs text-slate-600 dark:text-slate-400 truncate mt-1">
               {subtitle}
             </div>
