@@ -13,20 +13,24 @@ import {
   hasCapability,
 } from "@services/capabilities/capabilityMap";
 import { Typography } from "../design-system/Typography";
-import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
 import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal/Modal";
 import { Select } from "../ui/Select";
+import { Icon } from "../ui/Icon/Icon";
 
 interface SeasonStatsCardProps {
   teamId: string;
   userRole?: string;
+  compact?: boolean;
+  onClick?: () => void;
 }
 
 export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
   teamId,
   userRole,
+  compact = false,
+  onClick,
 }) => {
   const { data: stats, isLoading: statsLoading } = useSeasonStats(teamId);
   const { data: results = [] } = useGameResults(teamId);
@@ -94,136 +98,160 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
     stats?.win_pct != null ? (stats.win_pct * 100).toFixed(1) + "%" : "-";
 
   return (
-    <Card
-      className="bc-card-padding h-full flex flex-col"
-      aria-label="Season statistics"
-    >
-      <div className="flex items-center justify-between mb-4">
-        <Typography variant="headline-md" className="text-text-primary">
-          Season Stats
-        </Typography>
-      </div>
-      {statsLoading && (
-        <div className="text-sm text-text-muted">Loading stats...</div>
-      )}
-      {!statsLoading && !stats && (
-        <div className="text-sm text-text-muted">
-          No stats yet – log your first game.
-        </div>
-      )}
-      {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-4">
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              Wins
-            </Typography>
-            <div className="text-lg font-semibold">{stats.wins}</div>
-          </div>
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              Losses
-            </Typography>
-            <div className="text-lg font-semibold">{stats.losses}</div>
-          </div>
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              Win %
-            </Typography>
-            <div className="text-lg font-semibold">{winPct}</div>
-          </div>
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              PF
-            </Typography>
-            <div className="text-lg font-semibold">{stats.pf_total}</div>
-          </div>
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              PA
-            </Typography>
-            <div className="text-lg font-semibold">{stats.pa_total}</div>
-          </div>
-          <div>
-            <Typography
-              variant="label-md"
-              as="div"
-              className="text-text-secondary"
-            >
-              GP
-            </Typography>
-            <div className="text-lg font-semibold">{stats.games_played}</div>
-          </div>
-        </div>
-      )}
-      {!!results.length && (
-        <ul
-          className="divide-y divide-border text-sm"
-          aria-label="Recent game results"
+    <div className="h-full flex flex-col" aria-label="Season statistics">
+      {compact ? (
+        <div
+          className="h-full flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition-transform duration-200"
+          onClick={onClick}
         >
-          {results.slice(0, 5).map((r) => {
-            const pf = r.points_for;
-            const pa = r.points_against;
-            const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
-            const color =
-              outcome === "W"
-                ? "bg-surface-success text-text-success"
-                : outcome === "L"
-                  ? "bg-surface-error text-text-error"
-                  : "surface-subtle text-text-primary";
-            return (
-              <li key={r.id} className="flex items-center justify-between py-1">
-                <span className="flex items-center gap-2 font-medium text-text-primary">
-                  <span
-                    className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
-                  >
-                    {outcome}
-                  </span>
-                  {pf}-{pa} vs {r.opponent}
-                </span>
-                <span className="text-text-muted">
-                  {new Date(r.game_date).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-
-      {/* Action Button */}
-      {canLog && (
-        <div className="card-actions mt-auto pt-3">
-          <Button
-            variant="primary"
-            onClick={() => setOpen(true)}
-            ref={triggerRef}
-            className="w-full"
+          <div className="w-16 h-16 bg-aurora-violet rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+            <Icon name="trending-up" size="xl" className="text-purple-600" />
+          </div>
+          <Typography
+            variant="label-md"
+            className="text-text-primary font-medium mb-1"
           >
-            Log Game
-          </Button>
+            Season Stats
+          </Typography>
+          <Typography variant="caption" color="muted" className="text-xs">
+            {stats ? `${stats.wins}-${stats.losses}` : "0-0"}
+          </Typography>
         </div>
+      ) : (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <Typography variant="headline-md" className="text-text-primary">
+              Season Stats
+            </Typography>
+          </div>
+          {statsLoading && (
+            <div className="text-sm text-text-muted">Loading stats...</div>
+          )}
+          {!statsLoading && !stats && (
+            <div className="text-sm text-text-muted">
+              No stats yet – log your first game.
+            </div>
+          )}
+          {stats && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-4">
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  Wins
+                </Typography>
+                <div className="text-lg font-semibold">{stats.wins}</div>
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  Losses
+                </Typography>
+                <div className="text-lg font-semibold">{stats.losses}</div>
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  Win %
+                </Typography>
+                <div className="text-lg font-semibold">{winPct}</div>
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  PF
+                </Typography>
+                <div className="text-lg font-semibold">{stats.pf_total}</div>
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  PA
+                </Typography>
+                <div className="text-lg font-semibold">{stats.pa_total}</div>
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  as="div"
+                  className="text-text-secondary"
+                >
+                  GP
+                </Typography>
+                <div className="text-lg font-semibold">
+                  {stats.games_played}
+                </div>
+              </div>
+            </div>
+          )}
+          {!!results.length && (
+            <ul
+              className="divide-y divide-border text-sm"
+              aria-label="Recent game results"
+            >
+              {results.slice(0, 5).map((r) => {
+                const pf = r.points_for;
+                const pa = r.points_against;
+                const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
+                const color =
+                  outcome === "W"
+                    ? "bg-surface-success text-text-success"
+                    : outcome === "L"
+                      ? "bg-surface-error text-text-error"
+                      : "surface-subtle text-text-primary";
+                return (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between py-1"
+                  >
+                    <span className="flex items-center gap-2 font-medium text-text-primary">
+                      <span
+                        className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
+                      >
+                        {outcome}
+                      </span>
+                      {pf}-{pa} vs {r.opponent}
+                    </span>
+                    <span className="text-text-muted">
+                      {new Date(r.game_date).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* Action Button */}
+          {canLog && (
+            <div className="card-actions mt-auto pt-3">
+              <Button
+                variant="primary"
+                onClick={() => setOpen(true)}
+                ref={triggerRef}
+                className="w-full"
+              >
+                Log Game
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       {open && (
@@ -378,6 +406,6 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
           </form>
         </Modal>
       )}
-    </Card>
+    </div>
   );
 };

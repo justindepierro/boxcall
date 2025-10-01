@@ -76,7 +76,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
     <>
       {/* Enhanced Compact Display */}
       <div
-        className="flex items-center gap-4 bg-gradient-to-r from-jade-50 via-jade-100/80 to-emerald-50 hover:from-jade-100 hover:via-jade-200/90 hover:to-emerald-100 dark:from-jade-900/30 dark:via-jade-800/40 dark:to-emerald-900/30 border border-jade-200/60 dark:border-jade-700/60 rounded-xl px-5 py-3 transition-all duration-300 hover:border-jade-300/80 dark:hover:border-jade-600/80 group cursor-pointer"
+        className="flex items-center gap-4 bg-aurora-emerald rounded-aurora border border-jade-200/60 dark:border-jade-700/60 px-5 py-3 transition-all duration-300 hover:border-jade-300/80 dark:hover:border-jade-600/80 group cursor-pointer"
         onClick={() => setShowModal(true)}
       >
         {/* Trophy Icon with Animation */}

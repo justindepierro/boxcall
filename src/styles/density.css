@@ -1,10 +1,12 @@
 :root {
   --bc-surface: #fcfdfc;
   --bc-surface-alt: #f6f9f7;
+  --bc-card-padding: 0.9rem; /* 14px default */
+  --bc-grid-gap: 1.125rem; /* 18px default */
 }
 body[data-density="compact"] {
-  --bc-card-padding: 0.75rem; /* 12px */
-  --bc-grid-gap: 1rem; /* 16px */
+  --bc-card-padding: 0.7rem; /* 11px */
+  --bc-grid-gap: 0.9rem; /* 14px */
 }
 body[data-density="comfortable"] {
   --bc-card-padding: 1rem; /* 16px */

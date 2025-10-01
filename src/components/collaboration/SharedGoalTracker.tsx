@@ -59,6 +59,16 @@ export interface SharedGoalTrackerProps {
   teamId: string;
 
   /**
+   * Whether to show compact version
+   */
+  compact?: boolean;
+
+  /**
+   * Click handler for compact version
+   */
+  onClick?: () => void;
+
+  /**
    * Initial goals data
    */
   goals?: Goal[];
@@ -93,6 +103,8 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
   goals = [],
   onGoalsUpdate,
   mockCollaboration,
+  compact = false,
+  onClick,
 }) => {
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [isCreatingGoal, setIsCreatingGoal] = useState(false);
@@ -168,197 +180,217 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
       className="shared-goal-tracker"
       mockCollaboration={mockCollaboration}
     >
-      <Card variant="glass" className="h-full p-3 flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <Typography variant="headline-sm" as="h3">
-            Team Goals & Progress
+      {compact ? (
+        <div
+          className="h-full flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition-transform duration-200"
+          onClick={onClick}
+        >
+          <div className="w-16 h-16 bg-aurora-emerald rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+            <Icon name="target" size="xl" className="text-jade-600" />
+          </div>
+          <Typography
+            variant="label-md"
+            className="text-text-primary font-medium mb-1"
+          >
+            Team Goals
           </Typography>
-          <div className="flex items-center gap-2">
-            {/* Filter Options */}
-            <div className="flex bg-surface-secondary rounded-lg p-1">
-              <Button
-                variant={filter === "all" ? "primary" : "ghost"}
-                size="xs"
-                onClick={() => setFilter("all")}
-              >
-                All
-              </Button>
-              <Button
-                variant={filter === "my" ? "primary" : "ghost"}
-                size="xs"
-                onClick={() => setFilter("my")}
-              >
-                Mine
-              </Button>
-              <Button
-                variant={filter === "team" ? "primary" : "ghost"}
-                size="xs"
-                onClick={() => setFilter("team")}
-              >
-                Team
-              </Button>
+          <Typography variant="caption" color="muted" className="text-xs">
+            {goals.length} active goals
+          </Typography>
+        </div>
+      ) : (
+        <Card variant="glass" className="h-full p-3 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <Typography variant="headline-sm" as="h3">
+              Team Goals & Progress
+            </Typography>
+            <div className="flex items-center gap-2">
+              {/* Filter Options */}
+              <div className="flex bg-surface-secondary rounded-lg p-1">
+                <Button
+                  variant={filter === "all" ? "primary" : "ghost"}
+                  size="xs"
+                  onClick={() => setFilter("all")}
+                >
+                  All
+                </Button>
+                <Button
+                  variant={filter === "my" ? "primary" : "ghost"}
+                  size="xs"
+                  onClick={() => setFilter("my")}
+                >
+                  Mine
+                </Button>
+                <Button
+                  variant={filter === "team" ? "primary" : "ghost"}
+                  size="xs"
+                  onClick={() => setFilter("team")}
+                >
+                  Team
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Goals List - Flex grow to fill space */}
-        <div className="space-y-3 mb-4 flex-1 overflow-y-auto">
-          {filteredGoals.length === 0 ? (
-            <div className="text-center py-8">
-              <Icon
-                name="target"
-                size="lg"
-                className="mx-auto mb-2 text-text-muted"
-              />
-              <Typography variant="body-sm" color="muted">
-                {filter === "all"
-                  ? "No goals set yet. Create your first goal!"
-                  : `No ${filter} goals found.`}
-              </Typography>
-            </div>
-          ) : (
-            filteredGoals.map((goal) => (
-              <Card
-                key={goal.id}
-                variant="glass"
-                className="p-3 hover:shadow-sm transition-shadow cursor-pointer"
-                onClick={() => setSelectedGoal(goal)}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Typography variant="body-sm" className="font-medium">
-                        {goal.title}
-                      </Typography>
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          goal.type === "team"
-                            ? "bg-primary/10 text-primary"
-                            : goal.type === "individual"
-                              ? "bg-secondary/10 text-secondary"
-                              : "bg-warning/10 text-warning"
-                        }`}
-                      >
-                        {goal.type}
-                      </span>
-                    </div>
-                    <Typography
-                      variant="caption"
-                      color="muted"
-                      className="mb-2"
-                    >
-                      {goal.description}
-                    </Typography>
-
-                    {/* Progress Bar */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-border-secondary rounded-full h-2">
-                        <div
-                          className="bg-primary rounded-full h-2 transition-all"
-                          style={{ width: `${goal.progress}%` }}
-                        />
+          {/* Goals List - Flex grow to fill space */}
+          <div className="space-y-3 mb-4 flex-1 overflow-y-auto">
+            {filteredGoals.length === 0 ? (
+              <div className="text-center py-8">
+                <Icon
+                  name="target"
+                  size="lg"
+                  className="mx-auto mb-2 text-text-muted"
+                />
+                <Typography variant="body-sm" color="muted">
+                  {filter === "all"
+                    ? "No goals set yet. Create your first goal!"
+                    : `No ${filter} goals found.`}
+                </Typography>
+              </div>
+            ) : (
+              filteredGoals.map((goal) => (
+                <Card
+                  key={goal.id}
+                  variant="glass"
+                  className="p-3 hover:shadow-sm transition-shadow cursor-pointer"
+                  onClick={() => setSelectedGoal(goal)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Typography variant="body-sm" className="font-medium">
+                          {goal.title}
+                        </Typography>
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${
+                            goal.type === "team"
+                              ? "bg-primary/10 text-primary"
+                              : goal.type === "individual"
+                                ? "bg-secondary/10 text-secondary"
+                                : "bg-warning/10 text-warning"
+                          }`}
+                        >
+                          {goal.type}
+                        </span>
                       </div>
                       <Typography
                         variant="caption"
-                        className={getProgressColor(goal.progress)}
+                        color="muted"
+                        className="mb-2"
                       >
-                        {goal.progress}%
+                        {goal.description}
+                      </Typography>
+
+                      {/* Progress Bar */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-border-secondary rounded-full h-2">
+                          <div
+                            className="bg-primary rounded-full h-2 transition-all"
+                            style={{ width: `${goal.progress}%` }}
+                          />
+                        </div>
+                        <Typography
+                          variant="caption"
+                          className={getProgressColor(goal.progress)}
+                        >
+                          {goal.progress}%
+                        </Typography>
+                      </div>
+
+                      {/* Target Date */}
+                      <Typography
+                        variant="caption"
+                        color="muted"
+                        className="mt-1"
+                      >
+                        Target: {new Date(goal.targetDate).toLocaleDateString()}
                       </Typography>
                     </div>
 
-                    {/* Target Date */}
-                    <Typography
-                      variant="caption"
-                      color="muted"
-                      className="mt-1"
-                    >
-                      Target: {new Date(goal.targetDate).toLocaleDateString()}
-                    </Typography>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    {goal.status === "completed" && (
+                    <div className="flex items-center gap-1">
+                      {goal.status === "completed" && (
+                        <Icon
+                          name="check-circle"
+                          size="sm"
+                          className="text-success"
+                        />
+                      )}
                       <Icon
-                        name="check-circle"
-                        size="sm"
-                        className="text-success"
+                        name="chevron-right"
+                        size="xs"
+                        className="text-text-muted"
                       />
-                    )}
-                    <Icon
-                      name="chevron-right"
-                      size="xs"
-                      className="text-text-muted"
-                    />
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+
+          {/* Team Progress Summary */}
+          <div className="border-t border-border-secondary pt-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-text-secondary">Team Progress</span>
+              <span className="font-medium">
+                {localGoals.filter((g) => g.status === "completed").length} /{" "}
+                {localGoals.length} goals completed
+              </span>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          {(userRole === "coach" || userRole === "player") && (
+            <div className="card-actions mt-auto pt-3">
+              <Button
+                variant="primary"
+                onClick={() => setIsCreatingGoal(true)}
+                className="w-full"
+              >
+                <Icon name="plus" size="xs" />
+                New Goal
+              </Button>
+            </div>
+          )}
+
+          {/* Create Goal Modal Placeholder */}
+          {isCreatingGoal && (
+            <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
+              <Card variant="glass" className="p-6 max-w-md w-full mx-4">
+                <Typography variant="headline-sm" className="mb-4">
+                  Create New Goal
+                </Typography>
+                <div className="space-y-4">
+                  <Input placeholder="Goal title..." />
+                  <TextArea placeholder="Goal description..." />
+                  <div className="flex gap-2">
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        handleCreateGoal({
+                          title: "Sample Goal",
+                          description: "This is a sample goal",
+                          type: "individual",
+                          targetDate: "2025-12-31",
+                          category: "performance",
+                        })
+                      }
+                    >
+                      Create Goal
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setIsCreatingGoal(false)}
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </div>
               </Card>
-            ))
+            </div>
           )}
-        </div>
-
-        {/* Team Progress Summary */}
-        <div className="border-t border-border-secondary pt-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-text-secondary">Team Progress</span>
-            <span className="font-medium">
-              {localGoals.filter((g) => g.status === "completed").length} /{" "}
-              {localGoals.length} goals completed
-            </span>
-          </div>
-        </div>
-
-        {/* Action Button */}
-        {(userRole === "coach" || userRole === "player") && (
-          <div className="card-actions mt-auto pt-3">
-            <Button
-              variant="primary"
-              onClick={() => setIsCreatingGoal(true)}
-              className="w-full"
-            >
-              <Icon name="plus" size="xs" />
-              New Goal
-            </Button>
-          </div>
-        )}
-
-        {/* Create Goal Modal Placeholder */}
-        {isCreatingGoal && (
-          <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
-            <Card variant="glass" className="p-6 max-w-md w-full mx-4">
-              <Typography variant="headline-sm" className="mb-4">
-                Create New Goal
-              </Typography>
-              <div className="space-y-4">
-                <Input placeholder="Goal title..." />
-                <TextArea placeholder="Goal description..." />
-                <div className="flex gap-2">
-                  <Button
-                    variant="primary"
-                    onClick={() =>
-                      handleCreateGoal({
-                        title: "Sample Goal",
-                        description: "This is a sample goal",
-                        type: "individual",
-                        targetDate: "2025-12-31",
-                        category: "performance",
-                      })
-                    }
-                  >
-                    Create Goal
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setIsCreatingGoal(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
-        )}
-      </Card>
+        </Card>
+      )}
     </CollaborativeWidget>
   );
 };

@@ -1,6 +1,6 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui/Button/Button";
@@ -11,6 +11,7 @@ import Icon from "../components/ui/Icon/Icon";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { AuroraTile } from "../components/ui/AuroraTile";
 import { useAuth } from "../app/auth-store";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import {
@@ -44,7 +45,7 @@ export function PracticePlanner() {
   const { addBlock, reorderBlocks, deleteBlock } =
     usePracticeBlocks(selectedScheduleId);
   const { templates } = usePracticeTemplates(teamId || "");
-  const { startTimer, stopTimer, getTimeRemaining, formatTime } =
+  const { startTimer, stopTimer, getTimeRemaining, getElapsedTime, formatTime } =
     usePracticeTimer();
   // Select the first schedule if available
   useEffect(() => {
@@ -120,6 +121,114 @@ export function PracticePlanner() {
     setLockedSchedule(false);
   };
   const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
+  const totalDurationMinutes = currentBlocks.reduce(
+    (sum, block) => sum + block.duration,
+    0
+  );
+  const scheduleDateLabel = selectedSchedule
+    ? format(selectedSchedule.date, "EEE, MMM d")
+    : "Select schedule";
+  const scheduleLocationLabel = selectedSchedule?.location || "Location TBD";
+  const practiceElapsed = practiceStarted ? formatTime(getElapsedTime()) : null;
+  const finalBlockEnd =
+    currentBlocks.length > 0
+      ? currentBlocks[currentBlocks.length - 1].endTime
+      : null;
+  const practiceFinishEta =
+    practiceStarted && finalBlockEnd instanceof Date
+      ? formatTime(getTimeRemaining(finalBlockEnd))
+      : null;
+  const scrollToSection = (sectionId: string) => {
+    if (typeof window === "undefined") return;
+    const section = document.getElementById(sectionId);
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const heroTiles = [
+    {
+      key: "board",
+      title: "Practice Board",
+      description: "Manage blocks, scripts, and timing in one place.",
+      icon: "clipboard-list" as const,
+      accentOverlayClass: "bg-aurora-emerald",
+      glowClassName: "glow-aurora-emerald",
+      statusBadge: practiceStarted ? "Live" : "Plan",
+      iconClassName: "text-emerald-600",
+      footnote: practiceStarted ? "Timer running" : "Open board",
+      onOpen: () => scrollToSection("practice-schedule-blocks"),
+      body: (
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between text-text-secondary">
+            <span>Total blocks</span>
+            <span className="font-semibold text-text-primary">
+              {currentBlocks.length}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Duration planned</span>
+            <span className="font-semibold text-text-primary">
+              {totalDurationMinutes} min
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "timer",
+      title: "Live Timer",
+      description: "Keep the tempo right for every period.",
+      icon: "clock" as const,
+      accentOverlayClass: "bg-aurora-indigo",
+      glowClassName: "glow-aurora-indigo",
+      statusBadge: practiceStarted ? "On Field" : "Ready",
+      iconClassName: "text-sky-600",
+      footnote: practiceStarted ? "Running" : "View controls",
+      onOpen: () => scrollToSection("practice-controls"),
+      body: (
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between text-text-secondary">
+            <span>Elapsed</span>
+            <span className="font-semibold text-text-primary">
+              {practiceElapsed || "00:00"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Time to finish</span>
+            <span className="font-semibold text-text-primary">
+              {practiceFinishEta || "--:--"}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "schedule",
+      title: "Schedule Card",
+      description: "Review date, location, and staff assignments.",
+      icon: "calendar" as const,
+      accentOverlayClass: "bg-aurora-violet",
+      glowClassName: "glow-aurora-violet",
+      statusBadge: "Logistics",
+      iconClassName: "text-purple-600",
+      footnote: "View schedule",
+      onOpen: () => scrollToSection("practice-schedule-summary"),
+      body: (
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between text-text-secondary">
+            <span>Next session</span>
+            <span className="font-semibold text-text-primary">
+              {scheduleDateLabel}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Location</span>
+            <span className="font-semibold text-text-primary">
+              {scheduleLocationLabel}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+  ];
   // Prepare practice data for PDF export
   const preparePracticeDataForPDF = () => {
     if (!selectedSchedule) return null;
@@ -277,9 +386,40 @@ export function PracticePlanner() {
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+            <div className="mb-6">
+              <Typography variant="headline-sm" className="text-text-primary">
+                Command your practice flow
+              </Typography>
+              <Typography variant="body-sm" className="text-text-secondary mt-1">
+                Jump straight into blocks, timing, or logistics with a single tap.
+              </Typography>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+              {heroTiles.map((tile) => (
+                <AuroraTile
+                  key={tile.key}
+                  title={tile.title}
+                  description={tile.description}
+                  icon={tile.icon}
+                  accentOverlayClass={tile.accentOverlayClass}
+                  glowClassName={tile.glowClassName}
+                  statusBadge={tile.statusBadge}
+                  iconClassName={tile.iconClassName}
+                  footnote={tile.footnote}
+                  onOpen={tile.onOpen}
+                >
+                  {tile.body}
+                </AuroraTile>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Practice Schedule */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3" id="practice-schedule-blocks">
             <Card className="mb-6">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -289,7 +429,10 @@ export function PracticePlanner() {
                   >
                     Practice Blocks
                   </Typography>
-                  <div className="flex items-center space-x-4">
+                  <div
+                    className="flex items-center space-x-4"
+                    id="practice-controls"
+                  >
                     {/* PDF Export Button */}
                     <Button
                       onClick={() => setIsPDFExportOpen(true)}
@@ -609,7 +752,7 @@ export function PracticePlanner() {
               </Card>
               {/* Practice Info */}
               {selectedSchedule && (
-                <Card>
+                <Card id="practice-schedule-summary">
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"

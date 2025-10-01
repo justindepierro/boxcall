@@ -959,12 +959,12 @@ export const CreateTeam: React.FC = () => {
           <div className="text-center">
             {/* Hero Section */}
             <div className="mb-8">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-jade-500 to-emerald-600 rounded-full flex items-center justify-center mb-6">
+              <div className="w-20 h-20 mx-auto bg-aurora-emerald rounded-full flex items-center justify-center mb-6">
                 <Icon name="trophy" size="xl" className="text-white" />
               </div>
               <Typography
                 variant="headline-xl"
-                className="mb-4 bg-gradient-to-r from-jade-600 to-emerald-600 bg-clip-text text-transparent"
+                className="mb-4 bg-aurora-emerald bg-clip-text text-transparent"
               >
                 Let's Build Your Championship Team
               </Typography>
@@ -1014,9 +1014,9 @@ export const CreateTeam: React.FC = () => {
             )}
 
             {/* Feature Preview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="group p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
+              <div className="group p-5 bg-aurora-shell rounded-aurora border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 mx-auto bg-aurora-indigo rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   <Icon name="users" size="md" className="text-white" />
                 </div>
                 <Typography variant="body-md" className="font-semibold mb-2">
@@ -1028,8 +1028,8 @@ export const CreateTeam: React.FC = () => {
                 </Typography>
               </div>
 
-              <div className="group p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="group p-5 bg-aurora-shell rounded-aurora border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 mx-auto bg-aurora-emerald rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   <Icon name="calendar" size="md" className="text-white" />
                 </div>
                 <Typography variant="body-md" className="font-semibold mb-2">
@@ -1040,8 +1040,8 @@ export const CreateTeam: React.FC = () => {
                 </Typography>
               </div>
 
-              <div className="group p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 mx-auto bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="group p-5 bg-aurora-shell rounded-aurora border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 mx-auto bg-aurora-amber rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   <Icon name="trophy" size="md" className="text-white" />
                 </div>
                 <Typography variant="body-md" className="font-semibold mb-2">
@@ -1054,7 +1054,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {/* What's Next Preview */}
-            <div className="bg-gradient-to-r from-jade-50 to-emerald-50 dark:from-jade-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-jade-200 dark:border-jade-800">
+            <div className="bg-aurora-emerald rounded-aurora p-5 border border-jade-200 dark:border-jade-800">
               <Typography
                 variant="body-md"
                 className="font-semibold mb-3 text-jade-800 dark:text-jade-200"

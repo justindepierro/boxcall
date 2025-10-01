@@ -87,6 +87,71 @@ theme.applyContextTheme("energetic"); // Bright accents, high contrast
 />
 ```
 
+#### **Aurora Tiles Experience (2026 Refresh)**
+
+Our new “Aurora Tiles” visual language powers the Team Bulletin hero row and becomes the baseline for high-value launch surfaces across the app.
+
+**Design Pillars**
+
+- **Glass Foundations**: Soft, translucent cards (`backdrop-blur-xl`, `bg-white/80`, dark equivalents) with rounded 28–36px corners.
+- **Gradient Atmospheres**: Layered `bg-gradient-to-br` overlays plus subtle glow orbs to create depth without harsh shadows.
+- **Icon Capsules**: 48–56px rounded squares holding Lucide icons in semantic accent colors; always provide dark-mode parity.
+- **Micro-motion**: Hover/press states use `hover:-translate-y-1`, shadow morphing, and focus rings (`focus-visible:ring-4`) for tactility.
+- **Narrative Copy**: Each tile contains a 1–2 sentence mission line, a status badge (uppercase 11px tracking), and a CTA footer.
+
+**Implementation Tokens**
+
+| Layer | Light Mode | Dark Mode |
+| --- | --- | --- |
+| Base tile | `bg-white/80 border-white/70 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)]` | `bg-slate-900/70 border-slate-700/60 shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]` |
+| Overlay | Gradient accent tied to feature (amber, emerald, indigo, violet) | Same gradient with `opacity-80` and softened stops |
+| Glow | `absolute` blurred orb (`bg-amber-400/40`, etc.) anchored bottom-right | Darkened orb (`bg-amber-500/30`) |
+| Icon capsule | `bg-white/80 shadow-inner` | `bg-slate-800/80 shadow-inner` |
+| Footer CTA | Neutral text tokens + `Icon name="grid" size="xs"` | Same tokens with `dark:text-slate-300` |
+
+**Recommended Layouts**
+
+- 1 column on phones, 2 on tablets, 4 on desktops via `grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`.
+- Minimum tile padding: `p-6` mobile, `sm:p-8` desktop; maintain 24px gutter.
+- Primary section container uses a rounded 36px wrapper with soft background gradient.
+
+**Accessibility & Motion**
+
+- Maintain 4.5:1 contrast on headline text against gradients by keeping copy in neutral token colors.
+- Provide keyboard interactions via `<button type="button">` wrappers and `focus-visible` ring tokens.
+- Prefer translate-only transforms and transition tokens that respect `prefers-reduced-motion`.
+
+**Usage Snippet**
+
+```tsx
+<AppLauncherTile
+  title="Season Stats"
+  description="See the win column climb and log new results in seconds."
+  icon="trending-up"
+  accentOverlayClass="bg-gradient-to-br from-violet-100 via-purple-50 to-blue-100"
+  glowClassName="bg-violet-400/40"
+  statusBadge="Performance"
+  footnote="Tap for details"
+  onOpen={handleOpen}
+>
+  <SeasonStatsCard teamId={teamId} compact />
+</AppLauncherTile>
+```
+
+**Adoption Roadmap**
+
+1. Extract `AppLauncherTile` into `src/components/ui/AuroraTile.tsx` with prop-driven gradients and token defaults.
+2. Replace legacy dashboard mastheads (Home, Analytics, Recruiting) with 2–4 tile hero grids.
+3. Update marketing hero CTAs to reuse the tile shell for consistency.
+4. Promote badge, overlay, and glow utilities to Tailwind plugin tokens for centralized theming.
+
+**Tokenization Update — March 2026**
+
+- Published `auroraTheme` Tailwind plugin exposing `bg-aurora-*`, `glow-aurora-*`, and `rounded-aurora` utilities (white “mist” panel included).
+- Refactored shared `Card` base to adopt the mist gradient + 24px radius so every dashboard card inherits the same glass shell.
+- Tuned global density: default card padding now 14px with compact 11px variant; hero grids drop to `gap-4` to keep layouts tight by default.
+- Migrated Bulletin, Practice, Game Plan, Analytics, and Templates hero surfaces to the new tokens; remaining legacy gradients tracked for cleanup.
+
 ---
 
 ## 🚀 **Current Capabilities Showcase**

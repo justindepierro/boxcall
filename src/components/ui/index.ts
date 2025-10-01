@@ -16,6 +16,8 @@ export type { ModalProps } from "./Modal";
 export { NotificationBell } from "./NotificationBell";
 export type { NotificationBellProps } from "./NotificationBell";
 export { LoadingScreen } from "./LoadingScreen";
+export { AuroraTile } from "./AuroraTile";
+export type { AuroraTileProps } from "./AuroraTile";
 export { Sidebar } from "./Sidebar";
 export type { SidebarItem, SidebarProps } from "./Sidebar";
 export { Breadcrumb } from "./Breadcrumb";

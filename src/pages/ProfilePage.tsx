@@ -443,7 +443,7 @@ export const ProfilePage: React.FC = () => {
       {/* Profile Form */}
       <form onSubmit={handleSaveProfile} className="space-y-6">
         {/* Avatar Upload Section - Enhanced */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 rounded-xl p-8 shadow-lg">
+        <div className="relative overflow-hidden bg-aurora-shell rounded-aurora p-8 shadow-lg">
           <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full -mr-16 -mt-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand-secondary/10 rounded-full -ml-12 -mb-12"></div>
           <div className="relative">
@@ -459,7 +459,7 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="flex items-center space-x-6">
               <div className="relative">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-secondary p-1 shadow-lg">
+                <div className="w-24 h-24 rounded-2xl bg-aurora-emerald p-1 shadow-lg">
                   <div className="w-full h-full rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden">
                     {profile.avatar_url ? (
                       <img
@@ -511,7 +511,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Basic Information - Enhanced */}
-        <div className="surface-card elevation-card rounded-xl p-8">
+        <Card className="p-8">
           <Typography
             variant="headline-sm"
             as="h2"
@@ -645,7 +645,7 @@ export const ProfilePage: React.FC = () => {
 
         {/* Athletic Information - Only show for players */}
         {profile.app_role === "player" && (
-          <div className="surface-card elevation-card rounded-xl p-8 bg-gradient-to-br from-success/5 to-surface-card">
+          <Card className="p-8">
             <Typography
               variant="headline-sm"
               as="h2"
@@ -776,7 +776,7 @@ export const ProfilePage: React.FC = () => {
           profile.app_role === "free_coach" ||
           profile.app_role === "head_coach" ||
           profile.is_admin) && (
-          <div className="surface-card elevation-card rounded-xl p-8 bg-gradient-to-br from-blue-500/5 to-surface-card">
+        <Card className="p-8">
             <Typography
               variant="headline-sm"
               as="h2"
@@ -896,7 +896,7 @@ export const ProfilePage: React.FC = () => {
         )}
 
         {/* Emergency Contact Information - Enhanced */}
-        <div className="surface-card elevation-card rounded-xl p-8 bg-gradient-to-br from-error/5 to-surface-card">
+        <Card className="p-8">
           <Typography
             variant="headline-sm"
             as="h2"
@@ -958,8 +958,8 @@ export const ProfilePage: React.FC = () => {
           profile.app_role === "free_coach" ||
           profile.app_role === "head_coach" ||
           profile.is_admin) && (
-          <div className="relative overflow-hidden surface-card elevation-card rounded-xl p-8">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-brand-primary/10 to-brand-secondary/5 rounded-full -mr-10 -mt-10"></div>
+        <Card className="relative overflow-hidden p-8">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-aurora-emerald rounded-full -mr-10 -mt-10 opacity-60"></div>
             <Typography
               variant="headline-sm"
               as="h2"
@@ -1148,7 +1148,7 @@ export const ProfilePage: React.FC = () => {
         )}
 
         {/* Social Media Links - Enhanced */}
-        <div className="relative overflow-hidden surface-card elevation-card rounded-xl p-8 bg-gradient-to-br from-brand-secondary/5 to-surface-card">
+        <Card className="relative overflow-hidden p-8">
           <div className="absolute top-0 left-0 w-16 h-16 bg-brand-secondary/10 rounded-full -ml-8 -mt-8"></div>
           <div className="absolute bottom-0 right-0 w-12 h-12 bg-brand-primary/10 rounded-full -mr-6 -mb-6"></div>
           <Typography
@@ -1268,7 +1268,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Account Security */}
-        <div className="surface-card elevation-card rounded-lg p-6">
+        <Card className="p-6">
           <Typography variant="headline-sm" as="h2" className="mb-4">
             Account Security
           </Typography>

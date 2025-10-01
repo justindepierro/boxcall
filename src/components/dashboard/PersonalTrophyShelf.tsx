@@ -123,10 +123,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <Card
-        variant="glass"
-        className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800"
-      >
+      <Card variant="glass" className="compact-card">
         <div className="flex items-center justify-center h-24">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
         </div>
@@ -150,10 +147,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     );
   }
   return (
-    <Card
-      variant="glass"
-      className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800"
-    >
+    <Card variant="glass" className="compact-card">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

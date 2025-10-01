@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Typography } from "../design-system/Typography";
-import { Icon } from "../ui/Icon";
+import { Icon, type IconName } from "../ui/Icon";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { AuroraTile } from "../ui/AuroraTile";
 import {
   PlaybookAnalyticsService,
   type PlaybookAnalyticsSummary,
@@ -22,6 +23,14 @@ interface AnalyticsDashboardProps {
   className?: string;
 }
 
+type AnalyticsView =
+  | "overview"
+  | "formations"
+  | "situational"
+  | "performance"
+  | "player-performance"
+  | "game-planning";
+
 export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   playbookId,
   className = "",
@@ -31,14 +40,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedView, setSelectedView] = useState<
-    | "overview"
-    | "formations"
-    | "situational"
-    | "performance"
-    | "player-performance"
-    | "game-planning"
-  >("overview");
+  const [selectedView, setSelectedView] = useState<AnalyticsView>("overview");
 
   const loadAnalytics = useCallback(async () => {
     if (!playbookId) return;
@@ -117,42 +119,328 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     );
   }
 
+  const formatPercent = (value?: number) => {
+    if (value == null || Number.isNaN(value)) return "0%";
+    return `${Number(value).toFixed(1)}%`;
+  };
+
+  const formatDecimal = (value?: number, fractionDigits = 1) => {
+    if (value == null || Number.isNaN(value)) return `0.${"0".repeat(fractionDigits)}`;
+    return Number(value).toFixed(fractionDigits);
+  };
+
+  const bestFormation = analytics.formationAnalytics.length
+    ? analytics.formationAnalytics.reduce<FormationAnalytics | null>((best, item) => {
+        if (!best) return item;
+        return item.successRate > best.successRate ? item : best;
+      }, null)
+    : null;
+
+  const situationalEntries = Object.entries(
+    analytics.situationalPerformance.byDown || {}
+  ) as Array<[
+    string,
+    { called: number; successful: number; rate: number }
+  ]>;
+  const bestDown = situationalEntries.length
+    ? situationalEntries.reduce((best, entry) => {
+        if (!best) return entry;
+        return entry[1].rate > best[1].rate ? entry : best;
+      }, situationalEntries[0])
+    : null;
+
+  const personnelEntries = Object.entries(
+    analytics.situationalPerformance.byPersonnel || {}
+  ) as Array<[
+    string,
+    { called: number; successful: number; rate: number }
+  ]>;
+  const bestPersonnel = personnelEntries.length
+    ? personnelEntries.reduce((best, entry) => {
+        if (!best) return entry;
+        return entry[1].rate > best[1].rate ? entry : best;
+      }, personnelEntries[0])
+    : null;
+
+  const topPlay = analytics.topPerformingPlays[0] ?? null;
+
+  const complexityTotals = analytics.complexityDistribution;
+  const totalComplexityCount =
+    (complexityTotals.low || 0) +
+    (complexityTotals.medium || 0) +
+    (complexityTotals.high || 0);
+  const complexityFocus = totalComplexityCount
+    ? (Object.entries(complexityTotals) as Array<[
+        "low" | "medium" | "high",
+        number
+      ]>).reduce(
+        (best, entry) => (entry[1] > best[1] ? entry : best),
+        ["low", complexityTotals.low || 0] as ["low" | "medium" | "high", number]
+      )
+    : ["low", 0];
+
+  const complexityCopy: Record<"low" | "medium" | "high", string> = {
+    low: "Install ready",
+    medium: "Balanced attack",
+    high: "Advanced package",
+  };
+
+  const heroTiles: Array<{
+    key: AnalyticsView;
+    title: string;
+    description: string;
+    icon: IconName;
+    accentOverlayClass: string;
+    glowClassName: string;
+    statusBadge: string;
+    iconClassName: string;
+    footnote: string;
+    renderContent: () => React.ReactNode;
+    buttonLabel: string;
+  }> = [
+    {
+      key: "overview",
+      title: "Play Overview",
+      description: "Snapshot of usage, success, and complexity.",
+      icon: "grid",
+      accentOverlayClass: "bg-aurora-emerald",
+      glowClassName: "glow-aurora-emerald",
+      statusBadge: "Summary",
+      iconClassName: "text-emerald-600",
+      footnote: selectedView === "overview" ? "Active view" : "Tap to open",
+      buttonLabel: "Overview",
+      renderContent: () => (
+        <div className="grid gap-2 text-sm text-text-secondary">
+          <div className="flex items-center justify-between">
+            <span>Total plays</span>
+            <span className="font-semibold text-text-primary">
+              {analytics.totalPlays}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Avg success</span>
+            <span className="font-semibold text-text-primary">
+              {formatPercent(analytics.averageSuccessRate)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Avg complexity</span>
+            <span className="font-semibold text-text-primary">
+              {formatDecimal(analytics.averageComplexity)}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "formations",
+      title: "Formations Lab",
+      description: "See which looks are stretching defenses most.",
+      icon: "flag",
+      accentOverlayClass: "bg-aurora-amber",
+      glowClassName: "glow-aurora-amber",
+      statusBadge: "Formations",
+      iconClassName: "text-amber-600",
+      footnote: selectedView === "formations" ? "Active view" : "Tap to open",
+      buttonLabel: "Formations",
+      renderContent: () => (
+        <div className="space-y-2 text-sm">
+          <div className="text-text-secondary">Top formation</div>
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="font-semibold text-text-primary truncate">
+              {bestFormation?.formation ?? "No data"}
+            </span>
+            <span className="text-text-secondary">
+              {bestFormation ? formatPercent(bestFormation.successRate) : "0%"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Avg complexity</span>
+            <span className="font-semibold text-text-primary">
+              {bestFormation ? formatDecimal(bestFormation.averageComplexity) : "0.0"}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "situational",
+      title: "Situational Edge",
+      description: "Dial up the right call by down & distance.",
+      icon: "target",
+      accentOverlayClass: "bg-aurora-indigo",
+      glowClassName: "glow-aurora-indigo",
+      statusBadge: "Situational",
+      iconClassName: "text-sky-600",
+      footnote: selectedView === "situational" ? "Active view" : "Tap to open",
+      buttonLabel: "Situational",
+      renderContent: () => (
+        <div className="space-y-2 text-sm">
+          <div className="text-text-secondary">Best down & distance</div>
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="font-semibold text-text-primary truncate">
+              {bestDown ? bestDown[0] : "No data"}
+            </span>
+            <span className="text-text-secondary">
+              {bestDown ? formatPercent(bestDown[1].rate) : "0%"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Calls tracked</span>
+            <span className="font-semibold text-text-primary">
+              {bestDown ? bestDown[1].called : 0}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "performance",
+      title: "Performance Pulse",
+      description: "Identify the packages delivering right now.",
+      icon: "trending-up",
+      accentOverlayClass: "bg-aurora-violet",
+      glowClassName: "glow-aurora-violet",
+      statusBadge: "Performance",
+      iconClassName: "text-purple-600",
+      footnote: selectedView === "performance" ? "Active view" : "Tap to open",
+      buttonLabel: "Performance",
+      renderContent: () => (
+        <div className="space-y-2 text-sm">
+          <div className="text-text-secondary">Focus</div>
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="font-semibold text-text-primary capitalize">
+              {complexityCopy[complexityFocus[0]]}
+            </span>
+            <span className="text-text-secondary">
+              {totalComplexityCount
+                ? `${Math.round(
+                    (complexityFocus[1] / totalComplexityCount) * 100
+                  )}% share`
+                : "0% share"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Install balance</span>
+            <span className="font-semibold text-text-primary">
+              {`${complexityTotals.low}/${complexityTotals.medium}/${complexityTotals.high}`}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "player-performance",
+      title: "Player Spotlight",
+      description: "Track which calls juice your roster most.",
+      icon: "users",
+      accentOverlayClass: "bg-aurora-teal",
+      glowClassName: "glow-aurora-teal",
+      statusBadge: "Players",
+      iconClassName: "text-teal-600",
+      footnote: selectedView === "player-performance" ? "Active view" : "Tap to open",
+      buttonLabel: "Players",
+      renderContent: () => (
+        <div className="space-y-2 text-sm">
+          <div className="text-text-secondary">Top performing play</div>
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="font-semibold text-text-primary truncate">
+              {topPlay?.playName ?? "No data"}
+            </span>
+            <span className="text-text-secondary">
+              {topPlay ? formatPercent(topPlay.successRate) : "0%"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Calls / success</span>
+            <span className="font-semibold text-text-primary">
+              {topPlay
+                ? `${topPlay.timesCalled}/${topPlay.timesSuccessful}`
+                : "0/0"}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "game-planning",
+      title: "Game Planning",
+      description: "Prep your next opponent with confidence cues.",
+      icon: "file",
+      accentOverlayClass: "bg-aurora-slatewave",
+      glowClassName: "glow-aurora-slate",
+      statusBadge: "Strategy",
+      iconClassName: "text-slate-600",
+      footnote: selectedView === "game-planning" ? "Active view" : "Tap to open",
+      buttonLabel: "Game Planning",
+      renderContent: () => (
+        <div className="space-y-2 text-sm">
+          <div className="text-text-secondary">Personnel advantage</div>
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="font-semibold text-text-primary truncate">
+              {bestPersonnel ? bestPersonnel[0] : "No data"}
+            </span>
+            <span className="text-text-secondary">
+              {bestPersonnel ? formatPercent(bestPersonnel[1].rate) : "0%"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Calls tagged</span>
+            <span className="font-semibold text-text-primary">
+              {bestPersonnel ? bestPersonnel[1].called : 0}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Typography variant="headline-md" className="flex items-center">
-            <Icon name="bar-chart" className="h-6 w-6 text-jade-600 mr-2" />
+    <div className={`space-y-8 ${className}`}>
+      <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+        <div className="mb-6 flex flex-col gap-2">
+          <Typography variant="headline-md" className="flex items-center gap-3 text-text-primary">
+            <Icon name="bar-chart" className="h-6 w-6 text-jade-600" />
             Advanced Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-text-secondary mt-1">
-            Performance insights and strategic analysis
+          <Typography variant="body-sm" className="text-text-secondary">
+            Choose a workspace to dive deeper into your playbook trends.
           </Typography>
         </div>
-
-        {/* View Toggle */}
-        <div className="flex space-x-2">
-          {[
-            { key: "overview", label: "Overview", icon: "grid" },
-            { key: "formations", label: "Formations", icon: "layout" },
-            { key: "situational", label: "Situational", icon: "target" },
-            { key: "performance", label: "Performance", icon: "trending-up" },
-            { key: "player-performance", label: "Players", icon: "users" },
-            { key: "game-planning", label: "Game Planning", icon: "file" },
-          ].map(({ key, label, icon }) => (
-            <Button
-              key={key}
-              variant={selectedView === key ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setSelectedView(key as any)}
-              className="flex items-center"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-5">
+          {heroTiles.map(tile => (
+            <AuroraTile
+              key={tile.key}
+              title={tile.title}
+              description={tile.description}
+              icon={tile.icon}
+              accentOverlayClass={tile.accentOverlayClass}
+              glowClassName={tile.glowClassName}
+              statusBadge={tile.statusBadge}
+              iconClassName={tile.iconClassName}
+              footnote={tile.footnote}
+              onOpen={() => setSelectedView(tile.key)}
             >
-              <Icon name={icon as any} className="h-4 w-4 mr-1" />
-              {label}
-            </Button>
+              {tile.renderContent()}
+            </AuroraTile>
           ))}
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {heroTiles.map(({ key, buttonLabel, icon }) => (
+          <Button
+            key={key}
+            variant={selectedView === key ? "primary" : "secondary"}
+            size="sm"
+            onClick={() => setSelectedView(key)}
+            className="flex items-center gap-2"
+            aria-pressed={selectedView === key}
+          >
+            <Icon name={icon} className="h-4 w-4" />
+            {buttonLabel}
+          </Button>
+        ))}
       </div>
 
       {/* Content based on selected view */}

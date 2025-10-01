@@ -65,7 +65,7 @@ const SocialFeaturesDemo: React.FC = () => {
           </Card>
 
           {/* Recent Activity Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">🔥</div>
               <div className="text-xl font-bold text-text-primary">24</div>
@@ -122,7 +122,7 @@ const SocialFeaturesDemo: React.FC = () => {
             </div>
 
             {/* Play visualization placeholder */}
-            <div className="bg-gradient-to-br from-surface-muted to-surface-secondary rounded-lg h-48 flex items-center justify-center mb-4 relative overflow-hidden">
+            <div className="bg-aurora-shell rounded-aurora h-48 flex items-center justify-center mb-4 relative overflow-hidden">
               <div className="absolute inset-0 opacity-10">
                 <svg
                   width="100%"
@@ -220,7 +220,7 @@ const SocialFeaturesDemo: React.FC = () => {
           <Card variant="elevated" className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-gradient-to-br from-electric-500 to-jade-500 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 bg-aurora-teal rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-3xl font-bold text-text-inverse">
                     BC
                   </span>
@@ -315,7 +315,7 @@ const SocialFeaturesDemo: React.FC = () => {
                   variant="outlined"
                   className="p-4 text-center"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-jade-500 to-electric-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-aurora-emerald rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-text-inverse font-bold">
                       {player.avatar}
                     </span>

@@ -20,7 +20,9 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
@@ -35,7 +37,9 @@
 .dashboard-hero-section .collaborative-widget:hover,
 .dashboard-hero-section .surface-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 10px rgba(0, 0, 0, 0.06);
   transform: translateY(-2px);
 }
 
@@ -338,7 +342,9 @@
 .team-dashboard-container .surface-card,
 .dashboard-main-content .surface-card {
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: #ffffff;
   border-radius: 16px;
@@ -346,7 +352,9 @@
 
 .team-dashboard-container .surface-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 10px rgba(0, 0, 0, 0.06);
   border-color: #cbd5e1;
 }
 
@@ -390,7 +398,8 @@
 
 /* Smooth transitions for all interactive elements */
 .dashboard-hero-section *:not(svg):not(path) {
-  transition-property: color, background-color, border-color, transform, box-shadow, opacity;
+  transition-property:
+    color, background-color, border-color, transform, box-shadow, opacity;
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 // Import design tokens for centralized color management
+const auroraTheme = require("./src/styles/tailwind/auroraTheme");
 const designTokens = {
   jade: {
     50: "#ECFDF5",
@@ -495,5 +496,9 @@ export default {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    auroraTheme,
+  ],
 };

@@ -18,6 +18,7 @@ import { PlayerRosterContainer } from "../components/team/PlayerRosterContainer"
 import { OnboardingHint } from "../components/onboarding/OnboardingHint";
 import { Button, Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
+import { AuroraTile } from "../components/ui/AuroraTile";
 import { LogoIcon } from "../components/ui/Logo";
 import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
@@ -32,6 +33,12 @@ import { SharedGoalTracker } from "../components/collaboration/SharedGoalTracker
 import { TeamVoteWidget } from "../components/collaboration/TeamVoteWidget";
 import { ProgressSharing } from "../components/collaboration/ProgressSharing";
 import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
+
+// Modal components
+import { TeamTrophyCaseModal } from "../components/team-dashboard/TeamTrophyCaseModal";
+import { SeasonStatsModal } from "../components/team-dashboard/SeasonStatsModal";
+import { TeamGoalsModal } from "../components/collaboration/TeamGoalsModal";
+import { TeamVotesModal } from "../components/collaboration/TeamVotesModal";
 
 // Loading skeleton for collaboration widgets
 import { DashboardCardSkeleton } from "../components/ui/Skeleton";
@@ -86,6 +93,12 @@ const TeamBulletin: React.FC = React.memo(() => {
   });
 
   const [isTeamDataLoading, setIsTeamDataLoading] = useState(true);
+
+  // Modal states
+  const [isTrophyCaseModalOpen, setIsTrophyCaseModalOpen] = useState(false);
+  const [isSeasonStatsModalOpen, setIsSeasonStatsModalOpen] = useState(false);
+  const [isTeamGoalsModalOpen, setIsTeamGoalsModalOpen] = useState(false);
+  const [isTeamVotesModalOpen, setIsTeamVotesModalOpen] = useState(false);
 
   const loadingInitial = useMemo(
     () => !user || !profile || !teamId,
@@ -373,89 +386,61 @@ const TeamBulletin: React.FC = React.memo(() => {
           aria-labelledby="team-dashboard-heading"
           className="py-2"
         >
-          <div className="px-3 sm:px-4 lg:px-6">
+          <div className="px-4 sm:px-6 lg:px-8">
             <TeamBulletinHeader {...teamHeaderProps} />
 
             {/* Enhanced Team Dashboard Layout */}
             <div className="team-dashboard-container">
               {/* Hero Stats Row */}
               <div className="dashboard-hero-section mb-12">
-                {/* Mobile/Tablet: Stack vertically with improved spacing */}
-                <div className="grid grid-cols-1 gap-8 xl:hidden">
-                  <div className="trophy-case-container">
-                    <TeamTrophyCase teamId={teamId || ""} />
-                  </div>
+                <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
+                    <AuroraTile
+                      title="Trophy Case"
+                      description="Celebrate helmet stickers, medals, and season milestones together."
+                      icon="award"
+                      iconClassName="text-amber-600"
+                      accentOverlayClass="bg-aurora-amber"
+                      glowClassName="glow-aurora-amber"
+                      statusBadge="Recognition"
+                      footnote="Badges & stickers"
+                      onOpen={() => setIsTrophyCaseModalOpen(true)}
+                    >
+                      <TeamTrophyCase teamId={teamId || ""} compact />
+                    </AuroraTile>
 
-                  {/* Team Goals & Progress */}
-                  <div
-                    className="collaboration-goals"
-                    role="region"
-                    aria-label="Team Goals"
-                  >
-                    <React.Suspense fallback={<DashboardCardSkeleton />}>
-                      {collaborationProps && (
-                        <SharedGoalTracker {...collaborationProps} />
-                      )}
-                    </React.Suspense>
-                  </div>
-
-                  {/* Team Decisions */}
-                  <div
-                    className="collaboration-vote"
-                    role="region"
-                    aria-label="Team Decisions"
-                  >
-                    <React.Suspense fallback={<DashboardCardSkeleton />}>
-                      <TeamVoteWidget
-                        widgetId="team-bulletin-team-vote"
-                        userRole={
-                          profile?.role === "admin"
-                            ? "coach"
-                            : (userRole as "coach" | "player" | "family") ||
-                              "player"
-                        }
-                        userId={user?.id || "anonymous"}
-                        userName={
-                          profile?.display_name ||
-                          profile?.full_name ||
-                          "Team Member"
-                        }
-                      />
-                    </React.Suspense>
-                  </div>
-
-                  {/* Season Stats */}
-                  <div className="season-stats-container">
-                    <SeasonStatsCard
-                      teamId={teamId || ""}
-                      userRole={userRole}
-                    />
-                  </div>
-                </div>
-
-                {/* Desktop: Enhanced 4-column layout with better gaps */}
-                <div className="hidden xl:grid xl:grid-cols-4 gap-8">
-                  <div className="xl:col-span-1 trophy-case-container">
-                    <TeamTrophyCase teamId={teamId || ""} />
-                  </div>
-                  <div className="xl:col-span-1">
-                    <div
-                      className="collaboration-goals h-full"
-                      role="region"
-                      aria-label="Team Goals"
+                    <AuroraTile
+                      title="Goals & Progress"
+                      description="Plan season goals, track momentum, and keep everyone aligned."
+                      icon="target"
+                      iconClassName="text-emerald-600"
+                      accentOverlayClass="bg-aurora-emerald"
+                      glowClassName="glow-aurora-emerald"
+                      statusBadge="Collaboration"
+                      footnote="Shared goals"
+                      onOpen={() => setIsTeamGoalsModalOpen(true)}
                     >
                       <React.Suspense fallback={<DashboardCardSkeleton />}>
-                        {collaborationProps && (
-                          <SharedGoalTracker {...collaborationProps} />
+                        {collaborationProps ? (
+                          <SharedGoalTracker {...collaborationProps} compact />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-sm font-medium text-text-secondary opacity-70">
+                            Set up your team to start tracking goals.
+                          </div>
                         )}
                       </React.Suspense>
-                    </div>
-                  </div>
-                  <div className="xl:col-span-1">
-                    <div
-                      className="collaboration-vote h-full"
-                      role="region"
-                      aria-label="Team Decisions"
+                    </AuroraTile>
+
+                    <AuroraTile
+                      title="Team Decisions"
+                      description="Launch quick votes and gather feedback without the group chat chaos."
+                      icon="message"
+                      iconClassName="text-indigo-600"
+                      accentOverlayClass="bg-aurora-indigo"
+                      glowClassName="glow-aurora-indigo"
+                      statusBadge="Alignment"
+                      footnote="Live voting"
+                      onOpen={() => setIsTeamVotesModalOpen(true)}
                     >
                       <React.Suspense fallback={<DashboardCardSkeleton />}>
                         <TeamVoteWidget
@@ -472,39 +457,50 @@ const TeamBulletin: React.FC = React.memo(() => {
                             profile?.full_name ||
                             "Team Member"
                           }
+                          compact
                         />
                       </React.Suspense>
-                    </div>
-                  </div>
-                  <div className="xl:col-span-1 season-stats-container">
-                    <SeasonStatsCard
-                      teamId={teamId || ""}
-                      userRole={userRole}
-                    />
+                    </AuroraTile>
+
+                    <AuroraTile
+                      title="Season Stats"
+                      description="See the win column climb and log new results in seconds."
+                      icon="trending-up"
+                      iconClassName="text-purple-600"
+                      accentOverlayClass="bg-aurora-violet"
+                      glowClassName="glow-aurora-violet"
+                      statusBadge="Performance"
+                      footnote="Tap for details"
+                      onOpen={() => setIsSeasonStatsModalOpen(true)}
+                    >
+                      <SeasonStatsCard teamId={teamId || ""} userRole={userRole} compact />
+                    </AuroraTile>
                   </div>
                 </div>
               </div>
 
               {/* Main Content Area */}
-              <div className="dashboard-main-content">
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+              <div className="dashboard-main-content bg-aurora-shell rounded-aurora p-5 border border-slate-200/40 shadow-sm xl:p-6">
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 xl:gap-5">
                   {/* Left Sidebar - Quick Actions & Tools */}
                   <aside className="xl:col-span-3 order-2 xl:order-1">
                     <div className="sticky top-6 space-y-6">
-                      <Card className="bc-card-padding quick-actions-card border-slate-200 shadow-sm card-overflow-safe">
+                      <Card className="bc-card-padding quick-actions-card shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
                         <Typography
                           as="h2"
                           variant="headline-md"
-                          className="mb-4 text-text-primary flex items-center gap-2 icon-text-safe"
+                          className="mb-4 text-text-primary flex items-center gap-3 icon-text-safe"
                         >
-                          <div className="p-1.5 bg-jade-100 rounded-lg flex-shrink-0">
+                          <div className="p-2 bg-aurora-emerald rounded-lg flex-shrink-0 shadow-sm">
                             <Icon
                               name="zap"
                               size="sm"
                               className="text-jade-600"
                             />
                           </div>
-                          <span className="text-truncate">Quick Actions</span>
+                          <span className="text-truncate font-semibold">
+                            Quick Actions
+                          </span>
                         </Typography>
                         <TeamQuickActions
                           teamId={teamId || ""}
@@ -545,59 +541,61 @@ const TeamBulletin: React.FC = React.memo(() => {
                   {/* Center - Team Activity Feed */}
                   <main className="xl:col-span-6 order-1 xl:order-2">
                     <div className="space-y-6">
-                      <div className="team-activity-header bg-gradient-to-r from-jade-50 to-emerald-50 rounded-xl p-6 border border-jade-100 card-overflow-safe">
+                      <div className="team-activity-header bg-aurora-emerald rounded-aurora p-8 border border-jade-100/50 shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
                         <div className="text-center lg:text-left">
                           <Typography
                             variant="headline-lg"
-                            className="text-text-primary mb-2 flex items-center justify-center lg:justify-start gap-3 icon-text-safe"
+                            className="text-text-primary mb-3 flex items-center justify-center lg:justify-start gap-4 icon-text-safe"
                           >
-                            <div className="p-2 bg-jade-100 rounded-lg flex-shrink-0">
+                            <div className="p-3 bg-aurora-emerald rounded-xl flex-shrink-0 shadow-sm">
                               <Icon
                                 name="users"
                                 size="lg"
                                 className="text-jade-600"
                               />
                             </div>
-                            <span className="text-truncate">Team Hub</span>
+                            <span className="text-truncate font-bold">
+                              Team Hub
+                            </span>
                           </Typography>
                           <Typography
                             variant="body-lg"
                             color="muted"
-                            className="mb-4 text-truncate-2"
+                            className="mb-6 text-truncate-2 leading-relaxed"
                           >
                             Stay connected with your team's latest updates,
                             achievements, and announcements
                           </Typography>
 
                           {/* Team engagement stats */}
-                          <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-sm">
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-jade-200 badge-safe">
+                          <div className="flex flex-wrap justify-center lg:justify-start gap-3 text-sm">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-jade-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
                               <Icon
                                 name="message"
                                 size="xs"
                                 className="text-jade-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary text-truncate">
+                              <span className="text-text-secondary text-truncate font-medium">
                                 12 new posts
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-emerald-200 badge-safe">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
                               <Icon
                                 name="award"
                                 size="xs"
                                 className="text-emerald-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary text-truncate">
+                              <span className="text-text-secondary text-truncate font-medium">
                                 3 achievements
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-blue-200 badge-safe">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-blue-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
                               <Icon
                                 name="calendar"
                                 size="xs"
                                 className="text-blue-500 flex-shrink-0"
                               />
-                              <span className="text-text-secondary text-truncate">
+                              <span className="text-text-secondary text-truncate font-medium">
                                 2 upcoming events
                               </span>
                             </div>
@@ -606,7 +604,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                       </div>
 
                       <div className="team-activity-feed">
-                        <Card className="p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                        <Card className="p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                           <TeamFeed teamId={teamId || ""} userRole={userRole} />
                         </Card>
                       </div>
@@ -620,24 +618,26 @@ const TeamBulletin: React.FC = React.memo(() => {
                         <TeamCalendar teamId={teamId || ""} />
                       </div>
 
-                      <Card className="bc-card-padding roster-card border-slate-200 shadow-sm card-overflow-safe">
+                      <Card className="bc-card-padding roster-card shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
                         <div className="flex items-center justify-between mb-4 icon-text-safe">
                           <Typography
                             as="h2"
                             variant="headline-md"
-                            className="text-text-primary flex items-center gap-2 icon-text-safe flex-1 min-w-0"
+                            className="text-text-primary flex items-center gap-3 icon-text-safe flex-1 min-w-0"
                           >
-                            <div className="p-1.5 bg-blue-100 rounded-lg flex-shrink-0">
+                            <div className="p-2 bg-aurora-indigo rounded-lg flex-shrink-0 shadow-sm">
                               <Icon
                                 name="users"
                                 size="sm"
                                 className="text-blue-600"
                               />
                             </div>
-                            <span className="text-truncate">Team Roster</span>
+                            <span className="text-truncate font-semibold">
+                              Team Roster
+                            </span>
                           </Typography>
-                          <div className="text-xs text-text-secondary bg-slate-100 px-2 py-1 rounded-full flex-shrink-0 badge-safe">
-                            <span className="text-truncate">
+                          <div className="text-xs text-text-secondary bg-slate-100/80 px-3 py-1.5 rounded-full flex-shrink-0 badge-safe shadow-sm">
+                            <span className="text-truncate font-medium">
                               {teamData?.memberCount || 0} members
                             </span>
                           </div>
@@ -647,7 +647,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                         </div>
                       </Card>
 
-                      <Card className="p-4 border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50">
+                      <Card className="p-6 border-orange-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
                         <OnboardingHint
                           icon="calendar"
                           title="Upcoming Events"
@@ -672,6 +672,42 @@ const TeamBulletin: React.FC = React.memo(() => {
           </div>
         </main>
       </CollaborationProvider>
+
+      {/* Modal Components */}
+      <TeamTrophyCaseModal
+        isOpen={isTrophyCaseModalOpen}
+        onClose={() => setIsTrophyCaseModalOpen(false)}
+        teamId={teamId || ""}
+      />
+      <SeasonStatsModal
+        isOpen={isSeasonStatsModalOpen}
+        onClose={() => setIsSeasonStatsModalOpen(false)}
+        teamId={teamId || ""}
+      />
+      <TeamGoalsModal
+        isOpen={isTeamGoalsModalOpen}
+        onClose={() => setIsTeamGoalsModalOpen(false)}
+        widgetId="team-bulletin-team-goals-modal"
+        userRole={
+          profile?.role === "admin"
+            ? "coach"
+            : (userRole as "coach" | "player" | "family") || "player"
+        }
+        userId={user?.id || "anonymous"}
+        teamId={teamId || ""}
+      />
+      <TeamVotesModal
+        isOpen={isTeamVotesModalOpen}
+        onClose={() => setIsTeamVotesModalOpen(false)}
+        widgetId="team-bulletin-team-votes-modal"
+        userRole={
+          profile?.role === "admin"
+            ? "coach"
+            : (userRole as "coach" | "player" | "family") || "player"
+        }
+        userId={user?.id || "anonymous"}
+        userName={profile?.display_name || profile?.full_name || "Team Member"}
+      />
     </PageLayout>
   );
 });
