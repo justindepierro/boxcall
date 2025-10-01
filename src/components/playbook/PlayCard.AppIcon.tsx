@@ -12,8 +12,8 @@ interface PlayCardAppIconProps {
 
 /**
  * iPhone-style app icon for play cards
- * Compact 120x120px tile with centered icon and play name
- * Expands to full detail modal on click
+ * Larger 140x140px tile with centered icon and play name
+ * Better text handling with proper wrapping
  */
 export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
   play,
@@ -26,6 +26,11 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
   const displayName = showOneWordCalls && play.one_word_play
     ? play.one_word_play.toUpperCase()
     : `${play.formation || ''} ${play.play_name || ''}`.trim();
+
+  // Truncate long names for display
+  const truncatedName = displayName.length > 20 
+    ? displayName.substring(0, 20) + '...' 
+    : displayName;
 
   // Play type gradient classes
   const getTypeGradient = (type: string) => {
@@ -51,7 +56,7 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
       case 'Run':
         return 'trending-up';
       case 'RPO':
-        return 'activity'; // Changed from git-branch
+        return 'activity';
       case 'Play Action':
         return 'target';
       default:
@@ -68,96 +73,107 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(({
   };
 
   return (
-    <div className="relative group flex flex-col items-center">
+    <div className="relative group flex flex-col items-center w-full max-w-[160px] mx-auto">
       {/* Selection Checkbox - Top Left Corner */}
       {onSelectionChange && (
         <label 
-          className="absolute -top-2 -left-2 z-10 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer"
+          className="absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
           onClick={(e) => e.stopPropagation()}
         >
           <input
             type="checkbox"
             checked={isSelected}
             onChange={(e) => onSelectionChange(play.id, e.target.checked)}
-            className="w-3.5 h-3.5 rounded-sm border-0 text-electric-600 focus:ring-2 focus:ring-electric-500/20 cursor-pointer"
+            className="w-4 h-4 rounded border-0 text-electric-600 focus:ring-2 focus:ring-electric-500/20 cursor-pointer"
           />
         </label>
       )}
 
-      {/* App Icon Container */}
+      {/* App Icon Container - Increased to 140px */}
       <button
         onClick={() => onClick?.(play)}
-        className={`relative w-[120px] h-[120px] rounded-[28px] bg-gradient-to-br ${getTypeGradient(play.p_type)} shadow-lg hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 ${
+        className={`relative w-[140px] h-[140px] rounded-[32px] bg-gradient-to-br ${getTypeGradient(play.p_type)} shadow-lg hover:shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 ${
           isSelected ? 'ring-4 ring-electric-500/40' : ''
         }`}
+        aria-label={`Open ${displayName}`}
       >
         {/* Shine overlay */}
-        <div className="absolute inset-0 rounded-[28px] bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-50" />
+        <div className="absolute inset-0 rounded-[32px] bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-50" />
 
-        {/* Icon centered */}
+        {/* Icon centered - Larger */}
         <div className="absolute inset-0 flex items-center justify-center">
           <Icon 
             name={getPlayIcon(play.p_type)} 
             size="xl"
-            className="w-16 h-16 text-white drop-shadow-lg"
+            className="w-20 h-20 text-white drop-shadow-lg"
           />
         </div>
 
-        {/* Confidence Badge - Top Right */}
-        <div className="absolute -top-1.5 -right-1.5 w-10 h-10 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center">
+        {/* Confidence Badge - Top Right - Larger */}
+        <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
           {/* SVG Ring */}
-          <svg className="absolute w-10 h-10 -rotate-90" viewBox="0 0 40 40">
+          <svg className="absolute w-11 h-11 -rotate-90" viewBox="0 0 44 44">
             {/* Background ring */}
             <circle
-              cx="20"
-              cy="20"
-              r="16"
+              cx="22"
+              cy="22"
+              r="18"
               fill="none"
               className="stroke-slate-200 dark:stroke-slate-700"
               strokeWidth="3"
             />
             {/* Progress ring */}
             <circle
-              cx="20"
-              cy="20"
-              r="16"
+              cx="22"
+              cy="22"
+              r="18"
               fill="none"
               className={getConfidenceColor(play.confidence_base)}
               strokeWidth="3"
-              strokeDasharray={`${(play.confidence_base / 100) * 100.5} 100.5`}
+              strokeDasharray={`${(play.confidence_base / 100) * 113} 113`}
               strokeLinecap="round"
             />
           </svg>
           {/* Percentage */}
-          <span className="relative text-[11px] font-bold text-slate-700 dark:text-slate-300">
+          <span className="relative text-[10px] font-bold text-slate-700 dark:text-slate-300">
             {play.confidence_base}
           </span>
         </div>
 
         {/* Diagram indicator - Bottom Right */}
         {play.diagram_url && (
-          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-purple-500 shadow-md flex items-center justify-center">
+          <div className="absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800">
             <Icon name="image" className="w-4 h-4 text-white" />
           </div>
         )}
       </button>
 
-      {/* Play Name Label - Below Icon */}
-      <div className="mt-2 w-[120px] text-center">
-        <p className="text-sm font-bold text-slate-900 dark:text-white truncate px-1">
-          {displayName}
+      {/* Play Name Label - Below Icon with better wrapping */}
+      <div className="mt-3 w-full px-2">
+        <p 
+          className="text-sm font-bold text-slate-900 dark:text-white text-center leading-tight"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            wordBreak: 'break-word',
+            minHeight: '2.5rem',
+          }}
+          title={displayName}
+        >
+          {truncatedName}
         </p>
-        {/* One-word call badge (if different from display name) */}
-        {showOneWordCalls && play.one_word_play && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 truncate px-1 mt-0.5">
-            {play.formation || play.p_type}
-          </p>
-        )}
-        {!showOneWordCalls && play.one_word_play && (
-          <p className="text-xs font-semibold text-electric-600 dark:text-electric-400 truncate px-1 mt-0.5">
-            {play.one_word_play.toUpperCase()}
-          </p>
-        )}
+        
+        {/* Subtitle - One-word call or play type */}
+        <p className="text-xs text-slate-500 dark:text-slate-400 text-center mt-1 truncate">
+          {showOneWordCalls && play.one_word_play 
+            ? (play.formation || play.p_type)
+            : play.one_word_play 
+              ? play.one_word_play.toUpperCase()
+              : play.p_type
+          }
+        </p>
       </div>
     </div>
   );

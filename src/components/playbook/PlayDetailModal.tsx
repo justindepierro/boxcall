@@ -41,20 +41,20 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
       onClick={onClose}
       onKeyDown={handleKeyDown}
       role="dialog"
       aria-modal="true"
       aria-labelledby="play-detail-title"
     >
-      {/* Modal Container */}
+      {/* Modal Container - Larger and more polished */}
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-in zoom-in-95 duration-300"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[36px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-in zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Gradient Header */}
-        <div className={`relative h-32 bg-gradient-to-r ${playTypeGradient} overflow-hidden`}>
+        {/* Gradient Header - Taller */}
+        <div className={`relative h-40 bg-gradient-to-br ${playTypeGradient} overflow-hidden`}>
           {/* Pattern overlay */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -62,41 +62,55 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(({
               backgroundSize: '32px 32px'
             }} />
           </div>
+          
+          {/* Shine overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
 
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg"
             aria-label="Close modal"
           >
-            <Icon name="close" className="w-5 h-5 text-white" />
+            <Icon name="close" className="w-6 h-6 text-white" />
           </button>
 
-          {/* Play Title */}
-          <div className="absolute bottom-4 left-6">
+          {/* Play Title - Better spacing */}
+          <div className="absolute bottom-6 left-8 right-8">
+            <div className="flex items-center gap-3 mb-2">
+              <span className={`inline-flex items-center px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}>
+                {play.p_type}
+              </span>
+              {play.f_type && (
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-semibold">
+                  {play.f_type}
+                </span>
+              )}
+            </div>
             <h2
               id="play-detail-title"
-              className="text-3xl font-bold text-white mb-1 drop-shadow-lg"
+              className="text-4xl font-bold text-white mb-2 drop-shadow-lg"
             >
               {play.formation} {play.play_name}
             </h2>
             {play.one_word_play && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-semibold">
-                Code: {play.one_word_play.toUpperCase()}
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/25 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                <Icon name="zap" className="w-4 h-4 mr-2" />
+                {play.one_word_play.toUpperCase()}
               </span>
             )}
           </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700">
+        {/* Action Bar - Improved spacing */}
+        <div className="flex items-center justify-between px-8 py-4 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30">
           {/* Tabs */}
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {(['overview', 'details', 'analytics'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   activeTab === tab
                     ? 'bg-electric-100 dark:bg-electric-900/30 text-electric-700 dark:text-electric-400'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -139,13 +153,13 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(({
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="overflow-y-auto max-h-[calc(90vh-240px)] p-6">
+        {/* Content Area - Better spacing and sizing */}
+        <div className="overflow-y-auto max-h-[calc(92vh-280px)] p-8">
           {activeTab === 'overview' && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Diagram Preview */}
               {play.diagram_url && (
-                <div className="relative rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700">
+                <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 shadow-lg">
                   <img
                     src={play.diagram_url}
                     alt={`${play.formation} ${play.play_name} diagram`}
@@ -154,27 +168,27 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(({
                 </div>
               )}
 
-              {/* Quick Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Type</div>
-                  <div className="text-lg font-bold text-slate-900 dark:text-white">{play.p_type}</div>
+              {/* Quick Stats Grid - Better sizing */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Type</div>
+                  <div className="text-xl font-bold text-slate-900 dark:text-white">{play.p_type}</div>
                 </div>
-                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Confidence</div>
-                  <div className="text-lg font-bold text-jade-600 dark:text-jade-400">
+                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Confidence</div>
+                  <div className="text-xl font-bold text-jade-600 dark:text-jade-400">
                     {play.confidence_base}%
                   </div>
                 </div>
-                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Called</div>
-                  <div className="text-lg font-bold text-slate-900 dark:text-white">
+                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Called</div>
+                  <div className="text-xl font-bold text-slate-900 dark:text-white">
                     {play.times_called}x
                   </div>
                 </div>
-                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Success</div>
-                  <div className="text-lg font-bold text-electric-600 dark:text-electric-400">
+                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Success</div>
+                  <div className="text-xl font-bold text-electric-600 dark:text-electric-400">
                     {play.times_called > 0
                       ? Math.round((play.times_successful / play.times_called) * 100)
                       : 0}%
@@ -182,40 +196,41 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(({
                 </div>
               </div>
 
-              {/* Key Information */}
-              <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+              {/* Key Information - Better layout */}
+              <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-6 border border-slate-200/50 dark:border-slate-700/50">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+                  <Icon name="shield" className="w-5 h-5 text-electric-600" />
                   Formation Details
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-5">
                   {play.personnel && (
                     <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Personnel</div>
-                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Personnel</div>
+                      <div className="text-base font-semibold text-slate-900 dark:text-white">
                         {play.personnel}
                       </div>
                     </div>
                   )}
                   {play.f_type && (
                     <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Type</div>
-                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Type</div>
+                      <div className="text-base font-semibold text-slate-900 dark:text-white">
                         {play.f_type}
                       </div>
                     </div>
                   )}
                   {play.f_dir && (
                     <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Direction</div>
-                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Direction</div>
+                      <div className="text-base font-semibold text-slate-900 dark:text-white">
                         {play.f_dir}
                       </div>
                     </div>
                   )}
                   {play.protection && (
                     <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Protection</div>
-                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Protection</div>
+                      <div className="text-base font-semibold text-slate-900 dark:text-white">
                         {play.protection}
                       </div>
                     </div>

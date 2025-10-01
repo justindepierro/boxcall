@@ -581,8 +581,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
       {/* Play Grid - Conditional Rendering based on view mode */}
       {!showEmpty && viewMode === 'grid' ? (
-        /* App Icon Grid View */
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 py-8">
+        /* App Icon Grid View - Better spacing for larger icons */
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8 py-8 px-4">
           {filteredPlays.map((play) => (
             <PlayCardAppIcon
               key={play.id}
