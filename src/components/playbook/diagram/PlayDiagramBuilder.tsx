@@ -7,10 +7,7 @@ import { Input } from "../../ui/Input";
 import { Typography } from "../../design-system/Typography";
 import type { Play } from "../../../types/play";
 import { createEmptyDocument } from "./types/types";
-import type {
-  DiagramDocument,
-  DiagramFieldConfig,
-} from "./types/types";
+import type { DiagramDocument, DiagramFieldConfig } from "./types/types";
 import { DiagramEditorProvider } from "./context/DiagramEditorProvider";
 import { useDiagramEditor } from "./context/useDiagramEditor";
 import { ModernToolPalette } from "./components/ModernToolPalette";
@@ -68,10 +65,11 @@ const fieldSlicePresets: Record<
 };
 
 const determineSlicePreset = (field: DiagramFieldConfig) => {
-  return (Object.entries(fieldSlicePresets) as Array<[
-    keyof typeof fieldSlicePresets,
-    (typeof fieldSlicePresets)["midfield"],
-  ]>).find(([, preset]) => {
+  return (
+    Object.entries(fieldSlicePresets) as Array<
+      [keyof typeof fieldSlicePresets, (typeof fieldSlicePresets)["midfield"]]
+    >
+  ).find(([, preset]) => {
     const { backYards, forwardYards, losYards } = preset.slice;
     if (
       backYards === undefined ||
@@ -108,13 +106,18 @@ const FieldSettingsPanel: React.FC = () => {
     <div className="space-y-6">
       {/* Field Slice Section */}
       <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
-        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+        <Typography
+          variant="label-lg"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+        >
           Field Slice
         </Typography>
         <div className="space-y-3">
-          {(Object.keys(fieldSlicePresets) as Array<
-            keyof typeof fieldSlicePresets
-          >).map((key) => {
+          {(
+            Object.keys(fieldSlicePresets) as Array<
+              keyof typeof fieldSlicePresets
+            >
+          ).map((key) => {
             const preset = fieldSlicePresets[key];
             return (
               <label
@@ -138,7 +141,10 @@ const FieldSettingsPanel: React.FC = () => {
 
       {/* Display Options Section */}
       <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
-        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+        <Typography
+          variant="label-lg"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+        >
           Display
         </Typography>
         <div className="space-y-3">
@@ -174,7 +180,10 @@ const FieldSettingsPanel: React.FC = () => {
 
       {/* Ball Hash Section */}
       <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
-        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+        <Typography
+          variant="label-lg"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+        >
           Ball Hash
         </Typography>
         <div className="grid grid-cols-3 gap-2">
@@ -205,7 +214,10 @@ const FieldSettingsPanel: React.FC = () => {
 
       {/* Hash Layout Section */}
       <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
-        <Typography variant="label-lg" className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300">
+        <Typography
+          variant="label-lg"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+        >
           Hash Layout
         </Typography>
         <div className="grid grid-cols-3 gap-2">
@@ -219,7 +231,9 @@ const FieldSettingsPanel: React.FC = () => {
               onClick={() =>
                 dispatch({
                   type: "SET_FIELD_HASH_LAYOUT",
-                  layout: option.id as NonNullable<DiagramFieldConfig["hashLayout"]>,
+                  layout: option.id as NonNullable<
+                    DiagramFieldConfig["hashLayout"]
+                  >,
                 })
               }
               className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
@@ -240,12 +254,7 @@ const FieldSettingsPanel: React.FC = () => {
 const DiagramCanvas: React.FC = () => {
   return (
     <div className="relative flex-1 overflow-hidden rounded-[28px] bg-slate-900/40 border border-slate-800 shadow-inner">
-      <ShapeManipulator
-        zoom={1}
-        panX={0}
-        panY={0}
-        snapToGrid={true}
-      >
+      <ShapeManipulator zoom={1} panX={0} panY={0} snapToGrid={true}>
         <FootballFieldCanvas />
       </ShapeManipulator>
       <ElementPropertiesPopup className="xl:hidden" />
@@ -338,7 +347,10 @@ const DiagramTopBar: React.FC<{
   return (
     <div className="flex flex-wrap items-center gap-4 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 backdrop-blur-xl border-b border-slate-800/60 px-6 py-5 shadow-lg">
       <div className="flex flex-col gap-1.5 min-w-[220px]">
-        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <Typography
+          variant="label-lg"
+          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
           Play Name
         </Typography>
         <Input
@@ -349,7 +361,10 @@ const DiagramTopBar: React.FC<{
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-[180px]">
-        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <Typography
+          variant="label-lg"
+          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
           Formation
         </Typography>
         <Input
@@ -360,7 +375,10 @@ const DiagramTopBar: React.FC<{
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-[160px]">
-        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <Typography
+          variant="label-lg"
+          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
           Personnel
         </Typography>
         <Input
@@ -371,7 +389,10 @@ const DiagramTopBar: React.FC<{
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-[150px]">
-        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <Typography
+          variant="label-lg"
+          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
           Play Type
         </Typography>
         <select
@@ -388,7 +409,10 @@ const DiagramTopBar: React.FC<{
         </select>
       </div>
       <div className="flex flex-col gap-1.5 min-w-[150px]">
-        <Typography variant="label-lg" className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <Typography
+          variant="label-lg"
+          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
           VS Front
         </Typography>
         <Input
@@ -431,14 +455,16 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
         const parsed = JSON.parse(play.diagram_url) as DiagramDocument;
         doc = {
           ...parsed,
-          meta:
-            parsed.meta ?? {
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-            },
+          meta: parsed.meta ?? {
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
         };
       } catch (error) {
-        console.warn("Failed to parse play diagram; falling back to template", error);
+        console.warn(
+          "Failed to parse play diagram; falling back to template",
+          error
+        );
       }
     }
     dispatch({ type: "INIT", doc });
@@ -479,7 +505,10 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
       {/* Sidebar - Field Settings */}
       <aside className="hidden lg:block w-72 border-r border-slate-800/60 bg-slate-900/50 backdrop-blur-xl px-6 py-8 overflow-y-auto">
         <div className="mb-6">
-          <Typography variant="headline-sm" className="text-slate-100 font-semibold">
+          <Typography
+            variant="headline-sm"
+            className="text-slate-100 font-semibold"
+          >
             Field Settings
           </Typography>
           <Typography variant="caption" className="text-slate-400 mt-1">
@@ -498,11 +527,14 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
             <div className="flex-1 flex flex-col min-w-0">
               <DiagramCanvas />
             </div>
-            
+
             {/* Properties Panel - Desktop */}
             <div className="hidden xl:block w-80 space-y-4">
               <Card className="p-5 space-y-5 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl shadow-xl">
-                <Typography variant="caption" className="uppercase tracking-[0.2em] text-slate-400 font-semibold">
+                <Typography
+                  variant="caption"
+                  className="uppercase tracking-[0.2em] text-slate-400 font-semibold"
+                >
                   Properties
                 </Typography>
                 <PlayerPropertiesPanel />
@@ -513,19 +545,22 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
 
           {/* Bottom Toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl px-5 py-4 shadow-xl">
-            <ModernToolPalette orientation="horizontal" className="bg-transparent p-0" />
+            <ModernToolPalette
+              orientation="horizontal"
+              className="bg-transparent p-0"
+            />
             <div className="flex items-center gap-3">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleUndo}
                 className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
               >
                 <Icon name="undo" size="sm" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleRedo}
                 className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
               >
@@ -541,9 +576,9 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
               >
                 {saving ? "Saving…" : "Save Diagram"}
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={onClose}
                 className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
               >
@@ -557,7 +592,9 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
   );
 };
 
-export const PlayDiagramBuilder: React.FC<PlayDiagramBuilderProps> = (props) => {
+export const PlayDiagramBuilder: React.FC<PlayDiagramBuilderProps> = (
+  props
+) => {
   return (
     <DiagramEditorProvider>
       <PlayDiagramBuilderInner {...props} />

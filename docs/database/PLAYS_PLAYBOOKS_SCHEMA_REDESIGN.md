@@ -48,16 +48,16 @@
 
 #### Formation Details (KEEP - 8 columns)
 
-| Column       | Type | Nullable | Default | Purpose                                |
-| ------------ | ---- | -------- | ------- | -------------------------------------- |
-| `personnel`  | text | YES      | null    | Personnel group (e.g., "11 personnel") |
-| `shift`      | text | YES      | null    | Pre-snap shift                         |
-| `motion`     | text | YES      | null    | Pre-snap motion                        |
-| `back_align` | text | YES      | null    | Running back alignment                 |
-| `f_type`     | text | YES      | null    | Formation type classification          |
-| `f_dir`      | text | YES      | null    | Formation direction (left/right/field) |
-| `r_str`      | text | YES      | null    | Run strength (where run blocking is)   |
-| `p_str`      | text | YES      | null    | Pass strength (where pass protection is)|
+| Column       | Type | Nullable | Default | Purpose                                  |
+| ------------ | ---- | -------- | ------- | ---------------------------------------- |
+| `personnel`  | text | YES      | null    | Personnel group (e.g., "11 personnel")   |
+| `shift`      | text | YES      | null    | Pre-snap shift                           |
+| `motion`     | text | YES      | null    | Pre-snap motion                          |
+| `back_align` | text | YES      | null    | Running back alignment                   |
+| `f_type`     | text | YES      | null    | Formation type classification            |
+| `f_dir`      | text | YES      | null    | Formation direction (left/right/field)   |
+| `r_str`      | text | YES      | null    | Run strength (where run blocking is)     |
+| `p_str`      | text | YES      | null    | Pass strength (where pass protection is) |
 
 #### Protection/Blocking (KEEP - 1 column)
 
@@ -86,15 +86,16 @@
 
 #### Play Details & Execution (KEEP - 5 columns)
 
-| Column          | Type | Nullable | Default | Purpose                                     | Notes                                  |
-| --------------- | ---- | -------- | ------- | ------------------------------------------- | -------------------------------------- |
-| `one_word_play` | text | YES      | null    | Quick reference/code word for play          | Used for wristbands, speed calls       |
-| `p_dir`         | text | YES      | null    | Play direction (Left/Right)                 | "IZ Left" vs "IZ Right"                |
-| `key_player1`   | text | YES      | null    | Key player for success                      | Future: Link to roster/personnel (Y, Z)|
-| `key_player2`   | text | YES      | null    | Secondary key player                        | Future: Link to roster/personnel       |
-| `check_into`    | text | YES      | null    | Audible/kill call - alternative play        | Future: Link by play_id                |
+| Column          | Type | Nullable | Default | Purpose                              | Notes                                   |
+| --------------- | ---- | -------- | ------- | ------------------------------------ | --------------------------------------- |
+| `one_word_play` | text | YES      | null    | Quick reference/code word for play   | Used for wristbands, speed calls        |
+| `p_dir`         | text | YES      | null    | Play direction (Left/Right)          | "IZ Left" vs "IZ Right"                 |
+| `key_player1`   | text | YES      | null    | Key player for success               | Future: Link to roster/personnel (Y, Z) |
+| `key_player2`   | text | YES      | null    | Secondary key player                 | Future: Link to roster/personnel        |
+| `check_into`    | text | YES      | null    | Audible/kill call - alternative play | Future: Link by play_id                 |
 
 **Future Enhancements:**
+
 - `key_player1/2`: Should reference roster OR personnel positions (e.g., "Y receiver", "Z receiver")
 - `check_into`: Should be linkable to another play by ID (e.g., "Check into Speed Option")
 
@@ -116,12 +117,12 @@
 
 #### System Metadata (KEEP - 5 columns)
 
-| Column          | Type        | Nullable | Default | Purpose                                     |
-| --------------- | ----------- | -------- | ------- | ------------------------------------------- |
-| `created_at`    | timestamptz | YES      | now()   | When created                                |
-| `updated_at`    | timestamptz | YES      | now()   | Last updated                                |
-| `is_archived`   | boolean     | YES      | false   | Soft delete                                 |
-| `created_by`    | uuid        | YES      | null    | User who created                            |
+| Column          | Type        | Nullable | Default | Purpose                                    |
+| --------------- | ----------- | -------- | ------- | ------------------------------------------ |
+| `created_at`    | timestamptz | YES      | now()   | When created                               |
+| `updated_at`    | timestamptz | YES      | now()   | Last updated                               |
+| `is_archived`   | boolean     | YES      | false   | Soft delete                                |
+| `created_by`    | uuid        | YES      | null    | User who created                           |
 | `duplicate_key` | text        | YES      | null    | Track duplicate plays (versioning/history) |
 
 ---
@@ -131,13 +132,15 @@
 ### Final Column Count
 
 **Playbooks Table**: 8 columns (after removing 2 redundant)
+
 - Core: id, team_id, name, description, is_active, created_by
 - Timestamps: created_at, updated_at
 
 **Plays Table**: 38 columns (ALL KEPT - all serve valid purposes)
+
 - Core Identity: 5 columns
 - Formation Details: 8 columns (includes f_type, f_dir, r_str, p_str)
-- Protection/Blocking: 1 column  
+- Protection/Blocking: 1 column
 - Situational Preferences: 5 columns
 - Tagging System: 4 columns
 - Play Details & Execution: 5 columns (includes one_word_play, p_dir, key_players, check_into)
@@ -154,6 +157,7 @@
 ### ~~1. Unclear Columns - What do these mean?~~
 
 ✅ **RESOLVED** - All columns now have clear purposes:
+
 - `f_type` - Formation type classification
 - `f_dir` - Formation direction (field reference)
 - `r_str` - Run strength (blocking direction)
@@ -198,12 +202,14 @@ ALTER TABLE plays ADD COLUMN custom_fields JSONB DEFAULT '{}';
 ```
 
 **Use cases:**
+
 - Wristband numbers
 - Game week installed
-- Scout team notes  
+- Scout team notes
 - Team-specific tracking data
 
 **Benefits:**
+
 - ✅ Unlimited flexibility per team
 - ✅ No schema changes needed
 - ✅ Complements existing structured columns
@@ -343,12 +349,15 @@ CREATE POLICY "Coaches can delete plays"
 ## Decisions Made
 
 **Question 1**: Do you want to keep all 38 columns in plays table?
+
 - [x] **YES** - Keep everything, all columns serve valid football purposes
 
 **Question 2**: Do you want to add JSONB custom fields for future flexibility?
+
 - [x] **LATER** - Fix RLS first, then add JSONB in Phase 3
 
 **Question 3**: Immediate action?
+
 - [x] **PHASE 1 ONLY** - Just fix the RLS policies and get it working NOW
 - [ ] PHASE 1 + 2 - Fix RLS and clean up schema
 - [ ] ALL PHASES - Complete redesign with custom fields
@@ -374,6 +383,7 @@ CREATE POLICY "Coaches can delete plays"
    - Policy #3 "Users can view playbooks for their teams" duplicates #2
 
 **Next Steps**:
+
 1. Review SQL fix script (to be created)
 2. Run in Supabase SQL Editor
 3. Test play creation

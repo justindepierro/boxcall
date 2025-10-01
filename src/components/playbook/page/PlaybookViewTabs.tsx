@@ -108,7 +108,9 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 <Icon
                   name="file"
                   className={
-                    currentView === "playbook" ? "text-white" : "text-emerald-600 dark:text-emerald-400"
+                    currentView === "playbook"
+                      ? "text-white"
+                      : "text-emerald-600 dark:text-emerald-400"
                   }
                 />
               }

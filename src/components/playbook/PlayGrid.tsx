@@ -115,19 +115,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       return false;
     }
   });
-  
+
   // View mode: 'list' or 'grid' (app icons)
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>(() => {
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     try {
-      return (localStorage.getItem("bc_playgrid_view") as 'list' | 'grid') || 'list';
+      return (
+        (localStorage.getItem("bc_playgrid_view") as "list" | "grid") || "list"
+      );
     } catch {
-      return 'list';
+      return "list";
     }
   });
-  
+
   // Selected play for detail modal
   const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
-  
+
   useEffect(() => {
     try {
       localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
@@ -135,7 +137,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       // ignore persistence errors (private browsing, etc.)
     }
   }, [showOneWordCalls]);
-  
+
   useEffect(() => {
     try {
       localStorage.setItem("bc_playgrid_view", viewMode);
@@ -537,24 +539,28 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800">
             <IconButton
               aria-label="List view"
-              onClick={() => setViewMode('list')}
+              onClick={() => setViewMode("list")}
               variant="subtle"
               size="sm"
-              className={viewMode === 'list' ? 'bg-white dark:bg-slate-700' : ''}
+              className={
+                viewMode === "list" ? "bg-white dark:bg-slate-700" : ""
+              }
             >
               <Icon name="list" className="h-4 w-4" />
             </IconButton>
             <IconButton
               aria-label="Grid view (app icons)"
-              onClick={() => setViewMode('grid')}
+              onClick={() => setViewMode("grid")}
               variant="subtle"
               size="sm"
-              className={viewMode === 'grid' ? 'bg-white dark:bg-slate-700' : ''}
+              className={
+                viewMode === "grid" ? "bg-white dark:bg-slate-700" : ""
+              }
             >
               <Icon name="grid" className="h-4 w-4" />
             </IconButton>
           </div>
-          
+
           {/* One-word calls toggle */}
           <div className="flex items-center space-x-3">
             <span className="text-sm text-text-secondary">One-word calls</span>
@@ -571,7 +577,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               {showOneWordCalls ? (
                 <Icon name="toggle-right" className="h-5 w-5 text-text-info" />
               ) : (
-                <Icon name="toggle-left" className="h-5 w-5 text-text-tertiary" />
+                <Icon
+                  name="toggle-left"
+                  className="h-5 w-5 text-text-tertiary"
+                />
               )}
             </IconButton>
             <span className="text-sm text-text-secondary">Full names</span>
@@ -580,7 +589,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       </div>
 
       {/* Play Grid - Conditional Rendering based on view mode */}
-      {!showEmpty && viewMode === 'grid' ? (
+      {!showEmpty && viewMode === "grid" ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4">
           {filteredPlays.map((play) => (
             <div key={play.id} className="flex items-start justify-center">
@@ -595,7 +604,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           ))}
         </div>
       ) : !showEmpty &&
-      (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
         <div className="space-y-6" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
@@ -624,7 +633,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           />
         </div>
       ) : null}
-      
+
       {/* Play Detail Modal */}
       {selectedPlay && (
         <PlayDetailModal

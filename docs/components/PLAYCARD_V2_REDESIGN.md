@@ -12,6 +12,7 @@
 ## ⚡ Performance Improvements
 
 ### Old Design (PlayCard.tsx - 1451 lines)
+
 - ❌ 1451 lines of code
 - ❌ Heavy inline editing with drag-drop reordering
 - ❌ Complex state management (optimistic updates, saving states)
@@ -20,6 +21,7 @@
 - ❌ Re-renders on every field change
 
 ### New Design (PlayCard.v2.tsx - 258 lines)
+
 - ✅ 258 lines of code (**82% reduction**)
 - ✅ React.memo() for intelligent re-rendering
 - ✅ No drag-drop overhead
@@ -36,21 +38,25 @@
 ### Header & Title
 
 #### Old Design
+
 ```tsx
 <h3 className="truncate font-mono font-bold text-base text-text-primary">
   {displayName}
 </h3>
 ```
+
 - Plain text styling
 - Generic colors
 - No visual hierarchy
 
 #### New Design
+
 ```tsx
 <h3 className="font-mono font-bold text-lg text-slate-900 dark:text-white truncate mb-2">
   {displayName}
 </h3>
 ```
+
 - Larger, bolder text
 - Dark mode support
 - Better spacing
@@ -60,21 +66,25 @@
 ### Play Type Badge
 
 #### Old Design
+
 ```tsx
 <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-jade-600 text-white">
   Run
 </span>
 ```
+
 - Solid color backgrounds
 - Small text (11px)
 - No depth
 
 #### New Design
+
 ```tsx
 <span className="inline-flex items-center px-3 py-1 rounded-full text-white text-xs font-semibold shadow-sm bg-gradient-to-r from-jade-500 to-emerald-500">
   Run
 </span>
 ```
+
 - **Gradient backgrounds** (Run: jade→emerald, Pass: electric→purple)
 - Larger padding
 - Drop shadow for depth
@@ -85,23 +95,26 @@
 ### Confidence Display
 
 #### Old Design
+
 ```tsx
 <span className="text-xs font-medium text-white bg-jade-600 px-1.5 py-0.5 rounded font-semibold">
   70%
 </span>
 ```
+
 - Text-only percentage
 - Color coding only
 - No visual feedback
 
 #### New Design
+
 ```tsx
 {/* SVG Ring Progress Indicator */}
 <svg className="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
   <circle cx="18" cy="18" r="14" fill="none" className="stroke-slate-200" strokeWidth="3" />
-  <circle 
-    cx="18" cy="18" r="14" fill="none" 
-    className="text-jade-600" 
+  <circle
+    cx="18" cy="18" r="14" fill="none"
+    className="text-jade-600"
     strokeWidth="3"
     strokeDasharray="62 88" // 70% progress
     strokeLinecap="round"
@@ -111,6 +124,7 @@
   70
 </span>
 ```
+
 - **Circular progress ring** (like Apple Watch)
 - At-a-glance visual confidence
 - Color-coded: 85+ jade, 70+ emerald, 60+ amber, 50+ orange, <50 red
@@ -121,6 +135,7 @@
 ### Action Buttons
 
 #### Old Design
+
 ```tsx
 <Button
   variant="ghost"
@@ -129,16 +144,19 @@
   className="p-3 min-w-[40px] min-h-[40px]"
 />
 ```
+
 - Ghost variant (low contrast)
 - Square buttons
 - No color coding
 
 #### New Design
+
 ```tsx
 <button className="w-9 h-9 rounded-full bg-electric-100 dark:bg-electric-900/30 hover:bg-electric-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95">
   <Icon name="edit" className="w-4 h-4 text-electric-600" />
 </button>
 ```
+
 - **Circular icon capsules** (pill-shaped)
 - Color-coded by action (Edit: electric-blue, Duplicate: jade-green, Diagram: purple)
 - Micro-motion on hover (`scale-110`)
@@ -150,17 +168,21 @@
 ### Card Container
 
 #### Old Design
+
 ```tsx
 <div className="surface-card rounded-lg border shadow-sm border-subtle hover:border-border-light">
 ```
+
 - Standard rounded corners
 - Subtle border
 - Basic shadow
 
 #### New Design
+
 ```tsx
 <div className="group relative backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-[28px] border-2 transition-all duration-200 hover:shadow-xl hover:scale-[1.02] border-white/20">
 ```
+
 - **Glass morphism** (`backdrop-blur-xl bg-white/80`)
 - **Aurora rounded corners** (`rounded-[28px]`)
 - Micro-scale on hover (`scale-[1.02]`)
@@ -172,12 +194,14 @@
 ### Expanded Details
 
 #### Old Design
+
 - Drag-drop reordering for formation fields
 - Inline editing for every field
 - Complex grid layouts
 - 500+ lines of expanded content
 
 #### New Design
+
 - **Quick Stats Grid** - 2-column grid with icon badges
 - **Tag Cloud** - Compact flex-wrap display
 - **Clean Typography** - Better spacing, dark mode
@@ -196,11 +220,13 @@
 ## 🚀 Usage Example
 
 ### Import
+
 ```tsx
-import { PlayCard } from './components/playbook/PlayCard.v2';
+import { PlayCard } from "./components/playbook/PlayCard.v2";
 ```
 
 ### Basic Usage
+
 ```tsx
 <PlayCard
   play={myPlay}
@@ -211,6 +237,7 @@ import { PlayCard } from './components/playbook/PlayCard.v2';
 ```
 
 ### With Selection
+
 ```tsx
 <PlayCard
   play={myPlay}
@@ -220,34 +247,33 @@ import { PlayCard } from './components/playbook/PlayCard.v2';
 ```
 
 ### One-Word Calls Mode
+
 ```tsx
-<PlayCard
-  play={myPlay}
-  showOneWordCalls={true}
-/>
+<PlayCard play={myPlay} showOneWordCalls={true} />
 ```
 
 ---
 
 ## 📊 Side-by-Side Metrics
 
-| Metric | Old Design | New Design | Improvement |
-|--------|------------|------------|-------------|
-| **Lines of Code** | 1,451 | 258 | -82% |
-| **Bundle Size** | ~45 KB | ~8 KB | -82% |
-| **Re-render Time** | ~15ms | ~2ms | 7.5x faster |
-| **Dependencies** | 8 | 3 | -62% |
-| **Complexity** | High | Low | Simplified |
-| **Dark Mode** | Partial | Full | ✅ |
-| **Touch Targets** | 40px | 36px+ | ✅ |
-| **Micro-motion** | None | Yes | ✅ |
-| **Glass Morphism** | No | Yes | ✅ |
+| Metric             | Old Design | New Design | Improvement |
+| ------------------ | ---------- | ---------- | ----------- |
+| **Lines of Code**  | 1,451      | 258        | -82%        |
+| **Bundle Size**    | ~45 KB     | ~8 KB      | -82%        |
+| **Re-render Time** | ~15ms      | ~2ms       | 7.5x faster |
+| **Dependencies**   | 8          | 3          | -62%        |
+| **Complexity**     | High       | Low        | Simplified  |
+| **Dark Mode**      | Partial    | Full       | ✅          |
+| **Touch Targets**  | 40px       | 36px+      | ✅          |
+| **Micro-motion**   | None       | Yes        | ✅          |
+| **Glass Morphism** | No         | Yes        | ✅          |
 
 ---
 
 ## 🎯 Key Features
 
 ### ✅ Included in V2
+
 - Glass morphism card with backdrop blur
 - Gradient accent bar (play type)
 - Circular confidence progress ring
@@ -262,6 +288,7 @@ import { PlayCard } from './components/playbook/PlayCard.v2';
 - Memoized for performance
 
 ### ❌ Removed from V1 (By Design)
+
 - Inline field editing (edit mode instead)
 - Drag-drop field reordering
 - Optimistic update state management
@@ -274,25 +301,28 @@ import { PlayCard } from './components/playbook/PlayCard.v2';
 ## 🔄 Migration Path
 
 ### Option 1: Direct Replacement
+
 ```tsx
 // Before
-import { PlayCard } from './components/playbook/PlayCard';
+import { PlayCard } from "./components/playbook/PlayCard";
 
 // After
-import { PlayCard } from './components/playbook/PlayCard.v2';
+import { PlayCard } from "./components/playbook/PlayCard.v2";
 ```
 
 ### Option 2: Gradual Migration
+
 ```tsx
 // Use both during transition
-import { PlayCard as PlayCardOld } from './components/playbook/PlayCard';
-import { PlayCard as PlayCardNew } from './components/playbook/PlayCard.v2';
+import { PlayCard as PlayCardOld } from "./components/playbook/PlayCard";
+import { PlayCard as PlayCardNew } from "./components/playbook/PlayCard.v2";
 
 // Feature flag or AB test
-const Component = useFeatureFlag('new-play-card') ? PlayCardNew : PlayCardOld;
+const Component = useFeatureFlag("new-play-card") ? PlayCardNew : PlayCardOld;
 ```
 
 ### Option 3: Rename After Testing
+
 ```bash
 # After v2 is approved
 mv src/components/playbook/PlayCard.tsx src/components/playbook/PlayCard.old.tsx
@@ -310,6 +340,7 @@ npm run storybook
 Navigate to: **Features → Playbook → PlayCard V2 Redesign**
 
 Stories available:
+
 1. **New Design** - Single card demo
 2. **Comparison** - Side-by-side old vs new
 3. **All Play Types** - Run, Pass, RPO, Play Action
@@ -363,6 +394,7 @@ shadow-sm            /* Subtle badges */
 ## 🚀 Ready to Ship!
 
 The new PlayCard is:
+
 - ✅ **82% smaller** in code size
 - ✅ **7.5x faster** to render
 - ✅ **Aurora design** aligned

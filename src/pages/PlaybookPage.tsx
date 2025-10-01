@@ -231,7 +231,13 @@ export default function PlaybookPage() {
   };
 
   const handleSaveDiagram = useCallback(
-    async ({ doc, metadata }: { doc: DiagramDocument; metadata: DiagramMetadata }) => {
+    async ({
+      doc,
+      metadata,
+    }: {
+      doc: DiagramDocument;
+      metadata: DiagramMetadata;
+    }) => {
       if (!diagramPlay) return;
       const updates: Partial<Play> = {
         play_name: metadata.play_name,
@@ -239,8 +245,10 @@ export default function PlaybookPage() {
         diagram_url: JSON.stringify(doc),
       };
       if (metadata.p_type) updates.p_type = metadata.p_type;
-      if (metadata.personnel !== undefined) updates.personnel = metadata.personnel;
-      if (metadata.pref_front !== undefined) updates.pref_front = metadata.pref_front;
+      if (metadata.personnel !== undefined)
+        updates.personnel = metadata.personnel;
+      if (metadata.pref_front !== undefined)
+        updates.pref_front = metadata.pref_front;
 
       try {
         await PlaysService.updatePlay(diagramPlay.id, updates);
@@ -434,7 +442,7 @@ export default function PlaybookPage() {
             gradient="from-jade-500 to-emerald-500"
             onOpen={handleOpenBuilder}
           />
-          
+
           <AppIconTile
             title="Practice"
             subtitle="Quick start"
@@ -442,7 +450,7 @@ export default function PlaybookPage() {
             gradient="from-purple-500 to-violet-500"
             onOpen={handleQuickNewPracticeScript}
           />
-          
+
           <AppIconTile
             title="Game Plan"
             subtitle="Plan ahead"
@@ -450,7 +458,7 @@ export default function PlaybookPage() {
             gradient="from-amber-500 to-orange-500"
             onOpen={handleQuickNewGamePlan}
           />
-          
+
           <AppIconTile
             title="Diagrams"
             subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
@@ -660,17 +668,25 @@ export default function PlaybookPage() {
                 } else {
                   toast.error("Failed to process play", error.message);
                 }
-              } else if (typeof error === 'object' && error !== null) {
+              } else if (typeof error === "object" && error !== null) {
                 // Check for PostgREST schema cache errors
                 const err = error as { code?: string; message?: string };
-                if (err.code === 'PGRST204' || err.message?.includes('schema cache')) {
+                if (
+                  err.code === "PGRST204" ||
+                  err.message?.includes("schema cache")
+                ) {
                   toast.error(
                     "Database schema cache error",
                     "Please reload the page. If the issue persists, contact support."
                   );
-                  console.error("💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md");
+                  console.error(
+                    "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
+                  );
                 } else {
-                  toast.error("Failed to process play", err.message || "Please try again");
+                  toast.error(
+                    "Failed to process play",
+                    err.message || "Please try again"
+                  );
                 }
               } else {
                 toast.error("Failed to process play", "Please try again");

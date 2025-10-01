@@ -960,7 +960,7 @@ export const ProfilePage: React.FC = () => {
           profile.app_role === "head_coach" ||
           profile.is_admin) && (
           <Card className="relative overflow-hidden p-8">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-aurora-emerald rounded-full -mr-10 -mt-10 opacity-60"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-aurora-emerald rounded-full -mr-10 -mt-10 opacity-60"></div>
             <Typography
               variant="headline-sm"
               as="h2"
@@ -1303,7 +1303,7 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         </Card>
-        
+
         {/* Actions */}
         <div className="flex justify-between items-center">
           <Button
