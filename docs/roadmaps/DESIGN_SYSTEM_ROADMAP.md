@@ -150,6 +150,7 @@ Our new “Aurora Tiles” visual language powers the Team Bulletin hero row and
 - Published `auroraTheme` Tailwind plugin exposing `bg-aurora-*`, `glow-aurora-*`, and `rounded-aurora` utilities (white “mist” panel included).
 - Refactored shared `Card` base to adopt the mist gradient + 24px radius so every dashboard card inherits the same glass shell.
 - Tuned global density: default card padding now 14px with compact 11px variant; hero grids drop to `gap-4` to keep layouts tight by default.
+- Typography/controls condensed: headlines now 1.15 leading, body text 1.38; button padding reduced (md `h-2.7rem`) for a snug dashboard fit.
 - Migrated Bulletin, Practice, Game Plan, Analytics, and Templates hero surfaces to the new tokens; remaining legacy gradients tracked for cleanup.
 
 ---

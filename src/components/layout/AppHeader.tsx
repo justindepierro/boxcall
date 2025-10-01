@@ -8,6 +8,11 @@ import { NotificationBell } from "../ui/NotificationBell";
 import { TeamSwitcher } from "./TeamSwitcher";
 import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
+import { Icon } from "../ui/Icon/Icon";
+import {
+  isPWAInstallAvailable,
+  requestPWAInstallPrompt,
+} from "../pwa/PWAIntegration";
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
@@ -26,6 +31,7 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [canInstallPWA, setCanInstallPWA] = useState(isPWAInstallAvailable());
   const { roleContext } = useRoles();
   const { activeTeamId: _activeTeamId } = useActiveTeamStore();
   const teams =
@@ -60,6 +66,20 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    const handleAvailability = (event: Event) => {
+      const detail = (event as CustomEvent<{ available: boolean }>).detail;
+      setCanInstallPWA(Boolean(detail?.available));
+    };
+    window.addEventListener("pwa:install-available", handleAvailability);
+    return () =>
+      window.removeEventListener("pwa:install-available", handleAvailability);
+  }, []);
+
+  const handleInstallClick = async () => {
+    await requestPWAInstallPrompt();
+  };
 
   return (
     <>
@@ -101,11 +121,18 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
               </Typography>
             </div>
 
-            {/* Left spacer */}
-            <div className="flex-1" />
-
-            {/* Global Search - Truly Centered */}
-            <div className="flex items-center justify-center gap-3">
+            {/* Global Search + Install CTA */}
+            <div className="flex-1 flex items-center justify-center gap-3">
+              {canInstallPWA && (
+                <Button
+                  variant="gradient"
+                  size="sm"
+                  onClick={handleInstallClick}
+                  className="hidden sm:flex items-center gap-2 px-3"
+                >
+                  <Icon name="download" size="sm" /> Install BoxCall
+                </Button>
+              )}
               <GlobalSearch />
             </div>
 

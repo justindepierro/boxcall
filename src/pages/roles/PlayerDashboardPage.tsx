@@ -1,355 +1,200 @@
 import React from "react";
-import { Icon } from "../../components/ui/Icon/Icon";
-import { Typography } from "../../components/design-system/Typography";
-import { Button } from "../../components/ui/Button";
-import { PageLayout } from "../../components/layout/PageLayout";
-import ProfileCard from "../../components/dashboard/ProfileCard";
 
-/**
- * Player Dashboard Page - Only accessible by players
- */
-const PlayerDashboardContent: React.FC = () => {
+import { Typography } from "../../components/design-system/Typography";
+import { Button, Card } from "../../components/ui";
+import { Icon } from "../../components/ui/Icon/Icon";
+import ProfileCard from "../../components/dashboard/ProfileCard";
+import { PageLayout } from "../../components/layout/PageLayout";
+
+const PlayerDashboardPage: React.FC = () => {
+  const quickStats = [
+    {
+      icon: "target" as const,
+      accent: "bg-aurora-indigo",
+      label: "Practices Attended",
+      value: "23/25",
+    },
+    {
+      icon: "trophy" as const,
+      accent: "bg-aurora-amber",
+      label: "Games Played",
+      value: "8",
+    },
+    {
+      icon: "star" as const,
+      accent: "bg-aurora-emerald",
+      label: "Skill Rating",
+      value: "8.5",
+    },
+    {
+      icon: "trending-up" as const,
+      accent: "bg-aurora-violet",
+      label: "Improvement",
+      value: "+2.1",
+    },
+  ];
+
+  const upcomingEvents = [
+    {
+      icon: "calendar" as const,
+      title: "Practice Session",
+      subtitle: "Thursday • 3:30 – 5:30 PM",
+      detail: "Focus: Offensive Line Drills",
+    },
+    {
+      icon: "flag" as const,
+      title: "Game vs. Eagles",
+      subtitle: "Saturday • 7:00 PM",
+      detail: "Away Game • Memorial Stadium",
+    },
+    {
+      icon: "users" as const,
+      title: "Team Meeting",
+      subtitle: "Monday • 4:00 – 5:00 PM",
+      detail: "Film Review & Strategy",
+    },
+  ];
+
+  const performanceMetrics = [
+    { label: "Shooting", value: "72%" },
+    { label: "Attendance", value: "92%" },
+    { label: "Weekly Gains", value: "+4%" },
+  ];
+
+  const quickActions = [
+    { label: "View Playbook", icon: "book" as const, variant: "primary" as const },
+    { label: "Check Schedule", icon: "calendar" as const, variant: "success" as const },
+    { label: "Team Chat", icon: "message" as const, variant: "secondary" as const },
+    { label: "My Profile", icon: "user" as const, variant: "ghost" as const },
+  ];
+
   return (
     <PageLayout
       variant="dashboard"
       title="Player Dashboard"
       subtitle="Track your progress and stay updated with team activities"
     >
-      {/* Profile Card */}
-      <div className="mb-8 max-w-md">
+      <div className="mb-6 max-w-md">
         <ProfileCard />
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="surface-card elevation-card hoverable rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="bg-surface-info rounded-full p-3">
-              <Icon name="target" className="text-text-info" />
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
+        {quickStats.map((stat) => (
+          <Card key={stat.label} className="p-4">
+            <div className="flex items-center gap-3">
+              <span className={`${stat.accent} rounded-xl p-2.5 shadow-sm`}>
+                <Icon name={stat.icon} className="text-slate-900" />
+              </span>
+              <div className="space-y-1">
+                <Typography variant="body-sm" className="text-text-secondary">
+                  {stat.label}
+                </Typography>
+                <Typography variant="headline-sm" className="text-text-primary">
+                  {stat.value}
+                </Typography>
+              </div>
             </div>
-            <div className="ml-4">
-              <Typography
-                variant="body-sm"
-                as="p"
-                className="font-medium text-text-secondary"
-              >
-                Practices Attended
-              </Typography>
-              <Typography
-                variant="headline-sm"
-                as="p"
-                className="text-text-primary"
-              >
-                23/25
-              </Typography>
-            </div>
-          </div>
-        </div>
-        <div className="surface-card elevation-card hoverable rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="bg-surface-success rounded-full p-3">
-              <Icon name="trophy" className="text-text-success" />
-            </div>
-            <div className="ml-4">
-              <Typography
-                variant="body-sm"
-                as="p"
-                className="font-medium text-text-secondary"
-              >
-                Games Played
-              </Typography>
-              <Typography
-                variant="headline-sm"
-                as="p"
-                className="text-text-primary"
-              >
-                8
-              </Typography>
-            </div>
-          </div>
-        </div>
-        <div className="surface-card elevation-card hoverable rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="bg-surface-info rounded-full p-3">
-              <Icon name="star" className="text-text-info" />
-            </div>
-            <div className="ml-4">
-              <Typography
-                variant="body-sm"
-                as="p"
-                className="font-medium text-text-secondary"
-              >
-                Skill Rating
-              </Typography>
-              <Typography
-                variant="headline-sm"
-                as="p"
-                className="text-text-primary"
-              >
-                8.5
-              </Typography>
-            </div>
-          </div>
-        </div>
-        <div className="surface-card elevation-card hoverable rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="bg-surface-warning rounded-full p-3">
-              <Icon name="trending-up" className="text-text-warning" />
-            </div>
-            <div className="ml-4">
-              <Typography
-                variant="body-sm"
-                as="p"
-                className="font-medium text-text-secondary"
-              >
-                Improvement
-              </Typography>
-              <Typography
-                variant="headline-sm"
-                as="p"
-                className="text-text-primary"
-              >
-                +2.1
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </div>
+          </Card>
+        ))}
+      </section>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Upcoming Events */}
-        <div className="surface-card elevation-card rounded-lg">
-          <div className="px-6 py-4 border-b border-text-secondary">
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="flex items-center"
-            >
-              <Icon name="calendar" className="mr-2" /> Upcoming Events
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
+        <Card className="p-5">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
+            <Typography variant="headline-sm" className="flex items-center gap-2">
+              <Icon name="calendar" /> Upcoming Events
+            </Typography>
+            <Button variant="ghost" size="sm">
+              See calendar
+            </Button>
+          </div>
+          <div className="pt-4 space-y-3">
+            {upcomingEvents.map((event) => (
+              <div key={event.title} className="flex items-start gap-3">
+                <span className="bg-aurora-indigo rounded-lg p-2 shadow-sm">
+                  <Icon name={event.icon} size="sm" />
+                </span>
+                <div className="space-y-0.5">
+                  <Typography variant="body-sm" className="font-medium">
+                    {event.title}
+                  </Typography>
+                  <Typography variant="body-xs" className="text-text-secondary">
+                    {event.subtitle}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    {event.detail}
+                  </Typography>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-5">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
+            <Typography variant="headline-sm" className="flex items-center gap-2">
+              <Icon name="activity" /> Recent Performance
+            </Typography>
+            <Button variant="ghost" size="sm">
+              View stats
+            </Button>
+          </div>
+          <div className="pt-4 space-y-4">
+            <div>
+              <Typography variant="body-sm" className="text-text-secondary">
+                Last Game
+              </Typography>
+              <Typography variant="headline-sm" className="text-text-primary">
+                17 pts • 8 rebounds • 5 assists
+              </Typography>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {performanceMetrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="bg-aurora-shell rounded-aurora border border-slate-200/60 p-3 text-center"
+                >
+                  <Typography variant="headline-sm" className="text-text-primary">
+                    {metric.value}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    {metric.label}
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className="mt-6">
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <Typography variant="headline-sm" className="text-text-primary">
+              Quick Actions
+            </Typography>
+            <Typography variant="body-xs" className="text-text-secondary">
+              Jump into the tools you use most.
             </Typography>
           </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="bg-surface-info rounded-full p-2">
-                  <Icon name="calendar" size="sm" />
-                </div>
-                <div className="flex-1">
-                  <Typography
-                    variant="body-sm"
-                    as="p"
-                    className="font-medium text-text-primary"
-                  >
-                    Practice Session
-                  </Typography>
-                  <p className="text-sm text-text-secondary">
-                    Thursday, 3:30 PM - 5:30 PM
-                  </p>
-                  <p className="text-xs text-text-secondary">
-                    Focus: Offensive Line Drills
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-surface-success rounded-full p-2">
-                  <Icon name="flag" size="sm" />
-                </div>
-                <div className="flex-1">
-                  <Typography
-                    variant="body-sm"
-                    as="p"
-                    className="font-medium text-text-primary"
-                  >
-                    Game vs. Eagles
-                  </Typography>
-                  <p className="text-sm text-text-secondary">
-                    Saturday, 7:00 PM
-                  </p>
-                  <p className="text-xs text-text-secondary">
-                    Away Game - Memorial Stadium
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-surface-info rounded-full p-2">
-                  <Icon name="users" size="sm" />
-                </div>
-                <div className="flex-1">
-                  <Typography
-                    variant="body-sm"
-                    as="p"
-                    className="font-medium text-text-primary"
-                  >
-                    Team Meeting
-                  </Typography>
-                  <p className="text-sm text-text-secondary">
-                    Monday, 4:00 PM - 5:00 PM
-                  </p>
-                  <p className="text-xs text-text-secondary">
-                    Film Review & Strategy
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {quickActions.map((action) => (
+              <Button
+                key={action.label}
+                variant={action.variant}
+                size="sm"
+                className="flex items-center justify-center gap-2 py-3"
+              >
+                <Icon name={action.icon} size="sm" />
+                {action.label}
+              </Button>
+            ))}
           </div>
-        </div>
-
-        {/* Recent Performance */}
-        <div className="surface-card elevation-card rounded-lg">
-          <div className="px-6 py-4 border-b border-text-secondary">
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="flex items-center text-text-primary"
-            >
-              <Icon name="bar-chart" className="mr-2" />
-              Recent Performance
-            </Typography>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">
-                  Passing Accuracy
-                </span>
-                <div className="flex items-center">
-                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                    <div
-                      className="bg-text-success h-2 rounded-full"
-                      style={{ width: "85%" }}
-                    ></div>
-                  </div>
-                  <Typography
-                    variant="body-sm"
-                    as="span"
-                    className="font-medium text-text-primary"
-                  >
-                    85%
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">
-                  Speed & Agility
-                </span>
-                <div className="flex items-center">
-                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                    <div
-                      className="bg-text-success h-2 rounded-full"
-                      style={{ width: "78%" }}
-                    ></div>
-                  </div>
-                  <Typography
-                    variant="body-sm"
-                    as="span"
-                    className="font-medium text-text-primary"
-                  >
-                    78%
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">
-                  Team Coordination
-                </span>
-                <div className="flex items-center">
-                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                    <div
-                      className="bg-text-info h-2 rounded-full"
-                      style={{ width: "92%" }}
-                    ></div>
-                  </div>
-                  <Typography
-                    variant="body-sm"
-                    as="span"
-                    className="font-medium text-text-primary"
-                  >
-                    92%
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">Leadership</span>
-                <div className="flex items-center">
-                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                    <div
-                      className="bg-text-warning h-2 rounded-full"
-                      style={{ width: "88%" }}
-                    ></div>
-                  </div>
-                  <Typography
-                    variant="body-sm"
-                    as="span"
-                    className="font-medium text-text-primary"
-                  >
-                    88%
-                  </Typography>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-8">
-        <div className="surface-card elevation-card rounded-lg p-6">
-          <Typography
-            variant="headline-sm"
-            as="h3"
-            className="mb-4 text-text-primary"
-          >
-            Quick Actions
-          </Typography>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button
-              variant="primary"
-              size="sm"
-              className="p-4 flex flex-col items-center justify-center space-y-2"
-              icon={<Icon name="book" size="sm" />}
-              iconPosition="left"
-            >
-              View Playbook
-            </Button>
-            <Button
-              variant="success"
-              size="sm"
-              className="p-4 flex flex-col items-center justify-center space-y-2"
-              icon={<Icon name="calendar" size="sm" />}
-              iconPosition="left"
-            >
-              Check Schedule
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="p-4 flex flex-col items-center justify-center space-y-2"
-              icon={<Icon name="message" size="sm" />}
-              iconPosition="left"
-            >
-              Team Chat
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-4 flex flex-col items-center justify-center space-y-2"
-              icon={<Icon name="user" size="sm" />}
-              iconPosition="left"
-            >
-              My Profile
-            </Button>
-          </div>
-        </div>
-      </div>
+        </Card>
+      </section>
     </PageLayout>
   );
 };
 
-export const PlayerDashboardPage: React.FC = () => {
-  // Route access is enforced via loader guards in DataRouter.
-  // No runtime wrapper needed here.
-  return <PlayerDashboardContent />;
-};
-
+export { PlayerDashboardPage };
 export default PlayerDashboardPage;

@@ -148,34 +148,34 @@ const buttonVariants: ButtonStylesConfig = {
 // Button size styles configuration - Enhanced for masculine, substantial feel
 const buttonSizes: ButtonSizeConfig = {
   xs: {
-    padding: "px-3 py-1.5",
+    padding: "px-2.5 py-1.25",
     fontSize: "text-xs font-medium",
     iconSize: "w-3 h-3",
-    height: "h-7",
+    height: "h-[1.85rem]",
   },
   sm: {
-    padding: "px-4 py-2",
-    fontSize: "text-sm font-medium",
-    iconSize: "w-4 h-4",
-    height: "h-9",
+    padding: "px-3.5 py-1.75",
+    fontSize: "text-[0.85rem] font-medium",
+    iconSize: "w-[0.9rem] h-[0.9rem]",
+    height: "h-[2.35rem]",
   },
   md: {
-    padding: "px-6 py-3",
-    fontSize: "text-sm font-semibold",
-    iconSize: "w-4 h-4",
-    height: "h-11",
+    padding: "px-5 py-2.4",
+    fontSize: "text-[0.9rem] font-semibold",
+    iconSize: "w-[0.95rem] h-[0.95rem]",
+    height: "h-[2.7rem]",
   },
   lg: {
-    padding: "px-8 py-4",
-    fontSize: "text-base font-semibold",
-    iconSize: "w-5 h-5",
-    height: "h-13",
+    padding: "px-6.5 py-3",
+    fontSize: "text-[0.98rem] font-semibold",
+    iconSize: "w-[1.05rem] h-[1.05rem]",
+    height: "h-[3rem]",
   },
   xl: {
-    padding: "px-10 py-5",
-    fontSize: "text-lg font-bold font-display",
-    iconSize: "w-6 h-6",
-    height: "h-16",
+    padding: "px-8 py-3.6",
+    fontSize: "text-[1.15rem] font-semibold font-display",
+    iconSize: "w-[1.2rem] h-[1.2rem]",
+    height: "h-[3.4rem]",
   },
 };
 // Loading spinner component

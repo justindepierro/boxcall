@@ -93,29 +93,29 @@ type PolymorphicProps<E extends TypographyElement> = TypographyProps & {
 // Typography variant class mappings - Updated with new font families and square aesthetic
 const typographyClasses: Record<TypographyVariant, string> = {
   // Display variants - Bebas Neue for maximum impact
-  "display-xl": "font-display text-6xl font-normal leading-none tracking-tight",
-  "display-lg": "font-display text-5xl font-normal leading-none tracking-tight",
+  "display-xl": "font-display text-[3.25rem] font-normal leading-[0.95] tracking-tight",
+  "display-lg": "font-display text-[2.75rem] font-normal leading-[0.95] tracking-tight",
   "display-md":
-    "font-display text-4xl font-normal leading-tight tracking-tight",
+    "font-display text-[2.25rem] font-normal leading-[1.05] tracking-tight",
   // Headlines - Inter Bold for hierarchy
-  "headline-xl": "font-sans text-4xl font-bold leading-tight",
-  "headline-lg": "font-sans text-3xl font-bold leading-tight",
-  "headline-md": "font-sans text-2xl font-bold leading-tight",
-  "headline-sm": "font-sans text-xl font-bold leading-tight",
+  "headline-xl": "font-sans text-[2rem] font-semibold leading-[1.15]",
+  "headline-lg": "font-sans text-[1.625rem] font-semibold leading-[1.15]",
+  "headline-md": "font-sans text-[1.375rem] font-semibold leading-[1.2]",
+  "headline-sm": "font-sans text-[1.125rem] font-semibold leading-[1.25]",
   // Body text - Inter for readability
-  "body-lg": "font-sans text-lg leading-relaxed",
-  "body-md": "font-sans text-base leading-relaxed",
-  "body-sm": "font-sans text-sm leading-relaxed",
-  "body-xs": "font-sans text-xs leading-relaxed",
+  "body-lg": "font-sans text-[0.95rem] leading-[1.4]",
+  "body-md": "font-sans text-[0.9rem] leading-[1.38]",
+  "body-sm": "font-sans text-[0.82rem] leading-[1.32]",
+  "body-xs": "font-sans text-[0.72rem] leading-[1.3]",
   // Code/Stats - JetBrains Mono for technical data
-  "code-lg": "font-mono text-lg leading-normal",
-  "code-md": "font-mono text-base leading-normal",
-  "code-sm": "font-mono text-sm leading-normal",
+  "code-lg": "font-mono text-[0.95rem] leading-[1.3]",
+  "code-md": "font-mono text-[0.85rem] leading-[1.3]",
+  "code-sm": "font-mono text-[0.78rem] leading-[1.25]",
   // Labels and UI - Inter Medium
-  "label-lg": "font-sans text-sm font-semibold uppercase tracking-wide",
-  "label-md": "font-sans text-xs font-semibold uppercase tracking-wide",
-  button: "font-sans text-sm font-semibold",
-  caption: "font-sans text-xs text-text-muted",
+  "label-lg": "font-sans text-[0.7rem] font-semibold uppercase tracking-[0.18em]",
+  "label-md": "font-sans text-[0.62rem] font-semibold uppercase tracking-[0.18em]",
+  button: "font-sans text-[0.85rem] font-semibold",
+  caption: "font-sans text-[0.7rem] text-text-muted leading-[1.3]",
 };
 // Color class mappings - Updated to use semantic design system classes
 const colorClasses: Record<NonNullable<TypographyProps["color"]>, string> = {
