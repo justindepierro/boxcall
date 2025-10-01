@@ -30,7 +30,7 @@ import type { DiagramDocument } from "../components/playbook/diagram/types/types
 import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
 import { PracticeScriptBuilder } from "../components/playbook/PracticeScriptBuilder";
 import { useActiveTeamStore } from "../state/activeTeamStore";
-import { AuroraTile } from "../components/ui/AuroraTile";
+import { AppIconTile } from "../components/ui/AppIconTile";
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -424,50 +424,39 @@ export default function PlaybookPage() {
         streakDays={state.streakDays}
       />
 
-      {/* Aurora Hero Tiles */}
+      {/* Aurora Hero Tiles - iPhone App Style */}
       <div className="px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <AuroraTile
+        <div className="flex items-center justify-center gap-8 flex-wrap">
+          <AppIconTile
             title="New Play"
-            description="Create a new play with our step-by-step builder or draw your own diagram."
+            subtitle={`${state.playsCreated} plays`}
             icon="plus"
-            accentOverlayClass="bg-gradient-to-br from-emerald-100 via-green-50 to-jade-100 dark:from-emerald-900/40 dark:via-green-900/30 dark:to-jade-900/40"
-            glowClassName="bg-emerald-400/40 dark:bg-emerald-500/30"
-            statusBadge="Create"
-            footnote={`${state.playsCreated} plays`}
+            gradient="from-jade-500 to-emerald-500"
             onOpen={handleOpenBuilder}
           />
           
-          <AuroraTile
-            title="Practice Script"
-            description="Build a structured practice plan with drills, timing, and play sequences."
+          <AppIconTile
+            title="Practice"
+            subtitle="Quick start"
             icon="clock"
-            accentOverlayClass="bg-gradient-to-br from-violet-100 via-purple-50 to-blue-100 dark:from-violet-900/40 dark:via-purple-900/30 dark:to-blue-900/40"
-            glowClassName="bg-violet-400/40 dark:bg-violet-500/30"
-            statusBadge="Schedule"
-            footnote="Quick start"
+            gradient="from-purple-500 to-violet-500"
             onOpen={handleQuickNewPracticeScript}
           />
           
-          <AuroraTile
+          <AppIconTile
             title="Game Plan"
-            description="Strategize plays for upcoming matches organized by situation and priority."
+            subtitle="Plan ahead"
             icon="target"
-            accentOverlayClass="bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 dark:from-amber-900/40 dark:via-orange-900/30 dark:to-yellow-900/40"
-            glowClassName="bg-amber-400/40 dark:bg-amber-500/30"
-            statusBadge="Strategy"
-            footnote="Plan ahead"
+            gradient="from-amber-500 to-orange-500"
             onOpen={handleQuickNewGamePlan}
           />
           
-          <AuroraTile
-            title="Diagram Coverage"
-            description={`${state.diagramCoverage}% of your plays have visual diagrams for easy review.`}
-            icon="grid"
-            accentOverlayClass="bg-gradient-to-br from-indigo-100 via-blue-50 to-cyan-100 dark:from-indigo-900/40 dark:via-blue-900/30 dark:to-cyan-900/40"
-            glowClassName="bg-indigo-400/40 dark:bg-indigo-500/30"
-            statusBadge="Progress"
-            footnote={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} diagrams`}
+          <AppIconTile
+            title="Diagrams"
+            subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
+            icon="image"
+            gradient="from-blue-500 to-cyan-500"
+            badge={state.diagramCoverage}
             onOpen={() => {}}
           />
         </div>

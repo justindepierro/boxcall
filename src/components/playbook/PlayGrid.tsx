@@ -9,6 +9,8 @@ import React, {
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard.v2";
+import { PlayCardAppIcon } from "./PlayCard.AppIcon";
+import { PlayDetailModal } from "./PlayDetailModal";
 import { Virtuoso } from "react-virtuoso";
 import { Button } from "../ui/Button/Button";
 import { telemetry } from "../../telemetry/dispatcher";
@@ -113,6 +115,19 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       return false;
     }
   });
+  
+  // View mode: 'list' or 'grid' (app icons)
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>(() => {
+    try {
+      return (localStorage.getItem("bc_playgrid_view") as 'list' | 'grid') || 'list';
+    } catch {
+      return 'list';
+    }
+  });
+  
+  // Selected play for detail modal
+  const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
+  
   useEffect(() => {
     try {
       localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
@@ -120,6 +135,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       // ignore persistence errors (private browsing, etc.)
     }
   }, [showOneWordCalls]);
+  
+  useEffect(() => {
+    try {
+      localStorage.setItem("bc_playgrid_view", viewMode);
+    } catch {
+      // ignore persistence errors
+    }
+  }, [viewMode]);
 
   // Get real data from database with refresh capability
   const { plays: allPlays, loading, error, refreshData } = useTeamsData();
@@ -508,32 +531,72 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           )}
         </div>
 
-        {/* Play Name Display Toggle */}
-        <div className="flex items-center space-x-3">
-          <span className="text-sm text-text-secondary">One-word calls</span>
-          <IconButton
-            aria-label={
-              showOneWordCalls
-                ? "Switch to full play names"
-                : "Switch to one-word calls"
-            }
-            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
-            variant="subtle"
-            size="sm"
-          >
-            {showOneWordCalls ? (
-              <Icon name="toggle-right" className="h-5 w-5 text-text-info" />
-            ) : (
-              <Icon name="toggle-left" className="h-5 w-5 text-text-tertiary" />
-            )}
-          </IconButton>
-          <span className="text-sm text-text-secondary">Full names</span>
+        {/* Play Name Display Toggle & View Mode */}
+        <div className="flex items-center space-x-6">
+          {/* View Mode Toggle */}
+          <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800">
+            <IconButton
+              aria-label="List view"
+              onClick={() => setViewMode('list')}
+              variant="subtle"
+              size="sm"
+              className={viewMode === 'list' ? 'bg-white dark:bg-slate-700' : ''}
+            >
+              <Icon name="list" className="h-4 w-4" />
+            </IconButton>
+            <IconButton
+              aria-label="Grid view (app icons)"
+              onClick={() => setViewMode('grid')}
+              variant="subtle"
+              size="sm"
+              className={viewMode === 'grid' ? 'bg-white dark:bg-slate-700' : ''}
+            >
+              <Icon name="grid" className="h-4 w-4" />
+            </IconButton>
+          </div>
+          
+          {/* One-word calls toggle */}
+          <div className="flex items-center space-x-3">
+            <span className="text-sm text-text-secondary">One-word calls</span>
+            <IconButton
+              aria-label={
+                showOneWordCalls
+                  ? "Switch to full play names"
+                  : "Switch to one-word calls"
+              }
+              onClick={() => setShowOneWordCalls(!showOneWordCalls)}
+              variant="subtle"
+              size="sm"
+            >
+              {showOneWordCalls ? (
+                <Icon name="toggle-right" className="h-5 w-5 text-text-info" />
+              ) : (
+                <Icon name="toggle-left" className="h-5 w-5 text-text-tertiary" />
+              )}
+            </IconButton>
+            <span className="text-sm text-text-secondary">Full names</span>
+          </div>
         </div>
       </div>
 
-      {/* Play Grid (virtualized when large) */}
-      {!showEmpty &&
+      {/* Play Grid - Conditional Rendering based on view mode */}
+      {!showEmpty && viewMode === 'grid' ? (
+        /* App Icon Grid View */
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 py-8">
+          {filteredPlays.map((play) => (
+            <PlayCardAppIcon
+              key={play.id}
+              play={play}
+              showOneWordCalls={showOneWordCalls}
+              onClick={(p) => setSelectedPlay(p)}
+              isSelected={selectedPlayIds.has(play.id)}
+              onSelectionChange={handlePlaySelect}
+            />
+          ))}
+        </div>
+      ) : !showEmpty &&
       (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        /* List View - Non-virtualized */
         <div className="space-y-6" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
@@ -549,6 +612,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           ))}
         </div>
       ) : !showEmpty ? (
+        /* List View - Virtualized */
         <div
           style={{ height: "calc(100vh - 320px)" }}
           aria-label="Play list"
@@ -562,6 +626,27 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           />
         </div>
       ) : null}
+      
+      {/* Play Detail Modal */}
+      {selectedPlay && (
+        <PlayDetailModal
+          play={selectedPlay}
+          isOpen={selectedPlay !== null}
+          onClose={() => setSelectedPlay(null)}
+          onEdit={() => {
+            setSelectedPlay(null);
+            onEdit?.(selectedPlay);
+          }}
+          onDuplicate={() => {
+            setSelectedPlay(null);
+            onDuplicate?.(selectedPlay);
+          }}
+          onDelete={() => {
+            // TODO: Implement delete
+            setSelectedPlay(null);
+          }}
+        />
+      )}
     </div>
   );
 };
