@@ -49,11 +49,11 @@ export const AppIconTile = memo<AppIconTileProps>(
             <div className="absolute inset-0 rounded-[26px] bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
           </div>
 
-          {/* Icon - Absolutely centered with z-index */}
+          {/* Icon - Absolutely centered with z-index - Dynamic sizing: 50% of container */}
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <Icon
               name={icon}
-              className="!w-12 !h-12 text-white drop-shadow-lg flex-shrink-0"
+              className="w-1/2 h-1/2 text-white drop-shadow-lg flex-shrink-0"
               aria-hidden="true"
             />
           </div>

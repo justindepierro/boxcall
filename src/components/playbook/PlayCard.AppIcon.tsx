@@ -105,11 +105,11 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(
           {/* Shine overlay */}
           <div className="absolute inset-0 rounded-[32px] bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-50" />
 
-          {/* Icon centered - Larger */}
+          {/* Icon centered - Dynamic sizing: ~57% of 140px container (80px) */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Icon
               name={getPlayIcon(play.p_type)}
-              className="w-20 h-20 text-white drop-shadow-lg"
+              className="w-[57%] h-[57%] text-white drop-shadow-lg"
               aria-hidden="true"
             />
           </div>
