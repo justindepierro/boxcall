@@ -29,7 +29,7 @@ export const AppIconTile = memo<AppIconTileProps>(
       <button
         type="button"
         onClick={onOpen}
-        className={`group relative flex flex-col items-center justify-center gap-3 p-4 transition-transform duration-200 active:scale-95 ${className}`}
+        className={`group relative flex flex-col items-center justify-center gap-3 p-6 transition-transform duration-200 active:scale-95 ${className}`}
         aria-label={title}
       >
         {/* Top Label - Optional text above icon */}
@@ -40,10 +40,10 @@ export const AppIconTile = memo<AppIconTileProps>(
         )}
 
         {/* App Icon - iPhone Style - Centered */}
-        <div className="relative w-24 h-24">
+        <div className="relative w-24 h-24 overflow-visible">
           {/* Icon Container with Gradient and shine effect */}
           <div
-            className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} shadow-lg transition-transform duration-200 group-hover:scale-110 group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+            className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-xl group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
           />
 
           {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}
@@ -53,9 +53,9 @@ export const AppIconTile = memo<AppIconTileProps>(
             aria-hidden="true"
           />
 
-          {/* Badge (like notification count) */}
+          {/* Badge (like notification count) - Positioned to not get cut off */}
           {badge !== undefined && badge !== null && (
-            <div className="absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-2 rounded-full bg-red-500 border-2 border-white dark:border-slate-900 flex items-center justify-center shadow-lg">
+            <div className="absolute -top-2 -right-2 min-w-[24px] h-[24px] px-2 rounded-full bg-red-500 border-[3px] border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
               <span className="text-white text-[11px] font-bold leading-none">
                 {badge}
               </span>
