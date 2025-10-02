@@ -509,18 +509,18 @@ export default {
       // Phase 3: Token-based Border Radius System
       // Uses CSS custom properties from generated-tokens.css
       borderRadius: {
-        none: "var(--radius-none)",          // 0 - no rounding
-        sm: "var(--radius-sm)",              // 6px - subtle elements
-        DEFAULT: "var(--radius-base)",       // 8px - default
-        md: "var(--radius-md)",              // 12px - cards, inputs
-        lg: "var(--radius-lg)",              // 16px - modals, panels
-        xl: "var(--radius-xl)",              // 24px - feature cards
-        "2xl": "var(--radius-2xl)",          // 32px - hero elements
-        "3xl": "var(--radius-3xl)",          // 40px - extra large
-        full: "var(--radius-full)",          // 9999px - circular
+        none: "var(--radius-none)", // 0 - no rounding
+        sm: "var(--radius-sm)", // 6px - subtle elements
+        DEFAULT: "var(--radius-base)", // 8px - default
+        md: "var(--radius-md)", // 12px - cards, inputs
+        lg: "var(--radius-lg)", // 16px - modals, panels
+        xl: "var(--radius-xl)", // 24px - feature cards
+        "2xl": "var(--radius-2xl)", // 32px - hero elements
+        "3xl": "var(--radius-3xl)", // 40px - extra large
+        full: "var(--radius-full)", // 9999px - circular
         // Glass-specific variants
         "glass-sm": "var(--radius-glass-sm)", // 12px - glass small
-        glass: "var(--radius-glass)",         // 16px - glass default
+        glass: "var(--radius-glass)", // 16px - glass default
         "glass-lg": "var(--radius-glass-lg)", // 24px - glass large
       },
 
@@ -531,35 +531,35 @@ export default {
       // Maps to CSS custom properties from generated-tokens.css
       spacing: {
         // Core 8px Grid Scale (preferred)
-        0: "var(--space-0)",          // 0px - none
-        px: "1px",                     // 1px - hairline borders
-        0.5: "var(--space-0\\.5)",    // 2px - ultra-tight (rare)
-        1: "var(--space-1)",           // 4px - xs tight
-        2: "var(--space-2)",           // 8px - sm minimum
-        3: "var(--space-3)",           // 12px - md compact
-        4: "var(--space-4)",           // 16px - base comfortable
-        5: "var(--space-5)",           // 20px - lg generous
-        6: "var(--space-6)",           // 24px - xl spacious
-        8: "var(--space-8)",           // 32px - 2xl section spacing
-        10: "var(--space-10)",         // 40px - 3xl large sections
-        12: "var(--space-12)",         // 48px - 4xl page spacing
-        16: "var(--space-16)",         // 64px - 5xl hero spacing
-        20: "var(--space-20)",         // 80px - 6xl extra large
-        24: "var(--space-24)",         // 96px - 7xl maximum
-        32: "var(--space-32)",         // 128px - 8xl extreme
-        
+        0: "var(--space-0)", // 0px - none
+        px: "1px", // 1px - hairline borders
+        0.5: "var(--space-0\\.5)", // 2px - ultra-tight (rare)
+        1: "var(--space-1)", // 4px - xs tight
+        2: "var(--space-2)", // 8px - sm minimum
+        3: "var(--space-3)", // 12px - md compact
+        4: "var(--space-4)", // 16px - base comfortable
+        5: "var(--space-5)", // 20px - lg generous
+        6: "var(--space-6)", // 24px - xl spacious
+        8: "var(--space-8)", // 32px - 2xl section spacing
+        10: "var(--space-10)", // 40px - 3xl large sections
+        12: "var(--space-12)", // 48px - 4xl page spacing
+        16: "var(--space-16)", // 64px - 5xl hero spacing
+        20: "var(--space-20)", // 80px - 6xl extra large
+        24: "var(--space-24)", // 96px - 7xl maximum
+        32: "var(--space-32)", // 128px - 8xl extreme
+
         // Deprecated - Phase out these values (not 8px aligned)
         // Use nearest 8px multiple instead
-        1.5: "var(--space-1\\.5)",    // 6px - DEPRECATED: use 2 (8px)
-        2.5: "var(--space-2\\.5)",    // 10px - DEPRECATED: use 3 (12px)
-        3.5: "var(--space-3\\.5)",    // 14px - DEPRECATED: use 4 (16px)
-        4.5: "var(--space-4\\.5)",    // 18px - DEPRECATED: use 5 (20px)
-        5.5: "var(--space-5\\.5)",    // 22px - DEPRECATED: use 6 (24px)
+        1.5: "var(--space-1\\.5)", // 6px - DEPRECATED: use 2 (8px)
+        2.5: "var(--space-2\\.5)", // 10px - DEPRECATED: use 3 (12px)
+        3.5: "var(--space-3\\.5)", // 14px - DEPRECATED: use 4 (16px)
+        4.5: "var(--space-4\\.5)", // 18px - DEPRECATED: use 5 (20px)
+        5.5: "var(--space-5\\.5)", // 22px - DEPRECATED: use 6 (24px)
 
         // Legacy custom spacing (keep for compatibility)
-        18: "4.5rem",                  // 72px - legacy
-        88: "22rem",                   // 352px - legacy
-        128: "32rem",                  // 512px - legacy
+        18: "4.5rem", // 72px - legacy
+        88: "22rem", // 352px - legacy
+        128: "32rem", // 512px - legacy
       },
 
       animation: {
@@ -606,41 +606,41 @@ export default {
 
       boxShadow: {
         // Standard elevation shadows - mapped to CSS custom properties
-        none: 'var(--shadow-none)',
-        sm: 'var(--shadow-sm)',
-        DEFAULT: 'var(--shadow-md)',
-        md: 'var(--shadow-md)',
-        lg: 'var(--shadow-lg)',
-        xl: 'var(--shadow-xl)',
-        '2xl': 'var(--shadow-2xl)',
-        inner: 'var(--shadow-inner)',
-        
+        none: "var(--shadow-none)",
+        sm: "var(--shadow-sm)",
+        DEFAULT: "var(--shadow-md)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        "2xl": "var(--shadow-2xl)",
+        inner: "var(--shadow-inner)",
+
         // Glass morphism shadows
-        glass: 'var(--shadow-glass)',
-        'glass-dark': 'var(--shadow-glass-dark)',
-        'glass-elevated': 'var(--shadow-glass-elevated)',
-        'glass-elevated-dark': 'var(--shadow-glass-elevated-dark)',
-        'glass-subtle': 'var(--shadow-glass-subtle)',
-        'glass-subtle-dark': 'var(--shadow-glass-subtle-dark)',
-        
+        glass: "var(--shadow-glass)",
+        "glass-dark": "var(--shadow-glass-dark)",
+        "glass-elevated": "var(--shadow-glass-elevated)",
+        "glass-elevated-dark": "var(--shadow-glass-elevated-dark)",
+        "glass-subtle": "var(--shadow-glass-subtle)",
+        "glass-subtle-dark": "var(--shadow-glass-subtle-dark)",
+
         // Interactive state shadows
-        hover: 'var(--shadow-hover)',
-        active: 'var(--shadow-active)',
-        
+        hover: "var(--shadow-hover)",
+        active: "var(--shadow-active)",
+
         // Component-specific shadows
-        card: 'var(--shadow-card)',
-        'card-hover': 'var(--shadow-card-hover)',
-        modal: 'var(--shadow-modal)',
-        dropdown: 'var(--shadow-dropdown)',
-        button: 'var(--shadow-button)',
-        'button-hover': 'var(--shadow-button-hover)',
-        
+        card: "var(--shadow-card)",
+        "card-hover": "var(--shadow-card-hover)",
+        modal: "var(--shadow-modal)",
+        dropdown: "var(--shadow-dropdown)",
+        button: "var(--shadow-button)",
+        "button-hover": "var(--shadow-button-hover)",
+
         // Colored accent shadows
-        jade: 'var(--shadow-jade)',
-        electric: 'var(--shadow-electric)',
-        
+        jade: "var(--shadow-jade)",
+        electric: "var(--shadow-electric)",
+
         // Legacy shadows (deprecated - kept for backward compatibility)
-        "play-card": 'var(--shadow-card)',
+        "play-card": "var(--shadow-card)",
         confidence: "0 0 20px rgba(16, 185, 129, 0.3)",
       },
 
@@ -655,13 +655,13 @@ export default {
 
       // Duration Scale - Timing Utilities
       transitionDuration: {
-        instant: "var(--duration-instant)",     // 75ms - immediate feedback
-        fast: "var(--duration-fast)",           // 150ms - quick interactions
-        DEFAULT: "var(--duration-base)",        // 200ms - default speed
-        base: "var(--duration-base)",           // 200ms - standard animations
-        medium: "var(--duration-medium)",       // 300ms - moderate animations
-        slow: "var(--duration-slow)",           // 500ms - deliberate animations
-        slower: "var(--duration-slower)",       // 700ms - very slow transitions
+        instant: "var(--duration-instant)", // 75ms - immediate feedback
+        fast: "var(--duration-fast)", // 150ms - quick interactions
+        DEFAULT: "var(--duration-base)", // 200ms - default speed
+        base: "var(--duration-base)", // 200ms - standard animations
+        medium: "var(--duration-medium)", // 300ms - moderate animations
+        slow: "var(--duration-slow)", // 500ms - deliberate animations
+        slower: "var(--duration-slower)", // 700ms - very slow transitions
       },
 
       // Easing Functions - Motion Curves
@@ -670,39 +670,39 @@ export default {
         in: "var(--ease-in)",
         out: "var(--ease-out)",
         "in-out": "var(--ease-in-out)",
-        DEFAULT: "var(--ease-out)",             // Default to ease-out
+        DEFAULT: "var(--ease-out)", // Default to ease-out
         bounce: "var(--ease-bounce)",
         spring: "var(--ease-spring)",
       },
 
       // Scale Transform Values
       scale: {
-        subtle: "var(--scale-subtle)",          // 1.02 - subtle card hover
-        base: "var(--scale-base)",              // 1.05 - standard button hover
-        strong: "var(--scale-strong)",          // 1.1 - icon button hover
-        press: "var(--scale-press)",            // 0.95 - active press
+        subtle: "var(--scale-subtle)", // 1.02 - subtle card hover
+        base: "var(--scale-base)", // 1.05 - standard button hover
+        strong: "var(--scale-strong)", // 1.1 - icon button hover
+        press: "var(--scale-press)", // 0.95 - active press
         "press-strong": "var(--scale-press-strong)", // 0.9 - strong press
       },
 
       // Opacity Scale for Fades
       opacity: {
         0: "var(--opacity-invisible)",
-        faint: "var(--opacity-faint)",          // 0.1
-        subtle: "var(--opacity-subtle)",        // 0.3
-        medium: "var(--opacity-medium)",        // 0.5
-        strong: "var(--opacity-strong)",        // 0.7
-        opaque: "var(--opacity-opaque)",        // 0.9
+        faint: "var(--opacity-faint)", // 0.1
+        subtle: "var(--opacity-subtle)", // 0.3
+        medium: "var(--opacity-medium)", // 0.5
+        strong: "var(--opacity-strong)", // 0.7
+        opaque: "var(--opacity-opaque)", // 0.9
         100: "var(--opacity-full)",
       },
 
       // Translate Values for Lift/Slide Effects
       translate: {
-        "lift-sm": "var(--translate-lift-sm)",      // -2px
-        "lift-base": "var(--translate-lift-base)",  // -4px
-        "lift-lg": "var(--translate-lift-lg)",      // -8px
-        "slide-sm": "var(--translate-slide-sm)",    // 4px
+        "lift-sm": "var(--translate-lift-sm)", // -2px
+        "lift-base": "var(--translate-lift-base)", // -4px
+        "lift-lg": "var(--translate-lift-lg)", // -8px
+        "slide-sm": "var(--translate-slide-sm)", // 4px
         "slide-base": "var(--translate-slide-base)", // 8px
-        "slide-lg": "var(--translate-slide-lg)",    // 16px
+        "slide-lg": "var(--translate-slide-lg)", // 16px
       },
     },
   },

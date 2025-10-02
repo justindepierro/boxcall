@@ -118,10 +118,8 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const teamMembershipCount = Array.isArray(
     (profile as unknown as { team_memberships?: unknown[] })?.team_memberships
   )
-    ? (
-        (profile as unknown as { team_memberships?: unknown[] })
-          .team_memberships?.length || 0
-      )
+    ? (profile as unknown as { team_memberships?: unknown[] }).team_memberships
+        ?.length || 0
     : typeof (profile as unknown as { teams_count?: number })?.teams_count ===
         "number"
       ? (profile as unknown as { teams_count?: number }).teams_count || 0
@@ -195,7 +193,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Upcoming</span>
-              <span className="font-semibold text-text-primary">Stay sharp</span>
+              <span className="font-semibold text-text-primary">
+                Stay sharp
+              </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Sync status</span>
@@ -206,12 +206,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         target: "dashboard-calendar-section",
       },
     ],
-    [
-      profile?.display_name,
-      profile?.full_name,
-      teamMembershipCount,
-      userRole,
-    ]
+    [profile?.display_name, profile?.full_name, teamMembershipCount, userRole]
   );
 
   return (
@@ -232,9 +227,13 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="rounded-glass-lg border border-slate-200/40 bg-aurora-shell p-6 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-8">
             <div className="mb-6">
               <Typography variant="headline-sm" className="text-text-primary">
-                Welcome back, {profile?.display_name || profile?.full_name || "Coach"}
+                Welcome back,{" "}
+                {profile?.display_name || profile?.full_name || "Coach"}
               </Typography>
-              <Typography variant="body-sm" className="text-text-secondary mt-1">
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary mt-1"
+              >
                 Launch the workspace you need and keep your day moving.
               </Typography>
             </div>

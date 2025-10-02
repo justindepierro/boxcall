@@ -125,23 +125,24 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   };
 
   const formatDecimal = (value?: number, fractionDigits = 1) => {
-    if (value == null || Number.isNaN(value)) return `0.${"0".repeat(fractionDigits)}`;
+    if (value == null || Number.isNaN(value))
+      return `0.${"0".repeat(fractionDigits)}`;
     return Number(value).toFixed(fractionDigits);
   };
 
   const bestFormation = analytics.formationAnalytics.length
-    ? analytics.formationAnalytics.reduce<FormationAnalytics | null>((best, item) => {
-        if (!best) return item;
-        return item.successRate > best.successRate ? item : best;
-      }, null)
+    ? analytics.formationAnalytics.reduce<FormationAnalytics | null>(
+        (best, item) => {
+          if (!best) return item;
+          return item.successRate > best.successRate ? item : best;
+        },
+        null
+      )
     : null;
 
   const situationalEntries = Object.entries(
     analytics.situationalPerformance.byDown || {}
-  ) as Array<[
-    string,
-    { called: number; successful: number; rate: number }
-  ]>;
+  ) as Array<[string, { called: number; successful: number; rate: number }]>;
   const bestDown = situationalEntries.length
     ? situationalEntries.reduce((best, entry) => {
         if (!best) return entry;
@@ -151,10 +152,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   const personnelEntries = Object.entries(
     analytics.situationalPerformance.byPersonnel || {}
-  ) as Array<[
-    string,
-    { called: number; successful: number; rate: number }
-  ]>;
+  ) as Array<[string, { called: number; successful: number; rate: number }]>;
   const bestPersonnel = personnelEntries.length
     ? personnelEntries.reduce((best, entry) => {
         if (!best) return entry;
@@ -170,13 +168,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     (complexityTotals.medium || 0) +
     (complexityTotals.high || 0);
   const complexityFocus = totalComplexityCount
-    ? (Object.entries(complexityTotals) as Array<[
-        "low" | "medium" | "high",
-        number
-      ]>).reduce(
-        (best, entry) => (entry[1] > best[1] ? entry : best),
-        ["low", complexityTotals.low || 0] as ["low" | "medium" | "high", number]
-      )
+    ? (
+        Object.entries(complexityTotals) as Array<
+          ["low" | "medium" | "high", number]
+        >
+      ).reduce((best, entry) => (entry[1] > best[1] ? entry : best), [
+        "low",
+        complexityTotals.low || 0,
+      ] as ["low" | "medium" | "high", number])
     : ["low", 0];
 
   const complexityCopy: Record<"low" | "medium" | "high", string> = {
@@ -257,7 +256,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <div className="flex items-center justify-between text-xs text-text-secondary">
             <span>Avg complexity</span>
             <span className="font-semibold text-text-primary">
-              {bestFormation ? formatDecimal(bestFormation.averageComplexity) : "0.0"}
+              {bestFormation
+                ? formatDecimal(bestFormation.averageComplexity)
+                : "0.0"}
             </span>
           </div>
         </div>
@@ -338,7 +339,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       glowClassName: "glow-aurora-teal",
       statusBadge: "Players",
       iconClassName: "text-teal-600",
-      footnote: selectedView === "player-performance" ? "Active view" : "Tap to open",
+      footnote:
+        selectedView === "player-performance" ? "Active view" : "Tap to open",
       buttonLabel: "Players",
       renderContent: () => (
         <div className="space-y-2 text-sm">
@@ -371,7 +373,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       glowClassName: "glow-aurora-slate",
       statusBadge: "Strategy",
       iconClassName: "text-slate-600",
-      footnote: selectedView === "game-planning" ? "Active view" : "Tap to open",
+      footnote:
+        selectedView === "game-planning" ? "Active view" : "Tap to open",
       buttonLabel: "Game Planning",
       renderContent: () => (
         <div className="space-y-2 text-sm">
@@ -399,7 +402,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     <div className={`space-y-8 ${className}`}>
       <div className="rounded-glass-lg border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
         <div className="mb-6 flex flex-col gap-2">
-          <Typography variant="headline-md" className="flex items-center gap-3 text-text-primary">
+          <Typography
+            variant="headline-md"
+            className="flex items-center gap-3 text-text-primary"
+          >
             <Icon name="bar-chart" className="h-6 w-6 text-jade-600" />
             Advanced Analytics
           </Typography>
@@ -408,7 +414,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </Typography>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-5">
-          {heroTiles.map(tile => (
+          {heroTiles.map((tile) => (
             <AuroraTile
               key={tile.key}
               title={tile.title}

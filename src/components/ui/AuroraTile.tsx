@@ -83,11 +83,23 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
       <div className="relative z-10 flex h-full flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className={clsx(BASE_ICON_CONTAINER_CLASSES, iconContainerClassName)}>
-              <Icon name={icon} size="lg" className={clsx(BASE_ICON_CLASSES, iconClassName)} />
+            <span
+              className={clsx(
+                BASE_ICON_CONTAINER_CLASSES,
+                iconContainerClassName
+              )}
+            >
+              <Icon
+                name={icon}
+                size="lg"
+                className={clsx(BASE_ICON_CLASSES, iconClassName)}
+              />
             </span>
             <div className="flex flex-col">
-              <Typography variant="headline-sm" className="font-semibold text-text-primary dark:text-slate-50">
+              <Typography
+                variant="headline-sm"
+                className="font-semibold text-text-primary dark:text-slate-50"
+              >
                 {title}
               </Typography>
               {statusBadge && (
@@ -111,9 +123,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
         </Typography>
         {children && (
           <div className="flex-1">
-            <div className="pointer-events-none select-none">
-              {children}
-            </div>
+            <div className="pointer-events-none select-none">{children}</div>
           </div>
         )}
         <div className="flex items-center justify-between text-[11px] font-medium text-text-secondary opacity-80 dark:text-slate-300">

@@ -20,14 +20,14 @@ The animation system provides semantic tokens for timing, easing, and scale tran
 
 Semantic duration tokens for different animation speeds:
 
-| Token | Value | Usage | Examples |
-|-------|-------|-------|----------|
-| `duration-instant` | 75ms | Immediate feedback | Tooltip shows, loading dots |
-| `duration-fast` | 150ms | Quick interactions | Icon button hover, checkbox toggle |
-| `duration-base` | 200ms | Default speed | Button hover, card hover, shadows |
-| `duration-medium` | 300ms | Moderate animations | Tile lift, overlay fades, glow effects |
-| `duration-slow` | 500ms | Deliberate animations | Progress bars, modal open/close |
-| `duration-slower` | 700ms | Very slow transitions | Complex state changes |
+| Token              | Value | Usage                 | Examples                               |
+| ------------------ | ----- | --------------------- | -------------------------------------- |
+| `duration-instant` | 75ms  | Immediate feedback    | Tooltip shows, loading dots            |
+| `duration-fast`    | 150ms | Quick interactions    | Icon button hover, checkbox toggle     |
+| `duration-base`    | 200ms | Default speed         | Button hover, card hover, shadows      |
+| `duration-medium`  | 300ms | Moderate animations   | Tile lift, overlay fades, glow effects |
+| `duration-slow`    | 500ms | Deliberate animations | Progress bars, modal open/close        |
+| `duration-slower`  | 700ms | Very slow transitions | Complex state changes                  |
 
 ### Usage Examples
 
@@ -54,18 +54,19 @@ Semantic duration tokens for different animation speeds:
 
 Motion curves for natural, physics-based animations:
 
-| Token | Curve | Usage | Feel |
-|-------|-------|-------|------|
-| `ease-linear` | `linear` | Progress indicators, loading | Mechanical, constant speed |
-| `ease-in` | `cubic-bezier(0.4, 0, 1, 1)` | Exits, dismissals | Accelerating, gaining speed |
-| `ease-out` | `cubic-bezier(0, 0, 0.2, 1)` | **Default**, entrances, reveals | Decelerating, natural arrival |
-| `ease-in-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Reversible animations | Smooth start and end |
-| `ease-bounce` | `cubic-bezier(0.68, -0.55, 0.265, 1.55)` | Playful interactions | Bounce effect |
-| `ease-spring` | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` | Attention-grabbing | Spring effect |
+| Token         | Curve                                     | Usage                           | Feel                          |
+| ------------- | ----------------------------------------- | ------------------------------- | ----------------------------- |
+| `ease-linear` | `linear`                                  | Progress indicators, loading    | Mechanical, constant speed    |
+| `ease-in`     | `cubic-bezier(0.4, 0, 1, 1)`              | Exits, dismissals               | Accelerating, gaining speed   |
+| `ease-out`    | `cubic-bezier(0, 0, 0.2, 1)`              | **Default**, entrances, reveals | Decelerating, natural arrival |
+| `ease-in-out` | `cubic-bezier(0.4, 0, 0.2, 1)`            | Reversible animations           | Smooth start and end          |
+| `ease-bounce` | `cubic-bezier(0.68, -0.55, 0.265, 1.55)`  | Playful interactions            | Bounce effect                 |
+| `ease-spring` | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` | Attention-grabbing              | Spring effect                 |
 
 ### Default Easing
 
 Use `ease-out` (default) for most animations:
+
 - Elements entering the screen
 - Hover states
 - Scale transforms
@@ -96,17 +97,18 @@ Use `ease-out` (default) for most animations:
 
 Semantic scale values for hover and active states:
 
-| Token | Value | Usage | Examples |
-|-------|-------|-------|----------|
-| `scale-subtle` | 1.02 | Subtle card hover | Play cards, preset cards |
-| `scale-base` | 1.05 | **Default** button hover | Standard buttons, tiles |
-| `scale-strong` | 1.1 | Icon buttons, badges | Close buttons, notification badges |
-| `scale-press` | 0.95 | **Universal** active press | All interactive elements |
-| `scale-press-strong` | 0.9 | Strong press feedback | Special interactions |
+| Token                | Value | Usage                      | Examples                           |
+| -------------------- | ----- | -------------------------- | ---------------------------------- |
+| `scale-subtle`       | 1.02  | Subtle card hover          | Play cards, preset cards           |
+| `scale-base`         | 1.05  | **Default** button hover   | Standard buttons, tiles            |
+| `scale-strong`       | 1.1   | Icon buttons, badges       | Close buttons, notification badges |
+| `scale-press`        | 0.95  | **Universal** active press | All interactive elements           |
+| `scale-press-strong` | 0.9   | Strong press feedback      | Special interactions               |
 
 ### Scale Patterns
 
 #### Standard Button Pattern
+
 ```tsx
 <button className="transition-transform duration-base hover:scale-base active:scale-press">
   Standard Button
@@ -114,6 +116,7 @@ Semantic scale values for hover and active states:
 ```
 
 #### Icon Button Pattern
+
 ```tsx
 <button className="transition-transform duration-base hover:scale-strong active:scale-press">
   <Icon name="x" />
@@ -121,6 +124,7 @@ Semantic scale values for hover and active states:
 ```
 
 #### Card Hover Pattern
+
 ```tsx
 <div className="transition-all duration-base hover:scale-subtle">
   Card Content
@@ -133,15 +137,15 @@ Semantic scale values for hover and active states:
 
 Semantic opacity values for fade effects:
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `opacity-0` | 0 | Hidden elements |
-| `opacity-faint` | 0.1 | Very subtle overlays |
-| `opacity-subtle` | 0.3 | Subtle overlays, disabled states |
-| `opacity-medium` | 0.5 | Medium overlays, loading states |
-| `opacity-strong` | 0.7 | Strong overlays, modals |
-| `opacity-opaque` | 0.9 | Nearly opaque, glass effects |
-| `opacity-100` | 1 | Fully visible |
+| Token            | Value | Usage                            |
+| ---------------- | ----- | -------------------------------- |
+| `opacity-0`      | 0     | Hidden elements                  |
+| `opacity-faint`  | 0.1   | Very subtle overlays             |
+| `opacity-subtle` | 0.3   | Subtle overlays, disabled states |
+| `opacity-medium` | 0.5   | Medium overlays, loading states  |
+| `opacity-strong` | 0.7   | Strong overlays, modals          |
+| `opacity-opaque` | 0.9   | Nearly opaque, glass effects     |
+| `opacity-100`    | 1     | Fully visible                    |
 
 ### Usage Examples
 
@@ -163,14 +167,14 @@ Semantic opacity values for fade effects:
 
 Lift and slide effects for spatial animations:
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `translate-lift-sm` | -2px | Small lift - cards |
-| `translate-lift-base` | -4px | **Default** lift - tiles |
-| `translate-lift-lg` | -8px | Large lift - modals |
-| `translate-slide-sm` | 4px | Small slide - tooltips |
-| `translate-slide-base` | 8px | Base slide - drawers |
-| `translate-slide-lg` | 16px | Large slide - panels |
+| Token                  | Value | Usage                    |
+| ---------------------- | ----- | ------------------------ |
+| `translate-lift-sm`    | -2px  | Small lift - cards       |
+| `translate-lift-base`  | -4px  | **Default** lift - tiles |
+| `translate-lift-lg`    | -8px  | Large lift - modals      |
+| `translate-slide-sm`   | 4px   | Small slide - tooltips   |
+| `translate-slide-base` | 8px   | Base slide - drawers     |
+| `translate-slide-lg`   | 16px  | Large slide - panels     |
 
 ### Usage Examples
 
@@ -198,19 +202,25 @@ Lift and slide effects for spatial animations:
 Use Tailwind's built-in animations for loading states:
 
 ### `animate-spin`
+
 Loading spinners (infinite rotation):
+
 ```tsx
 <Icon name="loader" className="animate-spin text-brand-primary" />
 ```
 
 ### `animate-pulse`
+
 Skeleton loaders (fade in/out):
+
 ```tsx
 <div className="animate-pulse bg-surface-muted rounded h-4 w-32" />
 ```
 
 ### `animate-bounce`
+
 Loading dots (bounce effect):
+
 ```tsx
 <div className="flex gap-1">
   <div className="w-2 h-2 bg-brand-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -224,58 +234,72 @@ Loading dots (bounce effect):
 ## Common Patterns
 
 ### Interactive Card
+
 ```tsx
-<div className="
+<div
+  className="
   rounded-glass border border-base 
   bg-surface-elevated backdrop-blur-xl 
   shadow-card transition-all duration-base 
   hover:scale-subtle hover:shadow-card-hover
   active:scale-press
-">
+"
+>
   Card Content
 </div>
 ```
 
 ### Glass Button
+
 ```tsx
-<button className="
+<button
+  className="
   rounded-md px-4 py-2 
   bg-interactive-primary text-text-inverse 
   shadow-button transition-all duration-base 
   hover:bg-interactive-primary-hover hover:shadow-button-hover hover:scale-base
   active:scale-press
   focus:outline-none focus:ring-2 focus:ring-border-focus
-">
+"
+>
   Click Me
 </button>
 ```
 
 ### Aurora Tile
+
 ```tsx
-<button className="
+<button
+  className="
   relative flex flex-col gap-3 p-6 
   rounded-glass border border-white/70 
   bg-white/80 backdrop-blur-xl 
   shadow-glass transition-all duration-medium 
   hover:-translate-y-1 hover:shadow-xl
   focus:outline-none focus:ring-4 focus:ring-brand-primary
-">
+"
+>
   <Icon name="play" className="text-brand-primary" />
   <Typography variant="headline-sm">Tile Title</Typography>
-  <Typography variant="body-sm" color="secondary">Description</Typography>
+  <Typography variant="body-sm" color="secondary">
+    Description
+  </Typography>
 </button>
 ```
 
 ### Icon Button
+
 ```tsx
-<button className="
+<button
+  className="
   p-2 rounded-md 
   bg-surface-base hover:bg-surface-subtle 
   transition-all duration-base 
   hover:scale-strong 
   active:scale-press
   focus:outline-none focus:ring-2 focus:ring-border-focus
-">
+"
+>
   <Icon name="x" size="sm" />
 </button>
 ```
@@ -285,6 +309,7 @@ Loading dots (bounce effect):
 ## Migration Guide
 
 ### Before (Hardcoded Values)
+
 ```tsx
 // ❌ Old pattern - hardcoded durations and scales
 <button className="transition-all duration-200 hover:scale-105 active:scale-95">
@@ -301,6 +326,7 @@ Loading dots (bounce effect):
 ```
 
 ### After (Semantic Tokens)
+
 ```tsx
 // ✅ New pattern - semantic animation tokens
 <button className="transition-all duration-base hover:scale-base active:scale-press">
@@ -318,17 +344,17 @@ Loading dots (bounce effect):
 
 ### Common Replacements
 
-| Old Pattern | New Pattern | Reasoning |
-|-------------|-------------|-----------|
-| `duration-200` | `duration-base` | 200ms is our default speed |
-| `duration-300` | `duration-medium` | 300ms for moderate animations |
-| `duration-500` | `duration-slow` | 500ms for deliberate motion |
-| `hover:scale-105` | `hover:scale-base` | 5% is standard button hover |
-| `hover:scale-110` | `hover:scale-strong` | 10% for icon buttons |
-| `hover:scale-[1.02]` | `hover:scale-subtle` | 2% for subtle card hover |
-| `active:scale-95` | `active:scale-press` | Universal press state |
-| `transition-all` | `transition-all` | Keep for comprehensive transitions |
-| `transition-transform` | `transition-transform` | Use for scale/translate only |
+| Old Pattern            | New Pattern            | Reasoning                          |
+| ---------------------- | ---------------------- | ---------------------------------- |
+| `duration-200`         | `duration-base`        | 200ms is our default speed         |
+| `duration-300`         | `duration-medium`      | 300ms for moderate animations      |
+| `duration-500`         | `duration-slow`        | 500ms for deliberate motion        |
+| `hover:scale-105`      | `hover:scale-base`     | 5% is standard button hover        |
+| `hover:scale-110`      | `hover:scale-strong`   | 10% for icon buttons               |
+| `hover:scale-[1.02]`   | `hover:scale-subtle`   | 2% for subtle card hover           |
+| `active:scale-95`      | `active:scale-press`   | Universal press state              |
+| `transition-all`       | `transition-all`       | Keep for comprehensive transitions |
+| `transition-transform` | `transition-transform` | Use for scale/translate only       |
 
 ---
 
@@ -389,8 +415,8 @@ Always respect `prefers-reduced-motion` for users who prefer minimal animation:
 ```tsx
 // ✅ Good - respects user preferences
 <div className="
-  transition-all duration-base 
-  motion-reduce:transition-none 
+  transition-all duration-base
+  motion-reduce:transition-none
   hover:scale-base motion-reduce:hover:scale-100
 ">
   Content
@@ -414,11 +440,13 @@ Animations should not interfere with focus indicators:
 
 ```tsx
 // ✅ Good - animation complements focus ring
-<button className="
+<button
+  className="
   transition-all duration-base 
   hover:scale-base 
   focus:outline-none focus:ring-2 focus:ring-border-focus
-">
+"
+>
   Accessible Button
 </button>
 ```
@@ -428,6 +456,7 @@ Animations should not interfere with focus indicators:
 ## Performance Tips
 
 ### 1. Use `transform` and `opacity`
+
 These properties are GPU-accelerated and don't trigger layout:
 
 ```tsx
@@ -440,6 +469,7 @@ These properties are GPU-accelerated and don't trigger layout:
 ```
 
 ### 2. Use `will-change` Sparingly
+
 Only for elements that will animate frequently:
 
 ```css
@@ -450,6 +480,7 @@ Only for elements that will animate frequently:
 ```
 
 ### 3. Batch Transitions
+
 Use `transition-all` when multiple properties change:
 
 ```tsx
@@ -495,6 +526,7 @@ For older browsers, provide graceful degradation:
 ## Summary
 
 **30 Animation Tokens Defined:**
+
 - 6 duration tokens (instant → slower)
 - 6 easing functions (linear → spring)
 - 5 scale transforms (subtle → press-strong)
@@ -502,11 +534,13 @@ For older browsers, provide graceful degradation:
 - 6 translate values (lift/slide)
 
 **3 Components Migrated:**
+
 - `GlassCard.tsx` - Duration tokens
 - `AppIconTile.tsx` - Duration + scale tokens
 - `AuroraTile.tsx` - Duration + lift animations
 
 **Common Patterns:**
+
 - Buttons: `duration-base` + `scale-base` + `scale-press`
 - Cards: `duration-base` + `scale-subtle`
 - Tiles: `duration-medium` + `translate-lift-base`
@@ -514,6 +548,7 @@ For older browsers, provide graceful degradation:
 - Loading: `animate-spin`, `animate-pulse`, `animate-bounce`
 
 **Next Steps:**
+
 - Migrate remaining 40+ components using animation patterns
 - Add motion-reduce utilities globally
 - Consider animation presets for complex sequences

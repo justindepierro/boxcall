@@ -20,23 +20,23 @@ The spacing system provides a consistent scale based on an **8px base grid**. Al
 
 The **8px grid** uses 16 core values (0→32):
 
-| Token | Value | Pixels | Usage |
-|-------|-------|--------|-------|
-| `0` | 0px | 0px | None - reset spacing |
-| `0.5` | 0.125rem | 2px | Hairline - ultra-tight (rare) |
-| `1` | 0.25rem | 4px | XS - tight spacing |
-| `2` | 0.5rem | 8px | **SM - base minimum** ⭐ |
-| `3` | 0.75rem | 12px | MD - compact |
-| `4` | 1rem | 16px | **Base - comfortable** ⭐ |
-| `5` | 1.25rem | 20px | LG - generous |
-| `6` | 1.5rem | 24px | **XL - spacious** ⭐ |
-| `8` | 2rem | 32px | 2XL - section spacing |
-| `10` | 2.5rem | 40px | 3XL - large sections |
-| `12` | 3rem | 48px | 4XL - page spacing |
-| `16` | 4rem | 64px | 5XL - hero spacing |
-| `20` | 5rem | 80px | 6XL - extra large |
-| `24` | 6rem | 96px | 7XL - maximum |
-| `32` | 8rem | 128px | 8XL - extreme |
+| Token | Value    | Pixels | Usage                         |
+| ----- | -------- | ------ | ----------------------------- |
+| `0`   | 0px      | 0px    | None - reset spacing          |
+| `0.5` | 0.125rem | 2px    | Hairline - ultra-tight (rare) |
+| `1`   | 0.25rem  | 4px    | XS - tight spacing            |
+| `2`   | 0.5rem   | 8px    | **SM - base minimum** ⭐      |
+| `3`   | 0.75rem  | 12px   | MD - compact                  |
+| `4`   | 1rem     | 16px   | **Base - comfortable** ⭐     |
+| `5`   | 1.25rem  | 20px   | LG - generous                 |
+| `6`   | 1.5rem   | 24px   | **XL - spacious** ⭐          |
+| `8`   | 2rem     | 32px   | 2XL - section spacing         |
+| `10`  | 2.5rem   | 40px   | 3XL - large sections          |
+| `12`  | 3rem     | 48px   | 4XL - page spacing            |
+| `16`  | 4rem     | 64px   | 5XL - hero spacing            |
+| `20`  | 5rem     | 80px   | 6XL - extra large             |
+| `24`  | 6rem     | 96px   | 7XL - maximum                 |
+| `32`  | 8rem     | 128px  | 8XL - extreme                 |
 
 **Most Common:** `2` (8px), `4` (16px), `6` (24px) - these three cover 80% of spacing needs.
 
@@ -46,13 +46,13 @@ The **8px grid** uses 16 core values (0→32):
 
 These values are **deprecated** and should be migrated to the nearest 8px multiple:
 
-| Deprecated | Value | Pixels | **Use Instead** | Reason |
-|------------|-------|--------|-----------------|---------|
-| `1.5` | 0.375rem | 6px | `2` (8px) | Not 8px aligned |
-| `2.5` | 0.625rem | 10px | `3` (12px) | Not 8px aligned |
-| `3.5` | 0.875rem | 14px | `4` (16px) | Not 8px aligned |
-| `4.5` | 1.125rem | 18px | `5` (20px) | Not 8px aligned |
-| `5.5` | 1.375rem | 22px | `6` (24px) | Not 8px aligned |
+| Deprecated | Value    | Pixels | **Use Instead** | Reason          |
+| ---------- | -------- | ------ | --------------- | --------------- |
+| `1.5`      | 0.375rem | 6px    | `2` (8px)       | Not 8px aligned |
+| `2.5`      | 0.625rem | 10px   | `3` (12px)      | Not 8px aligned |
+| `3.5`      | 0.875rem | 14px   | `4` (16px)      | Not 8px aligned |
+| `4.5`      | 1.125rem | 18px   | `5` (20px)      | Not 8px aligned |
+| `5.5`      | 1.375rem | 22px   | `6` (24px)      | Not 8px aligned |
 
 **Migration Rule:** Round up to the nearest 8px multiple for better visual consistency.
 
@@ -117,35 +117,45 @@ Use gap for spacing between flex or grid items:
 ## Common Patterns
 
 ### Card Component
+
 ```tsx
-<div className="
+<div
+  className="
   rounded-glass-lg border border-base 
   bg-surface-elevated p-6         {/* 24px padding */}
   space-y-4                       {/* 16px vertical spacing */}
-">
-  <h2 className="mb-2">Title</h2>  {/* 8px margin bottom */}
+"
+>
+  <h2 className="mb-2">Title</h2> {/* 8px margin bottom */}
   <p>Content</p>
 </div>
 ```
 
 ### Button Row
+
 ```tsx
-<div className="flex items-center gap-2">  {/* 8px between buttons */}
+<div className="flex items-center gap-2">
+  {" "}
+  {/* 8px between buttons */}
   <button className="px-4 py-2">Primary</button>
   <button className="px-4 py-2">Secondary</button>
 </div>
 ```
 
 ### Form Field
+
 ```tsx
-<div className="space-y-2">              {/* 8px between label/input/error */}
+<div className="space-y-2">
+  {" "}
+  {/* 8px between label/input/error */}
   <label className="block mb-1">Name</label>
-  <input className="px-3 py-2" />        {/* 12px horizontal, 8px vertical */}
+  <input className="px-3 py-2" /> {/* 12px horizontal, 8px vertical */}
   <span className="text-xs mt-1">Helper text</span>
 </div>
 ```
 
 ### Icon with Text
+
 ```tsx
 // ❌ Old (non-grid)
 <div className="flex items-center gap-1.5">  {/* 6px - deprecated */}
@@ -161,11 +171,15 @@ Use gap for spacing between flex or grid items:
 ```
 
 ### Section Spacing
+
 ```tsx
-<section className="py-12">       {/* 48px top/bottom */}
-  <h1 className="mb-6">Title</h1>  {/* 24px margin bottom */}
-  
-  <div className="space-y-8">     {/* 32px between subsections */}
+<section className="py-12">
+  {" "}
+  {/* 48px top/bottom */}
+  <h1 className="mb-6">Title</h1> {/* 24px margin bottom */}
+  <div className="space-y-8">
+    {" "}
+    {/* 32px between subsections */}
     <div>Subsection 1</div>
     <div>Subsection 2</div>
   </div>
@@ -200,6 +214,7 @@ Use responsive utilities for different breakpoints:
 ## Migration Guide
 
 ### Before (Non-Grid Values)
+
 ```tsx
 // ❌ Old pattern - non-8px grid values
 <div className="flex items-center gap-1.5">       {/* 6px */}
@@ -218,6 +233,7 @@ Use responsive utilities for different breakpoints:
 ```
 
 ### After (8px Grid)
+
 ```tsx
 // ✅ New pattern - 8px grid aligned
 <div className="flex items-center gap-2">        {/* 8px */}
@@ -238,19 +254,21 @@ Use responsive utilities for different breakpoints:
 ### Component Migrations
 
 #### IconButton Component
+
 ```tsx
 // ❌ Before
 const sizeStyles = {
-  sm: "h-8 w-8 p-1.5 text-xs",  // 6px padding
+  sm: "h-8 w-8 p-1.5 text-xs", // 6px padding
 };
 
 // ✅ After
 const sizeStyles = {
-  sm: "h-8 w-8 p-2 text-xs",    // 8px padding
+  sm: "h-8 w-8 p-2 text-xs", // 8px padding
 };
 ```
 
 #### Play Detail Modal
+
 ```tsx
 // ❌ Before
 <div className="flex gap-1.5">          {/* 6px gap */}
@@ -270,6 +288,7 @@ const sizeStyles = {
 ```
 
 #### Role Badge
+
 ```tsx
 // ❌ Before
 <span className="inline-flex items-center gap-1.5">  {/* 6px gap */}
@@ -291,24 +310,27 @@ const sizeStyles = {
 When choosing a spacing value, follow this decision tree:
 
 ### 1. **What are you spacing?**
-   - **Icon + Text**: `gap-2` (8px)
-   - **Buttons in a row**: `gap-2` (8px)
-   - **Form label + input**: `space-y-2` (8px)
-   - **Card sections**: `space-y-4` (16px)
-   - **Page sections**: `space-y-8` (32px)
+
+- **Icon + Text**: `gap-2` (8px)
+- **Buttons in a row**: `gap-2` (8px)
+- **Form label + input**: `space-y-2` (8px)
+- **Card sections**: `space-y-4` (16px)
+- **Page sections**: `space-y-8` (32px)
 
 ### 2. **What direction?**
-   - **Horizontal (x-axis)**: `px-*`, `mx-*`, `gap-x-*`, `space-x-*`
-   - **Vertical (y-axis)**: `py-*`, `my-*`, `gap-y-*`, `space-y-*`
-   - **All directions**: `p-*`, `m-*`, `gap-*`
+
+- **Horizontal (x-axis)**: `px-*`, `mx-*`, `gap-x-*`, `space-x-*`
+- **Vertical (y-axis)**: `py-*`, `my-*`, `gap-y-*`, `space-y-*`
+- **All directions**: `p-*`, `m-*`, `gap-*`
 
 ### 3. **How tight or loose?**
-   - **Very tight**: `1` (4px) - rare
-   - **Tight**: `2` (8px) - icons, inline elements
-   - **Comfortable**: `4` (16px) - default choice
-   - **Spacious**: `6` (24px) - sections, cards
-   - **Very spacious**: `8` (32px) - major sections
-   - **Extreme**: `12+` (48px+) - hero elements
+
+- **Very tight**: `1` (4px) - rare
+- **Tight**: `2` (8px) - icons, inline elements
+- **Comfortable**: `4` (16px) - default choice
+- **Spacious**: `6` (24px) - sections, cards
+- **Very spacious**: `8` (32px) - major sections
+- **Extreme**: `12+` (48px+) - hero elements
 
 ---
 
@@ -318,28 +340,28 @@ All spacing tokens are defined in `src/styles/generated-tokens.css`:
 
 ```css
 /* Core 8px Grid Scale */
---space-0: 0px;                /* 0px - none */
---space-0\.5: 0.125rem;        /* 2px - hairline */
---space-1: 0.25rem;            /* 4px - xs tight */
---space-2: 0.5rem;             /* 8px - sm minimum */
---space-3: 0.75rem;            /* 12px - md compact */
---space-4: 1rem;               /* 16px - base comfortable */
---space-5: 1.25rem;            /* 20px - lg generous */
---space-6: 1.5rem;             /* 24px - xl spacious */
---space-8: 2rem;               /* 32px - 2xl section */
---space-10: 2.5rem;            /* 40px - 3xl large */
---space-12: 3rem;              /* 48px - 4xl page */
---space-16: 4rem;              /* 64px - 5xl hero */
---space-20: 5rem;              /* 80px - 6xl extra large */
---space-24: 6rem;              /* 96px - 7xl maximum */
---space-32: 8rem;              /* 128px - 8xl extreme */
+--space-0: 0px; /* 0px - none */
+--space-0\.5: 0.125rem; /* 2px - hairline */
+--space-1: 0.25rem; /* 4px - xs tight */
+--space-2: 0.5rem; /* 8px - sm minimum */
+--space-3: 0.75rem; /* 12px - md compact */
+--space-4: 1rem; /* 16px - base comfortable */
+--space-5: 1.25rem; /* 20px - lg generous */
+--space-6: 1.5rem; /* 24px - xl spacious */
+--space-8: 2rem; /* 32px - 2xl section */
+--space-10: 2.5rem; /* 40px - 3xl large */
+--space-12: 3rem; /* 48px - 4xl page */
+--space-16: 4rem; /* 64px - 5xl hero */
+--space-20: 5rem; /* 80px - 6xl extra large */
+--space-24: 6rem; /* 96px - 7xl maximum */
+--space-32: 8rem; /* 128px - 8xl extreme */
 
 /* Deprecated (phase out) */
---space-1\.5: 0.375rem;        /* 6px - DEPRECATED: use --space-2 (8px) */
---space-2\.5: 0.625rem;        /* 10px - DEPRECATED: use --space-3 (12px) */
---space-3\.5: 0.875rem;        /* 14px - DEPRECATED: use --space-4 (16px) */
---space-4\.5: 1.125rem;        /* 18px - DEPRECATED: use --space-5 (20px) */
---space-5\.5: 1.375rem;        /* 22px - DEPRECATED: use --space-6 (24px) */
+--space-1\.5: 0.375rem; /* 6px - DEPRECATED: use --space-2 (8px) */
+--space-2\.5: 0.625rem; /* 10px - DEPRECATED: use --space-3 (12px) */
+--space-3\.5: 0.875rem; /* 14px - DEPRECATED: use --space-4 (16px) */
+--space-4\.5: 1.125rem; /* 18px - DEPRECATED: use --space-5 (20px) */
+--space-5\.5: 1.375rem; /* 22px - DEPRECATED: use --space-6 (24px) */
 ```
 
 ---
@@ -367,7 +389,7 @@ spacing: {
   20: "var(--space-20)",         // 80px - 6xl extra large
   24: "var(--space-24)",         // 96px - 7xl maximum
   32: "var(--space-32)",         // 128px - 8xl extreme
-  
+
   // Deprecated (phase out these values)
   1.5: "var(--space-1\\.5)",    // 6px - DEPRECATED: use 2 (8px)
   2.5: "var(--space-2\\.5)",    // 10px - DEPRECATED: use 3 (12px)
@@ -382,18 +404,23 @@ spacing: {
 ## Benefits of 8px Grid
 
 ### 1. **Visual Consistency**
+
 All spacing follows the same rhythm, creating harmony across the UI.
 
 ### 2. **Easier Decisions**
+
 Fewer choices = faster development. Pick from 16 values instead of arbitrary pixels.
 
 ### 3. **Scalability**
+
 Grid scales naturally across devices without breaking rhythm.
 
 ### 4. **Pixel-Perfect Alignment**
+
 8px grid ensures elements align to pixel boundaries on all screen densities.
 
 ### 5. **Design-Dev Handoff**
+
 Designers and developers speak the same language (8px grid).
 
 ---
@@ -436,27 +463,27 @@ Designers and developers speak the same language (8px grid).
 
 ### Most Common Spacing Values
 
-| Value | Pixels | Common Use Cases |
-|-------|--------|------------------|
-| `gap-2` | 8px | Icon + text, button rows, inline elements |
-| `p-4` | 16px | Default component padding |
-| `space-y-4` | 16px | Stacked sections |
-| `p-6` | 24px | Card padding, modal padding |
-| `space-y-6` | 24px | Major sections |
-| `gap-4` | 16px | Grid/flex containers |
-| `mb-2` | 8px | Label margins, small gaps |
-| `py-2` | 8px | Button vertical padding |
-| `px-4` | 16px | Button horizontal padding |
+| Value       | Pixels | Common Use Cases                          |
+| ----------- | ------ | ----------------------------------------- |
+| `gap-2`     | 8px    | Icon + text, button rows, inline elements |
+| `p-4`       | 16px   | Default component padding                 |
+| `space-y-4` | 16px   | Stacked sections                          |
+| `p-6`       | 24px   | Card padding, modal padding               |
+| `space-y-6` | 24px   | Major sections                            |
+| `gap-4`     | 16px   | Grid/flex containers                      |
+| `mb-2`      | 8px    | Label margins, small gaps                 |
+| `py-2`      | 8px    | Button vertical padding                   |
+| `px-4`      | 16px   | Button horizontal padding                 |
 
 ### Migration Quick Wins
 
-| Old (Deprecated) | New (8px Grid) | Savings |
-|------------------|----------------|---------|
-| `gap-1.5` | `gap-2` | 2px wider (cleaner) |
-| `p-1.5` | `p-2` | 2px more padding |
-| `mb-1.5` | `mb-2` | 2px more margin |
-| `py-2.5` | `py-3` | 4px more padding |
-| `gap-3.5` | `gap-4` | 4px wider |
+| Old (Deprecated) | New (8px Grid) | Savings             |
+| ---------------- | -------------- | ------------------- |
+| `gap-1.5`        | `gap-2`        | 2px wider (cleaner) |
+| `p-1.5`          | `p-2`          | 2px more padding    |
+| `mb-1.5`         | `mb-2`         | 2px more margin     |
+| `py-2.5`         | `py-3`         | 4px more padding    |
+| `gap-3.5`        | `gap-4`        | 4px wider           |
 
 **Rule of Thumb:** When in doubt, round up to the next 8px multiple.
 
@@ -475,18 +502,22 @@ Designers and developers speak the same language (8px grid).
 ## Summary
 
 **16 Spacing Tokens Defined:**
+
 - Core scale: 0, 0.5, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32 (15 values)
 - Most common: `2` (8px), `4` (16px), `6` (24px)
 
 **5 Deprecated Values:**
+
 - 1.5, 2.5, 3.5, 4.5, 5.5 - use nearest 8px multiple
 
 **3 Components Migrated:**
+
 - `PlayDetailModal.tsx` - gap-1.5 → gap-2, mb-1.5 → mb-2
 - `IconButton.tsx` - p-1.5 → p-2
 - `RoleBadge.tsx` - gap-1.5 → gap-2
 
 **8px Grid Benefits:**
+
 - Visual consistency across all components
 - Easier spacing decisions (16 choices vs. infinite)
 - Pixel-perfect alignment on all screens
@@ -494,6 +525,7 @@ Designers and developers speak the same language (8px grid).
 - Design-dev alignment
 
 **Next Steps:**
+
 - Phase out deprecated values (1.5, 2.5, 3.5, 4.5, 5.5)
 - Migrate remaining 100+ components to 8px grid
 - Add linting rule to warn on non-grid values
