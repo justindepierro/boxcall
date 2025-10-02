@@ -38,10 +38,10 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         {/* Error Icon */}
-        <div className="w-20 h-20 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center mb-6">
+        <div className="w-20 h-20 rounded-2xl bg-status-error-bg dark:bg-status-error-bg-dark flex items-center justify-center mb-6">
           <Icon
             name="alert-triangle"
-            className="w-10 h-10 text-red-500 dark:text-red-400"
+            className="w-10 h-10 text-status-error dark:text-status-error-text-dark"
           />
         </div>
 
@@ -98,7 +98,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
           Still having issues?{" "}
           <a
             href="/contact"
-            className="text-jade-600 dark:text-jade-400 hover:underline"
+            className="text-brand-primary dark:text-brand-accent hover:underline"
           >
             Contact Support
           </a>

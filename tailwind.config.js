@@ -244,6 +244,94 @@ export default {
         // Dynamic Team Color System
         team: designTokens.team,
 
+        // ============================================
+        // SEMANTIC COLOR SYSTEM - Phase 3 Design System
+        // ============================================
+        // These map to CSS custom properties for consistent theming
+        brand: {
+          primary: "var(--color-brand-primary)",
+          "primary-hover": "var(--color-brand-primary-hover)",
+          "primary-active": "var(--color-brand-primary-active)",
+          accent: "var(--color-brand-accent)",
+          "accent-hover": "var(--color-brand-accent-hover)",
+          secondary: "var(--color-brand-secondary)",
+        },
+
+        surface: {
+          base: "var(--color-surface-base)",
+          "base-dark": "var(--color-surface-base-dark)",
+          elevated: "var(--color-surface-elevated)",
+          "elevated-dark": "var(--color-surface-elevated-dark)",
+          subtle: "var(--color-surface-subtle)",
+          "subtle-dark": "var(--color-surface-subtle-dark)",
+          muted: "var(--color-surface-muted)",
+          "muted-dark": "var(--color-surface-muted-dark)",
+          inverse: "var(--color-surface-inverse)",
+        },
+
+        text: {
+          primary: "var(--color-text-primary)",
+          "primary-dark": "var(--color-text-primary-dark)",
+          secondary: "var(--color-text-secondary)",
+          "secondary-dark": "var(--color-text-secondary-dark)",
+          muted: "var(--color-text-muted)",
+          "muted-dark": "var(--color-text-muted-dark)",
+          inverse: "var(--color-text-inverse)",
+          brand: "var(--color-text-brand)",
+          "brand-dark": "var(--color-text-brand-dark)",
+          accent: "var(--color-text-accent)",
+          "accent-dark": "var(--color-text-accent-dark)",
+        },
+
+        border: {
+          base: "var(--color-border-base)",
+          "base-dark": "var(--color-border-base-dark)",
+          subtle: "var(--color-border-subtle)",
+          "subtle-dark": "var(--color-border-subtle-dark)",
+          muted: "var(--color-border-muted)",
+          "muted-dark": "var(--color-border-muted-dark)",
+          focus: "var(--color-border-focus)",
+          error: "var(--color-border-error)",
+        },
+
+        interactive: {
+          primary: "var(--color-interactive-primary)",
+          "primary-hover": "var(--color-interactive-primary-hover)",
+          "primary-active": "var(--color-interactive-primary-active)",
+          accent: "var(--color-interactive-accent)",
+          "accent-hover": "var(--color-interactive-accent-hover)",
+          "accent-active": "var(--color-interactive-accent-active)",
+        },
+
+        status: {
+          success: "var(--color-success)",
+          "success-bg": "var(--color-success-bg)",
+          "success-bg-dark": "var(--color-success-bg-dark)",
+          "success-text": "var(--color-success-text)",
+          "success-text-dark": "var(--color-success-text-dark)",
+          warning: "var(--color-warning)",
+          "warning-bg": "var(--color-warning-bg)",
+          "warning-bg-dark": "var(--color-warning-bg-dark)",
+          "warning-text": "var(--color-warning-text)",
+          "warning-text-dark": "var(--color-warning-text-dark)",
+          error: "var(--color-error)",
+          "error-bg": "var(--color-error-bg)",
+          "error-bg-dark": "var(--color-error-bg-dark)",
+          "error-text": "var(--color-error-text)",
+          "error-text-dark": "var(--color-error-text-dark)",
+        },
+
+        gradient: {
+          "brand-start": "var(--gradient-brand-start)",
+          "brand-end": "var(--gradient-brand-end)",
+          "accent-start": "var(--gradient-accent-start)",
+          "accent-end": "var(--gradient-accent-end)",
+          "secondary-start": "var(--gradient-secondary-start)",
+          "secondary-end": "var(--gradient-secondary-end)",
+          "warning-start": "var(--gradient-warning-start)",
+          "warning-end": "var(--gradient-warning-end)",
+        },
+
         // Enhanced Contrast System - "Carhartt Reliability"
         contrast: {
           // High contrast pairings for maximum readability

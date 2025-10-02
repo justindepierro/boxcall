@@ -241,31 +241,31 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     switch (type) {
       case "Pass":
         // Electric purple background with white text for high contrast
-        return "bg-electric-600 text-white";
+        return "bg-interactive-accent text-inverse";
       case "Run":
         // Jade green background with white text for high contrast
-        return "bg-jade-600 text-white";
+        return "bg-brand-primary text-inverse";
       case "RPO":
         // Navy background with light text for professional look
-        return "bg-navy-700 text-white";
+        return "bg-brand-secondary text-inverse";
       case "Play Action":
         // Amber background with dark text for good contrast
-        return "bg-warning-500 text-gray-900";
+        return "bg-status-warning text-gray-900";
       default:
         // Neutral gray with good contrast
-        return "bg-gray-600 text-white";
+        return "bg-gray-600 text-inverse";
     }
   };
   const getConfidenceColor = (confidence: number) => {
     if (confidence >= 85)
-      return "text-white bg-jade-600 px-1.5 py-0.5 rounded font-semibold"; // High confidence - dark jade bg
+      return "text-text-inverse bg-brand-primary px-1.5 py-0.5 rounded font-semibold"; // High confidence - brand primary
     if (confidence >= 70)
       return "text-jade-800 bg-jade-100 px-1.5 py-0.5 rounded font-medium"; // Good confidence - light jade bg
     if (confidence >= 60)
-      return "text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium"; // Medium confidence - light amber bg
+      return "text-amber-800 bg-status-warning-bg px-1.5 py-0.5 rounded font-medium"; // Medium confidence - warning bg
     if (confidence >= 50)
       return "text-orange-800 bg-orange-100 px-1.5 py-0.5 rounded font-medium"; // Low-medium confidence - light orange bg
-    return "text-white bg-red-600 px-1.5 py-0.5 rounded font-semibold"; // Low confidence - red bg
+    return "text-text-inverse bg-status-error px-1.5 py-0.5 rounded font-semibold"; // Low confidence - error
   };
   const phaseLabel = ((): string | null => {
     if (!play.install_phase) return null;
@@ -677,7 +677,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       <div
         className={`rounded-glass border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
           isSelected
-            ? "ring-2 ring-jade-500 border-jade-400 shadow-jade"
+            ? "ring-2 ring-brand-primary border-brand-primary shadow-jade"
             : "shadow-card hover:shadow-card-hover hover:border-white"
         } ${isCompact ? "text-[13px]" : ""}`}
       >
@@ -703,7 +703,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 type="checkbox"
                 checked={Boolean(isSelected)}
                 onChange={(e) => onSelectionChange?.(play.id, e.target.checked)}
-                className="w-4 h-4 rounded border-2 border-slate-300 text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-1 cursor-pointer transition-all hover:border-jade-400 bg-white/90"
+                className="w-4 h-4 rounded border-2 border-slate-300 text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-1 cursor-pointer transition-all hover:border-brand-primary bg-white/90"
                 title="Select play"
               />
             </div>

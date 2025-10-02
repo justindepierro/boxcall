@@ -38,12 +38,12 @@ export interface AuroraTileProps {
 }
 
 const BASE_BUTTON_CLASSES =
-  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-jade-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
+  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
 
 const BASE_ICON_CONTAINER_CLASSES =
   "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";
 
-const BASE_ICON_CLASSES = "text-jade-600";
+const BASE_ICON_CLASSES = "text-brand-primary";
 
 export const AuroraTile: React.FC<AuroraTileProps> = ({
   title,
@@ -118,7 +118,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
         )}
         <div className="flex items-center justify-between text-[11px] font-medium text-text-secondary opacity-80 dark:text-slate-300">
           <span className="inline-flex items-center gap-2">
-            <Icon name="grid" size="xs" className="text-jade-500" />
+            <Icon name="grid" size="xs" className="text-brand-primary" />
             Open workspace
           </span>
           <span>{footnote}</span>
