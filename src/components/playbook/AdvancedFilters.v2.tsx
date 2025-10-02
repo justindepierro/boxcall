@@ -151,7 +151,7 @@ export const AdvancedFilters = memo<AdvancedFiltersProps>(
       );
 
     return (
-      <div className="backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-[28px] border-2 border-white/20 dark:border-slate-700/20 p-4 shadow-lg">
+      <div className="backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-glass border-2 border-white/20 dark:border-slate-700/20 p-4 shadow-lg">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

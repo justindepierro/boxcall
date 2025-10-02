@@ -48,7 +48,7 @@ const FIELD_PRESETS: FieldPreset[] = [
 export const AuroraFieldPresets = memo<AuroraFieldPresetsProps>(
   ({ activePreset, onPresetSelect }) => {
     return (
-      <div className="backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 rounded-[28px] border-2 border-white/30 dark:border-slate-700/30 p-4 shadow-2xl">
+      <div className="backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 rounded-glass border-2 border-white/30 dark:border-slate-700/30 p-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
           <Icon

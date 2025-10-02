@@ -58,7 +58,7 @@ export const PlayCard = memo<PlayCardProps>(
 
     return (
       <div
-        className={`group relative backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-[28px] border-2 transition-all duration-200 hover:shadow-xl hover:scale-[1.02] ${
+        className={`group relative backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 rounded-glass border-2 transition-all duration-200 hover:shadow-xl hover:scale-[1.02] ${
           isSelected
             ? "border-electric-500 ring-4 ring-electric-500/20 shadow-lg"
             : "border-white/20 dark:border-slate-700/20 hover:border-white/40"

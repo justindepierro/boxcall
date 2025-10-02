@@ -37,9 +37,9 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
     <div className="border-b border-white/20 bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 backdrop-blur-xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top row: Title, stats, team type selector, and search */}
-        <div className="flex items-center justify-between py-3">
-          <div className="flex items-center space-x-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25">
+        <div className="flex items-center justify-between py-3 overflow-visible">
+          <div className="flex items-center space-x-4 overflow-visible">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25 overflow-visible">
               <Icon name="file" className="h-6 w-6 text-white" />
             </div>
             <div className="flex flex-col">
@@ -50,7 +50,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               >
                 {title}
               </Typography>
-              <div className="flex items-center space-x-2 mt-1.5">
+              <div className="flex items-center space-x-2 mt-1.5 overflow-visible">
                 <ProgressBadge
                   progress={Math.round((playsCreated / 100) * 100)}
                 >
@@ -177,13 +177,13 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           </div>
 
           {/* Action Buttons - Right side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-visible">
             {/* Weekly Challenges - moved here */}
             <Button
               onClick={() => {}}
               variant="ghost"
               size="sm"
-              className="p-2.5 bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 border border-amber-200/50 dark:border-amber-700/50 text-amber-700 dark:text-amber-400 rounded-xl backdrop-blur-sm transition-all duration-200"
+              className="p-2.5 bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 border border-amber-200/50 dark:border-amber-700/50 text-amber-700 dark:text-amber-400 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
               title="Weekly Challenges"
             >
               <Icon name="trophy" className="h-5 w-5" />

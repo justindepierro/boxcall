@@ -67,7 +67,7 @@ export const GlassCard = memo<GlassCardProps>(
     return (
       <div
         className={`
-          rounded-[28px] 
+          rounded-glass-lg
           border 
           bg-white/80 
           dark:bg-slate-900/70 

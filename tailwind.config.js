@@ -418,14 +418,22 @@ export default {
         "4xl": ["2.25rem", { lineHeight: "2.5rem", fontWeight: "700" }],
       },
 
-      // BoxCall Square Component System - "Industrial Strength"
+      // Phase 3: Token-based Border Radius System
+      // Uses CSS custom properties from generated-tokens.css
       borderRadius: {
-        none: "0px", // No rounding - most industrial
-        xs: "2px", // Very subtle - inputs, technical elements
-        sm: "4px", // Default for most UI - buttons, cards
-        md: "6px", // Larger elements - modals, containers
-        lg: "8px", // Maximum for special elements only
-        // Removed xl+ values for more angular, industrial look
+        none: "var(--radius-none)",          // 0 - no rounding
+        sm: "var(--radius-sm)",              // 6px - subtle elements
+        DEFAULT: "var(--radius-base)",       // 8px - default
+        md: "var(--radius-md)",              // 12px - cards, inputs
+        lg: "var(--radius-lg)",              // 16px - modals, panels
+        xl: "var(--radius-xl)",              // 24px - feature cards
+        "2xl": "var(--radius-2xl)",          // 32px - hero elements
+        "3xl": "var(--radius-3xl)",          // 40px - extra large
+        full: "var(--radius-full)",          // 9999px - circular
+        // Glass-specific variants
+        "glass-sm": "var(--radius-glass-sm)", // 12px - glass small
+        glass: "var(--radius-glass)",         // 16px - glass default
+        "glass-lg": "var(--radius-glass-lg)", // 24px - glass large
       },
 
       spacing: {

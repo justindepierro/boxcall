@@ -34,7 +34,7 @@ button span {
 /* Card content overflow prevention */
 .surface-card,
 .card {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .surface-card h1,

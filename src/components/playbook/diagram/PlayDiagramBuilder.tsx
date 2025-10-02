@@ -253,7 +253,7 @@ const FieldSettingsPanel: React.FC = () => {
 
 const DiagramCanvas: React.FC = () => {
   return (
-    <div className="relative flex-1 overflow-hidden rounded-[28px] bg-slate-900/40 border border-slate-800 shadow-inner">
+    <div className="relative flex-1 overflow-hidden rounded-glass bg-slate-900/40 border border-slate-800 shadow-inner">
       <ShapeManipulator zoom={1} panX={0} panY={0} snapToGrid={true}>
         <FootballFieldCanvas />
       </ShapeManipulator>

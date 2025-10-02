@@ -675,7 +675,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   return (
     <>
       <div
-        className={`rounded-[20px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
+        className={`rounded-glass border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
           isSelected
             ? "ring-2 ring-jade-500 border-jade-400 shadow-lg shadow-jade-500/20"
             : "shadow-[0_8px_16px_-8px_rgba(15,23,42,0.3)] hover:shadow-[0_12px_20px_-8px_rgba(15,23,42,0.4)] hover:border-white"
@@ -689,7 +689,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               <img
                 src={play.diagram_url}
                 alt={`${displayName} diagram preview`}
-                className="w-full h-40 object-cover rounded-md border border-subtle"
+                className="w-full h-40 object-cover rounded-lg border border-subtle"
                 loading="lazy"
                 decoding="async"
               />
@@ -865,7 +865,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               {/* Main details grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Formation */}
-                <div className="surface-subtle rounded-md p-3">
+                <div className="surface-subtle rounded-lg p-3">
                   <Typography
                     variant="label-lg"
                     as="h4"
@@ -897,7 +897,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-md transition-colors ${
+                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-lg transition-colors ${
                                       snapshot.isDragging
                                         ? "bg-surface-hover shadow-lg"
                                         : "hover:bg-surface-hover"
@@ -962,7 +962,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </div>
 
                 {/* Play details */}
-                <div className="surface-subtle rounded-md p-3">
+                <div className="surface-subtle rounded-lg p-3">
                   <Typography
                     variant="label-lg"
                     as="h4"
@@ -998,7 +998,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-md transition-colors ${
+                                    className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-lg transition-colors ${
                                       snapshot.isDragging
                                         ? "bg-surface-hover shadow-lg"
                                         : "hover:bg-surface-hover"
@@ -1059,7 +1059,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </div>
 
                 {/* Preferences */}
-                <div className="surface-subtle rounded-md p-3">
+                <div className="surface-subtle rounded-lg p-3">
                   <Typography
                     variant="label-lg"
                     as="h4"
@@ -1149,7 +1149,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </div>
 
                 {/* Usage & Stats */}
-                <div className="surface-subtle rounded-md p-3">
+                <div className="surface-subtle rounded-lg p-3">
                   <Typography
                     variant="label-lg"
                     as="h4"
@@ -1187,7 +1187,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
 
               {/* Notes */}
-              <div className="surface-subtle rounded-md p-3">
+              <div className="surface-subtle rounded-lg p-3">
                 <Typography
                   variant="label-lg"
                   as="h4"
@@ -1205,7 +1205,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
 
               {/* Tags & Roles (summary + editor) */}
-              <div className="surface-subtle rounded-md p-3">
+              <div className="surface-subtle rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="label-lg"

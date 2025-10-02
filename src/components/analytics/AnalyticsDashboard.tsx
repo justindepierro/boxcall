@@ -397,7 +397,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   return (
     <div className={`space-y-8 ${className}`}>
-      <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+      <div className="rounded-glass-lg border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
         <div className="mb-6 flex flex-col gap-2">
           <Typography variant="headline-md" className="flex items-center gap-3 text-text-primary">
             <Icon name="bar-chart" className="h-6 w-6 text-jade-600" />
