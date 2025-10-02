@@ -43,7 +43,7 @@ export const AppIconTile = memo<AppIconTileProps>(
         <div className="relative w-24 h-24">
           {/* Icon Container with Gradient and shine effect */}
           <div
-            className={`absolute inset-0 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95 before:absolute before:inset-0 before:rounded-[26px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+            className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} shadow-lg transition-transform duration-200 group-hover:scale-110 group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
           />
 
           {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}

@@ -1,5 +1,15 @@
 import { memo, useState, useCallback } from "react";
-import { Icon } from "../ui/Icon/Icon";
+imp          {/* Header Section */}
+          <div
+            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[32px] flex-shrink-0`}
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
+              backgroundSize: "32px 32px",
+            }}
+          >
+            {/* Shine overlay - single layer */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none rounded-t-[32px]" />} from "../ui/Icon/Icon";
 import type { Play } from "../../types/play";
 
 interface PlayDetailModalProps {
@@ -56,7 +66,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         >
           {/* Gradient Header with pattern and shine */}
           <div
-            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[30px] overflow-hidden flex-shrink-0`}
+            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[32px] flex-shrink-0`}
             style={{
               backgroundImage:
                 "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
@@ -64,7 +74,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             }}
           >
             {/* Shine overlay - single layer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none rounded-t-[32px]" />
 
             {/* Close Button */}
             <button
