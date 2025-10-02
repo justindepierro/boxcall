@@ -8,6 +8,7 @@ import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { MultiBadgeDisplay } from "../ui/MultiBadgeDisplay";
 import type { Profile } from "../../types/database";
 import { AchievementService } from "@services/achievementService";
@@ -173,15 +174,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
           {!isViewMode && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleProfileEdit}
-              className="p-2 hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
-              aria-label="Edit profile"
-            >
-              <Edit2 className="w-4 h-4" />
-            </Button>
+            <Tooltip content="Edit profile">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleProfileEdit}
+                className="p-2 hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
+                aria-label="Edit profile"
+              >
+                <Edit2 className="w-4 h-4" />
+              </Button>
+            </Tooltip>
           )}
         </div>
       </div>
@@ -218,15 +221,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </Button>
             )}
             {isOwnProfile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200"
-                aria-label="Edit profile picture"
-                onClick={handleProfileEdit}
-              >
-                <Camera className="w-3 h-3 text-brand-primary" />
-              </Button>
+              <Tooltip content="Edit profile picture">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200"
+                  aria-label="Edit profile picture"
+                  onClick={handleProfileEdit}
+                >
+                  <Camera className="w-3 h-3 text-brand-primary" />
+                </Button>
+              </Tooltip>
             )}
           </div>
           <div className="flex-1 min-w-0">
@@ -336,15 +341,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 About
               </Typography>
               {isOwnProfile && !isEditingBio && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsEditingBio(true)}
-                  className="p-1 hover:bg-brand-secondary/10 rounded-md transition-colors"
-                  aria-label="Edit bio"
-                >
-                  <Edit2 className="w-3 h-3 text-brand-secondary" />
-                </Button>
+                <Tooltip content="Edit bio">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsEditingBio(true)}
+                    className="p-1 hover:bg-brand-secondary/10 rounded-md transition-colors"
+                    aria-label="Edit bio"
+                  >
+                    <Edit2 className="w-3 h-3 text-brand-secondary" />
+                  </Button>
+                </Tooltip>
               )}
             </div>
 

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import type { IconName } from "../ui/Icon";
 
 interface NavigationItem {
@@ -72,15 +73,17 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
               BoxCall
             </Typography>
             {/* Close button - only visible on mobile */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="lg:hidden p-2"
-              aria-label="Close sidebar"
-            >
-              <Icon name="close" size="sm" />
-            </Button>
+            <Tooltip content="Close sidebar (Esc)">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="lg:hidden p-2"
+                aria-label="Close sidebar"
+              >
+                <Icon name="close" size="sm" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
 

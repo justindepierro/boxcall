@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import type { LayoutSize } from "../../stores/dashboardStore";
 
@@ -370,15 +371,17 @@ export const DashboardCustomizationPanel: React.FC<
             </Typography>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="p-2"
-            aria-label="Close customization panel"
-          >
-            <Icon name="close" size="md" />
-          </Button>
+          <Tooltip content="Close customization panel (Esc)">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="p-2"
+              aria-label="Close customization panel"
+            >
+              <Icon name="close" size="md" />
+            </Button>
+          </Tooltip>
         </div>
 
         {/* Error Message */}

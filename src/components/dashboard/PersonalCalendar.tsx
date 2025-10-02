@@ -8,6 +8,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
@@ -245,15 +246,17 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 >
                   {selectedEvent.title}
                 </Typography>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => setSelectedEvent(null)}
-                  aria-label="Close"
-                  className="text-text-muted hover:text-text-secondary"
-                  icon={<Icon name="close" size="sm" />}
-                  iconPosition="only"
-                />
+                <Tooltip content="Close event details (Esc)">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setSelectedEvent(null)}
+                    aria-label="Close"
+                    className="text-text-muted hover:text-text-secondary"
+                    icon={<Icon name="close" size="sm" />}
+                    iconPosition="only"
+                  />
+                </Tooltip>
               </div>
 
               <div className="space-y-3">

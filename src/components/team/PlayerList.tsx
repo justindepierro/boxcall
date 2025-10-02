@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
 import { UserAvatar } from "../ui/UserAvatar";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 import type { TeamPlayer } from "../../types/team-management";
 
@@ -205,26 +206,30 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                   </div>
                   {/* Actions Menu */}
                   <div className="flex space-x-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => onEditPlayer(player)}
-                      aria-label="Edit Player"
-                      className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
-                    >
-                      <Icon name="edit" size="sm" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => onDeletePlayer(player.id)}
-                      aria-label="Remove Player"
-                      className="p-1 h-auto w-auto text-text-secondary hover:text-text-error"
-                    >
-                      <Icon name="delete" size="sm" />
-                    </Button>
+                    <Tooltip content="Edit player">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => onEditPlayer(player)}
+                        aria-label="Edit Player"
+                        className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
+                      >
+                        <Icon name="edit" size="sm" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="Remove player">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => onDeletePlayer(player.id)}
+                        aria-label="Remove Player"
+                        className="p-1 h-auto w-auto text-text-secondary hover:text-text-error"
+                      >
+                        <Icon name="delete" size="sm" />
+                      </Button>
+                    </Tooltip>
                   </div>
                 </div>
                 {/* Positions */}

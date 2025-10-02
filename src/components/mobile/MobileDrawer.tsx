@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ModularIcon as Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface MobileDrawerProps {
   title: string;
@@ -54,15 +55,17 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
           <Typography variant="label-md" as="h2" className="text-text-primary">
             {title}
           </Typography>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={onClose}
-            className="p-1 h-auto w-auto"
-            aria-label="Close drawer"
-          >
-            <Icon name="close" size="sm" />
-          </Button>
+          <Tooltip content="Close drawer (Esc)">
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={onClose}
+              className="p-1 h-auto w-auto"
+              aria-label="Close drawer"
+            >
+              <Icon name="close" size="sm" />
+            </Button>
+          </Tooltip>
         </div>
         <div className="flex-1 overflow-y-auto p-3 pb-24">{children}</div>
       </div>

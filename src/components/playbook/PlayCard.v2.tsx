@@ -1,6 +1,7 @@
 import { memo, useState } from "react";
 import type { Play as PlayType } from "../../types/play";
 import { Icon } from "../ui/Icon/Icon";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface PlayCardProps {
   play: PlayType;
@@ -140,49 +141,57 @@ export const PlayCard = memo<PlayCardProps>(
 
             {/* Action Buttons - Icon Capsules */}
             <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-                aria-label={isExpanded ? "Collapse" : "Expand"}
-              >
-                <Icon
-                  name={isExpanded ? "chevron-up" : "chevron-down"}
-                  className="w-4 h-4 text-slate-600 dark:text-slate-400"
-                />
-              </button>
+              <Tooltip content={isExpanded ? "Collapse play details" : "Expand play details"}>
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  aria-label={isExpanded ? "Collapse" : "Expand"}
+                >
+                  <Icon
+                    name={isExpanded ? "chevron-up" : "chevron-down"}
+                    className="w-4 h-4 text-slate-600 dark:text-slate-400"
+                  />
+                </button>
+              </Tooltip>
 
-              <button
-                onClick={() => onEdit?.(play)}
-                className="w-9 h-9 rounded-full bg-electric-100 dark:bg-electric-900/30 hover:bg-electric-200 dark:hover:bg-electric-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-                aria-label="Edit play"
-              >
-                <Icon
-                  name="edit"
-                  className="w-4 h-4 text-electric-600 dark:text-electric-400"
-                />
-              </button>
+              <Tooltip content="Edit play">
+                <button
+                  onClick={() => onEdit?.(play)}
+                  className="w-9 h-9 rounded-full bg-electric-100 dark:bg-electric-900/30 hover:bg-electric-200 dark:hover:bg-electric-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  aria-label="Edit play"
+                >
+                  <Icon
+                    name="edit"
+                    className="w-4 h-4 text-electric-600 dark:text-electric-400"
+                  />
+                </button>
+              </Tooltip>
 
-              <button
-                onClick={() => onDuplicate?.(play)}
-                className="w-9 h-9 rounded-full bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-                aria-label="Duplicate play"
-              >
-                <Icon
-                  name="copy"
-                  className="w-4 h-4 text-jade-600 dark:text-jade-400"
-                />
-              </button>
+              <Tooltip content="Duplicate play">
+                <button
+                  onClick={() => onDuplicate?.(play)}
+                  className="w-9 h-9 rounded-full bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  aria-label="Duplicate play"
+                >
+                  <Icon
+                    name="copy"
+                    className="w-4 h-4 text-jade-600 dark:text-jade-400"
+                  />
+                </button>
+              </Tooltip>
 
-              <button
-                onClick={() => onCreateDiagram?.(play)}
-                className="w-9 h-9 rounded-full bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-                aria-label="Create diagram"
-              >
-                <Icon
-                  name="image"
-                  className="w-4 h-4 text-purple-600 dark:text-purple-400"
-                />
-              </button>
+              <Tooltip content="Create diagram">
+                <button
+                  onClick={() => onCreateDiagram?.(play)}
+                  className="w-9 h-9 rounded-full bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-800/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  aria-label="Create diagram"
+                >
+                  <Icon
+                    name="image"
+                    className="w-4 h-4 text-purple-600 dark:text-purple-400"
+                  />
+                </button>
+              </Tooltip>
             </div>
           </div>
 
