@@ -624,6 +624,63 @@ export default {
       backdropBlur: {
         xs: "2px",
       },
+
+      // ============================================
+      // ANIMATION SYSTEM - Phase 3 Design System
+      // ============================================
+      // Maps to CSS custom properties for consistent motion
+
+      // Duration Scale - Timing Utilities
+      transitionDuration: {
+        instant: "var(--duration-instant)",     // 75ms - immediate feedback
+        fast: "var(--duration-fast)",           // 150ms - quick interactions
+        DEFAULT: "var(--duration-base)",        // 200ms - default speed
+        base: "var(--duration-base)",           // 200ms - standard animations
+        medium: "var(--duration-medium)",       // 300ms - moderate animations
+        slow: "var(--duration-slow)",           // 500ms - deliberate animations
+        slower: "var(--duration-slower)",       // 700ms - very slow transitions
+      },
+
+      // Easing Functions - Motion Curves
+      transitionTimingFunction: {
+        linear: "var(--ease-linear)",
+        in: "var(--ease-in)",
+        out: "var(--ease-out)",
+        "in-out": "var(--ease-in-out)",
+        DEFAULT: "var(--ease-out)",             // Default to ease-out
+        bounce: "var(--ease-bounce)",
+        spring: "var(--ease-spring)",
+      },
+
+      // Scale Transform Values
+      scale: {
+        subtle: "var(--scale-subtle)",          // 1.02 - subtle card hover
+        base: "var(--scale-base)",              // 1.05 - standard button hover
+        strong: "var(--scale-strong)",          // 1.1 - icon button hover
+        press: "var(--scale-press)",            // 0.95 - active press
+        "press-strong": "var(--scale-press-strong)", // 0.9 - strong press
+      },
+
+      // Opacity Scale for Fades
+      opacity: {
+        0: "var(--opacity-invisible)",
+        faint: "var(--opacity-faint)",          // 0.1
+        subtle: "var(--opacity-subtle)",        // 0.3
+        medium: "var(--opacity-medium)",        // 0.5
+        strong: "var(--opacity-strong)",        // 0.7
+        opaque: "var(--opacity-opaque)",        // 0.9
+        100: "var(--opacity-full)",
+      },
+
+      // Translate Values for Lift/Slide Effects
+      translate: {
+        "lift-sm": "var(--translate-lift-sm)",      // -2px
+        "lift-base": "var(--translate-lift-base)",  // -4px
+        "lift-lg": "var(--translate-lift-lg)",      // -8px
+        "slide-sm": "var(--translate-slide-sm)",    // 4px
+        "slide-base": "var(--translate-slide-base)", // 8px
+        "slide-lg": "var(--translate-slide-lg)",    // 16px
+      },
     },
   },
   plugins: [

@@ -245,5 +245,52 @@
   --gradient-secondary-end: #2563eb;        /* blue-600 */
   --gradient-warning-start: #f59e0b;        /* amber-500 */
   --gradient-warning-end: #f97316;          /* orange-500 */
+
+  /* ============================================
+   * ANIMATION SYSTEM - Phase 3 Design System
+   * ============================================
+   * Standardized animation timing, easing, and scale transforms.
+   * Use these for consistent motion across all components.
+   */
+
+  /* Duration Scale - Timing for Different Speeds */
+  --duration-instant: 75ms;       /* Immediate feedback - tooltips */
+  --duration-fast: 150ms;         /* Quick interactions - icon buttons */
+  --duration-base: 200ms;         /* Default speed - buttons, cards */
+  --duration-medium: 300ms;       /* Moderate animations - tiles, overlays */
+  --duration-slow: 500ms;         /* Deliberate animations - progress bars */
+  --duration-slower: 700ms;       /* Very slow - complex transitions */
+
+  /* Easing Functions - Motion Curves */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);           /* Accelerate */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);          /* Decelerate (default) */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);     /* Smooth start/end */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce effect */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring effect */
+
+  /* Scale Transform - Hover & Active States */
+  --scale-subtle: 1.02;           /* 2% - subtle card hover */
+  --scale-base: 1.05;             /* 5% - standard button hover */
+  --scale-strong: 1.1;            /* 10% - icon button, badges */
+  --scale-press: 0.95;            /* 5% smaller - active press state */
+  --scale-press-strong: 0.9;      /* 10% smaller - strong press */
+
+  /* Opacity Scale - Fade Effects */
+  --opacity-invisible: 0;
+  --opacity-faint: 0.1;
+  --opacity-subtle: 0.3;
+  --opacity-medium: 0.5;
+  --opacity-strong: 0.7;
+  --opacity-opaque: 0.9;
+  --opacity-full: 1;
+
+  /* Translate Scale - Lift & Slide Effects */
+  --translate-lift-sm: -2px;      /* Small lift - cards */
+  --translate-lift-base: -4px;    /* Base lift - tiles */
+  --translate-lift-lg: -8px;      /* Large lift - modals */
+  --translate-slide-sm: 4px;      /* Small slide - tooltips */
+  --translate-slide-base: 8px;    /* Base slide - drawers */
+  --translate-slide-lg: 16px;     /* Large slide - panels */
 }
 

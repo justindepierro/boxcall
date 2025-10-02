@@ -75,7 +75,7 @@ export const GlassCard = memo<GlassCardProps>(
           overflow-visible
           ${variants[variant]}
           ${paddings[padding]}
-          ${isClickable ? "cursor-pointer hover:shadow-xl transition-shadow duration-200" : ""}
+          ${isClickable ? "cursor-pointer hover:shadow-xl transition-shadow duration-base" : ""}
           ${className}
         `}
         onClick={onClick}

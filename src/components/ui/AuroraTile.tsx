@@ -38,7 +38,7 @@ export interface AuroraTileProps {
 }
 
 const BASE_BUTTON_CLASSES =
-  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
+  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-medium hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
 
 const BASE_ICON_CONTAINER_CLASSES =
   "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";
@@ -69,14 +69,14 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
       <div
         aria-hidden="true"
         className={clsx(
-          "absolute inset-0 opacity-90 transition-opacity duration-300 group-hover:opacity-100",
+          "absolute inset-0 opacity-90 transition-opacity duration-medium group-hover:opacity-100",
           accentOverlayClass
         )}
       />
       <div
         aria-hidden="true"
         className={clsx(
-          "pointer-events-none absolute -bottom-20 -right-12 h-48 w-48 rounded-full blur-3xl transition-opacity duration-300 group-hover:opacity-100",
+          "pointer-events-none absolute -bottom-20 -right-12 h-48 w-48 rounded-full blur-3xl transition-opacity duration-medium group-hover:opacity-100",
           glowClassName
         )}
       />
