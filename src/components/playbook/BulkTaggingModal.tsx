@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 export interface BulkTaggingModalProps {
   isOpen: boolean;
@@ -95,14 +96,16 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
               (future enhancement).
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={onClose}
-            aria-label="Close"
-            icon={<Icon name="close" className="w-4 h-4" />}
-            iconPosition="only"
-          />
+          <Tooltip content="Close tag modal (Esc)">
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={onClose}
+              aria-label="Close"
+              icon={<Icon name="close" className="w-4 h-4" />}
+              iconPosition="only"
+            />
+          </Tooltip>
         </div>
         <div>
           <label className="block text-xs font-medium text-text-secondary mb-1">

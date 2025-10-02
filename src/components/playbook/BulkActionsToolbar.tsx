@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "@components/design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface BulkActionsToolbarProps {
   selectedCount: number;
@@ -28,16 +29,17 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           >
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </Typography>
-          <Button
-            onClick={onClearSelection}
-            variant="ghost"
-            size="xs"
-            icon={<Icon name="close" className="w-4 h-4" />}
-            iconPosition="only"
-            aria-label="Clear selection"
-            className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
-            title="Clear selection"
-          />
+          <Tooltip content="Clear selection">
+            <Button
+              onClick={onClearSelection}
+              variant="ghost"
+              size="xs"
+              icon={<Icon name="close" className="w-4 h-4" />}
+              iconPosition="only"
+              aria-label="Clear selection"
+              className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
+            />
+          </Tooltip>
         </div>
 
         {/* Divider */}

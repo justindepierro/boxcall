@@ -3,6 +3,7 @@ import { TelemetryEventTypes } from "../../../telemetry/events";
 import { telemetry } from "../../../telemetry/dispatcher";
 import type { PlaybookFiltersState } from "../../../contexts/PlaybookContext";
 import { Button } from "../../ui/Button/Button";
+import { Tooltip } from "../../ui/Tooltip/Tooltip";
 
 export interface ActiveFilterChipsProps {
   searchQuery: string;
@@ -187,15 +188,17 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
           </Button>
         </span>
       ))}
-      <Button
-        size="xs"
-        variant="link"
-        onClick={handleClearAll}
-        aria-label="Clear all filters"
-        className="ml-1 text-[11px] px-1"
-      >
-        Clear All
-      </Button>
+      <Tooltip content="Clear all active filters">
+        <Button
+          size="xs"
+          variant="link"
+          onClick={handleClearAll}
+          aria-label="Clear all filters"
+          className="ml-1 text-[11px] px-1"
+        >
+          Clear All
+        </Button>
+      </Tooltip>
     </div>
   );
 };
