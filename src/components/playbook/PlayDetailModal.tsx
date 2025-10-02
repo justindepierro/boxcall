@@ -1,15 +1,5 @@
 import { memo, useState, useCallback } from "react";
-imp          {/* Header Section */}
-          <div
-            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[32px] flex-shrink-0`}
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
-              backgroundSize: "32px 32px",
-            }}
-          >
-            {/* Shine overlay - single layer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none rounded-t-[32px]" />} from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon/Icon";
 import type { Play } from "../../types/play";
 
 interface PlayDetailModalProps {
@@ -66,7 +56,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         >
           {/* Gradient Header with pattern and shine */}
           <div
-            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[32px] flex-shrink-0`}
+            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[30px] overflow-hidden flex-shrink-0`}
             style={{
               backgroundImage:
                 "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
@@ -74,7 +64,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             }}
           >
             {/* Shine overlay - single layer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none rounded-t-[32px]" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
 
             {/* Close Button */}
             <button
@@ -117,7 +107,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           {/* Action Bar - More compact */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30 flex-shrink-0">
             {/* Tabs */}
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               {(["overview", "details", "analytics"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -134,11 +124,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
 
             {/* Action Buttons - More compact */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {onEdit && (
                 <button
                   onClick={onEdit}
-                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
                 >
                   <Icon name="edit" className="w-3.5 h-3.5" />
                   Edit
