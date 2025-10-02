@@ -49,14 +49,14 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         aria-modal="true"
         aria-labelledby="play-detail-title"
       >
-        {/* Modal Container - Larger and more polished */}
+        {/* Modal Container - Larger with genie animation */}
         <div
-          className="relative w-full max-w-5xl max-h-[92vh] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[36px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-in zoom-in-95 duration-300"
+          className="relative w-full max-w-6xl max-h-[94vh] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Gradient Header - Taller */}
+          {/* Gradient Header - More compact */}
           <div
-            className={`relative h-40 bg-gradient-to-br ${playTypeGradient} overflow-hidden`}
+            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} overflow-hidden`}
           >
             {/* Pattern overlay */}
             <div className="absolute inset-0 opacity-10">
@@ -76,50 +76,50 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg"
               aria-label="Close modal"
             >
-              <Icon name="close" className="w-6 h-6 text-white" />
+              <Icon name="close" className="w-5 h-5 text-white" />
             </button>
 
-            {/* Play Title - Better spacing */}
-            <div className="absolute bottom-6 left-8 right-8">
-              <div className="flex items-center gap-3 mb-2">
+            {/* Play Title - More compact */}
+            <div className="absolute bottom-4 left-6 right-6">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span
-                  className={`inline-flex items-center px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
+                  className={`inline-flex items-center px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
                 >
                   {play.p_type}
                 </span>
                 {play.f_type && (
-                  <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-semibold">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-semibold">
                     {play.f_type}
                   </span>
                 )}
               </div>
               <h2
                 id="play-detail-title"
-                className="text-4xl font-bold text-white mb-2 drop-shadow-lg"
+                className="text-3xl font-bold text-white mb-1.5 drop-shadow-lg"
               >
                 {play.formation} {play.play_name}
               </h2>
               {play.one_word_play && (
-                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/25 backdrop-blur-md text-white text-sm font-bold border border-white/30">
-                  <Icon name="zap" className="w-4 h-4 mr-2" />
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/25 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                  <Icon name="zap" className="w-3.5 h-3.5 mr-1.5" />
                   {play.one_word_play.toUpperCase()}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Action Bar - Improved spacing */}
-          <div className="flex items-center justify-between px-8 py-4 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30">
+          {/* Action Bar - More compact */}
+          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30">
             {/* Tabs */}
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               {(["overview", "details", "analytics"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                     activeTab === tab
                       ? "bg-electric-100 dark:bg-electric-900/30 text-electric-700 dark:text-electric-400"
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -130,51 +130,51 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               ))}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2">
+            {/* Action Buttons - More compact */}
+            <div className="flex items-center gap-1.5">
               {onEdit && (
                 <button
                   onClick={onEdit}
-                  className="px-4 py-2 rounded-xl bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
                 >
-                  <Icon name="edit" className="w-4 h-4" />
+                  <Icon name="edit" className="w-3.5 h-3.5" />
                   Edit
                 </button>
               )}
               {onDuplicate && (
                 <button
                   onClick={onDuplicate}
-                  className="w-10 h-10 rounded-xl bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-105"
+                  className="w-9 h-9 rounded-lg bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-105"
                   aria-label="Duplicate play"
                 >
                   <Icon
                     name="copy"
-                    className="w-4 h-4 text-jade-600 dark:text-jade-400"
+                    className="w-3.5 h-3.5 text-jade-600 dark:text-jade-400"
                   />
                 </button>
               )}
               {onDelete && (
                 <button
                   onClick={onDelete}
-                  className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/40 flex items-center justify-center transition-all hover:scale-105"
+                  className="w-9 h-9 rounded-lg bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/40 flex items-center justify-center transition-all hover:scale-105"
                   aria-label="Delete play"
                 >
                   <Icon
                     name="delete"
-                    className="w-4 h-4 text-red-600 dark:text-red-400"
+                    className="w-3.5 h-3.5 text-red-600 dark:text-red-400"
                   />
                 </button>
               )}
             </div>
           </div>
 
-          {/* Content Area - Better spacing and sizing */}
-          <div className="overflow-y-auto max-h-[calc(92vh-280px)] p-8">
+          {/* Content Area - More compact with more space */}
+          <div className="overflow-y-auto max-h-[calc(94vh-200px)] p-6">
             {activeTab === "overview" && (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {/* Diagram Preview */}
                 {play.diagram_url && (
-                  <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 shadow-lg">
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 shadow-lg">
                     <img
                       src={play.diagram_url}
                       alt={`${play.formation} ${play.play_name} diagram`}
@@ -183,37 +183,37 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   </div>
                 )}
 
-                {/* Quick Stats Grid - Better sizing */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
-                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                {/* Quick Stats Grid - More compact */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                       Type
                     </div>
-                    <div className="text-xl font-bold text-slate-900 dark:text-white">
+                    <div className="text-lg font-bold text-slate-900 dark:text-white">
                       {play.p_type}
                     </div>
                   </div>
-                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
-                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                       Confidence
                     </div>
-                    <div className="text-xl font-bold text-jade-600 dark:text-jade-400">
+                    <div className="text-lg font-bold text-jade-600 dark:text-jade-400">
                       {play.confidence_base}%
                     </div>
                   </div>
-                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
-                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                       Called
                     </div>
-                    <div className="text-xl font-bold text-slate-900 dark:text-white">
+                    <div className="text-lg font-bold text-slate-900 dark:text-white">
                       {play.times_called}x
                     </div>
                   </div>
-                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
-                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                  <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                       Success
                     </div>
-                    <div className="text-xl font-bold text-electric-600 dark:text-electric-400">
+                    <div className="text-lg font-bold text-electric-600 dark:text-electric-400">
                       {play.times_called > 0
                         ? Math.round(
                             (play.times_successful / play.times_called) * 100
@@ -224,13 +224,13 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   </div>
                 </div>
 
-                {/* Key Information - Better layout */}
-                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-6 border border-slate-200/50 dark:border-slate-700/50">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
-                    <Icon name="shield" className="w-5 h-5 text-electric-600" />
+                {/* Key Information - More compact */}
+                <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Icon name="shield" className="w-4 h-4 text-electric-600" />
                     Formation Details
                   </h3>
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-2 gap-4">
                     {play.personnel && (
                       <div>
                         <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
