@@ -13,6 +13,18 @@ import { testDatabaseConnection } from "../lib/database-helpers";
 import { AuthMonitoring } from "../utils/authMonitoring";
 import { emitTelemetry } from "../lib/telemetry";
 import { auth as logAuth, success, error as logError, warn, info, debug } from "../utils/logger";
+import {
+  PROFILE_CACHE_TTL,
+  MAX_REFRESH_ATTEMPTS,
+  REFRESH_RETRY_DELAY,
+  SESSION_CHECK_INTERVAL,
+  SESSION_REFRESH_THRESHOLD,
+  MS_PER_SECOND,
+  NETWORK_MAX_RETRIES,
+  NETWORK_BASE_DELAY,
+  NETWORK_MAX_DELAY,
+  POSTGRES_NO_ROWS_CODE
+} from "../utils/authConstants";
 
 // Profile cache to prevent redundant database calls
 interface ProfileCache {
@@ -22,7 +34,6 @@ interface ProfileCache {
 }
 
 let profileCache: Map<string, ProfileCache> = new Map();
-const PROFILE_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 // Convert Supabase auth errors to user-friendly messages
 function getAuthErrorMessage(error: any): string {
@@ -172,9 +183,9 @@ export const useAuth = create<AuthState>()(
               email,
               password,
             }),
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
+            NETWORK_MAX_RETRIES,
+            NETWORK_BASE_DELAY,
+            NETWORK_MAX_DELAY
           );
           if (error) {
             AuthMonitoring.recordNetworkError();
@@ -306,9 +317,9 @@ export const useAuth = create<AuthState>()(
               if (error) throw error;
               return data;
             },
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
+            NETWORK_MAX_RETRIES,
+            NETWORK_BASE_DELAY,
+            NETWORK_MAX_DELAY
           );
 
           if (!authData.user) {
@@ -331,9 +342,9 @@ export const useAuth = create<AuthState>()(
                 });
               if (profileError) throw profileError;
             },
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
+            NETWORK_MAX_RETRIES,
+            NETWORK_BASE_DELAY,
+            NETWORK_MAX_DELAY
           );
 
           set({
@@ -366,9 +377,9 @@ export const useAuth = create<AuthState>()(
               if (error) throw error;
               return data;
             },
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
+            NETWORK_MAX_RETRIES,
+            NETWORK_BASE_DELAY,
+            NETWORK_MAX_DELAY
           );
 
           if (!authData.user) {
@@ -394,9 +405,9 @@ export const useAuth = create<AuthState>()(
                 });
               if (profileError) throw profileError;
             },
-            3, // max retries
-            1000, // base delay
-            10000 // max delay
+            NETWORK_MAX_RETRIES,
+            NETWORK_BASE_DELAY,
+            NETWORK_MAX_DELAY
           );
 
           set({
@@ -539,7 +550,7 @@ export const useAuth = create<AuthState>()(
           if (error) {
             logError("Error fetching user profile:", error);
             // Create a basic profile if it doesn't exist
-            if (error.code === 'PGRST116') { // No rows returned
+            if (error.code === POSTGRES_NO_ROWS_CODE) {
               info("Profile not found, creating basic profile");
               const basicProfile: UserProfile = {
                 id: userId,
@@ -649,8 +660,6 @@ export const useAuth = create<AuthState>()(
 // Session refresh logic with improved error handling and recovery
 let refreshInterval: NodeJS.Timeout | null = null;
 let refreshAttempts = 0;
-const MAX_REFRESH_ATTEMPTS = 3;
-const REFRESH_RETRY_DELAY = 30000; // 30 seconds
 
 const startSessionRefresh = () => {
   // Clear any existing interval
@@ -673,11 +682,11 @@ const startSessionRefresh = () => {
       }
 
       if (session) {
-        const now = Date.now() / 1000; // Convert to seconds
+        const now = Date.now() / MS_PER_SECOND; // Convert to seconds
         const expiresAt = session.expires_at;
 
-        // If token expires within 10 minutes, refresh it
-        if (expiresAt && (expiresAt - now) < 600) {
+        // If token expires within configured threshold, refresh it
+        if (expiresAt && (expiresAt - now) < SESSION_REFRESH_THRESHOLD) {
           debug("Refreshing session before expiration");
 
           if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
@@ -730,7 +739,7 @@ const startSessionRefresh = () => {
         attempt: refreshAttempts
       });
     }
-  }, 5 * 60 * 1000); // Check every 5 minutes
+  }, SESSION_CHECK_INTERVAL);
 };
 
 const stopSessionRefresh = () => {

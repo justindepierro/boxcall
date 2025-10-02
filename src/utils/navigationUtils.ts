@@ -3,7 +3,12 @@
  * Helper functions for managing navigation state and return URLs
  */
 
-const RETURN_URL_KEY = 'boxcall_return_url';
+import { 
+  STORAGE_KEYS, 
+  EXCLUDED_RETURN_ROUTES, 
+  DEFAULT_LOGIN_DESTINATION 
+} from './authConstants';
+
 const RETURN_URL_PARAM = 'returnUrl';
 
 /**
@@ -17,7 +22,7 @@ export function saveReturnUrl(path?: string): void {
     if (isAuthRoute(url)) {
       return;
     }
-    sessionStorage.setItem(RETURN_URL_KEY, url);
+    sessionStorage.setItem(STORAGE_KEYS.RETURN_URL, url);
     console.debug('🔖 Saved return URL:', url);
   } catch (error) {
     console.warn('Failed to save return URL:', error);
@@ -29,10 +34,10 @@ export function saveReturnUrl(path?: string): void {
  * @param defaultUrl - URL to return if no saved URL exists
  * @returns The return URL or default
  */
-export function getAndClearReturnUrl(defaultUrl = '/dashboard'): string {
+export function getAndClearReturnUrl(defaultUrl = DEFAULT_LOGIN_DESTINATION): string {
   try {
-    const url = sessionStorage.getItem(RETURN_URL_KEY);
-    sessionStorage.removeItem(RETURN_URL_KEY);
+    const url = sessionStorage.getItem(STORAGE_KEYS.RETURN_URL);
+    sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL);
     
     if (url && !isAuthRoute(url)) {
       console.debug('🔖 Retrieved return URL:', url);
@@ -86,8 +91,7 @@ export function createLoginUrl(returnUrl?: string): string {
  * @returns True if auth route
  */
 function isAuthRoute(url: string): boolean {
-  const authRoutes = ['/login', '/signup', '/logout', '/reset-password', '/verify-email'];
-  return authRoutes.some(route => url.startsWith(route));
+  return EXCLUDED_RETURN_ROUTES.some(route => url.startsWith(route));
 }
 
 /**
@@ -125,11 +129,11 @@ export function isValidReturnUrl(url: string): boolean {
  * @param defaultUrl - Default URL if none saved
  * @returns Safe return URL
  */
-export function getLoginDestination(search: string, defaultUrl = '/dashboard'): string {
+export function getLoginDestination(search: string, defaultUrl = DEFAULT_LOGIN_DESTINATION): string {
   // 1. Check query parameter
   const queryUrl = getReturnUrlFromQuery(search);
   if (queryUrl && isValidReturnUrl(queryUrl)) {
-    sessionStorage.removeItem(RETURN_URL_KEY); // Clear storage if using query
+    sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL); // Clear storage if using query
     return queryUrl;
   }
   
