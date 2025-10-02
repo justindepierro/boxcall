@@ -675,10 +675,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   return (
     <>
       <div
-        className={`surface-card rounded-lg border transition-colors shadow-sm ${
+        className={`rounded-[20px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 ${
           isSelected
-            ? "border-text-accent ring-2 ring-surface-info"
-            : "border-subtle hover:border-border-light"
+            ? "ring-2 ring-jade-500 border-jade-400 shadow-lg shadow-jade-500/20"
+            : "shadow-[0_8px_16px_-8px_rgba(15,23,42,0.3)] hover:shadow-[0_12px_20px_-8px_rgba(15,23,42,0.4)] hover:border-white"
         } ${isCompact ? "text-[13px]" : ""}`}
       >
         <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>

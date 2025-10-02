@@ -431,9 +431,9 @@ export default function PlaybookPage() {
         streakDays={state.streakDays}
       />
 
-      {/* Aurora Hero Tiles - iPhone App Style */}
-      <div className="px-4 sm:px-6 lg:px-8 py-6 overflow-visible">
-        <div className="flex items-center justify-center gap-8 flex-wrap overflow-visible">
+      {/* Aurora Hero Tiles - iPhone App Style - Tight spacing */}
+      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6">
+        <div className="flex items-center justify-center gap-6 flex-wrap">
           <AppIconTile
             title="New Play"
             subtitle={`${state.playsCreated} plays`}

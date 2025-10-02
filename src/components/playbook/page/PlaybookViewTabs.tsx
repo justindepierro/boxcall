@@ -37,7 +37,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
     <div className="border-b border-white/20 bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 backdrop-blur-xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top row: Title, stats, team type selector, and search */}
-        <div className="flex items-center justify-between py-5">
+        <div className="flex items-center justify-between py-3">
           <div className="flex items-center space-x-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25">
               <Icon name="file" className="h-6 w-6 text-white" />
@@ -87,7 +87,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
         </div>
 
         {/* Bottom row: Navigation tabs and actions */}
-        <div className="flex items-center justify-between pb-4">
+        <div className="flex items-center justify-between pb-2">
           {/* View Tabs - Left side */}
           <div className="flex items-center gap-2">
             <Button
