@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlayGrid } from "../components/playbook/PlayGrid";
@@ -9,27 +9,52 @@ import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
-import { PlaysService } from "@services";
+import { PlaysService, ActivityService } from "@services";
+import type { PlayActivityItem } from "@services";
 import { PracticeScriptService, GamePlanService } from "../services";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
-import { AddNewPlayModal } from "../components/playbook/AddNewPlayModal";
-import { PlaybookSettingsModal } from "../components/playbook/PlaybookSettingsModal";
 import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
 import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
-import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcutsGuide";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
-import {
-  PlayDiagramBuilder,
-  type DiagramMetadata,
-} from "../components/playbook/diagram/PlayDiagramBuilder";
+import type { DiagramMetadata } from "../components/playbook/diagram/PlayDiagramBuilder";
 import type { DiagramDocument } from "../components/playbook/diagram/types/types";
 import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
-import { PracticeScriptBuilder } from "../components/playbook/PracticeScriptBuilder";
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
+import { GlassCard } from "../components/ui/GlassCard";
+import { info, error as logError, warn, debug } from "../utils/logger";
+
+// Lazy load modal components for code splitting (~120KB savings)
+const AddNewPlayModal = lazy(() =>
+  import("../components/playbook/AddNewPlayModal").then((module) => ({
+    default: module.AddNewPlayModal,
+  }))
+);
+const PlaybookSettingsModal = lazy(() =>
+  import("../components/playbook/PlaybookSettingsModal").then((module) => ({
+    default: module.PlaybookSettingsModal,
+  }))
+);
+const KeyboardShortcutsGuide = lazy(() =>
+  import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
+    default: module.KeyboardShortcutsGuide,
+  }))
+);
+const PlayDiagramBuilder = lazy(() =>
+  import("../components/playbook/diagram/PlayDiagramBuilder").then(
+    (module) => ({
+      default: module.PlayDiagramBuilder,
+    })
+  )
+);
+const PracticeScriptBuilder = lazy(() =>
+  import("../components/playbook/PracticeScriptBuilder").then((module) => ({
+    default: module.PracticeScriptBuilder,
+  }))
+);
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -50,7 +75,7 @@ export default function PlaybookPage() {
   const handleCreateDiagram = useCallback((play: Play) => {
     setDiagramPlay(play);
     // TODO: Open diagram builder modal or navigate to diagram route
-    console.log("Creating diagram for play:", play);
+    debug("Creating diagram for play:", play);
   }, []);
 
   // Load settings from localStorage or use defaults
@@ -98,10 +123,7 @@ export default function PlaybookPage() {
         };
       }
     } catch (error) {
-      console.warn(
-        "Failed to load playbook settings from localStorage:",
-        error
-      );
+      warn("Failed to load playbook settings from localStorage:", error);
     }
 
     // Return defaults if no saved settings or error
@@ -141,32 +163,30 @@ export default function PlaybookPage() {
   };
 
   const [playbookSettings, setPlaybookSettings] = useState(loadSettings);
+  const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
+    []
+  );
+
+  // Load recent activities on mount
+  useEffect(() => {
+    const loadActivities = async () => {
+      try {
+        const activities = await ActivityService.getRecentActivities(
+          activeTeamId || undefined,
+          10
+        );
+        setRecentActivities(activities);
+        debug(`Loaded ${activities.length} recent activities`);
+      } catch (err) {
+        logError("Failed to load recent activities:", err);
+      }
+    };
+
+    void loadActivities();
+  }, [activeTeamId]);
 
   // Calculate playbook stats
   const calculatePlaybookStats = () => {
-    // Mock recent activity - in a real implementation, this would come from the database
-    const mockActivities = [
-      {
-        id: "1",
-        type: "created" as const,
-        playName: "Slant Route",
-        timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-      },
-      {
-        id: "2",
-        type: "updated" as const,
-        playName: "Power Run",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      },
-      {
-        id: "3",
-        type: "added_to_script" as const,
-        playName: "Screen Pass",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
-        details: "Week 1 Practice",
-      },
-    ];
-
     return {
       totalPlays: state.playsCreated || 0,
       playsWithDiagrams: Math.floor(
@@ -177,7 +197,22 @@ export default function PlaybookPage() {
       runPlays: Math.floor((state.playsCreated || 0) * 0.4),
       rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
       playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
-      recentActivity: mockActivities,
+      recentActivity: recentActivities
+        .filter(
+          (activity) => activity.activityType !== "deleted" // Filter out deleted activities for dashboard
+        )
+        .map((activity) => ({
+          id: activity.id,
+          type: activity.activityType as Exclude<
+            typeof activity.activityType,
+            "deleted"
+          >,
+          playName: activity.playName || "Unknown Play",
+          timestamp: new Date(activity.createdAt),
+          details: activity.details
+            ? JSON.stringify(activity.details)
+            : undefined,
+        })),
     };
   };
 
@@ -224,7 +259,7 @@ export default function PlaybookPage() {
       dispatch({ type: "INCREMENT_REFRESH" });
       return Promise.resolve();
     } catch (error) {
-      console.error("Failed to save play:", error);
+      logError("Failed to save play:", error);
       throw error; // Re-throw so the UI can show the error
     }
   };
@@ -264,7 +299,7 @@ export default function PlaybookPage() {
         );
         toast.success("Diagram saved", metadata.play_name);
       } catch (error) {
-        console.error("Failed to save diagram:", error);
+        logError("Failed to save diagram:", error);
         toast.error("Failed to save diagram", "Please try again");
         throw error;
       }
@@ -296,16 +331,14 @@ export default function PlaybookPage() {
         play,
         teamId
       );
-      console.log(
-        `✅ Added "${play.play_name}" to practice script: "${script.name}"`
-      );
+      info(`Added "${play.play_name}" to practice script: "${script.name}"`);
       // TODO: Replace with toast notification
       toast.success(
         `Added "${play.play_name}" to practice script`,
         script.name
       );
     } catch (error) {
-      console.error("Failed to add play to practice script:", error);
+      logError("Failed to add play to practice script:", error);
       toast.error("Failed to add play to practice script", "Please try again");
     }
   };
@@ -329,13 +362,11 @@ export default function PlaybookPage() {
         },
         play
       );
-      console.log(
-        `✅ Added "${play.play_name}" to game plan: "${gamePlan.name}"`
-      );
+      info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
       // TODO: Replace with toast notification
       toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
     } catch (error) {
-      console.error("Failed to add play to game plan:", error);
+      logError("Failed to add play to game plan:", error);
       toast.error("Failed to add play to game plan", "Please try again");
     }
   };
@@ -347,7 +378,7 @@ export default function PlaybookPage() {
   };
 
   const handleSavePracticeScript = (script: any) => {
-    console.log("Practice script saved:", script);
+    debug("Practice script saved:", script);
     setShowPracticeScriptBuilder(false);
     setEditingScript(null);
     // TODO: Refresh practice scripts list
@@ -407,7 +438,7 @@ export default function PlaybookPage() {
           personnel,
         });
       } catch (error) {
-        console.error("Failed to load suggestions:", error);
+        logError("Failed to load suggestions:", error);
         // Continue with empty suggestions - the UI will still work
       }
     };
@@ -432,8 +463,8 @@ export default function PlaybookPage() {
       />
 
       {/* Aurora Hero Tiles - iPhone App Style - Tight spacing */}
-      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6">
-        <div className="flex items-center justify-center gap-6 flex-wrap">
+      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 overflow-visible">
+        <div className="flex items-center justify-center gap-6 flex-wrap overflow-visible">
           <AppIconTile
             title="New Play"
             subtitle={`${state.playsCreated} plays`}
@@ -470,42 +501,42 @@ export default function PlaybookPage() {
       </div>
 
       {/* Main Content - 2 Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
         {/* Left Sidebar - Controls */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-6 overflow-visible">
           {/* Filters - Moved to top */}
-          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+          <GlassCard>
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
             />
-          </div>
+          </GlassCard>
 
           {/* Stats Dashboard */}
-          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+          <GlassCard>
             <PlaybookStatsDashboard stats={playbookStats} />
-          </div>
+          </GlassCard>
 
           {/* Recent Activity */}
-          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+          <GlassCard>
             <RecentActivityFeed activities={playbookStats.recentActivity} />
-          </div>
+          </GlassCard>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-6 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+            <GlassCard>
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
                 onBulkAction={handleBulkAction}
               />
-            </div>
+            </GlassCard>
           )}
         </div>
 
         {/* Right Side - Main Content Area */}
-        <div className="lg:col-span-3">
-          <div className="rounded-[28px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl p-8 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]">
+        <div className="lg:col-span-3 overflow-visible">
+          <GlassCard padding="lg">
             {state.currentView === "playbook" && (
               <PlayGrid
                 searchQuery={state.searchQuery}
@@ -605,131 +636,137 @@ export default function PlaybookPage() {
                 </div>
               </div>
             )}
-          </div>
+          </GlassCard>
         </div>
       </div>
 
       {/* Sticky Workflow Status Bar */}
       <WorkflowStatusBar />
 
-      {/* New Modals */}
+      {/* New Modals - Lazy loaded with Suspense for code splitting */}
       {showAddNewPlayModal && (
-        <AddNewPlayModal
-          isOpen={showAddNewPlayModal}
-          onClose={() => {
-            setShowAddNewPlayModal(false);
-            setEditingPlay(null);
-          }}
-          existingPlay={editingPlay}
-          onCreatePlay={async (playData) => {
-            try {
-              console.log("Processing play:", playData);
-
-              let resultPlay: Play;
-
-              if (editingPlay) {
-                // Update existing play
-                resultPlay = await PlaysService.updatePlay(
-                  editingPlay.id,
-                  playData
-                );
-                toast.success(
-                  `Play "${resultPlay.play_name}" updated successfully!`
-                );
-              } else {
-                // Create new play
-                resultPlay = await PlaysService.createPlay(playData);
-                toast.success(
-                  `Play "${resultPlay.play_name}" created successfully!`
-                );
-              }
-
-              // Refresh the playbook data
-              dispatch({ type: "INCREMENT_REFRESH" });
-
+        <Suspense fallback={null}>
+          <AddNewPlayModal
+            isOpen={showAddNewPlayModal}
+            onClose={() => {
               setShowAddNewPlayModal(false);
               setEditingPlay(null);
-            } catch (error) {
-              console.error("Failed to process play:", error);
+            }}
+            existingPlay={editingPlay}
+            onCreatePlay={async (playData) => {
+              try {
+                debug("Processing play:", playData);
 
-              // Handle specific error types
-              if (error instanceof Error) {
-                if (error.message.includes("Duplicate play")) {
-                  toast.error(
-                    "Duplicate play detected",
-                    "A play with this name and formation already exists"
+                let resultPlay: Play;
+
+                if (editingPlay) {
+                  // Update existing play
+                  resultPlay = await PlaysService.updatePlay(
+                    editingPlay.id,
+                    playData
                   );
-                } else if (error.message.includes("User not authenticated")) {
-                  toast.error(
-                    "Authentication required",
-                    "You must be logged in to modify plays"
-                  );
-                } else {
-                  toast.error("Failed to process play", error.message);
-                }
-              } else if (typeof error === "object" && error !== null) {
-                // Check for PostgREST schema cache errors
-                const err = error as { code?: string; message?: string };
-                if (
-                  err.code === "PGRST204" ||
-                  err.message?.includes("schema cache")
-                ) {
-                  toast.error(
-                    "Database schema cache error",
-                    "Please reload the page. If the issue persists, contact support."
-                  );
-                  console.error(
-                    "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
+                  toast.success(
+                    `Play "${resultPlay.play_name}" updated successfully!`
                   );
                 } else {
-                  toast.error(
-                    "Failed to process play",
-                    err.message || "Please try again"
+                  // Create new play
+                  resultPlay = await PlaysService.createPlay(playData);
+                  toast.success(
+                    `Play "${resultPlay.play_name}" created successfully!`
                   );
                 }
-              } else {
-                toast.error("Failed to process play", "Please try again");
+
+                // Refresh the playbook data
+                dispatch({ type: "INCREMENT_REFRESH" });
+
+                setShowAddNewPlayModal(false);
+                setEditingPlay(null);
+              } catch (error) {
+                logError("Failed to process play:", error);
+
+                // Handle specific error types
+                if (error instanceof Error) {
+                  if (error.message.includes("Duplicate play")) {
+                    toast.error(
+                      "Duplicate play detected",
+                      "A play with this name and formation already exists"
+                    );
+                  } else if (error.message.includes("User not authenticated")) {
+                    toast.error(
+                      "Authentication required",
+                      "You must be logged in to modify plays"
+                    );
+                  } else {
+                    toast.error("Failed to process play", error.message);
+                  }
+                } else if (typeof error === "object" && error !== null) {
+                  // Check for PostgREST schema cache errors
+                  const err = error as { code?: string; message?: string };
+                  if (
+                    err.code === "PGRST204" ||
+                    err.message?.includes("schema cache")
+                  ) {
+                    toast.error(
+                      "Database schema cache error",
+                      "Please reload the page. If the issue persists, contact support."
+                    );
+                    logError(
+                      "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
+                    );
+                  } else {
+                    toast.error(
+                      "Failed to process play",
+                      err.message || "Please try again"
+                    );
+                  }
+                } else {
+                  toast.error("Failed to process play", "Please try again");
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
+        </Suspense>
       )}
 
       {showPlaybookSettingsModal && (
-        <PlaybookSettingsModal
-          isOpen={showPlaybookSettingsModal}
-          onClose={() => setShowPlaybookSettingsModal(false)}
-          settings={playbookSettings}
-          onSave={(settings) => {
-            try {
-              console.log("Saving playbook settings:", settings);
+        <Suspense fallback={null}>
+          <PlaybookSettingsModal
+            isOpen={showPlaybookSettingsModal}
+            onClose={() => setShowPlaybookSettingsModal(false)}
+            settings={playbookSettings}
+            onSave={(settings) => {
+              try {
+                debug("Saving playbook settings:", settings);
 
-              // Update local state
-              setPlaybookSettings(settings);
+                // Update local state
+                setPlaybookSettings(settings);
 
-              // Persist settings to localStorage
-              localStorage.setItem(
-                "boxcall_playbook_settings",
-                JSON.stringify(settings)
-              );
+                // Persist settings to localStorage
+                localStorage.setItem(
+                  "boxcall_playbook_settings",
+                  JSON.stringify(settings)
+                );
 
-              // Show success message (replace with toast when available)
-              toast.success("Playbook settings saved successfully!");
+                // Show success message (replace with toast when available)
+                toast.success("Playbook settings saved successfully!");
 
-              setShowPlaybookSettingsModal(false);
-            } catch (error) {
-              console.error("Failed to save playbook settings:", error);
-              toast.error("Failed to save settings", "Please try again");
-            }
-          }}
-        />
+                setShowPlaybookSettingsModal(false);
+              } catch (error) {
+                logError("Failed to save playbook settings:", error);
+                toast.error("Failed to save settings", "Please try again");
+              }
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Keyboard Shortcuts Guide */}
-      <KeyboardShortcutsGuide
-        isOpen={showKeyboardShortcuts}
-        onClose={() => setShowKeyboardShortcuts(false)}
-      />
+      <Suspense fallback={null}>
+        <KeyboardShortcutsGuide
+          isOpen={showKeyboardShortcuts}
+          onClose={() => setShowKeyboardShortcuts(false)}
+        />
+      </Suspense>
 
       {/* Diagram Builder Modal */}
       {diagramPlay && (
@@ -742,25 +779,29 @@ export default function PlaybookPage() {
           closeOnBackdropClick={false}
           closeOnEscape={true}
         >
-          <PlayDiagramBuilder
-            play={diagramPlay}
-            onClose={() => setDiagramPlay(null)}
-            onSave={handleSaveDiagram}
-          />
+          <Suspense fallback={null}>
+            <PlayDiagramBuilder
+              play={diagramPlay}
+              onClose={() => setDiagramPlay(null)}
+              onSave={handleSaveDiagram}
+            />
+          </Suspense>
         </Modal>
       )}
 
       {/* Practice Script Builder Modal */}
-      <PracticeScriptBuilder
-        script={editingScript}
-        teamId={activeTeamId || ""}
-        onSave={handleSavePracticeScript}
-        onCancel={() => {
-          setShowPracticeScriptBuilder(false);
-          setEditingScript(null);
-        }}
-        isOpen={showPracticeScriptBuilder}
-      />
+      <Suspense fallback={null}>
+        <PracticeScriptBuilder
+          script={editingScript}
+          teamId={activeTeamId || ""}
+          onSave={handleSavePracticeScript}
+          onCancel={() => {
+            setShowPracticeScriptBuilder(false);
+            setEditingScript(null);
+          }}
+          isOpen={showPracticeScriptBuilder}
+        />
+      </Suspense>
     </PageLayout>
   );
 }

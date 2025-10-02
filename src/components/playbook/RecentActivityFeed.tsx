@@ -99,7 +99,7 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
 
   return (
     <div
-      className={`bg-surface-primary rounded-lg border border-border p-4 ${className}`}
+      className={`bg-surface-primary rounded-lg border border-border p-4 overflow-visible ${className}`}
     >
       <div className="flex items-center mb-4">
         <Icon name="activity" className="h-5 w-5 text-jade-600 mr-2" />

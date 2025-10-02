@@ -100,7 +100,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 aria-label={`Navigate to ${item.label}`}
               >
                 {/* Icon Container */}
-                <div className="relative mb-1">
+                <div className="relative mb-1 overflow-visible">
                   <Icon
                     name={
                       item.icon as

@@ -78,11 +78,11 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(
     };
 
     return (
-      <div className="relative flex flex-col items-center w-full max-w-[180px] mx-auto">
+      <div className="relative flex flex-col items-center w-full max-w-[180px] mx-auto overflow-visible">
         {/* Selection Checkbox - Top Left Corner */}
         {onSelectionChange && (
           <label
-            className="absolute top-0 left-0 z-10 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+            className="absolute top-0 left-0 z-10 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform overflow-visible"
             onClick={(e) => e.stopPropagation()}
           >
             <input
@@ -97,7 +97,7 @@ export const PlayCardAppIcon = memo<PlayCardAppIconProps>(
         {/* App Icon Container with gradient and shine effect */}
         <button
           onClick={() => onClick?.(play)}
-          className={`relative w-[140px] h-[140px] rounded-[32px] bg-gradient-to-br ${getTypeGradient(play.p_type)} shadow-lg hover:shadow-2xl transition-transform duration-200 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:rounded-[32px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none ${
+          className={`relative w-[140px] h-[140px] rounded-[32px] bg-gradient-to-br ${getTypeGradient(play.p_type)} shadow-lg hover:shadow-2xl transition-transform duration-200 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:rounded-[32px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none overflow-visible ${
             isSelected ? "ring-4 ring-electric-500/40" : ""
           }`}
           aria-label={`Open ${displayName}`}

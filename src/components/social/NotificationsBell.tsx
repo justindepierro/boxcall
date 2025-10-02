@@ -106,11 +106,11 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative overflow-visible">
       {/* Notification Bell Button */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-text-secondary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-text-info rounded-full"
+        className="relative p-2 text-text-secondary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-text-info rounded-full overflow-visible"
       >
         <svg
           className="w-6 h-6"

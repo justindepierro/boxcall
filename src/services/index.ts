@@ -1,4 +1,5 @@
 export * from "./achievementService";
+export * from "./activityService";
 export * from "./adaptiveContentService";
 export * from "./calendarService";
 export * from "./customFieldsService";

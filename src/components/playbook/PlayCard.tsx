@@ -675,13 +675,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   return (
     <>
       <div
-        className={`rounded-[20px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 ${
+        className={`rounded-[20px] border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
           isSelected
             ? "ring-2 ring-jade-500 border-jade-400 shadow-lg shadow-jade-500/20"
             : "shadow-[0_8px_16px_-8px_rgba(15,23,42,0.3)] hover:shadow-[0_12px_20px_-8px_rgba(15,23,42,0.4)] hover:border-white"
         } ${isCompact ? "text-[13px]" : ""}`}
       >
-        <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
+        <div
+          className={`${isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"} overflow-visible`}
+        >
           {play.diagram_url && (
             <div className="mb-3 -mt-1">
               <img
@@ -694,14 +696,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             </div>
           )}
           {/* Collapsed/Skinny Mode */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between overflow-visible">
             {/* Selection Checkbox: always available for quick selection */}
             <div className="flex items-center mr-3">
               <input
                 type="checkbox"
                 checked={Boolean(isSelected)}
                 onChange={(e) => onSelectionChange?.(play.id, e.target.checked)}
-                className="rounded border-border text-text-info focus:ring-text-accent"
+                className="w-4 h-4 rounded border-2 border-slate-300 text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-1 cursor-pointer transition-all hover:border-jade-400 bg-white/90"
                 title="Select play"
               />
             </div>

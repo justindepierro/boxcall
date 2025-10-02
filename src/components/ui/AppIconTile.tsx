@@ -26,11 +26,14 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div className={`relative ${className}`} style={{ padding: "8px" }}>
+      <div
+        className={`relative overflow-visible ${className}`}
+        style={{ padding: "8px" }}
+      >
         <button
           type="button"
           onClick={onOpen}
-          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 rounded-2xl"
+          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 rounded-2xl overflow-visible"
           aria-label={title}
         >
           {/* Top Label - Optional text above icon */}
@@ -41,10 +44,10 @@ export const AppIconTile = memo<AppIconTileProps>(
           )}
 
           {/* App Icon - iPhone Style - Centered */}
-          <div className="relative w-24 h-24">
+          <div className="relative w-24 h-24 overflow-visible">
             {/* Icon Container with Gradient and shine effect */}
             <div
-              className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} transition-all duration-200 group-hover:scale-105 group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+              className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} transition-all duration-200 group-hover:scale-105 group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none overflow-visible`}
               style={{
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
