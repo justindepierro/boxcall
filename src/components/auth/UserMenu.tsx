@@ -40,7 +40,7 @@ export const UserMenu: React.FC = () => {
       warn("Failed to sign out:", error);
     }
   };
-  
+
   const handleLogoutClick = () => {
     // Show confirmation on first click
     if (!showLogoutConfirm) {
@@ -50,7 +50,7 @@ export const UserMenu: React.FC = () => {
     // Actually logout on second click
     handleLogout();
   };
-  
+
   const handleCancelLogout = () => {
     setShowLogoutConfirm(false);
   };
@@ -159,7 +159,10 @@ export const UserMenu: React.FC = () => {
               </Button>
             ) : (
               <div className="px-4 py-3 bg-surface-error/5 border-t border-border-error/20">
-                <Typography variant="body-xs" className="text-text-secondary mb-2">
+                <Typography
+                  variant="body-xs"
+                  className="text-text-secondary mb-2"
+                >
                   Are you sure you want to sign out?
                 </Typography>
                 <div className="flex gap-2">

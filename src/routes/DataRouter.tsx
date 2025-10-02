@@ -77,7 +77,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
     // Save current location as return URL
     saveReturnUrl(location.pathname + location.search);
     // Redirect to login
-    return <Navigate to={createLoginUrl(location.pathname + location.search)} replace />;
+    return (
+      <Navigate
+        to={createLoginUrl(location.pathname + location.search)}
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

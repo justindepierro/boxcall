@@ -35,39 +35,75 @@ interface ProfileCache {
 
 let profileCache: Map<string, ProfileCache> = new Map();
 
-// Convert Supabase auth errors to user-friendly messages
+/**
+ * Convert Supabase auth errors to user-friendly, actionable messages
+ * 
+ * Provides context-aware error messages with clear next steps for users
+ * 
+ * @param error - The error object from Supabase auth operations
+ * @returns A user-friendly error message with actionable guidance
+ */
 function getAuthErrorMessage(error: any): string {
-  if (!error) return "An unexpected error occurred";
+  if (!error) {
+    return "An unexpected error occurred. Please refresh the page and try again.";
+  }
 
   const message = error.message?.toLowerCase() || "";
+  const status = error.status;
 
+  // Invalid credentials - most common auth error
   if (message.includes("invalid login credentials")) {
-    return "Invalid email or password. Please check your credentials and try again.";
-  }
-  if (message.includes("email not confirmed")) {
-    return "Please check your email and click the confirmation link before signing in.";
-  }
-  if (message.includes("too many requests")) {
-    return "Too many login attempts. Please wait a few minutes before trying again.";
-  }
-  if (message.includes("user not found")) {
-    return "No account found with this email address.";
-  }
-  if (message.includes("weak password")) {
-    return "Password is too weak. Please choose a stronger password.";
-  }
-  if (message.includes("signup disabled")) {
-    return "New account registration is currently disabled.";
-  }
-  if (message.includes("email address is invalid")) {
-    return "Please enter a valid email address.";
-  }
-  if (message.includes("password should be at least")) {
-    return "Password must be at least 6 characters long.";
+    return "Invalid email or password. Please double-check your credentials and try again. Forgot your password? Use the reset link below.";
   }
 
-  // Return the original message if we don't have a specific mapping
-  return error.message || "Authentication failed. Please try again.";
+  // Email not confirmed - user needs to take action
+  if (message.includes("email not confirmed")) {
+    return "Email not verified yet. Please check your inbox for the confirmation email. Can't find it? Check your spam folder or request a new confirmation email.";
+  }
+
+  // Rate limiting - time-based lockout
+  if (message.includes("too many requests") || status === 429) {
+    return "Too many login attempts detected. For security, please wait 5-10 minutes before trying again. This helps protect your account from unauthorized access.";
+  }
+
+  // User not found - might be typo or wrong account
+  if (message.includes("user not found")) {
+    return "No account found with this email address. Please check the email for typos, or create a new account if you haven't registered yet.";
+  }
+
+  // Weak password - needs stronger password
+  if (message.includes("weak password")) {
+    return "Password is too weak. Please choose a stronger password with at least 8 characters, including uppercase, lowercase, numbers, and symbols.";
+  }
+
+  // Signup disabled - system-level restriction
+  if (message.includes("signup disabled")) {
+    return "New registrations are temporarily disabled. Please contact support if you need access, or try again later.";
+  }
+
+  // Invalid email format
+  if (message.includes("email address is invalid")) {
+    return "The email address format is invalid. Please enter a valid email like: user@example.com";
+  }
+
+  // Password length requirement
+  if (message.includes("password should be at least")) {
+    return "Password must be at least 6 characters long. For better security, we recommend using 8+ characters with a mix of letters, numbers, and symbols.";
+  }
+
+  // Network errors - connectivity issues
+  if (message.includes("network") || message.includes("fetch") || message.includes("timeout")) {
+    return "Network connection issue detected. Please check your internet connection and try again. If the problem persists, try refreshing the page.";
+  }
+
+  // Session expired - user needs to re-authenticate
+  if (message.includes("session") && (message.includes("expired") || message.includes("invalid"))) {
+    return "Your session has expired for security reasons. Please sign in again to continue.";
+  }
+
+  // Fallback with original message for debugging
+  const originalMessage = error.message || "Authentication failed";
+  return `${originalMessage}. If this problem continues, please contact support with error code: ${status || 'UNKNOWN'}`;
 }
 
 interface AuthState {
@@ -258,10 +294,25 @@ export const useAuth = create<AuthState>()(
             return { success: true };
           }
           set({ loading: false });
-          return { success: false, error: "No user data returned" };
+          return { 
+            success: false, 
+            error: "Sign in succeeded but no user data was returned. This may be a temporary issue. Please try again or contact support if the problem persists." 
+          };
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : "Sign in failed";
+          // Enhanced error message with context and next steps
+          let errorMessage: string;
+          if (error instanceof Error) {
+            // Provide context based on error type
+            if (error.message.toLowerCase().includes("network") || error.message.toLowerCase().includes("fetch")) {
+              errorMessage = "Network error during sign in. Please check your internet connection and try again.";
+            } else if (error.message.toLowerCase().includes("timeout")) {
+              errorMessage = "Sign in request timed out. Please check your connection and try again.";
+            } else {
+              errorMessage = `Sign in failed: ${error.message}. Please try again or contact support if the issue persists.`;
+            }
+          } else {
+            errorMessage = "An unexpected error occurred during sign in. Please refresh the page and try again.";
+          }
           // Record failed attempt for rate limiting
           recordFailedAuth(email);
           AuthMonitoring.recordNetworkError();
@@ -383,12 +434,13 @@ export const useAuth = create<AuthState>()(
           );
 
           if (!authData.user) {
-            set({ error: "Failed to create user account", loading: false });
+            const errorMsg = "Account creation failed. The authentication service did not return user data. Please try again, or contact support if the problem continues.";
+            set({ error: errorMsg, loading: false });
             emitTelemetry("auth.signup.error", {
               email,
-              message: "Failed to create user account",
+              message: errorMsg,
             });
-            return { success: false, error: "Failed to create user account" };
+            return { success: false, error: errorMsg };
           }
 
           // Step 2: Create user profile in our database with retry
@@ -428,8 +480,25 @@ export const useAuth = create<AuthState>()(
           });
           return { success: true };
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : "Sign up failed";
+          // Enhanced error message with context for signup failures
+          let errorMessage: string;
+          if (error instanceof Error) {
+            const errMsg = error.message.toLowerCase();
+            // Provide specific guidance based on error type
+            if (errMsg.includes("network") || errMsg.includes("fetch")) {
+              errorMessage = "Network error during account creation. Please check your internet connection and try again.";
+            } else if (errMsg.includes("timeout")) {
+              errorMessage = "Account creation timed out. Please check your connection and try again.";
+            } else if (errMsg.includes("duplicate") || errMsg.includes("already exists")) {
+              errorMessage = "An account with this email already exists. Try signing in instead, or use the password reset option if you forgot your password.";
+            } else if (errMsg.includes("profile") || errMsg.includes("insert")) {
+              errorMessage = "Account created but profile setup failed. Please contact support to complete your registration.";
+            } else {
+              errorMessage = `Account creation failed: ${error.message}. Please try again or contact support if the issue persists.`;
+            }
+          } else {
+            errorMessage = "An unexpected error occurred during account creation. Please refresh the page and try again.";
+          }
           // Record failed attempt for rate limiting
           recordFailedAuth(email);
           AuthMonitoring.recordNetworkError();
@@ -467,10 +536,28 @@ export const useAuth = create<AuthState>()(
           profileCache.clear();
           emitTelemetry("auth.signout", { userId });
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : "Sign out failed";
+          // Enhanced error message for sign out failures
+          let errorMessage: string;
+          if (error instanceof Error) {
+            const errMsg = error.message.toLowerCase();
+            if (errMsg.includes("network") || errMsg.includes("fetch")) {
+              errorMessage = "Network error during sign out. Your session may still be cleared locally.";
+            } else {
+              errorMessage = `Sign out failed: ${error.message}. Your local session has been cleared, but you may need to refresh the page.`;
+            }
+          } else {
+            errorMessage = "An unexpected error occurred during sign out. Your local session has been cleared.";
+          }
           AuthMonitoring.recordError("signOut", errorMessage, userId);
-          set({ error: errorMessage, loading: false });
+          // Clear local state even if API call fails
+          set({ 
+            user: null, 
+            session: null, 
+            profile: null, 
+            error: errorMessage, 
+            loading: false 
+          });
+          profileCache.clear();
         }
       },
       resetPassword: async (email: string) => {
@@ -480,14 +567,29 @@ export const useAuth = create<AuthState>()(
             redirectTo: `${window.location.origin}/reset-password`,
           });
           if (error) {
-            set({ error: error.message, loading: false });
-            return { success: false, error: error.message };
+            const userFriendlyError = getAuthErrorMessage(error);
+            set({ error: userFriendlyError, loading: false });
+            return { success: false, error: userFriendlyError };
           }
           set({ loading: false });
           return { success: true };
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : "Password reset failed";
+          // Enhanced error message for password reset failures
+          let errorMessage: string;
+          if (error instanceof Error) {
+            const errMsg = error.message.toLowerCase();
+            if (errMsg.includes("network") || errMsg.includes("fetch")) {
+              errorMessage = "Network error while sending password reset email. Please check your connection and try again.";
+            } else if (errMsg.includes("timeout")) {
+              errorMessage = "Request timed out while sending password reset email. Please try again.";
+            } else if (errMsg.includes("not found") || errMsg.includes("user")) {
+              errorMessage = "If an account exists with this email, you will receive password reset instructions shortly.";
+            } else {
+              errorMessage = `Password reset failed: ${error.message}. Please try again or contact support.`;
+            }
+          } else {
+            errorMessage = "An unexpected error occurred while requesting password reset. Please try again.";
+          }
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
         }
@@ -519,10 +621,27 @@ export const useAuth = create<AuthState>()(
             return { success: true };
           }
           set({ loading: false });
-          return { success: false, error: "No session data returned" };
+          return { 
+            success: false, 
+            error: "Session refresh succeeded but no session data was returned. You may need to sign in again." 
+          };
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : "Session refresh failed";
+          // Enhanced error message for session refresh failures
+          let errorMessage: string;
+          if (error instanceof Error) {
+            const errMsg = error.message.toLowerCase();
+            if (errMsg.includes("network") || errMsg.includes("fetch")) {
+              errorMessage = "Network error while refreshing your session. Please check your internet connection.";
+            } else if (errMsg.includes("timeout")) {
+              errorMessage = "Session refresh timed out. Please check your connection and try again.";
+            } else if (errMsg.includes("expired") || errMsg.includes("invalid")) {
+              errorMessage = "Your session has expired. Please sign in again to continue.";
+            } else {
+              errorMessage = `Session refresh failed: ${error.message}. Please try signing in again.`;
+            }
+          } else {
+            errorMessage = "An unexpected error occurred while refreshing your session. Please sign in again.";
+          }
           logError("Session refresh error:", error);
           AuthMonitoring.recordError("refreshSession", errorMessage, userId);
           set({ error: errorMessage, loading: false });

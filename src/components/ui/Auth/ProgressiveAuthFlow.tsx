@@ -10,7 +10,12 @@ import Icon from "../Icon/Icon";
 import { LoginForm, SignupForm, ResetPasswordForm } from "./Auth";
 import { OnboardingFlow } from "./OnboardingFlow";
 import { ROUTES } from "../../../routes/paths";
-import { auth as logAuth, success, error as logError, debug } from "../../../utils/logger";
+import {
+  auth as logAuth,
+  success,
+  error as logError,
+  debug,
+} from "../../../utils/logger";
 
 type AuthStep = "welcome" | "login" | "signup" | "reset" | "onboarding";
 
@@ -83,7 +88,7 @@ export function ProgressiveAuthFlow({
     try {
       const result = await signIn(credentials.email, credentials.password);
       logAuth("ProgressiveAuthFlow: signIn result:", result);
-      
+
       if (result.success) {
         success("Login successful, calling handleAuthSuccess");
         handleAuthSuccess(false); // Existing user login
@@ -105,7 +110,7 @@ export function ProgressiveAuthFlow({
         role: data.role,
       });
       logAuth("ProgressiveAuthFlow: signUp result:", result);
-      
+
       if (result.success) {
         success("Signup successful, calling handleAuthSuccess(true)");
         handleAuthSuccess(true); // New user signup

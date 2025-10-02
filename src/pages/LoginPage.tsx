@@ -22,7 +22,10 @@ const LoginPage: React.FC = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
-      const destination = getLoginDestination(location.search, ROUTES.DASHBOARD);
+      const destination = getLoginDestination(
+        location.search,
+        ROUTES.DASHBOARD
+      );
       logAuth(`User already logged in, redirecting to: ${destination}`);
       navigate(destination, { replace: true });
     }
