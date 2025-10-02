@@ -14,16 +14,16 @@ export interface AppIconTileProps {
 }
 
 export const AppIconTile = memo<AppIconTileProps>(
-  ({ 
-    title, 
-    subtitle, 
+  ({
+    title,
+    subtitle,
     topLabel,
     bottomLabel,
-    icon, 
-    onOpen, 
-    gradient, 
-    badge, 
-    className = "" 
+    icon,
+    onOpen,
+    gradient,
+    badge,
+    className = "",
   }) => {
     return (
       <button

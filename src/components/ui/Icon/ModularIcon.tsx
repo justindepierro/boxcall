@@ -402,7 +402,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   // For tests, render a simple SVG synchronously
   if (isTestEnvironment) {
     return (
-      <span {...accessibilityProps} className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>
+      <span
+        {...accessibilityProps}
+        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
+      >
         <svg
           width={typeof size === "number" ? size : sizeMap[size]}
           height={typeof size === "number" ? size : sizeMap[size]}
@@ -425,7 +428,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   if ((loading && !showFallback) || (!IconComponent && !showFallback)) {
     // Show loading spinner for first 500ms or if no component and not in fallback mode
     return (
-      <span {...accessibilityProps} className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>
+      <span
+        {...accessibilityProps}
+        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
+      >
         <svg
           className="animate-spin"
           width={typeof size === "number" ? size : sizeMap[size]}
@@ -458,7 +464,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   if (!IconComponent || showFallback) {
     // Return a proper help-circle fallback when we have no icon component or are in fallback mode
     return (
-      <span {...accessibilityProps} className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>
+      <span
+        {...accessibilityProps}
+        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
+      >
         <svg
           width={typeof size === "number" ? size : sizeMap[size]}
           height={typeof size === "number" ? size : sizeMap[size]}
@@ -483,7 +492,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   const iconColor = colorMap[color];
 
   return (
-    <span {...accessibilityProps} className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>
+    <span
+      {...accessibilityProps}
+      className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
+    >
       <IconComponent
         size={iconSize}
         color={iconColor}
