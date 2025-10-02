@@ -29,7 +29,8 @@ export const AppIconTile = memo<AppIconTileProps>(
       <button
         type="button"
         onClick={onOpen}
-        className={`group relative flex flex-col items-center justify-center gap-3 p-6 transition-transform duration-200 active:scale-95 ${className}`}
+        className={`group relative flex flex-col items-center justify-center gap-3 p-8 transition-transform duration-200 active:scale-95 overflow-visible ${className}`}
+        style={{ overflow: 'visible' }}
         aria-label={title}
       >
         {/* Top Label - Optional text above icon */}
@@ -39,11 +40,14 @@ export const AppIconTile = memo<AppIconTileProps>(
           </div>
         )}
 
-        {/* App Icon - iPhone Style - Centered */}
-        <div className="relative w-24 h-24 overflow-visible">
+        {/* App Icon - iPhone Style - Centered - Extra margin for badge and shadow */}
+        <div className="relative w-24 h-24 my-2">
           {/* Icon Container with Gradient and shine effect */}
           <div
-            className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-xl group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+            className={`absolute inset-0 rounded-[24px] bg-gradient-to-br ${gradient} transition-all duration-200 group-hover:scale-105 group-active:scale-95 before:absolute before:inset-0 before:rounded-[24px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+            style={{
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+            }}
           />
 
           {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}

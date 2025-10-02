@@ -432,8 +432,8 @@ export default function PlaybookPage() {
       />
 
       {/* Aurora Hero Tiles - iPhone App Style */}
-      <div className="px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center justify-center gap-8 flex-wrap">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 overflow-visible">
+        <div className="flex items-center justify-center gap-8 flex-wrap overflow-visible">
           <AppIconTile
             title="New Play"
             subtitle={`${state.playsCreated} plays`}
