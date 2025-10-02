@@ -42,36 +42,29 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
         onClick={onClose}
         onKeyDown={handleKeyDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby="play-detail-title"
       >
-        {/* Modal Container - Larger with genie animation - NO overflow-hidden */}
+        {/* Modal Container - No padding gap */}
         <div
-          className="relative w-full max-w-6xl max-h-[94vh] backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
+          className="relative w-full max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Gradient Header - More compact with top rounding */}
+          {/* Gradient Header with pattern and shine */}
           <div
             className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[30px] overflow-hidden flex-shrink-0`}
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
+              backgroundSize: "32px 32px",
+            }}
           >
-            {/* Pattern overlay */}
-            <div className="absolute inset-0 opacity-10">
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-                  backgroundSize: "32px 32px",
-                }}
-              />
-            </div>
-
-            {/* Shine overlay */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
+            {/* Shine overlay - single layer */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
 
             {/* Close Button */}
             <button
