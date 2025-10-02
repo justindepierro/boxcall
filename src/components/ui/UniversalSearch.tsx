@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Icon } from "../ui/Icon";
+import { Tooltip } from "./Tooltip/Tooltip";
 
 export interface UniversalSearchProps {
   searchQuery: string;
@@ -61,14 +62,16 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
         />
 
         {searchQuery && (
-          <button
-            onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
-            type="button"
-            aria-label="Clear search"
-          >
-            <Icon name="close" className="h-4 w-4" aria-hidden="true" />
-          </button>
+          <Tooltip content="Clear search">
+            <button
+              onClick={handleClear}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
+              type="button"
+              aria-label="Clear search"
+            >
+              <Icon name="close" className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </Tooltip>
         )}
       </div>
     </div>

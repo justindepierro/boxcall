@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { PlaybookSearchService } from "@services/playbookSearchService";
 import type { Play } from "../../types/play";
 
@@ -143,16 +144,18 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
         />
 
         {searchQuery && (
-          <Button
-            onClick={clearSearch}
-            variant="ghost"
-            size="xs"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
-            type="button"
-            aria-label="Clear search"
-          >
-            <Icon name="close" className="h-4 w-4" />
-          </Button>
+          <Tooltip content="Clear search">
+            <Button
+              onClick={clearSearch}
+              variant="ghost"
+              size="xs"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
+              type="button"
+              aria-label="Clear search"
+            >
+              <Icon name="close" className="h-4 w-4" />
+            </Button>
+          </Tooltip>
         )}
       </div>
 

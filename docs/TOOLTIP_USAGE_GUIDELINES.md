@@ -219,31 +219,71 @@ Tooltips automatically add proper ARIA:
 
 ## Tooltip Components Inventory
 
-### Currently Enhanced with Tooltips
+### ✅ Currently Enhanced with Tooltips (7 components)
 
-| Component | Location | Tooltip Content |
-|-----------|----------|----------------|
-| IconButton | `ui/IconButton` | Via `tooltip` prop |
-| PlayGrid view toggle | `playbook/PlayGrid` | "List view", "Grid view" |
-| PlayGrid name toggle | `playbook/PlayGrid` | "Show full play names" / "Show one-word calls" |
-| Modal close button | `ui/Modal` | "Close" |
-| Input password toggle | `ui/Input` | "Show password" / "Hide password" |
-| Select clear button | `ui/Select` | "Clear selection" |
+| Component | Location | Tooltip Content | Status |
+|-----------|----------|----------------|--------|
+| IconButton | `ui/IconButton` | Via `tooltip` prop | ✅ Complete |
+| PlayGrid view toggle (list) | `playbook/PlayGrid` | "List view" | ✅ Complete |
+| PlayGrid view toggle (grid) | `playbook/PlayGrid` | "Grid view" | ✅ Complete |
+| PlayGrid name toggle | `playbook/PlayGrid` | "Show full play names" / "Show one-word calls" | ✅ Complete |
+| Modal close button | `ui/Modal` | "Close" | ✅ Complete |
+| Input password toggle | `ui/Input` | "Show password" / "Hide password" | ✅ Complete |
+| Select clear button | `ui/Select` | "Clear selection" | ✅ Complete |
 
-### Needs Tooltips (Future Work)
+### 🎯 High Priority - Icon-Only Buttons (Need Tooltips)
 
-- [ ] Navigation sidebar icons
-- [ ] Toolbar action buttons (copy, move, export)
-- [ ] Play diagram tools
-- [ ] Practice planner actions
-- [ ] Calendar view toggles
-- [ ] Settings toggles
-- [ ] Notification icons
-- [ ] User avatar menu
-- [ ] Team switching dropdown
-- [ ] Badge indicators
+| Component | Location | Suggested Tooltip | Priority |
+|-----------|----------|-------------------|----------|
+| UniversalSearch clear | `ui/UniversalSearch` | "Clear search" | High |
+| GlobalSearch clear | `ui/GlobalSearch` | "Clear search" | High |
+| Sidebar close button | `ui/Sidebar` | "Close sidebar" | High |
+| MobileDrawer close | `mobile/MobileDrawer` | "Close drawer" | High |
+| DashboardCustomization close | `dashboard/DashboardCustomizationPanel` | "Close panel" | High |
+| PersonalCalendar close | `dashboard/PersonalCalendar` | "Close calendar" | High |
+| CleanSidebar close | `dashboard/CleanSidebar` | "Close sidebar" | High |
 
-**Target:** 50+ tooltips across the app
+### 📋 Medium Priority - Action Buttons (Would Benefit)
+
+| Component | Location | Suggested Tooltip | Priority |
+|-----------|----------|-------------------|----------|
+| PlayerList edit button | `team/PlayerList` | "Edit player" | Medium |
+| PlayerList remove button | `team/PlayerList` | "Remove player" | Medium |
+| ProfileCard edit profile | `dashboard/ProfileCard` | "Edit profile" | Medium |
+| ProfileCard edit avatar | `dashboard/ProfileCard` | "Edit profile picture" | Medium |
+| ProfileCard edit bio | `dashboard/ProfileCard` | "Edit bio" | Medium |
+| PlayCard edit button | `playbook/PlayCard` | "Edit play" | Medium |
+| PlayCard duplicate button | `playbook/PlayCard` | "Duplicate play" | Medium |
+| PlayCard diagram button | `playbook/PlayCard` | "Create diagram" | Medium |
+| PlayCard.v2 edit button | `playbook/PlayCard.v2` | "Edit play" | Medium |
+| PlayCard.v2 expand | `playbook/PlayCard.v2` | "Expand details" | Medium |
+
+### 🔧 Already Using Tooltips (No Changes Needed)
+
+| Component | Location | Implementation | Notes |
+|-----------|----------|----------------|-------|
+| ToolPalette | `playbook/diagram-v2/components/ToolPalette` | Wrapped with `<Tooltip>` | ✅ Well implemented |
+| BulkActionsToolbar | `playbook/BulkActionsToolbar` | Uses `title` attribute | Consider upgrading to Tooltip component |
+| Diagram Toolbar buttons | `playbook/diagram-v2/components/Toolbar` | Text labels | No tooltip needed (has text) |
+
+### ⏳ Lower Priority - Consider for Future
+
+| Component | Location | Reason | Priority |
+|-----------|----------|--------|----------|
+| Diagram HelpOverlay close | `playbook/diagram-v2/components/HelpOverlay` | Context clear | Low |
+| BulkActionsToolbar actions | `playbook/BulkActionsToolbar` | Has text + icons | Low (upgrade title to Tooltip) |
+| EventModal close | `calendar/EventModal` | Context clear | Low |
+| CSVImportModal close | `playbook/CSVImport/CSVImportModal` | Context clear | Low |
+
+### 📊 Progress Summary
+
+- **Total Enhanced:** 7 components
+- **High Priority Remaining:** 7 components  
+- **Medium Priority Remaining:** 10 components
+- **Low Priority:** 10+ components
+- **Total Potential:** 50+ tooltip opportunities
+
+**Completion:** ~15% (7 of ~50 components)
 
 ---
 

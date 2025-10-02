@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getActiveTeamId } from "../../utils/activeTeam";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { usePlaybook } from "../../contexts/PlaybookContext";
+import { Tooltip } from "./Tooltip/Tooltip";
 
 interface GlobalSearchProps {
   className?: string;
@@ -320,14 +321,16 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         />
 
         {query && (
-          <button
-            onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
-            type="button"
-            aria-label="Clear search"
-          >
-            <Icon name="close" className="h-4 w-4" />
-          </button>
+          <Tooltip content="Clear search">
+            <button
+              onClick={handleClear}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
+              type="button"
+              aria-label="Clear search"
+            >
+              <Icon name="close" className="h-4 w-4" />
+            </button>
+          </Tooltip>
         )}
       </div>
 
