@@ -115,11 +115,13 @@ export const RoleBadge: React.FC<RoleBadgeProps> = ({
       ${sizeClasses.container}
       ${className}
     `}
+      role="status"
+      aria-label={`User role: ${config.label}`}
     >
       {showIcon && (
-        <Icon className={`${sizeClasses.icon} ${config.iconColor}`} />
+        <Icon className={`${sizeClasses.icon} ${config.iconColor}`} aria-hidden="true" />
       )}
-      {config.label}
+      <span aria-hidden="true">{config.label}</span>
     </span>
   );
 };

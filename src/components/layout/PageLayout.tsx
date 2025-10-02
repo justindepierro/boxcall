@@ -49,7 +49,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
             variant={variant}
           />
         )}
-        <PageContent variant={variant}>{children}</PageContent>
+        <main id="main-content" role="main">
+          <PageContent variant={variant}>{children}</PageContent>
+        </main>
       </div>
     </div>
   );
@@ -71,11 +73,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   const { user } = useAuth();
 
   return (
-    <div className="page-header mb-6 md:mb-8 pt-6">
+    <header className="page-header mb-6 md:mb-8 pt-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1 min-w-0">
           {title && (
-            <Typography variant="display-lg" className="text-text-primary mb-2">
+            <Typography variant="display-lg" className="text-text-primary mb-2" as="h1">
               {title}
             </Typography>
           )}
@@ -101,7 +103,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           <div className="flex flex-col sm:flex-row gap-3">{actions}</div>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -34,24 +34,26 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} role="search">
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Icon
             name="search"
             className={`h-4 w-4 ${isFocused ? "text-text-info" : "text-text-secondary"}`}
+            aria-hidden="true"
           />
         </div>
 
         <input
           ref={inputRef}
-          type="text"
+          type="search"
           value={searchQuery}
           onChange={handleInputChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          aria-label={placeholder}
           className={`block w-full pl-10 pr-10 py-2 text-sm rounded-lg
                      focus:ring-2 focus:ring-text-info focus:border-text-info
                      placeholder-text-secondary transition-all duration-200
@@ -65,7 +67,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
             type="button"
             aria-label="Clear search"
           >
-            <Icon name="close" className="h-4 w-4" />
+            <Icon name="close" className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
       </div>
