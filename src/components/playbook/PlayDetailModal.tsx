@@ -49,14 +49,14 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         aria-modal="true"
         aria-labelledby="play-detail-title"
       >
-        {/* Modal Container - Larger with genie animation */}
+        {/* Modal Container - Larger with genie animation - NO overflow-hidden */}
         <div
-          className="relative w-full max-w-6xl max-h-[94vh] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open"
+          className="relative w-full max-w-6xl max-h-[94vh] backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-[32px] border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Gradient Header - More compact */}
+          {/* Gradient Header - More compact with top rounding */}
           <div
-            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} overflow-hidden`}
+            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[30px] overflow-hidden flex-shrink-0`}
           >
             {/* Pattern overlay */}
             <div className="absolute inset-0 opacity-10">
@@ -112,7 +112,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           </div>
 
           {/* Action Bar - More compact */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30 flex-shrink-0">
             {/* Tabs */}
             <div className="flex gap-1.5">
               {(["overview", "details", "analytics"] as const).map((tab) => (
@@ -168,8 +168,9 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
           </div>
 
-          {/* Content Area - More compact with more space */}
-          <div className="overflow-y-auto max-h-[calc(94vh-200px)] p-6">
+          {/* Content Area - More compact with more space and bottom rounding */}
+          <div className="overflow-y-auto flex-1 rounded-b-[30px]">
+            <div className="p-6">
             {activeTab === "overview" && (
               <div className="space-y-6">
                 {/* Diagram Preview */}
@@ -392,6 +393,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 </div>
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
