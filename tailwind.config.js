@@ -524,19 +524,42 @@ export default {
         "glass-lg": "var(--radius-glass-lg)", // 24px - glass large
       },
 
+      // ============================================
+      // SPACING SCALE - Phase 3: 8px Grid System
+      // ============================================
+      // Enforces consistent spacing with 8px base grid.
+      // Maps to CSS custom properties from generated-tokens.css
       spacing: {
-        // Custom tight spacing for BoxCall
-        0.5: "0.125rem", // 2px - ultra-tight
-        1.5: "0.375rem", // 6px - tight
-        2.5: "0.625rem", // 10px - compact
-        3.5: "0.875rem", // 14px - comfortable
-        4.5: "1.125rem", // 18px - standard
-        5.5: "1.375rem", // 22px - loose
+        // Core 8px Grid Scale (preferred)
+        0: "var(--space-0)",          // 0px - none
+        px: "1px",                     // 1px - hairline borders
+        0.5: "var(--space-0\\.5)",    // 2px - ultra-tight (rare)
+        1: "var(--space-1)",           // 4px - xs tight
+        2: "var(--space-2)",           // 8px - sm minimum
+        3: "var(--space-3)",           // 12px - md compact
+        4: "var(--space-4)",           // 16px - base comfortable
+        5: "var(--space-5)",           // 20px - lg generous
+        6: "var(--space-6)",           // 24px - xl spacious
+        8: "var(--space-8)",           // 32px - 2xl section spacing
+        10: "var(--space-10)",         // 40px - 3xl large sections
+        12: "var(--space-12)",         // 48px - 4xl page spacing
+        16: "var(--space-16)",         // 64px - 5xl hero spacing
+        20: "var(--space-20)",         // 80px - 6xl extra large
+        24: "var(--space-24)",         // 96px - 7xl maximum
+        32: "var(--space-32)",         // 128px - 8xl extreme
+        
+        // Deprecated - Phase out these values (not 8px aligned)
+        // Use nearest 8px multiple instead
+        1.5: "var(--space-1\\.5)",    // 6px - DEPRECATED: use 2 (8px)
+        2.5: "var(--space-2\\.5)",    // 10px - DEPRECATED: use 3 (12px)
+        3.5: "var(--space-3\\.5)",    // 14px - DEPRECATED: use 4 (16px)
+        4.5: "var(--space-4\\.5)",    // 18px - DEPRECATED: use 5 (20px)
+        5.5: "var(--space-5\\.5)",    // 22px - DEPRECATED: use 6 (24px)
 
-        // Existing custom spacing
-        18: "4.5rem",
-        88: "22rem",
-        128: "32rem",
+        // Legacy custom spacing (keep for compatibility)
+        18: "4.5rem",                  // 72px - legacy
+        88: "22rem",                   // 352px - legacy
+        128: "32rem",                  // 512px - legacy
       },
 
       animation: {

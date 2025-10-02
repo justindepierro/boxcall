@@ -17,7 +17,7 @@ export interface IconButtonProps
 
 const sizeStyles = {
   xs: "h-6 w-6 p-1 text-[11px]",
-  sm: "h-8 w-8 p-1.5 text-xs",
+  sm: "h-8 w-8 p-2 text-xs",
 };
 
 const variantStyles = {

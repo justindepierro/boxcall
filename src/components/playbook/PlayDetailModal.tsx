@@ -107,7 +107,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           {/* Action Bar - More compact */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30 flex-shrink-0">
             {/* Tabs */}
-            <div className="flex gap-1.5">
+            <div className="flex gap-2">
               {(["overview", "details", "analytics"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -124,13 +124,13 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
 
             {/* Action Buttons - More compact */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {onEdit && (
                 <button
                   onClick={onEdit}
-                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                 >
-                  <Icon name="edit" className="w-3.5 h-3.5" />
+                  <Icon name="edit" className="w-4 h-4" />
                   Edit
                 </button>
               )}
@@ -142,7 +142,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 >
                   <Icon
                     name="copy"
-                    className="w-3.5 h-3.5 text-jade-600 dark:text-jade-400"
+                    className="w-4 h-4 text-jade-600 dark:text-jade-400"
                   />
                 </button>
               )}
@@ -154,7 +154,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 >
                   <Icon
                     name="delete"
-                    className="w-3.5 h-3.5 text-red-600 dark:text-red-400"
+                    className="w-4 h-4 text-red-600 dark:text-red-400"
                   />
                 </button>
               )}
@@ -180,7 +180,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   {/* Quick Stats Grid - More compact */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
                         Type
                       </div>
                       <div className="text-lg font-bold text-slate-900 dark:text-white">
@@ -188,7 +188,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                       </div>
                     </div>
                     <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
                         Confidence
                       </div>
                       <div className="text-lg font-bold text-jade-600 dark:text-jade-400">
@@ -196,7 +196,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                       </div>
                     </div>
                     <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
                         Called
                       </div>
                       <div className="text-lg font-bold text-slate-900 dark:text-white">
@@ -204,7 +204,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                       </div>
                     </div>
                     <div className="backdrop-blur-xl bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
                         Success
                       </div>
                       <div className="text-lg font-bold text-electric-600 dark:text-electric-400">
