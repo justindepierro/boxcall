@@ -125,14 +125,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     document.body.setAttribute("data-density", uiDensity);
   }
   return (
-    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-text-primary dark:via-text-primary dark:to-text-secondary bg-fixed relative">
-      <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
-
+    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-text-primary dark:via-text-primary dark:to-text-secondary bg-fixed relative before:pointer-events-none before:absolute before:inset-0 before:opacity-[0.03] before:bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]">
       {/* App Header */}
       <AppHeader onMenuToggle={() => toggleSidebar()} />
 
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
-      <div className="relative pt-16">
+      <div className="pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}
@@ -188,12 +186,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           width="md"
           position="left"
         />
-        {/* Main content - mobile-first layout */}
-        <main className="flex-1 min-h-screen">
-          <div className="flex flex-col min-h-screen">
-            <div className="flex-1 pb-4">{children}</div>
-            <Footer />
-          </div>
+        {/* Main content with footer */}
+        <main className="flex flex-col min-h-screen">
+          <div className="flex-1 pb-4">{children}</div>
+          <Footer />
         </main>
 
         {/* Professional Development Tools Panel */}
