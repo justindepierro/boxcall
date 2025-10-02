@@ -117,7 +117,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           {/* Action Bar - More compact */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30 flex-shrink-0">
             {/* Tabs */}
-            <div className="flex gap-1.5">
+            <div className="flex gap-2">
               {(["overview", "details", "analytics"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -134,11 +134,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
 
             {/* Action Buttons - More compact */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {onEdit && (
                 <button
                   onClick={onEdit}
-                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                 >
                   <Icon name="edit" className="w-3.5 h-3.5" />
                   Edit
