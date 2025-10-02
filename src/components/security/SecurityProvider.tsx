@@ -24,7 +24,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
   enableSessionSecurity = true,
 }) => {
   // Apply security headers and CSP
-  const { securityConfig } = useSecurity();
+  useSecurity();
 
   // Always call hooks, but conditionally enable their functionality
   const csrfProtection = useCSRFProtection();
@@ -87,15 +87,6 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
     };
   }, []);
 
-  return (
-    <>
-      {children}
-      {/* Security status indicator in development */}
-      {import.meta.env.DEV && (
-        <div className="fixed bottom-2 left-2 z-50 bg-green-600 text-white px-2 py-1 rounded text-xs font-mono">
-          🔒 Security: {securityConfig.csp.reportOnly ? "Monitor" : "Enforce"}
-        </div>
-      )}
-    </>
-  );
+  // Security info now available in DevPanel (Ctrl+Shift+D) instead of floating indicator
+  return <>{children}</>;
 };

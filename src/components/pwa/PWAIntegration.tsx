@@ -87,30 +87,23 @@ export const PWAIntegration: React.FC = () => {
     };
   }, []);
 
-  // Only show notifications in production or when PWA is enabled
-  const shouldShowNotifications =
-    import.meta.env.PROD || import.meta.env.VITE_ENABLE_PWA === "true";
+  // Show offline indicator (minimal, non-intrusive)
+  // PWA and other status info available in DevPanel (Ctrl+Shift+D)
+  const shouldShowOfflineIndicator = !isOnline;
 
-  if (!shouldShowNotifications) {
+  if (!shouldShowOfflineIndicator) {
     return null;
   }
 
   return (
     <>
-      {/* Offline Indicator */}
+      {/* Minimal Offline Indicator - only when actually offline */}
       {!isOnline && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">You're offline</span>
           </div>
-        </div>
-      )}
-
-      {/* PWA Status Indicator (dev only) */}
-      {import.meta.env.DEV && import.meta.env.VITE_ENABLE_PWA === "true" && (
-        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-3 py-1 rounded text-xs">
-          PWA Enabled
         </div>
       )}
     </>

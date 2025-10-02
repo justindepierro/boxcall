@@ -16,7 +16,6 @@ import { AddNewPlayModal } from "../components/playbook/AddNewPlayModal";
 import { PlaybookSettingsModal } from "../components/playbook/PlaybookSettingsModal";
 import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
 import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
-import { QuickActionsBar } from "../components/playbook/QuickActionsBar";
 import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcutsGuide";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
@@ -730,40 +729,6 @@ export default function PlaybookPage() {
       <KeyboardShortcutsGuide
         isOpen={showKeyboardShortcuts}
         onClose={() => setShowKeyboardShortcuts(false)}
-      />
-
-      {/* Quick Actions Bar */}
-      <QuickActionsBar
-        actions={[
-          {
-            id: "new-play",
-            label: "New Play",
-            icon: "plus",
-            onClick: handleOpenBuilder,
-            shortcut: "Ctrl+N",
-            variant: "primary",
-          },
-          {
-            id: "practice-script",
-            label: "Practice Script",
-            icon: "file",
-            onClick: handleQuickNewPracticeScript,
-            shortcut: "Ctrl+P",
-          },
-          {
-            id: "game-plan",
-            label: "Game Plan",
-            icon: "users",
-            onClick: handleQuickNewGamePlan,
-            shortcut: "Ctrl+G",
-          },
-          {
-            id: "settings",
-            label: "Settings",
-            icon: "settings",
-            onClick: handleOpenSettings,
-          },
-        ]}
       />
 
       {/* Diagram Builder Modal */}
