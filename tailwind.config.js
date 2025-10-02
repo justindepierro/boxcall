@@ -494,8 +494,42 @@ export default {
       },
 
       boxShadow: {
-        "play-card":
-          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        // Standard elevation shadows - mapped to CSS custom properties
+        none: 'var(--shadow-none)',
+        sm: 'var(--shadow-sm)',
+        DEFAULT: 'var(--shadow-md)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        xl: 'var(--shadow-xl)',
+        '2xl': 'var(--shadow-2xl)',
+        inner: 'var(--shadow-inner)',
+        
+        // Glass morphism shadows
+        glass: 'var(--shadow-glass)',
+        'glass-dark': 'var(--shadow-glass-dark)',
+        'glass-elevated': 'var(--shadow-glass-elevated)',
+        'glass-elevated-dark': 'var(--shadow-glass-elevated-dark)',
+        'glass-subtle': 'var(--shadow-glass-subtle)',
+        'glass-subtle-dark': 'var(--shadow-glass-subtle-dark)',
+        
+        // Interactive state shadows
+        hover: 'var(--shadow-hover)',
+        active: 'var(--shadow-active)',
+        
+        // Component-specific shadows
+        card: 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        modal: 'var(--shadow-modal)',
+        dropdown: 'var(--shadow-dropdown)',
+        button: 'var(--shadow-button)',
+        'button-hover': 'var(--shadow-button-hover)',
+        
+        // Colored accent shadows
+        jade: 'var(--shadow-jade)',
+        electric: 'var(--shadow-electric)',
+        
+        // Legacy shadows (deprecated - kept for backward compatibility)
+        "play-card": 'var(--shadow-card)',
         confidence: "0 0 20px rgba(16, 185, 129, 0.3)",
       },
 

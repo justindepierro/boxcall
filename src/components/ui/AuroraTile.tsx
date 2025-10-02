@@ -38,7 +38,7 @@ export interface AuroraTileProps {
 }
 
 const BASE_BUTTON_CLASSES =
-  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_35px_60px_-30px_rgba(15,23,42,0.55)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-jade-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)] dark:focus-visible:ring-offset-slate-900";
+  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-jade-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
 
 const BASE_ICON_CONTAINER_CLASSES =
   "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";

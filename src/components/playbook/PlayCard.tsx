@@ -677,8 +677,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       <div
         className={`rounded-glass border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
           isSelected
-            ? "ring-2 ring-jade-500 border-jade-400 shadow-lg shadow-jade-500/20"
-            : "shadow-[0_8px_16px_-8px_rgba(15,23,42,0.3)] hover:shadow-[0_12px_20px_-8px_rgba(15,23,42,0.4)] hover:border-white"
+            ? "ring-2 ring-jade-500 border-jade-400 shadow-jade"
+            : "shadow-card hover:shadow-card-hover hover:border-white"
         } ${isCompact ? "text-[13px]" : ""}`}
       >
         <div
