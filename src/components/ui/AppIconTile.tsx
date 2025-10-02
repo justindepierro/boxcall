@@ -41,22 +41,17 @@ export const AppIconTile = memo<AppIconTileProps>(
 
         {/* App Icon - iPhone Style - Centered */}
         <div className="relative w-24 h-24">
-          {/* Icon Container with Gradient */}
+          {/* Icon Container with Gradient and shine effect */}
           <div
-            className={`absolute inset-0 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95`}
-          >
-            {/* Shine effect overlay */}
-            <div className="absolute inset-0 rounded-[26px] bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
-          </div>
+            className={`absolute inset-0 rounded-[26px] bg-gradient-to-br ${gradient} shadow-lg transition-all duration-200 group-hover:scale-110 group-active:scale-95 before:absolute before:inset-0 before:rounded-[26px] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none`}
+          />
 
-          {/* Icon - Absolutely centered with z-index - Dynamic sizing: 50% of container */}
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <Icon
-              name={icon}
-              className="w-1/2 h-1/2 text-white drop-shadow-lg flex-shrink-0"
-              aria-hidden="true"
-            />
-          </div>
+          {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}
+          <Icon
+            name={icon}
+            className="absolute inset-0 m-auto w-1/2 h-1/2 text-white drop-shadow-lg flex-shrink-0 z-10"
+            aria-hidden="true"
+          />
 
           {/* Badge (like notification count) */}
           {badge !== undefined && badge !== null && (
