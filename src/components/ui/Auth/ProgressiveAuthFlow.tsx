@@ -10,6 +10,7 @@ import Icon from "../Icon/Icon";
 import { LoginForm, SignupForm, ResetPasswordForm } from "./Auth";
 import { OnboardingFlow } from "./OnboardingFlow";
 import { ROUTES } from "../../../routes/paths";
+import { auth as logAuth, success, error as logError, debug } from "../../../utils/logger";
 
 type AuthStep = "welcome" | "login" | "signup" | "reset" | "onboarding";
 
@@ -60,59 +61,59 @@ export function ProgressiveAuthFlow({
 
   // Handle successful authentication
   const handleAuthSuccess = (isNewUser = false) => {
-    console.log("🎉 Auth success handler called", { isNewUser });
+    debug("Auth success handler called", { isNewUser });
     if (isNewUser) {
       transitionToStep("onboarding");
     } else {
       // For existing users, skip onboarding and go directly to success
-      console.log("✅ Calling onSuccess callback");
+      success("Calling onSuccess callback");
       onSuccess?.();
     }
   };
 
   // Handle onboarding completion
   const handleOnboardingComplete = () => {
-    console.log("✅ Onboarding complete, calling onSuccess");
+    success("Onboarding complete, calling onSuccess");
     onSuccess?.();
   };
 
   // Handle login submission
   const handleLogin = async (credentials: any) => {
-    console.log("🔐 ProgressiveAuthFlow: handleLogin called");
+    logAuth("ProgressiveAuthFlow: handleLogin called");
     try {
       const result = await signIn(credentials.email, credentials.password);
-      console.log("🔐 ProgressiveAuthFlow: signIn result:", result);
+      logAuth("ProgressiveAuthFlow: signIn result:", result);
       
       if (result.success) {
-        console.log("✅ Login successful, calling handleAuthSuccess");
+        success("Login successful, calling handleAuthSuccess");
         handleAuthSuccess(false); // Existing user login
       } else {
-        console.error("❌ Login failed:", result.error);
+        logError("Login failed:", result.error);
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      logError("Login error:", error);
     }
   };
 
   // Handle signup submission
   const handleSignup = async (data: any) => {
-    console.log("📝 ProgressiveAuthFlow: handleSignup called");
+    logAuth("ProgressiveAuthFlow: handleSignup called");
     try {
       const result = await signUp(data.email, data.password, {
         firstName: data.name.split(" ")[0] || "",
         lastName: data.name.split(" ").slice(1).join(" ") || "",
         role: data.role,
       });
-      console.log("📝 ProgressiveAuthFlow: signUp result:", result);
+      logAuth("ProgressiveAuthFlow: signUp result:", result);
       
       if (result.success) {
-        console.log("✅ Signup successful, calling handleAuthSuccess(true)");
+        success("Signup successful, calling handleAuthSuccess(true)");
         handleAuthSuccess(true); // New user signup
       } else {
-        console.error("❌ Signup failed:", result.error);
+        logError("Signup failed:", result.error);
       }
     } catch (error) {
-      console.error("❌ Signup error:", error);
+      logError("Signup error:", error);
     }
   };
 

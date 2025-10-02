@@ -7,10 +7,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/Button/Button";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "@components/design-system/Typography";
+import { warn } from "../../utils/logger";
 
 export const UserMenu: React.FC = () => {
   const { user, profile, signOut, loading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -18,6 +20,7 @@ export const UserMenu: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setShowLogoutConfirm(false);
       }
     };
 
@@ -29,8 +32,27 @@ export const UserMenu: React.FC = () => {
   if (!user) return null;
 
   const handleLogout = async () => {
+    setShowLogoutConfirm(false);
     setIsOpen(false);
-    await signOut();
+    try {
+      await signOut();
+    } catch (error) {
+      warn("Failed to sign out:", error);
+    }
+  };
+  
+  const handleLogoutClick = () => {
+    // Show confirmation on first click
+    if (!showLogoutConfirm) {
+      setShowLogoutConfirm(true);
+      return;
+    }
+    // Actually logout on second click
+    handleLogout();
+  };
+  
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const userEmail = user.email || "Unknown User";
@@ -124,16 +146,44 @@ export const UserMenu: React.FC = () => {
 
             <div className="border-t border-border-medium/50 my-1" />
 
-            {/* Logout */}
-            <Button
-              onClick={handleLogout}
-              disabled={loading}
-              variant="ghost"
-              size="xs"
-              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-error hover:text-text-error hover:bg-surface-error/10 rounded-none"
-            >
-              {loading ? "Signing out..." : "Sign Out"}
-            </Button>
+            {/* Logout with confirmation */}
+            {!showLogoutConfirm ? (
+              <Button
+                onClick={handleLogoutClick}
+                disabled={loading}
+                variant="ghost"
+                size="xs"
+                className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-error hover:text-text-error hover:bg-surface-error/10 rounded-none"
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <div className="px-4 py-3 bg-surface-error/5 border-t border-border-error/20">
+                <Typography variant="body-xs" className="text-text-secondary mb-2">
+                  Are you sure you want to sign out?
+                </Typography>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleLogout}
+                    disabled={loading}
+                    variant="ghost"
+                    size="xs"
+                    className="flex-1 bg-surface-error/10 hover:bg-surface-error/20 text-text-error text-xs py-1.5"
+                  >
+                    {loading ? "Signing out..." : "Yes, sign out"}
+                  </Button>
+                  <Button
+                    onClick={handleCancelLogout}
+                    disabled={loading}
+                    variant="ghost"
+                    size="xs"
+                    className="flex-1 text-xs py-1.5"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

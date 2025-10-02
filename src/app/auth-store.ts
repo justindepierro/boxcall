@@ -12,6 +12,7 @@ import { NetworkResilience } from "../utils/networkResilience";
 import { testDatabaseConnection } from "../lib/database-helpers";
 import { AuthMonitoring } from "../utils/authMonitoring";
 import { emitTelemetry } from "../lib/telemetry";
+import { auth as logAuth, success, error as logError, warn, info, debug } from "../utils/logger";
 
 // Profile cache to prevent redundant database calls
 interface ProfileCache {
@@ -178,7 +179,7 @@ export const useAuth = create<AuthState>()(
           if (error) {
             AuthMonitoring.recordNetworkError();
             AuthMonitoring.recordError("offline_signin", error.message, undefined, { email });
-            console.error("🚨 Queued sign-in failed:", error);
+            logError("Queued sign-in failed:", error);
             return;
           }
           if (data.user && data.session) {
@@ -193,7 +194,7 @@ export const useAuth = create<AuthState>()(
             await get().fetchUserProfile(data.user.id);
             AuthMonitoring.recordSignInSuccess();
             AuthMonitoring.recordEvent("offline_signin_success", data.user.id, { email });
-            console.log("🔄 Queued sign-in operation completed successfully");
+            success("Queued sign-in operation completed successfully");
           }
         };
 
@@ -208,8 +209,8 @@ export const useAuth = create<AuthState>()(
             password,
           });
           if (error) {
-            console.error("🚨 Supabase signIn error:", error);
-            console.error("🚨 Error details:", {
+            logError("Supabase signIn error:", error);
+            logError("Error details:", {
               message: error.message,
               status: error.status,
               details: error,
@@ -312,7 +313,7 @@ export const useAuth = create<AuthState>()(
 
           if (!authData.user) {
             AuthMonitoring.recordError("offline_signup", "No user data returned", undefined, { email });
-            console.error("🚨 Queued sign-up failed: No user data");
+            logError("Queued sign-up failed: No user data");
             return;
           }
 
@@ -346,7 +347,7 @@ export const useAuth = create<AuthState>()(
           }
           AuthMonitoring.recordSignUpSuccess();
           AuthMonitoring.recordEvent("offline_signup_success", authData.user!.id, { email, role: userData.role });
-          console.log("🔄 Queued sign-up operation completed successfully");
+          success("Queued sign-up operation completed successfully");
         };
 
         if (get().handleOfflineAuth(offlineOperation)) {
@@ -489,7 +490,7 @@ export const useAuth = create<AuthState>()(
         try {
           const { data, error } = await supabase.auth.refreshSession();
           if (error) {
-            console.error("Session refresh failed:", error);
+            logError("Session refresh failed:", error);
             AuthMonitoring.recordError("refreshSession", error.message, userId);
             const userFriendlyError = getAuthErrorMessage(error);
             set({ error: userFriendlyError, loading: false });
@@ -511,7 +512,7 @@ export const useAuth = create<AuthState>()(
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : "Session refresh failed";
-          console.error("Session refresh error:", error);
+          logError("Session refresh error:", error);
           AuthMonitoring.recordError("refreshSession", errorMessage, userId);
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
@@ -536,10 +537,10 @@ export const useAuth = create<AuthState>()(
             .single();
 
           if (error) {
-            console.error("Error fetching user profile:", error);
+            logError("Error fetching user profile:", error);
             // Create a basic profile if it doesn't exist
             if (error.code === 'PGRST116') { // No rows returned
-              console.log("Profile not found, creating basic profile");
+              info("Profile not found, creating basic profile");
               const basicProfile: UserProfile = {
                 id: userId,
                 full_name: 'User',
@@ -607,7 +608,7 @@ export const useAuth = create<AuthState>()(
           });
           set({ profile: data });
         } catch (error) {
-          console.error("Error fetching user profile:", error);
+          logError("Error fetching user profile:", error);
           // Don't fail completely, just log the error
         } finally {
           set({ profileLoading: false });
@@ -666,7 +667,7 @@ const startSessionRefresh = () => {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("❌ Error checking session:", error);
+        logError("Error checking session:", error);
         AuthMonitoring.recordError("session_check", error.message, undefined, { error });
         return;
       }
@@ -677,10 +678,10 @@ const startSessionRefresh = () => {
 
         // If token expires within 10 minutes, refresh it
         if (expiresAt && (expiresAt - now) < 600) {
-          console.log("🔄 Refreshing session before expiration");
+          debug("Refreshing session before expiration");
 
           if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
-            console.error("❌ Max refresh attempts reached, signing out user");
+            logError("Max refresh attempts reached, signing out user");
             AuthMonitoring.recordError("session_refresh", "Max refresh attempts exceeded", undefined, {
               attempts: refreshAttempts,
               maxAttempts: MAX_REFRESH_ATTEMPTS
@@ -692,7 +693,7 @@ const startSessionRefresh = () => {
           const { data, error: refreshError } = await supabase.auth.refreshSession();
 
           if (refreshError) {
-            console.error("❌ Error refreshing session:", refreshError);
+            logError("Error refreshing session:", refreshError);
             AuthMonitoring.recordError("session_refresh", refreshError.message, undefined, {
               attempt: refreshAttempts + 1,
               maxAttempts: MAX_REFRESH_ATTEMPTS
@@ -701,7 +702,7 @@ const startSessionRefresh = () => {
 
             // Schedule a retry after delay
             setTimeout(() => {
-              console.log("🔄 Retrying session refresh...");
+              debug("Retrying session refresh...");
               startSessionRefresh();
             }, REFRESH_RETRY_DELAY);
 
@@ -709,7 +710,7 @@ const startSessionRefresh = () => {
           }
 
           if (data.session) {
-            console.log("✅ Session refreshed successfully");
+            debug("Session refreshed successfully");
             AuthMonitoring.recordEvent("session_refresh_success", data.session.user.id);
             useAuth.setState({
               user: data.session.user,
@@ -721,10 +722,10 @@ const startSessionRefresh = () => {
           }
         }
       } else {
-        console.log("🔐 No active session found during refresh check");
+        debug("No active session found during refresh check");
       }
     } catch (unexpectedError) {
-      console.error("❌ Unexpected error during session refresh:", unexpectedError);
+      logError("Unexpected error during session refresh:", unexpectedError);
       AuthMonitoring.recordError("session_refresh_unexpected", unexpectedError instanceof Error ? unexpectedError.message : "Unknown error", undefined, {
         attempt: refreshAttempts
       });
@@ -745,14 +746,14 @@ let isInitializing = false;
 const initializeAuth = async () => {
   // Prevent double initialization
   if (isInitializing) {
-    console.log("🔐 Auth initialization already in progress, skipping...");
+    debug("Auth initialization already in progress, skipping...");
     return;
   }
   
   isInitializing = true;
   
   try {
-    console.log("🔐 Initializing auth state...");
+    logAuth("Initializing auth state...");
     
     // Set loading to true at the start of initialization
     useAuth.setState({ loading: true, error: null });
@@ -760,7 +761,7 @@ const initializeAuth = async () => {
     const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error) {
-      console.error("❌ Error getting initial session:", error);
+      logError("Error getting initial session:", error);
       AuthMonitoring.recordError("auth_init", error.message, undefined, { phase: "get_session" });
       useAuth.setState({
         loading: false,
@@ -770,7 +771,7 @@ const initializeAuth = async () => {
     }
 
     if (session) {
-      console.log("🔐 Session restored on app start:", session.user.id);
+      logAuth("Session restored on app start:", session.user.id);
       AuthMonitoring.recordEvent("auth_init_success", session.user.id, { hasSession: true });
 
       useAuth.setState({
@@ -782,11 +783,11 @@ const initializeAuth = async () => {
 
       // Fetch user profile with error handling
       try {
-        console.log("🔐 Starting user profile fetch...");
+        debug("Starting user profile fetch...");
         await useAuth.getState().fetchUserProfile(session.user.id);
-        console.log("✅ User profile loaded successfully");
+        success("User profile loaded successfully");
       } catch (profileError) {
-        console.error("❌ Error loading user profile:", profileError);
+        logError("Error loading user profile:", profileError);
         AuthMonitoring.recordError("auth_init", profileError instanceof Error ? profileError.message : "Profile fetch failed", session.user.id, {
           phase: "fetch_profile"
         });
@@ -795,33 +796,33 @@ const initializeAuth = async () => {
 
       // Test authenticated database connection
       try {
-        console.log("🔐 Starting database connection test...");
+        debug("Starting database connection test...");
         const dbConnectionOk = await testDatabaseConnection();
         if (dbConnectionOk) {
-          console.log("✅ Authenticated database connection verified");
+          success("Authenticated database connection verified");
         } else {
-          console.warn("⚠️ Authenticated database connection test failed");
+          warn("Authenticated database connection test failed");
         }
       } catch (dbError) {
-        console.error("❌ Error testing authenticated database connection:", dbError);
+        logError("Error testing authenticated database connection:", dbError);
         // Don't fail auth init if DB test fails
       }
 
-      console.log("🔐 Starting session refresh monitoring...");
+      debug("Starting session refresh monitoring...");
       // Start session refresh monitoring
       startSessionRefresh();
       
-      console.log("✅ Auth initialization completed successfully");
+      success("Auth initialization completed successfully");
       
       // Ensure loading is definitely false at the end
       useAuth.setState({ loading: false });
     } else {
-      console.log("🔐 No session found on app start");
+      logAuth("No session found on app start");
       AuthMonitoring.recordEvent("auth_init_success", undefined, { hasSession: false });
       useAuth.setState({ loading: false });
     }
   } catch (unexpectedError) {
-    console.error("❌ Unexpected error during auth initialization:", unexpectedError);
+    logError("Unexpected error during auth initialization:", unexpectedError);
     AuthMonitoring.recordError("auth_init_unexpected", unexpectedError instanceof Error ? unexpectedError.message : "Unknown error", undefined, {
       phase: "unexpected"
     });
@@ -839,11 +840,11 @@ initializeAuth();
 
 // Enhanced auth state change listener with better error handling
 supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log(`🔐 Auth state changed: ${event}`, session?.user?.id || 'no user');
+  logAuth(`Auth state changed: ${event}`, session?.user?.id || 'no user');
 
   // Don't process auth state changes during initialization
   if (isInitializing) {
-    console.log("🔐 Skipping auth state change during initialization");
+    debug("Skipping auth state change during initialization");
     return;
   }
 
@@ -863,7 +864,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
           try {
             await useAuth.getState().fetchUserProfile(session.user.id);
           } catch (profileError) {
-            console.error("❌ Error fetching profile on sign in:", profileError);
+            logError("Error fetching profile on sign in:", profileError);
             AuthMonitoring.recordError("auth_state_change", profileError instanceof Error ? profileError.message : "Profile fetch failed", session.user.id, { event });
           }
 
@@ -871,10 +872,10 @@ supabase.auth.onAuthStateChange(async (event, session) => {
           try {
             const dbConnectionOk = await testDatabaseConnection();
             if (dbConnectionOk) {
-              console.log("✅ Database connection verified after sign-in");
+              success("Database connection verified after sign-in");
             }
           } catch (dbError) {
-            console.warn("⚠️ Database connection test failed after sign-in:", dbError);
+            warn("Database connection test failed after sign-in:", dbError);
           }
 
           startSessionRefresh();
@@ -903,7 +904,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
             session: session,
             error: null
           });
-          console.log("✅ Auth token refreshed");
+          debug("Auth token refreshed");
         }
         break;
 
@@ -915,15 +916,15 @@ supabase.auth.onAuthStateChange(async (event, session) => {
             session: session,
             error: null
           });
-          console.log("✅ User updated");
+          info("User updated");
         }
         break;
 
       default:
-        console.log(`ℹ️ Unhandled auth event: ${event}`);
+        info(`Unhandled auth event: ${event}`);
     }
   } catch (error) {
-    console.error("❌ Error handling auth state change:", error);
+    logError("Error handling auth state change:", error);
     AuthMonitoring.recordError("auth_state_change", error instanceof Error ? error.message : "Unknown error", session?.user?.id, { event });
   }
 });

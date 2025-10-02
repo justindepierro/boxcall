@@ -5,9 +5,11 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  useLocation,
 } from "react-router-dom";
 
 import { useAuth } from "../app/auth-store";
+import { saveReturnUrl, createLoginUrl } from "../utils/navigationUtils";
 import {
   LazyDashboardPage,
   LazyLoginPage,
@@ -60,18 +62,22 @@ const LegacyTeamBulletinRedirect: React.FC = () => {
   return <RouteLoadingSpinner />;
 };
 
-// Protected route wrapper
+// Protected route wrapper with return URL support
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <RouteLoadingSpinner />;
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Save current location as return URL
+    saveReturnUrl(location.pathname + location.search);
+    // Redirect to login
+    return <Navigate to={createLoginUrl(location.pathname + location.search)} replace />;
   }
 
   return <>{children}</>;
