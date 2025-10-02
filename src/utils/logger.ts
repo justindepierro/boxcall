@@ -211,8 +211,17 @@ class Logger {
 // Export singleton instance
 export const logger = new Logger();
 
-// Export convenience methods for direct use
-export const { debug, info, warn, error, success, auth, nav, group, groupCollapsed } = logger;
+// Export convenience methods for direct use with proper binding
+// Binding ensures 'this' context is preserved when methods are destructured
+export const debug = logger.debug.bind(logger);
+export const info = logger.info.bind(logger);
+export const warn = logger.warn.bind(logger);
+export const error = logger.error.bind(logger);
+export const success = logger.success.bind(logger);
+export const auth = logger.auth.bind(logger);
+export const nav = logger.nav.bind(logger);
+export const group = logger.group.bind(logger);
+export const groupCollapsed = logger.groupCollapsed.bind(logger);
 
 /**
  * Development-only logs
