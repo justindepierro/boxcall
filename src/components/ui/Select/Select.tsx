@@ -432,6 +432,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             {clearable && internalValue && !disabled && (
               <IconButton
                 aria-label="Clear selection"
+                tooltip="Clear selection"
                 size="xs"
                 onClick={(e) => {
                   e.stopPropagation();

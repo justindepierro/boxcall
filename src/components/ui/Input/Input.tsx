@@ -185,6 +185,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {variant === "password" && showPasswordToggle ? (
                 <IconButton
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  tooltip={showPassword ? "Hide password" : "Show password"}
                   onClick={togglePasswordVisibility}
                   size="xs"
                   variant="ghost"

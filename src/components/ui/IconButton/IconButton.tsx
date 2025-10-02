@@ -6,12 +6,14 @@ import React, { forwardRef } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import type { ButtonProps } from "../Button/Button.types";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 export interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "xs" | "sm";
   variant?: "ghost" | "subtle" | "danger";
-  tooltip?: string; // optional native title fallback
+  tooltip?: string; // contextual help tooltip (uses Tooltip component)
+  tooltipPlacement?: "top" | "bottom" | "left" | "right";
   "aria-label": string; // required for icon-only accessibility
 }
 
@@ -36,6 +38,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       variant = "ghost",
       className,
       tooltip,
+      tooltipPlacement = "top",
       children,
       disabled,
       type,
@@ -53,7 +56,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       xs: "xs",
       sm: "sm",
     };
-    return (
+    
+    const button = (
       <Button
         ref={ref}
         type={type as ButtonProps["type"]}
@@ -68,12 +72,22 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "!rounded-sm !p-0",
           className
         )}
-        title={tooltip}
         {...rest}
       >
         {children}
       </Button>
     );
+    
+    // Wrap with Tooltip if tooltip prop provided
+    if (tooltip && !disabled) {
+      return (
+        <Tooltip content={tooltip} placement={tooltipPlacement}>
+          {button}
+        </Tooltip>
+      );
+    }
+    
+    return button;
   }
 );
 

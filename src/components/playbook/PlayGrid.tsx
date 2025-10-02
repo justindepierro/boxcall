@@ -454,6 +454,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800">
               <IconButton
                 aria-label="List view"
+                tooltip="List view"
                 onClick={() => setViewMode("list")}
                 variant="subtle"
                 size="sm"
@@ -465,6 +466,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               </IconButton>
               <IconButton
                 aria-label="Grid view (app icons)"
+                tooltip="Grid view"
                 onClick={() => setViewMode("grid")}
                 variant="subtle"
                 size="sm"
@@ -486,6 +488,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   showOneWordCalls
                     ? "Switch to full play names"
                     : "Switch to one-word calls"
+                }
+                tooltip={
+                  showOneWordCalls
+                    ? "Show full play names"
+                    : "Show one-word calls"
                 }
                 onClick={() => setShowOneWordCalls(!showOneWordCalls)}
                 variant="subtle"
