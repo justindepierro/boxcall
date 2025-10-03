@@ -9,8 +9,6 @@ import React, {
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
-import { PlayCardAppIcon } from "./PlayCard.AppIcon";
-import { PlayDetailModal } from "./PlayDetailModal";
 import { PlayGridSkeleton } from "./PlayGridSkeleton";
 import { PlayGridErrorState } from "./PlayGridErrorState";
 import { PlayGridEmptyState } from "./PlayGridEmptyState";
@@ -30,6 +28,8 @@ import {
   getPlayCategory,
   playMatchesSubcategory,
 } from "../../utils/playbook-categories";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import type { DropResult } from "@hello-pangea/dnd";
 
 // Convert database play data to full Play type
 const mapDatabasePlayToFullPlay = (dbPlay: {
@@ -120,19 +120,66 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   });
 
   // View mode: 'list' or 'grid' (app icons)
-  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+  const [hasManualViewModeOverride, setHasManualViewModeOverride] =
+    useState<boolean>(() => {
+      try {
+        if (typeof window === "undefined") return false;
+        return localStorage.getItem("bc_playgrid_view_manual") === "1";
+      } catch {
+        return false;
+      }
+    });
+
+  const [viewMode, setViewModeState] = useState<"list" | "grid">(() => {
     try {
-      return (
-        (localStorage.getItem("bc_playgrid_view") as "list" | "grid") || "list"
-      );
+      if (typeof window === "undefined") {
+        return "list";
+      }
+
+      const storedView = localStorage.getItem("bc_playgrid_view");
+      const hasManualOverride =
+        localStorage.getItem("bc_playgrid_view_manual") === "1";
+
+      if (
+        hasManualOverride &&
+        (storedView === "list" || storedView === "grid")
+      ) {
+        return storedView;
+      }
+
+      const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
+
+      if (isMobileViewport) {
+        return "grid";
+      }
+
+      if (storedView === "list" || storedView === "grid") {
+        return storedView;
+      }
+
+      return "list";
     } catch {
       return "list";
     }
   });
 
-  // Selected play for detail modal
-  const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
+  const setViewMode = useCallback((mode: "list" | "grid", manual = true) => {
+    setViewModeState((prev) => (prev === mode ? prev : mode));
 
+    if (manual) {
+      setHasManualViewModeOverride(true);
+      try {
+        localStorage.setItem("bc_playgrid_view_manual", "1");
+      } catch {
+        // Ignore persistence errors (private browsing, etc.)
+      }
+    }
+  }, []);
+
+  // Drag and drop state for play reordering
+  const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
+
+  // Persist user preferences
   useEffect(() => {
     try {
       localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
@@ -148,6 +195,38 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       // ignore persistence errors
     }
   }, [viewMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (hasManualViewModeOverride) return;
+    if (typeof window.matchMedia !== "function") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+    const applyPreferredView = (matches: boolean) => {
+      setViewMode(matches ? "grid" : "list", false);
+    };
+
+    applyPreferredView(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      applyPreferredView(event.matches);
+    };
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
+    } else if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (typeof mediaQuery.removeEventListener === "function") {
+        mediaQuery.removeEventListener("change", handleChange);
+      } else if (typeof mediaQuery.removeListener === "function") {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, [hasManualViewModeOverride, setViewMode]);
 
   // Get real data from database with refresh capability
   const { plays: allPlays, loading, error, refreshData } = useTeamsData();
@@ -206,8 +285,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   const handleSelectAll = () => {
     if (!onPlaySelectionChange) return;
-    const currentIds = new Set(filteredPlays.map((p) => p.id));
-    const allVisibleSelected = filteredPlays.every((p) =>
+    const currentIds = new Set(displayPlays.map((p) => p.id));
+    const allVisibleSelected = displayPlays.every((p) =>
       selectedPlayIds.has(p.id)
     );
 
@@ -323,7 +402,32 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       (f) => f && (Array.isArray(f) ? f.length > 0 : true)
     );
 
-  const showEmpty = filteredPlays.length === 0 && !loading && !error;
+  // Drag and drop handler for reordering plays
+  const handleDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return;
+
+      const sourceIndex = result.source.index;
+      const destinationIndex = result.destination.index;
+
+      if (sourceIndex === destinationIndex) return;
+
+      // Reorder the filtered plays
+      const reordered = Array.from(filteredPlays);
+      const [removed] = reordered.splice(sourceIndex, 1);
+      reordered.splice(destinationIndex, 0, removed);
+
+      setReorderedPlays(reordered);
+    },
+    [filteredPlays]
+  );
+
+  // Use reordered plays if available, otherwise use filtered plays
+  const displayPlays = useMemo(() => {
+    return reorderedPlays.length > 0 ? reorderedPlays : filteredPlays;
+  }, [reorderedPlays, filteredPlays]);
+
+  const showEmpty = displayPlays.length === 0 && !loading && !error;
   // Virtualization threshold (avoid overhead for small lists)
   const VIRTUALIZE_THRESHOLD = 30; // use simple map below this
   const disableVirtual =
@@ -364,6 +468,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           onCreateDiagram={onCreateDiagram}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
+          density="compact"
+          variant="list"
         />
       </div>
     ),
@@ -412,8 +518,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 as="h2"
                 className="text-text-primary"
               >
-                {filteredPlays.length}{" "}
-                {filteredPlays.length === 1 ? "Play" : "Plays"}
+                {displayPlays.length}{" "}
+                {displayPlays.length === 1 ? "Play" : "Plays"}
                 {selectedCategory && (
                   <span className="text-text-secondary font-normal ml-2">
                     in{" "}
@@ -432,8 +538,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   <input
                     type="checkbox"
                     checked={
-                      filteredPlays.length > 0 &&
-                      filteredPlays.every((p) => selectedPlayIds.has(p.id))
+                      displayPlays.length > 0 &&
+                      displayPlays.every((p) => selectedPlayIds.has(p.id))
                     }
                     onChange={handleSelectAll}
                     className="rounded border-border text-text-info focus:ring-text-accent"
@@ -518,40 +624,90 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
       {/* Play Grid - Conditional Rendering based on view mode */}
       {!showEmpty && !loading && !error && viewMode === "grid" ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible">
-          {filteredPlays.map((play) => (
-            <div
-              key={play.id}
-              className="flex items-start justify-center overflow-visible"
-            >
-              <PlayCardAppIcon
-                play={play}
-                showOneWordCalls={showOneWordCalls}
-                onClick={(p) => setSelectedPlay(p)}
-                isSelected={selectedPlayIds.has(play.id)}
-                onSelectionChange={handlePlaySelect}
-              />
-            </div>
-          ))}
-        </div>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="play-grid" direction="horizontal">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible"
+              >
+                {displayPlays.map((play, index) => (
+                  <Draggable key={play.id} draggableId={play.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className={`flex items-start justify-center overflow-visible ${
+                          snapshot.isDragging ? "opacity-50" : ""
+                        }`}
+                      >
+                        <PlayCard
+                          play={play}
+                          showOneWordCalls={showOneWordCalls}
+                          onEdit={onEdit}
+                          onDuplicate={onDuplicate}
+                          onCreateDiagram={onCreateDiagram}
+                          isSelected={selectedPlayIds.has(play.id)}
+                          onSelectionChange={handlePlaySelect}
+                          variant="tile"
+                          density="comfortable"
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       ) : !showEmpty &&
         !loading &&
         !error &&
-        (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        <div className="space-y-6 overflow-visible" role="list">
-          {filteredPlays.map((play) => (
-            <PlayCard
-              key={play.id}
-              play={play}
-              showOneWordCalls={showOneWordCalls}
-              onEdit={onEdit}
-              onDuplicate={onDuplicate}
-              onCreateDiagram={onCreateDiagram}
-              isSelected={selectedPlayIds.has(play.id)}
-              onSelectionChange={handlePlaySelect}
-            />
-          ))}
-        </div>
+        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="play-list">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="space-y-6 overflow-visible"
+                role="list"
+              >
+                {displayPlays.map((play, index) => (
+                  <Draggable key={play.id} draggableId={play.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
+                        role="listitem"
+                      >
+                        <div
+                          {...provided.dragHandleProps}
+                          className="cursor-grab active:cursor-grabbing"
+                        >
+                          <PlayCard
+                            play={play}
+                            showOneWordCalls={showOneWordCalls}
+                            onEdit={onEdit}
+                            onDuplicate={onDuplicate}
+                            onCreateDiagram={onCreateDiagram}
+                            isSelected={selectedPlayIds.has(play.id)}
+                            onSelectionChange={handlePlaySelect}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       ) : !showEmpty && !loading && !error ? (
         <div
           style={{ height: "calc(100vh - 320px)" }}
@@ -559,34 +715,16 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           role="list"
         >
           <Virtuoso
-            data={filteredPlays}
+            data={displayPlays}
             overscan={200}
-            computeItemKey={(_, play) => play.id}
+            computeItemKey={(_: number, playItem: Play) => playItem.id}
             itemContent={renderPlayItem}
           />
         </div>
       ) : null}
 
       {/* Play Detail Modal */}
-      {selectedPlay && (
-        <PlayDetailModal
-          play={selectedPlay}
-          isOpen={selectedPlay !== null}
-          onClose={() => setSelectedPlay(null)}
-          onEdit={() => {
-            setSelectedPlay(null);
-            onEdit?.(selectedPlay);
-          }}
-          onDuplicate={() => {
-            setSelectedPlay(null);
-            onDuplicate?.(selectedPlay);
-          }}
-          onDelete={() => {
-            // TODO: Implement delete
-            setSelectedPlay(null);
-          }}
-        />
-      )}
+      {/* Tile variant now uses the same inline details as list view, so the modal remains retired. */}
     </div>
   );
 };

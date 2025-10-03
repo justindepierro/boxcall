@@ -1,0 +1,250 @@
+import React from "react";
+import { InlineEditField } from "../../ui/InlineEditField";
+import { InlineSelectField } from "../../ui/InlineSelectField";
+import type { Play as PlayType } from "../../../types/play";
+import {
+  DIRECTION_OPTIONS,
+  FORMATION_OPTIONS,
+  PLAY_TYPE_OPTIONS,
+} from "./constants";
+
+type SaveHandler = (
+  field: keyof PlayType,
+  value: string | number
+) => Promise<void>;
+
+type FieldRenderer = (
+  optimisticPlay: PlayType,
+  handleInlineSave: SaveHandler,
+  savingFields: Set<string>
+) => React.ReactNode;
+
+export interface FieldDefinition {
+  label: string;
+  render: FieldRenderer;
+}
+
+export type FieldDefinitionMap = Record<string, FieldDefinition>;
+
+interface FormationFieldFactoryOptions {
+  normalizeValue: (value: string) => string;
+  formationSuggestions: string[];
+}
+
+interface PlayDetailsFieldFactoryOptions {
+  normalizeValue: (value: string) => string;
+  playNameSuggestions: string[];
+}
+
+export const createFormationFields = ({
+  normalizeValue,
+  formationSuggestions,
+}: FormationFieldFactoryOptions): FieldDefinitionMap => ({
+  formation: {
+    label: "Base",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineSelectField
+        value={optimisticPlay.formation}
+        options={FORMATION_OPTIONS}
+        onSave={(value) => handleInlineSave("formation", value)}
+        placeholder="Select formation"
+        isSaving={savingFields.has("formation")}
+      />
+    ),
+  },
+  f_type: {
+    label: "Type",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.f_type || ""}
+        onSave={(value) => handleInlineSave("f_type", value)}
+        placeholder="Formation type"
+        suggestions={formationSuggestions}
+        enableSuggestions={true}
+        normalizeValue={normalizeValue}
+        isSaving={savingFields.has("f_type")}
+      />
+    ),
+  },
+  f_dir: {
+    label: "Direction",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineSelectField
+        value={optimisticPlay.f_dir || ""}
+        options={DIRECTION_OPTIONS}
+        onSave={(value) => handleInlineSave("f_dir", value)}
+        placeholder="Direction"
+        allowEmpty={true}
+        emptyLabel="None"
+        isSaving={savingFields.has("f_dir")}
+      />
+    ),
+  },
+  back_align: {
+    label: "Back Align",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.back_align || ""}
+        onSave={(value) => handleInlineSave("back_align", value)}
+        placeholder="Backfield alignment"
+        isSaving={savingFields.has("back_align")}
+      />
+    ),
+  },
+  shift: {
+    label: "Shift",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.shift || ""}
+        onSave={(value) => handleInlineSave("shift", value)}
+        placeholder="Pre-snap shift"
+        isSaving={savingFields.has("shift")}
+      />
+    ),
+  },
+  motion: {
+    label: "Motion",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.motion || ""}
+        onSave={(value) => handleInlineSave("motion", value)}
+        placeholder="Pre-snap motion"
+        isSaving={savingFields.has("motion")}
+      />
+    ),
+  },
+  ftags: {
+    label: "Tags",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={[optimisticPlay.ftag1, optimisticPlay.ftag2]
+          .filter(Boolean)
+          .join(", ")}
+        onSave={(value) => {
+          const tags = value
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
+          void handleInlineSave("ftag1", tags[0] || "");
+          if (tags[1]) void handleInlineSave("ftag2", tags[1]);
+        }}
+        placeholder="Formation tags"
+        isSaving={savingFields.has("ftag1") || savingFields.has("ftag2")}
+      />
+    ),
+  },
+  r_str: {
+    label: "Run Strength",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.r_str || ""}
+        onSave={(value) => handleInlineSave("r_str", value)}
+        placeholder="Run strength"
+        isSaving={savingFields.has("r_str")}
+      />
+    ),
+  },
+  p_str: {
+    label: "Pass Strength",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.p_str || ""}
+        onSave={(value) => handleInlineSave("p_str", value)}
+        placeholder="Pass strength"
+        isSaving={savingFields.has("p_str")}
+      />
+    ),
+  },
+});
+
+export const createPlayDetailsFields = ({
+  normalizeValue,
+  playNameSuggestions,
+}: PlayDetailsFieldFactoryOptions): FieldDefinitionMap => ({
+  play_name: {
+    label: "Name",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.play_name}
+        onSave={(value) => handleInlineSave("play_name", value)}
+        placeholder="Play name"
+        suggestions={playNameSuggestions}
+        enableSuggestions={true}
+        normalizeValue={normalizeValue}
+        validation={(value) => {
+          if (!value.trim()) return "Play name is required";
+          return null;
+        }}
+        isSaving={savingFields.has("play_name")}
+      />
+    ),
+  },
+  p_dir: {
+    label: "Direction",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineSelectField
+        value={optimisticPlay.p_dir || ""}
+        options={DIRECTION_OPTIONS}
+        onSave={(value) => handleInlineSave("p_dir", value)}
+        placeholder="Pass direction"
+        allowEmpty={true}
+        emptyLabel="None"
+        isSaving={savingFields.has("p_dir")}
+      />
+    ),
+  },
+  p_type: {
+    label: "Type",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineSelectField
+        value={optimisticPlay.p_type}
+        options={PLAY_TYPE_OPTIONS}
+        onSave={(value) => handleInlineSave("p_type", value)}
+        placeholder="Play type"
+        isSaving={savingFields.has("p_type")}
+      />
+    ),
+  },
+  protection: {
+    label: "Protection",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.protection || ""}
+        onSave={(value) => handleInlineSave("protection", value)}
+        placeholder="Pass protection scheme"
+        isSaving={savingFields.has("protection")}
+      />
+    ),
+  },
+  ptags: {
+    label: "Tags",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={[optimisticPlay.p_tag1, optimisticPlay.p_tag2]
+          .filter(Boolean)
+          .join(", ")}
+        onSave={(value) => {
+          const tags = value
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
+          void handleInlineSave("p_tag1", tags[0] || "");
+          if (tags[1]) void handleInlineSave("p_tag2", tags[1]);
+        }}
+        placeholder="Play tags"
+        isSaving={savingFields.has("p_tag1") || savingFields.has("p_tag2")}
+      />
+    ),
+  },
+  one_word_play: {
+    label: "Code",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.one_word_play || ""}
+        onSave={(value) => handleInlineSave("one_word_play", value)}
+        placeholder="One-word call"
+        isSaving={savingFields.has("one_word_play")}
+      />
+    ),
+  },
+});

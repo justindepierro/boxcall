@@ -272,7 +272,6 @@ When reviewing code, ask:
 | --------------- | ---------------- | ------------------------------- |
 | PlayDetailModal | 3 divs           | Faster modal rendering          |
 | AppIconTile     | 2 divs per icon  | 2N fewer nodes (N = icon count) |
-| PlayCardAppIcon | 4 divs per card  | 4N fewer nodes (N = play count) |
 | Layout.tsx      | 3 divs           | Faster page loads               |
 | **Total**       | **12 divs**      | **Measurable improvement**      |
 

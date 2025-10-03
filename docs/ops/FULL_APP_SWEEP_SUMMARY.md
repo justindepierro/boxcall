@@ -18,7 +18,6 @@ Conducted comprehensive full-application audit covering wrapping, text wrapping,
 
 - PlayDetailModal: 3 wrappers
 - AppIconTile: 2 wrappers
-- PlayCardAppIcon: 4 wrappers
 - Layout: 3 wrappers
 - **Commit**: 81b24ee
 
