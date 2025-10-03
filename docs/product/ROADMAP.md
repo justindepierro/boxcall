@@ -98,10 +98,37 @@
   - ⏳ Player management system (add, edit, profile views)
   - ⏳ Coach invitation and role assignment system
   - ⏳ Roster overview dashboard with statistics
+  - ⏳ Roster overview dashboard with statistics
   - ⏳ Smart defaults and contextual help integration
 - ⏳ Finish playbook management (CRUD, drag-drop)
 - ⏳ Add calendar event management
 - ⏳ Implement practice planning
+
+### 🎯 NEW: Phase 4+ Optimization & Production Readiness
+
+**Status**: Planning Complete - Comprehensive 8-phase roadmap created  
+**Documentation**: See `docs/PHASE_4_PLUS_ROADMAP.md`
+
+Building on Phase 3's successful service consolidation (-53% services, 99.4% test coverage), Phase 4+ focuses on deep optimization, performance improvements, and production readiness.
+
+**High-Level Goals:**
+- **Phase 4:** Performance optimization & bundle size reduction (611KB → <500KB)
+- **Phase 5:** Code quality & technical debt elimination (type safety, dead code, duplication)
+- **Phase 6:** Developer experience & tooling (testing, documentation, automation)
+- **Phase 7:** Production readiness & monitoring (error tracking, CI/CD, performance budgets)
+- **Phase 8:** Final cleanup & documentation (100% coverage, security audit)
+
+**Key Targets:**
+- Main bundle: <500KB (-18%)
+- Build time: <10s (-25%)
+- Type coverage: 95%+
+- Test coverage: 80%+
+- Lighthouse Performance: 95+
+- Error rate: <1%
+
+**Timeline:** 6-16 weeks depending on parallel execution and team velocity
+
+See comprehensive breakdown in [PHASE_4_PLUS_ROADMAP.md](../PHASE_4_PLUS_ROADMAP.md)
 
 ### Milestone 4: User Experience Polish
 
@@ -323,6 +350,8 @@
 
 - `README.md` - Project overview and quick start
 - `docs/product/ROADMAP.md` - This unified roadmap and status
+- `docs/PHASE_4_PLUS_ROADMAP.md` - **NEW: Phase 4+ optimization, cleanup, and production readiness**
+- `docs/PHASE_3_COMPLETE.md` - Phase 3 service consolidation summary
 - `docs/SETUP.md` - Development environment setup
 - `docs/ARCHITECTURE.md` - System architecture
 - `docs/API.md` - API documentation

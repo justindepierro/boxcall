@@ -575,14 +575,6 @@ export class AchievementService {
    * Legacy methods - kept for compatibility
    */
   static async getHelmetStickers(_userId: string): Promise<HelmetSticker[]> {
-<<<<<<< HEAD
-    return [];
-  }
-
-  static async getBoxCallMedals(userId: string): Promise<BoxCallMedal[]> {
-    const achievements = await this.getUserAchievements(userId);
-    return achievements.boxcallMedals;
-=======
     // TODO: Implement real helmet stickers from database
     return [];
   }
@@ -593,7 +585,6 @@ export class AchievementService {
   static async getBoxCallMedals(_userId: string): Promise<BoxCallMedal[]> {
     // TODO: Implement medal calculation based on user activity
     return [];
->>>>>>> origin/main
   }
 
   static async getActivityStreak(_userId: string): Promise<number> {

@@ -1,16 +1,14 @@
 import { useMemo } from "react";
 
 import { useAuth } from "../app/auth-store";
-<<<<<<< HEAD
 import { useRoles, useTeamPermissions } from "./useRoles";
-=======
-import { useDevMode } from "../app/dev-mode-hooks";
-import { RBACService } from "@services/rbac/RBACService";
-import { PERMISSIONS, type Permission } from "../types/rbac";
->>>>>>> origin/main
 
 const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
 
+/**
+ * Hook for permission checking in React components
+ * Simplified version after Phase 3 consolidation
+ */
 export const usePermissions = (teamId?: string) => {
   const { user } = useAuth();
   const { roleContext } = useRoles();
@@ -21,7 +19,6 @@ export const usePermissions = (teamId?: string) => {
   );
   const appRole = roleContext?.appRole ?? null;
 
-<<<<<<< HEAD
   return useMemo(
     () => ({
       isSuperAdmin,
@@ -32,13 +29,5 @@ export const usePermissions = (teamId?: string) => {
       permissionsError: error,
     }),
     [isSuperAdmin, appRole, permissions, loading, error]
-=======
-  // Specific permission checks for common use cases
-  const canCreateTeam = hasPermission(PERMISSIONS.CREATE_TEAM);
-  const canManageTeam = useCallback(
-    (teamId: string) =>
-      hasPermission(PERMISSIONS.MANAGE_TEAM_SETTINGS, { teamId }),
-    [hasPermission]
->>>>>>> origin/main
   );
 };
