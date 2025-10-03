@@ -12,8 +12,7 @@ export * from "./performanceAnalyticsService"; // Renamed from playerPerformance
 export * from "./playAnalyticsService"; // Consolidates game planning + playbook analytics
 export * from "./playsService"; // Now includes playbook search
 export * from "./postsService";
-export * from "./practiceScriptService";
-export * from "./practiceService";
+export * from "./practiceService"; // Now includes practice scripts
 export * from "./realTimeCollaboration";
 export * from "./roleService";
 export * from "./rosterService";
