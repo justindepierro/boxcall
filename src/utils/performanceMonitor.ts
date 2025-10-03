@@ -13,6 +13,13 @@ interface WebVitalsMetric {
   timestamp: number;
 }
 
+// TypeScript definition for Chrome's memory API
+interface MemoryInfo {
+  jsHeapSizeLimit: number;
+  totalJSHeapSize: number;
+  usedJSHeapSize: number;
+}
+
 interface PerformanceMetrics {
   // Core Web Vitals
   LCP?: WebVitalsMetric; // Largest Contentful Paint
@@ -175,7 +182,7 @@ class PerformanceMonitor {
   }
 
   // Track route changes
-  trackRouteChange(routeName: string) {
+  trackRouteChange(_routeName: string) {
     const startTime = performance.now();
     
     return () => {

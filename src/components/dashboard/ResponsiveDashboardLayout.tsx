@@ -28,93 +28,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, profileLoading, error } = useAuth();
   const { isStepVisible } = useProgressiveLoading(4, 200);
 
-  // Early returns for loading and error states
-  if (loading) {
-    return <PageLoadingSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-error mb-4">
-            Authentication Error
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            {error}
-          </Typography>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-error mb-4">
-            Access Denied
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            Please log in to access the dashboard
-          </Typography>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading while profile is being fetched, but with a timeout
-  if (!profile && profileLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-text-primary mb-4">
-            Loading Dashboard
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            Setting up your profile...
-          </Typography>
-          <div className="mt-4">
-            <PageLoadingSkeleton />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // If we have a user but no profile after loading is complete, create a basic profile
-  if (!profile && !loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-text-primary mb-4">
-            Welcome to BoxCall!
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mb-4">
-            Your profile is being set up. Please refresh the page or contact
-            support if this persists.
-          </Typography>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            Refresh Page
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
-
-  const scrollToSection = (sectionId: string) => {
-    if (typeof window === "undefined") return;
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
+  
   const teamMembershipCount = Array.isArray(
     (profile as unknown as { team_memberships?: unknown[] })?.team_memberships
   )
@@ -208,6 +124,91 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     ],
     [profile?.display_name, profile?.full_name, teamMembershipCount, userRole]
   );
+
+  // Early returns for loading and error states AFTER hooks
+  if (loading) {
+    return <PageLoadingSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-error mb-4">
+            Authentication Error
+          </Typography>
+          <Typography variant="body-lg" color="muted">
+            {error}
+          </Typography>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-error mb-4">
+            Access Denied
+          </Typography>
+          <Typography variant="body-lg" color="muted">
+            Please log in to access the dashboard
+          </Typography>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while profile is being fetched, but with a timeout
+  if (!profile && profileLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-text-primary mb-4">
+            Loading Dashboard
+          </Typography>
+          <Typography variant="body-lg" color="muted">
+            Setting up your profile...
+          </Typography>
+          <div className="mt-4">
+            <PageLoadingSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have a user but no profile after loading is complete, create a basic profile
+  if (!profile && !loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center max-w-md px-4">
+          <Typography variant="headline-lg" className="text-text-primary mb-4">
+            Welcome to BoxCall!
+          </Typography>
+          <Typography variant="body-lg" color="muted" className="mb-4">
+            Your profile is being set up. Please refresh the page or contact
+            support if this persists.
+          </Typography>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const scrollToSection = (sectionId: string) => {
+    if (typeof window === "undefined") return;
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <>

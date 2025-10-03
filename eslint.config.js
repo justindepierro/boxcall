@@ -17,6 +17,8 @@ export default [
       "src/components/ui/Icon/preloadShim.d.ts",
       "src/routes/__tests__/loaderAuth.test.tsx",
       "src/utils/errorHandler.tsx",
+      "**/*.stories.tsx", // Exclude Storybook files from linting
+      "**/*.stories.ts", // Exclude Storybook files from linting
     ],
   },
   // Base configuration for all JS/TS files
