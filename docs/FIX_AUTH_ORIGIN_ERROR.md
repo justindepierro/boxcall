@@ -1,9 +1,11 @@
 # Fixing "Request Origin Failed" Authentication Error
 
 ## Problem
+
 When trying to log in at **https://boxcallapp.com**, you're getting a "Request origin failed" error.
 
 ## Root Cause
+
 Supabase has a **Site URL** and **Redirect URLs** allowlist for security. Your production domain `boxcallapp.com` needs to be added to this allowlist.
 
 ---
@@ -21,11 +23,13 @@ Supabase has a **Site URL** and **Redirect URLs** allowlist for security. Your p
 1. In the left sidebar, click **Authentication** → **URL Configuration**
 
 2. Update **Site URL**:
+
    ```
    https://boxcallapp.com
    ```
 
 3. Add to **Redirect URLs** (should include ALL of these):
+
    ```
    https://boxcallapp.com/**
    https://boxcallapp.com/auth/callback
@@ -44,6 +48,7 @@ While in Authentication settings:
 
 1. Scroll down to **CORS Configuration**
 2. Ensure the following origins are allowed:
+
    ```
    https://boxcallapp.com
    https://*.netlify.app
@@ -66,6 +71,7 @@ While in Authentication settings:
 ### Test Credentials
 
 If you need test credentials, you should have:
+
 - Email: (your test account email)
 - Password: (your test password)
 
@@ -81,14 +87,15 @@ Open DevTools (F12) → Console tab and look for errors:
 
 ```javascript
 // You might see:
-"Failed to fetch" 
-"CORS policy blocked"
-"Origin not allowed"
+"Failed to fetch";
+"CORS policy blocked";
+"Origin not allowed";
 ```
 
 ### Check Network Tab
 
 Open DevTools (F12) → Network tab:
+
 1. Try logging in
 2. Look for failed requests to `lvmuiqwihlpnwppdqqfl.supabase.co`
 3. Check the response headers and error messages
@@ -98,18 +105,22 @@ Open DevTools (F12) → Network tab:
 ## Common Issues
 
 ### Issue 1: Wrong Site URL
+
 **Symptom:** "Request origin failed"  
 **Fix:** Ensure Site URL is exactly `https://boxcallapp.com` (no trailing slash)
 
 ### Issue 2: Missing Redirect URLs
+
 **Symptom:** Authentication works but redirects fail  
 **Fix:** Add all redirect URLs with `/**` wildcard
 
 ### Issue 3: CORS Not Configured
+
 **Symptom:** "CORS policy blocked"  
 **Fix:** Add your domain to CORS allowed origins
 
 ### Issue 4: Configuration Not Updated
+
 **Symptom:** Still failing after config change  
 **Fix:** Wait 1-2 minutes, clear cache, try incognito mode
 
@@ -162,12 +173,14 @@ netlify env:list
 ```
 
 Should show:
+
 - `VITE_SUPABASE_URL`: https://lvmuiqwihlpnwppdqqfl.supabase.co
 - `VITE_SUPABASE_ANON_KEY`: (your anon key)
 
 ### Verify Build Used Correct Env Vars
 
 In the build output, you should see:
+
 ```
 🔧 Supabase module loading...
 🔧 VITE_SUPABASE_URL: https://lvmuiqwihlpnwppdqqfl...
@@ -177,6 +190,7 @@ In the build output, you should see:
 ### Try a Fresh Deployment
 
 If environment variables changed:
+
 ```bash
 netlify deploy --prod
 ```

@@ -27,7 +27,8 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     try {
       setLoading(true);
       setFetchError(null);
-      const fetchedScripts = await PracticeScriptService.getPracticeScripts(teamId);
+      const fetchedScripts =
+        await PracticeScriptService.getPracticeScripts(teamId);
       setScripts(fetchedScripts);
     } catch (err) {
       console.error("Failed to load practice scripts:", err);
@@ -43,7 +44,11 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   }, [loadScripts]);
 
   const handleDeleteScript = async (scriptId: string, scriptName: string) => {
-    if (!confirm(`Are you sure you want to delete "${scriptName}"? This action cannot be undone.`)) {
+    if (
+      !confirm(
+        `Are you sure you want to delete "${scriptName}"? This action cannot be undone.`
+      )
+    ) {
       return;
     }
 
@@ -70,15 +75,18 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     }
   };
 
-  const handleExportPDF = useCallback(async (script: PracticeScript) => {
-    try {
-      await PDFExportService.exportPracticeScript(script);
-      success(`PDF exported for "${script.name}"`);
-    } catch (err) {
-      console.error("Failed to export PDF:", err);
-      toastError("Failed to export PDF", "Please try again");
-    }
-  }, [success, toastError]);
+  const handleExportPDF = useCallback(
+    async (script: PracticeScript) => {
+      try {
+        await PDFExportService.exportPracticeScript(script);
+        success(`PDF exported for "${script.name}"`);
+      } catch (err) {
+        console.error("Failed to export PDF:", err);
+        toastError("Failed to export PDF", "Please try again");
+      }
+    },
+    [success, toastError]
+  );
 
   const formatDuration = (minutes: number): string => {
     if (minutes < 60) {
@@ -86,14 +94,16 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     }
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+    return remainingMinutes > 0
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
   };
 
   const formatDate = (date: Date): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(date);
   };
 
@@ -111,7 +121,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   if (fetchError) {
     return (
       <div className="text-center py-12">
-        <Icon name="alert-triangle" className="h-16 w-16 text-error mx-auto mb-4" />
+        <Icon
+          name="alert-triangle"
+          className="h-16 w-16 text-error mx-auto mb-4"
+        />
         <Typography variant="headline-sm" className="text-text-secondary mb-2">
           Error Loading Scripts
         </Typography>
@@ -134,7 +147,8 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
           No Practice Scripts Yet
         </Typography>
         <Typography variant="body-sm" className="text-text-muted mb-6">
-          Create your first practice script to get started with organized practice planning.
+          Create your first practice script to get started with organized
+          practice planning.
         </Typography>
         <Button onClick={onCreateNew} variant="primary">
           <Icon name="plus" className="h-4 w-4 mr-2" />

@@ -31,7 +31,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
-  
+
   const teamMembershipCount = Array.isArray(
     (profile as unknown as { team_memberships?: unknown[] })?.team_memberships
   )

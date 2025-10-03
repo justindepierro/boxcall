@@ -4,11 +4,11 @@ import type {
   Game,
   Play,
   PlayCall,
-  PostReaction,
+  // PostReaction, // Unused - table doesn't exist
   Profile,
   Team,
-  TeamFile,
-  TeamGoal,
+  // TeamFile, // Unused - table doesn't exist
+  // TeamGoal, // Unused - table doesn't exist
   UserProfile,
 } from "../types/database";
 
@@ -349,6 +349,10 @@ export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
   }
   return data || [];
 }
+
+// DEPRECATED: These tables don't exist in production
+// Commenting out to prevent 404 errors in browser console
+/*
 export async function getTeamGoals(teamId: string): Promise<TeamGoal[]> {
   const { data, error } = await supabase
     .from("team_goals")
@@ -373,10 +377,12 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
   }
   return data || [];
 }
+*/
+
 export async function getUserProfileByUserId(
   userId: string
 ): Promise<UserProfile | null> {
-  const { data, error } = await supabase
+  const { data, error} = await supabase
     .from("user_profiles")
     .select("*")
     .eq("user_id", userId)
@@ -387,6 +393,9 @@ export async function getUserProfileByUserId(
   }
   return data;
 }
+
+// DEPRECATED: post_reactions table doesn't exist
+/*
 export async function getPostReactions(
   postId: string
 ): Promise<PostReaction[]> {
@@ -401,3 +410,4 @@ export async function getPostReactions(
   }
   return data || [];
 }
+*/

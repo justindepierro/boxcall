@@ -9,7 +9,12 @@ import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
-import { PlaysService, ActivityService, PracticeScriptService, GamePlanService } from "@services";
+import {
+  PlaysService,
+  ActivityService,
+  PracticeScriptService,
+  GamePlanService,
+} from "@services";
 import type { PlayActivityItem } from "@services";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";

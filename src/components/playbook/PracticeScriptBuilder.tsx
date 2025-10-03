@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DropResult,
+} from "@hello-pangea/dnd";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
@@ -29,10 +34,14 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
   onCancel,
   isOpen,
 }) => {
-  const [currentScript, setCurrentScript] = useState<PracticeScript | null>(script || null);
+  const [currentScript, setCurrentScript] = useState<PracticeScript | null>(
+    script || null
+  );
   const [isEditing, setIsEditing] = useState(!script);
   const [scriptName, setScriptName] = useState(script?.name || "");
-  const [scriptDescription, setScriptDescription] = useState(script?.description || "");
+  const [scriptDescription, setScriptDescription] = useState(
+    script?.description || ""
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [showPlaySelector, setShowPlaySelector] = useState(false);
   const toast = useToast();
@@ -94,105 +103,126 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     }
   }, [scriptName, scriptDescription, currentScript, teamId, onSave, toast]);
 
-  const handleAddPlay = useCallback(async (play: Play) => {
-    if (!currentScript) return;
+  const handleAddPlay = useCallback(
+    async (play: Play) => {
+      if (!currentScript) return;
 
-    try {
-      const updatedScript = await PracticeScriptService.addPlayToScript(
-        {
-          scriptId: currentScript.id,
-          playId: play.id,
-          repetitions: 5,
-          estimatedTime: 3,
-        },
-        play
-      );
+      try {
+        const updatedScript = await PracticeScriptService.addPlayToScript(
+          {
+            scriptId: currentScript.id,
+            playId: play.id,
+            repetitions: 5,
+            estimatedTime: 3,
+          },
+          play
+        );
 
-      setCurrentScript(updatedScript);
-      setShowPlaySelector(false);
-      toast.success(`Added "${play.play_name}" to script`);
-    } catch (error) {
-      console.error("Failed to add play to script:", error);
-      toast.error("Failed to add play", "Please try again");
-    }
-  }, [currentScript, toast]);
+        setCurrentScript(updatedScript);
+        setShowPlaySelector(false);
+        toast.success(`Added "${play.play_name}" to script`);
+      } catch (error) {
+        console.error("Failed to add play to script:", error);
+        toast.error("Failed to add play", "Please try again");
+      }
+    },
+    [currentScript, toast]
+  );
 
-  const handleRemovePlay = useCallback(async (playId: string) => {
-    if (!currentScript) return;
+  const handleRemovePlay = useCallback(
+    async (playId: string) => {
+      if (!currentScript) return;
 
-    try {
-      const updatedPlays = currentScript.plays.filter(p => p.id !== playId);
+      try {
+        const updatedPlays = currentScript.plays.filter((p) => p.id !== playId);
+        const updatedScript = {
+          ...currentScript,
+          plays: updatedPlays,
+          duration: updatedPlays.reduce(
+            (total, play) => total + play.estimatedTime,
+            0
+          ),
+          updatedAt: new Date(),
+        };
+
+        setCurrentScript(updatedScript);
+        toast.success("Play removed from script");
+      } catch (error) {
+        console.error("Failed to remove play from script:", error);
+        toast.error("Failed to remove play", "Please try again");
+      }
+    },
+    [currentScript, toast]
+  );
+
+  const handleDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!currentScript || !result.destination) return;
+
+      const { source, destination } = result;
+
+      if (source.index === destination.index) return;
+
+      const reorderedPlays = Array.from(currentScript.plays);
+      const [removed] = reorderedPlays.splice(source.index, 1);
+      reorderedPlays.splice(destination.index, 0, removed);
+
+      // Update order numbers
+      const updatedPlays = reorderedPlays.map((play, index) => ({
+        ...play,
+        order: index + 1,
+      }));
+
       const updatedScript = {
         ...currentScript,
         plays: updatedPlays,
-        duration: updatedPlays.reduce((total, play) => total + play.estimatedTime, 0),
         updatedAt: new Date(),
       };
 
       setCurrentScript(updatedScript);
-      toast.success("Play removed from script");
-    } catch (error) {
-      console.error("Failed to remove play from script:", error);
-      toast.error("Failed to remove play", "Please try again");
-    }
-  }, [currentScript, toast]);
+    },
+    [currentScript]
+  );
 
-  const handleDragEnd = useCallback((result: DropResult) => {
-    if (!currentScript || !result.destination) return;
+  const handleUpdatePlayNotes = useCallback(
+    (playId: string, notes: string) => {
+      if (!currentScript) return;
 
-    const { source, destination } = result;
+      const updatedPlays = currentScript.plays.map((play) =>
+        play.id === playId ? { ...play, notes } : play
+      );
 
-    if (source.index === destination.index) return;
+      setCurrentScript({
+        ...currentScript,
+        plays: updatedPlays,
+        updatedAt: new Date(),
+      });
+    },
+    [currentScript]
+  );
 
-    const reorderedPlays = Array.from(currentScript.plays);
-    const [removed] = reorderedPlays.splice(source.index, 1);
-    reorderedPlays.splice(destination.index, 0, removed);
+  const handleUpdatePlayRepetitions = useCallback(
+    (playId: string, repetitions: number) => {
+      if (!currentScript) return;
 
-    // Update order numbers
-    const updatedPlays = reorderedPlays.map((play, index) => ({
-      ...play,
-      order: index + 1,
-    }));
+      const updatedPlays = currentScript.plays.map((play) =>
+        play.id === playId ? { ...play, repetitions } : play
+      );
 
-    const updatedScript = {
-      ...currentScript,
-      plays: updatedPlays,
-      updatedAt: new Date(),
-    };
+      const updatedDuration = updatedPlays.reduce(
+        (total, play) => total + play.estimatedTime * play.repetitions,
+        0
+      );
 
-    setCurrentScript(updatedScript);
-  }, [currentScript]);
-
-  const handleUpdatePlayNotes = useCallback((playId: string, notes: string) => {
-    if (!currentScript) return;
-
-    const updatedPlays = currentScript.plays.map(play =>
-      play.id === playId ? { ...play, notes } : play
-    );
-
-    setCurrentScript({
-      ...currentScript,
-      plays: updatedPlays,
-      updatedAt: new Date(),
-    });
-  }, [currentScript]);
-
-  const handleUpdatePlayRepetitions = useCallback((playId: string, repetitions: number) => {
-    if (!currentScript) return;
-
-    const updatedPlays = currentScript.plays.map(play =>
-      play.id === playId ? { ...play, repetitions } : play
-    );
-
-    const updatedDuration = updatedPlays.reduce((total, play) => total + (play.estimatedTime * play.repetitions), 0);
-
-    setCurrentScript({
-      ...currentScript,
-      plays: updatedPlays,
-      duration: updatedDuration,
-      updatedAt: new Date(),
-    });
-  }, [currentScript]);
+      setCurrentScript({
+        ...currentScript,
+        plays: updatedPlays,
+        duration: updatedDuration,
+        updatedAt: new Date(),
+      });
+    },
+    [currentScript]
+  );
 
   const handleExportPDF = useCallback(async () => {
     if (!currentScript) return;
@@ -206,7 +236,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     }
   }, [currentScript, toast]);
 
-  const totalDuration = currentScript?.plays.reduce((total, play) => total + (play.estimatedTime * play.repetitions), 0) || 0;
+  const totalDuration =
+    currentScript?.plays.reduce(
+      (total, play) => total + play.estimatedTime * play.repetitions,
+      0
+    ) || 0;
   const totalPlays = currentScript?.plays.length || 0;
 
   return (
@@ -217,7 +251,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
       type="default"
       headerContent={
         <div className="flex items-center justify-between w-full">
-          <Typography variant="headline-sm" as="h3" className="text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary"
+          >
             {currentScript ? "Edit Practice Script" : "Create Practice Script"}
           </Typography>
           <div className="flex items-center space-x-2">
@@ -256,7 +294,9 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             {isEditing ? (
               <Input
                 value={scriptName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScriptName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setScriptName(e.target.value)
+                }
                 placeholder="e.g., Week 1 - Passing Fundamentals"
                 className="w-full"
               />
@@ -274,7 +314,9 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             {isEditing ? (
               <Textarea
                 value={scriptDescription}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setScriptDescription(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setScriptDescription(e.target.value)
+                }
                 placeholder="Describe the focus and goals of this practice script..."
                 rows={3}
                 className="w-full"
@@ -301,7 +343,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         {/* Plays Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Typography variant="headline-sm" as="h4" className="text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h4"
+              className="text-text-primary"
+            >
               Practice Plays
             </Typography>
             <Button
@@ -316,12 +362,19 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
           {!currentScript?.plays.length ? (
             <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-              <Icon name="file" className="h-16 w-16 text-text-muted mx-auto mb-4" />
-              <Typography variant="headline-sm" className="text-text-secondary mb-2">
+              <Icon
+                name="file"
+                className="h-16 w-16 text-text-muted mx-auto mb-4"
+              />
+              <Typography
+                variant="headline-sm"
+                className="text-text-secondary mb-2"
+              >
                 No plays added yet
               </Typography>
               <Typography variant="body-sm" className="text-text-muted mb-6">
-                Add plays from your playbook to create a structured practice session.
+                Add plays from your playbook to create a structured practice
+                session.
               </Typography>
               <Button
                 variant="primary"
@@ -351,17 +404,19 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             className={`${
-                              snapshot.isDragging
-                                ? "shadow-lg rotate-2"
-                                : ""
+                              snapshot.isDragging ? "shadow-lg rotate-2" : ""
                             }`}
                           >
                             <PracticeScriptPlayItem
                               scriptPlay={scriptPlay}
                               index={index}
                               onRemove={() => handleRemovePlay(scriptPlay.id)}
-                              onUpdateNotes={(notes: string) => handleUpdatePlayNotes(scriptPlay.id, notes)}
-                              onUpdateRepetitions={(reps: number) => handleUpdatePlayRepetitions(scriptPlay.id, reps)}
+                              onUpdateNotes={(notes: string) =>
+                                handleUpdatePlayNotes(scriptPlay.id, notes)
+                              }
+                              onUpdateRepetitions={(reps: number) =>
+                                handleUpdatePlayRepetitions(scriptPlay.id, reps)
+                              }
                               dragHandleProps={provided.dragHandleProps}
                             />
                           </div>

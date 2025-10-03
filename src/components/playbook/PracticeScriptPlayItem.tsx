@@ -26,7 +26,9 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
 }) => {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(scriptPlay.notes || "");
-  const [repetitionsValue, setRepetitionsValue] = useState(scriptPlay.repetitions);
+  const [repetitionsValue, setRepetitionsValue] = useState(
+    scriptPlay.repetitions
+  );
 
   const play = scriptPlay.play;
   const displayName = `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`;
@@ -69,7 +71,10 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <Typography variant="body-sm" className="text-text-primary font-medium truncate">
+              <Typography
+                variant="body-sm"
+                className="text-text-primary font-medium truncate"
+              >
                 {displayName}
               </Typography>
               <div className="flex items-center space-x-2 mt-1">
@@ -90,7 +95,10 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 onClick={() => setIsEditingNotes(!isEditingNotes)}
                 className="text-text-secondary hover:text-text-primary"
               >
-                <Icon name={isEditingNotes ? "check" : "edit"} className="h-4 w-4" />
+                <Icon
+                  name={isEditingNotes ? "check" : "edit"}
+                  className="h-4 w-4"
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -109,7 +117,9 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="space-y-2">
                 <Textarea
                   value={notesValue}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotesValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setNotesValue(e.target.value)
+                  }
                   placeholder="Add notes for this play (e.g., focus on footwork, emphasize timing)..."
                   rows={2}
                   className="w-full text-sm"
@@ -141,7 +151,9 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleRepetitionsChange(repetitionsValue - 1)}
+                    onClick={() =>
+                      handleRepetitionsChange(repetitionsValue - 1)
+                    }
                     disabled={repetitionsValue <= 1}
                     className="h-6 w-6 p-0"
                   >
@@ -153,7 +165,9 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleRepetitionsChange(repetitionsValue + 1)}
+                    onClick={() =>
+                      handleRepetitionsChange(repetitionsValue + 1)
+                    }
                     disabled={repetitionsValue >= 20}
                     className="h-6 w-6 p-0"
                   >

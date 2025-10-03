@@ -10,13 +10,13 @@
 
 8 phases of optimization, cleanup, and production readiness:
 
-| Phase | Focus | Duration | Key Metric |
-|-------|-------|----------|------------|
-| **4** | Performance & Bundle Size | 2-3 weeks | Bundle: 611KB → <500KB |
-| **5** | Code Quality & Tech Debt | 2-3 weeks | Type coverage: 85% → 95% |
-| **6** | Developer Experience | 1-2 weeks | Test coverage: → 80%+ |
-| **7** | Production Readiness | 2 weeks | Error rate: → <1% |
-| **8** | Final Cleanup | 1 week | 100% documentation |
+| Phase | Focus                     | Duration  | Key Metric               |
+| ----- | ------------------------- | --------- | ------------------------ |
+| **4** | Performance & Bundle Size | 2-3 weeks | Bundle: 611KB → <500KB   |
+| **5** | Code Quality & Tech Debt  | 2-3 weeks | Type coverage: 85% → 95% |
+| **6** | Developer Experience      | 1-2 weeks | Test coverage: → 80%+    |
+| **7** | Production Readiness      | 2 weeks   | Error rate: → <1%        |
+| **8** | Final Cleanup             | 1 week    | 100% documentation       |
 
 **Total:** 6-16 weeks (depending on parallel execution)
 
@@ -52,20 +52,24 @@ Create `docs/PHASE_4_BASELINE.md`:
 **Commit:** [git rev-parse HEAD]
 
 ## Bundle Sizes
+
 - Main bundle: 611KB
 - react-pdf bundle: 1,498KB
 - Total: ~2.1MB
 
 ## Build Times
+
 - Production build: 13.28s
 - Dev server start: [measure]
 
 ## Code Quality
+
 - Type coverage: ~85% (estimated)
 - Test coverage: Unknown (no reporter)
 - Services: 8 consolidated ✅
 
 ## Tests
+
 - Passing: 314/316 (99.4%)
 - Failing: 2 (timeouts, not Phase 3 related)
 ```
@@ -91,6 +95,7 @@ npm install -D husky lint-staged
 Pick **ONE** of these to start immediately:
 
 #### Option A: Bundle Size Quick Win
+
 ```bash
 # Find largest dependencies
 npm run build -- --report
@@ -102,6 +107,7 @@ npm run build -- --report
 ```
 
 #### Option B: Type Safety Quick Win
+
 ```bash
 # Find all 'any' types
 npx ts-prune | grep "used in module"
@@ -111,6 +117,7 @@ npx ts-prune | grep "used in module"
 ```
 
 #### Option C: Dead Code Quick Win
+
 ```bash
 # Find unused exports
 npx ts-prune
@@ -133,25 +140,25 @@ npx ts-prune
 
 ```tsx
 // Before (in PracticeScriptPDF.tsx)
-import { Document, Page, PDFDownloadLink } from '@react-pdf/renderer';
+import { Document, Page, PDFDownloadLink } from "@react-pdf/renderer";
 
 // After
-import { lazy, Suspense } from 'react';
-const PDFViewer = lazy(() => import('./PDFViewer'));
+import { lazy, Suspense } from "react";
+const PDFViewer = lazy(() => import("./PDFViewer"));
 
 // In component
 <Suspense fallback={<LoadingSpinner />}>
   <PDFViewer {...props} />
-</Suspense>
+</Suspense>;
 ```
 
 ### Priority 2: Route-Based Code Splitting
 
 ```tsx
 // In DataRouter.tsx - convert all pages to lazy
-const PlaybookPage = lazy(() => import('@/pages/PlaybookPage'));
-const PracticePlanner = lazy(() => import('@/pages/PracticePlanner'));
-const TeamBulletin = lazy(() => import('@/pages/TeamBulletin'));
+const PlaybookPage = lazy(() => import("@/pages/PlaybookPage"));
+const PracticePlanner = lazy(() => import("@/pages/PracticePlanner"));
+const TeamBulletin = lazy(() => import("@/pages/TeamBulletin"));
 // ... etc
 ```
 
@@ -200,22 +207,27 @@ npm uninstall [unused-packages]
 ## Phase 4 - Day [X]
 
 ### Today's Goal
+
 [One specific thing from Phase 4A-4C]
 
 ### Tasks
+
 - [ ] [Specific task 1]
 - [ ] [Specific task 2]
 - [ ] [Specific task 3]
 
 ### Metrics
+
 - Bundle size: [before] → [after]
 - Build time: [before] → [after]
 - Tests: [passing/total]
 
 ### Blockers
+
 [None / List blockers]
 
 ### Tomorrow
+
 [Next specific task]
 ```
 
@@ -240,7 +252,7 @@ During optimization, watch for these issues:
 ### Phase 4 Complete When:
 
 - [ ] Main bundle <500KB
-- [ ] Build time <10s  
+- [ ] Build time <10s
 - [ ] All tests still passing (314+/316)
 - [ ] No new TypeScript errors
 - [ ] Lighthouse Performance 95+
@@ -267,21 +279,25 @@ During optimization, watch for these issues:
 When choosing what to work on:
 
 ### High Impact, Low Effort → Do First
+
 - Lazy load react-pdf (1.49MB → lazy)
 - Add React.memo to PlayCard
 - Remove unused dependencies
 
 ### High Impact, High Effort → Do Next
+
 - Full type safety (remove all `any`)
 - Complete test coverage
 - Feature-based reorganization
 
 ### Low Impact, Low Effort → Do When Bored
+
 - Fix linting warnings
 - Update documentation
 - Clean up comments
 
 ### Low Impact, High Effort → Skip
+
 - Premature micro-optimizations
 - Rewriting working code
 - Over-engineering solutions
@@ -291,6 +307,7 @@ When choosing what to work on:
 ## 📞 Need Help?
 
 Reference the full roadmap for:
+
 - Detailed task breakdowns
 - Technical implementation guides
 - Tool recommendations
@@ -303,12 +320,14 @@ Reference the full roadmap for:
 ## 🎉 Motivation
 
 **You just completed Phase 3:**
+
 - 17 → 8 services (-53%)
 - 314/316 tests passing (99.4%)
 - Zero breaking changes
 - Comprehensive documentation
 
 **Phase 4+ will make it:**
+
 - ⚡ Faster (bundle -18%, build -25%)
 - 🛡️ Safer (type safety 95%+)
 - 🧪 More tested (coverage 80%+)

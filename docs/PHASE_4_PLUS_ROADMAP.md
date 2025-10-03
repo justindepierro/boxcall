@@ -54,6 +54,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** Reduce main bundle from 611KB → <500KB
 
 **Tasks:**
+
 1. **Bundle Analysis**
    - Run `npm run build -- --report` to generate bundle visualization
    - Identify largest chunks and dependencies
@@ -83,6 +84,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Consider icon sprite sheets
 
 **Success Metrics:**
+
 - Main bundle: <500KB (from 611KB) = -18%
 - First Load JS: <200KB
 - Lighthouse Performance: 95+
@@ -95,6 +97,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** Eliminate unnecessary re-renders, optimize component lifecycle
 
 **Tasks:**
+
 1. **Profiling & Analysis**
    - Use React DevTools Profiler on key pages:
      - PlaybookPage
@@ -133,6 +136,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Use proper `key` props (UUIDs, not indexes)
 
 **Success Metrics:**
+
 - Reduce re-renders by 50%+
 - Improve Interaction to Next Paint (INP) by 30%
 - Lighthouse Performance: 95+
@@ -145,6 +149,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** Reduce build time from 13.28s → <10s
 
 **Tasks:**
+
 1. **Vite Configuration Optimization**
    - Enable esbuild minification
    - Configure build cache properly
@@ -169,6 +174,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Only run affected tests on PRs
 
 **Success Metrics:**
+
 - Production build: <10s (from 13.28s) = -25%
 - Dev server start: <3s
 - HMR update: <200ms
@@ -187,6 +193,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** Eliminate `any` types, improve type coverage to 95%+
 
 **Tasks:**
+
 1. **Type Safety Audit**
    - Run `tsc --noImplicitAny --strict`
    - Document all `any` types in codebase
@@ -215,6 +222,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Create domain-specific type helpers
 
 **Success Metrics:**
+
 - Zero `any` types in application code
 - 95%+ type coverage
 - Zero type assertions in services
@@ -227,6 +235,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** Remove unused code, reduce maintenance burden
 
 **Tasks:**
+
 1. **Unused Code Detection**
    - Use `ts-prune` to find unused exports
    - Run `knip` for comprehensive dead code analysis
@@ -252,6 +261,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Use barrel exports strategically (not everywhere)
 
 **Success Metrics:**
+
 - Remove 10%+ of code (estimated 5,000+ lines)
 - Reduce node_modules size by 20%
 - Zero circular dependencies
@@ -264,6 +274,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 **Goal:** DRY principle - reduce duplication by 50%
 
 **Tasks:**
+
 1. **Duplication Analysis**
    - Run `jscpd` to find duplicate code blocks
    - Identify repeated patterns in components
@@ -296,6 +307,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Remove inline duplicated logic
 
 **Success Metrics:**
+
 - Reduce code duplication by 50%
 - 20+ reusable components created
 - 15+ shared hooks extracted
@@ -312,6 +324,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 6A: Development Tooling Enhancement
 
 **Tasks:**
+
 1. **ESLint Configuration Improvement**
    - Add stricter rules:
      - `@typescript-eslint/no-explicit-any`
@@ -343,6 +356,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Add database seeding scripts
 
 **Success Metrics:**
+
 - Pre-commit hooks prevent bad commits
 - 80%+ test coverage
 - Auto-generated documentation
@@ -353,6 +367,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 6B: Code Organization & Architecture
 
 **Tasks:**
+
 1. **Directory Structure Refinement**
    - Organize by feature (not by type):
      ```
@@ -395,6 +410,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Document component API patterns
 
 **Success Metrics:**
+
 - Features are self-contained modules
 - Clear import patterns enforced
 - Comprehensive CONTRIBUTING.md
@@ -411,6 +427,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 7A: Error Tracking & Monitoring
 
 **Tasks:**
+
 1. **Error Tracking Setup**
    - Integrate Sentry (or similar)
    - Configure source maps for production
@@ -444,6 +461,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - A/B testing infrastructure
 
 **Success Metrics:**
+
 - <1% unhandled errors
 - <100ms P95 API response time
 - 95+ Lighthouse Performance
@@ -454,6 +472,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 7B: Performance Budgets & CI/CD
 
 **Tasks:**
+
 1. **Performance Budgets**
    - Set bundle size budgets:
      - Main bundle: <500KB
@@ -483,6 +502,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Create rollback procedures
 
 **Success Metrics:**
+
 - Zero budget violations
 - 100% CI pass rate
 - <5 minute CI/CD pipeline
@@ -499,6 +519,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 8A: Documentation Completion
 
 **Tasks:**
+
 1. **Technical Documentation**
    - Complete architecture documentation
    - Document all services and APIs
@@ -524,6 +545,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Document keyboard shortcuts
 
 **Success Metrics:**
+
 - 100% component Storybook coverage
 - Complete technical documentation
 - Onboarding guide <30 minutes
@@ -534,6 +556,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### 8B: Final Code Review & Cleanup
 
 **Tasks:**
+
 1. **Comprehensive Code Review**
    - Review all services for consistency
    - Audit all components for patterns
@@ -561,6 +584,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
    - Fine-tune cache strategies
 
 **Success Metrics:**
+
 - Zero security vulnerabilities
 - 98+ accessibility score
 - All pages load <2s
@@ -572,37 +596,37 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 
 ### Phase 4 Targets
 
-| Metric | Current | Target | Change |
-|--------|---------|--------|--------|
-| **Main Bundle** | 611KB | <500KB | -18% |
-| **Build Time** | 13.28s | <10s | -25% |
-| **Re-renders** | Baseline | -50% | 50% improvement |
-| **Lighthouse** | Unknown | 95+ | +5-10 points |
+| Metric          | Current  | Target | Change          |
+| --------------- | -------- | ------ | --------------- |
+| **Main Bundle** | 611KB    | <500KB | -18%            |
+| **Build Time**  | 13.28s   | <10s   | -25%            |
+| **Re-renders**  | Baseline | -50%   | 50% improvement |
+| **Lighthouse**  | Unknown  | 95+    | +5-10 points    |
 
 ### Phase 5 Targets
 
-| Metric | Current | Target | Change |
-|--------|---------|--------|--------|
-| **Type Coverage** | ~85% | 95%+ | +10% |
-| **Dead Code** | Unknown | -10% | -5,000 lines |
-| **Dependencies** | Baseline | -20% | Lighter bundle |
-| **Duplication** | Baseline | -50% | DRY principle |
+| Metric            | Current  | Target | Change         |
+| ----------------- | -------- | ------ | -------------- |
+| **Type Coverage** | ~85%     | 95%+   | +10%           |
+| **Dead Code**     | Unknown  | -10%   | -5,000 lines   |
+| **Dependencies**  | Baseline | -20%   | Lighter bundle |
+| **Duplication**   | Baseline | -50%   | DRY principle  |
 
 ### Phase 6 Targets
 
-| Metric | Current | Target | Change |
-|--------|---------|--------|--------|
-| **Test Coverage** | Unknown | 80%+ | +30% |
-| **Dev Server Start** | Unknown | <3s | Fast iteration |
-| **Documentation** | Partial | 100% | Complete docs |
+| Metric               | Current | Target | Change         |
+| -------------------- | ------- | ------ | -------------- |
+| **Test Coverage**    | Unknown | 80%+   | +30%           |
+| **Dev Server Start** | Unknown | <3s    | Fast iteration |
+| **Documentation**    | Partial | 100%   | Complete docs  |
 
 ### Phase 7 Targets
 
-| Metric | Current | Target | Change |
-|--------|---------|--------|--------|
-| **Error Rate** | Unknown | <1% | Production stability |
-| **P95 Response** | Unknown | <100ms | Fast APIs |
-| **CI/CD Time** | Unknown | <5min | Fast deployments |
+| Metric           | Current | Target | Change               |
+| ---------------- | ------- | ------ | -------------------- |
+| **Error Rate**   | Unknown | <1%    | Production stability |
+| **P95 Response** | Unknown | <100ms | Fast APIs            |
+| **CI/CD Time**   | Unknown | <5min  | Fast deployments     |
 
 ---
 
@@ -628,6 +652,7 @@ Phase 4+ focuses on deep optimization, performance improvements, refactoring tec
 ### Parallel Track Option
 
 Some phases can run in parallel:
+
 - Phase 4B (React optimization) + Phase 5A (Type safety)
 - Phase 6A (Tooling) + Phase 5B (Dead code removal)
 - Phase 7A (Monitoring) + Phase 8A (Documentation)
@@ -740,6 +765,7 @@ Some phases can run in parallel:
 ### Immediate Next Steps
 
 1. **Create Phase 4 Branch**
+
    ```bash
    git checkout main
    git pull origin main
@@ -747,6 +773,7 @@ Some phases can run in parallel:
    ```
 
 2. **Run Baseline Analysis**
+
    ```bash
    npm run build -- --report
    npm run analyze
