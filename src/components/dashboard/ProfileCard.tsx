@@ -41,6 +41,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const ctx = useContext(DashboardContext);
   const authProfile = useAuthProfile();
   const profile = ctx?.profile ?? profileProp ?? authProfile;
+  const { fetchUserProfile } = useAuth(); // Get fetchUserProfile from hook
 
   const { roleContext } = useRoles(); // Use new unified role system
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -115,8 +116,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         return;
       }
 
-      // Refresh profile data
-      const { fetchUserProfile } = useAuth.getState();
+      // Refresh profile data using hook
       await fetchUserProfile(profile.id);
 
       setIsEditingBio(false);
