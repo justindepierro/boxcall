@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Icon } from "./Icon";
 import { Typography } from "../design-system";
 import { rosterService } from "../../services";
-import { PlaybookSearchService } from "../../services/playbookSearchService";
+import { PlaybookSearchService } from "../../services/playsService";
 import type { RosterPlayerView } from "../../services/rosterService";
 import type { Play } from "../../types/play";
 import { useNavigate, useLocation } from "react-router-dom";

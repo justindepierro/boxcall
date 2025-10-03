@@ -8,8 +8,7 @@ export * from "./dashboardService";
 export * from "./dataSyncService";
 export * from "./eventsService";
 export * from "./gamePlanService"; // Now includes game results tracking
-export * from "./playbookSearchService";
-export * from "./playsService";
+export * from "./playsService"; // Now includes playbook search
 export * from "./postsService";
 export * from "./practiceScriptService";
 export * from "./practiceService";
