@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
 import { SidebarLogo } from "../ui/Logo";
-import { GlobalSearch } from "../ui/GlobalSearch";
 import { UserMenu } from "../auth/UserMenu";
 import { NotificationBell } from "../ui/NotificationBell";
 import { TeamSwitcher } from "./TeamSwitcher";
@@ -13,6 +12,13 @@ import {
   isPWAInstallAvailable,
   requestPWAInstallPrompt,
 } from "../pwa/PWAIntegration";
+
+// Lazy load GlobalSearch to defer fuse.js (70KB) until user interacts
+const GlobalSearch = lazy(() => 
+  import("../ui/GlobalSearch").then(module => ({
+    default: module.GlobalSearch
+  }))
+);
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
@@ -133,7 +139,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
                   <Icon name="download" size="sm" /> Install BoxCall
                 </Button>
               )}
-              <GlobalSearch />
+              <Suspense fallback={<div className="w-64 h-10 animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg" />}>
+                <GlobalSearch />
+              </Suspense>
             </div>
 
             {/* Right side - TeamSwitcher and User Actions */}
