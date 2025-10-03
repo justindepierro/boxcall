@@ -7,7 +7,7 @@ import { Icon } from "../ui/Icon";
 import {
   GamePlanningAnalyticsService,
   type GamePlanningAnalyticsData,
-} from "../../services/gamePlanningAnalyticsService";
+} from "../../services/playAnalyticsService";
 
 interface GamePlanningDashboardProps {
   teamId: string;

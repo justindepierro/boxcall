@@ -1,9 +1,11 @@
-import { supabase } from "../lib/supabase";
-
 /**
- * Player Performance Analytics Service - Phase 4
- * Advanced analytics for player performance tracking
+ * Performance Analytics Service
+ * 
+ * Player performance tracking and team analytics
+ * (Renamed from playerPerformanceAnalyticsService.ts for consistency)
  */
+
+import { supabase } from "../lib/supabase";
 
 export interface PlayerPerformanceMetrics {
   playerId: string;

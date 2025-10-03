@@ -9,7 +9,7 @@ import {
   type PlayerPerformanceMetrics,
   type TeamPerformanceOverview,
   type PerformanceInsights,
-} from "../../services/playerPerformanceAnalyticsService";
+} from "../../services/performanceAnalyticsService";
 
 /**
  * Player Performance Analytics Dashboard - Phase 4

@@ -9,7 +9,7 @@ import {
   PlaybookAnalyticsService,
   type PlaybookAnalyticsSummary,
   type FormationAnalytics,
-} from "../../services/playbookAnalyticsService";
+} from "../../services/playAnalyticsService";
 import { PlayerPerformanceDashboard } from "./PlayerPerformanceDashboard";
 import { GamePlanningDashboard } from "./GamePlanningDashboard";
 

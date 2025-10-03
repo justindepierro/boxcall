@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   GamePlanningAnalyticsService,
   type GamePlanningAnalyticsData,
-} from "../../../services/gamePlanningAnalyticsService";
+} from "../../../services/playAnalyticsService";
 import { Card } from "../../ui";
 import { Typography } from "../../design-system";
 import { Icon } from "../../ui/Icon";
