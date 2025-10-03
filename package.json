@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "sideEffects": [
+    "*.css",
+    "./src/telemetry/**/*",
+    "./src/lib/supabase.ts",
+    "./src/app/store.ts"
+  ],
   "description": "Football program management platform - everything Hudl is not. Collaborative, social, and comprehensive.",
   "author": "Justin DePierro",
   "repository": {
