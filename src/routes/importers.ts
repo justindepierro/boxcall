@@ -16,19 +16,13 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
           default: m.ProfilePage,
         }));
     case "/calendar":
-      return () =>
-        import("../pages/CalendarShellPage").then((m) => ({
-          default: m.CalendarShellPage,
-        }));
+      return () => import("../pages/CalendarShellPage");
     case "/playbook":
       return () => import("../pages/PlaybookPage");
     case "/boxcall":
       return () => import("../pages/BoxCall");
     case "/about":
-      return () =>
-        import("../pages/legal/AboutPage").then((m) => ({
-          default: m.AboutPage,
-        }));
+      return () => import("../pages/legal/AboutPage");
     case "/privacy-policy":
       return () =>
         import("../pages/legal/PrivacyPolicyPage").then((m) => ({

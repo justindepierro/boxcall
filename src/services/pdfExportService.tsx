@@ -30,7 +30,7 @@ export class PDFExportService {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${script.name.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_practice_script.pdf`;
+      link.download = `${(script.name ?? 'practice_script').replace(/[^a-z0-9]/gi, "_").toLowerCase()}_practice_script.pdf`;
 
       // Trigger download
       document.body.appendChild(link);

@@ -600,7 +600,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
             is_pinned={p.is_pinned}
             canPin={canPin}
             onTogglePin={togglePin}
-            author={p.author}
             likes_count={p.likes_count}
             comments_count={p.comments_count}
             shares_count={p.shares_count}

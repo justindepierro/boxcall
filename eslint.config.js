@@ -19,6 +19,8 @@ export default [
       "src/utils/errorHandler.tsx",
       "**/*.stories.tsx", // Exclude Storybook files from linting
       "**/*.stories.ts", // Exclude Storybook files from linting
+      "vite.config.ts", // Vite config uses different tsconfig
+      "vitest.config.ts", // Vitest config uses different tsconfig
     ],
   },
   // Base configuration for all JS/TS files

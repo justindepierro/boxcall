@@ -8,6 +8,7 @@ import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { AuroraTile } from "../ui/AuroraTile";
+import type { IconName } from "../ui/Icon/Icon";
 // Onboarding components removed during cleanup
 
 /**
@@ -47,7 +48,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         key: "profile",
         title: "My Role",
         description: "Snapshot of your identity inside every team.",
-        icon: "user",
+        icon: "user" as IconName,
         accentOverlayClass: "bg-aurora-amber",
         glowClassName: "glow-aurora-amber",
         statusBadge: (userRole || "player").replace("_", " ").toUpperCase(),
@@ -75,7 +76,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         key: "activity",
         title: "Team Pulse",
         description: "Keep up with posts, votes, and announcements.",
-        icon: "message",
+        icon: "message" as IconName,
         accentOverlayClass: "bg-aurora-teal",
         glowClassName: "glow-aurora-teal",
         statusBadge: "Updates",
@@ -99,7 +100,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         key: "calendar",
         title: "Schedule",
         description: "Practices, games, and meetings at a glance.",
-        icon: "calendar",
+        icon: "calendar" as IconName,
         accentOverlayClass: "bg-aurora-indigo",
         glowClassName: "glow-aurora-indigo",
         statusBadge: "Today",

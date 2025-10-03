@@ -23,7 +23,7 @@ interface MemoryInfo {
 interface PerformanceMetrics {
   // Core Web Vitals
   LCP?: WebVitalsMetric; // Largest Contentful Paint
-  FID?: WebVitalsMetric; // First Input Delay
+  INP?: WebVitalsMetric; // Interaction to Next Paint (replaced FID)
   CLS?: WebVitalsMetric; // Cumulative Layout Shift
   FCP?: WebVitalsMetric; // First Contentful Paint
   TTFB?: WebVitalsMetric; // Time to First Byte
@@ -64,9 +64,9 @@ class PerformanceMonitor {
 
   private initWebVitals() {
     // Dynamic import to avoid blocking bundle
-    import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+    import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
       onCLS((metric) => this.recordMetric('CLS', metric));
-      onFID((metric) => this.recordMetric('FID', metric));
+      onINP((metric) => this.recordMetric('INP', metric));
       onFCP((metric) => this.recordMetric('FCP', metric));
       onLCP((metric) => this.recordMetric('LCP', metric));
       onTTFB((metric) => this.recordMetric('TTFB', metric));
@@ -76,7 +76,7 @@ class PerformanceMonitor {
     });
   }
 
-  private recordMetric(name: string, metric: any) {
+  private recordMetric(name: string, metric: { value: number }) {
     const rating = this.getRating(name, metric.value);
     const webVitalsMetric: WebVitalsMetric = {
       name,
@@ -85,7 +85,8 @@ class PerformanceMonitor {
       timestamp: Date.now(),
     };
 
-    this.metrics[name as keyof PerformanceMetrics] = webVitalsMetric;
+    // Store the metric with proper typing
+    (this.metrics as Record<string, WebVitalsMetric>)[name] = webVitalsMetric;
     
     // Report to analytics service
     this.reportMetric(webVitalsMetric);
@@ -94,7 +95,7 @@ class PerformanceMonitor {
   private getRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
     const thresholds: Record<string, [number, number]> = {
       CLS: [0.1, 0.25],
-      FID: [100, 300],
+      INP: [200, 500], // Updated from FID
       FCP: [1800, 3000],
       LCP: [2500, 4000],
       TTFB: [800, 1800],
