@@ -11,15 +11,18 @@ import {
   EnhancedSelect,
 } from "../components/forms/EnhancedFormFields";
 import { TeamWelcomeModal } from "../components/onboarding/TeamWelcomeModal";
-import { 
+import {
   TeamService as TeamCreationService,
   TeamService as TeamValidationService,
-  TeamService as TeamDuplicatePreventionService
+  TeamService as TeamDuplicatePreventionService,
 } from "../services/teamService";
 import { ProgressTrackingService } from "../services/progressTrackingService";
 import { LocationFinderService } from "../services/locationFinderService";
 
-import type { TeamCreationInput, DuplicateCheckResult } from "../services/teamService";
+import type {
+  TeamCreationInput,
+  DuplicateCheckResult,
+} from "../services/teamService";
 import type { AddressSuggestion } from "../services/locationFinderService";
 
 /**

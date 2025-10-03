@@ -172,8 +172,8 @@ export class PlayAnalyticsService {
     plays: GamePlanPlay[]
   ): GamePlanningMetrics {
     const totalGamePlans = gamePlans.length;
-    const activeGamePlans = gamePlans.filter(gp => gp.status === 'active').length;
-    const completedGamePlans = gamePlans.filter(gp => gp.status === 'completed').length;
+    const activeGamePlans = gamePlans.filter(gp => (gp as any).status === 'active').length;
+    const completedGamePlans = gamePlans.filter(gp => (gp as any).status === 'completed').length;
 
     const preparationTimes = gamePlans
       .filter(gp => gp.created_at && gp.updated_at)
@@ -187,7 +187,7 @@ export class PlayAnalyticsService {
       ? preparationTimes.reduce((a, b) => a + b, 0) / preparationTimes.length
       : 0;
 
-    const uniqueSituations = new Set(situations.map(s => s.situation_name)).size;
+    const uniqueSituations = new Set(situations.map(s => (s as any).situation_name)).size;
     const coveredSituations = new Set(plays.map(p => p.situation_id)).size;
     const coveragePercentage = uniqueSituations > 0
       ? (coveredSituations / uniqueSituations) * 100
@@ -197,7 +197,7 @@ export class PlayAnalyticsService {
     const averagePerSituation = coveredSituations > 0
       ? totalAssignments / coveredSituations
       : 0;
-    const highPriorityAssignments = plays.filter(p => p.priority && p.priority >= 4).length;
+    const highPriorityAssignments = plays.filter(p => (p as any).priority && (p as any).priority >= 4).length;
 
     return {
       totalGamePlans,
@@ -224,21 +224,22 @@ export class PlayAnalyticsService {
     analytics: GamePlanAnalytics[]
   ): GamePlanningInsights {
     const statusCounts = gamePlans.reduce((counts, gp) => {
-      const status = gp.status || 'draft';
+      const status = (gp as any).status || 'draft';
       counts[status] = (counts[status] || 0) + 1;
       return counts;
     }, {} as Record<string, number>);
 
     const executionQualities = analytics
-      .filter(a => a.execution_quality != null)
-      .map(a => a.execution_quality!);
+      .filter(a => (a as any).execution_quality != null)
+      .map(a => (a as any).execution_quality!);
     const averageExecutionQuality = executionQualities.length > 0
       ? executionQualities.reduce((a, b) => a + b, 0) / executionQualities.length
       : 0;
 
     const successRateBySituation = analytics.reduce((rates, a) => {
-      if (a.situation_id && a.success_rate != null) {
-        rates[a.situation_id] = a.success_rate;
+      const aAny = a as any;
+      if (aAny.situation_id && aAny.success_rate != null) {
+        rates[aAny.situation_id] = aAny.success_rate;
       }
       return rates;
     }, {} as Record<string, number>);
@@ -478,19 +479,20 @@ export class PlayAnalyticsService {
     }, {} as Record<string, any[]>);
 
     return Object.entries(formationGroups).map(([formation, formationPlays]) => {
-      const totalPlays = formationPlays.length;
-      const totalCalled = formationPlays.reduce((sum, play) => sum + (play.times_called || 0), 0);
-      const totalSuccessful = formationPlays.reduce((sum, play) => sum + (play.times_successful || 0), 0);
+      const typedPlays = formationPlays as any[];
+      const totalPlays = typedPlays.length;
+      const totalCalled = typedPlays.reduce((sum: number, play: any) => sum + (play.times_called || 0), 0);
+      const totalSuccessful = typedPlays.reduce((sum: number, play: any) => sum + (play.times_successful || 0), 0);
       const successRate = totalCalled > 0 ? (totalSuccessful / totalCalled) * 100 : 0;
-      const averageComplexity = formationPlays.reduce((sum, play) => sum + (play.complexity_score || 0), 0) / totalPlays;
+      const averageComplexity = typedPlays.reduce((sum: number, play: any) => sum + (play.complexity_score || 0), 0) / totalPlays;
 
-      const personnelBreakdown = formationPlays.reduce((breakdown, play) => {
+      const personnelBreakdown = typedPlays.reduce((breakdown: Record<string, number>, play: any) => {
         const personnel = play.personnel || "Unknown";
         breakdown[personnel] = (breakdown[personnel] || 0) + 1;
         return breakdown;
       }, {} as Record<string, number>);
 
-      const situationalUsage = formationPlays.reduce((usage, play) => {
+      const situationalUsage = typedPlays.reduce((usage: Record<string, number>, play: any) => {
         const situation = play.down_distance || "Unknown";
         usage[situation] = (usage[situation] || 0) + (play.times_called || 0);
         return usage;
@@ -532,13 +534,14 @@ export class PlayAnalyticsService {
       return acc;
     }, {} as Record<string, { called: number; successful: number; rate: number }>);
 
-    Object.values(byDown).forEach(stats => {
+    // Calculate rates with proper typing
+    (Object.values(byDown) as Array<{ called: number; successful: number; rate: number }>).forEach(stats => {
       stats.rate = stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
     });
-    Object.values(byFieldPosition).forEach(stats => {
+    (Object.values(byFieldPosition) as Array<{ called: number; successful: number; rate: number }>).forEach(stats => {
       stats.rate = stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
     });
-    Object.values(byPersonnel).forEach(stats => {
+    (Object.values(byPersonnel) as Array<{ called: number; successful: number; rate: number }>).forEach(stats => {
       stats.rate = stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
     });
 
