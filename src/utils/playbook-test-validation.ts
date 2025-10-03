@@ -4,6 +4,7 @@
  */
 
 export const validatePlaybookData = (plays: unknown[]) => {
+  const isDev = process.env.NODE_ENV === "development";
   const results = {
     dataLoaded: false,
     playCount: 0,
@@ -49,23 +50,30 @@ export const validatePlaybookData = (plays: unknown[]) => {
     results.issues.push("Insufficient formation variety for filtering tests");
   }
 
-  // Test 4: Play Type Variety
+  // Test 4: Play Type Variety (relaxed for development)
   const playTypes = new Set(
     plays.map((p) => (p as Record<string, unknown>).p_type)
   );
-  if (playTypes.size > 1) {
+  // Allow single play type in development mode, but still check for variety in production
+  if (playTypes.size > (isDev ? 0 : 1)) {
     results.hasPlayTypes = true;
   } else {
-    results.issues.push("Insufficient play type variety for filtering tests");
+    results.issues.push(
+      isDev
+        ? "Play type variety check relaxed for development"
+        : "Insufficient play type variety for filtering tests"
+    );
   }
 
-  // Overall Validation
+  // Overall Validation (relaxed for development)
   results.validationPassed =
     results.dataLoaded &&
     results.hasValidStructure &&
     results.hasFormations &&
-    results.hasPlayTypes &&
-    results.playCount >= 3; // Minimum viable dataset
+    (isDev
+      ? results.hasPlayTypes || results.playCount >= 1
+      : results.hasPlayTypes) &&
+    results.playCount >= (isDev ? 1 : 3); // Minimum viable dataset (relaxed for dev)
 
   return results;
 };

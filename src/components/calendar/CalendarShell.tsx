@@ -12,6 +12,8 @@ import {
   CalendarPageSkeleton,
   CalendarErrorSkeleton,
 } from "./CalendarSkeletons";
+import { AISuggestionsPanel } from "./AISuggestionsPanel";
+import { ConflictsPanel } from "./ConflictsPanel";
 import { CalendarStats } from "./CalendarStats";
 import { CalendarToolbar } from "./CalendarToolbar";
 import { EventModal } from "./EventModal";
@@ -43,9 +45,14 @@ export const CalendarShell: React.FC = () => {
     canAddEvent,
     handleAddEvent,
     handleExportCalendar,
+    handleApplySuggestion,
     createEventMutation,
     updateEventMutation,
     deleteEventMutation,
+    suggestions,
+    hasSuggestions,
+    conflicts,
+    hasConflicts,
     setUrlState,
     profile,
     user,
@@ -79,6 +86,13 @@ export const CalendarShell: React.FC = () => {
             </div>
             <CalendarStats events={events} />
           </Card>
+          {hasSuggestions && (
+            <AISuggestionsPanel
+              suggestions={suggestions}
+              onApplySuggestion={handleApplySuggestion}
+            />
+          )}
+          {hasConflicts && <ConflictsPanel conflicts={conflicts} />}
         </div>
         <div className="lg:col-span-3">
           <Card className="calendar-card">

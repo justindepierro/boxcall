@@ -27,7 +27,7 @@ export const DiagramPaneRoute: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-text-primary/40"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}

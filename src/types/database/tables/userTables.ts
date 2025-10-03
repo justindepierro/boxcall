@@ -24,7 +24,9 @@ export interface UserTables {
       id: string; // References auth.users.id
       full_name: string | null;
       avatar_url: string | null;
-      role: AppRole; // Updated to use standardized AppRole enum
+      role: AppRole; // Legacy role field (kept for backward compatibility)
+      app_role: 'admin' | 'head_coach' | 'coach' | 'free_coach' | 'player' | 'family'; // New app-level role system
+      is_admin: boolean; // Simple admin boolean check
       bio: string | null;
       phone: string | null;
       email: string | null;
@@ -34,9 +36,34 @@ export interface UserTables {
       last_login: string | null;
       created_at: string;
       updated_at: string;
-      // Enhanced fields for Phase 1
+      subscription_tier: string | null; // 'free', 'premium', etc.
+      subscription_expires_at: string | null;
+      // Enhanced fields for Phase 1 (Athletic Information)
       position: string | null;
       jersey_number: number | null;
+      emergency_contact: string | null;
+      emergency_phone: string | null;
+      grade_level: string | null;
+      height_inches: number | null;
+      weight_lbs: number | null;
+      // Enhanced fields for Phase 2 (Coaching Information)
+      coaching_experience: string | null;
+      education: string | null;
+      certifications: string | null;
+      coaching_philosophy: string | null;
+      specializations: string | null;
+      current_school: string | null;
+      previous_schools: string | null;
+      mentors: string | null;
+      coaching_system: string | null;
+      years_coaching: number | null;
+      // Social Media Links
+      social_twitter: string | null;
+      social_instagram: string | null;
+      social_linkedin: string | null;
+      social_tiktok: string | null;
+      social_youtube: string | null;
+      personal_website: string | null;
       is_active: boolean | null;
       notification_preferences: Json | null;
     };
@@ -44,7 +71,9 @@ export interface UserTables {
       id: string; // References auth.users.id
       full_name?: string | null;
       avatar_url?: string | null;
-      role?: AppRole; // Updated to use standardized AppRole enum
+      role?: AppRole; // Legacy role field (kept for backward compatibility)
+      app_role?: 'admin' | 'head_coach' | 'coach' | 'free_coach' | 'player' | 'family'; // New app-level role system
+      is_admin?: boolean; // Simple admin boolean check
       bio?: string | null;
       phone?: string | null;
       email?: string | null;
@@ -54,8 +83,33 @@ export interface UserTables {
       last_login?: string | null;
       created_at?: string;
       updated_at?: string;
+      subscription_tier?: string | null; // 'free', 'premium', etc.
+      subscription_expires_at?: string | null;
       position?: string | null;
       jersey_number?: number | null;
+      emergency_contact?: string | null;
+      emergency_phone?: string | null;
+      grade_level?: string | null;
+      height_inches?: number | null;
+      weight_lbs?: number | null;
+      // Enhanced fields for Phase 2 (Coaching Information)
+      coaching_experience?: string | null;
+      education?: string | null;
+      certifications?: string | null;
+      coaching_philosophy?: string | null;
+      specializations?: string | null;
+      current_school?: string | null;
+      previous_schools?: string | null;
+      mentors?: string | null;
+      coaching_system?: string | null;
+      years_coaching?: number | null;
+      // Social Media Links
+      social_twitter?: string | null;
+      social_instagram?: string | null;
+      social_linkedin?: string | null;
+      social_tiktok?: string | null;
+      social_youtube?: string | null;
+      personal_website?: string | null;
       is_active?: boolean | null;
       notification_preferences?: Json | null;
     };
@@ -73,6 +127,33 @@ export interface UserTables {
       settings?: Json | null;
       last_login?: string | null;
       updated_at?: string | null;
+      position?: string | null;
+      jersey_number?: number | null;
+      emergency_contact?: string | null;
+      emergency_phone?: string | null;
+      grade_level?: string | null;
+      height_inches?: number | null;
+      weight_lbs?: number | null;
+      // Enhanced fields for Phase 2 (Coaching Information)
+      coaching_experience?: string | null;
+      education?: string | null;
+      certifications?: string | null;
+      coaching_philosophy?: string | null;
+      specializations?: string | null;
+      current_school?: string | null;
+      previous_schools?: string | null;
+      mentors?: string | null;
+      coaching_system?: string | null;
+      years_coaching?: number | null;
+      // Social Media Links
+      social_twitter?: string | null;
+      social_instagram?: string | null;
+      social_linkedin?: string | null;
+      social_tiktok?: string | null;
+      social_youtube?: string | null;
+      personal_website?: string | null;
+      is_active?: boolean | null;
+      notification_preferences?: Json | null;
     };
   };
   user_profiles: {

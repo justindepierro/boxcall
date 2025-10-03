@@ -7,20 +7,18 @@
 import { forwardRef } from "react";
 
 import type { CardProps, CardStylesConfig } from "./Card.types";
-// Card styles configuration - Square, substantial styling with jade/navy theme
+// Card styles configuration - Modern glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.06)]", // Thin professional shadow
+  base: "rounded-aurora transition-colors duration-200 border border-slate-200/60 bg-aurora-mist backdrop-blur-md shadow-[0_25px_45px_-30px_rgba(15,23,42,0.45)] dark:bg-slate-900/80 dark:border-slate-700/60", // Aurora panel treatment with soft glass glow
   variants: {
-    default:
-      "bg-[#FCFDFC] border border-subtle dark:bg-gray-800 dark:border-gray-700 hover:shadow-[0_2px_4px_rgba(0,0,0,0.08)]",
-    elevated:
-      "bg-[#FCFDFC] shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-subtle dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/30 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)]",
-    outlined:
-      "bg-transparent border border-brand-jade/60 dark:border-brand-jade/70 hover:bg-brand-jade/5", // Subtle outlined
+    default: "bg-aurora-mist hover:bg-white/80", // Clean surface with subtle glass
+    glass: "bg-aurora-shell hover:bg-aurora-mist", // Full glassmorphism
+    elevated: "bg-white/85 dark:bg-slate-900/80", // Enhanced with subtle color change
+    outlined: "bg-white/85 dark:bg-slate-900/80", // Clean outlined
     filled:
-      "surface-subtle/60 border border-subtle dark:bg-gray-900 dark:border-gray-700 surface-subtle-hover dark:hover:bg-gray-800",
+      "bg-slate-100/80 hover:bg-slate-100/90 dark:bg-slate-800/80 dark:hover:bg-slate-800", // Subtle filled
     accent:
-      "bg-surface-navy border border-brand-navy/70 dark:bg-surface-navy-dark dark:border-brand-navy", // Navy accent
+      "bg-gradient-to-br from-surface-primary to-surface-secondary/50 hover:from-surface-secondary hover:to-surface-primary", // Accent with subtle gradient shift
   },
   sizes: {
     sm: "p-3",
@@ -30,23 +28,19 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer hover:shadow-[0_3px_6px_rgba(0,0,0,0.12)] active:shadow-[0_1px_2px_rgba(0,0,0,0.10)] active:translate-y-px", // Refined lift
+    "cursor-pointer transition-all duration-300 ease-out hover:animate-card-hover hover:animate-card-glow focus:animate-card-glow focus:outline-none focus:ring-2 focus:ring-electric-500/50 focus:ring-offset-2", // Enhanced micro-animations with electric glow
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };
 // Header and footer styles with theme awareness
 const getSectionStyles = (type: "header" | "footer", size: string) => {
-  const base =
-    type === "header"
-      ? "border-b border-subtle dark:border-gray-700"
-      : "border-t border-subtle dark:border-gray-700";
   const sizes = {
     sm: type === "header" ? "pb-2 mb-3" : "pt-2 mt-3",
     md: type === "header" ? "pb-3 mb-4" : "pt-3 mt-4",
     lg: type === "header" ? "pb-4 mb-6" : "pt-4 mt-6",
     xl: type === "header" ? "pb-6 mb-8" : "pt-6 mt-8",
   };
-  return `${base} ${sizes[size as keyof typeof sizes]}`;
+  return sizes[size as keyof typeof sizes];
 };
 /**
  * Card Component
@@ -117,9 +111,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
-              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-gray-700"></div>
+              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-surface-secondary"></div>
+              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-surface-secondary"></div>
+              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-surface-secondary"></div>
             </div>
           ) : (
             children

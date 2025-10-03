@@ -499,5 +499,3 @@ export function useCollaborativeCursor(
     };
   }, [elementRef, collaboration, widgetId]);
 }
-
-export default useCollaboration;

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 export interface BulkTaggingModalProps {
   isOpen: boolean;
@@ -79,7 +80,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
       aria-label="Bulk Tagging"
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="absolute inset-0 bg-text-primary/40" onClick={onClose} />
       <div className="relative surface-card elevation-modal rounded-md shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -95,14 +96,16 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
               (future enhancement).
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={onClose}
-            aria-label="Close"
-            icon={<Icon name="close" className="w-4 h-4" />}
-            iconPosition="only"
-          />
+          <Tooltip content="Close tag modal (Esc)">
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={onClose}
+              aria-label="Close"
+              icon={<Icon name="close" className="w-4 h-4" />}
+              iconPosition="only"
+            />
+          </Tooltip>
         </div>
         <div>
           <label className="block text-xs font-medium text-text-secondary mb-1">
@@ -169,7 +172,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
           </div>
         )}
         {applied && (
-          <div className="mt-4 text-xs text-green-600">
+          <div className="mt-4 text-xs text-text-success">
             Added {applied.added} tag{applied.added === 1 ? "" : "s"}.
             {applied.skipped > 0 && ` ${applied.skipped} duplicates skipped.`}
           </div>

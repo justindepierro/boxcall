@@ -90,7 +90,13 @@ const ToastContainer: React.FC<{
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+    <div
+      className="fixed top-4 right-4 z-50 space-y-2 max-w-sm"
+      role="region"
+      aria-label="Notifications"
+      aria-live="polite"
+      aria-atomic="false"
+    >
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={onRemove} />
       ))}
@@ -122,10 +128,10 @@ const ToastItem: React.FC<{
       : "translate-x-full opacity-0 scale-95";
 
     const typeStyles = {
-      success: "surface-subtle border-subtle text-green-800",
-      error: "surface-subtle border-subtle text-red-800",
-      warning: "surface-subtle border-subtle text-orange-800",
-      info: "surface-subtle border-subtle text-blue-800",
+      success: "surface-subtle border-subtle text-text-success",
+      error: "surface-subtle border-subtle text-text-error",
+      warning: "surface-subtle border-subtle text-text-warning",
+      info: "surface-subtle border-subtle text-text-info",
     };
 
     return `${baseStyles} ${animationStyles} ${typeStyles[toast.type]}`;
@@ -162,13 +168,14 @@ const ToastItem: React.FC<{
   };
 
   return (
-    <div className={getToastStyles()}>
+    <div className={getToastStyles()} role="status" aria-live="polite">
       <div className="flex items-start">
         <Icon
           name={getIconName()}
           size="md"
           color={getIconColor()}
           className="mr-3 mt-0.5 flex-shrink-0"
+          aria-hidden="true"
         />
         <div className="flex-1 min-w-0">
           {toast.title && (

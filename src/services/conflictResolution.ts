@@ -307,5 +307,3 @@ class ConflictResolutionService {
 
 // Export singleton instance
 export const conflictResolutionService = new ConflictResolutionService();
-
-export default conflictResolutionService;

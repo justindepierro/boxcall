@@ -1,4 +1,68 @@
+/**
+ * Unified Achievement Service
+ * 
+ * Consolidates achievement management from:
+ * - achievementService.ts (user-facing API)
+ * - achievementTracker.ts (tracking & database operations)
+ * 
+ * Handles Xbox-style achievements, progress tracking, and badge/medal systems.
+ * 
+ * Phase 3B: Properly consolidated Achievement Services (2→1)
+ * Previous consolidation corrupted (commit 55bea84) - this is the corrected version.
+ */
 import { supabase } from "../lib/supabase";
+
+// ============================================================================
+// Types from achievementTracker.ts
+// ============================================================================
+
+// Achievement trigger types
+export type AchievementTrigger =
+  | 'play_created'
+  | 'post_sent'
+  | 'player_added'
+  | 'game_won'
+  | 'game_won_streak'
+  | 'points_milestone'
+  | 'achievements_earned';
+
+export interface AchievementDefinition {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: 'gameplay' | 'social' | 'teamwork' | 'leadership' | 'milestone' | 'special';
+  trigger_type: 'action_count' | 'streak' | 'milestone' | 'special';
+  trigger_target: AchievementTrigger;
+  trigger_count: number;
+  points: number;
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  is_active: boolean;
+}
+
+export interface AchievementProgress {
+  id: string;
+  player_id: string;
+  achievement_id: string;
+  current_count: number;
+  is_completed: boolean;
+  completed_at?: string;
+}
+
+export interface EarnedAchievement {
+  id: string;
+  player_id: string;
+  definition_id: string;
+  achievement_type: string;
+  description?: string;
+  earned_date: string;
+  points_earned: number;
+  definition?: AchievementDefinition;
+}
+
+// ============================================================================
+// Types from achievementService.ts (legacy)
+// ============================================================================
 
 // Achievement types
 export interface HelmetSticker {
@@ -21,6 +85,8 @@ export interface BoxCallMedal {
   progress?: number;
   maxProgress?: number;
   earnedDate?: string;
+  rarity?: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  points?: number;
 }
 
 export interface AchievementData {
@@ -31,11 +97,368 @@ export interface AchievementData {
   recentAchievements: Array<HelmetSticker | BoxCallMedal>;
 }
 
+// ============================================================================
+// Achievement Tracking Service (from achievementTracker.ts)
+// ============================================================================
+
+/**
+ * Achievement Tracking Service
+ * Handles achievement progress, unlocking, and awarding
+ */
+class AchievementTracker {
+
+  /**
+   * Track a user action and check for achievement unlocks
+   */
+  static async trackAction(
+    userId: string,
+    action: AchievementTrigger,
+    additionalData?: Record<string, any>
+  ): Promise<EarnedAchievement[]> {
+    try {
+      console.log(`[Achievement] Tracking action: ${action} for user: ${userId}`);
+
+      // Get the player's team player record
+      const { data: player } = await supabase
+        .from('team_players')
+        .select('id, team_id')
+        .eq('user_id', userId)
+        .single();
+
+      if (!player) {
+        console.log('[Achievement] No player record found for user');
+        return [];
+      }
+
+      // Get all active achievements that could be triggered by this action
+      const { data: relevantAchievements } = await supabase
+        .from('achievement_definitions')
+        .select('*')
+        .eq('is_active', true)
+        .eq('trigger_target', action);
+
+      if (!relevantAchievements?.length) {
+        return [];
+      }
+
+      const earnedAchievements: EarnedAchievement[] = [];
+
+      for (const achievement of relevantAchievements) {
+        const earned = await this.checkAndAwardAchievement(player.id, achievement, additionalData);
+        if (earned) {
+          earnedAchievements.push(earned);
+        }
+      }
+
+      // Check milestone achievements
+      const milestoneAchievements = await this.checkMilestoneAchievements(player.id);
+      earnedAchievements.push(...milestoneAchievements);
+
+      return earnedAchievements;
+
+    } catch (error) {
+      console.error('[Achievement] Error tracking action:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Check and potentially award an achievement
+   */
+  private static async checkAndAwardAchievement(
+    playerId: string,
+    achievement: AchievementDefinition,
+    additionalData?: Record<string, any>
+  ): Promise<EarnedAchievement | null> {
+    try {
+      // Get or create progress record
+      let { data: progress } = await supabase
+        .from('achievement_progress')
+        .select('*')
+        .eq('player_id', playerId)
+        .eq('achievement_id', achievement.id)
+        .single();
+
+      if (!progress) {
+        // Create new progress record
+        const { data: newProgress, error } = await supabase
+          .from('achievement_progress')
+          .insert({
+            player_id: playerId,
+            achievement_id: achievement.id,
+            current_count: 0,
+            is_completed: false
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        progress = newProgress;
+      }
+
+      if (progress.is_completed) {
+        return null; // Already earned
+      }
+
+      // Increment progress based on trigger type
+      let newCount = progress.current_count;
+
+      switch (achievement.trigger_type) {
+        case 'action_count':
+          newCount += 1;
+          break;
+        case 'streak':
+          // Handle streak logic (would need additional context)
+          newCount = additionalData?.streakCount || 1;
+          break;
+        case 'special':
+          // Special achievements handled separately
+          return null;
+      }
+
+      // Check if achievement is now complete
+      const isComplete = newCount >= achievement.trigger_count;
+
+      // Update progress
+      await supabase
+        .from('achievement_progress')
+        .update({
+          current_count: newCount,
+          is_completed: isComplete,
+          completed_at: isComplete ? new Date().toISOString() : null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', progress.id);
+
+      if (isComplete) {
+        // Award the achievement
+        const { data: earnedAchievement, error } = await supabase
+          .from('achievements')
+          .insert({
+            player_id: playerId,
+            definition_id: achievement.id,
+            achievement_type: achievement.name,
+            description: achievement.description,
+            earned_date: new Date().toISOString().split('T')[0],
+            points_earned: achievement.points
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        console.log(`[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`);
+
+        return {
+          ...earnedAchievement,
+          definition: achievement
+        };
+      }
+
+      return null;
+
+    } catch (error) {
+      console.error('[Achievement] Error checking achievement:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Check milestone achievements (points, total achievements earned)
+   */
+  private static async checkMilestoneAchievements(playerId: string): Promise<EarnedAchievement[]> {
+    const earned: EarnedAchievement[] = [];
+
+    try {
+      // Check total points milestone
+      const { data: totalPoints } = await supabase
+        .from('achievements')
+        .select('points_earned')
+        .eq('player_id', playerId);
+
+      const pointsSum = totalPoints?.reduce((sum: number, a: any) => sum + (a.points_earned || 0), 0) || 0;
+
+      const pointsMilestones = [100, 250, 500, 1000];
+      for (const milestone of pointsMilestones) {
+        if (pointsSum >= milestone) {
+          const earnedAchievement = await this.awardMilestoneAchievement(
+            playerId,
+            'points_milestone',
+            milestone,
+            `Reach ${milestone} total achievement points`,
+            milestone
+          );
+          if (earnedAchievement) earned.push(earnedAchievement);
+        }
+      }
+
+      // Check total achievements earned
+      const totalAchievements = totalPoints?.length || 0;
+      const achievementMilestones = [10, 25, 50, 100];
+
+      for (const milestone of achievementMilestones) {
+        if (totalAchievements >= milestone) {
+          const earnedAchievement = await this.awardMilestoneAchievement(
+            playerId,
+            'achievements_earned',
+            milestone,
+            `Earn ${milestone} different achievements`,
+            milestone * 10
+          );
+          if (earnedAchievement) earned.push(earnedAchievement);
+        }
+      }
+
+    } catch (error) {
+      console.error('[Achievement] Error checking milestones:', error);
+    }
+
+    return earned;
+  }
+
+  /**
+   * Award a milestone achievement
+   */
+  private static async awardMilestoneAchievement(
+    playerId: string,
+    triggerTarget: string,
+    milestone: number,
+    description: string,
+    points: number
+  ): Promise<EarnedAchievement | null> {
+    try {
+      // Check if already earned
+      const { data: existing } = await supabase
+        .from('achievements')
+        .select('id')
+        .eq('player_id', playerId)
+        .eq('achievement_type', `Milestone: ${triggerTarget} ${milestone}`);
+
+      if (existing?.length) return null;
+
+      // Create the achievement
+      const { data: earned, error } = await supabase
+        .from('achievements')
+        .insert({
+          player_id: playerId,
+          achievement_type: `Milestone: ${triggerTarget} ${milestone}`,
+          description,
+          earned_date: new Date().toISOString().split('T')[0],
+          points_earned: points
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return earned;
+
+    } catch (error) {
+      console.error('[Achievement] Error awarding milestone:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all achievements for a user
+   */
+  static async getUserAchievements(userId: string): Promise<{
+    earned: EarnedAchievement[];
+    progress: AchievementProgress[];
+    definitions: AchievementDefinition[];
+  }> {
+    try {
+      // Get player record
+      const { data: player } = await supabase
+        .from('team_players')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (!player) {
+        return { earned: [], progress: [], definitions: [] };
+      }
+
+      // Get earned achievements
+      const { data: earned } = await supabase
+        .from('achievements')
+        .select('*, achievement_definitions(*)')
+        .eq('player_id', player.id);
+
+      // Get progress
+      const { data: progress } = await supabase
+        .from('achievement_progress')
+        .select('*, achievement_definitions(*)')
+        .eq('player_id', player.id);
+
+      // Get all active definitions
+      const { data: definitions } = await supabase
+        .from('achievement_definitions')
+        .select('*')
+        .eq('is_active', true);
+
+      return {
+        earned: earned || [],
+        progress: progress || [],
+        definitions: definitions || []
+      };
+
+    } catch (error) {
+      console.error('[Achievement] Error getting user achievements:', error);
+      return { earned: [], progress: [], definitions: [] };
+    }
+  }
+
+  /**
+   * Admin: Create a new achievement definition
+   */
+  static async createAchievementDefinition(definition: Omit<AchievementDefinition, 'id'>): Promise<AchievementDefinition | null> {
+    try {
+      const { data, error } = await supabase
+        .from('achievement_definitions')
+        .insert(definition)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+
+    } catch (error) {
+      console.error('[Achievement] Error creating definition:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Admin: Get all achievement definitions
+   */
+  static async getAllDefinitions(): Promise<AchievementDefinition[]> {
+    try {
+      const { data } = await supabase
+        .from('achievement_definitions')
+        .select('*')
+        .order('category', { ascending: true })
+        .order('rarity', { ascending: false });
+
+      return data || [];
+
+    } catch (error) {
+      console.error('[Achievement] Error getting definitions:', error);
+      return [];
+    }
+  }
+}
+
+// ============================================================================
+// User-Facing Achievement Service (from achievementService.ts)
+// ============================================================================
+
 /**
  * Achievement Service
- * Manages user achievements, helmet stickers, and BoxCall medals
+ * Xbox-style achievements for BoxCall
  */
 export class AchievementService {
+
   /**
    * Get all achievements for a user
    */
@@ -44,68 +467,64 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      console.info(
-        `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
-      );
+      console.info(`[Achievement] Getting achievements for user ${userId}`);
 
-      // Check if we're in blank slate mode
+      // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
         console.info("🆕 Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 
-      // For production/real modes, get real data
-      if (devMode === "production" || devMode === "super_admin_real") {
-        try {
-          console.info(
-            "[Search/Investigate] Attempting to fetch real achievements..."
-          );
-          const realAchievements = await Promise.race([
-            this.getRealAchievements(userId),
-            new Promise<never>((_, reject) =>
-              setTimeout(
-                () => reject(new Error("Achievement fetch timeout")),
-                5000
-              )
-            ),
-          ]);
-          console.info(
-            "[Success/Complete] Real achievements fetched successfully"
-          );
-          return realAchievements;
-        } catch (error) {
-          console.warn(
-            "[Warning] Could not fetch real achievements, returning empty:",
-            error
-          );
-          return this.getEmptyAchievements();
-        }
-      }
+      // Get real achievements from the new system
+      const { earned, progress, definitions } = await AchievementTracker.getUserAchievements(userId);
 
-      // For professional dev profiles, get dev profile data
-      if (devMode?.startsWith("dev_")) {
-        return this.getProfessionalDevAchievements(userId, devMode);
-      }
+      // Convert to the expected format
+      const boxcallMedals: BoxCallMedal[] = earned.map((achievement: any) => ({
+        id: achievement.id,
+        name: achievement.achievement_type,
+        icon: achievement.definition?.icon || 'trophy',
+        description: achievement.description || '',
+        earned: true,
+        earnedDate: achievement.earned_date,
+        rarity: achievement.definition?.rarity,
+        points: achievement.points_earned
+      }));
 
-      // For blank slate mode, return empty achievements
-      if (devMode === "blank_slate") {
-        console.info(
-          "🆕 Achievement Service: Blank slate mode - returning empty achievements"
-        );
-        return this.getEmptyAchievements();
-      }
+      // Add in-progress achievements
+      const inProgressMedals: BoxCallMedal[] = progress
+        .filter((p: any) => !p.is_completed && p.achievement_id)
+        .map((p: any) => {
+          const definition = definitions.find((d: any) => d.id === p.achievement_id);
+          if (!definition) return null;
 
-      // Default - try real data first, fall back to empty
-      try {
-        const realAchievements = await this.getRealAchievements(userId);
-        return realAchievements;
-      } catch (error) {
-        console.warn(
-          "Could not fetch real achievements, returning empty:",
-          error
-        );
-        return this.getEmptyAchievements();
-      }
+          return {
+            id: `progress_${p.id}`,
+            name: definition.name,
+            icon: definition.icon,
+            description: definition.description,
+            earned: false,
+            progress: p.current_count,
+            maxProgress: definition.trigger_count,
+            rarity: definition.rarity,
+            points: definition.points
+          };
+        })
+        .filter(Boolean) as BoxCallMedal[];
+
+      // Combine earned and in-progress
+      const allMedals = [...boxcallMedals, ...inProgressMedals];
+
+      // Calculate total points
+      const totalPoints = earned.reduce((sum: number, a: any) => sum + (a.points_earned || 0), 0);
+
+      return {
+        helmetStickers: [], // Legacy - can be removed or repurposed
+        boxcallMedals: allMedals,
+        weeklyStreak: 0, // TODO: Implement streak tracking
+        totalPoints,
+        recentAchievements: allMedals.slice(0, 5)
+      };
+
     } catch (error) {
       console.error("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
@@ -113,108 +532,14 @@ export class AchievementService {
   }
 
   /**
-   * Get real achievements from database
+   * Track an achievement-worthy action
    */
-  private static async getRealAchievements(
-    userId: string
-  ): Promise<AchievementData> {
-    try {
-      // Get helmet stickers without joins first
-      const stickersResult = await supabase
-        .from("helmet_stickers")
-        .select("*")
-        .eq("user_id", userId)
-        .order("awarded_at", { ascending: false });
-
-      if (stickersResult.error) {
-        console.warn("Error fetching helmet stickers:", stickersResult.error);
-      }
-
-      // Try to get real achievements with error handling
-      const achievementsResult = await supabase
-        .from("achievements")
-        .select("*")
-        .eq("user_id", userId)
-        .order("earned_at", { ascending: false });
-
-      if (achievementsResult.error) {
-        console.warn("Error fetching achievements:", achievementsResult.error);
-      }
-
-      const stickers: unknown[] = stickersResult.data || [];
-      const achievements: unknown[] = achievementsResult.data || [];
-
-      // Type guard function to ensure we have valid data
-      const isValidSticker = (
-        sticker: unknown
-      ): sticker is Record<string, unknown> => {
-        return !!(sticker && typeof sticker === "object" && "id" in sticker);
-      };
-
-      const isValidAchievement = (
-        achievement: unknown
-      ): achievement is Record<string, unknown> => {
-        return !!(
-          achievement &&
-          typeof achievement === "object" &&
-          "id" in achievement
-        );
-      };
-
-      // Safely extract stickers data
-      const validStickers: Record<string, unknown>[] = [];
-      if (Array.isArray(stickers)) {
-        validStickers.push(...stickers.filter(isValidSticker));
-      }
-
-      // Safely extract achievements data
-      const validAchievements: Record<string, unknown>[] = [];
-      if (Array.isArray(achievements)) {
-        validAchievements.push(...achievements.filter(isValidAchievement));
-      }
-
-      const helmetStickers: HelmetSticker[] = validStickers.map((sticker) => ({
-        id: String(sticker.id || ""),
-        name: String(sticker.reason || "Sticker"),
-        icon: this.getStickerIcon(String(sticker.sticker_type || "star")),
-        awardedBy: String(sticker.awarded_by || ""),
-        awardedByName: "Coach", // Simplified for now
-        date: String(sticker.awarded_at || new Date().toISOString()),
-        teamId: String(sticker.team_id || ""),
-        teamName: "Team", // Simplified for now
-      }));
-
-      const boxcallMedals: BoxCallMedal[] = validAchievements.map(
-        (achievement) => ({
-          id: String(achievement.id || ""),
-          name: String(achievement.title || "Achievement"),
-          icon: String(achievement.icon_name || "award"),
-          description: String(achievement.description || ""),
-          earned: true,
-          earnedDate: String(achievement.earned_at || new Date().toISOString()),
-        })
-      );
-
-      return {
-        helmetStickers,
-        boxcallMedals,
-        weeklyStreak: 0, // Calculate real streak later
-        totalPoints: this.calculateTotalPoints({
-          helmetStickers,
-          boxcallMedals,
-          weeklyStreak: 0,
-          totalPoints: 0,
-          recentAchievements: [],
-        }),
-        recentAchievements: [
-          ...helmetStickers.slice(0, 2),
-          ...boxcallMedals.slice(0, 1),
-        ],
-      };
-    } catch (error) {
-      console.error("Error in getRealAchievements:", error);
-      throw error; // Re-throw to be caught by calling function
-    }
+  static async trackAction(
+    userId: string,
+    action: 'play_created' | 'post_sent' | 'player_added' | 'game_won' | 'game_won_streak',
+    additionalData?: Record<string, any>
+  ): Promise<EarnedAchievement[]> {
+    return AchievementTracker.trackAction(userId, action, additionalData);
   }
 
   /**
@@ -230,28 +555,34 @@ export class AchievementService {
     };
   }
 
-  private static getStickerIcon(stickerType: string | null): string {
-    switch (stickerType) {
-      case "star":
-        return "star";
-      case "flame":
-        return "zap";
-      case "lightning":
-        return "zap";
-      case "crown":
-        return "crown";
-      case "diamond":
-        return "award";
-      default:
-        return "award";
-    }
+  /**
+   * Admin: Create a new achievement definition
+   */
+  static async createAchievement(
+    achievement: Omit<AchievementDefinition, 'id'>
+  ): Promise<AchievementDefinition | null> {
+    return AchievementTracker.createAchievementDefinition(achievement);
   }
 
   /**
-   * Get helmet stickers awarded to user
-   * TODO: Implement real database query
+   * Admin: Get all achievement definitions
+   */
+  static async getAllDefinitions(): Promise<AchievementDefinition[]> {
+    return AchievementTracker.getAllDefinitions();
+  }
+
+  /**
+   * Legacy methods - kept for compatibility
    */
   static async getHelmetStickers(_userId: string): Promise<HelmetSticker[]> {
+<<<<<<< HEAD
+    return [];
+  }
+
+  static async getBoxCallMedals(userId: string): Promise<BoxCallMedal[]> {
+    const achievements = await this.getUserAchievements(userId);
+    return achievements.boxcallMedals;
+=======
     // TODO: Implement real helmet stickers from database
     return [];
   }
@@ -262,205 +593,14 @@ export class AchievementService {
   static async getBoxCallMedals(_userId: string): Promise<BoxCallMedal[]> {
     // TODO: Implement medal calculation based on user activity
     return [];
+>>>>>>> origin/main
   }
 
-  /**
-   * Calculate user's activity streak
-   */
-  static async getActivityStreak(userId: string): Promise<number> {
-    try {
-      // TODO: Calculate based on user login/activity data
-      // For now, return mock data
-      console.info("Calculating activity streak for user:", userId);
-      return Math.floor(Math.random() * 14) + 1; // 1-14 days
-    } catch (error) {
-      console.error("Error calculating activity streak:", error);
-      return 0;
-    }
+  static async getActivityStreak(_userId: string): Promise<number> {
+    return 0; // TODO: Implement
   }
 
-  /**
-   * Calculate total achievement points
-   */
   static calculateTotalPoints(achievements: AchievementData): number {
-    const stickerPoints = achievements.helmetStickers.length * 25; // 25 points per sticker
-    const medalPoints =
-      achievements.boxcallMedals.filter((m) => m.earned).length * 50; // 50 points per medal
-    const streakBonus = achievements.weeklyStreak * 5; // 5 points per day streak
-
-    return stickerPoints + medalPoints + streakBonus;
-  }
-
-  /**
-   * Get professional dev profile achievements
-   */
-  private static getProfessionalDevAchievements(
-    _userId: string,
-    devMode: string
-  ): AchievementData {
-    // Professional dev profiles have realistic achievements based on their role
-    const baseAchievements = {
-      weeklyStreak: 3,
-      totalPoints: 850,
-      recentAchievements: [],
-    };
-
-    switch (devMode) {
-      case "dev_head_coach":
-        return {
-          ...baseAchievements,
-          helmetStickers: [
-            {
-              id: "dev-leadership-1",
-              name: "Leadership Excellence",
-              icon: "star",
-              awardedBy: "dev-system",
-              awardedByName: "Development System",
-              date: new Date(
-                Date.now() - 7 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-            {
-              id: "dev-coaching-1",
-              name: "Outstanding Coaching",
-              icon: "trophy",
-              awardedBy: "dev-system",
-              awardedByName: "Development System",
-              date: new Date(
-                Date.now() - 14 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-          ],
-          boxcallMedals: [
-            {
-              id: "dev-season-excellence",
-              name: "Season Excellence",
-              description: "Led team to outstanding season performance",
-              icon: "medal",
-              earned: true,
-              earnedDate: new Date(
-                Date.now() - 30 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-            },
-          ],
-        };
-
-      case "dev_assistant_coach":
-        return {
-          ...baseAchievements,
-          totalPoints: 620,
-          helmetStickers: [
-            {
-              id: "dev-defensive-1",
-              name: "Defensive Coordinator",
-              icon: "shield",
-              awardedBy: "dev-system",
-              awardedByName: "Development System",
-              date: new Date(
-                Date.now() - 5 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-          ],
-          boxcallMedals: [
-            {
-              id: "dev-player-development",
-              name: "Player Development",
-              description: "Exceptional player mentoring and development",
-              icon: "medal",
-              earned: true,
-              earnedDate: new Date(
-                Date.now() - 21 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-            },
-          ],
-        };
-
-      case "dev_player":
-        return {
-          ...baseAchievements,
-          totalPoints: 1250,
-          weeklyStreak: 5,
-          helmetStickers: [
-            {
-              id: "dev-touchdown-1",
-              name: "Touchdown Pass",
-              icon: "football", // fallback to help-circle if not in registry
-              awardedBy: "dev-coach",
-              awardedByName: "Coach Martinez",
-              date: new Date(
-                Date.now() - 3 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-            {
-              id: "dev-leadership-player",
-              name: "Team Captain",
-              icon: "star",
-              awardedBy: "dev-coach",
-              awardedByName: "Coach Martinez",
-              date: new Date(
-                Date.now() - 10 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-          ],
-          boxcallMedals: [
-            {
-              id: "dev-player-of-week",
-              name: "Player of the Week",
-              description: "Outstanding performance in last game",
-              icon: "trophy",
-              earned: true,
-              earnedDate: new Date(
-                Date.now() - 7 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-            },
-          ],
-        };
-
-      case "dev_super_admin":
-        return {
-          ...baseAchievements,
-          totalPoints: 2000,
-          weeklyStreak: 10,
-          helmetStickers: [
-            {
-              id: "dev-admin-excellence",
-              name: "Platform Excellence",
-              icon: "crown",
-              awardedBy: "dev-system",
-              awardedByName: "BoxCall System",
-              date: new Date(
-                Date.now() - 1 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              teamId: "dev-team",
-              teamName: "BoxCall Dev Team",
-            },
-          ],
-          boxcallMedals: [
-            {
-              id: "dev-system-admin",
-              name: "System Administrator",
-              description: "Excellence in platform management",
-              icon: "target",
-              earned: true,
-              earnedDate: new Date(
-                Date.now() - 14 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-            },
-          ],
-        };
-
-      default:
-        return this.getEmptyAchievements();
-    }
+    return achievements.totalPoints;
   }
 }

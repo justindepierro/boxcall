@@ -1,0 +1,703 @@
+/* Team Dashboard Modern Styles */
+
+.team-dashboard-container {
+  position: relative;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.dashboard-hero-section {
+  position: relative;
+  margin-bottom: 3rem;
+  overflow: visible;
+}
+
+/* Modern Card Foundation */
+.dashboard-hero-section .card,
+.dashboard-hero-section [class*="card"],
+.dashboard-hero-section .collaborative-widget,
+.dashboard-hero-section .surface-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  backdrop-filter: blur(8px);
+}
+
+.dashboard-hero-section .card:hover,
+.dashboard-hero-section [class*="card"]:hover,
+.dashboard-hero-section .collaborative-widget:hover,
+.dashboard-hero-section .surface-card:hover {
+  border-color: #cbd5e1;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 10px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+/* Subtle Card Accents - Modern Approach */
+.collaboration-goals,
+.collaboration-goals .collaborative-widget,
+.collaboration-goals .shared-goal-tracker {
+  position: relative;
+}
+
+.collaboration-goals::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+.collaboration-vote,
+.collaboration-vote .collaborative-widget,
+.collaboration-vote .team-vote-widget {
+  position: relative;
+}
+
+.collaboration-vote::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+.season-stats-container {
+  position: relative;
+}
+
+.season-stats-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+.trophy-case-container {
+  position: relative;
+}
+
+.trophy-case-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+/* Modern Typography System */
+.dashboard-hero-section h3,
+.dashboard-hero-section .card-title,
+.dashboard-hero-section [data-testid*="headline"] {
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin-bottom: 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  line-height: 1.4 !important;
+  position: relative;
+  z-index: 2;
+  padding-top: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.dashboard-hero-section p,
+.dashboard-hero-section .text-text-secondary,
+.dashboard-hero-section .text-text-muted {
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  margin-bottom: 0.75rem !important;
+  color: #64748b !important;
+  font-weight: 400;
+}
+
+/* Content Structure */
+.dashboard-hero-section .card-content,
+.dashboard-hero-section .p-6 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem !important;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.dashboard-hero-section .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+.dashboard-hero-section .card-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* Modern Action Buttons */
+.dashboard-hero-section .card-actions {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dashboard-hero-section .card-actions button {
+  width: 100%;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  padding: 0.875rem 1.25rem !important;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+  background: #f8fafc !important;
+  color: #475569 !important;
+  letter-spacing: -0.025em;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-hero-section .card-actions button:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-hero-section .card-actions button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Stats Grid */
+.dashboard-hero-section .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.dashboard-hero-section .stats-grid > div {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.dashboard-hero-section .stats-grid > div:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-hero-section .stats-grid .stat-value {
+  font-size: 1.5rem !important;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1e293b;
+  letter-spacing: -0.025em;
+}
+
+.dashboard-hero-section .stats-grid .stat-label {
+  font-size: 0.75rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1279px) {
+  .dashboard-hero-section .card,
+  .dashboard-hero-section [class*="card"],
+  .dashboard-hero-section .collaborative-widget {
+    min-height: 260px;
+    margin-bottom: 0;
+  }
+
+  .dashboard-hero-section .card-content,
+  .dashboard-hero-section .p-6 {
+    padding: 1.25rem !important;
+  }
+
+  .dashboard-hero-section h3,
+  .dashboard-hero-section .card-title {
+    font-size: 1rem !important;
+  }
+
+  .dashboard-hero-section p,
+  .dashboard-hero-section .text-text-secondary {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Modern List Styling */
+.dashboard-hero-section ol,
+.dashboard-hero-section ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.dashboard-hero-section li {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #64748b;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.dashboard-hero-section li:last-child {
+  border-bottom: none;
+}
+
+.dashboard-hero-section ol li::before {
+  content: counter(list-counter);
+  counter-increment: list-counter;
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-hero-section ol {
+  counter-reset: list-counter;
+}
+
+/* Filter Button Improvements */
+.dashboard-hero-section .bg-surface-secondary {
+  background-color: #f1f5f9 !important;
+  border-radius: 8px;
+  padding: 0.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard-hero-section .bg-surface-secondary button {
+  font-size: 0.8rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* Progress Bar Enhancements */
+.dashboard-hero-section .bg-border-secondary {
+  background-color: #e2e8f0 !important;
+  border-radius: 8px;
+}
+
+.dashboard-hero-section .bg-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%) !important;
+  border-radius: 8px;
+}
+
+/* Final Polish and Cohesion */
+
+/* Remove any outdated styling overrides */
+.team-dashboard-container .surface-card,
+.dashboard-main-content .surface-card {
+  border: 1px solid #e2e8f0;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.team-dashboard-container .surface-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 10px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
+}
+
+/* Global text overflow prevention with modern approach */
+.team-dashboard-container .surface-card h1,
+.team-dashboard-container .surface-card h2,
+.team-dashboard-container .surface-card h3,
+.team-dashboard-container .surface-card h4,
+.team-dashboard-container .surface-card h5,
+.team-dashboard-container .surface-card h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  max-width: 100%;
+}
+
+.team-dashboard-container button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Icon Enhancement */
+.dashboard-hero-section .icon,
+.dashboard-hero-section svg {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-hero-section .card:hover .icon,
+.dashboard-hero-section .card:hover svg {
+  opacity: 1;
+}
+
+/* Enhanced accessibility and focus states */
+.dashboard-hero-section button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Smooth transitions for all interactive elements */
+.dashboard-hero-section *:not(svg):not(path) {
+  transition-property:
+    color, background-color, border-color, transform, box-shadow, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Final layout optimization */
+.dashboard-hero-section {
+  margin-bottom: 3rem;
+  position: relative;
+  isolation: isolate;
+}
+
+.team-dashboard-container button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Icon container fixes */
+.team-dashboard-container .flex.items-center {
+  min-width: 0; /* Allow flex items to shrink below content size */
+}
+
+.team-dashboard-container .flex.items-center > * {
+  flex-shrink: 0; /* Prevent icons from shrinking */
+}
+
+.team-dashboard-container .flex.items-center > span:last-child,
+.team-dashboard-container .flex.items-center > div:last-child {
+  flex-shrink: 1; /* Allow text content to shrink */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Team activity header styling */
+.team-activity-header {
+  transition: all 0.3s ease;
+  overflow: hidden; /* Prevent overflow */
+}
+
+.team-activity-header:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Team engagement stats with proper text handling */
+.team-activity-header .flex.gap-4 > div {
+  transition: all 0.2s ease;
+  overflow: hidden; /* Prevent badge overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.team-activity-header .flex.gap-4 > div:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.team-activity-header .flex.gap-4 > div span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 8rem; /* Limit badge text width */
+}
+
+/* Improved spacing for collaboration widgets */
+.collaboration-goals,
+.collaboration-vote,
+.collaboration-progress {
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden; /* Prevent widget overflow */
+}
+
+/* Sticky sidebar positioning with safe spacing */
+.sticky {
+  position: sticky;
+  top: 1.5rem;
+}
+
+/* Quick actions styling improvements with overflow protection */
+.quick-actions-card {
+  background: linear-gradient(to bottom right, #f8fafc, white);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.quick-actions-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Quick action buttons with proper text handling */
+.quick-actions-card button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  overflow: hidden;
+  padding-right: 0.75rem; /* Ensure padding for text */
+}
+
+.quick-actions-card button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Roster card improvements */
+.roster-card {
+  max-height: 20rem;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.roster-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.roster-card::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.roster-card::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.roster-card::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Roster item text overflow prevention */
+.roster-card .flex.items-center {
+  min-width: 0;
+}
+
+.roster-card .flex.items-center > span,
+.roster-card .flex.items-center > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Enhanced card transitions */
+.dashboard-card {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+/* Progress sharing and collaboration widget improvements */
+.collaboration-section {
+  background: linear-gradient(to right, #ecfdf5, #f0fdf4);
+  border-radius: 0.5rem;
+  padding: 4px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.collaboration-section .surface-card {
+  background: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Calendar widget enhancements */
+.calendar-widget {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.calendar-widget:hover {
+  transform: translateY(-2px);
+}
+
+/* Calendar content text overflow prevention */
+.calendar-widget .surface-card {
+  overflow: hidden;
+}
+
+.calendar-widget button,
+.calendar-widget .flex.items-center {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Trophy case text handling */
+.team-dashboard-container .surface-card ol li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  padding-right: 0.5rem;
+}
+
+/* Member count badge styling */
+.roster-card .bg-slate-100 {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1279px) {
+  .team-dashboard-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .sticky {
+    position: static;
+  }
+
+  /* Stack order adjustments for mobile */
+  .xl\:col-span-3.order-2.xl\:order-1 {
+    order: 1;
+  }
+
+  .xl\:col-span-6.order-1.xl\:order-2 {
+    order: 2;
+  }
+
+  .xl\:col-span-3.order-3 {
+    order: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero-section .grid,
+  .dashboard-main-content .grid {
+    gap: 1rem;
+  }
+
+  /* Mobile-first team activity header */
+  .team-activity-header {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .team-activity-header .flex.gap-4 {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Adjust collaboration widgets for mobile */
+  .collaboration-goals,
+  .collaboration-vote,
+  .collaboration-progress {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero-section::after {
+    width: 4rem;
+  }
+
+  .team-activity-header {
+    padding: 0.75rem;
+  }
+
+  .collaboration-goals,
+  .collaboration-vote,
+  .collaboration-progress {
+    min-height: 200px;
+  }
+}
+
+/* Focus states for accessibility */
+.team-dashboard-container [role="region"]:focus-within,
+.team-dashboard-container .surface-card:focus-within {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .team-dashboard-container .sticky {
+    position: static !important;
+  }
+
+  .team-dashboard-container .shadow-lg,
+  .team-dashboard-container .shadow-md,
+  .team-dashboard-container .shadow-sm {
+    box-shadow: none !important;
+  }
+}

@@ -183,7 +183,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
           {insights.length > 0 && (
             <>
               <span>•</span>
-              <span className="text-blue-600">{insights.length} insights</span>
+              <span className="text-text-info">{insights.length} insights</span>
             </>
           )}
         </div>
@@ -197,7 +197,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
 
       {/* Chart configuration debug info (dev only) */}
       {process.env.NODE_ENV === "development" && (
-        <details className="mt-2 text-xs text-gray-400">
+        <details className="mt-2 text-xs text-text-muted">
           <summary>Chart Config (Dev)</summary>
           <pre>{JSON.stringify(chartConfig, null, 2)}</pre>
         </details>
@@ -216,13 +216,13 @@ interface InsightBadgeProps {
 const InsightBadge: React.FC<InsightBadgeProps> = ({ insight }) => {
   const getInsightColor = (type: DataInsight["type"]) => {
     const colors = {
-      trend: "bg-blue-100 text-blue-800",
-      anomaly: "bg-yellow-100 text-yellow-800",
-      achievement: "bg-green-100 text-green-800",
-      concern: "bg-red-100 text-red-800",
-      opportunity: "bg-purple-100 text-purple-800",
+      trend: "bg-surface-info text-text-info",
+      anomaly: "bg-surface-warning text-text-warning",
+      achievement: "bg-surface-success text-text-success",
+      concern: "bg-surface-error text-text-error",
+      opportunity: "bg-surface-tertiary text-text-tertiary",
     };
-    return colors[type] || "bg-gray-100 text-gray-800";
+    return colors[type] || "bg-surface-secondary text-text-primary";
   };
 
   const getPriorityIcon = (priority: DataInsight["priority"]) => {

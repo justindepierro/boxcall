@@ -7,24 +7,35 @@ import {
   useAddComment,
 } from "../../state/calendar/hooks";
 import { Typography } from "../design-system/Typography";
-import { PracticePlannerModal } from "../practice/PracticePlannerModal";
+import { PracticeScriptModal } from "../practice/PracticeScriptModal";
 import { Button } from "../ui";
 import Icon from "../ui/Icon/Icon";
 
 import { EventDetails } from "./EventModal/EventDetails";
 import { EventForm } from "./EventModal/EventForm";
 
-import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type {
+  CalendarEvent,
+  EventRSVP,
+  CalendarEventCreate,
+} from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
-// Minimal shape compatible with react-query mutation objects we pass in.
-type MinimalMutation<Args = unknown, Result = unknown> = {
-  status: string;
-  mutate: (...args: Args[]) => void;
-  mutateAsync: (...args: Args[]) => Promise<Result>;
-};
+// Mutation types for calendar operations
+type CreateEventMutation = UseMutationResult<
+  CalendarEvent,
+  Error,
+  CalendarEventCreate
+>;
+type UpdateEventMutation = UseMutationResult<
+  null,
+  Error,
+  { id: string; updates: Partial<CalendarEventCreate> }
+>;
+type DeleteEventMutation = UseMutationResult<boolean, Error, string>;
 
 interface EventModalProps {
   isOpen: boolean;
@@ -37,9 +48,9 @@ interface EventModalProps {
   setIsEditing: (v: boolean) => void;
   profile: UserProfile | null;
   userId: string | undefined;
-  createEventMutation: MinimalMutation;
-  updateEventMutation: MinimalMutation;
-  deleteEventMutation: MinimalMutation;
+  createEventMutation: CreateEventMutation;
+  updateEventMutation: UpdateEventMutation;
+  deleteEventMutation: DeleteEventMutation;
   onOpenPracticePlanner: (event: CalendarEvent) => void;
 }
 
@@ -78,7 +89,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 bg-text-primary/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div className="surface-card elevation-modal rounded-md w-full max-w-xl calendar-event-modal-container">
           <div className="p-5">
             <div className="flex items-center justify-between mb-4">
@@ -201,9 +212,13 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
       </div>
       {showPracticePlanner && event && event.type === "practice" && (
-        <PracticePlannerModal
-          event={event}
+        <PracticeScriptModal
           onClose={() => setShowPracticePlanner(false)}
+          onSave={(script) => {
+            console.log("Practice script saved:", script);
+            // TODO: Save to database and show success message
+            setShowPracticePlanner(false);
+          }}
         />
       )}
     </>

@@ -6,6 +6,7 @@
  */
 import { PDFColors, PDFFonts } from "./styles";
 import { PDFError } from "./types";
+import { pdfWorkerPool } from "./PDFWorkerPool";
 
 import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
 import type { DocumentProps } from "@react-pdf/renderer";
@@ -23,23 +24,16 @@ export abstract class BasePDFService {
    */
   protected async generateBlob(document: PDFDocumentElement): Promise<Blob> {
     try {
-      // Use PDF Web Worker via comlink
-      const { wrap } = await import("comlink");
-      const worker = new Worker(
-        new URL("../../workers/pdfWorker.ts", import.meta.url),
-        { type: "module" }
-      );
-      const pdfWorker =
-        wrap<import("../../workers/types/pdfWorkerTypes").PDFWorkerAPI>(worker);
-      // Cast to React.ReactElement<DocumentProps> for worker API
-      const blob = await pdfWorker.generatePdfBlob(
-        document as React.ReactElement<DocumentProps>
-      );
-      worker.terminate();
-      return blob;
+      // Use pooled PDF worker for better performance
+      return await pdfWorkerPool.generatePDF(async (api) => {
+        // Cast to React.ReactElement<DocumentProps> for worker API
+        return await api.generatePdfBlob(
+          document as React.ReactElement<DocumentProps>
+        );
+      });
     } catch (error) {
       throw new PDFError(
-        "Failed to generate PDF blob (worker)",
+        "Failed to generate PDF blob (worker pool)",
         "GENERATION_ERROR",
         error instanceof Error ? error.message : "Unknown error"
       );

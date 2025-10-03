@@ -20,7 +20,7 @@ const isEnabled = () =>
 // Lightweight diagnostic (safe if console blocked)
 try {
   console.info("[contrastDebug] loaded", { flag: isEnabled() });
-} catch (_err) {
+} catch {
   /* noop */
 }
 
@@ -148,7 +148,7 @@ if (isEnabled()) {
 }
 // Keyboard toggle Alt+Shift+C always available
 window.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === "c" && e.altKey && e.shiftKey) {
+  if (e.key && e.key.toLowerCase() === "c" && e.altKey && e.shiftKey) {
     if (active) {
       localStorage.removeItem(ACTIVE_FLAG);
       deactivateContrastDebug();

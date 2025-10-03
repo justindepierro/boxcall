@@ -100,22 +100,22 @@ const TeamFeeds: React.FC = () => {
   const [quickMessage, setQuickMessage] = useState("");
   // TODO: Only show quick add for user's own dashboard (add context check if needed)
   return (
-    <Card className="compact-card h-full surface-card relative">
+    <Card variant="glass" className="compact-card h-full surface-card relative">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-subtle dark:border-gray-700 pb-2">
+      <div className="flex items-center justify-between pb-2">
         <Typography variant="headline-md" className="text-text-primary">
           Team Feeds
         </Typography>
         <div className="flex items-center space-x-2">
-          <Icon name="users" size="sm" color="jade" />
+          <Icon name="users" size="sm" color="primary" />
           <Button
             variant="ghost"
             size="xs"
-            className="bg-surface-primary rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
+            className="bg-surface-primary rounded-full p-1 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
             aria-label="Quick add message"
             onClick={() => setQuickAddOpen(true)}
           >
-            <Icon name="plus" size={12} />
+            <Icon name="plus" size="xs" />
           </Button>
         </div>
       </div>
@@ -170,7 +170,7 @@ const TeamFeeds: React.FC = () => {
             </div>
           ))}
           {/* Show More */}
-          <div className="pt-2 border-t border-subtle dark:border-gray-700">
+          <div className="pt-2">
             <Button
               variant="brandLink"
               size="sm"

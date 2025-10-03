@@ -3,6 +3,7 @@ import { NavBar } from "../ui/NavBar";
 import type { NavBarItem } from "../ui/NavBar";
 import { LogoFull } from "../ui/Logo/Logo";
 import { useAuth } from "../../app/auth-store";
+import { Typography } from "../design-system/Typography";
 
 // Example navigation items (customize as needed)
 const navItems: NavBarItem[] = [
@@ -58,7 +59,10 @@ export const DashboardHeader: React.FC = () => {
       brand={<LogoFull size="md" />}
       actions={
         profile ? (
-          <span className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800 text-sm">
+          <Typography
+            variant="body-sm"
+            className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800"
+          >
             {profile.full_name
               ? profile.full_name
                   .split(" ")
@@ -67,7 +71,7 @@ export const DashboardHeader: React.FC = () => {
                   .toUpperCase()
                   .slice(0, 2)
               : "U"}
-          </span>
+          </Typography>
         ) : null
       }
       sticky={true}

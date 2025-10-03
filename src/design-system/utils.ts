@@ -65,7 +65,7 @@ export const tokenClasses = {
   // Form styles
   input:
     "border border-surface-jade-dark focus:border-brand-jade focus:ring-1 focus:ring-brand-jade rounded px-3 py-2",
-  inputError: "border-red-500 focus:border-red-500 focus:ring-red-500",
+  inputError: "border-text-error focus:border-text-error focus:ring-text-error",
 
   // Text styles
   heading: "text-brand-navy-dark font-bold",
@@ -77,9 +77,9 @@ export const tokenClasses = {
     "hover:bg-interaction-jade hover:text-[var(--semantic-text-inverse)] transition-colors cursor-pointer",
 
   // Status styles
-  success: "surface-subtle text-green-800 border border-subtle",
-  warning: "surface-subtle text-yellow-800 border border-subtle",
-  error: "surface-subtle text-red-800 border border-subtle",
+  success: "surface-subtle text-text-success border border-subtle",
+  warning: "surface-subtle text-text-warning border border-subtle",
+  error: "surface-subtle text-text-error border border-subtle",
 
   // Icon color standardization - Professional consistency
   iconBrand: `text-[${componentTokens.icon.jade}]`,

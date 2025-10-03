@@ -223,16 +223,3 @@ export function createSearchFilter(query: string) {
   const tokens = q.split(/\s+/);
   return (doc: string) => tokens.every((t) => doc.includes(t));
 }
-
-// End of module
-export default {
-  canonicalizePlayInput,
-  computeDuplicateKey,
-  buildPlaySearchDocument,
-  diffCanonical,
-  prepareForCreate,
-  applyCanonicalToPlay,
-  buildDuplicateIndex,
-  isDuplicate,
-  createSearchFilter,
-};

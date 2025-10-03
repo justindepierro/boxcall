@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import type { IconName } from "../ui/Icon";
 
 interface NavigationItem {
@@ -50,7 +51,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-text-primary bg-opacity-50 z-40 lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -59,7 +60,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-surface-card border-r border-subtle z-40 transform transition-transform duration-300 ease-in-out
+          fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-surface-card z-40 transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:z-auto lg:top-0 lg:h-full
         `}
@@ -72,15 +73,17 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
               BoxCall
             </Typography>
             {/* Close button - only visible on mobile */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="lg:hidden p-2"
-              aria-label="Close sidebar"
-            >
-              <Icon name="close" size="sm" />
-            </Button>
+            <Tooltip content="Close sidebar (Esc)">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="lg:hidden p-2"
+                aria-label="Close sidebar"
+              >
+                <Icon name="close" size="sm" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
 
@@ -120,7 +123,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                       px-2 py-1 text-xs font-medium rounded-full min-w-[20px] text-center
                       ${
                         item.isActive
-                          ? "bg-white bg-opacity-20 text-text-on-primary"
+                          ? "bg-surface-primary bg-opacity-20 text-text-on-primary"
                           : "bg-primary text-text-on-primary"
                       }
                     `}

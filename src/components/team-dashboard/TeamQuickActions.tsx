@@ -53,7 +53,11 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "calendar", // better semantic icon
     variant: "outline",
     requires: CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
+<<<<<<< HEAD
+    to: "practice-plans",
+=======
     to: "practice",
+>>>>>>> origin/main
   },
   {
     id: "upload_film",
@@ -180,11 +184,11 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           key={a.id}
           variant={a.variant || "outline"}
           size="sm"
-          className="w-full justify-start"
+          className="w-full justify-start btn-overflow-safe icon-text-safe"
           onClick={() => handleClick(a)}
         >
-          <Icon name={a.icon} className="w-5 h-5 mr-2" />
-          {a.label}
+          <Icon name={a.icon} className="w-5 h-5 mr-2 flex-shrink-0" />
+          <span className="flex-1 text-truncate">{a.label}</span>
         </Button>
       ))}
     </div>

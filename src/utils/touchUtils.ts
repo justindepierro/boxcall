@@ -106,7 +106,7 @@ export class AnimationUtils {
     const size = Math.max(rect.width, rect.height);
 
     ripple.className =
-      "absolute rounded-full pointer-events-none bg-current opacity-20";
+      "absolute rounded-full pointer-events-none bg-text-primary opacity-20";
     ripple.style.width = "0px";
     ripple.style.height = "0px";
     ripple.style.left = `${x - rect.left}px`;
@@ -395,11 +395,3 @@ export class GestureDetector {
     );
   }
 }
-
-export default {
-  HapticPatterns,
-  AnimationTimings,
-  AnimationUtils,
-  AnimationPerformanceMonitor,
-  GestureDetector,
-};

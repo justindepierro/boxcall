@@ -62,16 +62,27 @@ export function RoleProvider({ children }: RoleProviderProps) {
   const [error, setError] = useState<string | null>(null);
 
   const refreshRoles = useCallback(async () => {
+    console.log("🔄 useRoles: refreshRoles called, user:", user?.id);
     if (!user?.id) {
+      console.log("🔄 useRoles: No user ID, setting roleContext to null");
       setRoleContext(null);
       return;
     }
 
+    console.log("🔄 useRoles: Starting role refresh for user:", user.id);
+    // Clear cache to force fresh data
+    RoleService.clearRoleCache(user.id);
     setLoading(true);
     setError(null);
 
     try {
+      console.log("🔄 useRoles: Calling RoleService.getUserRoleContext");
       const context = await RoleService.getUserRoleContext(user.id);
+      console.log("🔄 useRoles: Got role context:", context);
+      console.log(
+        "🔄 useRoles: Team memberships count:",
+        context?.teamMemberships?.length
+      );
       setRoleContext(context);
     } catch (err) {
       console.error("Error refreshing roles:", err);
@@ -126,6 +137,16 @@ export function RoleProvider({ children }: RoleProviderProps) {
     isCoach,
   };
 
+  // Development helpers
+  if (import.meta.env.DEV) {
+    (window as any).BoxCallDebug = {
+      ...(window as any).BoxCallDebug,
+      refreshRoles,
+      clearRoleCache: () => RoleService.clearRoleCache(),
+      getRoleContext: () => roleContext,
+    };
+  }
+
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
 }
 
@@ -169,7 +190,7 @@ export function useTeamRole(teamId?: string): TeamRole | null {
 /**
  * Hook for checking permissions with automatic loading states
  */
-export function usePermissions(teamId?: string) {
+export function useTeamPermissions(teamId?: string) {
   const { getUIPermissions } = useRoles();
   const [permissions, setPermissions] = useState<UIPermissions | null>(null);
   const [loading, setLoading] = useState(false);

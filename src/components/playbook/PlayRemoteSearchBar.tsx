@@ -104,7 +104,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
                     </span>
                   )}
                   {r.source === "fuzzy" && (
-                    <span className="ml-2 rounded surface-subtle0/15 text-amber-700 dark:text-amber-300 px-1 py-0.5 text-[10px]">
+                    <span className="ml-2 rounded surface-subtle0/15 text-text-warning px-1 py-0.5 text-[10px]">
                       fuzzy
                     </span>
                   )}

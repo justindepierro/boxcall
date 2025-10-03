@@ -188,7 +188,7 @@ export const CollaborativeDashboardDemo: React.FC<
         <Card className="bg-surface-secondary p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-text-success rounded-full"></div>
               <span className="font-medium text-text-primary">
                 Connected to Collaboration Session
               </span>
@@ -201,7 +201,7 @@ export const CollaborativeDashboardDemo: React.FC<
                 {mockCollaborationData.participants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="w-8 h-8 bg-primary text-text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-white"
+                    className="w-8 h-8 bg-primary text-text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-surface-primary"
                     title={participant.name}
                   >
                     {participant.name.charAt(0)}
@@ -298,23 +298,23 @@ export const CollaborativeDashboardDemo: React.FC<
               </Typography>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-text-success rounded-full"></span>
                   <span>Live cursor tracking within widgets</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-text-success rounded-full"></span>
                   <span>Real-time data synchronization</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-text-success rounded-full"></span>
                   <span>Participant indicators</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-text-success rounded-full"></span>
                   <span>Conflict resolution (automatic)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-text-warning rounded-full"></span>
                   <span>Widget-level permissions (coming soon)</span>
                 </div>
               </div>

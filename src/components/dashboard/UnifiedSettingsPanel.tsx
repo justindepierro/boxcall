@@ -224,10 +224,10 @@ export const UnifiedSettingsPanel: React.FC = () => {
         {/* Toggle button */}
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center ${
+          className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center ${
             isOpen
-              ? "bg-red-600 text-text-on-primary rotate-45"
-              : "bg-primary text-text-on-primary"
+              ? "bg-text-error hover:bg-text-error/90 text-text-on-primary rotate-45"
+              : "bg-primary hover:bg-primary/90 text-text-on-primary"
           }`}
           title={isOpen ? "Close Settings" : "Settings & Tools"}
         >
@@ -242,7 +242,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
       />
 
       {isDev && showDevTools && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center">
+        <div className="fixed inset-0 bg-text-primary/50 z-[60] flex items-center justify-center">
           <div className="bg-surface-card rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
             <div className="p-4 border-b border-subtle flex justify-between items-center">
               <Typography variant="headline-sm">Development Tools</Typography>

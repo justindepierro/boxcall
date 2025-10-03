@@ -180,7 +180,7 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-text-secondary">System Health</span>
-            <span className="text-green-600 font-medium">Excellent</span>
+            <span className="text-text-success font-medium">Excellent</span>
           </div>
         </div>
       </div>

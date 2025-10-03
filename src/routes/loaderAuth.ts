@@ -3,6 +3,37 @@ import { authorize } from "./authorize";
 import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
 import type { AppRole } from "./authorize";
+import type { AuthorizeInput } from "./authorize";
+
+/**
+ * Generic loader factory for creating authorization-based route loaders
+ *
+ * @param authorizeOptions - Options to pass to the authorize function
+ * @returns A loader function that performs authorization and redirects on failure
+ */
+const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
+
+export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile'>) {
+  return async function authLoader({ params }: LoaderFunctionArgs) {
+    const current = await getCurrentUserWithRole();
+    if (!current) throw redirect(ROUTES.LOGIN);
+
+    const res = await authorize({
+      profile: { id: current.id, role: current.role },
+      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
+      ...authorizeOptions,
+      // Merge teamId from params if not explicitly provided
+      teamId: authorizeOptions.teamId || params.teamId,
+    });
+
+    if (!res.allowed) {
+      if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
+      throw redirect(ROUTES.DASHBOARD);
+    }
+
+    return null;
+  };
+}
 
 /**
  * requireTeamCoachLoader
@@ -11,40 +42,32 @@ import type { AppRole } from "./authorize";
  * Redirects before component render to avoid UI flashes.
  */
 // Shared helper to resolve current user id and app role
-async function getCurrentUserWithRole(): Promise<{
+export async function getCurrentUserWithRole(): Promise<{
   id: string;
   role: AppRole | null;
+  email: string | null;
 } | null> {
   const { data: authData } = await supabase.auth.getUser();
   const user = authData?.user ?? null;
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
   const { data: profileRow } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, email")
     .eq("id", user.id)
     .single();
-  return { id: user.id, role: (profileRow?.role ?? null) as AppRole | null };
+  const userWithRole = {
+    id: user.id,
+    role: (profileRow?.role ?? null) as AppRole | null,
+    email: profileRow?.email ?? user.email ?? null,
+  };
+  return userWithRole;
 }
 
-export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "admin"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-
-  return null;
-}
+export const requireTeamCoachLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "admin"],
+});
 
 /**
  * requireTeamAnalyticsLoader
@@ -52,28 +75,9 @@ export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {
  * Pre-render gate for premium analytics route restricted to coach/admin roles
  * with an active "team_premium" subscription tier.
  */
-export async function requireTeamAnalyticsLoader({
-  params,
-}: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "admin"],
-    requiredTiers: ["team_premium"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-
-  return null;
-}
+export const requireTeamAnalyticsLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "admin"],
+});
 
 /**
  * requireAuthenticatedLoader
@@ -89,23 +93,9 @@ export async function requireAuthenticatedLoader() {
  * requireTeamMemberLoader
  * Pre-render gate for any team member (coach, player, family, admin) to avoid flashes on team pages.
  */
-export async function requireTeamMemberLoader({ params }: LoaderFunctionArgs) {
-  const teamId = params.teamId as string | undefined;
-  const current = await getCurrentUserWithRole();
-  if (!current) throw redirect(ROUTES.LOGIN);
-
-  const res = await authorize({
-    profile: { id: current.id, role: current.role },
-    teamId,
-    allowedTeamRoles: ["coach", "player", "family", "admin"],
-  });
-
-  if (!res.allowed) {
-    if (res.reason === "unauthenticated") throw redirect(ROUTES.LOGIN);
-    throw redirect(ROUTES.DASHBOARD);
-  }
-  return null;
-}
+export const requireTeamMemberLoader = createAuthLoader({
+  allowedTeamRoles: ["coach", "player", "family", "admin"],
+});
 
 /**
  * requireRolesLoader
@@ -118,6 +108,7 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
+      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
       requiredRoles: allowedRoles,
     });
 
@@ -132,3 +123,4 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
 // Common role-gated loaders
 export const requireCoachOrAdminLoader = requireRolesLoader(["coach", "admin"]);
+export const requirePlayerLoader = requireRolesLoader(["player"]);

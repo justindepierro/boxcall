@@ -423,4 +423,3 @@ class RealTimeCollaborationService {
 
 // Export singleton instance
 export const collaborationService = new RealTimeCollaborationService();
-export default collaborationService;

@@ -17,7 +17,7 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
 }) => {
   return (
     <aside
-      className="lg:col-span-1 space-y-6"
+      className="lg:col-span-1 space-y-4"
       aria-labelledby="team-actions-heading"
     >
       <TeamTrophyCase teamId={teamId || ""} />

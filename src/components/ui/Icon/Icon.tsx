@@ -69,6 +69,7 @@ export type IconName =
   | "error"
   | "info"
   | "alert"
+  | "bell"
   | "wrench"
   | "bug"
   | "camera"
@@ -131,7 +132,13 @@ export type IconName =
   | "move"
   | "pen-tool"
   | "link"
-  | "sparkles";
+  | "sparkles"
+  | "undo"
+  | "sword"
+  | "sun"
+  | "moon"
+  | "monitor"
+  | "grip-vertical";
 
 type AccessibleSvgProps = Pick<
   React.SVGProps<SVGSVGElement>,
@@ -209,6 +216,7 @@ export const Icon: React.FC<IconProps> = ({
       "error",
       "info",
       "alert",
+      "bell",
       "wrench",
       "bug",
       "target",
@@ -258,6 +266,7 @@ export const Icon: React.FC<IconProps> = ({
       "pen-tool",
       "link",
       "sparkles",
+      "undo",
       "inbox",
       "flask-conical",
       "sprout",
@@ -269,6 +278,11 @@ export const Icon: React.FC<IconProps> = ({
       "circle",
       "graduation-cap",
       "shirt",
+      "sword",
+      "sun",
+      "moon",
+      "monitor",
+      "grip-vertical",
     ]);
     return supported.has(n as ModularIconName)
       ? (n as ModularIconName)

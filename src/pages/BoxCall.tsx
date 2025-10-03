@@ -42,10 +42,10 @@ const BoxCall: React.FC = () => {
             The ultimate game management platform for coaches. Coordinate plays,
             communicate with your team, and manage game strategy in real-time.
           </Typography>
-          <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 inline-block">
+          <div className="bg-surface-secondary border border-border rounded-lg p-4 inline-block">
             <Typography
               variant="body-sm"
-              className="text-blue-700 dark:text-blue-300 flex items-center gap-2"
+              className="text-text-primary flex items-center gap-2"
             >
               <Icon name="zap" size="sm" />
               Coming Soon - Advanced coaching tools for game day

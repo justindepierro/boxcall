@@ -144,7 +144,7 @@ export function Form({
       {/* Form Content */}
       <div className={loading ? "relative" : ""}>
         {loading && (
-          <div className="absolute inset-0 surface-card/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
+          <div className="absolute inset-0 surface-card/50 dark:bg-surface-primary/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-jade-600"></div>
               <Typography variant="body-sm" color="muted">
@@ -157,7 +157,7 @@ export function Form({
       </div>
       {/* Form Footer */}
       {footer && (
-        <div className="pt-4 border-t border-subtle dark:border-gray-700">
+        <div className="pt-4 border-t border-subtle dark:border-text-tertiary">
           {footer}
         </div>
       )}
@@ -192,8 +192,8 @@ export function FormField({
             variant="label-md"
             as="label"
             className={`
-              block text-gray-700 dark:text-gray-300
-              ${required ? "after:content-['*'] after:ml-1 after:text-red-500" : ""}
+              block text-text-primary dark:text-border-light
+              ${required ? "after:content-['*'] after:ml-1 after:text-text-error" : ""}
             `}
           >
             {label}
@@ -214,7 +214,7 @@ export function FormField({
             {error && (
               <Typography
                 variant="caption"
-                className="text-red-600 dark:text-red-400"
+                className="text-text-error dark:text-text-error"
               >
                 {error}
               </Typography>
@@ -222,7 +222,7 @@ export function FormField({
             {success && (
               <Typography
                 variant="caption"
-                className="text-green-600 dark:text-green-400"
+                className="text-text-success dark:text-text-success"
               >
                 {success}
               </Typography>
@@ -230,7 +230,7 @@ export function FormField({
             {warning && (
               <Typography
                 variant="caption"
-                className="text-yellow-600 dark:text-yellow-400"
+                className="text-text-warning dark:text-text-warning"
               >
                 {warning}
               </Typography>

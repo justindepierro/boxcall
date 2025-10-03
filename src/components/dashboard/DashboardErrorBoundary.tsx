@@ -45,7 +45,7 @@ export class DashboardErrorBoundary extends Component<Props, State> {
             <Icon
               name="warning"
               size="lg"
-              className="text-orange-500 mx-auto mb-3"
+              className="text-text-warning mx-auto mb-3"
             />
             <Typography
               variant="headline-sm"
@@ -53,14 +53,14 @@ export class DashboardErrorBoundary extends Component<Props, State> {
             >
               Something went wrong
             </Typography>
-            <Typography variant="body-sm" className="text-text-muted mb-4">
+            <Typography variant="body-sm" className="text-text-secondary mb-4">
               This component encountered an error. Try refreshing the page.
             </Typography>
             <Button
               variant="secondary"
               size="sm"
               onClick={() => window.location.reload()}
-              className="border-orange-300 text-orange-700 hover:bg-orange-50"
+              className="border-text-warning text-text-warning hover:bg-surface-warning"
             >
               Refresh Page
             </Button>

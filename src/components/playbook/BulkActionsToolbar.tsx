@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "@components/design-system/Typography";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface BulkActionsToolbarProps {
   selectedCount: number;
@@ -17,7 +18,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-subtle dark:border-gray-700 p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-border-medium p-3 z-50">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
@@ -28,20 +29,21 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           >
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </Typography>
-          <Button
-            onClick={onClearSelection}
-            variant="ghost"
-            size="xs"
-            icon={<Icon name="close" className="w-4 h-4" />}
-            iconPosition="only"
-            aria-label="Clear selection"
-            className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
-            title="Clear selection"
-          />
+          <Tooltip content="Clear selection">
+            <Button
+              onClick={onClearSelection}
+              variant="ghost"
+              size="xs"
+              icon={<Icon name="close" className="w-4 h-4" />}
+              iconPosition="only"
+              aria-label="Clear selection"
+              className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
+            />
+          </Tooltip>
         </div>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-slate-200"></div>
+        <div className="w-px h-6 bg-border-medium"></div>
 
         {/* Bulk Actions */}
         <div className="flex items-center space-x-2">
@@ -99,7 +101,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           </Button>
 
           {/* Divider */}
-          <div className="w-px h-6 bg-slate-200"></div>
+          <div className="w-px h-6 bg-border-medium"></div>
 
           <Button
             onClick={() => onBulkAction("delete")}

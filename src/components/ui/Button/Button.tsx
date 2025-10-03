@@ -5,69 +5,82 @@
  * Professional, confident design for football team management
  */
 import React, { forwardRef } from "react";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type {
   ButtonProps,
   ButtonSizeConfig,
   ButtonStylesConfig,
 } from "./Button.types";
-// Button variant styles configuration - Updated with jade/navy theme
-// NOTE: Using CSS variables mapped from design tokens (generated-tokens.css)
-// to reduce direct Tailwind color utility coupling. Utilities retained for spacing/structure only.
+// Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base:
-      "text-white border" +
-      " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
-    hover:
-      "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
-    active:
-      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+    base: "text-text-inverse bg-[var(--semantic-primary)] transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-primary-hover)]",
+    active: "active:bg-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:bg-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   secondary: {
-    base: "bg-transparent text-[var(--color-navy-700)] border-2 border-[var(--color-navy-700)]",
-    hover:
-      "hover:bg-[var(--color-navy-700)] hover:text-white hover:border-[var(--color-navy-700)]",
-    active:
-      "active:bg-[var(--color-navy-800)] active:text-white active:border-[var(--color-navy-800)]",
+    base: "text-text-primary bg-[var(--semantic-bg-secondary)] transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-bg-muted)]",
+    active: "active:bg-[color:var(--color-gray-200)]",
     disabled:
-      "disabled:text-[color:var(--color-navy-400)] disabled:border-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   outline: {
-    base: "bg-transparent text-[var(--semantic-primary-hover)] border border-[var(--semantic-primary-hover)]",
-    hover:
-      "hover:bg-[color:var(--color-jade-50)] hover:text-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
+    base: "text-[var(--semantic-primary)] border border-[var(--semantic-primary)] bg-transparent transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-primary)] hover:text-text-inverse",
     active:
-      "active:bg-[color:var(--color-jade-100)] active:text-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)] active:text-text-inverse",
     disabled:
-      "disabled:text-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-200)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:text-text-muted disabled:border-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+  },
+  gradient: {
+    base: "text-surface-primary bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
+    hover: "hover:from-electric-500 hover:to-electric-600",
+    active: "active:from-electric-700 active:to-electric-800",
+    disabled:
+      "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-electric-500 focus:ring-offset-2",
+  },
+  glass: {
+    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary transition-colors duration-200",
+    hover: "hover:bg-surface-primary/20",
+    active: "active:bg-surface-primary/30",
+    disabled:
+      "disabled:bg-surface-primary/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-surface-primary focus:ring-offset-2",
   },
   ghost: {
-    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent",
-    hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
-    active:
-      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
+    base: "text-[var(--semantic-text-primary)] bg-transparent transition-colors duration-200",
+    hover: "hover:bg-[var(--semantic-bg-muted)]",
+    active: "active:bg-[color:var(--color-gray-200)]",
     disabled:
-      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   subtle: {
-    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)]",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] transition-colors duration-200",
     hover:
       "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
     active:
       "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
-      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:border-[var(--semantic-border)] disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset",
+      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
   },
   link: {
-    base: "bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto",
+    base: "text-[var(--semantic-primary-hover)] p-0 h-auto",
     hover: "hover:text-[var(--semantic-primary-active)] hover:underline",
     active: "active:text-[var(--semantic-primary-active)]",
     disabled:
@@ -76,7 +89,7 @@ const buttonVariants: ButtonStylesConfig = {
   },
   // Brand link style with slightly stronger weight (used where prior inline text-jade-* overrides existed)
   brandLink: {
-    base: "bg-transparent text-[var(--semantic-primary-active)] border border-transparent p-0 h-auto font-medium",
+    base: "text-[var(--semantic-primary-active)] p-0 h-auto font-medium",
     hover: "hover:text-[color:var(--color-jade-800)] hover:underline",
     active: "active:text-[color:var(--color-jade-800)]",
     disabled:
@@ -84,7 +97,7 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   neutralLink: {
-    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent p-0 h-auto",
+    base: "text-[var(--semantic-text-secondary)] p-0 h-auto",
     hover: "hover:text-[var(--semantic-text-primary)] hover:underline",
     active: "active:text-[var(--semantic-text-primary)]",
     disabled:
@@ -92,7 +105,7 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   infoLink: {
-    base: "bg-transparent text-[color:var(--color-navy-600)] border border-transparent p-0 h-auto",
+    base: "text-[color:var(--color-navy-600)] p-0 h-auto",
     hover: "hover:text-[color:var(--color-navy-700)] hover:underline",
     active: "active:text-[color:var(--color-navy-700)]",
     disabled:
@@ -100,7 +113,7 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   dangerLink: {
-    base: "bg-transparent text-[color:var(--color-error-600)] border border-transparent p-0 h-auto",
+    base: "text-[color:var(--color-error-600)] p-0 h-auto",
     hover: "hover:text-[color:var(--color-error-700)] hover:underline",
     active: "active:text-[color:var(--color-error-700)]",
     disabled:
@@ -108,31 +121,25 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-    base: "text-white border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
-    hover:
-      "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
-    active:
-      "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
+    base: "text-surface-primary bg-[var(--semantic-error)]",
+    hover: "hover:bg-[color:var(--color-error-600)]",
+    active: "active:bg-[color:var(--color-error-700)]",
     disabled:
       "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-    base: "text-white border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
-    hover:
-      "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
-    active:
-      "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
+    base: "text-surface-primary bg-[color:var(--color-success-600)]",
+    hover: "hover:bg-[color:var(--color-success-700)]",
+    active: "active:bg-[color:var(--color-success-700)]",
     disabled:
       "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
-    base: "text-gray-900 border bg-[color:var(--color-warning-600)] border-[color:var(--color-warning-600)]",
-    hover:
-      "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
-    active:
-      "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
+    base: "text-text-primary bg-[color:var(--color-warning-600)]",
+    hover: "hover:bg-[color:var(--color-warning-700)]",
+    active: "active:bg-[color:var(--color-warning-700)]",
     disabled:
       "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -141,34 +148,34 @@ const buttonVariants: ButtonStylesConfig = {
 // Button size styles configuration - Enhanced for masculine, substantial feel
 const buttonSizes: ButtonSizeConfig = {
   xs: {
-    padding: "px-3 py-1.5",
+    padding: "px-2.5 py-1.25",
     fontSize: "text-xs font-medium",
     iconSize: "w-3 h-3",
-    height: "h-7",
+    height: "h-[1.85rem]",
   },
   sm: {
-    padding: "px-4 py-2",
-    fontSize: "text-sm font-medium",
-    iconSize: "w-4 h-4",
-    height: "h-9",
+    padding: "px-3.5 py-1.75",
+    fontSize: "text-[0.85rem] font-medium",
+    iconSize: "w-[0.9rem] h-[0.9rem]",
+    height: "h-[2.35rem]",
   },
   md: {
-    padding: "px-6 py-3",
-    fontSize: "text-sm font-semibold",
-    iconSize: "w-4 h-4",
-    height: "h-11",
+    padding: "px-5 py-2.4",
+    fontSize: "text-[0.9rem] font-semibold",
+    iconSize: "w-[0.95rem] h-[0.95rem]",
+    height: "h-[2.7rem]",
   },
   lg: {
-    padding: "px-8 py-4",
-    fontSize: "text-base font-semibold",
-    iconSize: "w-5 h-5",
-    height: "h-13",
+    padding: "px-6.5 py-3",
+    fontSize: "text-[0.98rem] font-semibold",
+    iconSize: "w-[1.05rem] h-[1.05rem]",
+    height: "h-[3rem]",
   },
   xl: {
-    padding: "px-10 py-5",
-    fontSize: "text-lg font-bold font-display",
-    iconSize: "w-6 h-6",
-    height: "h-16",
+    padding: "px-8 py-3.6",
+    fontSize: "text-[1.15rem] font-semibold font-display",
+    iconSize: "w-[1.2rem] h-[1.2rem]",
+    height: "h-[3.4rem]",
   },
 };
 // Loading spinner component
@@ -219,8 +226,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       icon,
       iconPosition = "left",
+      hapticType = "medium",
       className = "",
       type = "button",
+      onClick,
       ...restProps
     },
     ref
@@ -230,13 +239,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sizeStyles = buttonSizes[size];
     // Determine if button should be disabled
     const isDisabled = disabled || loading;
-    // Build class string - Square, masculine styling with enhanced animations
+
+    // Handle click with haptic feedback
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!isDisabled) {
+        triggerHapticFeedback(hapticType);
+      }
+      onClick?.(event);
+    };
+    // Build class string - Clean, minimal styling
     const baseClasses = [
-      // Base button styles - square, confident
-      "inline-flex items-center justify-center",
-      "font-sans", // radius via CSS var
-      "transition-square hover-lift active-press focus-square",
+      // Base button styles - clean and minimal
+      "inline-flex items-center justify-center flex-row flex-nowrap",
+      "font-sans rounded-md", // Clean rounded corners
       "focus:outline-none",
+      "overflow-hidden", // Handle overflow gracefully
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,
@@ -260,7 +277,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         return null;
       return (
         <span
-          className={`${sizeStyles.iconSize} ${
+          className={`inline-flex items-center ${sizeStyles.iconSize} flex-shrink-0 ${
             position === "left" && children
               ? "mr-2"
               : position === "right" && children
@@ -287,18 +304,24 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={baseClasses}
+        onClick={handleClick}
         style={{
           borderRadius: "var(--button-border-radius)",
-          boxShadow: "var(--button-shadow)",
         }}
         {...restProps}
       >
         {renderLoadingSpinner()}
         {renderIcon("left")}
         {iconPosition === "only" ? (
-          <span className={sizeStyles.iconSize}>{icon}</span>
+          <span
+            className={`inline-flex items-center justify-center ${sizeStyles.iconSize}`}
+          >
+            {icon}
+          </span>
         ) : (
-          children
+          <span className="inline-flex items-center leading-tight truncate min-w-0">
+            {children}
+          </span>
         )}
         {renderIcon("right")}
       </button>
@@ -307,4 +330,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 // Set display name for debugging
 Button.displayName = "Button";
-export default Button;

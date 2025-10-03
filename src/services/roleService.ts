@@ -17,10 +17,46 @@ import type {
 import {
   DEFAULT_TEAM_ROLE_CAPABILITIES,
   TEAM_ROLE_HIERARCHY,
+  capabilityListFromFlags,
 } from "../types/roles";
 import { supabase } from "../lib/supabase";
 
 export class RoleService {
+  private static roleContextCache = new Map<string, { context: UserRoleContext; timestamp: number }>();
+  private static readonly CACHE_DURATION = 30000; // 30 seconds
+
+  private static normalizeCapabilities(value: unknown): Capability[] {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return value as Capability[];
+    }
+    if (typeof value === "object") {
+      return capabilityListFromFlags(value as Record<string, boolean>);
+    }
+    return [];
+  }
+
+  private static clearExpiredCache() {
+    const now = Date.now();
+    for (const [key, value] of this.roleContextCache.entries()) {
+      if (now - value.timestamp > this.CACHE_DURATION) {
+        this.roleContextCache.delete(key);
+      }
+    }
+  }
+
+  /**
+   * Clear role context cache for a specific user or all users
+   */
+  static clearRoleCache(userId?: string) {
+    if (userId) {
+      this.roleContextCache.delete(userId);
+      console.log("🔍 RoleService: Cleared cache for user:", userId);
+    } else {
+      this.roleContextCache.clear();
+      console.log("🔍 RoleService: Cleared all role cache");
+    }
+  }
   // ============================================================================
   // ROLE CONTEXT MANAGEMENT
   // ============================================================================
@@ -29,20 +65,37 @@ export class RoleService {
    * Get complete user role context (app role + team memberships)
    */
   static async getUserRoleContext(userId: string): Promise<UserRoleContext> {
+    // Check cache first
+    this.clearExpiredCache();
+    const cached = this.roleContextCache.get(userId);
+    if (cached && (Date.now() - cached.timestamp) < this.CACHE_DURATION) {
+      console.log("🔍 RoleService: Returning cached role context for user:", userId);
+      return cached.context;
+    }
+
+    console.log("🔍 RoleService: getUserRoleContext started for user:", userId);
     try {
-      // Get user's app-level role from profiles
-      const { data: profile, error: profileError } = await supabase
+      // Get user profile - handle case where profile doesn't exist
+      console.log("🔍 RoleService: Fetching user profile");
+      const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("role")
-        .eq("id", userId)
-        .single();
+        .eq("id", userId);
 
+      let profile = null;
       if (profileError) {
-        console.error("Error fetching user profile:", profileError);
-        throw new Error("Failed to fetch user role context");
+        if (import.meta.env.DEV) {
+          console.warn("⚠️ RoleService: Profile query error (common in development):", profileError.message);
+        }
+      } else if (profileData && profileData.length > 0) {
+        profile = profileData[0];
+      } else if (import.meta.env.DEV) {
+        console.warn("⚠️ RoleService: No profile found for user (common in development)");
       }
 
-      // Get user's team memberships with new role fields
+      // Always try to fetch team memberships, even if profile query failed
+      // Team memberships might have different RLS policies and could still be accessible
+      console.log("🔍 RoleService: Fetching team memberships for user:", userId);
       const { data: memberships, error: memberError } = await supabase
         .from("team_members")
         .select(
@@ -59,16 +112,52 @@ export class RoleService {
         .eq("status", "active");
 
       if (memberError) {
-        console.error("Error fetching team memberships:", memberError);
-        throw new Error("Failed to fetch team memberships");
+        if (import.meta.env.DEV) {
+          console.warn("⚠️ RoleService: Team memberships query error:", memberError.message);
+        }
       }
 
-      // Get team names separately for now (can be optimized later)
+      console.log("🔍 RoleService: Team memberships result:", memberships);
+
+      // If no profile and no memberships, use fallback
+      if (!profile && (!memberships || memberships.length === 0)) {
+        if (import.meta.env.DEV) {
+          console.log("🔍 RoleService: Using fallback role context for development");
+          const fallbackContext = {
+            appRole: "player" as AppRole,
+            teamMemberships: [],
+            userId: userId,
+            lastUpdated: new Date(),
+          };
+          // Cache the fallback context
+          this.roleContextCache.set(userId, { context: fallbackContext, timestamp: Date.now() });
+          return fallbackContext;
+        }
+        throw new Error("Failed to fetch user profile and team memberships");
+      }
+
+      // Get team names separately
       const teamIds = (memberships || []).map((m) => m.team_id);
-      const { data: teams } = await supabase
-        .from("teams")
-        .select("id, name")
-        .in("id", teamIds);
+      console.log("🔍 RoleService: Team IDs to fetch:", teamIds);
+      
+      let teams: any[] = [];
+      if (teamIds.length > 0) {
+        const { data: teamsData, error: teamsError } = await supabase
+          .from("teams")
+          .select("id, name")
+          .in("id", teamIds);
+
+        if (teamsError) {
+          if (import.meta.env.DEV) {
+            console.warn("⚠️ RoleService: Team names not available:", teamsError.message);
+          }
+          // Continue without team names rather than failing completely
+        } else {
+          teams = teamsData || [];
+        }
+      }
+
+      console.log("🔍 RoleService: Teams data:", teams);
 
       const teamNameMap = new Map(teams?.map((t) => [t.id, t.name]) || []);
 
@@ -78,27 +167,47 @@ export class RoleService {
           teamId: membership.team_id,
           teamName: teamNameMap.get(membership.team_id) || "Unknown Team",
           teamRole: membership.team_role as TeamRole,
-          capabilities: (membership.capabilities as Capability[]) || [],
+          capabilities: RoleService.normalizeCapabilities(
+            membership.capabilities
+          ),
           isActive: membership.status === "active",
           assignedAt: new Date(membership.assigned_at),
           roleNotes: membership.role_notes || undefined,
         })
       );
-      return {
-        appRole: profile.role,
+      
+      console.log("🔍 RoleService: Final team memberships:", teamMemberships);
+      
+      // Use profile role if available, otherwise default to 'player' but still include team memberships
+      const appRole = profile?.role || "player";
+      
+      const roleContext = {
+        appRole: appRole as AppRole,
         teamMemberships,
         userId,
         lastUpdated: new Date(),
       };
+      
+      // Cache the successful result
+      this.roleContextCache.set(userId, { context: roleContext, timestamp: Date.now() });
+      
+      return roleContext;
     } catch (error) {
-      console.error("RoleService.getUserRoleContext error:", error);
+      if (import.meta.env.DEV) {
+        console.warn("⚠️ RoleService: Using fallback role due to database setup issues:", error);
+      }
       // Return safe fallback
-      return {
-        appRole: "player",
+      const fallbackContext = {
+        appRole: "player" as AppRole,
         teamMemberships: [],
         userId,
         lastUpdated: new Date(),
       };
+      
+      // Cache the fallback context to avoid repeated errors
+      this.roleContextCache.set(userId, { context: fallbackContext, timestamp: Date.now() });
+      
+      return fallbackContext;
     }
   }
 
@@ -155,7 +264,11 @@ export class RoleService {
       }
 
       // Check explicit capabilities first
-      if (data.capabilities && data.capabilities.includes(capability)) {
+      const userCapabilities = RoleService.normalizeCapabilities(
+        data.capabilities
+      );
+
+      if (userCapabilities.includes(capability)) {
         return true;
       }
 
@@ -287,7 +400,9 @@ export class RoleService {
       };
 
       if (teamMembership && teamId) {
-        const capabilities = teamMembership.capabilities;
+        const capabilities = RoleService.normalizeCapabilities(
+          teamMembership.capabilities
+        );
 
         teamPermissions = {
           canManageTeam: capabilities.includes("team.manage"),

@@ -52,7 +52,7 @@ export class PlaysDomainService {
           type: TelemetryEventTypes.PlayCreate,
           data: { duplicateKey, id: play.id },
         });
-      } catch (_e) {
+      } catch {
         // ignore telemetry failures
       }
       return { play, duplicateKey, diffs: {} };
@@ -103,7 +103,7 @@ export class PlaysDomainService {
           type: TelemetryEventTypes.PlayUpdate,
           data: { duplicateKey, id },
         });
-      } catch (_e) {
+      } catch {
         // ignore telemetry failures
       }
       return updated;

@@ -11,22 +11,32 @@ export const Toolbar: React.FC<{
     {
       key: "select",
       label: "Select",
-      icon: "pointer",
+      icon: "pointer" as const,
       tooltip: "Select and move objects",
     },
-    { key: "line", label: "Line", icon: "type", tooltip: "Draw a line" },
+    {
+      key: "line",
+      label: "Line",
+      icon: "pen-tool" as const,
+      tooltip: "Draw a line",
+    },
     {
       key: "arrow",
       label: "Arrow",
-      icon: "arrow-right",
+      icon: "arrow-right" as const,
       tooltip: "Draw an arrow",
     },
-    { key: "shape", label: "Shape", icon: "square", tooltip: "Draw a shape" },
-    { key: "text", label: "Text", icon: "type", tooltip: "Add text" },
+    {
+      key: "shape",
+      label: "Shape",
+      icon: "circle" as const,
+      tooltip: "Draw a shape",
+    },
+    { key: "text", label: "Text", icon: "type" as const, tooltip: "Add text" },
   ];
   return (
     <nav
-      className="field-canvas-toolbar flex gap-2 p-3 bg-surface-primary rounded-lg shadow-lg border border-slate-200"
+      className="field-canvas-toolbar flex gap-2 p-3 bg-surface-primary rounded-lg shadow-lg"
       aria-label="Field Canvas Toolbar"
       style={{ minHeight: 56 }}
     >
@@ -37,15 +47,15 @@ export const Toolbar: React.FC<{
           size="sm"
           onClick={() => onToolSelect(tool.key)}
           className={`flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150
-            ${tool.key === activeTool ? "bg-blue-50 text-blue-700 shadow-md ring-2 ring-blue-400" : "hover:bg-slate-100 hover:shadow-sm focus:bg-blue-100 focus:ring-2 focus:ring-blue-300"}`}
+            ${tool.key === activeTool ? "bg-surface-info text-text-info shadow-md ring-2 ring-focus-info" : "hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"}`}
           aria-label={tool.label}
           title={tool.tooltip}
           tabIndex={0}
         >
           <Icon
-            name={tool.icon as import("../../../ui/Icon/types").IconName}
+            name={tool.icon}
             size="sm"
-            color={tool.key === activeTool ? "navy" : "slate"}
+            color={tool.key === activeTool ? "navy" : "current"}
           />
           <span className="sr-only md:not-sr-only">{tool.label}</span>
         </Button>
@@ -54,7 +64,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("undo")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-slate-100 hover:shadow-sm focus:bg-blue-100 focus:ring-2 focus:ring-blue-300"
+        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Undo"
         title="Undo (Cmd+Z)"
       >
@@ -65,7 +75,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("redo")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-slate-100 hover:shadow-sm focus:bg-blue-100 focus:ring-2 focus:ring-blue-300"
+        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Redo"
         title="Redo (Cmd+Shift+Z)"
       >
@@ -76,7 +86,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("layer")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-slate-100 hover:shadow-sm focus:bg-blue-100 focus:ring-2 focus:ring-blue-300"
+        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Layer Controls"
         title="Layer Controls"
       >

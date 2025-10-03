@@ -8,6 +8,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
@@ -71,7 +72,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
   if (upcomingLoading) {
     return (
-      <Card className="h-full flex items-center justify-center surface-card">
+      <Card
+        variant="glass"
+        className="h-full flex items-center justify-center surface-card"
+      >
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
         <span className="ml-3 text-text-secondary">Loading calendar...</span>
       </Card>
@@ -80,9 +84,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
   return (
     <>
-      <Card className="compact-card h-full surface-card">
+      <Card variant="glass" className="compact-card h-full surface-card">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-subtle dark:border-gray-700 pb-2 mb-3">
+        <div className="flex items-center justify-between pb-2 mb-3">
           <Typography variant="headline-md" className="text-text-primary">
             Personal Calendar
           </Typography>
@@ -110,14 +114,16 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
         {showQuickAdd && (
           <div className="mb-4 p-3 surface-subtle rounded-lg border border-subtle">
             <div className="flex space-x-2">
-              <input
-                type="text"
-                value={quickEventTitle}
-                onChange={(e) => setQuickEventTitle(e.target.value)}
-                placeholder="Event title..."
-                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
-                onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
-              />
+              <Typography variant="body-sm" className="flex-1">
+                <input
+                  type="text"
+                  value={quickEventTitle}
+                  onChange={(e) => setQuickEventTitle(e.target.value)}
+                  placeholder="Event title..."
+                  className="w-full px-3 py-2 border border-border-medium rounded-md focus:ring-jade-500 focus:border-jade-500"
+                  onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
+                />
+              </Typography>
               <Button variant="primary" size="sm" onClick={handleQuickAdd}>
                 Add
               </Button>
@@ -164,7 +170,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700"
+                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-border-medium"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
@@ -230,7 +236,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
       {/* Event Detail Modal */}
       {selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="surface-card rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -240,15 +246,17 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 >
                   {selectedEvent.title}
                 </Typography>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => setSelectedEvent(null)}
-                  aria-label="Close"
-                  className="text-text-muted hover:text-text-secondary"
-                  icon={<Icon name="close" size="sm" />}
-                  iconPosition="only"
-                />
+                <Tooltip content="Close event details (Esc)">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setSelectedEvent(null)}
+                    aria-label="Close"
+                    className="text-text-muted hover:text-text-secondary"
+                    icon={<Icon name="close" size="sm" />}
+                    iconPosition="only"
+                  />
+                </Tooltip>
               </div>
 
               <div className="space-y-3">

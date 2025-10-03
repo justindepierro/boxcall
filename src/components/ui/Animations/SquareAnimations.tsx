@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon/Icon";
 // Square Progress Bar Component
 interface ProgressBarProps {
   value: number; // 0-100
@@ -25,7 +25,7 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
       case "navy":
         return "bg-navy-500";
       case "gray":
-        return "bg-gray-500";
+        return "bg-text-secondary";
       default:
         return "surface-subtle0";
     }
@@ -37,7 +37,7 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
       case "navy":
         return "bg-navy-100 dark:bg-navy-900/20";
       case "gray":
-        return "surface-subtle dark:bg-gray-900/20";
+        return "surface-subtle dark:bg-text-primary/20";
       default:
         return "bg-jade-100 dark:bg-jade-900/20";
     }
@@ -61,7 +61,7 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
       {(label || showPercentage) && (
         <div className="flex justify-between items-center mb-2">
           {label && (
-            <span className="text-sm font-sans font-medium text-text-primary dark:text-gray-300">
+            <span className="text-sm font-sans font-medium text-text-primary dark:text-border-light">
               {label}
             </span>
           )}
@@ -117,21 +117,27 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       case "navy":
         return "border-navy-500";
       case "gray":
-        return "border-gray-500";
+        return "border-text-secondary";
       default:
         return "border-jade-500";
     }
   };
   return (
-    <div className="flex flex-col items-center space-y-2">
+    <div
+      className="flex flex-col items-center space-y-2"
+      role="status"
+      aria-live="polite"
+    >
       <div
         className={`${getSpinnerSize()} border-2 ${getBorderColor()} border-t-transparent rounded-sm animate-spin`}
+        aria-hidden="true"
       />
       {label && (
         <span className="text-sm font-sans font-medium text-text-secondary">
           {label}
         </span>
       )}
+      {!label && <span className="sr-only">Loading...</span>}
     </div>
   );
 };
@@ -153,7 +159,7 @@ export const SquareSkeleton: React.FC<SkeletonProps> = ({
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className={`${width} ${height} surface-subtle dark:bg-gray-700 rounded-sm animate-pulse`}
+          className={`${width} ${height} surface-subtle dark:bg-text-primary rounded-sm animate-pulse`}
           style={{
             animationDelay: `${index * 0.1}s`,
             width: index === lines - 1 ? "75%" : "100%", // Last line shorter
@@ -202,7 +208,7 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
     <div className="flex items-center space-x-2">
       <div className={`${getSize()} ${getColors()} rounded-sm animate-pulse`} />
       {label && (
-        <span className="text-sm font-sans font-medium text-text-primary dark:text-gray-300">
+        <span className="text-sm font-sans font-medium text-text-primary dark:text-border-light">
           {label}
         </span>
       )}
@@ -214,16 +220,26 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
   message = "Loading team data...",
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-4 p-8">
+    <div
+      className="flex flex-col items-center justify-center space-y-4 p-8"
+      role="status"
+      aria-live="polite"
+    >
       <div className="relative">
         {/* Spinning football field */}
-        <div className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin">
-          <div className="absolute inset-2 bg-green-100 dark:bg-green-900/20 rounded-sm flex items-center justify-center">
-            <Icon name="award" className="w-5 h-5" />
+        <div
+          className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin"
+          aria-hidden="true"
+        >
+          <div className="absolute inset-2 bg-surface-success dark:bg-text-success/20 rounded-sm flex items-center justify-center">
+            <Icon name="award" className="w-5 h-5" aria-hidden="true" />
           </div>
         </div>
         {/* Pulsing yard lines */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          aria-hidden="true"
+        >
           <div className="w-12 h-0.5 surface-subtle0 animate-pulse" />
         </div>
       </div>

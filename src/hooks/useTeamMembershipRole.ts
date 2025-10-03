@@ -5,14 +5,15 @@ import { supabase } from "../lib/supabase";
 import type { PostgrestError } from "@supabase/supabase-js";
 
 interface TeamMembershipRow {
-  role: string | null;
+  team_role: string | null;
 }
 
 async function fetchTeamMembershipRole(teamId: string, userId: string) {
   if (!teamId || !userId) return null;
+  
   const { data, error } = await supabase
     .from("team_members")
-    .select("role")
+    .select("team_role")
     .eq("team_id", teamId)
     .eq("user_id", userId)
     .maybeSingle<TeamMembershipRow>();
@@ -21,7 +22,7 @@ async function fetchTeamMembershipRole(teamId: string, userId: string) {
     if (pgErr.code === "42P01") return null; // relation missing
     throw error;
   }
-  return data?.role || null;
+  return data?.team_role || null;
 }
 
 export function useTeamMembershipRole(teamId?: string, userId?: string) {

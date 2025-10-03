@@ -1,0 +1,149 @@
+/* Page Layout System - Standardized page rendering */
+
+/* Base page layout styles */
+.page-layout {
+  /* Consistent page-level spacing */
+  --page-padding-y: 2rem;
+  --page-padding-x: 1rem;
+  --content-gap: 1.5rem;
+  --header-margin-bottom: 1.5rem;
+}
+
+/* Responsive page padding */
+@media (min-width: 640px) {
+  .page-layout {
+    --page-padding-x: calc(var(--page-padding-x) * 1.5);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-layout {
+    --page-padding-x: calc(var(--page-padding-x) * 2);
+  }
+}
+
+/* Page content area */
+.page-content {
+  padding: var(--page-padding-y) var(--page-padding-x);
+}
+
+/* Page header styles */
+.page-header {
+  margin-bottom: var(--header-margin-bottom);
+}
+
+.page-header .flex {
+  align-items: flex-start;
+}
+
+/* Page variants */
+.page-dashboard .page-content {
+  padding-top: 0.5rem; /* Minimal top padding since header now has pt-6 */
+  padding-bottom: var(--page-padding-y);
+  padding-left: var(--page-padding-x);
+  padding-right: var(--page-padding-x);
+}
+
+.page-dashboard .page-header {
+  margin-bottom: 0.75rem; /* Reduce header margin for dashboard */
+  padding-top: 1.5rem; /* Add padding to create space from sticky header */
+}
+
+.page-detail .page-content {
+  max-width: 64rem; /* 1024px */
+  margin: 0 auto;
+}
+
+.page-form .page-content {
+  max-width: 64rem; /* 1024px */
+  margin: 0 auto;
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 639px) {
+  .page-layout {
+    --page-padding-y: 1rem;
+    --page-padding-x: 0.75rem;
+  }
+
+  .page-dashboard .page-content {
+    padding-top: 0.5rem; /* Even less top padding on mobile */
+  }
+
+  .page-dashboard .page-header {
+    margin-bottom: 0.75rem; /* Less header margin on mobile */
+  }
+
+  .page-header .flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .page-detail .page-content,
+  .page-form .page-content {
+    max-width: none;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .page-layout {
+    --page-padding-y: 1.5rem;
+  }
+
+  .page-header .flex {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  .page-layout {
+    --page-padding-y: 2rem;
+  }
+}
+
+/* High density mode adjustments */
+@media (data-density: compact) {
+  .page-layout {
+    --page-padding-y: calc(var(--page-padding-y) * 0.75);
+    --header-margin-bottom: calc(var(--header-margin-bottom) * 0.75);
+    --content-gap: calc(var(--content-gap) * 0.75);
+  }
+}
+
+/* Low density mode adjustments */
+@media (data-density: comfortable) {
+  .page-layout {
+    --page-padding-y: calc(var(--page-padding-y) * 1.25);
+    --header-margin-bottom: calc(var(--header-margin-bottom) * 1.25);
+    --content-gap: calc(var(--content-gap) * 1.25);
+  }
+}
+
+/* Print styles */
+@media print {
+  .page-layout {
+    --page-padding-y: 0;
+    --page-padding-x: 0;
+  }
+
+  .page-content {
+    padding: 0;
+  }
+
+  .page-header {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Focus and accessibility - handled by component-level styles */
+
+@media (prefers-reduced-motion: reduce) {
+  .page-layout * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

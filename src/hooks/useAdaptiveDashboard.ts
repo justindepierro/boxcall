@@ -296,5 +296,3 @@ export function useAdaptiveWidget(widgetId: string, widgetType: string) {
     contextRelevance: getPriorityBoost() > 0 ? "high" : "normal",
   };
 }
-
-export default useAdaptiveDashboard;

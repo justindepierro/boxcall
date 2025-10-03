@@ -35,38 +35,38 @@ const ERROR_CONFIGURATIONS = {
     icon: "wifi-off" as const,
     defaultTitle: "Network Error",
     defaultMessage: "Please check your internet connection and try again.",
-    color: "text-orange-600",
-    bgColor: "bg-orange-100",
+    color: "text-text-warning",
+    bgColor: "bg-surface-warning",
   },
   server: {
     icon: "server" as const,
     defaultTitle: "Server Error",
     defaultMessage:
       "Our servers are experiencing issues. Please try again in a moment.",
-    color: "text-red-600",
-    bgColor: "bg-red-100",
+    color: "text-text-error",
+    bgColor: "bg-surface-error",
   },
   offline: {
     icon: "wifi-off" as const,
     defaultTitle: "You're Offline",
     defaultMessage:
       "Check your connection and try again when you're back online.",
-    color: "text-gray-600",
+    color: "text-text-tertiary",
     bgColor: "surface-subtle",
   },
   timeout: {
     icon: "refresh-cw" as const,
     defaultTitle: "Request Timeout",
     defaultMessage: "This is taking longer than usual. Please try again.",
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-100",
+    color: "text-text-warning",
+    bgColor: "bg-surface-warning",
   },
   generic: {
     icon: "alert-triangle" as const,
     defaultTitle: "Something went wrong",
     defaultMessage: "We encountered an unexpected error. Please try again.",
-    color: "text-red-600",
-    bgColor: "bg-red-100",
+    color: "text-text-error",
+    bgColor: "bg-surface-error",
   },
 };
 
@@ -106,7 +106,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center justify-between p-4 surface-card border border-subtle rounded-lg ${className}`}
+        className={`flex items-center justify-between p-4 surface-card rounded-lg ${className}`}
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>

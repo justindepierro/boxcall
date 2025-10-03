@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 
 import { Typography } from "../design-system/Typography";
 /**
@@ -8,108 +8,203 @@ import { Typography } from "../design-system/Typography";
  * Each page component is loaded only when the user navigates to it
  */
 import { Button } from "../ui";
+import { lazyRoute } from "../ui/performance-utils";
 
 // Lazy load all major page components
-export const LazyDashboardPage = lazy(
-  () => import("../../pages/DashboardPage")
+export const LazyDashboardPage = lazyRoute(
+  () => import("../../pages/DashboardPage"),
+  "Dashboard"
 );
 
 // Calendar Shell (final) – load direct page wrapper (legacy shims removed)
-export const LazyCalendarShellPage = lazy(
-  () => import("../../pages/CalendarShellPage")
+export const LazyCalendarShellPage = lazyRoute(
+  () => import("../../pages/CalendarShellPage"),
+  "Calendar"
 );
 
-export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
-
-export const LazyProfilePage = lazy(() =>
-  import("../../pages/ProfilePage").then((module) => ({
-    default: module.ProfilePage,
-  }))
+export const LazyPlannerPage = lazyRoute(
+  () => import("../../pages/PlannerPage"),
+  "Planner"
 );
 
-export const LazyCollaborativeDemoPage = lazy(
-  () => import("../../pages/CollaborativeDemoPage")
+export const LazyLoginPage = lazyRoute(
+  () => import("../../pages/LoginPage"),
+  "Login"
 );
 
-export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
-
-export const LazyTeamsPage = lazy(() => import("../../pages/TeamsPage"));
-
-export const LazyCreateTeam = lazy(() =>
-  import("../../pages/CreateTeam").then((module) => ({
-    default: module.CreateTeam,
-  }))
+export const LazyProfilePage = lazyRoute(
+  () =>
+    import("../../pages/ProfilePage").then((module) => ({
+      default: module.ProfilePage,
+    })),
+  "Profile"
 );
 
-export const LazyJoinTeam = lazy(() =>
-  import("../../pages/JoinTeam").then((module) => ({
-    default: module.JoinTeam,
-  }))
+export const LazyCollaborativeDemoPage = lazyRoute(
+  () => import("../../pages/CollaborativeDemoPage"),
+  "Collaborative Demo"
 );
 
-export const LazyCreateCoachAccount = lazy(() =>
-  import("../../pages/CreateCoachAccount").then((module) => ({
-    default: module.CreateCoachAccount,
-  }))
+export const LazyDesignSystemShowcase = lazyRoute(
+  () =>
+    import("../design-system/DesignSystemShowcase").then((module) => ({
+      default: module.DesignSystemShowcase,
+    })),
+  "Design System"
 );
 
-export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
-
-export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
-
-export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
-export const LazyAnalyticsPage = lazy(
-  () => import("../../pages/AnalyticsPage")
+export const LazySocialFeaturesDemo = lazyRoute(
+  () => import("../../pages/SocialFeaturesDemo"),
+  "Social Features Demo"
 );
 
-export const LazyAboutPage = lazy(() => import("../../pages/legal/AboutPage"));
-
-export const LazyPrivacyPolicyPage = lazy(() =>
-  import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
-    default: module.PrivacyPolicyPage,
-  }))
+export const LazyTeamBulletin = lazyRoute(
+  () => import("../../pages/TeamBulletin"),
+  "Team Bulletin"
 );
 
-export const LazyTermsOfServicePage = lazy(() =>
-  import("../../pages/legal/TermsOfServicePage").then((module) => ({
-    default: module.TermsOfServicePage,
-  }))
+
+export const LazyCreateTeam = lazyRoute(
+  () =>
+    import("../../pages/CreateTeam").then((module) => ({
+      default: module.CreateTeam,
+    })),
+  "Create Team"
 );
 
-export const LazyContactPage = lazy(() =>
-  import("../../pages/legal/ContactPage").then((module) => ({
-    default: module.ContactPage,
-  }))
+export const LazyJoinTeam = lazyRoute(
+  () =>
+    import("../../pages/JoinTeam").then((module) => ({
+      default: module.JoinTeam,
+    })),
+  "Join Team"
+);
+
+export const LazyCreateCoachAccount = lazyRoute(
+  () =>
+    import("../../pages/CreateCoachAccount").then((module) => ({
+      default: module.CreateCoachAccount,
+    })),
+  "Create Coach Account"
+);
+
+export const LazyBoxCall = lazyRoute(
+  () => import("../../pages/BoxCall"),
+  "BoxCall"
+);
+
+export const LazyPlaybookPage = lazyRoute(
+  () => import("../../pages/Playbook"),
+  "Playbook"
+);
+
+export const LazyPracticePlansPage = lazyRoute(
+  () => import("../../pages/PracticePlansPage"),
+  "Practice Plans"
+);
+export const LazyGamePlansPage = lazyRoute(
+  () => import("../../pages/GamePlansPage"),
+  "Game Plans"
+);
+
+export const LazyAwardsPage = lazyRoute(
+  () => import("../../pages/AwardsPage"),
+  "Awards"
+);
+
+export const LazyTemplatesPage = lazyRoute(
+  () => import("../../pages/TemplatesPage"),
+  "Templates"
+);
+
+export const LazyTeamSettings = lazyRoute(
+  () => import("../../pages/TeamSettings"),
+  "Team Settings"
+);
+export const LazyAnalyticsPage = lazyRoute(
+  () => import("../../pages/AnalyticsPage"),
+  "Analytics"
+);
+
+export const LazyAboutPage = lazyRoute(
+  () => import("../../pages/legal/AboutPage"),
+  "About"
+);
+
+export const LazyPrivacyPolicyPage = lazyRoute(
+  () =>
+    import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
+      default: module.PrivacyPolicyPage,
+    })),
+  "Privacy Policy"
+);
+
+export const LazyTermsOfServicePage = lazyRoute(
+  () =>
+    import("../../pages/legal/TermsOfServicePage").then((module) => ({
+      default: module.TermsOfServicePage,
+    })),
+  "Terms of Service"
+);
+
+export const LazyContactPage = lazyRoute(
+  () =>
+    import("../../pages/legal/ContactPage").then((module) => ({
+      default: module.ContactPage,
+    })),
+  "Contact"
 );
 
 // Role-specific dashboard pages
-export const LazyCoachManagementPage = lazy(
-  () => import("../../pages/roles/CoachManagementPage")
+export const LazyCoachManagementPage = lazyRoute(
+  () => import("../../pages/roles/CoachManagementPage"),
+  "Coach Management"
 );
 
-export const LazyPlayerDashboardPage = lazy(
-  () => import("../../pages/roles/PlayerDashboardPage")
+export const LazyPlayerDashboardPage = lazyRoute(
+  () => import("../../pages/roles/PlayerDashboardPage"),
+  "Player Dashboard"
+);
+
+export const LazyAchievementAdminPage = lazyRoute(
+  () => import("../../pages/AchievementAdminPage"),
+  "Achievement Admin"
 );
 
 // Route loading spinner component
 
-export const LazyPracticePlanner = lazy(
-  () => import("../../pages/PracticePlanner")
+export const LazyPracticePlanner = lazyRoute(
+  () => import("../../pages/PracticePlanner"),
+  "Practice Planner"
 );
 
 // Heavy component lazy loading
-export const LazyPracticePlannerModal = lazy(() =>
-  import("../practice/PracticePlannerModal/index").then((module) => ({
-    default: module.PracticePlannerModal,
-  }))
+export const LazyPracticeScriptModal = lazyRoute(
+  () =>
+    import("../practice/PracticeScriptModal/index").then((module) => ({
+      default: module.PracticeScriptModal,
+    })),
+  "Practice Script Modal"
 );
 
 // Loading component for lazy routes
 export const RouteLoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="text-text-secondary">Loading page...</p>
+  <div className="min-h-screen flex items-center justify-center bg-surface-app relative overflow-hidden">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,168,107,0.12),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(147,195,253,0.12),transparent_55%)]" />
+    <div className="relative z-10 text-center px-6 py-10 rounded-3xl shadow-2xl bg-surface-primary/90 backdrop-blur-md border border-surface-subtle max-w-sm w-full">
+      <div className="mx-auto mb-6 h-14 w-14 rounded-full bg-jade-100 text-jade-700 flex items-center justify-center">
+        <span className="text-2xl font-semibold">BC</span>
+      </div>
+      <p className="text-lg font-semibold text-text-primary">Preparing BoxCall</p>
+      <p className="text-sm text-text-muted mt-2">
+        Loading secure data and initializing your coaching workspace.
+      </p>
+      <div className="mt-6 flex items-center justify-center gap-2">
+        <span className="sr-only">Loading</span>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce [animation-delay:-0.32s]"></div>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce [animation-delay:-0.16s]"></div>
+        <div className="h-2 w-2 rounded-full bg-jade-500 animate-bounce"></div>
+      </div>
     </div>
   </div>
 );
@@ -141,7 +236,7 @@ export class LazyLoadErrorBoundary extends React.Component<
         this.props.fallback || (
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
-              <div className="text-red-500 mb-4">
+              <div className="text-text-error mb-4">
                 <svg
                   className="w-12 h-12 mx-auto"
                   fill="none"

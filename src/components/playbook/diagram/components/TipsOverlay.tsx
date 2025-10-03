@@ -101,7 +101,7 @@ export const TipsOverlay: React.FC = () => {
       className="pointer-events-none absolute bottom-3 right-3 z-20 select-none"
       aria-hidden
     >
-      <div className="bg-black/0 text-text-inverse/60 dark:text-slate-200/50 text-[11px] leading-5">
+      <div className="text-text-inverse/60 dark:text-text-inverse/50 text-[11px] leading-5">
         {tips.title ? (
           <div className="font-medium tracking-wide mb-1 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
             {tips.title}

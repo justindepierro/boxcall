@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { supabase } from "../../../lib/supabase";
 import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
 import { Button } from "../../ui/Button"; // Import the shared Button component
+import { Icon } from "../../ui/Icon/Icon";
 
 // Removed old inline edit button import usage after redesign
 
@@ -20,6 +22,8 @@ export interface TeamBulletinHeaderProps {
   logoUrl?: string | null;
   /** Optional id for main heading to support aria-labelledby on main */
   headingId?: string;
+  /** User's role in this team */
+  userRole?: string;
 }
 
 export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
@@ -34,10 +38,15 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   isCoach,
   logoUrl,
   headingId,
+  userRole,
 }) => {
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [localLogo, setLocalLogo] = useState<string | null>(logoUrl || null);
+
+  // Check if user is team owner/head coach who can access settings
+  const canAccessSettings = userRole === "head_coach" || userRole === "coach";
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || !e.target.files[0] || !teamId) return;
@@ -71,7 +80,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   }
 
   return (
-    <div className="bg-[#FCFDFC] dark:bg-gray-800 border border-subtle dark:border-gray-700 rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
+    <div className="bg-[#FCFDFC] dark:bg-surface-secondary border border-subtle dark:border-text-tertiary rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}
@@ -91,8 +100,8 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               }
               className={
                 localLogo
-                  ? "w-20 h-20 rounded-none border-subtle dark:border-gray-600 surface-subtle dark:bg-gray-700 overflow-hidden"
-                  : "w-20 h-20 rounded-none border-gray-300 dark:border-gray-600 surface-subtle dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+                  ? "w-20 h-20 rounded-none border-subtle dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary overflow-hidden"
+                  : "w-20 h-20 rounded-none border-border-light dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
               }
             >
               {localLogo ? (
@@ -102,7 +111,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <div className="text-center flex flex-col items-center text-text-secondary dark:text-gray-300">
+                <div className="text-center flex flex-col items-center text-text-secondary dark:text-border-light">
                   <LogoIcon size="lg" color="brand" />
                   <span className="text-[10px] font-medium mt-1">
                     {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
@@ -119,7 +128,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-gray-800 text-text-inverse text-xs py-1 px-2 rounded whitespace-nowrap">
+                <div className="bg-surface-secondary text-text-inverse text-xs py-1 px-2 rounded whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>
@@ -136,12 +145,12 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-lg"
-              className="mt-0.5 text-text-secondary dark:text-gray-300"
+              className="mt-0.5 text-text-secondary dark:text-border-light"
             >
               {seasonDisplay} • Record: {record.wins}-{record.losses}
             </Typography>
             {schoolName && (
-              <div className="text-xs text-text-secondary dark:text-gray-300 mt-1">
+              <div className="text-xs text-text-secondary dark:text-border-light mt-1">
                 {schoolName}
                 {mascot ? ` ${mascot}` : ""}
               </div>
@@ -152,7 +161,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-text-secondary dark:text-gray-300"
+              className="text-text-secondary dark:text-border-light"
             >
               Next Game
             </Typography>
@@ -166,7 +175,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-text-secondary dark:text-gray-300"
+              className="text-text-secondary dark:text-border-light"
             >
               Team Members
             </Typography>
@@ -177,6 +186,17 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               {memberCount}
             </Typography>
           </div>
+          {canAccessSettings && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate(`/team/${teamId}/settings`)}
+              icon={<Icon name="settings" size="sm" />}
+              className="ml-4"
+            >
+              Team Settings
+            </Button>
+          )}
         </div>
       </div>
     </div>

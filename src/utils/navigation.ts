@@ -3,6 +3,7 @@ import type { Database } from "../types/database";
 import React from "react";
 import { Icon } from "../components/ui/Icon/Icon";
 import type { IconName } from "../components/ui/Icon/Icon";
+import { ROUTES, teamRoutes } from "../routes/paths";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
 export interface NavigationItem {
@@ -21,19 +22,23 @@ export interface NavigationItem {
  * Based on comprehensive requirements with role-based access
  */
 export const getNavigationItems = (
-  userRole?: UserRole | null | string
+  userRole?: UserRole | null | string,
+  activeTeamId?: string | null
 ): NavigationItem[] => {
-  console.info(
-    "getNavigationItems called with userRole:",
-    userRole,
-    typeof userRole
-  );
+  // Only log in development mode to reduce console noise
+  if (process.env.NODE_ENV === "development") {
+    console.info(
+      "getNavigationItems called with userRole:",
+      userRole,
+      typeof userRole
+    );
+  }
   // Dynamic team selection (persisted after creation)
-  let activeTeamId = "1";
+  let resolvedTeamId = activeTeamId || null;
   try {
     const stored = localStorage.getItem("activeTeamId");
-    if (stored) activeTeamId = stored;
-  } catch (_err) {
+    if (stored) resolvedTeamId = stored;
+  } catch {
     /* ignore */
   }
   const items: NavigationItem[] = [
@@ -42,7 +47,7 @@ export const getNavigationItems = (
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-      href: "/dashboard",
+      href: ROUTES.DASHBOARD,
       description: "Personal dashboard with live feed and notifications",
     },
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
@@ -50,7 +55,7 @@ export const getNavigationItems = (
       id: "team-bulletin",
       label: "Team Bulletin",
       icon: "users",
-      href: `/team/${activeTeamId}/bulletin`,
+      href: resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.TEAMS,
       description: "Team-specific feed, announcements, and quick actions",
     },
   ];
@@ -64,7 +69,7 @@ export const getNavigationItems = (
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-      href: "/boxcall",
+      href: ROUTES.BOXCALL,
       roles: ["admin", "coach", "super_admin"],
       badge: "Pro",
       description: "Advanced coaching tools and analytics (Premium)",
@@ -90,7 +95,7 @@ export const getNavigationItems = (
       id: "playbook",
       label: "Playbook",
       icon: "book",
-      href: "/playbook",
+      href: ROUTES.PLAYBOOK,
       roles: ["admin", "coach", "player", "super_admin"],
       description: "Team plays and strategies",
     });
@@ -100,26 +105,51 @@ export const getNavigationItems = (
     id: "calendar",
     label: "Calendar",
     icon: "calendar",
-    href: "/calendar",
+    href: resolvedTeamId ? teamRoutes.calendar(resolvedTeamId) : ROUTES.CALENDAR,
     description: "Personal and team calendars",
   });
+  // Planner - Available to everyone
+  items.push({
+    id: "planner",
+    label: "Planner",
+    icon: "clipboard-list",
+    href: ROUTES.PLANNER,
+    description: "Weekly planning dashboard for coaches",
+  });
+  // Awards - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "awards",
+      label: "Awards",
+      icon: "award",
+      href: ROUTES.AWARDS,
+      roles: ["admin", "coach", "super_admin"],
+      description: "Give out awards and recognition to players and staff",
+    });
+  }
   // Profile - Available to everyone
   items.push({
     id: "profile",
     label: "Profile",
     icon: "user",
-    href: "/profile",
+    href: ROUTES.PROFILE,
     description: "Edit user settings and preferences",
   });
   // Team Settings - Coaches and super_admin only
   // TEMP: Expose Team Settings to all authenticated roles for rapid iteration (will re-gate later)
-  items.push({
-    id: "team-settings",
-    label: "Team Settings",
-    icon: "settings",
-    href: `/team/${activeTeamId}/settings`,
-    description: "Manage team configuration and roster",
-  });
+  if (resolvedTeamId) {
+    items.push({
+      id: "team-settings",
+      label: "Team Settings",
+      icon: "settings",
+      href: teamRoutes.settings(resolvedTeamId),
+      description: "Manage team configuration and roster",
+    });
+  }
   // Divider before utility pages
   items.push({
     id: "divider-utility",
@@ -132,8 +162,24 @@ export const getNavigationItems = (
     id: "about",
     label: "About",
     icon: "info",
-    href: "/about",
+    href: ROUTES.ABOUT,
     description: "Learn about BoxCall",
+  });
+  // Design System Showcase - Available to everyone (dev/demo feature)
+  items.push({
+    id: "design-system",
+    label: "Design System",
+    icon: "sparkles",
+    href: ROUTES.DESIGN_SYSTEM,
+    description: "Explore our advanced design system and theming",
+  });
+  // Social Features Demo - Available to everyone (dev/demo feature)
+  items.push({
+    id: "social-demo",
+    label: "Social Demo",
+    icon: "message",
+    href: ROUTES.SOCIAL,
+    description: "Experience social features and interactions",
   });
   // Templates - Coaches and super_admin only
   if (
@@ -145,8 +191,8 @@ export const getNavigationItems = (
       id: "templates",
       label: "Templates",
       icon: "file",
-      href: "/templates",
-      roles: ["admin", "coach"],
+      href: ROUTES.TEMPLATES,
+      roles: ["admin", "coach", "super_admin"],
       description: "Pre-built templates and resources",
     });
   }
@@ -174,7 +220,8 @@ export const getNavigationItems = (
  */
 export const toSidebarItems = (
   items: NavigationItem[],
-  userRole?: UserRole | null | string
+  userRole?: UserRole | null | string,
+  onNavigate?: (href: string) => void
 ): SidebarItem[] => {
   return items
     .filter((item) => {
@@ -196,11 +243,19 @@ export const toSidebarItems = (
         : undefined,
       onClick: item.divider
         ? undefined
-        : () => (window.location.href = item.href),
+        : () => {
+            // Use the provided navigation handler
+            if (onNavigate) {
+              onNavigate(item.href);
+            } else {
+              // Fallback: use window.location for navigation
+              window.location.href = item.href;
+            }
+          },
       divider: item.divider,
       badge: item.badge,
       children: item.children
-        ? toSidebarItems(item.children, userRole)
+        ? toSidebarItems(item.children, userRole, onNavigate)
         : undefined,
     }));
 };

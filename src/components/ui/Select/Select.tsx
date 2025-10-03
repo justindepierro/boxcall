@@ -25,10 +25,10 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary focus:ring-jade-500 dark:focus:ring-blue-400",
+    base: "relative flex items-center justify-between w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary ring-text-info",
     variants: {
       default: "",
-      filled: "surface-subtle dark:bg-gray-700",
+      filled: "surface-subtle bg-surface-secondary",
       outlined: "border-2",
     },
     sizes: {
@@ -39,11 +39,11 @@ const selectStyles: SelectStylesConfig = {
     statuses: {
       default: "",
       error:
-        "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 surface-subtle dark:bg-red-900/20",
+        "border-text-error focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
       success:
-        "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 surface-subtle dark:bg-green-900/20",
+        "border-text-success focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
       warning:
-        "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 surface-subtle dark:bg-yellow-900/20",
+        "border-text-warning focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
     },
     states: {
       disabled: "opacity-50 cursor-not-allowed",
@@ -63,25 +63,23 @@ const selectStyles: SelectStylesConfig = {
     base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-text-primary surface-subtle-hover",
     states: {
       default: "",
-      highlighted:
-        "surface-subtle dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
-      selected:
-        "font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
+      highlighted: "surface-subtle bg-surface-info/30 text-text-info",
+      selected: "font-medium bg-surface-info text-text-info",
       disabled: "opacity-50 cursor-not-allowed",
     },
     withIcon: "pl-10",
   },
   input: {
-    base: "flex-1 bg-transparent border-none outline-none placeholder-gray-500 dark:placeholder-gray-400",
+    base: "flex-1 bg-surface-primary border-none outline-none placeholder-text-secondary",
     sizes: {
       sm: "text-sm",
       md: "text-sm",
       lg: "text-base",
     },
   },
-  placeholder: "text-gray-500 dark:text-gray-400",
-  noOptions: "px-3 py-2 text-gray-500 dark:text-gray-400 text-center italic",
-  loading: "px-3 py-2 text-center text-gray-500 dark:text-gray-400",
+  placeholder: "text-text-secondary",
+  noOptions: "px-3 py-2 text-text-secondary text-center italic",
+  loading: "px-3 py-2 text-center text-text-secondary",
 };
 /**
  * Select Component
@@ -395,7 +393,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <label htmlFor={selectId} className={labelClassName}>
             <Typography variant="label-md" className="text-text-primary">
               {label}
-              {required && <span className="text-red-500 ml-1">*</span>}
+              {required && <span className="text-text-error ml-1">*</span>}
             </Typography>
           </label>
         )}
@@ -434,6 +432,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             {clearable && internalValue && !disabled && (
               <IconButton
                 aria-label="Clear selection"
+                tooltip="Clear selection"
                 size="xs"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -504,7 +503,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                   className={`${selectStyles.option.base} border-t border-subtle`}
                   onClick={() => onCreateOption?.(searchTerm)}
                 >
-                  <span className="text-blue-600">Create "{searchTerm}"</span>
+                  <span className="text-text-info">Create "{searchTerm}"</span>
                 </div>
               )}
           </div>

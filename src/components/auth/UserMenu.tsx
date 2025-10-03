@@ -7,10 +7,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/Button/Button";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "@components/design-system/Typography";
+import { warn } from "../../utils/logger";
 
 export const UserMenu: React.FC = () => {
   const { user, profile, signOut, loading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -18,6 +20,7 @@ export const UserMenu: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setShowLogoutConfirm(false);
       }
     };
 
@@ -29,12 +32,41 @@ export const UserMenu: React.FC = () => {
   if (!user) return null;
 
   const handleLogout = async () => {
+    setShowLogoutConfirm(false);
     setIsOpen(false);
-    await signOut();
+    try {
+      await signOut();
+    } catch (error) {
+      warn("Failed to sign out:", error);
+    }
+  };
+
+  const handleLogoutClick = () => {
+    // Show confirmation on first click
+    if (!showLogoutConfirm) {
+      setShowLogoutConfirm(true);
+      return;
+    }
+    // Actually logout on second click
+    handleLogout();
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const userEmail = user.email || "Unknown User";
   const userName = profile?.full_name || userEmail;
+
+  // Helper function to get initials (matches ProfileCard)
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
@@ -43,20 +75,20 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
         size="sm"
-        className="flex items-center space-x-2 px-3 py-2 h-auto font-medium text-text-secondary hover:text-text-primary"
+        className="gap-2 px-4 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-[180px]"
         disabled={loading}
       >
-        {/* Simple avatar circle */}
-        <Typography
-          variant="body-sm"
-          as="div"
-          className="w-8 h-8 surface-subtle0 rounded-full flex items-center justify-center text-text-inverse font-medium"
-        >
-          {userName.charAt(0).toUpperCase()}
-        </Typography>
-        <span className="hidden sm:block max-w-32 truncate">{userName}</span>
+        {/* Profile picture matching ProfileCard style */}
+        <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-border-subtle flex-shrink-0">
+          <Typography variant="body-sm" className="font-bold text-text-primary">
+            {getInitials(userName)}
+          </Typography>
+        </div>
+        <span className="hidden sm:inline-block font-medium truncate text-left min-w-0 max-w-[120px]">
+          {userName}
+        </span>
         <svg
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -72,23 +104,22 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 surface-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-surface-card/98 backdrop-blur-xl rounded-lg shadow-2xl border border-border-medium/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-2 border-b border-subtle dark:border-gray-700">
+            <div className="px-4 py-3 border-b border-border-medium/40 bg-surface-subtle/20">
               <Typography
                 variant="body-sm"
                 as="p"
-                className="font-medium text-text-primary dark:text-text-inverse"
+                className="font-medium text-text-primary"
               >
                 {userName}
               </Typography>
-              <p className="text-sm text-text-secondary truncate">
+              <p className="text-xs text-text-secondary truncate mt-0.5">
                 {userEmail}
               </p>
             </div>
 
-            {/* Menu Items */}
             <Button
               onClick={() => {
                 setIsOpen(false);
@@ -96,7 +127,7 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2 h-auto text-sm text-text-secondary hover:text-text-primary"
+              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-none"
             >
               Profile Settings
             </Button>
@@ -108,23 +139,54 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2 h-auto text-sm text-text-secondary hover:text-text-primary"
+              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-none"
             >
               Team Settings
             </Button>
 
-            <hr className="border-subtle dark:border-gray-700" />
+            <div className="border-t border-border-medium/50 my-1" />
 
-            {/* Logout */}
-            <Button
-              onClick={handleLogout}
-              disabled={loading}
-              variant="danger"
-              size="xs"
-              className="w-full justify-start px-4 py-2 h-auto text-sm"
-            >
-              {loading ? "Signing out..." : "Sign Out"}
-            </Button>
+            {/* Logout with confirmation */}
+            {!showLogoutConfirm ? (
+              <Button
+                onClick={handleLogoutClick}
+                disabled={loading}
+                variant="ghost"
+                size="xs"
+                className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-error hover:text-text-error hover:bg-surface-error/10 rounded-none"
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <div className="px-4 py-3 bg-surface-error/5 border-t border-border-error/20">
+                <Typography
+                  variant="body-xs"
+                  className="text-text-secondary mb-2"
+                >
+                  Are you sure you want to sign out?
+                </Typography>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleLogout}
+                    disabled={loading}
+                    variant="ghost"
+                    size="xs"
+                    className="flex-1 bg-surface-error/10 hover:bg-surface-error/20 text-text-error text-xs py-1.5"
+                  >
+                    {loading ? "Signing out..." : "Yes, sign out"}
+                  </Button>
+                  <Button
+                    onClick={handleCancelLogout}
+                    disabled={loading}
+                    variant="ghost"
+                    size="xs"
+                    className="flex-1 text-xs py-1.5"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

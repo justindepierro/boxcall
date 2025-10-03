@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
+import { PageLayout } from "../components/layout/PageLayout";
 
 /**
  * Join Team Page
@@ -217,11 +218,11 @@ export const JoinTeam: React.FC = () => {
                   type="button"
                   variant={method.primary ? "primary" : "outline"}
                   onClick={() => handleMethodSelect(method.id)}
-                  className={`p-6 h-auto w-full justify-start text-left rounded-lg ${
+                  className={
                     method.primary
-                      ? ""
-                      : "border-subtle dark:border-gray-700 bg-transparent"
-                  }`}
+                      ? "p-6 h-auto w-full justify-start text-left rounded-lg"
+                      : "p-6 h-auto w-full justify-start text-left rounded-lg border-subtle dark:border-text-tertiary bg-surface-primary"
+                  }
                 >
                   <div className="flex items-start gap-4">
                     <Icon
@@ -275,7 +276,7 @@ export const JoinTeam: React.FC = () => {
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center font-mono text-[1.75rem] leading-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
+                className="w-full px-4 py-3 text-center font-mono text-[1.75rem] leading-none border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
                 aria-label="Invite code"
               />
               <Typography variant="body-sm" color="muted" className="mt-2">
@@ -335,7 +336,7 @@ export const JoinTeam: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by school or team name..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade"
+                  className="flex-1 px-4 py-3 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade"
                   onKeyPress={(e) => e.key === "Enter" && handleTeamSearch()}
                 />
                 <Button
@@ -360,7 +361,7 @@ export const JoinTeam: React.FC = () => {
                   {searchResults.map((team) => (
                     <div
                       key={team.id}
-                      className="border border-subtle dark:border-gray-700 rounded-lg p-6"
+                      className="border border-subtle dark:border-text-tertiary rounded-lg p-6"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -450,11 +451,8 @@ export const JoinTeam: React.FC = () => {
               request is approved.
             </Typography>
 
-            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-6">
-              <Typography
-                variant="body-sm"
-                className="text-blue-700 dark:text-blue-300"
-              >
+            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
+              <Typography variant="body-sm" className="text-text-info">
                 <strong>What's next?</strong>
                 <br />
                 The team's coaching staff will review your request and either
@@ -552,7 +550,7 @@ export const JoinTeam: React.FC = () => {
   };
 
   return (
-    <div className="py-6">
+    <PageLayout title="Join Team" variant="form">
       <div className="max-w-5xl mx-auto">
         {/* Back Navigation */}
         {currentStep !== "method" && currentStep !== "complete" && (
@@ -584,7 +582,7 @@ export const JoinTeam: React.FC = () => {
               <Button type="button" variant="brandLink" size="sm" className="">
                 Contact Support
               </Button>
-              <span className="text-gray-300">•</span>
+              <span className="text-border-light">•</span>
               <Button
                 type="button"
                 variant="link"
@@ -598,6 +596,6 @@ export const JoinTeam: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };

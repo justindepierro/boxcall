@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export interface CalendarUrlState {
@@ -43,8 +43,8 @@ export function useCalendarUrlState(options: Options = {}) {
   const lastPushRef = useRef<number>(0);
   const replaceThreshold = options.replaceThresholdMs ?? 750;
 
-  // Parse current query string into state
-  const parse = useCallback((): CalendarUrlState => {
+  // Memoize parsed state to prevent unnecessary re-renders
+  const state = useMemo((): CalendarUrlState => {
     const params = new URLSearchParams(location.search);
     const view = params.get("view") as CalendarUrlState["view"] | null;
     const date = params.get("date");
@@ -56,13 +56,14 @@ export function useCalendarUrlState(options: Options = {}) {
     };
   }, [location.search]);
 
-  const state = parse();
-
-  // Notify changes
-  useEffect(() => {
+  // Notify changes with memoized callback
+  const memoizedOnChange = useCallback(() => {
     options.onChange?.(state);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.view, state.date, state.event]);
+  }, [options, state]);
+
+  useEffect(() => {
+    memoizedOnChange();
+  }, [memoizedOnChange]);
 
   const setState = useCallback(
     (patch: CalendarUrlState, replace = false) => {

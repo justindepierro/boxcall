@@ -422,17 +422,3 @@ export {
   typographyTokens as typography,
   spacingTokens as spacing,
 };
-
-// Default export for convenience
-export default {
-  colors: colorTokens,
-  semantic: semanticTokens,
-  component: componentTokens,
-  typography: typographyTokens,
-  spacing: spacingTokens,
-  utils: {
-    getColor,
-    getComponentColor,
-    generateCSSCustomProperties,
-  },
-};

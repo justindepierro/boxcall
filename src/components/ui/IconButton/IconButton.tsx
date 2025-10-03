@@ -6,18 +6,20 @@ import React, { forwardRef } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import type { ButtonProps } from "../Button/Button.types";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 export interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "xs" | "sm";
   variant?: "ghost" | "subtle" | "danger";
-  tooltip?: string; // optional native title fallback
+  tooltip?: string; // contextual help tooltip (uses Tooltip component)
+  tooltipPlacement?: "top" | "bottom" | "left" | "right";
   "aria-label": string; // required for icon-only accessibility
 }
 
 const sizeStyles = {
   xs: "h-6 w-6 p-1 text-[11px]",
-  sm: "h-8 w-8 p-1.5 text-xs",
+  sm: "h-8 w-8 p-2 text-xs",
 };
 
 const variantStyles = {
@@ -26,7 +28,7 @@ const variantStyles = {
   subtle:
     "text-text-muted hover:text-text-primary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
   danger:
-    "text-red-600 hover:text-red-700 hover:surface-subtle active:bg-red-100",
+    "text-text-error hover:text-text-error hover:surface-subtle active:bg-surface-error",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
@@ -36,6 +38,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       variant = "ghost",
       className,
       tooltip,
+      tooltipPlacement = "top",
       children,
       disabled,
       type,
@@ -53,7 +56,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       xs: "xs",
       sm: "sm",
     };
-    return (
+
+    const button = (
       <Button
         ref={ref}
         type={type as ButtonProps["type"]}
@@ -68,12 +72,22 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "!rounded-sm !p-0",
           className
         )}
-        title={tooltip}
         {...rest}
       >
         {children}
       </Button>
     );
+
+    // Wrap with Tooltip if tooltip prop provided
+    if (tooltip && !disabled) {
+      return (
+        <Tooltip content={tooltip} placement={tooltipPlacement}>
+          {button}
+        </Tooltip>
+      );
+    }
+
+    return button;
   }
 );
 

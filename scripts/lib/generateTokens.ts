@@ -5,6 +5,7 @@ import {
   spacingTokens,
   elevationTokens,
 } from "../../src/design-system/tokens";
+import { writeFileSync } from "fs";
 
 function toKebab(key: string) {
   return key.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
@@ -65,4 +66,11 @@ export function generateTokensCSS(): string {
   emitObj("elevation", elevationTokens as Record<string, unknown>, lines);
   lines.push("}");
   return lines.join("\n") + "\n"; // trailing newline for determinism
+}
+
+// Write to file when run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const css = generateTokensCSS();
+  writeFileSync("src/styles/generated-tokens.css", css);
+  console.log("Generated tokens written to src/styles/generated-tokens.css");
 }

@@ -9,14 +9,19 @@ import React, {
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
+import { PlayCardAppIcon } from "./PlayCard.AppIcon";
+import { PlayDetailModal } from "./PlayDetailModal";
+import { PlayGridSkeleton } from "./PlayGridSkeleton";
+import { PlayGridErrorState } from "./PlayGridErrorState";
+import { PlayGridEmptyState } from "./PlayGridEmptyState";
 import { Virtuoso } from "react-virtuoso";
-import { Button } from "../ui/Button/Button";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
 import { getPlayFlags } from "@utils/localPlayFlags";
 import { Typography } from "../design-system/Typography";
+import { info, warn, debug } from "../../utils/logger";
 import {
   validatePlaybookData,
   logValidationResults,
@@ -64,6 +69,7 @@ interface PlayGridProps {
   selectedCategory?: string;
   selectedSubcategory?: string;
   onEdit?: (play: Play) => void;
+  onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
   onCreateDiagram?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
@@ -76,6 +82,9 @@ interface PlayGridProps {
   selectedPlayIds?: Set<string>;
   onPlaySelectionChange?: (playIds: Set<string>) => void;
   onOpenBuilder?: () => void;
+  // Suggestions for inline editing
+  formationSuggestions?: string[];
+  playNameSuggestions?: string[];
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -84,10 +93,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedCategory,
   selectedSubcategory,
   onEdit,
+  onSave: _onSave, // Not used in V2 (no inline editing)
   onDuplicate,
   onCreateDiagram,
-  onAddToPracticeScript,
-  onAddToGamePlan,
+  onAddToPracticeScript: _onAddToPracticeScript, // Not used in V2
+  onAddToGamePlan: _onAddToGamePlan, // Not used in V2
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
   onPlayCountChange,
   refreshTrigger = 0,
@@ -96,6 +106,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
   onOpenBuilder: _onOpenBuilder,
+  // Suggestions
+  formationSuggestions: _formationSuggestions = [], // Not used in V2
+  playNameSuggestions: _playNameSuggestions = [], // Not used in V2
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -105,6 +118,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       return false;
     }
   });
+
+  // View mode: 'list' or 'grid' (app icons)
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    try {
+      return (
+        (localStorage.getItem("bc_playgrid_view") as "list" | "grid") || "list"
+      );
+    } catch {
+      return "list";
+    }
+  });
+
+  // Selected play for detail modal
+  const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
+
   useEffect(() => {
     try {
       localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
@@ -113,13 +141,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     }
   }, [showOneWordCalls]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem("bc_playgrid_view", viewMode);
+    } catch {
+      // ignore persistence errors
+    }
+  }, [viewMode]);
+
   // Get real data from database with refresh capability
   const { plays: allPlays, loading, error, refreshData } = useTeamsData();
 
   // Refresh data when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger > 0) {
-      console.info("Refreshing plays data due to trigger:", refreshTrigger);
+      debug("Refreshing plays data due to trigger:", refreshTrigger);
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
@@ -140,13 +176,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Validate database integration (development mode only)
   useEffect(() => {
     if (plays.length > 0 && process.env.NODE_ENV === "development") {
-      console.info("🏈 Playbook Database Integration Test");
-      console.info("📊 Total Plays Loaded:", plays.length);
-      console.info("🏟️ Sample Play:", plays[0]);
-      console.info("Available Formations:", [
+      info("🏈 Playbook Database Integration Test");
+      info("📊 Total Plays Loaded:", plays.length);
+      info("🏟️ Sample Play:", plays[0]);
+      info("Available Formations:", [
         ...new Set(plays.map((p) => p.formation)),
       ]);
-      console.info("⚡ Available Play Types:", [
+      info("⚡ Available Play Types:", [
         ...new Set(plays.map((p) => p.p_type)),
       ]);
       // end group
@@ -293,24 +329,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const disableVirtual =
     (import.meta as unknown as { env: Record<string, string> }).env
       ?.VITE_DISABLE_VIRTUAL_PLAYGRID === "true";
-  // Density mode state (comfortable default)
-  const [density, setDensity] = useState<"comfortable" | "compact">(() => {
-    try {
-      const v = localStorage.getItem("bc_playgrid_density");
-      return v === "compact" ? "compact" : "comfortable";
-    } catch {
-      return "comfortable";
-    }
-  });
-  const toggleDensity = () =>
-    setDensity(density === "comfortable" ? "compact" : "comfortable");
-  useEffect(() => {
-    try {
-      localStorage.setItem("bc_playgrid_density", density);
-    } catch {
-      // ignore persistence errors
-    }
-  }, [density]);
 
   // --- Dev-only render diagnostics (no state updates) ---
   if (process.env.NODE_ENV === "development") {
@@ -325,7 +343,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     if (count % 100 === 0) {
       const elapsed = performance.now() - start;
       if (elapsed < 8000) {
-        console.warn(
+        warn(
           `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(
             0
           )}ms (filteredPlays=${filteredPlays.length})`
@@ -344,11 +362,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           onEdit={onEdit}
           onDuplicate={onDuplicate}
           onCreateDiagram={onCreateDiagram}
-          onAddToPracticeScript={onAddToPracticeScript}
-          onAddToGamePlan={onAddToGamePlan}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
-          density={density}
         />
       </div>
     ),
@@ -357,208 +372,173 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       onEdit,
       onDuplicate,
       onCreateDiagram,
-      onAddToPracticeScript,
-      onAddToGamePlan,
       selectedPlayIds,
       handlePlaySelect,
-      density,
     ]
   );
 
-  // --- Skeleton Loading State ---
-  const SkeletonCard: React.FC<{ idx: number }> = ({ idx }) => (
-    <div
-      className="rounded-md border border-subtle surface-card p-4 shadow-sm animate-pulse"
-      aria-label={`Loading play placeholder ${idx + 1}`}
-    >
-      <div className="h-4 w-1/3 bg-slate-200 rounded mb-3" />
-      <div className="h-3 w-1/2 bg-slate-100 rounded mb-2" />
-      <div className="h-3 w-2/5 bg-slate-100 rounded mb-4" />
-      <div className="flex gap-2">
-        <div className="h-6 w-14 bg-slate-100 rounded" />
-        <div className="h-6 w-10 bg-slate-100 rounded" />
-        <div className="h-6 w-16 bg-slate-100 rounded" />
-      </div>
-    </div>
-  );
-
-  // --- Derived empty helper actions (not dispatching to parent yet) ---
-  const EmptyActions = () => {
-    if (!hasFilters) {
-      return (
-        <Button variant="primary" size="sm" onClick={() => _onOpenBuilder?.()}>
-          Create your first play
-        </Button>
-      );
-    }
-    return (
-      <div className="flex flex-col items-center gap-3">
-        <div className="text-xs text-slate-500">Adjust your criteria</div>
-        <div className="flex gap-2">
-          {searchQuery && (
-            <Button
-              variant="secondary"
-              size="xs"
-              onClick={() => {
-                // Fire a custom event the parent PlaybookPage can listen to if desired
-                document.dispatchEvent(
-                  new CustomEvent("playgrid:clear-search")
-                );
-              }}
-            >
-              Clear search
-            </Button>
-          )}
-          {/* Placeholder: parent can add event listener to clear filters */}
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={() => {
-              document.dispatchEvent(new CustomEvent("playgrid:open-filters"));
-            }}
-          >
-            Modify filters
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="space-y-6" aria-live="polite">
-      {loading && (
-        <div aria-busy="true" aria-label="Loading plays" role="status">
-          <div
-            className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mt-2"
-            role="list"
-          >
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div role="listitem" key={i}>
-                <SkeletonCard idx={i} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Loading State */}
+      {loading && <PlayGridSkeleton count={8} viewMode={viewMode} />}
+
+      {/* Error State */}
       {error && !loading && (
-        <div
-          className="text-center p-10 border rounded-md border-red-200 bg-red-50"
-          role="alert"
-        >
-          <p className="text-red-600 font-medium mb-3">Error loading plays</p>
-          <p className="text-xs text-red-500 mb-4">{error}</p>
-          <div className="flex justify-center">
-            <Button size="sm" variant="secondary" onClick={() => refreshData()}>
-              Retry
-            </Button>
-          </div>
-        </div>
+        <PlayGridErrorState error={error} onRetry={refreshData} />
       )}
-      {showEmpty && (
-        <div className="text-center py-16">
-          <div className="text-slate-400 text-lg mb-4">
-            {hasFilters
-              ? selectedCategory && selectedSubcategory
-                ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
-                : selectedCategory
-                  ? `No plays found in "${selectedCategory}" category`
-                  : searchQuery
-                    ? "No plays match your search keywords"
-                    : "No plays match your current filters"
-              : "No plays in your playbook yet"}
-          </div>
-          <p className="text-slate-500 text-sm mb-8">
-            {hasFilters
-              ? "Refine or clear filters to broaden results"
-              : "Create your first play or import existing plays to get started"}
-          </p>
-          <EmptyActions />
-        </div>
+
+      {/* Empty State */}
+      {showEmpty && !loading && !error && (
+        <PlayGridEmptyState
+          onCreatePlay={_onOpenBuilder}
+          onImportPlays={() => {
+            // TODO: Implement import modal trigger
+            document.dispatchEvent(new CustomEvent("playgrid:open-import"));
+          }}
+          hasActiveFilters={!!hasFilters}
+          onClearFilters={() => {
+            document.dispatchEvent(new CustomEvent("playgrid:clear-filters"));
+          }}
+        />
       )}
+
       {/* Results Header with Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div>
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="text-slate-900"
-            >
-              {filteredPlays.length}{" "}
-              {filteredPlays.length === 1 ? "Play" : "Plays"}
-              {selectedCategory && (
-                <span className="text-slate-500 font-normal ml-2">
-                  in{" "}
-                  {selectedCategory.charAt(0).toUpperCase() +
-                    selectedCategory.slice(1).replace("-", " ")}
-                  {selectedSubcategory && ` › ${selectedSubcategory}`}
-                </span>
-              )}
-            </Typography>
-          </div>
-
-          {/* Bulk Selection Controls */}
-          {enableBulkOperations && (
-            <div className="flex items-center space-x-2">
-              <label className="flex items-center space-x-2 text-sm text-slate-600">
-                <input
-                  type="checkbox"
-                  checked={
-                    filteredPlays.length > 0 &&
-                    filteredPlays.every((p) => selectedPlayIds.has(p.id))
-                  }
-                  onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
-                />
-                <span>
-                  {selectedPlayIds.size > 0
-                    ? `${selectedPlayIds.size} selected`
-                    : "Select all"}
-                </span>
-              </label>
+      {!loading && !error && !showEmpty && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="text-text-primary"
+              >
+                {filteredPlays.length}{" "}
+                {filteredPlays.length === 1 ? "Play" : "Plays"}
+                {selectedCategory && (
+                  <span className="text-text-secondary font-normal ml-2">
+                    in{" "}
+                    {selectedCategory.charAt(0).toUpperCase() +
+                      selectedCategory.slice(1).replace("-", " ")}
+                    {selectedSubcategory && ` › ${selectedSubcategory}`}
+                  </span>
+                )}
+              </Typography>
             </div>
-          )}
-        </div>
 
-        {/* Play Name Display Toggle */}
-        <div className="flex items-center space-x-3">
-          <span className="text-sm text-slate-600">One-word calls</span>
-          <IconButton
-            aria-label={
-              showOneWordCalls
-                ? "Switch to full play names"
-                : "Switch to one-word calls"
-            }
-            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
-            variant="subtle"
-            size="sm"
-          >
-            {showOneWordCalls ? (
-              <Icon name="toggle-right" className="h-5 w-5 text-blue-600" />
-            ) : (
-              <Icon name="toggle-left" className="h-5 w-5 text-slate-400" />
+            {/* Bulk Selection Controls */}
+            {enableBulkOperations && (
+              <div className="flex items-center space-x-2">
+                <label className="flex items-center space-x-2 text-sm text-text-secondary">
+                  <input
+                    type="checkbox"
+                    checked={
+                      filteredPlays.length > 0 &&
+                      filteredPlays.every((p) => selectedPlayIds.has(p.id))
+                    }
+                    onChange={handleSelectAll}
+                    className="rounded border-border text-text-info focus:ring-text-accent"
+                  />
+                  <span>
+                    {selectedPlayIds.size > 0
+                      ? `${selectedPlayIds.size} selected`
+                      : "Select all"}
+                  </span>
+                </label>
+              </div>
             )}
-          </IconButton>
-          <span className="text-sm text-slate-600">Full names</span>
-          <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
-            <Button
-              variant={density === "compact" ? "secondary" : "ghost"}
-              size="xs"
-              onClick={toggleDensity}
-              aria-pressed={density === "compact"}
-              aria-label="Toggle density mode"
-              className="!h-auto px-2 py-1 text-xs"
-            >
-              {density === "compact" ? "Compact" : "Comfort"}
-            </Button>
+          </div>
+
+          {/* Play Name Display Toggle & View Mode */}
+          <div className="flex items-center space-x-6">
+            {/* View Mode Toggle */}
+            <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800">
+              <IconButton
+                aria-label="List view"
+                tooltip="List view"
+                onClick={() => setViewMode("list")}
+                variant="subtle"
+                size="sm"
+                className={
+                  viewMode === "list" ? "bg-white dark:bg-slate-700" : ""
+                }
+              >
+                <Icon name="list" className="h-4 w-4" />
+              </IconButton>
+              <IconButton
+                aria-label="Grid view (app icons)"
+                tooltip="Grid view"
+                onClick={() => setViewMode("grid")}
+                variant="subtle"
+                size="sm"
+                className={
+                  viewMode === "grid" ? "bg-white dark:bg-slate-700" : ""
+                }
+              >
+                <Icon name="grid" className="h-4 w-4" />
+              </IconButton>
+            </div>
+
+            {/* One-word calls toggle */}
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-text-secondary">
+                One-word calls
+              </span>
+              <IconButton
+                aria-label={
+                  showOneWordCalls
+                    ? "Switch to full play names"
+                    : "Switch to one-word calls"
+                }
+                tooltip={
+                  showOneWordCalls
+                    ? "Show full play names"
+                    : "Show one-word calls"
+                }
+                onClick={() => setShowOneWordCalls(!showOneWordCalls)}
+                variant="subtle"
+                size="sm"
+              >
+                {showOneWordCalls ? (
+                  <Icon
+                    name="toggle-right"
+                    className="h-5 w-5 text-text-info"
+                  />
+                ) : (
+                  <Icon
+                    name="toggle-left"
+                    className="h-5 w-5 text-text-tertiary"
+                  />
+                )}
+              </IconButton>
+              <span className="text-sm text-text-secondary">Full names</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Play Grid (virtualized when large) */}
-      {!showEmpty &&
-      (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        <div className="space-y-4" role="list">
+      {/* Play Grid - Conditional Rendering based on view mode */}
+      {!showEmpty && !loading && !error && viewMode === "grid" ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible">
+          {filteredPlays.map((play) => (
+            <div
+              key={play.id}
+              className="flex items-start justify-center overflow-visible"
+            >
+              <PlayCardAppIcon
+                play={play}
+                showOneWordCalls={showOneWordCalls}
+                onClick={(p) => setSelectedPlay(p)}
+                isSelected={selectedPlayIds.has(play.id)}
+                onSelectionChange={handlePlaySelect}
+              />
+            </div>
+          ))}
+        </div>
+      ) : !showEmpty &&
+        !loading &&
+        !error &&
+        (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        <div className="space-y-6 overflow-visible" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
               key={play.id}
@@ -567,15 +547,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               onEdit={onEdit}
               onDuplicate={onDuplicate}
               onCreateDiagram={onCreateDiagram}
-              onAddToPracticeScript={onAddToPracticeScript}
-              onAddToGamePlan={onAddToGamePlan}
               isSelected={selectedPlayIds.has(play.id)}
               onSelectionChange={handlePlaySelect}
-              density={density}
             />
           ))}
         </div>
-      ) : !showEmpty ? (
+      ) : !showEmpty && !loading && !error ? (
         <div
           style={{ height: "calc(100vh - 320px)" }}
           aria-label="Play list"
@@ -589,6 +566,27 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           />
         </div>
       ) : null}
+
+      {/* Play Detail Modal */}
+      {selectedPlay && (
+        <PlayDetailModal
+          play={selectedPlay}
+          isOpen={selectedPlay !== null}
+          onClose={() => setSelectedPlay(null)}
+          onEdit={() => {
+            setSelectedPlay(null);
+            onEdit?.(selectedPlay);
+          }}
+          onDuplicate={() => {
+            setSelectedPlay(null);
+            onDuplicate?.(selectedPlay);
+          }}
+          onDelete={() => {
+            // TODO: Implement delete
+            setSelectedPlay(null);
+          }}
+        />
+      )}
     </div>
   );
 };

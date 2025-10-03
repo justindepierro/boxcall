@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProfileCard from "../ProfileCard";
-import { DashboardContext } from "../../../context/DashboardContextInstance";
+import { DashboardContext } from "../../../contexts/DashboardContextInstance";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { RoleProvider } from "../../../hooks/useRoles";
 

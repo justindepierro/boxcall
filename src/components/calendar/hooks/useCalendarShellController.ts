@@ -15,6 +15,9 @@ import {
   mapQueryViewToInternal,
 } from "./useCalendarUrlState";
 
+import { useAISuggestions, type EventSuggestion } from "./useAISuggestions";
+import { useConflictDetection } from "./useConflictDetection";
+
 // Event creation moved to actions hook
 import type { BoxCallCalendarRef } from "../BoxCallCalendar";
 
@@ -69,6 +72,16 @@ export function useCalendarShellController() {
     },
     debouncedSearch,
   });
+
+  // AI-powered suggestions
+  const { suggestions, hasSuggestions } = useAISuggestions({
+    events,
+    userRole: profile?.role,
+  });
+
+  // Conflict detection
+  const { conflicts, hasConflicts, totalConflicts } =
+    useConflictDetection(events);
 
   // URL state + incoming sync
   const { setState: setUrlState } = useCalendarUrlState({
@@ -170,6 +183,25 @@ export function useCalendarShellController() {
       setShowEventModal,
     });
 
+  // Handle applying AI suggestions
+  const handleApplySuggestion = (suggestion: EventSuggestion) => {
+    // Create a new event based on the suggestion
+    const newEvent = {
+      title: suggestion.title,
+      start: suggestion.suggestedDate.toISOString(),
+      end: new Date(
+        suggestion.suggestedDate.getTime() + suggestion.duration * 60 * 1000
+      ).toISOString(),
+      type: suggestion.type,
+      // Add other default fields as needed
+    };
+
+    // Set the event for creation
+    setSelectedEvent(newEvent as any);
+    setIsCreatingEvent(true);
+    setShowEventModal(true);
+  };
+
   return {
     // state
     calendarRef,
@@ -198,10 +230,18 @@ export function useCalendarShellController() {
     // actions
     handleAddEvent,
     handleExportCalendar,
+    handleApplySuggestion,
     // mutations
     createEventMutation,
     updateEventMutation,
     deleteEventMutation,
+    // ai suggestions
+    suggestions,
+    hasSuggestions,
+    // conflicts
+    conflicts,
+    hasConflicts,
+    totalConflicts,
     // url
     setUrlState,
     profile,

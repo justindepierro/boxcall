@@ -11,8 +11,8 @@ import {
   gameResultLogSucceeded,
   gameResultLogFailed,
 } from "../lib/telemetry";
-import { listTeamEvents, createEvent } from "@services/eventsService";
-import { listGameResults, logGameResult } from "@services/gameResultsService";
+import { listTeamEvents, createEvent } from "@services";
+import { listGameResults, logGameResult } from "@services";
 import {
   listTeamPosts,
   createPost,
@@ -23,11 +23,11 @@ import { getSeasonStats } from "@services/statsService";
 import type {
   TeamEventListItem,
   CreateEventInput,
-} from "@services/eventsService";
+} from "@services";
 import type {
   GameResultListItem,
   LogGameResultInput,
-} from "@services/gameResultsService";
+} from "@services";
 import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys
@@ -43,7 +43,7 @@ export function useTeamPosts(teamId: string | undefined) {
   return useQuery({
     queryKey: teamId ? qk.posts(teamId) : ["team", "no-id", "posts"],
     queryFn: () => listTeamPosts(teamId || ""),
-    enabled: !!teamId,
+    enabled: !!teamId && teamId !== "",
   });
 }
 export function useCreatePost(teamId: string | undefined) {
@@ -65,13 +65,16 @@ export function useCreatePost(teamId: string | undefined) {
       if (!teamId) return;
       await qc.cancelQueries({ queryKey: qk.posts(teamId) });
       const prev = qc.getQueryData(qk.posts(teamId));
-      const optimistic = {
+      const optimistic: TeamPostListItem = {
         id: `optimistic-${Date.now()}`,
         team_id: teamId,
         author_id: "me",
         content,
         created_at: new Date().toISOString(),
         is_pinned: false,
+        likes_count: 0,
+        comments_count: 0,
+        shares_count: 0,
       };
       qc.setQueryData<TeamPostListItem[] | undefined>(
         qk.posts(teamId),
@@ -209,7 +212,7 @@ export function useGameResults(teamId: string | undefined) {
   return useQuery({
     queryKey: teamId ? qk.results(teamId) : ["team", "no-id", "game_results"],
     queryFn: () => listGameResults(teamId || ""),
-    enabled: !!teamId,
+    enabled: !!teamId && teamId !== "",
   });
 }
 export function useLogGameResult(teamId: string | undefined) {
@@ -226,9 +229,10 @@ export function useLogGameResult(teamId: string | undefined) {
           teamId: tid,
           gameDate: input.gameDate,
           opponent: input.opponent,
-          site: input.site,
+          venue: input.venue,
           pointsFor: input.pointsFor,
           pointsAgainst: input.pointsAgainst,
+          homeAway: input.homeAway,
           notes: input.notes,
         });
         gameResultLogSucceeded({ id: created.id });
@@ -243,15 +247,16 @@ export function useLogGameResult(teamId: string | undefined) {
       if (!tid) return;
       await qc.cancelQueries({ queryKey: qk.results(tid) });
       const prev = qc.getQueryData(qk.results(tid));
-      const optimistic = {
+      const optimistic: GameResultListItem = {
         id: `optimistic-${Date.now()}`,
         team_id: tid,
-        created_by: "me",
         game_date: input.gameDate,
         opponent: input.opponent,
-        site: input.site,
-        points_for: input.pointsFor,
-        points_against: input.pointsAgainst,
+        venue: input.venue || null,
+        our_score: input.pointsFor,
+        opponent_score: input.pointsAgainst,
+        result: null,
+        home_away: null,
         created_at: new Date().toISOString(),
       };
       qc.setQueryData<GameResultListItem[] | undefined>(
@@ -277,6 +282,6 @@ export function useSeasonStats(teamId: string | undefined) {
   return useQuery({
     queryKey: teamId ? qk.stats(teamId) : ["team", "no-id", "season_stats"],
     queryFn: () => getSeasonStats(teamId || ""),
-    enabled: !!teamId,
+    enabled: !!teamId && teamId !== "",
   });
 }

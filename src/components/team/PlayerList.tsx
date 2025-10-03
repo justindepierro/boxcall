@@ -5,6 +5,8 @@ import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
+import { UserAvatar } from "../ui/UserAvatar";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 import type { TeamPlayer } from "../../types/team-management";
 
@@ -92,7 +94,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Search and Filters */}
-      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
+      <div className="bc-card-padding">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -109,7 +111,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -124,7 +126,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (
@@ -137,9 +139,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
         {/* Results Summary */}
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-sm text-text-secondary">
+          <Typography variant="body-sm" color="muted">
             Showing {filteredPlayers.length} of {players.length} players
-          </p>
+          </Typography>
           <div className="space-x-2">
             <Button onClick={onAddPlayer} variant="primary" size="sm">
               <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add Player
@@ -166,7 +168,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}
-                className="border border-subtle dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="border border-subtle dark:border-border-medium rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 {/* Player Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -175,40 +177,59 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     <div className="w-12 h-12 surface-subtle0 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
-                    {/* Name and Level */}
+                    {/* Name and Level with UserAvatar */}
                     <div>
-                      <Typography variant="headline-sm" as="h3">
-                        {player.first_name} {player.last_name}
-                      </Typography>
+                      {player.user_id ? (
+                        <UserAvatar
+                          userId={player.user_id}
+                          name={`${player.first_name} ${player.last_name}`}
+                          role="player"
+                          size="sm"
+                          showName={true}
+                          showPopover={true}
+                          showOnHover={true}
+                          placement="bottom"
+                        />
+                      ) : (
+                        <Typography variant="headline-sm" as="h3">
+                          {player.first_name} {player.last_name}
+                        </Typography>
+                      )}
                       <span
-                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
+                        className={`inline-block px-2 py-1 font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
                       >
-                        {getTeamLevelLabel(player.team_level)}
+                        <Typography variant="caption" as="span">
+                          {getTeamLevelLabel(player.team_level)}
+                        </Typography>
                       </span>
                     </div>
                   </div>
                   {/* Actions Menu */}
                   <div className="flex space-x-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => onEditPlayer(player)}
-                      aria-label="Edit Player"
-                      className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
-                    >
-                      <Icon name="edit" size="sm" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => onDeletePlayer(player.id)}
-                      aria-label="Remove Player"
-                      className="p-1 h-auto w-auto text-text-secondary hover:text-red-600"
-                    >
-                      <Icon name="delete" size="sm" />
-                    </Button>
+                    <Tooltip content="Edit player">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => onEditPlayer(player)}
+                        aria-label="Edit Player"
+                        className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
+                      >
+                        <Icon name="edit" size="sm" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="Remove player">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => onDeletePlayer(player.id)}
+                        aria-label="Remove Player"
+                        className="p-1 h-auto w-auto text-text-secondary hover:text-text-error"
+                      >
+                        <Icon name="delete" size="sm" />
+                      </Button>
+                    </Tooltip>
                   </div>
                 </div>
                 {/* Positions */}
@@ -217,46 +238,57 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 text-xs font-medium surface-subtle text-text-secondary rounded"
+                        className="inline-block px-2 py-1 font-medium surface-subtle text-text-secondary rounded"
                       >
-                        #{position}
+                        <Typography variant="caption" as="span">
+                          #{position}
+                        </Typography>
                       </span>
                     ))}
                   </div>
                 </div>
                 {/* Physical Stats */}
-                <div className="grid grid-cols-2 gap-2 text-sm text-text-secondary">
+                <div className="grid grid-cols-2 gap-2">
                   {player.height && (
-                    <div>
+                    <Typography variant="body-sm" color="muted">
                       <span className="font-medium">Height:</span>{" "}
                       {player.height}
-                    </div>
+                    </Typography>
                   )}
                   {player.weight && (
-                    <div>
+                    <Typography variant="body-sm" color="muted">
                       <span className="font-medium">Weight:</span>{" "}
                       {player.weight} lbs
-                    </div>
+                    </Typography>
                   )}
                   {player.graduation_year && (
-                    <div className="col-span-2">
+                    <Typography
+                      variant="body-sm"
+                      color="muted"
+                      className="col-span-2"
+                    >
                       <span className="font-medium">Class:</span>{" "}
                       {player.graduation_year}
-                    </div>
+                    </Typography>
                   )}
                 </div>
                 {/* Contact Info */}
                 {(player.email || player.phone) && (
-                  <div className="mt-3 pt-3 border-t border-subtle dark:border-gray-700">
+                  <div className="mt-3 pt-3">
                     {player.email && (
-                      <div className="text-xs text-text-muted truncate flex items-center gap-1">
-                        <Icon name="mail" size="xs" /> {player.email}
+                      <div className="truncate flex items-center gap-1">
+                        <Icon name="mail" size="xs" />
+                        <Typography variant="caption" color="muted" as="span">
+                          {player.email}
+                        </Typography>
                       </div>
                     )}
                     {player.phone && (
-                      <div className="text-xs text-text-muted flex items-center gap-1">
+                      <div className="flex items-center gap-1">
                         <Icon name="phone" size="xs" />
-                        {player.phone}
+                        <Typography variant="caption" color="muted" as="span">
+                          {player.phone}
+                        </Typography>
                       </div>
                     )}
                   </div>

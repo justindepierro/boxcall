@@ -9,10 +9,58 @@ import type {
 // Removed unused imports
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
+
+const HISTORY_CAP = 100;
+
+function pushHistory(state: DiagramEditorState, nextDoc: typeof state.doc) {
+  const trimmed = state.history.slice(0, state.historyIndex + 1);
+  let newHistory = [...trimmed, nextDoc];
+  if (newHistory.length > HISTORY_CAP) {
+    const before = newHistory.length;
+    newHistory = newHistory.slice(newHistory.length - HISTORY_CAP);
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramHistory,
+      data: {
+        action: "cap-trim",
+        dropped: before - newHistory.length,
+        length: newHistory.length,
+        cap: HISTORY_CAP,
+      },
+    });
+  }
+  return {
+    ...state,
+    history: newHistory,
+    historyIndex: newHistory.length - 1,
+  };
+}
+
 export function reducer(
   state: DiagramEditorState,
   action: DiagramEditorAction
 ): DiagramEditorState {
+  if (action.type === "INIT") {
+    const doc = {
+      ...action.doc,
+      meta:
+        action.doc.meta ?? {
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+    };
+    return {
+      doc,
+      ui: {
+        ...state.ui,
+        tool: "select",
+        routeMode: undefined,
+        drawMode: undefined,
+      },
+      dirty: false,
+      history: [doc],
+      historyIndex: 0,
+    };
+  }
   if (
     [
       "START_ANNOTATION",
@@ -62,6 +110,24 @@ export function reducer(
     return routeReducer(state, action);
   }
   // Handle remaining actions directly
+  if (action.type === "SET_TOOL") {
+    return { ...state, ui: { ...state.ui, tool: action.tool } };
+  }
+  if (action.type === "SET_ROUTE_MODE") {
+    return { ...state, ui: { ...state.ui, routeMode: action.mode } };
+  }
+  if (action.type === "SET_DRAW_MODE") {
+    return { ...state, ui: { ...state.ui, drawMode: action.mode } };
+  }
+  if (action.type === "SET_DRAW_COLOR") {
+    return { ...state, ui: { ...state.ui, drawColor: action.color } };
+  }
+  if (action.type === "SET_DRAW_WIDTH") {
+    return { ...state, ui: { ...state.ui, drawWidth: action.width } };
+  }
+  if (action.type === "SET_DRAW_ARROW_HEAD") {
+    return { ...state, ui: { ...state.ui, drawArrowHead: action.arrowHead } };
+  }
   if (action.type === "REDO") {
     if (state.historyIndex >= state.history.length - 1) return state;
     const idx = state.historyIndex + 1;
@@ -74,6 +140,21 @@ export function reducer(
     telemetry.enqueue({
       type: TelemetryEventTypes.PlayDiagramHistory,
       data: { action: "redo", index: idx, length: state.history.length },
+    });
+    return newState;
+  }
+  if (action.type === "UNDO") {
+    if (state.historyIndex <= 0) return state;
+    const idx = state.historyIndex - 1;
+    const newState = {
+      ...state,
+      doc: state.history[idx],
+      historyIndex: idx,
+      dirty: true,
+    };
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramHistory,
+      data: { action: "undo", index: idx, length: state.history.length },
     });
     return newState;
   }
@@ -143,6 +224,43 @@ export function reducer(
   }
   if (action.type === "MARK_SAVED") {
     return { ...state, dirty: false };
+  }
+  if (action.type === "SET_FIELD_SLICE") {
+    const nextDoc = {
+      ...state.doc,
+      field: {
+        ...state.doc.field,
+        ...action.slice,
+      },
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+  }
+  if (action.type === "ADD_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: [...state.doc.players, action.player],
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+  }
+  if (action.type === "UPDATE_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: state.doc.players.map((player) =>
+        player.id === action.id ? { ...player, ...action.patch } : player
+      ),
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+  }
+  if (action.type === "REMOVE_PLAYER") {
+    const nextDoc = {
+      ...state.doc,
+      players: state.doc.players.filter((player) => player.id !== action.id),
+      meta: { ...state.doc.meta!, updatedAt: Date.now() },
+    };
+    return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
   }
   return state;
 }

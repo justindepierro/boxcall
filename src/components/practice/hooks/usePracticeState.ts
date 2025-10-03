@@ -96,11 +96,11 @@ export const usePracticeState = (event: CalendarEvent) => {
     const savedBlocks = loadPracticeFromStorage(event.id || "");
 
     if (savedBlocks) {
-      console.info("Loading saved practice plan:", savedBlocks);
+      // Loading saved practice plan
       const blocksWithTimes = memoizedRecalculateBlockTimes(savedBlocks);
       setPracticeBlocks(blocksWithTimes);
     } else {
-      console.info("No saved practice data found, loading sample data");
+      // No saved practice data found, loading sample data
       const sampleBlocks = getSamplePracticeBlocks();
       const blocksWithTimes = memoizedRecalculateBlockTimes(sampleBlocks);
       setPracticeBlocks(blocksWithTimes);
@@ -124,11 +124,6 @@ export const usePracticeState = (event: CalendarEvent) => {
     (newScaffoldMode: boolean) => {
       if (newScaffoldMode && !scaffoldMode) {
         // Entering scaffold mode - convert existing blocks to timeline allocation
-        console.info(
-          "🎯 ENTERING SCAFFOLD MODE - Converting blocks to timeline!"
-        );
-        console.info("📦 Current practice blocks:", practiceBlocks);
-
         // Store current blocks as backup for cancel functionality
         setOriginalBlocksBeforeScaffold([...practiceBlocks]);
 
@@ -137,9 +132,6 @@ export const usePracticeState = (event: CalendarEvent) => {
         let currentMinute = 0;
 
         practiceBlocks.forEach((block) => {
-          console.info(
-            `🕒 Converting block "${block.title}" (${block.duration} mins, ${block.category})`
-          );
           for (let i = 0; i < block.duration; i++) {
             allocation[currentMinute + i] = {
               category: block.category,
@@ -150,18 +142,9 @@ export const usePracticeState = (event: CalendarEvent) => {
           currentMinute += block.duration;
         });
 
-        console.info(
-          "✨ Created timeline allocation from existing blocks:",
-          allocation
-        );
-        console.info(
-          "📊 Total minutes allocated:",
-          Object.keys(allocation).length
-        );
         setTimelineAllocation(allocation);
       } else if (!newScaffoldMode && scaffoldMode) {
         // Exiting scaffold mode - clear timeline allocation
-        console.info("🚪 EXITING SCAFFOLD MODE - Clearing timeline");
         setTimelineAllocation({});
         setSelectedCategory(null);
         setSelectedBlock(null);
@@ -401,9 +384,9 @@ export const usePracticeState = (event: CalendarEvent) => {
         endTime: "",
       }));
       localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
-      console.info("Time allocation saved to localStorage");
-    } catch (error) {
-      console.error("Error saving time allocation:", error);
+      // Time allocation saved to localStorage
+    } catch {
+      // Error saving time allocation
     }
 
     setScaffoldMode(false);
@@ -420,17 +403,16 @@ export const usePracticeState = (event: CalendarEvent) => {
 
   // TODO: Implement remaining handlers for full integration
   const handleDragEnd = useCallback(() => {
-    console.info("handleDragEnd - TODO: implement");
+    // TODO: implement
   }, []);
 
   const handleAddBlock = useCallback(() => {
-    console.info("handleAddBlock - TODO: implement");
+    // TODO: implement
   }, []);
 
-  const handleEditBlock = useCallback((block: PracticeBlock) => {
+  const handleEditBlock = useCallback((_block: PracticeBlock) => {
     // This opens a modal or form to edit the block
     // For now, we'll just log it - the actual editing happens in modals
-    console.info("Edit block:", block);
     // TODO: Implement block editing modal or inline editing
   }, []);
 
@@ -463,11 +445,11 @@ export const usePracticeState = (event: CalendarEvent) => {
   }, []);
 
   const handleEditGroup = useCallback(() => {
-    console.info("handleEditGroup - TODO: implement");
+    // TODO: implement
   }, []);
 
   const handleUpdateGroup = useCallback(() => {
-    console.info("handleUpdateGroup - TODO: implement");
+    // TODO: implement
   }, []);
 
   const handleRemoveGroup = useCallback(

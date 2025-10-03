@@ -85,13 +85,13 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Header */}
-      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
+      <div className="bc-card-padding">
         <Typography variant="headline-sm" as="h2" className="text-text-primary">
           Team Settings
         </Typography>
-        <p className="mt-1 text-text-secondary">
+        <Typography variant="body-sm" color="muted" className="mt-1">
           Configure your team information and preferences
-        </p>
+        </Typography>
       </div>
 
       {/* Message */}
@@ -100,8 +100,8 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <div
             className={`p-4 rounded-lg border ${
               message.type === "success"
-                ? "surface-subtle border-subtle text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
-                : "surface-subtle border-subtle text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+                ? "surface-subtle border-subtle text-text-success"
+                : "surface-subtle border-subtle text-text-error"
             }`}
           >
             {message.text}
@@ -126,10 +126,10 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 <img
                   src={teamSettings.logoUrl}
                   alt={`${teamSettings.name} logo`}
-                  className="w-24 h-24 rounded-lg object-cover border border-gray-300 dark:border-gray-600"
+                  className="w-24 h-24 rounded-lg object-cover border border-border-medium dark:border-text-tertiary"
                 />
               ) : (
-                <div className="w-24 h-24 surface-subtle dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600">
+                <div className="w-24 h-24 surface-subtle dark:bg-surface-secondary rounded-lg flex items-center justify-center border border-border-medium dark:border-text-tertiary">
                   <Icon name="award" className="w-5 h-5" />
                 </div>
               )}
@@ -142,7 +142,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               >
                 <Icon
                   name="camera"
-                  className="inline h-4 w-4 align-middle text-current"
+                  className="inline h-4 w-4 align-middle text-text-primary"
                 />{" "}
                 Upload Logo
               </Button>
@@ -309,7 +309,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           >
             Subscription Status
           </Typography>
-          <div className="surface-subtle dark:bg-gray-700 rounded-lg p-4">
+          <div className="surface-subtle dark:bg-surface-secondary rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-text-primary capitalize">
@@ -353,7 +353,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end pt-4 border-t border-subtle dark:border-gray-700">
+        <div className="flex justify-end pt-4 border-t border-subtle dark:border-text-tertiary">
           <Button
             type="submit"
             variant="primary"

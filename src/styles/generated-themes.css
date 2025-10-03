@@ -7,6 +7,9 @@
   --semantic-text-muted: #6b7280;
   --semantic-text-inverse: #ffffff;
   --semantic-text-brand: #047857;
+  --semantic-text-accent: #00a86b;
+  --semantic-text-accent-secondary: #475569;
+  --semantic-text-accent-electric: #7c3aed;
   --semantic-bg-primary: #ffffff;
   --semantic-bg-secondary: #f9fafb;
   --semantic-bg-muted: #f3f4f6;
@@ -34,6 +37,9 @@
   --semantic-text-muted: #9ca3af;
   --semantic-text-inverse: #111827;
   --semantic-text-brand: #34d399;
+  --semantic-text-accent: #00a86b;
+  --semantic-text-accent-secondary: #94a3b8;
+  --semantic-text-accent-electric: #a78bfa;
   --semantic-bg-primary: #111827;
   --semantic-bg-secondary: #1f2937;
   --semantic-bg-muted: #374151;

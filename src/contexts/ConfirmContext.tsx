@@ -72,7 +72,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
       {active && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-text-primary/40"
             aria-hidden="true"
             onClick={() => handleClose(false)}
           />

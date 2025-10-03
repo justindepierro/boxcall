@@ -1,6 +1,71 @@
 /**
  * Team Vote Widget Component
- * Phase 2B Sprint 6: Collaborative Planning Tools
+ */
+export interface TeamVoteWidgetProps {
+  /**
+   * Widget ID for collaboration
+   */
+  widgetId: string;
+
+  /**
+   * Current user's role
+   */
+  userRole: "coach" | "player" | "family";
+
+  /**
+   * Current user ID
+   */
+  userId: string;
+
+  /**
+   * Current user name
+   */
+  userName: string;
+
+  /**
+   * Whether user is team captain
+   */
+  isCaptain?: boolean;
+
+  /**
+   * Initial votes data
+   */
+  votes?: Vote[];
+
+  /**
+   * Callback when votes are updated
+   */
+  onVotesUpdate?: (votes: Vote[]) => void;
+
+  /**
+   * Whether to show compact version
+   */
+  compact?: boolean;
+
+  /**
+   * Click handler for compact version
+   */
+  onClick?: () => void;
+
+  /**
+   * Mock collaboration data
+   */
+  mockCollaboration?: {
+    participants: Array<{ id: string; name: string; avatar?: string }>;
+    cursors: Array<{
+      userId: string;
+      userName: string;
+      x: number;
+      y: number;
+      action: "hover" | "click" | "typing";
+      color: string;
+    }>;
+    isConnected: boolean;
+  };
+}
+
+/**
+ * Collaborative Planning Tools
  *
  * Features:
  * - Create team votes and decisions
@@ -36,58 +101,15 @@ interface Vote {
   multipleChoice: boolean;
 }
 
-export interface TeamVoteWidgetProps {
-  /**
-   * Widget ID for collaboration
-   */
-  widgetId: string;
-
-  /**
-   * Current user's role
-   */
-  userRole: "coach" | "player" | "family";
-
-  /**
-   * Current user ID
-   */
-  userId: string;
-
-  /**
-   * Current user's name
-   */
-  userName: string;
-
-  /**
-   * Whether user is team captain
-   */
-  isCaptain?: boolean;
-
-  /**
-   * Initial votes data
-   */
-  votes?: Vote[];
-
-  /**
-   * Callback when votes are updated
-   */
-  onVotesUpdate?: (votes: Vote[]) => void;
-
-  /**
-   * Mock collaboration data
-   */
-  mockCollaboration?: {
-    participants: Array<{ id: string; name: string; avatar?: string }>;
-    cursors: Array<{
-      userId: string;
-      userName: string;
-      x: number;
-      y: number;
-      action: "hover" | "click" | "typing";
-      color: string;
-    }>;
-    isConnected: boolean;
-  };
-}
+/**
+ * Collaborative Planning Tools
+ *
+ * Features:
+ * - Create team votes and decisions
+ * - Real-time voting with live results
+ * - Role-based voting permissions
+ * - Anonymous and public voting modes
+ */
 
 export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
   widgetId,
@@ -98,6 +120,8 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
   votes = [],
   onVotesUpdate,
   mockCollaboration,
+  compact = false,
+  onClick,
 }) => {
   const [localVotes, setLocalVotes] = useState<Vote[]>(votes);
   const [isCreatingVote, setIsCreatingVote] = useState(false);
@@ -259,205 +283,234 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
       className="team-vote-widget"
       mockCollaboration={mockCollaboration}
     >
-      <Card className="h-full p-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <Typography variant="headline-sm" as="h3">
-            Team Decisions
+      {compact ? (
+        <div
+          className="h-full flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition-transform duration-200"
+          onClick={onClick}
+        >
+          <div className="w-16 h-16 bg-aurora-indigo rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+            <Icon name="users" size="xl" className="text-blue-600" />
+          </div>
+          <Typography
+            variant="label-md"
+            className="text-text-primary font-medium mb-1"
+          >
+            Team Votes
           </Typography>
-          {canCreateVote && (
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setIsCreatingVote(true)}
-            >
-              <Icon name="plus" size="xs" />
-              New Vote
-            </Button>
-          )}
+          <Typography variant="caption" color="muted" className="text-xs">
+            {votes.filter((v) => v.status === "active").length} active votes
+          </Typography>
         </div>
+      ) : (
+        <Card variant="glass" className="h-full p-3 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <Typography variant="headline-sm" as="h3">
+              Team Decisions
+            </Typography>
+          </div>
 
-        {/* Active Votes */}
-        <div className="space-y-4">
-          {localVotes.length === 0 ? (
-            <div className="text-center py-8">
-              <Icon
-                name="users"
-                size="lg"
-                className="mx-auto mb-2 text-text-muted"
-              />
-              <Typography variant="body-sm" color="muted">
-                No active votes. Team decisions will appear here.
-              </Typography>
-              {canCreateVote && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2"
-                  onClick={() => setIsCreatingVote(true)}
-                >
-                  Create First Vote
-                </Button>
-              )}
-            </div>
-          ) : (
-            localVotes.map((vote) => {
-              const totalVotes = getTotalVotes(vote);
-              const userHasVoted = hasUserVoted(vote);
-              const canVote = canUserVote(vote);
+          {/* Active Votes - Flex grow to fill space */}
+          <div className="space-y-4 flex-1 overflow-y-auto">
+            {localVotes.length === 0 ? (
+              <div className="text-center py-8">
+                <Icon
+                  name="users"
+                  size="lg"
+                  className="mx-auto mb-2 text-text-muted"
+                />
+                <Typography variant="body-sm" color="muted">
+                  No active votes. Team decisions will appear here.
+                </Typography>
+                {canCreateVote && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => setIsCreatingVote(true)}
+                  >
+                    Create First Vote
+                  </Button>
+                )}
+              </div>
+            ) : (
+              localVotes.map((vote) => {
+                const totalVotes = getTotalVotes(vote);
+                const userHasVoted = hasUserVoted(vote);
+                const canVote = canUserVote(vote);
 
-              return (
-                <Card
-                  key={vote.id}
-                  className="p-4 border border-border-secondary"
-                >
-                  {/* Vote Header */}
-                  <div className="mb-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <Typography
-                          variant="body-sm"
-                          className="font-medium mb-1"
+                return (
+                  <Card key={vote.id} variant="glass" className="p-4">
+                    {/* Vote Header */}
+                    <div className="mb-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <Typography
+                            variant="body-sm"
+                            className="font-medium mb-1"
+                          >
+                            {vote.title}
+                          </Typography>
+                          <Typography variant="caption" color="muted">
+                            {vote.description}
+                          </Typography>
+                        </div>
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${
+                            vote.status === "active"
+                              ? "bg-success/10 text-success"
+                              : "bg-text-muted/10 text-text-muted"
+                          }`}
                         >
-                          {vote.title}
-                        </Typography>
-                        <Typography variant="caption" color="muted">
-                          {vote.description}
-                        </Typography>
+                          {vote.status}
+                        </span>
                       </div>
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          vote.status === "active"
-                            ? "bg-success/10 text-success"
-                            : "bg-text-muted/10 text-text-muted"
-                        }`}
-                      >
-                        {vote.status}
-                      </span>
-                    </div>
 
-                    {/* Vote Info */}
-                    <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
-                      <span>
-                        <Icon name="users" size="xs" className="inline mr-1" />
-                        {totalVotes} votes
-                      </span>
-                      <span>
-                        <Icon name="clock" size="xs" className="inline mr-1" />
-                        {getTimeRemaining(vote.endsAt)}
-                      </span>
-                      {vote.isAnonymous && (
+                      {/* Vote Info */}
+                      <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
                         <span>
                           <Icon
-                            name="eye-off"
+                            name="users"
                             size="xs"
                             className="inline mr-1"
                           />
-                          Anonymous
+                          {totalVotes} votes
                         </span>
-                      )}
+                        <span>
+                          <Icon
+                            name="clock"
+                            size="xs"
+                            className="inline mr-1"
+                          />
+                          {getTimeRemaining(vote.endsAt)}
+                        </span>
+                        {vote.isAnonymous && (
+                          <span>
+                            <Icon
+                              name="eye-off"
+                              size="xs"
+                              className="inline mr-1"
+                            />
+                            Anonymous
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Vote Options */}
-                  <div className="space-y-2">
-                    {vote.options.map((option) => {
-                      const percentage = getOptionPercentage(vote, option);
-                      const isSelected = option.voters.includes(userId);
+                    {/* Vote Options */}
+                    <div className="space-y-2">
+                      {vote.options.map((option) => {
+                        const percentage = getOptionPercentage(vote, option);
+                        const isSelected = option.voters.includes(userId);
 
-                      return (
-                        <div
-                          key={option.id}
-                          className={`relative p-3 rounded-lg border cursor-pointer transition-colors ${
-                            canVote && !userHasVoted
-                              ? "hover:bg-surface-secondary border-border-primary"
-                              : "border-border-secondary"
-                          } ${isSelected ? "bg-primary/5 border-primary" : ""}`}
-                          onClick={
-                            canVote && !userHasVoted
-                              ? () => handleCastVote(vote.id, option.id)
-                              : undefined
-                          }
-                        >
-                          <div className="flex items-center justify-between relative z-10">
-                            <div className="flex items-center gap-2">
-                              {isSelected && (
-                                <Icon
-                                  name="check"
-                                  size="xs"
-                                  className="text-primary"
+                        return (
+                          <div
+                            key={option.id}
+                            className={`relative p-3 rounded-lg border cursor-pointer transition-colors ${
+                              canVote && !userHasVoted
+                                ? "hover:bg-surface-secondary border-border-primary"
+                                : "border-border-secondary"
+                            } ${isSelected ? "bg-primary/5 border-primary" : ""}`}
+                            onClick={
+                              canVote && !userHasVoted
+                                ? () => handleCastVote(vote.id, option.id)
+                                : undefined
+                            }
+                          >
+                            <div className="flex items-center justify-between relative z-10">
+                              <div className="flex items-center gap-2">
+                                {isSelected && (
+                                  <Icon
+                                    name="check"
+                                    size="xs"
+                                    className="text-primary"
+                                  />
+                                )}
+                                <Typography variant="body-sm">
+                                  {option.text}
+                                </Typography>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Typography variant="caption" color="muted">
+                                  {option.votes} ({percentage}%)
+                                </Typography>
+                              </div>
+                            </div>
+
+                            {/* Progress Bar */}
+                            {totalVotes > 0 && (
+                              <div className="absolute inset-0 rounded-lg overflow-hidden">
+                                <div
+                                  className="h-full bg-primary/10 transition-all"
+                                  style={{ width: `${percentage}%` }}
                                 />
-                              )}
-                              <Typography variant="body-sm">
-                                {option.text}
-                              </Typography>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Typography variant="caption" color="muted">
-                                {option.votes} ({percentage}%)
-                              </Typography>
-                            </div>
+                              </div>
+                            )}
                           </div>
-
-                          {/* Progress Bar */}
-                          {totalVotes > 0 && (
-                            <div className="absolute inset-0 rounded-lg overflow-hidden">
-                              <div
-                                className="h-full bg-primary/10 transition-all"
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Vote Status */}
-                  {userHasVoted && (
-                    <div className="mt-3 flex items-center gap-2 text-success text-sm">
-                      <Icon name="check-circle" size="xs" />
-                      You voted{vote.isAnonymous ? "" : ` (${userName})`}
+                        );
+                      })}
                     </div>
-                  )}
 
-                  {!canVote && vote.status === "active" && (
-                    <div className="mt-3 flex items-center gap-2 text-text-muted text-sm">
-                      <Icon name="info" size="xs" />
-                      Only {vote.allowedVoters} can vote on this
-                    </div>
-                  )}
-                </Card>
-              );
-            })
-          )}
-        </div>
+                    {/* Vote Status */}
+                    {userHasVoted && (
+                      <div className="mt-3 flex items-center gap-2 text-success text-sm">
+                        <Icon name="check-circle" size="xs" />
+                        You voted{vote.isAnonymous ? "" : ` (${userName})`}
+                      </div>
+                    )}
 
-        {/* Create Vote Modal Placeholder */}
-        {isCreatingVote && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="p-6 max-w-md w-full mx-4">
-              <Typography variant="headline-sm" className="mb-4">
-                Create Team Vote
-              </Typography>
-              <Typography variant="body-sm" color="muted" className="mb-4">
-                This will create a sample vote for demonstration purposes.
-              </Typography>
-              <div className="flex gap-2">
-                <Button variant="primary" onClick={handleCreateVote}>
-                  Create Sample Vote
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsCreatingVote(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </Card>
+                    {!canVote && vote.status === "active" && (
+                      <div className="mt-3 flex items-center gap-2 text-text-muted text-sm">
+                        <Icon name="info" size="xs" />
+                        Only {vote.allowedVoters} can vote on this
+                      </div>
+                    )}
+                  </Card>
+                );
+              })
+            )}
           </div>
-        )}
-      </Card>
+
+          {/* Action Button */}
+          {canCreateVote && (
+            <div className="card-actions mt-auto pt-3">
+              <Button
+                variant="primary"
+                onClick={() => setIsCreatingVote(true)}
+                className="w-full"
+              >
+                <Icon name="plus" size="xs" />
+                New Vote
+              </Button>
+            </div>
+          )}
+
+          {/* Create Vote Modal Placeholder */}
+          {isCreatingVote && (
+            <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
+              <Card variant="glass" className="p-6 max-w-md w-full mx-4">
+                <Typography variant="headline-sm" className="mb-4">
+                  Create Team Vote
+                </Typography>
+                <Typography variant="body-sm" color="muted" className="mb-4">
+                  This will create a sample vote for demonstration purposes.
+                </Typography>
+                <div className="flex gap-2">
+                  <Button variant="primary" onClick={handleCreateVote}>
+                    Create Sample Vote
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setIsCreatingVote(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          )}
+        </Card>
+      )}
     </CollaborativeWidget>
   );
 };

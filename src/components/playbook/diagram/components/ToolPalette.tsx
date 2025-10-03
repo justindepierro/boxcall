@@ -8,7 +8,6 @@ import { useDiagramEditor } from "../context/useDiagramEditor";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
-  const isDraw = state.ui.tool === "draw";
   const showTooltips = React.useMemo(
     () => UserPreferencesService.loadPreferences().ui.showTooltips,
     []
@@ -21,30 +20,42 @@ export const ToolPalette: React.FC = () => {
     tooltip?: React.ReactNode;
   }> = ({ active, label, onClick, icon, tooltip }) => (
     <Tooltip content={tooltip || label} disabled={!showTooltips}>
-      <Button
-        size="sm"
-        variant={active ? "secondary" : "ghost"}
+      <button
         onClick={onClick}
         aria-pressed={!!active}
         title={label}
-        className="w-11 h-11 p-0 flex items-center justify-center"
+        className={`w-10 h-10 rounded-md border-0 bg-transparent hover:bg-surface-secondary flex items-center justify-center overflow-hidden ${
+          active ? "bg-surface-secondary" : ""
+        }`}
       >
         {icon}
-      </Button>
+      </button>
     </Tooltip>
   );
   return (
     <div className="absolute left-3 right-3 top-3 z-20 pointer-events-none">
       <div className="mx-auto max-w-[1120px] pointer-events-auto flex flex-wrap items-center gap-4 panel-cupertino px-4 py-2">
         <div
-          className="flex items-center gap-2 pr-3 border-r border-slate-200"
+          className="flex items-center gap-2 pr-3 border-r border-border-light"
           aria-label="Primary tools"
         >
+          <Btn
+            label="AI Suggest"
+            active={state.ui.tool === "ai-suggest"}
+            onClick={() => dispatch({ type: "SET_TOOL", tool: "ai-suggest" })}
+            icon={<Icon name="sparkles" size={14} />}
+            tooltip={
+              <span>
+                AI Play Recognition
+                <span className="opacity-70 ml-1">• Smart suggestions</span>
+              </span>
+            }
+          />
           <Btn
             label="Select"
             active={state.ui.tool === "select"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "select" })}
-            icon={<Icon name="move" size="lg" />}
+            icon={<Icon name="pointer" size={14} />}
             tooltip={
               <span>
                 Select
@@ -56,7 +67,7 @@ export const ToolPalette: React.FC = () => {
             label="Pan"
             active={state.ui.tool === "pan"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "pan" })}
-            icon={<Icon name="move" size="lg" />}
+            icon={<Icon name="move" size={14} />}
             tooltip={
               <span>
                 Pan
@@ -68,7 +79,7 @@ export const ToolPalette: React.FC = () => {
             label="Add Player"
             active={state.ui.tool === "add-player"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "add-player" })}
-            icon={<Icon name="plus" size="lg" />}
+            icon={<Icon name="plus" size={14} />}
             tooltip={
               <span>
                 Add Player
@@ -80,7 +91,7 @@ export const ToolPalette: React.FC = () => {
             label="Route"
             active={state.ui.tool === "route"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "route" })}
-            icon={<Icon name="map-pin" size="lg" />}
+            icon={<Icon name="arrow-right" size={14} />}
             tooltip={
               <span>
                 Route
@@ -89,10 +100,34 @@ export const ToolPalette: React.FC = () => {
             }
           />
           <Btn
+            label="Motion"
+            active={state.ui.tool === "motion"}
+            onClick={() => dispatch({ type: "SET_TOOL", tool: "motion" })}
+            icon={<Icon name="trending-up" size={14} />}
+            tooltip={
+              <span>
+                Motion Path
+                <span className="opacity-70 ml-1">• Player movement</span>
+              </span>
+            }
+          />
+          <Btn
+            label="Blocking"
+            active={state.ui.tool === "blocking"}
+            onClick={() => dispatch({ type: "SET_TOOL", tool: "blocking" })}
+            icon={<Icon name="shield" size={14} />}
+            tooltip={
+              <span>
+                Blocking Assignment
+                <span className="opacity-70 ml-1">• Protection schemes</span>
+              </span>
+            }
+          />
+          <Btn
             label="Draw"
             active={state.ui.tool === "draw"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "draw" })}
-            icon={<Icon name="edit" size="lg" />}
+            icon={<Icon name="pen-tool" size={14} />}
             tooltip={
               <span>
                 Draw
@@ -103,13 +138,85 @@ export const ToolPalette: React.FC = () => {
             }
           />
         </div>
-        {isDraw && (
+        <div
+          className="flex items-center gap-2 pr-3 border-r border-border-light"
+          aria-label="Formation library"
+        >
+          <select
+            aria-label="Formation templates"
+            value={state.ui.selectedFormation || ""}
+            onChange={(e) => {
+              if (e.target.value) {
+                dispatch({
+                  type: "APPLY_FORMATION",
+                  formation: e.target.value,
+                });
+              }
+            }}
+            className="text-[12px] rounded px-2 py-1 bg-surface-card border border-border"
+            title="Formation Templates"
+          >
+            <option value="">Formations</option>
+            <option value="shotgun-11">Shotgun 11 Personnel</option>
+            <option value="shotgun-12">Shotgun 12 Personnel</option>
+            <option value="shotgun-13">Shotgun 13 Personnel</option>
+            <option value="pistol-11">Pistol 11 Personnel</option>
+            <option value="pistol-12">Pistol 12 Personnel</option>
+            <option value="under-center">Under Center</option>
+            <option value="wildcat">Wildcat</option>
+            <option value="empty">Empty Backfield</option>
+            <option value="bunch-left">Bunch Left</option>
+            <option value="bunch-right">Bunch Right</option>
+            <option value="trips-left">Trips Left</option>
+            <option value="trips-right">Trips Right</option>
+            <option value="stack-left">Stack Left</option>
+            <option value="stack-right">Stack Right</option>
+          </select>
+        </div>
+
+        <div
+          className="flex items-center gap-2 pr-3 border-r border-border-light"
+          aria-label="Formation library"
+        >
+          <select
+            aria-label="Formation templates"
+            value={state.ui.selectedFormation || ""}
+            onChange={(e) => {
+              if (e.target.value) {
+                dispatch({
+                  type: "APPLY_FORMATION",
+                  formation: e.target.value,
+                });
+              }
+            }}
+            className="text-[12px] rounded px-2 py-1 bg-surface-card border border-border"
+            title="Formation Templates"
+          >
+            <option value="">Formations</option>
+            <option value="shotgun-11">Shotgun 11 Personnel</option>
+            <option value="shotgun-12">Shotgun 12 Personnel</option>
+            <option value="shotgun-13">Shotgun 13 Personnel</option>
+            <option value="pistol-11">Pistol 11 Personnel</option>
+            <option value="pistol-12">Pistol 12 Personnel</option>
+            <option value="under-center">Under Center</option>
+            <option value="wildcat">Wildcat</option>
+            <option value="empty">Empty Backfield</option>
+            <option value="bunch-left">Bunch Left</option>
+            <option value="bunch-right">Bunch Right</option>
+            <option value="trips-left">Trips Left</option>
+            <option value="trips-right">Trips Right</option>
+            <option value="stack-left">Stack Left</option>
+            <option value="stack-right">Stack Right</option>
+          </select>
+        </div>
+
+        {state.ui.tool === "draw" && (
           <div className="flex items-center gap-2" aria-label="Draw modes">
             <Btn
               label="Line"
               active={state.ui.drawMode === "line"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "line" })}
-              icon={<Icon name="minus" size="lg" />}
+              icon={<Icon name="minus" size={14} />}
               tooltip={
                 <span>
                   Line
@@ -123,7 +230,7 @@ export const ToolPalette: React.FC = () => {
               label="Arrow"
               active={state.ui.drawMode === "arrow"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "arrow" })}
-              icon={<Icon name="arrow-right" size="lg" />}
+              icon={<Icon name="arrow-right" size={14} />}
               tooltip={
                 <span>
                   Arrow
@@ -137,7 +244,7 @@ export const ToolPalette: React.FC = () => {
               onClick={() =>
                 dispatch({ type: "SET_DRAW_MODE", mode: "dashed" })
               }
-              icon={<Icon name="activity" size="lg" />}
+              icon={<Icon name="activity" size={14} />}
               tooltip={<span>Dashed</span>}
             />
             <Btn
@@ -146,14 +253,14 @@ export const ToolPalette: React.FC = () => {
               onClick={() =>
                 dispatch({ type: "SET_DRAW_MODE", mode: "dotted" })
               }
-              icon={<Icon name="grid" size="lg" />}
+              icon={<Icon name="grid" size={14} />}
               tooltip={<span>Dotted</span>}
             />
             <Btn
               label="Curve"
               active={state.ui.drawMode === "curve"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "curve" })}
-              icon={<Icon name="activity" size="lg" />}
+              icon={<Icon name="activity" size={14} />}
               tooltip={
                 <span>
                   Curve
@@ -169,7 +276,7 @@ export const ToolPalette: React.FC = () => {
               onClick={() =>
                 dispatch({ type: "SET_DRAW_MODE", mode: "freehand" })
               }
-              icon={<Icon name="edit" size="lg" />}
+              icon={<Icon name="edit" size={14} />}
               tooltip={
                 <span>
                   Freehand
@@ -183,7 +290,7 @@ export const ToolPalette: React.FC = () => {
               onClick={() =>
                 dispatch({ type: "SET_DRAW_MODE", mode: "connector" })
               }
-              icon={<Icon name="link" size="lg" />}
+              icon={<Icon name="link" size={14} />}
               tooltip={
                 <span>
                   Connector
@@ -194,7 +301,47 @@ export const ToolPalette: React.FC = () => {
                 </span>
               }
             />
-            <div className="mx-1 w-px h-6 bg-slate-200" />
+            <Btn
+              label="Zone"
+              active={state.ui.drawMode === "zone"}
+              onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "zone" })}
+              icon={<Icon name="target" size={14} />}
+              tooltip={
+                <span>
+                  Coverage Zone
+                  <span className="opacity-70 ml-1">• Draw coverage areas</span>
+                </span>
+              }
+            />
+            <Btn
+              label="Pressure"
+              active={state.ui.drawMode === "pressure"}
+              onClick={() =>
+                dispatch({ type: "SET_DRAW_MODE", mode: "pressure" })
+              }
+              icon={<Icon name="zap" size={14} />}
+              tooltip={
+                <span>
+                  Pressure Rush
+                  <span className="opacity-70 ml-1">• Blitz paths</span>
+                </span>
+              }
+            />
+            <Btn
+              label="Hot Route"
+              active={state.ui.drawMode === "hot-route"}
+              onClick={() =>
+                dispatch({ type: "SET_DRAW_MODE", mode: "hot-route" })
+              }
+              icon={<Icon name="star" size={14} />}
+              tooltip={
+                <span>
+                  Hot Route
+                  <span className="opacity-70 ml-1">• Alert routes</span>
+                </span>
+              }
+            />
+            <div className="mx-1 w-px h-6 bg-border-light" />
             <select
               aria-label="Arrowhead"
               value={state.ui.drawArrowHead || "end"}
@@ -208,7 +355,7 @@ export const ToolPalette: React.FC = () => {
                     | "both",
                 })
               }
-              className="text-[12px] border border-slate-300 rounded px-2 py-1"
+              className="text-[12px] rounded px-2 py-1"
               title="Arrowhead"
             >
               <option value="none">Head: None</option>
@@ -223,7 +370,7 @@ export const ToolPalette: React.FC = () => {
               onChange={(e) =>
                 dispatch({ type: "SET_DRAW_COLOR", color: e.target.value })
               }
-              className="w-10 h-10 p-0 border border-slate-300 rounded"
+              className="w-10 h-10 p-0 rounded"
               title="Stroke color"
             />
             <input
@@ -242,17 +389,16 @@ export const ToolPalette: React.FC = () => {
               className="w-32"
               title="Stroke width"
             />
-            <span className="text-[12px] text-slate-700 w-9 text-right">
+            <span className="text-[12px] text-text-primary w-9 text-right">
               {state.ui.drawWidth || 3}px
             </span>
           </div>
         )}
         <div
-          className="ml-auto flex items-center gap-2 pr-3 border-r border-slate-200"
+          className="ml-auto flex items-center gap-2 pr-3 border-r border-border-light"
           aria-label="Align & distribute"
         >
           <Button
-            size="sm"
             variant="ghost"
             title="Align Left"
             className="w-11 h-11 p-0"
@@ -263,7 +409,6 @@ export const ToolPalette: React.FC = () => {
             <Icon name="chevron-left" />
           </Button>
           <Button
-            size="sm"
             variant="ghost"
             title="Align Center"
             className="w-11 h-11 p-0"
@@ -274,7 +419,6 @@ export const ToolPalette: React.FC = () => {
             <Icon name="target" />
           </Button>
           <Button
-            size="sm"
             variant="ghost"
             title="Align Right"
             className="w-11 h-11 p-0"
@@ -284,9 +428,9 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="chevron-right" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
+          <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Align Top"
             className="w-11 h-11 p-0"
@@ -297,7 +441,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="chevron-up" />
           </Button>
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Align Middle"
             className="w-11 h-11 p-0"
@@ -308,7 +452,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="target" />
           </Button>
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Align Bottom"
             className="w-11 h-11 p-0"
@@ -318,9 +462,9 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="chevron-down" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
+          <span className="mx-1 w-px h-6 bg-border-light" />
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Distribute Horizontally (even)"
             className="w-11 h-11 p-0"
@@ -331,7 +475,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="grid" />
           </Button>
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Distribute Vertically (even)"
             className="w-11 h-11 p-0"
@@ -341,8 +485,8 @@ export const ToolPalette: React.FC = () => {
           >
             <Icon name="grid" />
           </Button>
-          <span className="mx-1 w-px h-6 bg-slate-200" />
-          <span className="text-[11px] text-slate-700">Spacing</span>
+          <span className="mx-1 w-px h-6 bg-border-light" />
+          <span className="text-[11px] text-text-primary">Spacing</span>
           <input
             type="number"
             aria-label="Distribute spacing percent"
@@ -356,11 +500,11 @@ export const ToolPalette: React.FC = () => {
                 spacing: Number(e.target.value),
               })
             }
-            className="w-16 text-[12px] border border-slate-300 rounded px-2 py-1"
+            className="w-16 text-[12px] rounded px-2 py-1"
             title="Fixed spacing (%)"
           />
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Distribute Fixed Horizontally"
             className="w-11 h-11 p-0"
@@ -375,7 +519,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="arrow-left" />
           </Button>
           <Button
-            size="sm"
+            size="md"
             variant="ghost"
             title="Distribute Fixed Vertically"
             className="w-11 h-11 p-0"
@@ -394,7 +538,7 @@ export const ToolPalette: React.FC = () => {
           className="flex items-center gap-2 ml-auto"
           aria-label="Snap settings"
         >
-          <label className="flex items-center gap-1 text-[11px] text-slate-700">
+          <label className="flex items-center gap-1 text-[11px] text-text-primary">
             <input
               type="checkbox"
               checked={state.ui.snap}
@@ -409,7 +553,7 @@ export const ToolPalette: React.FC = () => {
             onChange={(e) =>
               dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })
             }
-            className="text-[11px] border border-slate-300 rounded px-2 py-1"
+            className="text-[11px] rounded px-2 py-1"
           >
             <option value={1}>1%</option>
             <option value={2}>2%</option>

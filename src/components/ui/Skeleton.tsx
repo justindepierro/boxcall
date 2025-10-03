@@ -19,10 +19,13 @@ const SkeletonBase: React.FC<SkeletonProps> = ({
   height = "1rem",
 }) => (
   <div
-    className={`animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] rounded ${className}`}
+    className={`animate-pulse bg-gradient-to-r from-border via-surface-muted to-border bg-[length:200%_100%] rounded ${className}`}
     style={{ width, height }}
   />
 );
+
+// Export SkeletonBase as Skeleton for generic use
+export const Skeleton = SkeletonBase;
 
 /**
  * Dashboard Card Skeleton - Matches dashboard card structure
@@ -53,49 +56,29 @@ export const DashboardCardSkeleton: React.FC = () => (
 );
 
 /**
- * PlayCard Skeleton - Matches playbook card structure
+ * GamePlan Skeleton - Matches game plan card structure
  */
-export const PlayCardSkeleton: React.FC = () => (
-  <div className="surface-card rounded-lg border border-subtle p-4 sm:p-6 shadow-sm">
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex-1 min-w-0 space-y-3">
-        {/* Play name */}
-        <SkeletonBase width="70%" height="1.5rem" />
-
-        {/* Subtitle */}
+export const GamePlanSkeleton: React.FC = () => (
+  <div className="bg-surface-primary rounded-lg p-6 shadow-sm animate-pulse">
+    <div className="flex items-start justify-between mb-4">
+      <div className="flex-1 space-y-2">
+        {/* Plan name */}
+        <SkeletonBase width="70%" height="1.25rem" />
+        {/* Opponent */}
         <SkeletonBase width="50%" height="0.875rem" />
-
-        {/* Badges */}
-        <div className="flex flex-wrap gap-2">
-          <SkeletonBase
-            width="4rem"
-            height="1.75rem"
-            className="rounded-full"
-          />
-          <SkeletonBase
-            width="3rem"
-            height="1.75rem"
-            className="rounded-full"
-          />
-          <SkeletonBase
-            width="2.5rem"
-            height="1.75rem"
-            className="rounded-full"
-          />
-        </div>
+        {/* Date */}
+        <SkeletonBase width="40%" height="0.875rem" />
       </div>
-
       {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-1">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <SkeletonBase
-            key={i}
-            width="48px"
-            height="48px"
-            className="rounded-lg"
-          />
-        ))}
+      <div className="flex space-x-1">
+        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded" />
+        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded" />
       </div>
+    </div>
+    {/* Footer stats */}
+    <div className="flex items-center justify-between pt-2 border-t border-border-light">
+      <SkeletonBase width="3rem" height="0.875rem" />
+      <SkeletonBase width="4rem" height="0.875rem" />
     </div>
   </div>
 );
@@ -218,3 +201,16 @@ export const PageLoadingSkeleton: React.FC = () => {
     </div>
   );
 };
+
+export const PlayCardSkeleton: React.FC = () => (
+  <div className="surface-card elevation-card rounded-lg p-4">
+    <div className="flex items-start space-x-3">
+      <SkeletonBase width="2.5rem" height="2.5rem" className="rounded-full" />
+      <div className="flex-1 space-y-2">
+        <SkeletonBase width="60%" height="1rem" />
+        <SkeletonBase width="40%" height="0.75rem" />
+        <SkeletonBase width="80%" height="0.75rem" />
+      </div>
+    </div>
+  </div>
+);

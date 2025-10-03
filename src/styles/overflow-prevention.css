@@ -1,0 +1,224 @@
+/* Overflow Prevention CSS - Global fixes for text and icon overflow issues */
+
+/* Base button overflow prevention */
+button {
+  overflow: hidden;
+}
+
+button span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Flex container with icon + text combinations */
+.flex.items-center {
+  min-width: 0;
+}
+
+.flex.items-center > svg,
+.flex.items-center > .icon {
+  flex-shrink: 0;
+}
+
+.flex.items-center > span:not(.icon),
+.flex.items-center > div:not(.icon):last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Card content overflow prevention */
+.surface-card,
+.card {
+  overflow: visible;
+}
+
+.surface-card h1,
+.surface-card h2,
+.surface-card h3,
+.surface-card h4,
+.surface-card h5,
+.surface-card h6,
+.card h1,
+.card h2,
+.card h3,
+.card h4,
+.card h5,
+.card h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Badge and pill components */
+.bg-slate-100,
+.bg-gray-100,
+.rounded-full {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rounded-full span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 8rem;
+}
+
+/* List items overflow prevention */
+ol li,
+ul li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Grid items overflow prevention */
+.grid > * {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Typography component overflow prevention */
+[class*="headline"],
+[class*="body"],
+[class*="caption"] {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Input and form element overflow prevention */
+input,
+textarea,
+select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+textarea {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Modal and dialog content overflow prevention */
+.modal-content,
+[role="dialog"] {
+  overflow: hidden;
+}
+
+.modal-content h1,
+.modal-content h2,
+.modal-content h3,
+.modal-content h4,
+.modal-content h5,
+.modal-content h6,
+[role="dialog"] h1,
+[role="dialog"] h2,
+[role="dialog"] h3,
+[role="dialog"] h4,
+[role="dialog"] h5,
+[role="dialog"] h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Navigation and menu items */
+nav a,
+.nav-item,
+[role="menuitem"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Table cell overflow prevention */
+td,
+th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+/* Tooltip content overflow prevention */
+.tooltip,
+[role="tooltip"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+/* Responsive breakpoint adjustments */
+@media (max-width: 640px) {
+  .rounded-full span {
+    max-width: 6rem;
+  }
+
+  td,
+  th {
+    max-width: 120px;
+  }
+
+  .tooltip,
+  [role="tooltip"] {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rounded-full span {
+    max-width: 4rem;
+  }
+
+  td,
+  th {
+    max-width: 80px;
+  }
+
+  .tooltip,
+  [role="tooltip"] {
+    max-width: 150px;
+  }
+
+  /* More aggressive truncation on very small screens */
+  button span {
+    max-width: 8rem;
+  }
+}
+
+/* Focus and active states maintain overflow prevention */
+button:focus,
+button:active,
+input:focus,
+input:active {
+  overflow: hidden;
+}
+
+button:focus span,
+button:active span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Print media overflow prevention */
+@media print {
+  * {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+}

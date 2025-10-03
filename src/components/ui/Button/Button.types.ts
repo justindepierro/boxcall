@@ -4,12 +4,15 @@
  * TypeScript definitions for the Button component system
  */
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { HapticType } from "../../../lib/hapticFeedback";
 
 export type ButtonVariant =
   | "primary" // Primary brand button
   | "secondary" // Secondary action button
   | "outline" // Outline style button
   | "ghost" // Minimal ghost button
+  | "glass" // Glassmorphism effect button
+  | "gradient" // NEW: Eye-catching gradient button
   | "subtle" // Low-emphasis neutral button
   | "link" // Text link style
   | "brandLink" // Strong brand-colored textual link button
@@ -44,6 +47,8 @@ export interface ButtonProps
   icon?: ReactNode;
   /** Icon position */
   iconPosition?: ButtonIconPosition;
+  /** Haptic feedback type for tactile response */
+  hapticType?: HapticType;
   /** Additional CSS classes */
   className?: string;
   /** Button type */

@@ -96,7 +96,11 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 # Environment files
 .env
+.env.local
 .env.*.local
 
 # ESLint cache
 .eslintcache
+
+*storybook.log
+storybook-static

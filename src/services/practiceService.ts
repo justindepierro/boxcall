@@ -8,10 +8,56 @@ import type {
   PracticeBlock,
   PracticeFilters,
   PracticeSchedule,
-  PracticeScript,
+  PracticeScript as BasePracticeScript,
   PracticeSearchResult,
   PracticeTemplate,
 } from "../types/practice";
+import type { Play } from "../types/play";
+
+// Extended Practice Script interface with workflow support
+export interface PracticeScript extends Partial<BasePracticeScript> {
+  id: string;
+  title?: string; // Optional for backward compatibility
+  name?: string; // Alias for title
+  description?: string;
+  teamId: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isTemplate: boolean;
+  plays?: PracticeScriptPlay[]; // Workflow-specific plays
+  duration: number;
+  tags?: string[];
+}
+
+// Practice Script types (consolidated from practiceScriptService)
+export interface PracticeScriptPlay {
+  id: string;
+  playId: string;
+  play: Play;
+  order: number;
+  notes?: string;
+  repetitions: number;
+  estimatedTime: number; // in minutes
+  addedAt: Date;
+}
+
+export interface CreatePracticeScriptData {
+  name: string;
+  description?: string;
+  teamId: string;
+  isTemplate?: boolean;
+  tags?: string[];
+}
+
+export interface AddPlayToPracticeScriptData {
+  scriptId: string;
+  playId: string;
+  orderIndex?: number;
+  notes?: string;
+  repetitions?: number;
+  estimatedTime?: number;
+}
 
 export class PracticeService {
   // Practice Schedule CRUD Operations
@@ -355,7 +401,7 @@ export class PracticeService {
       this.searchPracticeScripts(query, teamId),
     ]);
 
-    return { schedules, templates, scripts };
+    return { schedules, templates, scripts: scripts as BasePracticeScript[] };
   }
 
   private static async searchPracticeSchedules(
@@ -541,11 +587,326 @@ export class PracticeService {
     query: string,
     teamId: string
   ): Promise<PracticeScript[]> {
-    // Mock implementation - will be replaced when Practice Scripts are implemented
-    // For now, return empty array but accept the parameters for consistency
-    console.info(
-      `Searching practice scripts for query: ${query}, teamId: ${teamId}`
+    try {
+      const { data, error } = await supabase
+        .from("practice_scripts")
+        .select("*")
+        .eq("team_id", teamId)
+        .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+        .order("updated_at", { ascending: false });
+
+      if (error) throw error;
+      if (!data || data.length === 0) return [];
+
+      // Get plays for these scripts
+      const scriptIds = data.map((s) => s.id);
+      const { data: plays } = await supabase
+        .from("practice_script_plays")
+        .select(`*, plays (*)`)
+        .in("practice_script_id", scriptIds);
+
+      // Map scripts with their plays
+      return data.map((script) => this.mapDatabaseScriptToPracticeScript({
+        ...script,
+        practice_script_plays: plays?.filter(
+          (p: any) => p.practice_script_id === script.id
+        ) || [],
+      }));
+    } catch (error) {
+      console.error("Error searching practice scripts:", error);
+      return [];
+    }
+  }
+
+  // ============================================================================
+  // PRACTICE SCRIPT OPERATIONS
+  // Consolidated from practiceScriptService.ts
+  // ============================================================================
+
+  /**
+   * Create a new practice script
+   */
+  static async createPracticeScript(
+    data: CreatePracticeScriptData
+  ): Promise<PracticeScript> {
+    const { data: script, error } = await supabase
+      .from("practice_scripts")
+      .insert({
+        title: data.name,
+        description: data.description,
+        team_id: data.teamId,
+        focus_areas: data.tags || [],
+        created_by: (await supabase.auth.getUser()).data.user?.id,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating practice script:", error);
+      throw new Error("Failed to create practice script");
+    }
+
+    const scriptData = script as any;
+    return {
+      id: scriptData.id as string,
+      title: scriptData.title as string,
+      description: scriptData.description as string | undefined,
+      teamId: scriptData.team_id as string,
+      createdBy: scriptData.created_by as string,
+      createdAt: new Date(scriptData.created_at as string),
+      updatedAt: new Date(scriptData.updated_at as string),
+      isTemplate: false,
+      plays: [],
+      duration: (scriptData.duration_minutes as number) || 120,
+      tags: (scriptData.focus_areas as string[]) || [],
+    } as any; // Type cast for compatibility
+  }
+
+  /**
+   * Add a play to an existing practice script
+   */
+  static async addPlayToScript(
+    data: AddPlayToPracticeScriptData,
+    _play: Play
+  ): Promise<PracticeScript> {
+    const { error: playError } = await supabase
+      .from("practice_script_plays")
+      .insert({
+        practice_script_id: data.scriptId,
+        play_id: data.playId,
+        sequence_order: data.orderIndex || 1,
+        coaching_points: data.notes ? [data.notes] : [],
+        repetitions: data.repetitions || 5,
+        duration_minutes: data.estimatedTime || 10,
+        segment_name: "Drill",
+        segment_type: "drill",
+      });
+
+    if (playError) {
+      console.error("Error adding play to script:", playError);
+      throw new Error("Failed to add play to practice script");
+    }
+
+    const script = await this.getPracticeScript(data.scriptId);
+    if (!script) {
+      throw new Error("Failed to retrieve updated practice script");
+    }
+    return script;
+  }
+
+  /**
+   * Get all practice scripts for a team
+   */
+  static async getPracticeScripts(teamId: string): Promise<PracticeScript[]> {
+    try {
+      const { data: scripts, error: scriptsError } = await supabase
+        .from("practice_scripts")
+        .select("*")
+        .eq("team_id", teamId)
+        .order("updated_at", { ascending: false });
+
+      if (scriptsError) {
+        console.error("Error fetching practice scripts:", scriptsError);
+        throw new Error("Failed to fetch practice scripts");
+      }
+
+      if (!scripts || scripts.length === 0) {
+        return [];
+      }
+
+      let scriptPlays: any[] = [];
+      try {
+        const scriptIds = scripts.map((s) => s.id);
+        const { data: plays, error: playsError } = await supabase
+          .from("practice_script_plays")
+          .select(`*, plays (*)`)
+          .in("practice_script_id", scriptIds);
+
+        if (!playsError && plays) {
+          scriptPlays = plays;
+        }
+      } catch (playsError) {
+        console.warn(
+          "Could not fetch practice script plays, continuing without plays data:",
+          playsError
+        );
+      }
+
+      const playsByScriptId = scriptPlays.reduce((acc, play) => {
+        const scriptId = play.practice_script_id;
+        if (!acc[scriptId]) {
+          acc[scriptId] = [];
+        }
+        acc[scriptId].push(play);
+        return acc;
+      }, {} as Record<string, any[]>);
+
+      return scripts.map((script) => {
+        const scriptPlays = playsByScriptId[script.id] || [];
+        return this.mapDatabaseScriptToPracticeScript({
+          ...script,
+          practice_script_plays: scriptPlays,
+        });
+      });
+    } catch (error) {
+      console.error("Error in getPracticeScripts:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get a specific practice script by ID
+   */
+  static async getPracticeScript(
+    scriptId: string
+  ): Promise<PracticeScript | null> {
+    try {
+      const { data: script, error: scriptError } = await supabase
+        .from("practice_scripts")
+        .select("*")
+        .eq("id", scriptId)
+        .single();
+
+      if (scriptError) {
+        if (scriptError.code === "PGRST116") {
+          return null;
+        }
+        console.error("Error fetching practice script:", scriptError);
+        throw new Error("Failed to fetch practice script");
+      }
+
+      let scriptPlays: any[] = [];
+      try {
+        const { data: plays, error: playsError } = await supabase
+          .from("practice_script_plays")
+          .select(`*, plays (*)`)
+          .eq("practice_script_id", scriptId);
+
+        if (!playsError && plays) {
+          scriptPlays = plays;
+        }
+      } catch (playsError) {
+        console.warn(
+          "Could not fetch practice script plays, continuing without plays data:",
+          playsError
+        );
+      }
+
+      return this.mapDatabaseScriptToPracticeScript({
+        ...script,
+        practice_script_plays: scriptPlays,
+      });
+    } catch (error) {
+      console.error("Error in getPracticeScript:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Quick script creation for workflow integration
+   */
+  static async createQuickScript(
+    play: Play,
+    teamId: string
+  ): Promise<PracticeScript> {
+    const script = await this.createPracticeScript({
+      name: `Script with ${play.play_name}`,
+      description: `Practice script featuring ${play.play_name} and related plays`,
+      teamId,
+      tags: [play.formation || "", play.p_type || ""].filter(Boolean),
+    });
+
+    await this.addPlayToScript(
+      {
+        scriptId: script.id,
+        playId: play.id,
+        notes: `Added from playbook workflow`,
+        repetitions: 5,
+        estimatedTime: 3,
+      },
+      play
     );
-    return [];
+
+    return script;
+  }
+
+  /**
+   * Get or create a "Quick Adds" script for fast workflow
+   */
+  static async getOrCreateQuickAddsScript(
+    teamId: string
+  ): Promise<PracticeScript> {
+    const { data: existingScripts, error: fetchError } = await supabase
+      .from("practice_scripts")
+      .select("*")
+      .eq("team_id", teamId)
+      .eq("name", "Quick Adds")
+      .limit(1);
+
+    if (fetchError) {
+      console.error("Error fetching Quick Adds script:", fetchError);
+    }
+
+    if (existingScripts && existingScripts.length > 0) {
+      const script = existingScripts[0] as any;
+      return {
+        id: script.id as string,
+        title: script.title || script.name as string,
+        description: script.description as string | undefined,
+        teamId: script.team_id as string,
+        createdBy: script.created_by as string,
+        createdAt: new Date(script.created_at as string),
+        updatedAt: new Date(script.updated_at as string),
+        isTemplate: script.is_template as boolean,
+        plays: [],
+        duration: (script.duration as number) || 0,
+        tags: (script.tags as string[]) || [],
+      } as any; // Type cast for compatibility
+    }
+
+    return this.createPracticeScript({
+      name: "Quick Adds",
+      description:
+        "Plays added quickly from the playbook for practice planning",
+      teamId,
+      tags: ["quick-add", "workflow"],
+    });
+  }
+
+  /**
+   * Map database script with plays to PracticeScript interface
+   */
+  private static mapDatabaseScriptToPracticeScript(
+    scriptData: any
+  ): PracticeScript {
+    const plays: PracticeScriptPlay[] = (
+      scriptData.practice_script_plays || []
+    ).map((playData: any) => ({
+      id: playData.id,
+      playId: playData.play_id,
+      play: playData.plays,
+      order: playData.sequence_order || 0,
+      notes: playData.coaching_points?.join(", ") || "",
+      repetitions: playData.repetitions || 1,
+      estimatedTime: playData.duration_minutes || 10,
+      addedAt: new Date(playData.created_at),
+    }));
+
+    return {
+      id: scriptData.id,
+      title: scriptData.title || scriptData.name || "Untitled Script",
+      description: scriptData.description,
+      teamId: scriptData.team_id,
+      createdBy: scriptData.created_by,
+      createdAt: new Date(scriptData.created_at),
+      updatedAt: new Date(scriptData.updated_at),
+      isTemplate: scriptData.is_template || false,
+      plays,
+      duration: scriptData.duration_minutes || scriptData.duration || 120,
+      tags: scriptData.focus_areas || scriptData.tags || [],
+    } as any; // Type cast for compatibility with extended interface
   }
 }
+
+// Backward compatibility exports
+export const PracticeScriptService = PracticeService;

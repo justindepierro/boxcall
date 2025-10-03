@@ -48,7 +48,7 @@ export const ActionBar: React.FC<{
         className={`absolute inset-x-3 bottom-3 z-20 pointer-events-auto transition-opacity duration-150 ${isDragging ? "opacity-0" : "opacity-100"}`}
       >
         <div className="surface-card/95 backdrop-blur rounded-md shadow-lg border border-subtle px-3 py-2">
-          <div className="text-xs font-medium text-slate-700 mb-2">
+          <div className="text-xs font-medium text-text-secondary mb-2">
             {multi
               ? `Selected: ${sel.length} players`
               : `Selected: ${player.id}`}
@@ -66,12 +66,12 @@ export const ActionBar: React.FC<{
                 });
               }}
               disabled={multi}
-              className="w-24 text-xs border border-slate-300 rounded px-2 py-1 disabled:opacity-60"
+              className="w-24 text-xs border border-border-light rounded px-2 py-1 disabled:opacity-60"
               placeholder="Label"
               aria-label="Player label"
             />
             <select
-              className="text-xs border border-slate-300 rounded px-2 py-1"
+              className="text-xs border border-border-light rounded px-2 py-1"
               value={player.role || ""}
               onChange={(e) => {
                 const role = e.target.value;
@@ -116,7 +116,7 @@ export const ActionBar: React.FC<{
                       patch: { assignment },
                     });
                 }}
-                className="w-full text-xs border border-slate-300 rounded px-2 py-1"
+                className="w-full text-xs border border-border-light rounded px-2 py-1"
                 placeholder="Assignment / note"
                 aria-label="Assignment"
               />
@@ -143,7 +143,7 @@ export const ActionBar: React.FC<{
                         patch: { color: c },
                       });
                   }}
-                  className="p-0 w-5 h-5 rounded-full border border-slate-300"
+                  className="p-0 w-5 h-5 rounded-full border border-border-light"
                   style={{ background: c }}
                 />
               ))}

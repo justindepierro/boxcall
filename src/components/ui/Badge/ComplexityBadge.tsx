@@ -61,7 +61,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
         }
         size={size}
         onClick={onClick}
-        className="cursor-pointer hover:scale-105 transition-transform"
+        className="cursor-pointer transition-colors"
       >
         <span className="flex items-center gap-1">
           {badgeInfo.icon}
@@ -71,13 +71,13 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
 
       {showDetails && (
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-          <div className="bg-gray-900 text-text-inverse text-xs rounded-lg p-3 shadow-lg min-w-48">
+          <div className="bg-surface-inverse text-text-inverse text-xs rounded-lg p-3 shadow-lg min-w-48">
             <div className="text-center mb-2">
               <div className="font-semibold">{badgeInfo.title}</div>
-              <div className="text-gray-300">{badgeInfo.description}</div>
+              <div className="text-text-secondary">{badgeInfo.description}</div>
             </div>
 
-            <div className="border-t border-gray-700 pt-2 space-y-1">
+            <div className="border-t border-border pt-2 space-y-1">
               <div className="flex justify-between">
                 <span>Routes/Concept:</span>
                 <span className="font-mono">{complexity.routeCount}pts</span>
@@ -100,7 +100,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
                   {complexity.conceptDifficulty}pts
                 </span>
               </div>
-              <div className="border-t border-gray-700 pt-1 flex justify-between font-semibold">
+              <div className="border-t border-border pt-1 flex justify-between font-semibold">
                 <span>Total Score:</span>
                 <span className="font-mono">{complexity.totalScore}pts</span>
               </div>
@@ -143,11 +143,11 @@ const ComplexityProgress: React.FC<{ complexity: ComplexityMetrics }> = ({
     100;
 
   return (
-    <div className="border-t border-gray-700 pt-2 mt-2">
-      <div className="text-xs text-gray-300 mb-1">
+    <div className="border-t border-border pt-2 mt-2">
+      <div className="text-xs text-text-secondary mb-1">
         Next: {currentLevel.name} ({pointsToNext} points to go)
       </div>
-      <div className="w-full bg-gray-700 rounded-full h-1.5">
+      <div className="w-full bg-surface-secondary rounded-full h-1.5">
         <div
           className="surface-subtle0 h-1.5 rounded-full transition-all duration-300"
           style={{ width: `${Math.min(progressPercent, 100)}%` }}

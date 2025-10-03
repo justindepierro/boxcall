@@ -14,4 +14,5 @@ INSERT INTO plays (playbook_id, formation, play_name, one_word_play, p_type, per
 ('550e8400-e29b-41d4-a716-446655440001', 'Shotgun', 'Four Verticals', 'Smash', 'Pass', '11', 'Vertical stretch concept', 'demo-coach'),
 ('550e8400-e29b-41d4-a716-446655440001', 'Singleback', 'Inside Zone', 'Zorro', 'Run', '11', 'Gap scheme running play', 'demo-coach'),
 ('550e8400-e29b-41d4-a716-446655440001', 'Pistol', 'Read Option', 'Ranger', 'RPO', '11', 'QB read with pitch option', 'demo-coach'),
-('550e8400-e29b-41d4-a716-446655440001', 'Shotgun', 'Slants', 'Quick', 'Pass', '10', 'Quick 3-step passing game', 'demo-coach');
+('550e8400-e29b-41d4-a716-446655440001', 'Shotgun', 'Slants', 'Quick', 'Pass', '10', 'Quick 3-step passing game', 'demo-coach'),
+('550e8400-e29b-41d4-a716-446655440001', 'Under Center', 'Play Action Boot', 'Phantom', 'Play Action', '12', 'Play action rollout for QB', 'demo-coach');

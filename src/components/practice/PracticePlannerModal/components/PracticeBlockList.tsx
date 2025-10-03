@@ -51,13 +51,13 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
         <div className="text-right">
           <div
             className={`text-lg font-bold ${
-              isOvertime ? "text-red-600" : "text-green-600"
+              isOvertime ? "text-text-error" : "text-text-success"
             }`}
           >
             {totalDuration} / {scheduledDuration} min
           </div>
           {isOvertime && (
-            <div className="text-sm text-red-500 flex items-center">
+            <div className="text-sm text-text-error flex items-center">
               <Icon name="alert-triangle" size="xs" className="mr-1" />
               {totalDuration - scheduledDuration} min overtime
             </div>
@@ -74,8 +74,8 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               ref={provided.innerRef}
               className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
-                  ? "border-blue-400 surface-subtle"
-                  : "border-gray-300 surface-subtle"
+                  ? "border-text-info surface-subtle"
+                  : "border-border-light surface-subtle"
               }`}
             >
               {practiceBlocks.length === 0 ? (
@@ -83,7 +83,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                   <Icon
                     name="plus-circle"
                     size="lg"
-                    className="mx-auto mb-2 text-gray-400"
+                    className="mx-auto mb-2 text-text-muted"
                   />
                   <Typography variant="body-md" color="muted">
                     No practice blocks yet
@@ -115,12 +115,12 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {/* Drag Handle */}
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-black/5"
+                                className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-text-primary/5"
                               >
                                 <Icon
                                   name="menu"
                                   size="sm"
-                                  className="text-gray-400"
+                                  className="text-text-muted"
                                 />
                               </div>
 

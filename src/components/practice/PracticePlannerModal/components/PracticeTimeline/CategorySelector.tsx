@@ -63,7 +63,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         <div className="mt-3 p-2 surface-subtle rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-blue-800 flex items-center"
+            className="text-text-info flex items-center"
           >
             <Icon name="target" size="xs" className="mr-1" />
             Selected:{" "}

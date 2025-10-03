@@ -47,7 +47,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
       </div>
 
       <div
-        className="flex border border-gray-300 rounded-lg overflow-hidden relative cursor-crosshair"
+        className="flex border border-border-medium rounded-lg overflow-hidden relative cursor-crosshair"
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       >
@@ -73,7 +73,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
                     " " +
                     getCategoryColor(allocation.category)
                   : isSelected
-                    ? "bg-blue-200 border-t-4 border-t-blue-500"
+                    ? "bg-surface-info border-t-4 border-t-text-info"
                     : "surface-subtle surface-subtle-hover"
               } ${is5MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
               style={{ minWidth: "3px" }}

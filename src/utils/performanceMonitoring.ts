@@ -71,7 +71,7 @@ class WebVitalsMonitor {
     try {
       observer.observe({ type: "largest-contentful-paint", buffered: true });
       this.observers.push(observer);
-    } catch (_error) {
+    } catch {
       console.warn("LCP measurement not supported");
     }
   }
@@ -97,7 +97,7 @@ class WebVitalsMonitor {
     try {
       observer.observe({ type: "first-input", buffered: true });
       this.observers.push(observer);
-    } catch (_error) {
+    } catch {
       console.warn("FID measurement not supported");
     }
   }
@@ -128,7 +128,7 @@ class WebVitalsMonitor {
     try {
       observer.observe({ type: "layout-shift", buffered: true });
       this.observers.push(observer);
-    } catch (_error) {
+    } catch {
       console.warn("CLS measurement not supported");
     }
   }
@@ -152,7 +152,7 @@ class WebVitalsMonitor {
     try {
       observer.observe({ type: "paint", buffered: true });
       this.observers.push(observer);
-    } catch (_error) {
+    } catch {
       console.warn("FCP measurement not supported");
     }
   }

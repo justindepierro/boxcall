@@ -6,8 +6,8 @@ import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
 import type { ServerPlaybookViewPreset } from "../../../types/playbookViewPreset";
 
 export type PlaybookActionsBarProps = {
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
   onQuickNewPracticeScript: () => void;
   onQuickNewInstall: () => void;
   serverPresets: ServerPlaybookViewPreset[];
@@ -26,6 +26,7 @@ export type PlaybookActionsBarProps = {
   onOpenImport: () => void;
   playsCreated: number;
   onOpenBuilder: () => void;
+  onOpenSettings: () => void;
   selectedCount: number;
   onClearSelection: () => void;
   /** Optional slot rendered on the left side (after default left controls). */
@@ -56,6 +57,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
   onOpenImport,
   playsCreated,
   onOpenBuilder,
+  onOpenSettings,
   selectedCount,
   onClearSelection,
   extraLeft,
@@ -77,14 +79,16 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
         <div className="py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="w-full max-w-lg">
-                <AdvancedSearchBar
-                  plays={[]}
-                  searchQuery={searchQuery}
-                  onSearchChange={onSearchChange}
-                  placeholder="Search plays, formations, or tags..."
-                />
-              </div>
+              {searchQuery !== undefined && onSearchChange && (
+                <div className="w-full max-w-lg">
+                  <AdvancedSearchBar
+                    plays={[]}
+                    searchQuery={searchQuery}
+                    onSearchChange={onSearchChange}
+                    placeholder="Search plays, formations, or tags..."
+                  />
+                </div>
+              )}
               <Button
                 onClick={onQuickNewPracticeScript}
                 variant="secondary"
@@ -109,7 +113,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[240px]"
+                  className="text-sm border-border-light rounded px-2 py-1 min-w-[240px]"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
@@ -205,7 +209,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   type="checkbox"
                   checked={enableBulkOperations}
                   onChange={() => {}}
-                  className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
+                  className="h-4 w-4 mr-2 rounded border-border-light text-text-info"
                 />
                 Bulk Edit
               </Button>
@@ -223,7 +227,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   <Icon name="download" className="h-4 w-4 mr-2" /> Export
                   <Icon
                     name="chevron-down"
-                    className="h-3 w-3 ml-1 text-slate-500"
+                    className="h-3 w-3 ml-1 text-text-secondary"
                   />
                 </Button>
                 <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-[180px] surface-popover rounded-md shadow-lg border border-subtle py-1 z-40">
@@ -261,6 +265,15 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
               >
                 <Icon name="upload" className="h-4 w-4 mr-2" /> Import CSV
               </Button>
+              <Button
+                onClick={onOpenSettings}
+                variant="ghost"
+                size="sm"
+                className="px-4 py-2"
+                title="Playbook Settings"
+              >
+                <Icon name="settings" className="h-4 w-4 mr-2" /> Settings
+              </Button>
               <div className="relative">
                 <Button
                   onClick={onOpenBuilder}
@@ -279,11 +292,11 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 )}
               </div>
               {enableBulkOperations && (
-                <div className="text-xs text-slate-600 flex items-center gap-3 ml-2">
+                <div className="text-xs text-text-secondary flex items-center gap-3 ml-2">
                   <span>
                     Selected: <strong>{selectedCount}</strong>
                   </span>
-                  <span className="text-slate-400">
+                  <span className="text-text-secondary">
                     (persists across searches)
                   </span>
                   {selectedCount > 0 && (

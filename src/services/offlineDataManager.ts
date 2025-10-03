@@ -202,7 +202,7 @@ class OfflineDataManager {
         await this.syncAction(action);
         await this.removeSyncAction(action.id);
         this.syncQueue = this.syncQueue.filter((a) => a.id !== action.id);
-      } catch (_error) {
+      } catch {
         // TODO: Handle sync failure (was: console.error)
         action.retryCount++;
 

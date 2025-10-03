@@ -6,7 +6,8 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-import { PlaybookSearchService } from "@services/playbookSearchService";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
+import { PlaybookSearchService } from "@services/playsService";
 import type { Play } from "../../types/play";
 
 interface AdvancedSearchBarProps {
@@ -138,21 +139,23 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           placeholder={placeholder}
           className="block w-full pl-10 pr-10 py-3 border-subtle rounded-lg 
                    focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
-                   placeholder-gray-500 text-sm transition-colors duration-200
-       surface-card shadow-sm hover:border-gray-400"
+                   placeholder-text-secondary text-sm transition-colors duration-200
+       surface-card shadow-sm hover:border-border-medium"
         />
 
         {searchQuery && (
-          <Button
-            onClick={clearSearch}
-            variant="ghost"
-            size="xs"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
-            type="button"
-            aria-label="Clear search"
-          >
-            <Icon name="close" className="h-4 w-4" />
-          </Button>
+          <Tooltip content="Clear search">
+            <Button
+              onClick={clearSearch}
+              variant="ghost"
+              size="xs"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
+              type="button"
+              aria-label="Clear search"
+            >
+              <Icon name="close" className="h-4 w-4" />
+            </Button>
+          </Tooltip>
         )}
       </div>
 
@@ -178,7 +181,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   size="sm"
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
-                      ? "surface-subtle text-blue-700 dark:bg-blue-900/40"
+                      ? "surface-subtle text-text-info dark:bg-surface-info/40"
                       : "text-text-secondary surface-subtle-hover"
                   }`}
                 >

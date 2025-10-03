@@ -14,10 +14,10 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
 }) => {
   return (
     <section
-      className="lg:col-span-2 space-y-6"
+      className="lg:col-span-2 space-y-4"
       aria-labelledby="team-feed-heading"
     >
-      <Card className="bc-card-padding">
+      <Card className="p-3">
         <TeamFeed teamId={teamId || ""} userRole={userRole} />
       </Card>
     </section>

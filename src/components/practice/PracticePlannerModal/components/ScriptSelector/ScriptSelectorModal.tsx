@@ -59,7 +59,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center z-50">
       <div className="surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
         <div className="bc-card-padding">
           <div className="flex items-center justify-between mb-6">
@@ -87,7 +87,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             {MOCK_SCRIPTS.map((script) => (
               <div
                 key={script.id}
-                className="p-4 border border-subtle rounded-lg hover:border-blue-300 hover:surface-subtle cursor-pointer transition-colors"
+                className="p-4 border border-subtle rounded-lg hover:border-text-info hover:surface-subtle cursor-pointer transition-colors"
                 onClick={() => handleScriptSelect(script)}
               >
                 <div className="flex items-start justify-between">
@@ -110,12 +110,12 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           script.category === "offense"
-                            ? "bg-blue-100 text-blue-800"
+                            ? "bg-surface-info text-text-info"
                             : script.category === "defense"
-                              ? "bg-red-100 text-red-800"
+                              ? "bg-surface-error text-text-error"
                               : script.category === "special-teams"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-purple-100 text-purple-800"
+                                ? "bg-surface-success text-text-success"
+                                : "bg-surface-secondary text-text-primary"
                         }`}
                       >
                         {script.category.replace("-", " ")}
