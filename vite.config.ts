@@ -2,9 +2,11 @@ import { defineConfig } from "vite";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { visualizer } from "rollup-plugin-visualizer";
 
 const enablePWA = process.env.VITE_ENABLE_PWA === "true";
 const useLightningCss = process.env.MINIFY_CSS === "lightningcss";
+const analyzeBundle = process.env.ANALYZE === "true";
 
 export default defineConfig({
   worker: {
@@ -148,6 +150,17 @@ export default defineConfig({
                 },
               ],
             },
+          }),
+        ]
+      : []),
+    ...(analyzeBundle
+      ? [
+          visualizer({
+            filename: "./reports/bundle-analysis.html",
+            open: true,
+            gzipSize: true,
+            brotliSize: true,
+            template: "treemap", // or "sunburst", "network"
           }),
         ]
       : []),
