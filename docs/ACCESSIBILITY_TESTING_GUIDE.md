@@ -10,15 +10,15 @@
 
 ### Testing Status
 
-| Test Type | Status | Score | Last Run |
-|-----------|--------|-------|----------|
-| Keyboard Navigation | ✅ Pass | - | Oct 2, 2025 |
-| Focus Indicators | ✅ Pass | - | Oct 2, 2025 |
-| ARIA Labels | ✅ Pass | - | Oct 2, 2025 |
-| Semantic HTML | ✅ Pass | - | Oct 2, 2025 |
-| Screen Reader | ⏳ Manual | - | Pending |
-| Lighthouse | ⏳ Automated | - | Pending |
-| Color Contrast | ⏳ Manual | - | Pending |
+| Test Type           | Status       | Score | Last Run    |
+| ------------------- | ------------ | ----- | ----------- |
+| Keyboard Navigation | ✅ Pass      | -     | Oct 2, 2025 |
+| Focus Indicators    | ✅ Pass      | -     | Oct 2, 2025 |
+| ARIA Labels         | ✅ Pass      | -     | Oct 2, 2025 |
+| Semantic HTML       | ✅ Pass      | -     | Oct 2, 2025 |
+| Screen Reader       | ⏳ Manual    | -     | Pending     |
+| Lighthouse          | ⏳ Automated | -     | Pending     |
+| Color Contrast      | ⏳ Manual    | -     | Pending     |
 
 ---
 
@@ -35,6 +35,7 @@
 ### Test Checklist
 
 #### ✅ Navigation
+
 - [ ] Tab moves to next interactive element
 - [ ] Shift+Tab moves to previous interactive element
 - [ ] Tab order follows visual layout (top→bottom, left→right)
@@ -42,30 +43,35 @@
 - [ ] Skip links appear when focused (Tab from page load)
 
 #### ✅ Buttons & Links
+
 - [ ] All buttons reachable with Tab
 - [ ] Enter/Space activates buttons
 - [ ] Enter activates links
 - [ ] Focus visible on all interactive elements
 
 #### ✅ Forms
+
 - [ ] All form fields reachable with Tab
 - [ ] Tab order logical (label → field → next field)
 - [ ] Required fields indicated
 - [ ] Error messages announced
 
 #### ✅ Modals & Dialogs
+
 - [ ] Focus moves to modal when opened
 - [ ] Tab stays within modal (focus trap)
 - [ ] Escape closes modal
 - [ ] Focus returns to trigger element when closed
 
 #### ✅ Dropdowns
+
 - [ ] Tab moves to dropdown trigger
 - [ ] Enter/Space opens dropdown
 - [ ] Arrow keys navigate items (if implemented)
 - [ ] Escape closes dropdown
 
 #### ✅ Search
+
 - [ ] `/` focuses search field (if implemented)
 - [ ] Escape clears and unfocuses search
 - [ ] Clear button (×) works with keyboard
@@ -73,14 +79,17 @@
 ### Common Issues to Watch For
 
 ❌ **Keyboard Traps**
+
 - Elements you can Tab into but can't Tab out of
 - Modals that don't trap focus properly
 
 ❌ **Invisible Focus**
+
 - Interactive elements with no visible focus indicator
 - Focus indicators too subtle (low contrast)
 
 ❌ **Illogical Tab Order**
+
 - Tab order doesn't follow visual layout
 - Modals/dropdowns that break tab flow
 
@@ -91,6 +100,7 @@
 ### Visual Focus Check
 
 #### ✅ Requirements
+
 - [ ] All interactive elements have visible focus indicator
 - [ ] Focus ring has 2px width minimum
 - [ ] Focus ring has sufficient contrast (3:1 minimum)
@@ -98,6 +108,7 @@
 - [ ] Focus color is Jade 500 (`--focus-ring-color`)
 
 #### ✅ Test Components
+
 - [ ] Buttons (all variants)
 - [ ] Links
 - [ ] Form inputs
@@ -135,11 +146,13 @@
 ### ARIA Label Checklist
 
 #### ✅ Icon-Only Buttons
+
 - [ ] All icon-only buttons have `aria-label`
 - [ ] Labels are descriptive ("Delete play" not "Delete")
 - [ ] Alternative: Use tooltip with proper ARIA
 
 #### ✅ Landmarks
+
 - [ ] `<main>` element with `id="main-content"`
 - [ ] `<header>` for page header
 - [ ] `<nav>` for navigation (with `aria-label`)
@@ -148,39 +161,43 @@
 - [ ] Search component has `role="search"`
 
 #### ✅ Status Messages
+
 - [ ] Toast notifications have `role="status"` or `aria-live="polite"`
 - [ ] Loading spinners have `role="status"` and screen reader text
 - [ ] Error messages have `role="alert"` or `aria-live="assertive"`
 
 #### ✅ Dialogs & Modals
+
 - [ ] Modal has `role="dialog"` and `aria-modal="true"`
 - [ ] Modal has `aria-labelledby` pointing to title ID
 - [ ] Modal has `aria-describedby` if description exists
 
 #### ✅ Form Fields
+
 - [ ] All inputs have associated `<label>`
 - [ ] Error fields have `aria-invalid="true"`
 - [ ] Error messages have `aria-describedby`
 - [ ] Required fields have `aria-required="true"` or `required`
 
 #### ✅ Decorative Elements
+
 - [ ] Decorative icons have `aria-hidden="true"`
 - [ ] Decorative images have empty `alt=""`
 - [ ] Loading spinners have `aria-hidden="true"` on animation
 
 ### Component Implementation Status
 
-| Component | ARIA Complete | Notes |
-|-----------|---------------|-------|
-| SkipLinks | ✅ | Proper skip link markup |
-| Modal | ✅ | role="dialog", aria-modal, focus trap |
-| Toast | ✅ | role="status", aria-live="polite" |
-| UniversalSearch | ✅ | role="search", proper labels |
-| RoleBadge | ✅ | role="status", aria-label |
-| LoadingSpinner | ✅ | role="status", sr-only text |
-| IconButton | ✅ | Required aria-label prop |
-| PageLayout | ✅ | <main>, <header> landmarks |
-| Badge | ✅ | Optional ariaLabel prop |
+| Component       | ARIA Complete | Notes                                 |
+| --------------- | ------------- | ------------------------------------- |
+| SkipLinks       | ✅            | Proper skip link markup               |
+| Modal           | ✅            | role="dialog", aria-modal, focus trap |
+| Toast           | ✅            | role="status", aria-live="polite"     |
+| UniversalSearch | ✅            | role="search", proper labels          |
+| RoleBadge       | ✅            | role="status", aria-label             |
+| LoadingSpinner  | ✅            | role="status", sr-only text           |
+| IconButton      | ✅            | Required aria-label prop              |
+| PageLayout      | ✅            | <main>, <header> landmarks            |
+| Badge           | ✅            | Optional ariaLabel prop               |
 
 ---
 
@@ -189,51 +206,57 @@
 ### macOS VoiceOver Testing
 
 #### Setup
+
 1. Enable VoiceOver: **Cmd+F5** or System Settings → Accessibility → VoiceOver
 2. VoiceOver Help: **VO+H** (VO = Control+Option)
 3. Stop reading: **Control**
 
 #### Basic Navigation Commands
 
-| Action | Command |
-|--------|---------|
-| Start/Stop VoiceOver | Cmd+F5 |
-| Next item | VO+→ |
-| Previous item | VO+← |
-| Interact with item | VO+Shift+↓ |
-| Stop interacting | VO+Shift+↑ |
-| Activate item | VO+Space |
-| Read all | VO+A |
-| Landmarks menu | VO+U, then ← or → |
-| Headings menu | VO+U, then ↑ or ↓ |
+| Action               | Command           |
+| -------------------- | ----------------- |
+| Start/Stop VoiceOver | Cmd+F5            |
+| Next item            | VO+→              |
+| Previous item        | VO+←              |
+| Interact with item   | VO+Shift+↓        |
+| Stop interacting     | VO+Shift+↑        |
+| Activate item        | VO+Space          |
+| Read all             | VO+A              |
+| Landmarks menu       | VO+U, then ← or → |
+| Headings menu        | VO+U, then ↑ or ↓ |
 
 #### Test Checklist
 
 ##### ✅ Page Structure
+
 - [ ] Page title announced on load
 - [ ] Landmarks navigable (VO+U)
 - [ ] Heading structure logical (h1→h2→h3)
 - [ ] Skip links announced first
 
 ##### ✅ Navigation
+
 - [ ] Main navigation announced as "navigation"
 - [ ] Current page indicated ("current page" or "selected")
 - [ ] Links announced as "link"
 - [ ] Buttons announced as "button"
 
 ##### ✅ Forms
+
 - [ ] Form fields announced with labels
 - [ ] Required fields announced
 - [ ] Error messages announced immediately
 - [ ] Field hints read with field
 
 ##### ✅ Dynamic Content
+
 - [ ] Toast messages announced
 - [ ] Loading states announced
 - [ ] Errors announced
 - [ ] Success messages announced
 
 ##### ✅ Interactive Elements
+
 - [ ] Icon buttons read descriptive label
 - [ ] Role badges announce "User role: [role]"
 - [ ] Status indicators announce purpose
@@ -242,14 +265,17 @@
 #### Common Issues
 
 ❌ **Silent Updates**
+
 - Dynamic content changes not announced
 - Missing `aria-live` regions
 
 ❌ **Confusing Labels**
+
 - Generic labels ("Click here", "Button")
 - Missing context ("Delete" instead of "Delete play")
 
 ❌ **Wrong Roles**
+
 - Div clickable but not announced as button
 - Missing `role` attributes
 
@@ -260,6 +286,7 @@
 ### Running Lighthouse Audit
 
 #### In Chrome DevTools
+
 1. Open DevTools (F12 or Cmd+Opt+I)
 2. Go to **Lighthouse** tab
 3. Select **Accessibility** category
@@ -270,14 +297,14 @@
 
 #### Common Lighthouse Issues
 
-| Issue | Fix |
-|-------|-----|
-| `<button>` elements missing labels | Add `aria-label` |
-| `<img>` missing alt text | Add `alt` attribute or `role="presentation"` |
-| Background/foreground contrast | Adjust colors to meet 4.5:1 ratio |
-| `<html>` missing lang | Add `<html lang="en">` |
-| Form elements missing labels | Wrap in `<label>` or add `aria-label` |
-| Heading levels skipped | Fix heading hierarchy (h1→h2→h3) |
+| Issue                              | Fix                                          |
+| ---------------------------------- | -------------------------------------------- |
+| `<button>` elements missing labels | Add `aria-label`                             |
+| `<img>` missing alt text           | Add `alt` attribute or `role="presentation"` |
+| Background/foreground contrast     | Adjust colors to meet 4.5:1 ratio            |
+| `<html>` missing lang              | Add `<html lang="en">`                       |
+| Form elements missing labels       | Wrap in `<label>` or add `aria-label`        |
+| Heading levels skipped             | Fix heading hierarchy (h1→h2→h3)             |
 
 ### Running Automated Tests
 
@@ -300,7 +327,6 @@ open ./reports/accessibility-report.html
 
 1. **Chrome DevTools**
    - Inspect element → Color picker → Shows contrast ratio
-   
 2. **axe DevTools** (Browser Extension)
    - Free extension for Chrome/Firefox
    - Automatically finds contrast issues
@@ -310,12 +336,12 @@ open ./reports/accessibility-report.html
 
 ### WCAG AA Requirements
 
-| Text Type | Minimum Ratio |
-|-----------|---------------|
-| Normal text (< 18pt) | 4.5:1 |
-| Large text (≥ 18pt or 14pt bold) | 3:1 |
-| UI components (buttons, inputs) | 3:1 |
-| Focus indicators | 3:1 |
+| Text Type                        | Minimum Ratio |
+| -------------------------------- | ------------- |
+| Normal text (< 18pt)             | 4.5:1         |
+| Large text (≥ 18pt or 14pt bold) | 3:1           |
+| UI components (buttons, inputs)  | 3:1           |
+| Focus indicators                 | 3:1           |
 
 ### Components to Check
 
@@ -337,16 +363,19 @@ open ./reports/accessibility-report.html
 ### Mobile Considerations
 
 #### Touch Targets
+
 - [ ] Minimum 44×44px touch targets
 - [ ] Adequate spacing between interactive elements
 - [ ] No hover-only interactions
 
 #### Focus Management
+
 - [ ] Focus visible on mobile browsers
 - [ ] No focus traps on small screens
 - [ ] Modals work on mobile
 
 #### Screen Reader (iOS VoiceOver)
+
 - [ ] Enable: Settings → Accessibility → VoiceOver
 - [ ] Swipe right/left to navigate
 - [ ] Double-tap to activate
@@ -358,6 +387,7 @@ open ./reports/accessibility-report.html
 ### Pre-Release Checklist
 
 #### ✅ Keyboard Navigation
+
 - [ ] All interactive elements reachable
 - [ ] Logical tab order
 - [ ] No keyboard traps
@@ -365,12 +395,14 @@ open ./reports/accessibility-report.html
 - [ ] Modals trap focus correctly
 
 #### ✅ Focus Indicators
+
 - [ ] Visible on all interactive elements
 - [ ] High contrast (3:1 minimum)
 - [ ] Consistent style across site
 - [ ] Only visible on keyboard focus
 
 #### ✅ ARIA & Semantics
+
 - [ ] Icon buttons have labels
 - [ ] Landmarks present (<main>, <nav>, etc.)
 - [ ] Headings logical (h1→h2→h3)
@@ -378,23 +410,27 @@ open ./reports/accessibility-report.html
 - [ ] Form fields properly labeled
 
 #### ✅ Screen Reader
+
 - [ ] VoiceOver test passed
 - [ ] NVDA test passed (Windows)
 - [ ] Dynamic content announced
 - [ ] All functionality accessible
 
 #### ✅ Automated
+
 - [ ] Lighthouse score 95+
 - [ ] axe DevTools 0 violations
 - [ ] HTML validator passes
 
 #### ✅ Color Contrast
+
 - [ ] All text meets 4.5:1 (AA)
 - [ ] Large text meets 3:1 (AA)
 - [ ] UI components meet 3:1
 - [ ] Dark mode checked
 
 #### ✅ Mobile
+
 - [ ] Touch targets 44×44px
 - [ ] iOS VoiceOver tested
 - [ ] Android TalkBack tested
@@ -413,7 +449,7 @@ open ./reports/accessibility-report.html
 </button>
 
 // ✅ Good - With aria-label
-<IconButton 
+<IconButton
   aria-label="Delete play"
   onClick={handleDelete}
 >
@@ -441,8 +477,8 @@ open ./reports/accessibility-report.html
 <div className="toast">{message}</div>
 
 // ✅ Good - Announced to screen readers
-<div 
-  role="status" 
+<div
+  role="status"
   aria-live="polite"
   className="toast"
 >
@@ -460,7 +496,7 @@ open ./reports/accessibility-report.html
 </div>
 
 // ✅ Good - Proper ARIA
-<div 
+<div
   role="dialog"
   aria-modal="true"
   aria-labelledby="modal-title"
@@ -479,7 +515,7 @@ open ./reports/accessibility-report.html
 
 // ✅ Good - Proper association
 <label htmlFor="play-name">Play Name</label>
-<input 
+<input
   id="play-name"
   type="text"
   aria-invalid="true"
@@ -516,29 +552,32 @@ open ./reports/accessibility-report.html
 
 ### Manual Testing Schedule
 
-| Frequency | Tests |
-|-----------|-------|
+| Frequency    | Tests                                 |
+| ------------ | ------------------------------------- |
 | **Every PR** | Keyboard navigation, Focus indicators |
-| **Weekly** | Screen reader spot check |
-| **Monthly** | Full screen reader audit |
-| **Release** | Complete checklist, Lighthouse audit |
+| **Weekly**   | Screen reader spot check              |
+| **Monthly**  | Full screen reader audit              |
+| **Release**  | Complete checklist, Lighthouse audit  |
 
 ---
 
 ## 11. Resources
 
 ### Documentation
+
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [MDN Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
 - [A11y Project Checklist](https://www.a11yproject.com/checklist/)
 
 ### Tools
+
 - [Lighthouse](https://developers.google.com/web/tools/lighthouse)
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [WAVE](https://wave.webaim.org/)
 - [Color Contrast Checker](https://webaim.org/resources/contrastchecker/)
 
 ### Screen Readers
+
 - **macOS:** VoiceOver (built-in, Cmd+F5)
 - **Windows:** [NVDA](https://www.nvaccess.org/) (free)
 - **Windows:** JAWS (paid)
@@ -552,6 +591,7 @@ open ./reports/accessibility-report.html
 ### Current Limitations
 
 #### ⚠️ Not Yet Implemented
+
 - [ ] Keyboard shortcuts (Task #13)
 - [ ] Keyboard shortcuts help dialog (? key)
 - [ ] Arrow key navigation in dropdowns
@@ -559,11 +599,13 @@ open ./reports/accessibility-report.html
 - [ ] Complete color contrast audit
 
 #### ⚠️ Needs Improvement
+
 - [ ] More tooltips on icon buttons (Task #12)
 - [ ] Enhanced empty states (Task #14)
 - [ ] Bulk selection keyboard support (Task #15)
 
 ### Future Enhancements
+
 - High contrast mode support
 - Reduced motion support
 - Font size scaling
@@ -581,6 +623,7 @@ open ./reports/accessibility-report.html
 **Documentation Created:** 3 guides
 
 #### ✅ Completed
+
 - Skip links component
 - Focus ring system
 - Loading announcer utilities
@@ -592,6 +635,7 @@ open ./reports/accessibility-report.html
 - Comprehensive documentation
 
 #### ✅ WCAG 2.1 AA Coverage
+
 - 1.3.1 Info and Relationships: ✅ Semantic HTML + ARIA
 - 2.1.1 Keyboard: ✅ All interactive elements reachable
 - 2.4.1 Bypass Blocks: ✅ Skip links implemented

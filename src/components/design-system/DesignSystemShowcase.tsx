@@ -8,7 +8,7 @@ import { Button } from "../ui/Button/Button";
 import Card from "../ui/Card/Card";
 import { Skeleton } from "../ui/Skeleton";
 import { EmptyState } from "../ui/EmptyState";
-import { Tooltip } from "../ui/Tooltip";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { ProgressiveImage } from "../ui/ProgressiveImage";
 import { LazyLoad } from "../ui/LazyLoad";
 import { DarkModeToggle } from "../ui/DarkModeToggle";

@@ -16,8 +16,9 @@ Tooltips provide contextual help for icon buttons and complex UI elements. This 
 ### ✅ Good Uses
 
 **Icon-Only Buttons**
+
 ```tsx
-<IconButton 
+<IconButton
   aria-label="Delete play"
   tooltip="Delete play"
   onClick={handleDelete}
@@ -25,57 +26,72 @@ Tooltips provide contextual help for icon buttons and complex UI elements. This 
   <Icon name="trash" />
 </IconButton>
 ```
+
 Icon buttons without text labels SHOULD have tooltips.
 
 **Abbreviated Text**
+
 ```tsx
 <Tooltip content="Wide Receiver">
   <Badge>WR</Badge>
 </Tooltip>
 ```
+
 Abbreviations that may be unclear to users.
 
 **Complex Features**
+
 ```tsx
-<Tooltip 
+<Tooltip
   content="Players will receive notifications when this play is updated"
   placement="right"
 >
   <Icon name="info-circle" className="text-slate-400" />
 </Tooltip>
 ```
+
 Features that benefit from additional context.
 
 **Keyboard Shortcuts**
+
 ```tsx
 <Tooltip content="Save (⌘S)">
   <Button>Save</Button>
 </Tooltip>
 ```
+
 Show keyboard shortcuts for power users (when implemented).
 
 **Status/Badge Explanations**
+
 ```tsx
 <Tooltip content="This play requires coach approval">
   <Badge variant="warning">Pending</Badge>
 </Tooltip>
 ```
+
 Explain status indicators and badges.
 
 ### ❌ Bad Uses
 
 **Buttons with Clear Text Labels**
+
 ```tsx
-{/* ❌ DON'T - Redundant tooltip */}
+{
+  /* ❌ DON'T - Redundant tooltip */
+}
 <Tooltip content="Save">
   <Button>Save</Button>
-</Tooltip>
+</Tooltip>;
 
-{/* ✅ DO - No tooltip needed */}
-<Button>Save</Button>
+{
+  /* ✅ DO - No tooltip needed */
+}
+<Button>Save</Button>;
 ```
 
 **Long Paragraphs**
+
 ```tsx
 {/* ❌ DON'T - Too much text */}
 <Tooltip content="This feature allows you to...">
@@ -85,28 +101,35 @@ Explain status indicators and badges.
 ```
 
 **Critical Information**
+
 ```tsx
-{/* ❌ DON'T - User might miss it */}
+{
+  /* ❌ DON'T - User might miss it */
+}
 <Tooltip content="Required field">
   <Input />
-</Tooltip>
+</Tooltip>;
 
-{/* ✅ DO - Show inline */}
-<Input 
-  label="Email *"
-  helperText="Required field"
-/>
+{
+  /* ✅ DO - Show inline */
+}
+<Input label="Email *" helperText="Required field" />;
 ```
 
 **Mobile-Critical Actions**
+
 ```tsx
-{/* ❌ DON'T - Hover unreliable on mobile */}
+{
+  /* ❌ DON'T - Hover unreliable on mobile */
+}
 <Tooltip content="Important action">
   <Button>Action</Button>
-</Tooltip>
+</Tooltip>;
 
-{/* ✅ DO - Use visible label */}
-<Button>Important action</Button>
+{
+  /* ✅ DO - Use visible label */
+}
+<Button>Important action</Button>;
 ```
 
 ---
@@ -128,10 +151,11 @@ import { Icon } from "@/components/ui/Icon";
   onClick={onClose}
 >
   <Icon name="x" />
-</IconButton>
+</IconButton>;
 ```
 
 **Props:**
+
 - `tooltip` (string): Tooltip content
 - `tooltipPlacement` ("top" | "bottom" | "left" | "right"): Placement (default: "top")
 - `aria-label` (string): Required for accessibility
@@ -145,10 +169,11 @@ import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 
 <Tooltip content="This is helpful information" placement="top">
   <span>Hover me</span>
-</Tooltip>
+</Tooltip>;
 ```
 
 **Props:**
+
 - `content` (ReactNode): Tooltip content
 - `placement` ("top" | "bottom" | "left" | "right"): Position (default: "top")
 - `delay` (number): Show delay in ms (default: 200)
@@ -158,6 +183,7 @@ import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 ### Advanced Usage
 
 **Conditional Tooltip**
+
 ```tsx
 <IconButton
   aria-label="Delete play"
@@ -170,6 +196,7 @@ import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 ```
 
 **Dynamic Tooltip Content**
+
 ```tsx
 <IconButton
   aria-label={showOneWordCalls ? "Show full names" : "Show one-word calls"}
@@ -181,6 +208,7 @@ import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 ```
 
 **Tooltip with Rich Content**
+
 ```tsx
 <Tooltip
   content={
@@ -201,6 +229,7 @@ import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 ### ARIA Attributes
 
 Tooltips automatically add proper ARIA:
+
 - `aria-describedby`: Links tooltip to trigger element
 - `role="tooltip"`: Identifies element as tooltip
 
@@ -221,71 +250,71 @@ Tooltips automatically add proper ARIA:
 
 ### ✅ Currently Enhanced with Tooltips (31 components) - COMPLETE
 
-| Component | Location | Tooltip Content | Status |
-|-----------|----------|----------------|--------|
-| **Infrastructure** |
-| IconButton | `ui/IconButton` | Via `tooltip` prop | ✅ Complete |
-| **View Controls** |
-| PlayGrid view toggle (list) | `playbook/PlayGrid` | "List view" | ✅ Complete |
-| PlayGrid view toggle (grid) | `playbook/PlayGrid` | "Grid view" | ✅ Complete |
-| PlayGrid name toggle | `playbook/PlayGrid` | "Show full play names" / "Show one-word calls" | ✅ Complete |
-| **Form Controls** |
-| Input password toggle | `ui/Input` | "Show password" / "Hide password" | ✅ Complete |
-| Select clear button | `ui/Select` | "Clear selection" | ✅ Complete |
-| **Search Controls** |
-| UniversalSearch clear | `ui/UniversalSearch` | "Clear search" | ✅ Complete |
-| GlobalSearch clear | `ui/GlobalSearch` | "Clear search" | ✅ Complete |
-| AdvancedSearchBar clear | `playbook/AdvancedSearchBar` | "Clear search" | ✅ Complete |
-| **Close Buttons** |
-| Modal close button | `ui/Modal` | "Close" | ✅ Complete |
-| Sidebar close button | `ui/Sidebar` | "Close sidebar (Esc)" | ✅ Complete |
-| MobileDrawer close | `mobile/MobileDrawer` | "Close drawer (Esc)" | ✅ Complete |
-| CleanSidebar close | `dashboard/CleanSidebar` | "Close sidebar (Esc)" | ✅ Complete |
-| DashboardCustomization close | `dashboard/DashboardCustomizationPanel` | "Close customization panel (Esc)" | ✅ Complete |
-| PersonalCalendar close | `dashboard/PersonalCalendar` | "Close event details (Esc)" | ✅ Complete |
-| BulkTaggingModal close | `playbook/BulkTaggingModal` | "Close tag modal (Esc)" | ✅ Complete |
-| **Profile Actions** |
-| ProfileCard edit profile | `dashboard/ProfileCard` | "Edit profile" | ✅ Complete |
-| ProfileCard edit avatar | `dashboard/ProfileCard` | "Edit profile picture" | ✅ Complete |
-| ProfileCard edit bio | `dashboard/ProfileCard` | "Edit bio" | ✅ Complete |
-| **Player Management** |
-| PlayerList edit button | `team/PlayerList` | "Edit player" | ✅ Complete |
-| PlayerList remove button | `team/PlayerList` | "Remove player" | ✅ Complete |
-| **Play Actions** |
-| PlayCard.v2 expand button | `playbook/PlayCard.v2` | "Expand play details" / "Collapse play details" | ✅ Complete |
-| PlayCard.v2 edit button | `playbook/PlayCard.v2` | "Edit play" | ✅ Complete |
-| PlayCard.v2 duplicate button | `playbook/PlayCard.v2` | "Duplicate play" | ✅ Complete |
-| PlayCard.v2 diagram button | `playbook/PlayCard.v2` | "Create diagram" | ✅ Complete |
-| **Bulk Actions** |
-| BulkActionsToolbar clear | `playbook/BulkActionsToolbar` | "Clear selection" | ✅ Complete |
-| **Filter Controls** |
-| ActiveFilterChips clear all | `playbook/page/ActiveFilterChips` | "Clear all active filters" | ✅ Complete |
+| Component                    | Location                                | Tooltip Content                                 | Status      |
+| ---------------------------- | --------------------------------------- | ----------------------------------------------- | ----------- |
+| **Infrastructure**           |
+| IconButton                   | `ui/IconButton`                         | Via `tooltip` prop                              | ✅ Complete |
+| **View Controls**            |
+| PlayGrid view toggle (list)  | `playbook/PlayGrid`                     | "List view"                                     | ✅ Complete |
+| PlayGrid view toggle (grid)  | `playbook/PlayGrid`                     | "Grid view"                                     | ✅ Complete |
+| PlayGrid name toggle         | `playbook/PlayGrid`                     | "Show full play names" / "Show one-word calls"  | ✅ Complete |
+| **Form Controls**            |
+| Input password toggle        | `ui/Input`                              | "Show password" / "Hide password"               | ✅ Complete |
+| Select clear button          | `ui/Select`                             | "Clear selection"                               | ✅ Complete |
+| **Search Controls**          |
+| UniversalSearch clear        | `ui/UniversalSearch`                    | "Clear search"                                  | ✅ Complete |
+| GlobalSearch clear           | `ui/GlobalSearch`                       | "Clear search"                                  | ✅ Complete |
+| AdvancedSearchBar clear      | `playbook/AdvancedSearchBar`            | "Clear search"                                  | ✅ Complete |
+| **Close Buttons**            |
+| Modal close button           | `ui/Modal`                              | "Close"                                         | ✅ Complete |
+| Sidebar close button         | `ui/Sidebar`                            | "Close sidebar (Esc)"                           | ✅ Complete |
+| MobileDrawer close           | `mobile/MobileDrawer`                   | "Close drawer (Esc)"                            | ✅ Complete |
+| CleanSidebar close           | `dashboard/CleanSidebar`                | "Close sidebar (Esc)"                           | ✅ Complete |
+| DashboardCustomization close | `dashboard/DashboardCustomizationPanel` | "Close customization panel (Esc)"               | ✅ Complete |
+| PersonalCalendar close       | `dashboard/PersonalCalendar`            | "Close event details (Esc)"                     | ✅ Complete |
+| BulkTaggingModal close       | `playbook/BulkTaggingModal`             | "Close tag modal (Esc)"                         | ✅ Complete |
+| **Profile Actions**          |
+| ProfileCard edit profile     | `dashboard/ProfileCard`                 | "Edit profile"                                  | ✅ Complete |
+| ProfileCard edit avatar      | `dashboard/ProfileCard`                 | "Edit profile picture"                          | ✅ Complete |
+| ProfileCard edit bio         | `dashboard/ProfileCard`                 | "Edit bio"                                      | ✅ Complete |
+| **Player Management**        |
+| PlayerList edit button       | `team/PlayerList`                       | "Edit player"                                   | ✅ Complete |
+| PlayerList remove button     | `team/PlayerList`                       | "Remove player"                                 | ✅ Complete |
+| **Play Actions**             |
+| PlayCard.v2 expand button    | `playbook/PlayCard.v2`                  | "Expand play details" / "Collapse play details" | ✅ Complete |
+| PlayCard.v2 edit button      | `playbook/PlayCard.v2`                  | "Edit play"                                     | ✅ Complete |
+| PlayCard.v2 duplicate button | `playbook/PlayCard.v2`                  | "Duplicate play"                                | ✅ Complete |
+| PlayCard.v2 diagram button   | `playbook/PlayCard.v2`                  | "Create diagram"                                | ✅ Complete |
+| **Bulk Actions**             |
+| BulkActionsToolbar clear     | `playbook/BulkActionsToolbar`           | "Clear selection"                               | ✅ Complete |
+| **Filter Controls**          |
+| ActiveFilterChips clear all  | `playbook/page/ActiveFilterChips`       | "Clear all active filters"                      | ✅ Complete |
 
 ### 📋 Additional Components with Title Attributes (Working, Consider Upgrading)
 
-| Component | Location | Implementation | Priority |
-|-----------|----------|----------------|----------|
-| PlayCard edit button | `playbook/PlayCard` | `title="Edit play"` | Low - Already functional |
-| PlayCard duplicate button | `playbook/PlayCard` | `title="Duplicate play"` | Low - Already functional |
-| PlayCard diagram button | `playbook/PlayCard` | `title="Create diagram"` | Low - Already functional |
-| BulkActionsToolbar actions | `playbook/BulkActionsToolbar` | `title` attributes | Low - Has text labels |
+| Component                  | Location                      | Implementation           | Priority                 |
+| -------------------------- | ----------------------------- | ------------------------ | ------------------------ |
+| PlayCard edit button       | `playbook/PlayCard`           | `title="Edit play"`      | Low - Already functional |
+| PlayCard duplicate button  | `playbook/PlayCard`           | `title="Duplicate play"` | Low - Already functional |
+| PlayCard diagram button    | `playbook/PlayCard`           | `title="Create diagram"` | Low - Already functional |
+| BulkActionsToolbar actions | `playbook/BulkActionsToolbar` | `title` attributes       | Low - Has text labels    |
 
 ### 🔧 Already Using Tooltips (No Changes Needed)
 
-| Component | Location | Implementation | Notes |
-|-----------|----------|----------------|-------|
-| ToolPalette | `playbook/diagram-v2/components/ToolPalette` | Wrapped with `<Tooltip>` | ✅ Well implemented |
-| Diagram Toolbar buttons | `playbook/diagram-v2/components/Toolbar` | Text labels | No tooltip needed (has text) |
+| Component               | Location                                     | Implementation           | Notes                        |
+| ----------------------- | -------------------------------------------- | ------------------------ | ---------------------------- |
+| ToolPalette             | `playbook/diagram-v2/components/ToolPalette` | Wrapped with `<Tooltip>` | ✅ Well implemented          |
+| Diagram Toolbar buttons | `playbook/diagram-v2/components/Toolbar`     | Text labels              | No tooltip needed (has text) |
 
 ### ⏳ Lower Priority - Consider for Future
 
-| Component | Location | Reason | Priority |
-|-----------|----------|--------|----------|
-| Diagram HelpOverlay close | `playbook/diagram-v2/components/HelpOverlay` | Context clear | Low |
-| EventModal close | `calendar/EventModal` | Context clear | Low |
-| CSVImportModal close | `playbook/CSVImport/CSVImportModal` | Context clear | Low |
-| FilterPanel expand/collapse | `playbook/FilterPanel` | Context clear from icon | Low |
-| Notification dismiss | Various notification components | Context clear | Low |
+| Component                   | Location                                     | Reason                  | Priority |
+| --------------------------- | -------------------------------------------- | ----------------------- | -------- |
+| Diagram HelpOverlay close   | `playbook/diagram-v2/components/HelpOverlay` | Context clear           | Low      |
+| EventModal close            | `calendar/EventModal`                        | Context clear           | Low      |
+| CSVImportModal close        | `playbook/CSVImport/CSVImportModal`          | Context clear           | Low      |
+| FilterPanel expand/collapse | `playbook/FilterPanel`                       | Context clear from icon | Low      |
+| Notification dismiss        | Various notification components              | Context clear           | Low      |
 
 ### 📊 Progress Summary - TASK COMPLETE ✅
 
@@ -317,6 +346,7 @@ Tooltips automatically add proper ARIA:
 ### Default Styles
 
 Tooltips use the following default styles:
+
 - Background: `bg-slate-900` (dark)
 - Text: `text-white`
 - Padding: `px-3 py-2`
@@ -328,10 +358,7 @@ Tooltips use the following default styles:
 ### Custom Styling
 
 ```tsx
-<Tooltip
-  content="Custom tooltip"
-  className="bg-blue-600 text-white font-bold"
->
+<Tooltip content="Custom tooltip" className="bg-blue-600 text-white font-bold">
   <Button>Hover me</Button>
 </Tooltip>
 ```
@@ -429,16 +456,15 @@ Tooltips use the following default styles:
 ### Updating Existing Icon Buttons
 
 **Before:**
+
 ```tsx
-<IconButton
-  aria-label="Delete play"
-  onClick={handleDelete}
->
+<IconButton aria-label="Delete play" onClick={handleDelete}>
   <Icon name="trash" />
 </IconButton>
 ```
 
 **After:**
+
 ```tsx
 <IconButton
   aria-label="Delete play"
@@ -478,11 +504,7 @@ Tooltips use the following default styles:
 Once keyboard shortcuts are implemented:
 
 ```tsx
-<IconButton
-  aria-label="Save"
-  tooltip="Save (⌘S)"
-  onClick={handleSave}
->
+<IconButton aria-label="Save" tooltip="Save (⌘S)" onClick={handleSave}>
   <Icon name="save" />
 </IconButton>
 ```

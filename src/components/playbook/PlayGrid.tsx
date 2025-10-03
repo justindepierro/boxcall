@@ -8,7 +8,7 @@ import React, {
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
-import { PlayCard } from "./PlayCard.v2";
+import { PlayCard } from "./PlayCard";
 import { PlayCardAppIcon } from "./PlayCard.AppIcon";
 import { PlayDetailModal } from "./PlayDetailModal";
 import { PlayGridSkeleton } from "./PlayGridSkeleton";

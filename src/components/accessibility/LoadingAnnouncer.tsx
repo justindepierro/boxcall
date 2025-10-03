@@ -56,12 +56,7 @@ export const LiveRegion: React.FC<{
   children: React.ReactNode;
   politeness?: "polite" | "assertive" | "off";
   atomic?: boolean;
-  relevant?:
-    | "additions"
-    | "additions text"
-    | "all"
-    | "removals"
-    | "text";
+  relevant?: "additions" | "additions text" | "all" | "removals" | "text";
 }> = ({
   children,
   politeness = "polite",

@@ -1,125 +1,189 @@
-import clsx from "clsx";
 import React from "react";
+import { createPortal } from "react-dom";
 
 export interface TooltipProps {
-  children: React.ReactNode; // trigger element
-  content: React.ReactNode; // tooltip body
+  children: React.ReactNode;
+  content: React.ReactNode;
   className?: string;
   placement?: "top" | "bottom" | "left" | "right";
-  delay?: number; // ms
+  delay?: number;
   disabled?: boolean;
-  /** Optional max width */
   maxWidth?: number | string;
-  /** Automatically flip / shift if collision with viewport (basic heuristic) */
-  smart?: boolean;
 }
 
 /**
- * Lightweight, dependency-free tooltip using inverse surface token.
- * Accessible pattern: content rendered after trigger, aria-describedby link.
+ * Tooltip that uses Portal to escape overflow:hidden containers
  */
 export const Tooltip: React.FC<TooltipProps> = ({
   children,
   content,
-  className,
   placement = "top",
   delay = 140,
   disabled,
-  maxWidth = 280,
-  smart = true,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [timer, setTimer] = React.useState<number | null>(null);
+  const [position, setPosition] = React.useState({ top: 0, left: 0 });
   const id = React.useId();
-  const wrapperRef = React.useRef<HTMLSpanElement | null>(null);
-  const resolvedPlacement = React.useRef(placement);
+  const triggerRef = React.useRef<HTMLSpanElement | null>(null);
+
+  const updatePosition = React.useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    
+    let top = 0;
+    let left = 0;
+    
+    // Use viewport coordinates (no scroll offset needed with position: fixed)
+    switch (placement) {
+      case "top":
+        top = rect.top - 8;
+        left = rect.left + rect.width / 2;
+        break;
+      case "bottom":
+        top = rect.bottom + 8;
+        left = rect.left + rect.width / 2;
+        break;
+      case "left":
+        top = rect.top + rect.height / 2;
+        left = rect.left - 8;
+        break;
+      case "right":
+        top = rect.top + rect.height / 2;
+        left = rect.right + 8;
+        break;
+    }
+    
+    setPosition({ top, left });
+  }, [placement]);
 
   const show = () => {
     if (disabled) return;
-    if (delay === 0) return setOpen(true);
-    const t = window.setTimeout(() => setOpen(true), delay);
+    updatePosition();
+    if (delay === 0) {
+      setOpen(true);
+      return;
+    }
+    const t = window.setTimeout(() => {
+      setOpen(true);
+    }, delay);
     setTimer(t);
   };
+
   const hide = () => {
     if (timer) window.clearTimeout(timer);
     setTimer(null);
     setOpen(false);
   };
 
-  // Basic placement translation (no collision handling yet)
-  const placementStyles: Record<string, string> = {
-    top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-    bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-    left: "right-full top-1/2 -translate-y-1/2 mr-2",
-    right: "left-full top-1/2 -translate-y-1/2 ml-2",
+  // Update position on scroll or resize
+  React.useEffect(() => {
+    if (!open) return;
+    
+    const handleUpdate = () => updatePosition();
+    window.addEventListener("scroll", handleUpdate, true);
+    window.addEventListener("resize", handleUpdate);
+    
+    return () => {
+      window.removeEventListener("scroll", handleUpdate, true);
+      window.removeEventListener("resize", handleUpdate);
+    };
+  }, [open, updatePosition]);
+
+  const getTooltipStyle = (): React.CSSProperties => {
+    const base: React.CSSProperties = {
+      position: "fixed", // Changed from absolute to fixed for viewport-relative positioning
+      zIndex: 9999,
+      padding: "8px 12px",
+      background: "#1f2937",
+      color: "white",
+      borderRadius: "8px",
+      fontSize: "12px",
+      fontWeight: 500,
+      whiteSpace: "nowrap",
+      pointerEvents: "none",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)",
+      border: "1px solid rgba(255, 255, 255, 0.1)",
+      maxWidth: "280px",
+    };
+
+    let transform = "";
+    let finalTop = position.top;
+    let finalLeft = position.left;
+    const padding = 10;
+
+    // Calculate transform and adjust for viewport boundaries
+    switch (placement) {
+      case "top":
+      case "bottom": {
+        transform = "translate(-50%, " + (placement === "top" ? "-100%" : "0") + ")";
+        // For centered tooltips, ensure we don't go off the left or right edges
+        // Account for the -50% transform by checking if centered position would clip
+        const minLeft = padding + 140; // Half of max tooltip width (280px / 2)
+        const maxLeft = window.innerWidth - padding - 140;
+        
+        if (finalLeft < minLeft) {
+          finalLeft = minLeft;
+        } else if (finalLeft > maxLeft) {
+          finalLeft = maxLeft;
+        }
+        
+        // Also check top boundary for "top" placement
+        if (placement === "top" && finalTop < padding + 50) {
+          // Not enough space above, flip to bottom
+          transform = "translate(-50%, 0)";
+        }
+        break;
+      }
+        
+      case "left":
+      case "right": {
+        transform = "translate(" + (placement === "left" ? "-100%" : "0") + ", -50%)";
+        // Prevent going off top
+        const minTop = padding + 20;
+        const maxTop = window.innerHeight - padding - 20;
+        
+        if (finalTop < minTop) {
+          finalTop = minTop;
+        } else if (finalTop > maxTop) {
+          finalTop = maxTop;
+        }
+        break;
+      }
+    }
+
+    return {
+      ...base,
+      top: finalTop,
+      left: finalLeft,
+      transform,
+    };
   };
 
-  React.useEffect(() => {
-    if (!open || !smart) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    const tooltip = el.querySelector('[role="tooltip"]') as HTMLElement | null;
-    const trigger = el.firstElementChild as HTMLElement | null;
-    if (!tooltip || !trigger) return;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const rect = tooltip.getBoundingClientRect();
-    // Flip vertically if clipped
-    if (rect.top < 0 && resolvedPlacement.current === "top") {
-      resolvedPlacement.current = "bottom";
-    } else if (rect.bottom > vh && resolvedPlacement.current === "bottom") {
-      resolvedPlacement.current = "top";
-    }
-    // Shift horizontally if overflowing
-    if (rect.left < 4) tooltip.style.left = `${rect.width / 2 + 8}px`;
-    if (rect.right > vw - 4)
-      tooltip.style.left = `calc(100% - ${rect.width / 2 + 8}px)`;
-  }, [open, smart]);
-
   return (
-    <span
-      ref={wrapperRef}
-      className="relative inline-flex"
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
-      onBlur={hide}
-    >
-      {React.isValidElement(children)
-        ? React.cloneElement(children, {
-            "aria-describedby": open ? id : undefined,
-          } as Record<string, unknown>)
-        : children}
-      {open && !disabled && (
+    <>
+      <span
+        ref={triggerRef}
+        style={{ display: "inline-flex", position: "relative" }}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocus={show}
+        onBlur={hide}
+        aria-describedby={open ? id : undefined}
+      >
+        {children}
+      </span>
+      {open && !disabled && createPortal(
         <span
           id={id}
           role="tooltip"
-          className={clsx(
-            "pointer-events-none absolute z-50 px-2 py-1 rounded-md shadow-sm text-[11px] leading-tight font-medium",
-            "surface-inverse",
-            placementStyles[resolvedPlacement.current],
-            className
-          )}
-          style={{ maxWidth }}
+          style={getTooltipStyle()}
         >
           {content}
-          <span
-            className={clsx(
-              "absolute w-2 h-2 rotate-45 bg-surface-primary",
-              resolvedPlacement.current === "top" &&
-                "left-1/2 -translate-x-1/2 top-full",
-              resolvedPlacement.current === "bottom" &&
-                "left-1/2 -translate-x-1/2 bottom-full",
-              resolvedPlacement.current === "left" &&
-                "top-1/2 -translate-y-1/2 left-full",
-              resolvedPlacement.current === "right" &&
-                "top-1/2 -translate-y-1/2 right-full"
-            )}
-            aria-hidden="true"
-          />
-        </span>
+        </span>,
+        document.body
       )}
-    </span>
+    </>
   );
 };
 

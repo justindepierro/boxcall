@@ -21,24 +21,28 @@ Before committing any accessibility-related changes:
 ### When Creating a New Component
 
 #### ✅ Interactive Elements
+
 - [ ] Buttons use `<button>` not `<div onClick>`
 - [ ] Links use `<a href>` not `<div onClick>`
 - [ ] Icon-only buttons have `aria-label`
 - [ ] All interactive elements keyboard-accessible
 
 #### ✅ Focus Management
+
 - [ ] Focus indicator visible (jade ring)
 - [ ] Focus indicator high contrast (3:1 minimum)
 - [ ] `:focus-visible` used, not `:focus`
 - [ ] No focus traps
 
 #### ✅ ARIA
+
 - [ ] Decorative icons have `aria-hidden="true"`
 - [ ] Status messages have `role="status"`
 - [ ] Dialogs have `role="dialog"` and `aria-modal="true"`
 - [ ] Form fields have labels
 
 #### ✅ Semantic HTML
+
 - [ ] Use `<button>` for buttons
 - [ ] Use `<a>` for links
 - [ ] Use `<main>`, `<header>`, `<nav>` for landmarks
@@ -51,23 +55,27 @@ Before committing any accessibility-related changes:
 ### When Creating or Updating a Page
 
 #### ✅ Structure
+
 - [ ] Page wrapped in `<PageLayout>`
 - [ ] Page title is `<h1>`
 - [ ] Heading hierarchy logical (no skipped levels)
 - [ ] Skip links work (Tab from page load)
 
 #### ✅ Navigation
+
 - [ ] All links keyboard-accessible
 - [ ] Current page indicated
 - [ ] Tab order logical (follows visual layout)
 
 #### ✅ Forms
+
 - [ ] All fields have `<label>`
 - [ ] Required fields indicated
 - [ ] Error messages associated with fields (`aria-describedby`)
 - [ ] Form submit works with Enter key
 
 #### ✅ Dynamic Content
+
 - [ ] Loading states announced (`role="status"`)
 - [ ] Toasts announced (`aria-live="polite"`)
 - [ ] Errors announced (`role="alert"`)
@@ -244,14 +252,14 @@ button:focus-visible {
 
 ## 📊 Score Targets
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Lighthouse Accessibility | 95+ | ⏳ TBD |
-| Keyboard Navigation | 100% | ✅ Pass |
-| Focus Indicators | 100% | ✅ Pass |
-| ARIA Labels | 100% | ✅ Pass |
-| Semantic HTML | 100% | ✅ Pass |
-| Color Contrast | WCAG AA | ⏳ TBD |
+| Metric                   | Target  | Current |
+| ------------------------ | ------- | ------- |
+| Lighthouse Accessibility | 95+     | ⏳ TBD  |
+| Keyboard Navigation      | 100%    | ✅ Pass |
+| Focus Indicators         | 100%    | ✅ Pass |
+| ARIA Labels              | 100%    | ✅ Pass |
+| Semantic HTML            | 100%    | ✅ Pass |
+| Color Contrast           | WCAG AA | ⏳ TBD  |
 
 ---
 
@@ -264,12 +272,14 @@ button:focus-visible {
 **Reviewer:** [Name]
 
 ### Automated Tests
-- [ ] Lighthouse score: ___/100 (target: 95+)
-- [ ] axe DevTools: ___ violations
+
+- [ ] Lighthouse score: \_\_\_/100 (target: 95+)
+- [ ] axe DevTools: \_\_\_ violations
 - [ ] Type check passed
 - [ ] Build passed
 
 ### Manual Tests
+
 - [ ] Keyboard navigation tested
 - [ ] Focus indicators visible
 - [ ] Screen reader tested (VoiceOver/NVDA)
@@ -277,9 +287,11 @@ button:focus-visible {
 - [ ] Color contrast checked
 
 ### Issues Found
+
 - [ ] None / [List issues]
 
 ### Status
+
 - [ ] ✅ Approved
 - [ ] ⚠️ Needs fixes: [Details]
 ```

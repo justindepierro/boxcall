@@ -10,7 +10,7 @@ import { ActivityFeed } from "../components/social/ActivityFeed";
 import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import { Badge } from "../components/ui/Badge/Badge";
-import { Tooltip } from "../components/ui/Tooltip";
+import { Tooltip } from "../components/ui/Tooltip/Tooltip";
 
 const SocialFeaturesDemo: React.FC = () => {
   // Demo content IDs - in a real app these would come from your data

@@ -123,7 +123,11 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     }
   };
   return (
-    <div className="flex flex-col items-center space-y-2" role="status" aria-live="polite">
+    <div
+      className="flex flex-col items-center space-y-2"
+      role="status"
+      aria-live="polite"
+    >
       <div
         className={`${getSpinnerSize()} border-2 ${getBorderColor()} border-t-transparent rounded-sm animate-spin`}
         aria-hidden="true"
@@ -133,9 +137,7 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           {label}
         </span>
       )}
-      {!label && (
-        <span className="sr-only">Loading...</span>
-      )}
+      {!label && <span className="sr-only">Loading...</span>}
     </div>
   );
 };
@@ -218,16 +220,26 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
   message = "Loading team data...",
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-4 p-8" role="status" aria-live="polite">
+    <div
+      className="flex flex-col items-center justify-center space-y-4 p-8"
+      role="status"
+      aria-live="polite"
+    >
       <div className="relative">
         {/* Spinning football field */}
-        <div className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin" aria-hidden="true">
+        <div
+          className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin"
+          aria-hidden="true"
+        >
           <div className="absolute inset-2 bg-surface-success dark:bg-text-success/20 rounded-sm flex items-center justify-center">
             <Icon name="award" className="w-5 h-5" aria-hidden="true" />
           </div>
         </div>
         {/* Pulsing yard lines */}
-        <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          aria-hidden="true"
+        >
           <div className="w-12 h-0.5 surface-subtle0 animate-pulse" />
         </div>
       </div>

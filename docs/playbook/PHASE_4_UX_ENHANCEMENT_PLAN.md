@@ -8,13 +8,13 @@
 
 ## 📋 Tasks Overview
 
-| #   | Task                              | Est. Time | Priority | Status     |
-| --- | --------------------------------- | --------- | -------- | ---------- |
-| 11  | Enhanced Accessibility (ARIA)     | 3h        | High     | 🔄 Next    |
-| 12  | Contextual Tooltip System         | 2h        | High     | ⏳ Pending |
-| 13  | Keyboard Navigation Polish        | 2h        | High     | ⏳ Pending |
-| 14  | Empty State Illustrations         | 2h        | Medium   | ⏳ Pending |
-| 15  | Bulk Operations UI                | 3h        | Medium   | ⏳ Pending |
+| #   | Task                          | Est. Time | Priority | Status     |
+| --- | ----------------------------- | --------- | -------- | ---------- |
+| 11  | Enhanced Accessibility (ARIA) | 3h        | High     | 🔄 Next    |
+| 12  | Contextual Tooltip System     | 2h        | High     | ⏳ Pending |
+| 13  | Keyboard Navigation Polish    | 2h        | High     | ⏳ Pending |
+| 14  | Empty State Illustrations     | 2h        | Medium   | ⏳ Pending |
+| 15  | Bulk Operations UI            | 3h        | Medium   | ⏳ Pending |
 
 ---
 
@@ -42,6 +42,7 @@ Achieve WCAG 2.1 AA compliance with excellent screen reader support
 - [ ] Create priority list based on severity
 
 **Priority Issues to Check:**
+
 - Form controls without labels
 - Buttons without accessible names
 - Missing focus indicators
@@ -92,6 +93,7 @@ Achieve WCAG 2.1 AA compliance with excellent screen reader support
 ```
 
 **Components to Update:**
+
 - [ ] IconButton - aria-label, aria-describedby
 - [ ] Button - aria-busy, aria-disabled states
 - [ ] Modal/Dialog - role, aria-modal, aria-labelledby
@@ -121,7 +123,9 @@ export function useFocusTrap(isActive: boolean) {
     );
 
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
     // Focus first element on mount
     firstElement?.focus();
@@ -151,6 +155,7 @@ export function useFocusTrap(isActive: boolean) {
 ```
 
 **Components to Update:**
+
 - [ ] Modal - useFocusTrap, restore focus on close
 - [ ] Dropdown - Focus first item when opened
 - [ ] Dialog - Focus primary action button
@@ -251,6 +256,7 @@ export function SkipLinks() {
 ```
 
 **Components to Add Screen Reader Text:**
+
 - [ ] IconButton - Add sr-only label when no text
 - [ ] LoadingSpinner - Add "Loading..." text
 - [ ] Icon - Add aria-label or aria-hidden
@@ -437,6 +443,7 @@ export function Tooltip({
 **When to Use Tooltips:**
 
 ✅ **Good Uses:**
+
 - Icon-only buttons without text labels
 - Abbreviated text that needs expansion
 - Keyboard shortcuts for power users
@@ -444,6 +451,7 @@ export function Tooltip({
 - Status/badge explanations
 
 ❌ **Bad Uses:**
+
 - Buttons with clear text labels (redundant)
 - Long paragraphs of text (use help dialog instead)
 - Critical information (should be visible always)
@@ -479,36 +487,36 @@ Complete keyboard navigation support with discoverable shortcuts
 
 **Global Shortcuts:**
 
-| Shortcut    | Action                | Context |
-| ----------- | --------------------- | ------- |
-| `⌘K` / `^K` | Open command palette  | Global  |
-| `⌘S` / `^S` | Save current form     | Forms   |
-| `/`         | Focus search          | Global  |
-| `Esc`       | Close modal/dropdown  | Modals  |
-| `?`         | Show keyboard help    | Global  |
-| `⌘N` / `^N` | New play/item         | Context |
-| `⌘E` / `^E` | Edit current item     | Context |
-| `⌘D` / `^D` | Delete current item   | Context |
+| Shortcut    | Action               | Context |
+| ----------- | -------------------- | ------- |
+| `⌘K` / `^K` | Open command palette | Global  |
+| `⌘S` / `^S` | Save current form    | Forms   |
+| `/`         | Focus search         | Global  |
+| `Esc`       | Close modal/dropdown | Modals  |
+| `?`         | Show keyboard help   | Global  |
+| `⌘N` / `^N` | New play/item        | Context |
+| `⌘E` / `^E` | Edit current item    | Context |
+| `⌘D` / `^D` | Delete current item  | Context |
 
 **Navigation Shortcuts:**
 
-| Shortcut | Action             |
-| -------- | ------------------ |
-| `g h`    | Go to home         |
-| `g p`    | Go to playbook     |
-| `g r`    | Go to roster       |
-| `g a`    | Go to analytics    |
-| `g s`    | Go to settings     |
+| Shortcut | Action          |
+| -------- | --------------- |
+| `g h`    | Go to home      |
+| `g p`    | Go to playbook  |
+| `g r`    | Go to roster    |
+| `g a`    | Go to analytics |
+| `g s`    | Go to settings  |
 
 **List Navigation:**
 
-| Shortcut | Action                |
-| -------- | --------------------- |
-| `↑` `↓`  | Navigate list items   |
-| `Enter`  | Select/open item      |
-| `Space`  | Toggle selection      |
-| `⌘A`     | Select all            |
-| `⌘⇧A`    | Deselect all          |
+| Shortcut | Action              |
+| -------- | ------------------- |
+| `↑` `↓`  | Navigate list items |
+| `Enter`  | Select/open item    |
+| `Space`  | Toggle selection    |
+| `⌘A`     | Select all          |
+| `⌘⇧A`    | Deselect all        |
 
 #### 13.2 useKeyboardShortcut Hook
 
@@ -799,11 +807,13 @@ export function EmptyState({
 **Messaging Guidelines:**
 
 ✅ **Good Empty States:**
+
 - **Specific:** "No plays in your playbook yet"
 - **Helpful:** "Create your first play to get started"
 - **Action-oriented:** Clear CTA button
 
 ❌ **Bad Empty States:**
+
 - **Vague:** "No data"
 - **Technical:** "Query returned 0 results"
 - **Dead-end:** No suggestion on what to do
@@ -1234,16 +1244,16 @@ export function BulkOperationProgress({
 
 ## 📊 Success Metrics
 
-| Metric                     | Target         | Measurement                 |
-| -------------------------- | -------------- | --------------------------- |
-| Accessibility Score        | 95+ (Lighthouse) | Automated audit           |
-| Keyboard Shortcuts         | 20+ shortcuts  | Feature count               |
-| Tooltips Added             | 50+ tooltips   | Component scan              |
-| Empty States               | 100% coverage  | Page audit                  |
-| Bulk Operations            | 2+ sections    | Feature implementation      |
-| ARIA Labels                | 100% interactive | Accessibility scan        |
-| Focus Management           | All modals     | Manual test                 |
-| Screen Reader Pass         | VoiceOver/NVDA | Manual test                 |
+| Metric              | Target           | Measurement            |
+| ------------------- | ---------------- | ---------------------- |
+| Accessibility Score | 95+ (Lighthouse) | Automated audit        |
+| Keyboard Shortcuts  | 20+ shortcuts    | Feature count          |
+| Tooltips Added      | 50+ tooltips     | Component scan         |
+| Empty States        | 100% coverage    | Page audit             |
+| Bulk Operations     | 2+ sections      | Feature implementation |
+| ARIA Labels         | 100% interactive | Accessibility scan     |
+| Focus Management    | All modals       | Manual test            |
+| Screen Reader Pass  | VoiceOver/NVDA   | Manual test            |
 
 ---
 

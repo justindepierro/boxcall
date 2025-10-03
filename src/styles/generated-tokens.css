@@ -385,7 +385,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  
+
   /* Visible when focused */
   &:focus {
     position: fixed;
@@ -398,7 +398,7 @@
     overflow: visible;
     clip: auto;
     white-space: normal;
-    
+
     background-color: var(--color-jade-500);
     color: white;
     font-weight: 600;
@@ -407,12 +407,12 @@
     text-decoration: none;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
-    
+
     outline: 3px solid var(--color-jade-700);
     outline-offset: 2px;
-    
+
     transition: all var(--duration-fast) var(--ease-out);
-    
+
     &:hover {
       background-color: var(--color-jade-600);
       transform: translateY(-2px);

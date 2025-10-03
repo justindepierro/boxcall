@@ -19,15 +19,13 @@ const defaultLinks: SkipLink[] = [
   { id: "skip-nav", label: "Skip to navigation", target: "#main-navigation" },
 ];
 
-export const SkipLinks: React.FC<SkipLinksProps> = ({ links = defaultLinks }) => {
+export const SkipLinks: React.FC<SkipLinksProps> = ({
+  links = defaultLinks,
+}) => {
   return (
     <div className="skip-links">
       {links.map((link) => (
-        <a
-          key={link.id}
-          href={link.target}
-          className="skip-link"
-        >
+        <a key={link.id} href={link.target} className="skip-link">
           {link.label}
         </a>
       ))}

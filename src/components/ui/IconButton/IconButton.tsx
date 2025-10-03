@@ -56,7 +56,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       xs: "xs",
       sm: "sm",
     };
-    
+
     const button = (
       <Button
         ref={ref}
@@ -77,7 +77,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         {children}
       </Button>
     );
-    
+
     // Wrap with Tooltip if tooltip prop provided
     if (tooltip && !disabled) {
       return (
@@ -86,7 +86,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         </Tooltip>
       );
     }
-    
+
     return button;
   }
 );
