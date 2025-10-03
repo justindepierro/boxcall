@@ -102,10 +102,20 @@ class RequestSecurity {
       'http://localhost:5174',
       'http://localhost:5175',
       'https://boxcall.com',
-      // Add your production domains here
+      'https://boxcallapp.com',
+      'https://www.boxcallapp.com',
+      // Netlify preview deployments
+      /^https:\/\/[a-z0-9-]+--boxcall\.netlify\.app$/,
     ];
 
-    const isValid = allowedOrigins.includes(currentOrigin);
+    const isValid = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return allowed === currentOrigin;
+      }
+      // Handle regex patterns for Netlify previews
+      return allowed.test(currentOrigin);
+    });
+
     if (!isValid) {
       console.warn(`🚨 Origin validation failed. Current origin: ${currentOrigin}, Allowed: ${allowedOrigins.join(', ')}`);
     }
