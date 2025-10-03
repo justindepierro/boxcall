@@ -431,6 +431,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
           <nav className="py-4">
+<<<<<<< HEAD
             {loading ? (
               // Skeleton loading state
               Array.from({ length: 6 }).map((_, index) => (
@@ -472,6 +473,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <p className="text-sm">No items found for "{searchQuery}"</p>
               </div>
             ) : null}
+=======
+            {items.map((item) => (
+              <SidebarItemComponent
+                key={item.id}
+                item={item}
+                onItemClick={handleItemClick}
+              />
+            ))}
+>>>>>>> origin/main
           </nav>
         </div>
         {/* Footer */}

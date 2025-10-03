@@ -7,6 +7,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+<<<<<<< HEAD
 export default [{
   ignores: [
     "node_modules/",
@@ -46,10 +47,26 @@ export default [{
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
+=======
+export default [
+  {
+    ignores: [
+      "node_modules/",
+      "dist/",
+      "build/",
+      "coverage/",
+      ".vscode/",
+      "archive/**",
+      "*.log",
+      "src/components/ui/Icon/preloadShim.d.ts",
+      "src/routes/__tests__/loaderAuth.test.tsx",
+      "src/utils/errorHandler.tsx",
+>>>>>>> origin/main
     ],
     "no-unused-vars": "off", // Turn off base rule for TS override
     "no-console": "off", // Allow console in development
   },
+<<<<<<< HEAD
 }, // TypeScript specific rules for app source files
 {
   files: ["src/**/*.{ts,tsx}"],
@@ -59,6 +76,20 @@ export default [{
       project: "./tsconfig.app.json",
       ecmaFeatures: {
         jsx: true,
+=======
+  // Base configuration for all JS/TS files
+  {
+    files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        React: "readonly", // Add React global for JSX
+        NodeJS: "readonly", // Add NodeJS global for TypeScript
+        gtag: "readonly", // Add gtag global for Google Analytics
+>>>>>>> origin/main
       },
     },
   },

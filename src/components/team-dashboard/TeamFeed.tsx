@@ -262,6 +262,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
   const caps = getCapabilitiesForRole(userRole);
   const canCreate = hasCapability(caps, CAPABILITIES.CREATE_POST);
   const canPin = hasCapability(caps, CAPABILITIES.PIN_POST);
+<<<<<<< HEAD
 
   // Interaction state
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
@@ -269,6 +270,8 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
   const [_loadingInteractions, setLoadingInteractions] = useState<Set<string>>(
     new Set()
   );
+=======
+>>>>>>> origin/main
 
   useEffect(() => {
     if (!open && triggerRef.current) triggerRef.current.focus();
