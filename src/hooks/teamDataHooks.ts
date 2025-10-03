@@ -12,7 +12,7 @@ import {
   gameResultLogFailed,
 } from "../lib/telemetry";
 import { listTeamEvents, createEvent } from "@services/eventsService";
-import { listGameResults, logGameResult } from "@services/gameResultsService";
+import { listGameResults, logGameResult } from "@services/gamePlanService";
 import {
   listTeamPosts,
   createPost,
@@ -27,7 +27,7 @@ import type {
 import type {
   GameResultListItem,
   LogGameResultInput,
-} from "@services/gameResultsService";
+} from "@services/gamePlanService";
 import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys
