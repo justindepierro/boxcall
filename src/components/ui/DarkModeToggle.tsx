@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "./Button/Button";
 import { Icon, type IconName } from "./Icon";
-import { useDesignSystem } from "../design-system/design-system-hooks";
+import { useApp } from "../core/useApp";
 
 /**
  * Dark Mode Toggle Component
@@ -26,7 +26,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   className = "",
   hapticType = "medium",
 }) => {
-  const { config, updateConfig } = useDesignSystem();
+  const { designConfig: config, updateDesignConfig: updateConfig } = useApp();
 
   const toggleTheme = () => {
     const newTheme = config.theme === "dark" ? "light" : "dark";
@@ -86,7 +86,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
   showAuto = true,
   className = "",
 }) => {
-  const { config, updateConfig } = useDesignSystem();
+  const { designConfig: config, updateDesignConfig: updateConfig } = useApp();
 
   const themes = [
     { value: "light", label: "Light", icon: "sun" as IconName },

@@ -12,12 +12,12 @@ import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { ProgressiveImage } from "../ui/ProgressiveImage";
 import { LazyLoad } from "../ui/LazyLoad";
 import { DarkModeToggle } from "../ui/DarkModeToggle";
-import { useAdvancedTheme } from "./advanced-theme-hooks";
+import { useApp } from "../core/useApp";
 import { ColorGenerationService } from "../../lib/colorGeneration";
 import type { TeamColors } from "../../lib/colorGeneration";
 
 export function DesignSystemShowcase() {
-  const theme = useAdvancedTheme();
+  const theme = useApp(); // Get full app context for theme functionality
   const [selectedTeam, setSelectedTeam] = useState<TeamColors | null>(null);
   const [selectedEmotion, setSelectedEmotion] = useState<
     "trust" | "energy" | "calm" | "achievement" | null
@@ -430,17 +430,17 @@ export function DesignSystemShowcase() {
             🎨 Current Color Palette
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Object.entries(theme.palette).map(([key, value]) => (
+            {theme.colorTheme.palette && Object.entries(theme.colorTheme.palette).map(([key, value]) => (
               <div key={key} className="text-center space-y-2">
                 <div
                   className="h-16 w-full rounded-lg border-2 border-border"
-                  style={{ backgroundColor: value }}
+                  style={{ backgroundColor: value as string }}
                 />
                 <span className="text-xs font-medium text-primary capitalize">
                   {key}
                 </span>
                 <span className="text-xs text-secondary font-mono">
-                  {value}
+                  {value as string}
                 </span>
               </div>
             ))}

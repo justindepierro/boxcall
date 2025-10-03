@@ -2,10 +2,10 @@
  * Theme Colors Hook
  * Separated from DarkModeToggle to avoid fast refresh warnings
  */
-import { useDesignSystem } from "../design-system/design-system-hooks";
+import { useApp } from "../core/useApp";
 
 export const useThemeColors = () => {
-  const { config } = useDesignSystem();
+  const { designConfig: config } = useApp();
   const isDark = config.theme === "dark" ||
     (config.theme === "auto" && typeof window !== "undefined" &&
      window.matchMedia("(prefers-color-scheme: dark)").matches);

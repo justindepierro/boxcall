@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../app/auth-store";
-import { useDesignSystem } from "../design-system/design-system-hooks";
+import { useApp } from "../core/useApp";
 import { AuthMonitoring } from "../../utils/authMonitoring";
 import { PerformanceDashboard } from "./PerformanceDashboard";
 
@@ -369,7 +369,7 @@ type TabType =
 
 const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
-  const { config, updateConfig } = useDesignSystem();
+  const { designConfig: config, updateDesignConfig: updateConfig } = useApp();
   const [activeTab, setActiveTab] = useState<TabType>("design-system");
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ width: 600, height: 400 });
