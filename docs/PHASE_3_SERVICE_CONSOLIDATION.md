@@ -1,9 +1,9 @@
 # Phase 3: Service Layer Consolidation
 
-**Status**: Phases 3A, 3B & 3C Complete ✅ | 3D-F Planned 📋  
+**Status**: Phases 3A, 3B, 3C & 3D Complete ✅ | 3E-F Planned 📋  
 **Branch**: `fix/codebase-cleanup`  
 **Date Started**: January 2, 2025  
-**Last Updated**: January 2, 2025
+**Last Updated**: October 3, 2025
 
 ---
 
@@ -706,6 +706,145 @@ d71157e  Fix type assertions in playAnalyticsService after consolidation
 
 ---
 
+## ✅ Phase 3D: Practice Services (2→1)
+
+### Consolidation Details
+
+**Files Merged:**
+
+```
+practiceService.ts             (551 lines) - schedules/templates/attendance
+practiceScriptService.ts       (348 lines) - play workflow integration
+────────────────────────────────────────
+TOTAL INPUT                    (899 lines)
+```
+
+**Result:**
+
+```
+practiceService.ts (enhanced)  (912 lines)
+────────────────────────────────────────
+NET REDUCTION                  (+13 lines, -1 file)
+```
+
+### What Was Consolidated
+
+**`practiceService.ts`** - Now a unified practice management service:
+
+1. **Practice Schedule Operations** (existing)
+   - `createPracticeSchedule()` / `getPracticeSchedules()` - Schedule management
+   - `updatePracticeSchedule()` / `deletePracticeSchedule()` - CRUD operations
+   - Schedule filtering by date, location, field type, weather dependency
+
+2. **Practice Block Operations** (existing)
+   - `addPracticeBlock()` / `updatePracticeBlock()` / `deletePracticeBlock()` - Block management
+   - `reorderPracticeBlocks()` - Block sequencing
+
+3. **Practice Template Operations** (existing)
+   - `createPracticeTemplate()` / `getPracticeTemplates()` - Template management
+   - `createScheduleFromTemplate()` - Template instantiation
+
+4. **Attendance & Equipment** (existing)
+   - `recordAttendance()` / `getPracticeAttendance()` - Player tracking
+   - `getAvailableEquipment()` - Equipment management
+
+5. **Practice Script Operations** (from practiceScriptService.ts) ✨ NEW
+   - `createPracticeScript()` - Create scripts for playbook → practice workflow
+   - `getPracticeScripts()` / `getPracticeScript()` - Script retrieval with plays
+   - `addPlayToScript()` - Add plays to scripts with coaching points
+   - `createQuickScript()` - One-step script creation from a play
+   - `getOrCreateQuickAddsScript()` - Fast workflow integration
+   - `mapDatabaseScriptToPracticeScript()` - Data transformation
+
+6. **Search Functionality** (existing, now enhanced)
+   - `searchPractices()` - Unified search across schedules, templates, and scripts
+   - `searchPracticeScripts()` - Enhanced with actual script database queries
+
+### Architecture Improvements
+
+**Unified Practice Domain:**
+- Single source of truth for all practice-related operations
+- Coherent API surface: schedules → blocks → scripts → plays
+- Natural workflow progression within one service
+
+**Database Integration:**
+- `practice_schedules` - Schedule and planning data
+- `practice_templates` - Reusable templates
+- `practice_blocks` - Time-based practice segments
+- `practice_scripts` - Play workflow integration
+- `practice_script_plays` - Script-to-play relationships
+- Consistent RLS policies and error handling
+
+**Type Safety:**
+- Extended `PracticeScript` interface for workflow support
+- Exported `PracticeScriptPlay`, `CreatePracticeScriptData`, `AddPlayToPracticeScriptData`
+- Proper type handling for database transformations
+- Backward compatible with existing type definitions
+
+### Backward Compatibility
+
+```typescript
+// Legacy export maintained for zero-downtime migration
+export const PracticeScriptService = PracticeService;
+```
+
+**Zero Breaking Changes:**
+- All existing consumers work without modification
+- Import paths unchanged: `import { PracticeScriptService } from "../services"`
+- API surface identical for both `PracticeService` and `PracticeScriptService`
+
+### Files Updated
+
+- ✅ `src/services/practiceService.ts` (enhanced with script methods - 912 lines)
+- ✅ `src/services/index.ts` (removed practiceScriptService export, updated comment)
+- ❌ `src/services/practiceScriptService.ts` (deleted)
+
+**Consumer files automatically compatible:**
+- `src/pages/PlaybookPage.tsx` - Uses `PracticeScriptService.createQuickScript()`
+- `src/components/playbook/PracticeScriptBuilder.tsx` - Full script builder UI
+- `src/components/playbook/PracticeScriptList.tsx` - Script listing and management
+- `src/components/playbook/PracticeScriptPlayItem.tsx` - Individual play items
+- `src/components/pdf/PracticeScriptPDF.tsx` - PDF generation
+- `src/services/dataSyncService.ts` - Offline sync for practice scripts
+- `src/services/pdfExportService.tsx` - Export utilities
+
+### Quality Metrics
+
+- ✅ TypeScript compilation: PASSING (`tsc --noEmit` succeeds)
+- ✅ Type errors: 0 (clean consolidation)
+- ✅ All imports: Working without changes (backward compatibility)
+- ✅ RLS policies: Preserved for all practice tables
+- ✅ Zero breaking changes: All 7 consumer files work unchanged
+
+### Key Benefits
+
+**Maintainability:**
+- One file for all practice operations (schedules, blocks, templates, scripts)
+- Easier to understand the complete practice workflow
+- Reduced cognitive overhead (1 vs 2 files to navigate)
+- Single location for practice-related bug fixes
+
+**Developer Experience:**
+- Logical method organization: schedules → templates → blocks → scripts
+- Consistent API patterns across all practice operations
+- Better discoverability (all practice methods in one place)
+- Clear section comments for different responsibility areas
+
+**Performance:**
+- Shared database connection and error handling
+- Potential for query optimization across practice operations
+- Reduced module import overhead
+
+### Commit
+
+```bash
+b72d3e8  Consolidate practiceScriptService into practiceService (2→1)
+```
+
+**Status**: ✅ **COMPLETE** - Consolidation tested and validated
+
+---
+
 ## 🔗 Related Documentation
 
 - [Cleanup Audit](./architecture/CLEANUP_AUDIT.md) - Original analysis
@@ -715,6 +854,6 @@ d71157e  Fix type assertions in playAnalyticsService after consolidation
 
 ---
 
-**Last Updated**: January 2, 2025  
-**Next Review**: Before starting Phase 3D  
+**Last Updated**: October 3, 2025  
+**Next Review**: Before starting Phase 3E  
 **Maintained By**: Development Team
