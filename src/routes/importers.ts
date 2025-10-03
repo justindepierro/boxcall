@@ -21,7 +21,7 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
           default: m.CalendarShellPage,
         }));
     case "/playbook":
-      return () => import("../pages/Playbook");
+      return () => import("../pages/PlaybookPage");
     case "/boxcall":
       return () => import("../pages/BoxCall");
     case "/about":

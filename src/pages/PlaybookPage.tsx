@@ -20,7 +20,6 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
 import type { DiagramMetadata } from "../components/playbook/diagram/PlayDiagramBuilder";
 import type { DiagramDocument } from "../components/playbook/diagram/types/types";
-import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { GlassCard } from "../components/ui/GlassCard";
@@ -52,6 +51,13 @@ const PlayDiagramBuilder = lazy(() =>
 const PracticeScriptBuilder = lazy(() =>
   import("../components/playbook/PracticeScriptBuilder").then((module) => ({
     default: module.PracticeScriptBuilder,
+  }))
+);
+
+// Lazy load PracticeScriptList to avoid eager PDF dependency
+const PracticeScriptList = lazy(() =>
+  import("../components/playbook/PracticeScriptList").then((module) => ({
+    default: module.PracticeScriptList,
   }))
 );
 
