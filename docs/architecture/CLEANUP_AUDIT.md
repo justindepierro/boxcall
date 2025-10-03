@@ -163,6 +163,92 @@ Total Potential Reduction:   ~6,024 lines (4% of codebase)
 
 ---
 
+## 🔄 Phase 3: Service Layer Cleanup (ANALYSIS COMPLETE - READY TO IMPLEMENT)
+
+**Status:** ANALYZED - Awaiting implementation  
+**Estimated Time:** 3-4 hours  
+**Impact:** Reduce 70 service files to ~45-50 (28% reduction)
+
+### Service Inventory:
+- **Total Service Files:** 70 (excluding tests)
+- **Modular Systems (keep as-is):**
+  - CSV module: 8 files (well-organized)
+  - PDF module: 9 files (modular structure)
+  - Dev Profiles: 6 files (feature-specific)
+  - Analytics: 2 files
+  - Database: 2 files
+  - Base services: 2 files
+
+### Consolidation Opportunities:
+
+#### 1. **Team Services** (3 → 1 file)
+**Current:**
+- `teamCreationService.ts` (233 lines)
+- `teamDuplicatePreventionService.ts` (330 lines)
+- `teamValidationService.ts` (94 lines)
+
+**Proposed:** Merge into `teamService.ts`
+- All three handle different aspects of team management
+- Natural fit: validation → duplicate check → creation
+- **Savings:** ~657 lines consolidated into one cohesive service
+
+#### 2. **Achievement Services** (2 → 1 file)
+**Current:**
+- `achievementService.ts`
+- `achievementTracker.ts`
+
+**Proposed:** Merge into `achievementService.ts`
+- Likely overlap between tracking and service logic
+- **Savings:** 1 file eliminated
+
+#### 3. **Practice Services** (2 → 1 file)
+**Current:**
+- `practiceService.ts`
+- `practiceScriptService.ts`
+
+**Proposed:** Merge into `practiceService.ts` or keep separate if script generation is complex
+- Need to evaluate overlap
+- **Potential savings:** 1 file if merged
+
+#### 4. **Game Plan/Play Services** (7 → 3-4 files)
+**Current:**
+- `gamePlanService.ts`
+- `gamePlanningAnalyticsService.ts`
+- `gameResultsService.ts`
+- `playbookAnalyticsService.ts`
+- `playbookSearchService.ts`
+- `playerPerformanceAnalyticsService.ts`
+- `playsService.ts`
+
+**Proposed Structure:**
+- `gamePlanService.ts` - Core game planning (merge gamePlanService + gamePlanningAnalyticsService)
+- `playbookService.ts` - Playbook management (merge playbookAnalyticsService + playbookSearchService + playsService)
+- `gameAnalyticsService.ts` - Analytics & results (merge gameResultsService + playerPerformanceAnalyticsService)
+
+**Savings:** 7 → 3 files (4 files eliminated)
+
+#### 5. **Legacy/Unused Services** (candidates for deletion)
+Need to verify usage before removing:
+- `csvService.ts` (might be superseded by csv/ module)
+- `pdfExportService.tsx` (might be superseded by pdf/ module)
+- Check for any other unused services
+
+### Implementation Steps:
+1. **Phase 3A:** Team Services consolidation (1 hour)
+2. **Phase 3B:** Achievement & Practice services (30 min)
+3. **Phase 3C:** Game Plan/Play services (1-2 hours)
+4. **Phase 3D:** Remove duplicate/legacy services (30 min)
+5. **Phase 3E:** Update all imports across codebase (30 min)
+6. **Phase 3F:** Test & validate (30 min)
+
+### Expected Impact:
+- **Files reduced:** 70 → ~45-50 (28% reduction)
+- **Better organization:** Related logic grouped together
+- **Easier maintenance:** Fewer files to navigate
+- **Improved discoverability:** Clear service boundaries
+
+---
+
 ## ✅ Phase 2 Complete: Provider Consolidation
 
 **Status:** COMPLETED  
