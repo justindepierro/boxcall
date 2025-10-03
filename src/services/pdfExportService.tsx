@@ -1,18 +1,29 @@
 /**
  * PDF Export Service for Practice Scripts
  * Generates professional PDF documents for practice planning
+ * Now with lazy loading for react-pdf library (saves ~1.5MB from initial bundle)
  */
 
-import { pdf } from "@react-pdf/renderer";
-import type { PracticeScript } from "./practiceScriptService";
-import { PracticeScriptPDF } from "../components/pdf/PracticeScriptPDF";
+import type { PracticeScript } from "@services";
 
 export class PDFExportService {
+  /**
+   * Lazy load react-pdf and PDF component
+   */
+  private static async loadPDFDependencies() {
+    const [{ pdf }, { PracticeScriptPDF }] = await Promise.all([
+      import("@react-pdf/renderer"),
+      import("../components/pdf/PracticeScriptPDF"),
+    ]);
+    return { pdf, PracticeScriptPDF };
+  }
+
   /**
    * Generate and download a PDF for a practice script
    */
   static async exportPracticeScript(script: PracticeScript): Promise<void> {
     try {
+      const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();
       const blob = await pdf(<PracticeScriptPDF script={script} />).toBlob();
 
       // Create download link
@@ -41,6 +52,7 @@ export class PDFExportService {
     script: PracticeScript
   ): Promise<Blob> {
     try {
+      const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();
       return await pdf(<PracticeScriptPDF script={script} />).toBlob();
     } catch (error) {
       console.error("Error generating PDF:", error);

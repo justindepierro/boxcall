@@ -94,7 +94,7 @@ export const LazyBoxCall = lazyRoute(
 );
 
 export const LazyPlaybookPage = lazyRoute(
-  () => import("../../pages/Playbook"),
+  () => import("../../pages/PlaybookPage"),
   "Playbook"
 );
 
