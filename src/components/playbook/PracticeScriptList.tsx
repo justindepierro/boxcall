@@ -3,7 +3,7 @@ import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Badge } from "../ui/Badge";
-import { PracticeScriptService, type PracticeScript } from "../../services/practiceScriptService";
+import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
 

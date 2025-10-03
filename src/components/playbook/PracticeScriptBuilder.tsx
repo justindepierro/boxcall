@@ -7,7 +7,7 @@ import Input from "../ui/Input/Input";
 import Textarea from "../ui/TextArea/TextArea";
 import { Badge } from "../ui/Badge";
 import { Modal } from "../ui/Modal";
-import { PracticeScriptService, type PracticeScript } from "../../services/practiceScriptService";
+import { PracticeScriptService, type PracticeScript } from "@services";
 import type { Play } from "../../types/play";
 import { PlaySelectorModal } from "./PlaySelectorModal";
 import { PracticeScriptPlayItem } from "./PracticeScriptPlayItem";

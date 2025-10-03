@@ -11,7 +11,7 @@ import {
   View,
   StyleSheet,
 } from '@react-pdf/renderer';
-import type { PracticeScript } from '../../services/practiceScriptService';
+import type { PracticeScript } from '@services';
 
 const styles = StyleSheet.create({
   page: {

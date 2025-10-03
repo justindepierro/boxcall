@@ -11,8 +11,8 @@ import {
   gameResultLogSucceeded,
   gameResultLogFailed,
 } from "../lib/telemetry";
-import { listTeamEvents, createEvent } from "@services/eventsService";
-import { listGameResults, logGameResult } from "@services/gamePlanService";
+import { listTeamEvents, createEvent } from "@services";
+import { listGameResults, logGameResult } from "@services";
 import {
   listTeamPosts,
   createPost,
@@ -23,11 +23,11 @@ import { getSeasonStats } from "@services/statsService";
 import type {
   TeamEventListItem,
   CreateEventInput,
-} from "@services/eventsService";
+} from "@services";
 import type {
   GameResultListItem,
   LogGameResultInput,
-} from "@services/gamePlanService";
+} from "@services";
 import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys

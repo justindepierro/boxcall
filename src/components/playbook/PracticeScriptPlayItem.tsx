@@ -5,7 +5,7 @@ import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Badge } from "../ui/Badge";
 import Textarea from "../ui/TextArea/TextArea";
-import type { PracticeScriptPlay } from "../../services/practiceScriptService";
+import type { PracticeScriptPlay } from "@services";
 
 interface PracticeScriptPlayItemProps {
   scriptPlay: PracticeScriptPlay;
