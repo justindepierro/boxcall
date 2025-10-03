@@ -118,12 +118,12 @@ class AchievementTracker {
     try {
       console.log(`[Achievement] Tracking action: ${action} for user: ${userId}`);
 
-      // Get the player's team player record
+      // Get the player's roster record
       const { data: player } = await supabase
-        .from('team_players')
+        .from('player_roster')
         .select('id, team_id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (!player) {
         console.log('[Achievement] No player record found for user');
@@ -370,10 +370,10 @@ class AchievementTracker {
     try {
       // Get player record
       const { data: player } = await supabase
-        .from('team_players')
+        .from('player_roster')
         .select('id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (!player) {
         return { earned: [], progress: [], definitions: [] };
