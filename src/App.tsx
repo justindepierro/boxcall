@@ -10,16 +10,8 @@ import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
 import { PWAIntegration } from "./components/pwa/PWAIntegration";
-import { SecurityProvider } from "./components/security/SecurityProvider";
-import {
-  AnalyticsProvider,
-  AnalyticsDebugger,
-} from "./components/analytics/AnalyticsProvider";
-
-import { DesignSystemProvider } from "./components/design-system/DesignSystemProvider";
-import { AdvancedThemeProvider } from "./components/design-system/AdvancedThemeProvider";
-import { AccessibilityProvider } from "./components/accessibility/AccessibilityProvider";
-import { SEOProvider } from "./components/seo/SEOProvider";
+import { AnalyticsProvider, AnalyticsDebugger } from "./components/analytics/AnalyticsProvider";
+import { AppProvider } from "./components/core";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 /**
@@ -53,52 +45,49 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <SEOProvider>
-        <AccessibilityProvider>
-          <AnalyticsProvider>
-            <SecurityProvider enableCSRF={true} enableSessionSecurity={true}>
-              <DesignSystemProvider enableDevTools={import.meta.env.DEV}>
-                <AdvancedThemeProvider enableShowcase={import.meta.env.DEV}>
-                  <DevModeProvider>
-                    <div className="App">
-                      <DevHealthCheck />
-                      <AppGrid>
-                        <AuthGuard>
-                          <DataRouterApp />
-                        </AuthGuard>
-                      </AppGrid>
-                      <PWAIntegration />
-                      {showRQDevtools && (
-                        <ReactQueryDevtools
-                          initialIsOpen={false}
-                          position="bottom"
-                        />
-                      )}
-                      <DevPanel
-                        isOpen={showDevPanel}
-                        onClose={() => setShowDevPanel(false)}
-                      />
-                      {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
-                      {import.meta.env.DEV && (
-                        <ToggleQueryDevtools
-                          onToggle={() => setShowRQDevtools((v) => !v)}
-                        />
-                      )}
-                      {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-                      <ToggleDevPanel
-                        onToggle={() => setShowDevPanel((v) => !v)}
-                      />
+      <AppProvider 
+        enableDevTools={import.meta.env.DEV}
+        enableShowcase={import.meta.env.DEV}
+        enableCSRF={true}
+        enableSessionSecurity={true}
+      >
+        <AnalyticsProvider>
+          <DevModeProvider>
+            <div className="App">
+              <DevHealthCheck />
+              <AppGrid>
+                <AuthGuard>
+                  <DataRouterApp />
+                </AuthGuard>
+              </AppGrid>
+              <PWAIntegration />
+              {showRQDevtools && (
+                <ReactQueryDevtools
+                  initialIsOpen={false}
+                  position="bottom"
+                />
+              )}
+              <DevPanel
+                isOpen={showDevPanel}
+                onClose={() => setShowDevPanel(false)}
+              />
+              {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
+              {import.meta.env.DEV && (
+                <ToggleQueryDevtools
+                  onToggle={() => setShowRQDevtools((v) => !v)}
+                />
+              )}
+              {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
+              <ToggleDevPanel
+                onToggle={() => setShowDevPanel((v) => !v)}
+              />
 
-                      {/* Analytics Debug Panel (dev only) */}
-                      <AnalyticsDebugger />
-                    </div>
-                  </DevModeProvider>
-                </AdvancedThemeProvider>
-              </DesignSystemProvider>
-            </SecurityProvider>
-          </AnalyticsProvider>
-        </AccessibilityProvider>
-      </SEOProvider>
+              {/* Analytics Debug Panel (dev only) */}
+              <AnalyticsDebugger />
+            </div>
+          </DevModeProvider>
+        </AnalyticsProvider>
+      </AppProvider>
     </ErrorBoundary>
   );
 }
