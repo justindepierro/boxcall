@@ -10,7 +10,7 @@ export const MinimalTooltipTest = () => {
       <h1>Minimal Tooltip Test</h1>
       <p>Hover over the button below:</p>
       <br />
-      
+
       <Tooltip content="Hello! I am a tooltip 👋">
         <button
           style={{
@@ -26,10 +26,10 @@ export const MinimalTooltipTest = () => {
           Hover me!
         </button>
       </Tooltip>
-      
+
       <br />
       <br />
-      
+
       <Tooltip content="Bottom tooltip!" placement="bottom">
         <button
           style={{
@@ -45,10 +45,10 @@ export const MinimalTooltipTest = () => {
           Bottom tooltip
         </button>
       </Tooltip>
-      
+
       <br />
       <br />
-      
+
       <Tooltip content="Instant tooltip!" delay={0}>
         <button
           style={{

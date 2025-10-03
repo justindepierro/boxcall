@@ -1,21 +1,30 @@
 /**
  * Unified App Provider
- * 
+ *
  * Consolidates multiple providers to reduce nesting:
  * - Design System (theme, tokens, performance)
  * - Accessibility (a11y, reduced motion, screen reader)
  * - SEO (meta tags, structured data)
  * - Security hooks (applied at app level)
- * 
+ *
  * This replaces the previous 6-level provider nesting with a single provider.
  */
 
-import React, { createContext, useEffect, useMemo, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import type { ReactNode } from "react";
 
 // Design System imports
 import type { TeamColors } from "../../lib/colorGeneration";
-import { useColorTheme, type UseColorThemeReturn } from "../../hooks/useColorTheme";
+import {
+  useColorTheme,
+  type UseColorThemeReturn,
+} from "../../hooks/useColorTheme";
 
 // Accessibility imports
 import {
@@ -32,7 +41,11 @@ import { seoConfig } from "../../config/seo";
 import type { SEOMetaData } from "../../hooks/useSEO";
 
 // Security imports
-import { useSecurity, useCSRFProtection, useSecureSession } from "../../hooks/useSecurity";
+import {
+  useSecurity,
+  useCSRFProtection,
+  useSecureSession,
+} from "../../hooks/useSecurity";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -81,15 +94,22 @@ interface AppContextType {
   currentContext: "calm" | "energetic" | "professional" | null;
   setContext: (context: "calm" | "energetic" | "professional" | null) => void;
   currentEmotion: "trust" | "energy" | "calm" | "achievement" | null;
-  setEmotion: (emotion: "trust" | "energy" | "calm" | "achievement" | null) => void;
+  setEmotion: (
+    emotion: "trust" | "energy" | "calm" | "achievement" | null
+  ) => void;
   applyTeamTheme: (teamColors: TeamColors) => void;
-  applyEmotionTheme: (emotion: "trust" | "energy" | "calm" | "achievement") => void;
+  applyEmotionTheme: (
+    emotion: "trust" | "energy" | "calm" | "achievement"
+  ) => void;
   applyContextTheme: (context: "calm" | "energetic" | "professional") => void;
   showcaseMode: boolean;
   setShowcaseMode: (enabled: boolean) => void;
 
   // Accessibility
-  announce: (message: string, priority?: "POLITE" | "ASSERTIVE" | "OFF") => void;
+  announce: (
+    message: string,
+    priority?: "POLITE" | "ASSERTIVE" | "OFF"
+  ) => void;
   announceError: (message: string) => void;
   announceSuccess: (message: string) => void;
   announcePageChange: (pageName: string) => void;
@@ -148,16 +168,19 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   enableCSRF = true,
   enableSessionSecurity = true,
 }) => {
-
   // ============================================
   // DESIGN SYSTEM STATE
   // ============================================
-  const [designConfig, setDesignConfig] = useState<DesignSystemConfig>(defaultDesignConfig);
+  const [designConfig, setDesignConfig] =
+    useState<DesignSystemConfig>(defaultDesignConfig);
   const [usageTracking] = useState<ComponentUsage[]>([]);
 
-  const updateDesignConfig = useCallback((updates: Partial<DesignSystemConfig>) => {
-    setDesignConfig((prev) => ({ ...prev, ...updates }));
-  }, []);
+  const updateDesignConfig = useCallback(
+    (updates: Partial<DesignSystemConfig>) => {
+      setDesignConfig((prev) => ({ ...prev, ...updates }));
+    },
+    []
+  );
 
   const trackUsage = useCallback(
     (usage: ComponentUsage) => {
@@ -188,21 +211,28 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   // ============================================
   const colorTheme = useColorTheme();
   const [teamColors, setTeamColors] = useState<TeamColors | null>(null);
-  const [currentContext, setCurrentContext] = useState<"calm" | "energetic" | "professional" | null>(null);
-  const [currentEmotion, setCurrentEmotion] = useState<"trust" | "energy" | "calm" | "achievement" | null>(null);
+  const [currentContext, setCurrentContext] = useState<
+    "calm" | "energetic" | "professional" | null
+  >(null);
+  const [currentEmotion, setCurrentEmotion] = useState<
+    "trust" | "energy" | "calm" | "achievement" | null
+  >(null);
   const [showcaseMode, setShowcaseMode] = useState(enableShowcase);
 
-  const applyTeamTheme = useCallback(
-    (colors: TeamColors) => {
-      setTeamColors(colors);
-      // Apply colors to CSS custom properties
-      document.documentElement.style.setProperty("--team-primary", colors.primary);
-      if (colors.secondary) {
-        document.documentElement.style.setProperty("--team-secondary", colors.secondary);
-      }
-    },
-    []
-  );
+  const applyTeamTheme = useCallback((colors: TeamColors) => {
+    setTeamColors(colors);
+    // Apply colors to CSS custom properties
+    document.documentElement.style.setProperty(
+      "--team-primary",
+      colors.primary
+    );
+    if (colors.secondary) {
+      document.documentElement.style.setProperty(
+        "--team-secondary",
+        colors.secondary
+      );
+    }
+  }, []);
 
   const applyEmotionTheme = useCallback(
     (emotion: "trust" | "energy" | "calm" | "achievement") => {
@@ -239,16 +269,31 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   // Apply a11y CSS custom properties
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--a11y-min-touch-target", `${accessibilityConfig.interactive.minTouchTarget}px`);
-    root.style.setProperty("--a11y-focus-width", `${accessibilityConfig.interactive.focusIndicatorWidth}px`);
-    root.style.setProperty("--a11y-line-height", accessibilityConfig.text.lineHeight.toString());
-    root.style.setProperty("--a11y-letter-spacing", `${accessibilityConfig.text.letterSpacing}em`);
+    root.style.setProperty(
+      "--a11y-min-touch-target",
+      `${accessibilityConfig.interactive.minTouchTarget}px`
+    );
+    root.style.setProperty(
+      "--a11y-focus-width",
+      `${accessibilityConfig.interactive.focusIndicatorWidth}px`
+    );
+    root.style.setProperty(
+      "--a11y-line-height",
+      accessibilityConfig.text.lineHeight.toString()
+    );
+    root.style.setProperty(
+      "--a11y-letter-spacing",
+      `${accessibilityConfig.text.letterSpacing}em`
+    );
 
     if (prefersReducedMotion) {
       root.style.setProperty("--a11y-animation-duration", "0ms");
       root.classList.add("reduce-motion");
     } else {
-      root.style.setProperty("--a11y-animation-duration", `${accessibilityConfig.motion.defaultAnimationDuration}ms`);
+      root.style.setProperty(
+        "--a11y-animation-duration",
+        `${accessibilityConfig.motion.defaultAnimationDuration}ms`
+      );
       root.classList.remove("reduce-motion");
     }
   }, [prefersReducedMotion]);
@@ -269,7 +314,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     if (seoMeta.title) {
       document.title = seoMeta.title;
     }
-    
+
     // Update meta description
     if (seoMeta.description) {
       let descMeta = document.querySelector('meta[name="description"]');
@@ -283,7 +328,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 
     // Update canonical if available
     if (seoMeta.url) {
-      let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+      let canonicalLink = document.querySelector(
+        'link[rel="canonical"]'
+      ) as HTMLLinkElement;
       if (!canonicalLink) {
         canonicalLink = document.createElement("link");
         canonicalLink.setAttribute("rel", "canonical");
@@ -377,7 +424,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   return (
     <AppContext.Provider value={value}>
       {/* Screen reader announcements */}
-      <div ref={announcementRef} className="sr-only" aria-live="polite" aria-atomic="true" />
+      <div
+        ref={announcementRef}
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      />
       {children}
     </AppContext.Provider>
   );

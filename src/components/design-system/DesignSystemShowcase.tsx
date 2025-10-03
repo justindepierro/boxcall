@@ -430,20 +430,21 @@ export function DesignSystemShowcase() {
             🎨 Current Color Palette
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {theme.colorTheme.palette && Object.entries(theme.colorTheme.palette).map(([key, value]) => (
-              <div key={key} className="text-center space-y-2">
-                <div
-                  className="h-16 w-full rounded-lg border-2 border-border"
-                  style={{ backgroundColor: value as string }}
-                />
-                <span className="text-xs font-medium text-primary capitalize">
-                  {key}
-                </span>
-                <span className="text-xs text-secondary font-mono">
-                  {value as string}
-                </span>
-              </div>
-            ))}
+            {theme.colorTheme.palette &&
+              Object.entries(theme.colorTheme.palette).map(([key, value]) => (
+                <div key={key} className="text-center space-y-2">
+                  <div
+                    className="h-16 w-full rounded-lg border-2 border-border"
+                    style={{ backgroundColor: value as string }}
+                  />
+                  <span className="text-xs font-medium text-primary capitalize">
+                    {key}
+                  </span>
+                  <span className="text-xs text-secondary font-mono">
+                    {value as string}
+                  </span>
+                </div>
+              ))}
           </div>
         </Card>
 

@@ -1,4 +1,5 @@
 # 🧹 Codebase Cleanup Audit Report
+
 **Date**: October 2, 2025  
 **Branch**: fix/codebase-cleanup  
 **Total Files**: 797 TypeScript files
@@ -8,9 +9,11 @@
 ## 🚨 CRITICAL FINDINGS
 
 ### 1. **MASSIVE BLOAT: 2,724-Line Backup File**
+
 ```
 src/pages/legacy/CreateTeam_BACKUP_2725_lines.tsx (2,724 lines!)
 ```
+
 **Impact**: This single file is 1.75% of the entire codebase  
 **Recommendation**: ❌ **DELETE IMMEDIATELY**
 
@@ -19,16 +22,20 @@ src/pages/legacy/CreateTeam_BACKUP_2725_lines.tsx (2,724 lines!)
 ## 🔍 DUPLICATION & LEGACY CODE
 
 ### A. Version Duplicates (`.v2` files)
+
 ```
 ✅ Keep (Active)                          ❌ Remove (Old)
 --------------------------------          --------------------------------
 src/components/playbook/PlayCard.v2.tsx   → src/components/playbook/PlayCard.tsx (1,452 lines)
 src/components/playbook/AdvancedFilters.v2.tsx → src/components/playbook/AdvancedFilters.tsx
 ```
+
 **Action**: Rename `.v2` files to standard names, delete old versions
 
 ### B. Empty Legacy Files (19 files)
+
 These are **intentionally emptied placeholders** that satisfy old imports:
+
 ```
 src/telemetry/hooks.ts
 src/components/playbook/PlayBuilder/DiagramEditorMVP.tsx
@@ -39,12 +46,15 @@ src/components/ui/Icon/ProfessionalIcon.tsx
 src/components/ui/Icon/icons/index.ts
 ... and 12 more
 ```
+
 **Action**: ❌ **DELETE ALL** + find/replace imports across codebase
 
 ### C. Backup Files
+
 ```
 src/components/ui/Sidebar/Sidebar.legacy.backup.tsx
 ```
+
 **Action**: ❌ **DELETE**
 
 ---
@@ -52,6 +62,7 @@ src/components/ui/Sidebar/Sidebar.legacy.backup.tsx
 ## 🏗️ OVER-ENGINEERED LAYERS
 
 ### 1. **Provider Overload (12+ Providers)**
+
 ```typescript
 // Current Stack (nested ~8-10 deep!)
 <SecurityProvider>
@@ -76,12 +87,14 @@ src/components/ui/Sidebar/Sidebar.legacy.backup.tsx
 ```
 
 **Issues**:
+
 - Re-renders cascade through 8-10 layers
 - Context complexity nightmare
 - Performance overhead
 - Developer confusion
 
-**Recommendation**: 
+**Recommendation**:
+
 - ✅ Keep: `AuthProvider`, `AnalyticsProvider`
 - 🔄 Merge: `DesignSystemProvider` + `AdvancedThemeProvider` + `AccessibilityProvider` → `AppProvider`
 - ❌ Remove: `SecurityProvider` (use hooks), `SEOProvider` (use react-helmet-async), `DiagramEditorProvider` (component-local state)
@@ -90,6 +103,7 @@ src/components/ui/Sidebar/Sidebar.legacy.backup.tsx
 ### 2. **Service Layer Bloat**
 
 #### Similar Services (Consolidation Candidates)
+
 ```
 achievementService.ts           }
 achievementTracker.ts           } → Merge into single AchievementService
@@ -112,9 +126,11 @@ practiceScriptService.ts        } → Merge script into practice service
 **Target**: ~20-25 service files (40% reduction)
 
 #### Adapter Pattern Overuse
+
 ```
 src/adapters/fullcalendar/FullCalendarAdapter.ts
 ```
+
 - Only 1 adapter exists
 - Adds unnecessary abstraction layer
 - **Recommendation**: Import FullCalendar directly, remove adapter
@@ -122,6 +138,7 @@ src/adapters/fullcalendar/FullCalendarAdapter.ts
 ### 3. **Mega-Files (Potential Split Candidates)**
 
 #### Top 10 Largest Files
+
 ```
 3,283 lines - src/components/playbook/diagram-v2/FieldCanvas.tsx   ⚠️ NEEDS REFACTOR
 2,724 lines - src/pages/legacy/CreateTeam_BACKUP_2725_lines.tsx    ❌ DELETE
@@ -143,6 +160,7 @@ src/adapters/fullcalendar/FullCalendarAdapter.ts
 ## 📊 QUANTIFIED BLOAT
 
 ### File Count by Category
+
 ```
 Services:      38 files → Target: 25 files (34% reduction)
 Providers:     12 files → Target: 4 files (67% reduction)
@@ -152,6 +170,7 @@ Empty Legacy:  19 files → Target: 0 files (100% deletion)
 ```
 
 ### Estimated Lines of Code Reduction
+
 ```
 CreateTeam_BACKUP:           -2,724 lines
 Empty legacy files:          -500 lines (estimated)
@@ -170,6 +189,7 @@ Total Potential Reduction:   ~6,024 lines (4% of codebase)
 **Impact:** Reduce 70 service files to ~45-50 (28% reduction)
 
 ### Service Inventory:
+
 - **Total Service Files:** 70 (excluding tests)
 - **Modular Systems (keep as-is):**
   - CSV module: 8 files (well-organized)
@@ -182,36 +202,47 @@ Total Potential Reduction:   ~6,024 lines (4% of codebase)
 ### Consolidation Opportunities:
 
 #### 1. **Team Services** (3 → 1 file)
+
 **Current:**
+
 - `teamCreationService.ts` (233 lines)
 - `teamDuplicatePreventionService.ts` (330 lines)
 - `teamValidationService.ts` (94 lines)
 
 **Proposed:** Merge into `teamService.ts`
+
 - All three handle different aspects of team management
 - Natural fit: validation → duplicate check → creation
 - **Savings:** ~657 lines consolidated into one cohesive service
 
 #### 2. **Achievement Services** (2 → 1 file)
+
 **Current:**
+
 - `achievementService.ts`
 - `achievementTracker.ts`
 
 **Proposed:** Merge into `achievementService.ts`
+
 - Likely overlap between tracking and service logic
 - **Savings:** 1 file eliminated
 
 #### 3. **Practice Services** (2 → 1 file)
+
 **Current:**
+
 - `practiceService.ts`
 - `practiceScriptService.ts`
 
 **Proposed:** Merge into `practiceService.ts` or keep separate if script generation is complex
+
 - Need to evaluate overlap
 - **Potential savings:** 1 file if merged
 
 #### 4. **Game Plan/Play Services** (7 → 3-4 files)
+
 **Current:**
+
 - `gamePlanService.ts`
 - `gamePlanningAnalyticsService.ts`
 - `gameResultsService.ts`
@@ -221,6 +252,7 @@ Total Potential Reduction:   ~6,024 lines (4% of codebase)
 - `playsService.ts`
 
 **Proposed Structure:**
+
 - `gamePlanService.ts` - Core game planning (merge gamePlanService + gamePlanningAnalyticsService)
 - `playbookService.ts` - Playbook management (merge playbookAnalyticsService + playbookSearchService + playsService)
 - `gameAnalyticsService.ts` - Analytics & results (merge gameResultsService + playerPerformanceAnalyticsService)
@@ -228,12 +260,15 @@ Total Potential Reduction:   ~6,024 lines (4% of codebase)
 **Savings:** 7 → 3 files (4 files eliminated)
 
 #### 5. **Legacy/Unused Services** (candidates for deletion)
+
 Need to verify usage before removing:
+
 - `csvService.ts` (might be superseded by csv/ module)
 - `pdfExportService.tsx` (might be superseded by pdf/ module)
 - Check for any other unused services
 
 ### Implementation Steps:
+
 1. **Phase 3A:** Team Services consolidation (1 hour)
 2. **Phase 3B:** Achievement & Practice services (30 min)
 3. **Phase 3C:** Game Plan/Play services (1-2 hours)
@@ -242,6 +277,7 @@ Need to verify usage before removing:
 6. **Phase 3F:** Test & validate (30 min)
 
 ### Expected Impact:
+
 - **Files reduced:** 70 → ~45-50 (28% reduction)
 - **Better organization:** Related logic grouped together
 - **Easier maintenance:** Fewer files to navigate
@@ -256,17 +292,17 @@ Need to verify usage before removing:
 **Impact:** Reduced provider nesting from 6 levels to 3 (50% reduction)
 
 ### What Changed:
+
 1. ✅ Created `AppProvider` - Unified provider consolidating:
    - `DesignSystemProvider`
    - `AdvancedThemeProvider`
    - `AccessibilityProvider`
-   - `SEOProvider`  
+   - `SEOProvider`
    - `SecurityProvider` (hooks moved to AppProvider)
 
 2. ✅ Updated `App.tsx`:
    - **Before:** 6 nested providers (SEO → Accessibility → Analytics → Security → DesignSystem → AdvancedTheme)
    - **After:** 3 nested providers (ErrorBoundary → AppProvider → Analytics)
-   
 3. ✅ Created compatibility layer (`useProviderCompat.ts`):
    - `useDesignSystemCompat()` - wraps useApp()
    - `useAdvancedThemeCompat()` - wraps useApp()
@@ -274,20 +310,24 @@ Need to verify usage before removing:
    - `useSEOCompat()` - wraps useApp()
 
 ### Files Created:
+
 - `src/components/core/AppProvider.tsx` (383 lines)
 - `src/components/core/useApp.ts` (hook)
 - `src/components/core/index.ts` (exports)
 - `src/hooks/useProviderCompat.ts` (backward compatibility)
 
 ### Files Modified:
+
 - `src/App.tsx` - Simplified provider nesting
 
 ### Validation:
+
 - ✅ TypeScript: Passes with no errors
 - ✅ Backward compatible: Old hooks still work via compat layer
 - ⏳ Runtime testing: Needs manual verification
 
 ### Benefits:
+
 - **Simpler component tree**: 50% fewer provider levels
 - **Better performance**: Fewer context boundaries to cross
 - **Easier maintenance**: Single source of truth for app-level concerns
@@ -302,15 +342,18 @@ Need to verify usage before removing:
 **Impact:** ~3,200+ lines removed (~2% of codebase)
 
 ### Files Deleted:
+
 1. ✅ `CreateTeam_BACKUP_2725_lines.tsx` - 2,724 lines (1.75% of codebase)
 2. ✅ `PlayCard.v2.tsx` - Duplicate component version
 3. ✅ `PlayCard.v2.stories.tsx` - Duplicate stories
 4. ✅ `AdvancedFilters.v2.tsx` - Duplicate component version
 
 ### Files Updated:
+
 - ✅ `PlayGrid.tsx` - Updated to import from `PlayCard` instead of `PlayCard.v2`
 
 ### Validation:
+
 - ✅ TypeScript: Passes with no errors
 - ✅ Tests: All passing (0 failed)
 - ✅ ESLint cache cleared
@@ -320,19 +363,22 @@ Need to verify usage before removing:
 ## 🎯 Recommended Cleanup Plan
 
 ### Phase 1: Quick Wins (1-2 hours) - **Start Here!**
-1. ❌ Delete `CreateTeam_BACKUP_2725_lines.tsx` 
+
+1. ❌ Delete `CreateTeam_BACKUP_2725_lines.tsx`
 2. ❌ Delete 19 empty legacy files
 3. ❌ Delete `Sidebar.legacy.backup.tsx`
 4. ❌ Remove FullCalendar adapter (use directly)
 5. ✅ Rename `.v2` files to standard names
 
 ### Phase 2: Provider Consolidation (2-3 hours)
+
 1. Merge `DesignSystemProvider` + `AdvancedThemeProvider` + `AccessibilityProvider`
 2. Remove `SecurityProvider` (use hooks)
 3. Remove `SEOProvider` (use react-helmet-async directly)
 4. Move `DiagramEditorProvider` to component-local state
 
 ### Phase 3: Service Layer Cleanup (3-4 hours)
+
 1. Merge achievement services
 2. Merge game plan services
 3. Merge team services
@@ -340,6 +386,7 @@ Need to verify usage before removing:
 5. Merge practice services
 
 ### Phase 4: Mega-File Refactoring (4-6 hours)
+
 1. Split `FieldCanvas.tsx` (3,283 lines) into modular components
 2. Split `PlayCard.tsx` (1,452 lines) into sub-components
 3. Split `diagram-v2/context.tsx` (1,321 lines)
@@ -350,6 +397,7 @@ Need to verify usage before removing:
 ## 🏆 RECOMMENDED ARCHITECTURE
 
 ### Simplified Provider Stack
+
 ```typescript
 <QueryClientProvider client={queryClient}>
   <AuthProvider>
@@ -363,6 +411,7 @@ Need to verify usage before removing:
 ```
 
 ### Service Organization
+
 ```
 src/services/
   ├── core/
@@ -389,18 +438,21 @@ src/services/
 ## 💡 GENERAL PRINCIPLES
 
 ### When to Merge Services
+
 - ✅ Same domain (e.g., team creation + validation)
 - ✅ < 500 lines each
 - ✅ Similar dependencies
 - ✅ Used together 90%+ of the time
 
 ### When to Keep Separate
+
 - ❌ Different domains
 - ❌ > 800 lines
 - ❌ Independent use cases
 - ❌ Different update frequencies
 
 ### Provider Guidelines
+
 - Maximum 4-5 providers total
 - Each must manage orthogonal concerns
 - No provider > 200 lines
@@ -411,6 +463,7 @@ src/services/
 ## 📈 SUCCESS METRICS
 
 **Before**:
+
 - 797 files
 - 155,588 lines
 - 12 providers
@@ -418,6 +471,7 @@ src/services/
 - 19 dead files
 
 **After** (Target):
+
 - ~770 files (-27 files, -3.4%)
 - ~149,500 lines (-6,000 lines, -4%)
 - 4 providers (-67%)
@@ -429,6 +483,7 @@ src/services/
 ## ⚡ IMMEDIATE NEXT STEPS
 
 Run this to start cleanup:
+
 ```bash
 # 1. Delete the backup file
 git rm src/pages/legacy/CreateTeam_BACKUP_2725_lines.tsx

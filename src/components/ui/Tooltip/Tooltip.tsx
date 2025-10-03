@@ -30,10 +30,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const updatePosition = React.useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
-    
+
     let top = 0;
     let left = 0;
-    
+
     // Use viewport coordinates (no scroll offset needed with position: fixed)
     switch (placement) {
       case "top":
@@ -53,7 +53,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         left = rect.right + 8;
         break;
     }
-    
+
     setPosition({ top, left });
   }, [placement]);
 
@@ -79,11 +79,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
   // Update position on scroll or resize
   React.useEffect(() => {
     if (!open) return;
-    
+
     const handleUpdate = () => updatePosition();
     window.addEventListener("scroll", handleUpdate, true);
     window.addEventListener("resize", handleUpdate);
-    
+
     return () => {
       window.removeEventListener("scroll", handleUpdate, true);
       window.removeEventListener("resize", handleUpdate);
@@ -102,7 +102,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
       fontWeight: 500,
       whiteSpace: "nowrap",
       pointerEvents: "none",
-      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)",
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)",
       border: "1px solid rgba(255, 255, 255, 0.1)",
       maxWidth: "280px",
     };
@@ -116,18 +117,19 @@ export const Tooltip: React.FC<TooltipProps> = ({
     switch (placement) {
       case "top":
       case "bottom": {
-        transform = "translate(-50%, " + (placement === "top" ? "-100%" : "0") + ")";
+        transform =
+          "translate(-50%, " + (placement === "top" ? "-100%" : "0") + ")";
         // For centered tooltips, ensure we don't go off the left or right edges
         // Account for the -50% transform by checking if centered position would clip
         const minLeft = padding + 140; // Half of max tooltip width (280px / 2)
         const maxLeft = window.innerWidth - padding - 140;
-        
+
         if (finalLeft < minLeft) {
           finalLeft = minLeft;
         } else if (finalLeft > maxLeft) {
           finalLeft = maxLeft;
         }
-        
+
         // Also check top boundary for "top" placement
         if (placement === "top" && finalTop < padding + 50) {
           // Not enough space above, flip to bottom
@@ -135,14 +137,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
         }
         break;
       }
-        
+
       case "left":
       case "right": {
-        transform = "translate(" + (placement === "left" ? "-100%" : "0") + ", -50%)";
+        transform =
+          "translate(" + (placement === "left" ? "-100%" : "0") + ", -50%)";
         // Prevent going off top
         const minTop = padding + 20;
         const maxTop = window.innerHeight - padding - 20;
-        
+
         if (finalTop < minTop) {
           finalTop = minTop;
         } else if (finalTop > maxTop) {
@@ -173,16 +176,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
       >
         {children}
       </span>
-      {open && !disabled && createPortal(
-        <span
-          id={id}
-          role="tooltip"
-          style={getTooltipStyle()}
-        >
-          {content}
-        </span>,
-        document.body
-      )}
+      {open &&
+        !disabled &&
+        createPortal(
+          <span id={id} role="tooltip" style={getTooltipStyle()}>
+            {content}
+          </span>,
+          document.body
+        )}
     </>
   );
 };

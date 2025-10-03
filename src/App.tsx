@@ -10,7 +10,10 @@ import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
 import { PWAIntegration } from "./components/pwa/PWAIntegration";
-import { AnalyticsProvider, AnalyticsDebugger } from "./components/analytics/AnalyticsProvider";
+import {
+  AnalyticsProvider,
+  AnalyticsDebugger,
+} from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
@@ -45,7 +48,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <AppProvider 
+      <AppProvider
         enableDevTools={import.meta.env.DEV}
         enableShowcase={import.meta.env.DEV}
         enableCSRF={true}
@@ -62,10 +65,7 @@ function App() {
               </AppGrid>
               <PWAIntegration />
               {showRQDevtools && (
-                <ReactQueryDevtools
-                  initialIsOpen={false}
-                  position="bottom"
-                />
+                <ReactQueryDevtools initialIsOpen={false} position="bottom" />
               )}
               <DevPanel
                 isOpen={showDevPanel}
@@ -78,9 +78,7 @@ function App() {
                 />
               )}
               {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-              <ToggleDevPanel
-                onToggle={() => setShowDevPanel((v) => !v)}
-              />
+              <ToggleDevPanel onToggle={() => setShowDevPanel((v) => !v)} />
 
               {/* Analytics Debug Panel (dev only) */}
               <AnalyticsDebugger />
