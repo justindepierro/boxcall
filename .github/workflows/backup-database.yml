@@ -30,18 +30,15 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: npm run backup
       
-      - name: Get backup filename
+      - name: Get backup directory
         id: backup
         run: |
-          BACKUP_FILE=$(ls -t backups/*.json | head -1)
-          echo "file=$BACKUP_FILE" >> $GITHUB_OUTPUT
-          echo "filename=$(basename $BACKUP_FILE)" >> $GITHUB_OUTPUT
+          BACKUP_DIR=$(ls -td backups/2* | head -1)
+          echo "dir=$BACKUP_DIR" >> $GITHUB_OUTPUT
+          echo "dirname=$(basename $BACKUP_DIR)" >> $GITHUB_OUTPUT
       
       - name: Verify backup integrity
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npm run backup:verify
+        run: npm run backup:verify ${{ steps.backup.outputs.dir }}
       
       - name: Upload to S3
         if: success()
@@ -54,15 +51,15 @@ jobs:
       - name: Sync to S3 bucket
         if: success()
         run: |
-          aws s3 cp ${{ steps.backup.outputs.file }} \
-            s3://boxcall-backups/database/${{ steps.backup.outputs.filename }} \
+          aws s3 sync ${{ steps.backup.outputs.dir }} \
+            s3://boxcall-backups/database/${{ steps.backup.outputs.dirname }}/ \
             --storage-class STANDARD \
             --server-side-encryption AES256
       
       - name: Keep local backups (7 days)
         if: success()
         run: |
-          find backups/ -name "*.json" -type f -mtime +7 -delete || true
+          find backups/ -name "2*" -type d -mtime +7 -exec rm -rf {} + || true
           echo "Cleaned up backups older than 7 days"
       
       - name: Upload backup artifact (fallback)
@@ -70,5 +67,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: database-backup-${{ github.run_number }}
-          path: backups/*.json
+          path: ${{ steps.backup.outputs.dir }}
           retention-days: 7
