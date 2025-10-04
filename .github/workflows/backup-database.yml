@@ -1,0 +1,112 @@
+name: Database Backup
+
+on:
+  schedule:
+    # Run daily at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run database backup
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run backup
+      
+      - name: Get backup filename
+        id: backup
+        run: |
+          BACKUP_FILE=$(ls -t backups/*.json | head -1)
+          echo "file=$BACKUP_FILE" >> $GITHUB_OUTPUT
+          echo "filename=$(basename $BACKUP_FILE)" >> $GITHUB_OUTPUT
+      
+      - name: Verify backup integrity
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run backup:verify ${{ steps.backup.outputs.file }}
+      
+      - name: Upload to S3
+        if: success()
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Sync to S3 bucket
+        if: success()
+        run: |
+          aws s3 cp ${{ steps.backup.outputs.file }} \
+            s3://boxcall-backups/database/${{ steps.backup.outputs.filename }} \
+            --storage-class STANDARD \
+            --server-side-encryption AES256
+      
+      - name: Keep local backups (7 days)
+        if: success()
+        run: |
+          find backups/ -name "*.json" -type f -mtime +7 -delete
+          echo "Cleaned up backups older than 7 days"
+      
+      - name: Send success notification
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "✅ Database backup completed successfully",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*✅ Database Backup Successful*\n\nBackup: `${{ steps.backup.outputs.filename }}`\nTime: <!date^${{ github.event.repository.updated_at }}^{date_short_pretty} {time}|${{ github.event.repository.updated_at }}>"
+                  }
+                }
+              ]
+            }
+      
+      - name: Send failure notification
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "❌ Database backup FAILED",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*❌ Database Backup Failed*\n\nWorkflow: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>\nTime: <!date^${{ github.event.repository.updated_at }}^{date_short_pretty} {time}|${{ github.event.repository.updated_at }}>"
+                  }
+                }
+              ]
+            }
+      
+      - name: Upload backup artifact (fallback)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ github.run_number }}
+          path: backups/*.json
+          retention-days: 7

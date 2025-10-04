@@ -2,12 +2,18 @@
 
 Elite coaching platform – play lifecycle (Ideate → Author → Rehearse → Deploy → Analyze) with quality + performance gates.
 
+[![Uptime Status](https://img.shields.io/uptimerobot/status/801514177?label=Status&style=flat-square)](https://stats.uptimerobot.com/boxcall-status)
+[![Uptime (30 days)](https://img.shields.io/uptimerobot/ratio/30/801514177?style=flat-square)](https://stats.uptimerobot.com/boxcall-status)
+[![Health Check](https://img.shields.io/uptimerobot/status/801514167?label=Health&style=flat-square)](https://boxcallapp.com/health)
+
 Badges: TypeScript · React · Tailwind · Vite
 
 <div align="center">
   <img src="/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
 
 **Professional football management platform built for coaches, by coaches**
+
+[🔍 View Live Status](https://stats.uptimerobot.com/boxcall-status)
 
 </div>
 
