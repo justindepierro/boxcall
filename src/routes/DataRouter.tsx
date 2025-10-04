@@ -39,6 +39,9 @@ import {
   LazyAwardsPage,
   LazyTemplatesPage,
   LazyDesignSystemShowcase,
+  LazyHealthCheckPage,
+  LazyReadinessCheckPage,
+  LazyLivenessCheckPage,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
@@ -129,6 +132,34 @@ export const DataRouterApp: React.FC = () => {
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyLoginPage />
+            </Suspense>
+          }
+        />
+
+        {/* Health check API routes - must be public for monitoring */}
+        <Route
+          path="/health"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyHealthCheckPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/ready"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyReadinessCheckPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/live"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyLivenessCheckPage />
             </Suspense>
           }
         />

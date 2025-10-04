@@ -44,6 +44,7 @@ export default defineConfig({
       "@features": path.resolve(__dirname, "src/features"),
       "@infra": path.resolve(__dirname, "src/infra"),
       "@services": path.resolve(__dirname, "src/services"),
+      "@services/": path.resolve(__dirname, "src/services/"),
     },
   },
   plugins: [

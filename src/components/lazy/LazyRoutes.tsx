@@ -182,6 +182,22 @@ export const LazyPracticePlanner = lazyRoute(
   "Practice Planner"
 );
 
+// Health Check API Routes
+export const LazyHealthCheckPage = lazyRoute(
+  () => import("../../pages/api/HealthCheckPage"),
+  "Health Check"
+);
+
+export const LazyReadinessCheckPage = lazyRoute(
+  () => import("../../pages/api/ReadinessCheckPage"),
+  "Readiness Check"
+);
+
+export const LazyLivenessCheckPage = lazyRoute(
+  () => import("../../pages/api/LivenessCheckPage"),
+  "Liveness Check"
+);
+
 // Heavy component lazy loading
 export const LazyPracticeScriptModal = lazyRoute(
   () =>

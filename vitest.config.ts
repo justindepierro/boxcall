@@ -26,7 +26,7 @@ export default defineConfig({
       "@domain": path.resolve(__dirname, "src/domain"),
       "@features": path.resolve(__dirname, "src/features"),
       "@infra": path.resolve(__dirname, "src/infra"),
-      "@services": path.resolve(__dirname, "src/services"),
+      "@services": path.resolve(__dirname, "src/services/index.ts"),
       "@services/": path.resolve(__dirname, "src/services/"),
       "@telemetry": path.resolve(__dirname, "src/telemetry"),
       "@types": path.resolve(__dirname, "src/types"),
@@ -37,12 +37,37 @@ export default defineConfig({
     // to browser APIs. Node env can still be overridden per-file if needed.
     environment: "jsdom",
     coverage: {
-      reporter: ["text", "lcov"],
+      provider: "v8",
+      reporter: ["text", "text-summary", "html", "lcov", "json"],
+      reportsDirectory: "./coverage",
+      exclude: [
+        "node_modules/**",
+        "src/test/**",
+        "**/*.test.{ts,tsx}",
+        "**/*.spec.{ts,tsx}",
+        "**/*.stories.{ts,tsx}",
+        "**/__tests__/**",
+        "**/dist/**",
+        "**/.storybook/**",
+        "vite.config.ts",
+        "vitest.config.ts",
+        "postcss.config.js",
+        "tailwind.config.js",
+      ],
+      thresholds: {
+        lines: 75,
+        functions: 70,
+        branches: 70,
+        statements: 75,
+      },
+      all: true,
+      include: ["src/**/*.{ts,tsx}"],
     },
     setupFiles: ["./src/test/setup.ts"],
     projects: [
       {
         test: {
+          name: "unit",
           environment: "jsdom",
           include: [
             "src/**/*.spec.ts",
@@ -58,14 +83,8 @@ export default defineConfig({
         },
       },
       {
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
         test: {
+          name: "storybook",
           browser: {
             enabled: true,
             headless: true,
@@ -78,6 +97,13 @@ export default defineConfig({
           },
           setupFiles: [".storybook/vitest.setup.ts"],
         },
+        plugins: [
+          // The plugin will run tests for the stories defined in your Storybook config
+          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+          storybookTest({
+            configDir: path.join(dirname, ".storybook"),
+          }),
+        ],
       },
     ],
   },

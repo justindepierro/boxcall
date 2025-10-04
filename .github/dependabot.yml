@@ -1,0 +1,100 @@
+# Dependabot Configuration for BoxCall
+# Automatically checks for dependency updates and security vulnerabilities
+
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+
+    # Group updates for better PR management
+    groups:
+      # Group React ecosystem updates together
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-router-dom"
+          - "@types/react*"
+
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "@storybook/*"
+
+      # Group build tools
+      build-tools:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "typescript"
+          - "eslint"
+          - "prettier"
+
+      # Group Supabase dependencies
+      supabase:
+        patterns:
+          - "@supabase/*"
+          - "supabase"
+
+    # Open pull requests with specific labels
+    labels:
+      - "dependencies"
+      - "automated"
+
+    # Limit number of open PRs to avoid overwhelming the team
+    open-pull-requests-limit: 10
+
+    # Configure assignees and reviewers
+    assignees:
+      - "justindepierro"
+
+    # Commit message configuration
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+    # Increase version requirements
+    versioning-strategy: "increase"
+
+    # Allow both direct and indirect updates
+    allow:
+      - dependency-type: "all"
+
+    # Ignore specific packages if needed
+    ignore:
+      # Ignore major version updates for these (manual review required)
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+
+    # Security updates (checked daily)
+    pull-request-branch-name:
+      separator: "/"
+
+  # Enable updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"

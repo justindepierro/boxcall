@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
@@ -26,8 +25,6 @@ import { RosterImportModal } from "../components/roster/RosterImportModal";
  * - Coach role management
  */
 export default function RosterPage() {
-  const navigate = useNavigate();
-
   // State
   const [players, setPlayers] = useState<RosterPlayerView[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +38,7 @@ export default function RosterPage() {
     null
   );
   const [saving, setSaving] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [_formError, setFormError] = useState<string | null>(null); // TODO: Display error to user
 
   // Form state for add/edit
   const [playerForm, setPlayerForm] = useState({

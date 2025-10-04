@@ -7,9 +7,9 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { DatabaseOptimizationService } from '../src/services/database/DatabaseOptimizationService';
-import { OptimizedBaseService } from '../src/services/base/OptimizedBaseService';
-import { useOptimizedQuery, useOptimizedMutation } from '../src/hooks/useOptimizedDatabase';
+import { DatabaseOptimizationService } from './DatabaseOptimizationService';
+import { OptimizedBaseService } from '../base/OptimizedBaseService';
+import { useOptimizedQuery, useOptimizedMutation } from '../../hooks/useOptimizedDatabase';
 
 // Mock Supabase client
 const mockSupabaseClient = {
@@ -318,8 +318,8 @@ describe('Database Optimization System', () => {
 
       try {
         await errorService.optimizedFindMany({});
-      } catch (_error) {
-        // Expected error
+      } catch {
+        // Expected error - testing error handling
       }
 
       const metrics = errorService.getServiceMetrics();

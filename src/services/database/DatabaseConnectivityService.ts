@@ -449,5 +449,4 @@ export function getDatabaseConnectivityService(): DatabaseConnectivityService {
 }
 
 // Export convenience functions
-export const dbConnectivity = getDatabaseConnectivityService();</content>
-<parameter name="filePath">/Users/justindepierro/Documents/boxcall/src/services/database/DatabaseConnectivityService.ts
+export const dbConnectivity = getDatabaseConnectivityService();

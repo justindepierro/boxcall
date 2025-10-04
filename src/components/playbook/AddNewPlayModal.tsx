@@ -704,7 +704,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                 <div className="bg-surface-secondary/30 rounded-lg p-4">
                   <Typography
                     variant="label-lg"
-                    className="block mb-3 text-text-primary flex items-center"
+                    className="flex items-center mb-3 text-text-primary"
                   >
                     <Icon name="target" className="h-4 w-4 mr-2" />
                     Formation Details
@@ -838,7 +838,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                 <div className="bg-surface-secondary/30 rounded-lg p-4">
                   <Typography
                     variant="label-lg"
-                    className="block mb-3 text-text-primary flex items-center"
+                    className="flex items-center mb-3 text-text-primary"
                   >
                     <Icon name="hash" className="h-4 w-4 mr-2" />
                     Play Details
@@ -1057,7 +1057,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                 <div className="bg-surface-secondary/30 rounded-lg p-4">
                   <Typography
                     variant="label-lg"
-                    className="block mb-3 text-text-primary flex items-center"
+                    className="flex items-center mb-3 text-text-primary"
                   >
                     <Icon name="tag" className="h-4 w-4 mr-2" />
                     Tags & Roles

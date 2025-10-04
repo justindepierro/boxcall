@@ -13,6 +13,8 @@ export default [
       "coverage/",
       ".vscode/",
       "archive/**",
+      "scripts/**", // Exclude backup scripts
+      "tests/e2e/**", // Exclude Playwright E2E tests
       "*.log",
       "src/components/ui/Icon/preloadShim.d.ts",
       "src/routes/__tests__/loaderAuth.test.tsx",
@@ -21,6 +23,7 @@ export default [
       "**/*.stories.ts", // Exclude Storybook files from linting
       "vite.config.ts", // Vite config uses different tsconfig
       "vitest.config.ts", // Vitest config uses different tsconfig
+      "playwright.config.ts", // Playwright config uses different tsconfig
     ],
   },
   // Base configuration for all JS/TS files
