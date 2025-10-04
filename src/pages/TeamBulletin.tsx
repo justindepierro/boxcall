@@ -470,7 +470,11 @@ const TeamBulletin: React.FC = React.memo(() => {
                       footnote="Tap for details"
                       onOpen={() => setIsSeasonStatsModalOpen(true)}
                     >
-                      <SeasonStatsCard teamId={teamId || ""} userRole={userRole} compact />
+                      <SeasonStatsCard
+                        teamId={teamId || ""}
+                        userRole={userRole}
+                        compact
+                      />
                     </AuroraTile>
                   </div>
                 </div>

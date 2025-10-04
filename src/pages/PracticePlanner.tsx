@@ -45,8 +45,13 @@ export function PracticePlanner() {
   const { addBlock, reorderBlocks, deleteBlock } =
     usePracticeBlocks(selectedScheduleId);
   const { templates } = usePracticeTemplates(teamId || "");
-  const { startTimer, stopTimer, getTimeRemaining, getElapsedTime, formatTime } =
-    usePracticeTimer();
+  const {
+    startTimer,
+    stopTimer,
+    getTimeRemaining,
+    getElapsedTime,
+    formatTime,
+  } = usePracticeTimer();
   // Select the first schedule if available
   useEffect(() => {
     if (schedules.length > 0 && !selectedScheduleId) {
@@ -392,8 +397,12 @@ export function PracticePlanner() {
               <Typography variant="headline-sm" className="text-text-primary">
                 Command your practice flow
               </Typography>
-              <Typography variant="body-sm" className="text-text-secondary mt-1">
-                Jump straight into blocks, timing, or logistics with a single tap.
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary mt-1"
+              >
+                Jump straight into blocks, timing, or logistics with a single
+                tap.
               </Typography>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">

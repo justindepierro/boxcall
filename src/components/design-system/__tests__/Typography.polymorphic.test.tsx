@@ -7,8 +7,8 @@ describe("Typography polymorphic behavior", () => {
     render(<Typography as="span">Hello</Typography>);
     const el = screen.getByText("Hello");
     expect(el.tagName).toBe("SPAN");
-    // body-sm includes text-sm
-    expect(el.className).toContain("text-sm");
+    // body-sm includes text-[0.82rem]
+    expect(el.className).toContain("text-[0.82rem]");
   });
 
   it("uses alias variant and resolves default element from actual variant", () => {
@@ -27,9 +27,9 @@ describe("Typography polymorphic behavior", () => {
     );
     const el = screen.getByText("Section");
     expect(el.tagName).toBe("P");
-    // headline-lg includes bold + text-3xl
-    expect(el.className).toContain("text-3xl");
-    expect(el.className).toContain("font-bold");
+    // headline-lg includes font-semibold + text-[1.625rem]
+    expect(el.className).toContain("text-[1.625rem]");
+    expect(el.className).toContain("font-semibold");
   });
 
   it("applies htmlFor when rendering a label", () => {
@@ -49,22 +49,22 @@ describe("Typography shorthands", () => {
     render(<H1>Title</H1>);
     const el = screen.getByText("Title");
     expect(el.tagName).toBe("H1");
-    expect(el.className).toContain("text-4xl");
-    expect(el.className).toContain("font-bold");
+    expect(el.className).toContain("text-[2rem]");
+    expect(el.className).toContain("font-semibold");
   });
 
   it("H2 defaults to headline-lg", () => {
     render(<H2>Subsection</H2>);
     const el = screen.getByText("Subsection");
     expect(el.tagName).toBe("H2");
-    expect(el.className).toContain("text-3xl");
+    expect(el.className).toContain("text-[1.625rem]");
   });
 
   it("P defaults to body-md", () => {
     render(<P>Body</P>);
     const el = screen.getByText("Body");
     expect(el.tagName).toBe("P");
-    expect(el.className).toContain("text-base");
+    expect(el.className).toContain("text-[0.9rem]");
   });
 
   it("Label defaults to label-md and forwards htmlFor", () => {

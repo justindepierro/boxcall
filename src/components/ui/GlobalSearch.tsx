@@ -134,9 +134,10 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           ...filteredPlayers.map((player) => ({
             type: "player" as const,
             data: player,
-            displayText: player.first_name && player.last_name
-              ? `${player.first_name} ${player.last_name}`
-              : `Player ${player.jersey_number || "TBD"}`,
+            displayText:
+              player.first_name && player.last_name
+                ? `${player.first_name} ${player.last_name}`
+                : `Player ${player.jersey_number || "TBD"}`,
             subText: `${player.position || "Position TBD"} • ${player.status || "Status TBD"}`,
           }))
         );

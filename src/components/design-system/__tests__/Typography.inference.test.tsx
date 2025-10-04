@@ -12,25 +12,25 @@ describe("Typography variant ergonomics", () => {
     const { container } = render(<Typography as="h2">Title</Typography>);
     const el = container.firstElementChild as HTMLElement;
     expect(el.tagName).toBe("H2");
-    // headline-lg includes font-sans text-3xl font-bold
-    expect(getClass(el)).toContain("text-3xl");
-    expect(getClass(el)).toContain("font-bold");
+    // headline-lg includes font-sans text-[1.625rem] font-semibold
+    expect(getClass(el)).toContain("text-[1.625rem]");
+    expect(getClass(el)).toContain("font-semibold");
   });
 
   it("defaults to body-md for p when no variant provided", () => {
     const { container } = render(<Typography as="p">Body</Typography>);
     const el = container.firstElementChild as HTMLElement;
     expect(el.tagName).toBe("P");
-    // body-md includes font-sans text-base leading-relaxed
-    expect(getClass(el)).toContain("text-base");
-    expect(getClass(el)).toContain("leading-relaxed");
+    // body-md includes font-sans text-[0.9rem] leading-[1.38]
+    expect(getClass(el)).toContain("text-[0.9rem]");
+    expect(getClass(el)).toContain("leading-[1.38]");
   });
 
   it("normalizes alias 'body' to body-md classes", () => {
     const { container } = render(<Typography variant="body">Alias</Typography>);
     const el = container.firstElementChild as HTMLElement;
-    expect(getClass(el)).toContain("text-base");
-    expect(getClass(el)).toContain("leading-relaxed");
+    expect(getClass(el)).toContain("text-[0.9rem]");
+    expect(getClass(el)).toContain("leading-[1.38]");
   });
 
   it("honors explicit display-lg variant and element mapping", () => {
@@ -38,9 +38,9 @@ describe("Typography variant ergonomics", () => {
       <Typography variant="display-lg">Hero</Typography>
     );
     const el = container.firstElementChild as HTMLElement;
-    // display-lg maps to font-display text-5xl ... and default element h1
+    // display-lg maps to font-display text-[2.75rem] ... and default element h1
     expect(el.tagName).toBe("H1");
     expect(getClass(el)).toContain("font-display");
-    expect(getClass(el)).toContain("text-5xl");
+    expect(getClass(el)).toContain("text-[2.75rem]");
   });
 });

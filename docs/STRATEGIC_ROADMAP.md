@@ -13,6 +13,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 📊 Current Technical State
 
 ### ✅ Strengths
+
 - Professional React/TypeScript/Vite architecture
 - Supabase database with RLS security
 - Brian Billick game planning methodology implemented
@@ -21,6 +22,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 - Comprehensive documentation and testing setup
 
 ### ⚠️ Immediate Issues
+
 - 24 ESLint warnings blocking clean development
 - **Roster system conflicts**: Multiple roster components with different interfaces
 - **Duplicate functionality**: TeamSettings roster tab duplicates new RosterPage
@@ -36,11 +38,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 🎯 6-Pillar Strategic Roadmap
 
 ### **1. 🔧 Technical Excellence Foundation**
+
 **Status**: ✅ COMPLETED (Reduced from 24 to 8 ESLint warnings)
 **Time Estimate**: 2-3 hours
 **Impact**: High (enables smooth development)
 
 **Objectives**:
+
 - [x] Fix all 24 ESLint warnings (unused variables, React refresh issues, missing dependencies)
 - [x] Remove unused imports (`DIRECTION_OPTIONS`, `PERSONNEL_OPTIONS`, etc.)
 - [x] Add `useCallback` for `handleCreatePlan` in `GamePlansPage.tsx`
@@ -51,11 +55,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Current Status**: ✅ **8 warnings remaining** (all non-critical Fast Refresh optimizations)
 
 ### **2. 👥 Complete Roster Management System**
+
 **Status**: ✅ COMPLETED (Full CRUD operations, search/filtering, CSV import)
 **Time Estimate**: 4-6 hours
 **Impact**: High (core team functionality)
 
 **Objectives**:
+
 - [x] **Smart Player Profiles**: Position, jersey numbers, contact info, emergency contacts
 - [x] **Coach Role System**: Head coach, offensive coordinator, defensive coordinator, etc.
 - [x] **Bulk Import**: CSV upload for roster data
@@ -67,11 +73,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Current Status**: ✅ **Fully implemented with RosterPage, RosterQuickAdd, and CSV import**
 
 ### **3. 🎨 Enhanced Playbook Experience**
+
 **Status**: ⏳ Not Started
 **Time Estimate**: 6-8 hours
 **Impact**: High (signature feature)
 
 **Objectives**:
+
 - [ ] **Drag-Drop Formation Builder**: Visual player positioning with snap-to-grid
 - [ ] **Personnel Group Visualization**: Show 11, 12, 21 personnel graphically
 - [ ] **Play Animation Preview**: See how plays develop over time
@@ -83,11 +91,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Success Criteria**: Visual play design studio experience
 
 ### **4. 🧠 Brian Billick Game Planning System**
+
 **Status**: ⏳ Not Started
 **Time Estimate**: 8-10 hours
 **Impact**: Very High (differentiator)
 
 **Objectives**:
+
 - [ ] **Situational Intelligence**: Smart play suggestions based on down/distance/field position
 - [ ] **Coach Cards Generator**: Auto-create printable sideline cards
 - [ ] **Play Priority System**: 1-5 ranking with success probability
@@ -99,11 +109,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Success Criteria**: Complete situational football planning system
 
 ### **5. 🤝 Real-Time Collaboration Features**
+
 **Status**: ⏳ Not Started
 **Time Estimate**: 6-8 hours
 **Impact**: High (monetization opportunity)
 
 **Objectives**:
+
 - [ ] **Live Practice Scripting**: Multiple coaches editing simultaneously
 - [ ] **Play Design Collaboration**: Comment on plays, suggest changes
 - [ ] **Team Communication**: Integrated chat during planning sessions
@@ -115,11 +127,13 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Success Criteria**: Multi-coach collaboration platform
 
 ### **6. 📊 Performance Analytics Dashboard**
+
 **Status**: ⏳ Not Started
 **Time Estimate**: 6-8 hours
 **Impact**: High (data-driven coaching)
 
 **Objectives**:
+
 - [ ] **Play Success Rates**: By formation, personnel, down/distance
 - [ ] **Player Performance Tracking**: Individual stats, trends
 - [ ] **Game Plan Effectiveness**: Which situations work best
@@ -135,6 +149,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 📅 Immediate Action Plan (Next 2 Weeks)
 
 ### **Week 1: Foundation & Roster Cleanup (20-25 hours)**
+
 **Focus**: Clean up roster system conflicts and establish solid foundation
 **Status**: ✅ ESLint fixes completed, roster system implemented but needs cleanup
 
@@ -146,6 +161,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Milestone**: Clean, unified roster system with no duplicate code
 
 ### **Week 2: Playbook Enhancement (20-25 hours)**
+
 **Focus**: Make the core product visually impressive
 
 - [ ] **Day 8-10**: Upgrade play creation with better visual design
@@ -155,6 +171,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 **Milestone**: Professional playbook creation experience
 
 ### **Month 2: Game Planning Excellence (30-40 hours)**
+
 **Focus**: Implement signature Brian Billick methodology
 
 - [ ] Complete situational game planning system
@@ -168,6 +185,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 🎯 Competitive Advantages
 
 ### **What Makes BoxCall Special**
+
 1. **Real Coaching Methodology**: Brian Billick's NFL-proven situational system
 2. **Complete Workflow**: Playbook → Practice → Game Plan integration
 3. **Professional Architecture**: Built like enterprise software
@@ -175,6 +193,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 5. **Visual Excellence**: Drag-drop play design and formation building
 
 ### **Market Position**
+
 - **vs Basic Apps**: Comprehensive coaching operating system
 - **vs Hudl**: Specialized for football coaching workflow
 - **vs Spreadsheets**: Visual, collaborative, mobile-friendly
@@ -185,12 +204,14 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 📈 Success Metrics
 
 ### **Technical Excellence**
+
 - [ ] ESLint: 0 warnings
 - [ ] TypeScript: 0 errors
 - [ ] Bundle size: <500KB
 - [ ] Lighthouse: 95+ mobile score
 
 ### **Feature Completeness**
+
 - [x] Roster Management: 100% CRUD operations (completed)
 - [ ] Playbook Builder: Visual formation design
 - [ ] Game Planning: Full situational methodology
@@ -198,6 +219,7 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 - [ ] Analytics: Performance dashboards
 
 ### **User Experience**
+
 - [ ] Onboarding: <5 minutes to create team
 - [ ] Play Creation: <2 minutes for basic play
 - [ ] Game Planning: <15 minutes for basic plan
@@ -208,12 +230,14 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 🚀 Monetization Strategy
 
 ### **Freemium Model**
+
 - **Free**: Basic team creation, limited plays, basic game plans
 - **Pro ($29/month)**: Unlimited plays, advanced analytics, PDF export
 - **Team ($99/month)**: Multi-coach collaboration, advanced sharing
 - **Enterprise ($299/month)**: Custom integrations, priority support
 
 ### **Revenue Streams**
+
 - Subscription tiers
 - Premium templates and playbooks
 - Custom coaching content
@@ -224,12 +248,14 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 🔄 Progress Tracking
 
 ### **Weekly Check-ins**
+
 - [ ] Technical debt reduction
 - [ ] Feature completion status
 - [ ] User testing feedback
 - [ ] Performance metrics
 
 ### **Monthly Milestones**
+
 - [ ] Core functionality complete
 - [ ] MVP ready for beta testing
 - [ ] Production deployment
@@ -240,18 +266,21 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 ## 💡 Implementation Notes
 
 ### **Development Philosophy**
+
 - **Coach-Centric Design**: Every feature serves coaching workflow
 - **Mobile-First**: All features work on phones and tablets
 - **Performance Matters**: Sub-100ms interactions, offline capability
 - **Security First**: RLS policies, encrypted data, team isolation
 
 ### **Technical Priorities**
+
 - Clean code over feature rush
 - Test-driven development
 - Accessibility compliance
 - Performance monitoring
 
 ### **User Research**
+
 - Interview high school coaches
 - Study NFL coaching workflows
 - Analyze competitor feature gaps
@@ -259,6 +288,6 @@ BoxCall is a comprehensive football coaching platform with a three-view system (
 
 ---
 
-*Last Updated: October 3, 2025*
-*Next Review: October 7, 2025*</content>
+_Last Updated: October 3, 2025_
+_Next Review: October 7, 2025_</content>
 <parameter name="filePath">/Users/justindepierro/Documents/boxcall/docs/STRATEGIC_ROADMAP.md

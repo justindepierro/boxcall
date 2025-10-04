@@ -2,12 +2,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   authorize,
   type TeamMemberRole as DbTeamMemberRole,
-  type AppRole,
 } from "../authorize";
+import type { AppRole } from "../../types/roles";
 
 // Basic supabase mocks for membership/subscription queries used by authorize
 type TeamMemberRow = {
-  role: DbTeamMemberRole;
+  team_role: DbTeamMemberRole;
   status: "active" | "inactive" | "pending" | null;
 };
 const hoisted = vi.hoisted(() => ({
@@ -109,7 +109,7 @@ describe("authorize()", () => {
 
   it("denies when inactive member", async () => {
     hoisted.teamMember = {
-      role: "coach" as DbTeamMemberRole,
+      team_role: "coach" as DbTeamMemberRole,
       status: "inactive",
     };
     const res = await authorize({
@@ -123,13 +123,13 @@ describe("authorize()", () => {
 
   it("passes permission matrix when conditions satisfied", async () => {
     hoisted.teamMember = {
-      role: "coach" as DbTeamMemberRole,
+      team_role: "coach" as DbTeamMemberRole,
       status: "active",
     };
     const res = await authorize({
       profile,
       teamId: "t1",
-      requiredPermissions: ["playbook.create"],
+      allowedTeamRoles: ["coach"],
     });
     expect(res.allowed).toBe(true);
   });

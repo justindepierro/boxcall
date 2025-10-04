@@ -289,7 +289,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
             {/* Roster Quick Add */}
             <div className="roster-section">
-              {isStepVisible(1) ? <RosterQuickAdd /> : <DashboardCardSkeleton />}
+              {isStepVisible(1) ? (
+                <RosterQuickAdd />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
             </div>
 
             {/* Personal Feed */}

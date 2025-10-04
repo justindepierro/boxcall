@@ -36,19 +36,28 @@ export default defineConfig({
     // Use jsdom so component/unit tests that render React DOM nodes have access
     // to browser APIs. Node env can still be overridden per-file if needed.
     environment: "jsdom",
-    include: [
-      "src/**/*.spec.ts",
-      "src/**/*.spec.tsx",
-      "src/**/*.test.ts",
-      "src/**/*.test.tsx",
-    ],
     coverage: {
       reporter: ["text", "lcov"],
     },
     setupFiles: ["./src/test/setup.ts"],
     projects: [
       {
-        extends: true,
+        test: {
+          environment: "jsdom",
+          include: [
+            "src/**/*.spec.ts",
+            "src/**/*.spec.tsx",
+            "src/**/*.test.ts",
+            "src/**/*.test.tsx",
+          ],
+          exclude: [
+            "src/**/*.stories.tsx",
+            "src/**/*.stories.ts",
+          ],
+          setupFiles: ["./src/test/setup.ts"],
+        },
+      },
+      {
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
           // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
@@ -57,7 +66,6 @@ export default defineConfig({
           }),
         ],
         test: {
-          name: "storybook",
           browser: {
             enabled: true,
             headless: true,

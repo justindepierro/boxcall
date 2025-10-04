@@ -5,7 +5,11 @@ import { Card, Button, Input, Modal } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { rosterService } from "../services";
-import type { RosterPlayerView, PlayerRosterInsert, PlayerRosterUpdate } from "../services/rosterService";
+import type {
+  RosterPlayerView,
+  PlayerRosterInsert,
+  PlayerRosterUpdate,
+} from "../services/rosterService";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { RosterImportModal } from "../components/roster/RosterImportModal";
 // import { useToast } from "../hooks/useToast";
@@ -33,7 +37,9 @@ export default function RosterPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(null);
+  const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(
+    null
+  );
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -79,14 +85,19 @@ export default function RosterPage() {
 
   // Filtered players
   const filteredPlayers = useMemo(() => {
-    return players.filter(player => {
-      const matchesSearch = !searchTerm ||
-        `${player.first_name} ${player.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    return players.filter((player) => {
+      const matchesSearch =
+        !searchTerm ||
+        `${player.first_name} ${player.last_name}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         player.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         player.jersey_number?.toString().includes(searchTerm);
 
-      const matchesPosition = !positionFilter || player.position === positionFilter;
-      const matchesStatus = !statusFilter || player.roster_status === statusFilter;
+      const matchesPosition =
+        !positionFilter || player.position === positionFilter;
+      const matchesStatus =
+        !statusFilter || player.roster_status === statusFilter;
 
       return matchesSearch && matchesPosition && matchesStatus;
     });
@@ -121,7 +132,11 @@ export default function RosterPage() {
       setFormError(null);
 
       // Validate required fields
-      if (!playerForm.first_name.trim() || !playerForm.last_name.trim() || !playerForm.position) {
+      if (
+        !playerForm.first_name.trim() ||
+        !playerForm.last_name.trim() ||
+        !playerForm.position
+      ) {
         setFormError("First name, last name, and position are required");
         return;
       }
@@ -145,10 +160,14 @@ export default function RosterPage() {
         first_name: playerForm.first_name,
         last_name: playerForm.last_name,
         position: playerForm.position,
-        jersey_number: playerForm.jersey_number ? parseInt(playerForm.jersey_number) : undefined,
+        jersey_number: playerForm.jersey_number
+          ? parseInt(playerForm.jersey_number)
+          : undefined,
         grade_level: playerForm.grade_level || undefined,
         height_inches: heightInches,
-        weight_lbs: playerForm.weight_lbs ? parseInt(playerForm.weight_lbs) : undefined,
+        weight_lbs: playerForm.weight_lbs
+          ? parseInt(playerForm.weight_lbs)
+          : undefined,
       };
 
       await rosterService.createPlayer(playerData);
@@ -190,11 +209,15 @@ export default function RosterPage() {
       }
 
       const updateData: PlayerRosterUpdate = {
-        jersey_number: playerForm.jersey_number ? parseInt(playerForm.jersey_number) : undefined,
+        jersey_number: playerForm.jersey_number
+          ? parseInt(playerForm.jersey_number)
+          : undefined,
         position: playerForm.position || undefined,
         grade_level: playerForm.grade_level || undefined,
         height_inches: heightInches,
-        weight_lbs: playerForm.weight_lbs ? parseInt(playerForm.weight_lbs) : undefined,
+        weight_lbs: playerForm.weight_lbs
+          ? parseInt(playerForm.weight_lbs)
+          : undefined,
       };
 
       await rosterService.updatePlayer(editingPlayer.id, updateData);
@@ -236,17 +259,26 @@ export default function RosterPage() {
           first_name: csvPlayer.firstName,
           last_name: csvPlayer.lastName,
           position: csvPlayer.position,
-          jersey_number: csvPlayer.jerseyNumber ? parseInt(csvPlayer.jerseyNumber) : undefined,
+          jersey_number: csvPlayer.jerseyNumber
+            ? parseInt(csvPlayer.jerseyNumber)
+            : undefined,
           grade_level: csvPlayer.classYear as any,
-          height_inches: csvPlayer.height ? parseInt(csvPlayer.height) : undefined,
+          height_inches: csvPlayer.height
+            ? parseInt(csvPlayer.height)
+            : undefined,
           weight_lbs: csvPlayer.weight ? parseInt(csvPlayer.weight) : undefined,
-          graduation_year: csvPlayer.graduationYear ? parseInt(csvPlayer.graduationYear) : undefined,
+          graduation_year: csvPlayer.graduationYear
+            ? parseInt(csvPlayer.graduationYear)
+            : undefined,
         };
 
         await rosterService.createPlayer(playerData);
       }
 
-      console.log(`${csvPlayers.length} players imported successfully`, "success");
+      console.log(
+        `${csvPlayers.length} players imported successfully`,
+        "success"
+      );
       setShowImportModal(false);
       loadRoster();
     } catch (error) {
@@ -265,8 +297,12 @@ export default function RosterPage() {
       position: player.position || "",
       jersey_number: player.jersey_number?.toString() || "",
       grade_level: player.grade_level || "",
-      heightFeet: player.height_inches ? Math.floor(player.height_inches / 12).toString() : "",
-      heightInches: player.height_inches ? (player.height_inches % 12).toString() : "",
+      heightFeet: player.height_inches
+        ? Math.floor(player.height_inches / 12).toString()
+        : "",
+      heightInches: player.height_inches
+        ? (player.height_inches % 12).toString()
+        : "",
       weight_lbs: player.weight_lbs?.toString() || "",
       email_address: "",
       phone_number: "",
@@ -280,7 +316,22 @@ export default function RosterPage() {
 
   // Position options
   const positionOptions = [
-    "QB", "RB", "FB", "WR", "TE", "OL", "C", "G", "T", "DT", "DE", "LB", "CB", "S", "K", "P"
+    "QB",
+    "RB",
+    "FB",
+    "WR",
+    "TE",
+    "OL",
+    "C",
+    "G",
+    "T",
+    "DT",
+    "DE",
+    "LB",
+    "CB",
+    "S",
+    "K",
+    "P",
   ];
 
   // Status options
@@ -325,10 +376,7 @@ export default function RosterPage() {
               <Icon name="plus" className="w-4 h-4 mr-2" />
               Add Player
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => setShowImportModal(true)}
-            >
+            <Button variant="outline" onClick={() => setShowImportModal(true)}>
               <Icon name="upload" className="w-4 h-4 mr-2" />
               Import CSV
             </Button>
@@ -348,8 +396,10 @@ export default function RosterPage() {
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">All Positions</option>
-              {positionOptions.map(pos => (
-                <option key={pos} value={pos}>{pos}</option>
+              {positionOptions.map((pos) => (
+                <option key={pos} value={pos}>
+                  {pos}
+                </option>
               ))}
             </select>
             <select
@@ -358,8 +408,10 @@ export default function RosterPage() {
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">All Status</option>
-              {statusOptions.map(status => (
-                <option key={status.value} value={status.value}>{status.label}</option>
+              {statusOptions.map((status) => (
+                <option key={status.value} value={status.value}>
+                  {status.label}
+                </option>
               ))}
             </select>
           </div>
@@ -370,7 +422,9 @@ export default function RosterPage() {
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <Typography variant="body-sm" color="muted">Total Players</Typography>
+                <Typography variant="body-sm" color="muted">
+                  Total Players
+                </Typography>
                 <Typography variant="headline-lg">{players.length}</Typography>
               </div>
               <Icon name="users" className="w-8 h-8 text-primary" />
@@ -379,9 +433,11 @@ export default function RosterPage() {
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <Typography variant="body-sm" color="muted">Active Players</Typography>
+                <Typography variant="body-sm" color="muted">
+                  Active Players
+                </Typography>
                 <Typography variant="headline-lg">
-                  {players.filter(p => p.is_active === true).length}
+                  {players.filter((p) => p.is_active === true).length}
                 </Typography>
               </div>
               <Icon name="check-circle" className="w-8 h-8 text-green-500" />
@@ -390,10 +446,10 @@ export default function RosterPage() {
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <Typography variant="body-sm" color="muted">Injured</Typography>
-                <Typography variant="headline-lg">
-                  {0}
+                <Typography variant="body-sm" color="muted">
+                  Injured
                 </Typography>
+                <Typography variant="headline-lg">{0}</Typography>
               </div>
               <Icon name="alert-triangle" className="w-8 h-8 text-red-500" />
             </div>
@@ -401,11 +457,19 @@ export default function RosterPage() {
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <Typography variant="body-sm" color="muted">Average Height</Typography>
+                <Typography variant="body-sm" color="muted">
+                  Average Height
+                </Typography>
                 <Typography variant="headline-lg">
                   {players.length > 0
-                    ? Math.round(players.filter(p => p.height_inches).reduce((sum, p) => sum + (p.height_inches || 0), 0) / players.filter(p => p.height_inches).length)
-                    : 0}"
+                    ? Math.round(
+                        players
+                          .filter((p) => p.height_inches)
+                          .reduce((sum, p) => sum + (p.height_inches || 0), 0) /
+                          players.filter((p) => p.height_inches).length
+                      )
+                    : 0}
+                  "
                 </Typography>
               </div>
               <Icon name="trending-up" className="w-8 h-8 text-blue-500" />
@@ -415,12 +479,18 @@ export default function RosterPage() {
 
         {/* Player Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPlayers.map(player => (
-            <Card key={player.id} className="p-4 hover:shadow-lg transition-shadow">
+          {filteredPlayers.map((player) => (
+            <Card
+              key={player.id}
+              className="p-4 hover:shadow-lg transition-shadow"
+            >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Typography variant="headline-sm" className="text-primary font-bold">
+                    <Typography
+                      variant="headline-sm"
+                      className="text-primary font-bold"
+                    >
                       {player.jersey_number || "?"}
                     </Typography>
                   </div>
@@ -455,23 +525,35 @@ export default function RosterPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Class:</span>
-                  <span className="capitalize">{player.grade_level || "Not set"}</span>
+                  <span className="capitalize">
+                    {player.grade_level || "Not set"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Height:</span>
-                  <span>{player.height_inches ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"` : "Not set"}</span>
+                  <span>
+                    {player.height_inches
+                      ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"`
+                      : "Not set"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Weight:</span>
-                  <span>{player.weight_lbs ? `${player.weight_lbs} lbs` : "Not set"}</span>
+                  <span>
+                    {player.weight_lbs ? `${player.weight_lbs} lbs` : "Not set"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Status:</span>
-                  <span className={`capitalize px-2 py-1 rounded text-xs ${
-                    player.is_active ? 'bg-green-100 text-green-800' :
-                    player.roster_status === 'injured' ? 'bg-red-100 text-red-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span
+                    className={`capitalize px-2 py-1 rounded text-xs ${
+                      player.is_active
+                        ? "bg-green-100 text-green-800"
+                        : player.roster_status === "injured"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
                     {player.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -482,8 +564,13 @@ export default function RosterPage() {
 
         {filteredPlayers.length === 0 && (
           <Card className="p-8 text-center">
-            <Icon name="users" className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <Typography variant="headline-md" className="mb-2">No players found</Typography>
+            <Icon
+              name="users"
+              className="w-12 h-12 text-gray-400 mx-auto mb-4"
+            />
+            <Typography variant="headline-md" className="mb-2">
+              No players found
+            </Typography>
             <Typography variant="body-lg" color="muted" className="mb-4">
               {searchTerm || positionFilter || statusFilter
                 ? "Try adjusting your search or filters"
@@ -512,29 +599,48 @@ export default function RosterPage() {
               <Input
                 label="First Name"
                 value={playerForm.first_name}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, first_name: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    first_name: e.target.value,
+                  }))
+                }
                 required
               />
               <Input
                 label="Last Name"
                 value={playerForm.last_name}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, last_name: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    last_name: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Position</label>
+                <label className="block text-sm font-medium mb-1">
+                  Position
+                </label>
                 <select
                   value={playerForm.position}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, position: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      position: e.target.value,
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 >
                   <option value="">Select Position</option>
-                  {positionOptions.map(pos => (
-                    <option key={pos} value={pos}>{pos}</option>
+                  {positionOptions.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {pos}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -542,16 +648,28 @@ export default function RosterPage() {
                 label="Jersey Number"
                 type="number"
                 value={playerForm.jersey_number}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, jersey_number: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    jersey_number: e.target.value,
+                  }))
+                }
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Grade Level</label>
+                <label className="block text-sm font-medium mb-1">
+                  Grade Level
+                </label>
                 <select
                   value={playerForm.grade_level}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, grade_level: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      grade_level: e.target.value,
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="">Select Grade</option>
@@ -567,20 +685,35 @@ export default function RosterPage() {
                   label="Height (feet)"
                   type="number"
                   value={playerForm.heightFeet}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, heightFeet: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      heightFeet: e.target.value,
+                    }))
+                  }
                 />
                 <Input
                   label="Height (inches)"
                   type="number"
                   value={playerForm.heightInches}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, heightInches: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      heightInches: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <Input
                 label="Weight (lbs)"
                 type="number"
                 value={playerForm.weight_lbs}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, weight_lbs: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    weight_lbs: e.target.value,
+                  }))
+                }
               />
             </div>
 
@@ -589,19 +722,34 @@ export default function RosterPage() {
                 label="Email"
                 type="email"
                 value={playerForm.email_address}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, email_address: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    email_address: e.target.value,
+                  }))
+                }
               />
               <Input
                 label="Phone"
                 value={playerForm.phone_number}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, phone_number: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    phone_number: e.target.value,
+                  }))
+                }
               />
             </div>
 
             <Input
               label="Parent Contact"
               value={playerForm.parent_contact}
-              onChange={(e) => setPlayerForm(prev => ({ ...prev, parent_contact: e.target.value }))}
+              onChange={(e) =>
+                setPlayerForm((prev) => ({
+                  ...prev,
+                  parent_contact: e.target.value,
+                }))
+              }
             />
 
             <div className="flex justify-end gap-3 pt-4">
@@ -616,7 +764,12 @@ export default function RosterPage() {
               </Button>
               <Button
                 onClick={handleAddPlayer}
-                disabled={saving || !playerForm.first_name || !playerForm.last_name || !playerForm.position}
+                disabled={
+                  saving ||
+                  !playerForm.first_name ||
+                  !playerForm.last_name ||
+                  !playerForm.position
+                }
                 className="bg-primary hover:bg-primary/90"
               >
                 {saving ? "Adding..." : "Add Player"}
@@ -640,29 +793,48 @@ export default function RosterPage() {
               <Input
                 label="First Name"
                 value={playerForm.first_name}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, first_name: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    first_name: e.target.value,
+                  }))
+                }
                 required
               />
               <Input
                 label="Last Name"
                 value={playerForm.last_name}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, last_name: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    last_name: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Position</label>
+                <label className="block text-sm font-medium mb-1">
+                  Position
+                </label>
                 <select
                   value={playerForm.position}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, position: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      position: e.target.value,
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 >
                   <option value="">Select Position</option>
-                  {positionOptions.map(pos => (
-                    <option key={pos} value={pos}>{pos}</option>
+                  {positionOptions.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {pos}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -670,16 +842,28 @@ export default function RosterPage() {
                 label="Jersey Number"
                 type="number"
                 value={playerForm.jersey_number}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, jersey_number: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    jersey_number: e.target.value,
+                  }))
+                }
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Grade Level</label>
+                <label className="block text-sm font-medium mb-1">
+                  Grade Level
+                </label>
                 <select
                   value={playerForm.grade_level}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, grade_level: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      grade_level: e.target.value,
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="">Select Grade</option>
@@ -695,20 +879,35 @@ export default function RosterPage() {
                   label="Height (feet)"
                   type="number"
                   value={playerForm.heightFeet}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, heightFeet: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      heightFeet: e.target.value,
+                    }))
+                  }
                 />
                 <Input
                   label="Height (inches)"
                   type="number"
                   value={playerForm.heightInches}
-                  onChange={(e) => setPlayerForm(prev => ({ ...prev, heightInches: e.target.value }))}
+                  onChange={(e) =>
+                    setPlayerForm((prev) => ({
+                      ...prev,
+                      heightInches: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <Input
                 label="Weight (lbs)"
                 type="number"
                 value={playerForm.weight_lbs}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, weight_lbs: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    weight_lbs: e.target.value,
+                  }))
+                }
               />
             </div>
 
@@ -717,19 +916,34 @@ export default function RosterPage() {
                 label="Email"
                 type="email"
                 value={playerForm.email_address}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, email_address: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    email_address: e.target.value,
+                  }))
+                }
               />
               <Input
                 label="Phone"
                 value={playerForm.phone_number}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, phone_number: e.target.value }))}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    phone_number: e.target.value,
+                  }))
+                }
               />
             </div>
 
             <Input
               label="Parent Contact"
               value={playerForm.parent_contact}
-              onChange={(e) => setPlayerForm(prev => ({ ...prev, parent_contact: e.target.value }))}
+              onChange={(e) =>
+                setPlayerForm((prev) => ({
+                  ...prev,
+                  parent_contact: e.target.value,
+                }))
+              }
             />
 
             <div className="flex justify-end gap-3 pt-4">
@@ -745,7 +959,9 @@ export default function RosterPage() {
               </Button>
               <Button
                 onClick={handleEditPlayer}
-                disabled={saving || !playerForm.first_name || !playerForm.last_name}
+                disabled={
+                  saving || !playerForm.first_name || !playerForm.last_name
+                }
                 className="bg-primary hover:bg-primary/90"
               >
                 {saving ? "Updating..." : "Update Player"}

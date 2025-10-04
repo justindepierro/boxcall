@@ -1,12 +1,12 @@
 /**
  * Comprehensive Permission System
- * 
+ *
  * This system combines app-level and team-level permissions
  * to provide granular access control throughout the application.
  */
 
-import { useAuthProfile } from '../app/auth-store';
-import { useMemo } from 'react';
+import { useAuthProfile } from "../app/auth-store";
+import { useMemo } from "react";
 
 // App-level permissions based on subscription tier and role
 export interface AppPermissions {
@@ -14,19 +14,19 @@ export interface AppPermissions {
   canManagePlatform: boolean;
   canViewAnalytics: boolean;
   canManageUsers: boolean;
-  
+
   // Team creation and management
   canCreateTeams: boolean;
   canManagePayments: boolean;
   maxTeamsOwned: number;
   maxPlayersPerTeam: number;
-  
+
   // Premium features
   canAccessPremiumFeatures: boolean;
   canExportData: boolean;
   canUseAdvancedStats: boolean;
   canInviteUnlimitedMembers: boolean;
-  
+
   // Content features
   canCreateAdvancedPlays: boolean;
   canUseAIFeatures: boolean;
@@ -39,19 +39,19 @@ export interface TeamPermissions {
   canManageTeamSettings: boolean;
   canDeleteTeam: boolean;
   canManageBilling: boolean;
-  
+
   // Member management
   canInviteMembers: boolean;
   canRemoveMembers: boolean;
   canChangeRoles: boolean;
   canViewAllMembers: boolean;
-  
+
   // Content management
   canManagePractices: boolean;
   canManagePlaybook: boolean;
   canManageEvents: boolean;
   canManageRoster: boolean;
-  
+
   // Data and analytics
   canViewAnalytics: boolean;
   canExportTeamData: boolean;
@@ -65,8 +65,8 @@ const calculateAppPermissions = (
   isAdmin: boolean | null,
   subscriptionTier: string | null
 ): AppPermissions => {
-  const isPremium = subscriptionTier === 'premium';
-  
+  const isPremium = subscriptionTier === "premium";
+
   // Admin gets everything
   if (isAdmin) {
     return {
@@ -88,7 +88,7 @@ const calculateAppPermissions = (
   }
 
   switch (appRole) {
-    case 'head_coach':
+    case "head_coach":
       return {
         canManagePlatform: false,
         canViewAnalytics: false,
@@ -105,8 +105,8 @@ const calculateAppPermissions = (
         canUseAIFeatures: isPremium,
         canAccessVideoAnalysis: isPremium,
       };
-      
-    case 'coach':
+
+    case "coach":
       return {
         canManagePlatform: false,
         canViewAnalytics: false,
@@ -123,8 +123,8 @@ const calculateAppPermissions = (
         canUseAIFeatures: isPremium,
         canAccessVideoAnalysis: isPremium,
       };
-      
-    case 'free_coach':
+
+    case "free_coach":
       return {
         canManagePlatform: false,
         canViewAnalytics: false,
@@ -141,9 +141,9 @@ const calculateAppPermissions = (
         canUseAIFeatures: false,
         canAccessVideoAnalysis: false,
       };
-      
-    case 'player':
-    case 'family':
+
+    case "player":
+    case "family":
     default:
       return {
         canManagePlatform: false,
@@ -198,7 +198,7 @@ export function useComprehensivePermissions(teamId?: string) {
   };
 
   const isAdmin = profile?.is_admin || false;
-  const isPremium = profile?.subscription_tier === 'premium';
+  const isPremium = profile?.subscription_tier === "premium";
 
   return {
     app: appPermissions,
@@ -222,13 +222,13 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   permission,
   teamId,
   children,
-  fallback = null
+  fallback = null,
 }) => {
   const { can, loading } = useComprehensivePermissions(teamId);
 
   if (loading) return null;
   if (!can(permission)) return <>{fallback}</>;
-  
+
   return <>{children}</>;
 };
 
@@ -240,12 +240,12 @@ interface SubscriptionGateProps {
 
 export const PremiumGate: React.FC<SubscriptionGateProps> = ({
   children,
-  fallback = null
+  fallback = null,
 }) => {
   const { isPremium, loading } = useComprehensivePermissions();
 
   if (loading) return null;
   if (!isPremium) return <>{fallback}</>;
-  
+
   return <>{children}</>;
 };

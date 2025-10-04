@@ -154,7 +154,8 @@ export default function GamePlansPage() {
               Dial in this week’s script
             </Typography>
             <Typography variant="body-sm" className="text-text-secondary mt-1">
-              Launch the workspace you need for planning, film, and distribution.
+              Launch the workspace you need for planning, film, and
+              distribution.
             </Typography>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">

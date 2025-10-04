@@ -2,6 +2,7 @@
 // - Adds jest-dom matchers (e.g., toBeInTheDocument)
 // - Can host other global test config/mocks later
 import "@testing-library/jest-dom/vitest";
+
 import { vi } from "vitest";
 import React from "react";
 // Load global styles so getComputedStyle in JSDOM sees our Tailwind utilities and tokens
@@ -109,7 +110,14 @@ vi.mock("lucide-react/dist/esm/dynamicIconImports.js", () => ({
 
 // Mock ModularIcon to prevent state updates after unmount in tests
 vi.mock("../components/ui/Icon/ModularIcon.tsx", () => ({
-  ModularIcon: vi.fn(() => null),
+  ModularIcon: vi.fn(({ name, "aria-label": ariaLabel, role, ...props }) =>
+    React.createElement('svg', {
+      'data-testid': `${name}-icon`,
+      'aria-label': ariaLabel || name,
+      'role': role || 'img',
+      ...props
+    })
+  ),
   ModularIconName: {},
   ModularIconProps: {},
   ModularPlayIcon: vi.fn(() => null),

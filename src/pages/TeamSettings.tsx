@@ -18,9 +18,9 @@ import { PageLayout } from "../components/layout/PageLayout";
  * - Integration configurations
  */
 export const TeamSettings: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<
-    "overview" | "staff" | "settings"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "staff" | "settings">(
+    "overview"
+  );
 
   // Get the active team ID
   const teamId = getActiveTeamId();
@@ -51,7 +51,10 @@ export const TeamSettings: React.FC = () => {
                       : "border-transparent text-text-secondary hover:text-text-primary hover:border-border-strong"
                   }`}
                 >
-                  <Icon name={tab.icon as any} className="h-4 w-4 mr-2 inline" />
+                  <Icon
+                    name={tab.icon as any}
+                    className="h-4 w-4 mr-2 inline"
+                  />
                   {tab.label}
                 </button>
               ))}
@@ -67,7 +70,8 @@ export const TeamSettings: React.FC = () => {
                 Team Overview
               </Typography>
               <Typography variant="body-lg" color="muted" className="mb-6">
-                Get a high-level view of your team's configuration and performance.
+                Get a high-level view of your team's configuration and
+                performance.
               </Typography>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

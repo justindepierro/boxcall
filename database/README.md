@@ -5,12 +5,14 @@
 The BoxCall database has been completely audited and cleaned up. The `schema.sql` file now represents the **exact current state** of the database after all migrations have been applied.
 
 ### Current Schema
+
 - **Location**: `database/schema.sql` (authoritative current schema)
 - **Tables**: 24 core tables with all policies and constraints
 - **Migrations Applied**: All 3 migrations incorporated
 - **Last Updated**: October 4, 2025
 
 ### What Changed
+
 - ✅ **Schema.sql updated** to include all migration changes
 - ✅ **Team roles expanded** to include player, family, alumni
 - ✅ **RLS policies added** for teams and team_members tables
@@ -18,6 +20,7 @@ The BoxCall database has been completely audited and cleaned up. The `schema.sql
 - ✅ **93 legacy SQL files removed** to eliminate confusion
 
 ### Database Structure
+
 See `docs/DATABASE_AUDIT_2025.md` for complete documentation of all 24 tables with column details, relationships, and application integrations. Documentation
 
 ## Current State (October 2025)
@@ -25,13 +28,16 @@ See `docs/DATABASE_AUDIT_2025.md` for complete documentation of all 24 tables wi
 The BoxCall database has been completely audited and cleaned up. All legacy SQL files have been removed to eliminate confusion.
 
 ### Current Schema
+
 - **Location**: `database/schema.sql` (authoritative schema)
 - **Tables**: 24 core tables
 - **Migrations**: `supabase/migrations/` (3 current migrations)
 - **Seeds**: `database/seeds/sample_data.sql`
 
 ### Database Structure
+
 See `docs/DATABASE_AUDIT_2025.md` for complete documentation of:
+
 - All 24 tables with column details
 - Foreign key relationships
 - Application service mappings
@@ -56,6 +62,7 @@ This will apply the migrations in `supabase/migrations/` in order.
 ## Legacy Cleanup
 
 All previous SQL files (90+ files) have been removed:
+
 - Individual migration files
 - Debug/test SQL files
 - Policy fragments

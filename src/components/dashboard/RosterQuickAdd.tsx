@@ -76,7 +76,8 @@ export const RosterQuickAdd: React.FC = () => {
       let heightInches: number | undefined;
       if (quickAddData.heightFeet.trim() || quickAddData.heightInches.trim()) {
         const feet = parseInt(quickAddData.heightFeet.trim() || "0", 10) || 0;
-        const inches = parseInt(quickAddData.heightInches.trim() || "0", 10) || 0;
+        const inches =
+          parseInt(quickAddData.heightInches.trim() || "0", 10) || 0;
 
         if (feet < 0 || inches < 0 || inches > 11) {
           setError("Invalid height format. Inches must be 0-11.");
@@ -318,7 +319,9 @@ export const RosterQuickAdd: React.FC = () => {
                 }
                 className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
               />
-              <span className="flex items-center text-sm text-text-secondary">ft</span>
+              <span className="flex items-center text-sm text-text-secondary">
+                ft
+              </span>
             </div>
             <div className="flex space-x-1">
               <input
@@ -335,7 +338,9 @@ export const RosterQuickAdd: React.FC = () => {
                 }
                 className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
               />
-              <span className="flex items-center text-sm text-text-secondary">in</span>
+              <span className="flex items-center text-sm text-text-secondary">
+                in
+              </span>
             </div>
           </div>
 

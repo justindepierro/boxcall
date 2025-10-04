@@ -1,4 +1,5 @@
 # BoxCall Database Audit & Documentation
+
 **Date:** October 4, 2025
 **Status:** Current Production Schema
 
@@ -9,6 +10,7 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ## Database Architecture Overview
 
 ### Technology Stack
+
 - **Database:** PostgreSQL (Supabase)
 - **Extensions:** uuid-ossp, pgcrypto
 - **Authentication:** Supabase Auth (auth.users)
@@ -31,12 +33,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 1. Core Team Management Tables
 
 #### `teams`
+
 **Purpose:** Core team information and metadata
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - Referenced by: `team_members`, `team_players`, `playbooks`, `team_posts`, `game_plans`, `practice_scripts`, `practice_schedules`, `equipment`, `calendar_events`, `team_events`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `name` TEXT NOT NULL
 - `school_name` TEXT
@@ -49,13 +54,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `backup_version` INTEGER DEFAULT 1
 
 #### `team_members`
+
 **Purpose:** Team staff and their roles/capabilities
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `auth.users(id)`
 - Unique: `(team_id, user_id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `user_id` UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
@@ -66,12 +74,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `role_notes` TEXT
 
 #### `team_players`
+
 **Purpose:** Player roster information
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `first_name` TEXT NOT NULL
@@ -86,12 +97,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `profiles`
+
 **Purpose:** User profiles (consolidated player/staff info)
 **Primary Key:** `id` (UUID) REFERENCES auth.users(id)
 **Relationships:**
+
 - References: `auth.users(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE
 - `full_name` TEXT
 - `avatar_url` TEXT
@@ -118,13 +132,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 2. Playbook & Plays System
 
 #### `playbooks`
+
 **Purpose:** Playbook containers
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 - Referenced by: `plays`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `name` TEXT NOT NULL DEFAULT 'Main Playbook'
@@ -136,13 +153,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `last_modified_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `plays`
+
 **Purpose:** Individual plays within playbooks
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `playbooks(id)`
 - Referenced by: `play_calls`, `game_plan_plays`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `playbook_id` UUID REFERENCES playbooks(id) ON DELETE CASCADE
 - `formation` TEXT NOT NULL
@@ -179,13 +199,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `play_calls`
+
 **Purpose:** Game-time play execution tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `plays(id)`
 - References: `game_results(id)` (future)
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `game_id` UUID (references game_results when created)
 - `play_id` UUID REFERENCES plays(id) ON DELETE CASCADE
@@ -200,13 +223,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 3. Social Features
 
 #### `team_posts`
+
 **Purpose:** Team social media posts
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `auth.users(id)`
 - Referenced by: `post_likes`, `post_comments`, `post_shares`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - `team_id` UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE
 - `author_id` UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
@@ -219,26 +245,32 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `post_likes`
+
 **Purpose:** Post like tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `team_posts(id)`, `auth.users(id)`
 - Unique: `(post_id, user_id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - `post_id` UUID NOT NULL REFERENCES team_posts(id) ON DELETE CASCADE
 - `user_id` UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `post_comments`
+
 **Purpose:** Post comments and replies
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `team_posts(id)`, `auth.users(id)`
 - Self-reference: `parent_comment_id` REFERENCES post_comments(id)
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - `post_id` UUID NOT NULL REFERENCES team_posts(id) ON DELETE CASCADE
 - `author_id` UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
@@ -248,12 +280,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `post_shares`
+
 **Purpose:** Post sharing tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `team_posts(id)`, `auth.users(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - `post_id` UUID NOT NULL REFERENCES team_posts(id) ON DELETE CASCADE
 - `user_id` UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
@@ -262,13 +297,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 4. Game Management
 
 #### `game_plans`
+
 **Purpose:** Game planning and strategy
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 - Referenced by: `game_plan_situations`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `opponent` TEXT NOT NULL
@@ -281,13 +319,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `game_plan_situations`
+
 **Purpose:** Game situations and recommended plays
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `game_plans(id)`
 - Referenced by: `game_plan_plays`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `game_plan_id` UUID REFERENCES game_plans(id) ON DELETE CASCADE
 - `situation_type` TEXT NOT NULL
@@ -303,12 +344,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `game_plan_plays`
+
 **Purpose:** Specific plays assigned to situations
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `game_plan_situations(id)`, `plays(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `situation_id` UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE
 - `play_id` UUID REFERENCES plays(id) ON DELETE CASCADE
@@ -317,12 +361,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `game_results`
+
 **Purpose:** Game result tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `opponent` TEXT NOT NULL
@@ -341,13 +388,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 5. Practice Management
 
 #### `practice_scripts`
+
 **Purpose:** Practice planning and scripting
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 - Referenced by: `practice_schedules`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `title` TEXT NOT NULL
@@ -359,13 +409,16 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `practice_schedules`
+
 **Purpose:** Scheduled practice sessions
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `practice_scripts(id)`
 - Referenced by: `practice_attendance`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `practice_script_id` UUID REFERENCES practice_scripts(id)
@@ -379,12 +432,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `practice_attendance`
+
 **Purpose:** Practice attendance tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `practice_schedules(id)`, `profiles(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `practice_id` UUID REFERENCES practice_schedules(id) ON DELETE CASCADE
 - `player_id` UUID REFERENCES profiles(id) ON DELETE CASCADE
@@ -395,12 +451,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `practice_templates`
+
 **Purpose:** Reusable practice templates
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `name` TEXT NOT NULL
@@ -415,12 +474,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 6. Analytics & Performance
 
 #### `achievements`
+
 **Purpose:** Player and team achievements
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `profiles(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `player_id` UUID REFERENCES profiles(id) ON DELETE CASCADE
@@ -433,12 +495,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `helmet_stickers`
+
 **Purpose:** Helmet sticker achievements
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `profiles(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `player_id` UUID REFERENCES profiles(id) ON DELETE CASCADE
@@ -450,12 +515,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 7. Equipment & Assets
 
 #### `equipment`
+
 **Purpose:** Equipment inventory and tracking
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `name` TEXT NOT NULL
@@ -477,12 +545,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### 8. Calendar & Events
 
 #### `calendar_events`
+
 **Purpose:** General calendar events
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `title` TEXT NOT NULL
@@ -498,12 +569,15 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
 #### `team_events`
+
 **Purpose:** Team-specific events
 **Primary Key:** `id` (UUID)
 **Relationships:**
+
 - References: `teams(id)`, `auth.users(id)`
 
 **Columns:**
+
 - `id` UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 - `team_id` UUID REFERENCES teams(id) ON DELETE CASCADE
 - `title` TEXT NOT NULL
@@ -525,30 +599,36 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ### Frontend Components ↔ Database Tables
 
 #### Team Management
+
 - **TeamSettings.tsx** → `teams`, `team_members`
 - **RosterPage.tsx** → `team_players`, `profiles`
 - **TeamService.ts** → `teams`, `team_members`
 
 #### Playbook System
+
 - **Playbook pages** → `playbooks`, `plays`
 - **PlayService.ts** → `plays`, `playbooks`
 - **Game planning** → `game_plans`, `game_plan_situations`, `game_plan_plays`
 
 #### Social Features
+
 - **Social feed** → `team_posts`, `post_likes`, `post_comments`, `post_shares`
 - **PostsService.ts** → `team_posts` and related tables
 
 #### Analytics & Performance
+
 - **Analytics components** → `achievements`, `helmet_stickers`
 - **Performance services** → `plays` (stats), `game_results`
 
 #### Calendar & Scheduling
+
 - **Calendar components** → `calendar_events`, `team_events`, `practice_schedules`
 - **CalendarService.ts** → `calendar_events`, `team_events`
 
 ### Service Layer Architecture
 
 #### Core Services
+
 - **rosterService.ts** → `team_players` CRUD operations
 - **teamService.ts** → `teams`, `team_members` management
 - **playsService.ts** → `plays`, `playbooks` operations
@@ -558,11 +638,13 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 - **calendarService.ts** → Event scheduling
 
 #### Analytics Services
+
 - **performanceAnalyticsService.ts** → Player/team performance
 - **playAnalyticsService.ts** → Play success rates
 - **gamePlanningAnalyticsService.ts** → Game strategy analytics
 
 #### Utility Services
+
 - **csvService.ts** → Data import/export
 - **pdfExportService.tsx** → Report generation
 - **thumbnailUploadService.ts** → Asset management
@@ -570,11 +652,13 @@ This document provides a comprehensive audit of the BoxCall database structure, 
 ## Row Level Security (RLS) Policies
 
 All tables implement RLS with policies based on:
+
 - **Team membership** (team_members table)
 - **User authentication** (auth.users)
 - **Team ownership** (teams table)
 
 ### Policy Patterns
+
 1. **Team-based access**: Users can only access data for teams they belong to
 2. **Role-based permissions**: Different access levels for coaches vs players
 3. **Ownership checks**: Users can modify their own data
@@ -583,6 +667,7 @@ All tables implement RLS with policies based on:
 ## Data Relationships & Dependencies
 
 ### Core Dependencies
+
 ```
 auth.users (Supabase Auth)
     ↓
@@ -600,6 +685,7 @@ team_players   playbooks
 ```
 
 ### Extended Relationships
+
 - **Social**: `team_posts` → `post_likes`, `post_comments`, `post_shares`
 - **Games**: `game_plans` → `game_plan_situations` → `game_plan_plays`
 - **Practice**: `practice_scripts` → `practice_schedules` → `practice_attendance`
@@ -608,11 +694,13 @@ team_players   playbooks
 ## Migration History & Current State
 
 ### Recent Migrations
+
 - **20250928012435**: Complete schema rebuild
 - **20250928013235**: Profiles insert policy
 - **20250928104149**: Team roles and policies alignment
 
 ### Current Schema Status
+
 - **Total Tables**: 24
 - **Total Relationships**: ~50 foreign key constraints
 - **RLS Policies**: Implemented on all tables
@@ -622,12 +710,14 @@ team_players   playbooks
 ## Recommendations
 
 ### Immediate Actions
+
 1. **Clean up SQL files**: Remove all loose .sql files (25+ files) to reduce confusion
 2. **Consolidate migrations**: Keep only essential migration files
 3. **Document RLS policies**: Create detailed policy documentation
 4. **Audit service usage**: Ensure all services align with current schema
 
 ### Future Improvements
+
 1. **Schema versioning**: Implement proper schema versioning
 2. **Data validation**: Add more constraints and validations
 3. **Performance optimization**: Add strategic indexes
@@ -636,18 +726,22 @@ team_players   playbooks
 ## File Inventory for Cleanup
 
 ### SQL Files to Remove (25+ files)
+
 Located in `/database/` directory:
+
 - Individual migration files
 - Test/debug SQL files
 - Schema fragments
 - Policy files
 
 ### Files to Keep
+
 - `database/schema.sql` (authoritative schema)
 - Essential migration files in `supabase/migrations/`
 - Seed data files (if needed)
 
 ### Code References to Update
+
 - Any imports of removed SQL files
 - Hardcoded SQL queries
 - Database setup scripts
