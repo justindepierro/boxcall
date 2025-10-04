@@ -54,7 +54,7 @@ jobs:
           aws s3 sync ${{ steps.backup.outputs.dir }} \
             s3://boxcall-backups/database/${{ steps.backup.outputs.dirname }}/ \
             --storage-class STANDARD \
-            --server-side-encryption AES256
+            --sse AES256
       
       - name: Keep local backups (7 days)
         if: success()
