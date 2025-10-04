@@ -41,7 +41,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npm run backup:verify ${{ steps.backup.outputs.file }}
+        run: npm run backup:verify
       
       - name: Upload to S3
         if: success()
@@ -49,7 +49,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-2
       
       - name: Sync to S3 bucket
         if: success()
@@ -62,46 +62,8 @@ jobs:
       - name: Keep local backups (7 days)
         if: success()
         run: |
-          find backups/ -name "*.json" -type f -mtime +7 -delete
+          find backups/ -name "*.json" -type f -mtime +7 -delete || true
           echo "Cleaned up backups older than 7 days"
-      
-      - name: Send success notification
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          payload: |
-            {
-              "text": "✅ Database backup completed successfully",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*✅ Database Backup Successful*\n\nBackup: `${{ steps.backup.outputs.filename }}`\nTime: <!date^${{ github.event.repository.updated_at }}^{date_short_pretty} {time}|${{ github.event.repository.updated_at }}>"
-                  }
-                }
-              ]
-            }
-      
-      - name: Send failure notification
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          payload: |
-            {
-              "text": "❌ Database backup FAILED",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*❌ Database Backup Failed*\n\nWorkflow: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>\nTime: <!date^${{ github.event.repository.updated_at }}^{date_short_pretty} {time}|${{ github.event.repository.updated_at }}>"
-                  }
-                }
-              ]
-            }
       
       - name: Upload backup artifact (fallback)
         if: always()
