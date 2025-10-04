@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Card, Button } from "../ui";
@@ -28,16 +28,15 @@ export const RosterQuickAdd: React.FC = () => {
     lastName: "",
     position: "",
     jerseyNumber: "",
+    heightFeet: "",
+    heightInches: "",
   });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const teamId = getActiveTeamId();
 
-  useEffect(() => {
-    loadRosterData();
-  }, []);
-
-  const loadRosterData = async () => {
+  const loadRosterData = useCallback(async () => {
     try {
       setLoading(true);
       const roster = await rosterService.listByTeam(teamId);
@@ -49,7 +48,11 @@ export const RosterQuickAdd: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [teamId]);
+
+  useEffect(() => {
+    loadRosterData();
+  }, [loadRosterData]);
 
   const handleQuickAdd = async () => {
     if (
@@ -57,15 +60,31 @@ export const RosterQuickAdd: React.FC = () => {
       !quickAddData.lastName.trim() ||
       !quickAddData.position
     ) {
+      setError("First name, last name, and position are required");
       return;
     }
 
     try {
       setSaving(true);
+      setError(null);
 
       const jerseyNumber = quickAddData.jerseyNumber.trim()
         ? parseInt(quickAddData.jerseyNumber.trim(), 10)
         : undefined;
+
+      // Convert height from ft-in to inches
+      let heightInches: number | undefined;
+      if (quickAddData.heightFeet.trim() || quickAddData.heightInches.trim()) {
+        const feet = parseInt(quickAddData.heightFeet.trim() || "0", 10) || 0;
+        const inches = parseInt(quickAddData.heightInches.trim() || "0", 10) || 0;
+
+        if (feet < 0 || inches < 0 || inches > 11) {
+          setError("Invalid height format. Inches must be 0-11.");
+          return;
+        }
+
+        heightInches = feet * 12 + inches;
+      }
 
       const playerData = {
         team_id: teamId,
@@ -73,6 +92,7 @@ export const RosterQuickAdd: React.FC = () => {
         last_name: quickAddData.lastName.trim(),
         primary_position: quickAddData.position,
         jersey_number: jerseyNumber,
+        height_inches: heightInches,
       };
 
       await rosterService.createPlayer(playerData);
@@ -83,20 +103,28 @@ export const RosterQuickAdd: React.FC = () => {
         lastName: "",
         position: "",
         jerseyNumber: "",
+        heightFeet: "",
+        heightInches: "",
       });
       setShowQuickAdd(false);
+      setError(null);
 
       // Refresh data
       await loadRosterData();
     } catch (error) {
       console.error("Failed to add player:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to add player. Please try again."
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const handleManageRoster = () => {
-    navigate("/team/settings?tab=roster");
+    navigate("/roster");
   };
 
   if (loading) {
@@ -202,6 +230,12 @@ export const RosterQuickAdd: React.FC = () => {
             Add a new player quickly:
           </Typography>
 
+          {error && (
+            <div className="p-2 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-2">
             <input
               type="text"
@@ -268,12 +302,52 @@ export const RosterQuickAdd: React.FC = () => {
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-2">
+            <div className="flex space-x-1">
+              <input
+                type="number"
+                placeholder="Ft"
+                min="4"
+                max="8"
+                value={quickAddData.heightFeet}
+                onChange={(e) =>
+                  setQuickAddData((prev) => ({
+                    ...prev,
+                    heightFeet: e.target.value,
+                  }))
+                }
+                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              />
+              <span className="flex items-center text-sm text-text-secondary">ft</span>
+            </div>
+            <div className="flex space-x-1">
+              <input
+                type="number"
+                placeholder="In"
+                min="0"
+                max="11"
+                value={quickAddData.heightInches}
+                onChange={(e) =>
+                  setQuickAddData((prev) => ({
+                    ...prev,
+                    heightInches: e.target.value,
+                  }))
+                }
+                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              />
+              <span className="flex items-center text-sm text-text-secondary">in</span>
+            </div>
+          </div>
+
           <div className="flex space-x-2 pt-2">
             <Button
               variant="ghost"
               size="sm"
               className="flex-1"
-              onClick={() => setShowQuickAdd(false)}
+              onClick={() => {
+                setShowQuickAdd(false);
+                setError(null);
+              }}
             >
               Cancel
             </Button>

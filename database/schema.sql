@@ -1,10 +1,15 @@
--- BoxCall Database Schema - Clean Rebuild
--- Based on DATABASE_SCHEMA_REFERENCE.md
--- Generated: September 23, 2025
+-- BoxCall Database Schema - Current State (October 4, 2025)
+-- This file represents the current database schema after all migrations
+-- Includes: base schema + profiles policy + team roles alignment
+-- Generated from: supabase/migrations/20250928012435_apply_complete_schema.sql
+-- Plus migrations: 20250928013235_add_profiles_insert_policy.sql
+-- Plus migrations: 20250928104149_align_team_roles_and_policies.sql
 
 -- Enable required extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP EXTENSION IF EXISTS "pgcrypto";
+CREATE EXTENSION "uuid-ossp";
+CREATE EXTENSION "pgcrypto";
 
 -- ===========================================
 -- CORE TEAM MANAGEMENT TABLES
@@ -24,12 +29,17 @@ CREATE TABLE teams (
   backup_version INTEGER DEFAULT 1
 );
 
+-- Teams table policies (from migration 20250928104149)
+CREATE POLICY "Users can create teams" ON teams
+  FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
 -- Team members table
 CREATE TABLE team_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  team_role TEXT NOT NULL CHECK (team_role IN ('head_coach', 'assistant_coach', 'coordinator', 'manager', 'coach')),
+  team_role TEXT NOT NULL CHECK (team_role IN ('head_coach', 'assistant_coach', 'coordinator', 'manager', 'coach', 'player', 'family', 'alumni')),
   capabilities JSONB DEFAULT '{
     "can_manage_team": false,
     "can_manage_games": false,
@@ -45,6 +55,22 @@ CREATE TABLE team_members (
   role_notes TEXT,
   UNIQUE(team_id, user_id)
 );
+
+-- Team members table policies (from migration 20250928104149)
+CREATE POLICY "Users can join teams" ON team_members
+  FOR INSERT
+  WITH CHECK (
+    -- allow user to create their own membership (e.g., bootstrap after team creation)
+    user_id = auth.uid()
+    OR EXISTS (
+      SELECT 1
+      FROM team_members tm
+      WHERE tm.team_id = team_members.team_id
+        AND tm.user_id = auth.uid()
+        AND tm.status = 'active'
+        AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
+    )
+  );
 
 -- Team players table
 CREATE TABLE team_players (
@@ -87,6 +113,10 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Profiles table policies (from migration 20250928013235)
+CREATE POLICY "Users can insert their own profiles" ON profiles
+  FOR INSERT WITH CHECK (id = auth.uid());
 
 -- ===========================================
 -- PLAYBOOK & PLAYS SYSTEM

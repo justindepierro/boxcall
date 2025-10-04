@@ -100,6 +100,21 @@ export const getNavigationItems = (
       description: "Team plays and strategies",
     });
   }
+  // Roster - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "roster",
+      label: "Roster",
+      icon: "users",
+      href: ROUTES.ROSTER,
+      roles: ["admin", "coach", "super_admin"],
+      description: "Manage team roster and player profiles",
+    });
+  }
   // Calendar - Available to everyone
   items.push({
     id: "calendar",

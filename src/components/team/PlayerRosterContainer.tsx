@@ -5,30 +5,24 @@ import { Button } from "../ui";
 
 import { PlayerList } from "./PlayerList";
 
-import type { RosterPlayerView } from "@services/rosterService";
+import type { RosterPlayerView } from "../../services/rosterService";
 import type { TeamPlayer } from "../../types/team-management";
 
-type ExtendedRosterPlayer = RosterPlayerView & {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-};
-
-// Temporary adapter mapping from RosterPlayerView to TeamPlayer shape subset.
-function mapToTeamPlayer(view: ExtendedRosterPlayer): TeamPlayer {
+// Adapter to convert RosterPlayerView to TeamPlayer for PlayerList compatibility
+function mapRosterToTeamPlayer(view: RosterPlayerView): TeamPlayer {
   return {
     id: view.id,
     team_id: view.team_id,
-    user_id: view.user_id ?? undefined,
+    user_id: view.user_id || undefined,
     first_name: view.first_name || "Unknown",
     last_name: view.last_name || "Player",
-    email: view.email || undefined,
-    phone: undefined,
-    parent_email: undefined,
+    email: view.email_address || undefined,
+    phone: view.phone_number || undefined,
+    parent_email: view.parent_contact || undefined,
     positions: view.position ? [view.position] : [],
     jersey_number: view.jersey_number || undefined,
     height: view.height_inches
-      ? `${Math.floor(view.height_inches / 12)}'${view.height_inches % 12}`
+      ? `${Math.floor(view.height_inches / 12)}'${view.height_inches % 12}"`
       : undefined,
     weight: view.weight_pounds || undefined,
     graduation_year: view.graduation_year || undefined,
@@ -47,9 +41,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
 }) => {
   const { players: rosterPlayers, loading, error, refresh } = useRoster(teamId);
 
-  const mapped: TeamPlayer[] = (rosterPlayers as ExtendedRosterPlayer[]).map(
-    mapToTeamPlayer
-  );
+  const mappedPlayers: TeamPlayer[] = rosterPlayers.map(mapRosterToTeamPlayer);
 
   if (loading) return <div className="p-4 text-sm">Loading roster…</div>;
   if (error)
@@ -69,7 +61,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
 
   return (
     <PlayerList
-      players={mapped}
+      players={mappedPlayers}
       onEditPlayer={(p) => console.info("edit player", p.id)}
       onDeletePlayer={(id) => console.info("delete player", id)}
       onAddPlayer={() => console.info("add player")}

@@ -29,8 +29,34 @@ interface DatabasePlay {
   playbook_id: string;
   formation: string;
   play_name: string;
+  one_word_play?: string;
   p_type: string;
+  personnel?: string;
+  f_type?: string;
+  f_dir?: string;
+  protection?: string;
+  p_dir?: string;
+  r_str?: string;
+  p_str?: string;
+  pref_down?: string;
+  pref_dis?: string;
+  pref_hash?: string;
+  pref_cov?: string;
+  pref_front?: string;
+  ftag1?: string;
+  ftag2?: string;
+  p_tag1?: string;
+  p_tag2?: string;
+  back_align?: string;
+  shift?: string;
+  motion?: string;
+  key_player1?: string;
+  key_player2?: string;
+  check_into?: string;
   notes?: string;
+  confidence_base?: number;
+  times_called?: number;
+  times_successful?: number;
   created_at: string;
   updated_at: string;
 }
@@ -49,6 +75,35 @@ export function useTeamsData() {
   // Function to manually refresh data
   const refreshData = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
+  }, []);
+
+  // Function to update a play
+  const updatePlay = useCallback(async (playId: string, updates: Partial<DatabasePlay>) => {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .update(updates)
+        .eq("id", playId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error updating play:", error);
+        throw new Error(`Failed to update play: ${error.message}`);
+      }
+
+      // Update local state
+      setPlays((prevPlays) =>
+        prevPlays.map((play) =>
+          play.id === playId ? { ...play, ...updates } : play
+        )
+      );
+
+      return data;
+    } catch (err) {
+      console.error("Error in updatePlay:", err);
+      throw err;
+    }
   }, []);
 
   useEffect(() => {
@@ -134,6 +189,7 @@ export function useTeamsData() {
     loading,
     error,
     refreshData,
+    updatePlay,
     totalCount: teams.length + playbooks.length + plays.length,
   };
 }

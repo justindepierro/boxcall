@@ -1,22 +1,67 @@
-# BoxCall Database Setup Guide
+# BoxCall Database Documentation
 
-This guide will help you set up a completely clean BoxCall database from scratch, eliminating all RLS recursion issues and corrupted state.
+## Current State (October 4, 2025)
 
-## Prerequisites
+The BoxCall database has been completely audited and cleaned up. The `schema.sql` file now represents the **exact current state** of the database after all migrations have been applied.
 
-1. **Supabase Project**: Create a new Supabase project at [supabase.com](https://supabase.com)
-2. **Environment Variables**: Set up your `.env.local` file with:
+### Current Schema
+- **Location**: `database/schema.sql` (authoritative current schema)
+- **Tables**: 24 core tables with all policies and constraints
+- **Migrations Applied**: All 3 migrations incorporated
+- **Last Updated**: October 4, 2025
 
-   ```
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   ```
+### What Changed
+- ✅ **Schema.sql updated** to include all migration changes
+- ✅ **Team roles expanded** to include player, family, alumni
+- ✅ **RLS policies added** for teams and team_members tables
+- ✅ **Profiles insert policy** added for user registration
+- ✅ **93 legacy SQL files removed** to eliminate confusion
 
-   **Important**: Use the **Service Role Key** (not the anon key) for database setup scripts. You can find this in your Supabase dashboard under Settings > API.
+### Database Structure
+See `docs/DATABASE_AUDIT_2025.md` for complete documentation of all 24 tables with column details, relationships, and application integrations. Documentation
 
-## Quick Setup (Recommended)
+## Current State (October 2025)
 
-Run the complete setup with one command:
+The BoxCall database has been completely audited and cleaned up. All legacy SQL files have been removed to eliminate confusion.
+
+### Current Schema
+- **Location**: `database/schema.sql` (authoritative schema)
+- **Tables**: 24 core tables
+- **Migrations**: `supabase/migrations/` (3 current migrations)
+- **Seeds**: `database/seeds/sample_data.sql`
+
+### Database Structure
+See `docs/DATABASE_AUDIT_2025.md` for complete documentation of:
+- All 24 tables with column details
+- Foreign key relationships
+- Application service mappings
+- RLS policies overview
+
+## Setup Instructions
+
+The database is now managed through Supabase migrations. The current schema is applied via:
+
+```bash
+supabase db push
+```
+
+This will apply the migrations in `supabase/migrations/` in order.
+
+## Development Workflow
+
+1. **Schema Changes**: Edit `database/schema.sql` for documentation
+2. **Migrations**: Use `supabase db diff` to generate new migrations
+3. **Apply Changes**: `supabase db push` to apply to remote database
+
+## Legacy Cleanup
+
+All previous SQL files (90+ files) have been removed:
+- Individual migration files
+- Debug/test SQL files
+- Policy fragments
+- Schema dumps
+
+The current clean state eliminates confusion and provides a single source of truth.
 
 ```bash
 npm run db:setup

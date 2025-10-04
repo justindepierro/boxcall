@@ -318,7 +318,7 @@ describe('Database Optimization System', () => {
 
       try {
         await errorService.optimizedFindMany({});
-      } catch (error) {
+      } catch (_error) {
         // Expected error
       }
 

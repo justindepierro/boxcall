@@ -5,7 +5,7 @@
  * to provide granular access control throughout the application.
  */
 
-import { useAuth, useAuthProfile } from '../app/auth-store';
+import { useAuthProfile } from '../app/auth-store';
 import { useMemo } from 'react';
 
 // App-level permissions based on subscription tier and role
@@ -164,132 +164,6 @@ const calculateAppPermissions = (
   }
 };
 
-const calculateTeamPermissions = (
-  teamRole: string | null,
-  isTeamOwner: boolean = false
-): TeamPermissions => {
-  // Team owner gets full permissions
-  if (isTeamOwner || teamRole === 'owner') {
-    return {
-      canManageTeamSettings: true,
-      canDeleteTeam: true,
-      canManageBilling: true,
-      canInviteMembers: true,
-      canRemoveMembers: true,
-      canChangeRoles: true,
-      canViewAllMembers: true,
-      canManagePractices: true,
-      canManagePlaybook: true,
-      canManageEvents: true,
-      canManageRoster: true,
-      canViewAnalytics: true,
-      canExportTeamData: true,
-      canViewPlayerStats: true,
-      canEditPlayerProfiles: true,
-    };
-  }
-
-  switch (teamRole) {
-    case 'head_coach':
-      return {
-        canManageTeamSettings: false, // billing stays with owner
-        canDeleteTeam: false,
-        canManageBilling: false,
-        canInviteMembers: true,
-        canRemoveMembers: true,
-        canChangeRoles: true,
-        canViewAllMembers: true,
-        canManagePractices: true,
-        canManagePlaybook: true,
-        canManageEvents: true,
-        canManageRoster: true,
-        canViewAnalytics: true,
-        canExportTeamData: true,
-        canViewPlayerStats: true,
-        canEditPlayerProfiles: true,
-      };
-      
-    case 'assistant_coach':
-      return {
-        canManageTeamSettings: false,
-        canDeleteTeam: false,
-        canManageBilling: false,
-        canInviteMembers: false,
-        canRemoveMembers: false,
-        canChangeRoles: false,
-        canViewAllMembers: true,
-        canManagePractices: true,
-        canManagePlaybook: true,
-        canManageEvents: false,
-        canManageRoster: false,
-        canViewAnalytics: true,
-        canExportTeamData: false,
-        canViewPlayerStats: true,
-        canEditPlayerProfiles: true,
-      };
-      
-    case 'coordinator':
-    case 'manager':
-      return {
-        canManageTeamSettings: false,
-        canDeleteTeam: false,
-        canManageBilling: false,
-        canInviteMembers: false,
-        canRemoveMembers: false,
-        canChangeRoles: false,
-        canViewAllMembers: true,
-        canManagePractices: false,
-        canManagePlaybook: false,
-        canManageEvents: true,
-        canManageRoster: teamRole === 'manager',
-        canViewAnalytics: false,
-        canExportTeamData: false,
-        canViewPlayerStats: false,
-        canEditPlayerProfiles: false,
-      };
-      
-    case 'family':
-      return {
-        canManageTeamSettings: false,
-        canDeleteTeam: false,
-        canManageBilling: false,
-        canInviteMembers: false,
-        canRemoveMembers: false,
-        canChangeRoles: false,
-        canViewAllMembers: false, // only their own player
-        canManagePractices: false,
-        canManagePlaybook: false,
-        canManageEvents: false,
-        canManageRoster: false,
-        canViewAnalytics: false,
-        canExportTeamData: false,
-        canViewPlayerStats: false, // only their own player
-        canEditPlayerProfiles: false, // only their own player
-      };
-      
-    case 'alumni':
-    case 'player':
-    default:
-      return {
-        canManageTeamSettings: false,
-        canDeleteTeam: false,
-        canManageBilling: false,
-        canInviteMembers: false,
-        canRemoveMembers: false,
-        canChangeRoles: false,
-        canViewAllMembers: false, // roster view only
-        canManagePractices: false,
-        canManagePlaybook: false,
-        canManageEvents: false,
-        canManageRoster: false,
-        canViewAnalytics: false,
-        canExportTeamData: false,
-        canViewPlayerStats: false, // only their own
-        canEditPlayerProfiles: false, // only their own
-      };
-  }
-};
-
 // Main comprehensive permission hook
 export function useComprehensivePermissions(teamId?: string) {
   const profile = useAuthProfile();
@@ -303,7 +177,7 @@ export function useComprehensivePermissions(teamId?: string) {
       profile.is_admin,
       profile.subscription_tier
     );
-  }, [profile?.app_role, profile?.role, profile?.is_admin, profile?.subscription_tier]);
+  }, [profile]);
 
   const teamPermissions = useMemo(() => {
     if (!teamId) return null;

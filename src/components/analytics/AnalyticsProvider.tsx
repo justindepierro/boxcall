@@ -100,7 +100,7 @@ export function AnalyticsProvider({
     return () => {
       mounted = false;
     };
-  }, [user?.id, config.customProperties]);
+  }, [user?.id, user, config.customProperties]);
 
   // Update user context when user changes
   useEffect(() => {

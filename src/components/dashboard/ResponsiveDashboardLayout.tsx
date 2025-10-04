@@ -4,6 +4,7 @@ import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalFeed } from "../dashboard/PersonalFeed";
 import ProfileCard from "../dashboard/ProfileCard";
 import TeamFeeds from "../dashboard/TeamFeeds";
+import { RosterQuickAdd } from "../dashboard/RosterQuickAdd";
 import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
@@ -27,7 +28,7 @@ import type { IconName } from "../ui/Icon/Icon";
  */
 export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, profileLoading, error } = useAuth();
-  const { isStepVisible } = useProgressiveLoading(4, 200);
+  const { isStepVisible } = useProgressiveLoading(5, 200);
 
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
@@ -286,9 +287,14 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               )}
             </div>
 
+            {/* Roster Quick Add */}
+            <div className="roster-section">
+              {isStepVisible(1) ? <RosterQuickAdd /> : <DashboardCardSkeleton />}
+            </div>
+
             {/* Personal Feed */}
             <div className="personal-feed-section" id="dashboard-feed-section">
-              {isStepVisible(1) ? <PersonalFeed /> : <DashboardCardSkeleton />}
+              {isStepVisible(2) ? <PersonalFeed /> : <DashboardCardSkeleton />}
             </div>
           </div>
 
@@ -296,12 +302,12 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="right-column">
             {/* Team Feeds */}
             <div className="feeds-section">
-              {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
+              {isStepVisible(3) ? <TeamFeeds /> : <DashboardCardSkeleton />}
             </div>
 
             {/* Calendar */}
             <div className="calendar-section" id="dashboard-calendar-section">
-              {isStepVisible(3) ? (
+              {isStepVisible(4) ? (
                 <PersonalCalendar userId={user.id} />
               ) : (
                 <DashboardCardSkeleton />

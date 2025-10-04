@@ -124,6 +124,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
             (player) =>
               player.jersey_number?.toString().includes(query) ||
               player.position?.toLowerCase().includes(query.toLowerCase()) ||
+              player.first_name?.toLowerCase().includes(query.toLowerCase()) ||
+              player.last_name?.toLowerCase().includes(query.toLowerCase()) ||
               player.id.toLowerCase().includes(query.toLowerCase())
           )
           .slice(0, 3); // Limit to 3 results per type
@@ -132,7 +134,9 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           ...filteredPlayers.map((player) => ({
             type: "player" as const,
             data: player,
-            displayText: `Player ${player.jersey_number || "TBD"}`,
+            displayText: player.first_name && player.last_name
+              ? `${player.first_name} ${player.last_name}`
+              : `Player ${player.jersey_number || "TBD"}`,
             subText: `${player.position || "Position TBD"} • ${player.status || "Status TBD"}`,
           }))
         );

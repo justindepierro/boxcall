@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
@@ -20,10 +20,10 @@ export default function GamePlansPage() {
   const navigate = useNavigate();
   const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);
 
-  const handleCreatePlan = () => {
+  const handleCreatePlan = useCallback(() => {
     // TODO: Open create game plan modal or navigate to editor
     console.log("Create new game plan");
-  };
+  }, []);
 
   const handleEditPlan = (plan: GamePlan) => {
     // TODO: Navigate to plan editor

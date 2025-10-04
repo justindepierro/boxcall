@@ -85,6 +85,7 @@ interface PlayGridProps {
   // Suggestions for inline editing
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
+  playTypeSuggestions?: string[];
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -116,6 +117,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       return localStorage.getItem("bc_playgrid_oneword") === "1";
     } catch {
       return false;
+    }
+  });
+
+  // Direction display format: 'full', 'abbrev', or 'letter'
+  const [directionDisplayFormat, setDirectionDisplayFormat] = useState<
+    "full" | "abbrev" | "letter"
+  >(() => {
+    try {
+      const stored = localStorage.getItem("bc_playgrid_direction_format");
+      if (stored === "full" || stored === "abbrev" || stored === "letter") {
+        return stored;
+      }
+      return "full";
+    } catch {
+      return "full";
     }
   });
 
@@ -190,6 +206,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   useEffect(() => {
     try {
+      localStorage.setItem(
+        "bc_playgrid_direction_format",
+        directionDisplayFormat
+      );
+    } catch {
+      // ignore persistence errors (private browsing, etc.)
+    }
+  }, [directionDisplayFormat]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem("bc_playgrid_view", viewMode);
     } catch {
       // ignore persistence errors
@@ -229,7 +256,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   }, [hasManualViewModeOverride, setViewMode]);
 
   // Get real data from database with refresh capability
-  const { plays: allPlays, loading, error, refreshData } = useTeamsData();
+  const {
+    plays: allPlays,
+    loading,
+    error,
+    refreshData,
+    updatePlay,
+  } = useTeamsData();
 
   // Refresh data when refreshTrigger changes
   useEffect(() => {
@@ -270,6 +303,54 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       logValidationResults(validationResults);
     }
   }, [plays]);
+
+  // Handle inline play updates
+  const handlePlaySave = useCallback(
+    async (playId: string, updates: Partial<Play>) => {
+      try {
+        // Convert Play type updates to DatabasePlay type updates
+        const dbUpdates: any = {};
+
+        // Map all possible editable fields
+        if (updates.formation !== undefined) dbUpdates.formation = updates.formation;
+        if (updates.play_name !== undefined) dbUpdates.play_name = updates.play_name;
+        if (updates.one_word_play !== undefined) dbUpdates.one_word_play = updates.one_word_play;
+        if (updates.p_type !== undefined) dbUpdates.p_type = updates.p_type;
+        if (updates.personnel !== undefined) dbUpdates.personnel = updates.personnel;
+        if (updates.f_type !== undefined) dbUpdates.f_type = updates.f_type;
+        if (updates.f_dir !== undefined) dbUpdates.f_dir = updates.f_dir;
+        if (updates.protection !== undefined) dbUpdates.protection = updates.protection;
+        if (updates.p_dir !== undefined) dbUpdates.p_dir = updates.p_dir;
+        if (updates.r_str !== undefined) dbUpdates.r_str = updates.r_str;
+        if (updates.p_str !== undefined) dbUpdates.p_str = updates.p_str;
+        if (updates.pref_down !== undefined) dbUpdates.pref_down = updates.pref_down;
+        if (updates.pref_dis !== undefined) dbUpdates.pref_dis = updates.pref_dis;
+        if (updates.pref_hash !== undefined) dbUpdates.pref_hash = updates.pref_hash;
+        if (updates.pref_cov !== undefined) dbUpdates.pref_cov = updates.pref_cov;
+        if (updates.pref_front !== undefined) dbUpdates.pref_front = updates.pref_front;
+        if (updates.ftag1 !== undefined) dbUpdates.ftag1 = updates.ftag1;
+        if (updates.ftag2 !== undefined) dbUpdates.ftag2 = updates.ftag2;
+        if (updates.p_tag1 !== undefined) dbUpdates.p_tag1 = updates.p_tag1;
+        if (updates.p_tag2 !== undefined) dbUpdates.p_tag2 = updates.p_tag2;
+        if (updates.back_align !== undefined) dbUpdates.back_align = updates.back_align;
+        if (updates.shift !== undefined) dbUpdates.shift = updates.shift;
+        if (updates.motion !== undefined) dbUpdates.motion = updates.motion;
+        if (updates.key_player1 !== undefined) dbUpdates.key_player1 = updates.key_player1;
+        if (updates.key_player2 !== undefined) dbUpdates.key_player2 = updates.key_player2;
+        if (updates.check_into !== undefined) dbUpdates.check_into = updates.check_into;
+        if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+
+        console.log("Saving play updates:", { playId, updates, dbUpdates });
+
+        await updatePlay(playId, dbUpdates);
+        info(`Play ${playId} updated successfully`);
+      } catch (error) {
+        console.error("Failed to save play:", error);
+        throw error; // Re-throw so PlayCard can handle the error
+      }
+    },
+    [updatePlay]
+  );
 
   // Bulk Operations Handlers
   const handlePlaySelect = useCallback(
@@ -427,6 +508,25 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     return reorderedPlays.length > 0 ? reorderedPlays : filteredPlays;
   }, [reorderedPlays, filteredPlays]);
 
+  // Collect unique suggestions from all plays for inline editing
+  const collectedSuggestions = useMemo(() => {
+    const formations = new Set<string>();
+    const playNames = new Set<string>();
+    const playTypes = new Set<string>();
+
+    plays.forEach((play) => {
+      if (play.formation) formations.add(play.formation);
+      if (play.play_name) playNames.add(play.play_name);
+      if (play.p_type) playTypes.add(play.p_type);
+    });
+
+    return {
+      formations: Array.from(formations).sort(),
+      playNames: Array.from(playNames).sort(),
+      playTypes: Array.from(playTypes).sort(),
+    };
+  }, [plays]);
+
   const showEmpty = displayPlays.length === 0 && !loading && !error;
   // Virtualization threshold (avoid overhead for small lists)
   const VIRTUALIZE_THRESHOLD = 30; // use simple map below this
@@ -464,22 +564,30 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           play={play}
           showOneWordCalls={showOneWordCalls}
           onEdit={onEdit}
+          onSave={handlePlaySave}
           onDuplicate={onDuplicate}
           onCreateDiagram={onCreateDiagram}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
           density="compact"
           variant="list"
+          formationSuggestions={collectedSuggestions.formations}
+          playNameSuggestions={collectedSuggestions.playNames}
+          playTypeSuggestions={collectedSuggestions.playTypes}
+          directionDisplayFormat={directionDisplayFormat}
         />
       </div>
     ),
     [
       showOneWordCalls,
       onEdit,
+      handlePlaySave,
       onDuplicate,
       onCreateDiagram,
       selectedPlayIds,
       handlePlaySelect,
+      collectedSuggestions,
+      directionDisplayFormat,
     ]
   );
 
@@ -617,6 +725,35 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 )}
               </IconButton>
               <span className="text-sm text-text-secondary">Full names</span>
+            </div>
+
+            {/* Direction Display Format Toggle */}
+            <div className="flex items-center gap-2">
+              <IconButton
+                aria-label={`Direction format: ${directionDisplayFormat}`}
+                tooltip={`Direction format: ${directionDisplayFormat === "full" ? "Full words" : directionDisplayFormat === "abbrev" ? "Abbreviations" : "Letters"}`}
+                onClick={() => {
+                  const formats: ("full" | "abbrev" | "letter")[] = [
+                    "full",
+                    "abbrev",
+                    "letter",
+                  ];
+                  const currentIndex = formats.indexOf(directionDisplayFormat);
+                  const nextIndex = (currentIndex + 1) % formats.length;
+                  setDirectionDisplayFormat(formats[nextIndex]);
+                }}
+                variant="subtle"
+                size="sm"
+              >
+                <Icon name="move" className="h-5 w-5 text-text-info" />
+              </IconButton>
+              <span className="text-sm text-text-secondary">
+                {directionDisplayFormat === "full"
+                  ? "Right/Left"
+                  : directionDisplayFormat === "abbrev"
+                    ? "Rt/Lt"
+                    : "R/L"}
+              </span>
             </div>
           </div>
         </div>

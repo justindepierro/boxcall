@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
-import { InlineSelectField } from "../../ui/InlineSelectField";
 import { InlineEditField } from "../../ui/InlineEditField";
 import { Button } from "../../ui/Button/Button";
 import {
@@ -109,11 +108,12 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           {optimisticPlay.p_type}
         </span>
         {optimisticPlay.personnel && (
-          <InlineSelectField
+          <InlineEditField
             value={optimisticPlay.personnel}
-            options={PERSONNEL_OPTIONS}
             onSave={(value) => handleInlineSave("personnel", value)}
-            placeholder="Select personnel"
+            placeholder="Personnel (e.g., 11, 12, 21)"
+            suggestions={PERSONNEL_OPTIONS.map((option) => option.label)}
+            enableSuggestions={true}
             isSaving={savingFields.has("personnel")}
             className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium hover:bg-gray-200 transition-colors"
           />
@@ -131,24 +131,24 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         <span
           className={`ml-auto text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
         >
-          Confidence {optimisticPlay.confidence_base}%
+          Formation Confidence {optimisticPlay.confidence_base}%
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="surface-subtle rounded-lg p-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="surface-subtle rounded-lg p-4">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-2"
+            className="text-text-primary flex items-center mb-4"
           >
-            <Icon name="target" className="h-4 w-4 mr-1" /> Formation
+            <Icon name="target" className="h-4 w-4 mr-2" /> Formation
           </Typography>
           <DragDropContext onDragEnd={handleFormationDragEnd}>
             <Droppable droppableId="formation-fields">
               {(provided) => (
                 <dl
-                  className="space-y-2 text-sm"
+                  className="space-y-3 text-sm"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -168,16 +168,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-lg transition-colors ${
+                            className={`p-3 rounded-lg transition-all duration-200 ${
                               snapshot.isDragging
-                                ? "bg-surface-hover shadow-lg"
-                                : "hover:bg-surface-hover"
+                                ? "bg-surface-hover shadow-lg scale-105"
+                                : "hover:bg-surface-hover hover:shadow-sm"
                             }`}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3 mb-2">
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary"
+                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
                               >
                                 <Icon
                                   name="grip-vertical"
@@ -185,38 +185,38 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 />
                               </div>
                               <dt
-                                className={`font-medium ${
+                                className={`font-medium text-sm ${
                                   isVisible
-                                    ? "text-text-secondary"
+                                    ? "text-text-primary"
                                     : "text-text-tertiary line-through"
                                 }`}
                               >
                                 {field.label}
                               </dt>
+                              <button
+                                onClick={() =>
+                                  toggleFieldVisibility(fieldKey, "formation")
+                                }
+                                className="flex-shrink-0 p-1 rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                title={
+                                  isVisible
+                                    ? "Hide from display name"
+                                    : "Show in display name"
+                                }
+                              >
+                                <Icon
+                                  name={isVisible ? "eye" : "eye-off"}
+                                  className="h-4 w-4"
+                                />
+                              </button>
                             </div>
-                            <dd className="min-w-0">
+                            <div className="w-full">
                               {field.render(
                                 optimisticPlay,
                                 handleInlineSave,
                                 savingFields
                               )}
-                            </dd>
-                            <button
-                              onClick={() =>
-                                toggleFieldVisibility(fieldKey, "formation")
-                              }
-                              className="p-1 rounded hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors"
-                              title={
-                                isVisible
-                                  ? "Hide from display name"
-                                  : "Show in display name"
-                              }
-                            >
-                              <Icon
-                                name={isVisible ? "eye" : "eye-off"}
-                                className="h-4 w-4"
-                              />
-                            </button>
+                            </div>
                           </div>
                         )}
                       </Draggable>
@@ -229,13 +229,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-3">
+        <div className="surface-subtle rounded-lg p-4">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-2"
+            className="text-text-primary flex items-center mb-4"
           >
-            <Icon name="hash" className="h-4 w-4 mr-1" /> Play Details
+            <Icon name="hash" className="h-4 w-4 mr-2" /> Play Details
           </Typography>
           <DragDropContext onDragEnd={handlePlayDetailsDragEnd}>
             <Droppable droppableId="play-details">
@@ -243,7 +243,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="space-y-2 text-sm"
+                  className="space-y-3 text-sm"
                 >
                   {playDetailsFieldOrder.map((fieldKey, index) => {
                     const field =
@@ -263,16 +263,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`grid grid-cols-[120px_1fr_auto] gap-3 items-center p-2 rounded-lg transition-colors ${
+                            className={`p-3 rounded-lg transition-all duration-200 ${
                               snapshot.isDragging
-                                ? "bg-surface-hover shadow-lg"
-                                : "hover:bg-surface-hover"
+                                ? "bg-surface-hover shadow-lg scale-105"
+                                : "hover:bg-surface-hover hover:shadow-sm"
                             }`}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3 mb-2">
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary"
+                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
                               >
                                 <Icon
                                   name="grip-vertical"
@@ -280,38 +280,38 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 />
                               </div>
                               <dt
-                                className={`font-medium ${
+                                className={`font-medium text-sm ${
                                   isVisible
-                                    ? "text-text-secondary"
+                                    ? "text-text-primary"
                                     : "text-text-tertiary line-through"
                                 }`}
                               >
                                 {field.label}
                               </dt>
+                              <button
+                                onClick={() =>
+                                  toggleFieldVisibility(fieldKey, "playDetails")
+                                }
+                                className="flex-shrink-0 p-1 rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                title={
+                                  isVisible
+                                    ? "Hide from display name"
+                                    : "Show in display name"
+                                }
+                              >
+                                <Icon
+                                  name={isVisible ? "eye" : "eye-off"}
+                                  className="h-4 w-4"
+                                />
+                              </button>
                             </div>
-                            <dd className="min-w-0">
+                            <div className="w-full">
                               {field.render(
                                 optimisticPlay,
                                 handleInlineSave,
                                 savingFields
                               )}
-                            </dd>
-                            <button
-                              onClick={() =>
-                                toggleFieldVisibility(fieldKey, "playDetails")
-                              }
-                              className="p-1 rounded hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors"
-                              title={
-                                isVisible
-                                  ? "Hide from display name"
-                                  : "Show in display name"
-                              }
-                            >
-                              <Icon
-                                name={isVisible ? "eye" : "eye-off"}
-                                className="h-4 w-4"
-                              />
-                            </button>
+                            </div>
                           </div>
                         )}
                       </Draggable>
@@ -324,60 +324,65 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-3">
+        <div className="surface-subtle rounded-lg p-4">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-2"
+            className="text-text-primary flex items-center mb-4"
           >
-            Preferences
+            <Icon name="settings" className="h-4 w-4 mr-2" /> Preferences
           </Typography>
-          <dl className="space-y-2 text-sm">
-            <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-              <dt className="text-text-secondary font-medium">Down</dt>
-              <dd>
-                <InlineSelectField
+          <dl className="space-y-4 text-sm">
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-24">
+                Down
+              </dt>
+              <dd className="flex-1">
+                <InlineEditField
                   value={optimisticPlay.pref_down || ""}
-                  options={DOWN_OPTIONS}
                   onSave={(value) => handleInlineSave("pref_down", value)}
-                  placeholder="Preferred down"
-                  allowEmpty={true}
-                  emptyLabel="Any"
+                  placeholder="Preferred down (e.g., 1st, 2nd, 3rd)"
+                  suggestions={DOWN_OPTIONS.map((option) => option.label)}
+                  enableSuggestions={true}
                   isSaving={savingFields.has("pref_down")}
                 />
               </dd>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-              <dt className="text-text-secondary font-medium">Distance</dt>
-              <dd>
-                <InlineSelectField
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-24">
+                Distance
+              </dt>
+              <dd className="flex-1">
+                <InlineEditField
                   value={optimisticPlay.pref_dis || ""}
-                  options={DISTANCE_OPTIONS}
                   onSave={(value) => handleInlineSave("pref_dis", value)}
-                  placeholder="Preferred distance"
-                  allowEmpty={true}
-                  emptyLabel="Any"
+                  placeholder="Preferred distance (e.g., Short, Medium, Long)"
+                  suggestions={DISTANCE_OPTIONS.map((option) => option.label)}
+                  enableSuggestions={true}
                   isSaving={savingFields.has("pref_dis")}
                 />
               </dd>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-              <dt className="text-text-secondary font-medium">Hash</dt>
-              <dd>
-                <InlineSelectField
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-24">
+                Hash
+              </dt>
+              <dd className="flex-1">
+                <InlineEditField
                   value={optimisticPlay.pref_hash || ""}
-                  options={HASH_OPTIONS}
                   onSave={(value) => handleInlineSave("pref_hash", value)}
-                  placeholder="Preferred hash"
-                  allowEmpty={true}
-                  emptyLabel="Any"
+                  placeholder="Preferred hash (e.g., Left, Right, Middle)"
+                  suggestions={HASH_OPTIONS.map((option) => option.label)}
+                  enableSuggestions={true}
                   isSaving={savingFields.has("pref_hash")}
                 />
               </dd>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-              <dt className="text-text-secondary font-medium">Coverage</dt>
-              <dd>
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-24">
+                Coverage
+              </dt>
+              <dd className="flex-1">
                 <InlineEditField
                   value={optimisticPlay.pref_cov || ""}
                   onSave={(value) => handleInlineSave("pref_cov", value)}
@@ -386,42 +391,53 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-3 items-center">
-              <dt className="text-text-secondary font-medium">Front</dt>
-              <dd>
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-24">
+                Front
+              </dt>
+              <dd className="flex-1">
                 <InlineEditField
-                  value={play.pref_front || ""}
+                  value={optimisticPlay.pref_front || ""}
                   onSave={(value) => handleInlineSave("pref_front", value)}
                   placeholder="Preferred defensive front"
+                  isSaving={savingFields.has("pref_front")}
                 />
               </dd>
             </div>
           </dl>
         </div>
 
-        <div className="surface-subtle rounded-lg p-3">
+        <div className="surface-subtle rounded-lg p-4">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-2"
+            className="text-text-primary flex items-center mb-4"
           >
-            <Icon name="clock" className="h-4 w-4 mr-1" /> Usage & Stats
+            <Icon name="clock" className="h-4 w-4 mr-2" /> Usage & Stats
           </Typography>
-          <dl className="space-y-2 text-sm">
-            <div className="grid grid-cols-[120px_1fr] gap-3">
-              <dt className="text-text-secondary font-medium">Times Called</dt>
-              <dd className="text-text-primary">{play.times_called}</dd>
+          <dl className="space-y-3 text-sm">
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-32">
+                Times Called
+              </dt>
+              <dd className="text-text-primary font-mono">
+                {play.times_called}
+              </dd>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-3">
-              <dt className="text-text-secondary font-medium">
+            <div className="flex items-center gap-4">
+              <dt className="text-text-primary font-medium flex-shrink-0 w-32">
                 Times Successful
               </dt>
-              <dd className="text-text-primary">{play.times_successful}</dd>
+              <dd className="text-text-primary font-mono">
+                {play.times_successful}
+              </dd>
             </div>
             {play.last_used_at && (
-              <div className="grid grid-cols-[120px_1fr] gap-3">
-                <dt className="text-text-secondary font-medium">Last Used</dt>
-                <dd className="text-text-primary">
+              <div className="flex items-center gap-4">
+                <dt className="text-text-primary font-medium flex-shrink-0 w-32">
+                  Last Used
+                </dt>
+                <dd className="text-text-primary font-mono">
                   {new Date(play.last_used_at).toLocaleDateString()}
                 </dd>
               </div>
@@ -430,20 +446,21 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </div>
       </div>
 
-      <div className="surface-subtle rounded-lg p-3">
+      <div className="surface-subtle rounded-lg p-4">
         <Typography
           variant="label-lg"
           as="h4"
-          className="text-text-primary mb-2"
+          className="text-text-primary flex items-center mb-4"
         >
-          Notes
+          <Icon name="file" className="h-4 w-4 mr-2" /> Notes
         </Typography>
         <InlineEditField
-          value={play.notes || ""}
+          value={optimisticPlay.notes || ""}
           onSave={(value) => handleInlineSave("notes", value)}
           placeholder="Add notes about this play..."
           type="textarea"
-          rows={3}
+          rows={4}
+          isSaving={savingFields.has("notes")}
         />
       </div>
 

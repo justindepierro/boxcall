@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
-import { UserAvatar } from "../../ui/UserAvatar";
 import type { Play as PlayType } from "../../../types/play";
 
 type ToggleHandler = () => void;
-
-type SelectionHandler = (playId: string, selected: boolean) => void;
-
-type PlayActionHandler = (play: PlayType) => void;
 
 type StyleResolver = (value: string) => string;
 
@@ -18,14 +13,9 @@ interface PlayCardListHeaderProps {
   displayName: string;
   subtitleText: string | null;
   showOneWordCalls: boolean;
-  isSelected: boolean;
-  onSelectionChange?: SelectionHandler;
   isCompact: boolean;
   isExpanded: boolean;
   onToggleExpand: ToggleHandler;
-  onEdit?: PlayActionHandler;
-  onDuplicate?: PlayActionHandler;
-  onCreateDiagram: () => void;
   getPlayTypeColor: StyleResolver;
   getConfidenceColor: (confidence: number) => string;
   phaseLabel: string | null;
@@ -37,32 +27,15 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   displayName,
   subtitleText,
   showOneWordCalls,
-  isSelected,
-  onSelectionChange,
   isCompact,
   isExpanded,
   onToggleExpand,
-  onEdit,
-  onDuplicate,
-  onCreateDiagram,
   getPlayTypeColor,
   getConfidenceColor,
   phaseLabel,
 }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
-
   return (
     <div className="flex items-center justify-between overflow-visible">
-      <div className="flex items-center mr-3">
-        <input
-          type="checkbox"
-          checked={Boolean(isSelected)}
-          onChange={(e) => onSelectionChange?.(play.id, e.target.checked)}
-          className="w-4 h-4 rounded border-2 border-slate-300 text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-1 cursor-pointer transition-all hover:border-brand-primary bg-white/90"
-          title="Select play"
-        />
-      </div>
-
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 min-w-0">
           <h3
@@ -107,21 +80,10 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           >
             {optimisticPlay.confidence_base}%
           </span>
-          {optimisticPlay.created_by && (
-            <div className="flex items-center gap-1">
-              <span className="text-[10px] text-text-muted">by</span>
-              <UserAvatar
-                userId={optimisticPlay.created_by}
-                size="xs"
-                showName={false}
-                showPopover={true}
-              />
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="flex items-center space-x-1 ml-4">
+      <div className="flex items-center ml-4">
         <Button
           onClick={onToggleExpand}
           variant="ghost"
@@ -139,54 +101,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           aria-controls={`play-details-${play.id}`}
           title={isExpanded ? "Collapse" : "Expand details"}
         />
-        <div className="relative">
-          <Button
-            onClick={() => setShowDropdown(!showDropdown)}
-            variant="ghost"
-            size="sm"
-            icon={<Icon name="menu" className="h-5 w-5" />}
-            iconPosition="only"
-            aria-label="More options"
-            title="More options"
-          />
-          {showDropdown && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-surface-primary border border-border-medium rounded-lg shadow-lg z-50 py-1">
-              <button
-                type="button"
-                onClick={() => {
-                  onEdit?.(play);
-                  setShowDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-surface-secondary/50 flex items-center gap-2"
-              >
-                <Icon name="edit" className="h-4 w-4" />
-                Edit play
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onDuplicate?.(play);
-                  setShowDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-surface-secondary/50 flex items-center gap-2"
-              >
-                <Icon name="copy" className="h-4 w-4" />
-                Duplicate play
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onCreateDiagram();
-                  setShowDropdown(false);
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-surface-secondary/50 flex items-center gap-2"
-              >
-                <Icon name="image" className="h-4 w-4" />
-                Create diagram
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
-}
+  );
+};

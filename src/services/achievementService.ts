@@ -118,11 +118,11 @@ class AchievementTracker {
     try {
       console.log(`[Achievement] Tracking action: ${action} for user: ${userId}`);
 
-      // Get the player's roster record
+      // Get the player's profile record (since player_roster doesn't exist)
       const { data: player } = await supabase
-        .from('player_roster')
-        .select('id, team_id')
-        .eq('user_id', userId)
+        .from('profiles')
+        .select('id')
+        .eq('id', userId)
         .maybeSingle();
 
       if (!player) {
@@ -368,11 +368,11 @@ class AchievementTracker {
     definitions: AchievementDefinition[];
   }> {
     try {
-      // Get player record
+      // Get player record from profiles table (since player_roster doesn't exist)
       const { data: player } = await supabase
-        .from('player_roster')
+        .from('profiles')
         .select('id')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .maybeSingle();
 
       if (!player) {

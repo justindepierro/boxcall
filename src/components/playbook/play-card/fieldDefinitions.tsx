@@ -3,7 +3,7 @@ import { InlineEditField } from "../../ui/InlineEditField";
 import { InlineSelectField } from "../../ui/InlineSelectField";
 import type { Play as PlayType } from "../../../types/play";
 import {
-  DIRECTION_OPTIONS,
+  DIRECTION_RL_OPTIONS,
   FORMATION_OPTIONS,
   PLAY_TYPE_OPTIONS,
 } from "./constants";
@@ -29,25 +29,34 @@ export type FieldDefinitionMap = Record<string, FieldDefinition>;
 interface FormationFieldFactoryOptions {
   normalizeValue: (value: string) => string;
   formationSuggestions: string[];
+  directionOptions: Array<{ value: string; label: string }>;
 }
 
 interface PlayDetailsFieldFactoryOptions {
   normalizeValue: (value: string) => string;
   playNameSuggestions: string[];
+  playTypeSuggestions: string[];
+  directionOptions: Array<{ value: string; label: string }>;
 }
 
 export const createFormationFields = ({
   normalizeValue,
   formationSuggestions,
+  directionOptions,
 }: FormationFieldFactoryOptions): FieldDefinitionMap => ({
   formation: {
     label: "Base",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
-      <InlineSelectField
+      <InlineEditField
         value={optimisticPlay.formation}
-        options={FORMATION_OPTIONS}
         onSave={(value) => handleInlineSave("formation", value)}
-        placeholder="Select formation"
+        placeholder="Enter formation (e.g., Trips, Shotgun)"
+        suggestions={[
+          ...FORMATION_OPTIONS.map((option) => option.label),
+          ...formationSuggestions,
+        ]}
+        enableSuggestions={true}
+        normalizeValue={normalizeValue}
         isSaving={savingFields.has("formation")}
       />
     ),
@@ -71,7 +80,7 @@ export const createFormationFields = ({
     render: (optimisticPlay, handleInlineSave, savingFields) => (
       <InlineSelectField
         value={optimisticPlay.f_dir || ""}
-        options={DIRECTION_OPTIONS}
+        options={directionOptions}
         onSave={(value) => handleInlineSave("f_dir", value)}
         placeholder="Direction"
         allowEmpty={true}
@@ -136,10 +145,13 @@ export const createFormationFields = ({
   r_str: {
     label: "Run Strength",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
-      <InlineEditField
+      <InlineSelectField
         value={optimisticPlay.r_str || ""}
+        options={DIRECTION_RL_OPTIONS}
         onSave={(value) => handleInlineSave("r_str", value)}
         placeholder="Run strength"
+        allowEmpty={true}
+        emptyLabel="None"
         isSaving={savingFields.has("r_str")}
       />
     ),
@@ -147,10 +159,13 @@ export const createFormationFields = ({
   p_str: {
     label: "Pass Strength",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
-      <InlineEditField
+      <InlineSelectField
         value={optimisticPlay.p_str || ""}
+        options={DIRECTION_RL_OPTIONS}
         onSave={(value) => handleInlineSave("p_str", value)}
         placeholder="Pass strength"
+        allowEmpty={true}
+        emptyLabel="None"
         isSaving={savingFields.has("p_str")}
       />
     ),
@@ -160,6 +175,8 @@ export const createFormationFields = ({
 export const createPlayDetailsFields = ({
   normalizeValue,
   playNameSuggestions,
+  playTypeSuggestions,
+  directionOptions,
 }: PlayDetailsFieldFactoryOptions): FieldDefinitionMap => ({
   play_name: {
     label: "Name",
@@ -184,7 +201,7 @@ export const createPlayDetailsFields = ({
     render: (optimisticPlay, handleInlineSave, savingFields) => (
       <InlineSelectField
         value={optimisticPlay.p_dir || ""}
-        options={DIRECTION_OPTIONS}
+        options={directionOptions}
         onSave={(value) => handleInlineSave("p_dir", value)}
         placeholder="Pass direction"
         allowEmpty={true}
@@ -196,11 +213,16 @@ export const createPlayDetailsFields = ({
   p_type: {
     label: "Type",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
-      <InlineSelectField
+      <InlineEditField
         value={optimisticPlay.p_type}
-        options={PLAY_TYPE_OPTIONS}
         onSave={(value) => handleInlineSave("p_type", value)}
-        placeholder="Play type"
+        placeholder="Play type (e.g., Pass, Run, RPO)"
+        suggestions={[
+          ...PLAY_TYPE_OPTIONS.map((option) => option.label),
+          ...playTypeSuggestions,
+        ]}
+        enableSuggestions={true}
+        normalizeValue={normalizeValue}
         isSaving={savingFields.has("p_type")}
       />
     ),

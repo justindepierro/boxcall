@@ -1,6 +1,6 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { format } from "date-fns";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui/Button/Button";

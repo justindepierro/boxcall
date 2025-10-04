@@ -81,3 +81,30 @@ export const HASH_OPTIONS = [
   { value: "Right", label: "Right Hash" },
   { value: "Middle", label: "Middle" },
 ];
+
+export const DIRECTION_RL_OPTIONS = [
+  { value: "R", label: "Right" },
+  { value: "L", label: "Left" },
+];
+
+export const getDirectionOptions = (format: "full" | "abbrev" | "letter") => {
+  switch (format) {
+    case "full":
+      return [
+        { value: "R", label: "Right" },
+        { value: "L", label: "Left" },
+      ];
+    case "abbrev":
+      return [
+        { value: "R", label: "Rt" },
+        { value: "L", label: "Lt" },
+      ];
+    case "letter":
+      return [
+        { value: "R", label: "R" },
+        { value: "L", label: "L" },
+      ];
+    default:
+      return DIRECTION_RL_OPTIONS;
+  }
+};

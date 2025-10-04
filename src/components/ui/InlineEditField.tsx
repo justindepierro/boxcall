@@ -219,90 +219,90 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
   if (isEditing) {
     return (
-      <div ref={containerRef} className="relative">
-        {type === "textarea" ? (
-          <textarea
-            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-            value={editValue}
-            onChange={(e) => handleInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            rows={rows}
-            className={`w-full px-2 py-1 text-sm border rounded bg-white focus:outline-none focus:ring-2 focus:border-transparent ${
-              saveStatus === "error"
-                ? "border-red-500 focus:ring-red-500"
-                : saveStatus === "success"
-                  ? "border-green-500 focus:ring-green-500"
-                  : "border-electric-500 focus:ring-electric-500"
-            } ${className}`}
-          />
-        ) : (
-          <input
-            ref={inputRef as React.RefObject<HTMLInputElement>}
-            type="text"
-            value={editValue}
-            onChange={(e) => handleInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            className={`w-full px-2 py-1 text-sm border rounded bg-white focus:outline-none focus:ring-2 focus:border-transparent ${
-              saveStatus === "error"
-                ? "border-red-500 focus:ring-red-500"
-                : saveStatus === "success"
-                  ? "border-green-500 focus:ring-green-500"
-                  : "border-electric-500 focus:ring-electric-500"
-            } ${className}`}
-          />
-        )}
-
-        {/* Save status indicator */}
-        {saveStatus === "saving" && (
-          <div className="absolute right-8 top-1">
-            <Icon
-              name="refresh-cw"
-              className="h-4 w-4 animate-spin text-gray-500"
+      <div ref={containerRef} className="relative w-full">
+        <div className="flex items-center gap-2">
+          {type === "textarea" ? (
+            <textarea
+              ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+              value={editValue}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+              placeholder={placeholder}
+              maxLength={maxLength}
+              rows={rows}
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-md bg-white shadow-sm transition-colors ${
+                saveStatus === "error"
+                  ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                  : saveStatus === "success"
+                    ? "border-green-300 focus:border-green-500 focus:ring-green-500/20"
+                    : "border-gray-300 focus:border-electric-500 focus:ring-electric-500/20"
+              } focus:outline-none focus:ring-4 ${className}`}
             />
-          </div>
-        )}
-        {saveStatus === "success" && (
-          <div className="absolute right-8 top-1">
-            <Icon name="check-circle" className="h-4 w-4 text-green-600" />
-          </div>
-        )}
+          ) : (
+            <input
+              ref={inputRef as React.RefObject<HTMLInputElement>}
+              type="text"
+              value={editValue}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+              placeholder={placeholder}
+              maxLength={maxLength}
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-md bg-white shadow-sm transition-colors ${
+                saveStatus === "error"
+                  ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                  : saveStatus === "success"
+                    ? "border-green-300 focus:border-green-500 focus:ring-green-500/20"
+                    : "border-gray-300 focus:border-electric-500 focus:ring-electric-500/20"
+              } focus:outline-none focus:ring-4 ${className}`}
+            />
+          )}
 
-        {/* Action buttons */}
-        <div className="absolute right-1 top-1 flex gap-1" data-inline-action>
-          <button
-            onClick={handleSave}
-            disabled={saveStatus === "saving"}
-            className="p-1 text-electric-600 hover:text-electric-800 hover:bg-electric-50 rounded disabled:opacity-50"
-            title="Save (Enter)"
-            data-inline-action
-          >
-            <Icon name="check" className="h-3 w-3" />
-          </button>
-          <button
-            onClick={handleCancel}
-            disabled={saveStatus === "saving"}
-            className="p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded disabled:opacity-50"
-            title="Cancel (Escape)"
-            data-inline-action
-          >
-            <Icon name="close" className="h-3 w-3" />
-          </button>
+          {/* Action buttons */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {saveStatus === "saving" && (
+              <div className="flex items-center justify-center w-8 h-8">
+                <Icon
+                  name="refresh-cw"
+                  className="h-4 w-4 animate-spin text-electric-600"
+                />
+              </div>
+            )}
+            {saveStatus === "success" && (
+              <div className="flex items-center justify-center w-8 h-8">
+                <Icon name="check-circle" className="h-4 w-4 text-green-600" />
+              </div>
+            )}
+            {saveStatus === "idle" && (
+              <>
+                <button
+                  onClick={handleSave}
+                  className="flex items-center justify-center w-8 h-8 text-electric-600 hover:text-electric-700 hover:bg-electric-50 rounded-md transition-colors"
+                  title="Save (Enter)"
+                >
+                  <Icon name="check" className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                  title="Cancel (Escape)"
+                >
+                  <Icon name="close" className="h-4 w-4" />
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Suggestions dropdown */}
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-40 overflow-y-auto">
+          <div className="absolute left-0 top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
             {filteredSuggestions.map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestionSelect(suggestion)}
-                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b border-gray-100 last:border-b-0"
+                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b border-gray-100 last:border-b-0 transition-colors"
               >
                 {suggestion}
               </button>
@@ -311,7 +311,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
         )}
 
         {error && (
-          <div className="absolute left-0 top-full mt-1 text-xs text-red-600 bg-red-50 px-2 py-1 rounded border border-red-200 z-10">
+          <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md border border-red-200">
             {error}
           </div>
         )}
@@ -322,27 +322,30 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   return (
     <div
       onClick={handleStartEdit}
-      className={`group cursor-pointer hover:bg-gray-50 rounded px-1 py-0.5 -mx-1 -my-0.5 transition-colors inline-flex items-center gap-1 ${
+      className={`group cursor-pointer rounded-lg p-3 -m-3 transition-all duration-200 hover:bg-surface-hover hover:shadow-sm border-2 border-transparent hover:border-gray-200 ${
         disabled ? "cursor-not-allowed opacity-50" : ""
       } ${className}`}
       title={disabled ? "Editing disabled" : "Click to edit"}
     >
-      <span className="text-sm flex-1 truncate">
-        {value || <span className="text-gray-400 italic">{placeholder}</span>}
-      </span>
-      {isSaving ? (
-        <Icon
-          name="refresh-cw"
-          className="h-3 w-3 flex-shrink-0 animate-spin text-gray-500"
-        />
-      ) : (
-        !disabled && (
-          <Icon
-            name="edit"
-            className="h-3 w-3 flex-shrink-0 opacity-0 group-hover:opacity-50 transition-opacity"
-          />
-        )
-      )}
+      <div className="flex items-center justify-between">
+        <span className="text-sm flex-1 truncate pr-2">
+          {value || <span className="text-gray-400 italic">{placeholder}</span>}
+        </span>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {isSaving && (
+            <Icon
+              name="refresh-cw"
+              className="h-4 w-4 animate-spin text-electric-600"
+            />
+          )}
+          {!disabled && !isSaving && (
+            <Icon
+              name="edit"
+              className="h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-gray-500"
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

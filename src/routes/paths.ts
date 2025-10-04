@@ -8,6 +8,7 @@ export const ROUTES = {
   CALENDAR: "/calendar",
   PLANNER: "/planner",
   TEAMS: "/teams",
+  ROSTER: "/roster",
   PLAYBOOK: "/playbook",
   PRACTICE_PLANS: "/practice-plans",
   GAME_PLANS: "/game-plans",

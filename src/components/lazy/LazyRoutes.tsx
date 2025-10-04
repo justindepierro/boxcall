@@ -98,6 +98,11 @@ export const LazyPlaybookPage = lazyRoute(
   "Playbook"
 );
 
+export const LazyRosterPage = lazyRoute(
+  () => import("../../pages/RosterPage"),
+  "Roster"
+);
+
 export const LazyPracticePlansPage = lazyRoute(
   () => import("../../pages/PracticePlansPage"),
   "Practice Plans"

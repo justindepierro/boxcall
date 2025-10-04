@@ -3,12 +3,13 @@ import type { DropResult } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../types/play";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
-// import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
+import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
 import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
+  getDirectionOptions,
 } from "./play-card/constants";
 import {
   createFormationFields,
@@ -34,8 +35,10 @@ interface PlayCardProps {
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
   variant?: "list" | "tile";
+  directionDisplayFormat?: "full" | "abbrev" | "letter";
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
+  playTypeSuggestions?: string[];
 }
 
 type FieldVisibility = Record<string, boolean>;
@@ -97,8 +100,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onSelectionChange,
   density = "compact",
   variant = "list",
+  directionDisplayFormat = "full",
   formationSuggestions = [],
   playNameSuggestions = [],
+  playTypeSuggestions = [],
 }) => {
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
@@ -127,13 +132,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       ? playNameSuggestions
       : DEFAULT_PLAY_NAME_SUGGESTIONS;
 
+  const directionOptions = getDirectionOptions(directionDisplayFormat);
+
   const formationFields: FieldDefinitionMap = useMemo(
     () =>
       createFormationFields({
         normalizeValue: normalizePlayText,
         formationSuggestions: actualFormationSuggestions,
+        directionOptions,
       }),
-    [actualFormationSuggestions]
+    [actualFormationSuggestions, directionOptions]
   );
 
   const playDetailsFields: FieldDefinitionMap = useMemo(
@@ -141,8 +149,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       createPlayDetailsFields({
         normalizeValue: normalizePlayText,
         playNameSuggestions: actualPlayNameSuggestions,
+        playTypeSuggestions,
+        directionOptions,
       }),
-    [actualPlayNameSuggestions]
+    [actualPlayNameSuggestions, playTypeSuggestions, directionOptions]
   );
 
   const visibleFormationFields = useMemo(
@@ -164,12 +174,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const displayName = useMemo(
     () =>
       getDisplayName(
-        play,
+        optimisticPlay,
         showOneWordCalls,
         visibleFormationFields,
         visiblePlayDetailsFields
       ),
-    [play, showOneWordCalls, visibleFormationFields, visiblePlayDetailsFields]
+    [
+      optimisticPlay,
+      showOneWordCalls,
+      visibleFormationFields,
+      visiblePlayDetailsFields,
+    ]
   );
 
   const subtitleText = useMemo(
@@ -305,7 +320,24 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             phaseLabel={phaseLabel}
           />
         ) : (
-          <div>Temporarily disabled PlayCardListHeader</div>
+          <PlayCardListHeader
+            play={play}
+            optimisticPlay={optimisticPlay}
+            displayName={displayName}
+            subtitleText={subtitleText}
+            showOneWordCalls={showOneWordCalls}
+            isSelected={isSelected}
+            onSelectionChange={onSelectionChange}
+            isCompact={isCompact}
+            isExpanded={isExpanded}
+            onToggleExpand={onToggleExpand}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onCreateDiagram={handleCreateDiagram}
+            getPlayTypeColor={getPlayTypeColor}
+            getConfidenceColor={getConfidenceColor}
+            phaseLabel={phaseLabel}
+          />
         )}
 
         {!isTile && isExpanded && (

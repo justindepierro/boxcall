@@ -4,7 +4,7 @@
  * React hooks for asset optimization, lazy loading, and CDN integration
  */
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { cdnService, AssetLoader } from '../services/cdn/CDNService';
 
@@ -187,14 +187,14 @@ export function useAssetPerformance() {
 export function useResponsiveImage(src: string, breakpoints: { [key: string]: number } = {}) {
   const [currentSize, setCurrentSize] = useState<number>();
 
-  const defaultBreakpoints = {
+  const defaultBreakpoints = useMemo(() => ({
     sm: 640,
     md: 768,
     lg: 1024,
     xl: 1280,
     '2xl': 1536,
     ...breakpoints
-  };
+  }), [breakpoints]);
 
   useEffect(() => {
     const updateSize = () => {
@@ -208,7 +208,7 @@ export function useResponsiveImage(src: string, breakpoints: { [key: string]: nu
     window.addEventListener('resize', updateSize);
 
     return () => window.removeEventListener('resize', updateSize);
-  }, [breakpoints]);
+  }, [breakpoints, defaultBreakpoints]);
 
   const { getOptimizedUrl, getResponsiveSrcSet } = useCDN();
 
