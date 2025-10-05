@@ -7,6 +7,7 @@
  */
 
 import React, { useMemo } from "react";
+import { colorTokens } from "../../design-system/tokens";
 import type { DataSeries, DataInsight } from "@services/smartDataAnalyzer";
 import { SmartDataAnalyzer } from "@services/smartDataAnalyzer";
 
@@ -256,10 +257,10 @@ const InsightBadge: React.FC<InsightBadgeProps> = ({ insight }) => {
 
 function getColorScheme(dataType: DataSeries["type"]): string[] {
   const schemes = {
-    performance: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
-    attendance: ["#8B5CF6", "#06B6D4", "#84CC16", "#F97316"],
-    progress: ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B"],
-    engagement: ["#EC4899", "#8B5CF6", "#06B6D4", "#10B981"],
+    performance: [colorTokens.blue[500], colorTokens.emerald[500], colorTokens.amber[500], colorTokens.red[500]],
+    attendance: [colorTokens.purple[500], colorTokens.cyan[500], colorTokens.emerald[400], colorTokens.amber[600]],
+    progress: [colorTokens.emerald[500], colorTokens.blue[500], colorTokens.purple[500], colorTokens.amber[500]],
+    engagement: [colorTokens.violet[400], colorTokens.purple[500], colorTokens.cyan[500], colorTokens.emerald[500]],
   };
 
   return schemes[dataType] || schemes.performance;
