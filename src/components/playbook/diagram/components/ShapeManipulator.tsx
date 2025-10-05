@@ -224,7 +224,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
             width: 20,
             height: 20,
             data: { personnel: player },
-            style: { fill: player.color || "#3b82f6" },
+            style: { fill: player.color || colorTokens.blue[500] },
           }));
 
         let bestSnapTarget: SnapTarget | null = null;
@@ -375,13 +375,13 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
           cx={snapTarget.position.x}
           cy={snapTarget.position.y}
           r={6}
-          fill="#ff6b35"
+          fill={colorTokens.amber[500]}
           opacity={0.8}
         />
         <text
           x={snapTarget.position.x + 10}
           y={snapTarget.position.y - 5}
-          fill="#ff6b35"
+          fill={colorTokens.amber[500]}
           fontSize="12"
           fontWeight="bold"
         >
