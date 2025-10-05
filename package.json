@@ -48,6 +48,7 @@
     "test:visual:ui": "playwright test visual-regression.spec.ts --ui",
     "clean": "rm -rf dist coverage .eslintcache",
     "validate": "npm run type-check && npm run lint && npm run test",
+    "tokens:generate": "tsx scripts/generate-token-css.ts",
     "security:audit": "tsx scripts/security-audit.ts",
     "security:deps": "npm audit",
     "security:check": "npm run security:audit && npm run security:deps",

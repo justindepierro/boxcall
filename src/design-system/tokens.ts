@@ -74,6 +74,104 @@ export const colorTokens = {
     900: "#111827",
   },
 
+  // Blue System - Links, Actions, Interactive Elements
+  blue: {
+    50: "#EFF6FF",
+    100: "#DBEAFE",
+    200: "#BFDBFE",
+    300: "#93C5FD",
+    400: "#60A5FA",
+    500: "#3B82F6", // PRIMARY interactive blue (66 occurrences in audit!)
+    600: "#2563EB", // Links, primary actions (48 occurrences!)
+    700: "#1D4ED8",
+    800: "#1E40AF",
+    900: "#1E3A8A",
+  },
+
+  // Cyan System - Highlights, Selections, Focus States
+  cyan: {
+    50: "#ECFEFF",
+    100: "#CFFAFE",
+    200: "#A5F3FC",
+    300: "#67E8F9",
+    400: "#22D3EE", // Highlight color (42 occurrences in audit!)
+    500: "#06B6D4",
+    600: "#0891B2",
+    700: "#0E7490",
+    800: "#155E75",
+    900: "#164E63",
+  },
+
+  // Amber System - Warnings, Selections, Active States
+  amber: {
+    50: "#FFFBEB",
+    100: "#FEF3C7",
+    200: "#FDE68A",
+    300: "#FCD34D",
+    400: "#FBBF24", // Selection highlight (118 occurrences! 🔥 Top hardcoded color!)
+    500: "#F59E0B", // Warning states (54 occurrences!)
+    600: "#D97706",
+    700: "#B45309",
+    800: "#92400E",
+    900: "#78350F",
+  },
+
+  // Emerald System - Success States, Positive Actions
+  emerald: {
+    50: "#ECFDF5",
+    100: "#D1FAE5",
+    200: "#A7F3D0",
+    300: "#6EE7B7",
+    400: "#34D399",
+    500: "#10B981", // Success indicators (28 occurrences!)
+    600: "#059669",
+    700: "#047857",
+    800: "#065F46",
+    900: "#064E3B",
+  },
+
+  // Purple System - Electric Theme, Premium Features
+  purple: {
+    50: "#FAF5FF",
+    100: "#F3E8FF",
+    200: "#E9D5FF",
+    300: "#D8B4FE",
+    400: "#C084FC",
+    500: "#A855F7",
+    600: "#9333EA",
+    700: "#7C3AED", // Electric accent (24 occurrences!)
+    800: "#6B21A8",
+    900: "#581C87",
+  },
+
+  // Violet System - Alternative Purple Tones
+  violet: {
+    50: "#F5F3FF",
+    100: "#EDE9FE",
+    200: "#DDD6FE",
+    300: "#C4B5FD",
+    400: "#A78BFA",
+    500: "#8B5CF6", // Premium features
+    600: "#7C3AED",
+    700: "#6D28D9",
+    800: "#5B21B6",
+    900: "#4C1D95",
+  },
+
+  // Red System - Extended for Defensive Players, Alerts
+  red: {
+    50: "#FEF2F2",
+    100: "#FEE2E2",
+    200: "#FECACA",
+    300: "#FCA5A5",
+    400: "#F87171",
+    500: "#EF4444",
+    600: "#DC2626",
+    700: "#B91C1C", // Defensive player color (15 occurrences!)
+    800: "#991B1B",
+    900: "#7F1D1D",
+  },
+
   // Text colors
   text: {
     primary: "#111827", // gray-900
@@ -126,6 +224,55 @@ export const semanticTokens = {
   warningBg: colorTokens.warning[50],
   error: colorTokens.error[500],
   errorBg: colorTokens.error[50],
+
+  // Links & Interactive Elements
+  linkColor: colorTokens.blue[600], // Primary link color
+  linkHoverColor: colorTokens.blue[700], // Link hover state
+  linkVisitedColor: colorTokens.purple[700], // Visited link color
+
+  // Highlights & Selections
+  highlightColor: colorTokens.amber[400], // Selection highlight
+  highlightBg: colorTokens.amber[50], // Highlight background
+  selectionColor: colorTokens.cyan[400], // Active selection
+  selectionBg: colorTokens.cyan[50], // Selection background
+  selectionBorder: colorTokens.amber[400], // Selection border (118 occurrences!)
+
+  // Diagram-Specific Colors
+  diagram: {
+    // Player colors
+    offensivePlayer: colorTokens.blue[600], // Offensive player (blue)
+    offensivePlayerAlt: colorTokens.blue[900], // Alternative offensive (#1e3a8a)
+    defensivePlayer: colorTokens.red[700], // Defensive player (red)
+    defensivePlayerAlt: colorTokens.red[600], // Alternative defensive
+    specialTeamsPlayer: colorTokens.amber[500], // Special teams
+
+    // Route colors
+    routeColor: colorTokens.emerald[500], // Route paths (green)
+    routeColorAlt: colorTokens.blue[600], // Alternative route color
+    routeStart: colorTokens.emerald[400], // Route start point
+    routeEnd: colorTokens.amber[400], // Route end point
+
+    // Annotation colors
+    annotationColor: colorTokens.gray[900], // Default annotation color
+    annotationHighlight: colorTokens.cyan[400], // Highlighted annotation
+    annotationConnector: colorTokens.blue[500], // Connector lines
+    annotationSelection: colorTokens.blue[500], // Selected annotation
+
+    // Guide & Grid colors
+    guideColor: colorTokens.success[500], // Alignment guides (#22c55e)
+    gridColor: colorTokens.gray[200], // Grid lines
+    gridColorDark: colorTokens.gray[700], // Dark theme grid
+
+    // Field colors
+    fieldBackground: colorTokens.gray[50], // Light field background
+    fieldBackgroundDark: colorTokens.gray[900], // Dark field background
+    fieldBorder: colorTokens.jade[700], // Field borders
+    fieldZone: colorTokens.jade[800], // End zones
+
+    // Minimap colors
+    minimapBorder: colorTokens.amber[400], // Minimap viewport border
+    minimapBackground: "#FFFFFF", // Minimap background
+  },
 
   // Football-specific
   boxcallBrand: colorTokens.jade[600], // For BoxCall icons/elements
@@ -180,6 +327,36 @@ export const spacingTokens = {
   16: "4rem", // 64px
 } as const;
 
+// Fine-grained spacing for precision layouts
+export const fineSpacingTokens = {
+  0.5: "0.125rem", // 2px - hairline spacing
+  1.5: "0.375rem", // 6px - fine spacing
+  2.5: "0.625rem", // 10px - between standard steps
+  3.5: "0.875rem", // 14px - precise layouts
+} as const;
+
+// Semantic spacing tokens for common use cases
+export const semanticSpacingTokens = {
+  // Component padding
+  buttonPadding: spacingTokens[3], // 12px
+  buttonPaddingLarge: spacingTokens[4], // 16px
+  cardPadding: spacingTokens[4], // 16px
+  cardPaddingLarge: spacingTokens[6], // 24px
+  inputPadding: spacingTokens[3], // 12px
+  
+  // Layout spacing
+  sectionGap: spacingTokens[8], // 32px between sections
+  itemSpacing: spacingTokens[4], // 16px between items
+  listGap: spacingTokens[2], // 8px between list items
+  gridGap: spacingTokens[4], // 16px grid gap
+  
+  // Stack spacing
+  stackTight: spacingTokens[1], // 4px
+  stackNormal: spacingTokens[2], // 8px
+  stackRelaxed: spacingTokens[4], // 16px
+  stackLoose: spacingTokens[6], // 24px
+} as const;
+
 // Density scale (compact layout support)
 export const densityTokens = {
   compact: {
@@ -195,12 +372,67 @@ export const densityTokens = {
 } as const;
 
 // ============================================================================
+// OPACITY/ALPHA SYSTEM - Transparent Overlays
+// ============================================================================
+
+export const opacityTokens = {
+  0: "0",
+  5: "0.05", // 5% - very subtle
+  10: "0.1", // 10% - subtle overlay
+  15: "0.15", // 15% - light overlay
+  20: "0.2", // 20% - moderate overlay
+  30: "0.3", // 30% - visible overlay
+  40: "0.4", // 40% - strong overlay
+  50: "0.5", // 50% - half opacity
+  60: "0.6", // 60% - more opaque
+  70: "0.7", // 70% - mostly opaque
+  75: "0.75", // 75% - three-quarters
+  80: "0.8", // 80% - very opaque
+  90: "0.9", // 90% - nearly solid
+  95: "0.95", // 95% - almost solid
+  100: "1", // 100% - fully opaque
+} as const;
+
+// ============================================================================
+// BORDER RADIUS SYSTEM - Consistent Corner Styles
+// ============================================================================
+
+export const borderRadiusTokens = {
+  none: "0", // No rounding
+  sm: "0.125rem", // 2px - subtle rounding
+  md: "0.375rem", // 6px - moderate rounding
+  lg: "0.5rem", // 8px - large rounding
+  xl: "0.75rem", // 12px - extra large
+  "2xl": "1rem", // 16px - very large
+  "3xl": "1.5rem", // 24px - huge
+  full: "9999px", // Fully rounded (pills, circles)
+} as const;
+
+// Semantic border radius for common components
+export const semanticBorderRadiusTokens = {
+  button: borderRadiusTokens.md, // 6px
+  card: borderRadiusTokens.lg, // 8px
+  input: borderRadiusTokens.md, // 6px
+  modal: borderRadiusTokens.xl, // 12px
+  badge: borderRadiusTokens.full, // Fully rounded
+  avatar: borderRadiusTokens.full, // Fully rounded
+  image: borderRadiusTokens.lg, // 8px
+} as const;
+
+// ============================================================================
 // ELEVATION & SHADOW SYSTEM - "Professional Depth"
 // ============================================================================
 
 export const elevationTokens = {
   // Minimal shadows for subtle depth
   none: "none",
+
+  // Standardized shadow scale
+  sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)", // Subtle shadow
+  md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", // Moderate shadow
+  lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", // Large shadow
+  xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", // Extra large shadow
+  "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)", // Huge shadow
 
   // Card elevations - increasing depth
   card: {
@@ -359,8 +591,24 @@ export const componentTokens = {
  * Get color by semantic token name
  * Usage: getColor('primary') -> '#00A86B'
  */
-export function getColor(tokenName: keyof typeof semanticTokens): string {
-  return semanticTokens[tokenName];
+export function getColor(
+  tokenName: Exclude<keyof typeof semanticTokens, "diagram">
+): string {
+  const value = semanticTokens[tokenName];
+  if (typeof value === "string") {
+    return value;
+  }
+  throw new Error(`Token ${tokenName} is not a string value`);
+}
+
+/**
+ * Get diagram-specific color
+ * Usage: getDiagramColor('offensivePlayer') -> '#2563EB'
+ */
+export function getDiagramColor(
+  colorName: keyof typeof semanticTokens.diagram
+): string {
+  return semanticTokens.diagram[colorName];
 }
 
 /**
@@ -385,9 +633,16 @@ export function getComponentColor(
 export function generateCSSCustomProperties(): Record<string, string> {
   const cssVars: Record<string, string> = {};
 
-  // Add semantic tokens
+  // Add semantic tokens (excluding nested objects)
   Object.entries(semanticTokens).forEach(([key, value]) => {
-    cssVars[`--color-${key}`] = value;
+    if (typeof value === "string") {
+      cssVars[`--color-${key}`] = value;
+    } else if (typeof value === "object") {
+      // Handle nested objects like diagram
+      Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+        cssVars[`--color-${key}-${nestedKey}`] = nestedValue as string;
+      });
+    }
   });
 
   // Add component tokens
@@ -409,6 +664,13 @@ export const tailwindColors = {
   jade: colorTokens.jade,
   navy: colorTokens.navy,
   gray: colorTokens.gray,
+  blue: colorTokens.blue,
+  cyan: colorTokens.cyan,
+  amber: colorTokens.amber,
+  emerald: colorTokens.emerald,
+  purple: colorTokens.purple,
+  violet: colorTokens.violet,
+  red: colorTokens.red,
   success: colorTokens.success,
   warning: colorTokens.warning,
   error: colorTokens.error,
@@ -421,4 +683,11 @@ export {
   componentTokens as component,
   typographyTokens as typography,
   spacingTokens as spacing,
+  fineSpacingTokens as fineSpacing,
+  semanticSpacingTokens as semanticSpacing,
+  densityTokens as density,
+  opacityTokens as opacity,
+  borderRadiusTokens as borderRadius,
+  semanticBorderRadiusTokens as semanticBorderRadius,
+  elevationTokens as elevation,
 };
