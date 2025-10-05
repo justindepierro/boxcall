@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 /**
  * Field Minimap Component
@@ -49,19 +50,19 @@ export const FieldMinimap: React.FC<{
   const rw = widthWorld * scale;
   const rh = heightWorld * scale;
 
-  // Theme colors
+  // Theme colors - matching FieldGrid for consistency
   const bg =
     theme === "mono-dark"
-      ? "#111827"
+      ? colorTokens.gray[900]
       : theme === "mono-light"
-        ? "#f9fafb"
-        : "#064e3b";
+        ? colorTokens.gray[50]
+        : colorTokens.emerald[900];
   const frame =
     theme === "mono-dark"
-      ? "#6b7280"
+      ? colorTokens.gray[500]
       : theme === "mono-light"
-        ? "#9ca3af"
-        : "#10b981";
+        ? colorTokens.gray[400]
+        : colorTokens.emerald[500];
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -106,7 +107,7 @@ export const FieldMinimap: React.FC<{
           width={MINI_W + 2 * border}
           height={MINI_W * 0.5625 + 2 * border}
           rx={6}
-          fill="#ffffff"
+          fill={colorTokens.gray[50]}
           opacity={0.8}
         />
         <g transform={`translate(${border} ${border})`}>
