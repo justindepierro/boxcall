@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export interface TextProps {
   x: number;
@@ -12,7 +13,7 @@ export const Text: React.FC<TextProps> = ({
   x,
   y,
   text,
-  color = "#111827",
+  color = colorTokens.gray[900],
   fontSize = 18,
 }) => (
   <text

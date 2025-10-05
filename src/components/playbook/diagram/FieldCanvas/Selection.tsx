@@ -1,6 +1,7 @@
 // Selection box, multi-select, drag, snap logic
 import React from "react";
 import { useFieldCanvas } from "./useFieldCanvas";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const Selection: React.FC = () => {
   const { selectionBox, state } = useFieldCanvas();
@@ -27,7 +28,7 @@ export const Selection: React.FC = () => {
             width={selectionBox.w}
             height={selectionBox.h}
             fill="rgba(250,204,21,0.15)"
-            stroke="#fbbf24"
+            stroke={colorTokens.amber[400]}
             strokeWidth={1.5}
             strokeDasharray="4 3"
           />
@@ -44,7 +45,7 @@ export const Selection: React.FC = () => {
                 height={22}
                 rx={11}
                 ry={11}
-                fill="#111827"
+                fill={colorTokens.gray[900]}
                 opacity={0.9}
               />
               <text
@@ -52,7 +53,7 @@ export const Selection: React.FC = () => {
                 y={-3}
                 fontSize={12}
                 fontWeight={700}
-                fill="#fbbf24"
+                fill={colorTokens.amber[400]}
                 textAnchor="middle"
                 dominantBaseline="middle"
               >

@@ -1,12 +1,13 @@
 import React from "react";
 import type { LineType } from "./FieldCanvasContext";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const Arrow: React.FC<LineType> = ({
   x1,
   y1,
   x2,
   y2,
-  color = "#2563eb",
+  color = colorTokens.blue[600],
 }) => {
   // Simple arrowhead calculation
   const arrowLength = 16;
