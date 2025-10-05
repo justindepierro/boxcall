@@ -7,6 +7,7 @@ import type {
   ShapeHandle,
   SnapTarget,
 } from "../engine/ShapeEngine";
+import { colorTokens } from "../../../../design-system/tokens";
 
 interface ShapeManipulatorProps {
   children: React.ReactNode;
@@ -74,7 +75,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
           side: "O" as const,
           x: canvasPoint.x,
           y: canvasPoint.y,
-          color: "#047857",
+          color: colorTokens.emerald[700],
         };
         dispatch({ type: "ADD_PLAYER", player: newPlayer });
         return;
@@ -341,7 +342,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
             width={bounds.width + 4}
             height={bounds.height + 4}
             fill="none"
-            stroke="#007acc"
+            stroke={colorTokens.blue[500]}
             strokeWidth={1}
             strokeDasharray="5,5"
           />
@@ -353,8 +354,8 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
               cx={handle.x}
               cy={handle.y}
               r={handle.type === "rotation" ? 6 : 4}
-              fill={handle.type === "rotation" ? "#007acc" : "#ffffff"}
-              stroke="#007acc"
+              fill={handle.type === "rotation" ? colorTokens.blue[500] : "#ffffff"}
+              stroke={colorTokens.blue[500]}
               strokeWidth={2}
               style={{ cursor: handle.cursor }}
             />
