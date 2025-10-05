@@ -13,6 +13,7 @@ Identified 6 files exceeding 1000 lines that need decomposition before continuin
 ## Problem Statement
 
 ### Current Blockers
+
 1. **AddNewPlayModal.tsx** (1,323 lines, 121 spacing instances)
    - Only 8/121 spacing instances migrated due to file size
    - 113 remaining instances blocked by complexity
@@ -29,6 +30,7 @@ Identified 6 files exceeding 1000 lines that need decomposition before continuin
 ### Priority 1: Blocking Spacing Migrations
 
 #### 1. AddNewPlayModal.tsx (1,323 lines) 🔴 **HIGHEST PRIORITY**
+
 - **Current State**: 8/121 spacing instances migrated
 - **Complexity**: 11 imports, massive form state, multiple sections
 - **Sections Identified**:
@@ -41,6 +43,7 @@ Identified 6 files exceeding 1000 lines that need decomposition before continuin
   - Position/player/flag management (200+ lines)
 
 **Refactoring Strategy**:
+
 ```
 src/components/playbook/AddNewPlayModal/
 ├── index.tsx (main modal orchestrator, 150 lines)
@@ -60,7 +63,8 @@ src/components/playbook/AddNewPlayModal/
 └── types.ts (form data types)
 ```
 
-**Expected Outcome**: 
+**Expected Outcome**:
+
 - Main file: ~150 lines
 - 7 section components: ~150 lines each
 - 3 reusable components: ~100 lines each
@@ -70,11 +74,13 @@ src/components/playbook/AddNewPlayModal/
 ---
 
 #### 2. ProfilePage.tsx (1,381 lines) 🟡
+
 - **Current State**: Already migrated in Phase 3A (72 spacing instances)
 - **Complexity**: 13 imports, large state management
 - **Issue**: Completed migration, but maintenance burden remains
 
 **Refactoring Strategy**:
+
 ```
 src/pages/ProfilePage/
 ├── index.tsx (page orchestrator, 150 lines)
@@ -95,11 +101,13 @@ src/pages/ProfilePage/
 ### Priority 2: Technical Debt
 
 #### 3. FieldCanvas.tsx (3,283 lines) 🔴 **LARGEST FILE**
+
 - **Location**: `src/components/playbook/diagram-v2/`
 - **Complexity**: Monolithic canvas implementation
 - **Issue**: Single file handling entire play diagram rendering
 
 **Refactoring Strategy**:
+
 ```
 src/components/playbook/diagram-v2/FieldCanvas/
 ├── index.tsx (canvas orchestrator)
@@ -126,10 +134,12 @@ src/components/playbook/diagram-v2/FieldCanvas/
 ---
 
 #### 4. context.tsx (1,321 lines) 🟡
+
 - **Location**: `src/components/playbook/diagram-v2/`
 - **Complexity**: 11 imports, massive context provider
 
 **Refactoring Strategy**:
+
 ```
 src/components/playbook/diagram-v2/context/
 ├── DiagramProvider.tsx (main provider)
@@ -147,11 +157,13 @@ src/components/playbook/diagram-v2/context/
 ---
 
 #### 5. auth-store.ts (1,075 lines) 🟢
+
 - **Location**: `src/app/`
 - **Complexity**: 27 imports/exports, Zustand store
 - **Issue**: All auth logic in single store file
 
 **Refactoring Strategy**:
+
 ```
 src/app/auth/
 ├── store.ts (main store, 150 lines)
@@ -173,10 +185,12 @@ src/app/auth/
 ---
 
 #### 6. PracticePlanner.tsx (1,010 lines) 🟢
+
 - **Location**: `src/pages/`
 - **Complexity**: 27 imports, large page component
 
 **Refactoring Strategy**:
+
 ```
 src/pages/PracticePlanner/
 ├── index.tsx (page orchestrator)
@@ -199,6 +213,7 @@ src/pages/PracticePlanner/
 ## Implementation Plan
 
 ### Phase 1: AddNewPlayModal Refactoring (Highest Priority)
+
 **Estimated Time**: 2-3 hours  
 **Blocks**: 113 spacing instances in AddNewPlayModal
 
@@ -227,6 +242,7 @@ src/pages/PracticePlanner/
    - Verify all 121 spacing instances migrated
 
 **Success Criteria**:
+
 - ✅ AddNewPlayModal main file <200 lines
 - ✅ All sections <200 lines each
 - ✅ 121/121 spacing instances migrated
@@ -236,9 +252,11 @@ src/pages/PracticePlanner/
 ---
 
 ### Phase 2: Return to Phase 3B Migrations
+
 **Estimated Time**: 2-3 hours
 
 After AddNewPlayModal refactoring, resume spacing migrations with cleaner codebase:
+
 - CSVImportModal (81 instances)
 - AnalyticsDashboard (87 instances)
 - PlayCardDetails (62 instances)
@@ -249,9 +267,11 @@ After AddNewPlayModal refactoring, resume spacing migrations with cleaner codeba
 ---
 
 ### Phase 3: Additional Large File Refactoring (Future)
+
 **Estimated Time**: 1-2 days
 
 Tackle remaining large files in priority order:
+
 1. FieldCanvas.tsx (3,283 lines) - diagram rendering
 2. context.tsx (1,321 lines) - diagram state
 3. ProfilePage.tsx (1,381 lines) - already migrated spacing
@@ -263,12 +283,14 @@ Tackle remaining large files in priority order:
 ## Benefits
 
 ### Immediate Benefits (Phase 1)
+
 - ✅ Unblock 113 spacing instances in AddNewPlayModal
 - ✅ Easier code review (small, focused components)
 - ✅ Faster spacing token migrations
 - ✅ Better component reusability
 
 ### Long-term Benefits (Phase 3)
+
 - ✅ Improved maintainability
 - ✅ Better testability (isolated components)
 - ✅ Reduced merge conflicts
@@ -280,20 +302,26 @@ Tackle remaining large files in priority order:
 ## Risks & Mitigation
 
 ### Risk: Breaking Existing Functionality
-**Mitigation**: 
+
+**Mitigation**:
+
 - Extract one section at a time
 - Test after each extraction
 - Keep git commits small and focused
 - Run type checker continuously
 
 ### Risk: Time Investment vs. Migration Progress
+
 **Mitigation**:
+
 - Focus only on AddNewPlayModal (blocks 113 instances)
 - Defer other large files to post-Phase 3B
 - Measure time spent vs. instances gained
 
 ### Risk: Increased File Count
+
 **Mitigation**:
+
 - Better than massive monoliths
 - Proper directory structure aids discovery
 - TypeScript imports handle file relationships
@@ -313,16 +341,19 @@ Tackle remaining large files in priority order:
 ## Metrics
 
 ### Current State
+
 - **Files >1000 lines**: 6 files, 9,392 total lines
 - **Largest file**: FieldCanvas.tsx (3,283 lines)
 - **Spacing migration blocked**: 113 instances in AddNewPlayModal
 
 ### Target State (Post-Phase 1)
+
 - **AddNewPlayModal**: 12 files, max 150 lines each
 - **Spacing migration**: 121/121 instances complete
 - **Files >1000 lines**: 5 files (AddNewPlayModal refactored)
 
 ### Target State (Post-Phase 3)
+
 - **Files >1000 lines**: 0 files
 - **Average file size**: <400 lines
 - **Component reusability**: High (extracted shared components)

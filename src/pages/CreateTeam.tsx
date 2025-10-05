@@ -336,10 +336,17 @@ export const CreateTeam: React.FC = () => {
                   className="mt-0.5"
                 />
                 <div className="flex-1">
-                  <Typography variant="body-sm" className="font-medium mb-spacing-xs">
+                  <Typography
+                    variant="body-sm"
+                    className="font-medium mb-spacing-xs"
+                  >
                     Quick Location Setup
                   </Typography>
-                  <Typography variant="body-sm" color="muted" className="mb-spacing-sm">
+                  <Typography
+                    variant="body-sm"
+                    color="muted"
+                    className="mb-spacing-sm"
+                  >
                     We can help fill in your school's location automatically.
                   </Typography>
                   <Button
@@ -449,7 +456,10 @@ export const CreateTeam: React.FC = () => {
                     className="mt-0.5"
                   />
                   <div className="flex-1">
-                    <Typography variant="body-sm" className="font-medium mb-spacing-xs">
+                    <Typography
+                      variant="body-sm"
+                      className="font-medium mb-spacing-xs"
+                    >
                       Similar Team Found
                     </Typography>
                     <Typography

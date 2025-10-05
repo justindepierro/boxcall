@@ -325,7 +325,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {achLoading && (
           <div className="flex items-center justify-center py-spacing-md">
             <div className="w-6 h-6 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
-            <Typography variant="body-xs" className="text-text-muted ml-spacing-xs">
+            <Typography
+              variant="body-xs"
+              className="text-text-muted ml-spacing-xs"
+            >
               Loading achievements…
             </Typography>
           </div>

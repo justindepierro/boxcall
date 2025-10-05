@@ -579,7 +579,11 @@ export default function RosterPage() {
               <Typography variant="headline-md" className="mb-spacing-xs">
                 No players found
               </Typography>
-              <Typography variant="body-lg" color="muted" className="mb-spacing-md">
+              <Typography
+                variant="body-lg"
+                color="muted"
+                className="mb-spacing-md"
+              >
                 {searchTerm || positionFilter || statusFilter
                   ? "Try adjusting your search or filters"
                   : "Get started by adding your first player"}

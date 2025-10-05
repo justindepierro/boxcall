@@ -405,7 +405,10 @@ export const DashboardCustomizationPanel: React.FC<
 
         {/* Tabs */}
         <div className="border-b border-subtle">
-          <nav className="flex space-x-spacing-xl px-spacing-lg" aria-label="Tabs">
+          <nav
+            className="flex space-x-spacing-xl px-spacing-lg"
+            aria-label="Tabs"
+          >
             {[
               { id: "widgets", label: "Widgets", icon: "grid" as const },
               { id: "layouts", label: "Layouts", icon: "grid" as const }, // Using grid as layout icon

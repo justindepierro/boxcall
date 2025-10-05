@@ -71,7 +71,11 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-lg" className="mb-spacing-md">
                   Team Overview
                 </Typography>
-                <Typography variant="body-lg" color="muted" className="mb-spacing-lg">
+                <Typography
+                  variant="body-lg"
+                  color="muted"
+                  className="mb-spacing-lg"
+                >
                   Get a high-level view of your team's configuration and
                   performance.
                 </Typography>
@@ -157,7 +161,11 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-lg" className="mb-spacing-md">
                   Team Preferences
                 </Typography>
-                <Typography variant="body-lg" color="muted" className="mb-spacing-lg">
+                <Typography
+                  variant="body-lg"
+                  color="muted"
+                  className="mb-spacing-lg"
+                >
                   Configure team-wide settings and preferences.
                 </Typography>
 
