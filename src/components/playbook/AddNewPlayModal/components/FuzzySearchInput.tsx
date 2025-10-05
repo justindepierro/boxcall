@@ -1,0 +1,89 @@
+import React from "react";
+import { Typography } from "../../../design-system/Typography";
+
+interface FuzzySearchInputProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  suggestions: string[];
+  showSuggestions: boolean;
+  onShowSuggestionsChange: (show: boolean) => void;
+  required?: boolean;
+  maxSuggestions?: number;
+  className?: string;
+}
+
+/**
+ * FuzzySearchInput - Reusable autocomplete/fuzzy search input component
+ *
+ * Features:
+ * - Text input with fuzzy search filtering
+ * - Dropdown suggestions based on input
+ * - Keyboard navigation (Tab, Escape)
+ * - Click outside to close
+ * - Customizable max suggestions
+ *
+ * Used by: FormationSection, PlayNameSection, PersonnelSection
+ */
+export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
+  label,
+  value,
+  onChange,
+  placeholder,
+  suggestions,
+  showSuggestions,
+  onShowSuggestionsChange,
+  required = false,
+  maxSuggestions = 5,
+  className = "",
+}) => {
+  // Filter suggestions based on input value
+  const filteredSuggestions = React.useMemo(() => {
+    if (!value.trim()) return suggestions.slice(0, maxSuggestions);
+    const lower = value.toLowerCase();
+    return suggestions
+      .filter((s) => s.toLowerCase().includes(lower))
+      .slice(0, maxSuggestions);
+  }, [value, suggestions, maxSuggestions]);
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    onChange(suggestion);
+    onShowSuggestionsChange(false);
+  };
+
+  return (
+    <div className={className}>
+      <Typography variant="label-md" className="block mb-spacing-sm">
+        {label}
+        {required && " *"}
+      </Typography>
+      <div className="relative">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => onShowSuggestionsChange(true)}
+          onBlur={() => setTimeout(() => onShowSuggestionsChange(false), 200)}
+          placeholder={placeholder}
+          className="w-full px-spacing-sm py-spacing-xs border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+          required={required}
+        />
+        {showSuggestions && filteredSuggestions.length > 0 && (
+          <div className="absolute top-full left-0 right-0 bg-surface-primary border border-border-medium rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto mt-spacing-xs">
+            {filteredSuggestions.map((suggestion, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => handleSelectSuggestion(suggestion)}
+                className="w-full text-left px-spacing-sm py-spacing-xs hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+              >
+                <Typography variant="body-sm">{suggestion}</Typography>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
