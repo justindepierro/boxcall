@@ -97,13 +97,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   return (
     <div
       id={`play-details-${play.id}`}
-      className="mt-4 pt-4 border-t border-subtle space-y-4"
+      className="mt-spacing-md pt-spacing-md border-t border-subtle space-y-spacing-md"
       role="region"
       aria-label={`Details for ${play.play_name}`}
     >
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-spacing-xs">
         <span
-          className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
+          className={`px-spacing-xs py-spacing-xs rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
         >
           {optimisticPlay.p_type}
         </span>
@@ -115,16 +115,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             suggestions={PERSONNEL_OPTIONS.map((option) => option.label)}
             enableSuggestions={true}
             isSaving={savingFields.has("personnel")}
-            className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium hover:bg-gray-200 transition-colors"
+            className="px-spacing-xs py-spacing-xs bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium hover:bg-gray-200 transition-colors"
           />
         )}
         {phaseLabel && (
-          <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold uppercase border border-warning-600">
+          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold uppercase border border-warning-600">
             {phaseLabel}
           </span>
         )}
         {optimisticPlay.one_word_play && !showOneWordCalls && (
-          <span className="px-2 py-0.5 bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-[11px] font-medium">
+          <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-[11px] font-medium">
             Code: {optimisticPlay.one_word_play.toUpperCase()}
           </span>
         )}
@@ -135,20 +135,20 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="surface-subtle rounded-lg p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
+        <div className="surface-subtle rounded-lg p-spacing-md">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-4"
+            className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="target" className="h-4 w-4 mr-2" /> Formation
+            <Icon name="target" className="h-4 w-4 mr-spacing-xs" /> Formation
           </Typography>
           <DragDropContext onDragEnd={handleFormationDragEnd}>
             <Droppable droppableId="formation-fields">
               {(provided) => (
                 <dl
-                  className="space-y-3 text-sm"
+                  className="space-y-spacing-sm text-sm"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -168,13 +168,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-3 rounded-lg transition-all duration-200 ${
+                            className={`p-spacing-sm rounded-lg transition-all duration-200 ${
                               snapshot.isDragging
                                 ? "bg-surface-hover shadow-lg scale-105"
                                 : "hover:bg-surface-hover hover:shadow-sm"
                             }`}
                           >
-                            <div className="flex items-center gap-3 mb-2">
+                            <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                               <div
                                 {...provided.dragHandleProps}
                                 className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
@@ -197,7 +197,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "formation")
                                 }
-                                className="flex-shrink-0 p-1 rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -229,13 +229,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-4">
+        <div className="surface-subtle rounded-lg p-spacing-md">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-4"
+            className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="hash" className="h-4 w-4 mr-2" /> Play Details
+            <Icon name="hash" className="h-4 w-4 mr-spacing-xs" /> Play Details
           </Typography>
           <DragDropContext onDragEnd={handlePlayDetailsDragEnd}>
             <Droppable droppableId="play-details">
@@ -243,7 +243,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="space-y-3 text-sm"
+                  className="space-y-spacing-sm text-sm"
                 >
                   {playDetailsFieldOrder.map((fieldKey, index) => {
                     const field =
@@ -263,13 +263,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-3 rounded-lg transition-all duration-200 ${
+                            className={`p-spacing-sm rounded-lg transition-all duration-200 ${
                               snapshot.isDragging
                                 ? "bg-surface-hover shadow-lg scale-105"
                                 : "hover:bg-surface-hover hover:shadow-sm"
                             }`}
                           >
-                            <div className="flex items-center gap-3 mb-2">
+                            <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                               <div
                                 {...provided.dragHandleProps}
                                 className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
@@ -292,7 +292,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "playDetails")
                                 }
-                                className="flex-shrink-0 p-1 rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -324,16 +324,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-4">
+        <div className="surface-subtle rounded-lg p-spacing-md">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-4"
+            className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="settings" className="h-4 w-4 mr-2" /> Preferences
+            <Icon name="settings" className="h-4 w-4 mr-spacing-xs" /> Preferences
           </Typography>
-          <dl className="space-y-4 text-sm">
-            <div className="flex items-center gap-4">
+          <dl className="space-y-spacing-md text-sm">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-24">
                 Down
               </dt>
@@ -348,7 +348,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-24">
                 Distance
               </dt>
@@ -363,7 +363,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-24">
                 Hash
               </dt>
@@ -378,7 +378,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-24">
                 Coverage
               </dt>
@@ -391,7 +391,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-24">
                 Front
               </dt>
@@ -407,16 +407,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </dl>
         </div>
 
-        <div className="surface-subtle rounded-lg p-4">
+        <div className="surface-subtle rounded-lg p-spacing-md">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center mb-4"
+            className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="clock" className="h-4 w-4 mr-2" /> Usage & Stats
+            <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage & Stats
           </Typography>
-          <dl className="space-y-3 text-sm">
-            <div className="flex items-center gap-4">
+          <dl className="space-y-spacing-sm text-sm">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-32">
                 Times Called
               </dt>
@@ -424,7 +424,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 {play.times_called}
               </dd>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <dt className="text-text-primary font-medium flex-shrink-0 w-32">
                 Times Successful
               </dt>
@@ -433,7 +433,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             {play.last_used_at && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-spacing-md">
                 <dt className="text-text-primary font-medium flex-shrink-0 w-32">
                   Last Used
                 </dt>
@@ -446,13 +446,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </div>
       </div>
 
-      <div className="surface-subtle rounded-lg p-4">
+      <div className="surface-subtle rounded-lg p-spacing-md">
         <Typography
           variant="label-lg"
           as="h4"
-          className="text-text-primary flex items-center mb-4"
+          className="text-text-primary flex items-center mb-spacing-md"
         >
-          <Icon name="file" className="h-4 w-4 mr-2" /> Notes
+          <Icon name="file" className="h-4 w-4 mr-spacing-xs" /> Notes
         </Typography>
         <InlineEditField
           value={optimisticPlay.notes || ""}
@@ -464,12 +464,12 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         />
       </div>
 
-      <div className="surface-subtle rounded-lg p-3">
+      <div className="surface-subtle rounded-lg p-spacing-sm">
         <div className="flex items-center justify-between">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary mb-2"
+            className="text-text-primary mb-spacing-xs"
           >
             Tags & Roles
           </Typography>
@@ -482,11 +482,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             {showTagsEditor ? "Hide" : "Edit"}
           </Button>
         </div>
-        <div className="mt-2 flex flex-wrap gap-1">
+        <div className="mt-spacing-xs flex flex-wrap gap-spacing-xs">
           {summaryChips.slice(0, 8).map((chip) => (
             <span
               key={chip}
-              className="px-2 py-0.5 text-[11px] rounded bg-surface-secondary text-text-primary"
+              className="px-spacing-xs py-spacing-xs text-[11px] rounded bg-surface-secondary text-text-primary"
             >
               {chip}
             </span>
@@ -498,16 +498,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           )}
         </div>
         {showTagsEditor && (
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="mt-spacing-sm grid grid-cols-1 md:grid-cols-3 gap-spacing-sm">
             <div>
-              <div className="text-xs text-text-secondary mb-1">Positions</div>
-              <div className="flex flex-wrap gap-1">
+              <div className="text-xs text-text-secondary mb-spacing-xs">Positions</div>
+              <div className="flex flex-wrap gap-spacing-xs">
                 {flags.positions.map((pos) => (
                   <Button
                     key={pos}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-2 py-0.5 text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
                     onClick={() =>
                       setFlags(removeFlag(play.id, "positions", pos))
                     }
@@ -517,7 +517,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
                 <select
                   value={newPosition}
                   onChange={(e) => setNewPosition(e.target.value)}
@@ -545,14 +545,14 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xs text-text-secondary mb-1">Players</div>
-              <div className="flex flex-wrap gap-1">
+              <div className="text-xs text-text-secondary mb-spacing-xs">Players</div>
+              <div className="flex flex-wrap gap-spacing-xs">
                 {flags.players.map((pl) => (
                   <Button
                     key={pl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-2 py-0.5 text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
                     onClick={() => setFlags(removeFlag(play.id, "players", pl))}
                     title="Remove"
                   >
@@ -560,7 +560,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
                 <input
                   value={newPlayer}
                   onChange={(e) => setNewPlayer(e.target.value)}
@@ -582,14 +582,14 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xs text-text-secondary mb-1">Flags</div>
-              <div className="flex flex-wrap gap-1">
+              <div className="text-xs text-text-secondary mb-spacing-xs">Flags</div>
+              <div className="flex flex-wrap gap-spacing-xs">
                 {flags.flags.map((fl) => (
                   <Button
                     key={fl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-2 py-0.5 text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
                     onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
                     title="Remove"
                   >
@@ -597,7 +597,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
                 <input
                   value={newFlag}
                   onChange={(e) => setNewFlag(e.target.value)}
@@ -627,7 +627,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary mb-2"
+            className="text-text-primary mb-spacing-xs"
           >
             Add to Workflow
           </Typography>
@@ -635,7 +635,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             Build practice scripts and game plans from this play
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-spacing-xs">
           <Button
             variant="secondary"
             size="xs"
@@ -643,7 +643,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             title="Add this play to a practice script"
             className="surface-subtle hover:bg-surface-info text-text-info border-surface-primary"
           >
-            <Icon name="calendar" className="h-3 w-3 mr-1" /> Practice Script
+            <Icon name="calendar" className="h-3 w-3 mr-spacing-xs" /> Practice Script
           </Button>
           <Button
             variant="secondary"
@@ -652,7 +652,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             title="Add this play to a game plan"
             className="surface-subtle hover:bg-surface-success text-text-success border-surface-primary"
           >
-            <Icon name="gamepad-2" className="h-3 w-3 mr-1" /> Game Plan
+            <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game Plan
           </Button>
           <Badge variant="premium" size="sm">
             Week 3
