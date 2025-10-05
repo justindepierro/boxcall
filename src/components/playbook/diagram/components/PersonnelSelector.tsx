@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDiagramEditor } from "../context/useDiagramEditor";
 import type { DiagramPlayer } from "../types/types";
+import { colorTokens } from "../../../../design-system/tokens";
 
 interface PersonnelSelectorProps {
   onPersonnelSelect: (personnel: DiagramPlayer[]) => void;
@@ -26,7 +27,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
         side: "O",
         x: 50,
         y: 30,
-        color: "#047857",
+        color: colorTokens.emerald[700],
       },
       {
         id: "RB",
@@ -35,7 +36,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
         side: "O",
         x: 50,
         y: 40,
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       },
       {
         id: "X",
@@ -44,7 +45,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
         side: "O",
         x: 80,
         y: 20,
-        color: "#dc2626",
+        color: colorTokens.red[600],
       },
       {
         id: "Y",
@@ -53,7 +54,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
         side: "O",
         x: 70,
         y: 25,
-        color: "#dc2626",
+        color: colorTokens.red[600],
       },
       {
         id: "Z",
@@ -62,7 +63,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
         side: "O",
         x: 20,
         y: 25,
-        color: "#dc2626",
+        color: colorTokens.red[600],
       },
     ];
 
