@@ -116,9 +116,9 @@ export const Badge: React.FC<BadgeProps> = ({
 
   // Size variants - purposeful scaling
   const sizeStyles = {
-    sm: "px-2 py-0.5 text-[11px] leading-tight min-h-[18px]",
-    md: "px-2.5 py-0.5 text-xs leading-tight min-h-[22px]",
-    lg: "px-3 py-1 text-sm min-h-[30px]",
+    sm: "px-2 py-0.5 text-xs leading-tight h-5", // 12px font, 20px height
+    md: "px-2.5 py-0.5 text-xs leading-tight h-6", // 12px font, 24px height
+    lg: "px-3 py-1 text-sm h-8", // 14px font, 32px height
   } as const;
 
   // Color variants using our psychological color system
