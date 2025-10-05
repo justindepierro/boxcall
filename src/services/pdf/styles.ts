@@ -25,9 +25,9 @@ export const PDFColors = {
   warning: colorTokens.warning[600], // colorTokens.amber[600]
   error: colorTokens.error[600], // colorTokens.red[600]
   info: semantic.primary, // Use brand color for info
-  // Neutral colors
-  white: "#ffffff",
-  black: "#000000",
+  // Neutral colors  
+  white: "#FFFFFF", // Pure white for PDF documents
+  black: "#000000", // Pure black for PDF documents
   gray: {
     50: colorTokens.navy[50], // "#f8fafc"
     100: colorTokens.navy[100], // "#f1f5f9"
@@ -37,12 +37,12 @@ export const PDFColors = {
     500: colorTokens.navy[500], // "#64748b"
     600: colorTokens.navy[600], // "#475569"
     700: colorTokens.navy[700], // "#334155"
-    800: "#1e293b",
-    900: "#0f172a",
+    800: colorTokens.navy[800], // "#1e293b"
+    900: colorTokens.navy[900], // "#0f172a"
   },
   // Football-specific colors
-  field: "#4ade80",
-  fieldDark: "#16a34a",
+  field: colorTokens.emerald[400], // "#4ade80" - matches field green
+  fieldDark: colorTokens.emerald[600], // "#16a34a"
   // Category colors (matches practice planner)
   categories: {
     meeting: colorTokens.violet[500],
@@ -50,8 +50,8 @@ export const PDFColors = {
     defense: colorTokens.blue[500],
     "special-teams": colorTokens.amber[500],
     conditioning: colorTokens.emerald[500],
-    "weight-room": "#6366f1",
-    transition: "#64748b",
+    "weight-room": colorTokens.purple[700], // "#6366f1" → #7C3AED electric accent
+    transition: colorTokens.navy[500], // "#64748b" → matches our navy system
     break: colorTokens.cyan[500],
   },
 };
