@@ -16,13 +16,13 @@ export const PlayerSidebar: React.FC = () => {
   if (!state.doc) return null;
   return (
     <div data-testid="player-sidebar-root">
-      <div className="text-xs text-text-secondary">
+      <div className="text-xsssssssssssssssssss text-text-secondary">
         Complexity: {complexity}
       </div>
-      <div className="text-xs text-text-secondary">
+      <div className="text-xsssssssssssssssssss text-text-secondary">
         Players: {state.doc.players.length}
       </div>
-      <div className="text-xs text-text-secondary">
+      <div className="text-xsssssssssssssssssss text-text-secondary">
         Routes: {state.doc.routes.length}
       </div>
       {state.doc.players.length > 0 && (

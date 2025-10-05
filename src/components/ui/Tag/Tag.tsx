@@ -21,7 +21,7 @@ export interface TagProps {
 
 const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
   sm: "px-2 py-0.5 text-[11px] leading-tight rounded-full",
-  md: "px-2.5 py-0.5 text-xs leading-tight rounded-full",
+  md: "px-2.5 py-0.5 text-xss leading-tight rounded-full",
   lg: "px-3 py-1 text-sm rounded-full",
 };
 

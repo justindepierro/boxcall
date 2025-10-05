@@ -7,7 +7,7 @@ export const RoutesPanel: React.FC = () => {
   if (!state.doc.routes.length) return null;
   return (
     <div className="mt-4">
-      <div className="text-[11px] font-semibold text-text-primary mt-2 mb-1">
+      <div className="text-[11px] font-semibold text-text-xssrimary mt-2 mb-1">
         ROUTES
       </div>
       <ul className="space-y-1">

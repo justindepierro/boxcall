@@ -38,7 +38,7 @@ export const AppIconTile = memo<AppIconTileProps>(
         >
           {/* Top Label - Optional text above icon */}
           {topLabel && (
-            <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+            <div className="text-xss font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
               {topLabel}
             </div>
           )}
@@ -73,7 +73,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
           {/* Bottom Label - Optional text below icon */}
           {bottomLabel && (
-            <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
+            <div className="text-xss font-medium text-slate-600 dark:text-slate-400">
               {bottomLabel}
             </div>
           )}
@@ -84,7 +84,7 @@ export const AppIconTile = memo<AppIconTileProps>(
               {title}
             </div>
             {subtitle && !bottomLabel && (
-              <div className="text-xs text-slate-600 dark:text-slate-400 truncate mt-0.5">
+              <div className="text-xss text-slate-600 dark:text-slate-400 truncate mt-0.5">
                 {subtitle}
               </div>
             )}

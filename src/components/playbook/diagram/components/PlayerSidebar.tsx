@@ -26,12 +26,12 @@ export const PlayerSidebar: React.FC = () => {
     : 0;
   return (
     <div data-testid="player-sidebar-root">
-      <div className="text-xs text-text-secondary">Complexity: {complexity}</div>
-      <div className="text-xs text-text-secondary">Players: {playersLength}</div>
-      <div className="text-xs text-text-secondary">Routes: {routesLength}</div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">Complexity: {complexity}</div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">Players: {playersLength}</div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">Routes: {routesLength}</div>
       {playersLength > 0 && (
         <div>
-          <div className="text-[11px] font-semibold text-text-primary mt-3 mb-1 flex items-center justify-between">
+          <div className="text-[11px] font-semibold text-text-xssssssssssssssssssrimary mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>
             <span className="text-[10px] font-normal text-text-tertiary">
               {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}

@@ -98,7 +98,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
             <div className="flex flex-col">
               <Typography
                 variant="headline-sm"
-                className="font-semibold text-text-primary dark:text-slate-50"
+                className="font-semibold text-text-xssrimary dark:text-slate-50"
               >
                 {title}
               </Typography>

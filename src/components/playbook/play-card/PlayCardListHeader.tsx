@@ -44,7 +44,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             } ${
               showOneWordCalls && play.one_word_play
                 ? "text-text-info"
-                : "text-text-primary"
+                : "text-text-xssssrimary"
             } text-left`}
           >
             {displayName}
@@ -76,7 +76,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             </span>
           )}
           <span
-            className={`text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
+            className={`text-xsssss font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
           >
             {optimisticPlay.confidence_base}%
           </span>

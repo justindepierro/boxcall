@@ -390,7 +390,7 @@ export const ToolPalette: React.FC = () => {
               className="w-32"
               title="Stroke width"
             />
-            <span className="text-[12px] text-text-primary w-9 text-right">
+            <span className="text-[12px] text-text-xssssssssrimary w-9 text-right">
               {state.ui.drawWidth || 3}px
             </span>
           </div>
@@ -487,7 +487,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="grid" />
           </Button>
           <span className="mx-1 w-px h-6 bg-border-light" />
-          <span className="text-[11px] text-text-primary">Spacing</span>
+          <span className="text-[11px] text-text-xssssssssrimary">Spacing</span>
           <input
             type="number"
             aria-label="Distribute spacing percent"
@@ -539,7 +539,7 @@ export const ToolPalette: React.FC = () => {
           className="flex items-center gap-2 ml-auto"
           aria-label="Snap settings"
         >
-          <label className="flex items-center gap-1 text-[11px] text-text-primary">
+          <label className="flex items-center gap-1 text-[11px] text-text-xssssssssrimary">
             <input
               type="checkbox"
               checked={state.ui.snap}

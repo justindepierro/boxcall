@@ -73,12 +73,12 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
         <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-md border-subtle surface-card elevation-dropdown shadow-sm">
           <div className="py-1">
             {error && (
-              <div className="px-3 py-2 text-xs text-error flex items-center gap-2">
+              <div className="px-3 py-2 text-xsssss text-error flex items-center gap-2">
                 <Icon name="error" className="h-3 w-3" /> {error}
               </div>
             )}
             {!error && !loading && results.length === 0 && (
-              <div className="px-3 py-2 text-xs text-text-muted">
+              <div className="px-3 py-2 text-xsssss text-text-muted">
                 No matches
               </div>
             )}
@@ -89,7 +89,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start px-3 py-2 text-left text-xs surface-subtle-hover"
+                  className="w-full justify-start px-3 py-2 text-left text-xsssss surface-subtle-hover"
                   onClick={() => handleSelect(r.play_id)}
                 >
                   <span className="truncate flex-1">{r.play_id}</span>

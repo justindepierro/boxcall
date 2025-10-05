@@ -142,7 +142,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
 
         {/* Quick Actions */}
         <div className="pt-3 border-t border-slate-200 dark:border-slate-700">
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
+          <div className="text-xssss font-semibold text-slate-500 dark:text-slate-400 mb-2">
             Quick Actions
           </div>
           <div className="flex gap-2">
@@ -159,7 +159,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
                     action.id === "redo" ? "scale-x-[-1]" : ""
                   }`}
                 />
-                <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                <span className="text-xssss font-medium text-slate-700 dark:text-slate-300">
                   {action.label}
                 </span>
               </button>
@@ -169,7 +169,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
 
         {/* Keyboard Shortcuts Hint */}
         <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700">
-          <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+          <div className="text-xssss text-slate-500 dark:text-slate-400 space-y-1">
             <div className="flex items-center justify-between">
               <span>Select</span>
               <kbd className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">

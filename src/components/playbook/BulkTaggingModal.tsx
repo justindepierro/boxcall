@@ -80,18 +80,18 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
       aria-label="Bulk Tagging"
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
-      <div className="absolute inset-0 bg-text-primary/40" onClick={onClose} />
+      <div className="absolute inset-0 bg-text-xssrimary/40" onClick={onClose} />
       <div className="relative surface-card elevation-modal rounded-md shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
         <div className="flex items-start justify-between mb-4">
           <div>
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-text-primary"
+              className="text-text-xssrimary"
             >
               Add Tags to {playIds.length} Play{playIds.length === 1 ? "" : "s"}
             </Typography>
-            <p className="text-xs text-text-secondary mt-1">
+            <p className="text-xsss text-text-secondary mt-1">
               Tags will be appended. Duplicates are ignored automatically
               (future enhancement).
             </p>
@@ -108,7 +108,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
           </Tooltip>
         </div>
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1">
+          <label className="block text-xsss font-medium text-text-secondary mb-1">
             New Tag
           </label>
           <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
         </div>
         {selectedTags.length > 0 && (
           <div className="mt-4">
-            <div className="text-xs font-medium text-text-secondary mb-1">
+            <div className="text-xsss font-medium text-text-secondary mb-1">
               Pending Tags
             </div>
             <div className="flex flex-wrap gap-1">
@@ -172,13 +172,13 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
           </div>
         )}
         {applied && (
-          <div className="mt-4 text-xs text-text-success">
+          <div className="mt-4 text-xsss text-text-success">
             Added {applied.added} tag{applied.added === 1 ? "" : "s"}.
             {applied.skipped > 0 && ` ${applied.skipped} duplicates skipped.`}
           </div>
         )}
         <div className="mt-6 flex items-center justify-between">
-          <div className="text-xs text-text-secondary flex items-center gap-1">
+          <div className="text-xsss text-text-secondary flex items-center gap-1">
             <Icon name="tag" className="w-3 h-3" />
             {selectedTags.length === 0
               ? "No tags added yet"

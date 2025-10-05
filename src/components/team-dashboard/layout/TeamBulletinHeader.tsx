@@ -128,7 +128,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-surface-secondary text-text-inverse text-xs py-1 px-2 rounded whitespace-nowrap">
+                <div className="bg-surface-secondary text-text-inverse text-xss py-1 px-2 rounded whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>
@@ -139,7 +139,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               variant="headline-xl"
               as="h1"
               id={headingId}
-              className="text-text-primary"
+              className="text-text-xsrimary"
             >
               {teamName}
             </Typography>
@@ -150,7 +150,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               {seasonDisplay} • Record: {record.wins}-{record.losses}
             </Typography>
             {schoolName && (
-              <div className="text-xs text-text-secondary dark:text-border-light mt-1">
+              <div className="text-xss text-text-secondary dark:text-border-light mt-1">
                 {schoolName}
                 {mascot ? ` ${mascot}` : ""}
               </div>
@@ -167,7 +167,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-primary"
+              className="font-semibold text-text-xsrimary"
             >
               {nextGame}
             </Typography>
@@ -181,7 +181,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-primary"
+              className="font-semibold text-text-xsrimary"
             >
               {memberCount}
             </Typography>

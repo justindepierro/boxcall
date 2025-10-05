@@ -132,7 +132,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
       <div className="mt-4 space-y-1 w-full">
         <h3
-          className={`font-mono font-bold text-lg leading-tight text-text-primary line-clamp-2 ${
+          className={`font-mono font-bold text-lg leading-tight text-text-xsssssrimary line-clamp-2 ${
             showOneWordCalls && play.one_word_play ? "text-text-info" : ""
           }`}
         >

@@ -19,14 +19,14 @@ export interface IconButtonProps
 
 const sizeStyles = {
   xs: "h-6 w-6 p-1 text-[11px]",
-  sm: "h-8 w-8 p-2 text-xs",
+  sm: "h-8 w-8 p-2 text-xss",
 };
 
 const variantStyles = {
   ghost:
-    "text-text-secondary hover:text-text-primary hover:bg-surface-neutral active:bg-surface-neutral-dark",
+    "text-text-secondary hover:text-text-xsrimary hover:bg-surface-neutral active:bg-surface-neutral-dark",
   subtle:
-    "text-text-muted hover:text-text-primary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
+    "text-text-muted hover:text-text-xsrimary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
   danger:
     "text-text-error hover:text-text-error hover:surface-subtle active:bg-surface-error",
 };
