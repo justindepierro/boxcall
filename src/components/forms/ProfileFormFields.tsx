@@ -14,7 +14,7 @@ interface FormFieldProps {
 export const FormField = memo<FormFieldProps>(
   ({ field, value, onChange, error }) => {
     const baseInputClasses = `
-    w-full p-3 border rounded-lg transition-colors
+    w-full p-spacing-sm border rounded-lg transition-colors
     ${
       error
         ? "border-error focus:border-error"
@@ -73,11 +73,11 @@ export const FormField = memo<FormFieldProps>(
         case "multi-select": {
           const selectedValues = Array.isArray(value) ? value : [];
           return (
-            <div className="space-y-2">
+            <div className="space-y-spacing-xs">
               {field.options?.map((option) => (
                 <label
                   key={option.value}
-                  className="flex items-center space-x-2"
+                  className="flex items-center space-x-spacing-xs"
                 >
                   <input
                     type="checkbox"
@@ -191,14 +191,14 @@ interface ProfileFormSectionProps {
 export const ProfileFormSection = memo<ProfileFormSectionProps>(
   ({ title, fields, values, onChange, errors = {} }) => {
     return (
-      <div className="space-y-4">
+      <div className="space-y-spacing-md">
         <Typography
           variant="headline-sm"
-          className="text-text-primary border-b border-subtle pb-2"
+          className="text-text-primary border-b border-subtle pb-spacing-xs"
         >
           {title}
         </Typography>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
           {fields.map((field) => (
             <div
               key={field.key}
