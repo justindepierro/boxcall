@@ -5,6 +5,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Card } from "../components/ui/Card";
 import { Typography } from "../components/design-system";
 import { AuroraTile } from "../components/ui/AuroraTile";
+import { Aurora } from "../components/ui/Aurora";
 
 const TemplatesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -93,12 +94,13 @@ const TemplatesPage: React.FC = () => {
   );
 
   return (
-    <PageLayout
-      title="Templates"
-      subtitle="Reusable practice, planning, and communication templates."
-      variant="detail"
-    >
-      <div className="mb-8">
+    <Aurora variant="shell" fullHeight>
+      <PageLayout
+        title="Templates"
+        subtitle="Reusable practice, planning, and communication templates."
+        variant="detail"
+      >
+        <div className="mb-8">
         <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
           <div className="mb-6">
             <Typography variant="headline-sm" className="text-text-primary">
@@ -137,6 +139,7 @@ const TemplatesPage: React.FC = () => {
         </Typography>
       </Card>
     </PageLayout>
+    </Aurora>
   );
 };
 

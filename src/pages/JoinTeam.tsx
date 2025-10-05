@@ -7,6 +7,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
 import { PageLayout } from "../components/layout/PageLayout";
+import { Aurora } from "../components/ui/Aurora";
 
 /**
  * Join Team Page
@@ -550,8 +551,9 @@ export const JoinTeam: React.FC = () => {
   };
 
   return (
-    <PageLayout title="Join Team" variant="form">
-      <div className="max-w-5xl mx-auto">
+    <Aurora variant="shell" fullHeight>
+      <PageLayout title="Join Team" variant="form">
+        <div className="max-w-5xl mx-auto">
         {/* Back Navigation */}
         {currentStep !== "method" && currentStep !== "complete" && (
           <div className="mb-6">
@@ -597,5 +599,6 @@ export const JoinTeam: React.FC = () => {
         )}
       </div>
     </PageLayout>
+    </Aurora>
   );
 };

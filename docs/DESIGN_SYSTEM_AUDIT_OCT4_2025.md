@@ -24,6 +24,7 @@
 **Status**: Well-established token system exists
 
 **Files Reviewed**:
+
 - ✅ `src/design-system/tokens.ts` - Comprehensive color system
 - ✅ `tailwind.config.js` - Extended theme with aurora system
 - ✅ Design tokens include:
@@ -34,11 +35,13 @@
   - Advanced color harmonies (complementary, triadic, analogous)
 
 **Strengths**:
+
 - Semantic color naming
 - Dark mode support built-in
 - Mathematical color relationships defined
 
 **Issues Found**: ⚠️ Minor
+
 - Some hardcoded hex values still present in JSX (see Section 3)
 
 ---
@@ -46,11 +49,13 @@
 ### 2. Aurora Background System ⚠️ NEEDS IMPROVEMENT
 
 **Current Implementation**:
+
 - `AuroraTile.tsx` component exists
 - Aurora theme in `tailwind.config.js` with gradient definitions
 - Usage found in 12 files
 
 **Files Using Aurora**:
+
 1. ✅ `PracticePlansPage.tsx`
 2. ✅ `PracticePlanner.tsx`
 3. ✅ `GamePlansPage.tsx`
@@ -61,6 +66,7 @@
 8. ⚠️ Playbook diagram components (specialized use)
 
 **Issues Found**: 🔴 HIGH PRIORITY
+
 ```tsx
 // ❌ INCONSISTENT: Some pages missing Aurora background
 - DashboardPage.tsx - NO AURORA
@@ -76,6 +82,7 @@ className="rounded-[36px] border border-slate-200/40 bg-aurora-shell..."
 ```
 
 **Recommendations**:
+
 1. Create unified `<Aurora>` background component
 2. Standardize all pages to use consistent aurora wrapper
 3. Move all hardcoded gradient styles to tokens
@@ -88,30 +95,33 @@ className="rounded-[36px] border border-slate-200/40 bg-aurora-shell..."
 **Search Results**: 50+ instances of hardcoded values found
 
 #### Color Violations
+
 ```tsx
 // ❌ Found in multiple files:
-className="bg-red-50 border-red-200 text-red-800"
+className = "bg-red-50 border-red-200 text-red-800";
 // ✅ Should be: bg-error-50 border-error-200 text-error-800
 
-className="bg-green-100 text-green-800"
+className = "bg-green-100 text-green-800";
 // ✅ Should be: bg-success-100 text-success-800
 
-className="text-slate-600"
+className = "text-slate-600";
 // ✅ Should be: text-text-secondary (semantic token)
 ```
 
 #### Spacing Violations
+
 ```tsx
 // ❌ Found frequently:
-className="mb-8 p-6 mt-4"
+className = "mb-8 p-6 mt-4";
 // ✅ Should use semantic spacing:
-className="mb-spacing-lg p-spacing-md mt-spacing-sm"
+className = "mb-spacing-lg p-spacing-md mt-spacing-sm";
 
 // Or Tailwind's existing semantic scale:
-className="mb-8" // OK if part of design system scale
+className = "mb-8"; // OK if part of design system scale
 ```
 
 #### Border Radius Violations
+
 ```tsx
 // ❌ Inconsistent border radius:
 rounded-[36px]  // Custom value
@@ -125,6 +135,7 @@ rounded-field   // For form inputs
 ```
 
 **Files with Most Violations**:
+
 1. 🔴 `ProfilePage.tsx` (1371 lines) - Extensive hardcoded values
 2. 🔴 `RosterPage.tsx` (974 lines) - Mixed token usage
 3. 🔴 `PlaybookPage.tsx` (827 lines) - Custom styling
@@ -168,12 +179,14 @@ rounded-field   // For form inputs
 ```
 
 **Redundant Wrapper Patterns**:
+
 1. Multiple `<div className="flex flex-col">` wrappers
 2. Unnecessary grid containers with single column
 3. Spacing wrappers that could be on parent
 4. Container -> padding wrapper -> content (should be 2 layers max)
 
 **Recommended Fixes**:
+
 - Use `PageLayout` component for consistent page structure
 - Limit nesting to 3-4 levels maximum
 - Consolidate spacing/flex properties on fewer elements
@@ -184,6 +197,7 @@ rounded-field   // For form inputs
 ### 5. Design Consistency Issues ⚠️ MODERATE PRIORITY
 
 #### Button Styles
+
 ```tsx
 // Found 3 different button patterns:
 
@@ -200,6 +214,7 @@ rounded-field   // For form inputs
 **Recommendation**: Audit all `<button>` tags, ensure 95%+ use `<Button>` component
 
 #### Card Styles
+
 ```tsx
 // Found 2 different card patterns:
 
@@ -213,6 +228,7 @@ rounded-field   // For form inputs
 **Recommendation**: Replace all custom card divs with `<Card>` component
 
 #### Typography Hierarchy
+
 ```tsx
 // ✅ GOOD: Using Typography component
 <Typography variant="headline-lg">Title</Typography>
@@ -224,6 +240,7 @@ rounded-field   // For form inputs
 ```
 
 **Issues**:
+
 - ~40% of pages still use raw HTML tags instead of `<Typography>`
 - Inconsistent heading sizes (h1 as 2xl vs 3xl vs 4xl)
 - Missing semantic hierarchy in some sections
@@ -233,6 +250,7 @@ rounded-field   // For form inputs
 ### 6. Visual Bugs & Accessibility 🔴 HIGH PRIORITY
 
 #### Overflow Issues Found
+
 ```tsx
 // ❌ Profile page: Long names truncate without ellipsis
 className="truncate max-w-[200px]" // Missing title attribute
@@ -245,6 +263,7 @@ className="truncate max-w-[200px]" // Missing title attribute
 ```
 
 #### Icon Issues
+
 ```tsx
 // ❌ Inconsistent icon sizing
 <Icon name="user" className="h-4 w-4" /> // Some pages
@@ -257,6 +276,7 @@ className="truncate max-w-[200px]" // Missing title attribute
 ```
 
 #### Text Clipping
+
 ```tsx
 // ❌ Found in cards: Content can clip at specific breakpoints
 <div className="h-32 overflow-hidden"> // No fade effect or "read more"
@@ -267,6 +287,7 @@ className="line-clamp-3" // Tailwind utility
 ```
 
 #### Z-Index Conflicts
+
 ```tsx
 // ❌ Found modal/dropdown conflicts:
 Modal: z-50
@@ -286,6 +307,7 @@ z-tooltip: 60
 ## 📊 Priority Matrix
 
 ### 🔴 Critical (Fix Immediately)
+
 1. **Hardcoded Colors** - Replace with design tokens (50+ instances)
 2. **Aurora System** - Standardize background across all pages
 3. **Over-Wrapped Layers** - Simplify ProfilePage, RosterPage, PlaybookPage
@@ -293,6 +315,7 @@ z-tooltip: 60
 5. **Overflow/Clipping** - Fix mobile responsiveness issues
 
 ### ⚠️ High (Fix This Sprint)
+
 1. **Button Consistency** - Convert all custom buttons to `<Button>` component
 2. **Card Consistency** - Replace custom card divs with `<Card>` component
 3. **Typography Hierarchy** - Replace HTML tags with `<Typography>` component
@@ -300,6 +323,7 @@ z-tooltip: 60
 5. **Border Radius** - Standardize to design system utilities
 
 ### ✅ Medium (Fix Next Sprint)
+
 1. **Spacing Tokens** - Move to semantic spacing names
 2. **Component Documentation** - Document all design system components
 3. **Storybook Coverage** - Ensure all components have stories
@@ -311,9 +335,11 @@ z-tooltip: 60
 ## 🎯 Recommended Action Plan
 
 ### Phase 1: Token Migration (Week 1)
+
 **Goal**: Replace all hardcoded values with design tokens
 
 **Tasks**:
+
 1. Create comprehensive token list in `tokens.ts`
 2. Add semantic spacing scale: `spacing-xs`, `spacing-sm`, `spacing-md`, etc.
 3. Create global find-replace script for common patterns
@@ -323,9 +349,11 @@ z-tooltip: 60
 **Estimated Impact**: ~200 file changes
 
 ### Phase 2: Aurora Standardization (Week 1-2)
+
 **Goal**: Consistent background system across all pages
 
 **Tasks**:
+
 1. Create `<Aurora>` wrapper component with variants
 2. Update all pages to use `<Aurora>` wrapper
 3. Remove all hardcoded gradient classes
@@ -335,9 +363,11 @@ z-tooltip: 60
 **Estimated Impact**: ~20 page files
 
 ### Phase 3: Component Consolidation (Week 2)
+
 **Goal**: Eliminate custom implementations in favor of design system
 
 **Tasks**:
+
 1. Audit all `<button>` tags -> replace with `<Button>`
 2. Audit all card divs -> replace with `<Card>`
 3. Audit all text elements -> replace with `<Typography>`
@@ -347,9 +377,11 @@ z-tooltip: 60
 **Estimated Impact**: ~100 file changes
 
 ### Phase 4: Wrapper Cleanup (Week 2-3)
+
 **Goal**: Simplify component hierarchy
 
 **Tasks**:
+
 1. Start with ProfilePage (1371 lines) - reduce nesting
 2. Refactor RosterPage (974 lines) - extract sub-components
 3. Simplify PlaybookPage (827 lines) - remove redundant wrappers
@@ -359,9 +391,11 @@ z-tooltip: 60
 **Estimated Impact**: ~30 page files
 
 ### Phase 5: Visual Bug Fixes (Week 3)
+
 **Goal**: Fix all overflow, clipping, and accessibility issues
 
 **Tasks**:
+
 1. Fix text truncation (add ellipsis + tooltips)
 2. Fix table overflow on mobile (responsive tables)
 3. Fix modal/tooltip z-index conflicts
@@ -371,9 +405,11 @@ z-tooltip: 60
 **Estimated Impact**: ~50 file changes
 
 ### Phase 6: Documentation & Testing (Week 3-4)
+
 **Goal**: Prevent regression and document standards
 
 **Tasks**:
+
 1. Create design system documentation site
 2. Add Storybook stories for all components
 3. Create visual regression tests (Playwright)
@@ -387,6 +423,7 @@ z-tooltip: 60
 ## 📈 Success Metrics
 
 ### Code Quality Metrics
+
 - [ ] **0 hardcoded color values** in JSX files
 - [ ] **0 hardcoded spacing values** (beyond Tailwind scale)
 - [ ] **95%+ Button component usage** (vs custom buttons)
@@ -395,6 +432,7 @@ z-tooltip: 60
 - [ ] **Max 4 levels of nesting** in any component
 
 ### Design Consistency Metrics
+
 - [ ] **100% aurora background coverage** on all pages
 - [ ] **Unified z-index scale** with no conflicts
 - [ ] **Consistent icon sizing** (sm, md, lg only)
@@ -402,6 +440,7 @@ z-tooltip: 60
 - [ ] **0 visual overflow/clipping issues**
 
 ### Performance Metrics
+
 - [ ] **< 50 KB CSS bundle** (after token migration)
 - [ ] **< 5 ms first paint** (from simplified DOM)
 - [ ] **0 layout shifts** (from proper spacing)
@@ -411,6 +450,7 @@ z-tooltip: 60
 ## 🔧 Tools & Scripts
 
 ### Automated Auditing
+
 ```bash
 # Find hardcoded hex colors
 grep -r "#[0-9A-Fa-f]\{3,6\}" src/pages src/components --include="*.tsx"
@@ -426,6 +466,7 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ```
 
 ### Migration Scripts (To Be Created)
+
 1. `migrate-colors.ts` - Replace hardcoded colors with tokens
 2. `migrate-spacing.ts` - Replace hardcoded spacing with semantic tokens
 3. `migrate-buttons.ts` - Convert button tags to Button component
@@ -437,6 +478,7 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ## 📝 Next Steps
 
 ### Immediate Actions (Today)
+
 1. ✅ Complete initial audit (this document)
 2. 🔄 Review findings with team
 3. 🔄 Prioritize quick wins
@@ -444,12 +486,14 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 5. 🔄 Assign ownership for each phase
 
 ### This Week
+
 1. Start Phase 1: Token migration for top 10 most-used pages
 2. Create Aurora wrapper component
 3. Begin button/card/typography consolidation
 4. Set up visual regression testing
 
 ### This Month
+
 1. Complete all 6 phases
 2. Launch design system documentation site
 3. Train team on new standards
@@ -460,6 +504,7 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ## 🎨 Visual Examples
 
 ### Before/After: ProfilePage Header
+
 ```tsx
 // ❌ BEFORE (8 nested divs)
 <div className="max-w-7xl mx-auto">
@@ -499,6 +544,7 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ```
 
 ### Before/After: Button Styles
+
 ```tsx
 // ❌ BEFORE (inconsistent)
 <button className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
@@ -512,6 +558,7 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ```
 
 ### Before/After: Aurora Background
+
 ```tsx
 // ❌ BEFORE (hardcoded gradient)
 <div className="min-h-screen bg-gradient-to-br from-jade-50 via-white to-electric-50/30">
@@ -533,16 +580,18 @@ grep -r "<h[1-6]\\|<p>" src/pages --include="*.tsx" | wc -l
 ## 📚 Resources
 
 ### Design System References
+
 - [Material Design 3](https://m3.material.io/) - Design token patterns
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
 - [Chakra UI](https://chakra-ui.com/) - Component design patterns
 
 ### Internal Documentation
+
 - `/src/design-system/` - Design system components
 - `/src/design-system/tokens.ts` - Design tokens
 - `/tailwind.config.js` - Tailwind theme configuration
-- `/docs/DESIGN_SYSTEM_GUIDE.md` - *(To be created)*
+- `/docs/DESIGN_SYSTEM_GUIDE.md` - _(To be created)_
 
 ---
 

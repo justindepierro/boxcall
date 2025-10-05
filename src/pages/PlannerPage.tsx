@@ -3,6 +3,7 @@ import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import Icon from "../components/ui/Icon/Icon";
 import { PageLayout } from "../components/layout/PageLayout";
+import { Aurora } from "../components/ui/Aurora";
 
 export default function PlannerPage() {
   const navigate = useNavigate();
@@ -21,12 +22,13 @@ export default function PlannerPage() {
   const progressPercentage = (completedTasks / totalTasks) * 100;
 
   return (
-    <PageLayout
-      title="Weekly Planning Dashboard"
-      subtitle="Systematic planning tools for coaches to organize their week"
-      variant="dashboard"
-    >
-      {/* Progress Bar */}
+    <Aurora variant="minimal" fullHeight>
+      <PageLayout
+        title="Weekly Planning Dashboard"
+        subtitle="Systematic planning tools for coaches to organize their week"
+        variant="dashboard"
+      >
+        {/* Progress Bar */}
       <div className="bg-surface-primary rounded-lg p-6 shadow-sm mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-text-primary">
@@ -250,5 +252,6 @@ export default function PlannerPage() {
         </Card>
       </div>
     </PageLayout>
+    </Aurora>
   );
 }

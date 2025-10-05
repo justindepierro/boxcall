@@ -368,492 +368,497 @@ export function PracticePlanner() {
         title="Practice Schedule"
         subtitle="Plan and manage your team's practice sessions"
         variant="dashboard"
-      actions={
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/team/${teamId}`)}
-            className="text-text-secondary hover:text-text-primary"
-          >
-            ← Back to Team
-          </Button>
-          {selectedSchedule && (
-            <div className="text-sm text-text-secondary">
-              {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
-              {selectedSchedule.location}
-            </div>
-          )}
-          {practiceStarted && (
-            <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
-              <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
-              <span className="font-mono text-sm">Practice Live</span>
-            </div>
-          )}
-        </div>
-      }
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
-            <div className="mb-6">
-              <Typography variant="headline-sm" className="text-text-primary">
-                Command your practice flow
-              </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary mt-1"
-              >
-                Jump straight into blocks, timing, or logistics with a single
-                tap.
-              </Typography>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-              {heroTiles.map((tile) => (
-                <AuroraTile
-                  key={tile.key}
-                  title={tile.title}
-                  description={tile.description}
-                  icon={tile.icon}
-                  accentOverlayClass={tile.accentOverlayClass}
-                  glowClassName={tile.glowClassName}
-                  statusBadge={tile.statusBadge}
-                  iconClassName={tile.iconClassName}
-                  footnote={tile.footnote}
-                  onOpen={tile.onOpen}
+        actions={
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => navigate(`/team/${teamId}`)}
+              className="text-text-secondary hover:text-text-primary"
+            >
+              ← Back to Team
+            </Button>
+            {selectedSchedule && (
+              <div className="text-sm text-text-secondary">
+                {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
+                {selectedSchedule.location}
+              </div>
+            )}
+            {practiceStarted && (
+              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
+                <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
+                <span className="font-mono text-sm">Practice Live</span>
+              </div>
+            )}
+          </div>
+        }
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+              <div className="mb-6">
+                <Typography variant="headline-sm" className="text-text-primary">
+                  Command your practice flow
+                </Typography>
+                <Typography
+                  variant="body-sm"
+                  className="text-text-secondary mt-1"
                 >
-                  {tile.body}
-                </AuroraTile>
-              ))}
+                  Jump straight into blocks, timing, or logistics with a single
+                  tap.
+                </Typography>
+              </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+                {heroTiles.map((tile) => (
+                  <AuroraTile
+                    key={tile.key}
+                    title={tile.title}
+                    description={tile.description}
+                    icon={tile.icon}
+                    accentOverlayClass={tile.accentOverlayClass}
+                    glowClassName={tile.glowClassName}
+                    statusBadge={tile.statusBadge}
+                    iconClassName={tile.iconClassName}
+                    footnote={tile.footnote}
+                    onOpen={tile.onOpen}
+                  >
+                    {tile.body}
+                  </AuroraTile>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Practice Schedule */}
-          <div className="lg:col-span-3" id="practice-schedule-blocks">
-            <Card className="mb-6">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <Typography
-                    variant="headline-md"
-                    className="text-text-primary"
-                  >
-                    Practice Blocks
-                  </Typography>
-                  <div
-                    className="flex items-center space-x-4"
-                    id="practice-controls"
-                  >
-                    {/* PDF Export Button */}
-                    <Button
-                      onClick={() => setIsPDFExportOpen(true)}
-                      variant="secondary"
-                      className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
-                      disabled={currentBlocks.length === 0}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Main Practice Schedule */}
+            <div className="lg:col-span-3" id="practice-schedule-blocks">
+              <Card className="mb-6">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <Typography
+                      variant="headline-md"
+                      className="text-text-primary"
                     >
-                      <Icon name="pdf" size="sm" />
-                      Print Practice to PDF
-                    </Button>
-                    {/* Add/Edit Season Schedule Button - Team Owners Only */}
-                    {teamRole === "head_coach" && (
+                      Practice Blocks
+                    </Typography>
+                    <div
+                      className="flex items-center space-x-4"
+                      id="practice-controls"
+                    >
+                      {/* PDF Export Button */}
                       <Button
-                        onClick={() =>
-                          navigate(`/teams/${teamId}/season-schedule`)
-                        }
+                        onClick={() => setIsPDFExportOpen(true)}
                         variant="secondary"
                         className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
-                      >
-                        <Icon name="plus-circle" size="sm" />
-                        Add/Edit Season Schedule
-                      </Button>
-                    )}
-                    {/* Practice Controls */}
-                    {!practiceStarted ? (
-                      <Button
-                        onClick={handleStartPractice}
-                        variant="primary"
-                        className="flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
-                        <Icon
-                          name="play"
-                          size="sm"
-                          className="text-text-primary"
-                        />
-                        Start Practice
+                        <Icon name="pdf" size="sm" />
+                        Print Practice to PDF
                       </Button>
-                    ) : (
-                      <div className="flex items-center space-x-2">
+                      {/* Add/Edit Season Schedule Button - Team Owners Only */}
+                      {teamRole === "head_coach" && (
                         <Button
-                          onClick={handleStopPractice}
-                          variant="danger"
+                          onClick={() =>
+                            navigate(`/teams/${teamId}/season-schedule`)
+                          }
+                          variant="secondary"
+                          className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
+                        >
+                          <Icon name="plus-circle" size="sm" />
+                          Add/Edit Season Schedule
+                        </Button>
+                      )}
+                      {/* Practice Controls */}
+                      {!practiceStarted ? (
+                        <Button
+                          onClick={handleStartPractice}
+                          variant="primary"
                           className="flex items-center gap-2"
+                          disabled={currentBlocks.length === 0}
                         >
                           <Icon
-                            name="power"
+                            name="play"
                             size="sm"
-                            className="text-text-error"
+                            className="text-text-primary"
                           />
-                          End Practice
+                          Start Practice
                         </Button>
-                        {lockedSchedule && (
+                      ) : (
+                        <div className="flex items-center space-x-2">
                           <Button
-                            onClick={handleUnlockSchedule}
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs flex items-center gap-1"
+                            onClick={handleStopPractice}
+                            variant="danger"
+                            className="flex items-center gap-2"
                           >
-                            <Icon name="unlock" size="xs" />
-                            Unlock Schedule
+                            <Icon
+                              name="power"
+                              size="sm"
+                              className="text-text-error"
+                            />
+                            End Practice
                           </Button>
-                        )}
-                      </div>
-                    )}
+                          {lockedSchedule && (
+                            <Button
+                              onClick={handleUnlockSchedule}
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs flex items-center gap-1"
+                            >
+                              <Icon name="unlock" size="xs" />
+                              Unlock Schedule
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                {/* Practice Schedule Timeline */}
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="practice-blocks" direction="vertical">
-                    {(provided, snapshot) => (
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
-                          snapshot.isDraggingOver
-                            ? "border-jade-400 surface-subtle"
-                            : "border-subtle surface-subtle"
-                        }`}
-                      >
-                        {currentBlocks.length === 0 ? (
-                          <div className="text-center py-8">
-                            <Typography
-                              variant="body-lg"
-                              className="text-text-muted mb-4"
-                            >
-                              No practice blocks yet
-                            </Typography>
-                            <Typography
-                              variant="body-sm"
-                              className="text-text-muted"
-                            >
-                              Add blocks using the quick actions or create
-                              custom blocks
-                            </Typography>
-                          </div>
-                        ) : (
-                          currentBlocks.map((block, index) => (
-                            <Draggable
-                              key={block.id}
-                              draggableId={block.id}
-                              index={index}
-                              isDragDisabled={lockedSchedule}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  className={`surface-card border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
-                                    snapshot.isDragging
-                                      ? "shadow-lg"
-                                      : "hover:shadow-md"
-                                  } ${lockedSchedule ? "opacity-75" : ""}`}
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-4">
-                                      <div
-                                        {...provided.dragHandleProps}
-                                        className={`cursor-grab active:cursor-grabbing p-1 rounded ${
-                                          lockedSchedule
-                                            ? "cursor-not-allowed opacity-50"
-                                            : ""
-                                        }`}
-                                      >
-                                        ⋮⋮
-                                      </div>
-                                      <div className="flex-1">
-                                        <div className="flex items-center space-x-3">
-                                          <Typography
-                                            variant="body-lg"
-                                            className="font-semibold text-text-primary"
-                                          >
-                                            {block.title}
-                                          </Typography>
-                                          {block.isLocked && (
-                                            <Icon
-                                              name="lock"
-                                              size="sm"
-                                              className="text-text-warning"
-                                            />
-                                          )}
-                                          <span className="px-2 py-1 surface-subtle text-text-secondary rounded text-sm font-mono">
-                                            {block.duration}min
-                                          </span>
-                                          {practiceStarted && (
-                                            <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded text-sm font-mono">
-                                              {formatTime(
-                                                getTimeRemaining(block.endTime)
-                                              )}{" "}
-                                              left
+                  {/* Practice Schedule Timeline */}
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable
+                      droppableId="practice-blocks"
+                      direction="vertical"
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
+                            snapshot.isDraggingOver
+                              ? "border-jade-400 surface-subtle"
+                              : "border-subtle surface-subtle"
+                          }`}
+                        >
+                          {currentBlocks.length === 0 ? (
+                            <div className="text-center py-8">
+                              <Typography
+                                variant="body-lg"
+                                className="text-text-muted mb-4"
+                              >
+                                No practice blocks yet
+                              </Typography>
+                              <Typography
+                                variant="body-sm"
+                                className="text-text-muted"
+                              >
+                                Add blocks using the quick actions or create
+                                custom blocks
+                              </Typography>
+                            </div>
+                          ) : (
+                            currentBlocks.map((block, index) => (
+                              <Draggable
+                                key={block.id}
+                                draggableId={block.id}
+                                index={index}
+                                isDragDisabled={lockedSchedule}
+                              >
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    className={`surface-card border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
+                                      snapshot.isDragging
+                                        ? "shadow-lg"
+                                        : "hover:shadow-md"
+                                    } ${lockedSchedule ? "opacity-75" : ""}`}
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-4">
+                                        <div
+                                          {...provided.dragHandleProps}
+                                          className={`cursor-grab active:cursor-grabbing p-1 rounded ${
+                                            lockedSchedule
+                                              ? "cursor-not-allowed opacity-50"
+                                              : ""
+                                          }`}
+                                        >
+                                          ⋮⋮
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="flex items-center space-x-3">
+                                            <Typography
+                                              variant="body-lg"
+                                              className="font-semibold text-text-primary"
+                                            >
+                                              {block.title}
+                                            </Typography>
+                                            {block.isLocked && (
+                                              <Icon
+                                                name="lock"
+                                                size="sm"
+                                                className="text-text-warning"
+                                              />
+                                            )}
+                                            <span className="px-2 py-1 surface-subtle text-text-secondary rounded text-sm font-mono">
+                                              {block.duration}min
                                             </span>
+                                            {practiceStarted && (
+                                              <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded text-sm font-mono">
+                                                {formatTime(
+                                                  getTimeRemaining(
+                                                    block.endTime
+                                                  )
+                                                )}{" "}
+                                                left
+                                              </span>
+                                            )}
+                                          </div>
+                                          {block.description && (
+                                            <Typography
+                                              variant="body-sm"
+                                              className="text-text-secondary mt-1"
+                                            >
+                                              {block.description}
+                                            </Typography>
+                                          )}
+                                          {block.practiceScriptId && (
+                                            <div className="mt-2">
+                                              <Button
+                                                variant="brandLink"
+                                                size="sm"
+                                                className="p-0 h-auto flex items-center"
+                                              >
+                                                <Icon
+                                                  name="file"
+                                                  size="sm"
+                                                  className="mr-1"
+                                                />
+                                                Practice Script Attached
+                                              </Button>
+                                            </div>
                                           )}
                                         </div>
-                                        {block.description && (
-                                          <Typography
-                                            variant="body-sm"
-                                            className="text-text-secondary mt-1"
-                                          >
-                                            {block.description}
-                                          </Typography>
-                                        )}
-                                        {block.practiceScriptId && (
-                                          <div className="mt-2">
-                                            <Button
-                                              variant="brandLink"
-                                              size="sm"
-                                              className="p-0 h-auto flex items-center"
-                                            >
-                                              <Icon
-                                                name="file"
-                                                size="sm"
-                                                className="mr-1"
-                                              />
-                                              Practice Script Attached
-                                            </Button>
-                                          </div>
-                                        )}
+                                      </div>
+                                      <div className="flex items-center space-x-2">
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => {
+                                            // Open edit modal
+                                          }}
+                                          disabled={lockedSchedule}
+                                        >
+                                          <Icon name="edit" size="sm" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() =>
+                                            handleDeleteBlock(block.id)
+                                          }
+                                          disabled={lockedSchedule}
+                                          className="text-text-error hover:text-text-error hover:surface-subtle"
+                                        >
+                                          <Icon name="delete" size="sm" />
+                                        </Button>
                                       </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => {
-                                          // Open edit modal
-                                        }}
-                                        disabled={lockedSchedule}
-                                      >
-                                        <Icon name="edit" size="sm" />
-                                      </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() =>
-                                          handleDeleteBlock(block.id)
-                                        }
-                                        disabled={lockedSchedule}
-                                        className="text-text-error hover:text-text-error hover:surface-subtle"
-                                      >
-                                        <Icon name="delete" size="sm" />
-                                      </Button>
-                                    </div>
                                   </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))
-                        )}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
-            </Card>
-          </div>
-          {/* Sidebar - Quick Actions */}
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {/* Quick Time Intervals */}
-              <Card>
-                <div className="p-4">
-                  <Typography
-                    variant="headline-sm"
-                    className="text-text-primary mb-4"
-                  >
-                    Quick Add Blocks
-                  </Typography>
-                  <div className="space-y-3">
-                    {Object.entries(PRACTICE_BLOCK_TYPES).map(
-                      ([key, config]) => (
-                        <div key={key} className="space-y-2">
-                          <Typography
-                            variant="body-sm"
-                            className="font-medium text-text-secondary"
-                          >
-                            {config.title}
-                          </Typography>
-                          <div className="flex flex-wrap gap-1">
-                            {Object.values(QUICK_TIME_INTERVALS).map(
-                              (interval) => (
-                                <Button
-                                  key={interval.duration}
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    handleQuickAddBlock(
-                                      key as keyof typeof PRACTICE_BLOCK_TYPES,
-                                      interval.duration
-                                    )
-                                  }
-                                  disabled={lockedSchedule}
-                                  className="text-xs"
-                                >
-                                  {interval.label}
-                                </Button>
-                              )
-                            )}
-                          </div>
+                                )}
+                              </Draggable>
+                            ))
+                          )}
+                          {provided.placeholder}
                         </div>
-                      )
-                    )}
-                  </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 </div>
               </Card>
-              {/* Custom Block */}
-              <Card>
-                <div className="p-4">
-                  <Typography
-                    variant="headline-sm"
-                    className="text-text-primary mb-4"
-                  >
-                    Custom Block
-                  </Typography>
-                  <Button
-                    onClick={() => setIsCreateBlockModalOpen(true)}
-                    variant="primary"
-                    className="w-full"
-                    disabled={lockedSchedule}
-                  >
-                    + Create Custom Block
-                  </Button>
-                </div>
-              </Card>
-              {/* Templates */}
-              <Card>
-                <div className="p-4">
-                  <Typography
-                    variant="headline-sm"
-                    className="text-text-primary mb-4"
-                  >
-                    Practice Templates
-                  </Typography>
-                  <div className="space-y-2">
-                    {templates.slice(0, 3).map((template) => (
-                      <Button
-                        key={template.id}
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-left"
-                        disabled={lockedSchedule}
-                      >
-                        <Icon name="file" size="sm" className="mr-2" />
-                        {template.name}
-                      </Button>
-                    ))}
-                    <Button
-                      variant="brandLink"
-                      size="sm"
-                      onClick={() => setIsTemplateModalOpen(true)}
-                      className="w-full"
-                    >
-                      View All Templates →
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-              {/* Practice Info */}
-              {selectedSchedule && (
-                <Card id="practice-schedule-summary">
+            </div>
+            {/* Sidebar - Quick Actions */}
+            <div className="lg:col-span-1">
+              <div className="space-y-6">
+                {/* Quick Time Intervals */}
+                <Card>
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"
                       className="text-text-primary mb-4"
                     >
-                      Practice Info
+                      Quick Add Blocks
                     </Typography>
-                    <div className="space-y-3 text-sm">
-                      <div>
-                        <span className="font-medium text-text-secondary">
-                          Date:
-                        </span>
-                        <span className="ml-2">
-                          {format(selectedSchedule.date, "MMM d, yyyy")}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-text-secondary">
-                          Time:
-                        </span>
-                        <span className="ml-2">
-                          {format(selectedSchedule.startTime, "h:mm a")} -{" "}
-                          {format(selectedSchedule.endTime, "h:mm a")}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-text-secondary">
-                          Location:
-                        </span>
-                        <span className="ml-2">
-                          {selectedSchedule.location}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-text-secondary">
-                          Field:
-                        </span>
-                        <span className="ml-2 capitalize">
-                          {selectedSchedule.fieldType}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-text-secondary">
-                          Total Duration:
-                        </span>
-                        <span className="ml-2 font-mono">
-                          {currentBlocks.reduce(
-                            (total, block) => total + block.duration,
-                            0
-                          )}{" "}
-                          min
-                        </span>
-                      </div>
+                    <div className="space-y-3">
+                      {Object.entries(PRACTICE_BLOCK_TYPES).map(
+                        ([key, config]) => (
+                          <div key={key} className="space-y-2">
+                            <Typography
+                              variant="body-sm"
+                              className="font-medium text-text-secondary"
+                            >
+                              {config.title}
+                            </Typography>
+                            <div className="flex flex-wrap gap-1">
+                              {Object.values(QUICK_TIME_INTERVALS).map(
+                                (interval) => (
+                                  <Button
+                                    key={interval.duration}
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      handleQuickAddBlock(
+                                        key as keyof typeof PRACTICE_BLOCK_TYPES,
+                                        interval.duration
+                                      )
+                                    }
+                                    disabled={lockedSchedule}
+                                    className="text-xs"
+                                  >
+                                    {interval.label}
+                                  </Button>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 </Card>
-              )}
+                {/* Custom Block */}
+                <Card>
+                  <div className="p-4">
+                    <Typography
+                      variant="headline-sm"
+                      className="text-text-primary mb-4"
+                    >
+                      Custom Block
+                    </Typography>
+                    <Button
+                      onClick={() => setIsCreateBlockModalOpen(true)}
+                      variant="primary"
+                      className="w-full"
+                      disabled={lockedSchedule}
+                    >
+                      + Create Custom Block
+                    </Button>
+                  </div>
+                </Card>
+                {/* Templates */}
+                <Card>
+                  <div className="p-4">
+                    <Typography
+                      variant="headline-sm"
+                      className="text-text-primary mb-4"
+                    >
+                      Practice Templates
+                    </Typography>
+                    <div className="space-y-2">
+                      {templates.slice(0, 3).map((template) => (
+                        <Button
+                          key={template.id}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-left"
+                          disabled={lockedSchedule}
+                        >
+                          <Icon name="file" size="sm" className="mr-2" />
+                          {template.name}
+                        </Button>
+                      ))}
+                      <Button
+                        variant="brandLink"
+                        size="sm"
+                        onClick={() => setIsTemplateModalOpen(true)}
+                        className="w-full"
+                      >
+                        View All Templates →
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+                {/* Practice Info */}
+                {selectedSchedule && (
+                  <Card id="practice-schedule-summary">
+                    <div className="p-4">
+                      <Typography
+                        variant="headline-sm"
+                        className="text-text-primary mb-4"
+                      >
+                        Practice Info
+                      </Typography>
+                      <div className="space-y-3 text-sm">
+                        <div>
+                          <span className="font-medium text-text-secondary">
+                            Date:
+                          </span>
+                          <span className="ml-2">
+                            {format(selectedSchedule.date, "MMM d, yyyy")}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-text-secondary">
+                            Time:
+                          </span>
+                          <span className="ml-2">
+                            {format(selectedSchedule.startTime, "h:mm a")} -{" "}
+                            {format(selectedSchedule.endTime, "h:mm a")}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-text-secondary">
+                            Location:
+                          </span>
+                          <span className="ml-2">
+                            {selectedSchedule.location}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-text-secondary">
+                            Field:
+                          </span>
+                          <span className="ml-2 capitalize">
+                            {selectedSchedule.fieldType}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-text-secondary">
+                            Total Duration:
+                          </span>
+                          <span className="ml-2 font-mono">
+                            {currentBlocks.reduce(
+                              (total, block) => total + block.duration,
+                              0
+                            )}{" "}
+                            min
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* Create Block Modal */}
-      <CreateBlockModal
-        isOpen={isCreateBlockModalOpen}
-        onClose={() => setIsCreateBlockModalOpen(false)}
-        onSave={async (blockData) => {
-          await handleQuickAddBlock("CUSTOM", blockData.duration);
-          setIsCreateBlockModalOpen(false);
-        }}
-      />
-      {/* Templates Modal */}
-      <TemplatesModal
-        isOpen={isTemplateModalOpen}
-        onClose={() => setIsTemplateModalOpen(false)}
-        templates={templates}
-        onSelectTemplate={async () => {
-          // Handle template selection
-          setIsTemplateModalOpen(false);
-        }}
-      />
-      {/* PDF Export with Lazy Loading */}
-      {selectedSchedule && (
-        <PDFExportTrigger
-          isOpen={isPDFExportOpen}
-          onClose={() => setIsPDFExportOpen(false)}
-          practiceData={preparePracticeDataForPDF() || {}}
-          triggerElement={null} // Programmatically controlled
+        {/* Create Block Modal */}
+        <CreateBlockModal
+          isOpen={isCreateBlockModalOpen}
+          onClose={() => setIsCreateBlockModalOpen(false)}
+          onSave={async (blockData) => {
+            await handleQuickAddBlock("CUSTOM", blockData.duration);
+            setIsCreateBlockModalOpen(false);
+          }}
         />
-      )}
-    </PageLayout>
+        {/* Templates Modal */}
+        <TemplatesModal
+          isOpen={isTemplateModalOpen}
+          onClose={() => setIsTemplateModalOpen(false)}
+          templates={templates}
+          onSelectTemplate={async () => {
+            // Handle template selection
+            setIsTemplateModalOpen(false);
+          }}
+        />
+        {/* PDF Export with Lazy Loading */}
+        {selectedSchedule && (
+          <PDFExportTrigger
+            isOpen={isPDFExportOpen}
+            onClose={() => setIsPDFExportOpen(false)}
+            practiceData={preparePracticeDataForPDF() || {}}
+            triggerElement={null} // Programmatically controlled
+          />
+        )}
+      </PageLayout>
     </Aurora>
   );
 }

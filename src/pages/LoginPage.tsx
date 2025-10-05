@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import { ProgressiveAuthFlow } from "../components/ui/Auth/ProgressiveAuthFlow";
 import { PageLayout } from "../components/layout/PageLayout";
+import { Aurora } from "../components/ui/Aurora";
 import { ROUTES } from "../routes/paths";
 import { useAuth } from "../app/auth-store";
 import { getLoginDestination } from "../utils/navigationUtils";
@@ -48,9 +49,11 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <PageLayout>
-      <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />
-    </PageLayout>
+    <Aurora variant="minimal" fullHeight>
+      <PageLayout>
+        <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />
+      </PageLayout>
+    </Aurora>
   );
 };
 

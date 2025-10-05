@@ -6,6 +6,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Button } from "../components/ui/Button/Button";
 import { Typography } from "../components/design-system/Typography";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Aurora } from "../components/ui/Aurora";
 import {
   EnhancedInput,
   EnhancedSelect,
@@ -614,13 +615,15 @@ export const CreateTeam: React.FC = () => {
 
   if (!user) {
     return (
-      <PageLayout title="Create Team">
-        <div className="text-center">
-          <Typography variant="body-lg">
-            Please log in to create a team.
-          </Typography>
-        </div>
-      </PageLayout>
+      <Aurora variant="shell" fullHeight>
+        <PageLayout title="Create Team">
+          <div className="text-center">
+            <Typography variant="body-lg">
+              Please log in to create a team.
+            </Typography>
+          </div>
+        </PageLayout>
+      </Aurora>
     );
   }
 
@@ -634,8 +637,9 @@ export const CreateTeam: React.FC = () => {
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <PageLayout title="Create Team">
-      <div className="max-w-2xl mx-auto">
+    <Aurora variant="shell" fullHeight>
+      <PageLayout title="Create Team">
+        <div className="max-w-2xl mx-auto">
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -730,5 +734,6 @@ export const CreateTeam: React.FC = () => {
         )}
       </div>
     </PageLayout>
+    </Aurora>
   );
 };
