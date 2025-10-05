@@ -3,6 +3,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
+import { Aurora } from "../components/ui/Aurora";
 import { rosterService } from "../services";
 import type {
   RosterPlayerView,
@@ -340,26 +341,29 @@ export default function RosterPage() {
 
   if (loading) {
     return (
-      <PageLayout title="Roster" subtitle="Loading team roster...">
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-32 bg-gray-200 rounded"></div>
-              </Card>
-            ))}
+      <Aurora variant="shell" fullHeight>
+        <PageLayout title="Roster" subtitle="Loading team roster...">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <div className="h-32 bg-gray-200 rounded"></div>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </PageLayout>
+        </PageLayout>
+      </Aurora>
     );
   }
 
   return (
-    <PageLayout
-      title="Team Roster"
-      subtitle={`${players.length} players • Manage your team's roster and player information`}
-    >
-      <div className="space-y-6">
+    <Aurora variant="shell" fullHeight>
+      <PageLayout
+        title="Team Roster"
+        subtitle={`${players.length} players • Manage your team's roster and player information`}
+      >
+        <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -970,5 +974,6 @@ export default function RosterPage() {
         />
       </div>
     </PageLayout>
+    </Aurora>
   );
 }

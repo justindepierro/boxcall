@@ -28,6 +28,7 @@ import type { DiagramDocument } from "../components/playbook/diagram/types/types
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { GlassCard } from "../components/ui/GlassCard";
+import { Aurora } from "../components/ui/Aurora";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
 
@@ -467,9 +468,10 @@ export default function PlaybookPage() {
   }, []);
 
   return (
-    <PageLayout variant="dashboard">
-      {/* Unified Header with Navigation */}
-      <PlaybookViewTabs
+    <Aurora variant="field" fullHeight>
+      <PageLayout variant="dashboard">
+        {/* Unified Header with Navigation */}
+        <PlaybookViewTabs
         currentView={state.currentView}
         onViewChange={handleViewChange}
         currentTeamType={state.currentTeamType}
@@ -823,5 +825,6 @@ export default function PlaybookPage() {
         />
       </Suspense>
     </PageLayout>
+    </Aurora>
   );
 }

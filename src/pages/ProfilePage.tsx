@@ -8,6 +8,7 @@ import { supabase } from "../lib/supabase";
 import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
+import { Aurora } from "../components/ui/Aurora";
 import {
   Camera,
   User,
@@ -424,13 +425,14 @@ export const ProfilePage: React.FC = () => {
     );
   }
   return (
-    <PageLayout
-      title="My Profile"
-      subtitle="Manage your account information and preferences"
-      variant="form"
-    >
-      {/* Message Display */}
-      {message && (
+    <Aurora variant="shell" fullHeight>
+      <PageLayout
+        title="My Profile"
+        subtitle="Manage your account information and preferences"
+        variant="form"
+      >
+        {/* Message Display */}
+        {message && (
         <div
           className={`mb-6 p-4 rounded-lg border ${
             message.type === "success"
@@ -1366,5 +1368,6 @@ export const ProfilePage: React.FC = () => {
         </div>
       </div>
     </PageLayout>
+    </Aurora>
   );
 };
