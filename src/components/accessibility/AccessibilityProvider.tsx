@@ -18,6 +18,7 @@ import {
   AccessibilityContext,
   type AccessibilityContextType,
 } from "../../hooks/useAccessibilityContext";
+import { colorTokens } from "../../design-system/tokens";
 
 interface AccessibilityProviderProps {
   children: ReactNode;
@@ -93,7 +94,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     style.textContent = `
       /* Focus indicators */
       .keyboard-navigation *:focus {
-        outline: var(--a11y-focus-width) solid #0066cc;
+        outline: var(--a11y-focus-width) solid ${colorTokens.blue[600]};
         outline-offset: 2px;
       }
       
@@ -179,14 +180,14 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       
       /* Error states */
       .a11y-enabled [aria-invalid="true"] {
-        border-color: #d32f2f;
-        background-color: #ffebee;
+        border-color: ${colorTokens.red[700]};
+        background-color: ${colorTokens.red[50]};
       }
       
       /* Required field indicators */
       .a11y-enabled [aria-required="true"]::after {
         content: " *";
-        color: #d32f2f;
+        color: ${colorTokens.red[700]};
         font-weight: bold;
       }
     `;
@@ -239,7 +240,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
             position: "fixed",
             bottom: 0,
             right: 0,
-            background: "#ff5722",
+            background: colorTokens.red[600],
             color: "white",
             padding: "8px",
             zIndex: 10000,
