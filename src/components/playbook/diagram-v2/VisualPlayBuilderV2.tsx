@@ -95,7 +95,7 @@ const Shell: React.FC<ShellProps> = ({
         const dataUrl = await svgFullToPngDataUrl(svg, {
           width: 800,
           height: 450,
-          background: "colorTokens.navy[950]",
+          background: colorTokens.navy[900],
           type: "image/png",
           quality: 0.92,
         });

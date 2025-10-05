@@ -20,7 +20,7 @@ interface CoordinateHook {
 }
 
 interface UseFieldCoordinatesProps {
-  svgRef: RefObject<SVGSVGElement>;
+  svgRef: RefObject<SVGSVGElement | null>;
   panX: number;
   panY: number;
   zoom: number;

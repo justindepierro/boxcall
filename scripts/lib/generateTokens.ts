@@ -55,8 +55,18 @@ interface TypographyDef {
   [k: string]: unknown;
 }
 
+const HEADER_LINES = [
+  "/**",
+  " * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY",
+  " *",
+  " * This file is generated from src/design-system/tokens.ts",
+  " * Run: npm run tokens:generate",
+  " */",
+  "",
+];
+
 export function generateTokensCSS(): string {
-  const lines: string[] = [":root {"];
+  const lines: string[] = [...HEADER_LINES, ":root {"];
   emitObj("color", colorTokens as Record<string, unknown>, lines);
   emitObj("semantic", semanticTokens as Record<string, unknown>, lines);
   const typo = typographyTokens as unknown as TypographyDef;

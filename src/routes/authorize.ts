@@ -4,6 +4,7 @@ import type {
   AppUserType,
   TeamRole as PermissionTeamRole,
   Permission,
+  SubscriptionTier,
 } from "../types/permissions";
 import { canAccessTeamFeature, hasPermission } from "../types/permissions";
 import type { AppRole, TeamRole } from "../types/roles";
@@ -158,6 +159,29 @@ export async function fetchTeamMembership(
   };
 }
 
+const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
+  "free",
+  "coach_tools",
+  "team_premium",
+  "staff_addon",
+];
+
+function normalizeSubscriptionTier(value: unknown): SubscriptionTier {
+  if (typeof value === "string" && SUBSCRIPTION_TIERS.includes(value as SubscriptionTier)) {
+    return value as SubscriptionTier;
+  }
+  return "free";
+}
+
+async function fetchTeamSubscriptionTier(teamId: string): Promise<SubscriptionTier> {
+  const { data } = await supabase
+    .from("teams")
+    .select("subscription_tier")
+    .eq("id", teamId)
+    .single();
+  return normalizeSubscriptionTier(data?.subscription_tier);
+}
+
 // Super admin check helper (developer/admin panel access)
 export async function fetchSuperAdminStatus(
   userId: string,
@@ -295,12 +319,21 @@ async function checkTeamRequirements({
 
   // Check subscription requirements
   // Check permission/feature requirements
+  const needsPermissionChecks = Boolean(
+    (requiredPermissions && requiredPermissions.length > 0) || teamFeature
+  );
+
+  const subscriptionTier = needsPermissionChecks
+    ? await fetchTeamSubscriptionTier(teamId)
+    : ("free" as SubscriptionTier);
+
   const permissionResult = checkPermissionRequirements({
     profile,
     isSuperAdmin,
     membership,
     requiredPermissions,
     teamFeature,
+    subscriptionTier,
   });
 
   if (!permissionResult.allowed) {
@@ -319,43 +352,51 @@ function checkPermissionRequirements({
   membership,
   requiredPermissions,
   teamFeature,
+  subscriptionTier = "free",
 }: {
   profile: { role?: AppRole | null };
   isSuperAdmin: boolean;
   membership?: Awaited<ReturnType<typeof fetchTeamMembership>>;
   requiredPermissions?: Permission[];
   teamFeature?: "management" | "dashboard" | "playbooks" | "family_view";
+  subscriptionTier?: SubscriptionTier;
 }): { allowed: boolean; reason?: DenyReason } {
-  const hasPermissionChecks = (requiredPermissions && requiredPermissions.length > 0) || teamFeature;
+  const hasPermissionChecks =
+    (requiredPermissions && requiredPermissions.length > 0) || teamFeature;
 
   if (!hasPermissionChecks) {
     return { allowed: true };
   }
 
-  // Convert AppRole to AppUserType for legacy permissions system
-  // TODO: Replace this mapping when permissions system is updated to use AppRole directly
-  const roleToAppUserType = (role: AppRole | null): AppUserType => {
-    if (!role) return "player";
-    switch (role) {
-      case "super_admin": return "super_admin";
-      case "admin": return "admin";
-      case "coach": return "coach";
-      case "player": return "player";
-      case "family": return "family";
-      default: return "player";
-    }
-  };
-
-  const appUserType: AppUserType = isSuperAdmin
-    ? "super_admin"
-    : roleToAppUserType(profile.role ?? null);
   const teamRole: PermissionTeamRole | undefined =
     (membership?.role as unknown as PermissionTeamRole) || undefined;
-  const subscriptionTier: "free" = "free";
+  const tier: SubscriptionTier = subscriptionTier;
+  const appUserType: AppUserType = (() => {
+    if (isSuperAdmin) return "super_admin";
+    const globalRole = profile.role ?? null;
+    switch (globalRole) {
+      case "super_admin":
+        return "super_admin";
+      case "admin":
+        return "admin";
+      case "coach": {
+        if (teamRole === "head_coach" && tier === "team_premium") {
+          return "head_coach";
+        }
+        return "coach";
+      }
+      case "player":
+        return "player";
+      case "family":
+        return "family";
+      default:
+        return "player";
+    }
+  })();
 
   // Check team feature access
   if (teamFeature) {
-    const ok = canAccessTeamFeature(appUserType, teamRole, subscriptionTier, teamFeature);
+    const ok = canAccessTeamFeature(appUserType, teamRole, tier, teamFeature);
     if (!ok) {
       return { allowed: false, reason: "permission_denied" };
     }
@@ -364,7 +405,7 @@ function checkPermissionRequirements({
   // Check granular permissions
   if (requiredPermissions && requiredPermissions.length > 0) {
     const ok = requiredPermissions.every((perm) =>
-      hasPermission(appUserType, teamRole, subscriptionTier, perm)
+      hasPermission(appUserType, teamRole, tier, perm)
     );
     if (!ok) {
       return { allowed: false, reason: "permission_denied" };

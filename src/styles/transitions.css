@@ -45,7 +45,9 @@
  * - Smooth color transitions
  */
 .card-hover-effect {
-  transition: transform 200ms ease-in-out, box-shadow 200ms ease-in-out;
+  transition:
+    transform 200ms ease-in-out,
+    box-shadow 200ms ease-in-out;
 }
 
 .card-hover-effect:hover {
@@ -59,7 +61,10 @@
  * - Shadow enhancement
  */
 .button-hover-effect {
-  transition: transform 150ms ease-in-out, box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+  transition:
+    transform 150ms ease-in-out,
+    box-shadow 150ms ease-in-out,
+    background-color 150ms ease-in-out;
 }
 
 .button-hover-effect:hover {
@@ -75,7 +80,9 @@
  * - Subtle rotation or scale
  */
 .icon-hover {
-  transition: transform 200ms ease-in-out, color 200ms ease-in-out;
+  transition:
+    transform 200ms ease-in-out,
+    color 200ms ease-in-out;
 }
 
 .icon-hover:hover {
@@ -90,7 +97,8 @@
  * Pulse animation for loading states
  */
 @keyframes pulse-gentle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -191,7 +199,9 @@
  * - Smooth transition
  */
 .focus-ring-enhanced {
-  transition: box-shadow 200ms ease-in-out, outline 200ms ease-in-out;
+  transition:
+    box-shadow 200ms ease-in-out,
+    outline 200ms ease-in-out;
 }
 
 .focus-ring-enhanced:focus {
@@ -213,7 +223,8 @@
  * Badge pulse (for notifications, new items)
  */
 @keyframes badge-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -252,13 +263,21 @@
  * Error shake animation
  */
 @keyframes error-shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
-  10%, 30%, 50%, 70%, 90% {
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-4px);
   }
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(4px);
   }
 }
@@ -279,14 +298,30 @@
   animation: slideUp 300ms ease-out;
 }
 
-.list-item-enter:nth-child(1) { animation-delay: 0ms; }
-.list-item-enter:nth-child(2) { animation-delay: 50ms; }
-.list-item-enter:nth-child(3) { animation-delay: 100ms; }
-.list-item-enter:nth-child(4) { animation-delay: 150ms; }
-.list-item-enter:nth-child(5) { animation-delay: 200ms; }
-.list-item-enter:nth-child(6) { animation-delay: 250ms; }
-.list-item-enter:nth-child(7) { animation-delay: 300ms; }
-.list-item-enter:nth-child(8) { animation-delay: 350ms; }
+.list-item-enter:nth-child(1) {
+  animation-delay: 0ms;
+}
+.list-item-enter:nth-child(2) {
+  animation-delay: 50ms;
+}
+.list-item-enter:nth-child(3) {
+  animation-delay: 100ms;
+}
+.list-item-enter:nth-child(4) {
+  animation-delay: 150ms;
+}
+.list-item-enter:nth-child(5) {
+  animation-delay: 200ms;
+}
+.list-item-enter:nth-child(6) {
+  animation-delay: 250ms;
+}
+.list-item-enter:nth-child(7) {
+  animation-delay: 300ms;
+}
+.list-item-enter:nth-child(8) {
+  animation-delay: 350ms;
+}
 
 /* ============================================================================
    GLASSMORPHISM ENHANCEMENTS
@@ -296,7 +331,9 @@
  * Glass card with smooth backdrop filter transition
  */
 .glass-transition {
-  transition: backdrop-filter 300ms ease-in-out, background-color 300ms ease-in-out;
+  transition:
+    backdrop-filter 300ms ease-in-out,
+    background-color 300ms ease-in-out;
 }
 
 .glass-transition:hover {

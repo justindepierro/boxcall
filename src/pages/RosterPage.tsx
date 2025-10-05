@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
+import { EmptyState } from "../components/ui/EmptyState";
+import { Skeleton } from "../components/ui/Skeleton";
+import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Aurora } from "../components/ui/Aurora";
@@ -26,6 +30,8 @@ import { RosterImportModal } from "../components/roster/RosterImportModal";
  * - Coach role management
  */
 export default function RosterPage() {
+  const navigate = useNavigate();
+
   // State
   const [players, setPlayers] = useState<RosterPlayerView[]>([]);
   const [loading, setLoading] = useState(true);
@@ -363,6 +369,19 @@ export default function RosterPage() {
         title="Team Roster"
         subtitle={`${players.length} players • Manage your team's roster and player information`}
       >
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            {
+              id: "dashboard",
+              label: "Dashboard",
+              onClick: () => navigate("/dashboard"),
+            },
+            { id: "roster", label: "Roster", current: true },
+          ]}
+          className="mb-4"
+        />
+
         <div className="space-y-spacing-lg">
           {/* Header Actions */}
           <div className="flex flex-col sm:flex-row gap-spacing-md justify-between items-start sm:items-center">
@@ -482,119 +501,143 @@ export default function RosterPage() {
             </Card>
           </div>
 
+          {/* Loading State */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="p-spacing-md">
+                  <div className="flex items-start gap-spacing-sm mb-spacing-sm">
+                    <Skeleton className="w-12 h-12 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-6 w-32" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-20 w-full" />
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && filteredPlayers.length === 0 && players.length === 0 && (
+            <EmptyState
+              icon="users"
+              title="No players yet"
+              description="Get started by adding your first player to the roster"
+              primaryAction={{
+                label: "Add First Player",
+                onClick: () => setShowAddModal(true),
+                icon: "plus",
+              }}
+            />
+          )}
+
+          {/* No Results State */}
+          {!loading && filteredPlayers.length === 0 && players.length > 0 && (
+            <EmptyState
+              icon="search"
+              title="No players found"
+              description="Try adjusting your search or filters"
+              primaryAction={{
+                label: "Clear Filters",
+                onClick: () => {
+                  setSearchTerm("");
+                  setPositionFilter("");
+                  setStatusFilter("");
+                },
+              }}
+            />
+          )}
+
           {/* Player Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-            {filteredPlayers.map((player) => (
-              <Card
-                key={player.id}
-                className="p-spacing-md hover:shadow-lg transition-shadow"
-              >
-                <div className="flex items-start justify-between mb-spacing-sm">
-                  <div className="flex items-center gap-spacing-sm">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                      <Typography
-                        variant="headline-sm"
-                        className="text-primary font-bold"
-                      >
-                        {player.jersey_number || "?"}
-                      </Typography>
+          {!loading && filteredPlayers.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+              {filteredPlayers.map((player) => (
+                <Card
+                  key={player.id}
+                  className="p-spacing-md hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-spacing-sm">
+                    <div className="flex items-center gap-spacing-sm">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Typography
+                          variant="headline-sm"
+                          className="text-primary font-bold"
+                        >
+                          {player.jersey_number || "?"}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography
+                          variant="headline-sm"
+                          className="font-semibold"
+                        >
+                          {player.first_name} {player.last_name}
+                        </Typography>
+                        <Typography variant="body-sm" color="muted">
+                          {player.position || "No position"}
+                        </Typography>
+                      </div>
                     </div>
-                    <div>
-                      <Typography
-                        variant="headline-sm"
-                        className="font-semibold"
+                    <div className="flex gap-spacing-xs">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEditModal(player)}
                       >
-                        {player.first_name} {player.last_name}
-                      </Typography>
-                      <Typography variant="body-sm" color="muted">
-                        {player.position || "No position"}
-                      </Typography>
+                        <Icon name="edit" className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeletePlayer(player.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Icon name="delete" className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex gap-spacing-xs">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => openEditModal(player)}
-                    >
-                      <Icon name="edit" className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDeletePlayer(player.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <Icon name="delete" className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
 
-                <div className="space-y-spacing-xs text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-text-secondary">Class:</span>
-                    <span className="capitalize">
-                      {player.grade_level || "Not set"}
-                    </span>
+                  <div className="space-y-spacing-xs text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Class:</span>
+                      <span className="capitalize">
+                        {player.grade_level || "Not set"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Height:</span>
+                      <span>
+                        {player.height_inches
+                          ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"`
+                          : "Not set"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Weight:</span>
+                      <span>
+                        {player.weight_lbs
+                          ? `${player.weight_lbs} lbs`
+                          : "Not set"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Status:</span>
+                      <span
+                        className={`capitalize px-spacing-xs py-spacing-xs rounded text-xs ${
+                          player.is_active
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {player.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-text-secondary">Height:</span>
-                    <span>
-                      {player.height_inches
-                        ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"`
-                        : "Not set"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-text-secondary">Weight:</span>
-                    <span>
-                      {player.weight_lbs
-                        ? `${player.weight_lbs} lbs`
-                        : "Not set"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-text-secondary">Status:</span>
-                    <span
-                      className={`capitalize px-spacing-xs py-spacing-xs rounded text-xs ${
-                        player.is_active
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {player.is_active ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          {filteredPlayers.length === 0 && (
-            <Card className="p-spacing-xl text-center">
-              <Icon
-                name="users"
-                className="w-12 h-12 text-gray-400 mx-auto mb-spacing-md"
-              />
-              <Typography variant="headline-md" className="mb-spacing-xs">
-                No players found
-              </Typography>
-              <Typography
-                variant="body-lg"
-                color="muted"
-                className="mb-spacing-md"
-              >
-                {searchTerm || positionFilter || statusFilter
-                  ? "Try adjusting your search or filters"
-                  : "Get started by adding your first player"}
-              </Typography>
-              {!searchTerm && !positionFilter && !statusFilter && (
-                <Button onClick={() => setShowAddModal(true)}>
-                  <Icon name="plus" className="w-4 h-4 mr-spacing-xs" />
-                  Add First Player
-                </Button>
-              )}
-            </Card>
+                </Card>
+              ))}
+            </div>
           )}
 
           {/* Add Player Modal */}

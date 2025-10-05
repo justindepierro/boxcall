@@ -15,168 +15,160 @@ import type {
 // Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "text-text-inverse bg-[var(--semantic-primary)] transition-colors duration-200",
-    hover: "hover:bg-[var(--semantic-primary-hover)]",
-    active: "active:bg-[var(--semantic-primary-active)]",
+    base: "text-text-inverse bg-brand-primary transition-colors duration-200",
+    hover: "hover:bg-brand-hover",
+    active: "active:bg-brand-active",
     disabled:
-      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   secondary: {
-    base: "text-text-primary bg-[var(--semantic-bg-secondary)] transition-colors duration-200",
-    hover: "hover:bg-[var(--semantic-bg-muted)]",
-    active: "active:bg-[color:var(--color-gray-200)]",
+    base: "text-text-primary bg-surface-secondary transition-colors duration-200",
+    hover: "hover:bg-surface-muted",
+    active: "active:bg-surface-base",
     disabled:
-      "disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   outline: {
-    base: "text-[var(--semantic-primary)] border border-[var(--semantic-primary)] bg-transparent transition-colors duration-200",
-    hover: "hover:bg-[var(--semantic-primary)] hover:text-text-inverse",
+    base: "text-brand-primary border border-brand-primary bg-transparent transition-colors duration-200",
+    hover: "hover:bg-brand-primary hover:text-text-inverse",
     active:
-      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)] active:text-text-inverse",
+      "active:bg-brand-active active:border-brand-active active:text-text-inverse",
     disabled:
-      "disabled:text-text-muted disabled:border-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:text-text-muted disabled:border-border disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   gradient: {
-    base: "text-surface-primary bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
+    base: "text-text-inverse bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
     hover: "hover:from-electric-500 hover:to-electric-600",
     active: "active:from-electric-700 active:to-electric-800",
     disabled:
-      "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-electric-500 focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-electric-500 focus-visible:ring-offset-2",
   },
   glass: {
-    base: "bg-surface-primary/10 backdrop-blur-md text-surface-primary transition-colors duration-200",
-    hover: "hover:bg-surface-primary/20",
-    active: "active:bg-surface-primary/30",
+    base: "bg-surface-base/10 backdrop-blur-md text-text-primary transition-colors duration-200",
+    hover: "hover:bg-surface-base/20",
+    active: "active:bg-surface-base/30",
     disabled:
-      "disabled:bg-surface-primary/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:bg-surface-base/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-surface-primary focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   ghost: {
-    base: "text-[var(--semantic-text-primary)] bg-transparent transition-colors duration-200",
-    hover: "hover:bg-[var(--semantic-bg-muted)]",
-    active: "active:bg-[color:var(--color-gray-200)]",
+    base: "text-text-primary bg-transparent transition-colors duration-200",
+    hover: "hover:bg-surface-muted",
+    active: "active:bg-surface-base",
     disabled:
-      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   subtle: {
-    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] transition-colors duration-200",
-    hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
-    active:
-      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
+    base: "bg-surface-secondary text-text-secondary transition-colors duration-200",
+    hover: "hover:bg-surface-muted hover:text-text-primary",
+    active: "active:bg-surface-base active:text-text-primary",
     disabled:
-      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed disabled:opacity-50",
+      "disabled:bg-surface-secondary disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus:
-      "focus:outline-none focus:ring-2 focus:ring-[var(--semantic-primary)] focus:ring-offset-2",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   link: {
-    base: "text-[var(--semantic-primary-hover)] p-0 h-auto",
-    hover: "hover:text-[var(--semantic-primary-active)] hover:underline",
-    active: "active:text-[var(--semantic-primary-active)]",
-    disabled:
-      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    base: "text-brand-hover p-0 h-auto",
+    hover: "hover:text-brand-active hover:underline",
+    active: "active:text-brand-active",
+    disabled: "disabled:text-brand-primary/40 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
-  // Brand link style with slightly stronger weight (used where prior inline text-jade-* overrides existed)
   brandLink: {
-    base: "text-[var(--semantic-primary-active)] p-0 h-auto font-medium",
-    hover: "hover:text-[color:var(--color-jade-800)] hover:underline",
-    active: "active:text-[color:var(--color-jade-800)]",
-    disabled:
-      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    base: "text-brand-active p-0 h-auto font-medium",
+    hover: "hover:text-brand-hover hover:underline",
+    active: "active:text-brand-hover",
+    disabled: "disabled:text-brand-primary/40 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   neutralLink: {
-    base: "text-[var(--semantic-text-secondary)] p-0 h-auto",
-    hover: "hover:text-[var(--semantic-text-primary)] hover:underline",
-    active: "active:text-[var(--semantic-text-primary)]",
-    disabled:
-      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    base: "text-text-secondary p-0 h-auto",
+    hover: "hover:text-text-primary hover:underline",
+    active: "active:text-text-primary",
+    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   infoLink: {
-    base: "text-[color:var(--color-navy-600)] p-0 h-auto",
-    hover: "hover:text-[color:var(--color-navy-700)] hover:underline",
-    active: "active:text-[color:var(--color-navy-700)]",
-    disabled:
-      "disabled:text-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
+    base: "text-navy-600 p-0 h-auto",
+    hover: "hover:text-navy-700 hover:underline",
+    active: "active:text-navy-700",
+    disabled: "disabled:text-navy-300 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   dangerLink: {
-    base: "text-[color:var(--color-error-600)] p-0 h-auto",
-    hover: "hover:text-[color:var(--color-error-700)] hover:underline",
-    active: "active:text-[color:var(--color-error-700)]",
-    disabled:
-      "disabled:text-[color:var(--color-error-300,colorTokens.red[300])] disabled:cursor-not-allowed",
+    base: "text-error-600 p-0 h-auto",
+    hover: "hover:text-error-700 hover:underline",
+    active: "active:text-error-700",
+    disabled: "disabled:text-error-500/40 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-    base: "text-surface-primary bg-[var(--semantic-error)]",
-    hover: "hover:bg-[color:var(--color-error-600)]",
-    active: "active:bg-[color:var(--color-error-700)]",
+    base: "text-text-inverse bg-status-error",
+    hover: "hover:bg-error-600",
+    active: "active:bg-error-700",
     disabled:
-      "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
+      "disabled:bg-error-500/60 disabled:cursor-not-allowed disabled:opacity-70",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-    base: "text-surface-primary bg-[color:var(--color-success-600)]",
-    hover: "hover:bg-[color:var(--color-success-700)]",
-    active: "active:bg-[color:var(--color-success-700)]",
+    base: "text-text-inverse bg-success-600",
+    hover: "hover:bg-success-700",
+    active: "active:bg-success-700",
     disabled:
-      "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
+      "disabled:bg-success-500/60 disabled:cursor-not-allowed disabled:opacity-70",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
-    base: "text-text-primary bg-[color:var(--color-warning-600)]",
-    hover: "hover:bg-[color:var(--color-warning-700)]",
-    active: "active:bg-[color:var(--color-warning-700)]",
+    base: "text-text-primary bg-warning-600",
+    hover: "hover:bg-warning-700",
+    active: "active:bg-warning-700",
     disabled:
-      "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
+      "disabled:bg-warning-500/60 disabled:cursor-not-allowed disabled:opacity-70",
     focus: "focus-ring focus-ring-offset",
   },
 };
-// Button size styles configuration - Enhanced for masculine, substantial feel
+// Button size styles configuration - aligned to 8px rhythm
 const buttonSizes: ButtonSizeConfig = {
   xs: {
-    padding: "px-2.5 py-1.25",
+    padding: "px-3 py-2",
     fontSize: "text-xs font-medium",
-    iconSize: "w-3 h-3",
-    height: "h-[1.85rem]",
+    iconSize: "w-4 h-4",
+    height: "h-8",
   },
   sm: {
-    padding: "px-3.5 py-1.75",
-    fontSize: "text-[0.85rem] font-medium",
-    iconSize: "w-[0.9rem] h-[0.9rem]",
-    height: "h-[2.35rem]",
+    padding: "px-4 py-2",
+    fontSize: "text-sm font-medium",
+    iconSize: "w-4 h-4",
+    height: "h-10",
   },
   md: {
-    padding: "px-5 py-2.4",
-    fontSize: "text-[0.9rem] font-semibold",
-    iconSize: "w-[0.95rem] h-[0.95rem]",
-    height: "h-[2.7rem]",
+    padding: "px-6 py-3",
+    fontSize: "text-sm font-semibold",
+    iconSize: "w-5 h-5",
+    height: "h-12",
   },
   lg: {
-    padding: "px-6.5 py-3",
-    fontSize: "text-[0.98rem] font-semibold",
-    iconSize: "w-[1.05rem] h-[1.05rem]",
-    height: "h-[3rem]",
+    padding: "px-6 py-3",
+    fontSize: "text-base font-semibold",
+    iconSize: "w-5 h-5",
+    height: "h-14",
   },
   xl: {
-    padding: "px-8 py-3.6",
-    fontSize: "text-[1.15rem] font-semibold font-display",
-    iconSize: "w-[1.2rem] h-[1.2rem]",
-    height: "h-[3.4rem]",
+    padding: "px-8 py-4",
+    fontSize: "text-lg font-semibold font-display",
+    iconSize: "w-6 h-6",
+    height: "h-16",
   },
 };
 // Loading spinner component
@@ -258,9 +250,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       // Smooth transitions for transform and colors
       "transition-all duration-200 ease-in-out",
       // Hover scale effect (subtle lift)
-      !isDisabled && variant !== "link" && variant !== "brandLink" && "hover:scale-[1.02]",
+      !isDisabled &&
+        variant !== "link" &&
+        variant !== "brandLink" &&
+        "hover:scale-[1.02]",
       // Active scale effect (pressed feeling)
-      !isDisabled && variant !== "link" && variant !== "brandLink" && "active:scale-[0.98]",
+      !isDisabled &&
+        variant !== "link" &&
+        variant !== "brandLink" &&
+        "active:scale-[0.98]",
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,

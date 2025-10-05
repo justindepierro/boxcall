@@ -39,7 +39,15 @@ vi.mock("../../lib/supabase", () => ({
             if (table === "profiles")
               return { data: { role: hoisted.role }, error: null };
             if (table === "team_members")
-              return { data: hoisted.member, error: null };
+              return {
+                data: hoisted.member
+                  ? {
+                      team_role: hoisted.member.role,
+                      status: hoisted.member.status,
+                    }
+                  : null,
+                error: null,
+              };
             return { data: null, error: null };
           },
         } as const;

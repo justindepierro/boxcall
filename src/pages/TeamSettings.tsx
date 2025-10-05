@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Button } from "../components/ui/Button/Button";
+import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { StaffManagement } from "../components/team/StaffManagement";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { PageLayout } from "../components/layout/PageLayout";
@@ -19,6 +21,7 @@ import { Aurora } from "../components/ui/Aurora";
  * - Integration configurations
  */
 export const TeamSettings: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"overview" | "staff" | "settings">(
     "overview"
   );
@@ -38,6 +41,20 @@ export const TeamSettings: React.FC = () => {
         title="Team Settings"
         subtitle="Manage your team configuration and staff"
       >
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            {
+              id: "dashboard",
+              label: "Dashboard",
+              onClick: () => navigate("/dashboard"),
+            },
+            { id: "team", label: "Team" },
+            { id: "settings", label: "Settings", current: true },
+          ]}
+          className="mb-4"
+        />
+
         <div className="max-w-6xl mx-auto">
           {/* Tab Navigation */}
           <div className="mb-spacing-xl">

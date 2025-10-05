@@ -210,7 +210,7 @@ export const LazyPracticeScriptModal = lazyRoute(
 // Loading component for lazy routes
 export const RouteLoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-surface-app relative overflow-hidden">
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,168,107,0.12),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(147,195,253,0.12),transparent_55%)]" />
+    <div className="absolute inset-0 bg-aurora-radial" />
     <div className="relative z-10 text-center px-6 py-10 rounded-3xl shadow-2xl bg-surface-primary/90 backdrop-blur-md border border-surface-subtle max-w-sm w-full">
       <div className="mx-auto mb-6 h-14 w-14 rounded-full bg-jade-100 text-jade-700 flex items-center justify-center">
         <span className="text-2xl font-semibold">BC</span>

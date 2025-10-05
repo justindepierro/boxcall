@@ -80,7 +80,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   }
 
   return (
-    <div className="bg-[#FCFDFC] dark:bg-surface-secondary border border-subtle dark:border-text-tertiary rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
+    <div className="bg-surface-secondary dark:bg-surface-secondary border border-subtle dark:border-text-tertiary rounded-none mb-3 shadow-card p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}
@@ -139,7 +139,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               variant="headline-xl"
               as="h1"
               id={headingId}
-              className="text-text-xsrimary"
+              className="text-text-primary"
             >
               {teamName}
             </Typography>
@@ -167,7 +167,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-xsrimary"
+              className="font-semibold text-text-primary"
             >
               {nextGame}
             </Typography>

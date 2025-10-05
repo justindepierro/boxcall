@@ -62,15 +62,29 @@ body,
 
 @layer base {
   :root {
-    /* Component-level fallbacks */
-    --panel-bg: rgba(255, 255, 255, 0.85);
-    --panel-border: rgba(60, 60, 67, 0.18);
-    --panel-radius: 12px;
+    color-scheme: light dark;
+    /* Bridge legacy custom properties to semantic tokens */
+    --panel-bg: var(--semantic-bg-secondary);
+    --panel-border: var(--semantic-border);
+    --panel-radius: var(--radius-card, 12px);
     --panel-blur: 16px;
-    --panel-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.06);
-    --button-border-radius: 4px;
-    --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --panel-shadow: var(--elevation-card-resting);
+    --button-border-radius: var(--radius-button, 8px);
+    --button-shadow: var(--elevation-button-resting);
+    --navigation-background: var(--semantic-bg-primary);
+    --navigation-border: var(--semantic-border);
+    --navigation-linkHover: var(--semantic-bg-muted);
+    --color-bgBase: var(--semantic-bg-primary);
+    --color-bgSecondary: var(--semantic-bg-secondary);
+    --color-bgMuted: var(--semantic-bg-muted);
+    --color-bgBrand: var(--color-bgBrand, var(--semantic-bg-secondary));
+    --color-border: var(--semantic-border);
+    --color-textPrimary: var(--semantic-text-primary);
+    --color-textSecondary: var(--semantic-text-secondary);
+    --color-textMuted: var(--semantic-text-muted);
+    --color-primary: var(--semantic-primary);
+    --color-primaryHover: var(--semantic-primary-hover);
+    --color-primaryActive: var(--semantic-primary-active);
   }
   html {
     font-family: "Inter", system-ui, sans-serif;
@@ -100,27 +114,15 @@ body,
 
   html:not(.dark) .card,
   html:not(.dark) [class*="bg-gray-8"],
-  html:not(.dark) [class*="bg-gray-9"] {
-    background-color: #ffffff !important;
-    color: #111827 !important; /* gray-900 */
-  }
-
-  /* Override specific problematic background classes in light mode */
-  html:not(.dark) [style*="background-color: rgb(31, 41, 55)"],
-  html:not(.dark) [style*="background-color: rgb(17, 24, 39)"] {
-    background-color: white !important;
-    color: rgb(17, 24, 39) !important;
-  }
-
-  /* Force proper dark mode styling when in dark mode */
+  html:not(.dark) [class*="bg-gray-9"],
   html.dark .card {
-    background-color: #1f2937 !important; /* gray-800 */
-    color: #f3f4f6 !important; /* gray-100 */
+    background-color: var(--semantic-bg-secondary) !important;
+    color: var(--semantic-text-primary) !important;
   }
 
   body {
-    background-color: #f9fafb; /* gray-50 */
-    color: #111827; /* gray-900 */
+    background-color: var(--semantic-bg-primary);
+    color: var(--semantic-text-primary);
     margin: 0;
     min-height: 100vh;
     padding: 0;
@@ -128,8 +130,8 @@ body,
     outline: none;
   }
   .dark body {
-    background-color: #111827; /* gray-900 */
-    color: #f3f4f6; /* gray-100 */
+    background-color: var(--semantic-bg-primary);
+    color: var(--semantic-text-primary);
   }
 
   /* Custom scrollbar */
@@ -138,25 +140,25 @@ body,
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #f3f4f6;
+    background-color: var(--semantic-bg-muted);
   }
   .dark ::-webkit-scrollbar-track {
-    background-color: #1f2937;
+    background-color: var(--semantic-bg-muted);
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
+    background-color: var(--semantic-border);
     border-radius: 9999px;
   }
   .dark ::-webkit-scrollbar-thumb {
-    background-color: #4b5563;
+    background-color: var(--semantic-border);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #9ca3af;
+    background-color: var(--color-gray-400);
   }
   .dark ::-webkit-scrollbar-thumb:hover {
-    background-color: #6b7280;
+    background-color: var(--color-gray-500);
   }
 }
 
@@ -172,61 +174,50 @@ body,
   }
   /* Semantic Surface Utilities */
   .surface-app {
-    background-color: #f9fafb;
-    color: #111827;
-  }
-  .dark .surface-app {
-    background-color: #111827;
-    color: #f3f4f6;
+    background-color: var(--semantic-bg-primary);
+    color: var(--semantic-text-primary);
   }
   .surface-header {
-    background-color: #ffffff;
-    color: #111827;
-  }
-  .dark .surface-header {
-    background-color: #1f2937;
-    color: #f3f4f6;
+    background-color: var(--semantic-bg-secondary);
+    color: var(--semantic-text-primary);
   }
   .surface-card {
-    background-color: #ffffff;
-  }
-  .dark .surface-card {
-    background-color: #1f2937;
+    background-color: var(--semantic-bg-secondary);
   }
   .surface-subtle {
-    background-color: #f9fafb;
-  }
-  .dark .surface-subtle {
-    background-color: rgba(31, 41, 55, 0.6);
+    background-color: var(--semantic-bg-muted);
   }
   /* New: Navigation surface (tokens-driven) */
   .surface-nav {
     background: var(--navigation-background);
     border-bottom: 1px solid var(--navigation-border);
-    color: var(--color-textPrimary);
+    color: var(--semantic-text-secondary);
   }
-  .dark .surface-nav {
-    background: var(--color-bgSecondary);
-    border-color: var(--color-border);
-    color: var(--color-textPrimary);
+
+  /* Aurora-style ambient gradient backed by brand tokens */
+  .bg-aurora-radial {
+    background-image:
+      radial-gradient(
+        circle at 20% 20%,
+        color-mix(in srgb, var(--color-jade-500) 12%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at 80% 30%,
+        color-mix(in srgb, var(--color-blue-300) 12%, transparent),
+        transparent 55%
+      );
   }
 
   /* Optional inverse surface (for future tooltips / overlays) */
   .surface-inverse {
-    background-color: rgb(17 24 39); /* gray-900 */
-    color: #fff;
-  }
-  .dark .surface-inverse {
-    background-color: rgb(55 65 81); /* gray-700 */
-    color: rgb(243 244 246); /* gray-100 */
+    background-color: var(--semantic-surface-inverse);
+    color: var(--semantic-text-inverse);
   }
 
   /* Subtle hover layer utility (token-friendly) */
   .hoverable-subtle:hover {
-    background: var(--color-bgMuted);
-  }
-  .dark .hoverable-subtle:hover {
-    background-color: rgb(55 65 81); /* gray-700 */
+    background: var(--semantic-bg-muted);
   }
 
   /* Nav item base + states (tokens-based) */
@@ -239,18 +230,15 @@ body,
     font-weight: 500;
     border-radius: 0.5rem;
     line-height: 1.25rem;
-    color: var(--color-textSecondary);
+    color: var(--semantic-text-secondary);
     position: relative;
     transition:
       background-color 120ms ease,
       color 120ms ease;
   }
-  .dark .nav-item-base {
-    color: var(--color-textSecondary);
-  }
   .nav-item-base:hover {
     background: var(--navigation-linkHover);
-    color: var(--color-textPrimary);
+    color: var(--semantic-text-primary);
   }
   .nav-item-active {
     background: var(--color-bgBrand);
@@ -362,42 +350,33 @@ body,
 
   /* Semantic Text Tokens */
   .text-text-primary {
-    color: #111827;
-  }
-  .dark .text-text-primary {
-    color: #f3f4f6;
+    color: var(--semantic-text-primary);
   }
   .text-text-secondary {
-    color: #4b5563;
-  }
-  .dark .text-text-secondary {
-    color: #9ca3af;
+    color: var(--semantic-text-secondary);
   }
   .text-text-muted {
-    color: #6b7280;
-  }
-  .dark .text-text-muted {
-    color: #6b7280;
+    color: var(--semantic-text-muted);
   }
   .text-text-inverse {
-    color: #ffffff;
+    color: var(--semantic-text-inverse);
   }
   /* Button variants */
   .btn-primary {
-    background-color: #00a86b;
-    color: #ffffff;
+    background-color: var(--semantic-primary);
+    color: var(--semantic-text-inverse);
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: background-color 0.15s;
   }
   .btn-primary:hover {
-    background-color: #047857;
+    background-color: var(--semantic-primary-hover);
   }
 
   .btn-secondary {
-    background-color: #e5e7eb;
-    color: #111827;
+    background-color: var(--semantic-bg-secondary);
+    color: var(--semantic-text-primary);
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -406,14 +385,7 @@ body,
       color 0.15s;
   }
   .btn-secondary:hover {
-    background-color: #d1d5db;
-  }
-  .dark .btn-secondary {
-    background-color: #374151;
-    color: #f3f4f6;
-  }
-  .dark .btn-secondary:hover {
-    background-color: #4b5563;
+    background-color: var(--semantic-bg-muted);
   }
 
   /* Unified Focus Ring Utilities */
@@ -441,26 +413,23 @@ body,
   }
 
   .btn-danger {
-    background-color: #dc2626;
-    color: #ffffff;
+    background-color: var(--color-error-600);
+    color: var(--semantic-text-inverse);
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: background-color 0.15s;
   }
   .btn-danger:hover {
-    background-color: #b91c1c;
+    background-color: var(--color-error-700);
   }
 
   /* Card components */
   .card {
-    background-color: #ffffff;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    padding: 1.5rem;
-  }
-  .dark .card {
-    background-color: #1f2937;
+    background-color: var(--semantic-bg-secondary);
+    border-radius: var(--radius-card, 0.5rem);
+    box-shadow: var(--elevation-card-resting);
+    padding: var(--spacing-cardPadding);
   }
 
   .play-card {
@@ -468,43 +437,43 @@ body,
     transition: box-shadow 0.15s;
   }
   .play-card:hover {
-    box-shadow:
-      0 4px 6px -1px rgb(0 0 0 / 0.1),
-      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    box-shadow: var(--elevation-card-hover);
   }
 
   /* Confidence indicators */
   .confidence-high {
-    background-color: #047857;
-    color: #ffffff;
+    background-color: var(--color-success-700);
+    color: var(--semantic-text-inverse);
   }
 
   .confidence-medium {
-    background-color: #d97706;
-    color: #ffffff;
+    background-color: var(--color-warning-600);
+    color: var(--semantic-text-inverse);
   }
 
   .confidence-low {
-    background-color: #dc2626;
-    color: #ffffff;
+    background-color: var(--color-error-600);
+    color: var(--semantic-text-inverse);
   }
 
   .confidence-unknown {
-    background-color: #64748b;
-    color: #ffffff;
+    background-color: var(--color-navy-500);
+    color: var(--semantic-text-inverse);
   }
 
   /* Form styling */
   .form-input {
     display: block;
     width: 100%;
-    border-radius: 0.375rem;
-    border: 1px solid #d1d5db;
-    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-input, 0.375rem);
+    border: 1px solid var(--semantic-border);
+    padding: var(--spacing-inputPadding) var(--spacing-buttonPadding);
+    background-color: var(--semantic-bg-secondary);
+    color: var(--semantic-text-primary);
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
   .form-input:focus {
-    outline: 2px solid #00a86b;
+    outline: 2px solid var(--semantic-primary);
     outline-offset: 1px;
   }
 
@@ -513,7 +482,7 @@ body,
     font-size: 0.875rem;
     line-height: 1.25rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--semantic-text-secondary);
     margin-bottom: 0.25rem;
   }
 

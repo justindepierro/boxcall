@@ -1,7 +1,6 @@
 import { createContext } from "react";
 import type { DiagramEditorState, DiagramEditorAction } from "../types/types";
 import { createEmptyDocument } from "../types/types";
-import { colorTokens } from "../../../../design-system/tokens";
 
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),

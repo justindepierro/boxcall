@@ -25,7 +25,7 @@ export function useFieldZoomPan({
   panY,
   onViewportChange,
 }: {
-  svgRef: RefObject<SVGSVGElement>;
+  svgRef: RefObject<SVGSVGElement | null>;
   zoom: number;
   panX: number;
   panY: number;

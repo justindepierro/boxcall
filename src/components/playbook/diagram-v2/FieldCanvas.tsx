@@ -7,13 +7,10 @@ import React, {
 } from "react";
 import { useDiagramEditor } from "./context";
 import { Button } from "../../ui/Button/Button";
-import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
+import type { DiagramAnnotationConnector } from "./types";
 
 // Extracted hooks
-import { useFieldCoordinates } from "./hooks/useFieldCoordinates";
 import { useFieldZoomPan } from "./hooks/useFieldZoomPan";
-import { useFieldDragDrop } from "./hooks/useFieldDragDrop";
-import { useFieldSnapping } from "./hooks/useFieldSnapping";
 import { useFieldKeyboard } from "./hooks/useFieldKeyboard";
 
 // Extracted components
@@ -28,8 +25,7 @@ import { FieldMinimap } from "./components/FieldMinimap";
 // Simple SVG field canvas with zoom/pan transforms (placeholder)
 export const FieldCanvas: React.FC<{
   className?: string;
-  onPlayerMouseDown?: (id: string, e: React.MouseEvent) => void;
-}> = ({ className, onPlayerMouseDown }) => {
+}> = ({ className }) => {
   // Ephemeral attach/snap preview while dragging a route point
   const [attachPreview, setAttachPreview] = React.useState<
     | { x1: number; y1: number; x2: number; y2: number; targetId?: string }
@@ -140,16 +136,8 @@ export const FieldCanvas: React.FC<{
   // EXTRACTED HOOKS - All field interaction logic externalized
   // ============================================================================
 
-  // Coordinate conversion utilities
-  const coordinates = useFieldCoordinates({
-    svgRef,
-    panX: state.ui.panX,
-    panY: state.ui.panY,
-    zoom: state.ui.zoom,
-  });
-
   // Zoom & pan management (wheel zoom, drag panning)
-  const zoomPan = useFieldZoomPan({
+  useFieldZoomPan({
     svgRef,
     zoom: state.ui.zoom,
     panX: state.ui.panX,
@@ -168,8 +156,8 @@ export const FieldCanvas: React.FC<{
   const commitMoveTimer = useRef<number | null>(null);
 
   // Keyboard shortcuts and interactions
-  const keyboard = useFieldKeyboard({
-    onNudge: (direction, delta, patches) => {
+  useFieldKeyboard({
+    onNudge: (_direction, _delta, patches) => {
       if (patches.length) {
         dispatch({ type: "MOVE_SELECTION", patches });
         // Debounce commit after keyboard nudges
@@ -1123,7 +1111,10 @@ export const FieldCanvas: React.FC<{
             // Route tool: custom pen cursor (theme-aware), fallback crosshair
             if (state.ui.tool === "route") {
               const theme = doc.field.theme || "classic";
-              const stroke = theme === "mono-light" ? colorTokens.gray[900] : colorTokens.gray[50];
+              const stroke =
+                theme === "mono-light"
+                  ? colorTokens.gray[900]
+                  : colorTokens.gray[50];
               const svg = `<?xml version='1.0' encoding='UTF-8'?>\n<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>\n  <g fill='none' stroke='${stroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\n    <path d='M4 28l6-2 16-16a3 3 0 0 0-4.24-4.24L5.76 21.76z'/>\n    <path d='M18 6l8 8'/>\n    <path d='M4 28l2-6'/>\n  </g>\n</svg>`;
               const data = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}") 4 28, crosshair`;
               return data;
@@ -1564,7 +1555,7 @@ export const FieldCanvas: React.FC<{
                           value={
                             "color" in ann && ann.color
                               ? ann.color!
-                              : state.ui.drawColor || colorTokens.gray[900]}
+                              : state.ui.drawColor || colorTokens.gray[900]
                           }
                           onChange={(e) =>
                             dispatch({
@@ -1989,7 +1980,12 @@ export const FieldCanvas: React.FC<{
                       strokeWidth={3}
                       strokeDasharray="6 4"
                     />
-                    <circle cx={x1} cy={y1} r={5} fill={colorTokens.gray[900]} />
+                    <circle
+                      cx={x1}
+                      cy={y1}
+                      r={5}
+                      fill={colorTokens.gray[900]}
+                    />
                   </g>
                 );
               }

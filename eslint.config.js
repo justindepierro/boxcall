@@ -3,6 +3,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import rawTailwindColors from "./eslint-rules/no-raw-tailwind-colors.js";
 
 export default [
   {
@@ -43,6 +44,7 @@ export default [
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "boxcall-design": rawTailwindColors,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -53,6 +55,7 @@ export default [
       ],
       "no-unused-vars": "off", // Turn off base rule for TS override
       "no-console": "off", // Allow console in development
+      "boxcall-design/no-raw-tailwind-colors": "error",
     },
   },
   // TypeScript specific rules
@@ -69,6 +72,7 @@ export default [
     },
     plugins: {
       "@typescript-eslint": tseslint.plugin,
+      "boxcall-design": rawTailwindColors,
     },
     rules: {
       ...tseslint.configs.recommended.rules,

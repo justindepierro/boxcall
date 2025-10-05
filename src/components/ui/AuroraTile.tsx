@@ -38,10 +38,10 @@ export interface AuroraTileProps {
 }
 
 const BASE_BUTTON_CLASSES =
-  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-medium hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900 min-h-[160px] md:min-h-[180px]";
+  "group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface-secondary text-left shadow-card transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-secondary min-h-[160px] md:min-h-[180px]";
 
 const BASE_ICON_CONTAINER_CLASSES =
-  "inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";
+  "inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-lg bg-surface-subtle text-brand-primary shadow-button";
 
 const BASE_ICON_CLASSES = "text-brand-primary";
 
@@ -69,14 +69,14 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
       <div
         aria-hidden="true"
         className={clsx(
-          "absolute inset-0 opacity-90 transition-opacity duration-medium group-hover:opacity-100",
+          "pointer-events-none absolute inset-0 opacity-10 transition-opacity duration-300 group-hover:opacity-25",
           accentOverlayClass
         )}
       />
       <div
         aria-hidden="true"
         className={clsx(
-          "pointer-events-none absolute -bottom-20 -right-12 h-48 w-48 rounded-full blur-3xl transition-opacity duration-medium group-hover:opacity-100",
+          "pointer-events-none absolute -bottom-20 -right-12 h-48 w-48 rounded-full opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-40",
           glowClassName
         )}
       />
@@ -104,9 +104,9 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
               </Typography>
               {statusBadge && (
                 <Typography
-                  variant="caption"
+                  variant="label-md"
                   color="muted"
-                  className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary opacity-80"
+                  className="opacity-80"
                 >
                   {statusBadge}
                 </Typography>
@@ -126,12 +126,18 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
             <div className="pointer-events-none select-none">{children}</div>
           </div>
         )}
-        <div className="flex items-center justify-between text-[11px] font-medium text-text-secondary opacity-80 dark:text-slate-300">
-          <span className="inline-flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <Typography
+            as="span"
+            variant="body-xs"
+            className="inline-flex items-center gap-2 text-text-secondary opacity-80"
+          >
             <Icon name="grid" size="xs" className="text-brand-primary" />
             Open workspace
-          </span>
-          <span>{footnote}</span>
+          </Typography>
+          <Typography as="span" variant="body-xs" color="muted">
+            {footnote}
+          </Typography>
         </div>
       </div>
     </button>

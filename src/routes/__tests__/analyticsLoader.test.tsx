@@ -12,7 +12,7 @@ const hoisted = vi.hoisted(() => ({
   userId: "u1" as string | null,
   role: "coach" as unknown,
   tier: "team_premium" as string | null,
-  member: { role: "coach", status: "active" as const } as {
+  member: { role: "head_coach", status: "active" as const } as {
     role: string;
     status: "active" | "inactive" | "pending" | null;
   } | null,
@@ -41,7 +41,15 @@ vi.mock("../../lib/supabase", () => ({
                 error: null,
               };
             if (table === "team_members")
-              return { data: hoisted.member, error: null };
+              return {
+                data: hoisted.member
+                  ? {
+                      team_role: hoisted.member.role,
+                      status: hoisted.member.status,
+                    }
+                  : null,
+                error: null,
+              };
             return { data: null, error: null };
           },
         } as const;
@@ -78,7 +86,7 @@ describe("requireTeamAnalyticsLoader", () => {
     hoisted.userId = "u1";
     hoisted.role = "coach";
     hoisted.tier = "team_premium";
-    hoisted.member = { role: "coach", status: "active" };
+    hoisted.member = { role: "head_coach", status: "active" };
   });
 
   it("renders when authorized and tier satisfied", async () => {

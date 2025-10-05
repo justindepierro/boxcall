@@ -215,7 +215,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 className="w-20 h-20 md:w-16 md:h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
                 aria-label="View profile"
               >
-                <Typography variant="body-lg" className="font-bold text-white text-xl md:text-lg">
+                <Typography
+                  variant="body-lg"
+                  className="font-bold text-white text-xl md:text-lg"
+                >
                   {getInitials(displayName)}
                 </Typography>
               </Button>

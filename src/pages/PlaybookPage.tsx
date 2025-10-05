@@ -7,6 +7,7 @@ import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
+import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
 import {
@@ -470,6 +471,19 @@ export default function PlaybookPage() {
   return (
     <Aurora variant="field" fullHeight>
       <PageLayout variant="dashboard">
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            {
+              id: "dashboard",
+              label: "Dashboard",
+              onClick: () => navigate("/dashboard"),
+            },
+            { id: "playbook", label: "Playbook", current: true },
+          ]}
+          className="mb-4"
+        />
+
         {/* Unified Header with Navigation */}
         <PlaybookViewTabs
           currentView={state.currentView}

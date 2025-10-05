@@ -2,7 +2,7 @@ import { redirect, type LoaderFunctionArgs } from "react-router-dom";
 import { authorize } from "./authorize";
 import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
-import type { AppRole } from "./authorize";
+import type { AppRole } from "../types/roles";
 import type { AuthorizeInput } from "./authorize";
 
 /**
@@ -76,7 +76,8 @@ export const requireTeamCoachLoader = createAuthLoader({
  * with an active "team_premium" subscription tier.
  */
 export const requireTeamAnalyticsLoader = createAuthLoader({
-  allowedTeamRoles: ["coach", "admin"],
+  allowedTeamRoles: ["head_coach", "coach", "admin"],
+  requiredPermissions: ["dashboard.view_team"],
 });
 
 /**

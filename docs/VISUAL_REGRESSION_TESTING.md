@@ -1,48 +1,71 @@
 # Visual Regression Testing Guide
 
-**Status**: ✅ Active  
+**Status**: ✅ Active & Enhanced  
 **Created**: January 9, 2025  
-**Tool**: Playwright Built-in Screenshots
+**Updated**: October 5, 2025 - Added Storybook Component Testing  
+**Tools**: Playwright + Storybook Test Runner
 
 ## 📋 Overview
 
 Visual regression testing automatically detects unintended visual changes in your UI by comparing screenshots before and after code changes.
 
-**What we test:**
+BoxCall now has **two-tier visual testing**:
+
+### Page-Level Testing (Playwright)
 
 - ✅ Critical pages (homepage, login, dashboard, etc.)
-- ✅ Key components (nav, cards, forms)
 - ✅ Responsive layouts (mobile, tablet, desktop)
 - ✅ Dark mode variations
 - ✅ Cross-browser rendering
+- ✅ Interactive states (modals, menus)
+
+### Component-Level Testing (Storybook) - NEW ✨
+
+- ✅ Isolated UI components (118+ stories)
+- ✅ All component variants and states
+- ✅ Design system consistency
+- ✅ Fast, focused testing
+- ✅ Automatic for all Storybook stories
 
 ---
 
 ## 🚀 Quick Start
 
-### Run Visual Tests
+### Page-Level Tests (Existing)
 
 ```bash
-# Run all visual regression tests
+# Run all page visual regression tests
 npm run test:visual
 
 # Run with UI mode (recommended for development)
 npm run test:visual:ui
 
-# Run specific test file
-npx playwright test visual-regression.spec.ts
+# Update page baselines
+npm run test:visual:update
 ```
 
-### Generate Initial Baselines
-
-When running tests for the first time or adding new tests:
+### Component-Level Tests (NEW)
 
 ```bash
-# Generate all baseline screenshots
-npm run test:visual:update
+# Run all component visual tests
+npm run test:storybook
 
-# Generate for specific test
-npx playwright test visual-regression.spec.ts --update-snapshots
+# Run in CI mode (builds Storybook first)
+npm run test:storybook:ci
+
+# Update component baselines
+npm run test:storybook:update
+
+# Test while developing
+npm run storybook  # Terminal 1
+npm run test:storybook  # Terminal 2
+```
+
+### Run All Visual Tests
+
+```bash
+# Complete visual regression suite
+npm run test:visual && npm run test:storybook
 ```
 
 ### Review Visual Differences
@@ -58,7 +81,9 @@ npm run test:e2e:report
 
 ## 📸 How It Works
 
-### 1. Baseline Screenshots
+### Page-Level Testing
+
+#### 1. Baseline Screenshots
 
 First run creates baseline screenshots stored in:
 
@@ -73,7 +98,7 @@ tests/e2e/visual-regression.spec.ts-snapshots/
 └── webkit/
 ```
 
-### 2. Comparison
+#### 2. Comparison
 
 Subsequent runs compare current screenshots against baselines:
 
@@ -81,7 +106,7 @@ Subsequent runs compare current screenshots against baselines:
 - ❌ **Fail**: Visual differences exceed threshold
 - 📊 **Diff images** generated showing differences
 
-### 3. Review & Update
+#### 3. Review & Update
 
 When intentional changes are made:
 
@@ -91,6 +116,77 @@ When intentional changes are made:
    npm run test:visual:update
    ```
 3. Commit new baselines to Git
+
+### Component-Level Testing (Storybook) - NEW ✨
+
+#### How Storybook Test Runner Works
+
+1. **Starts Storybook**: Launches Storybook server on port 6006
+2. **Discovers Stories**: Finds all `*.stories.tsx` files (118+ stories)
+3. **Renders Each Story**: Opens each story in headless browser
+4. **Disables Animations**: Automatically via injected CSS
+5. **Captures Screenshot**: Takes snapshot of `#storybook-root`
+6. **Compares**: Checks against baseline with 0.2% threshold
+7. **Reports**: Generates diffs for any failures
+
+#### Configuration
+
+Located in `.storybook/test-runner.ts`:
+
+```typescript
+const config: TestRunnerConfig = {
+  async preVisit(page) {
+    // Disable animations for consistent screenshots
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          animation-duration: 0s !important;
+          transition-duration: 0s !important;
+        }
+      `,
+    });
+  },
+  async postVisit(page, context) {
+    // Wait for rendering
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(200);
+
+    // Screenshot the story
+    const element = await page.locator("#storybook-root").first();
+    await expect(element).toHaveScreenshot(`${context.id}.png`, {
+      threshold: 0.2,
+      maxDiffPixels: 100,
+    });
+  },
+};
+```
+
+#### Skipping Stories
+
+To skip visual testing for interactive/dynamic stories:
+
+```typescript
+export const InteractiveDemo: Story = {
+  args: {
+    /* ... */
+  },
+  tags: ["skip-visual-test"], // Skip visual regression
+};
+```
+
+#### Coverage
+
+**Automatic testing for**:
+
+- ✅ Button (all variants: primary, secondary, ghost, danger)
+- ✅ Aurora (shell, field, minimal, none)
+- ✅ Card (standard and glass variants)
+- ✅ Form components (Input, Select, TextArea, etc.)
+- ✅ Modal (all sizes and states)
+- ✅ Badge (role badges, multi-badge display)
+- ✅ EmptyState, Skeleton, LoadingScreen
+- ✅ Table, Icon, Tooltip
+- ✅ **All 118+ Storybook stories**
 
 ---
 

@@ -20,6 +20,7 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    strictPort: true,
     hmr: {
       overlay: false,
     },
@@ -61,6 +62,7 @@ export default defineConfig({
                 "**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}",
               ],
               globIgnores: ["**/*.ts", "**/*.tsx"],
+              maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB (up from 2MB default)
               runtimeCaching: [
                 // Supabase API calls
                 {

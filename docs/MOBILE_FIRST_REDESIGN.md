@@ -51,30 +51,35 @@
 ## 🎯 Mobile-First Design Principles
 
 ### 1. Touch-First Interaction
+
 - Minimum 44x44pt touch targets
 - Generous spacing between interactive elements
 - Large, obvious buttons
 - Swipe gestures where appropriate
 
 ### 2. Content Hierarchy
+
 - Most important content first
 - Progressive disclosure
 - Scannable layouts
 - Clear visual hierarchy
 
 ### 3. Performance
+
 - Fast loading (< 3s on 3G)
 - Smooth scrolling (60fps)
 - Optimized images
 - Lazy loading
 
 ### 4. Accessibility
+
 - High contrast ratios (WCAG AAA)
 - Readable font sizes (16px minimum)
 - Clear focus states
 - Screen reader support
 
 ### 5. Progressive Enhancement
+
 - Works on all devices
 - Enhanced on larger screens
 - Graceful degradation
@@ -87,6 +92,7 @@
 ### Phase 1: Mobile Audit & Fixes (Immediate)
 
 **1.1 Responsive Breakpoints**
+
 ```css
 /* Mobile First */
 Base: 320px (iPhone SE)
@@ -98,12 +104,14 @@ XXLarge: 1440px (Desktop)
 ```
 
 **1.2 Touch Target Audit**
+
 - [ ] Scan all buttons (minimum 44x44pt)
 - [ ] Check link spacing (16px minimum)
 - [ ] Verify icon sizes (24px minimum)
 - [ ] Test on actual devices
 
 **1.3 Typography Scale**
+
 ```css
 Mobile:
   h1: 28px (instead of 32px+)
@@ -121,6 +129,7 @@ Desktop:
 ```
 
 **1.4 Spacing System**
+
 ```css
 Mobile: Tighter but breathable
   xs: 4px
@@ -144,12 +153,14 @@ Desktop: More generous
 #### 2.1 Dashboard Hero Tiles
 
 **Current Issues:**
+
 - Cramped content
 - Poor visual hierarchy
 - Small text
 - Not touch-friendly
 
 **Redesign:**
+
 ```tsx
 <AuroraTile
   // MOBILE: Full height card, larger text
@@ -161,6 +172,7 @@ Desktop: More generous
 ```
 
 **Mobile Layout:**
+
 - Stack vertically (1 column)
 - Larger cards (200px min height)
 - Bigger text (20px titles)
@@ -168,6 +180,7 @@ Desktop: More generous
 - Prominent icons (48px)
 
 **Desktop Layout:**
+
 - 3-column grid (current)
 - Compact cards (160px height)
 - Standard text (18px titles)
@@ -177,6 +190,7 @@ Desktop: More generous
 #### 2.2 Profile Card
 
 **Current Issues:**
+
 - Premium badge looks dated
 - Stats hard to read
 - Avatar too small
@@ -185,15 +199,16 @@ Desktop: More generous
 **Redesign:**
 
 **Mobile (Portrait):**
+
 ```tsx
 <Card className="p-6">
   {/* Large centered avatar */}
   <Avatar size="xl" className="mx-auto mb-4" /> {/* 96px */}
-  
   {/* Name + role */}
   <h2 className="text-2xl font-bold text-center">Justin DePierro</h2>
-  <Badge variant="premium" className="mx-auto mt-2">Premium Admin</Badge>
-  
+  <Badge variant="premium" className="mx-auto mt-2">
+    Premium Admin
+  </Badge>
   {/* Stats Grid (2x2) */}
   <div className="grid grid-cols-2 gap-4 mt-6">
     <StatCard icon="sticker" value="0" label="Stickers" />
@@ -201,19 +216,22 @@ Desktop: More generous
     <StatCard icon="fire" value="0" label="Streak" />
     <StatCard icon="trophy" value="0" label="Points" />
   </div>
-  
   {/* Bio */}
   <Bio className="mt-6" />
-  
   {/* Actions */}
   <div className="flex gap-3 mt-6">
-    <Button variant="primary" fullWidth>View Profile</Button>
-    <Button variant="ghost" size="lg" icon>Edit</Button>
+    <Button variant="primary" fullWidth>
+      View Profile
+    </Button>
+    <Button variant="ghost" size="lg" icon>
+      Edit
+    </Button>
   </div>
 </Card>
 ```
 
 **Desktop:**
+
 - Horizontal layout
 - Avatar left side (80px)
 - Content flows right
@@ -225,6 +243,7 @@ Desktop: More generous
 **Current**: Generic message, no visual
 
 **Redesign:**
+
 ```tsx
 <EmptyState
   icon={<Icon name="users" size="4xl" className="text-gray-300" />}
@@ -232,13 +251,14 @@ Desktop: More generous
   description="Join a team or create your first team to see updates, announcements, and team celebrations here."
   actions={[
     { label: "Create Team", variant: "primary", icon: "plus" },
-    { label: "Browse Teams", variant: "secondary", icon: "search" }
+    { label: "Browse Teams", variant: "secondary", icon: "search" },
   ]}
   illustration={<TeamActivityIllustration />}
 />
 ```
 
 **Features:**
+
 - Large illustration (200px)
 - Clear heading (24px)
 - Helpful description (16px)
@@ -248,6 +268,7 @@ Desktop: More generous
 #### 2.4 Trophy Shelf
 
 **Current Issues:**
+
 - Too small (tiny badges)
 - Hard to read counts
 - Not celebratory
@@ -256,6 +277,7 @@ Desktop: More generous
 **Redesign Options:**
 
 **Option A: Inline Cards (Mobile)**
+
 ```tsx
 <div className="grid grid-cols-2 gap-3 md:hidden">
   <TrophyCard icon="star" count={0} label="Week Streak" color="warning" />
@@ -266,21 +288,23 @@ Desktop: More generous
 ```
 
 **Option B: Expandable Drawer**
-```tsx
-{/* Mobile: Floating button */}
-<FloatingButton
-  icon="trophy"
-  badge={totalAchievements}
-  onClick={openDrawer}
-/>
 
-{/* Desktop: Current compact shelf */}
-<CompactTrophyShelf className="hidden md:flex" />
+```tsx
+{
+  /* Mobile: Floating button */
+}
+<FloatingButton icon="trophy" badge={totalAchievements} onClick={openDrawer} />;
+
+{
+  /* Desktop: Current compact shelf */
+}
+<CompactTrophyShelf className="hidden md:flex" />;
 ```
 
 #### 2.5 Navigation
 
 **Mobile Issues:**
+
 - Search bar too small
 - Create Team button cramped
 - Profile icon tiny
@@ -288,6 +312,7 @@ Desktop: More generous
 **Redesign:**
 
 **Mobile:**
+
 ```tsx
 <MobileNav>
   {/* Top bar */}
@@ -299,20 +324,21 @@ Desktop: More generous
       <Avatar size="md" />
     </div>
   </div>
-  
+
   {/* Quick actions */}
   <div className="px-4 pb-4">
     <Button variant="primary" fullWidth size="lg">
       + Create Team
     </Button>
   </div>
-  
+
   {/* Bottom nav (fixed) */}
   <BottomNav items={navItems} />
 </MobileNav>
 ```
 
 **Desktop:**
+
 - Current top nav
 - Enhanced with better spacing
 - Larger touch targets
@@ -324,6 +350,7 @@ Desktop: More generous
 #### 3.1 Mobile Layout Patterns
 
 **Stack Pattern (Default):**
+
 ```tsx
 <div className="space-y-6 md:space-y-0 md:grid md:grid-cols-12 md:gap-6">
   {/* Mobile: Stack vertically */}
@@ -332,6 +359,7 @@ Desktop: More generous
 ```
 
 **Card Pattern:**
+
 ```tsx
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
   {/* Responsive grid that adapts */}
@@ -339,6 +367,7 @@ Desktop: More generous
 ```
 
 **List Pattern:**
+
 ```tsx
 <div className="divide-y divide-gray-200">
   {/* Mobile-optimized list items */}
@@ -374,12 +403,14 @@ Desktop: More generous
 #### 4.1 Touch Gestures
 
 **Swipe Gestures:**
+
 - Swipe cards to dismiss
 - Swipe between views
 - Pull to refresh
 - Swipe to reveal actions
 
 **Tap Patterns:**
+
 - Single tap: Primary action
 - Double tap: Like/favorite
 - Long press: Context menu
@@ -388,12 +419,14 @@ Desktop: More generous
 #### 4.2 Loading States
 
 **Mobile:**
+
 - Skeleton screens (not spinners)
 - Progressive loading
 - Optimistic updates
 - Pull-to-refresh
 
 **Micro-interactions:**
+
 - Button press feedback
 - Card lift on touch
 - Smooth page transitions
@@ -416,18 +449,21 @@ First Input Delay: < 100ms
 #### 5.2 Optimization Strategies
 
 **Images:**
+
 - WebP format with fallbacks
 - Responsive images (srcset)
 - Lazy loading below fold
 - Proper sizing (no oversized)
 
 **Code:**
+
 - Code splitting by route
 - Lazy load heavy components
 - Tree shaking unused code
 - Minify and compress
 
 **Network:**
+
 - Service worker caching
 - Offline support
 - Background sync
@@ -438,24 +474,28 @@ First Input Delay: < 100ms
 ## 🚀 Implementation Plan
 
 ### Week 1: Foundation
+
 - [ ] Audit current mobile experience
 - [ ] Set up responsive testing tools
 - [ ] Create mobile-first component library
 - [ ] Establish breakpoint system
 
 ### Week 2: Core Components
+
 - [ ] Redesign Dashboard hero tiles
 - [ ] Enhance Profile card
 - [ ] Create better empty states
 - [ ] Improve navigation
 
 ### Week 3: Layout & Spacing
+
 - [ ] Implement mobile-first layouts
 - [ ] Fix spacing inconsistencies
 - [ ] Optimize touch targets
 - [ ] Add gesture support
 
 ### Week 4: Polish & Test
+
 - [ ] Performance optimization
 - [ ] Real device testing
 - [ ] Accessibility audit
@@ -466,6 +506,7 @@ First Input Delay: < 100ms
 ## 📱 Testing Checklist
 
 ### Devices to Test
+
 - [ ] iPhone SE (smallest)
 - [ ] iPhone 12/13 (standard)
 - [ ] iPhone 12 Pro Max (large)
@@ -473,6 +514,7 @@ First Input Delay: < 100ms
 - [ ] Android (various sizes)
 
 ### Scenarios to Test
+
 - [ ] Portrait orientation
 - [ ] Landscape orientation
 - [ ] One-handed use
@@ -485,18 +527,21 @@ First Input Delay: < 100ms
 ## 🎯 Success Metrics
 
 **User Experience:**
+
 - 90%+ mobile satisfaction score
 - < 3 taps to key actions
 - 100% touch target compliance
 - Zero horizontal scrolling
 
 **Performance:**
+
 - Lighthouse mobile score: 90+
 - Load time: < 3s on 3G
 - Smooth scrolling: 60fps
 - Battery efficient
 
 **Accessibility:**
+
 - WCAG AAA compliance
 - Screen reader compatible
 - High contrast support

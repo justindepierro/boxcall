@@ -9,26 +9,25 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Modern glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-aurora transition-all duration-200 ease-in-out border border-slate-200/60 bg-aurora-mist backdrop-blur-md shadow-[0_25px_45px_-30px_rgba(15,23,42,0.45)] dark:bg-slate-900/80 dark:border-slate-700/60", // Aurora panel treatment with soft glass glow
+  base: "rounded-[var(--radius-card)] border border-border bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
   variants: {
-    default: "bg-aurora-mist hover:bg-white/80", // Clean surface with subtle glass
-    glass: "bg-aurora-shell hover:bg-aurora-mist", // Full glassmorphism
-    elevated: "bg-white/85 dark:bg-slate-900/80 hover:shadow-xl", // Enhanced with subtle lift
-    outlined: "bg-white/85 dark:bg-slate-900/80", // Clean outlined
-    filled:
-      "bg-slate-100/80 hover:bg-slate-100/90 dark:bg-slate-800/80 dark:hover:bg-slate-800", // Subtle filled
+    default: "hover:bg-surface-muted",
+    glass:
+      "bg-surface-base/80 backdrop-blur-md border border-border/60 hover:bg-surface-base/90",
+    elevated: "shadow-card hover:shadow-card-hover",
+    outlined: "border border-border bg-surface-secondary",
+    filled: "bg-surface-muted hover:bg-surface-muted/90",
     accent:
-      "bg-gradient-to-br from-surface-primary to-surface-secondary/50 hover:from-surface-secondary hover:to-surface-primary", // Accent with subtle gradient shift
+      "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20",
   },
   sizes: {
     sm: "p-3",
-    // Use density-driven padding utility for the default (md) size so cards inherit global density
-    md: "bc-card-padding",
+    md: "p-4",
     lg: "p-6",
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer transition-all duration-300 ease-out hover:translate-y-[-2px] hover:shadow-xl hover:animate-card-hover hover:animate-card-glow focus:animate-card-glow focus:outline-none focus:ring-2 focus:ring-electric-500/50 focus:ring-offset-2", // Enhanced micro-animations with subtle lift and electric glow
+    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2",
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };
@@ -111,9 +110,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
-              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-surface-secondary"></div>
-              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-surface-secondary"></div>
-              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-surface-secondary"></div>
+              <div className="h-4 rounded animate-pulse bg-surface-muted"></div>
+              <div className="h-4 rounded animate-pulse w-3/4 bg-surface-muted"></div>
+              <div className="h-4 rounded animate-pulse w-1/2 bg-surface-muted"></div>
             </div>
           ) : (
             children
