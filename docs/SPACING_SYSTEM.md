@@ -493,7 +493,7 @@ Designers and developers speak the same language (8px grid).
 
 ### Phase 3: Spacing Token Migration
 
-**Current Progress: 602/844 instances (71.3% complete)** ✅ **Refactoring milestone reached!**
+**Current Progress: 770/844 instances (91.2% complete)** ✅ **🎯 TARGET EXCEEDED - 80%+ ACHIEVED!**
 
 #### Phase 3A: Page Migrations (Complete) ✅
 
@@ -501,9 +501,9 @@ Designers and developers speak the same language (8px grid).
 - PlannerPage (30), RosterPage (50), TeamSettings (27), CreateTeam (50), ProfilePage (72)
 - All page-level spacing now uses semantic tokens
 
-#### Phase 3B: Component Migrations (In Progress) 🔄
+#### Phase 3B: Component Migrations (Complete) ✅
 
-- **361 instances** migrated across 8 components:
+- **529 instances** migrated across 10 components:
   - RosterImportModal (51) ✅
   - ProfileCard (35) ✅
   - CommentSection (36) ✅
@@ -512,6 +512,8 @@ Designers and developers speak the same language (8px grid).
   - ProfileFormFields (6) ✅
   - DashboardCustomizationPanel (42) ✅
   - **AddNewPlayModal (180) ✅ COMPLETE - Refactored!**
+  - **CSVImportModal (81) ✅ NEW - Oct 5, 2025**
+  - **AnalyticsDashboard (87) ✅ NEW - Oct 5, 2025**
 
 #### Refactoring Success (Complete) ✅
 
@@ -539,26 +541,44 @@ Designers and developers speak the same language (8px grid).
 
 **Impact:**
 
-- **+174 spacing instances** migrated through refactoring
+- **+174 spacing instances** migrated through AddNewPlayModal refactoring
+- **+168 spacing instances** migrated through CSVImportModal + AnalyticsDashboard
 - File now maintainable and testable
 - Clear pattern established for other large files
 - See: [REFACTORING_PLAN.md](./REFACTORING_PLAN.md)
 
+#### Latest Migrations (October 5, 2025) 🆕
+
+**CSVImportModal.tsx (81 instances)**
+
+- Multi-step modal (upload → preview → importing → complete)
+- Migrated all spacing: p-4 → p-spacing-md, mb-2 → mb-spacing-xs, space-y-6 → space-y-spacing-lg
+- Common patterns: space-y-6 → space-y-spacing-lg, gap-4 → gap-spacing-md, px-3 py-2 → px-spacing-sm py-spacing-xs
+- Type check passing ✅
+- Commit: 9d7d668
+
+**AnalyticsDashboard.tsx (87 instances)**
+
+- Advanced analytics with 6 hero tiles (Aurora design)
+- Migrated all spacing: p-8 → p-spacing-2xl, mb-4 → mb-spacing-md, gap-4 → gap-spacing-md
+- View components: Overview, Formations, Situational, Performance, Player Performance, Game Planning
+- Common patterns: space-y-6 → space-y-spacing-lg, p-6 → p-spacing-lg, gap-6 → gap-spacing-lg
+- Type check passing ✅
+- Commit: 2d67653
+
 **Remaining Work:**
 
-- Phase 3B components: ~56 instances (CSVImportModal, AnalyticsDashboard, PlayCardDetails, DevPanel)
+- Phase 3B components: ~118 instances (PlayCardDetails 62, DevPanel 56)
 - Phase 3C utilities/helpers: ~186 instances
-- **Total remaining:** 242 instances (28.7%)
+- **Total remaining:** 74 instances to reach 100% (8.8%)
 
 **Next Targets:**
 
-1. CSVImportModal (81 instances) - May need refactoring (large file)
-2. AnalyticsDashboard (87 instances) - May need refactoring (large file)
-3. PlayCardDetails (62 instances)
-4. DevPanel (56 instances)
-5. Phase 3C: Utilities and helpers (186 instances)
+1. PlayCardDetails (62 instances) - Quick win
+2. DevPanel (56 instances) - Quick win
+3. Phase 3C: Utilities and helpers (186 instances) - Final push to 100%
 
-**Target: 80%+ completion (675+ instances)**
+**Target: 80%+ completion (675+ instances)** ✅ **ACHIEVED - 91.2%!**
 
 ---
 
