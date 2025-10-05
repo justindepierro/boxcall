@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useContext } from "react";
 import { DiagramEditorContext } from "../context/DiagramEditorContext";
+import { colorTokens } from "../../../../design-system/tokens";
 
 interface Point {
   x: number;
@@ -97,7 +98,7 @@ export const FootballFieldCanvas: React.FC = () => {
       const fieldY = FIELD_PADDING;
 
       // Fill field area with green
-      ctx.fillStyle = "#ECFDF5"; // jade-50 - very light green from design system
+      ctx.fillStyle = colorTokens.emerald[50]; // Very light green background
       ctx.fillRect(fieldX, fieldY, fieldWidth, fieldHeight);
 
       // Calculate pixels per yard based on field size to fit field properly
@@ -107,7 +108,7 @@ export const FootballFieldCanvas: React.FC = () => {
       );
 
       // Draw yard lines and hash marks (horizontal lines across the field)
-      ctx.strokeStyle = "#A7F3D0"; // jade-200 - slightly darker green for lines
+      ctx.strokeStyle = colorTokens.emerald[200]; // Field lines
       ctx.lineWidth = 2;
       ctx.setLineDash([]);
 
@@ -126,7 +127,7 @@ export const FootballFieldCanvas: React.FC = () => {
 
           // Yard numbers (simple numbering from 0 to 35)
           if (yard > 0 && yard < FIELD_HEIGHT && yard % 10 === 0) {
-            ctx.fillStyle = "#A7F3D0"; // jade-200 for numbers
+            ctx.fillStyle = colorTokens.emerald[200]; // Yard numbers
             ctx.font = "bold 14px Arial";
             ctx.textAlign = "left";
             ctx.fillText(
@@ -167,7 +168,7 @@ export const FootballFieldCanvas: React.FC = () => {
       }
 
       // Draw goal lines
-      ctx.strokeStyle = "#A7F3D0"; // jade-200
+      ctx.strokeStyle = colorTokens.emerald[200]; // Goal lines
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(fieldX, fieldY);
@@ -344,8 +345,8 @@ export const FootballFieldCanvas: React.FC = () => {
                 cy={canvasY}
                 rx="10"
                 ry="8"
-                fill="#93C5FD"
-                stroke="#3B82F6"
+                fill={colorTokens.blue[300]}
+                stroke={colorTokens.blue[500]}
                 strokeWidth="2"
               />
               {/* Player label */}
@@ -355,7 +356,7 @@ export const FootballFieldCanvas: React.FC = () => {
                 textAnchor="middle"
                 fontSize="12"
                 fontWeight="bold"
-                fill="#1E40AF"
+                fill={colorTokens.blue[900]}
               >
                 {player.label}
               </text>
