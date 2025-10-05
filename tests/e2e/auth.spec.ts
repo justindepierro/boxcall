@@ -112,7 +112,7 @@ test.describe('Authentication', () => {
       expect(value).toBe(xssPayload); // Input can contain it
       
       // But it shouldn't execute
-      const alerts = [];
+      const alerts: string[] = [];
       page.on('dialog', dialog => {
         alerts.push(dialog.message());
         dialog.dismiss();

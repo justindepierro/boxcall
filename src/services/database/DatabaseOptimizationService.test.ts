@@ -54,7 +54,7 @@ const mockSupabaseClient = {
 
 describe('Database Optimization System', () => {
   let dbOptimization: DatabaseOptimizationService;
-  let optimizedService: OptimizedBaseService<'users'>;
+  let optimizedService: OptimizedBaseService<'profiles'>;
 
   beforeEach(() => {
     // Clear any existing state
@@ -71,7 +71,7 @@ describe('Database Optimization System', () => {
 
     optimizedService = new OptimizedBaseService(
       mockSupabaseClient as any,
-      'users' as any,
+      'profiles',
       {
         enableQueryOptimization: true,
         defaultCacheTTL: 1000,
@@ -85,7 +85,7 @@ describe('Database Optimization System', () => {
       const filters = { status: 'active' };
       
       // First query
-      const result1 = await dbOptimization.optimizedSelect('users', { filters });
+      const result1 = await dbOptimization.optimizedSelect('profiles', { filters });
       expect(result1.metrics.cacheHit).toBe(false);
       
       // Second query should hit cache
@@ -148,7 +148,8 @@ describe('Database Optimization System', () => {
     it('should provide optimized CRUD operations', async () => {
       // Test optimized create
       const createResult = await optimizedService.optimizedCreate({
-        name: 'Test User',
+        id: '1',
+        full_name: 'Test User',
         email: 'test@example.com'
       });
       
@@ -162,14 +163,14 @@ describe('Database Optimization System', () => {
       
       // Test optimized update
       const updateResult = await optimizedService.optimizedUpdate('1', {
-        name: 'Updated Name'
+        full_name: 'Updated Name'
       });
       expect(updateResult.data).toBeDefined();
       expect(updateResult.metrics.success).toBe(true);
     });
 
     it('should provide service-level metrics', async () => {
-      await optimizedService.optimizedFindMany({ status: 'active' });
+      await optimizedService.optimizedFindMany({ is_admin: true });
       await optimizedService.optimizedFindById('1');
       
       const metrics = optimizedService.getServiceMetrics();
@@ -182,7 +183,7 @@ describe('Database Optimization System', () => {
     it('should support search functionality', async () => {
       const result = await optimizedService.optimizedSearch(
         'test',
-        ['name', 'email'],
+        ['full_name', 'email'],
         { fuzzy: true, limit: 10 }
       );
       
@@ -193,7 +194,7 @@ describe('Database Optimization System', () => {
     it('should support aggregation queries', async () => {
       const result = await optimizedService.optimizedAggregate(
         { count: true, sum: ['score'] },
-        { status: 'active' }
+        { is_admin: true }
       );
       
       expect(result.data).toBeDefined();
@@ -206,7 +207,7 @@ describe('Database Optimization System', () => {
       const { result } = renderHook(() =>
         useOptimizedQuery(
           optimizedService,
-          { status: 'active' },
+          { is_admin: true },
           { limit: 10 }
         )
       );
@@ -323,7 +324,8 @@ describe('Database Optimization System', () => {
       }
 
       const metrics = errorService.getServiceMetrics();
-      expect(metrics.errorRate).toBeGreaterThan(0);
+      // Error rate can be calculated as 1 - successRate
+      expect(metrics.successRate).toBeLessThan(1);
     });
   });
 });

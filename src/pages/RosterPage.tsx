@@ -38,7 +38,7 @@ export default function RosterPage() {
     null
   );
   const [saving, setSaving] = useState(false);
-  const [_formError, setFormError] = useState<string | null>(null); // TODO: Display error to user
+  const [, setFormError] = useState<string | null>(null); // TODO: Display error to user
 
   // Form state for add/edit
   const [playerForm, setPlayerForm] = useState({
@@ -94,7 +94,7 @@ export default function RosterPage() {
       const matchesPosition =
         !positionFilter || player.position === positionFilter;
       const matchesStatus =
-        !statusFilter || player.roster_status === statusFilter;
+        !statusFilter || player.is_active === (statusFilter === "active");
 
       return matchesSearch && matchesPosition && matchesStatus;
     });
@@ -264,9 +264,6 @@ export default function RosterPage() {
             ? parseInt(csvPlayer.height)
             : undefined,
           weight_lbs: csvPlayer.weight ? parseInt(csvPlayer.weight) : undefined,
-          graduation_year: csvPlayer.graduationYear
-            ? parseInt(csvPlayer.graduationYear)
-            : undefined,
         };
 
         await rosterService.createPlayer(playerData);
@@ -546,9 +543,7 @@ export default function RosterPage() {
                     className={`capitalize px-2 py-1 rounded text-xs ${
                       player.is_active
                         ? "bg-green-100 text-green-800"
-                        : player.roster_status === "injured"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-800"
+                        : "bg-gray-100 text-gray-800"
                     }`}
                   >
                     {player.is_active ? "Active" : "Inactive"}
