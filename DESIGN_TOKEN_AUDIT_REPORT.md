@@ -1,7 +1,7 @@
 # Design Token Audit Report
 
-**Generated**: 2025-10-05T20:03:24.418Z  
-**Total Violations**: 1118
+**Generated**: 2025-10-05T20:29:01.905Z  
+**Total Violations**: 559
 
 ---
 
@@ -9,171 +9,43 @@
 
 | Type | Count | Severity |
 |------|-------|----------|
-| hex-color | 654 | 🔴 High |
-| rgba-color | 161 | 🔴 High |
+| hex-color | 203 | 🔴 High |
+| rgba-color | 107 | 🔴 High |
 | px-spacing | 89 | 🟡 Medium |
-| tailwind-spacing | 73 | 🟡 Medium |
-| rgb-color | 71 | ⚪ Info |
-| border-radius | 37 | 🟢 Low |
+| tailwind-spacing | 72 | 🟡 Medium |
+| border-radius | 35 | 🟢 Low |
 | box-shadow | 32 | 🟡 Medium |
+| rgb-color | 20 | ⚪ Info |
 | tailwind-hex | 1 | 🔴 High |
 
 ---
 
 ## Top 20 Files by Violation Count
 
-1. **src/design-system/tokens.ts**: 169 violations
-2. **src/styles/generated-themes.css**: 140 violations
-3. **src/index.css**: 124 violations
-4. **src/styles/team-dashboard.css**: 100 violations
-5. **src/themes/registry.ts**: 67 violations
-6. **src/lib/colorGeneration.ts**: 53 violations
-7. **src/styles/mobile.css**: 41 violations
-8. **src/styles/tailwind/auroraTheme.js**: 30 violations
-9. **src/components/ui/Badge/Badge.css**: 28 violations
-10. **src/styles/responsive-dashboard.css**: 25 violations
-11. **src/hooks/useColorTheme.ts**: 22 violations
-12. **src/styles/generated-tokens.css**: 22 violations
-13. **src/components/calendar/BoxCallCalendar.css**: 18 violations
-14. **src/stories/page.css**: 16 violations
-15. **src/styles/animations.css**: 16 violations
-16. **src/components/ui/Button/Button.tsx**: 13 violations
-17. **src/dev/contrastDebug.ts**: 12 violations
-18. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
-19. **src/components/pdf/PracticeScriptPDF.tsx**: 10 violations
-20. **src/services/pdf/styles.ts**: 9 violations
+1. **src/index.css**: 124 violations
+2. **src/styles/team-dashboard.css**: 100 violations
+3. **src/styles/mobile.css**: 41 violations
+4. **src/components/ui/Badge/Badge.css**: 28 violations
+5. **src/styles/responsive-dashboard.css**: 25 violations
+6. **src/components/calendar/BoxCallCalendar.css**: 18 violations
+7. **src/stories/page.css**: 16 violations
+8. **src/styles/animations.css**: 16 violations
+9. **src/components/ui/Button/Button.tsx**: 13 violations
+10. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
+11. **src/services/pdf/styles.ts**: 9 violations
+12. **src/types/practice.ts**: 9 violations
+13. **src/components/accessibility/AccessibilityProvider.tsx**: 8 violations
+14. **src/styles/overflow-prevention.css**: 7 violations
+15. **src/components/playbook/diagram/components/PlayerSidebar.tsx**: 6 violations
+16. **src/components/playbook/diagram/PlayDiagramBuilder.tsx**: 5 violations
+17. **src/components/ui/AppIconTile.tsx**: 5 violations
+18. **src/stories/button.css**: 5 violations
+19. **src/components/layout/Footer.tsx**: 4 violations
+20. **src/styles/density.css**: 4 violations
 
 ---
 
 ## Detailed Violations
-
-### src/design-system/tokens.ts (169 violations)
-
-- **Line 15** (hex-color): `#ECFDF5`
-  - 💡 Suggestion: `colorTokens.jade[50]`
-  - Context: `50: "#ECFDF5",`
-
-- **Line 16** (hex-color): `#D1FAE5`
-  - 💡 Suggestion: `colorTokens.jade[100]`
-  - Context: `100: "#D1FAE5",`
-
-- **Line 17** (hex-color): `#A7F3D0`
-  - 💡 Suggestion: `colorTokens.jade[200]`
-  - Context: `200: "#A7F3D0",`
-
-- **Line 18** (hex-color): `#6EE7B7`
-  - 💡 Suggestion: `colorTokens.jade[300]`
-  - Context: `300: "#6EE7B7",`
-
-- **Line 19** (hex-color): `#34D399`
-  - 💡 Suggestion: `colorTokens.jade[400]`
-  - Context: `400: "#34D399",`
-
-- **Line 20** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `500: "#00A86B", // PRIMARY brand color`
-
-- **Line 21** (hex-color): `#047857`
-  - 💡 Suggestion: `colorTokens.jade[600]`
-  - Context: `600: "#047857", // MAIN interaction color (hover, focus, icons)`
-
-- **Line 22** (hex-color): `#065F46`
-  - 💡 Suggestion: `colorTokens.jade[700]`
-  - Context: `700: "#065F46",`
-
-- **Line 23** (hex-color): `#064E3B`
-  - 💡 Suggestion: `colorTokens.jade[800]`
-  - Context: `800: "#064E3B",`
-
-- **Line 24** (hex-color): `#052E16`
-  - 💡 Suggestion: `colorTokens.jade[900]`
-  - Context: `900: "#052E16",`
-
-- **Line 29** (hex-color): `#F8FAFC`
-  - 💡 Suggestion: `colorTokens.navy[50]`
-  - Context: `50: "#F8FAFC",`
-
-- **Line 30** (hex-color): `#F1F5F9`
-  - 💡 Suggestion: `colorTokens.navy[100]`
-  - Context: `100: "#F1F5F9",`
-
-- **Line 31** (hex-color): `#E2E8F0`
-  - 💡 Suggestion: `colorTokens.navy[200]`
-  - Context: `200: "#E2E8F0",`
-
-- **Line 32** (hex-color): `#CBD5E1`
-  - 💡 Suggestion: `colorTokens.navy[300]`
-  - Context: `300: "#CBD5E1",`
-
-- **Line 33** (hex-color): `#94A3B8`
-  - 💡 Suggestion: `colorTokens.navy[400]`
-  - Context: `400: "#94A3B8",`
-
-... and 154 more violations
-
-### src/styles/generated-themes.css (140 violations)
-
-- **Line 2** (hex-color): `#00a86b`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `--semantic-primary: #00a86b;`
-
-- **Line 3** (hex-color): `#047857`
-  - 💡 Suggestion: `colorTokens.jade[600]`
-  - Context: `--semantic-primary-hover: #047857;`
-
-- **Line 4** (hex-color): `#065f46`
-  - 💡 Suggestion: `colorTokens.jade[700]`
-  - Context: `--semantic-primary-active: #065f46;`
-
-- **Line 5** (hex-color): `#111827`
-  - 💡 Suggestion: `colorTokens.gray[900]`
-  - Context: `--semantic-text-primary: #111827;`
-
-- **Line 6** (hex-color): `#4b5563`
-  - 💡 Suggestion: `colorTokens.gray[600]`
-  - Context: `--semantic-text-secondary: #4b5563;`
-
-- **Line 7** (hex-color): `#6b7280`
-  - 💡 Suggestion: `colorTokens.gray[500]`
-  - Context: `--semantic-text-muted: #6b7280;`
-
-- **Line 8** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `--semantic-text-inverse: #ffffff;`
-
-- **Line 9** (hex-color): `#047857`
-  - 💡 Suggestion: `colorTokens.jade[600]`
-  - Context: `--semantic-text-brand: #047857;`
-
-- **Line 10** (hex-color): `#00a86b`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `--semantic-text-accent: #00a86b;`
-
-- **Line 11** (hex-color): `#475569`
-  - 💡 Suggestion: `colorTokens.navy[600]`
-  - Context: `--semantic-text-accent-secondary: #475569;`
-
-- **Line 12** (hex-color): `#7c3aed`
-  - 💡 Suggestion: `colorTokens.purple[700]`
-  - Context: `--semantic-text-accent-electric: #7c3aed;`
-
-- **Line 13** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `--semantic-bg-primary: #ffffff;`
-
-- **Line 14** (hex-color): `#f9fafb`
-  - 💡 Suggestion: `colorTokens.gray[50]`
-  - Context: `--semantic-bg-secondary: #f9fafb;`
-
-- **Line 15** (hex-color): `#f3f4f6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `--semantic-bg-muted: #f3f4f6;`
-
-- **Line 16** (hex-color): `#f3f4f6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `--semantic-surface-subtle-hover: #f3f4f6;`
-
-... and 125 more violations
 
 ### src/index.css (124 violations)
 
@@ -287,128 +159,6 @@
 
 ... and 85 more violations
 
-### src/themes/registry.ts (67 violations)
-
-- **Line 11** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `primary: "#00A86B",`
-
-- **Line 17** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `textInverse: "#ffffff",`
-
-- **Line 19** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `bgPrimary: "#ffffff",`
-
-- **Line 26** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `borderFocus: "#00A86B",`
-
-- **Line 30** (hex-color): `#F0FDF4`
-  - 💡 Suggestion: `colorTokens.success[50]`
-  - Context: `successBg: "#F0FDF4",`
-
-- **Line 45** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `primary: "#00A86B",`
-
-- **Line 56** (rgba-color): `rgba(55,65,81,0.85)`
-  - Context: `surfaceSubtleHover: "rgba(55,65,81,0.85)",`
-
-- **Line 60** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `borderFocus: "#00A86B",`
-
-- **Line 62** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `focusRing: "#00A86B",`
-
-- **Line 66** (hex-color): `#78350F`
-  - 💡 Suggestion: `colorTokens.amber[900]`
-  - Context: `warningBg: "#78350F",`
-
-- **Line 68** (hex-color): `#7F1D1D`
-  - 💡 Suggestion: `colorTokens.red[900]`
-  - Context: `errorBg: "#7F1D1D",`
-
-- **Line 80** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `primaryHover: "#00A86B",`
-
-- **Line 82** (hex-color): `#000000`
-  - 💡 Suggestion: `black / semanticTokens.textPrimary`
-  - Context: `textPrimary: "#000000",`
-
-- **Line 85** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `textInverse: "#ffffff",`
-
-- **Line 87** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `bgPrimary: "#ffffff",`
-
-... and 52 more violations
-
-### src/lib/colorGeneration.ts (53 violations)
-
-- **Line 56** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `primary: '#00A86B',`
-
-- **Line 57** (hex-color): `#1E293B`
-  - 💡 Suggestion: `colorTokens.navy[800]`
-  - Context: `secondary: '#1E293B',`
-
-- **Line 59** (hex-color): `#F0FDF4`
-  - 💡 Suggestion: `colorTokens.success[50]`
-  - Context: `background: '#F0FDF4',`
-
-- **Line 60** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `surface: "#ffffff",`
-
-- **Line 61** (hex-color): `#052E16`
-  - 💡 Suggestion: `colorTokens.jade[900]`
-  - Context: `text: '#052E16',`
-
-- **Line 65** (hex-color): `#FF6B6B`
-  - Context: `secondary: '#FF6B6B',`
-
-- **Line 66** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `accent: '#00A86B',`
-
-- **Line 68** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `surface: "#ffffff",`
-
-- **Line 69** (hex-color): `#4C1D95`
-  - 💡 Suggestion: `colorTokens.violet[900]`
-  - Context: `text: '#4C1D95',`
-
-- **Line 72** (hex-color): `#009688`
-  - Context: `primary: '#009688',`
-
-- **Line 73** (hex-color): `#7CB342`
-  - Context: `secondary: '#7CB342',`
-
-- **Line 74** (hex-color): `#00A86B`
-  - 💡 Suggestion: `colorTokens.jade[500]`
-  - Context: `accent: '#00A86B',`
-
-- **Line 75** (hex-color): `#F0F9FF`
-  - Context: `background: '#F0F9FF',`
-
-- **Line 76** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `surface: "#ffffff",`
-
-- **Line 77** (hex-color): `#0F766E`
-  - Context: `text: '#0F766E',`
-
-... and 38 more violations
-
 ### src/styles/mobile.css (41 violations)
 
 - **Line 14** (px-spacing): `44px`
@@ -457,64 +207,6 @@
   - Context: `0 4px 8px rgba(0, 0, 0, 0.1),`
 
 ... and 26 more violations
-
-### src/styles/tailwind/auroraTheme.js (30 violations)
-
-- **Line 10** (hex-color): `#FEF3C7`
-  - 💡 Suggestion: `colorTokens.amber[100]`
-  - Context: `"#FEF3C7 0%",`
-
-- **Line 11** (hex-color): `#FFF7ED`
-  - Context: `"#FFF7ED 50%",`
-
-- **Line 12** (hex-color): `#FFE4E6`
-  - Context: `"#FFE4E6 100%",`
-
-- **Line 15** (hex-color): `#D1FAE5`
-  - 💡 Suggestion: `colorTokens.jade[100]`
-  - Context: `"#D1FAE5 0%",`
-
-- **Line 16** (hex-color): `#ECFDF5`
-  - 💡 Suggestion: `colorTokens.jade[50]`
-  - Context: `"#ECFDF5 55%",`
-
-- **Line 17** (hex-color): `#CCFBF1`
-  - Context: `"#CCFBF1 100%",`
-
-- **Line 20** (hex-color): `#E0E7FF`
-  - Context: `"#E0E7FF 0%",`
-
-- **Line 21** (hex-color): `#F0F9FF`
-  - Context: `"#F0F9FF 55%",`
-
-- **Line 22** (hex-color): `#F3E8FF`
-  - 💡 Suggestion: `colorTokens.purple[100]`
-  - Context: `"#F3E8FF 100%",`
-
-- **Line 25** (hex-color): `#EDE9FE`
-  - 💡 Suggestion: `colorTokens.violet[100]`
-  - Context: `"#EDE9FE 0%",`
-
-- **Line 26** (hex-color): `#FAF5FF`
-  - 💡 Suggestion: `colorTokens.purple[50]`
-  - Context: `"#FAF5FF 55%",`
-
-- **Line 27** (hex-color): `#DBEAFE`
-  - 💡 Suggestion: `colorTokens.blue[100]`
-  - Context: `"#DBEAFE 100%",`
-
-- **Line 30** (hex-color): `#CCFBF1`
-  - Context: `"#CCFBF1 0%",`
-
-- **Line 31** (hex-color): `#ECFDF5`
-  - 💡 Suggestion: `colorTokens.jade[50]`
-  - Context: `"#ECFDF5 55%",`
-
-- **Line 32** (hex-color): `#D1FAE5`
-  - 💡 Suggestion: `colorTokens.jade[100]`
-  - Context: `"#D1FAE5 100%",`
-
-... and 15 more violations
 
 ### src/components/ui/Badge/Badge.css (28 violations)
 
@@ -621,6 +313,241 @@
 
 ... and 10 more violations
 
+### src/components/calendar/BoxCallCalendar.css (18 violations)
+
+- **Line 11** (hex-color): `#f9fafb`
+  - 💡 Suggestion: `colorTokens.gray[50]`
+  - Context: `--fc-neutral-bg-color: #f9fafb;`
+
+- **Line 12** (hex-color): `#ffffff`
+  - 💡 Suggestion: `semanticTokens.textInverse`
+  - Context: `--fc-page-bg-color: #ffffff;`
+
+- **Line 30** (border-radius): `0.375rem`
+  - Context: `border-radius: 0.375rem;`
+
+- **Line 36** (rgba-color): `rgba(0, 168, 107, 0.2)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2);`
+
+- **Line 36** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2);`
+
+- **Line 41** (border-radius): `0.25rem`
+  - Context: `border-radius: 0.25rem;`
+
+- **Line 46** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 46** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 52** (rgba-color): `rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+
+- **Line 52** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+
+- **Line 113** (px-spacing): `768px`
+  - Context: `@media (max-width: 768px) {`
+
+- **Line 140** (px-spacing): `480px`
+  - Context: `@media (max-width: 480px) {`
+
+- **Line 164** (box-shadow): `box-shadow: 0 0 0 2px var(--color-brand-jade)`
+  - Context: `box-shadow: 0 0 0 2px var(--color-brand-jade);`
+
+- **Line 178** (px-spacing): `32px`
+  - 💡 Suggestion: `spacingTokens[8]`
+  - Context: `width: 32px;`
+
+- **Line 179** (px-spacing): `32px`
+  - 💡 Suggestion: `spacingTokens[8]`
+  - Context: `height: 32px;`
+
+... and 3 more violations
+
+### src/stories/page.css (16 violations)
+
+- **Line 3** (px-spacing): `48px`
+  - 💡 Suggestion: `spacingTokens[12]`
+  - Context: `padding: 48px 20px;`
+
+- **Line 4** (px-spacing): `600px`
+  - Context: `max-width: 600px;`
+
+- **Line 5** (hex-color): `#333`
+  - Context: `color: #333;`
+
+- **Line 7** (px-spacing): `24px`
+  - 💡 Suggestion: `spacingTokens[6]`
+  - Context: `line-height: 24px;`
+
+- **Line 34** (px-spacing): `8px`
+  - 💡 Suggestion: `spacingTokens[2]`
+  - Context: `margin-bottom: 8px;`
+
+- **Line 42** (hex-color): `#e7fdd8`
+  - Context: `background: #e7fdd8;`
+
+- **Line 43** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `padding: 4px 12px;`
+
+- **Line 44** (hex-color): `#357a14`
+  - Context: `color: #357a14;`
+
+- **Line 47** (px-spacing): `12px`
+  - 💡 Suggestion: `spacingTokens[3]`
+  - Context: `line-height: 12px;`
+
+- **Line 51** (px-spacing): `40px`
+  - 💡 Suggestion: `spacingTokens[10]`
+  - Context: `margin-top: 40px;`
+
+- **Line 52** (px-spacing): `40px`
+  - 💡 Suggestion: `spacingTokens[10]`
+  - Context: `margin-bottom: 40px;`
+
+- **Line 54** (px-spacing): `20px`
+  - 💡 Suggestion: `spacingTokens[5]`
+  - Context: `line-height: 20px;`
+
+- **Line 61** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `margin-right: 4px;`
+
+- **Line 62** (px-spacing): `12px`
+  - 💡 Suggestion: `spacingTokens[3]`
+  - Context: `width: 12px;`
+
+- **Line 63** (px-spacing): `12px`
+  - 💡 Suggestion: `spacingTokens[3]`
+  - Context: `height: 12px;`
+
+... and 1 more violations
+
+### src/styles/animations.css (16 violations)
+
+- **Line 54** (box-shadow): `box-shadow: var(--glass-shadow)`
+  - Context: `box-shadow: var(--glass-shadow);`
+
+- **Line 62** (rgba-color): `rgba(255, 255, 255, 0.9)`
+  - Context: `background: rgba(255, 255, 255, 0.9);`
+
+- **Line 63** (rgba-color): `rgba(255, 255, 255, 0.3)`
+  - Context: `border-color: rgba(255, 255, 255, 0.3);`
+
+- **Line 64** (rgba-color): `rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);`
+
+- **Line 64** (box-shadow): `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);`
+
+- **Line 75** (box-shadow): `box-shadow: var(--hover-glow)`
+  - Context: `box-shadow: var(--hover-glow);`
+
+- **Line 96** (rgba-color): `rgba(0, 168, 107, 0.1)`
+  - Context: `rgba(0, 168, 107, 0.1),`
+
+- **Line 97** (rgba-color): `rgba(0, 168, 107, 0.05)`
+  - Context: `rgba(0, 168, 107, 0.05)`
+
+- **Line 384** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 384** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 388** (rgba-color): `rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+
+- **Line 388** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+
+- **Line 481** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);`
+
+- **Line 481** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);`
+
+- **Line 498** (rgba-color): `rgba(0, 168, 107, 0.2)`
+  - Context: `box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);`
+
+... and 1 more violations
+
+### src/components/ui/Button/Button.tsx (13 violations)
+
+- **Line 156** (tailwind-spacing): `h-[1.85rem]`
+  - Context: `height: "h-[1.85rem]",`
+
+- **Line 161** (tailwind-spacing): `w-[0.9rem]`
+  - Context: `iconSize: "w-[0.9rem] h-[0.9rem]",`
+
+- **Line 161** (tailwind-spacing): `h-[0.9rem]`
+  - Context: `iconSize: "w-[0.9rem] h-[0.9rem]",`
+
+- **Line 162** (tailwind-spacing): `h-[2.35rem]`
+  - Context: `height: "h-[2.35rem]",`
+
+- **Line 167** (tailwind-spacing): `w-[0.95rem]`
+  - Context: `iconSize: "w-[0.95rem] h-[0.95rem]",`
+
+- **Line 167** (tailwind-spacing): `h-[0.95rem]`
+  - Context: `iconSize: "w-[0.95rem] h-[0.95rem]",`
+
+- **Line 168** (tailwind-spacing): `h-[2.7rem]`
+  - Context: `height: "h-[2.7rem]",`
+
+- **Line 173** (tailwind-spacing): `w-[1.05rem]`
+  - Context: `iconSize: "w-[1.05rem] h-[1.05rem]",`
+
+- **Line 173** (tailwind-spacing): `h-[1.05rem]`
+  - Context: `iconSize: "w-[1.05rem] h-[1.05rem]",`
+
+- **Line 174** (tailwind-spacing): `h-[3rem]`
+  - Context: `height: "h-[3rem]",`
+
+- **Line 179** (tailwind-spacing): `w-[1.2rem]`
+  - Context: `iconSize: "w-[1.2rem] h-[1.2rem]",`
+
+- **Line 179** (tailwind-spacing): `h-[1.2rem]`
+  - Context: `iconSize: "w-[1.2rem] h-[1.2rem]",`
+
+- **Line 180** (tailwind-spacing): `h-[3.4rem]`
+  - Context: `height: "h-[3.4rem]",`
+
+### src/components/design-system/DesignSystemShowcase.tsx (10 violations)
+
+- **Line 31** (hex-color): `#002244`
+  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
+
+- **Line 31** (hex-color): `#C8102E`
+  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
+
+- **Line 32** (hex-color): `#E31837`
+  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
+
+- **Line 32** (hex-color): `#FFB612`
+  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
+
+- **Line 33** (hex-color): `#AA0000`
+  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
+
+- **Line 33** (hex-color): `#B3995D`
+  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
+
+- **Line 34** (hex-color): `#203731`
+  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
+
+- **Line 34** (hex-color): `#FFB612`
+  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
+
+- **Line 35** (hex-color): `#003594`
+  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
+
+- **Line 35** (hex-color): `#869397`
+  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
+
 
 
 ---
@@ -629,7 +556,7 @@
 
 ### Immediate Actions (High Priority)
 
-1. **Replace hardcoded hex colors** (654 violations)
+1. **Replace hardcoded hex colors** (203 violations)
    - Map to existing color tokens where possible
    - Add missing semantic tokens for common colors
 
@@ -637,7 +564,7 @@
    - Use spacing tokens (4px grid)
    - Replace all hardcoded px values
 
-3. **Fix Tailwind arbitrary values** (74 violations)
+3. **Fix Tailwind arbitrary values** (73 violations)
    - Use Tailwind utility classes
    - Extend Tailwind config with design tokens
 
@@ -647,7 +574,7 @@
    - Define elevation tokens
    - Replace all box-shadow with tokens
 
-5. **Border radius consistency** (37 violations)
+5. **Border radius consistency** (35 violations)
    - Use border radius tokens
    - Standardize corner styles
 

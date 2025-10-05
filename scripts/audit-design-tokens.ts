@@ -64,9 +64,61 @@ const violations: Violation[] = [];
 const fileExtensions = [".ts", ".tsx", ".js", ".jsx", ".css", ".scss"];
 const excludeDirs = ["node_modules", "dist", "build", ".next", "coverage", ".git"];
 
+// Infrastructure files that should keep hex values (token definitions, themes, utilities)
+const excludeFiles = [
+  // Token definitions (source of truth)
+  "src/design-system/tokens.ts",
+  "src/design-system/tokens.js",
+  
+  // Theme infrastructure
+  "src/themes/registry.ts",
+  "src/themes/dark.ts",
+  "src/themes/light.ts",
+  "src/themes/highContrast.ts",
+  
+  // Color utilities
+  "src/lib/colorGeneration.ts",
+  "src/hooks/useColorTheme.ts",
+  
+  // Tailwind config
+  "src/styles/tailwind/auroraTheme.js",
+  "tailwind.config.js",
+  "tailwind.config.ts",
+  
+  // CSS variable definitions (intentional hex values)
+  "src/styles/generated-themes.css",
+  "src/styles/generated-tokens.css",
+  
+  // Dev/debug tools (lower priority)
+  "src/dev/contrastDebug.ts",
+];
+
+// Additional paths to skip (directories and patterns)
+const excludePatterns = [
+  /src\/dev\//,
+  /src\/themes\//,
+  /\.test\./,
+  /\.spec\./,
+  /__tests__/,
+  /\.stories\./,
+];
+
 function shouldScanFile(filePath: string): boolean {
   const ext = filePath.substring(filePath.lastIndexOf("."));
-  return fileExtensions.includes(ext);
+  if (!fileExtensions.includes(ext)) return false;
+  
+  // Check if file is in exclude list
+  const normalizedPath = filePath.replace(/\\/g, "/");
+  if (excludeFiles.some(excluded => normalizedPath.includes(excluded))) {
+    return false;
+  }
+  
+  // Check if file matches exclude patterns
+  if (excludePatterns.some(pattern => pattern.test(normalizedPath))) {
+    return false;
+  }
+  
+  return true;
 }
 
 function shouldScanDir(dirName: string): boolean {
