@@ -1,5 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
+import { colorTokens } from "../../../design-system/tokens";
 
 export interface TooltipProps {
   children: React.ReactNode;
@@ -95,7 +96,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       position: "fixed", // Changed from absolute to fixed for viewport-relative positioning
       zIndex: 9999,
       padding: "8px 12px",
-      background: "#1f2937",
+      background: colorTokens.gray[800],
       color: "white",
       borderRadius: "8px",
       fontSize: "12px",

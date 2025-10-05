@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../design-system/tokens";
 
 /**
  * Super minimal tooltip for debugging
@@ -34,7 +35,7 @@ export const SimpleTooltip = ({
             transform: "translateX(-50%)",
             marginBottom: "8px",
             padding: "8px 12px",
-            background: "#1f2937",
+            background: colorTokens.gray[800],
             color: "white",
             borderRadius: "6px",
             fontSize: "12px",
