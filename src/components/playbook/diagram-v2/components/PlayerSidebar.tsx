@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 import { Button } from "../../../ui/Button";
 import { useDiagramEditor } from "../context";
 import type { DiagramPlayer, DiagramDocument } from "../types";
@@ -335,7 +336,7 @@ export const PlayerSidebar: React.FC = () => {
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                             value={
                               gp.color ||
-                              (gp.side === "D" ? "#b91c1c" : "#1e3a8a")
+                              (gp.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
                             }
                             onChange={(e) =>
                               dispatch({
@@ -350,7 +351,7 @@ export const PlayerSidebar: React.FC = () => {
                           <input
                             type="color"
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
-                            value={gp.outlineColor || "#ffffff"}
+                            value={gp.outlineColor || colorTokens.gray[50]}
                             onChange={(e) =>
                               dispatch({
                                 type: "UPDATE_PLAYER",
@@ -374,11 +375,11 @@ export const PlayerSidebar: React.FC = () => {
                           >
                             <option value="">Auto</option>
                             {[
-                              "#ffffff",
-                              "#f8fafc",
-                              "#1f2937",
-                              "#111827",
-                              "#000000",
+                              colorTokens.gray[50],   // white
+                              colorTokens.gray[100],  // near-white
+                              colorTokens.gray[800],  // dark gray
+                              colorTokens.gray[900],  // darker
+                              "#000000",              // pure black
                             ].map((c) => (
                               <option key={c} value={c}>
                                 {c}
@@ -589,7 +590,7 @@ export const PlayerSidebar: React.FC = () => {
                           type="color"
                           className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                           value={
-                            p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
+                            p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
                           }
                           onChange={(e) =>
                             dispatch({
@@ -604,7 +605,7 @@ export const PlayerSidebar: React.FC = () => {
                         <input
                           type="color"
                           className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
-                          value={p.outlineColor || "#ffffff"}
+                          value={p.outlineColor || colorTokens.gray[50]}
                           onChange={(e) =>
                             dispatch({
                               type: "UPDATE_PLAYER",
@@ -628,11 +629,11 @@ export const PlayerSidebar: React.FC = () => {
                         >
                           <option value="">Auto</option>
                           {[
-                            "#ffffff",
-                            "#f8fafc",
-                            "#1f2937",
-                            "#111827",
-                            "#000000",
+                            colorTokens.gray[50],   // white
+                            colorTokens.gray[100],  // near-white
+                            colorTokens.gray[800],  // dark gray
+                            colorTokens.gray[900],  // darker
+                            "#000000",              // pure black
                           ].map((c) => (
                             <option key={c} value={c}>
                               {c}
