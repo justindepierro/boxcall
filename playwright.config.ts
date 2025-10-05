@@ -42,6 +42,20 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
+  /* Visual regression testing configuration */
+  expect: {
+    toHaveScreenshot: {
+      // Maximum pixel ratio difference allowed
+      maxDiffPixelRatio: 0.01, // 1% difference threshold
+      
+      // Animations: disabled for consistent screenshots
+      animations: 'disabled',
+      
+      // Compare images pixel by pixel
+      threshold: 0.2,
+    },
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {

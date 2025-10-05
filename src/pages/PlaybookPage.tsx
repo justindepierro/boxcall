@@ -28,6 +28,7 @@ import type { DiagramDocument } from "../components/playbook/diagram/types/types
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { GlassCard } from "../components/ui/GlassCard";
+import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
 
 // Lazy load modal components for code splitting (~120KB savings)
@@ -181,6 +182,13 @@ export default function PlaybookPage() {
   useEffect(() => {
     const loadActivities = async () => {
       try {
+        // Only load activities if user is authenticated
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          debug("Skipping activities load - user not authenticated yet");
+          return;
+        }
+        
         const activities = await ActivityService.getRecentActivities(
           activeTeamId || undefined,
           10
