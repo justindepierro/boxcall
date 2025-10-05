@@ -68,11 +68,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center p-8 ${className}`}>
+      <div className={`flex items-center justify-center p-spacing-2xl ${className}`}>
         <div className="text-center">
           <Icon
             name="refresh-cw"
-            className="h-8 w-8 animate-spin text-jade-600 mx-auto mb-4"
+            className="h-8 w-8 animate-spin text-jade-600 mx-auto mb-spacing-md"
           />
           <Typography variant="body-lg">Loading analytics...</Typography>
         </div>
@@ -82,15 +82,15 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   if (error) {
     return (
-      <div className={`p-8 text-center ${className}`}>
+      <div className={`p-spacing-2xl text-center ${className}`}>
         <Icon
           name="alert-triangle"
-          className="h-12 w-12 text-text-error mx-auto mb-4"
+          className="h-12 w-12 text-text-error mx-auto mb-spacing-md"
         />
-        <Typography variant="headline-sm" className="text-text-error mb-2">
+        <Typography variant="headline-sm" className="text-text-error mb-spacing-xs">
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-text-error mb-4">
+        <Typography variant="body-sm" className="text-text-error mb-spacing-md">
           {error}
         </Typography>
         <Button onClick={loadAnalytics} variant="secondary">
@@ -102,12 +102,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   if (!analytics || analytics.totalPlays === 0) {
     return (
-      <div className={`p-8 text-center ${className}`}>
+      <div className={`p-spacing-2xl text-center ${className}`}>
         <Icon
           name="bar-chart"
-          className="h-12 w-12 text-text-muted mx-auto mb-4"
+          className="h-12 w-12 text-text-muted mx-auto mb-spacing-md"
         />
-        <Typography variant="headline-sm" className="text-text-secondary mb-2">
+        <Typography variant="headline-sm" className="text-text-secondary mb-spacing-xs">
           No Analytics Data
         </Typography>
         <Typography variant="body-sm" className="text-text-secondary">
@@ -209,7 +209,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       footnote: selectedView === "overview" ? "Active view" : "Tap to open",
       buttonLabel: "Overview",
       renderContent: () => (
-        <div className="grid gap-2 text-sm text-text-secondary">
+        <div className="grid gap-spacing-xs text-sm text-text-secondary">
           <div className="flex items-center justify-between">
             <span>Total plays</span>
             <span className="font-semibold text-text-primary">
@@ -243,9 +243,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       footnote: selectedView === "formations" ? "Active view" : "Tap to open",
       buttonLabel: "Formations",
       renderContent: () => (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-spacing-xs text-sm">
           <div className="text-text-secondary">Top formation</div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary truncate">
               {bestFormation?.formation ?? "No data"}
             </span>
@@ -276,9 +276,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       footnote: selectedView === "situational" ? "Active view" : "Tap to open",
       buttonLabel: "Situational",
       renderContent: () => (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-spacing-xs text-sm">
           <div className="text-text-secondary">Best down & distance</div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary truncate">
               {bestDown ? bestDown[0] : "No data"}
             </span>
@@ -307,9 +307,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       footnote: selectedView === "performance" ? "Active view" : "Tap to open",
       buttonLabel: "Performance",
       renderContent: () => (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-spacing-xs text-sm">
           <div className="text-text-secondary">Focus</div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary capitalize">
               {complexityCopy[complexityFocus[0]]}
             </span>
@@ -343,9 +343,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         selectedView === "player-performance" ? "Active view" : "Tap to open",
       buttonLabel: "Players",
       renderContent: () => (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-spacing-xs text-sm">
           <div className="text-text-secondary">Top performing play</div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary truncate">
               {topPlay?.playName ?? "No data"}
             </span>
@@ -377,9 +377,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         selectedView === "game-planning" ? "Active view" : "Tap to open",
       buttonLabel: "Game Planning",
       renderContent: () => (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-spacing-xs text-sm">
           <div className="text-text-secondary">Personnel advantage</div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary truncate">
               {bestPersonnel ? bestPersonnel[0] : "No data"}
             </span>
@@ -399,9 +399,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   ];
 
   return (
-    <div className={`space-y-8 ${className}`}>
+    <div className={`space-y-spacing-2xl ${className}`}>
       <div className="rounded-glass-lg border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
-        <div className="mb-6 flex flex-col gap-2">
+        <div className="mb-spacing-lg flex flex-col gap-spacing-xs">
           <Typography
             variant="headline-md"
             className="flex items-center gap-3 text-text-primary"
@@ -413,7 +413,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             Choose a workspace to dive deeper into your playbook trends.
           </Typography>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-5">
+        <div className="grid grid-cols-1 gap-spacing-md sm:grid-cols-2 xl:grid-cols-3 xl:gap-5">
           {heroTiles.map((tile) => (
             <AuroraTile
               key={tile.key}
@@ -433,14 +433,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-spacing-xs">
         {heroTiles.map(({ key, buttonLabel, icon }) => (
           <Button
             key={key}
             variant={selectedView === key ? "primary" : "secondary"}
             size="sm"
             onClick={() => setSelectedView(key)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-spacing-xs"
             aria-pressed={selectedView === key}
           >
             <Icon name={icon} className="h-4 w-4" />
@@ -474,9 +474,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
   analytics,
 }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-lg">
     {/* Key Metrics */}
-    <Card className="p-6">
+    <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
           <Typography variant="body-sm" className="text-text-secondary">
@@ -490,7 +490,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </div>
     </Card>
 
-    <Card className="p-6">
+    <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
           <Typography variant="body-sm" className="text-text-secondary">
@@ -504,7 +504,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </div>
     </Card>
 
-    <Card className="p-6">
+    <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
           <Typography variant="body-sm" className="text-text-secondary">
@@ -518,7 +518,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </div>
     </Card>
 
-    <Card className="p-6">
+    <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
           <Typography variant="body-sm" className="text-text-secondary">
@@ -533,14 +533,14 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
     </Card>
 
     {/* Complexity Distribution */}
-    <Card className="p-6 md:col-span-2">
-      <Typography variant="headline-sm" className="mb-4">
+    <Card className="p-spacing-lg md:col-span-2">
+      <Typography variant="headline-sm" className="mb-spacing-md">
         Complexity Distribution
       </Typography>
-      <div className="space-y-3">
+      <div className="space-y-spacing-sm">
         <div className="flex justify-between items-center">
           <span className="text-sm text-text-secondary">Low (1-3)</span>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
                 className="bg-text-success h-2 rounded-full"
@@ -556,7 +556,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-text-secondary">Medium (4-7)</span>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
                 className="bg-text-warning h-2 rounded-full"
@@ -572,7 +572,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-text-secondary">High (8-10)</span>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
                 className="bg-text-error h-2 rounded-full"
@@ -590,17 +590,17 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
     </Card>
 
     {/* Top Performing Plays */}
-    <Card className="p-6 md:col-span-2">
-      <Typography variant="headline-sm" className="mb-4">
+    <Card className="p-spacing-lg md:col-span-2">
+      <Typography variant="headline-sm" className="mb-spacing-md">
         Top Performing Plays
       </Typography>
-      <div className="space-y-3">
+      <div className="space-y-spacing-sm">
         {analytics.topPerformingPlays.slice(0, 5).map((play, index) => (
           <div
             key={play.playId}
-            className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg"
+            className="flex items-center justify-between p-spacing-sm bg-surface-secondary rounded-lg"
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-spacing-sm">
               <Badge
                 variant={index === 0 ? "success" : "neutral"}
                 className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
@@ -638,9 +638,9 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
 const FormationsView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
   analytics,
 }) => (
-  <div className="space-y-6">
+  <div className="space-y-spacing-lg">
     <Typography variant="headline-sm">Formation Analysis</Typography>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
       {analytics.formationAnalytics.map((formation) => (
         <FormationCard key={formation.formation} formation={formation} />
       ))}
@@ -652,8 +652,8 @@ const FormationsView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
 const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
   formation,
 }) => (
-  <Card className="p-6">
-    <div className="flex items-center justify-between mb-4">
+  <Card className="p-spacing-lg">
+    <div className="flex items-center justify-between mb-spacing-md">
       <Typography variant="headline-sm">{formation.formation}</Typography>
       <Badge
         variant={
@@ -668,7 +668,7 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
       </Badge>
     </div>
 
-    <div className="space-y-3">
+    <div className="space-y-spacing-sm">
       <div className="flex justify-between">
         <span className="text-sm text-text-secondary">Total Plays</span>
         <span className="font-medium">{formation.totalPlays}</span>
@@ -679,11 +679,11 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
       </div>
     </div>
 
-    <div className="mt-4">
-      <Typography variant="body-xs" className="text-text-secondary mb-2">
+    <div className="mt-spacing-md">
+      <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
         Personnel Usage
       </Typography>
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-spacing-xs">
         {Object.entries(formation.personnelBreakdown).map(
           ([personnel, count]) => (
             <Badge key={personnel} variant="neutral" className="text-xs">
@@ -700,16 +700,16 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
 const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
   analytics,
 }) => (
-  <div className="space-y-6">
+  <div className="space-y-spacing-lg">
     <Typography variant="headline-sm">Situational Performance</Typography>
 
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
       {/* By Down */}
-      <Card className="p-6">
-        <Typography variant="headline-sm" className="mb-4">
+      <Card className="p-spacing-lg">
+        <Typography variant="headline-sm" className="mb-spacing-md">
           By Down & Distance
         </Typography>
-        <div className="space-y-3">
+        <div className="space-y-spacing-sm">
           {Object.entries(analytics.situationalPerformance.byDown).map(
             ([down, stats]) => (
               <div key={down} className="flex justify-between items-center">
@@ -727,18 +727,18 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Card>
 
       {/* By Field Position */}
-      <Card className="p-6">
-        <Typography variant="headline-sm" className="mb-4">
+      <Card className="p-spacing-lg">
+        <Typography variant="headline-sm" className="mb-spacing-md">
           By Field Position
         </Typography>
-        <div className="space-y-3">
+        <div className="space-y-spacing-sm">
           {Object.entries(analytics.situationalPerformance.byFieldPosition).map(
             ([position, stats]) => (
               <div key={position} className="flex justify-between items-center">
                 <span className="text-sm text-text-secondary">{position}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-text-muted ml-2">
+                  <span className="text-xs text-text-muted ml-spacing-xs">
                     ({stats.called})
                   </span>
                 </div>
@@ -749,11 +749,11 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Card>
 
       {/* By Personnel */}
-      <Card className="p-6">
-        <Typography variant="headline-sm" className="mb-4">
+      <Card className="p-spacing-lg">
+        <Typography variant="headline-sm" className="mb-spacing-md">
           By Personnel
         </Typography>
-        <div className="space-y-3">
+        <div className="space-y-spacing-sm">
           {Object.entries(analytics.situationalPerformance.byPersonnel).map(
             ([personnel, stats]) => (
               <div
@@ -763,7 +763,7 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 <span className="text-sm text-text-secondary">{personnel}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-text-muted ml-2">
+                  <span className="text-xs text-text-muted ml-spacing-xs">
                     ({stats.called})
                   </span>
                 </div>
@@ -780,17 +780,17 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
 const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
   analytics,
 }) => (
-  <div className="space-y-6">
+  <div className="space-y-spacing-lg">
     <Typography variant="headline-sm">Performance Insights</Typography>
 
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 gap-spacing-lg">
       {/* Success Rate Trends */}
-      <Card className="p-6">
-        <Typography variant="headline-sm" className="mb-4">
+      <Card className="p-spacing-lg">
+        <Typography variant="headline-sm" className="mb-spacing-md">
           Success Rate Analysis
         </Typography>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-surface-success rounded-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md">
+          <div className="text-center p-spacing-md bg-surface-success rounded-lg">
             <Typography variant="headline-md" className="text-text-success">
               {analytics.topPerformingPlays.length > 0
                 ? Math.max(
@@ -803,7 +803,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
               Best Play
             </Typography>
           </div>
-          <div className="text-center p-4 bg-surface-info rounded-lg">
+          <div className="text-center p-spacing-md bg-surface-info rounded-lg">
             <Typography variant="headline-md" className="text-text-info">
               {analytics.averageSuccessRate.toFixed(1)}%
             </Typography>
@@ -811,7 +811,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
               Average
             </Typography>
           </div>
-          <div className="text-center p-4 bg-surface-warning rounded-lg">
+          <div className="text-center p-spacing-md bg-surface-warning rounded-lg">
             <Typography variant="headline-md" className="text-text-warning">
               {analytics.averageComplexity.toFixed(1)}/10
             </Typography>
@@ -819,7 +819,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
               Complexity
             </Typography>
           </div>
-          <div className="text-center p-4 bg-surface-secondary rounded-lg">
+          <div className="text-center p-spacing-md bg-surface-secondary rounded-lg">
             <Typography variant="headline-md" className="text-text-primary">
               {analytics.formationsCount}
             </Typography>
@@ -831,41 +831,41 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Card>
 
       {/* Recommendations */}
-      <Card className="p-6">
-        <Typography variant="headline-sm" className="mb-4">
+      <Card className="p-spacing-lg">
+        <Typography variant="headline-sm" className="mb-spacing-md">
           Strategic Recommendations
         </Typography>
-        <div className="space-y-3">
+        <div className="space-y-spacing-sm">
           {analytics.averageSuccessRate < 60 && (
-            <div className="p-3 bg-surface-warning border border-text-warning rounded-lg">
+            <div className="p-spacing-sm bg-surface-warning border border-text-warning rounded-lg">
               <Typography variant="body-sm" className="text-text-warning">
-                <Icon name="alert-triangle" className="h-4 w-4 inline mr-2" />
+                <Icon name="alert-triangle" className="h-4 w-4 inline mr-spacing-xs" />
                 Consider simplifying play calls - average success rate is below
                 60%.
               </Typography>
             </div>
           )}
           {analytics.averageComplexity > 7 && (
-            <div className="p-3 bg-surface-error border border-text-error rounded-lg">
+            <div className="p-spacing-sm bg-surface-error border border-text-error rounded-lg">
               <Typography variant="body-sm" className="text-text-error">
-                <Icon name="zap" className="h-4 w-4 inline mr-2" />
+                <Icon name="zap" className="h-4 w-4 inline mr-spacing-xs" />
                 High complexity plays may be causing execution issues.
               </Typography>
             </div>
           )}
           {analytics.formationsCount < 3 && (
-            <div className="p-3 bg-surface-info border border-text-info rounded-lg">
+            <div className="p-spacing-sm bg-surface-info border border-text-info rounded-lg">
               <Typography variant="body-sm" className="text-text-info">
-                <Icon name="grid" className="h-4 w-4 inline mr-2" />
+                <Icon name="grid" className="h-4 w-4 inline mr-spacing-xs" />
                 Consider adding more formations for situational variety.
               </Typography>
             </div>
           )}
           {analytics.topPerformingPlays.length > 0 &&
             analytics.topPerformingPlays[0].successRate > 80 && (
-              <div className="p-3 bg-surface-success border border-text-success rounded-lg">
+              <div className="p-spacing-sm bg-surface-success border border-text-success rounded-lg">
                 <Typography variant="body-sm" className="text-text-success">
-                  <Icon name="check-circle" className="h-4 w-4 inline mr-2" />
+                  <Icon name="check-circle" className="h-4 w-4 inline mr-spacing-xs" />
                   Excellent performance! Focus on replicating success patterns.
                 </Typography>
               </div>
