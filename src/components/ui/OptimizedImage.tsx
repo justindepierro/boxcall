@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { colorTokens } from "../../design-system/tokens";
 import { cdnService } from "../../services/cdn/CDNService";
 
 interface OptimizedImageProps {
@@ -122,7 +123,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate placeholder styles
   const placeholderStyle: React.CSSProperties = {
-    backgroundColor: placeholder === "blur" ? "#f3f4f6" : "transparent",
+    backgroundColor: placeholder === "blur" ? colorTokens.gray[100] : "transparent",
     backgroundImage:
       typeof placeholder === "string" &&
       placeholder !== "blur" &&
