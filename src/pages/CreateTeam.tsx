@@ -286,8 +286,8 @@ export const CreateTeam: React.FC = () => {
     switch (currentStep) {
       case "team-info":
         return (
-          <div className="space-y-4">
-            <Typography variant="headline-md" className="mb-4">
+          <div className="space-y-spacing-md">
+            <Typography variant="headline-md" className="mb-spacing-md">
               Team Information
             </Typography>
             <EnhancedInput
@@ -321,14 +321,14 @@ export const CreateTeam: React.FC = () => {
 
       case "school-info":
         return (
-          <div className="space-y-4">
-            <Typography variant="headline-md" className="mb-4">
+          <div className="space-y-spacing-md">
+            <Typography variant="headline-md" className="mb-spacing-md">
               School Details (Optional)
             </Typography>
 
             {/* Location Helper */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-spacing-md">
+              <div className="flex items-start gap-spacing-sm">
                 <Icon
                   name="map-pin"
                   size="sm"
@@ -336,10 +336,10 @@ export const CreateTeam: React.FC = () => {
                   className="mt-0.5"
                 />
                 <div className="flex-1">
-                  <Typography variant="body-sm" className="font-medium mb-2">
+                  <Typography variant="body-sm" className="font-medium mb-spacing-xs">
                     Quick Location Setup
                   </Typography>
-                  <Typography variant="body-sm" color="muted" className="mb-3">
+                  <Typography variant="body-sm" color="muted" className="mb-spacing-sm">
                     We can help fill in your school's location automatically.
                   </Typography>
                   <Button
@@ -375,11 +375,11 @@ export const CreateTeam: React.FC = () => {
 
               {/* Address Suggestions */}
               {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-spacing-xs bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-4 py-2 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">
@@ -395,7 +395,7 @@ export const CreateTeam: React.FC = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-spacing-md">
               <EnhancedInput
                 label="City"
                 placeholder="e.g., Goshen"
@@ -421,15 +421,15 @@ export const CreateTeam: React.FC = () => {
 
       case "review":
         return (
-          <div className="space-y-4">
-            <Typography variant="headline-md" className="mb-4">
+          <div className="space-y-spacing-md">
+            <Typography variant="headline-md" className="mb-spacing-md">
               Review Your Team
             </Typography>
 
             {/* Duplicate Check Loading */}
             {duplicateCheckLoading && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-center gap-3">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-spacing-md">
+                <div className="flex items-center gap-spacing-sm">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                   <Typography variant="body-sm">
                     Checking for similar teams...
@@ -440,8 +440,8 @@ export const CreateTeam: React.FC = () => {
 
             {/* Duplicate Warning */}
             {showDuplicateWarning && duplicateCheck && (
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-spacing-md">
+                <div className="flex items-start gap-spacing-sm">
                   <Icon
                     name="alert-triangle"
                     size="sm"
@@ -449,22 +449,22 @@ export const CreateTeam: React.FC = () => {
                     className="mt-0.5"
                   />
                   <div className="flex-1">
-                    <Typography variant="body-sm" className="font-medium mb-2">
+                    <Typography variant="body-sm" className="font-medium mb-spacing-xs">
                       Similar Team Found
                     </Typography>
                     <Typography
                       variant="body-sm"
                       color="muted"
-                      className="mb-3"
+                      className="mb-spacing-sm"
                     >
                       {duplicateCheck.warningMessage}
                     </Typography>
 
                     {duplicateCheck.similarTeams.length > 0 && (
-                      <div className="bg-white rounded border p-3 mb-3">
+                      <div className="bg-white rounded border p-spacing-sm mb-spacing-sm">
                         <Typography
                           variant="body-xs"
-                          className="font-medium mb-2"
+                          className="font-medium mb-spacing-xs"
                         >
                           Similar Team:
                         </Typography>
@@ -480,7 +480,7 @@ export const CreateTeam: React.FC = () => {
                                   {similar.schoolCity}, {similar.schoolState}
                                 </div>
                               )}
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div className="text-xs text-gray-500 mt-spacing-xs">
                                 Match reasons: {similar.matchReasons.join(", ")}
                               </div>
                             </div>
@@ -489,7 +489,7 @@ export const CreateTeam: React.FC = () => {
                     )}
 
                     {duplicateCheck.isDuplicate ? (
-                      <div className="flex gap-2">
+                      <div className="flex gap-spacing-xs">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -505,7 +505,7 @@ export const CreateTeam: React.FC = () => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex gap-2">
+                      <div className="flex gap-spacing-xs">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -537,7 +537,7 @@ export const CreateTeam: React.FC = () => {
               </div>
             )}
 
-            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+            <div className="bg-gray-50 p-spacing-md rounded-lg space-y-spacing-xs">
               <div>
                 <span className="font-medium">School:</span>{" "}
                 {formData.schoolName}
@@ -573,7 +573,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {createError && !showDuplicateWarning && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-spacing-md py-spacing-sm rounded">
                 {createError}
               </div>
             )}
@@ -582,7 +582,7 @@ export const CreateTeam: React.FC = () => {
 
       case "complete":
         return (
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-spacing-lg">
             <Icon
               name="check-circle"
               size="xl"
@@ -641,7 +641,7 @@ export const CreateTeam: React.FC = () => {
       <PageLayout title="Create Team">
         <div className="max-w-2xl mx-auto">
           {/* Progress Steps */}
-          <div className="mb-8">
+          <div className="mb-spacing-xl">
             <div className="flex items-center justify-between">
               {steps.map((step, index) => (
                 <div
@@ -663,7 +663,7 @@ export const CreateTeam: React.FC = () => {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`flex-1 h-1 mx-4 ${
+                      className={`flex-1 h-1 mx-spacing-md ${
                         currentStepIndex > index
                           ? "bg-green-600"
                           : "bg-gray-200"
@@ -673,7 +673,7 @@ export const CreateTeam: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-2 text-center">
+            <div className="mt-spacing-xs text-center">
               <Typography variant="body-lg" className="font-medium">
                 {steps[currentStepIndex]?.title}
               </Typography>
@@ -681,7 +681,7 @@ export const CreateTeam: React.FC = () => {
           </div>
 
           {/* Step Content */}
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+          <div className="bg-white shadow-lg rounded-lg p-spacing-lg mb-spacing-lg">
             {renderStepContent()}
           </div>
 
@@ -718,8 +718,8 @@ export const CreateTeam: React.FC = () => {
           {/* Loading State */}
           {isLoading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <div className="bg-white p-spacing-lg rounded-lg max-w-sm w-full mx-spacing-md text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-spacing-md"></div>
                 <Typography variant="body-md">{loadingMessage}</Typography>
               </div>
             </div>
