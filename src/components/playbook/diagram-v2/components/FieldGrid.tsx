@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 /**
  * Field configuration
@@ -52,10 +53,10 @@ export const FieldGrid: React.FC<{
       );
     }
     if (theme === "mono-light") {
-      return <rect x={0} y={0} width={1600} height={900} fill="#f4f5f6" />;
+      return <rect x={0} y={0} width={1600} height={900} fill={colorTokens.gray[100]} />;
     }
     if (theme === "mono-dark") {
-      return <rect x={0} y={0} width={1600} height={900} fill="#1d1f20" />;
+      return <rect x={0} y={0} width={1600} height={900} fill={colorTokens.gray[900]} />;
     }
     return null;
   };
@@ -69,7 +70,7 @@ export const FieldGrid: React.FC<{
         y={y - 3}
         width={1600}
         height={6}
-        fill="#064e3b"
+        fill={colorTokens.emerald[900]}
         opacity={0.95}
         rx={2}
       />
@@ -85,7 +86,7 @@ export const FieldGrid: React.FC<{
         y={0}
         width={1600}
         height={(20 / field.forwardYards) * 900}
-        fill="#ef4444"
+        fill={colorTokens.red[500]}
         opacity={0.08}
       />
     );
@@ -101,7 +102,7 @@ export const FieldGrid: React.FC<{
         x2={1600}
         y1={i * (900 / (field.forwardYards / 5))}
         y2={i * (900 / (field.forwardYards / 5))}
-        stroke="#065f46"
+        stroke={colorTokens.emerald[800]}
         strokeWidth={i % 2 === 0 ? 3 : 1}
         opacity={0.6}
       />
@@ -127,11 +128,11 @@ export const FieldGrid: React.FC<{
 
     const hashColor =
       theme === "mono-dark"
-        ? "#374151"
+        ? colorTokens.gray[700]
         : theme === "mono-light"
-          ? "#9ca3af"
-          : "#064e3b";
-    const midColor = theme === "classic" ? "#065f46" : hashColor;
+          ? colorTokens.gray[400]
+          : colorTokens.emerald[900];
+    const midColor = theme === "classic" ? colorTokens.emerald[800] : hashColor;
 
     const marks: React.ReactNode[] = [];
     const w = 10;
@@ -202,10 +203,10 @@ export const FieldGrid: React.FC<{
   const renderYardNumbers = () => {
     const baseColor =
       theme === "classic"
-        ? "#ecfdf5"
+        ? colorTokens.emerald[50]
         : theme === "mono-light"
-          ? "#444"
-          : "#e5e7eb";
+          ? colorTokens.gray[700]
+          : colorTokens.gray[200];
     const opacity = theme === "classic" ? 0.24 : 0.32;
     const feetFromSideline = 9 * 3;
     const leftX = feetFromSideline * 10;
@@ -273,10 +274,10 @@ export const FieldGrid: React.FC<{
     const g = Math.max(1, snapGrid);
     const color =
       theme === "mono-dark"
-        ? "#6b7280"
+        ? colorTokens.gray[500]
         : theme === "mono-light"
-          ? "#9ca3af"
-          : "#10b981";
+          ? colorTokens.gray[400]
+          : colorTokens.emerald[500];
     const opacity = theme === "classic" ? 0.2 : 0.25;
     const stepX = (1600 * g) / 100;
     const stepY = (900 * g) / 100;
