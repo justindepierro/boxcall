@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 /**
  * Alignment guide lines
@@ -69,7 +70,7 @@ export const FieldGuides: React.FC<{
               x2={x}
               y1={0}
               y2={900}
-              stroke="#22c55e"
+              stroke={colorTokens.emerald[500]}
               strokeWidth={2}
               strokeDasharray="6 4"
             />
@@ -82,7 +83,7 @@ export const FieldGuides: React.FC<{
               x2={1600}
               y1={y}
               y2={y}
-              stroke="#22c55e"
+              stroke={colorTokens.emerald[500]}
               strokeWidth={2}
               strokeDasharray="6 4"
             />
@@ -108,7 +109,7 @@ export const FieldGuides: React.FC<{
                   x2={x}
                   y1={0}
                   y2={900}
-                  stroke="#22c55e"
+                  stroke={colorTokens.emerald[500]}
                   strokeWidth={2}
                   strokeDasharray="6 4"
                 />
@@ -121,7 +122,7 @@ export const FieldGuides: React.FC<{
                   x2={1600}
                   y1={y}
                   y2={y}
-                  stroke="#22c55e"
+                  stroke={colorTokens.emerald[500]}
                   strokeWidth={2}
                   strokeDasharray="6 4"
                 />
@@ -150,7 +151,7 @@ export const FieldGuides: React.FC<{
                   height={18}
                   rx={9}
                   ry={9}
-                  fill="#0f172a"
+                  fill={colorTokens.navy[900]}
                   opacity={0.7}
                 />
                 <text
@@ -158,7 +159,7 @@ export const FieldGuides: React.FC<{
                   y={19}
                   fontSize={11}
                   fontWeight={700}
-                  fill="#a7f3d0"
+                  fill={colorTokens.emerald[200]}
                   textAnchor="middle"
                 >
                   Center
@@ -178,7 +179,7 @@ export const FieldGuides: React.FC<{
                   height={18}
                   rx={9}
                   ry={9}
-                  fill="#0f172a"
+                  fill={colorTokens.navy[900]}
                   opacity={0.7}
                 />
                 <text
@@ -186,7 +187,7 @@ export const FieldGuides: React.FC<{
                   y={450 + 4}
                   fontSize={11}
                   fontWeight={700}
-                  fill="#a7f3d0"
+                  fill={colorTokens.emerald[200]}
                   textAnchor="middle"
                 >
                   Center
