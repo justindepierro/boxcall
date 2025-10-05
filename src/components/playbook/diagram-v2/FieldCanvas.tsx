@@ -40,39 +40,9 @@ export const FieldCanvas: React.FC<{
   const { doc } = state;
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  // Clamp helper for zoom range
+  // Simple utility helper
   const clamp = (v: number, min: number, max: number) =>
     Math.max(min, Math.min(max, v));
-  // Focal wheel zoom (Ctrl/Cmd + wheel) centered on cursor; also prevent default pinch zoom
-  useEffect(() => {
-    const el = svgRef.current;
-    if (!el) return;
-    const handler = (e: WheelEvent) => {
-      // allow trackpad pinch-zoom (which sets ctrlKey on mac) and Ctrl+wheel
-      if (!e.ctrlKey) return;
-      e.preventDefault();
-      const rect = el.getBoundingClientRect();
-      const xView = ((e.clientX - rect.left) / rect.width) * 1600;
-      const yView = ((e.clientY - rect.top) / rect.height) * 900;
-      // Convert view coords to world under current transform
-      const worldX = (xView - state.ui.panX) / state.ui.zoom;
-      const worldY = (yView - state.ui.panY) / state.ui.zoom;
-      // Zoom step factor
-      const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
-      const targetZoom = clamp(state.ui.zoom * factor, 0.25, 4);
-      // Compute new pan so that world point stays under cursor
-      const newPanX = xView - worldX * targetZoom;
-      const newPanY = yView - worldY * targetZoom;
-      dispatch({
-        type: "SET_VIEWPORT",
-        zoom: targetZoom,
-        panX: newPanX,
-        panY: newPanY,
-      });
-    };
-    el.addEventListener("wheel", handler, { passive: false });
-    return () => el.removeEventListener("wheel", handler);
-  }, [dispatch, state.ui.panX, state.ui.panY, state.ui.zoom]);
 
   // Minimum pixels (client) before a drag is considered started
   const DRAG_THRESHOLD_PX = 5;
@@ -188,6 +158,22 @@ export const FieldCanvas: React.FC<{
     panX: state.ui.panX,
     panY: state.ui.panY,
     zoom: state.ui.zoom,
+  });
+
+  // Zoom & pan management (wheel zoom, drag panning)
+  const zoomPan = useFieldZoomPan({
+    svgRef,
+    zoom: state.ui.zoom,
+    panX: state.ui.panX,
+    panY: state.ui.panY,
+    onViewportChange: (viewport) => {
+      dispatch({
+        type: "SET_VIEWPORT",
+        zoom: viewport.zoom ?? state.ui.zoom,
+        panX: viewport.panX ?? state.ui.panX,
+        panY: viewport.panY ?? state.ui.panY,
+      });
+    },
   });
 
   // Note: Keeping legacy inline functions temporarily for backwards compatibility
