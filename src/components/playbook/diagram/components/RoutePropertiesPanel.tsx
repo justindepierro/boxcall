@@ -1,3 +1,4 @@
+import { colorTokens } from "../../../../design-system/tokens";
 import { useDiagramEditor } from "../context/useDiagramEditor";
 
 export const RoutePropertiesPanel: React.FC = () => {
@@ -23,14 +24,14 @@ export const RoutePropertiesPanel: React.FC = () => {
   }
 
   const colorOptions = [
-    "#ef4444", // Red
-    "#3b82f6", // Blue
-    "#10b981", // Green
-    "#f59e0b", // Yellow
-    "#8b5cf6", // Purple
-    "#ec4899", // Pink
-    "#6b7280", // Gray
-    "#000000", // Black
+    colorTokens.red[500],      // Red
+    colorTokens.blue[500],     // Blue
+    colorTokens.emerald[500],  // Green
+    colorTokens.amber[500],    // Yellow
+    colorTokens.purple[500],   // Purple
+    colorTokens.violet[400],   // Pink
+    colorTokens.gray[500],     // Gray
+    "#000000",                 // Black
   ];
 
   // Get the associated player for context
