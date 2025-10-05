@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system/Typography";
 import { PracticeScriptModal } from "../components/practice/PracticeScriptModal";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
+import { Aurora } from "../components/ui/Aurora";
 
 import type { PracticeScript } from "../components/practice/PracticeScriptModal/types";
 
@@ -122,10 +123,11 @@ export default function PracticePlansPage() {
   );
 
   return (
-    <PageLayout
-      title="Practice Plans"
-      subtitle="Create and manage practice scripts for your team's training sessions"
-      variant="list"
+    <Aurora variant="field" fullHeight>
+      <PageLayout
+        title="Practice Plans"
+        subtitle="Create and manage practice scripts for your team's training sessions"
+        variant="list"
       actions={
         <div className="flex items-center gap-3">
           <Button
@@ -299,5 +301,6 @@ export default function PracticePlansPage() {
         />
       )}
     </PageLayout>
+    </Aurora>
   );
 }

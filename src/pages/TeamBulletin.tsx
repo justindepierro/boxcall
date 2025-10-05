@@ -22,6 +22,7 @@ import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
 import { useRoles } from "../hooks/useRoles";
+import { Aurora } from "../components/ui/Aurora";
 
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 
@@ -259,11 +260,12 @@ const TeamBulletin: React.FC = React.memo(() => {
   if (!teamId) {
     if (!hasAnyTeam) {
       return (
-        <PageLayout
-          title="Team Bulletin"
-          subtitle="Create or join a team to unlock your bulletin."
-        >
-          <div className="flex items-center justify-center min-h-[400px]">
+        <Aurora variant="shell" fullHeight>
+          <PageLayout
+            title="Team Bulletin"
+            subtitle="Create or join a team to unlock your bulletin."
+          >
+            <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center max-w-md px-4">
               <Typography variant="headline-lg" className="mb-3">
                 Welcome to BoxCall
@@ -283,11 +285,13 @@ const TeamBulletin: React.FC = React.memo(() => {
             </div>
           </div>
         </PageLayout>
+        </Aurora>
       );
     }
 
     return (
-      <PageLayout
+      <Aurora variant="shell" fullHeight>
+        <PageLayout
         title="Team Bulletin"
         subtitle="Choose a team from the switcher to view its bulletin."
       >
@@ -303,12 +307,14 @@ const TeamBulletin: React.FC = React.memo(() => {
           </div>
         </div>
       </PageLayout>
+      </Aurora>
     );
   }
 
   if (!teamData) {
     return (
-      <div className="py-6">
+      <Aurora variant="shell" fullHeight>
+        <div className="py-6">
         <div className="max-w-2xl mx-auto text-center">
           <div className="surface-card elevation-card border-subtle rounded-lg p-8">
             <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
@@ -347,10 +353,12 @@ const TeamBulletin: React.FC = React.memo(() => {
           </div>
         </div>
       </div>
+      </Aurora>
     );
   }
 
   return (
+    <Aurora variant="shell" fullHeight>
     <PageLayout
       title={`${teamData.name} Bulletin`}
       subtitle={`Season ${teamData.season} • ${teamData.memberCount} members`}
@@ -710,6 +718,7 @@ const TeamBulletin: React.FC = React.memo(() => {
         userName={profile?.display_name || profile?.full_name || "Team Member"}
       />
     </PageLayout>
+    </Aurora>
   );
 });
 

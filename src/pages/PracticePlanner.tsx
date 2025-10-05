@@ -12,6 +12,7 @@ import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { AuroraTile } from "../components/ui/AuroraTile";
+import { Aurora } from "../components/ui/Aurora";
 import { useAuth } from "../app/auth-store";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import {
@@ -362,10 +363,11 @@ export function PracticePlanner() {
     );
   }
   return (
-    <PageLayout
-      title="Practice Schedule"
-      subtitle="Plan and manage your team's practice sessions"
-      variant="dashboard"
+    <Aurora variant="field" fullHeight>
+      <PageLayout
+        title="Practice Schedule"
+        subtitle="Plan and manage your team's practice sessions"
+        variant="dashboard"
       actions={
         <div className="flex items-center gap-3">
           <Button
@@ -852,6 +854,7 @@ export function PracticePlanner() {
         />
       )}
     </PageLayout>
+    </Aurora>
   );
 }
 // Create Block Modal Component

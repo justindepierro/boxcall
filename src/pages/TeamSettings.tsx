@@ -6,6 +6,7 @@ import { Button } from "../components/ui/Button/Button";
 import { StaffManagement } from "../components/team/StaffManagement";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { PageLayout } from "../components/layout/PageLayout";
+import { Aurora } from "../components/ui/Aurora";
 
 /**
  * TeamSettings - Team configuration and management
@@ -32,11 +33,12 @@ export const TeamSettings: React.FC = () => {
   ];
 
   return (
-    <PageLayout
-      title="Team Settings"
-      subtitle="Manage your team configuration and staff"
-    >
-      <div className="max-w-6xl mx-auto">
+    <Aurora variant="shell" fullHeight>
+      <PageLayout
+        title="Team Settings"
+        subtitle="Manage your team configuration and staff"
+      >
+        <div className="max-w-6xl mx-auto">
         {/* Tab Navigation */}
         <div className="mb-8">
           <div className="border-b border-border-medium">
@@ -180,6 +182,7 @@ export const TeamSettings: React.FC = () => {
         )}
       </div>
     </PageLayout>
+    </Aurora>
   );
 };
 

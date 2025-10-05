@@ -5,6 +5,7 @@ import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
+import { Aurora } from "../components/ui/Aurora";
 
 interface GamePlan {
   id: string;
@@ -126,10 +127,11 @@ export default function GamePlansPage() {
   );
 
   return (
-    <PageLayout
-      title="Game Plans"
-      subtitle="Create and manage strategic game plans for upcoming matches"
-      variant="list"
+    <Aurora variant="field" fullHeight>
+      <PageLayout
+        title="Game Plans"
+        subtitle="Create and manage strategic game plans for upcoming matches"
+        variant="list"
       actions={
         <div className="flex items-center gap-3">
           <Button
@@ -284,5 +286,6 @@ export default function GamePlansPage() {
         </div>
       )}
     </PageLayout>
+    </Aurora>
   );
 }
