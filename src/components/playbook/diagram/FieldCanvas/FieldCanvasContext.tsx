@@ -100,7 +100,9 @@ const initialState: FieldCanvasState = {
         color: colorTokens.amber[400],
       },
     ],
-    lines: [{ x1: 150, y1: 140, x2: 360, y2: 230, color: colorTokens.blue[600] }],
+    lines: [
+      { x1: 150, y1: 140, x2: 360, y2: 230, color: colorTokens.blue[600] },
+    ],
   },
 };
 

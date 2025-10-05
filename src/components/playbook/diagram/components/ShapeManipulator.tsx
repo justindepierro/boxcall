@@ -354,7 +354,9 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = ({
               cx={handle.x}
               cy={handle.y}
               r={handle.type === "rotation" ? 6 : 4}
-              fill={handle.type === "rotation" ? colorTokens.blue[500] : "#ffffff"}
+              fill={
+                handle.type === "rotation" ? colorTokens.blue[500] : "#ffffff"
+              }
               stroke={colorTokens.blue[500]}
               strokeWidth={2}
               style={{ cursor: handle.cursor }}
