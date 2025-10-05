@@ -29,6 +29,16 @@ const scripts = [
     file: '03-replace-color-parameter-defaults.ts',
     description: 'Replaces default parameter color values',
   },
+  {
+    name: 'Arbitrary Border Radius',
+    file: '04-replace-arbitrary-border-radius.ts',
+    description: 'Replaces rounded-[Npx] with Tailwind rounded classes',
+  },
+  {
+    name: 'Arbitrary Spacing',
+    file: '05-replace-arbitrary-spacing.ts',
+    description: 'Replaces p/m/gap-[Npx] with Tailwind spacing classes',
+  },
 ];
 
 async function runScript(scriptFile: string, apply: boolean = false) {
