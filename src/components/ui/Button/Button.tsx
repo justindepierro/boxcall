@@ -11,7 +11,6 @@ import type {
   ButtonSizeConfig,
   ButtonStylesConfig,
 } from "./Button.types";
-import { colorTokens } from "../../../design-system/tokens";
 
 // Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
@@ -249,13 +248,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       }
       onClick?.(event);
     };
-    // Build class string - Clean, minimal styling
+    // Build class string - Clean, minimal styling with smooth transitions
     const baseClasses = [
       // Base button styles - clean and minimal
       "inline-flex items-center justify-center flex-row flex-nowrap",
       "font-sans rounded-md", // Clean rounded corners
       "focus:outline-none",
       "overflow-hidden", // Handle overflow gracefully
+      // Smooth transitions for transform and colors
+      "transition-all duration-200 ease-in-out",
+      // Hover scale effect (subtle lift)
+      !isDisabled && variant !== "link" && variant !== "brandLink" && "hover:scale-[1.02]",
+      // Active scale effect (pressed feeling)
+      !isDisabled && variant !== "link" && variant !== "brandLink" && "active:scale-[0.98]",
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,

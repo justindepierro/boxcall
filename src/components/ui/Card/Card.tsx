@@ -9,11 +9,11 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Modern glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-aurora transition-colors duration-200 border border-slate-200/60 bg-aurora-mist backdrop-blur-md shadow-[0_25px_45px_-30px_rgba(15,23,42,0.45)] dark:bg-slate-900/80 dark:border-slate-700/60", // Aurora panel treatment with soft glass glow
+  base: "rounded-aurora transition-all duration-200 ease-in-out border border-slate-200/60 bg-aurora-mist backdrop-blur-md shadow-[0_25px_45px_-30px_rgba(15,23,42,0.45)] dark:bg-slate-900/80 dark:border-slate-700/60", // Aurora panel treatment with soft glass glow
   variants: {
     default: "bg-aurora-mist hover:bg-white/80", // Clean surface with subtle glass
     glass: "bg-aurora-shell hover:bg-aurora-mist", // Full glassmorphism
-    elevated: "bg-white/85 dark:bg-slate-900/80", // Enhanced with subtle color change
+    elevated: "bg-white/85 dark:bg-slate-900/80 hover:shadow-xl", // Enhanced with subtle lift
     outlined: "bg-white/85 dark:bg-slate-900/80", // Clean outlined
     filled:
       "bg-slate-100/80 hover:bg-slate-100/90 dark:bg-slate-800/80 dark:hover:bg-slate-800", // Subtle filled
@@ -28,7 +28,7 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer transition-all duration-300 ease-out hover:animate-card-hover hover:animate-card-glow focus:animate-card-glow focus:outline-none focus:ring-2 focus:ring-electric-500/50 focus:ring-offset-2", // Enhanced micro-animations with electric glow
+    "cursor-pointer transition-all duration-300 ease-out hover:translate-y-[-2px] hover:shadow-xl hover:animate-card-hover hover:animate-card-glow focus:animate-card-glow focus:outline-none focus:ring-2 focus:ring-electric-500/50 focus:ring-offset-2", // Enhanced micro-animations with subtle lift and electric glow
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

@@ -18,6 +18,8 @@
 @import "./styles/overflow-prevention.css";
 /* Import animation system */
 @import "./styles/animations.css";
+/* Modern transitions and micro-interactions */
+@import "./styles/transitions.css";
 
 @tailwind base;
 @tailwind components;
