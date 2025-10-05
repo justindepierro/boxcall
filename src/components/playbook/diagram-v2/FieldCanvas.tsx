@@ -8,8 +8,6 @@ import React, {
 import { useDiagramEditor } from "./context";
 import { Button } from "../../ui/Button/Button";
 import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
-import { telemetry } from "../../../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../../../telemetry/events";
 
 // Extracted hooks
 import { useFieldCoordinates } from "./hooks/useFieldCoordinates";
@@ -76,15 +74,6 @@ export const FieldCanvas: React.FC<{
     startClientY: number; // client px
     hasMoved: boolean;
   } | null>(null);
-  const nudgeBatchRef = useRef<{
-    events: number;
-    playersMoved: number;
-    timer: number | null;
-  }>({
-    events: 0,
-    playersMoved: 0,
-    timer: null,
-  });
   const [selectionBox, setSelectionBox] = useState<null | {
     x: number;
     y: number;
@@ -144,8 +133,6 @@ export const FieldCanvas: React.FC<{
   }, [selectionBox, doc.players]);
   // Suppress canvas click after a drag/pan to avoid unintended add-point/clear-selection
   const suppressClickRef = useRef(false);
-  // Spacebar-hold-to-pan state
-  const spaceHeldRef = useRef(false);
   const prevToolRef = useRef<null | typeof state.ui.tool>(null);
 
   // ============================================================================
@@ -174,6 +161,137 @@ export const FieldCanvas: React.FC<{
         panY: viewport.panY ?? state.ui.panY,
       });
     },
+  });
+
+  // Debounce timer for keyboard nudge commits
+  const commitMoveTimer = useRef<number | null>(null);
+
+  // Keyboard shortcuts and interactions
+  const keyboard = useFieldKeyboard({
+    onNudge: (direction, delta, patches) => {
+      if (patches.length) {
+        dispatch({ type: "MOVE_SELECTION", patches });
+        // Debounce commit after keyboard nudges
+        if (commitMoveTimer.current) window.clearTimeout(commitMoveTimer.current);
+        commitMoveTimer.current = window.setTimeout(() => {
+          dispatch({ type: "COMMIT_MOVE" });
+          commitMoveTimer.current = null;
+        }, 300);
+      }
+    },
+    onToolShortcut: (tool) => {
+      dispatch({ type: "SET_TOOL", tool });
+    },
+    onZoom: (direction) => {
+      const rect = svgRef.current?.getBoundingClientRect();
+      const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+      const cy = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+      const xView = rect ? ((cx - rect.left) / rect.width) * 1600 : 800;
+      const yView = rect ? ((cy - rect.top) / rect.height) * 900 : 450;
+      const worldX = (xView - state.ui.panX) / state.ui.zoom;
+      const worldY = (yView - state.ui.panY) / state.ui.zoom;
+      const factor = direction === "in" ? 1.1 : 1 / 1.1;
+      const targetZoom = clamp(state.ui.zoom * factor, 0.25, 4);
+      const newPanX = xView - worldX * targetZoom;
+      const newPanY = yView - worldY * targetZoom;
+      dispatch({
+        type: "SET_VIEWPORT",
+        zoom: targetZoom,
+        panX: newPanX,
+        panY: newPanY,
+      });
+    },
+    onSpacebarPan: (active, prevTool) => {
+      if (active) {
+        if (state.ui.tool !== "pan") {
+          prevToolRef.current = state.ui.tool;
+          dispatch({ type: "SET_TOOL", tool: "pan" });
+        }
+      } else {
+        if (prevTool && state.ui.tool === "pan") {
+          dispatch({ type: "SET_TOOL", tool: prevTool as any });
+        }
+        prevToolRef.current = null;
+      }
+    },
+    onUndo: () => dispatch({ type: "UNDO" }),
+    onRedo: () => dispatch({ type: "REDO" }),
+    onAlign: (axis, align) => {
+      dispatch({ type: "ALIGN_SELECTION", axis, align });
+    },
+    onDistribute: (axis, fixedSpacing) => {
+      if (fixedSpacing) {
+        dispatch({
+          type: "DISTRIBUTE_SELECTION_FIXED",
+          axis,
+          spacing: state.ui.distributeSpacing ?? 5,
+        });
+      } else {
+        dispatch({ type: "DISTRIBUTE_SELECTION", axis });
+      }
+    },
+    onEscape: () => {
+      if (state.ui.drawing) {
+        dispatch({ type: "CANCEL_ROUTE" });
+      } else if (state.ui.annotating) {
+        dispatch({ type: "CANCEL_ANNOTATION" });
+      }
+    },
+    onEnter: () => {
+      if (state.ui.drawing) {
+        if (state.ui.drawing.preview) {
+          dispatch({
+            type: "ADD_ROUTE_POINT",
+            point: state.ui.drawing.preview,
+          });
+        }
+        dispatch({ type: "COMMIT_ROUTE" });
+      } else if (state.ui.annotating) {
+        if (state.ui.annotating.preview) {
+          dispatch({
+            type: "ADD_ANNOTATION_POINT",
+            point: state.ui.annotating.preview,
+          });
+        }
+        dispatch({ type: "COMMIT_ANNOTATION" });
+      }
+    },
+    onBackspace: () => {
+      if (state.ui.drawing) {
+        dispatch({ type: "POP_ROUTE_POINT" });
+      } else if (state.ui.annotating) {
+        dispatch({ type: "POP_ANNOTATION_POINT" });
+      } else if (state.ui.selectedAnnotationId) {
+        dispatch({
+          type: "DELETE_ANNOTATION",
+          id: state.ui.selectedAnnotationId,
+        });
+      }
+    },
+    onDuplicate: () => {
+      if (state.ui.selectedAnnotationId) {
+        dispatch({
+          type: "DUPLICATE_ANNOTATION",
+          id: state.ui.selectedAnnotationId,
+        });
+      }
+    },
+    onDelete: () => {
+      if (state.ui.selectedAnnotationId) {
+        dispatch({
+          type: "DELETE_ANNOTATION",
+          id: state.ui.selectedAnnotationId,
+        });
+      }
+    },
+    onToggleGrid: () => {
+      dispatch({
+        type: "SET_GRID_OVERLAY",
+        enabled: !state.ui.showGridOverlay,
+      });
+    },
+    selectedIds: state.ui.selectedIds || [],
+    enabled: true,
   });
 
   // Note: Keeping legacy inline functions temporarily for backwards compatibility
@@ -956,390 +1074,6 @@ export const FieldCanvas: React.FC<{
     });
     return () => cancelAnimationFrame(raf);
   }, [snapPulses]);
-
-  // Debounce commit after keyboard nudges
-  const commitMoveTimer = useRef<number | null>(null);
-  const scheduleCommitMove = useCallback(() => {
-    if (commitMoveTimer.current) window.clearTimeout(commitMoveTimer.current);
-    commitMoveTimer.current = window.setTimeout(() => {
-      dispatch({ type: "COMMIT_MOVE" });
-      commitMoveTimer.current = null;
-    }, 300);
-  }, [dispatch]);
-
-  // Keyboard shortcuts + arrow key nudging
-  useEffect(() => {
-    const keyHandler = (e: KeyboardEvent) => {
-      // Quick tool shortcuts (avoid when typing in inputs/textareas)
-      const ae = document.activeElement as HTMLElement | null;
-      const tag = (ae?.tagName || "").toLowerCase();
-      const typing =
-        tag === "input" || tag === "textarea" || ae?.isContentEditable;
-      if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        const k = e.key.toLowerCase();
-        if (k === "v") {
-          dispatch({ type: "SET_TOOL", tool: "select" });
-          e.preventDefault();
-        } else if (k === "p") {
-          dispatch({ type: "SET_TOOL", tool: "add-player" });
-          e.preventDefault();
-        } else if (k === "r") {
-          dispatch({ type: "SET_TOOL", tool: "route" });
-          e.preventDefault();
-        } else if (k === "m") {
-          dispatch({ type: "SET_TOOL", tool: "pan" });
-          e.preventDefault();
-        }
-        // Grid overlay toggle (G)
-        if (k === "g") {
-          dispatch({
-            type: "SET_GRID_OVERLAY",
-            enabled: !state.ui.showGridOverlay,
-          });
-          e.preventDefault();
-        }
-      }
-      // Zoom shortcuts: Cmd/Ctrl + '+' or '-' (and '=' for '+')
-      const meta = e.metaKey || e.ctrlKey;
-      if (meta && (e.key === "+" || e.key === "=")) {
-        const rect = svgRef.current?.getBoundingClientRect();
-        const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-        const cy = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
-        const xView = rect ? ((cx - rect.left) / rect.width) * 1600 : 800;
-        const yView = rect ? ((cy - rect.top) / rect.height) * 900 : 450;
-        const worldX = (xView - state.ui.panX) / state.ui.zoom;
-        const worldY = (yView - state.ui.panY) / state.ui.zoom;
-        const targetZoom = clamp(state.ui.zoom * 1.1, 0.25, 4);
-        const newPanX = xView - worldX * targetZoom;
-        const newPanY = yView - worldY * targetZoom;
-        dispatch({
-          type: "SET_VIEWPORT",
-          zoom: targetZoom,
-          panX: newPanX,
-          panY: newPanY,
-        });
-        e.preventDefault();
-      }
-      if (meta && e.key === "-") {
-        const rect = svgRef.current?.getBoundingClientRect();
-        const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-        const cy = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
-        const xView = rect ? ((cx - rect.left) / rect.width) * 1600 : 800;
-        const yView = rect ? ((cy - rect.top) / rect.height) * 900 : 450;
-        const worldX = (xView - state.ui.panX) / state.ui.zoom;
-        const worldY = (yView - state.ui.panY) / state.ui.zoom;
-        const targetZoom = clamp(state.ui.zoom / 1.1, 0.25, 4);
-        const newPanX = xView - worldX * targetZoom;
-        const newPanY = yView - worldY * targetZoom;
-        dispatch({
-          type: "SET_VIEWPORT",
-          zoom: targetZoom,
-          panX: newPanX,
-          panY: newPanY,
-        });
-        e.preventDefault();
-      }
-      if (e.key === "Escape" && state.ui.drawing) {
-        dispatch({ type: "CANCEL_ROUTE" });
-      }
-      if (e.key === "Escape" && state.ui.annotating) {
-        dispatch({ type: "CANCEL_ANNOTATION" });
-      }
-      // Spacebar: temporary pan tool (hold-to-pan)
-      const isSpace = e.code === "Space" || e.key === " ";
-      if (isSpace) {
-        // ignore when typing in inputs/textareas/contentEditable
-        const ae = document.activeElement as HTMLElement | null;
-        const tag = (ae?.tagName || "").toLowerCase();
-        const typing =
-          tag === "input" || tag === "textarea" || ae?.isContentEditable;
-        if (!typing && !spaceHeldRef.current) {
-          spaceHeldRef.current = true;
-          if (state.ui.tool !== "pan") {
-            prevToolRef.current = state.ui.tool;
-            dispatch({ type: "SET_TOOL", tool: "pan" });
-          } else {
-            // Already in pan; don't override explicit user choice
-            prevToolRef.current = null;
-          }
-          e.preventDefault();
-        }
-      }
-      if (e.key === "Enter" && state.ui.drawing) {
-        // Commit current preview as final point if present
-        if (state.ui.drawing.preview) {
-          dispatch({
-            type: "ADD_ROUTE_POINT",
-            point: state.ui.drawing.preview,
-          });
-        }
-        dispatch({ type: "COMMIT_ROUTE" });
-        e.preventDefault();
-      }
-      if (e.key === "Enter" && state.ui.annotating) {
-        if (state.ui.annotating.preview) {
-          dispatch({
-            type: "ADD_ANNOTATION_POINT",
-            point: state.ui.annotating.preview,
-          });
-        }
-        dispatch({ type: "COMMIT_ANNOTATION" });
-        e.preventDefault();
-      }
-      if ((e.key === "Backspace" || e.key === "Delete") && state.ui.drawing) {
-        dispatch({ type: "POP_ROUTE_POINT" });
-        e.preventDefault();
-      }
-      if (
-        (e.key === "Backspace" || e.key === "Delete") &&
-        state.ui.annotating
-      ) {
-        dispatch({ type: "POP_ANNOTATION_POINT" });
-        e.preventDefault();
-      }
-      // Duplicate selected annotation
-      if (
-        (e.key.toLowerCase() === "d" && (e.metaKey || e.ctrlKey)) ||
-        (e.key.toLowerCase() === "d" &&
-          !state.ui.annotating &&
-          !state.ui.drawing &&
-          state.ui.selectedAnnotationId)
-      ) {
-        if (state.ui.selectedAnnotationId) {
-          dispatch({
-            type: "DUPLICATE_ANNOTATION",
-            id: state.ui.selectedAnnotationId,
-          });
-          e.preventDefault();
-        }
-      }
-      if (
-        (e.key === "Backspace" || e.key === "Delete") &&
-        !state.ui.annotating &&
-        !state.ui.drawing &&
-        state.ui.selectedAnnotationId
-      ) {
-        dispatch({
-          type: "DELETE_ANNOTATION",
-          id: state.ui.selectedAnnotationId,
-        });
-        e.preventDefault();
-      }
-      // Undo / Redo
-      const meta2 = e.metaKey || e.ctrlKey;
-      if (meta2 && e.key.toLowerCase() === "z") {
-        if (e.shiftKey) dispatch({ type: "REDO" });
-        else dispatch({ type: "UNDO" });
-        e.preventDefault();
-      }
-      const selected = state.ui.selectedIds || [];
-      if (
-        selected.length &&
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
-      ) {
-        e.preventDefault();
-        // Nudge step granularity: Alt = 0.1%, Shift = 2%, default = 0.5%
-        const delta = e.altKey ? 0.1 : e.shiftKey ? 2 : 0.5;
-        const patches: { id: string; x: number; y: number }[] = [];
-        selected.forEach((id) => {
-          const p = doc.players.find((pl) => pl.id === id);
-          if (!p) return;
-          let nx = p.x;
-          let ny = p.y;
-          if (e.key === "ArrowUp") ny = Math.max(0, p.y - delta);
-          if (e.key === "ArrowDown") ny = Math.min(100, p.y + delta);
-          if (e.key === "ArrowLeft") nx = Math.max(0, p.x - delta);
-          if (e.key === "ArrowRight") nx = Math.min(100, p.x + delta);
-          patches.push({ id, x: nx, y: ny });
-        });
-        if (patches.length) {
-          dispatch({ type: "MOVE_SELECTION", patches });
-          scheduleCommitMove();
-          // Nudge telemetry (sample individual events at ~1/5 rate)
-          if (Math.random() < 0.2) {
-            telemetry.enqueue({
-              type: TelemetryEventTypes.PlayDiagramNudge,
-              data: {
-                count: selected.length,
-                dx: patches[0] ? patches[0].x : 0,
-                dy: patches[0] ? patches[0].y : 0,
-                step: delta,
-                modifier: e.altKey ? "alt" : e.shiftKey ? "shift" : "base",
-              },
-            });
-          }
-          // Aggregate into batch buffer
-          nudgeBatchRef.current.events++;
-          nudgeBatchRef.current.playersMoved = Math.max(
-            nudgeBatchRef.current.playersMoved,
-            selected.length
-          );
-          if (!nudgeBatchRef.current.timer) {
-            nudgeBatchRef.current.timer = window.setTimeout(() => {
-              telemetry.enqueue({
-                type: TelemetryEventTypes.PlayDiagramNudgeBatch,
-                data: {
-                  events: nudgeBatchRef.current.events,
-                  maxPlayers: nudgeBatchRef.current.playersMoved,
-                },
-              });
-              nudgeBatchRef.current = {
-                events: 0,
-                playersMoved: 0,
-                timer: null,
-              };
-            }, 1500);
-          }
-        }
-      }
-
-      // Alignment shortcuts (Meta+Alt + arrows/letters). Hold Shift for fixed-spacing distribute.
-      const metaKey = e.metaKey || e.ctrlKey;
-      const alt = e.altKey;
-      if ((state.ui.selectedIds || []).length >= 1 && metaKey && alt) {
-        if (e.key === "ArrowLeft") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "start" });
-          e.preventDefault();
-        } else if (e.key === "ArrowRight") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "end" });
-          e.preventDefault();
-        } else if (e.key === "ArrowUp") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "start" });
-          e.preventDefault();
-        } else if (e.key === "ArrowDown") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "end" });
-          e.preventDefault();
-        } else if (e.key.toLowerCase() === "c") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "center" });
-          e.preventDefault();
-        } else if (e.key.toLowerCase() === "m") {
-          dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "center" });
-          e.preventDefault();
-        } else if (e.key.toLowerCase() === "h") {
-          if (e.shiftKey) {
-            dispatch({
-              type: "DISTRIBUTE_SELECTION_FIXED",
-              axis: "x",
-              spacing: state.ui.distributeSpacing ?? 5,
-            });
-          } else {
-            dispatch({ type: "DISTRIBUTE_SELECTION", axis: "x" });
-          }
-          e.preventDefault();
-        } else if (e.key.toLowerCase() === "v") {
-          if (e.shiftKey) {
-            dispatch({
-              type: "DISTRIBUTE_SELECTION_FIXED",
-              axis: "y",
-              spacing: state.ui.distributeSpacing ?? 5,
-            });
-          } else {
-            dispatch({ type: "DISTRIBUTE_SELECTION", axis: "y" });
-          }
-          e.preventDefault();
-        }
-      }
-
-      // Quick style cycles: J cycles stroke width, K cycles arrowhead
-      if (e.key.toLowerCase() === "j") {
-        const widths = [1, 2, 3, 4, 6, 8];
-        const selectedAnnId = state.ui.selectedAnnotationId;
-        let currentWidth = state.ui.drawWidth || 3;
-        if (selectedAnnId) {
-          const ann = (doc.annotations || []).find(
-            (a) => a.id === selectedAnnId
-          );
-          if (ann && typeof (ann as { width?: number }).width === "number") {
-            currentWidth = (ann as { width?: number }).width || currentWidth;
-          }
-        }
-        const idx = widths.indexOf(currentWidth);
-        const next = widths[(idx >= 0 ? idx + 1 : 0) % widths.length];
-        if (selectedAnnId) {
-          dispatch({
-            type: "UPDATE_ANNOT_STYLE",
-            id: selectedAnnId,
-            patch: { width: next },
-          });
-        } else {
-          dispatch({ type: "SET_DRAW_WIDTH", width: next });
-        }
-        e.preventDefault();
-      }
-      if (e.key.toLowerCase() === "k") {
-        const order: Array<"none" | "start" | "end" | "both"> = [
-          "none",
-          "start",
-          "end",
-          "both",
-        ];
-        const selectedAnnId = state.ui.selectedAnnotationId;
-        let current: "none" | "start" | "end" | "both" =
-          state.ui.drawArrowHead || "end";
-        if (selectedAnnId) {
-          const ann = (doc.annotations || []).find(
-            (a) => a.id === selectedAnnId
-          );
-          const ah = (
-            ann as { arrowHead?: "none" | "start" | "end" | "both" } | undefined
-          )?.arrowHead;
-          if (ah) current = ah;
-        }
-        const ni = (order.indexOf(current) + 1) % order.length;
-        const next = order[ni];
-        if (selectedAnnId) {
-          dispatch({
-            type: "UPDATE_ANNOT_STYLE",
-            id: selectedAnnId,
-            patch: { arrowHead: next },
-          });
-        } else {
-          dispatch({ type: "SET_DRAW_ARROW_HEAD", arrowHead: next });
-        }
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("keydown", keyHandler);
-    const keyUp = (e: KeyboardEvent) => {
-      const isSpace = e.code === "Space" || e.key === " ";
-      if (isSpace && spaceHeldRef.current) {
-        spaceHeldRef.current = false;
-        // Restore only if we switched due to space
-        if (prevToolRef.current && state.ui.tool === "pan") {
-          dispatch({ type: "SET_TOOL", tool: prevToolRef.current });
-        }
-        prevToolRef.current = null;
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("keyup", keyUp);
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-      window.removeEventListener("keyup", keyUp);
-    };
-  }, [
-    dispatch,
-    state.ui.drawing,
-    state.ui.annotating,
-    state.ui.selectedIds,
-    state.ui.selectedAnnotationId,
-    doc.players,
-    doc.annotations,
-    scheduleCommitMove,
-    state.ui.distributeSpacing,
-    state.ui.tool,
-    state.ui.panX,
-    state.ui.panY,
-    state.ui.zoom,
-    state.ui.showGridOverlay,
-    state.ui.drawWidth,
-    state.ui.drawArrowHead,
-  ]);
-
-  // Minimap drag tracking
-  const miniDragRef = useRef<{
-    dragging: boolean;
-  }>({ dragging: false });
 
   // Convert a minimap client click/drag into a viewport pan
   const moveViewportFromMinimap = useCallback(
