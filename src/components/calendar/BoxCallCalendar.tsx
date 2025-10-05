@@ -3,6 +3,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { forwardRef, useImperativeHandle, useRef } from "react";
+import { colorTokens } from "../../design-system/tokens";
 
 import type { CalendarEvent } from "../../domain/calendar/types";
 import type {
@@ -86,7 +87,7 @@ export const BoxCallCalendar = forwardRef<
       end: event.end,
       backgroundColor: getEventColor(event.type),
       borderColor: getEventColor(event.type),
-      textColor: "#FFFFFF",
+      textColor: colorTokens.gray[50],
       extendedProps: {
         type: event.type,
         team_id: event.team_id,
@@ -177,15 +178,15 @@ export const BoxCallCalendar = forwardRef<
 function getEventColor(type: string): string {
   switch (type) {
     case "game":
-      return "#1E3A8A"; // Navy Blue
+      return colorTokens.blue[900]; // Navy Blue
     case "practice":
-      return "#00A86B"; // Jade Green
+      return colorTokens.emerald[600]; // Jade Green  
     case "meeting":
-      return "#F59E0B"; // Amber
+      return colorTokens.amber[500]; // Amber
     case "film":
-      return "#8B5CF6"; // Purple
+      return colorTokens.purple[500]; // Purple
     default:
-      return "#6B7280"; // Gray
+      return colorTokens.gray[500]; // Gray
   }
 }
 BoxCallCalendar.displayName = "BoxCallCalendar";
