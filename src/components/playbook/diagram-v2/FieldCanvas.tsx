@@ -2296,7 +2296,7 @@ export const FieldCanvas: React.FC<{
                   className="pointer-events-auto"
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <div className="inline-flex items-center gap-2 panel-cupertino px-2.5 py-1.5">
+                  <div className="inline-flex items-center gap-spacing-xs panel-cupertino px-spacing-xs py-spacing-xs">
                     <input
                       type="text"
                       aria-label="Player label"
@@ -2308,7 +2308,7 @@ export const FieldCanvas: React.FC<{
                           patch: { label: e.target.value },
                         })
                       }
-                      className="w-20 text-[12px] border border-border-light rounded px-2 py-1"
+                      className="w-20 text-[12px] border border-border-light rounded px-spacing-xs py-spacing-xs"
                       title="Label"
                     />
                     <input
@@ -2325,10 +2325,10 @@ export const FieldCanvas: React.FC<{
                       className="w-9 h-9 p-0 border border-border-light rounded"
                       title="Color"
                     />
-                    <span className="mx-1 w-px h-5 bg-border-light" />
+                    <span className="mx-spacing-xs w-px h-5 bg-border-light" />
                     <span
                       role="button"
-                      className="text-text-error text-xs px-2 py-1 border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
+                      className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         dispatch({ type: "REMOVE_PLAYER", id: player.id });
@@ -2667,7 +2667,7 @@ export const FieldCanvas: React.FC<{
                   {/* Floating popover for style/delete */}
                   <foreignObject x={dockX} y={dockY} width={260} height={64}>
                     <div className="pointer-events-auto">
-                      <div className="inline-flex items-center gap-2 panel-cupertino px-2.5 py-1.5">
+                      <div className="inline-flex items-center gap-spacing-xs panel-cupertino px-spacing-xs py-spacing-xs">
                         <input
                           type="color"
                           aria-label="Annotation color"
@@ -2727,7 +2727,7 @@ export const FieldCanvas: React.FC<{
                               },
                             })
                           }
-                          className="text-[12px] border border-border-light rounded px-2 py-1"
+                          className="text-[12px] border border-border-light rounded px-spacing-xs py-spacing-xs"
                           title="Arrowhead"
                         >
                           <option value="none">None</option>
@@ -2741,10 +2741,10 @@ export const FieldCanvas: React.FC<{
                             : state.ui.drawWidth || 3}
                           px
                         </span>
-                        <span className="mx-1 w-px h-5 bg-border-light" />
+                        <span className="mx-spacing-xs w-px h-5 bg-border-light" />
                         <span
                           role="button"
-                          className="text-text-error text-xs px-2 py-1 border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
+                          className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
                           onClick={(e) => {
                             e.stopPropagation();
                             dispatch({ type: "DELETE_ANNOTATION", id: ann.id });
@@ -2941,7 +2941,7 @@ export const FieldCanvas: React.FC<{
                   className="pointer-events-auto"
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <div className="panel-cupertino inline-flex items-center gap-1 px-2 py-1">
+                  <div className="panel-cupertino inline-flex items-center gap-spacing-xs px-spacing-xs py-spacing-xs">
                     {/* Align X */}
                     {btn(
                       "L",
@@ -2976,7 +2976,7 @@ export const FieldCanvas: React.FC<{
                         }),
                       "ax-r"
                     )}
-                    <span className="w-px h-4 bg-border-light mx-1" />
+                    <span className="w-px h-4 bg-border-light mx-spacing-xs" />
                     {/* Align Y */}
                     {btn(
                       "T",
@@ -3011,7 +3011,7 @@ export const FieldCanvas: React.FC<{
                         }),
                       "ay-b"
                     )}
-                    <span className="w-px h-4 bg-border-light mx-1" />
+                    <span className="w-px h-4 bg-border-light mx-spacing-xs" />
                     {/* Distribute */}
                     {btn(
                       "H",
@@ -3228,7 +3228,7 @@ export const FieldCanvas: React.FC<{
 
         return (
           <div
-            className="absolute bottom-2 right-2 select-none"
+            className="absolute bottom-spacing-xs right-spacing-xs select-none"
             style={{
               width: MINI_W + 2 * border,
               height: MINI_W * 0.5625 + 2 * border,
