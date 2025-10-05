@@ -14,13 +14,13 @@ Successfully refactored `PracticePlanner.tsx` from a 1,010-line monolithic compo
 
 ### Code Quality Improvements
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Main file lines** | 1,010 | 566 | **-444 lines (44%)** |
-| **Files in structure** | 1 | 10 | Modular architecture |
-| **Largest module** | 1,010 lines | 566 lines | Better maintainability |
-| **Average module size** | 1,010 lines | ~92 lines | Easier to review |
-| **Testability** | Low | High | Isolated hooks/components |
+| Metric                  | Before      | After     | Improvement               |
+| ----------------------- | ----------- | --------- | ------------------------- |
+| **Main file lines**     | 1,010       | 566       | **-444 lines (44%)**      |
+| **Files in structure**  | 1           | 10        | Modular architecture      |
+| **Largest module**      | 1,010 lines | 566 lines | Better maintainability    |
+| **Average module size** | 1,010 lines | ~92 lines | Easier to review          |
+| **Testability**         | Low         | High      | Isolated hooks/components |
 
 ### Architecture Overview
 
@@ -51,9 +51,11 @@ src/pages/PracticePlanner/
 ### Phase 1: Custom Hooks Extraction (368 lines)
 
 #### 1. usePracticePlannerState.ts (70 lines)
+
 **Purpose**: Centralized state management with side effects
 
 **Responsibilities**:
+
 - Schedule selection state (`selectedScheduleId`)
 - Modal visibility states (create block, templates, PDF export)
 - Practice state (blocks, started, locked)
@@ -61,14 +63,17 @@ src/pages/PracticePlanner/
 - Computed values (selectedSchedule, totalDurationMinutes)
 
 **Benefits**:
+
 - Single source of truth for component state
 - Effects encapsulated with state logic
 - Easy to test state transitions
 
 #### 2. usePracticePlannerHandlers.ts (122 lines)
+
 **Purpose**: Event handler logic for user interactions
 
 **Handlers**:
+
 - `handleDragEnd` - Reorder blocks with optimistic UI updates
 - `handleQuickAddBlock` - Add blocks from quick actions
 - `handleDeleteBlock` - Remove blocks from schedule
@@ -77,14 +82,17 @@ src/pages/PracticePlanner/
 - `handleUnlockSchedule` - Allow editing after practice started
 
 **Benefits**:
+
 - Handlers separated from component logic
 - Easy to test business logic in isolation
 - Clear error handling and rollback strategies
 
 #### 3. usePracticePDFData.ts (128 lines)
+
 **Purpose**: Prepare practice data for PDF export
 
 **Responsibilities**:
+
 - Convert blocks to PDF format
 - Infer categories from titles/descriptions
 - Calculate category breakdowns
@@ -92,14 +100,17 @@ src/pages/PracticePlanner/
 - Format dates and times
 
 **Benefits**:
+
 - Complex PDF logic isolated
 - Easy to modify export format
 - Can be reused for other export formats
 
 #### 4. usePracticePlannerComputed.ts (48 lines)
+
 **Purpose**: Derived values and utility functions
 
 **Computed Values**:
+
 - `scheduleDateLabel` - Formatted date display
 - `scheduleLocationLabel` - Location with fallback
 - `practiceElapsed` - Elapsed time display
@@ -107,6 +118,7 @@ src/pages/PracticePlanner/
 - `scrollToSection` - Smooth scroll utility
 
 **Benefits**:
+
 - Consistent formatting across component
 - Single place to update display logic
 - Utility functions reusable
@@ -116,9 +128,11 @@ src/pages/PracticePlanner/
 ### Phase 2: Component Extraction (321 lines)
 
 #### 1. PracticeHero.tsx (155 lines)
+
 **Purpose**: Hero section with Aurora tiles showing practice stats
 
 **Features**:
+
 - 3 Aurora tiles (Board, Timer, Schedule)
 - Dynamic status badges based on practice state
 - Live stats (blocks count, duration, elapsed time)
@@ -127,14 +141,17 @@ src/pages/PracticePlanner/
 **Props**: 8 props for practice state and computed values
 
 **Benefits**:
+
 - Complex hero UI isolated
 - Tile configuration easy to modify
 - Reusable hero pattern
 
 #### 2. CreateBlockModal.tsx (102 lines)
+
 **Purpose**: Form modal for creating custom practice blocks
 
 **Features**:
+
 - Title, description, duration inputs
 - Form validation
 - Auto-reset on save
@@ -143,14 +160,17 @@ src/pages/PracticePlanner/
 **Props**: `isOpen`, `onClose`, `onSave`
 
 **Benefits**:
+
 - Form logic isolated from main component
 - Easy to test form validation
 - Reusable modal pattern
 
 #### 3. TemplatesModal.tsx (64 lines)
+
 **Purpose**: Modal for selecting practice templates
 
 **Features**:
+
 - Template list with metadata
 - Selection handler
 - Close/cancel actions
@@ -158,6 +178,7 @@ src/pages/PracticePlanner/
 **Props**: `isOpen`, `onClose`, `templates`, `onSelectTemplate`
 
 **Benefits**:
+
 - Template UI isolated
 - Easy to extend template features
 - Clean modal interface
@@ -169,6 +190,7 @@ src/pages/PracticePlanner/
 #### Orchestrator Pattern Implementation
 
 **Before**:
+
 ```tsx
 export function PracticePlanner() {
   // 8 useState declarations
@@ -182,6 +204,7 @@ export function PracticePlanner() {
 ```
 
 **After**:
+
 ```tsx
 export function PracticePlanner() {
   // Auth and permissions
@@ -190,7 +213,6 @@ export function PracticePlanner() {
   // Custom handlers hook (destructure 6 handlers)
   // Custom computed hook (destructure 5 values)
   // Custom PDF hook (destructure 1 function)
-  
   // Guard clauses (23 lines)
   // Template handler (8 lines)
   // JSX return with components (500 lines, now clean)
@@ -198,6 +220,7 @@ export function PracticePlanner() {
 ```
 
 **Key Changes**:
+
 1. **Removed 8 useState declarations** → Moved to `usePracticePlannerState`
 2. **Removed 2 useEffect hooks** → Moved to `usePracticePlannerState`
 3. **Removed 6 handler functions** → Moved to `usePracticePlannerHandlers`
@@ -207,6 +230,7 @@ export function PracticePlanner() {
 7. **Removed 2 modal components** → Moved to separate files
 
 **Retained in Main File**:
+
 - Practice blocks list with drag-and-drop (main feature)
 - Quick actions sidebar
 - Control buttons (start/stop/unlock)
@@ -293,14 +317,14 @@ export function PracticePlanner() {
 
 ## Comparison with AddNewPlayModal
 
-| Metric | AddNewPlayModal | PracticePlanner | Pattern Consistency |
-|--------|-----------------|-----------------|-------------------|
-| **Original size** | 1,323 lines | 1,010 lines | Similar complexity |
-| **Final main file** | 340 lines | 566 lines | Both < 600 lines |
-| **Reduction %** | 74% | 44% | Good improvement |
-| **Hooks extracted** | 2 hooks | 4 hooks | Scalable pattern |
-| **Components extracted** | 8 components | 3 components | Varies by need |
-| **Total files** | 12 files | 10 files | Similar modularity |
+| Metric                   | AddNewPlayModal | PracticePlanner | Pattern Consistency |
+| ------------------------ | --------------- | --------------- | ------------------- |
+| **Original size**        | 1,323 lines     | 1,010 lines     | Similar complexity  |
+| **Final main file**      | 340 lines       | 566 lines       | Both < 600 lines    |
+| **Reduction %**          | 74%             | 44%             | Good improvement    |
+| **Hooks extracted**      | 2 hooks         | 4 hooks         | Scalable pattern    |
+| **Components extracted** | 8 components    | 3 components    | Varies by need      |
+| **Total files**          | 12 files        | 10 files        | Similar modularity  |
 
 **Key Insight**: Pattern is flexible - PracticePlanner kept more in main file due to tight drag-drop integration, while AddNewPlayModal extracted more components due to form sections.
 
@@ -355,6 +379,7 @@ Following the same pattern:
 The PracticePlanner refactoring successfully applied the AddNewPlayModal pattern to a different type of component (page vs modal), demonstrating the pattern's flexibility. By extracting **689 lines into 10 focused modules**, we achieved a **44% reduction** in main file size while significantly improving code organization, maintainability, and testability.
 
 This refactoring proves that the orchestrator pattern with custom hooks works well for:
+
 - ✅ Large page components (1,000+ lines)
 - ✅ Components with complex state management
 - ✅ Components with multiple user interactions

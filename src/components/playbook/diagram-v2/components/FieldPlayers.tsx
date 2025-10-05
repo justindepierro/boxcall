@@ -9,7 +9,7 @@ export interface Player {
   y: number; // percentage
   label: string;
   role?: string;
-  side?: "O" | "D";
+  side?: "O" | "D" | "ST";
   color?: string;
   outlineColor?: string;
   locked?: boolean;

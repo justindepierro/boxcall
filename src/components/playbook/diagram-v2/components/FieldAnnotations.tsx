@@ -100,7 +100,11 @@ export const FieldAnnotations: React.FC<{
         const isSelected = selectedAnnotationId === a.id;
         const isHover = hoverAnnotationId === a.id;
         const highlightStroke =
-          isSelected || isHover ? (isSelected ? "#3b82f6" : "#22d3ee") : undefined;
+          isSelected || isHover
+            ? isSelected
+              ? "#3b82f6"
+              : "#22d3ee"
+            : undefined;
 
         const commonEvents = {
           onMouseEnter: (e: React.MouseEvent) => {
@@ -164,17 +168,28 @@ export const FieldAnnotations: React.FC<{
                 />
               )}
               {/* Main line */}
-              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={width} />
+              <line
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={color}
+                strokeWidth={width}
+              />
               {/* Arrowheads */}
-              {(ah === "end" || ah === "both") && renderArrowHead(x1, y1, x2, y2, color, "end")}
-              {(ah === "start" || ah === "both") && renderArrowHead(x1, y1, x2, y2, color, "start")}
+              {(ah === "end" || ah === "both") &&
+                renderArrowHead(x1, y1, x2, y2, color, "end")}
+              {(ah === "start" || ah === "both") &&
+                renderArrowHead(x1, y1, x2, y2, color, "start")}
             </g>
           );
         }
 
         // Line-like annotations (line, arrow, dashed, dotted, curve)
         const pts = "points" in a ? a.points : [];
-        const abs = pts.map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`).join(" ");
+        const abs = pts
+          .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
+          .join(" ");
 
         // Curve annotation (quadratic bezier)
         if (a.type === "curve" && pts.length >= 3) {
@@ -265,35 +280,41 @@ export const FieldAnnotations: React.FC<{
               stroke={color}
               strokeWidth={width}
               strokeDasharray={
-                a.type === "dashed" ? "8 6" : a.type === "dotted" ? "2 6" : undefined
+                a.type === "dashed"
+                  ? "8 6"
+                  : a.type === "dotted"
+                    ? "2 6"
+                    : undefined
               }
             />
             {/* Arrowhead for arrow type */}
-            {a.type === "arrow" && pts.length >= 2 && (() => {
-              const p2 = pts[pts.length - 1];
-              const p1 = pts[pts.length - 2];
-              const x2 = (p2.x / 100) * 1600;
-              const y2 = (p2.y / 100) * 900;
-              const x1 = (p1.x / 100) * 1600;
-              const y1 = (p1.y / 100) * 900;
-              const ah = a.arrowHead ?? "end";
-              const heads: React.ReactElement[] = [];
-              if (ah === "end" || ah === "both") {
-                heads.push(
-                  <React.Fragment key="end">
-                    {renderArrowHead(x1, y1, x2, y2, color, "end")}
-                  </React.Fragment>
-                );
-              }
-              if (ah === "start" || ah === "both") {
-                heads.push(
-                  <React.Fragment key="start">
-                    {renderArrowHead(x1, y1, x2, y2, color, "start")}
-                  </React.Fragment>
-                );
-              }
-              return heads;
-            })()}
+            {a.type === "arrow" &&
+              pts.length >= 2 &&
+              (() => {
+                const p2 = pts[pts.length - 1];
+                const p1 = pts[pts.length - 2];
+                const x2 = (p2.x / 100) * 1600;
+                const y2 = (p2.y / 100) * 900;
+                const x1 = (p1.x / 100) * 1600;
+                const y1 = (p1.y / 100) * 900;
+                const ah = a.arrowHead ?? "end";
+                const heads: React.ReactElement[] = [];
+                if (ah === "end" || ah === "both") {
+                  heads.push(
+                    <React.Fragment key="end">
+                      {renderArrowHead(x1, y1, x2, y2, color, "end")}
+                    </React.Fragment>
+                  );
+                }
+                if (ah === "start" || ah === "both") {
+                  heads.push(
+                    <React.Fragment key="start">
+                      {renderArrowHead(x1, y1, x2, y2, color, "start")}
+                    </React.Fragment>
+                  );
+                }
+                return heads;
+              })()}
           </g>
         );
       })}

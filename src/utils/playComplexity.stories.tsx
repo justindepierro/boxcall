@@ -143,10 +143,16 @@ const PlayComplexityDemo = () => {
             ).map((badge) => {
               const info = getComplexityBadgeInfo(badge);
               return (
-                <div key={badge} className="p-spacing-sm border rounded-lg text-center">
+                <div
+                  key={badge}
+                  className="p-spacing-sm border rounded-lg text-center"
+                >
                   <div className="text-2xl mb-spacing-xs">{info.icon}</div>
                   <div className="font-medium text-sm">{info.title}</div>
-                  <Badge variant={info.color as any} className="mt-spacing-xs text-xs">
+                  <Badge
+                    variant={info.color as any}
+                    className="mt-spacing-xs text-xs"
+                  >
                     {badge}
                   </Badge>
                 </div>
@@ -392,7 +398,9 @@ export const BadgeSystem: StoryObj = {
 
     return (
       <Card className="p-spacing-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-spacing-md">Complexity Badge System</h3>
+        <h3 className="text-lg font-semibold mb-spacing-md">
+          Complexity Badge System
+        </h3>
         <div className="space-y-spacing-md">
           {badges.map((badge) => {
             const info = getComplexityBadgeInfo(badge);
@@ -449,7 +457,9 @@ export const ComplexityBreakdown: StoryObj = {
 
     return (
       <Card className="p-spacing-lg max-w-md">
-        <h3 className="text-lg font-semibold mb-spacing-md">Complexity Breakdown</h3>
+        <h3 className="text-lg font-semibold mb-spacing-md">
+          Complexity Breakdown
+        </h3>
         <div className="space-y-spacing-md">
           <div className="text-center">
             <div className="text-3xl mb-spacing-xs">{badgeInfo.icon}</div>
@@ -535,7 +545,9 @@ export const MilestoneTracking: StoryObj = {
 
     return (
       <Card className="p-spacing-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-spacing-md">Complexity Milestones</h3>
+        <h3 className="text-lg font-semibold mb-spacing-md">
+          Complexity Milestones
+        </h3>
         <div className="space-y-spacing-md">
           {plays.map((play, index) => {
             const mockMetrics = {
@@ -570,7 +582,9 @@ export const MilestoneTracking: StoryObj = {
         </div>
 
         <div className="mt-spacing-md p-spacing-sm bg-blue-50 rounded-lg">
-          <h5 className="font-medium text-sm mb-spacing-xs">Milestone Thresholds</h5>
+          <h5 className="font-medium text-sm mb-spacing-xs">
+            Milestone Thresholds
+          </h5>
           <div className="text-sm text-gray-600 space-y-spacing-xs">
             <div>• 26+ points: First Intermediate Play</div>
             <div>• 51+ points: Advanced Play Designer</div>

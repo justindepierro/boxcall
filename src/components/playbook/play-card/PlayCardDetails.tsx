@@ -330,7 +330,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             as="h4"
             className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="settings" className="h-4 w-4 mr-spacing-xs" /> Preferences
+            <Icon name="settings" className="h-4 w-4 mr-spacing-xs" />{" "}
+            Preferences
           </Typography>
           <dl className="space-y-spacing-md text-sm">
             <div className="flex items-center gap-spacing-md">
@@ -413,7 +414,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             as="h4"
             className="text-text-primary flex items-center mb-spacing-md"
           >
-            <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage & Stats
+            <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage &
+            Stats
           </Typography>
           <dl className="space-y-spacing-sm text-sm">
             <div className="flex items-center gap-spacing-md">
@@ -500,7 +502,9 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         {showTagsEditor && (
           <div className="mt-spacing-sm grid grid-cols-1 md:grid-cols-3 gap-spacing-sm">
             <div>
-              <div className="text-xs text-text-secondary mb-spacing-xs">Positions</div>
+              <div className="text-xs text-text-secondary mb-spacing-xs">
+                Positions
+              </div>
               <div className="flex flex-wrap gap-spacing-xs">
                 {flags.positions.map((pos) => (
                   <Button
@@ -545,7 +549,9 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xs text-text-secondary mb-spacing-xs">Players</div>
+              <div className="text-xs text-text-secondary mb-spacing-xs">
+                Players
+              </div>
               <div className="flex flex-wrap gap-spacing-xs">
                 {flags.players.map((pl) => (
                   <Button
@@ -582,7 +588,9 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xs text-text-secondary mb-spacing-xs">Flags</div>
+              <div className="text-xs text-text-secondary mb-spacing-xs">
+                Flags
+              </div>
               <div className="flex flex-wrap gap-spacing-xs">
                 {flags.flags.map((fl) => (
                   <Button
@@ -643,7 +651,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             title="Add this play to a practice script"
             className="surface-subtle hover:bg-surface-info text-text-info border-surface-primary"
           >
-            <Icon name="calendar" className="h-3 w-3 mr-spacing-xs" /> Practice Script
+            <Icon name="calendar" className="h-3 w-3 mr-spacing-xs" /> Practice
+            Script
           </Button>
           <Button
             variant="secondary"
@@ -652,7 +661,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             title="Add this play to a game plan"
             className="surface-subtle hover:bg-surface-success text-text-success border-surface-primary"
           >
-            <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game Plan
+            <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game
+            Plan
           </Button>
           <Badge variant="premium" size="sm">
             Week 3

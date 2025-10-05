@@ -68,7 +68,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center p-spacing-2xl ${className}`}>
+      <div
+        className={`flex items-center justify-center p-spacing-2xl ${className}`}
+      >
         <div className="text-center">
           <Icon
             name="refresh-cw"
@@ -87,7 +89,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           name="alert-triangle"
           className="h-12 w-12 text-text-error mx-auto mb-spacing-md"
         />
-        <Typography variant="headline-sm" className="text-text-error mb-spacing-xs">
+        <Typography
+          variant="headline-sm"
+          className="text-text-error mb-spacing-xs"
+        >
           Analytics Error
         </Typography>
         <Typography variant="body-sm" className="text-text-error mb-spacing-md">
@@ -107,7 +112,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           name="bar-chart"
           className="h-12 w-12 text-text-muted mx-auto mb-spacing-md"
         />
-        <Typography variant="headline-sm" className="text-text-secondary mb-spacing-xs">
+        <Typography
+          variant="headline-sm"
+          className="text-text-secondary mb-spacing-xs"
+        >
           No Analytics Data
         </Typography>
         <Typography variant="body-sm" className="text-text-secondary">
@@ -680,7 +688,10 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
     </div>
 
     <div className="mt-spacing-md">
-      <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
+      <Typography
+        variant="body-xs"
+        className="text-text-secondary mb-spacing-xs"
+      >
         Personnel Usage
       </Typography>
       <div className="flex flex-wrap gap-spacing-xs">
@@ -839,7 +850,10 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {analytics.averageSuccessRate < 60 && (
             <div className="p-spacing-sm bg-surface-warning border border-text-warning rounded-lg">
               <Typography variant="body-sm" className="text-text-warning">
-                <Icon name="alert-triangle" className="h-4 w-4 inline mr-spacing-xs" />
+                <Icon
+                  name="alert-triangle"
+                  className="h-4 w-4 inline mr-spacing-xs"
+                />
                 Consider simplifying play calls - average success rate is below
                 60%.
               </Typography>
@@ -865,7 +879,10 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
             analytics.topPerformingPlays[0].successRate > 80 && (
               <div className="p-spacing-sm bg-surface-success border border-text-success rounded-lg">
                 <Typography variant="body-sm" className="text-text-success">
-                  <Icon name="check-circle" className="h-4 w-4 inline mr-spacing-xs" />
+                  <Icon
+                    name="check-circle"
+                    className="h-4 w-4 inline mr-spacing-xs"
+                  />
                   Excellent performance! Focus on replicating success patterns.
                 </Typography>
               </div>

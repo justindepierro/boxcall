@@ -11,6 +11,21 @@ import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
 
+// Extracted hooks
+import { useFieldCoordinates } from "./hooks/useFieldCoordinates";
+import { useFieldZoomPan } from "./hooks/useFieldZoomPan";
+import { useFieldDragDrop } from "./hooks/useFieldDragDrop";
+import { useFieldSnapping } from "./hooks/useFieldSnapping";
+import { useFieldKeyboard } from "./hooks/useFieldKeyboard";
+
+// Extracted components
+import { FieldGrid } from "./components/FieldGrid";
+import { FieldPlayers } from "./components/FieldPlayers";
+import { FieldRoutes } from "./components/FieldRoutes";
+import { FieldAnnotations } from "./components/FieldAnnotations";
+import { FieldGuides } from "./components/FieldGuides";
+import { FieldMinimap } from "./components/FieldMinimap";
+
 // Simple SVG field canvas with zoom/pan transforms (placeholder)
 export const FieldCanvas: React.FC<{
   className?: string;
@@ -162,6 +177,25 @@ export const FieldCanvas: React.FC<{
   // Spacebar-hold-to-pan state
   const spaceHeldRef = useRef(false);
   const prevToolRef = useRef<null | typeof state.ui.tool>(null);
+
+  // ============================================================================
+  // EXTRACTED HOOKS - All field interaction logic externalized
+  // ============================================================================
+  
+  // Coordinate conversion utilities
+  const coordinates = useFieldCoordinates({
+    svgRef,
+    panX: state.ui.panX,
+    panY: state.ui.panY,
+    zoom: state.ui.zoom,
+  });
+
+  // Note: Keeping legacy inline functions temporarily for backwards compatibility
+  // TODO: Remove after all usages are migrated to coordinates.pctToAbs, etc.
+
+  // ============================================================================
+  // LEGACY INLINE FUNCTIONS (to be removed after full refactoring)
+  // ============================================================================
 
   function pctToAbs(xPct: number, yPct: number) {
     return {
@@ -1384,399 +1418,37 @@ export const FieldCanvas: React.FC<{
         <g
           transform={`translate(${state.ui.panX} ${state.ui.panY}) scale(${state.ui.zoom})`}
         >
-          {/* Field background */}
-          {(() => {
-            const theme = doc.field.theme || "classic";
-            if (theme === "classic")
-              return (
-                <rect
-                  x={0}
-                  y={0}
-                  width={1600}
-                  height={900}
-                  fill="#1e7a44"
-                  fillOpacity={0.55}
-                />
-              );
-            if (theme === "mono-light")
-              return (
-                <rect x={0} y={0} width={1600} height={900} fill="#f4f5f6" />
-              );
-            if (theme === "mono-dark")
-              return (
-                <rect x={0} y={0} width={1600} height={900} fill="#1d1f20" />
-              );
-          })()}
-          {/* LOS */}
-          {(() => {
-            const losYards = doc.field.losYards ?? 20;
-            const y = (losYards / doc.field.forwardYards) * 900;
-            return (
-              <rect
-                x={0}
-                y={y - 3}
-                width={1600}
-                height={6}
-                fill="#064e3b"
-                opacity={0.95}
-                rx={2}
-              />
-            );
-          })()}
-          {/* Red Zone Highlight (top 20 yards of visible slice) */}
-          {doc.field.showRedZone && doc.field.forwardYards >= 20 && (
-            <rect
-              x={0}
-              y={0}
-              width={1600}
-              height={(20 / doc.field.forwardYards) * 900}
-              fill="#ef4444"
-              opacity={0.08}
-            />
-          )}
-          {/* Yard Lines */}
-          {doc.field.showYardLines &&
-            Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
-              (_, i) => (
-                <line
-                  key={i}
-                  x1={0}
-                  x2={1600}
-                  y1={i * (900 / (doc.field.forwardYards / 5))}
-                  y2={i * (900 / (doc.field.forwardYards / 5))}
-                  stroke="#065f46"
-                  strokeWidth={i % 2 === 0 ? 3 : 1}
-                  opacity={0.6}
-                />
-              )
-            )}
-          {/* Hashes */}
-          {doc.field.showHashMarks &&
-            (() => {
-              const layout = doc.field.hashLayout || "highschool";
-              const FT = 160;
-              const PXPF = 1600 / FT;
-              const hashDistances: Record<string, [number, number]> = {
-                highschool: [53 + 4 / 12, FT - (53 + 4 / 12)],
-                college: [60, FT - 60],
-                nfl: [70 + 9 / 12, FT - (70 + 9 / 12)],
-              };
-              const [lFt, rFt] = hashDistances[layout];
-              const lX = lFt * PXPF;
-              const rX = rFt * PXPF;
-              const mid = 800;
-              const theme = doc.field.theme || "classic";
-              const hashColor =
-                theme === "mono-dark"
-                  ? "#374151"
-                  : theme === "mono-light"
-                    ? "#9ca3af"
-                    : "#064e3b";
-              const midColor = theme === "classic" ? "#065f46" : hashColor;
-              const marks: React.ReactNode[] = [];
-              const w = 10;
-              const h = 3;
-              const sideOffsetFt = 3;
-              const sideCenterX = sideOffsetFt * PXPF;
-              const sideRightCenterX = 1600 - sideCenterX;
-              for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
-                const y = (yrd / doc.field.forwardYards) * 900;
-                marks.push(
-                  <g key={yrd}>
-                    <rect
-                      x={lX - w / 2}
-                      y={y - h / 2}
-                      width={w}
-                      height={h}
-                      fill={hashColor}
-                      opacity={0.55}
-                    />
-                    <rect
-                      x={rX - w / 2}
-                      y={y - h / 2}
-                      width={w}
-                      height={h}
-                      fill={hashColor}
-                      opacity={0.55}
-                    />
-                    {doc.field.ballHash === "middle" && (
-                      <rect
-                        x={mid - 3}
-                        y={y - h / 2}
-                        width={6}
-                        height={h}
-                        fill={midColor}
-                        opacity={0.35}
-                      />
-                    )}
-                    <rect
-                      x={sideCenterX - w / 2}
-                      y={y - h / 2}
-                      width={w}
-                      height={h}
-                      fill={hashColor}
-                      opacity={0.45}
-                    />
-                    <rect
-                      x={sideRightCenterX - w / 2}
-                      y={y - h / 2}
-                      width={w}
-                      height={h}
-                      fill={hashColor}
-                      opacity={0.45}
-                    />
-                  </g>
-                );
-              }
-              return marks;
-            })()}
-          {/* Yard Numbers */}
-          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
-            (_, i) => {
-              const y = i * (900 / (doc.field.forwardYards / 5));
-              if (i === 0) return null;
-              const yardValue = i * 5;
-              if (yardValue === 50) return null;
-              const theme = doc.field.theme || "classic";
-              const baseColor =
-                theme === "classic"
-                  ? "#ecfdf5"
-                  : theme === "mono-light"
-                    ? "#444"
-                    : "#e5e7eb";
-              const opacity = theme === "classic" ? 0.24 : 0.32;
-              const feetFromSideline = 9 * 3;
-              const leftX = feetFromSideline * 10;
-              const rightX = 1600 - leftX;
-              const numberY = y + 26;
-              const digits = String(yardValue).split("");
-              const halfSpacing = 24;
-              return (
-                <g key={i} opacity={opacity}>
-                  <g
-                    transform={`translate(${leftX},${numberY}) rotate(90)`}
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    {digits.map((d, di) => (
-                      <text
-                        key={di}
-                        fontSize={50}
-                        fontWeight={700}
-                        fill={baseColor}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        x={di === 0 ? -halfSpacing : halfSpacing}
-                      >
-                        {d}
-                      </text>
-                    ))}
-                  </g>
-                  <g
-                    transform={`translate(${rightX},${numberY}) rotate(-90)`}
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    {digits.map((d, di) => (
-                      <text
-                        key={di}
-                        fontSize={50}
-                        fontWeight={700}
-                        fill={baseColor}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        x={di === 0 ? -halfSpacing : halfSpacing}
-                      >
-                        {d}
-                      </text>
-                    ))}
-                  </g>
-                </g>
-              );
-            }
-          )}
-          {/* Grid Overlay */}
-          {state.ui.showGridOverlay &&
-            (() => {
-              const g = Math.max(1, state.ui.snapGrid || 1);
-              const theme = doc.field.theme || "classic";
-              const color =
-                theme === "mono-dark"
-                  ? "#6b7280"
-                  : theme === "mono-light"
-                    ? "#9ca3af"
-                    : "#10b981";
-              const opacity = theme === "classic" ? 0.2 : 0.25;
-              const stepX = (1600 * g) / 100;
-              const stepY = (900 * g) / 100;
-              const nodes: React.ReactNode[] = [];
-              // Vertical lines
-              for (let x = 0; x <= 1600; x += stepX) {
-                nodes.push(
-                  <line
-                    key={`gv-${x}`}
-                    x1={x}
-                    y1={0}
-                    x2={x}
-                    y2={900}
-                    stroke={color}
-                    strokeWidth={1}
-                    opacity={opacity}
-                    strokeDasharray="4 6"
-                    style={{ pointerEvents: "none" }}
-                  />
-                );
-              }
-              // Horizontal lines
-              for (let y = 0; y <= 900; y += stepY) {
-                nodes.push(
-                  <line
-                    key={`gh-${y}`}
-                    x1={0}
-                    y1={y}
-                    x2={1600}
-                    y2={y}
-                    stroke={color}
-                    strokeWidth={1}
-                    opacity={opacity}
-                    strokeDasharray="4 6"
-                    style={{ pointerEvents: "none" }}
-                  />
-                );
-              }
-              return <g>{nodes}</g>;
-            })()}
-          {/* Players */}
-          {doc.players
-            .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
-            .map((p) => {
-              const isCenter = p.label === "C" || p.role === "C";
-              const theme = doc.field.theme || "classic";
-              const defaultOutline =
-                theme === "mono-light" ? "#1f2937" : "#ffffff";
-              const strokeColor = p.outlineColor || defaultOutline;
-              const selected = (state.ui.selectedIds || []).includes(p.id);
-              const locked = !!p.locked;
-              return (
-                <g
-                  key={p.id}
-                  transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
-                  className={
-                    locked ? "cursor-not-allowed opacity-70" : undefined
-                  }
-                  onMouseDown={(e) => {
-                    onPlayerMouseDown?.(p.id, e);
-                    handleMouseDownPlayer(e, p.id);
-                  }}
-                  onDoubleClick={(e) => {
-                    e.stopPropagation();
-                    if (locked) return;
-                    dispatch({ type: "START_INLINE_EDIT", playerId: p.id });
-                  }}
-                >
-                  {/* Gentle selection pulse halo */}
-                  {selected && showSelectionPulse && (
-                    <circle
-                      cx={0}
-                      cy={0}
-                      r={isCenter ? 28 : 30}
-                      fill="none"
-                      stroke="#fbbf24"
-                      strokeWidth={3}
-                      opacity={0.55}
-                      className="animate-selectedBreathe"
-                    />
-                  )}
-                  {isCenter ? (
-                    <rect
-                      x={-24}
-                      y={-16}
-                      width={48}
-                      height={32}
-                      rx={4}
-                      ry={4}
-                      fill={p.color || "#1e3a8a"}
-                      stroke={selected ? "#fbbf24" : strokeColor}
-                      strokeWidth={selected ? 4 : 2}
-                    />
-                  ) : (
-                    <ellipse
-                      rx={26}
-                      ry={18}
-                      fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")}
-                      stroke={selected ? "#fbbf24" : strokeColor}
-                      strokeWidth={selected ? 4 : 2}
-                    />
-                  )}{" "}
-                  {doc.field.showPlayerLabels && (
-                    <text
-                      x={0}
-                      y={4}
-                      fontSize={18}
-                      fontWeight={700}
-                      fill={theme === "mono-light" ? "#111827" : "#ffffff"}
-                      textAnchor="middle"
-                      style={{ userSelect: "none" }}
-                    >
-                      {p.label}
-                    </text>
-                  )}
-                  {/* Lock toggle (top-right of glyph) */}
-                  <g
-                    transform="translate(20,-22)"
-                    onMouseDown={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      dispatch({
-                        type: "UPDATE_PLAYER",
-                        id: p.id,
-                        patch: { locked: !p.locked },
-                      });
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {/* subtle circular hit area */}
-                    <circle
-                      cx={0}
-                      cy={0}
-                      r={10}
-                      fill={theme === "mono-light" ? "#f9fafb" : "#111827"}
-                      opacity={p.locked ? 0.85 : 0.25}
-                      stroke={theme === "mono-light" ? "#cbd5e1" : "#374151"}
-                      strokeWidth={1}
-                    />
-                    {/* padlock icon */}
-                    <rect
-                      x={-4.5}
-                      y={-1}
-                      width={9}
-                      height={7}
-                      rx={1.5}
-                      ry={1.5}
-                      fill={
-                        p.locked
-                          ? theme === "mono-light"
-                            ? "#334155"
-                            : "#e5e7eb"
-                          : "none"
-                      }
-                      stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
-                      strokeWidth={1.2}
-                    />
-                    <path
-                      d="M -3 -1 v -2.5 a3 3 0 0 1 6 0 V -1"
-                      fill="none"
-                      stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
-                      strokeWidth={1.2}
-                      strokeLinecap="round"
-                    />
-                    <title>{p.locked ? "Unlock player" : "Lock player"}</title>
-                  </g>
-                </g>
-              );
-            })}
-          {/* Existing routes */}
+          {/* ==================== FIELD GRID ==================== */}
+          <FieldGrid
+            field={doc.field}
+            showGridOverlay={state.ui.showGridOverlay}
+            snapGrid={state.ui.snapGrid}
+          />
+
+          {/* ==================== PLAYERS ==================== */}
+          <FieldPlayers
+            players={doc.players}
+            selectedIds={state.ui.selectedIds || []}
+            theme={doc.field.theme || "classic"}
+            showPlayerLabels={doc.field.showPlayerLabels ?? true}
+            showDefensePlayers={doc.field.showDefensePlayers ?? true}
+            showSelectionPulse={showSelectionPulse}
+            onPlayerMouseDown={(id, e) => {
+              handleMouseDownPlayer(e, id);
+            }}
+            onPlayerDoubleClick={(id) => {
+              dispatch({ type: "START_INLINE_EDIT", playerId: id });
+            }}
+            onPlayerLockToggle={(id) => {
+              dispatch({
+                type: "UPDATE_PLAYER",
+                id,
+                patch: { locked: !(doc.players.find(p => p.id === id)?.locked) },
+              });
+            }}
+          />
+
+          {/* ==================== ROUTES ==================== */}
           {doc.routes.map((r) => (
             <g key={r.id}>
               {r.segments.map((s, si) => {

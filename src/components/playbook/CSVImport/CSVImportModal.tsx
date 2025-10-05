@@ -828,7 +828,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               aria-label="Close modal"
             />
           </div>
-          <div className="surface-card px-spacing-lg py-spacing-2xl">{renderStep()}</div>
+          <div className="surface-card px-spacing-lg py-spacing-2xl">
+            {renderStep()}
+          </div>
         </div>
       </div>
     </div>

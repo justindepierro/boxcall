@@ -70,7 +70,9 @@ export const TagInput: React.FC<TagInputProps> = ({
         variant="label-md"
         className="block mb-spacing-xs text-text-secondary"
       >
-        {icon && <Icon name={icon as any} className="h-4 w-4 mr-spacing-xs inline" />}
+        {icon && (
+          <Icon name={icon as any} className="h-4 w-4 mr-spacing-xs inline" />
+        )}
         {label}
         {maxTags && (
           <Typography

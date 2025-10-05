@@ -21,14 +21,12 @@ export const FieldMinimap: React.FC<{
   panY: number;
   zoom: number;
   theme?: string;
-  onMinimapDrag?: (miniElement: HTMLDivElement, clientX: number, clientY: number) => void;
-}> = ({
-  panX,
-  panY,
-  zoom,
-  theme = "classic",
-  onMinimapDrag,
-}) => {
+  onMinimapDrag?: (
+    miniElement: HTMLDivElement,
+    clientX: number,
+    clientY: number
+  ) => void;
+}> = ({ panX, panY, zoom, theme = "classic", onMinimapDrag }) => {
   const miniDragRef = React.useRef({ dragging: false });
   const showMini = zoom > 1.001; // hide when fully zoomed out
   if (!showMini) return null;

@@ -311,7 +311,10 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           <h4 className="font-medium text-text-secondary">Recent Errors</h4>
           <div className="max-h-32 overflow-y-auto bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded p-spacing-xs text-xs">
             {monitoringData.recentErrors.map((error, index) => (
-              <div key={index} className="mb-spacing-xs text-red-700 dark:text-red-300">
+              <div
+                key={index}
+                className="mb-spacing-xs text-red-700 dark:text-red-300"
+              >
                 <div className="font-medium">{error.operation}</div>
                 <div className="text-red-600 dark:text-red-400">
                   {error.error}
