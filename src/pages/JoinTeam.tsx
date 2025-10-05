@@ -554,51 +554,56 @@ export const JoinTeam: React.FC = () => {
     <Aurora variant="shell" fullHeight>
       <PageLayout title="Join Team" variant="form">
         <div className="max-w-5xl mx-auto">
-        {/* Back Navigation */}
-        {currentStep !== "method" && currentStep !== "complete" && (
-          <div className="mb-6">
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              onClick={() => setCurrentStep("method")}
-              className="flex items-center gap-1 text-text-secondary hover:text-text-primary"
-            >
-              <Icon name="chevron-left" size="sm" /> Back to join methods
-            </Button>
-          </div>
-        )}
-
-        {/* Step Content */}
-        <div className="surface-card elevation-card border-subtle rounded-lg p-8">
-          {renderStepContent()}
-        </div>
-
-        {/* Help Section */}
-        {currentStep === "method" && (
-          <div className="mt-8 text-center">
-            <Typography variant="body-sm" color="muted" className="mb-2">
-              Need help joining your team?
-            </Typography>
-            <div className="space-x-4">
-              <Button type="button" variant="brandLink" size="sm" className="">
-                Contact Support
-              </Button>
-              <span className="text-border-light">•</span>
+          {/* Back Navigation */}
+          {currentStep !== "method" && currentStep !== "complete" && (
+            <div className="mb-6">
               <Button
                 type="button"
                 variant="link"
                 size="sm"
-                onClick={() => navigate("/create-team")}
-                className=""
+                onClick={() => setCurrentStep("method")}
+                className="flex items-center gap-1 text-text-secondary hover:text-text-primary"
               >
-                Create a New Team Instead
+                <Icon name="chevron-left" size="sm" /> Back to join methods
               </Button>
             </div>
+          )}
+
+          {/* Step Content */}
+          <div className="surface-card elevation-card border-subtle rounded-lg p-8">
+            {renderStepContent()}
           </div>
-        )}
-      </div>
-    </PageLayout>
+
+          {/* Help Section */}
+          {currentStep === "method" && (
+            <div className="mt-8 text-center">
+              <Typography variant="body-sm" color="muted" className="mb-2">
+                Need help joining your team?
+              </Typography>
+              <div className="space-x-4">
+                <Button
+                  type="button"
+                  variant="brandLink"
+                  size="sm"
+                  className=""
+                >
+                  Contact Support
+                </Button>
+                <span className="text-border-light">•</span>
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  onClick={() => navigate("/create-team")}
+                  className=""
+                >
+                  Create a New Team Instead
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </PageLayout>
     </Aurora>
   );
 };

@@ -640,100 +640,102 @@ export const CreateTeam: React.FC = () => {
     <Aurora variant="shell" fullHeight>
       <PageLayout title="Create Team">
         <div className="max-w-2xl mx-auto">
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={`flex items-center ${
-                  index < steps.length - 1 ? "flex-1" : ""
-                }`}
-              >
+          {/* Progress Steps */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => (
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    step.id === currentStep
-                      ? "bg-blue-600 text-white"
-                      : currentStepIndex > index
-                        ? "bg-green-600 text-white"
-                        : "bg-gray-200 text-gray-600"
+                  key={step.id}
+                  className={`flex items-center ${
+                    index < steps.length - 1 ? "flex-1" : ""
                   }`}
                 >
-                  {index + 1}
-                </div>
-                {index < steps.length - 1 && (
                   <div
-                    className={`flex-1 h-1 mx-4 ${
-                      currentStepIndex > index ? "bg-green-600" : "bg-gray-200"
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      step.id === currentStep
+                        ? "bg-blue-600 text-white"
+                        : currentStepIndex > index
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-200 text-gray-600"
                     }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="mt-2 text-center">
-            <Typography variant="body-lg" className="font-medium">
-              {steps[currentStepIndex]?.title}
-            </Typography>
-          </div>
-        </div>
-
-        {/* Step Content */}
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-          {renderStepContent()}
-        </div>
-
-        {/* Navigation */}
-        {currentStep !== "complete" && (
-          <div className="flex justify-between">
-            <Button
-              variant="secondary"
-              onClick={handlePrevious}
-              disabled={currentStepIndex === 0}
-              icon={<Icon name="arrow-left" size="sm" />}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleNext}
-              disabled={!validateCurrentStep() || isLoading}
-              loading={isLoading}
-              icon={
-                currentStep === "review" ? (
-                  <Icon name="plus" size="sm" />
-                ) : (
-                  <Icon name="arrow-right" size="sm" />
-                )
-              }
-              iconPosition="right"
-            >
-              {currentStep === "review" ? "Create Team" : "Next"}
-            </Button>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {isLoading && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <Typography variant="body-md">{loadingMessage}</Typography>
+                  >
+                    {index + 1}
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`flex-1 h-1 mx-4 ${
+                        currentStepIndex > index
+                          ? "bg-green-600"
+                          : "bg-gray-200"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 text-center">
+              <Typography variant="body-lg" className="font-medium">
+                {steps[currentStepIndex]?.title}
+              </Typography>
             </div>
           </div>
-        )}
 
-        {/* Welcome Modal */}
-        {showWelcomeModal && createdTeamId && (
-          <TeamWelcomeModal
-            isOpen={showWelcomeModal}
-            onClose={() => setShowWelcomeModal(false)}
-            teamName={`${formData.schoolName} ${formData.teamName}`}
-            onGoToBulletin={handleGoToBulletin}
-          />
-        )}
-      </div>
-    </PageLayout>
+          {/* Step Content */}
+          <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+            {renderStepContent()}
+          </div>
+
+          {/* Navigation */}
+          {currentStep !== "complete" && (
+            <div className="flex justify-between">
+              <Button
+                variant="secondary"
+                onClick={handlePrevious}
+                disabled={currentStepIndex === 0}
+                icon={<Icon name="arrow-left" size="sm" />}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleNext}
+                disabled={!validateCurrentStep() || isLoading}
+                loading={isLoading}
+                icon={
+                  currentStep === "review" ? (
+                    <Icon name="plus" size="sm" />
+                  ) : (
+                    <Icon name="arrow-right" size="sm" />
+                  )
+                }
+                iconPosition="right"
+              >
+                {currentStep === "review" ? "Create Team" : "Next"}
+              </Button>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {isLoading && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <Typography variant="body-md">{loadingMessage}</Typography>
+              </div>
+            </div>
+          )}
+
+          {/* Welcome Modal */}
+          {showWelcomeModal && createdTeamId && (
+            <TeamWelcomeModal
+              isOpen={showWelcomeModal}
+              onClose={() => setShowWelcomeModal(false)}
+              teamName={`${formData.schoolName} ${formData.teamName}`}
+              onGoToBulletin={handleGoToBulletin}
+            />
+          )}
+        </div>
+      </PageLayout>
     </Aurora>
   );
 };

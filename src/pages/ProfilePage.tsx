@@ -414,7 +414,11 @@ export const ProfilePage: React.FC = () => {
     return (
       <PageLayout>
         <div className="text-center py-spacing-2xl">
-          <Typography variant="headline-md" as="h1" className="text-error mb-spacing-md">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="text-error mb-spacing-md"
+          >
             Profile Not Found
           </Typography>
           <p className="text-text-secondary">

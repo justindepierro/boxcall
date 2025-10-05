@@ -32,7 +32,9 @@ const TemplatesPage: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Highlights</span>
-              <span className="font-semibold text-text-primary">Install, OTA</span>
+              <span className="font-semibold text-text-primary">
+                Install, OTA
+              </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Status</span>
@@ -56,7 +58,9 @@ const TemplatesPage: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Assets</span>
-              <span className="font-semibold text-text-primary">Scripts, PDF</span>
+              <span className="font-semibold text-text-primary">
+                Scripts, PDF
+              </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Availability</span>
@@ -101,44 +105,48 @@ const TemplatesPage: React.FC = () => {
         variant="detail"
       >
         <div className="mb-8">
-        <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
-          <div className="mb-6">
-            <Typography variant="headline-sm" className="text-text-primary">
-              Launch a template workspace
-            </Typography>
-            <Typography variant="body-sm" className="text-text-secondary mt-1">
-              Choose the toolkit you need and we’ll drop you into the right builder.
-            </Typography>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-            {heroTiles.map((tile) => (
-              <AuroraTile
-                key={tile.key}
-                title={tile.title}
-                description={tile.description}
-                icon={tile.icon}
-                accentOverlayClass={tile.accentOverlayClass}
-                glowClassName={tile.glowClassName}
-                statusBadge={tile.statusBadge}
-                iconClassName={tile.iconClassName}
-                footnote={tile.footnote}
-                onOpen={tile.onOpen}
+          <div className="rounded-[36px] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+            <div className="mb-6">
+              <Typography variant="headline-sm" className="text-text-primary">
+                Launch a template workspace
+              </Typography>
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary mt-1"
               >
-                {tile.body}
-              </AuroraTile>
-            ))}
+                Choose the toolkit you need and we’ll drop you into the right
+                builder.
+              </Typography>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+              {heroTiles.map((tile) => (
+                <AuroraTile
+                  key={tile.key}
+                  title={tile.title}
+                  description={tile.description}
+                  icon={tile.icon}
+                  accentOverlayClass={tile.accentOverlayClass}
+                  glowClassName={tile.glowClassName}
+                  statusBadge={tile.statusBadge}
+                  iconClassName={tile.iconClassName}
+                  footnote={tile.footnote}
+                  onOpen={tile.onOpen}
+                >
+                  {tile.body}
+                </AuroraTile>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <Card className="p-6" id="templates-overview">
-        <Typography variant="body-lg">
-          We're building a library of ready-made templates for playbooks,
-          practices, and team communication. Stay tuned for updates, and let us
-          know which templates would help your staff most.
-        </Typography>
-      </Card>
-    </PageLayout>
+        <Card className="p-6" id="templates-overview">
+          <Typography variant="body-lg">
+            We're building a library of ready-made templates for playbooks,
+            practices, and team communication. Stay tuned for updates, and let
+            us know which templates would help your staff most.
+          </Typography>
+        </Card>
+      </PageLayout>
     </Aurora>
   );
 };

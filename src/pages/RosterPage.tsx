@@ -343,8 +343,8 @@ export default function RosterPage() {
     return (
       <Aurora variant="shell" fullHeight>
         <PageLayout title="Roster" subtitle="Loading team roster...">
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-spacing-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
               {[...Array(6)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
                   <div className="h-32 bg-gray-200 rounded"></div>
@@ -363,28 +363,28 @@ export default function RosterPage() {
         title="Team Roster"
         subtitle={`${players.length} players • Manage your team's roster and player information`}
       >
-        <div className="space-y-6">
+        <div className="space-y-spacing-lg">
           {/* Header Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-            <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-spacing-md justify-between items-start sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-spacing-md">
               <Button
                 onClick={() => setShowAddModal(true)}
                 className="bg-primary hover:bg-primary/90"
               >
-                <Icon name="plus" className="w-4 h-4 mr-2" />
+                <Icon name="plus" className="w-4 h-4 mr-spacing-xs" />
                 Add Player
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowImportModal(true)}
               >
-                <Icon name="upload" className="w-4 h-4 mr-2" />
+                <Icon name="upload" className="w-4 h-4 mr-spacing-xs" />
                 Import CSV
               </Button>
             </div>
 
             {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-spacing-md w-full sm:w-auto">
               <Input
                 placeholder="Search players..."
                 value={searchTerm}
@@ -394,7 +394,7 @@ export default function RosterPage() {
               <select
                 value={positionFilter}
                 onChange={(e) => setPositionFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Positions</option>
                 {positionOptions.map((pos) => (
@@ -406,7 +406,7 @@ export default function RosterPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Status</option>
                 {statusOptions.map((status) => (
@@ -419,8 +419,8 @@ export default function RosterPage() {
           </div>
 
           {/* Roster Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md">
+            <Card className="p-spacing-md">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-sm" color="muted">
@@ -433,7 +433,7 @@ export default function RosterPage() {
                 <Icon name="users" className="w-8 h-8 text-primary" />
               </div>
             </Card>
-            <Card className="p-4">
+            <Card className="p-spacing-md">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-sm" color="muted">
@@ -446,7 +446,7 @@ export default function RosterPage() {
                 <Icon name="check-circle" className="w-8 h-8 text-green-500" />
               </div>
             </Card>
-            <Card className="p-4">
+            <Card className="p-spacing-md">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-sm" color="muted">
@@ -457,7 +457,7 @@ export default function RosterPage() {
                 <Icon name="alert-triangle" className="w-8 h-8 text-red-500" />
               </div>
             </Card>
-            <Card className="p-4">
+            <Card className="p-spacing-md">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-sm" color="muted">
@@ -483,14 +483,14 @@ export default function RosterPage() {
           </div>
 
           {/* Player Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
             {filteredPlayers.map((player) => (
               <Card
                 key={player.id}
-                className="p-4 hover:shadow-lg transition-shadow"
+                className="p-spacing-md hover:shadow-lg transition-shadow"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-start justify-between mb-spacing-sm">
+                  <div className="flex items-center gap-spacing-sm">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                       <Typography
                         variant="headline-sm"
@@ -511,7 +511,7 @@ export default function RosterPage() {
                       </Typography>
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-spacing-xs">
                     <Button
                       size="sm"
                       variant="ghost"
@@ -530,7 +530,7 @@ export default function RosterPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2 text-sm">
+                <div className="space-y-spacing-xs text-sm">
                   <div className="flex justify-between">
                     <span className="text-text-secondary">Class:</span>
                     <span className="capitalize">
@@ -556,7 +556,7 @@ export default function RosterPage() {
                   <div className="flex justify-between">
                     <span className="text-text-secondary">Status:</span>
                     <span
-                      className={`capitalize px-2 py-1 rounded text-xs ${
+                      className={`capitalize px-spacing-xs py-spacing-xs rounded text-xs ${
                         player.is_active
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-100 text-gray-800"
@@ -571,22 +571,22 @@ export default function RosterPage() {
           </div>
 
           {filteredPlayers.length === 0 && (
-            <Card className="p-8 text-center">
+            <Card className="p-spacing-xl text-center">
               <Icon
                 name="users"
-                className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                className="w-12 h-12 text-gray-400 mx-auto mb-spacing-md"
               />
-              <Typography variant="headline-md" className="mb-2">
+              <Typography variant="headline-md" className="mb-spacing-xs">
                 No players found
               </Typography>
-              <Typography variant="body-lg" color="muted" className="mb-4">
+              <Typography variant="body-lg" color="muted" className="mb-spacing-md">
                 {searchTerm || positionFilter || statusFilter
                   ? "Try adjusting your search or filters"
                   : "Get started by adding your first player"}
               </Typography>
               {!searchTerm && !positionFilter && !statusFilter && (
                 <Button onClick={() => setShowAddModal(true)}>
-                  <Icon name="plus" className="w-4 h-4 mr-2" />
+                  <Icon name="plus" className="w-4 h-4 mr-spacing-xs" />
                   Add First Player
                 </Button>
               )}
@@ -602,8 +602,8 @@ export default function RosterPage() {
             }}
             title="Add New Player"
           >
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-spacing-md">
+              <div className="grid grid-cols-2 gap-spacing-md">
                 <Input
                   label="First Name"
                   value={playerForm.first_name}
@@ -628,9 +628,9 @@ export default function RosterPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-spacing-md">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-spacing-xs">
                     Position
                   </label>
                   <select
@@ -641,7 +641,7 @@ export default function RosterPage() {
                         position: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   >
                     <option value="">Select Position</option>

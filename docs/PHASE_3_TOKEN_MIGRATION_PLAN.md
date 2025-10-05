@@ -13,8 +13,9 @@ Migrate hardcoded values to semantic design tokens for consistency and maintaina
 ### Spacing Tokens (Priority 1)
 
 Our semantic spacing scale (8px grid):
+
 - `spacing-xs` → 8px (var(--space-2)) - minimum spacing
-- `spacing-sm` → 12px (var(--space-3)) - compact spacing  
+- `spacing-sm` → 12px (var(--space-3)) - compact spacing
 - `spacing-md` → 16px (var(--space-4)) - comfortable spacing (default)
 - `spacing-lg` → 24px (var(--space-6)) - spacious section spacing
 - `spacing-xl` → 32px (var(--space-8)) - large section spacing
@@ -23,7 +24,8 @@ Our semantic spacing scale (8px grid):
 
 #### Migration Mapping
 
-**Padding (p-*):**
+**Padding (p-\*):**
+
 ```
 p-2  (8px)  → p-spacing-xs
 p-3  (12px) → p-spacing-sm
@@ -34,7 +36,8 @@ p-12 (48px) → p-spacing-2xl
 p-16 (64px) → p-spacing-3xl
 ```
 
-**Margin (m-*, mb-*, mt-*, etc):**
+**Margin (m-_, mb-_, mt-\*, etc):**
+
 ```
 mb-2  → mb-spacing-xs
 mb-3  → mb-spacing-sm
@@ -45,6 +48,7 @@ mb-12 → mb-spacing-2xl
 ```
 
 **Gap:**
+
 ```
 gap-2 → gap-spacing-xs
 gap-3 → gap-spacing-sm
@@ -54,6 +58,7 @@ gap-8 → gap-spacing-xl
 ```
 
 **Space Between:**
+
 ```
 space-y-2 → space-y-spacing-xs
 space-y-4 → space-y-spacing-md
@@ -65,6 +70,7 @@ space-y-6 → space-y-spacing-lg
 #### Hardcoded Hex Colors Found
 
 **Practice Block Types** (`src/types/practice.ts`):
+
 ```
 #10B981 → emerald-500 (Warmup - green)
 #06B6D4 → cyan-500 (Stretch - blue)
@@ -78,6 +84,7 @@ space-y-6 → space-y-spacing-lg
 ```
 
 **Background Colors in Components**:
+
 ```
 #FCFDFC → surface-primary or bg-white
 #f5f9f6 → jade-50 (light jade tint)
@@ -87,16 +94,19 @@ space-y-6 → space-y-spacing-lg
 #### Recommended Token Usage
 
 **Backgrounds:**
+
 - `#FCFDFC`, `#ffffff` → `bg-surface-primary` or `bg-white`
 - Light gradients → Use Aurora component variants
 - Gray backgrounds → `bg-surface-secondary`, `bg-surface-tertiary`
 
 **Text Colors:**
+
 - Black/dark text → `text-text-primary`
 - Gray text → `text-text-secondary` or `text-text-tertiary`
 - Muted text → `text-text-muted`
 
 **Interactive Elements:**
+
 - Primary actions → `bg-brand-primary`, `text-brand-primary`
 - Success states → `bg-success-500`, `text-success-600`
 - Errors → `bg-error-500`, `text-error-600`
@@ -107,13 +117,15 @@ space-y-6 → space-y-spacing-lg
 ### Phase 3A: High-Impact Spacing (Estimated: 1-2 hours)
 
 **Target Files** (most spacing instances):
+
 1. PlannerPage.tsx - ~40 instances
-2. ProfilePage.tsx - ~60 instances  
+2. ProfilePage.tsx - ~60 instances
 3. RosterPage.tsx - ~50 instances
 4. TeamSettings.tsx - ~30 instances
 5. CreateTeam.tsx - ~50 instances
 
 **Approach:**
+
 1. Focus on most common patterns: `mb-4`, `p-6`, `gap-4`, `mb-6`, `p-4`
 2. Use find/replace with regex for consistent patterns
 3. Manual review for edge cases (tight spacing, specific layouts)
@@ -121,12 +133,14 @@ space-y-6 → space-y-spacing-lg
 ### Phase 3B: Color Tokens (Estimated: 1 hour)
 
 **Target Files:**
+
 1. `src/types/practice.ts` - Practice block colors
 2. `src/components/layout/Layout.tsx` - Gradient backgrounds
 3. `src/components/team-dashboard/layout/TeamBulletinHeader.tsx` - Hex background
 4. CSS files - Global color overrides
 
 **Approach:**
+
 1. Replace practice block hex codes with Tailwind color tokens
 2. Remove hardcoded gradients in favor of Aurora variants
 3. Update CSS overrides to use CSS variables
@@ -149,15 +163,16 @@ space-y-6 → space-y-spacing-lg
 ## Automation Script
 
 Create `scripts/migrate-tokens.js`:
+
 ```javascript
 // Find and replace common patterns
 const migrations = {
   spacing: {
-    'p-6': 'p-spacing-lg',
-    'mb-4': 'mb-spacing-md',
-    'gap-4': 'gap-spacing-md',
+    "p-6": "p-spacing-lg",
+    "mb-4": "mb-spacing-md",
+    "gap-4": "gap-spacing-md",
     // ... more patterns
-  }
+  },
 };
 ```
 
@@ -182,6 +197,7 @@ const migrations = {
 ## Rollback Plan
 
 Git commit strategy:
+
 1. Commit spacing migrations separately from color migrations
 2. Test after each commit
 3. Easy to revert individual commits if issues arise
