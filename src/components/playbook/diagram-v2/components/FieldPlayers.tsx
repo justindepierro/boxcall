@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 /**
  * Player data
@@ -56,7 +57,7 @@ export const FieldPlayers: React.FC<{
   onPlayerDoubleClick,
   onPlayerLockToggle,
 }) => {
-  const defaultOutline = theme === "mono-light" ? "#1f2937" : "#ffffff";
+  const defaultOutline = theme === "mono-light" ? colorTokens.gray[800] : colorTokens.gray[50];
 
   return (
     <g id="field-players">
@@ -81,52 +82,50 @@ export const FieldPlayers: React.FC<{
                 if (locked) return;
                 onPlayerDoubleClick?.(p.id, e);
               }}
-            >
-              {/* Gentle selection pulse halo */}
-              {selected && showSelectionPulse && (
-                <circle
-                  cx={0}
-                  cy={0}
-                  r={isCenter ? 28 : 30}
-                  fill="none"
-                  stroke="#fbbf24"
-                  strokeWidth={3}
-                  opacity={0.55}
-                  className="animate-selectedBreathe"
-                />
-              )}
+          >
+            {/* Gentle selection pulse halo */}
+            {selected && showSelectionPulse && (
+              <circle
+                cx={0}
+                cy={0}
+                r={isCenter ? 28 : 30}
+                fill="none"
+                stroke={colorTokens.amber[400]}
+                strokeWidth={3}
+                opacity={0.55}
+                className="animate-selectedBreathe"
+              />
+            )}
 
-              {/* Player shape */}
-              {isCenter ? (
-                <rect
-                  x={-24}
-                  y={-16}
-                  width={48}
-                  height={32}
-                  rx={4}
-                  ry={4}
-                  fill={p.color || "#1e3a8a"}
-                  stroke={selected ? "#fbbf24" : strokeColor}
-                  strokeWidth={selected ? 4 : 2}
-                />
-              ) : (
-                <ellipse
-                  rx={26}
-                  ry={18}
-                  fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")}
-                  stroke={selected ? "#fbbf24" : strokeColor}
-                  strokeWidth={selected ? 4 : 2}
-                />
-              )}
-
-              {/* Player label */}
+            {/* Player shape */}
+            {isCenter ? (
+              <rect
+                x={-24}
+                y={-16}
+                width={48}
+                height={32}
+                rx={4}
+                ry={4}
+                fill={p.color || colorTokens.blue[900]}
+                stroke={selected ? colorTokens.amber[400] : strokeColor}
+                strokeWidth={selected ? 4 : 2}
+              />
+            ) : (
+              <ellipse
+                rx={26}
+                ry={18}
+                fill={p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])}
+                stroke={selected ? colorTokens.amber[400] : strokeColor}
+                strokeWidth={selected ? 4 : 2}
+              />
+            )}              {/* Player label */}
               {showPlayerLabels && (
                 <text
                   x={0}
                   y={4}
                   fontSize={18}
                   fontWeight={700}
-                  fill={theme === "mono-light" ? "#111827" : "#ffffff"}
+                  fill={theme === "mono-light" ? colorTokens.gray[900] : colorTokens.gray[50]}
                   textAnchor="middle"
                   style={{ userSelect: "none" }}
                 >
@@ -152,9 +151,9 @@ export const FieldPlayers: React.FC<{
                   cx={0}
                   cy={0}
                   r={10}
-                  fill={theme === "mono-light" ? "#f9fafb" : "#111827"}
+                  fill={theme === "mono-light" ? colorTokens.gray[50] : colorTokens.gray[900]}
                   opacity={p.locked ? 0.85 : 0.25}
-                  stroke={theme === "mono-light" ? "#cbd5e1" : "#374151"}
+                  stroke={theme === "mono-light" ? colorTokens.navy[300] : colorTokens.gray[700]}
                   strokeWidth={1}
                 />
                 {/* Padlock icon */}
@@ -166,19 +165,19 @@ export const FieldPlayers: React.FC<{
                   rx={1.5}
                   ry={1.5}
                   fill={
-                    p.locked
-                      ? theme === "mono-light"
-                        ? "#334155"
-                        : "#e5e7eb"
-                      : "none"
-                  }
-                  stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
+                  p.locked
+                    ? theme === "mono-light"
+                      ? colorTokens.navy[700]
+                      : colorTokens.gray[200]
+                    : "none"
+                }
+                  stroke={theme === "mono-light" ? colorTokens.navy[700] : colorTokens.gray[200]}
                   strokeWidth={1.2}
                 />
                 <path
                   d="M -3 -1 v -2.5 a3 3 0 0 1 6 0 V -1"
                   fill="none"
-                  stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
+                  stroke={theme === "mono-light" ? colorTokens.navy[700] : colorTokens.gray[200]}
                   strokeWidth={1.2}
                   strokeLinecap="round"
                 />
