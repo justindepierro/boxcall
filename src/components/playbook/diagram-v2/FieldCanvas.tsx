@@ -181,7 +181,7 @@ export const FieldCanvas: React.FC<{
   // ============================================================================
   // EXTRACTED HOOKS - All field interaction logic externalized
   // ============================================================================
-  
+
   // Coordinate conversion utilities
   const coordinates = useFieldCoordinates({
     svgRef,
@@ -1443,507 +1443,126 @@ export const FieldCanvas: React.FC<{
               dispatch({
                 type: "UPDATE_PLAYER",
                 id,
-                patch: { locked: !(doc.players.find(p => p.id === id)?.locked) },
+                patch: {
+                  locked: !doc.players.find((p) => p.id === id)?.locked,
+                },
               });
             }}
           />
 
           {/* ==================== ROUTES ==================== */}
-          {doc.routes.map((r) => (
-            <g key={r.id}>
-              {r.segments.map((s, si) => {
-                const pts = s.points.map((p) => ({
-                  x: (p.x / 100) * 1600,
-                  y: (p.y / 100) * 900,
-                }));
-                if (s.type === "curve" && pts.length >= 3) {
-                  // Quadratic curve: M start Q control end
-                  const d = `M ${pts[0].x},${pts[0].y} Q ${pts[1].x},${pts[1].y} ${pts[2].x},${pts[2].y}`;
-                  return (
-                    <g key={s.id}>
-                      <path
-                        d={d}
-                        fill="none"
-                        stroke="#2563eb"
-                        strokeWidth={6}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      {pts.map((p, pi) => {
-                        const isEndpoint = pi === 0 || pi === pts.length - 1;
-                        const radius = pi === 1 ? 10 : isEndpoint ? 12 : 10;
-                        const fill = pi === 1 ? "#34d399" : "#fbbf24";
-                        return (
-                          <circle
-                            key={pi}
-                            cx={p.x}
-                            cy={p.y}
-                            r={radius}
-                            fill={fill}
-                            stroke="#1f2937"
-                            strokeWidth={2}
-                            className="cursor-move"
-                            onMouseDown={(e) => {
-                              e.stopPropagation();
-                              const start = clientToWorld(e);
-                              const startPt = { x: p.x, y: p.y };
-                              const move = (me: MouseEvent) => {
-                                const now = clientToWorld(me);
-                                const dx = now.x - start.x;
-                                const dy = now.y - start.y;
-                                const nx = Math.min(
-                                  100,
-                                  Math.max(
-                                    0,
-                                    snapPct(((startPt.x + dx) / 1600) * 100)
-                                  )
-                                );
-                                const ny = Math.min(
-                                  100,
-                                  Math.max(
-                                    0,
-                                    snapPct(((startPt.y + dy) / 900) * 100)
-                                  )
-                                );
-                                // Update point
-                                dispatch({
-                                  type: "UPDATE_ROUTE_POINT",
-                                  routeId: r.id,
-                                  segIndex: si,
-                                  pointIndex: pi,
-                                  point: { x: nx, y: ny },
-                                });
-                                // Attach preview to nearest player when dragging endpoints
-                                if (isEndpoint) {
-                                  const cx = (nx / 100) * 1600;
-                                  const cy = (ny / 100) * 900;
-                                  let best:
-                                    | {
-                                        id: string;
-                                        x: number;
-                                        y: number;
-                                        d: number;
-                                      }
-                                    | undefined;
-                                  for (const pl of doc.players) {
-                                    const px = (pl.x / 100) * 1600;
-                                    const py = (pl.y / 100) * 900;
-                                    const d = Math.hypot(px - cx, py - cy);
-                                    if (!best || d < best.d)
-                                      best = { id: pl.id, x: px, y: py, d };
-                                  }
-                                  const thresh = 24; // px threshold for attach preview
-                                  if (best && best.d <= thresh) {
-                                    setAttachPreview({
-                                      x1: cx,
-                                      y1: cy,
-                                      x2: best.x,
-                                      y2: best.y,
-                                      targetId: best.id,
-                                    });
-                                  } else {
-                                    setAttachPreview(undefined);
-                                  }
-                                }
-                              };
-                              const up = () => {
-                                window.removeEventListener("mousemove", move);
-                                window.removeEventListener("mouseup", up);
-                                setAttachPreview(undefined);
-                                dispatch({ type: "COMMIT_ROUTE_EDIT" });
-                              };
-                              window.addEventListener("mousemove", move);
-                              window.addEventListener("mouseup", up);
-                            }}
-                          />
-                        );
-                      })}
-                    </g>
-                  );
-                }
-                // default line polyline
-                return (
-                  <g key={s.id}>
-                    <polyline
-                      points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
-                      fill="none"
-                      stroke="#2563eb"
-                      strokeWidth={6}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    {pts.map((p, pi) => {
-                      const isEndpoint = pi === 0 || pi === pts.length - 1;
-                      return (
-                        <circle
-                          key={pi}
-                          cx={p.x}
-                          cy={p.y}
-                          r={isEndpoint ? 12 : 10}
-                          fill="#fbbf24"
-                          stroke="#1f2937"
-                          strokeWidth={2}
-                          className="cursor-move"
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            const start = clientToWorld(e);
-                            const startPt = { x: p.x, y: p.y };
-                            const move = (me: MouseEvent) => {
-                              const now = clientToWorld(me);
-                              const dx = now.x - start.x;
-                              const dy = now.y - start.y;
-                              const nx = Math.min(
-                                100,
-                                Math.max(
-                                  0,
-                                  snapPct(((startPt.x + dx) / 1600) * 100)
-                                )
-                              );
-                              const ny = Math.min(
-                                100,
-                                Math.max(
-                                  0,
-                                  snapPct(((startPt.y + dy) / 900) * 100)
-                                )
-                              );
-                              dispatch({
-                                type: "UPDATE_ROUTE_POINT",
-                                routeId: r.id,
-                                segIndex: si,
-                                pointIndex: pi,
-                                point: { x: nx, y: ny },
-                              });
-                              // Attach preview for endpoints
-                              if (isEndpoint) {
-                                const cx = (nx / 100) * 1600;
-                                const cy = (ny / 100) * 900;
-                                let best:
-                                  | {
-                                      id: string;
-                                      x: number;
-                                      y: number;
-                                      d: number;
-                                    }
-                                  | undefined;
-                                for (const pl of doc.players) {
-                                  const px = (pl.x / 100) * 1600;
-                                  const py = (pl.y / 100) * 900;
-                                  const d = Math.hypot(px - cx, py - cy);
-                                  if (!best || d < best.d)
-                                    best = { id: pl.id, x: px, y: py, d };
-                                }
-                                const thresh = 24;
-                                if (best && best.d <= thresh) {
-                                  setAttachPreview({
-                                    x1: cx,
-                                    y1: cy,
-                                    x2: best.x,
-                                    y2: best.y,
-                                    targetId: best.id,
-                                  });
-                                } else {
-                                  setAttachPreview(undefined);
-                                }
-                              }
-                            };
-                            const up = () => {
-                              window.removeEventListener("mousemove", move);
-                              window.removeEventListener("mouseup", up);
-                              setAttachPreview(undefined);
-                              dispatch({ type: "COMMIT_ROUTE_EDIT" });
-                            };
-                            window.addEventListener("mousemove", move);
-                            window.addEventListener("mouseup", up);
-                          }}
-                        />
-                      );
-                    })}
-                  </g>
+          <FieldRoutes
+            routes={doc.routes}
+            attachPreview={attachPreview}
+            onRoutePointMouseDown={(routeId, segIndex, pointIndex, e) => {
+              e.stopPropagation();
+              const route = doc.routes.find((r) => r.id === routeId);
+              if (!route) return;
+              const seg = route.segments[segIndex];
+              if (!seg) return;
+              const pt = seg.points[pointIndex];
+              if (!pt) return;
+
+              // Convert to absolute coordinates
+              const absX = (pt.x / 100) * 1600;
+              const absY = (pt.y / 100) * 900;
+              const start = clientToWorld(e);
+              const startPt = { x: absX, y: absY };
+              const isEndpoint =
+                pointIndex === 0 || pointIndex === seg.points.length - 1;
+
+              const move = (me: MouseEvent) => {
+                const now = clientToWorld(me);
+                const dx = now.x - start.x;
+                const dy = now.y - start.y;
+                const nx = Math.min(
+                  100,
+                  Math.max(0, snapPct(((startPt.x + dx) / 1600) * 100))
                 );
-              })}
-            </g>
-          ))}
-          {/* Annotations */}
-          {(doc.annotations || []).map((a: DiagramAnnotation) => {
-            const color = a.color || "#111827";
-            const width = a.width || 3;
-            const isSelected = state.ui.selectedAnnotationId === a.id;
-            const isHover = hoverAnnId === a.id;
-            const highlightStroke =
-              isSelected || isHover
-                ? isSelected
-                  ? "#3b82f6"
-                  : "#22d3ee"
-                : undefined;
-            const commonEvents = {
-              onMouseEnter: (e: React.MouseEvent) => {
-                e.stopPropagation();
-                setHoverAnnId(a.id);
-              },
-              onMouseLeave: (e: React.MouseEvent) => {
-                e.stopPropagation();
-                setHoverAnnId((curr) => (curr === a.id ? undefined : curr));
-              },
-            } as const;
-            if (a.type === "connector") {
-              const conn = a as DiagramAnnotationConnector;
-              const from = doc.players.find((p) => p.id === conn.fromPlayerId);
-              const to = doc.players.find((p) => p.id === conn.toPlayerId);
-              if (!from || !to) return null;
-              const x1 = (from.x / 100) * 1600,
-                y1 = (from.y / 100) * 900,
-                x2 = (to.x / 100) * 1600,
-                y2 = (to.y / 100) * 900;
-              return (
-                <g
-                  key={a.id}
-                  className="cursor-move"
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    dispatch({ type: "SELECT_ANNOTATION", id: a.id });
-                    const start = clientToWorld(e);
-                    annotDragRef.current = {
-                      id: a.id,
-                      startX: start.x,
-                      startY: start.y,
-                    };
-                  }}
-                  {...commonEvents}
-                >
-                  {/* Breathing selection outline for selected connector */}
-                  {isSelected && showSelectionPulse && (
-                    <line
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke="#3b82f6"
-                      strokeWidth={(width || 3) + 10}
-                      opacity={0.35}
-                      strokeLinecap="round"
-                      className="animate-selectedBreathe"
-                    />
-                  )}
-                  {highlightStroke && (
-                    <line
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke={highlightStroke}
-                      strokeWidth={width + 8}
-                      opacity={0.25}
-                      strokeLinecap="round"
-                    />
-                  )}
-                  <line
-                    x1={x1}
-                    y1={y1}
-                    x2={x2}
-                    y2={y2}
-                    stroke={color}
-                    strokeWidth={width}
-                  />
-                  {(() => {
-                    const len = Math.hypot(x2 - x1, y2 - y1) || 1;
-                    const ux = (x2 - x1) / len;
-                    const uy = (y2 - y1) / len;
-                    const size = 10;
-                    const px = x2 - ux * size;
-                    const py = y2 - uy * size;
-                    const leftX = px + -uy * (size * 0.6);
-                    const leftY = py + ux * (size * 0.6);
-                    const rightX = px - -uy * (size * 0.6);
-                    const rightY = py - ux * (size * 0.6);
-                    const ah = a.arrowHead ?? "end";
-                    const heads: React.ReactElement[] = [];
-                    if (ah === "end" || ah === "both") {
-                      heads.push(
-                        <polygon
-                          key="end"
-                          points={`${x2},${y2} ${leftX},${leftY} ${rightX},${rightY}`}
-                          fill={color}
-                        />
-                      );
-                    }
-                    if (ah === "start" || ah === "both") {
-                      const sx = x1,
-                        sy = y1;
-                      const px2 = sx + ux * size;
-                      const py2 = sy + uy * size;
-                      const l2x = px2 + uy * (size * 0.6);
-                      const l2y = py2 + -ux * (size * 0.6);
-                      const r2x = px2 - uy * (size * 0.6);
-                      const r2y = py2 - -ux * (size * 0.6);
-                      heads.push(
-                        <polygon
-                          key="start"
-                          points={`${sx},${sy} ${l2x},${l2y} ${r2x},${r2y}`}
-                          fill={color}
-                        />
-                      );
-                    }
-                    return heads;
-                  })()}
-                </g>
-              );
-            }
-            // line-like annotations
-            const pts = "points" in a ? a.points : [];
-            const abs = pts
-              .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
-              .join(" ");
-            if (a.type === "curve" && pts.length >= 3) {
-              const [s, c, e] = pts;
-              const d = `M ${(s.x / 100) * 1600},${(s.y / 100) * 900} Q ${(c.x / 100) * 1600},${(c.y / 100) * 900} ${(e.x / 100) * 1600},${(e.y / 100) * 900}`;
-              return (
-                <g
-                  key={a.id}
-                  className="cursor-move"
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    dispatch({ type: "SELECT_ANNOTATION", id: a.id });
-                    const start = clientToWorld(e);
-                    annotDragRef.current = {
-                      id: a.id,
-                      startX: start.x,
-                      startY: start.y,
-                    };
-                  }}
-                  {...commonEvents}
-                >
-                  {/* Breathing selection outline for selected curved annotation */}
-                  {isSelected && showSelectionPulse && (
-                    <path
-                      d={d}
-                      fill="none"
-                      stroke="#3b82f6"
-                      strokeWidth={(width || 3) + 10}
-                      opacity={0.35}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="animate-selectedBreathe"
-                    />
-                  )}
-                  {highlightStroke && (
-                    <path
-                      d={d}
-                      fill="none"
-                      stroke={highlightStroke}
-                      strokeWidth={width + 8}
-                      opacity={0.25}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  )}
-                  <path d={d} fill="none" stroke={color} strokeWidth={width} />
-                </g>
-              );
-            }
-            return (
-              <g
-                key={a.id}
-                className="cursor-move"
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  dispatch({ type: "SELECT_ANNOTATION", id: a.id });
-                  const start = clientToWorld(e);
-                  annotDragRef.current = {
-                    id: a.id,
-                    startX: start.x,
-                    startY: start.y,
-                  };
-                }}
-                {...commonEvents}
-              >
-                {/* Breathing selection outline for selected polyline/arrow/dashed/dotted */}
-                {isSelected && showSelectionPulse && (
-                  <polyline
-                    points={abs}
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth={(width || 3) + 10}
-                    opacity={0.35}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="animate-selectedBreathe"
-                  />
-                )}
-                {highlightStroke && (
-                  <polyline
-                    points={abs}
-                    fill="none"
-                    stroke={highlightStroke}
-                    strokeWidth={width + 8}
-                    opacity={0.25}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                )}
-                <polyline
-                  points={abs}
-                  fill="none"
-                  stroke={color}
-                  strokeWidth={width}
-                  strokeDasharray={
-                    a.type === "dashed"
-                      ? "8 6"
-                      : a.type === "dotted"
-                        ? "2 6"
-                        : undefined
+                const ny = Math.min(
+                  100,
+                  Math.max(0, snapPct(((startPt.y + dy) / 900) * 100))
+                );
+
+                // Update route point
+                dispatch({
+                  type: "UPDATE_ROUTE_POINT",
+                  routeId,
+                  segIndex,
+                  pointIndex,
+                  point: { x: nx, y: ny },
+                });
+
+                // Attach preview for endpoints
+                if (isEndpoint) {
+                  const cx = (nx / 100) * 1600;
+                  const cy = (ny / 100) * 900;
+                  let best:
+                    | { id: string; x: number; y: number; d: number }
+                    | undefined;
+                  for (const pl of doc.players) {
+                    const px = (pl.x / 100) * 1600;
+                    const py = (pl.y / 100) * 900;
+                    const d = Math.hypot(px - cx, py - cy);
+                    if (!best || d < best.d)
+                      best = { id: pl.id, x: px, y: py, d };
                   }
-                />
-                {a.type === "arrow" &&
-                  pts.length >= 2 &&
-                  (() => {
-                    const p2 = pts[pts.length - 1];
-                    const p1 = pts[pts.length - 2];
-                    const x2 = (p2.x / 100) * 1600,
-                      y2 = (p2.y / 100) * 900;
-                    const x1 = (p1.x / 100) * 1600,
-                      y1 = (p1.y / 100) * 900;
-                    const len = Math.hypot(x2 - x1, y2 - y1) || 1;
-                    const ux = (x2 - x1) / len;
-                    const uy = (y2 - y1) / len;
-                    const size = 10;
-                    const px = x2 - ux * size;
-                    const py = y2 - uy * size;
-                    const leftX = px + -uy * (size * 0.6);
-                    const leftY = py + ux * (size * 0.6);
-                    const rightX = px - -uy * (size * 0.6);
-                    const rightY = py - ux * (size * 0.6);
-                    const ah = a.arrowHead ?? "end";
-                    const out: React.ReactElement[] = [];
-                    if (ah === "end" || ah === "both")
-                      out.push(
-                        <polygon
-                          key="end"
-                          points={`${x2},${y2} ${leftX},${leftY} ${rightX},${rightY}`}
-                          fill={color}
-                        />
-                      );
-                    if (ah === "start" || ah === "both") {
-                      const sx = x1,
-                        sy = y1;
-                      const px2 = sx + ux * size;
-                      const py2 = sy + uy * size;
-                      const l2x = px2 + uy * (size * 0.6);
-                      const l2y = py2 + -ux * (size * 0.6);
-                      const r2x = px2 - uy * (size * 0.6);
-                      const r2y = py2 - -ux * (size * 0.6);
-                      out.push(
-                        <polygon
-                          key="start"
-                          points={`${sx},${sy} ${l2x},${l2y} ${r2x},${r2y}`}
-                          fill={color}
-                        />
-                      );
-                    }
-                    return out;
-                  })()}
-              </g>
-            );
-          })}
+                  const thresh = 24;
+                  if (best && best.d <= thresh) {
+                    setAttachPreview({
+                      x1: cx,
+                      y1: cy,
+                      x2: best.x,
+                      y2: best.y,
+                      targetId: best.id,
+                    });
+                  } else {
+                    setAttachPreview(undefined);
+                  }
+                }
+              };
+
+              const up = () => {
+                window.removeEventListener("mousemove", move);
+                window.removeEventListener("mouseup", up);
+                setAttachPreview(undefined);
+                dispatch({ type: "COMMIT_ROUTE_EDIT" });
+              };
+
+              window.addEventListener("mousemove", move);
+              window.addEventListener("mouseup", up);
+            }}
+          />
+          {/* Annotations */}
+          <FieldAnnotations
+            annotations={doc.annotations || []}
+            players={doc.players.map((p) => ({
+              id: p.id,
+              x: (p.x / 100) * 1600,
+              y: (p.y / 100) * 900,
+            }))}
+            selectedAnnotationId={state.ui.selectedAnnotationId}
+            hoverAnnotationId={hoverAnnId}
+            showSelectionPulse={showSelectionPulse}
+            onAnnotationMouseDown={(id, e) => {
+              e.stopPropagation();
+              dispatch({ type: "SELECT_ANNOTATION", id });
+              const start = clientToWorld(e);
+              annotDragRef.current = {
+                id,
+                startX: start.x,
+                startY: start.y,
+              };
+            }}
+            onAnnotationMouseEnter={(id, e) => {
+              e.stopPropagation();
+              setHoverAnnId(id);
+            }}
+            onAnnotationMouseLeave={(id, e) => {
+              e.stopPropagation();
+              setHoverAnnId((curr) => (curr === id ? undefined : curr));
+            }}
+          />
           {/* Player edit popover (single selection) */}
           {(() => {
             const sel = state.ui.selectedIds || [];
@@ -2106,136 +1725,13 @@ export const FieldCanvas: React.FC<{
                 })}
               </g>
             )}
-          {/* Alignment guides (live, with fade-in) */}
-          {alignGuides && (
-            <g
-              pointerEvents="none"
-              opacity={guideLiveOpacity}
-              style={{ transition: "opacity 120ms ease" }}
-            >
-              {alignGuides.vertical?.map((x, i) => (
-                <line
-                  key={`vg${i}`}
-                  x1={x}
-                  x2={x}
-                  y1={0}
-                  y2={900}
-                  stroke="#22c55e"
-                  strokeWidth={2}
-                  strokeDasharray="6 4"
-                />
-              ))}
-              {alignGuides.horizontal?.map((y, i) => (
-                <line
-                  key={`hg${i}`}
-                  x1={0}
-                  x2={1600}
-                  y1={y}
-                  y2={y}
-                  stroke="#22c55e"
-                  strokeWidth={2}
-                  strokeDasharray="6 4"
-                />
-              ))}
-            </g>
-          )}
-          {/* Alignment guides fade-out trail */}
-          {!alignGuides &&
-            guideFade &&
-            (() => {
-              const elapsed = performance.now() - guideFade.t0;
-              const op = Math.max(0, 0.6 * (1 - elapsed / 260));
-              return (
-                <g pointerEvents="none" opacity={op}>
-                  {guideFade.guides.vertical?.map((x, i) => (
-                    <line
-                      key={`vgf${i}`}
-                      x1={x}
-                      x2={x}
-                      y1={0}
-                      y2={900}
-                      stroke="#22c55e"
-                      strokeWidth={2}
-                      strokeDasharray="6 4"
-                    />
-                  ))}
-                  {guideFade.guides.horizontal?.map((y, i) => (
-                    <line
-                      key={`hgf${i}`}
-                      x1={0}
-                      x2={1600}
-                      y1={y}
-                      y2={y}
-                      stroke="#22c55e"
-                      strokeWidth={2}
-                      strokeDasharray="6 4"
-                    />
-                  ))}
-                </g>
-              );
-            })()}
-          {/* Center label flash when snapping to center axes */}
-          {centerFlash &&
-            (() => {
-              const elapsed = performance.now() - centerFlash.t0;
-              const op = Math.max(0, 0.9 * (1 - elapsed / 800));
-              const nodes: React.ReactNode[] = [];
-              if (centerFlash.x) {
-                // Vertical center label near top
-                nodes.push(
-                  <g key="cxl" pointerEvents="none" opacity={op}>
-                    <rect
-                      x={800 - 26}
-                      y={6}
-                      width={52}
-                      height={18}
-                      rx={9}
-                      ry={9}
-                      fill="#0f172a"
-                      opacity={0.7}
-                    />
-                    <text
-                      x={800}
-                      y={19}
-                      fontSize={11}
-                      fontWeight={700}
-                      fill="#a7f3d0"
-                      textAnchor="middle"
-                    >
-                      Center
-                    </text>
-                  </g>
-                );
-              }
-              if (centerFlash.y) {
-                // Horizontal center label near right side
-                nodes.push(
-                  <g key="cyl" pointerEvents="none" opacity={op}>
-                    <rect
-                      x={1600 - 66}
-                      y={450 - 9}
-                      width={60}
-                      height={18}
-                      rx={9}
-                      ry={9}
-                      fill="#0f172a"
-                      opacity={0.7}
-                    />
-                    <text
-                      x={1600 - 36}
-                      y={450 + 4}
-                      fontSize={11}
-                      fontWeight={700}
-                      fill="#a7f3d0"
-                      textAnchor="middle"
-                    >
-                      Center
-                    </text>
-                  </g>
-                );
-              }
-              return <g>{nodes}</g>;
-            })()}
+          {/* Alignment guides and center snap flash */}
+          <FieldGuides
+            alignGuides={alignGuides || undefined}
+            guideLiveOpacity={guideLiveOpacity}
+            guideFade={guideFade || undefined}
+            centerFlash={centerFlash || undefined}
+          />
           {/* Annotation selection handles */}
           {state.ui.selectedAnnotationId &&
             (() => {
@@ -2849,107 +2345,13 @@ export const FieldCanvas: React.FC<{
         </g>
       </svg>
       {/* Minimap Navigator (bottom-right) */}
-      {(() => {
-        const showMini = state.ui.zoom > 1.001; // hide when fully zoomed out
-        if (!showMini) return null;
-        const MINI_W = 160;
-        const border = 1;
-        // Compute viewport rect in world coords
-        const widthWorld = 1600 / state.ui.zoom;
-        const heightWorld = 900 / state.ui.zoom;
-        let xWorld = -state.ui.panX / state.ui.zoom;
-        let yWorld = -state.ui.panY / state.ui.zoom;
-        xWorld = Math.max(0, Math.min(1600 - widthWorld, xWorld));
-        yWorld = Math.max(0, Math.min(900 - heightWorld, yWorld));
-        const scale = MINI_W / 1600; // 0.1
-        const rx = xWorld * scale;
-        const ry = yWorld * scale;
-        const rw = widthWorld * scale;
-        const rh = heightWorld * scale;
-        const theme = doc.field.theme || "classic";
-        const bg =
-          theme === "mono-dark"
-            ? "#111827"
-            : theme === "mono-light"
-              ? "#f9fafb"
-              : "#064e3b";
-        const frame =
-          theme === "mono-dark"
-            ? "#6b7280"
-            : theme === "mono-light"
-              ? "#9ca3af"
-              : "#10b981";
-
-        const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-          e.preventDefault();
-          e.stopPropagation();
-          miniDragRef.current.dragging = true;
-          moveViewportFromMinimap(e.currentTarget, e.clientX, e.clientY);
-          const move = (ev: MouseEvent) => {
-            if (!miniDragRef.current.dragging) return;
-            moveViewportFromMinimap(e.currentTarget, ev.clientX, ev.clientY);
-          };
-          const up = () => {
-            miniDragRef.current.dragging = false;
-            window.removeEventListener("mousemove", move);
-            window.removeEventListener("mouseup", up);
-          };
-          window.addEventListener("mousemove", move);
-          window.addEventListener("mouseup", up);
-        };
-
-        return (
-          <div
-            className="absolute bottom-spacing-xs right-spacing-xs select-none"
-            style={{
-              width: MINI_W + 2 * border,
-              height: MINI_W * 0.5625 + 2 * border,
-            }}
-            onMouseDown={onMouseDown}
-            role="presentation"
-            aria-hidden
-          >
-            <svg
-              width={MINI_W + 2 * border}
-              height={MINI_W * 0.5625 + 2 * border}
-              viewBox={`0 0 ${MINI_W + 2 * border} ${MINI_W * 0.5625 + 2 * border}`}
-              style={{ display: "block", cursor: "pointer" }}
-            >
-              {/* frame */}
-              <rect
-                x={0}
-                y={0}
-                width={MINI_W + 2 * border}
-                height={MINI_W * 0.5625 + 2 * border}
-                rx={6}
-                fill="#ffffff"
-                opacity={0.8}
-              />
-              <g transform={`translate(${border} ${border})`}>
-                {/* field */}
-                <rect
-                  x={0}
-                  y={0}
-                  width={MINI_W}
-                  height={MINI_W * 0.5625}
-                  fill={bg}
-                  opacity={theme === "classic" ? 0.6 : 0.8}
-                />
-                {/* viewport */}
-                <rect
-                  x={rx}
-                  y={ry}
-                  width={rw}
-                  height={rh}
-                  fill="none"
-                  stroke={frame}
-                  strokeWidth={2}
-                />
-              </g>
-            </svg>
-          </div>
-        );
-      })()}
+      <FieldMinimap
+        panX={state.ui.panX}
+        panY={state.ui.panY}
+        zoom={state.ui.zoom}
+        theme={doc.field.theme}
+        onMinimapDrag={moveViewportFromMinimap}
+      />
     </div>
   );
 };

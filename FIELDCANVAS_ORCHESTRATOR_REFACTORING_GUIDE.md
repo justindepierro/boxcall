@@ -3,6 +3,7 @@
 ## Status: Phase 12 In Progress
 
 All hooks and components have been extracted and committed:
+
 - ✅ Commit 55618d0: 5 hooks (~1,410 lines)
 - ✅ Commit 68a8435: 6 components (~1,245 lines)
 - ✅ Total extracted: ~2,655 lines
@@ -13,6 +14,7 @@ All hooks and components have been extracted and committed:
 ## Imports Added ✅
 
 All necessary imports have been added to `FieldCanvas.tsx`:
+
 ```typescript
 // Extracted hooks
 import { useFieldCoordinates } from "./hooks/useFieldCoordinates";
@@ -33,6 +35,7 @@ import { FieldMinimap } from "./components/FieldMinimap";
 ## Hook Initialization Started ✅
 
 `useFieldCoordinates` has been initialized (line ~186):
+
 ```typescript
 const coordinates = useFieldCoordinates({
   svgRef,
@@ -48,17 +51,21 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines 1422-1680
 **Replace with**:
+
 ```tsx
-{/* ========== FIELD GRID ========== */}
+{
+  /* ========== FIELD GRID ========== */
+}
 <FieldGrid
   field={doc.field}
   theme={doc.field.theme || "classic"}
   snapGrid={state.ui.snapGrid}
   showGrid={state.ui.showGrid}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Field background (classic/mono themes)
 - Line of scrimmage (LOS)
 - Red zone highlight
@@ -71,8 +78,11 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines ~1681-1860
 **Replace with**:
+
 ```tsx
-{/* ========== PLAYERS ========== */}
+{
+  /* ========== PLAYERS ========== */
+}
 <FieldPlayers
   players={doc.players}
   selectedIds={state.ui.selectedIds || []}
@@ -93,10 +103,11 @@ const coordinates = useFieldCoordinates({
     e.stopPropagation();
     dispatch({ type: "TOGGLE_PLAYER_LOCK", id });
   }}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Player marker rendering (ellipse/rectangle)
 - Selection halos with pulse animation
 - Player labels
@@ -108,8 +119,11 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines ~1861-1996
 **Replace with**:
+
 ```tsx
-{/* ========== ROUTES ========== */}
+{
+  /* ========== ROUTES ========== */
+}
 <FieldRoutes
   routes={doc.routes}
   attachPreview={attachPreview}
@@ -118,10 +132,11 @@ const coordinates = useFieldCoordinates({
     e.stopPropagation();
     // ... existing route point drag logic
   }}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Route path rendering (curves and lines)
 - Route point markers (draggable)
 - Attach preview visualization
@@ -131,17 +146,20 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines ~1997-2287
 **Replace with**:
+
 ```tsx
-{/* ========== ANNOTATIONS ========== */}
+{
+  /* ========== ANNOTATIONS ========== */
+}
 <FieldAnnotations
   annotations={doc.annotations}
-  players={doc.players.map(p => ({ id: p.id, x: p.x, y: p.y }))}
+  players={doc.players.map((p) => ({ id: p.id, x: p.x, y: p.y }))}
   selectedAnnotationId={state.ui.selectedAnnotationId}
   hoverAnnotationId={hoverAnnId}
   showSelectionPulse={state.ui.effectsSelectionPulse ?? true}
   onAnnotationMouseDown={(id, e) => {
     e.stopPropagation();
-    const ann = doc.annotations.find(a => a.id === id);
+    const ann = doc.annotations.find((a) => a.id === id);
     if (!ann) return;
     const world = clientToWorld(e);
     annotDragRef.current = { id, startX: world.x, startY: world.y };
@@ -155,10 +173,11 @@ const coordinates = useFieldCoordinates({
     e.stopPropagation();
     if (hoverAnnId === id) setHoverAnnId(undefined);
   }}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Connector lines with arrow heads
 - Curve annotations (quadratic bezier)
 - Line/arrow/dashed/dotted annotations
@@ -169,18 +188,22 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines ~2400-2580
 **Replace with**:
+
 ```tsx
-{/* ========== ALIGNMENT GUIDES ========== */}
+{
+  /* ========== ALIGNMENT GUIDES ========== */
+}
 <FieldGuides
   alignGuides={alignGuides}
   guideLiveOpacity={guideLiveOpacity}
   guideFade={guideFade}
   guideFadeOpacity={guideFadeOpacity}
   centerFlash={centerFlash}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Live alignment guides (vertical/horizontal)
 - Guide fade-in animation
 - Guide fade-out trail
@@ -190,18 +213,22 @@ const coordinates = useFieldCoordinates({
 
 **Location**: Lines ~3179-3319 (near end of file, outside main SVG)
 **Replace with**:
+
 ```tsx
-{/* ========== MINIMAP ========== */}
+{
+  /* ========== MINIMAP ========== */
+}
 <FieldMinimap
   panX={state.ui.panX}
   panY={state.ui.panY}
   zoom={state.ui.zoom}
   theme={doc.field.theme}
   onMinimapDrag={moveViewportFromMinimap}
-/>
+/>;
 ```
 
 **What this replaces**:
+
 - Minimap canvas rendering
 - Viewport rectangle indicator
 - Minimap drag interactions
@@ -212,6 +239,7 @@ const coordinates = useFieldCoordinates({
 The remaining hooks need callback-based integration:
 
 ### useFieldZoomPan
+
 ```typescript
 const zoomPan = useFieldZoomPan({
   svgRef,
@@ -225,6 +253,7 @@ const zoomPan = useFieldZoomPan({
 ```
 
 ### useFieldDragDrop
+
 ```typescript
 const dragDrop = useFieldDragDrop({
   svgRef,
@@ -243,6 +272,7 @@ const dragDrop = useFieldDragDrop({
 ```
 
 ### useFieldSnapping
+
 ```typescript
 const snapping = useFieldSnapping({
   players: doc.players,
@@ -255,6 +285,7 @@ const snapping = useFieldSnapping({
 ```
 
 ### useFieldKeyboard
+
 ```typescript
 const keyboard = useFieldKeyboard({
   onNudge: (direction, delta, patches) => {
@@ -275,11 +306,13 @@ const keyboard = useFieldKeyboard({
 ## Expected Results
 
 After completing all replacements:
+
 - **Before**: 3,318 lines
 - **After**: ~500 lines (85% reduction!)
 - **Removed**: ~2,800 lines (moved to extracted hooks/components)
 
 The main `FieldCanvas.tsx` will become a clean orchestrator that:
+
 1. Initializes all hooks
 2. Renders extracted components
 3. Wires up event handlers
@@ -288,6 +321,7 @@ The main `FieldCanvas.tsx` will become a clean orchestrator that:
 ## Type Check
 
 After making changes, run:
+
 ```bash
 npm run type-check
 ```
@@ -297,6 +331,7 @@ Fix any prop mismatches between components and the main file.
 ## Testing
 
 Test all interactions:
+
 - ✅ Zoom and pan
 - ✅ Player drag and drop
 - ✅ Route drawing
@@ -308,6 +343,7 @@ Test all interactions:
 ## Final Commit
 
 Once complete:
+
 ```bash
 git add src/components/playbook/diagram-v2/FieldCanvas.tsx
 git commit -m "feat: Complete FieldCanvas orchestrator refactoring - 85% reduction! 🎉🔥

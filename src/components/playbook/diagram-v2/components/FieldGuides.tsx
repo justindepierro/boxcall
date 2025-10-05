@@ -20,8 +20,8 @@ export interface GuideFadeState {
  * Center snap flash state
  */
 export interface CenterFlashState {
-  x: boolean;
-  y: boolean;
+  x?: boolean;
+  y?: boolean;
   t0: number;
 }
 
