@@ -38,10 +38,10 @@ export interface AuroraTileProps {
 }
 
 const BASE_BUTTON_CLASSES =
-  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-medium hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900";
+  "group relative flex h-full flex-col overflow-hidden rounded-glass border border-white/70 bg-white/80 text-left shadow-glass backdrop-blur-xl transition-all duration-medium hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:shadow-glass-dark dark:focus-visible:ring-offset-slate-900 min-h-[160px] md:min-h-[180px]";
 
 const BASE_ICON_CONTAINER_CLASSES =
-  "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";
+  "inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-2xl bg-white/80 shadow-inner shadow-white/40 dark:bg-slate-800/80";
 
 const BASE_ICON_CLASSES = "text-brand-primary";
 
@@ -63,7 +63,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
     <button
       type="button"
       onClick={onOpen}
-      className={clsx(BASE_BUTTON_CLASSES, "p-5 sm:p-6", className)}
+      className={clsx(BASE_BUTTON_CLASSES, "p-5 md:p-6", className)}
       aria-label={`${title} — open workspace`}
     >
       <div
@@ -98,7 +98,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
             <div className="flex flex-col">
               <Typography
                 variant="headline-sm"
-                className="font-semibold text-text-xssrimary dark:text-slate-50"
+                className="font-semibold text-text-primary dark:text-slate-50 text-base md:text-lg"
               >
                 {title}
               </Typography>
@@ -106,7 +106,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
                 <Typography
                   variant="caption"
                   color="muted"
-                  className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary opacity-80"
+                  className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary opacity-80"
                 >
                   {statusBadge}
                 </Typography>

@@ -29,6 +29,33 @@
 }
 
 /* ============================================================================
+   MOBILE-FIRST ENHANCEMENTS (0-767px) - Touch-friendly design
+   ============================================================================ */
+
+@media (max-width: 767px) {
+  .responsive-content-grid {
+    gap: 1.25rem; /* Slightly tighter on mobile to reduce scrolling */
+  }
+
+  /* Hero tiles - More breathing room on mobile */
+  .dashboard-hero-section .grid {
+    gap: 1rem; /* Better spacing between tiles */
+  }
+
+  /* Profile card - Better mobile layout */
+  .profile-section .compact-card {
+    padding: 1.25rem; /* More padding on mobile */
+  }
+
+  /* Touch targets - Ensure 44px minimum */
+  .profile-section button,
+  .profile-section a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ============================================================================
    TABLET LAYOUT (768px+) - Side-by-side layout
    ============================================================================ */
 

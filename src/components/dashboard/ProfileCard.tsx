@@ -161,14 +161,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       className={`compact-card h-full relative overflow-hidden ${cardClassName}`}
     >
       {/* Enhanced Header with gradient background */}
-      <div className="relative bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 -mx-spacing-lg -mt-spacing-lg px-spacing-lg pt-spacing-lg pb-spacing-md mb-spacing-md">
+      <div className="relative bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 -mx-spacing-lg -mt-spacing-lg px-spacing-lg pt-spacing-lg pb-spacing-md md:pb-spacing-sm mb-spacing-md">
         <div className="absolute top-0 right-0 w-24 h-24 bg-brand-primary/5 rounded-full -mr-12 -mt-12"></div>
-        <div className="relative flex items-center justify-between">
+        <div className="relative flex items-center justify-between min-h-[44px]">
           <div className="flex items-center space-x-spacing-sm">
-            <User className="w-5 h-5 text-brand-primary" />
+            <User className="w-5 h-5 md:w-4 md:h-4 text-brand-primary" />
             <Typography
               variant="headline-md"
-              className="text-text-primary font-bold"
+              className="text-text-primary font-bold text-lg md:text-base"
             >
               Profile
             </Typography>
@@ -179,7 +179,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleProfileEdit}
-                className="p-spacing-xs hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
+                className="p-spacing-xs min-w-[44px] min-h-[44px] md:min-w-[auto] md:min-h-[auto] hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
                 aria-label="Edit profile"
               >
                 <Edit2 className="w-4 h-4" />
@@ -198,7 +198,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/profile")}
-                className="w-16 h-16 p-0 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                className="w-20 h-20 md:w-16 md:h-16 p-0 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
                 aria-label="View profile"
               >
                 <img
@@ -212,10 +212,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/profile")}
-                className="w-16 h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                className="w-20 h-20 md:w-16 md:h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
                 aria-label="View profile"
               >
-                <Typography variant="body-lg" className="font-bold text-white">
+                <Typography variant="body-lg" className="font-bold text-white text-xl md:text-lg">
                   {getInitials(displayName)}
                 </Typography>
               </Button>
@@ -225,11 +225,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200"
+                  className="absolute -bottom-1 -right-1 bg-white rounded-full p-2 md:p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200 min-w-[36px] min-h-[36px] md:min-w-[auto] md:min-h-[auto]"
                   aria-label="Edit profile picture"
                   onClick={handleProfileEdit}
                 >
-                  <Camera className="w-3 h-3 text-brand-primary" />
+                  <Camera className="w-4 h-4 md:w-3 md:h-3 text-brand-primary" />
                 </Button>
               </Tooltip>
             )}
@@ -263,59 +263,59 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
         {/* Enhanced Achievements Summary */}
         {achievements && (
-          <div className="grid grid-cols-4 gap-spacing-xs pt-spacing-sm">
-            <div className="bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-lg p-spacing-sm text-center border border-brand-primary/20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-spacing-xs pt-spacing-sm">
+            <div className="bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-primary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-primary font-medium"
+                className="text-brand-primary font-medium text-xs md:text-[11px]"
               >
                 Stickers
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-brand-primary text-lg"
+                className="font-bold text-brand-primary text-xl md:text-lg mt-1"
               >
                 {achievements.stickers}
               </Typography>
             </div>
-            <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-lg p-spacing-sm text-center border border-success/20">
+            <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-lg p-3 md:p-spacing-sm text-center border border-success/20">
               <Typography
                 variant="body-xs"
-                className="text-success font-medium"
+                className="text-success font-medium text-xs md:text-[11px]"
               >
                 Medals
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-success text-lg"
+                className="font-bold text-success text-xl md:text-lg mt-1"
               >
                 {achievements.medals}
               </Typography>
             </div>
-            <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-lg p-spacing-sm text-center border border-warning/20">
+            <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-lg p-3 md:p-spacing-sm text-center border border-warning/20">
               <Typography
                 variant="body-xs"
-                className="text-warning font-medium"
+                className="text-warning font-medium text-xs md:text-[11px]"
               >
                 Streak
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-warning text-lg"
+                className="font-bold text-warning text-xl md:text-lg mt-1"
               >
                 {achievements.streak}
               </Typography>
             </div>
-            <div className="bg-gradient-to-br from-brand-secondary/10 to-brand-secondary/5 rounded-lg p-spacing-sm text-center border border-brand-secondary/20">
+            <div className="bg-gradient-to-br from-brand-secondary/10 to-brand-secondary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-secondary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-secondary font-medium"
+                className="text-brand-secondary font-medium text-xs md:text-[11px]"
               >
                 Points
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-brand-secondary text-lg"
+                className="font-bold text-brand-secondary text-xl md:text-lg mt-1"
               >
                 {achievements.points}
               </Typography>
@@ -465,13 +465,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
 
         {/* Enhanced Actions */}
-        <div className="pt-spacing-md flex items-center space-x-spacing-xs">
+        <div className="pt-spacing-md flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-spacing-xs sm:space-x-spacing-xs">
           <Button
             variant="secondary"
             size="sm"
             onClick={() => navigate("/profile")}
             aria-label="View full profile"
-            className="flex-1 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 border-brand-primary/20"
+            className="flex-1 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 border-brand-primary/20 min-h-[44px] justify-center"
           >
             <User className="w-4 h-4 mr-spacing-xs" />
             View Profile
@@ -481,7 +481,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               variant="primary"
               size="sm"
               onClick={handleProfileEdit}
-              className="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-md"
+              className="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-md min-h-[44px] min-w-[44px] sm:min-w-[auto] justify-center"
             >
               <Edit2 className="w-4 h-4" />
             </Button>
