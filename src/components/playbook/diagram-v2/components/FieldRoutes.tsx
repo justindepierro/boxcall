@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 
 /**
  * Route point
@@ -67,7 +68,7 @@ export const FieldRoutes: React.FC<{
           y1={attachPreview.y1}
           x2={attachPreview.x2}
           y2={attachPreview.y2}
-          stroke="#10b981"
+          stroke={colorTokens.emerald[500]}
           strokeWidth={3}
           strokeDasharray="6 4"
           opacity={0.7}
@@ -92,7 +93,7 @@ export const FieldRoutes: React.FC<{
                   <path
                     d={d}
                     fill="none"
-                    stroke="#2563eb"
+                    stroke={colorTokens.blue[600]}
                     strokeWidth={6}
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -100,7 +101,7 @@ export const FieldRoutes: React.FC<{
                   {pts.map((p, pi) => {
                     const isEndpoint = pi === 0 || pi === pts.length - 1;
                     const radius = pi === 1 ? 10 : isEndpoint ? 12 : 10;
-                    const fill = pi === 1 ? "#34d399" : "#fbbf24";
+                    const fill = pi === 1 ? colorTokens.emerald[400] : colorTokens.amber[400];
                     return (
                       <circle
                         key={pi}
@@ -108,7 +109,7 @@ export const FieldRoutes: React.FC<{
                         cy={p.y}
                         r={radius}
                         fill={fill}
-                        stroke="#1f2937"
+                        stroke={colorTokens.gray[800]}
                         strokeWidth={2}
                         className="cursor-move"
                         onMouseDown={(e) => {
@@ -128,7 +129,7 @@ export const FieldRoutes: React.FC<{
                 <polyline
                   points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
                   fill="none"
-                  stroke="#2563eb"
+                  stroke={colorTokens.blue[600]}
                   strokeWidth={6}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -141,8 +142,8 @@ export const FieldRoutes: React.FC<{
                       cx={p.x}
                       cy={p.y}
                       r={isEndpoint ? 12 : 10}
-                      fill="#fbbf24"
-                      stroke="#1f2937"
+                      fill={colorTokens.amber[400]}
+                      stroke={colorTokens.gray[800]}
                       strokeWidth={2}
                       className="cursor-move"
                       onMouseDown={(e) => {
