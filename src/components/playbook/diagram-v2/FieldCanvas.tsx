@@ -172,7 +172,8 @@ export const FieldCanvas: React.FC<{
       if (patches.length) {
         dispatch({ type: "MOVE_SELECTION", patches });
         // Debounce commit after keyboard nudges
-        if (commitMoveTimer.current) window.clearTimeout(commitMoveTimer.current);
+        if (commitMoveTimer.current)
+          window.clearTimeout(commitMoveTimer.current);
         commitMoveTimer.current = window.setTimeout(() => {
           dispatch({ type: "COMMIT_MOVE" });
           commitMoveTimer.current = null;
@@ -1319,7 +1320,7 @@ export const FieldCanvas: React.FC<{
                           patch: { label: e.target.value },
                         })
                       }
-                      className="w-20 text-[12px] border border-border-light rounded px-spacing-xs py-spacing-xs"
+                      className="w-20 text-xs border border-border-light rounded px-spacing-xs py-spacing-xs"
                       title="Label"
                     />
                     <input
@@ -1394,7 +1395,7 @@ export const FieldCanvas: React.FC<{
                         }
                       }}
                       onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
-                      className="w-full h-full text-center text-[14px] font-semibold border border-subtle rounded surface-card shadow-sm"
+                      className="w-full h-full text-center text-sm font-semibold border border-subtle rounded surface-card shadow-sm"
                     />
                   </div>
                 </foreignObject>
@@ -1615,7 +1616,7 @@ export const FieldCanvas: React.FC<{
                               },
                             })
                           }
-                          className="text-[12px] border border-border-light rounded px-spacing-xs py-spacing-xs"
+                          className="text-xs border border-border-light rounded px-spacing-xs py-spacing-xs"
                           title="Arrowhead"
                         >
                           <option value="none">None</option>
@@ -1623,7 +1624,7 @@ export const FieldCanvas: React.FC<{
                           <option value="start">Start</option>
                           <option value="both">Both</option>
                         </select>
-                        <span className="text-[12px] w-7 text-right">
+                        <span className="text-xs w-7 text-right">
                           {"width" in ann && ann.width
                             ? ann.width
                             : state.ui.drawWidth || 3}
