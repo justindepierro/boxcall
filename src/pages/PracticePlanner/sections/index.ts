@@ -1,0 +1,1 @@
+export { PracticeHero } from "./PracticeHero";
