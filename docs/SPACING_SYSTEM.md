@@ -489,6 +489,51 @@ Designers and developers speak the same language (8px grid).
 
 ---
 
+## Migration Status (October 2025)
+
+### Phase 3: Spacing Token Migration
+
+**Current Progress: 428/844 instances (50.7% complete)** ✅ **Halfway milestone reached!**
+
+#### Phase 3A: Page Migrations (Complete) ✅
+- **241 instances** migrated across 5 major pages
+- PlannerPage (30), RosterPage (50), TeamSettings (27), CreateTeam (50), ProfilePage (72)
+- All page-level spacing now uses semantic tokens
+
+#### Phase 3B: Component Migrations (In Progress) 🔄
+- **187 instances** migrated across 8 components:
+  - RosterImportModal (51) ✅
+  - ProfileCard (35) ✅
+  - CommentSection (36) ✅
+  - ConflictsPanel (7) ✅
+  - CalendarShell (4) ✅
+  - ProfileFormFields (6) ✅
+  - DashboardCustomizationPanel (42) ✅
+  - AddNewPlayModal (8/121 partial) 🔄 **Blocked - needs refactoring**
+
+#### Refactoring Detour (Active) 🚧
+**Problem:** AddNewPlayModal.tsx is 1,323 lines with 121 spacing instances. Only 8 migrated due to file complexity.
+
+**Solution:** Decompose large files before continuing migrations:
+- 6 files identified >1000 lines (9,392 total lines)
+- AddNewPlayModal highest priority (blocks 113 spacing instances)
+- Plan: Extract into 12 focused files <200 lines each
+- See: [REFACTORING_PLAN.md](./REFACTORING_PLAN.md)
+
+**Timeline:**
+1. ✅ Created refactoring plan (Oct 4, 2025)
+2. ⏭️ Extract AddNewPlayModal hooks and sections
+3. ⏭️ Complete AddNewPlayModal spacing (113 remaining instances)
+4. ⏭️ Resume Phase 3B: CSVImportModal (81), AnalyticsDashboard (87), PlayCardDetails (62)
+5. ⏭️ Target: 60-70% complete (500-600 instances)
+
+**Remaining Work:**
+- Phase 3B components: ~230 instances
+- Phase 3C utilities/helpers: ~186 instances
+- **Total remaining:** 416 instances
+
+---
+
 ## Related Documentation
 
 - [Border Radius System](./BORDER_RADIUS_SYSTEM.md) - Rounded corners
