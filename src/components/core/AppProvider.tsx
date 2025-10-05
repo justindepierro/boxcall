@@ -9,6 +9,7 @@
  *
  * This replaces the previous 6-level provider nesting with a single provider.
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, {
   createContext,

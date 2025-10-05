@@ -4,6 +4,7 @@
  * This system combines app-level and team-level permissions
  * to provide granular access control throughout the application.
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import { useAuthProfile } from "../app/auth-store";
 import { useMemo } from "react";

@@ -3,8 +3,8 @@
  *
  * Provides analytics and error tracking context throughout the application
  */
-
-import React, { createContext, useContext, useEffect, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useEffect, useState } from "react";
 import { analyticsService } from "../../services/analytics/AnalyticsService";
 import { errorTracking } from "../../services/analytics/ErrorTrackingService";
 

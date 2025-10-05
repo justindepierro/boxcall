@@ -4,6 +4,7 @@
  * Provides offline detection and install prompts. Service worker registration
  * is handled by vite-plugin-pwa automatically when enabled.
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, { useEffect, useState } from "react";
 
