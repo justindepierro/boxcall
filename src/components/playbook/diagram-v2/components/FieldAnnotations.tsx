@@ -1,4 +1,5 @@
 import React from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 import type { DiagramAnnotation, DiagramAnnotationConnector } from "../types";
 
 /**
@@ -95,15 +96,15 @@ export const FieldAnnotations: React.FC<{
   return (
     <g id="field-annotations">
       {annotations.map((a) => {
-        const color = a.color || "#111827";
+        const color = a.color || colorTokens.gray[900];
         const width = a.width || 3;
         const isSelected = selectedAnnotationId === a.id;
         const isHover = hoverAnnotationId === a.id;
         const highlightStroke =
           isSelected || isHover
             ? isSelected
-              ? "#3b82f6"
-              : "#22d3ee"
+              ? colorTokens.blue[500]
+              : colorTokens.cyan[400]
             : undefined;
 
         const commonEvents = {
@@ -147,7 +148,7 @@ export const FieldAnnotations: React.FC<{
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke="#3b82f6"
+                  stroke={colorTokens.blue[500]}
                   strokeWidth={width + 10}
                   opacity={0.35}
                   strokeLinecap="round"
@@ -211,7 +212,7 @@ export const FieldAnnotations: React.FC<{
                 <path
                   d={d}
                   fill="none"
-                  stroke="#3b82f6"
+                  stroke={colorTokens.blue[500]}
                   strokeWidth={width + 10}
                   opacity={0.35}
                   strokeLinecap="round"
@@ -253,7 +254,7 @@ export const FieldAnnotations: React.FC<{
               <polyline
                 points={abs}
                 fill="none"
-                stroke="#3b82f6"
+                stroke={colorTokens.blue[500]}
                 strokeWidth={width + 10}
                 opacity={0.35}
                 strokeLinecap="round"
