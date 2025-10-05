@@ -175,6 +175,7 @@
 #### Results Summary
 
 **Total Added**: 149 new design tokens
+
 - ✅ 7 complete color systems (70 color definitions)
 - ✅ 29 semantic token mappings
 - ✅ 4 supporting token systems
@@ -185,7 +186,7 @@
 
 1. **✅ Added Color Systems**
    - ✅ Blue system (50-900) - 10 shades
-   - ✅ Cyan system (50-900) - 10 shades  
+   - ✅ Cyan system (50-900) - 10 shades
    - ✅ Amber system (50-900) - 10 shades (addresses 118 violations!)
    - ✅ Emerald system (50-900) - 10 shades
    - ✅ Purple system (50-900) - 10 shades
@@ -229,6 +230,7 @@
 #### Impact Analysis
 
 **Token Coverage**: Can now replace ~40% of 1,498 violations!
+
 - Amber violations: 118 → covered by amber system ✅
 - Blue violations: 66 → covered by blue system ✅
 - Cyan violations: 42 → covered by cyan system ✅
@@ -249,7 +251,7 @@
 With 1,498 violations across 135 files, a single bug in automation could break many things. Instead, we're using a **safe hybrid approach**:
 
 1. **Manual Proof of Concept** (Phase 4a)
-2. **Semi-Automated Helper Tool** (Phase 4b)  
+2. **Semi-Automated Helper Tool** (Phase 4b)
 3. **Human-Reviewed Systematic Replacement** (Phase 5)
 
 ---
@@ -263,6 +265,7 @@ With 1,498 violations across 135 files, a single bug in automation could break m
 **Goal**: Validate tokens work in real components, document patterns
 
 **Completed Tasks**:
+
 - ✅ Picked Badge.tsx as POC component
 - ✅ Replaced 4 arbitrary font/size values with standard Tailwind
 - ✅ Documented replacement patterns in BADGE_REPLACEMENT_TEMPLATE.md
@@ -271,6 +274,7 @@ With 1,498 violations across 135 files, a single bug in automation could break m
 - ✅ Committed as template (2c30967)
 
 **Key Learnings**:
+
 - **Trade-offs acceptable**: +1-2px differences for standardization worth it
 - **Type safety**: Tokens compile-time validated = safer than hex codes
 - **Speed**: 15 minutes to completely standardize a component
@@ -289,6 +293,7 @@ With 1,498 violations across 135 files, a single bug in automation could break m
 **Goal**: Create a SUGGESTION tool (not auto-replace) that assists with manual review
 
 **Completed Features**:
+
 - ✅ **Finds violations** - Scans files for hardcoded values
 - ✅ **Suggests tokens** - Maps violations to appropriate tokens
 - ✅ **Context aware** - Shows surrounding code for review
@@ -493,6 +498,7 @@ Files Complete: 16/135 (11.9%)
 ### Files Completed (Phase 5 In Progress)
 
 #### ✅ Diagram v2 Components (10 files)
+
 1. **Badge.tsx** - 4 font sizes → standardized (POC) ✅
 2. **FieldCanvas.tsx** - 4 font sizes → text-xs/sm ✅
 3. **FieldPlayers.tsx** - 20 hex colors → colorTokens ✅
@@ -506,21 +512,26 @@ Files Complete: 16/135 (11.9%)
 11. **ToolPalette.tsx** - 1 draw color → gray-900 ✅
 
 #### ✅ UI Components (2 files)
+
 12. **OptimizedImage.tsx** - 1 placeholder color → gray-100 ✅
 13. **SimpleTooltip.tsx** - 1 background → gray-800 ✅
 14. **Tooltip.tsx** - 1 background → gray-800 ✅
 
 #### ✅ Dashboard Components (1 file)
+
 15. **AdaptiveChart.tsx** - 16 chart colors → token palettes ✅
 
 #### ✅ Calendar Components (1 file)
+
 16. **BoxCallCalendar.tsx** - 6 event colors → semantic tokens ✅
 
-#### ✅ Diagram v1 Components (2 files) 
+#### ✅ Diagram v1 Components (2 files)
+
 17. **RoutePropertiesPanel.tsx** - 8 color picker → tokens ✅
 18. **DrawingTools.tsx** - 8 color picker → tokens ✅
 
 ### Commits Made (Phase 5)
+
 - `9c95f38` - FieldCanvas.tsx font sizes
 - `81f0bdf` - FieldPlayers.tsx 20 colors
 - `e7c52f4` - FieldGrid.tsx 15 colors
@@ -587,9 +598,9 @@ Files Complete: 16/135 (11.9%)
 
 While replacing tokens, we're establishing **semantic consistency** across the app:
 
-1. **Player Colors**: 
+1. **Player Colors**:
    - Offense: `blue-900` consistently
-   - Defense: `red-700` consistently  
+   - Defense: `red-700` consistently
    - Selection: `amber-400` consistently (the #1 offender!)
    - Outlines: `gray-800` for dark, `gray-50` for light
 
@@ -610,36 +621,40 @@ While replacing tokens, we're establishing **semantic consistency** across the a
 
 ### Replacement Patterns Discovered
 
-**Font Sizes**: 
+**Font Sizes**:
+
 ```tsx
 // Before
 text-[12px] text-[14px]
-// After  
+// After
 text-xs text-sm
 // Principle: Use standard scale, accept 1-2px differences
 ```
 
 **Colors**:
+
 ```tsx
 // Before
-"#fbbf24" "#1e3a8a" 
+"#fbbf24" "#1e3a8a"
 // After
 colorTokens.amber[400] colorTokens.blue[900]
 // Principle: Import tokens, use typed references
 ```
 
 **Theme Switching**:
+
 ```tsx
 // Before
-theme === "dark" ? "#111827" : "#f9fafb"
-// After  
-theme === "dark" ? colorTokens.gray[900] : colorTokens.gray[50]
+theme === "dark" ? "#111827" : "#f9fafb";
+// After
+theme === "dark" ? colorTokens.gray[900] : colorTokens.gray[50];
 // Principle: Semantic tokens adapt to theme
 ```
 
 ### Efficiency Metrics
 
 **Time per file**: 3-15 minutes average
+
 - Simple files (1-5 colors): 3-5 min
 - Medium files (10-15 colors): 8-12 min
 - Complex files (20+ colors): 12-15 min
@@ -685,26 +700,31 @@ theme === "dark" ? colorTokens.gray[900] : colorTokens.gray[50]
 ### 🔄 Week 2: Safe Replacement Strategy (October 12-18, 2025) - ✅ **COMPLETE**
 
 #### Phase 4a: Manual Proof of Concept ✅ COMPLETE
+
 **Time**: 15 minutes  
 **Outcome**: Badge.tsx fully standardized, template created
 
-#### Phase 4b: Build Helper Tool ✅ COMPLETE  
+#### Phase 4b: Build Helper Tool ✅ COMPLETE
+
 **Time**: 30 minutes  
 **Outcome**: Tool created, decided manual approach is safer/faster
 
 #### Phase 5: Systematic Replacement 🚀 **IN PROGRESS**
+
 **Started**: October 5, 2025  
 **Progress**: 16/135 files (11.9%), 125/1,498 violations (8.3%)  
 **Pace**: ~10 files/day, ~3-15 min per file  
 **ETA**: ~2 weeks at current pace
 
 **Files Completed**:
+
 - ✅ All diagram-v2 components (10 files)
-- ✅ Core UI components (3 files) 
+- ✅ Core UI components (3 files)
 - ✅ Dashboard & Calendar (2 files)
 - ✅ Diagram v1 components (2 files)
 
 **Current Strategy**: Manual file-by-file replacement with:
+
 - Semantic color consistency across related components
 - Type-checking after each file
 - Individual commits for safety
@@ -721,26 +741,31 @@ theme === "dark" ? colorTokens.gray[900] : colorTokens.gray[50]
 #### Remaining Work (119 files)
 
 **Tier 1: Diagram Components** (~30 files remaining)
+
 - ShapeManipulator, FootballFieldCanvas, PlayerPropertiesPanel
 - PersonnelSelector, FieldCanvas legacy components
 - **Priority**: HIGH - Visual consistency critical
 
 **Tier 2: Component Library** (~25 files)
+
 - Button variations, Card, Modal, Input components
 - Form components, Layout components
 - **Priority**: HIGH - Fix once, fixed everywhere
 
 **Tier 3: Page Components** (~30 files)
+
 - Team dashboard, Playbook pages
 - Settings, Profile pages
 - **Priority**: MEDIUM - Feature-specific
 
 **Tier 4: CSS & Themes** (~15 files)
+
 - generated-themes.css (140 violations!)
 - theme registry, index.css
 - **Priority**: MEDIUM - Foundation layer
 
 **Tier 5: Utilities & Tests** (~19 files)
+
 - Color generation utilities
 - Test files, Story files
 - **Priority**: LOW - Support files
@@ -763,6 +788,7 @@ theme === "dark" ? colorTokens.gray[900] : colorTokens.gray[50]
 ### 🎯 Revised Success Criteria
 
 **By November 8, 2025**:
+
 - ✅ 149 tokens added (DONE)
 - ⏳ 1,498 violations → 0 violations (0% complete)
 - ⏳ 100% design token coverage

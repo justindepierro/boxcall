@@ -5,6 +5,7 @@ import { Button } from "../../../ui/Button";
 import Icon from "../../../ui/Icon/Icon";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
 import { useDiagramEditor } from "../context/useDiagramEditor";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
@@ -366,7 +367,7 @@ export const ToolPalette: React.FC = () => {
             <input
               type="color"
               aria-label="Draw color"
-              value={state.ui.drawColor || "#111827"}
+              value={state.ui.drawColor || colorTokens.gray[900]}
               onChange={(e) =>
                 dispatch({ type: "SET_DRAW_COLOR", color: e.target.value })
               }

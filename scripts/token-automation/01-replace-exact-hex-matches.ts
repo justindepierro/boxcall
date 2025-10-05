@@ -11,7 +11,7 @@
  * - No context needed - direct substitution
  */
 
-import { Project } from 'ts-morph';
+import { Project, SourceFile } from 'ts-morph';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -170,24 +170,35 @@ function calculateImportPath(filePath: string): string {
   return '../'.repeat(depth) + 'design-system/tokens';
 }
 
-function hasColorTokensImport(sourceFile: any): boolean {
-  const imports = sourceFile.getImportDeclarations();
-  return imports.some((imp: any) => {
-    const moduleSpecifier = imp.getModuleSpecifierValue();
-    return moduleSpecifier.includes('design-system/tokens');
-  });
-}
+function addColorTokensImport(sourceFile: SourceFile, importPath: string) {
+  // Check if import already exists
+  const existingImport = sourceFile.getImportDeclaration(
+    (imp) => imp.getModuleSpecifierValue() === importPath
+  );
 
-function addColorTokensImport(sourceFile: any, importPath: string): void {
-  if (hasColorTokensImport(sourceFile)) return;
+  if (existingImport) {
+    const namedImports = existingImport.getNamedImports();
+    const hasColorTokens = namedImports.some(
+      (imp) => imp.getName() === "colorTokens"
+    );
 
-  const lastImport = sourceFile.getImportDeclarations().slice(-1)[0];
-  const importStatement = `import { colorTokens } from "${importPath}";`;
-
-  if (lastImport) {
-    lastImport.insertAfter(importStatement);
+    if (!hasColorTokens) {
+      existingImport.addNamedImport("colorTokens");
+    }
   } else {
-    sourceFile.insertText(0, importStatement + '\n');
+    // Add new import - either after last import or at top of file
+    const imports = sourceFile.getImportDeclarations();
+    if (imports.length > 0) {
+      sourceFile.insertImportDeclaration(imports.length, {
+        moduleSpecifier: importPath,
+        namedImports: ["colorTokens"],
+      });
+    } else {
+      sourceFile.insertImportDeclaration(0, {
+        moduleSpecifier: importPath,
+        namedImports: ["colorTokens"],
+      });
+    }
   }
 }
 

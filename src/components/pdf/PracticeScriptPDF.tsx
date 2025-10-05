@@ -6,6 +6,7 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { PracticeScript } from "@services";
+import { colorTokens } from "../../design-system/tokens";
 
 const styles = StyleSheet.create({
   page: {
@@ -17,12 +18,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingBottom: 10,
     borderBottom: 2,
-    borderBottomColor: "#2563eb",
+    borderBottomColor: colorTokens.blue[600],
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#1e40af",
+    color: colorTokens.blue[900],
     marginBottom: 4,
   },
   subtitle: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 10,
-    color: "#6b7280",
+    color: colorTokens.gray[500],
     marginBottom: 2,
   },
   section: {
@@ -41,10 +42,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1e40af",
+    color: colorTokens.blue[900],
     marginBottom: 10,
     borderBottom: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: colorTokens.gray[200],
     paddingBottom: 4,
   },
   playItem: {
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   playDetails: {
     fontSize: 10,
-    color: "#6b7280",
+    color: colorTokens.gray[500],
   },
   summary: {
     marginTop: 20,
@@ -86,12 +87,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#eff6ff",
     borderRadius: 6,
     border: 1,
-    borderColor: "#dbeafe",
+    borderColor: colorTokens.blue[50],
   },
   summaryTitle: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#1e40af",
+    color: colorTokens.blue[900],
     marginBottom: 8,
   },
   summaryText: {

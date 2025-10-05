@@ -36,21 +36,25 @@ npm run dev
 ## What It Detects
 
 ### 1. Arbitrary Font Sizes
+
 - **Pattern**: `text-[11px]`, `text-[13px]`
 - **Suggests**: Closest standard Tailwind font size
 - **Example**: `text-[11px]` → `text-xs` (12px)
 
 ### 2. Arbitrary Heights
+
 - **Pattern**: `h-[18px]`, `min-h-[22px]`
 - **Suggests**: Standard height utilities (4px increments)
 - **Example**: `min-h-[18px]` → `h-5` (20px)
 
 ### 3. Arbitrary Widths
+
 - **Pattern**: `w-[24px]`, `max-w-[100px]`
 - **Suggests**: Standard width utilities
 - **Example**: `w-[24px]` → `w-6` (24px)
 
 ### 4. Arbitrary Spacing
+
 - **Pattern**: `p-[12px]`, `mx-[8px]`, `gap-[16px]`
 - **Suggests**: Standard spacing scale
 - **Example**: `p-[10px]` → `p-2.5` (10px exact match!)
@@ -108,16 +112,19 @@ Summary
 ## Confidence Levels
 
 ### 🟢 HIGH (0-2px difference)
+
 - Safe to accept
 - Visually identical or imperceptible
 - Aligns with design system
 
 ### 🟡 MEDIUM (3-4px difference)
+
 - Generally safe
 - May be slightly noticeable
 - Review in browser
 
 ### 🔴 LOW (5+ px difference)
+
 - Use caution
 - Likely visually noticeable
 - May require adding precision token
@@ -152,24 +159,28 @@ export const fineSpacingTokens = {
 ## Workflow Tips
 
 ### 1. Start with high-confidence files
+
 ```bash
 # Components with mostly HIGH confidence suggestions
 npx tsx scripts/suggest-token-replacements.ts src/components/ui/Badge/Badge.tsx
 ```
 
 ### 2. Test after each component
+
 ```bash
 npm run type-check  # Ensure it compiles
 npm run dev         # Visual check
 ```
 
 ### 3. Commit after each success
+
 ```bash
 git add src/components/ui/Badge/Badge.tsx
 git commit -m "refactor(badge): Replace arbitrary values with standard tokens"
 ```
 
 ### 4. Build confidence
+
 - Start with small components (Badge, Button)
 - Progress to medium components (Card, Modal)
 - Tackle large components last (FieldCanvas, Dashboard)
@@ -177,12 +188,14 @@ git commit -m "refactor(badge): Replace arbitrary values with standard tokens"
 ## Limitations
 
 ### Does NOT detect:
+
 - Hex colors (e.g., `#fbbf24`) - Use audit script
 - RGB/RGBA colors - Use audit script
 - Inline styles with hardcoded values
 - CSS files (only TSX/JSX)
 
 ### Does NOT handle:
+
 - Complex calculations (e.g., `calc(100% - 20px)`)
 - CSS-in-JS libraries
 - Styled-components

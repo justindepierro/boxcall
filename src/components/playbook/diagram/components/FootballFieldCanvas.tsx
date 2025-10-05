@@ -88,7 +88,7 @@ export const FootballFieldCanvas: React.FC = () => {
       displayHeight: number
     ) => {
       // Clear entire canvas with background color
-      ctx.fillStyle = "#ECFDF5"; // jade-50 - very light green from design system
+      ctx.fillStyle = colorTokens.emerald[50]; // jade-50 - very light green from design system
       ctx.fillRect(0, 0, displayWidth, displayHeight);
 
       // Calculate field area with padding

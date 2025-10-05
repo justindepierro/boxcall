@@ -21,6 +21,7 @@ import { FieldGrid } from "./components/FieldGrid";
 import { FieldPlayers } from "./components/FieldPlayers";
 import { FieldRoutes } from "./components/FieldRoutes";
 import { FieldAnnotations } from "./components/FieldAnnotations";
+import { colorTokens } from "../../../design-system/tokens";
 import { FieldGuides } from "./components/FieldGuides";
 import { FieldMinimap } from "./components/FieldMinimap";
 
@@ -1122,7 +1123,7 @@ export const FieldCanvas: React.FC<{
             // Route tool: custom pen cursor (theme-aware), fallback crosshair
             if (state.ui.tool === "route") {
               const theme = doc.field.theme || "classic";
-              const stroke = theme === "mono-light" ? "#111827" : "#f9fafb";
+              const stroke = theme === "mono-light" ? colorTokens.gray[900] : colorTokens.gray[50];
               const svg = `<?xml version='1.0' encoding='UTF-8'?>\n<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>\n  <g fill='none' stroke='${stroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\n    <path d='M4 28l6-2 16-16a3 3 0 0 0-4.24-4.24L5.76 21.76z'/>\n    <path d='M18 6l8 8'/>\n    <path d='M4 28l2-6'/>\n  </g>\n</svg>`;
               const data = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}") 4 28, crosshair`;
               return data;
@@ -1326,7 +1327,7 @@ export const FieldCanvas: React.FC<{
                     <input
                       type="color"
                       aria-label="Player color"
-                      value={player.color || "#1e3a8a"}
+                      value={player.color || colorTokens.blue[900]}
                       onChange={(e) =>
                         dispatch({
                           type: "UPDATE_PLAYER",
@@ -1409,7 +1410,7 @@ export const FieldCanvas: React.FC<{
                 cy={snapViz.y}
                 r={8}
                 fill="none"
-                stroke="#22d3ee"
+                stroke=colorTokens.cyan[400]
                 strokeWidth={2}
                 opacity={0.8}
               />
@@ -1417,7 +1418,7 @@ export const FieldCanvas: React.FC<{
                 cx={snapViz.x}
                 cy={snapViz.y}
                 r={3}
-                fill="#22d3ee"
+                fill=colorTokens.cyan[400]
                 opacity={0.9}
               />
             </g>
@@ -1438,7 +1439,7 @@ export const FieldCanvas: React.FC<{
                       cy={p.y}
                       r={r}
                       fill="none"
-                      stroke="#22d3ee"
+                      stroke=colorTokens.cyan[400]
                       strokeWidth={2}
                       opacity={op}
                     />
@@ -1505,7 +1506,7 @@ export const FieldCanvas: React.FC<{
                         rx={2}
                         ry={2}
                         fill="#fff"
-                        stroke="#2563eb"
+                        stroke=colorTokens.blue[600]
                         strokeWidth={2}
                         className="cursor-move"
                         onMouseDown={(e) => {
@@ -1563,7 +1564,7 @@ export const FieldCanvas: React.FC<{
                           value={
                             "color" in ann && ann.color
                               ? ann.color!
-                              : state.ui.drawColor || "#111827"
+                              : state.ui.drawColor || colorTokens.gray[900]
                           }
                           onChange={(e) =>
                             dispatch({
@@ -1670,7 +1671,7 @@ export const FieldCanvas: React.FC<{
                       <path
                         d={d}
                         fill="none"
-                        stroke="#fbbf24"
+                        stroke=colorTokens.amber[400]
                         strokeWidth={6}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -1698,7 +1699,7 @@ export const FieldCanvas: React.FC<{
                                 y1={ey2}
                                 x2={best.x}
                                 y2={best.y}
-                                stroke="#f59e0b"
+                                stroke=colorTokens.amber[500]
                                 strokeWidth={3}
                                 strokeDasharray="2 6"
                                 opacity={0.9}
@@ -1708,7 +1709,7 @@ export const FieldCanvas: React.FC<{
                                 cy={best.y}
                                 r={8}
                                 fill="none"
-                                stroke="#f59e0b"
+                                stroke=colorTokens.amber[500]
                                 strokeWidth={2}
                                 strokeDasharray="2 6"
                                 opacity={0.9}
@@ -1748,7 +1749,7 @@ export const FieldCanvas: React.FC<{
                       <polyline
                         points={poly}
                         fill="none"
-                        stroke="#fbbf24"
+                        stroke=colorTokens.amber[400]
                         strokeWidth={6}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -1764,7 +1765,7 @@ export const FieldCanvas: React.FC<{
                               y1={ey2}
                               x2={attach.x}
                               y2={attach.y}
-                              stroke="#f59e0b"
+                              stroke=colorTokens.amber[500]
                               strokeWidth={3}
                               strokeDasharray="2 6"
                               opacity={0.9}
@@ -1774,7 +1775,7 @@ export const FieldCanvas: React.FC<{
                               cy={attach.y}
                               r={8}
                               fill="none"
-                              stroke="#f59e0b"
+                              stroke=colorTokens.amber[500]
                               strokeWidth={2}
                               strokeDasharray="2 6"
                               opacity={0.9}
@@ -1929,7 +1930,7 @@ export const FieldCanvas: React.FC<{
                 y1={attachPreview.y1}
                 x2={attachPreview.x2}
                 y2={attachPreview.y2}
-                stroke="#f59e0b"
+                stroke=colorTokens.amber[500]
                 strokeWidth={3}
                 strokeDasharray="2 6"
                 opacity={0.9}
@@ -1939,7 +1940,7 @@ export const FieldCanvas: React.FC<{
                 cy={attachPreview.y2}
                 r={8}
                 fill="none"
-                stroke="#f59e0b"
+                stroke=colorTokens.amber[500]
                 strokeWidth={2}
                 strokeDasharray="2 6"
                 opacity={0.9}
@@ -1984,11 +1985,11 @@ export const FieldCanvas: React.FC<{
                       y1={y1}
                       x2={x2}
                       y2={y2}
-                      stroke="#111827"
+                      stroke=colorTokens.gray[900]
                       strokeWidth={3}
                       strokeDasharray="6 4"
                     />
-                    <circle cx={x1} cy={y1} r={5} fill="#111827" />
+                    <circle cx={x1} cy={y1} r={5} fill=colorTokens.gray[900] />
                   </g>
                 );
               }
@@ -2001,7 +2002,7 @@ export const FieldCanvas: React.FC<{
                   <path
                     d={d}
                     fill="none"
-                    stroke="#111827"
+                    stroke=colorTokens.gray[900]
                     strokeWidth={3}
                     strokeDasharray="6 4"
                   />
@@ -2013,7 +2014,7 @@ export const FieldCanvas: React.FC<{
                     .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
                     .join(" ")}
                   fill="none"
-                  stroke="#111827"
+                  stroke=colorTokens.gray[900]
                   strokeWidth={3}
                   strokeDasharray="6 4"
                 />
@@ -2027,7 +2028,7 @@ export const FieldCanvas: React.FC<{
                 width={selectionBox.w}
                 height={selectionBox.h}
                 fill="rgba(250,204,21,0.15)"
-                stroke="#fbbf24"
+                stroke=colorTokens.amber[400]
                 strokeWidth={1.5}
                 strokeDasharray="4 3"
               />
@@ -2045,7 +2046,7 @@ export const FieldCanvas: React.FC<{
                     height={22}
                     rx={11}
                     ry={11}
-                    fill="#111827"
+                    fill=colorTokens.gray[900]
                     opacity={0.9}
                   />
                   <text
@@ -2053,7 +2054,7 @@ export const FieldCanvas: React.FC<{
                     y={-3}
                     fontSize={12}
                     fontWeight={700}
-                    fill="#fbbf24"
+                    fill=colorTokens.amber[400]
                     textAnchor="middle"
                     dominantBaseline="middle"
                   >

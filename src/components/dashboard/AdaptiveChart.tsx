@@ -257,10 +257,30 @@ const InsightBadge: React.FC<InsightBadgeProps> = ({ insight }) => {
 
 function getColorScheme(dataType: DataSeries["type"]): string[] {
   const schemes = {
-    performance: [colorTokens.blue[500], colorTokens.emerald[500], colorTokens.amber[500], colorTokens.red[500]],
-    attendance: [colorTokens.purple[500], colorTokens.cyan[500], colorTokens.emerald[400], colorTokens.amber[600]],
-    progress: [colorTokens.emerald[500], colorTokens.blue[500], colorTokens.purple[500], colorTokens.amber[500]],
-    engagement: [colorTokens.violet[400], colorTokens.purple[500], colorTokens.cyan[500], colorTokens.emerald[500]],
+    performance: [
+      colorTokens.blue[500],
+      colorTokens.emerald[500],
+      colorTokens.amber[500],
+      colorTokens.red[500],
+    ],
+    attendance: [
+      colorTokens.purple[500],
+      colorTokens.cyan[500],
+      colorTokens.emerald[400],
+      colorTokens.amber[600],
+    ],
+    progress: [
+      colorTokens.emerald[500],
+      colorTokens.blue[500],
+      colorTokens.purple[500],
+      colorTokens.amber[500],
+    ],
+    engagement: [
+      colorTokens.violet[400],
+      colorTokens.purple[500],
+      colorTokens.cyan[500],
+      colorTokens.emerald[500],
+    ],
   };
 
   return schemes[dataType] || schemes.performance;

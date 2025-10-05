@@ -1,3 +1,5 @@
+import { colorTokens } from "../design-system/tokens";
+
 /**
  * Advanced Color Generation Service
  * Provides AI-powered color palette generation and team-specific theming
@@ -53,17 +55,17 @@ export class ColorGenerationService {
       trust: {
         primary: '#00A86B',
         secondary: '#1E293B',
-        accent: '#7C3AED',
+        accent: colorTokens.violet[600],
         background: '#F0FDF4',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#052E16',
       },
       energy: {
-        primary: '#7C3AED',
+        primary: colorTokens.violet[600],
         secondary: '#FF6B6B',
         accent: '#00A86B',
-        background: '#F5F3FF',
-        surface: '#FFFFFF',
+        background: colorTokens.violet[50],
+        surface: "#ffffff",
         text: '#4C1D95',
       },
       calm: {
@@ -71,15 +73,15 @@ export class ColorGenerationService {
         secondary: '#7CB342',
         accent: '#00A86B',
         background: '#F0F9FF',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#0F766E',
       },
       achievement: {
-        primary: '#22C55E',
-        secondary: '#F59E0B',
-        accent: '#7C3AED',
+        primary: colorTokens.emerald[500],
+        secondary: colorTokens.amber[500],
+        accent: colorTokens.violet[600],
         background: '#F0FDF4',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#14532D',
       },
     };
@@ -104,25 +106,25 @@ export class ColorGenerationService {
       calm: {
         primary: '#00A86B',
         secondary: '#475569',
-        accent: '#7C3AED',
+        accent: colorTokens.violet[600],
         background: '#F8FAFC',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#1E293B',
       },
       energetic: {
-        primary: '#7C3AED',
+        primary: colorTokens.violet[600],
         secondary: '#00A86B',
         accent: '#FF6B6B',
         background: '#FEF7FF',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#4C1D95',
       },
       professional: {
         primary: '#1E293B',
         secondary: '#00A86B',
-        accent: '#F59E0B',
+        accent: colorTokens.amber[500],
         background: '#F8FAFC',
-        surface: '#FFFFFF',
+        surface: "#ffffff",
         text: '#0F172A',
       },
     };
@@ -147,10 +149,10 @@ export class ColorGenerationService {
       case 'highContrast':
         return {
           ...basePalette,
-          background: '#FFFFFF',
+          background: "#ffffff",
           surface: '#F8FAFC',
-          text: '#000000',
-          primary: '#000000',
+          text: "#000000",
+          primary: "#000000",
           secondary: '#404040',
         };
 

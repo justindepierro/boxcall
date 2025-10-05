@@ -1,3 +1,4 @@
+import { colorTokens } from "../design-system/tokens";
 /**
  * SEO Configuration
  * 
@@ -83,7 +84,7 @@ export const seoConfig: SEOConfig = {
     favicon: '/favicon.svg',
     language: 'en',
     locale: 'en_US',
-    themeColor: '#2563eb',
+    themeColor: colorTokens.blue[600],
   },
 
   defaultMeta: {

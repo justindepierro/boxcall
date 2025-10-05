@@ -123,7 +123,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate placeholder styles
   const placeholderStyle: React.CSSProperties = {
-    backgroundColor: placeholder === "blur" ? colorTokens.gray[100] : "transparent",
+    backgroundColor:
+      placeholder === "blur" ? colorTokens.gray[100] : "transparent",
     backgroundImage:
       typeof placeholder === "string" &&
       placeholder !== "blur" &&

@@ -1,4 +1,5 @@
 import { useDiagramEditor } from "./useDiagramEditor";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const useAddPlayer = () => {
   const { dispatch } = useDiagramEditor();
@@ -10,7 +11,7 @@ export const useAddPlayer = () => {
         label: "P",
         x: 50,
         y: 60,
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
     });
   };

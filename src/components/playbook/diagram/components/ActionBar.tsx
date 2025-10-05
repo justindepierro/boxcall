@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "../../../ui/Button";
 import { useDiagramEditor } from "../context/useDiagramEditor";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const ActionBar: React.FC<{
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
@@ -37,7 +38,7 @@ export const ActionBar: React.FC<{
   const allLocked =
     selectedPlayers.length > 0 && selectedPlayers.every((p) => !!p.locked);
 
-  const colors = ["#1e3a8a", "#2563eb", "#047857", "#92400e", "#b91c1c"];
+  const colors = [colorTokens.blue[900], colorTokens.blue[600], colorTokens.emerald[700], colorTokens.amber[800], colorTokens.red[700]];
   const roles = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "C"];
 
   return (

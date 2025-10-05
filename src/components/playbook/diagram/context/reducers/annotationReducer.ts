@@ -7,6 +7,7 @@ import type {
   DiagramAnnotation,
 } from "../../types/types";
 import { TelemetryEventTypes } from "../../../../../telemetry/events";
+import { colorTokens } from "../../../../../design-system/tokens";
 import { telemetry } from "../../../../../telemetry/dispatcher";
 
 export function annotationReducer(
@@ -97,7 +98,7 @@ export function annotationReducer(
         return { ...state, ui: { ...state.ui, annotating: undefined } };
       const a = state.ui.annotating;
       const id = `ann_${Date.now()}`;
-      const color = state.ui.drawColor || "#111827";
+      const color = state.ui.drawColor || colorTokens.gray[900];
       const width = state.ui.drawWidth || 3;
       const arrowHead = state.ui.drawArrowHead || "end";
       const nextDoc: DiagramDocument = {

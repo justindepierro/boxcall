@@ -1,4 +1,6 @@
 // Formation library for Diagram Builder v2
+import { colorTokens } from "../../../design-system/tokens";
+
 // Provides a small set of offensive formations with idempotent application support.
 
 import type { DiagramPlayer } from "./types";
@@ -25,11 +27,11 @@ export type FormationSpec = Record<
 
 function baseColors() {
   return {
-    ol: "#1e3a8a", // blue
-    qb: "#047857", // green
-    rb: "#92400e", // brown
-    wrA: "#2563eb",
-    wrB: "#1e3a8a",
+    ol: colorTokens.blue[900], // blue
+    qb: colorTokens.emerald[700], // green
+    rb: colorTokens.amber[800], // brown
+    wrA: colorTokens.blue[600],
+    wrB: colorTokens.blue[900],
   } as const;
 }
 

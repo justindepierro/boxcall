@@ -101,7 +101,10 @@ export const FieldRoutes: React.FC<{
                   {pts.map((p, pi) => {
                     const isEndpoint = pi === 0 || pi === pts.length - 1;
                     const radius = pi === 1 ? 10 : isEndpoint ? 12 : 10;
-                    const fill = pi === 1 ? colorTokens.emerald[400] : colorTokens.amber[400];
+                    const fill =
+                      pi === 1
+                        ? colorTokens.emerald[400]
+                        : colorTokens.amber[400];
                     return (
                       <circle
                         key={pi}

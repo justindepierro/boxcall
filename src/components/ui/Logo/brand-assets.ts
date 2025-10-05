@@ -1,3 +1,5 @@
+import { colorTokens } from "../../../design-system/tokens";
+
 /**
  * Brand Assets Configuration
  *
@@ -24,12 +26,12 @@ export const BRAND_ASSETS = {
 
   // Brand colors (matches design system)
   colors: {
-    primary: "#059669", // jade-600 - main brand color
-    primaryDark: "#047857", // jade-700 - darker variant
-    primaryLight: "#10b981", // jade-500 - lighter variant
+    primary: colorTokens.emerald[600], // jade-600 - main brand color
+    primaryDark: colorTokens.emerald[700], // jade-700 - darker variant
+    primaryLight: colorTokens.emerald[500], // jade-500 - lighter variant
 
     // Contrast colors for different backgrounds
-    onLight: "#059669", // Use brand green on light backgrounds
+    onLight: colorTokens.emerald[600], // Use brand green on light backgrounds
     onDark: "#ffffff", // Use white on dark backgrounds
     onBrand: "#ffffff", // Use white on brand color backgrounds
   },

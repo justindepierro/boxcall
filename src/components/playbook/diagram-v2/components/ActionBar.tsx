@@ -35,11 +35,11 @@ export const ActionBar: React.FC<{
 
   // Player color palette - consistent with team/position scheme
   const colors = [
-    colorTokens.blue[900],    // Deep blue
-    colorTokens.blue[600],    // Medium blue
+    colorTokens.blue[900], // Deep blue
+    colorTokens.blue[600], // Medium blue
     colorTokens.emerald[700], // Emerald
-    colorTokens.amber[700],   // Amber/brown
-    colorTokens.red[700]      // Red
+    colorTokens.amber[700], // Amber/brown
+    colorTokens.red[700], // Red
   ];
   const roles = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "C"];
 

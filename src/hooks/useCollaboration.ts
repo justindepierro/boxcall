@@ -13,6 +13,7 @@ import {
   type DashboardUpdate,
   type CursorUpdate,
 } from "@services/realTimeCollaboration";
+import { colorTokens } from "../design-system/tokens";
 
 export interface UseCollaborationOptions {
   teamId: string;
@@ -316,7 +317,7 @@ export function useCollaboration(
             widgetX: cursor.widgetX,
             widgetY: cursor.widgetY,
             action: cursor.action || "hover",
-            color: "#3B82F6", // Default blue color
+            color: colorTokens.blue[500], // Default blue color
           });
         }
         return updated;

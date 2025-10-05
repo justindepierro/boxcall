@@ -16,6 +16,7 @@ import type {
 import { createEmptyDocument, computeComplexityScore } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
+import { colorTokens } from "../../../design-system/tokens";
 import {
   getFormationSpec,
   applyFormationIdempotent,
@@ -29,7 +30,7 @@ const initialState: DiagramEditorState = {
     tool: "select",
     routeMode: "line",
     drawMode: "line",
-    drawColor: "#111827",
+    drawColor: colorTokens.gray[900],
     drawWidth: 3,
     drawArrowHead: "end",
     zoom: 1,
@@ -441,7 +442,7 @@ function reducer(
         return { ...state, ui: { ...state.ui, annotating: undefined } };
       const a = state.ui.annotating;
       const id = `ann_${Date.now()}`;
-      const color = state.ui.drawColor || "#111827";
+      const color = state.ui.drawColor || colorTokens.gray[900];
       const width = state.ui.drawWidth || 3;
       const arrowHead = state.ui.drawArrowHead || "end";
       const nextDoc: DiagramDocument = {
@@ -1314,7 +1315,7 @@ export const useAddPlayer = () => {
         label: "P",
         x: 50,
         y: 60,
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
     });
   }, [dispatch]);

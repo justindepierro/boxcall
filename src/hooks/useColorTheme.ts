@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import type { ColorPalette, TeamColors } from '../lib/colorGeneration';
+import { colorTokens } from "../design-system/tokens";
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
 export type AccessibilityMode = 'normal' | 'highContrast' | 'deuteranopia' | 'protanopia' | 'tritanopia';
@@ -39,14 +40,14 @@ const defaultConfig: ThemeConfig = {
 const defaultPalette: ColorPalette = {
   primary: '#00A86B',
   secondary: '#1E293B',
-  accent: '#7C3AED',
+  accent: colorTokens.violet[600],
   background: '#F8FAFC',
-  surface: '#FFFFFF',
+  surface: "#ffffff",
   text: '#1E293B',
-  success: '#22C55E',
-  warning: '#F59E0B',
-  error: '#EF4444',
-  info: '#3B82F6',
+  success: colorTokens.emerald[500],
+  warning: colorTokens.amber[500],
+  error: colorTokens.red[500],
+  info: colorTokens.blue[500],
 };
 
 export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThemeReturn {
@@ -108,7 +109,7 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
         case 'trust':
           basePalette = {
             ...basePalette,
-            primary: '#22C55E', // Green for trust
+            primary: colorTokens.emerald[500], // Green for trust
             background: '#F0FDF4',
             surface: '#DCFCE7',
           };
@@ -116,27 +117,27 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
         case 'energy':
           basePalette = {
             ...basePalette,
-            primary: '#EF4444', // Red for energy
-            accent: '#F59E0B', // Orange accent
-            background: '#FEF2F2',
-            surface: '#FEE2E2',
+            primary: colorTokens.red[500], // Red for energy
+            accent: colorTokens.amber[500], // Orange accent
+            background: colorTokens.red[50],
+            surface: colorTokens.red[100],
           };
           break;
         case 'calm':
           basePalette = {
             ...basePalette,
-            primary: '#3B82F6', // Blue for calm
+            primary: colorTokens.blue[500], // Blue for calm
             background: '#EFF6FF',
-            surface: '#DBEAFE',
+            surface: colorTokens.blue[50],
           };
           break;
         case 'achievement':
           basePalette = {
             ...basePalette,
-            primary: '#8B5CF6', // Purple for achievement
-            accent: '#F59E0B', // Gold accent
-            background: '#F3E8FF',
-            surface: '#E9D5FF',
+            primary: colorTokens.violet[500], // Purple for achievement
+            accent: colorTokens.amber[500], // Gold accent
+            background: colorTokens.purple[100],
+            surface: colorTokens.purple[200],
           };
           break;
       }
@@ -148,7 +149,7 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
         case 'professional':
           basePalette = {
             ...basePalette,
-            background: '#FFFFFF',
+            background: "#ffffff",
             surface: '#F8FAFC',
             text: '#1E293B',
           };
@@ -156,17 +157,17 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
         case 'energetic':
           basePalette = {
             ...basePalette,
-            background: '#FEF3C7', // Light yellow
-            surface: '#FDE68A',
-            primary: '#F59E0B',
+            background: colorTokens.amber[100], // Light yellow
+            surface: colorTokens.amber[200],
+            primary: colorTokens.amber[500],
           };
           break;
         case 'calm':
           basePalette = {
             ...basePalette,
-            background: '#ECFDF5', // Light green
-            surface: '#D1FAE5',
-            primary: '#10B981',
+            background: colorTokens.emerald[50], // Light green
+            surface: colorTokens.emerald[100],
+            primary: colorTokens.emerald[500],
           };
           break;
       }
@@ -219,16 +220,16 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
       if (themeConfig.emotion) {
         switch (themeConfig.emotion) {
           case 'trust':
-            basePalette = { ...basePalette, primary: '#22C55E', background: '#F0FDF4', surface: '#DCFCE7' };
+            basePalette = { ...basePalette, primary: colorTokens.emerald[500], background: '#F0FDF4', surface: '#DCFCE7' };
             break;
           case 'energy':
-            basePalette = { ...basePalette, primary: '#EF4444', accent: '#F59E0B', background: '#FEF2F2', surface: '#FEE2E2' };
+            basePalette = { ...basePalette, primary: colorTokens.red[500], accent: colorTokens.amber[500], background: colorTokens.red[50], surface: colorTokens.red[100] };
             break;
           case 'calm':
-            basePalette = { ...basePalette, primary: '#3B82F6', background: '#EFF6FF', surface: '#DBEAFE' };
+            basePalette = { ...basePalette, primary: colorTokens.blue[500], background: '#EFF6FF', surface: colorTokens.blue[50] };
             break;
           case 'achievement':
-            basePalette = { ...basePalette, primary: '#8B5CF6', accent: '#F59E0B', background: '#F3E8FF', surface: '#E9D5FF' };
+            basePalette = { ...basePalette, primary: colorTokens.violet[500], accent: colorTokens.amber[500], background: colorTokens.purple[100], surface: colorTokens.purple[200] };
             break;
         }
       }
@@ -237,13 +238,13 @@ export function useColorTheme(initialConfig?: Partial<ThemeConfig>): UseColorThe
       if (themeConfig.context) {
         switch (themeConfig.context) {
           case 'professional':
-            basePalette = { ...basePalette, background: '#FFFFFF', surface: '#F8FAFC', text: '#1E293B' };
+            basePalette = { ...basePalette, background: "#ffffff", surface: '#F8FAFC', text: '#1E293B' };
             break;
           case 'energetic':
-            basePalette = { ...basePalette, background: '#FEF3C7', surface: '#FDE68A', primary: '#F59E0B' };
+            basePalette = { ...basePalette, background: colorTokens.amber[100], surface: colorTokens.amber[200], primary: colorTokens.amber[500] };
             break;
           case 'calm':
-            basePalette = { ...basePalette, background: '#ECFDF5', surface: '#D1FAE5', primary: '#10B981' };
+            basePalette = { ...basePalette, background: colorTokens.emerald[50], surface: colorTokens.emerald[100], primary: colorTokens.emerald[500] };
             break;
         }
       }

@@ -53,10 +53,26 @@ export const FieldGrid: React.FC<{
       );
     }
     if (theme === "mono-light") {
-      return <rect x={0} y={0} width={1600} height={900} fill={colorTokens.gray[100]} />;
+      return (
+        <rect
+          x={0}
+          y={0}
+          width={1600}
+          height={900}
+          fill={colorTokens.gray[100]}
+        />
+      );
     }
     if (theme === "mono-dark") {
-      return <rect x={0} y={0} width={1600} height={900} fill={colorTokens.gray[900]} />;
+      return (
+        <rect
+          x={0}
+          y={0}
+          width={1600}
+          height={900}
+          fill={colorTokens.gray[900]}
+        />
+      );
     }
     return null;
   };

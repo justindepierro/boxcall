@@ -11,6 +11,8 @@ import type {
   ButtonSizeConfig,
   ButtonStylesConfig,
 } from "./Button.types";
+import { colorTokens } from "../../../design-system/tokens";
+
 // Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
   primary: {

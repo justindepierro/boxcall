@@ -22,6 +22,7 @@ import { Button, Card } from "../ui";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import type { DataSeries } from "@services/smartDataAnalyzer";
+import { colorTokens } from "../../design-system/tokens";
 
 // Mock data for demo
 const mockChartData: DataSeries = {
@@ -76,7 +77,7 @@ const mockCollaborationData = {
       widgetX: 80,
       widgetY: 30,
       action: "hover" as const,
-      color: "#3B82F6",
+      color: colorTokens.blue[500],
     },
   ],
   isConnected: true,

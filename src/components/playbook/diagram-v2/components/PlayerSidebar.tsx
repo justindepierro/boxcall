@@ -16,7 +16,9 @@ export const PlayerSidebar: React.FC = () => {
   if (!state.doc) return null;
   return (
     <div data-testid="player-sidebar-root">
-      <div className="text-xs text-text-secondary">Complexity: {complexity}</div>
+      <div className="text-xs text-text-secondary">
+        Complexity: {complexity}
+      </div>
       <div className="text-xs text-text-secondary">
         Players: {state.doc.players.length}
       </div>
@@ -336,7 +338,9 @@ export const PlayerSidebar: React.FC = () => {
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                             value={
                               gp.color ||
-                              (gp.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
+                              (gp.side === "D"
+                                ? colorTokens.red[700]
+                                : colorTokens.blue[900])
                             }
                             onChange={(e) =>
                               dispatch({
@@ -375,11 +379,11 @@ export const PlayerSidebar: React.FC = () => {
                           >
                             <option value="">Auto</option>
                             {[
-                              colorTokens.gray[50],   // white
-                              colorTokens.gray[100],  // near-white
-                              colorTokens.gray[800],  // dark gray
-                              colorTokens.gray[900],  // darker
-                              "#000000",              // pure black
+                              colorTokens.gray[50], // white
+                              colorTokens.gray[100], // near-white
+                              colorTokens.gray[800], // dark gray
+                              colorTokens.gray[900], // darker
+                              "#000000", // pure black
                             ].map((c) => (
                               <option key={c} value={c}>
                                 {c}
@@ -590,7 +594,10 @@ export const PlayerSidebar: React.FC = () => {
                           type="color"
                           className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                           value={
-                            p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
+                            p.color ||
+                            (p.side === "D"
+                              ? colorTokens.red[700]
+                              : colorTokens.blue[900])
                           }
                           onChange={(e) =>
                             dispatch({
@@ -629,11 +636,11 @@ export const PlayerSidebar: React.FC = () => {
                         >
                           <option value="">Auto</option>
                           {[
-                            colorTokens.gray[50],   // white
-                            colorTokens.gray[100],  // near-white
-                            colorTokens.gray[800],  // dark gray
-                            colorTokens.gray[900],  // darker
-                            "#000000",              // pure black
+                            colorTokens.gray[50], // white
+                            colorTokens.gray[100], // near-white
+                            colorTokens.gray[800], // dark gray
+                            colorTokens.gray[900], // darker
+                            "#000000", // pure black
                           ].map((c) => (
                             <option key={c} value={c}>
                               {c}

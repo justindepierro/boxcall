@@ -1,3 +1,5 @@
+import { colorTokens } from "../../../../design-system/tokens";
+
 // Shape Engine - Professional diagramming utilities
 
 // Define our own interfaces for the shape engine
@@ -352,8 +354,8 @@ export class ShapeEngine {
     } = {}
   ): DiagramElement {
     const baseStyle = {
-      fill: options.fill || '#10b981',
-      stroke: options.stroke || '#059669',
+      fill: options.fill || colorTokens.emerald[500],
+      stroke: options.stroke || colorTokens.emerald[600],
       strokeWidth: options.strokeWidth || 2
     };
 
@@ -399,8 +401,8 @@ export class ShapeEngine {
         label: options.label || personnel.jerseyNumber.toString()
       },
       style: {
-        fill: options.color || '#3b82f6',
-        stroke: '#1e40af',
+        fill: options.color || colorTokens.blue[500],
+        stroke: colorTokens.blue[900],
         strokeWidth: 2
       }
     };
@@ -426,12 +428,12 @@ export class ShapeEngine {
       height: bounds.height,
       data: {
         segments,
-        color: options.color || '#ef4444',
+        color: options.color || colorTokens.red[500],
         width: options.width || 3,
         arrowHead: options.arrowHead || false
       },
       style: {
-        stroke: options.color || '#ef4444',
+        stroke: options.color || colorTokens.red[500],
         strokeWidth: options.width || 3
       }
     };

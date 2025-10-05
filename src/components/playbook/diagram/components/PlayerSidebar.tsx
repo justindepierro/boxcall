@@ -6,6 +6,7 @@ import { Button } from "../../../ui/Button";
 import { useDiagramEditor } from "../context/useDiagramEditor";
 
 import type { DiagramPlayer, DiagramDocument } from "../types/types";
+import { colorTokens } from "../../../../design-system/tokens";
 
 // PlayerSidebar: handles player stats, bulk edit controls and grouped player list (no routes panel)
 export const PlayerSidebar: React.FC = () => {
@@ -341,7 +342,7 @@ export const PlayerSidebar: React.FC = () => {
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                             value={
                               gp.color ||
-                              (gp.side === "D" ? "#b91c1c" : "#1e3a8a")
+                              (gp.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
                             }
                             onChange={(e) =>
                               dispatch({
@@ -382,8 +383,8 @@ export const PlayerSidebar: React.FC = () => {
                             {[
                               "#ffffff",
                               "#f8fafc",
-                              "#1f2937",
-                              "#111827",
+                              colorTokens.gray[800],
+                              colorTokens.gray[900],
                               "#000000",
                             ].map((c) => (
                               <option key={c} value={c}>
@@ -595,7 +596,7 @@ export const PlayerSidebar: React.FC = () => {
                           type="color"
                           className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                           value={
-                            p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
+                            p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
                           }
                           onChange={(e) =>
                             dispatch({
@@ -636,8 +637,8 @@ export const PlayerSidebar: React.FC = () => {
                           {[
                             "#ffffff",
                             "#f8fafc",
-                            "#1f2937",
-                            "#111827",
+                            colorTokens.gray[800],
+                            colorTokens.gray[900],
                             "#000000",
                           ].map((c) => (
                             <option key={c} value={c}>

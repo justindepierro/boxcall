@@ -1,4 +1,5 @@
 import { Tooltip } from "../components/ui/Tooltip/Tooltip";
+import { colorTokens } from "../design-system/tokens";
 
 /**
  * Minimal tooltip test - inline on any page
@@ -15,7 +16,7 @@ export const MinimalTooltipTest = () => {
         <button
           style={{
             padding: "12px 24px",
-            backgroundColor: "#3b82f6",
+            backgroundColor: colorTokens.blue[500],
             color: "white",
             border: "none",
             borderRadius: "8px",
@@ -34,7 +35,7 @@ export const MinimalTooltipTest = () => {
         <button
           style={{
             padding: "12px 24px",
-            backgroundColor: "#10b981",
+            backgroundColor: colorTokens.emerald[500],
             color: "white",
             border: "none",
             borderRadius: "8px",
@@ -53,7 +54,7 @@ export const MinimalTooltipTest = () => {
         <button
           style={{
             padding: "12px 24px",
-            backgroundColor: "#f59e0b",
+            backgroundColor: colorTokens.amber[500],
             color: "white",
             border: "none",
             borderRadius: "8px",

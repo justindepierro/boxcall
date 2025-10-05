@@ -1,3 +1,5 @@
+import { colorTokens } from "../../../design-system/tokens";
+
 // Diagram Builder v2 core types (stable schema V1)
 export interface DiagramPlayer {
   id: string;
@@ -271,7 +273,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x,
         y: losY,
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       })),
       {
         id: "QB",
@@ -280,7 +282,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 50,
         y: qbY,
-        color: "#047857",
+        color: colorTokens.emerald[700],
       },
       // Running Back 4 yards behind QB
       {
@@ -290,7 +292,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 50,
         y: Math.min(99, qbY + 4 * scalePctPerYard),
-        color: "#92400e",
+        color: colorTokens.amber[800],
       },
       // Outside Receivers X (left) and Z (right)
       {
@@ -300,7 +302,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 25,
         y: losY + 2 * scalePctPerYard,
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
       {
         id: "Z",
@@ -309,7 +311,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 75,
         y: losY + 2 * scalePctPerYard,
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
       // Slot Receivers Y (left slot) and H (right slot)
       {
@@ -319,7 +321,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 38,
         y: losY + 1 * scalePctPerYard,
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       },
       {
         id: "H",
@@ -328,7 +330,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 62,
         y: losY + 1 * scalePctPerYard,
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       },
     ];
     return players;

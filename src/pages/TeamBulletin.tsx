@@ -36,6 +36,7 @@ import { CollaborationProvider } from "../components/collaboration/Collaboration
 import { TeamTrophyCaseModal } from "../components/team-dashboard/TeamTrophyCaseModal";
 import { SeasonStatsModal } from "../components/team-dashboard/SeasonStatsModal";
 import { TeamGoalsModal } from "../components/collaboration/TeamGoalsModal";
+import { colorTokens } from "../design-system/tokens";
 import { TeamVotesModal } from "../components/collaboration/TeamVotesModal";
 
 // Loading skeleton for collaboration widgets
@@ -82,7 +83,7 @@ const TeamBulletin: React.FC = React.memo(() => {
       id: teamId || "unknown",
       name: "BoxCall Dev Team",
       season: "2025-2026", // Default season
-      colors: { primary: "#00A86B", secondary: "#1E3A8A" },
+      colors: { primary: "#00A86B", secondary: colorTokens.blue[900] },
       logo: "eagle",
       record: { wins: 8, losses: 2 },
       nextGame: "Friday vs. Central Lions",
@@ -181,7 +182,7 @@ const TeamBulletin: React.FC = React.memo(() => {
             id: data.id,
             name: data.name,
             season: seasonDisplay,
-            colors: { primary: "#00A86B", secondary: "#1E3A8A" },
+            colors: { primary: "#00A86B", secondary: colorTokens.blue[900] },
             logo: "generic",
             record: { wins: 0, losses: 0 },
             nextGame: "TBD",

@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { colorTokens } from "../../design-system/tokens";
 
 export function AuthDebugPanel() {
   const [authState, setAuthState] = useState<{
@@ -57,7 +58,7 @@ export function AuthDebugPanel() {
         bottom: 20,
         right: 20,
         padding: "12px",
-        background: authState.hasSession ? "#10b981" : "#ef4444",
+        background: authState.hasSession ? colorTokens.emerald[500] : colorTokens.red[500],
         color: "white",
         borderRadius: "8px",
         fontSize: "12px",

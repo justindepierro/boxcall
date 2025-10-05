@@ -24,14 +24,14 @@ export const RoutePropertiesPanel: React.FC = () => {
   }
 
   const colorOptions = [
-    colorTokens.red[500],      // Red
-    colorTokens.blue[500],     // Blue
-    colorTokens.emerald[500],  // Green
-    colorTokens.amber[500],    // Yellow
-    colorTokens.purple[500],   // Purple
-    colorTokens.violet[400],   // Pink
-    colorTokens.gray[500],     // Gray
-    "#000000",                 // Black
+    colorTokens.red[500], // Red
+    colorTokens.blue[500], // Blue
+    colorTokens.emerald[500], // Green
+    colorTokens.amber[500], // Yellow
+    colorTokens.purple[500], // Purple
+    colorTokens.violet[400], // Pink
+    colorTokens.gray[500], // Gray
+    "#000000", // Black
   ];
 
   // Get the associated player for context

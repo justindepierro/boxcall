@@ -1,3 +1,5 @@
+import { colorTokens } from "../../../../design-system/tokens";
+
 // Diagram Builder v2 core types (stable schema V1)
 export interface DiagramPlayer {
   id: string;
@@ -283,7 +285,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x,
         y: losY,
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       })),
       {
         id: "QB",
@@ -292,7 +294,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: qbX,
         y: qbY,
-        color: "#047857",
+        color: colorTokens.emerald[700],
       },
       // Running Back to the right of QB
       {
@@ -302,7 +304,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: qbX + 8, // 8 units to the right of QB
         y: qbY,
-        color: "#92400e",
+        color: colorTokens.amber[800],
       },
       // Outside Receivers X (left) and Z (right) - personnel letters - wider and at LOS
       {
@@ -312,7 +314,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 15, // Wider out
         y: losY, // Aligned with ball/LOS
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
       {
         id: "Z",
@@ -321,7 +323,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 85, // Wider out
         y: losY, // Aligned with ball/LOS
-        color: "#2563eb",
+        color: colorTokens.blue[600],
       },
       // Slot Receivers Y (left slot) and H (right slot) - split difference between wideouts and OT
       {
@@ -331,7 +333,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 28, // Split between X(15) and LT(42)
         y: losY + 1 * scalePctPerYard, // Behind O line, in front of QB
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       },
       {
         id: "H",
@@ -340,7 +342,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
         side: "O" as const,
         x: 72, // Split between Z(85) and RT(58)
         y: losY + 1 * scalePctPerYard, // Behind O line, in front of QB
-        color: "#1e3a8a",
+        color: colorTokens.blue[900],
       },
     ];
     return players;

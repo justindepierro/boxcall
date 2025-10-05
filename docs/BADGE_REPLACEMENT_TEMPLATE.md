@@ -10,12 +10,12 @@
 
 ### Violations Found
 
-| Line | Code | Type | Issue |
-|------|------|------|-------|
-| 119 | `text-[11px]` | Arbitrary Typography | Hardcoded font size |
-| 119 | `min-h-[18px]` | Arbitrary Spacing | Hardcoded height |
-| 120 | `min-h-[22px]` | Arbitrary Spacing | Hardcoded height |
-| 121 | `min-h-[30px]` | Arbitrary Spacing | Hardcoded height |
+| Line | Code           | Type                 | Issue               |
+| ---- | -------------- | -------------------- | ------------------- |
+| 119  | `text-[11px]`  | Arbitrary Typography | Hardcoded font size |
+| 119  | `min-h-[18px]` | Arbitrary Spacing    | Hardcoded height    |
+| 120  | `min-h-[22px]` | Arbitrary Spacing    | Hardcoded height    |
+| 121  | `min-h-[30px]` | Arbitrary Spacing    | Hardcoded height    |
 
 **Total Violations**: 4
 
@@ -39,19 +39,22 @@ const sizeStyles = {
 **Context**: Used for small badge size
 
 **Available Options**:
+
 1. Use Tailwind's `text-xs` (12px) - closest standard size ✅ **CHOSEN**
 2. Create custom utility in Tailwind config
 3. Use CSS variable with our typography tokens
 
 **Decision**: ✅ Use `text-xs` (12px)
 
-**Reasoning**: 
+**Reasoning**:
+
 - Only 1px difference (11px → 12px) - visually negligible
 - Keeps token system standardized
 - Aligns with Tailwind's design philosophy
 - Reduces token complexity
 
-**Implementation**: 
+**Implementation**:
+
 ```tsx
 // BEFORE: "text-[11px]"
 // AFTER:  "text-xs"
@@ -67,23 +70,27 @@ const sizeStyles = {
 **Context**: Ensures consistent badge height across sizes
 
 **Available Options**:
+
 1. Use standard Tailwind height utilities (h-4, h-5, h-6, etc.) ✅ **CHOSEN**
 2. Create semantic spacing tokens for badge heights
 3. Use CSS variables with our spacing tokens
 
 **Standard Tailwind Heights**:
+
 - `h-4` = 16px (too small)
 - `h-5` = 20px (close to 18px) ✅ **+2px**
 - `h-6` = 24px (close to 22px) ✅ **+2px**
 - `h-7` = 28px (close to 30px) ✅ **-2px**
 - `h-8` = 32px (close to 30px) ✅ **+2px - CHOSEN**
 
-**Decision**: 
+**Decision**:
+
 - Small: `h-5` (20px instead of 18px) - **+2px**
 - Medium: `h-6` (24px instead of 22px) - **+2px**
 - Large: `h-8` (32px instead of 30px) - **+2px**
 
 **Reasoning**:
+
 - 2px differences are visually negligible
 - Standardizes on Tailwind's 4px spacing scale
 - Reduces token system complexity
@@ -91,19 +98,21 @@ const sizeStyles = {
 - Makes badges feel slightly more substantial (good for touch targets!)
 
 **Implementation**:
+
 ```tsx
-// BEFORE: 
-sm: "min-h-[18px]"
-md: "min-h-[22px]"
-lg: "min-h-[30px]"
+// BEFORE:
+sm: "min-h-[18px]";
+md: "min-h-[22px]";
+lg: "min-h-[30px]";
 
 // AFTER:
-sm: "h-5"  // 20px
-md: "h-6"  // 24px  
-lg: "h-8"  // 32px
+sm: "h-5"; // 20px
+md: "h-6"; // 24px
+lg: "h-8"; // 32px
 ```
 
-**Trade-offs**: 
+**Trade-offs**:
+
 - +2px on all sizes (18→20, 22→24, 30→32)
 - Better accessibility (slightly larger touch targets)
 - More consistent with 4px spacing rhythm
@@ -113,22 +122,26 @@ lg: "h-8"  // 32px
 ## 📝 Replacement Steps
 
 ### Step 1: Research Token Options
+
 - [ ] Check if typography tokens support 11px
 - [ ] Check if spacing tokens support these heights
 - [ ] Evaluate Tailwind standard alternatives
 - [ ] Document trade-offs
 
 ### Step 2: Make First Replacement
+
 - [ ] Choose replacement approach
 - [ ] Update code
 - [ ] Document reasoning
 
 ### Step 3: Test Component
+
 - [ ] Visual regression check
 - [ ] Type check passes
 - [ ] Component still renders correctly
 
 ### Step 4: Document Pattern
+
 - [ ] Create reusable pattern
 - [ ] Note edge cases
 - [ ] Document decision criteria
@@ -147,6 +160,7 @@ lg: "h-8"  // 32px
 ## 📊 Replacement Log
 
 ### Replacement 1: Font Size (text-[11px])
+
 - **Before**: `text-[11px]`
 - **After**: `text-xs`
 - **Change**: 11px → 12px (+1px)
@@ -154,6 +168,7 @@ lg: "h-8"  // 32px
 - **Test Result**: ✅ Visually identical, type-safe
 
 ### Replacement 2: Small Badge Height (min-h-[18px])
+
 - **Before**: `min-h-[18px]`
 - **After**: `h-5`
 - **Change**: 18px → 20px (+2px)
@@ -161,6 +176,7 @@ lg: "h-8"  // 32px
 - **Test Result**: ⏳ Pending visual check
 
 ### Replacement 3: Medium Badge Height (min-h-[22px])
+
 - **Before**: `min-h-[22px]`
 - **After**: `h-6`
 - **Change**: 22px → 24px (+2px)
@@ -168,6 +184,7 @@ lg: "h-8"  // 32px
 - **Test Result**: ⏳ Pending visual check
 
 ### Replacement 4: Large Badge Height (min-h-[30px])
+
 - **Before**: `min-h-[30px]`
 - **After**: `h-8`
 - **Change**: 30px → 32px (+2px)
@@ -219,6 +236,7 @@ lg: "h-8"  // 32px
 **When you see**: `text-[Xpx]`, `min-h-[Xpx]`, `w-[Xpx]`, etc.
 
 **Steps**:
+
 1. Find closest standard Tailwind utility
 2. Calculate pixel difference
 3. If difference ≤ 2px: Use standard utility
@@ -227,12 +245,13 @@ lg: "h-8"  // 32px
 6. Test visually
 
 **Code Pattern**:
+
 ```tsx
 // BEFORE: Arbitrary values
-className="text-[11px] min-h-[18px]"
+className = "text-[11px] min-h-[18px]";
 
 // AFTER: Standard utilities
-className="text-xs h-5"
+className = "text-xs h-5";
 
 // Result: +1px font, +2px height
 // Trade-off: Consistency > Precision
@@ -262,4 +281,3 @@ className="text-xs h-5"
 **Time Taken**: ~15 minutes  
 **Estimated Time per Component**: 10-20 minutes (now that we have pattern)  
 **Projected Time for 134 Files**: 22-45 hours (2-6 days with helper tool)
-

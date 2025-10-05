@@ -180,7 +180,7 @@ function getEventColor(type: string): string {
     case "game":
       return colorTokens.blue[900]; // Navy Blue
     case "practice":
-      return colorTokens.emerald[600]; // Jade Green  
+      return colorTokens.emerald[600]; // Jade Green
     case "meeting":
       return colorTokens.amber[500]; // Amber
     case "film":

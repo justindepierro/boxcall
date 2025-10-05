@@ -22,8 +22,8 @@ export const PDFColors = {
   accent: semantic.primary, // Unified with brand color
   // Semantic colors - using consistent system colors
   success: colorTokens.success[600], // "#16a34a"
-  warning: colorTokens.warning[600], // "#d97706"
-  error: colorTokens.error[600], // "#dc2626"
+  warning: colorTokens.warning[600], // colorTokens.amber[600]
+  error: colorTokens.error[600], // colorTokens.red[600]
   info: semantic.primary, // Use brand color for info
   // Neutral colors
   white: "#ffffff",
@@ -45,14 +45,14 @@ export const PDFColors = {
   fieldDark: "#16a34a",
   // Category colors (matches practice planner)
   categories: {
-    meeting: "#8b5cf6",
-    offense: "#ef4444",
-    defense: "#3b82f6",
-    "special-teams": "#f59e0b",
-    conditioning: "#10b981",
+    meeting: colorTokens.violet[500],
+    offense: colorTokens.red[500],
+    defense: colorTokens.blue[500],
+    "special-teams": colorTokens.amber[500],
+    conditioning: colorTokens.emerald[500],
     "weight-room": "#6366f1",
     transition: "#64748b",
-    break: "#06b6d4",
+    break: colorTokens.cyan[500],
   },
 };
 // Typography
