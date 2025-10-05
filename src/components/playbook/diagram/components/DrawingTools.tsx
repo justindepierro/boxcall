@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 import { useDiagramEditor } from "../context/useDiagramEditor";
 import type { Point } from "../engine/ShapeEngine";
 import {
@@ -87,14 +88,14 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
   ];
 
   const colorOptions = [
-    "#000000", // Black
-    "#ef4444", // Red
-    "#3b82f6", // Blue
-    "#10b981", // Green
-    "#f59e0b", // Yellow
-    "#8b5cf6", // Purple
-    "#ec4899", // Pink
-    "#6b7280", // Gray
+    "#000000",                 // Black
+    colorTokens.red[500],      // Red
+    colorTokens.blue[500],     // Blue
+    colorTokens.emerald[500],  // Green
+    colorTokens.amber[500],    // Yellow
+    colorTokens.purple[500],   // Purple
+    colorTokens.violet[400],   // Pink
+    colorTokens.gray[500],     // Gray
   ];
 
   const widthOptions = [1, 2, 3, 4, 5, 8, 12];
@@ -285,7 +286,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
           Color:{" "}
           <span
             className="inline-block w-3 h-3 rounded border border-border"
-            style={{ backgroundColor: state.ui.drawColor || "#000000" }}
+            style={{ backgroundColor: state.ui.drawColor || colorTokens.gray[900] }}
           />
         </div>
         <div>Width: {state.ui.drawWidth || 2}px</div>
