@@ -1,5 +1,6 @@
 import { FieldCanvasContext } from "./FieldCanvasContextInstance";
 import React, { useReducer, useRef, useState } from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 // Only types and provider are exported from this file. Context instance is imported from FieldCanvasContextInstance.ts
 
 // Define initial state shape
@@ -88,7 +89,7 @@ const initialState: FieldCanvasState = {
         y: 100,
         width: 120,
         height: 80,
-        color: "#e0e7ff",
+        color: colorTokens.blue[100],
       },
       {
         type: "circle",
@@ -96,10 +97,10 @@ const initialState: FieldCanvasState = {
         y: 200,
         width: 60,
         height: 60,
-        color: "#fbbf24",
+        color: colorTokens.amber[400],
       },
     ],
-    lines: [{ x1: 150, y1: 140, x2: 360, y2: 230, color: "#2563eb" }],
+    lines: [{ x1: 150, y1: 140, x2: 360, y2: 230, color: colorTokens.blue[600] }],
   },
 };
 

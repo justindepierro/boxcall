@@ -1,5 +1,6 @@
 import React from "react";
 import { useFieldCanvas } from "./useFieldCanvas";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const ZoomPan: React.FC = () => {
   const { state } = useFieldCanvas();
@@ -46,7 +47,7 @@ export const ZoomPan: React.FC = () => {
               y={0}
               width={MINI_W}
               height={MINI_W * 0.5625}
-              fill="#064e3b"
+              fill={colorTokens.emerald[900]}
               opacity={0.6}
             />
             <rect
@@ -55,7 +56,7 @@ export const ZoomPan: React.FC = () => {
               width={rw}
               height={rh}
               fill="none"
-              stroke="#10b981"
+              stroke={colorTokens.emerald[500]}
               strokeWidth={2}
             />
           </g>
