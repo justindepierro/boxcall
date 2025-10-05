@@ -9,6 +9,7 @@
 Visual regression testing automatically detects unintended visual changes in your UI by comparing screenshots before and after code changes.
 
 **What we test:**
+
 - ✅ Critical pages (homepage, login, dashboard, etc.)
 - ✅ Key components (nav, cards, forms)
 - ✅ Responsive layouts (mobile, tablet, desktop)
@@ -60,6 +61,7 @@ npm run test:e2e:report
 ### 1. Baseline Screenshots
 
 First run creates baseline screenshots stored in:
+
 ```
 tests/e2e/visual-regression.spec.ts-snapshots/
 ├── chromium/
@@ -74,6 +76,7 @@ tests/e2e/visual-regression.spec.ts-snapshots/
 ### 2. Comparison
 
 Subsequent runs compare current screenshots against baselines:
+
 - ✅ **Pass**: Visual differences below threshold (1%)
 - ❌ **Fail**: Visual differences exceed threshold
 - 📊 **Diff images** generated showing differences
@@ -81,6 +84,7 @@ Subsequent runs compare current screenshots against baselines:
 ### 3. Review & Update
 
 When intentional changes are made:
+
 1. Review diff images in test report
 2. Update baselines if changes are correct:
    ```bash
@@ -95,13 +99,13 @@ When intentional changes are made:
 ### Basic Page Test
 
 ```typescript
-test('Homepage renders correctly', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  
-  await expect(page).toHaveScreenshot('homepage.png', {
+test("Homepage renders correctly", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  await expect(page).toHaveScreenshot("homepage.png", {
     fullPage: true,
-    animations: 'disabled',
+    animations: "disabled",
   });
 });
 ```
@@ -109,12 +113,12 @@ test('Homepage renders correctly', async ({ page }) => {
 ### Component Test
 
 ```typescript
-test('Navigation header renders correctly', async ({ page }) => {
-  await page.goto('/dashboard');
-  
-  const header = page.locator('header').first();
-  await expect(header).toHaveScreenshot('nav-header.png', {
-    animations: 'disabled',
+test("Navigation header renders correctly", async ({ page }) => {
+  await page.goto("/dashboard");
+
+  const header = page.locator("header").first();
+  await expect(header).toHaveScreenshot("nav-header.png", {
+    animations: "disabled",
   });
 });
 ```
@@ -122,11 +126,11 @@ test('Navigation header renders correctly', async ({ page }) => {
 ### Responsive Test
 
 ```typescript
-test('Homepage mobile view', async ({ page }) => {
+test("Homepage mobile view", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
-  await page.goto('/');
-  
-  await expect(page).toHaveScreenshot('homepage-mobile.png', {
+  await page.goto("/");
+
+  await expect(page).toHaveScreenshot("homepage-mobile.png", {
     fullPage: true,
   });
 });
@@ -135,11 +139,11 @@ test('Homepage mobile view', async ({ page }) => {
 ### Dark Mode Test
 
 ```typescript
-test('Dashboard in dark mode', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'dark' });
-  await page.goto('/dashboard');
-  
-  await expect(page).toHaveScreenshot('dashboard-dark.png');
+test("Dashboard in dark mode", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/dashboard");
+
+  await expect(page).toHaveScreenshot("dashboard-dark.png");
 });
 ```
 
@@ -166,9 +170,9 @@ expect: {
 For pages with dynamic content:
 
 ```typescript
-await expect(page).toHaveScreenshot('dynamic-page.png', {
-  maxDiffPixelRatio: 0.05,  // Allow 5% difference
-  threshold: 0.3,            // More lenient pixel comparison
+await expect(page).toHaveScreenshot("dynamic-page.png", {
+  maxDiffPixelRatio: 0.05, // Allow 5% difference
+  threshold: 0.3, // More lenient pixel comparison
 });
 ```
 
@@ -177,11 +181,8 @@ await expect(page).toHaveScreenshot('dynamic-page.png', {
 For timestamps, user data, etc.:
 
 ```typescript
-await expect(page).toHaveScreenshot('page.png', {
-  mask: [
-    page.locator('.timestamp'),
-    page.locator('.user-avatar'),
-  ],
+await expect(page).toHaveScreenshot("page.png", {
+  mask: [page.locator(".timestamp"), page.locator(".user-avatar")],
 });
 ```
 
@@ -196,7 +197,7 @@ Visual tests run automatically in CI:
 ```yaml
 - name: Run visual regression tests
   run: npm run test:visual
-  
+
 - name: Upload visual diff artifacts
   if: failure()
   uses: actions/upload-artifact@v4
@@ -208,6 +209,7 @@ Visual tests run automatically in CI:
 ### Baseline Management
 
 **Committing baselines:**
+
 ```bash
 # After generating baselines
 git add tests/e2e/visual-regression.spec.ts-snapshots/
@@ -216,6 +218,7 @@ git push
 ```
 
 **When baselines diverge:**
+
 - Different OS/browsers may generate slightly different screenshots
 - Use consistent CI environment (Linux in GitHub Actions)
 - Store separate baselines per platform if needed
@@ -229,7 +232,7 @@ git push
 Always wait for content to load:
 
 ```typescript
-await page.waitForLoadState('networkidle');
+await page.waitForLoadState("networkidle");
 await page.waitForTimeout(1000); // For animations
 ```
 
@@ -238,14 +241,15 @@ await page.waitForTimeout(1000); // For animations
 Prevents flaky tests due to mid-animation captures:
 
 ```typescript
-await expect(page).toHaveScreenshot('page.png', {
-  animations: 'disabled',
+await expect(page).toHaveScreenshot("page.png", {
+  animations: "disabled",
 });
 ```
 
 ### 3. Test Critical Paths Only
 
 Don't screenshot everything - focus on:
+
 - User-facing pages (home, login, dashboard)
 - Critical components (nav, cards, forms)
 - Mobile/responsive layouts
@@ -257,21 +261,21 @@ Avoid full-page screenshots when testing specific components:
 
 ```typescript
 // ❌ Bad: Full page for small component
-await expect(page).toHaveScreenshot('button.png', { fullPage: true });
+await expect(page).toHaveScreenshot("button.png", { fullPage: true });
 
 // ✅ Good: Just the component
-const button = page.locator('button.primary').first();
-await expect(button).toHaveScreenshot('button.png');
+const button = page.locator("button.primary").first();
+await expect(button).toHaveScreenshot("button.png");
 ```
 
 ### 5. Use Descriptive Names
 
 ```typescript
 // ❌ Bad
-await expect(page).toHaveScreenshot('test1.png');
+await expect(page).toHaveScreenshot("test1.png");
 
 // ✅ Good
-await expect(page).toHaveScreenshot('homepage-logged-out.png');
+await expect(page).toHaveScreenshot("homepage-logged-out.png");
 ```
 
 ---
@@ -283,6 +287,7 @@ await expect(page).toHaveScreenshot('homepage-logged-out.png');
 **Cause**: Different rendering between macOS/Windows/Linux
 
 **Solution**:
+
 ```bash
 # Generate baselines in Docker (matches CI)
 docker run --rm -v $(pwd):/work -w /work mcr.microsoft.com/playwright:latest npx playwright test visual-regression.spec.ts --update-snapshots
@@ -293,29 +298,34 @@ docker run --rm -v $(pwd):/work -w /work mcr.microsoft.com/playwright:latest npx
 **Symptoms**: Tests randomly fail/pass
 
 **Solutions**:
+
 1. Increase wait times:
+
    ```typescript
    await page.waitForTimeout(2000);
    ```
 
 2. Mask dynamic content:
+
    ```typescript
-   mask: [page.locator('.timestamp')]
+   mask: [page.locator(".timestamp")];
    ```
 
 3. Increase threshold:
    ```typescript
-   maxDiffPixelRatio: 0.02  // 2% instead of 1%
+   maxDiffPixelRatio: 0.02; // 2% instead of 1%
    ```
 
 ### Issue: Large Screenshot Diffs
 
 **When to update baselines:**
+
 - ✅ Intentional design changes
 - ✅ Updated dependencies (fonts, icons)
 - ✅ Improved layouts
 
 **When NOT to update:**
+
 - ❌ Unexpected visual regressions
 - ❌ Broken layouts
 - ❌ Missing content
@@ -328,28 +338,30 @@ Always review diffs before updating!
 
 ### Current Coverage
 
-| Category | Tests | Viewports | Total Scenarios |
-|----------|-------|-----------|-----------------|
-| Public Pages | 3 | Desktop | 3 |
-| Auth Pages | 4 | Desktop | 4 |
-| Components | 3 | Desktop | 3 |
-| Responsive | 3 | Mobile/Tablet | 3 |
-| Dark Mode | 2 | Desktop | 2 |
-| **Total** | **15** | **Various** | **15** |
+| Category     | Tests  | Viewports     | Total Scenarios |
+| ------------ | ------ | ------------- | --------------- |
+| Public Pages | 3      | Desktop       | 3               |
+| Auth Pages   | 4      | Desktop       | 4               |
+| Components   | 3      | Desktop       | 3               |
+| Responsive   | 3      | Mobile/Tablet | 3               |
+| Dark Mode    | 2      | Desktop       | 2               |
+| **Total**    | **15** | **Various**   | **15**          |
 
 ### Adding New Tests
 
 When adding new pages/components:
 
 1. Add test to `visual-regression.spec.ts`:
+
    ```typescript
-   test('New feature renders correctly', async ({ page }) => {
-     await page.goto('/new-feature');
-     await expect(page).toHaveScreenshot('new-feature.png');
+   test("New feature renders correctly", async ({ page }) => {
+     await page.goto("/new-feature");
+     await expect(page).toHaveScreenshot("new-feature.png");
    });
    ```
 
 2. Generate baseline:
+
    ```bash
    npm run test:visual:update
    ```
@@ -394,12 +406,14 @@ npm run test:e2e:report
 ## ✅ Checklist
 
 ### Initial Setup
+
 - [x] Playwright configured for visual testing
 - [x] Test suite created (`visual-regression.spec.ts`)
 - [x] npm scripts added
 - [x] Documentation created
 
 ### Before Committing Changes
+
 - [ ] Run visual tests: `npm run test:visual`
 - [ ] Review any failures in HTML report
 - [ ] Update baselines if changes are intentional
@@ -407,6 +421,7 @@ npm run test:e2e:report
 - [ ] Verify tests pass in CI
 
 ### Adding New Features
+
 - [ ] Add visual tests for new pages/components
 - [ ] Generate baselines
 - [ ] Test responsive layouts

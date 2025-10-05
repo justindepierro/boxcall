@@ -9,6 +9,7 @@
 Automated daily database backups with verification, S3 storage, and Slack notifications.
 
 **Features**:
+
 - ✅ Daily automated backups (2 AM UTC)
 - ✅ Integrity verification before upload
 - ✅ S3 storage with encryption (AES-256)
@@ -62,6 +63,7 @@ aws s3api put-bucket-encryption \
 ```
 
 **Via Console**:
+
 1. Select bucket → Properties
 2. Default encryption → Edit
 3. Server-side encryption: Amazon S3-managed keys (SSE-S3)
@@ -76,6 +78,7 @@ aws s3api put-bucket-versioning \
 ```
 
 **Via Console**:
+
 1. Select bucket → Properties
 2. Bucket Versioning → Edit
 3. Enable
@@ -118,6 +121,7 @@ aws s3api put-bucket-lifecycle-configuration \
 ```
 
 **Via Console**:
+
 1. Select bucket → Management
 2. Lifecycle rules → Create lifecycle rule
 3. Rule name: "DeleteOldBackups"
@@ -136,6 +140,7 @@ aws iam create-user --user-name github-actions-backup
 ```
 
 **Via Console**:
+
 1. IAM → Users → Create user
 2. User name: `github-actions-backup`
 3. No console access needed
@@ -181,6 +186,7 @@ aws iam attach-user-policy \
 ```
 
 **Via Console**:
+
 1. IAM → Policies → Create policy
 2. JSON tab → Paste policy above
 3. Name: `GitHubActionsBackupPolicy`
@@ -197,10 +203,12 @@ aws iam create-access-key --user-name github-actions-backup
 ```
 
 **Save the output!** You'll need:
+
 - `AccessKeyId`
 - `SecretAccessKey`
 
 **Via Console**:
+
 1. IAM → Users → github-actions-backup
 2. Security credentials → Create access key
 3. Use case: Application running outside AWS
@@ -215,17 +223,17 @@ Go to: `https://github.com/justindepierro/boxcall/settings/secrets/actions`
 
 ### Required Secrets
 
-| Secret Name | Value | Description |
-|-------------|-------|-------------|
-| `VITE_SUPABASE_URL` | `https://your-project.supabase.co` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` | Service role key (from Supabase dashboard) |
-| `AWS_ACCESS_KEY_ID` | `AKIA...` | From Step 2.3 |
-| `AWS_SECRET_ACCESS_KEY` | `wJa...` | From Step 2.3 |
+| Secret Name                 | Value                              | Description                                |
+| --------------------------- | ---------------------------------- | ------------------------------------------ |
+| `VITE_SUPABASE_URL`         | `https://your-project.supabase.co` | Supabase project URL                       |
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...`                           | Service role key (from Supabase dashboard) |
+| `AWS_ACCESS_KEY_ID`         | `AKIA...`                          | From Step 2.3                              |
+| `AWS_SECRET_ACCESS_KEY`     | `wJa...`                           | From Step 2.3                              |
 
 ### Optional Secrets
 
-| Secret Name | Value | Description |
-|-------------|-------|-------------|
+| Secret Name         | Value                                  | Description       |
+| ------------------- | -------------------------------------- | ----------------- |
 | `SLACK_WEBHOOK_URL` | `https://hooks.slack.com/services/...` | For notifications |
 
 ### Adding Secrets
@@ -273,6 +281,7 @@ Go to: `https://github.com/justindepierro/boxcall/settings/secrets/actions`
 ### 5.2 Verify Success
 
 **Check GitHub Actions**:
+
 ```
 ✅ Checkout repository
 ✅ Setup Node.js
@@ -286,17 +295,20 @@ Go to: `https://github.com/justindepierro/boxcall/settings/secrets/actions`
 ```
 
 **Check S3**:
+
 ```bash
 aws s3 ls s3://boxcall-backups/database/
 ```
 
 Expected output:
+
 ```
 2025-01-09 02:05:23    1234567 boxcall-backup-2025-01-09T02-05-20.json
 ```
 
 **Check Slack** (if configured):
 You should see a message like:
+
 > ✅ **Database Backup Successful**  
 > Backup: `boxcall-backup-2025-01-09T02-05-20.json`  
 > Time: Jan 9, 2025 at 2:05 AM
@@ -304,6 +316,7 @@ You should see a message like:
 ### 5.3 Test Failure Handling
 
 To test failure notifications:
+
 1. Temporarily remove one of the secrets
 2. Trigger workflow manually
 3. Verify failure notification sent
@@ -316,6 +329,7 @@ To test failure notifications:
 ### Schedule
 
 The workflow runs **daily at 2:00 AM UTC**:
+
 - **PST**: 6:00 PM previous day (winter)
 - **PDT**: 7:00 PM previous day (summer)
 - **EST**: 9:00 PM previous day (winter)
@@ -324,12 +338,14 @@ The workflow runs **daily at 2:00 AM UTC**:
 ### Monitoring
 
 **First 7 Days**:
+
 - Check GitHub Actions tab daily
 - Verify S3 uploads
 - Monitor Slack notifications
 - Review backup file sizes
 
 **After 7 Days**:
+
 - Weekly spot checks
 - Monthly review of S3 costs
 - Quarterly test restore
@@ -341,12 +357,14 @@ The workflow runs **daily at 2:00 AM UTC**:
 ### Issue: Workflow Fails at "Run database backup"
 
 **Symptoms**:
+
 ```
 Error: Missing required environment variables
 Required: VITE_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 ```
 
 **Solution**:
+
 1. Verify secrets are set in GitHub
 2. Check secret names match exactly (case-sensitive)
 3. Ensure `SUPABASE_SERVICE_ROLE_KEY` not `SUPABASE_SERVICE_KEY`
@@ -354,11 +372,13 @@ Required: VITE_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 ### Issue: S3 Upload Fails
 
 **Symptoms**:
+
 ```
 error: Unable to locate credentials
 ```
 
 **Solution**:
+
 1. Verify AWS secrets are set
 2. Check IAM policy is attached to user
 3. Verify bucket name matches workflow
@@ -370,6 +390,7 @@ error: Unable to locate credentials
 No message in Slack after backup
 
 **Solution**:
+
 1. Check `SLACK_WEBHOOK_URL` secret is set
 2. Test webhook manually:
    ```bash
@@ -383,11 +404,13 @@ No message in Slack after backup
 ### Issue: Backup File Size is 0
 
 **Symptoms**:
+
 ```
 Backup created but verify fails: No data
 ```
 
 **Solution**:
+
 1. Check Supabase service role key has read permissions
 2. Verify RLS policies allow service role
 3. Test script locally:
@@ -431,11 +454,13 @@ Backup created but verify fails: No data
 ### AWS S3 Costs
 
 **Assumptions**:
+
 - Backup size: 50 MB (compressed)
 - Daily backups: 30 per month
 - Storage: 30-day retention
 
 **Monthly Costs** (us-east-1):
+
 - Storage: 1.5 GB × $0.023/GB = **$0.03**
 - PUT requests: 30 × $0.005/1000 = **$0.0002**
 - GET requests: ~10 × $0.0004/1000 = **$0.00004**

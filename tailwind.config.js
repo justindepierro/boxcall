@@ -560,6 +560,18 @@ export default {
         18: "4.5rem", // 72px - legacy
         88: "22rem", // 352px - legacy
         128: "32rem", // 512px - legacy
+
+        // ============================================
+        // SEMANTIC SPACING TOKENS - Design System
+        // ============================================
+        // Consistent naming for common spacing patterns
+        "spacing-xs": "var(--space-2)", // 8px - minimum spacing
+        "spacing-sm": "var(--space-3)", // 12px - compact spacing
+        "spacing-md": "var(--space-4)", // 16px - comfortable spacing (default)
+        "spacing-lg": "var(--space-6)", // 24px - spacious section spacing
+        "spacing-xl": "var(--space-8)", // 32px - large section spacing
+        "spacing-2xl": "var(--space-12)", // 48px - page section spacing
+        "spacing-3xl": "var(--space-16)", // 64px - hero spacing
       },
 
       animation: {
@@ -646,6 +658,34 @@ export default {
 
       backdropBlur: {
         xs: "2px",
+      },
+
+      // ============================================
+      // Z-INDEX SCALE - Design System Stacking Context
+      // ============================================
+      // Establishes proper layering hierarchy across all components
+      // Prevents z-index conflicts and ensures predictable stacking
+      zIndex: {
+        auto: "auto",
+        0: "0",
+        10: "10",
+        20: "20",
+        30: "30",
+        40: "40",
+        50: "50",
+        // Semantic z-index values (preferred)
+        base: "0", // Default layer
+        dropdown: "40", // Dropdowns and select menus
+        sticky: "45", // Sticky headers/footers
+        modal: "50", // Modal dialogs
+        popover: "50", // Popovers (same as modal)
+        toast: "55", // Toast notifications (above modals)
+        tooltip: "60", // Tooltips (always on top)
+        // Legacy values (for backwards compatibility)
+        negative: "-1",
+        1: "1",
+        999: "999",
+        9999: "9999",
       },
 
       // ============================================

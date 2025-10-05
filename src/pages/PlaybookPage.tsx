@@ -183,12 +183,14 @@ export default function PlaybookPage() {
     const loadActivities = async () => {
       try {
         // Only load activities if user is authenticated
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) {
           debug("Skipping activities load - user not authenticated yet");
           return;
         }
-        
+
         const activities = await ActivityService.getRecentActivities(
           activeTeamId || undefined,
           10

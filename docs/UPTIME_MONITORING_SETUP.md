@@ -9,6 +9,7 @@
 Professional uptime monitoring with real-time alerts and public status page.
 
 **Features**:
+
 - ✅ Free tier (50 monitors, 5-minute intervals)
 - ✅ Multiple monitor types (HTTP, Ping, Keyword)
 - ✅ SMS, Email, Slack, webhook alerts
@@ -41,6 +42,7 @@ Professional uptime monitoring with real-time alerts and public status page.
 ### 1.2 Upgrade to Pro (Optional)
 
 **Free Tier Includes**:
+
 - 50 monitors
 - 5-minute checks
 - Email/SMS/Slack alerts
@@ -48,6 +50,7 @@ Professional uptime monitoring with real-time alerts and public status page.
 - 10 status pages
 
 **Pro Tier ($7/month)**:
+
 - 1-minute checks
 - Unlimited alerts
 - 12-month logs
@@ -66,6 +69,7 @@ Professional uptime monitoring with real-time alerts and public status page.
 Click "+ Add New Monitor"
 
 **Settings**:
+
 ```
 Monitor Type: HTTP(s)
 Friendly Name: BoxCall - Health Check
@@ -75,6 +79,7 @@ Monitor Timeout: 30 seconds
 ```
 
 **Advanced Settings**:
+
 ```
 Alert when:
   ☑ Down
@@ -104,6 +109,7 @@ Keyword Monitoring:
 Click "+ Add New Monitor"
 
 **Settings**:
+
 ```
 Monitor Type: HTTP(s)
 Friendly Name: BoxCall - Ready
@@ -113,6 +119,7 @@ Monitor Timeout: 15 seconds
 ```
 
 **Advanced Settings**:
+
 ```
 Alert when:
   ☑ Down
@@ -135,6 +142,7 @@ Keyword Monitoring:
 Click "+ Add New Monitor"
 
 **Settings**:
+
 ```
 Monitor Type: HTTP(s)
 Friendly Name: BoxCall - Live
@@ -144,6 +152,7 @@ Monitor Timeout: 10 seconds
 ```
 
 **Advanced Settings**:
+
 ```
 Alert when:
   ☑ Down
@@ -166,6 +175,7 @@ Keyword Monitoring:
 Click "+ Add New Monitor"
 
 **Settings**:
+
 ```
 Monitor Type: HTTP(s)
 Friendly Name: BoxCall - Homepage
@@ -175,6 +185,7 @@ Monitor Timeout: 30 seconds
 ```
 
 **Advanced Settings**:
+
 ```
 Alert when:
   ☑ Down
@@ -198,6 +209,7 @@ Keyword Monitoring:
 Click "+ Add New Monitor"
 
 **Settings**:
+
 ```
 Monitor Type: HTTP(s)
 Friendly Name: BoxCall - Performance
@@ -207,6 +219,7 @@ Monitor Timeout: 30 seconds
 ```
 
 **Advanced Settings**:
+
 ```
 Alert when:
   ☑ Down
@@ -225,6 +238,7 @@ HTTP Expected Status Code: 200
 **Already configured** with your account email.
 
 **Settings**:
+
 - Click Settings → Alert Contacts
 - Your email is added automatically
 - Configure notifications:
@@ -237,6 +251,7 @@ HTTP Expected Status Code: 200
 ### 3.2 Slack Alerts (Recommended)
 
 **Setup**:
+
 1. In Uptime Robot: Settings → Alert Contacts
 2. Click "+ Add Alert Contact"
 3. Select "Slack"
@@ -246,6 +261,7 @@ HTTP Expected Status Code: 200
 7. Allow
 
 **Configure**:
+
 ```
 Contact Type: Slack
 Friendly Name: DevOps Alerts
@@ -259,6 +275,7 @@ Send alerts for:
 ```
 
 **Test**:
+
 1. Go to Dashboard
 2. Find any monitor
 3. Click "..." → "Pause Monitoring"
@@ -274,6 +291,7 @@ Send alerts for:
 **Pro Tier**: Unlimited SMS
 
 **Setup**:
+
 1. Settings → Alert Contacts
 2. "+ Add Alert Contact"
 3. Select "SMS"
@@ -290,6 +308,7 @@ Send alerts for:
 For integration with PagerDuty, Opsgenie, or custom systems.
 
 **Setup**:
+
 1. Settings → Alert Contacts
 2. "+ Add Alert Contact"
 3. Select "Webhook"
@@ -297,6 +316,7 @@ For integration with PagerDuty, Opsgenie, or custom systems.
 5. Configure POST data
 
 **Example for PagerDuty**:
+
 ```
 URL: https://events.pagerduty.com/v2/enqueue
 POST Value: {
@@ -328,6 +348,7 @@ Status Page URL: boxcall-status (becomes boxcall-status.uptimerobot.com)
 ### 4.2 Configure Monitors
 
 **Select monitors to display**:
+
 - ☑ BoxCall - Health Check
 - ☑ BoxCall - Homepage
 - ☑ BoxCall - Performance
@@ -337,6 +358,7 @@ Status Page URL: boxcall-status (becomes boxcall-status.uptimerobot.com)
 ### 4.3 Customize Appearance
 
 **Design Tab**:
+
 ```
 Header: BoxCall System Status
 Logo: (upload boxcall-logo.png)
@@ -355,6 +377,7 @@ Colors:
 ```
 
 **Announcement**:
+
 ```
 Welcome to BoxCall Status Page
 Real-time monitoring of our services and systems.
@@ -398,6 +421,7 @@ Email Subscriptions:
 ### 5.1 Verify All Monitors are Up
 
 Go to Dashboard and check:
+
 ```
 ✅ BoxCall - Health Check (Up - 100%)
 ✅ BoxCall - Ready (Up - 100%)
@@ -409,6 +433,7 @@ Go to Dashboard and check:
 ### 5.2 Test Alert Flow
 
 **Method 1: Pause Monitor**
+
 1. Select any monitor
 2. Click "..." → "Pause Monitoring"
 3. Wait 30 seconds
@@ -417,6 +442,7 @@ Go to Dashboard and check:
 6. Verify recovery alert received
 
 **Method 2: Temporarily Break Endpoint** (more realistic)
+
 1. Deploy a test change that breaks `/health`
 2. Wait for monitor to detect
 3. Verify alerts received
@@ -467,12 +493,14 @@ Go to Dashboard and check:
 ### Issue: Monitor Shows "Down" but Site Works
 
 **Causes**:
+
 - Keyword not found in response
 - Timeout too short
 - SSL certificate issue
 - Geographic check location issue
 
 **Solutions**:
+
 1. Check monitor logs for specific error
 2. Test endpoint manually:
    ```bash
@@ -488,6 +516,7 @@ Go to Dashboard and check:
 Monitor goes down for 30 seconds, then recovers
 
 **Solutions**:
+
 1. Enable "Seems Down" instead of immediate "Down"
 2. Increase check interval to 5 minutes
 3. Increase timeout to 30 seconds
@@ -499,6 +528,7 @@ Monitor goes down for 30 seconds, then recovers
 Monitor shows down but no alert
 
 **Solutions**:
+
 1. Verify alert contact is active
 2. Check spam/junk folder (email)
 3. Test alert contact manually
@@ -511,6 +541,7 @@ Monitor shows down but no alert
 Monitor is up but status page shows old data
 
 **Solutions**:
+
 1. Refresh page (Ctrl+F5)
 2. Check if monitor is included in status page
 3. Verify status page is published
@@ -523,6 +554,7 @@ Monitor is up but status page shows old data
 ### Free Tier
 
 **Included**:
+
 - 50 monitors
 - 5-minute intervals
 - Unlimited alert contacts
@@ -537,6 +569,7 @@ Monitor is up but status page shows old data
 ### Pro Tier ($7/month)
 
 **Additional Features**:
+
 - 1-minute intervals
 - Advanced notifications
 - 12-month logs
@@ -546,11 +579,13 @@ Monitor is up but status page shows old data
 **Cost**: **$84/year**
 
 **Worth it if**:
+
 - Need faster detection (1 min vs 5 min)
 - Require longer historical data
 - Need multi-location redundancy
 
 **Recommendation**: Start with free, upgrade if you experience:
+
 - Frequent 5-minute outages you want to catch faster
 - Need historical data beyond 2 months
 - Require SLA reporting
@@ -561,29 +596,29 @@ Monitor is up but status page shows old data
 
 ### Uptime Targets
 
-| Service | Target | Alert Threshold |
-|---------|--------|-----------------|
-| Health Check | 99.9% | < 99.5% |
-| Homepage | 99.9% | < 99.5% |
-| API Performance | 99.5% | < 99.0% |
+| Service         | Target | Alert Threshold |
+| --------------- | ------ | --------------- |
+| Health Check    | 99.9%  | < 99.5%         |
+| Homepage        | 99.9%  | < 99.5%         |
+| API Performance | 99.5%  | < 99.0%         |
 
 ### Response Time Targets
 
-| Endpoint | Target | Alert Threshold |
-|----------|--------|-----------------|
-| /health | < 500ms | > 2000ms |
-| /ready | < 300ms | > 1000ms |
-| /live | < 200ms | > 500ms |
-| Homepage | < 1000ms | > 3000ms |
+| Endpoint | Target   | Alert Threshold |
+| -------- | -------- | --------------- |
+| /health  | < 500ms  | > 2000ms        |
+| /ready   | < 300ms  | > 1000ms        |
+| /live    | < 200ms  | > 500ms         |
+| Homepage | < 1000ms | > 3000ms        |
 
 ### Alert Response Time
 
 | Severity | Response Time | Resolution Time |
-|----------|---------------|-----------------|
-| Critical | < 5 minutes | < 30 minutes |
-| High | < 15 minutes | < 2 hours |
-| Medium | < 1 hour | < 24 hours |
-| Low | < 4 hours | < 3 days |
+| -------- | ------------- | --------------- |
+| Critical | < 5 minutes   | < 30 minutes    |
+| High     | < 15 minutes  | < 2 hours       |
+| Medium   | < 1 hour      | < 24 hours      |
+| Low      | < 4 hours     | < 3 days        |
 
 ---
 
@@ -640,6 +675,7 @@ Add uptime status to README:
 ### Slack Commands
 
 Create custom slash commands:
+
 - `/status` - Quick uptime check
 - `/incidents` - Recent incidents
 - `/perf` - Performance metrics
@@ -647,6 +683,7 @@ Create custom slash commands:
 ### PagerDuty (Optional)
 
 For 24/7 on-call rotation:
+
 1. Create PagerDuty service
 2. Get integration key
 3. Add webhook alert contact in Uptime Robot
