@@ -1,6 +1,6 @@
 # Design Token Audit Report
 
-**Generated**: 2025-10-05T20:29:01.905Z  
+**Generated**: 2025-10-05T20:31:25.808Z  
 **Total Violations**: 559
 
 ---
