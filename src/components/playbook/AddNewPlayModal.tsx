@@ -338,7 +338,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       title={existingPlay ? "Edit Play" : "Create New Play"}
       size="lg"
       footer={
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-spacing-sm">
           <Button
             type="button"
             variant="secondary"
@@ -363,7 +363,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               <>
                 <Icon
                   name={existingPlay ? "edit" : "plus"}
-                  className="h-4 w-4 mr-2"
+                  className="h-4 w-4 mr-spacing-xs"
                 />
                 {existingPlay ? "Update Play" : "Create Play"}
               </>
@@ -372,9 +372,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         </div>
       }
     >
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-surface-secondary rounded-lg">
+      <div className="space-y-spacing-lg">
+        <div className="flex items-center gap-spacing-sm mb-spacing-lg">
+          <div className="p-spacing-xs bg-surface-secondary rounded-lg">
             <Icon name="plus" className="h-6 w-6 text-text-primary" />
           </div>
           <div>
@@ -648,10 +648,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
           {/* Play Type */}
           <div>
-            <Typography variant="label-md" className="block mb-3">
+            <Typography variant="label-md" className="block mb-spacing-sm">
               Play Type
             </Typography>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-spacing-xs">
               {["Run", "Pass", "RPO", "Screen", "Boot"].map((type) => (
                 <Button
                   key={type}
