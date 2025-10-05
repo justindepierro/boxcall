@@ -382,7 +382,7 @@ export const PlayerSidebar: React.FC = () => {
                             <option value="">Auto</option>
                             {[
                               "#ffffff",
-                              "#f8fafc",
+                              "colorTokens.slate[50]",
                               colorTokens.gray[800],
                               colorTokens.gray[900],
                               "#000000",
@@ -636,7 +636,7 @@ export const PlayerSidebar: React.FC = () => {
                           <option value="">Auto</option>
                           {[
                             "#ffffff",
-                            "#f8fafc",
+                            "colorTokens.slate[50]",
                             colorTokens.gray[800],
                             colorTokens.gray[900],
                             "#000000",

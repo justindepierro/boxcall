@@ -19,6 +19,7 @@ import { AppHeader } from "./AppHeader";
 import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
+import { colorTokens } from "../../design-system/tokens";
 
 const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
 
@@ -125,7 +126,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     document.body.setAttribute("data-density", uiDensity);
   }
   return (
-    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-text-primary dark:via-text-primary dark:to-text-secondary bg-fixed relative before:pointer-events-none before:absolute before:inset-0 before:opacity-[0.03] before:bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]">
+    <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,colorTokens.jade[50],colorTokens.emerald[50])] dark:bg-gradient-to-br dark:from-text-primary dark:via-text-primary dark:to-text-secondary bg-fixed relative before:pointer-events-none before:absolute before:inset-0 before:opacity-[0.03] before:bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]">
       {/* App Header */}
       <AppHeader onMenuToggle={() => toggleSidebar()} />
 

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: "#64748b",
+    color: "colorTokens.slate[500]",
     marginBottom: 8,
   },
   meta: {
@@ -51,10 +51,10 @@ const styles = StyleSheet.create({
   playItem: {
     marginBottom: 12,
     padding: 10,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "colorTokens.slate[50]",
     borderRadius: 4,
     border: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "colorTokens.slate[200]",
   },
   playHeader: {
     flexDirection: "row",
@@ -65,16 +65,16 @@ const styles = StyleSheet.create({
   playName: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#1e293b",
+    color: "colorTokens.slate[800]",
     flex: 1,
   },
   playMeta: {
     fontSize: 10,
-    color: "#64748b",
+    color: "colorTokens.slate[500]",
   },
   playDescription: {
     fontSize: 11,
-    color: "#475569",
+    color: "colorTokens.slate[600]",
     marginBottom: 4,
   },
   playDetails: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   summary: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "colorTokens.blue[50]",
     borderRadius: 6,
     border: 1,
     borderColor: colorTokens.blue[50],
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     fontSize: 12,
-    color: "#3730a3",
+    color: "colorTokens.indigo[800]",
     marginBottom: 4,
   },
   tags: {
@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
   },
   tag: {
     fontSize: 9,
-    backgroundColor: "#e0e7ff",
-    color: "#3730a3",
+    backgroundColor: "colorTokens.indigo[100]",
+    color: "colorTokens.indigo[800]",
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 3,

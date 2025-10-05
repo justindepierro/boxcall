@@ -119,7 +119,7 @@ const buttonVariants: ButtonStylesConfig = {
     hover: "hover:text-[color:var(--color-error-700)] hover:underline",
     active: "active:text-[color:var(--color-error-700)]",
     disabled:
-      "disabled:text-[color:var(--color-error-300,#fca5a5)] disabled:cursor-not-allowed",
+      "disabled:text-[color:var(--color-error-300,colorTokens.red[300])] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {

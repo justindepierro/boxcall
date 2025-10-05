@@ -7,6 +7,7 @@ import { CanvasPane } from "./components/CanvasPane";
 import { HelpOverlay } from "./components/HelpOverlay";
 import { Toolbar } from "./components/Toolbar";
 import { DiagramEditorProvider } from "./context/DiagramEditorProvider";
+import { colorTokens } from "../../../design-system/tokens";
 import { useDiagramEditor } from "./context/useDiagramEditor";
 import { svgFullToPngDataUrl } from "./utils/thumbnail";
 
@@ -97,7 +98,7 @@ const Shell: React.FC<ShellProps> = ({
         const dataUrl = await svgFullToPngDataUrl(svg, {
           width: 800,
           height: 450,
-          background: "#0a0f1a",
+          background: "colorTokens.navy[950]",
           type: "image/png",
           quality: 0.92,
         });
