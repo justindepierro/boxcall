@@ -534,7 +534,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-2"
+                  className="block font-medium text-text-primary mb-spacing-xs"
                 >
                   Email Address
                 </Typography>
@@ -647,7 +647,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
               />
             </div>
           </Card>
@@ -756,7 +756,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Grade Level
                   </Typography>
@@ -765,7 +765,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("grade_level", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
                   >
                     <option value="">Select grade level</option>
                     <option value="9th">9th Grade</option>
@@ -801,7 +801,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Years Coaching
                   </Typography>
@@ -818,7 +818,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Current School/Organization
                   </Typography>
@@ -835,7 +835,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Coaching Experience
                   </Typography>
@@ -852,7 +852,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Education
                   </Typography>
@@ -869,7 +869,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Coaching Philosophy
                   </Typography>
@@ -880,14 +880,14 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
                   />
                 </div>
                 <div className="md:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-2"
+                    className="block font-medium text-text-primary mb-spacing-xs"
                   >
                     Certifications
                   </Typography>
@@ -905,23 +905,23 @@ export const ProfilePage: React.FC = () => {
           )}
 
           {/* Emergency Contact Information - Enhanced */}
-          <Card className="p-8">
+          <Card className="p-spacing-xl">
             <Typography
               variant="headline-sm"
               as="h2"
-              className="mb-6 text-error font-bold flex items-center"
+              className="mb-spacing-lg text-error font-bold flex items-center"
             >
-              <span className="w-8 h-8 bg-error/20 rounded-lg flex items-center justify-center mr-3">
+              <span className="w-8 h-8 bg-error/20 rounded-lg flex items-center justify-center mr-spacing-sm">
                 <AlertTriangle className="text-error w-4 h-4" />
               </span>
               Emergency Contact
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
               <div>
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-2"
+                  className="block font-medium text-text-primary mb-spacing-xs"
                 >
                   Emergency Contact Name
                 </Typography>
@@ -942,7 +942,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-2"
+                  className="block font-medium text-text-primary mb-spacing-xs"
                 >
                   Emergency Contact Phone
                 </Typography>
@@ -967,24 +967,24 @@ export const ProfilePage: React.FC = () => {
             profile.app_role === "free_coach" ||
             profile.app_role === "head_coach" ||
             profile.is_admin) && (
-            <Card className="relative overflow-hidden p-8">
+            <Card className="relative overflow-hidden p-spacing-xl">
               <div className="absolute top-0 right-0 w-20 h-20 bg-aurora-emerald rounded-full -mr-10 -mt-10 opacity-60"></div>
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="mb-6 text-brand-primary font-bold flex items-center"
+                className="mb-spacing-lg text-brand-primary font-bold flex items-center"
               >
-                <span className="w-8 h-8 bg-brand-primary/20 rounded-lg flex items-center justify-center mr-3">
+                <span className="w-8 h-8 bg-brand-primary/20 rounded-lg flex items-center justify-center mr-spacing-sm">
                   <Trophy className="text-brand-primary w-4 h-4" />
                 </span>
                 Coaching Information
               </Typography>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
                 <div>
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Years of Coaching Experience
                   </Typography>
@@ -1003,7 +1003,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Current School/Organization
                   </Typography>
@@ -1020,7 +1020,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Education
                   </Typography>
@@ -1037,7 +1037,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Certifications
                   </Typography>
@@ -1054,7 +1054,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Specializations
                   </Typography>
@@ -1071,7 +1071,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching System
                   </Typography>
@@ -1088,7 +1088,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Previous Schools
                   </Typography>
@@ -1105,7 +1105,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching Experience
                   </Typography>
@@ -1116,14 +1116,14 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_experience", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-3 py-2 border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching Philosophy
                   </Typography>
@@ -1134,14 +1134,14 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-3 py-2 border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Mentors & Influences
                   </Typography>
@@ -1159,25 +1159,25 @@ export const ProfilePage: React.FC = () => {
           )}
 
           {/* Social Media Links - Enhanced */}
-          <Card className="relative overflow-hidden p-8">
+          <Card className="relative overflow-hidden p-spacing-xl">
             <div className="absolute top-0 left-0 w-16 h-16 bg-brand-secondary/10 rounded-full -ml-8 -mt-8"></div>
             <div className="absolute bottom-0 right-0 w-12 h-12 bg-brand-primary/10 rounded-full -mr-6 -mb-6"></div>
             <Typography
               variant="headline-sm"
               as="h2"
-              className="mb-6 text-brand-secondary font-bold flex items-center"
+              className="mb-spacing-lg text-brand-secondary font-bold flex items-center"
             >
-              <span className="w-8 h-8 bg-brand-secondary/20 rounded-lg flex items-center justify-center mr-3">
+              <span className="w-8 h-8 bg-brand-secondary/20 rounded-lg flex items-center justify-center mr-spacing-sm">
                 <Link2 className="text-brand-secondary w-4 h-4" />
               </span>
               Social Media & Links
             </Typography>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
               <div>
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Personal Website
                 </Typography>
@@ -1194,7 +1194,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Twitter/X
                 </Typography>
@@ -1211,7 +1211,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Instagram
                 </Typography>
@@ -1228,7 +1228,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   LinkedIn
                 </Typography>
@@ -1245,7 +1245,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   TikTok
                 </Typography>
@@ -1262,7 +1262,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-2"
+                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   YouTube
                 </Typography>
@@ -1279,20 +1279,20 @@ export const ProfilePage: React.FC = () => {
           </Card>
 
           {/* Account Security */}
-          <Card className="p-6">
-            <Typography variant="headline-sm" as="h2" className="mb-4">
+          <Card className="p-spacing-lg">
+            <Typography variant="headline-sm" as="h2" className="mb-spacing-md">
               Account Security
             </Typography>
-            <div className="space-y-4">
+            <div className="space-y-spacing-md">
               <div>
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-2"
+                  className="block font-medium text-text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Password
                 </Typography>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-spacing-md">
                   <Input
                     type="password"
                     value="••••••••••"
@@ -1338,11 +1338,11 @@ export const ProfilePage: React.FC = () => {
           </div>
         </form>
         {/* Account Info */}
-        <div className="mt-8 surface-subtle dark:bg-surface-secondary/50 rounded-lg p-6">
-          <Typography variant="headline-sm" as="h3" className="mb-3">
+        <div className="mt-spacing-xl surface-subtle dark:bg-surface-secondary/50 rounded-lg p-spacing-lg">
+          <Typography variant="headline-sm" as="h3" className="mb-spacing-sm">
             Account Information
           </Typography>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md text-sm">
             <div>
               <span className="font-medium">Account Created:</span>{" "}
               {profile.created_at
@@ -1357,7 +1357,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <span className="font-medium">Role:</span>{" "}
-              <div className="inline-flex items-center gap-2">
+              <div className="inline-flex items-center gap-spacing-xs">
                 <MultiBadgeDisplay
                   isAdmin={profile.is_admin}
                   appRole={profile.app_role || profile.role}
@@ -1369,7 +1369,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <span className="font-medium">User ID:</span>{" "}
-              <code className="text-xs surface-subtle dark:bg-text-primary px-2 py-1 rounded">
+              <code className="text-xs surface-subtle dark:bg-text-primary px-spacing-xs py-1 rounded">
                 {profile.id.substring(0, 8)}...
               </code>
             </div>
