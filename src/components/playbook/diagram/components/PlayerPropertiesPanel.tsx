@@ -1,6 +1,7 @@
 import React from "react";
 import { useDiagramEditor } from "../context/useDiagramEditor";
 import type { DiagramPlayer } from "../types/types";
+import { colorTokens } from "../../../../design-system/tokens";
 
 export const PlayerPropertiesPanel: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
@@ -30,14 +31,14 @@ export const PlayerPropertiesPanel: React.FC = () => {
   };
 
   const colorOptions = [
-    "#047857", // Green
-    "#1e3a8a", // Blue
-    "#dc2626", // Red
-    "#7c3aed", // Purple
-    "#059669", // Emerald
-    "#ea580c", // Orange
-    "#0891b2", // Cyan
-    "#be123c", // Rose
+    colorTokens.emerald[700], // Green
+    colorTokens.blue[900], // Blue
+    colorTokens.red[600], // Red
+    colorTokens.purple[600], // Purple
+    colorTokens.emerald[600], // Emerald
+    colorTokens.amber[600], // Orange
+    colorTokens.cyan[600], // Cyan
+    colorTokens.violet[600], // Rose
   ];
 
   return (
