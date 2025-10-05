@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { colorTokens } from "../../../../design-system/tokens";
 import { useDiagramEditor } from "../context";
 import { Button } from "../../../ui/Button";
 
@@ -32,7 +33,14 @@ export const ActionBar: React.FC<{
   const allLocked =
     selectedPlayers.length > 0 && selectedPlayers.every((p) => !!p.locked);
 
-  const colors = ["#1e3a8a", "#2563eb", "#047857", "#92400e", "#b91c1c"];
+  // Player color palette - consistent with team/position scheme
+  const colors = [
+    colorTokens.blue[900],    // Deep blue
+    colorTokens.blue[600],    // Medium blue
+    colorTokens.emerald[700], // Emerald
+    colorTokens.amber[700],   // Amber/brown
+    colorTokens.red[700]      // Red
+  ];
   const roles = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "C"];
 
   return (
