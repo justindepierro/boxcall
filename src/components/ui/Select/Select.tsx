@@ -32,9 +32,9 @@ const selectStyles: SelectStylesConfig = {
       outlined: "border-2",
     },
     sizes: {
-      sm: "px-3 py-1.5 text-sm min-h-[32px]",
-      md: "px-3 py-2 text-sm min-h-[40px]",
-      lg: "px-4 py-3 text-base min-h-[48px]",
+      sm: "px-3 py-1.5 text-sm min-h-8",
+      md: "px-3 py-2 text-sm min-h-10",
+      lg: "px-4 py-3 text-base min-h-12",
     },
     statuses: {
       default: "",

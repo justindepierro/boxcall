@@ -44,20 +44,20 @@
   }
 
   /* Modern Border System - iOS-Inspired Subtle Dividers */
-  
+
   /* Divider borders - for separating sections (barely visible, iOS-style) */
   .border-divider {
     border-width: var(--border-width-hairline);
     border-color: var(--border-color-subtle);
     border-style: solid;
   }
-  
+
   .border-divider-medium {
     border-width: var(--border-width-thin);
     border-color: var(--border-color-default);
     border-style: solid;
   }
-  
+
   .border-divider-strong {
     border-width: var(--border-width-thin);
     border-color: var(--border-color-medium);
@@ -69,7 +69,7 @@
     border-width: 0;
     box-shadow: var(--elevation-card-resting);
   }
-  
+
   .border-card-elevated {
     border-width: 0;
     box-shadow: var(--elevation-lg);
@@ -81,7 +81,7 @@
     border-top-color: var(--border-color-brand);
     border-top-style: solid;
   }
-  
+
   .border-accent-top-strong {
     border-top-width: var(--border-width-thick);
     border-top-color: var(--border-color-brand-strong);
@@ -108,15 +108,15 @@
   .divider-t {
     @apply border-t border-divider;
   }
-  
+
   .divider-b {
     @apply border-b border-divider;
   }
-  
+
   .divider-l {
     @apply border-l border-divider;
   }
-  
+
   .divider-r {
     @apply border-r border-divider;
   }
@@ -125,7 +125,7 @@
   .divider-t-medium {
     @apply border-t border-divider-medium;
   }
-  
+
   .divider-b-medium {
     @apply border-b border-divider-medium;
   }
@@ -134,7 +134,7 @@
   .divider-t-strong {
     @apply border-t border-divider-strong;
   }
-  
+
   .divider-b-strong {
     @apply border-b border-divider-strong;
   }

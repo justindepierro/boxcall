@@ -163,7 +163,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       {/* Enhanced Header with gradient background */}
       <div className="relative bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 -mx-spacing-lg -mt-spacing-lg px-spacing-lg pt-spacing-lg pb-spacing-md md:pb-spacing-sm mb-spacing-md">
         <div className="absolute top-0 right-0 w-24 h-24 bg-brand-primary/5 rounded-full -mr-12 -mt-12"></div>
-        <div className="relative flex items-center justify-between min-h-[44px]">
+        <div className="relative flex items-center justify-between min-h-11">
           <div className="flex items-center space-x-spacing-sm">
             <User className="w-5 h-5 md:w-4 md:h-4 text-brand-primary" />
             <Typography
@@ -179,7 +179,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleProfileEdit}
-                className="p-spacing-xs min-w-[44px] min-h-[44px] md:min-w-[auto] md:min-h-[auto] hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
+                className="p-spacing-xs min-w-11 min-h-11 md:min-w-auto md:min-h-auto hover:bg-surface-secondary/50 rounded-lg backdrop-blur-sm"
                 aria-label="Edit profile"
               >
                 <Edit2 className="w-4 h-4" />
@@ -228,7 +228,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 bg-white rounded-full p-2 md:p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200 min-w-[36px] min-h-[36px] md:min-w-[auto] md:min-h-[auto]"
+                  className="absolute -bottom-1 -right-1 bg-white rounded-full p-2 md:p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200 min-w-9 min-h-9 md:min-w-auto md:min-h-auto"
                   aria-label="Edit profile picture"
                   onClick={handleProfileEdit}
                 >
@@ -474,7 +474,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             size="sm"
             onClick={() => navigate("/profile")}
             aria-label="View full profile"
-            className="flex-1 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 border-brand-primary/20 min-h-[44px] justify-center"
+            className="flex-1 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 border-brand-primary/20 min-h-11 justify-center"
           >
             <User className="w-4 h-4 mr-spacing-xs" />
             View Profile
@@ -484,7 +484,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               variant="primary"
               size="sm"
               onClick={handleProfileEdit}
-              className="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-md min-h-[44px] min-w-[44px] sm:min-w-[auto] justify-center"
+              className="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-md min-h-11 min-w-11 sm:min-w-auto justify-center"
             >
               <Edit2 className="w-4 h-4" />
             </Button>

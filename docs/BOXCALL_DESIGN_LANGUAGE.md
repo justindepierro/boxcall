@@ -101,31 +101,32 @@ BoxCall embraces an iOS/iPadOS-inspired design language that prioritizes **eleva
 ### Design Philosophy
 
 **iOS-Style Principles:**
+
 - 🎨 **Shadows over borders** - Cards float with subtle shadows, not hard lines
-- ⭕ **Generous corner radius** - 10-16px for that modern, approachable feel  
+- ⭕ **Generous corner radius** - 10-16px for that modern, approachable feel
 - 👻 **Nearly invisible dividers** - When needed, dividers are whisper-thin
 - 📱 **Clean white space** - Breathing room instead of visual clutter
 
 ### Border Widths
 
-| Token               | Value | Usage                                            |
-| ------------------- | ----- | ------------------------------------------------ |
-| `hairline`          | 0.5px | Ultra-thin dividers (iOS-style)                  |
-| `thin` (default)    | 1px   | Subtle separators when absolutely needed         |
-| `medium`            | 2px   | Rare - only for strong emphasis                  |
-| `thick`             | 3px   | Accent strips only                               |
-| `heavy`             | 4px   | Top accent bars on hero cards                    |
+| Token            | Value | Usage                                    |
+| ---------------- | ----- | ---------------------------------------- |
+| `hairline`       | 0.5px | Ultra-thin dividers (iOS-style)          |
+| `thin` (default) | 1px   | Subtle separators when absolutely needed |
+| `medium`         | 2px   | Rare - only for strong emphasis          |
+| `thick`          | 3px   | Accent strips only                       |
+| `heavy`          | 4px   | Top accent bars on hero cards            |
 
 ### Border Colors (iOS-Style Subtle)
 
-| Semantic Name       | Light Mode    | Usage                                  |
-| ------------------- | ------------- | -------------------------------------- |
-| `subtle`            | `gray-50`     | Nearly invisible (default iOS style)   |
-| `default`           | `gray-100`    | Very light separator                   |
-| `medium`            | `gray-200`    | Barely visible divider                 |
-| `strong`            | `gray-300`    | Light but noticeable (rare)            |
-| `brand`             | `jade-100`    | Very subtle brand tint                 |
-| `brand-strong`      | `jade-500`    | Accent elements only                   |
+| Semantic Name  | Light Mode | Usage                                |
+| -------------- | ---------- | ------------------------------------ |
+| `subtle`       | `gray-50`  | Nearly invisible (default iOS style) |
+| `default`      | `gray-100` | Very light separator                 |
+| `medium`       | `gray-200` | Barely visible divider               |
+| `strong`       | `gray-300` | Light but noticeable (rare)          |
+| `brand`        | `jade-100` | Very subtle brand tint               |
+| `brand-strong` | `jade-500` | Accent elements only                 |
 
 ### Border Radius (iOS-Style Rounded)
 
@@ -141,12 +142,14 @@ BoxCall embraces an iOS/iPadOS-inspired design language that prioritizes **eleva
 ### Semantic Border Classes
 
 **iOS-Style Cards** - No visible borders, just elevation:
+
 ```css
 .border-card          /* No border - uses shadow only */
 .border-card-elevated /* No border - uses larger shadow */
 ```
 
 **Dividers** - Barely visible, like iOS separators:
+
 ```css
 .divider-t         /* Nearly invisible top line */
 .divider-b         /* Nearly invisible bottom line */
@@ -155,6 +158,7 @@ BoxCall embraces an iOS/iPadOS-inspired design language that prioritizes **eleva
 ```
 
 **Accent Stripes** - Only for hero elements:
+
 ```css
 .border-accent-top        /* Brand-colored top stripe */
 .border-accent-top-strong /* Strong brand top stripe */
@@ -185,11 +189,13 @@ BoxCall embraces an iOS/iPadOS-inspired design language that prioritizes **eleva
 ### When to Use Borders
 
 **✅ Use borders for:**
+
 - Accent top stripes on hero cards
 - Very subtle dividers between list items (hairline)
 - Form input focus states (with brand color)
 
 **❌ Avoid borders for:**
+
 - Cards (use shadows instead)
 - Buttons (use filled or ghost styles)
 - Navigation items (use background color changes)

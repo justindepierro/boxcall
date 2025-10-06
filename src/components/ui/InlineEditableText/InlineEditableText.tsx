@@ -48,9 +48,9 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
   // Size configurations
   const sizeClasses = {
-    sm: "px-2 py-1 text-sm min-h-[24px]",
-    md: "px-3 py-2 text-sm min-h-[32px]",
-    lg: "px-4 py-3 text-base min-h-[40px]",
+    sm: "px-2 py-1 text-sm min-h-6",
+    md: "px-3 py-2 text-sm min-h-8",
+    lg: "px-4 py-3 text-base min-h-10",
   };
 
   // Update edit value when prop value changes

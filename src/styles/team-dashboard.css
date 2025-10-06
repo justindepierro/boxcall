@@ -57,7 +57,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, var(--color-jade-500) 0%, var(--color-jade-400) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-jade-500) 0%,
+    var(--color-jade-400) 100%
+  );
   border-radius: 16px 16px 0 0;
   z-index: 1;
 }
@@ -75,7 +79,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, var(--color-navy-500) 0%, var(--color-navy-400) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-500) 0%,
+    var(--color-navy-400) 100%
+  );
   border-radius: 16px 16px 0 0;
   z-index: 1;
 }
@@ -91,7 +99,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, var(--color-amber-500) 0%, var(--color-amber-400) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-amber-500) 0%,
+    var(--color-amber-400) 100%
+  );
   border-radius: 16px 16px 0 0;
   z-index: 1;
 }
@@ -107,7 +119,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, var(--color-red-500) 0%, var(--color-red-400) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-red-500) 0%,
+    var(--color-red-400) 100%
+  );
   border-radius: 16px 16px 0 0;
   z-index: 1;
 }
@@ -211,7 +227,11 @@
 .dashboard-hero-section .stats-grid > div {
   text-align: center;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-gray-100) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-gray-50) 0%,
+    var(--color-gray-100) 100%
+  );
   border-radius: 12px;
   border: 1px solid var(--color-gray-200);
   transition: all 0.2s ease;
@@ -293,7 +313,11 @@
   position: absolute;
   left: 0;
   top: 0.5rem;
-  background: linear-gradient(135deg, var(--color-blue-500), var(--color-blue-400));
+  background: linear-gradient(
+    135deg,
+    var(--color-blue-500),
+    var(--color-blue-400)
+  );
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
@@ -332,7 +356,11 @@
 }
 
 .dashboard-hero-section .bg-primary {
-  background: linear-gradient(135deg, var(--color-navy-500) 0%, var(--color-navy-400) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-500) 0%,
+    var(--color-navy-400) 100%
+  ) !important;
   border-radius: 12px; /* Tier 1: rounded-lg standard */
 }
 

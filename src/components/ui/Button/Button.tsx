@@ -35,8 +35,7 @@ const buttonVariants: ButtonStylesConfig = {
   outline: {
     base: "text-brand-primary bg-surface-base/50 backdrop-blur-sm transition-all duration-200 ring-1 ring-inset ring-brand-primary/30",
     hover: "hover:bg-brand-primary/10 hover:ring-brand-primary/50",
-    active:
-      "active:bg-brand-primary/20 active:ring-brand-primary",
+    active: "active:bg-brand-primary/20 active:ring-brand-primary",
     disabled:
       "disabled:text-text-muted disabled:ring-gray-200 disabled:bg-transparent disabled:cursor-not-allowed disabled:opacity-60",
     focus:

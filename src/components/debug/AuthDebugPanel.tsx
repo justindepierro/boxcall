@@ -58,7 +58,9 @@ export function AuthDebugPanel() {
         bottom: 20,
         right: 20,
         padding: "12px",
-        background: authState.hasSession ? colorTokens.emerald[500] : colorTokens.red[500],
+        background: authState.hasSession
+          ? colorTokens.emerald[500]
+          : colorTokens.red[500],
         color: "white",
         borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
         fontSize: "12px",

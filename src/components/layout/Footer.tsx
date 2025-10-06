@@ -48,28 +48,28 @@ export const Footer: React.FC = () => {
             <Link
               ref={aboutRef}
               to="/about"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px] flex items-center px-2"
+              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
             >
               About
             </Link>
             <Link
               ref={privacyRef}
               to="/privacy-policy"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px] flex items-center px-2"
+              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Privacy Policy
             </Link>
             <Link
               ref={termsRef}
               to="/terms-of-service"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px] flex items-center px-2"
+              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Terms of Service
             </Link>
             <Link
               ref={contactRef}
               to="/contact"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px] flex items-center px-2"
+              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Contact
             </Link>
