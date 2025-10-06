@@ -73,10 +73,10 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
         </div>
       )}
       <div
-        className={`w-full ${getHeight()} ${getBackgroundColors()} rounded-sm overflow-hidden`}
+        className={`w-full ${getHeight()} ${getBackgroundColors()} rounded-lg overflow-hidden`}
       >
         <div
-          className={`${getHeight()} ${getBarColors()} rounded-sm ${
+          className={`${getHeight()} ${getBarColors()} rounded-lg ${
             animated ? "transition-all duration-700 ease-out" : ""
           }`}
           style={{ width: `${clampedValue}%` }}
@@ -129,7 +129,7 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       aria-live="polite"
     >
       <div
-        className={`${getSpinnerSize()} border-2 ${getBorderColor()} border-t-transparent rounded-sm animate-spin`}
+        className={`${getSpinnerSize()} border-2 ${getBorderColor()} border-t-transparent rounded-lg animate-spin`}
         aria-hidden="true"
       />
       {label && (
@@ -159,7 +159,7 @@ export const SquareSkeleton: React.FC<SkeletonProps> = ({
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className={`${width} ${height} surface-subtle dark:bg-text-primary rounded-sm animate-pulse`}
+          className={`${width} ${height} surface-subtle dark:bg-text-primary rounded-lg animate-pulse`}
           style={{
             animationDelay: `${index * 0.1}s`,
             width: index === lines - 1 ? "75%" : "100%", // Last line shorter
@@ -206,7 +206,7 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
   };
   return (
     <div className="flex items-center space-x-2">
-      <div className={`${getSize()} ${getColors()} rounded-sm animate-pulse`} />
+      <div className={`${getSize()} ${getColors()} rounded-lg animate-pulse`} />
       {label && (
         <span className="text-sm font-sans font-medium text-text-primary dark:text-border-light">
           {label}
@@ -228,10 +228,10 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
       <div className="relative">
         {/* Spinning football field */}
         <div
-          className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin"
+          className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-lg animate-spin"
           aria-hidden="true"
         >
-          <div className="absolute inset-2 bg-surface-success dark:bg-text-success/20 rounded-sm flex items-center justify-center">
+          <div className="absolute inset-2 bg-surface-success dark:bg-text-success/20 rounded-lg flex items-center justify-center">
             <Icon name="award" className="w-5 h-5" aria-hidden="true" />
           </div>
         </div>

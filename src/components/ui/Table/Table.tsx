@@ -337,7 +337,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       if (el) el.indeterminate = isIndeterminate;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded-sm border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                    className="rounded-lg border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                   />
                 </th>
               )}
@@ -394,7 +394,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                           onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                           }
-                          className="rounded-sm border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                          className="rounded-lg border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                         />
                       </td>
                     )}

@@ -34,7 +34,7 @@ export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
             <div className="space-y-3">
               {/* Header Row */}
               <div className="flex items-start gap-3">
-                <Skeleton className="w-4 h-4 rounded-sm" />
+                <Skeleton className="w-4 h-4 rounded-lg" />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-5 w-3/4" />
                   <div className="flex gap-2">

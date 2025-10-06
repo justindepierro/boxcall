@@ -110,7 +110,7 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                     // Active press feedback
                     "active:surface-subtle",
                   ].join(" ")) +
-              " rounded-sm min-w-[52px] font-medium transition-colors"
+              " rounded-lg min-w-[52px] font-medium transition-colors"
             }
             onClick={() => onChange(v)}
           >
