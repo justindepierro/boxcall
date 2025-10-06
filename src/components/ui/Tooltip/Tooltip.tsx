@@ -95,11 +95,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
     const base: React.CSSProperties = {
       position: "fixed", // Changed from absolute to fixed for viewport-relative positioning
       zIndex: 9999,
-      padding: "8px 12px",
+      padding: "0.5rem 0.75rem", // 8px 12px = py-2 px-3
       background: colorTokens.gray[800],
       color: "white",
       borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
-      fontSize: "12px",
+      fontSize: "0.75rem", // 12px = text-xs
       fontWeight: 500,
       whiteSpace: "nowrap",
       pointerEvents: "none",

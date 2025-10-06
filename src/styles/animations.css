@@ -59,9 +59,9 @@
 }
 
 .glass-hover:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgb(var(--color-white-rgb) / 0.9);
+  border-color: rgb(var(--color-white-rgb) / 0.3);
+  box-shadow: 0 12px 40px rgb(var(--color-black-rgb) / 0.15);
 }
 
 /* Modern Hover Effects */

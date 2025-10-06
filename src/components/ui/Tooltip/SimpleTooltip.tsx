@@ -33,12 +33,12 @@ export const SimpleTooltip = ({
             bottom: "100%",
             left: "50%",
             transform: "translateX(-50%)",
-            marginBottom: "8px",
-            padding: "8px 12px",
+            marginBottom: "0.5rem", // 8px = mb-2
+            padding: "0.5rem 0.75rem", // 8px 12px = py-2 px-3
             background: colorTokens.gray[800],
             color: "white",
             borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
-            fontSize: "12px",
+            fontSize: "0.75rem", // 12px = text-xs
             whiteSpace: "nowrap",
             zIndex: 99999,
             pointerEvents: "none",

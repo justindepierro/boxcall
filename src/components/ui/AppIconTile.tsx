@@ -26,10 +26,7 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div
-        className={`relative overflow-visible ${className}`}
-        style={{ padding: "8px" }}
-      >
+      <div className={`relative overflow-visible p-2 ${className}`}>
         <button
           type="button"
           onClick={onOpen}
