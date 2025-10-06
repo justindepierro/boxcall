@@ -140,7 +140,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   // Placeholder while loading
   const placeholderElement = (
     <div
-      className={`bg-gray-200 animate-pulse ${className}`}
+      className={`bg-surface-muted animate-pulse ${className}`}
       style={{ width, height, ...placeholderStyle }}
       aria-label="Loading image..."
     />
@@ -164,7 +164,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     return (
       <div
         ref={imgRef}
-        className={`bg-gray-200 ${className}`}
+        className={`bg-surface-muted ${className}`}
         style={{ width, height, ...placeholderStyle }}
         aria-label="Loading..."
       />
@@ -232,7 +232,7 @@ export function OptimizedAvatar({
   if (!src || hasError) {
     return (
       <div
-        className={`flex items-center justify-center bg-gray-300 text-secondary font-medium rounded-full ${className}`}
+        className={`flex items-center justify-center bg-surface-muted text-secondary font-medium rounded-full ${className}`}
         style={{ width: size, height: size }}
       >
         {fallbackInitials || alt.charAt(0).toUpperCase()}

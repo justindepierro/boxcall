@@ -132,10 +132,10 @@ export const RosterQuickAdd: React.FC = () => {
     return (
       <Card className="p-6">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded-lg w-3/4 mb-4"></div>
+          <div className="h-4 bg-surface-muted rounded-lg w-3/4 mb-4"></div>
           <div className="space-y-2">
-            <div className="h-3 bg-gray-200 rounded-lg"></div>
-            <div className="h-3 bg-gray-200 rounded-lg w-5/6"></div>
+            <div className="h-3 bg-surface-muted rounded-lg"></div>
+            <div className="h-3 bg-surface-muted rounded-lg w-5/6"></div>
           </div>
         </div>
       </Card>

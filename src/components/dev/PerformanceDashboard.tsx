@@ -136,7 +136,7 @@ export const PerformanceDashboard: React.FC = () => {
       case "poor":
         return "text-red-600 bg-red-50 border-red-200";
       default:
-        return "text-gray-600 bg-gray-50 border-gray-200";
+        return "text-secondary bg-surface-secondary border";
     }
   };
 

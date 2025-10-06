@@ -178,7 +178,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
               size="sm"
               onClick={onClose}
               ariaLabel={ARIA_LABELS.CLOSE}
-              className="ml-4 text-gray-400 hover:text-secondary"
+              className="ml-4 text-muted hover:text-secondary"
             >
               <svg
                 className="w-5 h-5"

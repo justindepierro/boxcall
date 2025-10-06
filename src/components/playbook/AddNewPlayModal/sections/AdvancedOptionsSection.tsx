@@ -350,7 +350,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 max="100"
                 value={confidence}
                 onChange={(e) => onConfidenceChange(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-surface-muted rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-xs text-text-muted">
                 <span>Low</span>

@@ -115,11 +115,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             suggestions={PERSONNEL_OPTIONS.map((option) => option.label)}
             enableSuggestions={true}
             isSaving={savingFields.has("personnel")}
-            className="px-spacing-xs py-spacing-xs bg-gray-100 text-gray-800 border border rounded-full text-[11px] font-medium hover:bg-gray-200 transition-colors"
+            className="px-spacing-xs py-spacing-xs bg-surface-muted text-primary border border rounded-full text-[11px] font-medium hover:bg-surface-secondary transition-colors"
           />
         )}
         {phaseLabel && (
-          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-gray-900 rounded-full text-2xs font-semibold uppercase border border-warning-600">
+          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-primary rounded-full text-2xs font-semibold uppercase border border-warning-600">
             {phaseLabel}
           </span>
         )}

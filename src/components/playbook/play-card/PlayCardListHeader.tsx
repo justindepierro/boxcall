@@ -66,12 +66,12 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             {optimisticPlay.p_type}
           </span>
           {optimisticPlay.f_type && (
-            <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border rounded-full text-[11px] font-medium">
+            <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-[11px] font-medium">
               {optimisticPlay.f_type}
             </span>
           )}
           {phaseLabel && (
-            <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
+            <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
               {phaseLabel}
             </span>
           )}
