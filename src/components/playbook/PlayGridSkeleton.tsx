@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Skeleton } from "../ui/Skeleton";
-import { GlassCard } from "../ui/GlassCard";
+import { Card } from "../ui/Card";
 
 /**
  * PlayGridSkeleton Component
@@ -30,7 +30,7 @@ export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
       `}
       >
         {Array.from({ length: count }).map((_, i) => (
-          <GlassCard key={i} variant="subtle">
+          <Card key={i} variant="glass">
             <div className="space-y-3">
               {/* Header Row */}
               <div className="flex items-start gap-3">
@@ -57,7 +57,7 @@ export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
                 <Skeleton className="h-8 w-8 rounded-lg" />
               </div>
             </div>
-          </GlassCard>
+          </Card>
         ))}
       </div>
     );

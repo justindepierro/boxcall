@@ -28,7 +28,7 @@ import type { DiagramMetadata } from "../components/playbook/diagram/PlayDiagram
 import type { DiagramDocument } from "../components/playbook/diagram/types/types";
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
-import { GlassCard } from "../components/ui/GlassCard";
+import { Card } from "../components/ui/Card";
 import { Aurora } from "../components/ui/Aurora";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
@@ -541,38 +541,38 @@ export default function PlaybookPage() {
           {/* Left Sidebar - Controls */}
           <div className="lg:col-span-1 space-y-6 overflow-visible">
             {/* Filters - Moved to top */}
-            <GlassCard>
+            <Card variant="glass">
               <AdvancedFilters
                 activeFilters={state.advancedFilters}
                 onFiltersChange={handleFiltersChange}
               />
-            </GlassCard>
+            </Card>
 
             {/* Stats Dashboard */}
-            <GlassCard>
+            <Card variant="glass">
               <PlaybookStatsDashboard stats={playbookStats} />
-            </GlassCard>
+            </Card>
 
             {/* Recent Activity */}
-            <GlassCard>
+            <Card variant="glass">
               <RecentActivityFeed activities={playbookStats.recentActivity} />
-            </GlassCard>
+            </Card>
 
             {/* Bulk Actions - Only show when items are selected */}
             {(state.selectedPlayIds?.size || 0) > 0 && (
-              <GlassCard>
+              <Card variant="glass">
                 <BulkActionsToolbar
                   selectedCount={state.selectedPlayIds?.size || 0}
                   onClearSelection={handleClearSelection}
                   onBulkAction={handleBulkAction}
                 />
-              </GlassCard>
+              </Card>
             )}
           </div>
 
           {/* Right Side - Main Content Area */}
           <div className="lg:col-span-3 overflow-visible">
-            <GlassCard padding="lg">
+            <Card variant="glass" size="lg">
               {state.currentView === "playbook" && (
                 <PlayGrid
                   searchQuery={state.searchQuery}
@@ -672,7 +672,7 @@ export default function PlaybookPage() {
                   </div>
                 </div>
               )}
-            </GlassCard>
+            </Card>
           </div>
         </div>
 

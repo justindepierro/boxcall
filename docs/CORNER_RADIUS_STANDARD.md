@@ -21,12 +21,14 @@ iOS/iPad aesthetic with **minimal radius variation** for visual consistency and 
 **Value:** `rounded-xl` (12px / 16px)  
 **Usage:**
 - All cards (dashboard, playbook, roster, team)
-- GlassCard component
+- Card component with `variant="glass"` for glassmorphism
 - Modal dialogs
 - Side panels
 - Large hero sections
 - Data tables
 - Content sections
+
+**Note:** The `GlassCard` component has been deprecated and removed in favor of using `<Card variant="glass">` for glassmorphic styling. This consolidates all card styling into a single, consistent component.
 
 ### Special Cases (Exceptions)
 **App Icon Tiles:** `rounded-2xl` (16px)
@@ -103,6 +105,7 @@ borderRadius: {
 ### ✅ DO
 - Use `rounded-lg` for ALL interactive elements
 - Use `rounded-xl` for ALL cards and containers
+- Use `<Card variant="glass">` for glassmorphic styling
 - Be consistent within a single page
 - Use tokens (rounded-lg, rounded-xl) not hardcoded values
 
@@ -111,6 +114,27 @@ borderRadius: {
 - Use `rounded-3xl` for anything (too large)
 - Use bare `rounded` or `rounded-md` (deprecated)
 - Use custom values like `rounded-[2.25rem]`
+- Use the deprecated `GlassCard` component (use Card instead)
+
+## Component Consolidation
+
+### Card Component
+The `Card` component is now the single source of truth for all card styling:
+
+```tsx
+// Standard card
+<Card variant="default">Content</Card>
+
+// Glassmorphic card (replaces GlassCard)
+<Card variant="glass">Content</Card>
+
+// Other variants
+<Card variant="elevated">Content</Card>
+<Card variant="outlined">Content</Card>
+<Card variant="filled">Content</Card>
+```
+
+**Migration:** Replace all `<GlassCard>` usage with `<Card variant="glass">` for consistency.
 
 ## Success Metrics
 - **Zero** instances of `rounded-3xl` in cards
