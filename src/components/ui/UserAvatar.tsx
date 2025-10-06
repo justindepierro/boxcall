@@ -96,7 +96,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       case "admin":
         return "text-red-600";
       default:
-        return "text-gray-600";
+        return "text-secondary";
     }
   };
 
@@ -122,7 +122,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     >
       {/* Avatar */}
       <div
-        className={`${sizeClasses.avatar} rounded-full overflow-hidden bg-gray-200 flex items-center justify-center flex-shrink-0`}
+        className={`${sizeClasses.avatar} rounded-full overflow-hidden bg-surface-muted flex items-center justify-center flex-shrink-0`}
       >
         {avatarUrl ? (
           <img
@@ -131,7 +131,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <Typography variant="body-sm" className="text-gray-600 font-semibold">
+          <Typography variant="body-sm" className="text-secondary font-semibold">
             {getAvatarFallback(name || null)}
           </Typography>
         )}

@@ -150,7 +150,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   if (hasError) {
     return (
       <div
-        className={`bg-gray-100 flex items-center justify-center text-gray-500 text-sm ${className}`}
+        className={`bg-surface-muted flex items-center justify-center text-muted text-sm ${className}`}
         style={{ width, height }}
         aria-label="Failed to load image"
       >
@@ -232,7 +232,7 @@ export function OptimizedAvatar({
   if (!src || hasError) {
     return (
       <div
-        className={`flex items-center justify-center bg-gray-300 text-gray-600 font-medium rounded-full ${className}`}
+        className={`flex items-center justify-center bg-gray-300 text-secondary font-medium rounded-full ${className}`}
         style={{ width: size, height: size }}
       >
         {fallbackInitials || alt.charAt(0).toUpperCase()}

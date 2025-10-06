@@ -206,7 +206,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
           {loading ? (
             <div className="p-6 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <Typography variant="body-sm" className="text-gray-500 mt-2">
+              <Typography variant="body-sm" className="text-muted mt-2">
                 Loading profile...
               </Typography>
             </div>
@@ -227,7 +227,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       <div className="w-16 h-16 rounded-full border-3 border-white bg-white flex items-center justify-center">
                         <Typography
                           variant="body-lg"
-                          className="text-gray-600 font-semibold"
+                          className="text-secondary font-semibold"
                         >
                           {getAvatarFallback(profile.full_name)}
                         </Typography>
@@ -264,7 +264,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
               <div className="p-4 space-y-4">
                 {/* Position/Experience */}
                 {getPositionDisplay() && (
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-secondary">
                     <Activity className="w-4 h-4 mr-2" />
                     <Typography variant="body-sm">
                       {getPositionDisplay()}
@@ -274,7 +274,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
                 {/* School/Organization */}
                 {profile.current_school && (
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-secondary">
                     <MapPin className="w-4 h-4 mr-2" />
                     <Typography variant="body-sm" className="truncate">
                       {profile.current_school}
@@ -287,7 +287,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                   <div>
                     <Typography
                       variant="body-sm"
-                      className="text-gray-700 line-clamp-3"
+                      className="text-primary line-clamp-3"
                     >
                       {profile.bio}
                     </Typography>
@@ -301,7 +301,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       <Trophy className="w-4 h-4 mr-2 text-yellow-500" />
                       <Typography
                         variant="body-sm"
-                        className="font-medium text-gray-900"
+                        className="font-medium text-primary"
                       >
                         Recent Achievements
                       </Typography>
@@ -323,10 +323,10 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                 {getSocialLinks().length > 0 && (
                   <div>
                     <div className="flex items-center mb-2">
-                      <Link2 className="w-4 h-4 mr-2 text-gray-500" />
+                      <Link2 className="w-4 h-4 mr-2 text-muted" />
                       <Typography
                         variant="body-sm"
-                        className="font-medium text-gray-900"
+                        className="font-medium text-primary"
                       >
                         Social Links
                       </Typography>
@@ -338,7 +338,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-blue-500 transition-colors"
+                          className="text-muted hover:text-blue-500 transition-colors"
                         >
                           <Link2 className="w-4 h-4" />
                         </a>
@@ -350,7 +350,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                 {/* Contact Info */}
                 <div className="border-t pt-3 space-y-2">
                   {profile.email && (
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-secondary">
                       <Mail className="w-4 h-4 mr-2" />
                       <Typography variant="body-xs" className="truncate">
                         {profile.email}
@@ -358,7 +358,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                     </div>
                   )}
                   {profile.phone && (
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-secondary">
                       <Phone className="w-4 h-4 mr-2" />
                       <Typography variant="body-xs">{profile.phone}</Typography>
                     </div>
@@ -367,7 +367,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
                 {/* Member Since */}
                 <div className="border-t pt-3">
-                  <div className="flex items-center text-gray-500">
+                  <div className="flex items-center text-muted">
                     <Calendar className="w-4 h-4 mr-2" />
                     <Typography variant="body-xs">
                       Member since {formatMemberSince(profile.created_at)}
@@ -378,7 +378,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             </>
           ) : (
             <div className="p-6 text-center">
-              <Typography variant="body-sm" className="text-gray-500">
+              <Typography variant="body-sm" className="text-muted">
                 Profile not found
               </Typography>
             </div>

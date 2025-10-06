@@ -567,11 +567,11 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
               />
             </div>
           )}
-          <div className="w-6 h-6 rounded-full bg-gray-500/10 dark:bg-gray-400/10 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-6 h-6 rounded-full bg-surface-secondary0/10 dark:bg-gray-400/10 backdrop-blur-sm flex items-center justify-center">
             <Icon
               name="map-pin"
               size="xs"
-              className="text-gray-600 dark:text-gray-400"
+              className="text-secondary dark:text-gray-400"
             />
           </div>
         </div>

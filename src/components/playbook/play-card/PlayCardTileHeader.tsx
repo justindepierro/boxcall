@@ -152,7 +152,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           {optimisticPlay.p_type}
         </span>
         {optimisticPlay.f_type && (
-          <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-[11px] font-medium">
+          <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border rounded-full text-[11px] font-medium">
             {optimisticPlay.f_type}
           </span>
         )}

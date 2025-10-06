@@ -166,8 +166,8 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 id={titleId} className="text-xl font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border">
+          <h2 id={titleId} className="text-xl font-semibold text-primary">
             {title}
           </h2>
 
@@ -178,7 +178,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
               size="sm"
               onClick={onClose}
               ariaLabel={ARIA_LABELS.CLOSE}
-              className="ml-4 text-gray-400 hover:text-gray-600"
+              className="ml-4 text-gray-400 hover:text-secondary"
             >
               <svg
                 className="w-5 h-5"
@@ -201,7 +201,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
         {/* Description */}
         {description && (
           <div className="px-6 pt-4">
-            <p id={descriptionId} className="text-sm text-gray-600">
+            <p id={descriptionId} className="text-sm text-secondary">
               {description}
             </p>
           </div>

@@ -97,13 +97,13 @@ export const AccessibleInput = forwardRef<
     const variantClasses = {
       default: `
       bg-white
-      border-gray-300
+      border
       focus:border-blue-500
       focus:ring-blue-500
       ${hasError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
     `,
       filled: `
-      bg-gray-50
+      bg-surface-secondary
       border-transparent
       focus:bg-white
       focus:border-blue-500
@@ -113,7 +113,7 @@ export const AccessibleInput = forwardRef<
       outlined: `
       bg-transparent
       border-2
-      border-gray-300
+      border
       focus:border-blue-500
       focus:ring-blue-500
       ${hasError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
@@ -131,7 +131,7 @@ export const AccessibleInput = forwardRef<
     text-sm
     font-medium
     mb-1
-    ${hasError ? "text-red-700" : "text-gray-700"}
+    ${hasError ? "text-red-700" : "text-primary"}
     ${required ? 'after:content-["*"] after:text-red-500 after:ml-1' : ""}
   `;
 
@@ -153,7 +153,7 @@ export const AccessibleInput = forwardRef<
           {hasIcon && iconPosition === "left" && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <span
-                className={`${hasError ? "text-red-500" : "text-gray-400"}`}
+                className={`${hasError ? "text-red-500" : "text-muted"}`}
                 aria-hidden="true"
               >
                 {icon}
@@ -177,7 +177,7 @@ export const AccessibleInput = forwardRef<
           {hasIcon && iconPosition === "right" && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <span
-                className={`${hasError ? "text-red-500" : "text-gray-400"}`}
+                className={`${hasError ? "text-red-500" : "text-muted"}`}
                 aria-hidden="true"
               >
                 {icon}
@@ -195,7 +195,7 @@ export const AccessibleInput = forwardRef<
         </div>
 
         {hint && !error && (
-          <p id={hintId} className="text-sm text-gray-600" role="note">
+          <p id={hintId} className="text-sm text-secondary" role="note">
             {hint}
           </p>
         )}
