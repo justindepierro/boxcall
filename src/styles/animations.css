@@ -93,8 +93,8 @@
   border-radius: inherit;
   background: linear-gradient(
     135deg,
-    rgba(0, 168, 107, 0.1),
-    rgba(0, 168, 107, 0.05)
+    rgb(var(--color-jade-500-rgb) / 0.1),
+    rgb(var(--color-jade-500-rgb) / 0.05)
   );
   opacity: 0;
   transition: opacity var(--transition-normal);
@@ -495,7 +495,7 @@
 
 .focus-square:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2); /* jade-500 RGB - keep as-is until RGB token added */
+  box-shadow: 0 0 0 3px rgb(var(--color-jade-500-rgb) / 0.2);
   transform: scale(1.02);
 }
 
