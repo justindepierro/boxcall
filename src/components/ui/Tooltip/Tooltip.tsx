@@ -168,7 +168,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     <>
       <span
         ref={triggerRef}
-        style={{ display: "inline-flex", position: "relative" }}
+        className="inline-flex relative"
         onMouseEnter={show}
         onMouseLeave={hide}
         onFocus={show}

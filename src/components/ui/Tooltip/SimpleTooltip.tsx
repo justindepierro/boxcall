@@ -15,7 +15,7 @@ export const SimpleTooltip = ({
 
   return (
     <span
-      style={{ position: "relative", display: "inline-block" }}
+      className="relative inline-block"
       onMouseEnter={() => {
         console.log("ENTER");
         setShow(true);
@@ -28,20 +28,10 @@ export const SimpleTooltip = ({
       {children}
       {show && (
         <span
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 py-2 px-3 text-white rounded-lg text-xs whitespace-nowrap pointer-events-none"
           style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            marginBottom: "0.5rem", // 8px = mb-2
-            padding: "0.5rem 0.75rem", // 8px 12px = py-2 px-3
             background: colorTokens.gray[800],
-            color: "white",
-            borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
-            fontSize: "0.75rem", // 12px = text-xs
-            whiteSpace: "nowrap",
             zIndex: 99999,
-            pointerEvents: "none",
           }}
         >
           {content}

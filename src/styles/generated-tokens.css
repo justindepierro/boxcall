@@ -134,9 +134,9 @@
   --semantic-text-primary: var(--color-gray-900);
   --semantic-text-secondary: var(--color-gray-600);
   --semantic-text-muted: var(--color-gray-500);
-  --semantic-text-inverse: #ffffff;
+  --semantic-text-inverse: var(--color-white);
   --semantic-text-brand: var(--color-jade-600);
-  --semantic-bg-primary: #ffffff;
+  --semantic-bg-primary: var(--color-white);
   --semantic-bg-secondary: var(--color-gray-50);
   --semantic-bg-muted: var(--color-gray-100);
   --semantic-bg-brand: var(--color-jade-50);
@@ -185,7 +185,7 @@
   --semantic-diagram-field-border: var(--color-emerald-700);
   --semantic-diagram-field-zone: var(--color-emerald-800);
   --semantic-diagram-minimap-border: var(--color-amber-400);
-  --semantic-diagram-minimap-background: #ffffff;
+  --semantic-diagram-minimap-background: var(--color-white);
   --semantic-boxcall-brand: var(--color-jade-600);
   --semantic-coach-authority: var(--color-navy-600);
   --font-family-display: Bebas Neue, system-ui, sans-serif;

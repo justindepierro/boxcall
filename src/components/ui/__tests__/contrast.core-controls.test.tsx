@@ -37,7 +37,7 @@ function effectiveBg(el: Element): string {
 describe("Core UI control contrast", () => {
   it("IconButton ghost has at least 3:1 for icon-like content", () => {
     render(
-      <div className="bg-surface-primary" style={{ padding: 8 }}>
+      <div className="bg-surface-primary p-2">
         <IconButton aria-label="Close" variant="ghost">
           <svg width="16" height="16" aria-hidden="true" />
         </IconButton>
@@ -54,7 +54,7 @@ describe("Core UI control contrast", () => {
 
   it("MobileBottomNavigation items have icon contrast >= 3:1 and text >= 3:1 (JSDOM)", () => {
     render(
-      <div className="bg-surface-primary" style={{ padding: 8 }}>
+      <div className="bg-surface-primary p-2">
         <MobileBottomNavigation
           items={[
             {

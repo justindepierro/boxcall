@@ -381,11 +381,11 @@
 @keyframes buttonHover {
   0% {
     transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgb(var(--color-black-rgb) / 0.1);
   }
   100% {
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgb(var(--color-black-rgb) / 0.15);
   }
 }
 
@@ -478,7 +478,7 @@
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(var(--color-black-rgb) / 0.1);
 }
 
 .active-press {
@@ -495,7 +495,7 @@
 
 .focus-square:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);
+  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2); /* jade-500 RGB - keep as-is until RGB token added */
   transform: scale(1.02);
 }
 

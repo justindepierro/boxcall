@@ -3,7 +3,7 @@ import { PenLine } from "lucide-react";
 import { colorTokens } from "../../../design-system/tokens";
 
 const LucideTest: React.FC = () => (
-  <div style={{ padding: 32 }}>
+  <div className="p-8">
     <h2>Direct Lucide Icon Test</h2>
     <PenLine
       width={48}
