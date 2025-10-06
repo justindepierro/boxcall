@@ -51,7 +51,7 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
       role="tablist"
       aria-orientation={orientation}
       className={
-        "inline-flex rounded-md surface-subtle border-subtle shadow-sm p-0.5 gap-0.5 " +
+        "inline-flex rounded-lg surface-subtle border-subtle shadow-sm p-0.5 gap-0.5 " +
         (className || "")
       }
       onKeyDown={(e) => {

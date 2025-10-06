@@ -352,7 +352,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsEditingBio(true)}
-                    className="p-1 hover:bg-brand-secondary/10 rounded-md transition-colors"
+                    className="p-1 hover:bg-brand-secondary/10 rounded-lg transition-colors"
                     aria-label="Edit bio"
                   >
                     <Edit2 className="w-3 h-3 text-brand-secondary" />
@@ -367,7 +367,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   value={bioText}
                   onChange={(e) => setBioText(e.target.value)}
                   placeholder="Tell others about yourself..."
-                  className="w-full p-spacing-xs text-sm bg-surface-primary border border-border-primary rounded-md focus:ring-2 focus:ring-brand-secondary focus:border-transparent resize-none"
+                  className="w-full p-spacing-xs text-sm bg-surface-primary border border-border-primary rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-transparent resize-none"
                   rows={3}
                   maxLength={200}
                 />
@@ -381,7 +381,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       size="sm"
                       onClick={handleBioCancel}
                       disabled={isSavingBio}
-                      className="p-1 hover:bg-error/10 rounded-md"
+                      className="p-1 hover:bg-error/10 rounded-lg"
                     >
                       <X className="w-3 h-3 text-error" />
                     </Button>
@@ -390,7 +390,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       size="sm"
                       onClick={handleBioSave}
                       disabled={isSavingBio}
-                      className="p-1 hover:bg-success/10 rounded-md"
+                      className="p-1 hover:bg-success/10 rounded-lg"
                     >
                       {isSavingBio ? (
                         <div className="w-3 h-3 border border-success/30 border-t-success rounded-full animate-spin" />

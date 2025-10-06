@@ -25,7 +25,7 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary ring-text-info",
+    base: "relative flex items-center justify-between w-full rounded-lg border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary ring-text-info",
     variants: {
       default: "",
       filled: "surface-subtle bg-surface-secondary",
@@ -52,7 +52,7 @@ const selectStyles: SelectStylesConfig = {
     },
   },
   menu: {
-    base: "absolute z-50 w-full mt-1 rounded-md border-subtle elevation-dropdown overflow-hidden surface-card",
+    base: "absolute z-50 w-full mt-1 rounded-lg border-subtle elevation-dropdown overflow-hidden surface-card",
     positions: {
       top: "bottom-full mb-1 mt-0",
       bottom: "top-full mt-1",

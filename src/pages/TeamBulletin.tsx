@@ -373,7 +373,7 @@ const TeamBulletin: React.FC = React.memo(() => {
         {/* Skip link for keyboard users */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-text-inverse px-4 py-2 rounded-md z-50"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-text-inverse px-4 py-2 rounded-lg z-50"
         >
           Skip to main content
         </a>

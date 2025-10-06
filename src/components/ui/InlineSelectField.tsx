@@ -113,7 +113,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className={`w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
+              className={`w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
             >
               {allowEmpty && <option value="">{emptyLabel}</option>}
               {options.map((option) => (
@@ -137,14 +137,14 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
           <div className="flex items-center gap-1 flex-shrink-0">
             <button
               onClick={handleSave}
-              className="flex items-center justify-center w-8 h-8 text-electric-600 hover:text-electric-700 hover:bg-electric-50 rounded-md transition-colors"
+              className="flex items-center justify-center w-8 h-8 text-electric-600 hover:text-electric-700 hover:bg-electric-50 rounded-lg transition-colors"
               title="Save (Enter)"
             >
               <Icon name="check" className="h-4 w-4" />
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
               title="Cancel (Escape)"
             >
               <Icon name="close" className="h-4 w-4" />

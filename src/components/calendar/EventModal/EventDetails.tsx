@@ -260,7 +260,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
               rows={2}
-              className="w-full border border-border-medium rounded-md px-3 py-2"
+              className="w-full border border-border-medium rounded-lg px-3 py-2"
               disabled={addCommentPending}
             />
             <div className="flex items-center gap-2">

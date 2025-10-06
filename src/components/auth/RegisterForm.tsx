@@ -184,7 +184,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             fullWidth
           />
           {error && (
-            <div className="p-3 surface-subtle dark:bg-surface-error/10 border border-subtle dark:border-border-error rounded-md">
+            <div className="p-3 surface-subtle dark:bg-surface-error/10 border border-subtle dark:border-border-error rounded-lg">
               <Typography
                 variant="body-sm"
                 className="text-text-error dark:text-text-error-hover"

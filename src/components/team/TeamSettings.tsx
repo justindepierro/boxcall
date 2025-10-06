@@ -335,7 +335,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           >
             Team Information
           </Typography>
-          <div className="surface-subtle dark:bg-navy-900/20 rounded-md p-4">
+          <div className="surface-subtle dark:bg-navy-900/20 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-text-primary">

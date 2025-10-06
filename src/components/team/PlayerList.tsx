@@ -174,7 +174,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     {/* Jersey Number */}
-                    <div className="w-12 h-12 surface-subtle0 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
+                    <div className="w-12 h-12 surface-subtle0 rounded-lg flex items-center justify-center text-text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
                     {/* Name and Level with UserAvatar */}

@@ -33,7 +33,7 @@ export const DiagramPaneRoute: React.FC = () => {
       }}
     >
       <div
-        className="surface-card rounded-md p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative border border-subtle"
+        className="surface-card rounded-lg p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative border border-subtle"
         role="dialog"
         aria-modal="true"
       >

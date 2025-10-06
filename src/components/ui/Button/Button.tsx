@@ -244,7 +244,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = [
       // Base button styles - clean and minimal
       "inline-flex items-center justify-center flex-row flex-nowrap",
-      "font-sans rounded-md", // Clean rounded-lg corners
+      "font-sans rounded-lg", // Clean rounded-lg corners
       "focus:outline-none",
       "overflow-hidden", // Handle overflow gracefully
       // Smooth transitions for transform and colors

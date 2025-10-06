@@ -57,7 +57,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
-          className="block w-full pl-10 pr-10 py-2 rounded-md border-subtle surface-card text-sm
+          className="block w-full pl-10 pr-10 py-2 rounded-lg border-subtle surface-card text-sm
                      focus:ring-2 focus:ring-jade-500 focus:border-jade-600 transition-colors"
         />
         {loading && (
@@ -70,7 +70,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
         )}
       </div>
       {query.trim().length >= 2 && (results.length > 0 || loading || error) && (
-        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-md border-subtle surface-card elevation-dropdown shadow-sm">
+        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-subtle surface-card elevation-dropdown shadow-sm">
           <div className="py-1">
             {error && (
               <div className="px-3 py-2 text-xsssss text-error flex items-center gap-2">

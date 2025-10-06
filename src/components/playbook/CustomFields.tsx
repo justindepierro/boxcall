@@ -95,7 +95,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   const renderFieldInput = (definition: CustomFieldDefinition) => {
     const value = values[definition.field_name];
     const commonClasses =
-      "w-full px-3 py-2 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500";
+      "w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500";
 
     switch (definition.field_type) {
       case "text":

@@ -87,7 +87,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
                 <a
                   key={i}
                   href={a.href}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${base}`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${base}`}
                   onClick={() => telemetry.onboardingAction(a.label)}
                 >
                   {a.label}

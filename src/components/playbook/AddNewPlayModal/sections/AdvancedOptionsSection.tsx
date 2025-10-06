@@ -168,7 +168,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={formationType}
                   onChange={(e) => onFormationTypeChange(e.target.value)}
                   placeholder="e.g., Spread, Tight"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>
               <div>
@@ -181,7 +181,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 <select
                   value={formationDir}
                   onChange={(e) => onFormationDirChange(e.target.value)}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 >
                   <option value="">None</option>
                   {directionOptions.map((opt) => (
@@ -204,21 +204,21 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     value={backAlign}
                     onChange={(e) => onBackAlignChange(e.target.value)}
                     placeholder="Backfield alignment"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                   <input
                     type="text"
                     value={shift}
                     onChange={(e) => onShiftChange(e.target.value)}
                     placeholder="Pre-snap shift"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                   <input
                     type="text"
                     value={motion}
                     onChange={(e) => onMotionChange(e.target.value)}
                     placeholder="Pre-snap motion"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                 </div>
               </div>
@@ -234,7 +234,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={formationTags}
                   onChange={(e) => onFormationTagsChange(e.target.value)}
                   placeholder="e.g., Nickel, Dime"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>
               <div>
@@ -250,14 +250,14 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     value={runStrength}
                     onChange={(e) => onRunStrengthChange(e.target.value)}
                     placeholder="Run strength"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                   <input
                     type="text"
                     value={passStrength}
                     onChange={(e) => onPassStrengthChange(e.target.value)}
                     placeholder="Pass strength"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                 </div>
               </div>
@@ -284,7 +284,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 <select
                   value={playDir}
                   onChange={(e) => onPlayDirChange(e.target.value)}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 >
                   <option value="">None</option>
                   {directionOptions.map((opt) => (
@@ -306,7 +306,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={protection}
                   onChange={(e) => onProtectionChange(e.target.value)}
                   placeholder="e.g., 5-man, Slide"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>
               <div className="md:col-span-2">
@@ -321,7 +321,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={playTags}
                   onChange={(e) => onPlayTagsChange(e.target.value)}
                   placeholder="e.g., Red Zone, 3rd&Short"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>
             </div>
@@ -393,7 +393,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     value={newPosition}
                     onChange={(e) => onNewPositionChange(e.target.value)}
                     onKeyDown={handlePositionKeyDown}
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   >
                     <option value="">Add position...</option>
                     {positionOptions.map((opt) => (
@@ -437,7 +437,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     onChange={(e) => onNewPlayerChange(e.target.value)}
                     onKeyDown={handlePlayerKeyDown}
                     placeholder="Add player (e.g., Z, WR1)"
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                   <Button
                     size="sm"
@@ -474,7 +474,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     onChange={(e) => onNewFlagChange(e.target.value)}
                     onKeyDown={handleFlagKeyDown}
                     placeholder="Add tag (e.g., Red Zone)"
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                   />
                   <Button
                     size="sm"
@@ -510,7 +510,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={oneWordPlay}
                   onChange={(e) => onOneWordPlayChange(e.target.value)}
                   placeholder="e.g., POWER, SLANT"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>
               <div>
@@ -525,7 +525,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   onChange={(e) => onDescriptionChange(e.target.value)}
                   placeholder="Brief description of the play..."
                   rows={2}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
                 />
               </div>
             </div>

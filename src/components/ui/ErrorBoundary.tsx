@@ -97,7 +97,7 @@ export class ErrorBoundary extends Component<Props, State> {
       // Default professional error UI with recovery options
       return (
         <div className="min-h-screen surface-app flex items-center justify-center p-4">
-          <div className="max-w-md w-full surface-card elevation-modal rounded-md p-6 mx-4">
+          <div className="max-w-md w-full surface-card elevation-modal rounded-lg p-6 mx-4">
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-surface-error mb-4">

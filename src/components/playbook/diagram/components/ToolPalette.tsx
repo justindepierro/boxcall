@@ -25,7 +25,7 @@ export const ToolPalette: React.FC = () => {
         onClick={onClick}
         aria-pressed={!!active}
         title={label}
-        className={`w-10 h-10 rounded-md border-0 bg-transparent hover:bg-surface-secondary flex items-center justify-center overflow-hidden ${
+        className={`w-10 h-10 rounded-lg border-0 bg-transparent hover:bg-surface-secondary flex items-center justify-center overflow-hidden ${
           active ? "bg-surface-secondary" : ""
         }`}
       >

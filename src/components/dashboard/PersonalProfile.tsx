@@ -111,7 +111,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 setEditedProfile((prev) => ({ ...prev, bio: e.target.value }))
               }
               placeholder="Tell everyone about yourself..."
-              className="w-full p-3 border border-border-medium dark:border-text-tertiary rounded-md surface-card text-text-primary"
+              className="w-full p-3 border border-border-medium dark:border-text-tertiary rounded-lg surface-card text-text-primary"
               rows={3}
             />
           ) : (

@@ -37,7 +37,7 @@ export const SimpleTooltip = ({
             padding: "8px 12px",
             background: colorTokens.gray[800],
             color: "white",
-            borderRadius: "6px",
+            borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
             fontSize: "12px",
             whiteSpace: "nowrap",
             zIndex: 99999,

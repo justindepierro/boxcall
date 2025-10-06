@@ -1098,7 +1098,7 @@ export const FieldCanvas: React.FC<{
       <svg
         ref={svgRef}
         viewBox="0 0 1600 900"
-        className={`w-full h-full rounded-md shadow-inner select-none`}
+        className={`w-full h-full rounded-lg shadow-inner select-none`}
         style={{
           // Context-specific cursor states
           cursor: (() => {

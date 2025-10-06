@@ -167,7 +167,7 @@ export const ActivationChecklist: React.FC = () => {
   if (!remaining.length) return null; // all done
 
   return (
-    <div className="surface-card border-subtle rounded-md p-4 mb-6 shadow-sm">
+    <div className="surface-card border-subtle rounded-lg p-4 mb-6 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <Typography variant="headline-sm" className="font-medium">
           Getting Started

@@ -19,7 +19,7 @@ export const MinimalTooltipTest = () => {
             backgroundColor: colorTokens.blue[500],
             color: "white",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "12px", // Tier 1: rounded-lg standard
             cursor: "pointer",
             fontSize: "16px",
           }}
@@ -38,7 +38,7 @@ export const MinimalTooltipTest = () => {
             backgroundColor: colorTokens.emerald[500],
             color: "white",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "12px", // Tier 1: rounded-lg standard
             cursor: "pointer",
             fontSize: "16px",
           }}
@@ -57,7 +57,7 @@ export const MinimalTooltipTest = () => {
             backgroundColor: colorTokens.amber[500],
             color: "white",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "12px", // Tier 1: rounded-lg standard
             cursor: "pointer",
             fontSize: "16px",
           }}

@@ -197,7 +197,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "formation")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -292,7 +292,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "playDetails")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-md hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"

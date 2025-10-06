@@ -191,7 +191,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedFormation}
               onChange={(e) => setSelectedFormation(e.target.value)}
-              className="px-3 py-2 border border-border rounded-md text-sm bg-surface-card text-text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
             >
               <option value="">All Formations</option>
               {formations.map(formation => (
@@ -202,7 +202,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedPlayType}
               onChange={(e) => setSelectedPlayType(e.target.value)}
-              className="px-3 py-2 border border-border rounded-md text-sm bg-surface-card text-text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
             >
               <option value="">All Play Types</option>
               {playTypes.map(type => (

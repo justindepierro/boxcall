@@ -145,7 +145,7 @@ const NavBarItemComponent: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          surface-card rounded-md shadow-lg z-50
+          surface-card rounded-lg shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (

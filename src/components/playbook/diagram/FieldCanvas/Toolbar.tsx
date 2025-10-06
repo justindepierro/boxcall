@@ -46,7 +46,7 @@ export const Toolbar: React.FC<{
           variant={tool.key === activeTool ? "primary" : "secondary"}
           size="sm"
           onClick={() => onToolSelect(tool.key)}
-          className={`flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150
+          className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-150
             ${tool.key === activeTool ? "bg-surface-info text-text-info shadow-md ring-2 ring-focus-info" : "hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"}`}
           aria-label={tool.label}
           title={tool.tooltip}
@@ -64,7 +64,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("undo")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Undo"
         title="Undo (Cmd+Z)"
       >
@@ -75,7 +75,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("redo")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Redo"
         title="Redo (Cmd+Shift+Z)"
       >
@@ -86,7 +86,7 @@ export const Toolbar: React.FC<{
         variant="secondary"
         size="sm"
         onClick={() => onToolSelect("layer")}
-        className="flex items-center gap-1 px-3 py-2 rounded-md transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-surface-hover hover:shadow-sm focus:bg-surface-info-hover focus:ring-2 focus:ring-focus-info"
         aria-label="Layer Controls"
         title="Layer Controls"
       >

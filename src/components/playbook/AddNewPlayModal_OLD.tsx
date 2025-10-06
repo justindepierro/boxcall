@@ -724,7 +724,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ formationType: e.target.value })
                         }
                         placeholder="e.g., Spread, Tight"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                     <div>
@@ -739,7 +739,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         onChange={(e) =>
                           updateFormData({ formationDir: e.target.value })
                         }
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       >
                         <option value="">None</option>
                         {DIRECTION_OPTIONS.map((opt) => (
@@ -764,7 +764,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             updateFormData({ backAlign: e.target.value })
                           }
                           placeholder="Backfield alignment"
-                          className="px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                         <input
                           type="text"
@@ -773,7 +773,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             updateFormData({ shift: e.target.value })
                           }
                           placeholder="Pre-snap shift"
-                          className="px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                         <input
                           type="text"
@@ -782,7 +782,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             updateFormData({ motion: e.target.value })
                           }
                           placeholder="Pre-snap motion"
-                          className="px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                       </div>
                     </div>
@@ -800,7 +800,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ formationTags: e.target.value })
                         }
                         placeholder="e.g., Nickel, Dime"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                     <div>
@@ -818,7 +818,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             updateFormData({ runStrength: e.target.value })
                           }
                           placeholder="Run strength"
-                          className="px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                         <input
                           type="text"
@@ -827,7 +827,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             updateFormData({ passStrength: e.target.value })
                           }
                           placeholder="Pass strength"
-                          className="px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                       </div>
                     </div>
@@ -856,7 +856,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         onChange={(e) =>
                           updateFormData({ playDir: e.target.value })
                         }
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       >
                         <option value="">None</option>
                         {DIRECTION_OPTIONS.map((opt) => (
@@ -880,7 +880,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ protection: e.target.value })
                         }
                         placeholder="e.g., 5-man, Slide"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                     <div className="md:col-span-2">
@@ -897,7 +897,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ playTags: e.target.value })
                         }
                         placeholder="e.g., Red Zone, 3rd&Short"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                   </div>
@@ -924,7 +924,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         onChange={(e) =>
                           updateFormData({ prefDown: e.target.value })
                         }
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       >
                         <option value="">Any</option>
                         {DOWN_OPTIONS.map((opt) => (
@@ -946,7 +946,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         onChange={(e) =>
                           updateFormData({ prefDistance: e.target.value })
                         }
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       >
                         <option value="">Any</option>
                         {DISTANCE_OPTIONS.map((opt) => (
@@ -968,7 +968,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         onChange={(e) =>
                           updateFormData({ prefHash: e.target.value })
                         }
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       >
                         <option value="">Any</option>
                         {HASH_OPTIONS.map((opt) => (
@@ -992,7 +992,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ prefCoverage: e.target.value })
                         }
                         placeholder="e.g., Man, Zone"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                     <div>
@@ -1009,7 +1009,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ prefFront: e.target.value })
                         }
                         placeholder="e.g., 4-3, 3-4"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                   </div>
@@ -1108,7 +1108,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                               updateFormData({ newPosition: "" });
                             }
                           }}
-                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         >
                           <option value="">Add position...</option>
                           {POSITION_OPTIONS.map((opt) => (
@@ -1181,7 +1181,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             }
                           }}
                           placeholder="Add player (e.g., Z, WR1)"
-                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                         <Button
                           size="sm"
@@ -1243,7 +1243,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                             }
                           }}
                           placeholder="Add tag (e.g., Red Zone)"
-                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                          className="flex-1 px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                         />
                         <Button
                           size="sm"
@@ -1290,7 +1290,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                           updateFormData({ oneWordPlay: e.target.value })
                         }
                         placeholder="e.g., POWER, SLANT"
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                       />
                     </div>
                     <div>
@@ -1307,7 +1307,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                         }
                         placeholder="Brief description of the play..."
                         rows={2}
-                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
+                        className="w-full px-3 py-2 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
                       />
                     </div>
                   </div>

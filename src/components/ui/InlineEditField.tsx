@@ -231,7 +231,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               placeholder={placeholder}
               maxLength={maxLength}
               rows={rows}
-              className={`flex-1 px-3 py-2 text-sm border-2 rounded-md bg-white shadow-sm transition-colors ${
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
                 saveStatus === "error"
                   ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
                   : saveStatus === "success"
@@ -249,7 +249,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               onBlur={handleBlur}
               placeholder={placeholder}
               maxLength={maxLength}
-              className={`flex-1 px-3 py-2 text-sm border-2 rounded-md bg-white shadow-sm transition-colors ${
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
                 saveStatus === "error"
                   ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
                   : saveStatus === "success"
@@ -278,14 +278,14 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               <>
                 <button
                   onClick={handleSave}
-                  className="flex items-center justify-center w-8 h-8 text-electric-600 hover:text-electric-700 hover:bg-electric-50 rounded-md transition-colors"
+                  className="flex items-center justify-center w-8 h-8 text-electric-600 hover:text-electric-700 hover:bg-electric-50 rounded-lg transition-colors"
                   title="Save (Enter)"
                 >
                   <Icon name="check" className="h-4 w-4" />
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                  className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                   title="Cancel (Escape)"
                 >
                   <Icon name="close" className="h-4 w-4" />
@@ -311,7 +311,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
         )}
 
         {error && (
-          <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md border border-red-200">
+          <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
             {error}
           </div>
         )}

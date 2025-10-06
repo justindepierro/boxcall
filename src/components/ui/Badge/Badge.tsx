@@ -103,7 +103,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const baseStyles = clsx(
     "inline-flex items-center justify-center font-medium select-none whitespace-nowrap align-middle",
     "transition-colors duration-200 ease-out",
-    pill && size !== "lg" ? "rounded-full" : "rounded-md",
+    pill && size !== "lg" ? "rounded-full" : "rounded-lg",
     // Elevation (optional)
     elevated ? "shadow-md" : "shadow-sm",
     // Interactive

@@ -118,7 +118,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             onChange={(e) => onNewTagChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-md focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           />
           <Button
             size="sm"

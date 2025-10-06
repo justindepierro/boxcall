@@ -53,7 +53,7 @@ export const ActionBar: React.FC<{
         ref={containerRef}
         className={`absolute inset-x-3 bottom-3 z-20 pointer-events-auto transition-opacity duration-150 ${isDragging ? "opacity-0" : "opacity-100"}`}
       >
-        <div className="surface-card/95 backdrop-blur rounded-md shadow-lg border border-subtle px-3 py-2">
+        <div className="surface-card/95 backdrop-blur rounded-lg shadow-lg border border-subtle px-3 py-2">
           <div className="text-xs font-medium text-text-secondary mb-2">
             {multi
               ? `Selected: ${sel.length} players`
