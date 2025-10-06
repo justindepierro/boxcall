@@ -204,7 +204,7 @@ export const JoinTeam: React.FC = () => {
               <Typography
                 variant="body-lg"
                 color="muted"
-                className="max-w-2xl mx-auto"
+                className="container-content"
               >
                 Choose how you'd like to join your team. Most coaches will
                 provide you with an invite code, but you can also search for
@@ -212,7 +212,7 @@ export const JoinTeam: React.FC = () => {
               </Typography>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid-form">
               {joinMethods.map((method) => (
                 <Button
                   key={method.id}
@@ -330,7 +330,7 @@ export const JoinTeam: React.FC = () => {
               </Typography>
             </div>
 
-            <div className="max-w-2xl mx-auto mb-8">
+            <div className="container-content mb-8">
               <div className="flex gap-3">
                 <input
                   type="text"
@@ -353,7 +353,7 @@ export const JoinTeam: React.FC = () => {
 
             {/* Search Results */}
             {searchResults.length > 0 && (
-              <div className="max-w-3xl mx-auto">
+              <div className="content-narrow">
                 <Typography variant="headline-md" className="mb-4">
                   Found {searchResults.length} team
                   {searchResults.length !== 1 ? "s" : ""}
@@ -553,7 +553,7 @@ export const JoinTeam: React.FC = () => {
   return (
     <Aurora variant="shell" fullHeight>
       <PageLayout title="Join Team" variant="form">
-        <div className="max-w-5xl mx-auto">
+        <div className="content-medium">
           {/* Back Navigation */}
           {currentStep !== "method" && currentStep !== "complete" && (
             <div className="mb-6">

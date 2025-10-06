@@ -392,7 +392,7 @@ export function PracticePlanner() {
           </div>
         }
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="container-page container-padding py-8">
           <div className="mb-8">
             <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
               <div className="mb-6">
@@ -407,7 +407,7 @@ export function PracticePlanner() {
                   tap.
                 </Typography>
               </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+              <div className="grid-dashboard">
                 {heroTiles.map((tile) => (
                   <AuroraTile
                     key={tile.key}

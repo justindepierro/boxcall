@@ -649,7 +649,7 @@ export const CreateTeam: React.FC = () => {
   return (
     <Aurora variant="shell" fullHeight>
       <PageLayout title="Create Team">
-        <div className="max-w-2xl mx-auto">
+        <div className="container-content">
           {/* Progress Steps */}
           <div className="mb-spacing-xl">
             <div className="flex items-center justify-between">

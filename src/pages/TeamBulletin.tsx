@@ -323,7 +323,7 @@ const TeamBulletin: React.FC = React.memo(() => {
     return (
       <Aurora variant="shell" fullHeight>
         <div className="py-6">
-          <div className="max-w-2xl mx-auto text-center">
+          <div className="container-content text-center">
             <div className="surface-card elevation-card border-subtle rounded-lg p-8">
               <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
               <Typography variant="headline-lg" className="mb-2">

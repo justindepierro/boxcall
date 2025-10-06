@@ -23,7 +23,7 @@ const AboutPage: React.FC = () => {
         <Typography
           variant="body-lg"
           color="muted"
-          className="max-w-2xl mx-auto"
+          className="container-content"
         >
           Revolutionizing football coaching with intelligent play management and
           team coordination tools.

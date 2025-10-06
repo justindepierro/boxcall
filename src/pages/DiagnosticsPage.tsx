@@ -33,7 +33,7 @@ export const DiagnosticsPage: React.FC = () => {
       window.removeEventListener("web-vitals", handler as EventListener);
   }, []);
   return (
-    <div className="p-6 max-w-3xl mx-auto font-sans">
+    <div className="content-narrow container-padding font-sans">
       <div className="Typography typography-headline-md mb-4">
         Diagnostics (Dev Only)
       </div>
