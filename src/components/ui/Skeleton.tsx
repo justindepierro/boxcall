@@ -89,7 +89,7 @@ export const GamePlanSkeleton: React.FC = () => (
 export const NavigationSkeleton: React.FC = () => (
   <div className="fixed bottom-0 left-0 right-0 surface-card border-t border-subtle pb-safe-area-inset-bottom">
     <div className="px-2 py-1">
-      <div className="flex justify-between items-center max-w-sm mx-auto">
+      <div className="flex justify-between items-center content-narrow">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}

@@ -91,7 +91,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </Typography>
       <Typography
         variant={styles.description as any}
-        className="text-text-secondary mb-8 max-w-md mx-auto"
+        className="text-text-secondary mb-8 content-narrow"
       >
         {description}
       </Typography>

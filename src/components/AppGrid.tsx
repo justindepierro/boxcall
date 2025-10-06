@@ -14,7 +14,7 @@ export const AppGrid: React.FC<AppGridProps> = ({ children }) => {
   const breakpoint = useBreakpoint();
   return (
     <div
-      className="min-h-screen w-full max-w-7xl mx-auto px-2 md:px-6 lg:px-8"
+      className="min-h-screen w-full container-page container-padding"
       data-breakpoint={breakpoint}
     >
       {children}
