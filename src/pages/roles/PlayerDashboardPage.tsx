@@ -83,7 +83,7 @@ const PlayerDashboardPage: React.FC = () => {
           <Card key={stat.label} className="p-4">
             <div className="flex items-center gap-3">
               <span className={`${stat.accent} rounded-xl p-2.5 shadow-sm`}>
-                <Icon name={stat.icon} className="text-slate-900" />
+                <Icon name={stat.icon} className="text-primary" />
               </span>
               <div className="space-y-1">
                 <Typography variant="body-sm" className="text-text-secondary">
@@ -100,7 +100,7 @@ const PlayerDashboardPage: React.FC = () => {
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
         <Card className="p-5">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
+          <div className="flex items-center justify-between pb-4 border-b border/60">
             <Typography variant="headline-sm" className="flex items-center gap-2">
               <Icon name="calendar" /> Upcoming Events
             </Typography>
@@ -131,7 +131,7 @@ const PlayerDashboardPage: React.FC = () => {
         </Card>
 
         <Card className="p-5">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
+          <div className="flex items-center justify-between pb-4 border-b border/60">
             <Typography variant="headline-sm" className="flex items-center gap-2">
               <Icon name="activity" /> Recent Performance
             </Typography>
@@ -152,7 +152,7 @@ const PlayerDashboardPage: React.FC = () => {
               {performanceMetrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className="bg-aurora-shell rounded-aurora border border-slate-200/60 p-3 text-center"
+                  className="bg-aurora-shell rounded-aurora border border/60 p-3 text-center"
                 >
                   <Typography variant="headline-sm" className="text-text-primary">
                     {metric.value}

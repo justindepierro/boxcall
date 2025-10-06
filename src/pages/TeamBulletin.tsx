@@ -665,7 +665,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                                 Team Roster
                               </span>
                             </Typography>
-                            <div className="text-xs text-text-secondary bg-slate-100/80 px-3 py-1.5 rounded-full flex-shrink-0 badge-safe shadow-sm">
+                            <div className="text-xs text-text-secondary bg-surface-muted/80 px-3 py-1.5 rounded-full flex-shrink-0 badge-safe shadow-sm">
                               <span className="text-truncate font-medium">
                                 {teamData?.memberCount || 0} members
                               </span>

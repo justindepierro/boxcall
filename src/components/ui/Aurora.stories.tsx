@@ -73,7 +73,7 @@ type Story = StoryObj<typeof meta>;
 const SampleContent = ({ title }: { title: string }) => (
   <div className="container mx-auto px-4 py-16">
     <Card className="p-8 max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold text-slate-900 mb-4">{title}</h2>
+      <h2 className="text-3xl font-bold text-primary mb-4">{title}</h2>
       <p className="text-secondary mb-6">
         This demonstrates the Aurora background component with various content
         overlays. The animated gradient provides visual depth while maintaining
@@ -82,7 +82,7 @@ const SampleContent = ({ title }: { title: string }) => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         {[1, 2, 3].map((i) => (
           <Card key={i} className="p-4">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+            <h3 className="text-lg font-semibold text-primary mb-2">
               Feature {i}
             </h3>
             <p className="text-secondary">Content card on Aurora background</p>
@@ -163,7 +163,7 @@ export const ContentSized: Story = {
     children: (
       <div className="p-8">
         <Card className="p-8 max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl font-bold text-primary mb-4">
             Content-Sized Aurora
           </h2>
           <p className="text-secondary">
@@ -219,13 +219,13 @@ export const ComplexLayout: Story = {
           {/* Sidebar */}
           <aside className="lg:col-span-1">
             <Card className="p-4">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
+              <h2 className="text-lg font-semibold text-primary mb-4">
                 Navigation
               </h2>
               <ul className="space-y-2">
                 {["Dashboard", "Playbook", "Roster", "Settings"].map((item) => (
                   <li key={item}>
-                    <button className="text-slate-700 hover:text-primary-600 transition-colors">
+                    <button className="text-secondary hover:text-primary-600 transition-colors">
                       {item}
                     </button>
                   </li>
@@ -237,7 +237,7 @@ export const ComplexLayout: Story = {
           {/* Main content */}
           <main className="lg:col-span-2 space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">
+              <h2 className="text-2xl font-bold text-primary mb-4">
                 Main Content Area
               </h2>
               <p className="text-secondary mb-4">
@@ -248,10 +248,10 @@ export const ComplexLayout: Story = {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="bg-slate-50 rounded-lg p-4 border border-slate-200"
+                    className="bg-surface-secondary rounded-lg p-4 border border"
                   >
-                    <p className="text-xs text-slate-500">Metric {i}</p>
-                    <p className="text-2xl font-bold text-slate-900">1,234</p>
+                    <p className="text-xs text-muted">Metric {i}</p>
+                    <p className="text-2xl font-bold text-primary">1,234</p>
                   </div>
                 ))}
               </div>
@@ -276,7 +276,7 @@ export const PerformanceTest: Story = {
           <Aurora key={variant} variant={variant} className="h-64">
             <div className="flex items-center justify-center h-full">
               <Card className="p-6">
-                <h2 className="text-2xl font-bold text-slate-900 capitalize">
+                <h2 className="text-2xl font-bold text-primary capitalize">
                   {variant} Variant
                 </h2>
                 <p className="text-secondary">

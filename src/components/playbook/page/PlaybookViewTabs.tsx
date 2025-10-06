@@ -183,7 +183,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => {}}
               variant="ghost"
               size="sm"
-              className="p-2.5 bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 border border-amber-200/50 dark:border-amber-700/50 text-amber-700 dark:text-amber-400 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
+              className="p-2.5 bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 border border-amber-200/50 dark:border-amber-700/50 text-warning-600 dark:text-warning-500 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
               title="Weekly Challenges"
             >
               <Icon name="trophy" className="h-5 w-5" />

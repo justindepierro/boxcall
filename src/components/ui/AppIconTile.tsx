@@ -80,7 +80,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
           {/* App Name - Below everything */}
           <div className="text-center w-24 mt-1">
-            <div className="text-sm font-semibold text-slate-900 dark:text-white leading-tight line-clamp-2">
+            <div className="text-sm font-semibold text-primary dark:text-white leading-tight line-clamp-2">
               {title}
             </div>
             {subtitle && !bottomLabel && (

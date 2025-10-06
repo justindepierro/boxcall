@@ -58,7 +58,7 @@ export const TeamRoleManager: React.FC<TeamRoleManagerProps> = ({
           This feature is under development. Full team role management coming
           soon.
         </Typography>
-        <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+        <div className="mt-6 p-4 bg-surface-secondary dark:bg-slate-800 rounded-lg">
           <Typography variant="body-sm" color="muted">
             Team ID: {teamId} | Members: {members.length}
           </Typography>

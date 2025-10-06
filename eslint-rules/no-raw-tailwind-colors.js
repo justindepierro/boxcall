@@ -26,8 +26,9 @@ export default {
           /\b(text|bg|border|ring)-(gray|slate|red|green|yellow|amber|blue)-(50|100|200|300|400|500|600|700|800|900)\b/gi;
         
         // NEW: Pattern for arbitrary sizing/spacing values
+        // Note: We allow vh/vw units (converted from svh/svw for better browser support)
         const ARBITRARY_SIZE_PATTERN =
-          /\b(?:text|w|h|min-w|min-h|max-w|max-h|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space)-\[([0-9.]+)(px|rem|em|svh|vh|svw|vw|%)\]/gi;
+          /\b(?:text|w|h|min-w|min-h|max-w|max-h|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space)-\[([0-9.]+)(px|rem|em|svh|svw|%)\]/gi;
         
         // Semantic token suggestions
         const SEMANTIC_SUGGESTIONS = {
@@ -178,9 +179,9 @@ export default {
             return `Use Tailwind scale or spacing token (${value}${unit})`;
           }
           
-          // For viewport units, suggest standard utilities
-          if (unit === 'svh' || unit === 'vh') {
-            return 'Use h-screen, h-full, or max-h-[Xvh] with standard units';
+          // For viewport units, only flag svh/svw (we use vh/vw for better support)
+          if (unit === 'svh' || unit === 'svw') {
+            return `Use vh/vw instead (better browser support) or h-screen/w-screen utilities`;
           }
           
           return 'Use Tailwind utility or spacing token from design system';

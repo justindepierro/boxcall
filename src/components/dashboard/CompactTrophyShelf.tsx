@@ -96,13 +96,13 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1 mb-1">
               <Icon name="zap" size="sm" className="text-warning-500" />
-              <span className="text-lg font-bold text-warning-600 dark:text-amber-400">
+              <span className="text-lg font-bold text-warning-600 dark:text-warning-500">
                 {weeklyStreak}
               </span>
             </div>
             <Typography
               variant="caption"
-              className="text-amber-700/70 dark:text-amber-300/70 text-xs font-medium"
+              className="text-warning-600/70 dark:text-warning-400/70 text-xs font-medium"
             >
               Week Streak
             </Typography>
@@ -218,13 +218,13 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               />
               <Typography
                 variant="headline-sm"
-                className="font-bold text-warning-600 dark:text-amber-400"
+                className="font-bold text-warning-600 dark:text-warning-500"
               >
                 {weeklyStreak}
               </Typography>
               <Typography
                 variant="caption"
-                className="text-amber-700 dark:text-amber-300"
+                className="text-warning-600 dark:text-warning-400"
               >
                 Week Streak
               </Typography>

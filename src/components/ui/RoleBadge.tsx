@@ -23,8 +23,8 @@ const getRoleConfig = (role: string) => {
         label: "Platform Admin",
         icon: Shield,
         colors:
-          "bg-red-100 text-red-800 border-error-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
-        iconColor: "text-error-600 dark:text-red-400",
+          "bg-red-100 text-red-800 border-error-200 dark:bg-red-900/20 dark:text-error-500 dark:border-error-800",
+        iconColor: "text-error-600 dark:text-error-500",
       };
     case "head_coach":
       return {
@@ -47,8 +47,8 @@ const getRoleConfig = (role: string) => {
         label: "Coach (Free)",
         icon: GraduationCap,
         colors:
-          "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800",
-        iconColor: "text-success-600 dark:text-green-400",
+          "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-success-400 dark:border-green-800",
+        iconColor: "text-success-600 dark:text-success-400",
       };
     case "player":
       return {

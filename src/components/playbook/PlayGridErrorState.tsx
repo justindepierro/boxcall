@@ -74,7 +74,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
             <summary className="cursor-pointer text-sm text-text-muted hover:text-text-secondary">
               Technical Details
             </summary>
-            <pre className="mt-2 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs overflow-auto">
+            <pre className="mt-2 p-3 bg-surface-muted dark:bg-slate-800 rounded-lg text-xs overflow-auto">
               {errorMessage}
             </pre>
           </details>

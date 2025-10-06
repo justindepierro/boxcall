@@ -141,7 +141,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
         <Typography
           variant="body-sm"
           as="label"
-          className="block font-medium text-slate-700 dark:text-slate-300"
+          className="block font-medium text-secondary dark:text-slate-300"
         >
           {label}
           {required && <span className="text-error-500 ml-1">*</span>}
@@ -173,7 +173,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
           className={`
             w-full px-3 py-2.5 rounded-lg transition-all duration-200
             bg-white dark:bg-slate-800
-            text-slate-900 dark:text-slate-100
+            text-primary dark:text-slate-100
             placeholder-slate-400 dark:placeholder-slate-500
             focus:outline-none
             ${getInputBorderColor()}
@@ -206,7 +206,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             />
             <Typography
               variant="body-xs"
-              className="text-error-600 dark:text-red-400"
+              className="text-error-600 dark:text-error-500"
             >
               {validationState.message}
             </Typography>
@@ -218,7 +218,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             <Icon name="check" size="xs" className="text-success-500 mt-0.5" />
             <Typography
               variant="body-xs"
-              className="text-success-600 dark:text-green-400"
+              className="text-success-600 dark:text-success-400"
             >
               Looks good!
             </Typography>
@@ -272,7 +272,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
       <Typography
         variant="body-sm"
         as="label"
-        className="block font-medium text-slate-700 dark:text-slate-300"
+        className="block font-medium text-secondary dark:text-slate-300"
       >
         {label}
         {required && <span className="text-error-500 ml-1">*</span>}
@@ -287,7 +287,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
           className={`
             w-full px-3 py-2.5 rounded-lg transition-all duration-200
             bg-white dark:bg-slate-800
-            text-slate-900 dark:text-slate-100
+            text-primary dark:text-slate-100
             focus:outline-none
             appearance-none
             ${getBorderColor()}
