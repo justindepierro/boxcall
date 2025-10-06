@@ -77,7 +77,7 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
         isVisible ? "translate-y-0" : "translate-y-full"
       } ${className}`}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="container-page">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">

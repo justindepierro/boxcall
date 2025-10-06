@@ -46,7 +46,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
   return (
     <>
       <header className="surface-subtle shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-page container-padding">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Icon name="file" className="h-8 w-8 text-text-success mr-3" />

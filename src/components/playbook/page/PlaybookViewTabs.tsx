@@ -35,7 +35,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
 }) => {
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 backdrop-blur-xl shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-page container-padding">
         {/* Top row: Title, stats, team type selector, and search */}
         <div className="flex items-center justify-between py-3 overflow-visible">
           <div className="flex items-center space-x-4 overflow-visible">

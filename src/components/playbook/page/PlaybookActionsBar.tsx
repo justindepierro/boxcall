@@ -75,7 +75,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
     .filter(Boolean) as { id: string; name: string }[];
   return (
     <div className="surface-subtle border-b border-subtle sticky top-0 z-30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-page container-padding">
         <div className="py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0 flex-1">

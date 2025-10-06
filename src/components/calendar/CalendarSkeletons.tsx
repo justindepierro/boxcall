@@ -55,7 +55,7 @@ export const CalendarGridSkeleton: React.FC = () => (
 export const CalendarPageSkeleton: React.FC = () => (
   <div className="min-h-screen surface-app">
     <div className="surface-header border-b border-subtle">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-pulse">
+      <div className="container-page container-padding py-6 animate-pulse">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full surface-subtle" />
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export const CalendarPageSkeleton: React.FC = () => (
         </div>
       </div>
     </div>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container-page container-padding py-8">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1">
           <CalendarSidebarSkeleton />

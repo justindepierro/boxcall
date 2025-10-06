@@ -151,7 +151,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
 
   const renderStepContent = () => {
     return (
-      <div className="text-center max-w-2xl mx-auto">
+      <div className="text-center container-content">
         {/* Icon */}
         <div className="mb-6">
           <div className="w-16 h-16 mx-auto bg-aurora-emerald rounded-full flex items-center justify-center">
@@ -269,7 +269,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
 
   return (
     <div className="min-h-screen bg-aurora-mist dark:bg-surface-inverse py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="content-medium px-4">
         {/* Progress bar */}
         {currentStep !== "welcome" && (
           <div className="mb-8">
