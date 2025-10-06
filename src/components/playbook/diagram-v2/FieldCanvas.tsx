@@ -2031,7 +2031,7 @@ export const FieldCanvas: React.FC<{
               {/* Count badge at top-right of marquee */}
               <g
                 transform={`translate(${selectionBox.x + selectionBox.w}, ${selectionBox.y})`}
-                style={{ pointerEvents: "none", userSelect: "none" }}
+                className="pointer-events-none select-none"
               >
                 {/* offset to avoid overlapping the border */}
                 <g transform="translate(6, -10)">

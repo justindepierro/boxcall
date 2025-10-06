@@ -35,7 +35,7 @@ export const Selection: React.FC = () => {
           {/* Count badge at top-right of marquee */}
           <g
             transform={`translate(${selectionBox.x + selectionBox.w}, ${selectionBox.y})`}
-            style={{ pointerEvents: "none", userSelect: "none" }}
+            className="pointer-events-none select-none"
           >
             <g transform="translate(6, -10)">
               <rect

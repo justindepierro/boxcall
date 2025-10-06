@@ -72,7 +72,7 @@ export const FieldRoutes: React.FC<{
           strokeWidth={3}
           strokeDasharray="6 4"
           opacity={0.7}
-          style={{ pointerEvents: "none" }}
+          className="pointer-events-none"
         />
       )}
 

@@ -137,7 +137,7 @@ export const FieldPlayers: React.FC<{
                       : colorTokens.gray[50]
                   }
                   textAnchor="middle"
-                  style={{ userSelect: "none" }}
+                  className="select-none"
                 >
                   {p.label}
                 </text>

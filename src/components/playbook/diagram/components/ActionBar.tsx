@@ -53,7 +53,7 @@ export const ActionBar: React.FC<{
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-14 z-10 surface-subtle/0 [mask-image:linear-gradient(to_top,black,transparent)]"
-        style={{ backgroundColor: "rgba(0,0,0,0.14)" }}
+        style={{ backgroundColor: "rgb(var(--color-black-rgb) / 0.14)" }}
       />
       <div
         ref={containerRef}

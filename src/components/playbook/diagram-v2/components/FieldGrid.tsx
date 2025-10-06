@@ -243,7 +243,7 @@ export const FieldGrid: React.FC<{
           {/* Left side numbers */}
           <g
             transform={`translate(${leftX},${numberY}) rotate(90)`}
-            style={{ pointerEvents: "none", userSelect: "none" }}
+            className="pointer-events-none select-none"
           >
             {digits.map((d, di) => (
               <text
@@ -262,7 +262,7 @@ export const FieldGrid: React.FC<{
           {/* Right side numbers */}
           <g
             transform={`translate(${rightX},${numberY}) rotate(-90)`}
-            style={{ pointerEvents: "none", userSelect: "none" }}
+            className="pointer-events-none select-none"
           >
             {digits.map((d, di) => (
               <text
@@ -312,7 +312,7 @@ export const FieldGrid: React.FC<{
           strokeWidth={1}
           opacity={opacity}
           strokeDasharray="4 6"
-          style={{ pointerEvents: "none" }}
+          className="pointer-events-none"
         />
       );
     }
@@ -330,7 +330,7 @@ export const FieldGrid: React.FC<{
           strokeWidth={1}
           opacity={opacity}
           strokeDasharray="4 6"
-          style={{ pointerEvents: "none" }}
+          className="pointer-events-none"
         />
       );
     }
