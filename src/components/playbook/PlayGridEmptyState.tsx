@@ -43,7 +43,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
           <div className="w-20 h-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6">
             <Icon
               name="search"
-              className="w-10 h-10 text-slate-400 dark:text-slate-500"
+              className="w-10 h-10 text-muted dark:text-slate-500"
             />
           </div>
 

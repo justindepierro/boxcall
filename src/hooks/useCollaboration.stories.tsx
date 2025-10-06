@@ -325,7 +325,7 @@ const CollaborativeCursorDemo: React.FC = () => {
 
         <div
           ref={elementRef}
-          className="w-full h-48 bg-surface-muted border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-crosshair"
+          className="w-full h-48 bg-surface-muted border-2 border-dashed border rounded-lg flex items-center justify-center cursor-crosshair"
         >
           <span className="text-muted">Move mouse here</span>
         </div>

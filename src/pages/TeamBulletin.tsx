@@ -410,7 +410,7 @@ const TeamBulletin: React.FC = React.memo(() => {
               <div className="team-dashboard-container">
                 {/* Hero Stats Row */}
                 <div className="dashboard-hero-section mb-12">
-                  <div className="rounded-xl border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+                  <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
                       <AuroraTile
                         title="Trophy Case"
@@ -504,7 +504,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="dashboard-main-content bg-aurora-shell rounded-aurora p-5 border border-slate-200/40 shadow-sm xl:p-6">
+                <div className="dashboard-main-content bg-aurora-shell rounded-aurora p-5 border border/40 shadow-sm xl:p-6">
                   <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 xl:gap-5">
                     {/* Left Sidebar - Quick Actions & Tools */}
                     <aside className="xl:col-span-3 order-2 xl:order-1">

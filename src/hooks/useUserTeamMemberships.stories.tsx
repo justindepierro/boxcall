@@ -232,19 +232,19 @@ const UserTeamMembershipsDemo = () => {
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-surface-secondary">
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border px-4 py-2 text-left">
                       Team
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border px-4 py-2 text-left">
                       Role
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border px-4 py-2 text-left">
                       Status
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border px-4 py-2 text-left">
                       Joined
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border px-4 py-2 text-left">
                       Team ID
                     </th>
                   </tr>
@@ -252,7 +252,7 @@ const UserTeamMembershipsDemo = () => {
                 <tbody>
                   {memberships.map((membership: any) => (
                     <tr key={membership.id} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border px-4 py-2">
                         <div>
                           <div className="font-medium">
                             {membership.teams?.name}
@@ -264,10 +264,10 @@ const UserTeamMembershipsDemo = () => {
                           )}
                         </div>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border px-4 py-2">
                         <Badge variant="info">{membership.role}</Badge>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border px-4 py-2">
                         <Badge
                           variant={
                             membership.status === "active"
@@ -278,10 +278,10 @@ const UserTeamMembershipsDemo = () => {
                           {membership.status}
                         </Badge>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-sm">
+                      <td className="border border px-4 py-2 text-sm">
                         {new Date(membership.joined_at).toLocaleDateString()}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-sm font-mono">
+                      <td className="border border px-4 py-2 text-sm font-mono">
                         {membership.team_id.slice(0, 8)}...
                       </td>
                     </tr>

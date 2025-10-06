@@ -150,7 +150,7 @@ export default function GamePlansPage() {
         }
       >
         <div className="mb-8">
-          <div className="rounded-xl border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+          <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
             <div className="mb-6">
               <Typography variant="headline-sm" className="text-text-primary">
                 Dial in this week’s script

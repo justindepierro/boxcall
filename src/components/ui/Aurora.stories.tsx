@@ -74,7 +74,7 @@ const SampleContent = ({ title }: { title: string }) => (
   <div className="container mx-auto px-4 py-16">
     <Card className="p-8 max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold text-slate-900 mb-4">{title}</h2>
-      <p className="text-slate-600 mb-6">
+      <p className="text-secondary mb-6">
         This demonstrates the Aurora background component with various content
         overlays. The animated gradient provides visual depth while maintaining
         readability.
@@ -85,7 +85,7 @@ const SampleContent = ({ title }: { title: string }) => (
             <h3 className="text-lg font-semibold text-slate-900 mb-2">
               Feature {i}
             </h3>
-            <p className="text-slate-600">Content card on Aurora background</p>
+            <p className="text-secondary">Content card on Aurora background</p>
           </Card>
         ))}
       </div>
@@ -166,7 +166,7 @@ export const ContentSized: Story = {
           <h2 className="text-3xl font-bold text-slate-900 mb-4">
             Content-Sized Aurora
           </h2>
-          <p className="text-slate-600">
+          <p className="text-secondary">
             This Aurora background is not full height - it sizes to its content.
             Useful for sections within a page rather than full-page backgrounds.
           </p>
@@ -240,7 +240,7 @@ export const ComplexLayout: Story = {
               <h2 className="text-2xl font-bold text-slate-900 mb-4">
                 Main Content Area
               </h2>
-              <p className="text-slate-600 mb-4">
+              <p className="text-secondary mb-4">
                 Aurora backgrounds work seamlessly with complex layouts
                 including navigation, sidebars, and multiple content sections.
               </p>
@@ -279,7 +279,7 @@ export const PerformanceTest: Story = {
                 <h2 className="text-2xl font-bold text-slate-900 capitalize">
                   {variant} Variant
                 </h2>
-                <p className="text-slate-600">
+                <p className="text-secondary">
                   Performance with multiple instances
                 </p>
               </Card>

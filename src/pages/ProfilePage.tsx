@@ -595,7 +595,7 @@ export const ProfilePage: React.FC = () => {
                   placeholder="(555) 123-4567"
                   value={formData.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
-                  className={validationErrors.phone ? "border-red-500" : ""}
+                  className={validationErrors.phone ? "border-error-500" : ""}
                 />
                 <ValidationError error={validationErrors.phone} />
               </div>
@@ -701,7 +701,7 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("jersey_number", e.target.value)
                     }
                     className={
-                      validationErrors.jersey_number ? "border-red-500" : ""
+                      validationErrors.jersey_number ? "border-error-500" : ""
                     }
                   />
                   <ValidationError error={validationErrors.jersey_number} />
@@ -724,7 +724,7 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("height_inches", e.target.value)
                     }
                     className={
-                      validationErrors.height_inches ? "border-red-500" : ""
+                      validationErrors.height_inches ? "border-error-500" : ""
                     }
                   />
                   <ValidationError error={validationErrors.height_inches} />
@@ -747,7 +747,7 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("weight_lbs", e.target.value)
                     }
                     className={
-                      validationErrors.weight_lbs ? "border-red-500" : ""
+                      validationErrors.weight_lbs ? "border-error-500" : ""
                     }
                   />
                   <ValidationError error={validationErrors.weight_lbs} />
@@ -933,7 +933,7 @@ export const ProfilePage: React.FC = () => {
                     handleInputChange("emergency_contact", e.target.value)
                   }
                   className={
-                    validationErrors.emergency_contact ? "border-red-500" : ""
+                    validationErrors.emergency_contact ? "border-error-500" : ""
                   }
                 />
                 <ValidationError error={validationErrors.emergency_contact} />
@@ -954,7 +954,7 @@ export const ProfilePage: React.FC = () => {
                     handleInputChange("emergency_phone", e.target.value)
                   }
                   className={
-                    validationErrors.emergency_phone ? "border-red-500" : ""
+                    validationErrors.emergency_phone ? "border-error-500" : ""
                   }
                 />
                 <ValidationError error={validationErrors.emergency_phone} />

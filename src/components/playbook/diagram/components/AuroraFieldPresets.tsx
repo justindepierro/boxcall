@@ -50,7 +50,7 @@ export const AuroraFieldPresets = memo<AuroraFieldPresetsProps>(
     return (
       <div className="backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 rounded-glass border-2 border-white/30 dark:border-slate-700/30 p-4 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border dark:border-slate-700">
           <Icon
             name="book"
             className="w-5 h-5 text-slate-600 dark:text-slate-400"
@@ -132,7 +132,7 @@ export const AuroraFieldPresets = memo<AuroraFieldPresetsProps>(
         </div>
 
         {/* Info Footer */}
-        <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700">
+        <div className="mt-4 pt-3 border-t border dark:border-slate-700">
           <div className="flex items-start gap-2 p-2 rounded-xl bg-electric-50 dark:bg-electric-900/20">
             <Icon
               name="info"
