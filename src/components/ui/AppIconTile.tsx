@@ -33,7 +33,7 @@ export const AppIconTile = memo<AppIconTileProps>(
         <button
           type="button"
           onClick={onOpen}
-          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 rounded-2xl overflow-visible"
+          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 rounded-xl overflow-visible"
           aria-label={title}
         >
           {/* Top Label - Optional text above icon */}
@@ -47,7 +47,7 @@ export const AppIconTile = memo<AppIconTileProps>(
           <div className="relative w-24 h-24 overflow-visible">
             {/* Icon Container with Gradient and shine effect */}
             <div
-              className={`absolute inset-0 rounded-glass bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-glass before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none overflow-visible`}
+              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none overflow-visible`}
               style={{
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",

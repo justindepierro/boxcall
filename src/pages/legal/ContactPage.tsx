@@ -132,7 +132,7 @@ export const ContactPage: React.FC = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="Your full name"
               />
             </div>
@@ -149,7 +149,7 @@ export const ContactPage: React.FC = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -165,7 +165,7 @@ export const ContactPage: React.FC = () => {
               <select
                 id="subject"
                 name="subject"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
               >
                 <option value="">Select a topic</option>
                 <option value="support">Technical Support</option>
@@ -188,7 +188,7 @@ export const ContactPage: React.FC = () => {
                 id="message"
                 name="message"
                 rows={6}
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
                 placeholder="Tell us how we can help..."
               />
             </div>

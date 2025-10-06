@@ -46,25 +46,25 @@ export function getTokenColor(path: string): string {
 export const tokenClasses = {
   // Primary button styles
   buttonPrimary:
-    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-[var(--semantic-text-inverse)] font-semibold py-2 px-4 rounded transition-colors",
+    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-[var(--semantic-text-inverse)] font-semibold py-2 px-4 rounded-lg transition-colors",
 
   // Secondary button styles
   buttonSecondary:
-    "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded border border-surface-jade-dark transition-colors",
+    "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded-lg border border-surface-jade-dark transition-colors",
 
   // Card styles
-  card: "surface-card border border-surface-jade-dark rounded-lg shadow-sm",
+  card: "surface-card border border-surface-jade-dark rounded-xl shadow-sm",
   cardHover:
     "hover:shadow-md hover:border-brand-jade transition-all duration-200",
 
   // Navigation styles
   navItem:
-    "text-text-secondary hover:text-interaction-jade hover:bg-surface-jade p-2 rounded transition-colors",
+    "text-text-secondary hover:text-interaction-jade hover:bg-surface-jade p-2 rounded-lg transition-colors",
   navBrand: "text-interaction-jade font-bold text-xl",
 
   // Form styles
   input:
-    "border border-surface-jade-dark focus:border-brand-jade focus:ring-1 focus:ring-brand-jade rounded px-3 py-2",
+    "border border-surface-jade-dark focus:border-brand-jade focus:ring-1 focus:ring-brand-jade rounded-lg px-3 py-2",
   inputError: "border-text-error focus:border-text-error focus:ring-text-error",
 
   // Text styles

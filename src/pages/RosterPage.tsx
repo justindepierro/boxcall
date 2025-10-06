@@ -413,7 +413,7 @@ export default function RosterPage() {
               <select
                 value={positionFilter}
                 onChange={(e) => setPositionFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Positions</option>
                 {positionOptions.map((pos) => (
@@ -425,7 +425,7 @@ export default function RosterPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Status</option>
                 {statusOptions.map((status) => (
@@ -625,7 +625,7 @@ export default function RosterPage() {
                     <div className="flex justify-between">
                       <span className="text-text-secondary">Status:</span>
                       <span
-                        className={`capitalize px-spacing-xs py-spacing-xs rounded text-xs ${
+                        className={`capitalize px-spacing-xs py-spacing-xs rounded-lg text-xs ${
                           player.is_active
                             ? "bg-green-100 text-green-800"
                             : "bg-gray-100 text-gray-800"
@@ -688,7 +688,7 @@ export default function RosterPage() {
                         position: e.target.value,
                       }))
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-spacing-sm py-spacing-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   >
                     <option value="">Select Position</option>
@@ -725,7 +725,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>
@@ -882,7 +882,7 @@ export default function RosterPage() {
                         position: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   >
                     <option value="">Select Position</option>
@@ -919,7 +919,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>

@@ -145,13 +145,13 @@ const AboutPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/create-team"
-            className="inline-flex items-center justify-center px-6 py-3 border border-surface-primary text-base font-medium rounded-md text-text-primary bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-surface-primary text-base font-medium rounded-lg text-text-primary bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
           >
             Start Your Team
           </a>
           <a
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-md text-text-primary surface-card surface-subtle-hover transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-lg text-text-primary surface-card surface-subtle-hover transition-colors"
           >
             Contact Us
           </a>

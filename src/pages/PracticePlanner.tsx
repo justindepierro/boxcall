@@ -165,7 +165,7 @@ export function PracticePlanner() {
               </div>
             )}
             {practiceStarted && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
+              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-lg">
                 <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
                 <span className="font-mono text-sm">Practice Live</span>
               </div>

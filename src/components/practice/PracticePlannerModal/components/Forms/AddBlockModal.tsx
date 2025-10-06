@@ -135,7 +135,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onClick={() => handleTemplateSelect(template)}
               variant="ghost"
               size="xs"
-              className={`px-3 py-1 bg-${template.color}-100 text-${template.color}-800 hover:bg-${template.color}-200 flex items-center rounded-md`}
+              className={`px-3 py-1 bg-${template.color}-100 text-${template.color}-800 hover:bg-${template.color}-200 flex items-center rounded-lg`}
               icon={<Icon name={template.icon} size="xs" className="mr-1" />}
             >
               {template.title.includes("Equipment") ? "🥿 " : ""}
@@ -164,7 +164,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onBlockChange({ ...newBlock, title: e.target.value })
             }
             placeholder="e.g., Offensive line drills"
-            className="w-full border border-border-medium rounded-md px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-border-medium rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
           />
         </div>
         <div>
@@ -186,7 +186,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             }
             placeholder="15"
             min="1"
-            className="w-full border border-border-medium rounded-md px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-border-medium rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
           />
         </div>
       </div>
@@ -208,7 +208,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
                 category: e.target.value as PracticeBlock["category"],
               })
             }
-            className="w-full border border-border-medium rounded-md px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-border-medium rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
           >
             <option value="">Select category</option>
             {CATEGORY_OPTIONS.map((option) => (
@@ -233,7 +233,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onBlockChange({ ...newBlock, location: e.target.value })
             }
             placeholder="Field, Weight Room, etc."
-            className="w-full border border-border-medium rounded-md px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-border-medium rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
           />
         </div>
       </div>
@@ -253,7 +253,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           }
           placeholder="Special instructions, equipment needed, etc."
           rows={2}
-          className="w-full border border-border-medium rounded-md px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+          className="w-full border border-border-medium rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
         />
       </div>
 

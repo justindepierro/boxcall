@@ -647,7 +647,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
               />
             </div>
           </Card>
@@ -765,7 +765,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("grade_level", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
                   >
                     <option value="">Select grade level</option>
                     <option value="9th">9th Grade</option>
@@ -880,7 +880,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -1116,7 +1116,7 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_experience", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">
@@ -1134,7 +1134,7 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-md focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">

@@ -384,7 +384,7 @@ export function PracticePlanner() {
               </div>
             )}
             {practiceStarted && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
+              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-lg">
                 <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
                 <span className="font-mono text-sm">Practice Live</span>
               </div>
@@ -394,7 +394,7 @@ export function PracticePlanner() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <div className="rounded-[2.25rem] border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+            <div className="rounded-3xl border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
               <div className="mb-6">
                 <Typography variant="headline-sm" className="text-text-primary">
                   Command your practice flow
@@ -919,7 +919,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the practice block..."
-              className="w-full p-3 border border-subtle rounded-md focus:ring-jade-500 focus:border-jade-500"
+              className="w-full p-3 border border-subtle rounded-lg focus:ring-jade-500 focus:border-jade-500"
               rows={3}
             />
           </div>
