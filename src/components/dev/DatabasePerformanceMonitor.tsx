@@ -103,7 +103,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
   }
 
   return (
-    <div className={`bg-white border border rounded-lg shadow-sm ${className}`}>
+    <div className={`bg-white border-subtle rounded-lg shadow-sm ${className}`}>
       {/* Header */}
       <div className="px-4 py-3 border-b border flex items-center justify-between">
         <div className="flex items-center gap-2">
