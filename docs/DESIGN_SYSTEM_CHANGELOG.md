@@ -10,11 +10,103 @@
 
 ### In Progress
 - Phase 1: Foundation Solidification (Steps 1-3)
-- Typography system standardization
+- Typography Phase 3+: Additional standardization opportunities
 - Color semantic token completion
 
 ### Completed
 - ✅ Spacing audit and standardization (100% complete - 83 violations fixed)
+- ✅ Typography Phase 1 & 2 (40% complete - 38 violations fixed, 58 intentional whitelisted)
+
+---
+
+## [2.2.0] - 2025-01-20
+
+### 🎨 Minor: Typography Standardization (Phase 1 & 2)
+
+#### Summary
+Fixed 38 typography violations and established ESLint enforcement with smart whitelist for 58 intentional design decisions.
+
+#### Phase 1: Font Size Standardization (38 violations fixed)
+**Tailwind Extension:**
+- Added `text-2xs` custom font size (0.625rem = 10px)
+- Enables standard Tailwind class for previously arbitrary 10px text
+
+**Global Replacements:**
+- `text-[10px]` → `text-2xs` (30 instances)
+- `text-[12px]` → `text-xs` (8 instances)
+
+**Files Modified (12 total):**
+- **Player Components:** PlayerSidebar.tsx (v1 & v2) - Compact player roster UI
+- **Tool Palettes:** ToolPalette.tsx (v1 & v2), AuroraToolPalette.tsx - Diagram toolbars and keyboard shortcuts
+- **Play Cards:** PlayCardDetails.tsx, PlayCardListHeader.tsx, PlayCardTileHeader.tsx - Play card layouts
+- **Search/Selection:** PlayRemoteSearchBar.tsx, CategorySelector.tsx - Search and timeline UIs
+- **Team Dashboard:** TeamBulletinHeader.tsx - Team dashboard headers
+
+#### Phase 2: ESLint Enforcement (58 intentional whitelisted)
+**Created Rule:** `boxcall-design/no-arbitrary-typography`
+- Detects arbitrary font size values in text utilities
+- Enforces Tailwind standard classes (text-xs, text-sm, etc.)
+- Smart whitelist for intentional design decisions
+
+**Whitelisted Values (17 total, 58 instances):**
+- **text-[11px]** (55 instances)
+  - Purpose: Compact labels/badges requiring size between xs (12px) and 2xs (10px)
+  - Used in: Player rosters, tool palettes, compact badges
+  - Rationale: Precise visual density control
+
+- **text-[13px]** (1 instance)
+  - Purpose: Compact mode UI requiring size between xs (12px) and sm (14px)
+  - Used in: Compact mode layouts
+  - Rationale: Optimal readability in dense layouts
+
+- **Typography Variant System** (15 sizes, 2 instances)
+  - Purpose: Design system semantic typography scale
+  - Sizes: Display (3.25rem, 2.75rem, 2.25rem), Headline (2rem, 1.625rem, 1.375rem, 1.125rem), Body (0.95rem, 0.9rem, 0.82rem, 0.72rem), Code/Button (0.85rem, 0.78rem), Labels (0.7rem, 0.62rem), Additional (1rem)
+  - Used in: Typography variant components (headline-xl, body-sm, etc.)
+  - Rationale: Design system component definitions, not violations
+
+**Rule Features:**
+- ✅ Catches unauthorized arbitrary font sizes
+- ✅ Provides standard Tailwind suggestions (e.g., text-[14px] → text-sm)
+- ✅ Works with className, clsx, cn, classnames utilities
+- ✅ Clear, actionable error messages
+- ✅ No false positives on whitelisted values
+
+**Testing:**
+- Verified rule catches text-[14px] violation ❌
+- Verified rule allows text-[11px] (whitelisted) ✅
+- Confirmed standard Tailwind classes pass ✅
+- Type check passing ✅
+
+#### Benefits
+- ✅ 38 violations fixed with standard Tailwind classes
+- ✅ 58 intentional exceptions documented and protected
+- ✅ ESLint enforcement prevents regression
+- ✅ Design system integrity preserved (no visual changes)
+- ✅ Automated compliance checking at dev time
+- ✅ Clear documentation of typography decisions
+
+#### Documentation
+- **Created:** `docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md`
+  - Complete audit results breakdown
+  - Decision rationale (extend vs round)
+  - Whitelist justification with examples
+  - Implementation plan and progress tracking
+- **Updated:** `eslint-rules/README.md`
+  - Typography rule section with examples
+  - Whitelist table with rationale
+  - Suggested replacements
+- **Updated:** `README.md`
+  - Typography rule in ESLint section
+  - Compliance statistics
+
+#### Breaking Changes
+None - all changes use standard/whitelisted values, maintain visual appearance
+
+#### Future Work
+- Phase 3+: Continue standardization where applicable
+- Expand typography token documentation
+- Create comprehensive typography usage guide
 
 ---
 
