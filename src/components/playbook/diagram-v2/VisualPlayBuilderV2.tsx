@@ -108,7 +108,7 @@ const Shell: React.FC<ShellProps> = ({
   }, [onRequestExport]);
 
   return (
-    <div className="flex flex-col h-full min-h-[620px]">
+    <div className="flex flex-col h-full min-h-[37.5rem]">
       <Toolbar onClose={onClose} svgRef={svgRef} />
       <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
         {/* Sidebar hidden */}

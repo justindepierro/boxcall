@@ -32,7 +32,7 @@ export const FormField = memo<FormFieldProps>(
               value={String(value || "")}
               onChange={(e) => onChange(e.target.value)}
               placeholder={field.placeholder}
-              className={`${baseInputClasses} min-h-[100px] resize-y`}
+              className={`${baseInputClasses} min-h-24 resize-y`}
               rows={4}
             />
           );

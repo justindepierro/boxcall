@@ -25,7 +25,7 @@ const Logout: React.FC = () => {
   }, [signOut]);
 
   return (
-    <div className="min-h-[40vh] flex items-center justify-center">
+    <div className="min-h-[40svh] flex items-center justify-center">
       <Typography variant="body-md" as="p" className="text-text-secondary">
         Signing you out…
       </Typography>

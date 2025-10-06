@@ -521,7 +521,7 @@ export function PracticePlanner() {
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
+                          className={`space-y-3 min-h-48 p-4 rounded-lg placeholder-zone transition-colors ${
                             snapshot.isDraggingOver
                               ? "border-jade-400 surface-subtle"
                               : "border-subtle surface-subtle"

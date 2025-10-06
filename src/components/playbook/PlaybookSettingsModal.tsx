@@ -325,7 +325,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
         </div>
 
         {/* Tab Content */}
-        <div className="min-h-[400px]">
+        <div className="min-h-96">
           {activeTab === "personnel" && (
             <div className="space-y-6">
               <Typography variant="headline-md" className="mb-4">

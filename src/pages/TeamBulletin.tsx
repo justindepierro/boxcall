@@ -266,7 +266,7 @@ const TeamBulletin: React.FC = React.memo(() => {
             title="Team Bulletin"
             subtitle="Create or join a team to unlock your bulletin."
           >
-            <div className="flex items-center justify-center min-h-[400px]">
+            <div className="flex items-center justify-center min-h-96">
               <div className="text-center max-w-md px-4">
                 <Typography variant="headline-lg" className="mb-3">
                   Welcome to BoxCall
@@ -297,7 +297,7 @@ const TeamBulletin: React.FC = React.memo(() => {
           title="Team Bulletin"
           subtitle="Choose a team from the switcher to view its bulletin."
         >
-          <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex items-center justify-center min-h-96">
             <div className="text-center max-w-md px-4">
               <Typography variant="headline-lg" className="mb-4">
                 Select a Team

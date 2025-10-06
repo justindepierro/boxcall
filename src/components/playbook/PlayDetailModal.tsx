@@ -51,7 +51,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
       >
         {/* Modal Container - No padding gap */}
         <div
-          className="relative w-full max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
+          className="relative w-full max-w-6xl max-h-[94svh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Gradient Header with pattern and shine */}

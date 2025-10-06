@@ -103,7 +103,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-spacing-lg overflow-y-auto max-h-[60vh]">
+        <div className="p-spacing-lg overflow-y-auto max-h-[60svh]">
           {step === "upload" && (
             <div className="text-center py-12">
               <div className="mx-auto w-24 h-24 bg-surface-info rounded-full flex items-center justify-center mb-spacing-lg">

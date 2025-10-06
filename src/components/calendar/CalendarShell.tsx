@@ -103,7 +103,7 @@ export const CalendarShell: React.FC = () => {
               onPrev={() => calendarRef.current?.prev()}
               onNext={() => calendarRef.current?.next()}
             />
-            <div className="h-[600px]">
+            <div className="h-[37.5rem]">
               <BoxCallCalendar
                 ref={calendarRef}
                 events={events}

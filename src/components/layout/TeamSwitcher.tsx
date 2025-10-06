@@ -57,7 +57,7 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
           <Icon name="chevron-down" size="xs" className="ml-2" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[16rem]">
+      <DropdownMenuContent align="end" className="min-w-64">
         <Typography variant="body-sm" className="px-3 py-2 text-text-muted">
           Your Teams
         </Typography>

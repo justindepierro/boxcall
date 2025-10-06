@@ -38,7 +38,7 @@ export const CalendarGridSkeleton: React.FC = () => (
         <div className="h-9 w-24 rounded-lg surface-subtle" />
       </div>
     </div>
-    <div className="grid grid-cols-7 gap-2 h-[600px] select-none">
+    <div className="grid grid-cols-7 gap-2 h-[37.5rem] select-none">
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`skel-${i}`}
