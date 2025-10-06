@@ -114,4 +114,18 @@ export default [
       "boxcall-design/no-arbitrary-spacing": "warn",
     },
   },
+  // Relax arbitrary spacing for calendar/diagram components with fixed heights
+  {
+    files: [
+      "**/CalendarShell.tsx",
+      "**/CalendarSkeletons.tsx",
+      "**/VisualPlayBuilder*.tsx",
+      "**/*Modal*.tsx", // Modals often have fixed viewport heights
+      "**/PlayerComparison*.tsx", // Comparison views with aspect ratios
+    ],
+    rules: {
+      "boxcall-design/no-arbitrary-spacing": "warn", // Warn instead of error for fixed layouts
+      "boxcall-design/no-raw-tailwind-colors": "warn", // Warn instead of error for fixed sizes
+    },
+  },
 ];

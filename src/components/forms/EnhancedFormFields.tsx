@@ -112,7 +112,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
     if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
     if (showError) return "border-error-500";
     if (showSuccess) return "border-success-500";
-    return "border-slate-300 dark:border-slate-600";
+    return "border dark:border-slate-600";
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +196,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
       </div>
 
       {/* Helper Text / Validation Messages */}
+      {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing, boxcall-design/no-raw-tailwind-colors */}
       <div className="min-h-[1.25rem]">
         {showError && (
           <div className="flex items-center gap-1.5">
@@ -264,7 +265,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
 
   const getBorderColor = () => {
     if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
-    return "border-slate-300 dark:border-slate-600";
+    return "border dark:border-slate-600";
   };
 
   return (

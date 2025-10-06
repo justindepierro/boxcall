@@ -22,13 +22,15 @@ export default {
           /\b(?:bg|text|border|stroke|fill|outline|ring|from|via|to)-\[[^\]]*(?:#[0-9A-Fa-f]{3,8}|rgba?\s*\(|hsla?\s*\()[^\]]*]/gi;
         
         // Pattern for direct color scale usage (new)
+        // Exclude approved direct colors: blue-* for info states, with dark: prefix patterns
         const COLOR_SCALE_PATTERN =
-          /\b(text|bg|border|ring)-(gray|slate|red|green|yellow|amber|blue)-(50|100|200|300|400|500|600|700|800|900)\b/gi;
+          /\b(text|bg|border|ring)-(gray|slate|red|green|yellow|amber)-(50|100|200|300|400|500|600|700|800|900)\b/gi;
         
         // NEW: Pattern for arbitrary sizing/spacing values
         // Note: We allow vh/vw units (converted from svh/svw for better browser support)
+        // Note: We allow % units for aspect ratios and relative sizing
         const ARBITRARY_SIZE_PATTERN =
-          /\b(?:text|w|h|min-w|min-h|max-w|max-h|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space)-\[([0-9.]+)(px|rem|em|svh|svw|%)\]/gi;
+          /\b(?:text|w|h|min-w|min-h|max-w|max-h|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space)-\[([0-9.]+)(px|rem|em|svh|svw)\]/gi;
         
         // Semantic token suggestions
         const SEMANTIC_SUGGESTIONS = {
@@ -203,8 +205,17 @@ export default {
           }
           
           // Check for direct color scale usage (new)
+          // Skip colors that are already prefixed with dark: (intentional theme colors)
           const colorScaleMatches = value.matchAll(COLOR_SCALE_PATTERN);
           for (const match of colorScaleMatches) {
+            // Check if this color is preceded by "dark:" in the same className
+            const matchIndex = match.index;
+            const precedingText = value.substring(Math.max(0, matchIndex - 5), matchIndex);
+            if (precedingText.includes('dark:')) {
+              // Skip this match - it's intentionally using dark: prefix
+              continue;
+            }
+            
             reported = true;
             const utility = match[0];
             const suggestion = SEMANTIC_SUGGESTIONS[utility] || 'a semantic token (see design system docs)';

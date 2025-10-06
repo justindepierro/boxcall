@@ -13,5 +13,3 @@
 console.warn("⚠️  This script is deprecated and needs to be updated for the new theme system");
 console.warn("📝 To validate contrast, see: src/design-system/tokens.ts");
 process.exit(0);
-
-writeFileSync("docs/style-inventory/theme-contrast-matrix.md", md);

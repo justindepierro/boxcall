@@ -267,7 +267,7 @@ export const ActiveStates: StoryObj = {
                     {item.isActive ? (
                       <Badge variant="success">Active</Badge>
                     ) : (
-                      <span className="text-gray-400">Inactive</span>
+                      <span className="text-muted">Inactive</span>
                     )}
                   </div>
                 ))}
