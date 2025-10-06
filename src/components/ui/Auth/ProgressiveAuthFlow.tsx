@@ -129,7 +129,7 @@ export function ProgressiveAuthFlow({
 
   // Welcome screen component
   const WelcomeScreen = () => (
-    <Card className="max-w-md mx-auto">
+    <Card className="content-narrow">
       <div className="text-center p-8">
         {/* Logo and branding */}
         <div className="mb-6">

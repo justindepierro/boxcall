@@ -81,7 +81,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       aria-label="Mobile bottom navigation"
     >
       <div className="px-2 py-1">
-        <div className="flex justify-between items-center max-w-sm mx-auto">
+        <div className="flex justify-between items-center content-narrow">
           {items.map((item) => (
             <div
               key={item.id}

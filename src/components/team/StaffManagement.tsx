@@ -140,7 +140,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
           <Typography
             variant="body-lg"
             color="muted"
-            className="mb-6 max-w-2xl mx-auto"
+            className="mb-6 container-content"
           >
             Invite assistant coaches, coordinators, and managers to help run
             your team.

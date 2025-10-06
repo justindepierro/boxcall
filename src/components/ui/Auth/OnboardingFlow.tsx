@@ -208,7 +208,7 @@ export function OnboardingFlow({ user, onComplete }: OnboardingFlowProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-success to-surface-info dark:from-surface-primary dark:to-surface-secondary flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl mx-auto shadow-xl">
+      <Card className="w-full container-content shadow-xl">
         <div className="p-8">
           {/* Progress Indicator */}
           <div className="flex items-center justify-center mb-8">

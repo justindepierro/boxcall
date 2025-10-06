@@ -115,7 +115,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               <Typography
                 variant="body-lg"
                 color="muted"
-                className="mb-spacing-lg max-w-md mx-auto"
+                className="mb-spacing-lg content-narrow"
               >
                 Select a CSV file exported from MaxPreps or in the standard
                 roster format. The file should include player names, jersey

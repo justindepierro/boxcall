@@ -41,7 +41,7 @@ export const TeamWelcomeModal: React.FC<TeamWelcomeModalProps> = ({
         <Typography
           variant="body-lg"
           color="muted"
-          className="mb-8 max-w-md mx-auto"
+          className="mb-8 content-narrow"
         >
           Your team has been successfully created and you're ready to start
           building something amazing together.

@@ -62,13 +62,13 @@ export function DesignSystemShowcase() {
 
   return (
     <div className="min-h-screen bg-primary p-8">
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="container-page space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-primary">
             🎨 BoxCall Design System Showcase
           </h1>
-          <p className="text-lg text-secondary max-w-2xl mx-auto">
+          <p className="text-lg text-secondary container-content">
             Experience our industry-leading design system with AI-powered
             theming, advanced animations, and comprehensive accessibility
             support.
