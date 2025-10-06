@@ -396,4 +396,42 @@
   --component-navigation-background: #ffffff;
   --component-navigation-border: #e5e7eb;
   --component-navigation-link-hover: #ecfdf5;
+
+  /* ============================================================================
+     LAYOUT TOKENS - Page Containers & Grid Systems
+     ============================================================================ */
+
+  /* Container Widths - Page-level max-width containers */
+  --layout-container-xs: 20rem; /* 320px - Minimal mobile */
+  --layout-container-sm: 24rem; /* 384px - Small forms */
+  --layout-container-md: 28rem; /* 448px - Medium forms */
+  --layout-container-lg: 32rem; /* 512px - Large forms */
+  --layout-container-xl: 36rem; /* 576px - Modals */
+  --layout-container-2xl: 42rem; /* 672px - Articles/Forms (max-w-2xl) */
+  --layout-container-3xl: 48rem; /* 768px - Wide forms (max-w-3xl) */
+  --layout-container-4xl: 56rem; /* 896px - Wide content (max-w-4xl) */
+  --layout-container-5xl: 64rem; /* 1024px - Detail pages (max-w-5xl) */
+  --layout-container-6xl: 72rem; /* 1152px - Wide dashboards (max-w-6xl) */
+  --layout-container-7xl: 80rem; /* 1280px - Main app container (max-w-7xl) */
+  --layout-container-full: 100%; /* Full width */
+
+  /* Content Widths - Semantic content area sizing */
+  --layout-content-narrow: var(--layout-container-2xl); /* 42rem - Articles, forms */
+  --layout-content-medium: var(--layout-container-4xl); /* 56rem - Detail pages */
+  --layout-content-wide: var(--layout-container-6xl); /* 72rem - Dashboards */
+  --layout-content-full: var(--layout-container-7xl); /* 80rem - Main container */
+
+  /* Grid Gaps - Layout-specific spacing for grids */
+  --layout-gap-xs: 0.5rem; /* 8px - Tight grids */
+  --layout-gap-sm: 0.75rem; /* 12px - Compact grids */
+  --layout-gap-md: 1rem; /* 16px - Standard grids (gap-4) */
+  --layout-gap-lg: 1.25rem; /* 20px - Spacious grids (gap-5) */
+  --layout-gap-xl: 1.5rem; /* 24px - Wide grids (gap-6) */
+  --layout-gap-2xl: 2rem; /* 32px - Extra wide grids */
+
+  /* Container Padding - Responsive page padding */
+  --layout-padding-xs: 0.75rem; /* 12px - Tight mobile */
+  --layout-padding-sm: 1rem; /* 16px - Mobile (px-4) */
+  --layout-padding-md: 1.5rem; /* 24px - Tablet (px-6) */
+  --layout-padding-lg: 2rem; /* 32px - Desktop (px-8) */
 }

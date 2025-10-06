@@ -2,6 +2,7 @@ import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
 import auroraTheme from "./src/styles/tailwind/auroraTheme.js";
 import boxcallTheme from "./src/styles/tailwind/boxcallTheme.js";
+import layoutTokens from "./src/styles/tailwind/layoutTokens.js";
 
 const colorSteps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 const statusSteps = [50, 500, 600, 700];
@@ -195,6 +196,26 @@ export default {
     extend: {
       colors,
       spacing: spacingTokens,
+      maxWidth: {
+        // Layout container tokens
+        'container-xs': 'var(--layout-container-xs)',
+        'container-sm': 'var(--layout-container-sm)',
+        'container-md': 'var(--layout-container-md)',
+        'container-lg': 'var(--layout-container-lg)',
+        'container-xl': 'var(--layout-container-xl)',
+        'container-2xl': 'var(--layout-container-2xl)',
+        'container-3xl': 'var(--layout-container-3xl)',
+        'container-4xl': 'var(--layout-container-4xl)',
+        'container-5xl': 'var(--layout-container-5xl)',
+        'container-6xl': 'var(--layout-container-6xl)',
+        'container-7xl': 'var(--layout-container-7xl)',
+        'container-full': 'var(--layout-container-full)',
+        // Semantic content widths
+        'content-narrow': 'var(--layout-content-narrow)',
+        'content-medium': 'var(--layout-content-medium)',
+        'content-wide': 'var(--layout-content-wide)',
+        'content-full': 'var(--layout-content-full)',
+      },
       fontFamily: {
         display: ["Bebas Neue", "system-ui", "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -254,5 +275,5 @@ export default {
       },
     },
   },
-  plugins: [forms, typography, auroraTheme, boxcallTheme],
+  plugins: [forms, typography, auroraTheme, boxcallTheme, layoutTokens],
 };
