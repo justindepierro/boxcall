@@ -24,7 +24,7 @@ const getRoleConfig = (role: string) => {
         icon: Shield,
         colors:
           "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
-        iconColor: "text-red-600 dark:text-red-400",
+        iconColor: "text-error-600 dark:text-red-400",
       };
     case "head_coach":
       return {
@@ -48,7 +48,7 @@ const getRoleConfig = (role: string) => {
         icon: GraduationCap,
         colors:
           "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800",
-        iconColor: "text-green-600 dark:text-green-400",
+        iconColor: "text-success-600 dark:text-green-400",
       };
     case "player":
       return {

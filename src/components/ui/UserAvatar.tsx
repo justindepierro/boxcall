@@ -89,12 +89,12 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       case "assistant_coach":
         return "text-blue-600";
       case "player":
-        return "text-green-600";
+        return "text-success-600";
       case "family":
       case "parent":
         return "text-purple-600";
       case "admin":
-        return "text-red-600";
+        return "text-error-600";
       default:
         return "text-secondary";
     }

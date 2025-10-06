@@ -233,9 +233,9 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               rows={rows}
               className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
                 saveStatus === "error"
-                  ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                  ? "border-error-300 focus:border-error-500 focus:ring-error-500/20"
                   : saveStatus === "success"
-                    ? "border-green-300 focus:border-green-500 focus:ring-green-500/20"
+                    ? "border-success-300 focus:border-success-500 focus:ring-success-500/20"
                     : "border focus:border-electric-500 focus:ring-electric-500/20"
               } focus:outline-none focus:ring-4 ${className}`}
             />
@@ -251,9 +251,9 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               maxLength={maxLength}
               className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
                 saveStatus === "error"
-                  ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                  ? "border-error-300 focus:border-error-500 focus:ring-error-500/20"
                   : saveStatus === "success"
-                    ? "border-green-300 focus:border-green-500 focus:ring-green-500/20"
+                    ? "border-success-300 focus:border-success-500 focus:ring-success-500/20"
                     : "border focus:border-electric-500 focus:ring-electric-500/20"
               } focus:outline-none focus:ring-4 ${className}`}
             />
@@ -271,7 +271,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
             )}
             {saveStatus === "success" && (
               <div className="flex items-center justify-center w-8 h-8">
-                <Icon name="check-circle" className="h-4 w-4 text-green-600" />
+                <Icon name="check-circle" className="h-4 w-4 text-success-600" />
               </div>
             )}
             {saveStatus === "idle" && (
@@ -311,7 +311,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
         )}
 
         {error && (
-          <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+          <div className="mt-2 text-sm text-error-600 bg-error-bg px-3 py-2 rounded-lg border border-error-200">
             {error}
           </div>
         )}

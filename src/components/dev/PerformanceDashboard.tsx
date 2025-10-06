@@ -130,11 +130,11 @@ export const PerformanceDashboard: React.FC = () => {
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case "good":
-        return "text-green-600 bg-green-50 border-green-200";
+        return "text-success-600 bg-success-bg border-success-200";
       case "needs-improvement":
-        return "text-yellow-600 bg-yellow-50 border-yellow-200";
+        return "text-warning-600 bg-warning-bg border-warning-200";
       case "poor":
-        return "text-red-600 bg-red-50 border-red-200";
+        return "text-error-600 bg-error-bg border-error-200";
       default:
         return "text-secondary bg-surface-secondary border";
     }
@@ -216,15 +216,15 @@ export const PerformanceDashboard: React.FC = () => {
         </div>
         <div className="grid grid-cols-3 gap-4 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-success-500 rounded-full"></div>
             <span className="text-text-secondary">Good</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-warning-500 rounded-full"></div>
             <span className="text-text-secondary">Needs Improvement</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-error-500 rounded-full"></div>
             <span className="text-text-secondary">Poor</span>
           </div>
         </div>

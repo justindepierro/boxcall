@@ -247,7 +247,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       accentOverlayClass: "bg-aurora-amber",
       glowClassName: "glow-aurora-amber",
       statusBadge: "Formations",
-      iconClassName: "text-amber-600",
+      iconClassName: "text-warning-600",
       footnote: selectedView === "formations" ? "Active view" : "Tap to open",
       buttonLabel: "Formations",
       renderContent: () => (

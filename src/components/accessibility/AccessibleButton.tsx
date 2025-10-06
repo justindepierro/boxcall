@@ -116,13 +116,13 @@ export const AccessibleButton = forwardRef<
       active:bg-surface-muted
     `,
       danger: `
-      bg-red-600
-      border-red-600
+      bg-error-600
+      border-error-600
       text-white
-      hover:bg-red-700
-      hover:border-red-700
+      hover:bg-error-700
+      hover:border-error-700
       focus:ring-red-500
-      active:bg-red-800
+      active:bg-error-800
     `,
       ghost: `
       bg-transparent

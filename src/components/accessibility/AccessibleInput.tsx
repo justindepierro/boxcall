@@ -100,7 +100,7 @@ export const AccessibleInput = forwardRef<
       border
       focus:border-blue-500
       focus:ring-blue-500
-      ${hasError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
+      ${hasError ? "border-error-500 focus:border-error-500 focus:ring-red-500" : ""}
     `,
       filled: `
       bg-surface-secondary
@@ -108,7 +108,7 @@ export const AccessibleInput = forwardRef<
       focus:bg-white
       focus:border-blue-500
       focus:ring-blue-500
-      ${hasError ? "bg-red-50 border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
+      ${hasError ? "bg-error-bg border-error-500 focus:border-error-500 focus:ring-error-500" : ""}
     `,
       outlined: `
       bg-transparent
@@ -116,7 +116,7 @@ export const AccessibleInput = forwardRef<
       border
       focus:border-blue-500
       focus:ring-blue-500
-      ${hasError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
+      ${hasError ? "border-error-500 focus:border-error-500 focus:ring-red-500" : ""}
     `,
     };
 
@@ -131,8 +131,8 @@ export const AccessibleInput = forwardRef<
     text-sm
     font-medium
     mb-1
-    ${hasError ? "text-red-700" : "text-primary"}
-    ${required ? 'after:content-["*"] after:text-red-500 after:ml-1' : ""}
+    ${hasError ? "text-error-600" : "text-primary"}
+    ${required ? 'after:content-["*"] after:text-error-500 after:ml-1' : ""}
   `;
 
     const describedBy =
@@ -153,7 +153,7 @@ export const AccessibleInput = forwardRef<
           {hasIcon && iconPosition === "left" && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <span
-                className={`${hasError ? "text-red-500" : "text-muted"}`}
+                className={`${hasError ? "text-error-500" : "text-muted"}`}
                 aria-hidden="true"
               >
                 {icon}
@@ -177,7 +177,7 @@ export const AccessibleInput = forwardRef<
           {hasIcon && iconPosition === "right" && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <span
-                className={`${hasError ? "text-red-500" : "text-muted"}`}
+                className={`${hasError ? "text-error-500" : "text-muted"}`}
                 aria-hidden="true"
               >
                 {icon}
@@ -203,7 +203,7 @@ export const AccessibleInput = forwardRef<
         {error && (
           <p
             id={errorId}
-            className="text-sm text-red-600"
+            className="text-sm text-error-600"
             role="alert"
             aria-live="polite"
           >

@@ -53,7 +53,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         accentOverlayClass: "bg-aurora-amber",
         glowClassName: "glow-aurora-amber",
         statusBadge: (userRole || "player").replace("_", " ").toUpperCase(),
-        iconClassName: "text-amber-600",
+        iconClassName: "text-warning-600",
         footnote: "View profile",
         body: (
           <div className="space-y-2 text-sm">

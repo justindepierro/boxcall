@@ -234,7 +234,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       </div>
                     )}
                     {/* Online status indicator */}
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success-500 rounded-full border-2 border-white"></div>
                   </div>
 
                   {/* Name and role */}
@@ -298,7 +298,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                 {achievements.length > 0 && (
                   <div>
                     <div className="flex items-center mb-2">
-                      <Trophy className="w-4 h-4 mr-2 text-yellow-500" />
+                      <Trophy className="w-4 h-4 mr-2 text-warning-500" />
                       <Typography
                         variant="body-sm"
                         className="font-medium text-primary"
@@ -310,7 +310,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       {achievements.map((achievement, index) => (
                         <div
                           key={index}
-                          className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-lg text-xs font-medium"
+                          className="bg-warning-bg text-warning-600 px-2 py-1 rounded-lg text-xs font-medium"
                         >
                           {achievement.title}
                         </div>

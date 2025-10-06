@@ -57,16 +57,16 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
 
   const getPerformanceStatus = (metrics: PerformanceMetrics) => {
     if (metrics.errorRate > 5)
-      return { status: "error", color: "text-red-600" };
+      return { status: "error", color: "text-error-600" };
     if (
       metrics.averageResponseTime >
       databaseConfig.performance.slowQueryThreshold
     ) {
-      return { status: "warning", color: "text-yellow-600" };
+      return { status: "warning", color: "text-warning-600" };
     }
     if (metrics.cacheHitRate < 50)
-      return { status: "warning", color: "text-yellow-600" };
-    return { status: "good", color: "text-green-600" };
+      return { status: "warning", color: "text-warning-600" };
+    return { status: "good", color: "text-success-600" };
   };
 
   const performanceStatus = getPerformanceStatus(databaseMetrics);
@@ -84,10 +84,10 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           <div
             className={`w-2 h-2 rounded-full ${
               performanceStatus.status === "good"
-                ? "bg-green-500"
+                ? "bg-success-500"
                 : performanceStatus.status === "warning"
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
+                  ? "bg-warning-500"
+                  : "bg-error-500"
             }`}
           />
           <span className="text-sm font-medium">DB</span>
@@ -110,10 +110,10 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           <div
             className={`w-3 h-3 rounded-full ${
               performanceStatus.status === "good"
-                ? "bg-green-500"
+                ? "bg-success-500"
                 : performanceStatus.status === "warning"
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
+                  ? "bg-warning-500"
+                  : "bg-error-500"
             }`}
           />
           <h3 className="text-sm font-semibold text-primary">
@@ -125,7 +125,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`text-xs px-2 py-1 rounded-lg ${
               autoRefresh
-                ? "bg-green-100 text-green-700"
+                ? "bg-success-bg text-success-600"
                 : "bg-surface-muted text-primary"
             }`}
           >
@@ -133,7 +133,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           </button>
           <button
             onClick={refresh}
-            className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+            className="text-xs px-2 py-1 bg-status-info-bg text-status-info rounded-lg hover:bg-blue-100"
           >
             Refresh
           </button>
@@ -186,10 +186,10 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           <div
             className={`text-lg font-bold ${
               cache.hitRate > 70
-                ? "text-green-600"
+                ? "text-success-600"
                 : cache.hitRate > 40
-                  ? "text-yellow-600"
-                  : "text-red-600"
+                  ? "text-warning-600"
+                  : "text-error-600"
             }`}
           >
             {formatPercentage(cache.hitRate)}
@@ -202,10 +202,10 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           <div
             className={`text-lg font-bold ${
               databaseMetrics.errorRate < 1
-                ? "text-green-600"
+                ? "text-success-600"
                 : databaseMetrics.errorRate < 5
-                  ? "text-yellow-600"
-                  : "text-red-600"
+                  ? "text-warning-600"
+                  : "text-error-600"
             }`}
           >
             {formatPercentage(databaseMetrics.errorRate)}
@@ -217,7 +217,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
       <div className="px-4 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Cache Statistics */}
-          <div className="bg-blue-50 p-3 rounded-lg">
+          <div className="bg-status-info-bg p-3 rounded-lg">
             <h4 className="text-sm font-semibold text-blue-900 mb-2">
               Cache Statistics
             </h4>
@@ -248,25 +248,25 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           </div>
 
           {/* Performance Alerts */}
-          <div className="bg-yellow-50 p-3 rounded-lg">
-            <h4 className="text-sm font-semibold text-yellow-900 mb-2">
+          <div className="bg-warning-bg p-3 rounded-lg">
+            <h4 className="text-sm font-semibold text-warning-600 mb-2">
               Performance Alerts
             </h4>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
-                <span className="text-yellow-700">Slow Queries:</span>
+                <span className="text-warning-600">Slow Queries:</span>
                 <span
                   className={`font-medium ${
                     databaseMetrics.slowQueries > 0
-                      ? "text-red-600"
-                      : "text-green-600"
+                      ? "text-error-600"
+                      : "text-success-600"
                   }`}
                 >
                   {databaseMetrics.slowQueries}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-yellow-700">Threshold:</span>
+                <span className="text-warning-600">Threshold:</span>
                 <span className="font-medium">
                   {formatDuration(
                     databaseConfig.performance.slowQueryThreshold
@@ -304,7 +304,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
                       </span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {metric.cacheHit && (
-                          <span className="px-1 py-0.5 bg-green-100 text-green-700 rounded-lg text-xs">
+                          <span className="px-1 py-0.5 bg-success-bg text-success-600 rounded-lg text-xs">
                             cached
                           </span>
                         )}
@@ -312,7 +312,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
                           className={`font-medium ${
                             metric.duration >
                             databaseConfig.performance.slowQueryThreshold
-                              ? "text-red-600"
+                              ? "text-error-600"
                               : "text-primary"
                           }`}
                         >

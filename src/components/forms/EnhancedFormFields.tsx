@@ -110,8 +110,8 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
 
   const getInputBorderColor = () => {
     if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
-    if (showError) return "border-red-500";
-    if (showSuccess) return "border-green-500";
+    if (showError) return "border-error-500";
+    if (showSuccess) return "border-success-500";
     return "border-slate-300 dark:border-slate-600";
   };
 
@@ -144,14 +144,14 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
           className="block font-medium text-slate-700 dark:text-slate-300"
         >
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-error-500 ml-1">*</span>}
         </Typography>
 
         {maxLength && (
           <Typography
             variant="body-xs"
             color="muted"
-            className={`text-right ${value.length > maxLength * 0.8 ? "text-amber-600" : ""}`}
+            className={`text-right ${value.length > maxLength * 0.8 ? "text-warning-600" : ""}`}
           >
             {value.length}/{maxLength}
           </Typography>
@@ -187,10 +187,10 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             <div className="w-2 h-2 bg-jade-500 rounded-full animate-pulse" />
           )}
           {showError && (
-            <Icon name="alert" size="sm" className="text-red-500" />
+            <Icon name="alert" size="sm" className="text-error-500" />
           )}
           {showSuccess && (
-            <Icon name="check-circle" size="sm" className="text-green-500" />
+            <Icon name="check-circle" size="sm" className="text-success-500" />
           )}
         </div>
       </div>
@@ -202,11 +202,11 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             <Icon
               name="alert-triangle"
               size="xs"
-              className="text-red-500 mt-0.5"
+              className="text-error-500 mt-0.5"
             />
             <Typography
               variant="body-xs"
-              className="text-red-600 dark:text-red-400"
+              className="text-error-600 dark:text-red-400"
             >
               {validationState.message}
             </Typography>
@@ -215,10 +215,10 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
 
         {showSuccess && !helperText && (
           <div className="flex items-center gap-1.5">
-            <Icon name="check" size="xs" className="text-green-500 mt-0.5" />
+            <Icon name="check" size="xs" className="text-success-500 mt-0.5" />
             <Typography
               variant="body-xs"
-              className="text-green-600 dark:text-green-400"
+              className="text-success-600 dark:text-green-400"
             >
               Looks good!
             </Typography>
@@ -275,7 +275,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
         className="block font-medium text-slate-700 dark:text-slate-300"
       >
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-error-500 ml-1">*</span>}
       </Typography>
 
       <div className="relative">

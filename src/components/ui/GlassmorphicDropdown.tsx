@@ -129,7 +129,7 @@ export const GlassmorphicInputWrapper: React.FC<GlassmorphicInputProps> = ({
           "absolute inset-0 rounded-lg backdrop-blur-sm opacity-0 transition-opacity duration-200",
           "peer-focus:opacity-100",
           error
-            ? "bg-red-500/5 border border-red-500/20"
+            ? "bg-error-500/5 border border-error-500/20"
             : "bg-jade-500/5 border border-jade-500/20"
         )}
       />

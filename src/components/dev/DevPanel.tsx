@@ -182,7 +182,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           </div>
         </div>
         {error && (
-          <div className="mt-spacing-xs p-spacing-xs bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-red-900/20 border border-error-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -309,17 +309,17 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       {monitoringData.recentErrors.length > 0 && (
         <div className="space-y-spacing-xs">
           <h4 className="font-medium text-text-secondary">Recent Errors</h4>
-          <div className="max-h-32 overflow-y-auto bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-spacing-xs text-xs">
+          <div className="max-h-32 overflow-y-auto bg-error-bg dark:bg-red-900/10 border border-error-200 dark:border-red-800 rounded-lg p-spacing-xs text-xs">
             {monitoringData.recentErrors.map((error, index) => (
               <div
                 key={index}
                 className="mb-spacing-xs text-red-700 dark:text-red-300"
               >
                 <div className="font-medium">{error.operation}</div>
-                <div className="text-red-600 dark:text-red-400">
+                <div className="text-error-600 dark:text-red-400">
                   {error.error}
                 </div>
-                <div className="text-xs text-red-500 dark:text-red-500">
+                <div className="text-xs text-error-500 dark:text-error-500">
                   {error.timestamp.toLocaleTimeString()}
                   {error.userId && ` • User: ${error.userId.slice(0, 8)}...`}
                 </div>

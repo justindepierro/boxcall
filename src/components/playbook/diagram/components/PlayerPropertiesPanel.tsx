@@ -156,7 +156,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
           onClick={() =>
             dispatch({ type: "REMOVE_PLAYER", id: selectedPlayer.id })
           }
-          className="w-full px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          className="w-full px-3 py-2 text-sm bg-error-600 hover:bg-error-700 text-white rounded-lg transition-colors"
         >
           Remove Player
         </button>

@@ -87,7 +87,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
             className="text-jade-600 dark:text-jade-400 transition-colors duration-300 group-hover:text-jade-500 dark:group-hover:text-jade-300"
           />
           {totalPoints > 0 && (
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-warning-500 rounded-full animate-pulse"></div>
           )}
         </div>
 
@@ -95,8 +95,8 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
         <div className="flex items-center gap-6">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1 mb-1">
-              <Icon name="zap" size="sm" className="text-amber-500" />
-              <span className="text-lg font-bold text-amber-600 dark:text-amber-400">
+              <Icon name="zap" size="sm" className="text-warning-500" />
+              <span className="text-lg font-bold text-warning-600 dark:text-amber-400">
                 {weeklyStreak}
               </span>
             </div>
@@ -214,11 +214,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               <Icon
                 name="zap"
                 size="md"
-                className="text-amber-500 mx-auto mb-2"
+                className="text-warning-500 mx-auto mb-2"
               />
               <Typography
                 variant="headline-sm"
-                className="font-bold text-amber-600 dark:text-amber-400"
+                className="font-bold text-warning-600 dark:text-amber-400"
               >
                 {weeklyStreak}
               </Typography>

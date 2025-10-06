@@ -154,7 +154,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 >
                   <Icon
                     name="delete"
-                    className="w-4 h-4 text-red-600 dark:text-red-400"
+                    className="w-4 h-4 text-error-600 dark:text-red-400"
                   />
                 </button>
               )}

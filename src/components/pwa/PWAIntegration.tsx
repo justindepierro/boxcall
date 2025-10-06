@@ -100,7 +100,7 @@ export const PWAIntegration: React.FC = () => {
     <>
       {/* Minimal Offline Indicator - only when actually offline */}
       {!isOnline && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-warning-500 text-white px-4 py-2 rounded-lg shadow-lg">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">You're offline</span>

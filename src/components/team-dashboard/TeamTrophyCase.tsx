@@ -22,7 +22,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({
         onClick={onClick}
       >
         <div className="w-16 h-16 bg-aurora-amber rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-          <Icon name="award" size="xl" className="text-yellow-600" />
+          <Icon name="award" size="xl" className="text-warning-600" />
         </div>
         <Typography
           variant="label-md"

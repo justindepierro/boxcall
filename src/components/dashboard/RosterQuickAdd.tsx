@@ -232,7 +232,7 @@ export const RosterQuickAdd: React.FC = () => {
           </Typography>
 
           {error && (
-            <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="p-2 bg-error-bg border border-error-200 rounded-lg text-sm text-error-600">
               {error}
             </div>
           )}
