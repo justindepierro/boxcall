@@ -357,7 +357,7 @@ export const DashboardCustomizationPanel: React.FC<
 
       {/* Panel */}
       <div
-        className="relative w-full max-w-2xl max-h-[90svh] mx-spacing-md bg-surface-app rounded-lg shadow-xl 
+        className="relative w-full max-w-2xl max-h-[90vh] mx-spacing-md bg-surface-app rounded-lg shadow-xl 
                       border border-subtle overflow-hidden"
       >
         {/* Header */}

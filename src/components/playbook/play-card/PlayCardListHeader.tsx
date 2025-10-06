@@ -50,7 +50,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             {displayName}
           </h3>
           {subtitleText && (
-            <span className="shrink-0 text-[11px] text-text-secondary italic">
+            <span className="shrink-0 text-xs text-text-secondary italic">
               {subtitleText}
             </span>
           )}
@@ -61,12 +61,12 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           }`}
         >
           <span
-            className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
+            className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
           >
             {optimisticPlay.p_type}
           </span>
           {optimisticPlay.f_type && (
-            <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-[11px] font-medium">
+            <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-xs font-medium">
               {optimisticPlay.f_type}
             </span>
           )}

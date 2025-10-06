@@ -58,7 +58,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
   return (
     <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div
-        className="surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90svh] overflow-y-auto"
+        className="surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">

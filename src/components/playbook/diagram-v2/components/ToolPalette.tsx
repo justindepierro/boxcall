@@ -342,7 +342,7 @@ export const ToolPalette: React.FC = () => {
             <Icon name="grid" />
           </Button>
           <span className="mx-1 w-px h-6 bg-border-light" />
-          <span className="text-[11px] text-text-xssssssrimary">Spacing</span>
+          <span className="text-xs text-text-xssssssrimary">Spacing</span>
           <input
             type="number"
             aria-label="Distribute spacing percent"
@@ -394,7 +394,7 @@ export const ToolPalette: React.FC = () => {
           className="flex items-center gap-2 ml-auto"
           aria-label="Snap settings"
         >
-          <label className="flex items-center gap-1 text-[11px] text-text-xssssssrimary">
+          <label className="flex items-center gap-1 text-xs text-text-xssssssrimary">
             <input
               type="checkbox"
               checked={state.ui.snap}
@@ -409,7 +409,7 @@ export const ToolPalette: React.FC = () => {
             onChange={(e) =>
               dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })
             }
-            className="text-[11px] border border-border-light rounded-lg px-2 py-1"
+            className="text-xs border border-border-light rounded-lg px-2 py-1"
           >
             <option value={1}>1%</option>
             <option value={2}>2%</option>

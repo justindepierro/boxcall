@@ -82,7 +82,7 @@ export const HelpHint: React.FC = () => {
       aria-hidden
     >
       <div
-        className="text-[11px] font-medium tracking-wide"
+        className="text-xs font-medium tracking-wide"
         style={{
           color: "rgba(255,255,255,0.7)",
           textShadow: "0 1px 1px rgba(0,0,0,0.35)",

@@ -270,7 +270,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-primary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-primary font-medium text-xs md:text-[11px]"
+                className="text-brand-primary font-medium text-xs md:text-xs"
               >
                 Stickers
               </Typography>
@@ -284,7 +284,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-lg p-3 md:p-spacing-sm text-center border border-success/20">
               <Typography
                 variant="body-xs"
-                className="text-success font-medium text-xs md:text-[11px]"
+                className="text-success font-medium text-xs md:text-xs"
               >
                 Medals
               </Typography>
@@ -298,7 +298,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-lg p-3 md:p-spacing-sm text-center border border-warning/20">
               <Typography
                 variant="body-xs"
-                className="text-warning font-medium text-xs md:text-[11px]"
+                className="text-warning font-medium text-xs md:text-xs"
               >
                 Streak
               </Typography>
@@ -312,7 +312,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-brand-secondary/10 to-brand-secondary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-secondary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-secondary font-medium text-xs md:text-[11px]"
+                className="text-brand-secondary font-medium text-xs md:text-xs"
               >
                 Points
               </Typography>

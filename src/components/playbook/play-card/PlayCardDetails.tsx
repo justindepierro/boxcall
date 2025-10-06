@@ -103,7 +103,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
     >
       <div className="flex flex-wrap items-center gap-spacing-xs">
         <span
-          className={`px-spacing-xs py-spacing-xs rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
+          className={`px-spacing-xs py-spacing-xs rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
         >
           {optimisticPlay.p_type}
         </span>
@@ -115,7 +115,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             suggestions={PERSONNEL_OPTIONS.map((option) => option.label)}
             enableSuggestions={true}
             isSaving={savingFields.has("personnel")}
-            className="px-spacing-xs py-spacing-xs bg-surface-muted text-primary border-subtle rounded-full text-[11px] font-medium hover:bg-surface-secondary transition-colors"
+            className="px-spacing-xs py-spacing-xs bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium hover:bg-surface-secondary transition-colors"
           />
         )}
         {phaseLabel && (
@@ -124,7 +124,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </span>
         )}
         {optimisticPlay.one_word_play && !showOneWordCalls && (
-          <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-[11px] font-medium">
+          <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-xs font-medium">
             Code: {optimisticPlay.one_word_play.toUpperCase()}
           </span>
         )}
@@ -488,7 +488,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           {summaryChips.slice(0, 8).map((chip) => (
             <span
               key={chip}
-              className="px-spacing-xs py-spacing-xs text-[11px] rounded-lg bg-surface-secondary text-text-xssssssssrimary"
+              className="px-spacing-xs py-spacing-xs text-xs rounded-lg bg-surface-secondary text-text-xssssssssrimary"
             >
               {chip}
             </span>
@@ -511,7 +511,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                     key={pos}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
                     onClick={() =>
                       setFlags(removeFlag(play.id, "positions", pos))
                     }
@@ -558,7 +558,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                     key={pl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
                     onClick={() => setFlags(removeFlag(play.id, "players", pl))}
                     title="Remove"
                   >
@@ -597,7 +597,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                     key={fl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-[11px]"
+                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
                     onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
                     title="Remove"
                   >

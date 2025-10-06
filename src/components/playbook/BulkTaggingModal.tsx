@@ -141,7 +141,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
                   key={s}
                   size="xs"
                   variant="subtle"
-                  className="!h-auto px-2 py-0.5 text-[11px]"
+                  className="!h-auto px-2 py-0.5 text-xs"
                   onClick={() => handleAddTag(s)}
                 >
                   {s}
@@ -161,7 +161,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
                   key={t}
                   size="xs"
                   variant="subtle"
-                  className="!h-auto px-2 py-0.5 text-[11px]"
+                  className="!h-auto px-2 py-0.5 text-xs"
                   onClick={() => handleRemoveTag(t)}
                   title="Remove tag"
                 >

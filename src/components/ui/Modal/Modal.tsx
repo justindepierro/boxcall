@@ -165,7 +165,7 @@ export const Modal: React.FC<ModalProps> = ({
           ref={modalRef}
           className={`
             ${size === "fullscreen" ? "w-full h-full" : `w-full ${getModalSizeStyles(size)}`}
-            ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90svh] overflow-hidden flex flex-col`}
+            ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
             transform transition-all duration-300 scale-100 opacity-100
             ${className}
           `}

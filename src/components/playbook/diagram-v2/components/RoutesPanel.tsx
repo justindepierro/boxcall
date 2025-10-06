@@ -7,14 +7,14 @@ export const RoutesPanel: React.FC = () => {
   if (!state.doc.routes.length) return null;
   return (
     <div className="mt-4">
-      <div className="text-[11px] font-semibold text-text-xssrimary mt-2 mb-1">
+      <div className="text-xs font-semibold text-text-xssrimary mt-2 mb-1">
         ROUTES
       </div>
       <ul className="space-y-1">
         {state.doc.routes.map((r) => (
           <li
             key={r.id}
-            className="flex items-center justify-between text-[11px] surface-card/70 rounded-lg px-2 py-1 border border-subtle"
+            className="flex items-center justify-between text-xs surface-card/70 rounded-lg px-2 py-1 border border-subtle"
           >
             <span>
               {r.playerId} ·{" "}

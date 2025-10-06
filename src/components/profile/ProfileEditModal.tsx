@@ -216,7 +216,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`
       }
       size="lg"
-      className="max-h-[90svh] overflow-y-auto"
+      className="max-h-[90vh] overflow-y-auto"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Avatar Upload Section */}

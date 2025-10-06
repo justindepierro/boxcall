@@ -22,7 +22,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
       className="fixed inset-0 z-50 bg-text-primary/70 backdrop-blur-sm flex items-center justify-center"
       data-testid="help-overlay-root"
     >
-      <div className="panel-cupertino max-w-3xl w-[min(90vw,900px)] max-h-[85svh] overflow-auto p-5 relative">
+      <div className="panel-cupertino max-w-3xl w-[min(90vw,900px)] max-h-[85vh] overflow-auto p-5 relative">
         <div className="absolute top-2 right-2">
           <Button
             size="xs"

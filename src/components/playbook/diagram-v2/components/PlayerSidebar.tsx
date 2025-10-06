@@ -27,7 +27,7 @@ export const PlayerSidebar: React.FC = () => {
       </div>
       {state.doc.players.length > 0 && (
         <div>
-          <div className="text-[11px] font-semibold text-text-tertiary mt-3 mb-1 flex items-center justify-between">
+          <div className="text-xs font-semibold text-text-tertiary mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>
             <span className="text-2xs font-normal text-text-secondary">
               {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}
@@ -79,7 +79,7 @@ export const PlayerSidebar: React.FC = () => {
                   <span>Outline</span>
                 </label>
                 <select
-                  className="px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                  className="px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                   onChange={(e) => {
                     if (!e.target.value) return;
                     dispatch({
@@ -273,7 +273,7 @@ export const PlayerSidebar: React.FC = () => {
                     >
                       <div className="flex items-center gap-2">
                         <input
-                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                          className="w-14 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                           value={gp.label}
                           onChange={(e) =>
                             dispatch({
@@ -286,7 +286,7 @@ export const PlayerSidebar: React.FC = () => {
                           }
                         />
                         <select
-                          className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                          className="flex-1 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                           value={gp.role || ""}
                           onChange={(e) =>
                             dispatch({
@@ -316,7 +316,7 @@ export const PlayerSidebar: React.FC = () => {
                           ))}
                         </select>
                         <select
-                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                          className="w-14 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                           value={gp.side || "O"}
                           onChange={(e) =>
                             dispatch({
@@ -365,7 +365,7 @@ export const PlayerSidebar: React.FC = () => {
                             }
                           />
                           <select
-                            className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                            className="w-16 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                             value={gp.outlineColor || ""}
                             onChange={(e) =>
                               dispatch({
@@ -532,7 +532,7 @@ export const PlayerSidebar: React.FC = () => {
                   >
                     <div className="flex items-center gap-2">
                       <input
-                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                        className="w-14 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                         value={p.label}
                         onChange={(e) =>
                           dispatch({
@@ -545,7 +545,7 @@ export const PlayerSidebar: React.FC = () => {
                         }
                       />
                       <select
-                        className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                        className="flex-1 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                         value={p.role || ""}
                         onChange={(e) =>
                           dispatch({
@@ -575,7 +575,7 @@ export const PlayerSidebar: React.FC = () => {
                         ))}
                       </select>
                       <select
-                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                        className="w-14 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                         value={p.side || "O"}
                         onChange={(e) =>
                           dispatch({
@@ -622,7 +622,7 @@ export const PlayerSidebar: React.FC = () => {
                           }
                         />
                         <select
-                          className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
+                          className="w-16 px-1 py-0.5 text-xs border border-subtle rounded-lg surface-card"
                           value={p.outlineColor || ""}
                           onChange={(e) =>
                             dispatch({

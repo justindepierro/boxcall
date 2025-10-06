@@ -82,7 +82,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-spacing-md">
-      <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90svh] overflow-hidden">
+      <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-spacing-lg">
           <div className="flex items-center justify-between">
@@ -103,7 +103,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-spacing-lg overflow-y-auto max-h-[60svh]">
+        <div className="p-spacing-lg overflow-y-auto max-h-[60vh]">
           {step === "upload" && (
             <div className="text-center py-12">
               <div className="mx-auto w-24 h-24 bg-surface-info rounded-full flex items-center justify-center mb-spacing-lg">

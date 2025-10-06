@@ -147,12 +147,12 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
         <span
-          className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
+          className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
         >
           {optimisticPlay.p_type}
         </span>
         {optimisticPlay.f_type && (
-          <span className="px-2 py-0.5 bg-surface-muted text-primary border-subtle rounded-full text-[11px] font-medium">
+          <span className="px-2 py-0.5 bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium">
             {optimisticPlay.f_type}
           </span>
         )}
