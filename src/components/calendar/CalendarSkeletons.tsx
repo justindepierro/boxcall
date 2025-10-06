@@ -87,7 +87,7 @@ export const CalendarErrorSkeleton: React.FC<{ message?: string }> = ({
         <div className="h-8 w-8 rounded-full bg-surface-error" />
       </div>
       <p className="text-text-error font-medium">Calendar Error</p>
-      <p className="text-sm text-text-secondary max-w-sm mx-auto">{message}</p>
+      <p className="text-sm text-text-secondary content-narrow">{message}</p>
       <Button
         variant="primary"
         size="sm"

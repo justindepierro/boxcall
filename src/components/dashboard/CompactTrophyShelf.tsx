@@ -410,7 +410,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                 </Typography>
                 <Typography
                   variant="body-sm"
-                  className="text-text-muted max-w-md mx-auto"
+                  className="text-text-muted content-narrow"
                 >
                   Start earning achievements by completing tasks, connecting
                   with your team, and reaching your goals. Your coach can award

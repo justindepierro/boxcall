@@ -155,7 +155,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
         </Typography>
         <Typography
           variant="body-md"
-          className="text-text-secondary max-w-sm mx-auto"
+          className="text-text-secondary content-narrow"
         >
           {message || config.defaultMessage}
         </Typography>

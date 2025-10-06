@@ -72,7 +72,7 @@ type Story = StoryObj<typeof meta>;
  */
 const SampleContent = ({ title }: { title: string }) => (
   <div className="container mx-auto px-4 py-16">
-    <Card className="p-8 max-w-4xl mx-auto">
+    <Card className="p-8 content-medium">
       <h2 className="text-3xl font-bold text-primary mb-4">{title}</h2>
       <p className="text-secondary mb-6">
         This demonstrates the Aurora background component with various content
@@ -162,7 +162,7 @@ export const ContentSized: Story = {
     fullHeight: false,
     children: (
       <div className="p-8">
-        <Card className="p-8 max-w-2xl mx-auto">
+        <Card className="p-8 container-content">
           <h2 className="text-3xl font-bold text-primary mb-4">
             Content-Sized Aurora
           </h2>

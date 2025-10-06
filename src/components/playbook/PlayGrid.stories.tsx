@@ -203,7 +203,7 @@ const PlayGridDemo = (args: any) => {
 
   return (
     <div className="min-h-screen bg-surface-secondary p-6">
-      <Card className="w-full max-w-7xl mx-auto p-6">
+      <Card className="w-full container-page p-6">
         <div className="space-y-6">
           <div>
             <h3 className="text-xl font-semibold mb-2">PlayGrid Component</h3>

@@ -167,7 +167,7 @@ export const CollaborativeDashboardDemo: React.FC<
           <Typography variant="headline-lg" as="h1" className="text-center">
             Real-Time Collaborative Dashboard
           </Typography>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary container-content">
             This demo showcases Phase 2B Sprint 4 collaboration features.
             Multiple users can edit widgets simultaneously with live cursor
             tracking and real-time data synchronization.
