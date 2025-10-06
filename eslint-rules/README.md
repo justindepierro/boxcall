@@ -98,6 +98,100 @@ The rule allows:
 
 ---
 
+### `boxcall-design/no-arbitrary-typography`
+
+**Type:** Error  
+**Fixable:** No (manual fix required)
+
+Prevents arbitrary typography values that bypass the design system. Enforces use of Tailwind standard classes.
+
+#### Rule Details
+
+This rule detects and reports arbitrary font size values in:
+- Font size utilities: `text-[14px]`, `text-[1.5rem]`, etc.
+
+The rule includes a whitelist of intentional arbitrary values used in the Typography variant system and specific design cases.
+
+#### Examples
+
+❌ **Incorrect** (will trigger error):
+
+```tsx
+// Arbitrary font sizes (not whitelisted)
+<div className="text-[14px]">Text</div>
+<div className="text-[16px]">Text</div>
+<div className="text-[1.5rem]">Text</div>
+```
+
+✅ **Correct** (passes linting):
+
+```tsx
+// Standard Tailwind classes
+<div className="text-2xs">10px text</div>
+<div className="text-xs">12px text</div>
+<div className="text-sm">14px text</div>
+<div className="text-base">16px text</div>
+
+// Whitelisted intentional values
+<div className="text-[11px]">Intentional compact label</div>
+<div className="text-[2rem]">Typography variant (headline-xl)</div>
+```
+
+#### Whitelisted Arbitrary Values
+
+The following arbitrary values are allowed (intentional design decisions):
+
+| Value | Usage | Rationale |
+|-------|-------|-----------|
+| `text-[11px]` | Compact labels, badges | Between xs (12px) and 2xs (10px) |
+| `text-[13px]` | Compact mode | Between xs (12px) and sm (14px) |
+| Typography variants | See below | Design system definitions |
+
+**Typography Variant System (allowed):**
+- `text-[2rem]`, `text-[3.25rem]`, `text-[2.75rem]`, `text-[2.25rem]` - Display/headline variants
+- `text-[1.625rem]`, `text-[1.375rem]`, `text-[1.125rem]` - Headline variants  
+- `text-[0.95rem]`, `text-[0.9rem]`, `text-[0.82rem]`, `text-[0.72rem]` - Body variants
+- `text-[0.85rem]`, `text-[0.78rem]` - Code/button variants
+- `text-[0.7rem]`, `text-[0.62rem]` - Label variants
+
+See `docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md` for complete rationale.
+
+#### Suggested Replacements
+
+| Arbitrary Value | Suggested Replacement | Actual Size |
+|----------------|----------------------|-------------|
+| `text-[10px]` | `text-2xs` | 10px |
+| `text-[12px]` | `text-xs` | 12px |
+| `text-[14px]` | `text-sm` | 14px |
+| `text-[16px]` | `text-base` | 16px |
+| `text-[18px]` | `text-lg` | 18px |
+| `text-[20px]` | `text-xl` | 20px |
+| `text-[24px]` | `text-2xl` | 24px |
+
+#### Why This Rule?
+
+**Design System Compliance:**
+- Ensures consistent typography across the app
+- Prevents arbitrary font sizes
+- Maintains typographic hierarchy
+
+**Developer Experience:**
+- Clear semantic meaning (text-sm vs text-[14px])
+- Better IDE autocomplete
+- Easier to maintain
+
+**Flexibility:**
+- Whitelists intentional design decisions
+- Allows Typography variant system
+- Documents exceptions clearly
+
+#### Related Documentation
+
+- [Typography Standardization Strategy](../docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md)
+- [Design System Changelog](../docs/DESIGN_SYSTEM_CHANGELOG.md)
+
+---
+
 ### `boxcall-design/no-raw-tailwind-colors`
 
 **Type:** Error  
@@ -145,6 +239,7 @@ export default [
     },
     rules: {
       "boxcall-design/no-arbitrary-spacing": "error",
+      "boxcall-design/no-arbitrary-typography": "error",
       "boxcall-design/no-raw-tailwind-colors": "error",
     },
   },

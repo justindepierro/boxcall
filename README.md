@@ -93,12 +93,19 @@ BoxCall enforces design system compliance through custom ESLint rules that catch
   - Suggests iOS-compliant touch targets (44px)
   - Requires mobile-safe viewport units (`svh` instead of `vh`)
   
+- **`boxcall-design/no-arbitrary-typography`** - Prevents arbitrary font sizes (e.g., `text-[14px]`)
+  - Enforces Tailwind standard classes (text-xs, text-sm, etc.)
+  - Whitelists intentional design decisions (text-[11px] for compact labels)
+  - Supports Typography variant system
+  
 - **`boxcall-design/no-raw-tailwind-colors`** - Prevents raw color values
   - Enforces semantic design tokens
   - Maintains consistent color system
 
 **Benefits:**
-- ✅ 100% design system compliance (83 spacing violations fixed)
+- ✅ 100% design system compliance
+  - Spacing: 83 violations fixed
+  - Typography: 38 violations fixed, 58 intentional whitelisted
 - ✅ Automatic enforcement - violations blocked at commit time
 - ✅ Helpful suggestions for standard replacements
 

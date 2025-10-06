@@ -5,12 +5,14 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import rawTailwindColors from "./eslint-rules/no-raw-tailwind-colors.js";
 import arbitrarySpacing from "./eslint-rules/no-arbitrary-spacing.js";
+import arbitraryTypography from "./eslint-rules/no-arbitrary-typography.js";
 
 // Merge custom design system rules
 const boxcallDesignRules = {
   rules: {
     ...rawTailwindColors.rules,
     ...arbitrarySpacing.rules,
+    ...arbitraryTypography.rules,
   },
 };
 
@@ -66,6 +68,7 @@ export default [
       "no-console": "off", // Allow console in development
       "boxcall-design/no-raw-tailwind-colors": "error",
       "boxcall-design/no-arbitrary-spacing": "error",
+      "boxcall-design/no-arbitrary-typography": "error",
     },
   },
   // TypeScript specific rules
