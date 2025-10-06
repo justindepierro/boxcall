@@ -172,19 +172,19 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
           <div className="text-xssss text-slate-500 dark:text-slate-400 space-y-1">
             <div className="flex items-center justify-between">
               <span>Select</span>
-              <kbd className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
+              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
                 V
               </kbd>
             </div>
             <div className="flex items-center justify-between">
               <span>Player</span>
-              <kbd className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
+              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
                 P
               </kbd>
             </div>
             <div className="flex items-center justify-between">
               <span>Route</span>
-              <kbd className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
+              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px]">
                 R
               </kbd>
             </div>

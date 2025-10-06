@@ -66,7 +66,7 @@ export const RoutePropertiesPanel: React.FC = () => {
                 // For now, this is a placeholder
                 console.log("Update route color:", color);
               }}
-              className={`w-8 h-8 rounded border-2 ${
+              className={`w-8 h-8 rounded-lg border-2 ${
                 selectedRoute.color === color
                   ? "border-primary"
                   : "border-border hover:border-primary/50"
@@ -126,7 +126,7 @@ export const RoutePropertiesPanel: React.FC = () => {
               // Apply slant route template
               console.log("Apply slant template");
             }}
-            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded transition-colors"
+            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded-lg transition-colors"
           >
             Slant
           </button>
@@ -135,7 +135,7 @@ export const RoutePropertiesPanel: React.FC = () => {
               // Apply out route template
               console.log("Apply out template");
             }}
-            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded transition-colors"
+            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded-lg transition-colors"
           >
             Out
           </button>
@@ -144,7 +144,7 @@ export const RoutePropertiesPanel: React.FC = () => {
               // Apply curl route template
               console.log("Apply curl template");
             }}
-            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded transition-colors"
+            className="w-full text-left px-2 py-1 text-sm bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded-lg transition-colors"
           >
             Curl
           </button>
@@ -157,7 +157,7 @@ export const RoutePropertiesPanel: React.FC = () => {
           onClick={() =>
             dispatch({ type: "DELETE_ROUTE", routeId: selectedRoute.id })
           }
-          className="w-full px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+          className="w-full px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           Delete Route
         </button>

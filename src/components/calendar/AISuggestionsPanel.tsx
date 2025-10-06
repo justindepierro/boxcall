@@ -169,7 +169,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
 
         <button
           onClick={onApply}
-          className="bg-navy-600 text-text-inverse px-3 py-1 rounded hover:bg-navy-700 transition-colors"
+          className="bg-navy-600 text-text-inverse px-3 py-1 rounded-lg hover:bg-navy-700 transition-colors"
         >
           <Typography variant="caption" as="span">
             Apply

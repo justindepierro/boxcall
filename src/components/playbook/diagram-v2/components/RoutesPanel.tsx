@@ -14,7 +14,7 @@ export const RoutesPanel: React.FC = () => {
         {state.doc.routes.map((r) => (
           <li
             key={r.id}
-            className="flex items-center justify-between text-[11px] surface-card/70 rounded px-2 py-1 border border-subtle"
+            className="flex items-center justify-between text-[11px] surface-card/70 rounded-lg px-2 py-1 border border-subtle"
           >
             <span>
               {r.playerId} ·{" "}

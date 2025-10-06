@@ -408,7 +408,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                       return (
                         <div
                           key={event.id}
-                          className={`p-2 rounded border ${getEventTypeColor(
+                          className={`p-2 rounded-lg border ${getEventTypeColor(
                             event.type
                           )} ${hasConflicts ? "border-l-4 border-l-danger" : ""}`}
                         >

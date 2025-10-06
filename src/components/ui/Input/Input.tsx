@@ -14,7 +14,7 @@ import type {
   InputSizeConfig,
   InputStylesConfig,
 } from "./Input.types";
-// Input base styles configuration - iOS-style rounded inputs with semantic design system
+// Input base styles configuration - iOS-style rounded-lg inputs with semantic design system
 const inputStyles: InputStylesConfig = {
   base: "block w-full rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)] bg-surface-primary text-text-primary placeholder-text-muted font-sans",
   sizes: {

@@ -4,7 +4,7 @@ import { memo, type ReactNode } from "react";
  * GlassCard Component
  *
  * Reusable glassmorphic card with Aurora design system styling.
- * Provides consistent rounded corners, backdrop blur, borders, and shadows.
+ * Provides consistent rounded-lg corners, backdrop blur, borders, and shadows.
  *
  * @example
  * ```tsx

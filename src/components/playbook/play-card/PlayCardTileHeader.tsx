@@ -73,7 +73,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
               type="checkbox"
               checked={Boolean(isSelected)}
               onChange={(e) => onSelectionChange(play.id, e.target.checked)}
-              className="w-4 h-4 rounded border-0 text-brand-primary focus:ring-2 focus:ring-brand-primary/30 cursor-pointer"
+              className="w-4 h-4 rounded-lg border-0 text-brand-primary focus:ring-2 focus:ring-brand-primary/30 cursor-pointer"
             />
           </label>
         )}

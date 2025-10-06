@@ -125,7 +125,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <button
                   onClick={handleEdit}
                   disabled={isSubmitting || !editContent.trim()}
-                  className="px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded hover:bg-surface-info-hover disabled:opacity-50"
+                  className="px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
@@ -357,7 +357,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                 <button
                   onClick={handleSubmitComment}
                   disabled={isSubmitting || !newComment.trim()}
-                  className="flex items-center gap-spacing-xs px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded hover:bg-surface-info-hover disabled:opacity-50"
+                  className="flex items-center gap-spacing-xs px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "Posting..." : replyTo ? "Reply" : "Comment"}
@@ -376,8 +376,8 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
               <div key={i} className="flex gap-spacing-sm">
                 <div className="w-8 h-8 bg-surface-tertiary rounded-full animate-pulse" />
                 <div className="flex-1 space-y-spacing-xs">
-                  <div className="h-4 bg-surface-tertiary rounded animate-pulse w-1/4" />
-                  <div className="h-16 bg-surface-tertiary rounded animate-pulse" />
+                  <div className="h-4 bg-surface-tertiary rounded-lg animate-pulse w-1/4" />
+                  <div className="h-16 bg-surface-tertiary rounded-lg animate-pulse" />
                 </div>
               </div>
             ))}

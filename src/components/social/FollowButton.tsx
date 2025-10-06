@@ -72,7 +72,7 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
         className={`${buttonSizeClasses[size]} bg-border animate-pulse rounded-lg flex items-center gap-2`}
       >
         <div className={`${sizeClasses[size]} bg-border-light rounded`} />
-        <div className="h-4 bg-border-light rounded w-16" />
+        <div className="h-4 bg-border-light rounded-lg w-16" />
       </div>
     );
   }

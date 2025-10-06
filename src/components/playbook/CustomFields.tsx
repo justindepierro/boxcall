@@ -237,9 +237,9 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   if (loading) {
     return (
       <div className={`animate-pulse space-y-4 ${className}`}>
-        <div className="h-4 bg-surface-secondary rounded w-3/4"></div>
+        <div className="h-4 bg-surface-secondary rounded-lg w-3/4"></div>
         <div className="h-10 bg-surface-secondary rounded"></div>
-        <div className="h-4 bg-surface-secondary rounded w-1/2"></div>
+        <div className="h-4 bg-surface-secondary rounded-lg w-1/2"></div>
         <div className="h-10 bg-surface-secondary rounded"></div>
       </div>
     );
@@ -355,9 +355,9 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
       <div className={`animate-pulse space-y-6 ${className}`}>
         {[1, 2, 3].map((i) => (
           <div key={i} className="space-y-3">
-            <div className="h-6 bg-surface-secondary rounded w-1/3"></div>
+            <div className="h-6 bg-surface-secondary rounded-lg w-1/3"></div>
             <div className="space-y-2">
-              <div className="h-4 bg-surface-secondary rounded w-2/3"></div>
+              <div className="h-4 bg-surface-secondary rounded-lg w-2/3"></div>
               <div className="h-10 bg-surface-secondary rounded"></div>
             </div>
           </div>

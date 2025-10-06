@@ -398,7 +398,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                         </div>
                         <div className="flex items-center gap-1">
                           <span
-                            className={`inline-flex px-2 py-1 rounded text-xs ${getCategoryColor(metric.category)}`}
+                            className={`inline-flex px-2 py-1 rounded-lg text-xs ${getCategoryColor(metric.category)}`}
                           >
                             {metric.category}
                           </span>
@@ -590,7 +590,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                             {insight.confidence}% confidence
                           </Typography>
                           <span
-                            className={`px-2 py-1 rounded text-xs ${
+                            className={`px-2 py-1 rounded-lg text-xs ${
                               insight.priority === "high"
                                 ? "bg-danger/10 text-danger"
                                 : insight.priority === "medium"

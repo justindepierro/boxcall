@@ -162,13 +162,13 @@ export const PerformanceDashboard: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="px-3 py-1 bg-surface-secondary rounded text-sm hover:bg-surface-hover disabled:opacity-50 transition-colors"
+            className="px-3 py-1 bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover disabled:opacity-50 transition-colors"
           >
             {isRefreshing ? "↻" : "🔄"} Refresh
           </button>
           <button
             onClick={handleLogMetrics}
-            className="px-3 py-1 bg-surface-secondary rounded text-sm hover:bg-surface-hover transition-colors"
+            className="px-3 py-1 bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover transition-colors"
           >
             📋 Log to Console
           </button>

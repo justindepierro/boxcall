@@ -565,7 +565,7 @@ export function PracticePlanner() {
                                       <div className="flex items-center space-x-4">
                                         <div
                                           {...provided.dragHandleProps}
-                                          className={`cursor-grab active:cursor-grabbing p-1 rounded ${
+                                          className={`cursor-grab active:cursor-grabbing p-1 rounded-lg ${
                                             lockedSchedule
                                               ? "cursor-not-allowed opacity-50"
                                               : ""
@@ -588,11 +588,11 @@ export function PracticePlanner() {
                                                 className="text-text-warning"
                                               />
                                             )}
-                                            <span className="px-2 py-1 surface-subtle text-text-secondary rounded text-sm font-mono">
+                                            <span className="px-2 py-1 surface-subtle text-text-secondary rounded-lg text-sm font-mono">
                                               {block.duration}min
                                             </span>
                                             {practiceStarted && (
-                                              <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded text-sm font-mono">
+                                              <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded-lg text-sm font-mono">
                                                 {formatTime(
                                                   getTimeRemaining(
                                                     block.endTime

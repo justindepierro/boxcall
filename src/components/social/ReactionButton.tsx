@@ -128,7 +128,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                   <button
                     key={reactionType}
                     onClick={() => handleReaction(reactionType)}
-                    className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
+                    className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-colors ${
                       userReaction === reactionType
                         ? "bg-surface-secondary"
                         : "hover:bg-surface-secondary"
@@ -198,7 +198,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 <button
                   key={reactionType}
                   onClick={() => handleReaction(reactionType)}
-                  className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-colors ${
                     userReaction === reactionType
                       ? "bg-surface-secondary"
                       : "hover:bg-surface-secondary"

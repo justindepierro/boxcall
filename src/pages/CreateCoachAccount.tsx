@@ -533,7 +533,7 @@ export const CreateCoachAccount: React.FC = () => {
                       hasSchoolCode: e.target.checked,
                     })
                   }
-                  className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded focus:ring-jade-500"
+                  className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus:ring-jade-500"
                 />
                 <Typography
                   variant="body-sm"
@@ -594,7 +594,7 @@ export const CreateCoachAccount: React.FC = () => {
                           requestTeamLink: e.target.checked,
                         })
                       }
-                      className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded focus:ring-jade-500"
+                      className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus:ring-jade-500"
                     />
                     <label htmlFor="requestTeamLink" className="text-sm">
                       Request to be linked to this team (Head Coach will

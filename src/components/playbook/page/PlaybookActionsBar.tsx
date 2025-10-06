@@ -113,7 +113,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-border-light rounded px-2 py-1 min-w-[240px]"
+                  className="text-sm border-border-light rounded-lg px-2 py-1 min-w-[240px]"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
@@ -209,7 +209,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   type="checkbox"
                   checked={enableBulkOperations}
                   onChange={() => {}}
-                  className="h-4 w-4 mr-2 rounded border-border-light text-text-info"
+                  className="h-4 w-4 mr-2 rounded-lg border-border-light text-text-info"
                 />
                 Bulk Edit
               </Button>

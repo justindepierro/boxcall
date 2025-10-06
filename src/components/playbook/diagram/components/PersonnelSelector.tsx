@@ -128,7 +128,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
                     >
                       <button
                         onClick={() => handlePersonnelToggle(player)}
-                        className={`flex-1 text-left p-2 rounded border transition-colors ${
+                        className={`flex-1 text-left p-2 rounded-lg border transition-colors ${
                           isSelected
                             ? "border-primary bg-primary/10 text-primary"
                             : "border-border hover:bg-surface-secondary text-text-primary"
@@ -141,7 +141,7 @@ export const PersonnelSelector: React.FC<PersonnelSelectorProps> = ({
                       </button>
                       <button
                         onClick={() => handleAddToDiagram(player)}
-                        className="ml-2 px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors text-sm"
+                        className="ml-2 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
                       >
                         Add
                       </button>

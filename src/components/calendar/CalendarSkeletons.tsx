@@ -8,22 +8,22 @@ import { Card, Button } from "../ui";
 export const CalendarSidebarSkeleton: React.FC = () => (
   <div className="space-y-6" aria-label="Loading calendar sidebar">
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-40 rounded surface-subtle" />
-      <div className="h-9 w-full rounded surface-subtle" />
-      <div className="h-9 w-5/6 rounded surface-subtle" />
-      <div className="h-9 w-2/3 rounded surface-subtle" />
+      <div className="h-5 w-40 rounded-lg surface-subtle" />
+      <div className="h-9 w-full rounded-lg surface-subtle" />
+      <div className="h-9 w-5/6 rounded-lg surface-subtle" />
+      <div className="h-9 w-2/3 rounded-lg surface-subtle" />
     </Card>
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-28 rounded surface-subtle" />
+      <div className="h-5 w-28 rounded-lg surface-subtle" />
       <div className="flex gap-3">
-        <div className="h-6 w-12 rounded surface-subtle" />
-        <div className="h-6 w-10 rounded surface-subtle" />
-        <div className="h-6 w-14 rounded surface-subtle" />
+        <div className="h-6 w-12 rounded-lg surface-subtle" />
+        <div className="h-6 w-10 rounded-lg surface-subtle" />
+        <div className="h-6 w-14 rounded-lg surface-subtle" />
       </div>
       <div className="space-y-2 pt-2">
-        <div className="h-3 w-5/6 rounded surface-subtle" />
-        <div className="h-3 w-2/3 rounded surface-subtle" />
-        <div className="h-3 w-3/5 rounded surface-subtle" />
+        <div className="h-3 w-5/6 rounded-lg surface-subtle" />
+        <div className="h-3 w-2/3 rounded-lg surface-subtle" />
+        <div className="h-3 w-3/5 rounded-lg surface-subtle" />
       </div>
     </Card>
   </div>
@@ -32,10 +32,10 @@ export const CalendarSidebarSkeleton: React.FC = () => (
 export const CalendarGridSkeleton: React.FC = () => (
   <Card className="p-6 animate-pulse" aria-label="Loading calendar grid">
     <div className="flex items-center justify-between mb-6">
-      <div className="h-9 w-56 rounded surface-subtle" />
+      <div className="h-9 w-56 rounded-lg surface-subtle" />
       <div className="flex gap-3">
-        <div className="h-9 w-20 rounded surface-subtle" />
-        <div className="h-9 w-24 rounded surface-subtle" />
+        <div className="h-9 w-20 rounded-lg surface-subtle" />
+        <div className="h-9 w-24 rounded-lg surface-subtle" />
       </div>
     </div>
     <div className="grid grid-cols-7 gap-2 h-[600px] select-none">
@@ -44,7 +44,7 @@ export const CalendarGridSkeleton: React.FC = () => (
           key={`skel-${i}`}
           className="rounded border border-subtle/60 surface-subtle relative overflow-hidden"
         >
-          <div className="h-4 w-8 surface-subtle rounded mt-1 ml-1" />
+          <div className="h-4 w-8 surface-subtle rounded-lg mt-1 ml-1" />
           <div className="absolute inset-0 opacity-60" />
         </div>
       ))}
@@ -59,8 +59,8 @@ export const CalendarPageSkeleton: React.FC = () => (
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full surface-subtle" />
           <div className="space-y-2">
-            <div className="h-6 w-56 rounded surface-subtle" />
-            <div className="h-4 w-72 rounded surface-subtle" />
+            <div className="h-6 w-56 rounded-lg surface-subtle" />
+            <div className="h-4 w-72 rounded-lg surface-subtle" />
           </div>
         </div>
       </div>

@@ -200,7 +200,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   // Determine display classes based on state
   const getDisplayClasses = () => {
     const baseClasses = `
-      inline-flex items-center gap-2 rounded transition-all duration-200 cursor-pointer
+      inline-flex items-center gap-2 rounded-lg transition-all duration-200 cursor-pointer
       border-2 border-surface-primary hover:border-border-light hover:border-text-tertiary
       ${sizeClasses[size]}
       ${className}

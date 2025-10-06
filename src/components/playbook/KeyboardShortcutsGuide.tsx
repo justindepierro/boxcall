@@ -106,7 +106,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                         >
                           {shortcut.description}
                         </Typography>
-                        <kbd className="px-2 py-1 bg-surface-primary rounded text-xs font-mono text-text-secondary shadow-sm">
+                        <kbd className="px-2 py-1 bg-surface-primary rounded-lg text-xs font-mono text-text-secondary shadow-sm">
                           {shortcut.key}
                         </kbd>
                       </div>
@@ -121,7 +121,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
             <div className="flex items-center justify-between">
               <Typography variant="body-xs" className="text-text-muted">
                 Press{" "}
-                <kbd className="px-1 py-0.5 bg-surface-muted border rounded text-xs">
+                <kbd className="px-1 py-0.5 bg-surface-muted border rounded-lg text-xs">
                   ?
                 </kbd>{" "}
                 anywhere to show this guide

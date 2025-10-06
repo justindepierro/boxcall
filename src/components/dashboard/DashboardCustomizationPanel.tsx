@@ -257,7 +257,7 @@ export const DashboardCustomizationPanel: React.FC<
                   compactMode: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Compact mode</Typography>
@@ -273,7 +273,7 @@ export const DashboardCustomizationPanel: React.FC<
                   showWelcomeMessages: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Show welcome messages</Typography>
@@ -298,7 +298,7 @@ export const DashboardCustomizationPanel: React.FC<
                   enableNotifications: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Enable notifications</Typography>
@@ -314,7 +314,7 @@ export const DashboardCustomizationPanel: React.FC<
                   autoRefresh: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded 
+              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
                          focus:ring-jade-500 focus:ring-2"
             />
             <Typography variant="body-sm">Auto-refresh dashboard</Typography>

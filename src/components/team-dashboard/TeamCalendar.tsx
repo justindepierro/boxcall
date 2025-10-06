@@ -109,7 +109,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
           {events.slice(0, 6).map((ev) => (
             <li
               key={ev.id}
-              className="flex items-center justify-between text-sm surface-subtle rounded px-3 py-2 hover:bg-surface-subtle/70 transition-colors"
+              className="flex items-center justify-between text-sm surface-subtle rounded-lg px-3 py-2 hover:bg-surface-subtle/70 transition-colors"
             >
               <span className="font-medium text-text-primary">{ev.title}</span>
               <span className="text-text-secondary">

@@ -534,10 +534,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           {Array.from({ length: 3 }).map((_, i) => (
             <li
               key={i}
-              className="animate-pulse rounded border-subtle surface-card p-3"
+              className="animate-pulse rounded-lg border-subtle surface-card p-3"
             >
-              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded w-5/6 mb-2" />
-              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded w-2/3" />
+              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded-lg w-5/6 mb-2" />
+              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded-lg w-2/3" />
             </li>
           ))}
         </ul>
@@ -561,7 +561,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
       )}
       {canCreate && !isLoading && !error && posts.length > 0 && (
         <div
-          className="border-subtle surface-card elevation-card rounded p-4"
+          className="border-subtle surface-card elevation-card rounded-lg p-4"
           aria-label="Quick post composer"
         >
           <form onSubmit={handleSubmit} className="space-y-3" noValidate>

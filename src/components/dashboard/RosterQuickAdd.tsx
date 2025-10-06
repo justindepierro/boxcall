@@ -132,10 +132,10 @@ export const RosterQuickAdd: React.FC = () => {
     return (
       <Card className="p-6">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded-lg w-3/4 mb-4"></div>
           <div className="space-y-2">
             <div className="h-3 bg-gray-200 rounded"></div>
-            <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+            <div className="h-3 bg-gray-200 rounded-lg w-5/6"></div>
           </div>
         </div>
       </Card>
@@ -232,7 +232,7 @@ export const RosterQuickAdd: React.FC = () => {
           </Typography>
 
           {error && (
-            <div className="p-2 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               {error}
             </div>
           )}
@@ -248,7 +248,7 @@ export const RosterQuickAdd: React.FC = () => {
                   firstName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
             <input
               type="text"
@@ -260,7 +260,7 @@ export const RosterQuickAdd: React.FC = () => {
                   lastName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -273,7 +273,7 @@ export const RosterQuickAdd: React.FC = () => {
                   position: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             >
               <option value="">Position</option>
               <option value="QB">QB</option>
@@ -299,7 +299,7 @@ export const RosterQuickAdd: React.FC = () => {
                   jerseyNumber: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -317,7 +317,7 @@ export const RosterQuickAdd: React.FC = () => {
                     heightFeet: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
               <span className="flex items-center text-sm text-text-secondary">
                 ft
@@ -336,7 +336,7 @@ export const RosterQuickAdd: React.FC = () => {
                     heightInches: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
               <span className="flex items-center text-sm text-text-secondary">
                 in

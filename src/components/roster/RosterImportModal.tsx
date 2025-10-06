@@ -144,7 +144,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
                 <div className="text-sm text-text-secondary">
                   <p className="mb-spacing-xs">Expected CSV format:</p>
-                  <div className="bg-surface-secondary p-spacing-sm rounded text-left font-mono text-xs">
+                  <div className="bg-surface-secondary p-spacing-sm rounded-lg text-left font-mono text-xs">
                     First Name,Last Name,Jersey
                     Number,Position,Grade,Height,Weight,Email
                     <br />

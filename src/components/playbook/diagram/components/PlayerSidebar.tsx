@@ -39,7 +39,7 @@ export const PlayerSidebar: React.FC = () => {
             </span>
           </div>
           {state.ui.selectedIds && state.ui.selectedIds.length > 1 && (
-            <div className="mb-2 p-2 rounded border border-text-warning bg-surface-warning/70 space-y-2">
+            <div className="mb-2 p-2 rounded-lg border border-text-warning bg-surface-warning/70 space-y-2">
               <div className="text-[10px] font-medium text-text-warning tracking-wide">
                 {state.ui.selectedIds.length} selected – bulk edit
               </div>
@@ -57,7 +57,7 @@ export const PlayerSidebar: React.FC = () => {
                 <label className="flex items-center gap-1 text-[10px]">
                   <input
                     type="color"
-                    className="h-5 w-5 p-0 border border-subtle rounded cursor-pointer"
+                    className="h-5 w-5 p-0 border border-subtle rounded-lg cursor-pointer"
                     onChange={(e) =>
                       dispatch({
                         type: "UPDATE_PLAYERS_BULK",
@@ -71,7 +71,7 @@ export const PlayerSidebar: React.FC = () => {
                 <label className="flex items-center gap-1 text-[10px]">
                   <input
                     type="color"
-                    className="h-5 w-5 p-0 border border-subtle rounded cursor-pointer"
+                    className="h-5 w-5 p-0 border border-subtle rounded-lg cursor-pointer"
                     onChange={(e) =>
                       dispatch({
                         type: "UPDATE_PLAYERS_BULK",
@@ -83,7 +83,7 @@ export const PlayerSidebar: React.FC = () => {
                   <span>Outline</span>
                 </label>
                 <select
-                  className="px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                  className="px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                   onChange={(e) => {
                     if (!e.target.value) return;
                     dispatch({
@@ -218,7 +218,7 @@ export const PlayerSidebar: React.FC = () => {
                   rendered.push(
                     <li
                       key={gp.id}
-                      className="surface-card/70 rounded border border-subtle p-2 space-y-1"
+                      className="surface-card/70 rounded-lg border border-subtle p-2 space-y-1"
                       draggable
                       onDragStart={(e) => {
                         e.dataTransfer.setData("text/player-id", gp.id);
@@ -277,7 +277,7 @@ export const PlayerSidebar: React.FC = () => {
                     >
                       <div className="flex items-center gap-2">
                         <input
-                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                           value={gp.label}
                           onChange={(e) =>
                             dispatch({
@@ -290,7 +290,7 @@ export const PlayerSidebar: React.FC = () => {
                           }
                         />
                         <select
-                          className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                          className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                           value={gp.role || ""}
                           onChange={(e) =>
                             dispatch({
@@ -320,7 +320,7 @@ export const PlayerSidebar: React.FC = () => {
                           ))}
                         </select>
                         <select
-                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                          className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                           value={gp.side || "O"}
                           onChange={(e) =>
                             dispatch({
@@ -339,7 +339,7 @@ export const PlayerSidebar: React.FC = () => {
                         <label className="flex items-center gap-1">
                           <input
                             type="color"
-                            className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                            className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                             value={
                               gp.color ||
                               (gp.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
@@ -356,7 +356,7 @@ export const PlayerSidebar: React.FC = () => {
                         <div className="flex items-center gap-1">
                           <input
                             type="color"
-                            className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                            className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                             value={gp.outlineColor || "#ffffff"}
                             onChange={(e) =>
                               dispatch({
@@ -367,7 +367,7 @@ export const PlayerSidebar: React.FC = () => {
                             }
                           />
                           <select
-                            className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                            className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                             value={gp.outlineColor || ""}
                             onChange={(e) =>
                               dispatch({
@@ -523,7 +523,7 @@ export const PlayerSidebar: React.FC = () => {
                 rendered.push(
                   <li
                     key={p.id}
-                    className="surface-card/80 rounded border border-subtle p-2 space-y-1"
+                    className="surface-card/80 rounded-lg border border-subtle p-2 space-y-1"
                     draggable
                     onDragStart={startHandler}
                     onDragOver={(e) => {
@@ -534,7 +534,7 @@ export const PlayerSidebar: React.FC = () => {
                   >
                     <div className="flex items-center gap-2">
                       <input
-                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                         value={p.label}
                         onChange={(e) =>
                           dispatch({
@@ -547,7 +547,7 @@ export const PlayerSidebar: React.FC = () => {
                         }
                       />
                       <select
-                        className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                        className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                         value={p.role || ""}
                         onChange={(e) =>
                           dispatch({
@@ -577,7 +577,7 @@ export const PlayerSidebar: React.FC = () => {
                         ))}
                       </select>
                       <select
-                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                         value={p.side || "O"}
                         onChange={(e) =>
                           dispatch({
@@ -594,7 +594,7 @@ export const PlayerSidebar: React.FC = () => {
                       <label className="flex items-center gap-1">
                         <input
                           type="color"
-                          className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                          className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                           value={
                             p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
                           }
@@ -610,7 +610,7 @@ export const PlayerSidebar: React.FC = () => {
                       <div className="flex items-center gap-1">
                         <input
                           type="color"
-                          className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                          className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                           value={p.outlineColor || "#ffffff"}
                           onChange={(e) =>
                             dispatch({
@@ -621,7 +621,7 @@ export const PlayerSidebar: React.FC = () => {
                           }
                         />
                         <select
-                          className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded surface-card"
+                          className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded-lg surface-card"
                           value={p.outlineColor || ""}
                           onChange={(e) =>
                             dispatch({

@@ -220,7 +220,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                   >
                     <span className="flex items-center gap-2 font-medium text-text-primary">
                       <span
-                        className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
+                        className={`inline-flex items-center justify-center rounded-lg px-1.5 py-0.5 text-xs font-semibold ${color}`}
                       >
                         {outcome}
                       </span>

@@ -121,7 +121,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
                   handleAddTag(input);
                 }
               }}
-              className="flex-1 border-subtle rounded px-2 py-1 text-sm"
+              className="flex-1 border-subtle rounded-lg px-2 py-1 text-sm"
               placeholder="Type tag and press Enter"
             />
             <Button

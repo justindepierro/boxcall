@@ -439,7 +439,7 @@ export function SignupForm({
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-text-info focus:ring-jade-500 rounded mt-1"
+            className="h-4 w-4 text-text-info focus:ring-jade-500 rounded-lg mt-1"
             disabled={loading}
           />
           <label

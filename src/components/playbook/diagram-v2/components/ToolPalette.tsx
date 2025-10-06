@@ -208,7 +208,7 @@ export const ToolPalette: React.FC = () => {
                     | "both",
                 })
               }
-              className="text-[12px] border border-border-light rounded px-2 py-1"
+              className="text-[12px] border border-border-light rounded-lg px-2 py-1"
               title="Arrowhead"
             >
               <option value="none">Head: None</option>
@@ -356,7 +356,7 @@ export const ToolPalette: React.FC = () => {
                 spacing: Number(e.target.value),
               })
             }
-            className="w-16 text-[12px] border border-border-light rounded px-2 py-1"
+            className="w-16 text-[12px] border border-border-light rounded-lg px-2 py-1"
             title="Fixed spacing (%)"
           />
           <Button
@@ -409,7 +409,7 @@ export const ToolPalette: React.FC = () => {
             onChange={(e) =>
               dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })
             }
-            className="text-[11px] border border-border-light rounded px-2 py-1"
+            className="text-[11px] border border-border-light rounded-lg px-2 py-1"
           >
             <option value={1}>1%</option>
             <option value={2}>2%</option>

@@ -128,7 +128,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-surface-secondary text-text-inverse text-xss py-1 px-2 rounded whitespace-nowrap">
+                <div className="bg-surface-secondary text-text-inverse text-xss py-1 px-2 rounded-lg whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>

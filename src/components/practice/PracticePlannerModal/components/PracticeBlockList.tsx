@@ -115,7 +115,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {/* Drag Handle */}
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-text-primary/5"
+                                className="cursor-grab active:cursor-grabbing p-1 rounded-lg hover:bg-text-primary/5"
                               >
                                 <Icon
                                   name="menu"

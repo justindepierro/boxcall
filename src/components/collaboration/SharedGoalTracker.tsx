@@ -263,7 +263,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
                           {goal.title}
                         </Typography>
                         <span
-                          className={`px-2 py-1 rounded text-xs ${
+                          className={`px-2 py-1 rounded-lg text-xs ${
                             goal.type === "team"
                               ? "bg-primary/10 text-primary"
                               : goal.type === "individual"

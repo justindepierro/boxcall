@@ -190,7 +190,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                     Role:
                   </Typography>
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getRoleColor(
+                    className={`px-2 py-1 rounded-lg text-xs font-medium ${getRoleColor(
                       member.role
                     )}`}
                   >
@@ -203,7 +203,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                     Status:
                   </Typography>
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`px-2 py-1 rounded-lg text-xs ${
                       member.status === "active"
                         ? "bg-surface-success text-text-success"
                         : member.status === "pending"

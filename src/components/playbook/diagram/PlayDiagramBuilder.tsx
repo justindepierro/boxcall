@@ -153,7 +153,7 @@ const FieldSettingsPanel: React.FC = () => {
               type="checkbox"
               checked={field.showPlayerLabels}
               onChange={() => toggleFlag("showPlayerLabels")}
-              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
             <span>Show Player Labels</span>
           </label>
@@ -162,7 +162,7 @@ const FieldSettingsPanel: React.FC = () => {
               type="checkbox"
               checked={field.showDefensePlayers}
               onChange={() => toggleFlag("showDefensePlayers")}
-              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
             <span>Show Defense</span>
           </label>
@@ -171,7 +171,7 @@ const FieldSettingsPanel: React.FC = () => {
               type="checkbox"
               checked={field.showRedZone ?? false}
               onChange={() => toggleFlag("showRedZone")}
-              className="h-4 w-4 rounded text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
             />
             <span>Highlight Red Zone</span>
           </label>

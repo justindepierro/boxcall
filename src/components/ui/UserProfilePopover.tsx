@@ -310,7 +310,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       {achievements.map((achievement, index) => (
                         <div
                           key={index}
-                          className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded text-xs font-medium"
+                          className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-lg text-xs font-medium"
                         >
                           {achievement.title}
                         </div>

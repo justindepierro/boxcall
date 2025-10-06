@@ -125,7 +125,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`text-xs px-2 py-1 rounded ${
+            className={`text-xs px-2 py-1 rounded-lg ${
               autoRefresh
                 ? "bg-green-100 text-green-700"
                 : "bg-gray-100 text-gray-700"
@@ -135,7 +135,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           </button>
           <button
             onClick={refresh}
-            className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+            className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
           >
             Refresh
           </button>
@@ -240,7 +240,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
               </div>
               <button
                 onClick={cache.clearCache}
-                className="mt-2 text-xs px-2 py-1 bg-blue-200 text-blue-800 rounded hover:bg-blue-300"
+                className="mt-2 text-xs px-2 py-1 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-300"
               >
                 Clear Cache
               </button>
@@ -304,7 +304,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
                       </span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {metric.cacheHit && (
-                          <span className="px-1 py-0.5 bg-green-100 text-green-700 rounded text-xs">
+                          <span className="px-1 py-0.5 bg-green-100 text-green-700 rounded-lg text-xs">
                             cached
                           </span>
                         )}

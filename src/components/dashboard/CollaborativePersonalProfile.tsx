@@ -116,7 +116,7 @@ export const CollaborativePersonalProfile: React.FC<
       <div className="relative">
         {/* Live editing indicator */}
         {editingField && (
-          <div className="absolute top-2 right-12 z-10 bg-primary text-text-on-primary px-2 py-1 rounded text-xs">
+          <div className="absolute top-2 right-12 z-10 bg-primary text-text-on-primary px-2 py-1 rounded-lg text-xs">
             Someone is editing {editingField}...
           </div>
         )}

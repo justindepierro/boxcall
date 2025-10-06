@@ -58,7 +58,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
           type="text"
           value={selectedPlayer.label}
           onChange={(e) => updatePlayer({ label: e.target.value })}
-          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -71,7 +71,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
           type="text"
           value={selectedPlayer.role || ""}
           onChange={(e) => updatePlayer({ role: e.target.value })}
-          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
           placeholder="e.g., QB, RB, WR"
         />
       </div>
@@ -86,7 +86,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
           onChange={(e) =>
             updatePlayer({ side: e.target.value as "O" | "D" | "ST" })
           }
-          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
         >
           <option value="">None</option>
           <option value="O">Offense</option>
@@ -105,7 +105,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
             <button
               key={color}
               onClick={() => updatePlayer({ color })}
-              className={`w-8 h-8 rounded border-2 ${
+              className={`w-8 h-8 rounded-lg border-2 ${
                 selectedPlayer.color === color
                   ? "border-primary"
                   : "border-border hover:border-primary/50"
@@ -125,7 +125,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
         <textarea
           value={selectedPlayer.assignment || ""}
           onChange={(e) => updatePlayer({ assignment: e.target.value })}
-          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+          className="w-full px-2 py-1 text-sm bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary resize-none"
           rows={3}
           placeholder="Assignment or notes..."
         />
@@ -156,7 +156,7 @@ export const PlayerPropertiesPanel: React.FC = () => {
           onClick={() =>
             dispatch({ type: "REMOVE_PLAYER", id: selectedPlayer.id })
           }
-          className="w-full px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+          className="w-full px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           Remove Player
         </button>

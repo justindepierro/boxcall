@@ -32,7 +32,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         </Typography>
         <div className="mt-2 flex items-center space-x-4">
           <span
-            className={`px-2 py-1 rounded text-xs font-medium flex items-center ${
+            className={`px-2 py-1 rounded-lg text-xs font-medium flex items-center ${
               userRole === "head_coach"
                 ? "bg-surface-info text-text-info"
                 : "bg-surface-success text-text-success"

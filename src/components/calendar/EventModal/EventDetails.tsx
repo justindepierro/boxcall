@@ -215,7 +215,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 comments.data.map((c) => (
                   <div
                     key={c.id}
-                    className="p-3 surface-subtle rounded border border-subtle"
+                    className="p-3 surface-subtle rounded-lg border border-subtle"
                   >
                     <div className="flex items-start gap-3">
                       {/* User Avatar with Profile Popover */}

@@ -41,7 +41,7 @@ export const DiagnosticsPage: React.FC = () => {
         <div className="Typography typography-headline-xs mb-2">
           Build Metadata
         </div>
-        <pre className="bg-surface-secondary p-3 rounded text-sm overflow-auto">
+        <pre className="bg-surface-secondary p-3 rounded-lg text-sm overflow-auto">
           {JSON.stringify(
             {
               buildTime: window.__BUILD_META__?.buildTime || "N/A",

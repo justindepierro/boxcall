@@ -488,7 +488,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           {summaryChips.slice(0, 8).map((chip) => (
             <span
               key={chip}
-              className="px-spacing-xs py-spacing-xs text-[11px] rounded bg-surface-secondary text-text-xssssssssrimary"
+              className="px-spacing-xs py-spacing-xs text-[11px] rounded-lg bg-surface-secondary text-text-xssssssssrimary"
             >
               {chip}
             </span>
@@ -525,7 +525,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 <select
                   value={newPosition}
                   onChange={(e) => setNewPosition(e.target.value)}
-                  className="border-subtle rounded px-2 py-1 text-xsssssssss"
+                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss"
                 >
                   <option value="">Select…</option>
                   {POSITION_OPTIONS.map((opt: string) => (
@@ -571,7 +571,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   value={newPlayer}
                   onChange={(e) => setNewPlayer(e.target.value)}
                   placeholder="Add player (e.g., Z, WR1)"
-                  className="border-subtle rounded px-2 py-1 text-xsssssssss flex-1"
+                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss flex-1"
                 />
                 <Button
                   size="xs"
@@ -610,7 +610,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   value={newFlag}
                   onChange={(e) => setNewFlag(e.target.value)}
                   placeholder="Add flag (e.g., Red Zone, 3rd&Short)"
-                  className="border-subtle rounded px-2 py-1 text-xsssssssss flex-1"
+                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss flex-1"
                 />
                 <Button
                   size="xs"

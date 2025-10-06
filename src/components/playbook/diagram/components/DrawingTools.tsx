@@ -181,7 +181,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
           <button
             key={tool.id}
             onClick={tool.action}
-            className={`group relative p-2 rounded border transition-all duration-200 flex flex-col items-center justify-center text-xs ${
+            className={`group relative p-2 rounded-lg border transition-all duration-200 flex flex-col items-center justify-center text-xs ${
               selectedTool === tool.id
                 ? "bg-primary border-primary text-primary-foreground"
                 : "bg-surface-card border-border hover:border-primary/50 hover:bg-surface-secondary text-text-primary"
@@ -193,7 +193,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
 
             {/* Tooltip */}
             <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              <div className="bg-surface-tooltip text-text-primary text-xs px-2 py-1 rounded whitespace-nowrap">
+              <div className="bg-surface-tooltip text-text-primary text-xs px-2 py-1 rounded-lg whitespace-nowrap">
                 {tool.label}
               </div>
             </div>
@@ -214,7 +214,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
                 <button
                   key={color}
                   onClick={() => handleColorChange(color)}
-                  className={`w-6 h-6 rounded border-2 transition-all ${
+                  className={`w-6 h-6 rounded-lg border-2 transition-all ${
                     state.ui.drawColor === color
                       ? "border-primary scale-110"
                       : "border-border hover:border-primary/50"
@@ -236,7 +236,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
                 <button
                   key={width}
                   onClick={() => handleWidthChange(width)}
-                  className={`px-2 py-1 text-xs rounded border transition-all ${
+                  className={`px-2 py-1 text-xs rounded-lg border transition-all ${
                     state.ui.drawWidth === width
                       ? "bg-primary border-primary text-primary-foreground"
                       : "bg-surface-card border-border hover:border-primary/50 text-text-primary"
@@ -264,7 +264,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
                         arrowHead: option as "none" | "start" | "end" | "both",
                       })
                     }
-                    className={`px-2 py-1 text-xs rounded border transition-all capitalize ${
+                    className={`px-2 py-1 text-xs rounded-lg border transition-all capitalize ${
                       state.ui.drawArrowHead === option
                         ? "bg-primary border-primary text-primary-foreground"
                         : "bg-surface-card border-border hover:border-primary/50 text-text-primary"
@@ -285,7 +285,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
         <div>
           Color:{" "}
           <span
-            className="inline-block w-3 h-3 rounded border border-border"
+            className="inline-block w-3 h-3 rounded-lg border border-border"
             style={{
               backgroundColor: state.ui.drawColor || colorTokens.gray[900],
             }}

@@ -282,7 +282,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeOffense}
                     onChange={() => handleOptionChange("includeOffense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-jade-500 border-border-medium rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-jade-500 border-border-medium rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Offense</span>
                   <span className="px-2 py-1 bg-surface-info text-text-info text-xs rounded">
@@ -296,7 +296,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeDefense}
                     onChange={() => handleOptionChange("includeDefense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-text-error border-border-medium rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-text-error border-border-medium rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Defense</span>
                   <span className="px-2 py-1 bg-surface-error text-text-error text-xs rounded">
@@ -310,7 +310,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeSpecial}
                     onChange={() => handleOptionChange("includeSpecial")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-text-success border-border-medium rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-text-success border-border-medium rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Special Teams</span>
                   <span className="px-2 py-1 bg-surface-success text-text-success text-xs rounded">

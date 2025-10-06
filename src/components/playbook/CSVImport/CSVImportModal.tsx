@@ -554,7 +554,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Errors */}
                             {preview.errors.length > 0 && (
-                              <div className="bg-surface-error border border-subtle rounded p-spacing-xs">
+                              <div className="bg-surface-error border border-subtle rounded-lg p-spacing-xs">
                                 <p className="text-xs font-medium text-text-error mb-spacing-xs">
                                   Errors:
                                 </p>
@@ -568,7 +568,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Warnings */}
                             {preview.warnings.length > 0 && (
-                              <div className="bg-surface-warning border border-subtle rounded p-spacing-xs">
+                              <div className="bg-surface-warning border border-subtle rounded-lg p-spacing-xs">
                                 <p className="text-xs font-medium text-text-warning mb-spacing-xs">
                                   Warnings:
                                 </p>

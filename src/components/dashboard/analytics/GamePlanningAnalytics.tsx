@@ -60,9 +60,9 @@ export const GamePlanningAnalytics: React.FC<GamePlanningAnalyticsProps> = ({
     return (
       <Card variant="elevated" className="p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-border rounded w-3/4"></div>
-          <div className="h-4 bg-border rounded w-1/2"></div>
-          <div className="h-4 bg-border rounded w-2/3"></div>
+          <div className="h-4 bg-border rounded-lg w-3/4"></div>
+          <div className="h-4 bg-border rounded-lg w-1/2"></div>
+          <div className="h-4 bg-border rounded-lg w-2/3"></div>
         </div>
       </Card>
     );

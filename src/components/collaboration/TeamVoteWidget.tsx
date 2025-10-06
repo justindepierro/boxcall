@@ -356,7 +356,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                           </Typography>
                         </div>
                         <span
-                          className={`px-2 py-1 rounded text-xs ${
+                          className={`px-2 py-1 rounded-lg text-xs ${
                             vote.status === "active"
                               ? "bg-success/10 text-success"
                               : "bg-text-muted/10 text-text-muted"

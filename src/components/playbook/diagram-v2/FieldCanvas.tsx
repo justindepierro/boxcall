@@ -1312,7 +1312,7 @@ export const FieldCanvas: React.FC<{
                           patch: { label: e.target.value },
                         })
                       }
-                      className="w-20 text-xs border border-border-light rounded px-spacing-xs py-spacing-xs"
+                      className="w-20 text-xs border border-border-light rounded-lg px-spacing-xs py-spacing-xs"
                       title="Label"
                     />
                     <input
@@ -1332,7 +1332,7 @@ export const FieldCanvas: React.FC<{
                     <span className="mx-spacing-xs w-px h-5 bg-border-light" />
                     <span
                       role="button"
-                      className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
+                      className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded-lg hover:bg-surface-error cursor-pointer select-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         dispatch({ type: "REMOVE_PLAYER", id: player.id });
@@ -1387,7 +1387,7 @@ export const FieldCanvas: React.FC<{
                         }
                       }}
                       onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
-                      className="w-full h-full text-center text-sm font-semibold border border-subtle rounded surface-card shadow-sm"
+                      className="w-full h-full text-center text-sm font-semibold border border-subtle rounded-lg surface-card shadow-sm"
                     />
                   </div>
                 </foreignObject>
@@ -1608,7 +1608,7 @@ export const FieldCanvas: React.FC<{
                               },
                             })
                           }
-                          className="text-xs border border-border-light rounded px-spacing-xs py-spacing-xs"
+                          className="text-xs border border-border-light rounded-lg px-spacing-xs py-spacing-xs"
                           title="Arrowhead"
                         >
                           <option value="none">None</option>
@@ -1625,7 +1625,7 @@ export const FieldCanvas: React.FC<{
                         <span className="mx-spacing-xs w-px h-5 bg-border-light" />
                         <span
                           role="button"
-                          className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded hover:bg-surface-error cursor-pointer select-none"
+                          className="text-text-error text-xs px-spacing-xs py-spacing-xs border border-text-error rounded-lg hover:bg-surface-error cursor-pointer select-none"
                           onClick={(e) => {
                             e.stopPropagation();
                             dispatch({ type: "DELETE_ANNOTATION", id: ann.id });

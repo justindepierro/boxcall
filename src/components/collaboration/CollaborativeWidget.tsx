@@ -205,7 +205,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
 
       {/* Connection status */}
       {!isConnected && (
-        <div className="absolute top-2 left-2 bg-warning text-text-on-warning px-2 py-1 rounded text-xs">
+        <div className="absolute top-2 left-2 bg-warning text-text-on-warning px-2 py-1 rounded-lg text-xs">
           Reconnecting...
         </div>
       )}

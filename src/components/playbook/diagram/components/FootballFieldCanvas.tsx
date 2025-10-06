@@ -369,26 +369,26 @@ export const FootballFieldCanvas: React.FC = () => {
       <div className="absolute top-4 right-6 flex flex-col gap-2 p-2 bg-surface-card/80 backdrop-blur-sm rounded-lg shadow-lg">
         <button
           onClick={zoomIn}
-          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center transition-colors"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded-lg flex items-center justify-center transition-colors"
         >
           <span className="text-sm font-bold">+</span>
         </button>
         <button
           onClick={zoomOut}
-          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center transition-colors"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded-lg flex items-center justify-center transition-colors"
         >
           <span className="text-sm font-bold">−</span>
         </button>
         <button
           onClick={resetZoom}
-          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded flex items-center justify-center text-xs transition-colors"
+          className="w-8 h-8 bg-surface-secondary hover:bg-surface-tertiary rounded-lg flex items-center justify-center text-xs transition-colors"
         >
           1:1
         </button>
       </div>
 
       {/* Coordinates display */}
-      <div className="absolute bottom-4 left-4 bg-surface-card px-3 py-2 rounded border border-border text-sm">
+      <div className="absolute bottom-4 left-4 bg-surface-card px-3 py-2 rounded-lg border border-border text-sm">
         Zoom: {transform.scale}x | X: {Math.round(transform.x)}, Y:{" "}
         {Math.round(transform.y)}
       </div>

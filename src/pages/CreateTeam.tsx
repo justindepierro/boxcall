@@ -471,7 +471,7 @@ export const CreateTeam: React.FC = () => {
                     </Typography>
 
                     {duplicateCheck.similarTeams.length > 0 && (
-                      <div className="bg-white rounded border p-spacing-sm mb-spacing-sm">
+                      <div className="bg-white rounded-lg border p-spacing-sm mb-spacing-sm">
                         <Typography
                           variant="body-xs"
                           className="font-medium mb-spacing-xs"

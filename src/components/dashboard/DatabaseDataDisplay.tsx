@@ -282,7 +282,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                 </Typography>
                 <div className="mt-1">
                   <span
-                    className={`inline-block px-2 py-1 rounded text-xs ${
+                    className={`inline-block px-2 py-1 rounded-lg text-xs ${
                       playbook.is_active
                         ? "bg-surface-success text-text-success"
                         : "surface-subtle text-text-tertiary"

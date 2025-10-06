@@ -130,7 +130,7 @@ export class ErrorBoundary extends Component<Props, State> {
                     />{" "}
                     Error Details (Development Only)
                   </summary>
-                  <div className="mt-2 p-3 surface-card border rounded text-xs font-mono">
+                  <div className="mt-2 p-3 surface-card border rounded-lg text-xs font-mono">
                     <div className="text-text-error mb-2">
                       <strong>Message:</strong> {this.state.error.message}
                     </div>
