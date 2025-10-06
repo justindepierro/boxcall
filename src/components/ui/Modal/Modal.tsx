@@ -176,7 +176,7 @@ export const Modal: React.FC<ModalProps> = ({
         >
           {/* Header - Enhanced with display font and substantial styling */}
           {(title || headerContent) && (
-            <div className="bc-card-padding border-b-2 border-subtle dark:border-text-tertiary">
+            <div className="bc-card-padding divider-b-medium">
               {headerContent ? (
                 headerContent
               ) : (
@@ -219,7 +219,7 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
           {/* Footer - Enhanced styling */}
           {footer && (
-            <div className="bc-card-padding border-t-2 border-subtle dark:border-text-tertiary surface-subtle dark:bg-surface-primary/50">
+            <div className="bc-card-padding divider-t-medium surface-subtle dark:bg-surface-primary/50">
               {footer}
             </div>
           )}

@@ -141,7 +141,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
           </div>
 
           {/* Timing and Repetitions */}
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+          <div className="flex items-center justify-between mt-3 pt-3 divider-t">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Typography variant="caption" className="text-text-secondary">

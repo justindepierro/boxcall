@@ -3,7 +3,17 @@ import {
   semanticTokens,
   typographyTokens,
   spacingTokens,
+  fineSpacingTokens,
+  semanticSpacingTokens,
+  densityTokens,
+  opacityTokens,
+  borderRadiusTokens,
+  semanticBorderRadiusTokens,
+  borderTokens,
+  semanticBorderTokens,
   elevationTokens,
+  contrastTokens,
+  componentTokens,
 } from "../../src/design-system/tokens";
 import { writeFileSync } from "fs";
 
@@ -67,13 +77,42 @@ const HEADER_LINES = [
 
 export function generateTokensCSS(): string {
   const lines: string[] = [...HEADER_LINES, ":root {"];
+  
+  // Color system
   emitObj("color", colorTokens as Record<string, unknown>, lines);
   emitObj("semantic", semanticTokens as Record<string, unknown>, lines);
+  
+  // Typography
   const typo = typographyTokens as unknown as TypographyDef;
   emitObj("font-family", typo.fontFamily as Nested, lines);
   emitObj("font-size", typo.fontSize as Nested, lines);
+  
+  // Spacing system
   emitObj("space", spacingTokens as Record<string, unknown>, lines);
+  emitObj("fine-spacing", fineSpacingTokens as Record<string, unknown>, lines);
+  emitObj("semantic-spacing", semanticSpacingTokens as Record<string, unknown>, lines);
+  
+  // Layout
+  emitObj("density", densityTokens as Record<string, unknown>, lines);
+  
+  // Visual properties
+  emitObj("opacity", opacityTokens as Record<string, unknown>, lines);
+  
+  // Border system
+  emitObj("radius", borderRadiusTokens as Record<string, unknown>, lines);
+  emitObj("semantic-radius", semanticBorderRadiusTokens as Record<string, unknown>, lines);
+  emitObj("border", borderTokens as Record<string, unknown>, lines);
+  emitObj("semantic-border", semanticBorderTokens as Record<string, unknown>, lines);
+  
+  // Elevation
   emitObj("elevation", elevationTokens as Record<string, unknown>, lines);
+  
+  // Contrast & accessibility
+  emitObj("contrast", contrastTokens as Record<string, unknown>, lines);
+  
+  // Component-specific tokens
+  emitObj("component", componentTokens as Record<string, unknown>, lines);
+  
   lines.push("}");
   return lines.join("\n") + "\n"; // trailing newline for determinism
 }

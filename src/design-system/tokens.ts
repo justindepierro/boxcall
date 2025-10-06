@@ -399,24 +399,133 @@ export const opacityTokens = {
 
 export const borderRadiusTokens = {
   none: "0", // No rounding
-  sm: "0.125rem", // 2px - subtle rounding
-  md: "0.375rem", // 6px - moderate rounding
-  lg: "0.5rem", // 8px - large rounding
-  xl: "0.75rem", // 12px - extra large
-  "2xl": "1rem", // 16px - very large
-  "3xl": "1.5rem", // 24px - huge
+  sm: "0.375rem", // 6px - subtle rounding
+  md: "0.625rem", // 10px - iOS button style
+  lg: "0.75rem", // 12px - iOS card style
+  xl: "1rem", // 16px - large cards
+  "2xl": "1.25rem", // 20px - hero cards
+  "3xl": "1.5rem", // 24px - huge cards
   full: "9999px", // Fully rounded (pills, circles)
 } as const;
 
-// Semantic border radius for common components
+// Semantic border radius for common components (iOS-inspired)
 export const semanticBorderRadiusTokens = {
-  button: borderRadiusTokens.md, // 6px
-  card: borderRadiusTokens.lg, // 8px
-  input: borderRadiusTokens.md, // 6px
-  modal: borderRadiusTokens.xl, // 12px
-  badge: borderRadiusTokens.full, // Fully rounded
+  button: borderRadiusTokens.md, // 10px - iOS style
+  card: borderRadiusTokens.lg, // 12px - iOS card style
+  input: borderRadiusTokens.md, // 10px - iOS input style
+  modal: borderRadiusTokens.xl, // 16px - prominent cards
+  badge: borderRadiusTokens.md, // 10px - softer badges
   avatar: borderRadiusTokens.full, // Fully rounded
-  image: borderRadiusTokens.lg, // 8px
+  image: borderRadiusTokens.lg, // 12px
+} as const;
+
+// ============================================================================
+// BORDER SYSTEM - Modern, Semantic Borders
+// ============================================================================
+
+export const borderTokens = {
+  // Border widths - semantic naming for clarity
+  width: {
+    none: "0", // No border
+    hairline: "0.5px", // Ultra-thin border (0.5px) for very subtle divisions
+    thin: "1px", // Thin border (1px) for subtle divisions - default
+    medium: "2px", // Medium border (2px) for emphasis
+    thick: "3px", // Thick border (3px) for strong emphasis
+    heavy: "4px", // Heavy border (4px) for accent strips
+  },
+
+  // Border colors - light theme (iOS-style subtle)
+  color: {
+    subtle: colorTokens.gray[50], // rgba(249, 250, 251, 1) - Nearly invisible, iOS-style
+    default: colorTokens.gray[100], // rgba(243, 244, 246, 1) - Very subtle separator
+    medium: colorTokens.gray[200], // rgba(229, 231, 235, 1) - Light divider
+    strong: colorTokens.gray[300], // rgba(209, 213, 219, 1) - Visible but not harsh
+    brand: colorTokens.jade[100], // Very subtle brand borders
+    brandStrong: colorTokens.jade[500], // Strong brand emphasis
+    interactive: colorTokens.blue[200], // Subtle interactive borders
+    interactiveStrong: colorTokens.blue[500], // Strong interactive emphasis
+  },
+
+  // Border styles
+  style: {
+    solid: "solid",
+    dashed: "dashed",
+    dotted: "dotted",
+    none: "none",
+  },
+} as const;
+
+// Semantic border combinations for common use cases
+export const semanticBorderTokens = {
+  // Dividers - horizontal/vertical lines separating content
+  divider: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.subtle,
+    style: borderTokens.style.solid,
+  },
+  dividerMedium: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.default,
+    style: borderTokens.style.solid,
+  },
+  dividerStrong: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.medium,
+    style: borderTokens.style.solid,
+  },
+
+  // Cards & containers
+  card: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.default,
+    style: borderTokens.style.solid,
+  },
+  cardElevated: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.subtle,
+    style: borderTokens.style.solid,
+  },
+
+  // Interactive elements
+  input: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.medium,
+    style: borderTokens.style.solid,
+  },
+  inputFocus: {
+    width: borderTokens.width.medium,
+    color: borderTokens.color.brandStrong,
+    style: borderTokens.style.solid,
+  },
+  inputError: {
+    width: borderTokens.width.medium,
+    color: colorTokens.error[500],
+    style: borderTokens.style.solid,
+  },
+
+  // Accent borders (e.g., top stripe on cards)
+  accentTop: {
+    width: borderTokens.width.heavy,
+    color: borderTokens.color.brand,
+    style: borderTokens.style.solid,
+  },
+  accentTopStrong: {
+    width: borderTokens.width.heavy,
+    color: borderTokens.color.brandStrong,
+    style: borderTokens.style.solid,
+  },
+
+  // Special states
+  selected: {
+    width: borderTokens.width.medium,
+    color: borderTokens.color.brandStrong,
+    style: borderTokens.style.solid,
+  },
+  hover: {
+    width: borderTokens.width.thin,
+    color: borderTokens.color.interactive,
+    style: borderTokens.style.solid,
+  },
 } as const;
 
 // ============================================================================

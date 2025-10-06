@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { Button } from "../Button";
 import { Tooltip } from "../Tooltip/Tooltip";
+import { Icon } from "../Icon/Icon";
 export interface SidebarItem {
   /** Unique identifier for the sidebar item */
   id: string;
@@ -365,7 +366,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Header - Only show when main header is hidden (scrolled down) */}
         {!headerVisible && (
-          <div className="px-4 py-4 border-b border-border/10">
+          <div className="px-4 py-4 divider-b">
             <div className="flex items-center gap-3">
               {onToggle && (
                 <Button

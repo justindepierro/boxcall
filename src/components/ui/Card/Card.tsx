@@ -7,18 +7,18 @@
 import { forwardRef } from "react";
 
 import type { CardProps, CardStylesConfig } from "./Card.types";
-// Card styles configuration - Modern glassmorphism and clean design
+// Card styles configuration - iOS-inspired glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-[var(--radius-card)] border border-border bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
+  base: "rounded-[var(--radius-card)] bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
   variants: {
-    default: "hover:bg-surface-muted",
+    default: "hover:bg-surface-muted hover:shadow-card-hover",
     glass:
-      "bg-surface-base/80 backdrop-blur-md border border-border/60 hover:bg-surface-base/90",
-    elevated: "shadow-card hover:shadow-card-hover",
-    outlined: "border border-border bg-surface-secondary",
-    filled: "bg-surface-muted hover:bg-surface-muted/90",
+      "bg-surface-base/80 backdrop-blur-md hover:bg-surface-base/90 shadow-lg",
+    elevated: "shadow-lg hover:shadow-xl bg-white dark:bg-surface-secondary",
+    outlined: "border-card-elevated bg-surface-secondary",
+    filled: "bg-surface-muted hover:bg-surface-muted/90 shadow-sm",
     accent:
-      "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20",
+      "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20 shadow-md",
   },
   sizes: {
     sm: "p-3",
@@ -27,7 +27,7 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2",
+    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2",
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

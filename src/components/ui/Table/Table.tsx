@@ -101,7 +101,7 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     lg: "px-6 py-3",
   };
   return [
-    "border-b border-subtle dark:border-text-tertiary",
+    "divider-b",
     "surface-subtle dark:bg-surface-tertiary",
     "text-left font-semibold",
     "text-text-primary dark:text-surface-secondary",
@@ -123,7 +123,7 @@ const getCellStyles = (
     right: "text-right",
   };
   return [
-    "border-b border-subtle dark:border-text-tertiary",
+    "divider-b",
     "text-text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
@@ -324,7 +324,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           />
         </div>
       )}
-      <div className="overflow-x-auto border border-subtle dark:border-text-tertiary rounded-lg">
+      <div className="overflow-x-auto border-card rounded-lg">
         <table className={getTableStyles(size)}>
           <thead>
             <tr>

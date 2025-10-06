@@ -97,7 +97,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   return (
     <div
       id={`play-details-${play.id}`}
-      className="mt-spacing-md pt-spacing-md border-t border-subtle space-y-spacing-md"
+      className="mt-spacing-md pt-spacing-md divider-t space-y-spacing-md"
       role="region"
       aria-label={`Details for ${play.play_name}`}
     >

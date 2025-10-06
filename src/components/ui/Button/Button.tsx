@@ -15,30 +15,30 @@ import type {
 // Button variant styles configuration - Updated with semantic design system
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "text-text-inverse bg-brand-primary transition-colors duration-200",
-    hover: "hover:bg-brand-hover",
-    active: "active:bg-brand-active",
+    base: "text-text-inverse bg-brand-primary transition-colors duration-200 shadow-sm",
+    hover: "hover:bg-brand-hover hover:shadow-md",
+    active: "active:bg-brand-active active:shadow-sm",
     disabled:
-      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
     focus:
       "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   secondary: {
-    base: "text-text-primary bg-surface-secondary transition-colors duration-200",
-    hover: "hover:bg-surface-muted",
-    active: "active:bg-surface-base",
+    base: "text-text-primary bg-surface-secondary transition-colors duration-200 shadow-sm",
+    hover: "hover:bg-surface-muted hover:shadow-md",
+    active: "active:bg-surface-base active:shadow-sm",
     disabled:
-      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
     focus:
       "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },
   outline: {
-    base: "text-brand-primary border border-brand-primary bg-transparent transition-colors duration-200",
-    hover: "hover:bg-brand-primary hover:text-text-inverse",
+    base: "text-brand-primary bg-surface-base/50 backdrop-blur-sm transition-all duration-200 ring-1 ring-inset ring-brand-primary/30",
+    hover: "hover:bg-brand-primary/10 hover:ring-brand-primary/50",
     active:
-      "active:bg-brand-active active:border-brand-active active:text-text-inverse",
+      "active:bg-brand-primary/20 active:ring-brand-primary",
     disabled:
-      "disabled:text-text-muted disabled:border-border disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:text-text-muted disabled:ring-gray-200 disabled:bg-transparent disabled:cursor-not-allowed disabled:opacity-60",
     focus:
       "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
   },

@@ -101,7 +101,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     // Build textarea classes with theme awareness
     const textareaClasses = [
       // Base styles
-      "block w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2",
+      "block w-full rounded-md border-card transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2",
       // Size styles
       size === "sm" ? "px-3 py-1.5 text-sm" : "",
       size === "md" ? "px-3 py-2 text-sm" : "",

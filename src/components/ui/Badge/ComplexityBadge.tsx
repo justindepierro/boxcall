@@ -77,7 +77,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
               <div className="text-text-secondary">{badgeInfo.description}</div>
             </div>
 
-            <div className="border-t border-border pt-2 space-y-1">
+            <div className="divider-t pt-2 space-y-1">
               <div className="flex justify-between">
                 <span>Routes/Concept:</span>
                 <span className="font-mono">{complexity.routeCount}pts</span>
@@ -100,7 +100,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
                   {complexity.conceptDifficulty}pts
                 </span>
               </div>
-              <div className="border-t border-border pt-1 flex justify-between font-semibold">
+              <div className="divider-t pt-1 flex justify-between font-semibold">
                 <span>Total Score:</span>
                 <span className="font-mono">{complexity.totalScore}pts</span>
               </div>
@@ -143,7 +143,7 @@ const ComplexityProgress: React.FC<{ complexity: ComplexityMetrics }> = ({
     100;
 
   return (
-    <div className="border-t border-border pt-2 mt-2">
+    <div className="divider-t pt-2 mt-2">
       <div className="text-xs text-text-secondary mb-1">
         Next: {currentLevel.name} ({pointsToNext} points to go)
       </div>

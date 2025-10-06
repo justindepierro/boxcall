@@ -152,7 +152,7 @@ export const RoutePropertiesPanel: React.FC = () => {
       </div>
 
       {/* Actions */}
-      <div className="pt-4 border-t border-border">
+      <div className="pt-4 divider-t">
         <button
           onClick={() =>
             dispatch({ type: "DELETE_ROUTE", routeId: selectedRoute.id })

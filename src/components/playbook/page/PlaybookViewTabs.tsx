@@ -34,7 +34,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   streakDays,
 }) => {
   return (
-    <div className="border-b border-white/20 bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 backdrop-blur-xl shadow-sm">
+    <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 backdrop-blur-xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top row: Title, stats, team type selector, and search */}
         <div className="flex items-center justify-between py-3 overflow-visible">
@@ -99,10 +99,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("playbook")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl border transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "playbook"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border-emerald-600 shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/80 dark:bg-slate-800/60 dark:hover:bg-slate-800/80 border-slate-200/50 dark:border-slate-700/50 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
+                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
+                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
               }`}
               icon={
                 <Icon
@@ -127,10 +127,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("practice-script")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl border transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "practice-script"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border-emerald-600 shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/80 dark:bg-slate-800/60 dark:hover:bg-slate-800/80 border-slate-200/50 dark:border-slate-700/50 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
+                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
+                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
               }`}
               icon={
                 <Icon
@@ -155,10 +155,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("game-plan")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl border transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "game-plan"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border-emerald-600 shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/80 dark:bg-slate-800/60 dark:hover:bg-slate-800/80 border-slate-200/50 dark:border-slate-700/50 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
+                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
+                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400 backdrop-blur-sm"
               }`}
               icon={
                 <Icon

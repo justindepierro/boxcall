@@ -303,7 +303,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
     >
       <div className="space-y-6">
         {/* Tab Navigation */}
-        <div className="border-b border-border">
+        <div className="divider-b">
           <nav className="-mb-px flex space-x-8">
             {tabs.map((tab) => (
               <button

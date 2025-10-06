@@ -71,7 +71,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       className={`
         fixed bottom-0 left-0 right-0 z-50
   surface-card
-        border-t border-border-medium
+        divider-t-medium
         shadow-lg
         pb-safe-area-inset-bottom
         md:hidden

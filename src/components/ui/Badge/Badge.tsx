@@ -124,31 +124,31 @@ export const Badge: React.FC<BadgeProps> = ({
   // Color variants using our psychological color system
   const variantStyles: Record<CanonicalBadgeVariant, string> = {
     neutral: cn(
-      "surface-subtle text-text-primary border border-subtle",
+      "surface-subtle text-text-primary border-card-elevated",
       "surface-subtle-hover hover:text-text-primary"
     ),
     info: cn(
-      "surface-subtle text-text-info border border-subtle",
+      "surface-subtle text-text-info border-card-elevated",
       "hover:bg-surface-info hover:text-text-info"
     ),
     success: cn(
-      "surface-subtle text-text-success border border-subtle",
+      "surface-subtle text-text-success border-card-elevated",
       "hover:bg-surface-success hover:text-text-success"
     ),
     warning: cn(
-      "surface-subtle text-text-warning border border-subtle",
+      "surface-subtle text-text-warning border-card-elevated",
       "hover:bg-surface-warning hover:text-text-warning"
     ),
     danger: cn(
-      "surface-subtle text-text-error border border-subtle",
+      "surface-subtle text-text-error border-card-elevated",
       "hover:bg-surface-error hover:text-text-error"
     ),
     accent: cn(
-      "surface-subtle text-text-accent border border-subtle",
+      "surface-subtle text-text-accent border-card-elevated",
       "hover:bg-surface-accent hover:text-text-accent"
     ),
     premium: cn(
-      "premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-surface-info text-text-accent border border-subtle",
+      "premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-surface-info text-text-accent border-card-elevated",
       "hover:from-surface-accent hover:to-surface-info hover:text-text-accent"
     ),
   };

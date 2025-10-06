@@ -94,6 +94,117 @@ All combinations tested for ≥4.5:1 contrast in both light and dark modes.
 
 ---
 
+## Border System - iOS-Inspired Minimal Design
+
+BoxCall embraces an iOS/iPadOS-inspired design language that prioritizes **elevation over borders**. Clean shadows and generous spacing create visual hierarchy without harsh lines.
+
+### Design Philosophy
+
+**iOS-Style Principles:**
+- 🎨 **Shadows over borders** - Cards float with subtle shadows, not hard lines
+- ⭕ **Generous corner radius** - 10-16px for that modern, approachable feel  
+- 👻 **Nearly invisible dividers** - When needed, dividers are whisper-thin
+- 📱 **Clean white space** - Breathing room instead of visual clutter
+
+### Border Widths
+
+| Token               | Value | Usage                                            |
+| ------------------- | ----- | ------------------------------------------------ |
+| `hairline`          | 0.5px | Ultra-thin dividers (iOS-style)                  |
+| `thin` (default)    | 1px   | Subtle separators when absolutely needed         |
+| `medium`            | 2px   | Rare - only for strong emphasis                  |
+| `thick`             | 3px   | Accent strips only                               |
+| `heavy`             | 4px   | Top accent bars on hero cards                    |
+
+### Border Colors (iOS-Style Subtle)
+
+| Semantic Name       | Light Mode    | Usage                                  |
+| ------------------- | ------------- | -------------------------------------- |
+| `subtle`            | `gray-50`     | Nearly invisible (default iOS style)   |
+| `default`           | `gray-100`    | Very light separator                   |
+| `medium`            | `gray-200`    | Barely visible divider                 |
+| `strong`            | `gray-300`    | Light but noticeable (rare)            |
+| `brand`             | `jade-100`    | Very subtle brand tint                 |
+| `brand-strong`      | `jade-500`    | Accent elements only                   |
+
+### Border Radius (iOS-Style Rounded)
+
+| Component  | Radius | Feels Like                    |
+| ---------- | ------ | ----------------------------- |
+| Button     | 10px   | iOS button (medium)           |
+| Card       | 12px   | iOS card / panel              |
+| Input      | 10px   | iOS text field                |
+| Modal      | 16px   | iOS sheet / dialog            |
+| Badge      | 10px   | Soft pill (not fully rounded) |
+| Large Card | 20px   | Hero element                  |
+
+### Semantic Border Classes
+
+**iOS-Style Cards** - No visible borders, just elevation:
+```css
+.border-card          /* No border - uses shadow only */
+.border-card-elevated /* No border - uses larger shadow */
+```
+
+**Dividers** - Barely visible, like iOS separators:
+```css
+.divider-t         /* Nearly invisible top line */
+.divider-b         /* Nearly invisible bottom line */
+.divider-t-medium  /* Very subtle top separator */
+.divider-b-medium  /* Very subtle bottom separator */
+```
+
+**Accent Stripes** - Only for hero elements:
+```css
+.border-accent-top        /* Brand-colored top stripe */
+.border-accent-top-strong /* Strong brand top stripe */
+```
+
+### Usage Examples
+
+```tsx
+// iOS-style card with shadow, no border
+<div className="rounded-xl bg-white shadow-lg hover:shadow-xl p-6">
+  Card Content
+</div>
+
+// Subtle divider (barely visible)
+<div className="divider-b pb-4">Section Header</div>
+
+// Premium card with accent
+<div className="rounded-xl bg-white shadow-lg border-accent-top-strong p-6">
+  Premium Feature
+</div>
+
+// iOS-style button (no border)
+<button className="rounded-lg bg-brand-primary text-white px-6 py-3 shadow-sm hover:shadow-md">
+  Action
+</button>
+```
+
+### When to Use Borders
+
+**✅ Use borders for:**
+- Accent top stripes on hero cards
+- Very subtle dividers between list items (hairline)
+- Form input focus states (with brand color)
+
+**❌ Avoid borders for:**
+- Cards (use shadows instead)
+- Buttons (use filled or ghost styles)
+- Navigation items (use background color changes)
+- Page sections (use white space and shadows)
+
+### Design Principles
+
+1. **Elevation creates hierarchy** - Shadows show importance, not borders
+2. **Rounded corners feel approachable** - Sharp corners feel dated
+3. **White space breathes** - Don't box everything in
+4. **Subtle is sophisticated** - Heavy borders feel cluttered
+5. **Consistency matters** - One design language throughout
+
+---
+
 ## Elevation & Radii
 
 - **Cards & surfaces**: `box-shadow: var(--shadow-card)` + `border-radius: var(--radius-card)`.

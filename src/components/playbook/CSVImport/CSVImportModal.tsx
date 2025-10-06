@@ -408,7 +408,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
         {/* Plays Table */}
         <div className="border border-subtle rounded-lg overflow-hidden">
-          <div className="surface-subtle px-spacing-md py-spacing-xs border-b border-subtle">
+          <div className="surface-subtle px-spacing-md py-spacing-xs divider-b">
             <Typography
               variant="body-sm"
               as="h4"
@@ -811,7 +811,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           onClick={onClose}
         />
         <div className="inline-block align-bottom surface-card elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div className="surface-subtle px-spacing-lg py-spacing-md border-b border-subtle flex items-center justify-between">
+          <div className="surface-subtle px-spacing-lg py-spacing-md divider-b flex items-center justify-between">
             <Typography
               variant="headline-sm"
               as="h2"
