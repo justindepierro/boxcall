@@ -76,7 +76,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         {/* Play Icon with Gradient */}
-        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-jade-500 to-emerald-600 flex items-center justify-center mb-6 shadow-lg shadow-jade-500/25">
+        <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-jade-500 to-emerald-600 flex items-center justify-center mb-6 shadow-lg shadow-jade-500/25">
           <Icon name="file" className="w-12 h-12 text-white" />
         </div>
 

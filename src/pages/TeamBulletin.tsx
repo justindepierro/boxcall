@@ -404,7 +404,7 @@ const TeamBulletin: React.FC = React.memo(() => {
               <div className="team-dashboard-container">
                 {/* Hero Stats Row */}
                 <div className="dashboard-hero-section mb-12">
-                  <div className="rounded-3xl border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+                  <div className="rounded-xl border border-slate-200/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
                       <AuroraTile
                         title="Trophy Case"
