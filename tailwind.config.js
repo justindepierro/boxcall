@@ -170,6 +170,8 @@ const colors = {
     "warning-bg": semanticColor("warning-bg"),
     error: semanticColor("error"),
     "error-bg": semanticColor("error-bg"),
+    info: semanticColor("info"),
+    "info-bg": semanticColor("info-bg"),
   },
   link: {
     DEFAULT: "var(--color-linkColor)",

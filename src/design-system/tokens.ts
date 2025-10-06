@@ -224,6 +224,8 @@ export const semanticTokens = {
   warningBg: colorTokens.warning[50],
   error: colorTokens.error[500],
   errorBg: colorTokens.error[50],
+  info: colorTokens.blue[500], // Info status (for info badges, alerts)
+  infoBg: colorTokens.blue[50], // Info background (12 occurrences)
 
   // Links & Interactive Elements
   linkColor: colorTokens.blue[600], // Primary link color
