@@ -113,7 +113,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className={`w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
+              className={`w-full px-3 py-2 text-sm border-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
             >
               {allowEmpty && <option value="">{emptyLabel}</option>}
               {options.map((option) => (
@@ -129,7 +129,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
 
             {/* Custom dropdown arrow */}
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <Icon name="chevron-down" className="h-4 w-4 text-gray-400" />
+              <Icon name="chevron-down" className="h-4 w-4 text-muted" />
             </div>
           </div>
 
@@ -144,7 +144,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+              className="flex items-center justify-center w-8 h-8 text-muted hover:text-primary hover:bg-surface-secondary rounded-lg transition-colors"
               title="Cancel (Escape)"
             >
               <Icon name="close" className="h-4 w-4" />
@@ -158,7 +158,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
   return (
     <div
       onClick={handleStartEdit}
-      className={`group cursor-pointer rounded-lg p-3 -m-3 transition-all duration-200 hover:bg-surface-hover hover:shadow-sm border-2 border-transparent hover:border-gray-200 ${
+      className={`group cursor-pointer rounded-lg p-3 -m-3 transition-all duration-200 hover:bg-surface-hover hover:shadow-sm border-2 border-transparent hover:border ${
         disabled ? "cursor-not-allowed opacity-50" : ""
       } ${className}`}
       title={disabled ? "Editing disabled" : "Click to edit"}
@@ -166,7 +166,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
       <div className="flex items-center justify-between">
         <span className="text-sm flex-1 truncate pr-2">
           {displayValue || (
-            <span className="text-gray-400 italic">{placeholder}</span>
+            <span className="text-muted italic">{placeholder}</span>
           )}
         </span>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -180,9 +180,9 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
             <div className="flex items-center gap-1">
               <Icon
                 name="edit"
-                className="h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-gray-500"
+                className="h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-muted"
               />
-              <Icon name="chevron-down" className="h-4 w-4 text-gray-400" />
+              <Icon name="chevron-down" className="h-4 w-4 text-muted" />
             </div>
           )}
         </div>
