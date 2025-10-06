@@ -101,4 +101,17 @@ export default [
       "@typescript-eslint/no-empty-function": "off",
     },
   },
+  // Relax design token rules for diagram components (intentionally always-dark)
+  {
+    files: [
+      "**/diagram/**",
+      "**/PlayDiagramBuilder.tsx",
+      "**/*Demo.tsx", // Demo/test files can use direct colors
+      "**/TooltipTest.tsx",
+    ],
+    rules: {
+      "boxcall-design/no-raw-tailwind-colors": "warn", // Warn instead of error
+      "boxcall-design/no-arbitrary-spacing": "warn",
+    },
+  },
 ];
