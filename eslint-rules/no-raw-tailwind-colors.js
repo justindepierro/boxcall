@@ -25,6 +25,10 @@ export default {
         const COLOR_SCALE_PATTERN =
           /\b(text|bg|border|ring)-(gray|slate|red|green|yellow|amber|blue)-(50|100|200|300|400|500|600|700|800|900)\b/gi;
         
+        // NEW: Pattern for arbitrary sizing/spacing values
+        const ARBITRARY_SIZE_PATTERN =
+          /\b(?:text|w|h|min-w|min-h|max-w|max-h|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space)-\[([0-9.]+)(px|rem|em|svh|vh|svw|vw|%)\]/gi;
+        
         // Semantic token suggestions
         const SEMANTIC_SUGGESTIONS = {
           // Gray text colors
@@ -105,6 +109,39 @@ export default {
           'border-slate-700': 'Use with dark: prefix (dark:border-slate-700)',
           'bg-gray-800': 'Use bg-surface-secondary with dark:bg-gray-800',
         };
+        
+        // NEW: Arbitrary value suggestions
+        const ARBITRARY_VALUE_SUGGESTIONS = {
+          // Text sizes (should use scale)
+          'text-[11px]': 'text-xs (12px) - consider adjusting scale or accepting closest match',
+          'text-[13px]': 'text-sm (14px base)',
+          'text-[14px]': 'text-sm',
+          'text-[15px]': 'text-base (16px)',
+          'text-[16px]': 'text-base',
+          'text-[18px]': 'text-lg (18px)',
+          'text-[20px]': 'text-xl (20px)',
+          'text-[0.82rem]': 'text-sm or text-xs',
+          'text-[1.625rem]': 'text-2xl or adjust design token',
+          'text-[1.75rem]': 'text-3xl (30px)',
+          
+          // Spacing (8px grid system)
+          'p-[24px]': 'p-6 (6 × 4px = 24px)',
+          'p-[16px]': 'p-4',
+          'p-[32px]': 'p-8',
+          'p-[20px]': 'p-5 (closest: 20px)',
+          'px-[24px]': 'px-6',
+          'py-[24px]': 'py-6',
+          'm-[16px]': 'm-4',
+          'gap-[16px]': 'gap-4',
+          'gap-[1.75rem]': 'gap-7 (1.75rem = 28px)',
+          'gap-[0.875rem]': 'gap-3.5 (0.875rem = 14px)',
+          
+          // Sizing
+          'w-[90svh]': 'max-w-[90vh] or h-screen with constraints',
+          'h-[40svh]': 'min-h-[40vh] or use h-auto with constraints',
+          'max-h-[90svh]': 'max-h-[90vh] (svh → vh for better support)',
+          'min-h-[40svh]': 'min-h-[40vh]',
+        };
 
         const TARGET_ATTRIBUTES = new Set(["className", "class"]);
         const TARGET_CALLEES = new Set([
@@ -113,6 +150,41 @@ export default {
           "classNames",
           "cn",
         ]);
+        
+        function getSuggestionForArbitrarySize(match) {
+          const fullMatch = match[0];
+          const value = match[1];
+          const unit = match[2];
+          
+          // Check direct match first
+          if (ARBITRARY_VALUE_SUGGESTIONS[fullMatch]) {
+            return ARBITRARY_VALUE_SUGGESTIONS[fullMatch];
+          }
+          
+          // For px values, suggest 8px grid
+          if (unit === 'px') {
+            const numValue = parseFloat(value);
+            const gridValue = Math.round(numValue / 4);
+            if (numValue % 4 === 0) {
+              return `Use Tailwind scale (≈ ${gridValue} units, ${numValue}px = ${gridValue} × 4px)`;
+            } else {
+              const nearest = Math.round(numValue / 4) * 4;
+              return `Use 8px grid - nearest: ${nearest}px (actual: ${numValue}px)`;
+            }
+          }
+          
+          // For rem/em, suggest scale
+          if (unit === 'rem' || unit === 'em') {
+            return `Use Tailwind scale or spacing token (${value}${unit})`;
+          }
+          
+          // For viewport units, suggest standard utilities
+          if (unit === 'svh' || unit === 'vh') {
+            return 'Use h-screen, h-full, or max-h-[Xvh] with standard units';
+          }
+          
+          return 'Use Tailwind utility or spacing token from design system';
+        }
 
         function reportMatches(value, node) {
           if (typeof value !== "string" || !value) return;
@@ -135,6 +207,22 @@ export default {
             reported = true;
             const utility = match[0];
             const suggestion = SEMANTIC_SUGGESTIONS[utility] || 'a semantic token (see design system docs)';
+            context.report({
+              node,
+              messageId: "replaceWithSuggestion",
+              data: { 
+                utility: utility,
+                suggestion: suggestion 
+              },
+            });
+          }
+          
+          // NEW: Check for arbitrary sizing/spacing values
+          const sizeMatches = value.matchAll(ARBITRARY_SIZE_PATTERN);
+          for (const match of sizeMatches) {
+            reported = true;
+            const utility = match[0];
+            const suggestion = getSuggestionForArbitrarySize(match);
             context.report({
               node,
               messageId: "replaceWithSuggestion",
