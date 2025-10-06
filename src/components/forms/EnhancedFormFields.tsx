@@ -196,8 +196,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
       </div>
 
       {/* Helper Text / Validation Messages */}
-      {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing, boxcall-design/no-raw-tailwind-colors */}
-      <div className="min-h-[1.25rem]">
+      <div className="min-h-5">
         {showError && (
           <div className="flex items-center gap-1.5">
             <Icon

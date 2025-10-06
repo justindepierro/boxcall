@@ -61,9 +61,7 @@ export function AuthDebugPanel() {
         zIndex: 9999,
       }}
     >
-      <div className="font-bold mb-1">
-        🔐 Auth Status
-      </div>
+      <div className="font-bold mb-1">🔐 Auth Status</div>
       <div>Session: {authState.hasSession ? "✅ ACTIVE" : "❌ NONE"}</div>
       <div>User ID: {authState.userId || "NULL"}</div>
       {authState.error && (

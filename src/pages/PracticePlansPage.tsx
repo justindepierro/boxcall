@@ -166,7 +166,7 @@ export default function PracticePlansPage() {
                 Launch scripts, pull templates, or share the agenda in seconds.
               </Typography>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+            <div className="grid-dashboard gap-4 md:gap-5">
               {tileConfigs.map((tile) => (
                 <AuroraTile
                   key={tile.key}
@@ -243,7 +243,7 @@ export default function PracticePlansPage() {
             </div>
 
             {/* Scripts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            <div className="grid-dashboard gap-4 md:gap-5">
               {practiceScripts.map((script) => (
                 <div
                   key={script.id}

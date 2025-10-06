@@ -30,6 +30,7 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 **Impact**: Foundation established
 
 **Changes**:
+
 - ✅ AppIconTile: `padding: "8px"` → `className="p-2"`
 - ✅ Tooltip: px values → rem values (matches Tailwind scale)
 - ✅ SimpleTooltip: px values → rem values
@@ -49,6 +50,7 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 **Impact**: Simple static conversions
 
 **Changes**:
+
 - ✅ LivenessCheckPage: `fontFamily: "monospace"` → `font-mono`
 - ✅ ReadinessCheckPage: `padding: "20px"` → `p-5`
 - ✅ HealthCheckPage: Same conversions
@@ -67,6 +69,7 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 **Impact**: Pattern documented
 
 **Findings**:
+
 - ✅ All 20 progress bar width calculations are **legitimate**
 - ✅ Pattern: `style={{ width: \`${percent}%\` }}` is correct for dynamic values
 - ✅ Examples: PlannerPage, Badge, ComplexityBadge, WeeklyChallengePopover
@@ -83,6 +86,7 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 **Impact**: SVG element standardization
 
 **Changes**:
+
 - ✅ FieldGrid: 4 conversions (pointerEvents, userSelect)
 - ✅ FieldRoutes: 1 conversion (pointerEvents)
 - ✅ FieldCanvas: 1 conversion (pointerEvents, userSelect)
@@ -90,6 +94,7 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 - ✅ Selection: 1 conversion (pointerEvents, userSelect)
 
 **Pattern Established**:
+
 ```tsx
 // BEFORE
 <g style={{ pointerEvents: "none", userSelect: "none" }}>
@@ -109,11 +114,13 @@ Successfully completed comprehensive design token cleanup (Option A) across the 
 **Impact**: Theme-aware colors
 
 **Changes**:
+
 - ✅ ActionBar (v2): `rgba(0,0,0,0.14)` → `rgb(var(--color-black-rgb) / 0.14)`
 - ✅ ActionBar (original): Same conversion
 - ✅ **30+ other backgroundColor uses** audited - all legitimate (dynamic colors from props/state)
 
 **Pattern Established**:
+
 ```tsx
 // BEFORE
 style={{ backgroundColor: "rgba(0,0,0,0.14)" }}
@@ -133,6 +140,7 @@ style={{ backgroundColor: "rgb(var(--color-black-rgb) / 0.14)" }}
 **Impact**: Pattern documented
 
 **Findings**:
+
 - ✅ All 7 animationDelay uses are **legitimate** (dynamic, calculated from index)
 - ✅ All 12 transition uses are **appropriate** (smooth UX, accessibility-aware)
 - ✅ Examples: Sidebar stagger animations, guide fade transitions
@@ -145,6 +153,7 @@ style={{ backgroundColor: "rgb(var(--color-black-rgb) / 0.14)" }}
 ## Cumulative Impact
 
 ### Files Modified
+
 - **Batch #1**: 8 files (quick wins + documentation)
 - **Batch #2**: 6 files (API/debug pages)
 - **Batch #3**: 0 files (audit only)
@@ -155,6 +164,7 @@ style={{ backgroundColor: "rgb(var(--color-black-rgb) / 0.14)" }}
 **Total**: **23 code files** modified + **2 documentation files** created
 
 ### Code Changes
+
 - **Inline styles converted**: ~70 properties
 - **CSS tokens standardized**: 50+ tokens
 - **Parse errors eliminated**: 150+
@@ -181,23 +191,26 @@ These patterns are **legitimate** and should **remain inline**:
    ```tsx
    style={{ width: `${percent}%` }}
    ```
-   
 2. **Dynamic Colors** (From Props/State)
+
    ```tsx
    style={{ backgroundColor: player.color }}
    ```
 
 3. **Calculated Delays** (Stagger Animations)
+
    ```tsx
    style={{ animationDelay: `${index * 100}ms` }}
    ```
 
 4. **Dynamic Positioning** (Tooltips, Modals)
+
    ```tsx
    style={{ top: `${position.y}px`, left: `${position.x}px` }}
    ```
 
 5. **Theme-Aware Opacity** (With CSS Variables)
+
    ```tsx
    style={{ backgroundColor: `rgb(var(--color-black-rgb) / ${opacity})` }}
    ```
@@ -212,19 +225,21 @@ These patterns are **legitimate** and should **remain inline**:
 These patterns have been **eliminated**:
 
 1. ❌ **Static Padding/Margin**
+
    ```tsx
    // BEFORE
    style={{ padding: "8px" }}
-   
+
    // AFTER
    className="p-2"
    ```
 
 2. ❌ **Hardcoded Colors**
+
    ```tsx
    // BEFORE
    style={{ backgroundColor: "#e5e7eb" }}
-   
+
    // AFTER
    className="bg-gray-200"
    // OR for CSS tokens:
@@ -232,29 +247,32 @@ These patterns have been **eliminated**:
    ```
 
 3. ❌ **Font Families**
+
    ```tsx
    // BEFORE
    style={{ fontFamily: "monospace" }}
-   
+
    // AFTER
    className="font-mono"
    ```
 
 4. ❌ **Static Positioning**
+
    ```tsx
    // BEFORE
    style={{ position: "fixed", bottom: "20px", right: "20px" }}
-   
+
    // AFTER
    className="fixed bottom-5 right-5"
    ```
 
 5. ❌ **Duplicate CSS Token Values**
+
    ```css
    /* BEFORE */
    --semantic-primary: #10b981;
    --color-emerald-500: #10b981;
-   
+
    /* AFTER */
    --semantic-primary: var(--color-emerald-500);
    ```
@@ -264,6 +282,7 @@ These patterns have been **eliminated**:
 ## Design System Maturity
 
 ### Before Option A
+
 - Color System: 90% token coverage
 - Spacing System: 75% token coverage
 - Typography System: 85% token coverage
@@ -271,6 +290,7 @@ These patterns have been **eliminated**:
 - Animation System: 30% coverage
 
 ### After Option A ✅
+
 - **Color System: 98% token coverage** ⬆️ +8%
 - **Spacing System: 95% token coverage** ⬆️ +20%
 - **Typography System: 92% token coverage** ⬆️ +7%
@@ -315,12 +335,14 @@ Now that Option A (Cleanup) is complete, ready to start **Option B: Build New Ca
 **Goal**: Systematic responsive design patterns
 
 **Components to Build**:
+
 - Container width tokens (xs, sm, md, lg, xl, 2xl)
 - Grid/flex pattern tokens
 - Content area sizing tokens
 - Responsive breakpoint utilities
 
 **Expected Impact**:
+
 - Layout system: 40% → 85% coverage
 - Consistent responsive patterns
 - Easier complex layouts
@@ -330,12 +352,14 @@ Now that Option A (Cleanup) is complete, ready to start **Option B: Build New Ca
 **Goal**: Consistent motion design language
 
 **Components to Build**:
+
 - Duration scale (instant, fast, normal, slow, slower)
 - Easing functions (linear, ease, spring, bounce)
 - Transition presets (fade, slide, scale, blur)
 - Animation utilities
 
 **Expected Impact**:
+
 - Animation system: 30% → 75% coverage
 - Professional motion design
 - Better accessibility (respects prefers-reduced-motion)
@@ -388,6 +412,7 @@ Now that Option A (Cleanup) is complete, ready to start **Option B: Build New Ca
 **Option A cleanup is COMPLETE** ✅
 
 The codebase now has:
+
 - ✅ Clean, consistent styling patterns
 - ✅ Comprehensive token system
 - ✅ Well-documented approved patterns
@@ -400,7 +425,7 @@ The codebase now has:
 
 ---
 
-*Generated: October 6, 2025*  
-*Duration: ~2 hours*  
-*Team: Engineering*  
-*Phase: Design System V2 - Cleanup Complete*
+_Generated: October 6, 2025_  
+_Duration: ~2 hours_  
+_Team: Engineering_  
+_Phase: Design System V2 - Cleanup Complete_

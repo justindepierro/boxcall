@@ -40,7 +40,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
   return (
     <div className={layoutClasses}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-page container-padding">
         {(title || actions) && (
           <PageHeader
             title={title}

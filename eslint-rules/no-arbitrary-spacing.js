@@ -134,7 +134,12 @@ export default {
 
             // Skip if it's already using svh/vh (viewport height) - these are standardized
             // Note: We use vh instead of svh for better browser support
-            if (utility.includes("svh") || utility.includes("vh") || utility.includes("vw")) continue;
+            if (
+              utility.includes("svh") ||
+              utility.includes("vh") ||
+              utility.includes("vw")
+            )
+              continue;
 
             // Skip large rem values (> 40rem) - these are for layout containers
             const remMatch = utility.match(/(\d+(?:\.\d+)?)rem/);

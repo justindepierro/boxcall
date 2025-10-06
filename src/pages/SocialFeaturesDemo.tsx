@@ -23,7 +23,7 @@ const SocialFeaturesDemo: React.FC = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
+    <div className="container-wide container-padding space-y-8">
       <div className="text-center relative">
         <div className="absolute top-0 right-0">
           <NotificationsBell userId={demoUserId} />
@@ -65,7 +65,7 @@ const SocialFeaturesDemo: React.FC = () => {
           </Card>
 
           {/* Recent Activity Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          <div className="grid-dashboard gap-4 md:gap-5">
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">🔥</div>
               <div className="text-xl font-bold text-text-primary">24</div>
@@ -289,7 +289,7 @@ const SocialFeaturesDemo: React.FC = () => {
             <h3 className="text-xl font-semibold text-text-primary mb-4">
               🌟 Team Spotlight
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid-dashboard gap-4">
               {[
                 {
                   name: "Jake Thompson",

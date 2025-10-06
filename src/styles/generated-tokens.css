@@ -416,10 +416,16 @@
   --layout-container-full: 100%; /* Full width */
 
   /* Content Widths - Semantic content area sizing */
-  --layout-content-narrow: var(--layout-container-2xl); /* 42rem - Articles, forms */
-  --layout-content-medium: var(--layout-container-4xl); /* 56rem - Detail pages */
+  --layout-content-narrow: var(
+    --layout-container-2xl
+  ); /* 42rem - Articles, forms */
+  --layout-content-medium: var(
+    --layout-container-4xl
+  ); /* 56rem - Detail pages */
   --layout-content-wide: var(--layout-container-6xl); /* 72rem - Dashboards */
-  --layout-content-full: var(--layout-container-7xl); /* 80rem - Main container */
+  --layout-content-full: var(
+    --layout-container-7xl
+  ); /* 80rem - Main container */
 
   /* Grid Gaps - Layout-specific spacing for grids */
   --layout-gap-xs: 0.5rem; /* 8px - Tight grids */

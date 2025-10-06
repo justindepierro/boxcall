@@ -58,7 +58,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
     <div className="min-h-screen surface-app">
       {/* Welcome Header */}
       <div className="surface-header shadow-sm border-b">
-        <div className="max-w-7xl mx-auto bc-container-padding">
+        <div className="container-page container-padding">
           <div className="py-6">
             <div className="flex items-center justify-between">
               <div>
@@ -84,7 +84,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
       </div>
 
       {/* Role-Specific Content */}
-      <div className="max-w-7xl mx-auto bc-container-padding py-8">
+      <div className="container-page container-padding py-8">
         <React.Suspense
           fallback={
             <div className="flex items-center justify-center py-12">
@@ -154,7 +154,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
  */
 const AdminDashboard: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
+    <div className="grid-dashboard">
       {/* System Overview */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
         <Typography

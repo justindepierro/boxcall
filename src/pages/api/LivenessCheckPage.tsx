@@ -32,9 +32,7 @@ export const LivenessCheckPage: React.FC = () => {
   }
 
   return (
-    <pre className="font-mono p-5">
-      {JSON.stringify(liveness, null, 2)}
-    </pre>
+    <pre className="font-mono p-5">{JSON.stringify(liveness, null, 2)}</pre>
   );
 };
 

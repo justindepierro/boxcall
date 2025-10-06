@@ -55,7 +55,7 @@ export const TeamSettings: React.FC = () => {
           className="mb-4"
         />
 
-        <div className="max-w-6xl mx-auto">
+        <div className="container-wide">
           {/* Tab Navigation */}
           <div className="mb-spacing-xl">
             <div className="border-b border-border-medium">
@@ -97,7 +97,7 @@ export const TeamSettings: React.FC = () => {
                   performance.
                 </Typography>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+                <div className="grid-dashboard gap-spacing-lg">
                   <div className="text-center p-spacing-md bg-surface-subtle rounded-lg">
                     <Typography
                       variant="headline-lg"
@@ -138,7 +138,7 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-md" className="mb-spacing-md">
                   Quick Actions
                 </Typography>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+                <div className="grid-form gap-spacing-md">
                   <Button
                     variant="outline"
                     className="justify-start h-auto p-spacing-md"

@@ -34,21 +34,25 @@ Design comprehensive layout token system to standardize page containers, content
 #### 1. Page Container Patterns
 
 **Most Common: `max-w-7xl mx-auto`** (80rem / 1280px)
+
 - Used in: PracticePlanner, AchievementAdmin, RoleBasedDashboard, Footer, PageLayout
 - Purpose: Main page container for dashboard/wide content
 - **22+ occurrences**
 
 **Second: `max-w-2xl mx-auto`** (42rem / 672px)
+
 - Used in: BoxCall, AboutPage, CreateCoachAccount, TeamBulletin, CreateTeam
 - Purpose: Centered content (forms, articles, narratives)
 - **10+ occurrences**
 
 **Third: `max-w-6xl mx-auto`** (72rem / 1152px)
+
 - Used in: SocialFeaturesDemo, TeamSettings
 - Purpose: Medium-wide content
 - **4+ occurrences**
 
 **Other widths found:**
+
 - `max-w-4xl` (56rem / 896px) - CreateCoachAccount
 - `max-w-3xl` (48rem / 768px) - DiagnosticsPage
 - `max-w-xl` (36rem / 576px) - EventModal
@@ -59,28 +63,35 @@ Design comprehensive layout token system to standardize page containers, content
 #### 2. Grid Patterns
 
 **Most Common: Dashboard Grid**
+
 ```tsx
 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5
 ```
+
 - Used in: SocialFeaturesDemo, PracticePlansPage, AchievementAdmin
 - **15+ variations**
 
 **Form Layouts**
+
 ```tsx
 grid grid-cols-1 md:grid-cols-2 gap-4
 // or gap-6
 ```
+
 - Used in: CreateCoachAccount (8 times), TeamSettings, JoinTeam
 - **20+ occurrences**
 
 **Dashboard Hero Tiles**
+
 ```tsx
 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5
 ```
+
 - Used in: TeamBulletin
 - Dashboard overview cards
 
 **Responsive Breakpoints Used:**
+
 - `sm:` (640px)
 - `md:` (768px) - MOST COMMON for 2-column layouts
 - `lg:` (1024px) - MOST COMMON for 3-column layouts
@@ -89,21 +100,25 @@ grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5
 #### 3. Content Area Widths
 
 **Form Inputs**
+
 ```tsx
 w-full sm:w-64
 w-full // default for mobile
 ```
 
 **Section Containers**
+
 ```tsx
 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 ```
+
 - Consistent padding pattern: `px-4 sm:px-6 lg:px-8`
 - Consistent vertical: `py-8`
 
 #### 4. Custom Layout Classes
 
 **Existing custom classes:**
+
 - `bc-container-padding` (used in Footer, RoleBasedDashboard, NavBar)
 - `bc-grid-gap` (used in RoleBasedDashboard)
 - `bc-card-padding` (used in RoleBasedDashboard)
@@ -120,21 +135,22 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 
 ```css
 /* Container Widths - Page-level containers */
---layout-container-xs: 20rem;     /* 320px - Minimal mobile */
---layout-container-sm: 24rem;     /* 384px - Small forms */
---layout-container-md: 28rem;     /* 448px - Medium forms */
---layout-container-lg: 32rem;     /* 512px - Large forms */
---layout-container-xl: 36rem;     /* 576px - Modals */
---layout-container-2xl: 42rem;    /* 672px - Articles/Forms (max-w-2xl) */
---layout-container-3xl: 48rem;    /* 768px - Wide forms (max-w-3xl) */
---layout-container-4xl: 56rem;    /* 896px - Wide content (max-w-4xl) */
---layout-container-5xl: 64rem;    /* 1024px - Detail pages (max-w-5xl) */
---layout-container-6xl: 72rem;    /* 1152px - Wide dashboards (max-w-6xl) */
---layout-container-7xl: 80rem;    /* 1280px - Main app container (max-w-7xl) */
---layout-container-full: 100%;    /* Full width */
+--layout-container-xs: 20rem; /* 320px - Minimal mobile */
+--layout-container-sm: 24rem; /* 384px - Small forms */
+--layout-container-md: 28rem; /* 448px - Medium forms */
+--layout-container-lg: 32rem; /* 512px - Large forms */
+--layout-container-xl: 36rem; /* 576px - Modals */
+--layout-container-2xl: 42rem; /* 672px - Articles/Forms (max-w-2xl) */
+--layout-container-3xl: 48rem; /* 768px - Wide forms (max-w-3xl) */
+--layout-container-4xl: 56rem; /* 896px - Wide content (max-w-4xl) */
+--layout-container-5xl: 64rem; /* 1024px - Detail pages (max-w-5xl) */
+--layout-container-6xl: 72rem; /* 1152px - Wide dashboards (max-w-6xl) */
+--layout-container-7xl: 80rem; /* 1280px - Main app container (max-w-7xl) */
+--layout-container-full: 100%; /* Full width */
 ```
 
 **Tailwind Utilities:**
+
 ```tsx
 // Instead of: max-w-7xl mx-auto
 <div className="container-page">
@@ -152,13 +168,16 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 
 ```css
 /* Content Widths - Semantic sizing */
---layout-content-narrow: var(--layout-container-2xl);   /* 42rem - Articles, forms */
---layout-content-medium: var(--layout-container-4xl);   /* 56rem - Detail pages */
---layout-content-wide: var(--layout-container-6xl);     /* 72rem - Dashboards */
---layout-content-full: var(--layout-container-7xl);     /* 80rem - Main container */
+--layout-content-narrow: var(
+  --layout-container-2xl
+); /* 42rem - Articles, forms */
+--layout-content-medium: var(--layout-container-4xl); /* 56rem - Detail pages */
+--layout-content-wide: var(--layout-container-6xl); /* 72rem - Dashboards */
+--layout-content-full: var(--layout-container-7xl); /* 80rem - Main container */
 ```
 
 **Tailwind Utilities:**
+
 ```tsx
 // Semantic naming
 <div className="content-narrow">  // Forms, articles
@@ -173,15 +192,16 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 
 ```css
 /* Grid Gaps - Layout-specific spacing */
---layout-gap-xs: 0.5rem;   /* 8px - Tight grids */
---layout-gap-sm: 0.75rem;  /* 12px - Compact grids */
---layout-gap-md: 1rem;     /* 16px - Standard grids (gap-4) */
---layout-gap-lg: 1.25rem;  /* 20px - Spacious grids (gap-5) */
---layout-gap-xl: 1.5rem;   /* 24px - Wide grids (gap-6) */
---layout-gap-2xl: 2rem;    /* 32px - Extra wide grids */
+--layout-gap-xs: 0.5rem; /* 8px - Tight grids */
+--layout-gap-sm: 0.75rem; /* 12px - Compact grids */
+--layout-gap-md: 1rem; /* 16px - Standard grids (gap-4) */
+--layout-gap-lg: 1.25rem; /* 20px - Spacious grids (gap-5) */
+--layout-gap-xl: 1.5rem; /* 24px - Wide grids (gap-6) */
+--layout-gap-2xl: 2rem; /* 32px - Extra wide grids */
 ```
 
 **Rationale**: These align with Tailwind's gap utilities but provide semantic tokens:
+
 - `gap-4` (1rem) → `layout-gap-md`
 - `gap-5` (1.25rem) → `layout-gap-lg`
 - `gap-6` (1.5rem) → `layout-gap-xl`
@@ -206,6 +226,7 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 **Purpose**: Replace repetitive responsive grid patterns
 
 **Pattern 1: Dashboard Grid (1→2→3 columns)**
+
 ```tsx
 // BEFORE
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
@@ -215,6 +236,7 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 ```
 
 **Pattern 2: Form Grid (1→2 columns)**
+
 ```tsx
 // BEFORE
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -224,6 +246,7 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 ```
 
 **Pattern 3: Hero Tiles (1→2→4 columns)**
+
 ```tsx
 // BEFORE
 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
@@ -233,6 +256,7 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 ```
 
 **Pattern 4: Card Grid (auto-fit responsive)**
+
 ```tsx
 // BEFORE
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -247,13 +271,14 @@ max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8
 
 ```css
 /* Container Padding - Page-level padding */
---layout-padding-xs: 0.75rem;  /* 12px - Mobile */
---layout-padding-sm: 1rem;     /* 16px - Mobile (px-4) */
---layout-padding-md: 1.5rem;   /* 24px - Tablet (px-6) */
---layout-padding-lg: 2rem;     /* 32px - Desktop (px-8) */
+--layout-padding-xs: 0.75rem; /* 12px - Mobile */
+--layout-padding-sm: 1rem; /* 16px - Mobile (px-4) */
+--layout-padding-md: 1.5rem; /* 24px - Tablet (px-6) */
+--layout-padding-lg: 2rem; /* 32px - Desktop (px-8) */
 ```
 
 **Responsive Utility:**
+
 ```tsx
 // BEFORE
 <div className="px-4 sm:px-6 lg:px-8">
@@ -387,7 +412,7 @@ plugins: [
         marginLeft: 'auto',
         marginRight: 'auto',
       },
-      
+
       // Container padding utility
       '.container-padding': {
         paddingLeft: 'var(--layout-padding-sm)',
@@ -401,7 +426,7 @@ plugins: [
           paddingRight: 'var(--layout-padding-lg)',
         },
       },
-      
+
       // Grid patterns
       '.grid-dashboard': {
         display: 'grid',
@@ -596,6 +621,6 @@ Before committing changes:
 
 ---
 
-*Generated: October 6, 2025*  
-*Team: Engineering*  
-*Phase: Option B - Layout Token System Design*
+_Generated: October 6, 2025_  
+_Team: Engineering_  
+_Phase: Option B - Layout Token System Design_

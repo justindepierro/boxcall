@@ -162,7 +162,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Typography
               variant="body-lg"
               color="muted"
-              className="mb-8 max-w-2xl mx-auto"
+              className="mb-8 container-content"
             >
               Join BoxCall as an individual coach! Build your personal
               playbooks, create practice plans, and enhance your coaching
@@ -177,7 +177,7 @@ export const CreateCoachAccount: React.FC = () => {
               >
                 Why Coach Account?
               </Typography>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="grid-form gap-4 text-left">
                 <div className="flex items-start gap-3">
                   <Icon name="book" size="sm" color="info" className="mt-1" />
                   <div>
@@ -253,7 +253,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Typography variant="headline-lg" className="mb-6">
               Personal Information
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid-form">
               <div>
                 <Typography
                   variant="body-sm"
@@ -340,7 +340,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Typography variant="headline-lg" className="mb-6">
               Address Information
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid-form">
               <div className="md:col-span-2">
                 <Typography
                   variant="body-sm"
@@ -427,7 +427,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Typography variant="headline-lg" className="mb-6">
               Coaching Background
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid-form">
               <div>
                 <Typography
                   variant="body-sm"
@@ -545,7 +545,7 @@ export const CreateCoachAccount: React.FC = () => {
               </div>
 
               {formData.hasSchoolCode && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 surface-subtle dark:bg-surface-info/20 rounded-lg">
+                <div className="grid-form p-4 surface-subtle dark:bg-surface-info/20 rounded-lg">
                   <div>
                     <Typography
                       variant="body-sm"
@@ -682,7 +682,7 @@ export const CreateCoachAccount: React.FC = () => {
                 <Typography variant="body-sm" className="font-medium mb-2">
                   What you get:
                 </Typography>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                <ul className="grid-form gap-2 text-sm">
                   <li className="flex items-center gap-2">
                     <Icon name="check" size="xs" color="success" />
                     Personal playbook library
@@ -728,7 +728,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Typography
               variant="body-lg"
               color="muted"
-              className="mb-8 max-w-2xl mx-auto"
+              className="mb-8 container-content"
             >
               Welcome to BoxCall, Coach {formData.firstName}! Your personal
               coaching account is ready to use. Start building your playbooks
@@ -769,7 +769,7 @@ export const CreateCoachAccount: React.FC = () => {
 
   return (
     <div className="py-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="content-medium">
         {/* Progress Bar */}
         {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="mb-8">

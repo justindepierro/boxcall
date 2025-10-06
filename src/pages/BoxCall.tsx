@@ -16,7 +16,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 const BoxCall: React.FC = () => {
   return (
     <div className="py-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="container-page">
         {/* Header */}
         <div className="mb-8">
           <Typography variant="headline-xl" className="text-text-primary">
@@ -37,7 +37,7 @@ const BoxCall: React.FC = () => {
           <Typography
             variant="body-lg"
             color="muted"
-            className="mb-6 max-w-2xl mx-auto"
+            className="mb-6 container-content"
           >
             The ultimate game management platform for coaches. Coordinate plays,
             communicate with your team, and manage game strategy in real-time.

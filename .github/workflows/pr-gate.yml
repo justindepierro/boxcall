@@ -19,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -50,27 +50,27 @@ jobs:
             const lint = '${{ steps.lint.outcome }}';
             const test = '${{ steps.test.outcome }}';
             const build = '${{ steps.build.outcome }}';
-            
+
             const emoji = (status) => status === 'success' ? '✅' : '❌';
-            
+
             const comment = `## 🚦 PR Quality Gate Results
-            
+
             | Check | Status |
             |-------|--------|
             | Type Check | ${emoji(typecheck)} ${typecheck} |
             | Lint | ${emoji(lint)} ${lint} |
             | Tests | ${emoji(test)} ${test} |
             | Build | ${emoji(build)} ${build} |
-            
+
             ${lint === 'failure' ? '⚠️ **Lint errors detected.** Run `npm run lint` locally to see details.' : ''}
             ${test === 'failure' ? '⚠️ **Tests failing.** Run `npm run test` locally to debug.' : ''}
             ${build === 'failure' ? '⚠️ **Build failed.** Check build logs for errors.' : ''}
             ${typecheck === 'success' && lint === 'success' && test === 'success' && build === 'success' ? '🎉 **All checks passed!** Ready to merge.' : ''}
-            
+
             ---
             📚 [Design System Lockdown Progress](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/DESIGN_SYSTEM_LOCKDOWN.md)
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

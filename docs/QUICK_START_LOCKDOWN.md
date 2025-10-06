@@ -7,6 +7,7 @@
 ## What We're Building
 
 A **bulletproof design system** with:
+
 - ✅ Pre-commit hooks (can't commit broken code)
 - ✅ CI gates (can't merge broken code)
 - ✅ Enhanced ESLint (catches ALL violations)
@@ -19,12 +20,14 @@ A **bulletproof design system** with:
 ## Where We Are Now
 
 **✅ Completed:**
+
 - Color standardization (340+ violations fixed)
 - Token architecture (semantic tokens in place)
 - 50+ UI components
 - 99%+ color compliance
 
 **⚠️ Gaps:**
+
 - Can commit broken code (no pre-commit hooks)
 - Can merge broken code (no CI gates)
 - ESLint only catches colors (not spacing/sizing)
@@ -39,11 +42,13 @@ A **bulletproof design system** with:
 ### Week 1: Lock It Down 🔒
 
 **Days 1-2: Quick Wins**
+
 - Fix 3 files with duplicate `border border` classes
 - Clean up 4 story files using `bg-gray-100` → `bg-surface-muted`
 - Standardize TeamOnboardingWizard (20+ violations)
 
 **Days 3-5: Enforcement**
+
 - Enhance ESLint to catch arbitrary values (`text-[11px]`, `p-[24px]`)
 - Add pre-commit hooks (type-check + lint + format)
 - Setup CI quality gates (GitHub Actions)
@@ -51,11 +56,13 @@ A **bulletproof design system** with:
 ### Week 2: Document & Refine 📚
 
 **Days 6-10: Documentation**
+
 - Create 20 Storybook stories (core components)
 - Setup visual regression testing (Playwright)
 - Build token usage dashboard (HTML report)
 
 **Days 11-14: Architecture**
+
 - Refactor large pages (PlaybookPage 833 lines, RosterPage 996 lines)
 - Document component patterns
 - Polish remaining rough edges
@@ -113,9 +120,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - run: npm ci
       - run: npm run type-check
       - run: npm run lint -- --max-warnings 0
@@ -124,6 +131,7 @@ jobs:
 ```
 
 Enable branch protection:
+
 - Require status checks
 - Require reviews
 - Block merge if checks fail
@@ -131,6 +139,7 @@ Enable branch protection:
 ### Step 4: Enhance ESLint (Day 4)
 
 Update `eslint-rules/no-raw-tailwind-colors.js` to also detect:
+
 - `text-[11px]` → suggest `text-xs`
 - `p-[24px]` → suggest `p-6`
 - `gap-[1.75rem]` → suggest `gap-7`
@@ -138,6 +147,7 @@ Update `eslint-rules/no-raw-tailwind-colors.js` to also detect:
 ### Step 5: Storybook Sprint (Week 2)
 
 Create stories for:
+
 1. Button (9 variants)
 2. Card (elevation states)
 3. Input (focus states)
@@ -150,15 +160,16 @@ Create stories for:
 10. Tabs (segment control)
 
 Template:
+
 ```tsx
 // Button.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./Button";
 
 const meta = {
-  title: 'UI/Button',
+  title: "UI/Button",
   component: Button,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -166,8 +177,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    children: 'Primary Button',
+    variant: "primary",
+    children: "Primary Button",
   },
 };
 ```
@@ -200,6 +211,7 @@ open reports/token-usage-dashboard.html
 ## What Success Looks Like
 
 ### Week 1 (Friday Check-in)
+
 - ✅ Zero lint errors
 - ✅ Pre-commit hooks working
 - ✅ CI gates configured
@@ -207,6 +219,7 @@ open reports/token-usage-dashboard.html
 - ✅ 3 quick win files fixed
 
 ### Week 2 (Friday Check-in)
+
 - ✅ 20 Storybook stories
 - ✅ Visual regression baseline
 - ✅ Token dashboard showing 98%+ coverage
@@ -214,6 +227,7 @@ open reports/token-usage-dashboard.html
 - ✅ Pattern documentation complete
 
 ### Long-term (Ongoing)
+
 - ✅ Can't commit broken code
 - ✅ Can't merge without review + tests
 - ✅ Zero arbitrary values in production
@@ -225,18 +239,21 @@ open reports/token-usage-dashboard.html
 ## Daily Checklist
 
 ### Every Day
+
 - [ ] Run `npm run type-check` before starting
 - [ ] Run `npm run lint` to catch issues
 - [ ] Run `npm run test` if touching logic
 - [ ] Check `npm run tokens:audit` weekly
 
 ### Before Every Commit
+
 - [ ] Type check passes
 - [ ] Lint passes with zero warnings
 - [ ] Tests pass
 - [ ] Format check passes
 
 ### Before Every PR
+
 - [ ] CI passes (all checks green)
 - [ ] Visual regression approved (if UI changes)
 - [ ] Storybook updated (if component changes)
@@ -280,7 +297,9 @@ npm run predev               # Pre-development check
 ## Troubleshooting
 
 ### "Pre-commit hook failed"
+
 **Solution**: Fix the errors shown, then commit again.
+
 ```bash
 npm run type-check  # Find type errors
 npm run lint        # Find lint errors
@@ -288,13 +307,17 @@ npm run format:check # Find format errors
 ```
 
 ### "CI checks failing"
+
 **Solution**: Run checks locally first.
+
 ```bash
 npm run validate    # Runs everything CI runs
 ```
 
 ### "ESLint suggesting token I don't have"
+
 **Solution**: Check token reference.
+
 ```bash
 # View all tokens
 cat src/styles/generated-tokens.css
@@ -304,7 +327,9 @@ open docs/BOXCALL_DESIGN_LANGUAGE.md
 ```
 
 ### "Visual regression test failing"
+
 **Solution**: Review diff, update baseline if intentional.
+
 ```bash
 # View diff images
 npm run test:visual:ui
@@ -317,33 +342,36 @@ npm run test:visual:update
 
 ## Key Files
 
-| File                                       | Purpose                  |
-| ------------------------------------------ | ------------------------ |
-| `src/design-system/tokens.ts`              | Token definitions        |
-| `src/styles/generated-tokens.css`          | Generated CSS vars       |
-| `eslint-rules/no-raw-tailwind-colors.js`   | Custom ESLint rule       |
-| `.husky/pre-commit`                        | Pre-commit hook          |
-| `.github/workflows/quality-gate.yml`       | CI configuration         |
-| `docs/BOXCALL_DESIGN_LANGUAGE.md`          | Design system reference  |
-| `docs/DESIGN_SYSTEM_LOCKDOWN.md`           | Full lockdown plan       |
-| `scripts/token-usage-dashboard.ts`         | Token audit script       |
+| File                                     | Purpose                 |
+| ---------------------------------------- | ----------------------- |
+| `src/design-system/tokens.ts`            | Token definitions       |
+| `src/styles/generated-tokens.css`        | Generated CSS vars      |
+| `eslint-rules/no-raw-tailwind-colors.js` | Custom ESLint rule      |
+| `.husky/pre-commit`                      | Pre-commit hook         |
+| `.github/workflows/quality-gate.yml`     | CI configuration        |
+| `docs/BOXCALL_DESIGN_LANGUAGE.md`        | Design system reference |
+| `docs/DESIGN_SYSTEM_LOCKDOWN.md`         | Full lockdown plan      |
+| `scripts/token-usage-dashboard.ts`       | Token audit script      |
 
 ---
 
 ## Team Communication
 
 ### Daily Standup
+
 - What I completed yesterday
 - What I'm working on today
 - Any blockers (ESLint errors, test failures)
 
 ### Weekly Review
+
 - Token coverage progress (aim for 98%+)
 - Storybook coverage progress (aim for 90%+)
 - CI health (passing rate, failure patterns)
 - Visual regression diffs (review + approve)
 
 ### PR Reviews
+
 - ✅ Type check passes
 - ✅ Lint passes
 - ✅ Tests pass

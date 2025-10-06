@@ -58,9 +58,7 @@ The Layout Token System provides **standardized, reusable layout patterns** to r
 
 ```tsx
 <div className="container-page container-padding py-8">
-  <div className="grid-dashboard">
-    {/* content */}
-  </div>
+  <div className="grid-dashboard">{/* content */}</div>
 </div>
 ```
 
@@ -81,9 +79,7 @@ Use these for main page wrappers.
 **Use for**: Dashboard pages, wide layouts
 
 ```tsx
-<div className="container-page">
-  {/* Main page content */}
-</div>
+<div className="container-page">{/* Main page content */}</div>
 ```
 
 #### `.container-content`
@@ -93,9 +89,7 @@ Use these for main page wrappers.
 **Use for**: Forms, articles, narratives
 
 ```tsx
-<div className="container-content">
-  {/* Form or article content */}
-</div>
+<div className="container-content">{/* Form or article content */}</div>
 ```
 
 #### `.container-wide`
@@ -105,9 +99,7 @@ Use these for main page wrappers.
 **Use for**: Wide content areas
 
 ```tsx
-<div className="container-wide">
-  {/* Wide content */}
-</div>
+<div className="container-wide">{/* Wide content */}</div>
 ```
 
 ### Semantic Content Widths
@@ -193,6 +185,7 @@ You can also use tokens directly with Tailwind's `max-w-*` utility:
 ```
 
 **Responsive Behavior**:
+
 - Mobile (< 768px): 1 column, 1rem gap
 - Tablet (768px+): 2 columns, 1.25rem gap
 - Desktop (1024px+): 3 columns, 1.25rem gap
@@ -216,6 +209,7 @@ You can also use tokens directly with Tailwind's `max-w-*` utility:
 ```
 
 **Responsive Behavior**:
+
 - Mobile (< 768px): 1 column, 1.5rem gap
 - Tablet/Desktop (768px+): 2 columns, 1.5rem gap
 
@@ -238,6 +232,7 @@ You can also use tokens directly with Tailwind's `max-w-*` utility:
 ```
 
 **Responsive Behavior**:
+
 - Mobile (< 640px): 1 column, 1rem gap
 - Small (640px+): 2 columns, 1rem gap
 - Extra large (1280px+): 4 columns, 1.25rem gap
@@ -261,6 +256,7 @@ You can also use tokens directly with Tailwind's `max-w-*` utility:
 ```
 
 **Responsive Behavior**:
+
 - Mobile (< 640px): 1 column, 1rem gap
 - Small (640px+): 2 columns, 1rem gap
 - Large (1024px+): 3 columns, 1rem gap
@@ -272,9 +268,7 @@ You can also use tokens directly with Tailwind's `max-w-*` utility:
 Same as `.grid-dashboard` but with tighter gaps (0.75rem → 1rem).
 
 ```tsx
-<div className="grid-dashboard-tight">
-  {/* Compact dashboard cards */}
-</div>
+<div className="grid-dashboard-tight">{/* Compact dashboard cards */}</div>
 ```
 
 #### `.grid-dashboard-wide`
@@ -282,9 +276,7 @@ Same as `.grid-dashboard` but with tighter gaps (0.75rem → 1rem).
 Same as `.grid-dashboard` but extends to 4 columns on xl screens.
 
 ```tsx
-<div className="grid-dashboard-wide">
-  {/* Wide dashboard with 4 columns */}
-</div>
+<div className="grid-dashboard-wide">{/* Wide dashboard with 4 columns */}</div>
 ```
 
 ---
@@ -297,6 +289,7 @@ Same as `.grid-dashboard` but extends to 4 columns on xl screens.
 **Replaces**: `px-4 sm:px-6 lg:px-8`
 
 **Padding Scale**:
+
 - Mobile (< 640px): 1rem (16px)
 - Tablet (640px+): 1.5rem (24px)
 - Desktop (1024px+): 2rem (32px)
@@ -315,9 +308,7 @@ Same as `.grid-dashboard` but extends to 4 columns on xl screens.
 // Page wrapper with padding and vertical spacing
 <div className="container-page container-padding py-8">
   <h1>Page Title</h1>
-  <div className="grid-dashboard">
-    {/* content */}
-  </div>
+  <div className="grid-dashboard">{/* content */}</div>
 </div>
 ```
 
@@ -330,36 +321,40 @@ Same as `.grid-dashboard` but extends to 4 columns on xl screens.
 Look for these common patterns in your component:
 
 **Pattern A: Page Container**
+
 ```tsx
 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 ```
 
 **Pattern B: Content Container**
+
 ```tsx
 <div className="max-w-2xl mx-auto">
 ```
 
 **Pattern C: Dashboard Grid**
+
 ```tsx
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
 ```
 
 **Pattern D: Form Grid**
+
 ```tsx
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 ```
 
 ### Step 2: Replace with Token
 
-| Old Pattern | New Pattern |
-|------------|-------------|
-| `max-w-7xl mx-auto` | `.container-page` |
-| `max-w-6xl mx-auto` | `.container-wide` |
-| `max-w-2xl mx-auto` | `.container-content` |
-| `px-4 sm:px-6 lg:px-8` | `.container-padding` |
-| `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5` | `.grid-dashboard` |
-| `grid grid-cols-1 md:grid-cols-2 gap-6` | `.grid-form` |
-| `grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5` | `.grid-hero` |
+| Old Pattern                                                     | New Pattern          |
+| --------------------------------------------------------------- | -------------------- |
+| `max-w-7xl mx-auto`                                             | `.container-page`    |
+| `max-w-6xl mx-auto`                                             | `.container-wide`    |
+| `max-w-2xl mx-auto`                                             | `.container-content` |
+| `px-4 sm:px-6 lg:px-8`                                          | `.container-padding` |
+| `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5` | `.grid-dashboard`    |
+| `grid grid-cols-1 md:grid-cols-2 gap-6`                         | `.grid-form`         |
+| `grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5` | `.grid-hero`         |
 
 ### Step 3: Test Responsive Behavior
 
@@ -433,9 +428,7 @@ export default function DashboardPage() {
 ```tsx
 // Good - Main page container
 <PageLayout title="Dashboard">
-  <div className="grid-dashboard">
-    {/* content */}
-  </div>
+  <div className="grid-dashboard">{/* content */}</div>
 </PageLayout>
 ```
 
@@ -467,7 +460,9 @@ export default function DashboardPage() {
 ```tsx
 // Bad - Too granular
 <Card>
-  <div className="grid-dashboard">  // Use regular Tailwind here
+  <div className="grid-dashboard">
+    {" "}
+    // Use regular Tailwind here
     <CardContent />
   </div>
 </Card>
@@ -483,6 +478,7 @@ export default function DashboardPage() {
 ### When to Use Layout Tokens
 
 ✅ **Use for**:
+
 - Page containers
 - Main content areas
 - Dashboard grids
@@ -491,6 +487,7 @@ export default function DashboardPage() {
 - Hero sections
 
 ❌ **Don't use for**:
+
 - Component-internal layouts (use regular Tailwind)
 - One-off custom grids (use regular Tailwind)
 - Complex nested grids (use regular Tailwind)
@@ -504,16 +501,19 @@ export default function DashboardPage() {
 The following components are **off-limits** and should not be modified during layout token migration:
 
 #### **AppHeader**
+
 - **Location**: `src/components/layout/AppHeader.tsx`
 - **Reason**: Global search and navigation working perfectly
 - **Status**: ✅ Working - Don't touch
 
 #### **Sidebar**
+
 - **Location**: `src/components/layout/Sidebar.tsx`
 - **Reason**: Overlay behavior and navigation items working correctly
 - **Status**: ✅ Working - Don't touch
 
 #### **Layout (wrapper)**
+
 - **Location**: `src/components/layout/Layout.tsx`
 - **Reason**: Main app wrapper integrating AppHeader + Sidebar
 - **Status**: ✅ Working - Don't touch
@@ -548,8 +548,8 @@ After migration, verify:
 ### Example 1: Dashboard Page
 
 ```tsx
-import { PageLayout } from '../components/layout/PageLayout';
-import { StatsCard } from '../components/dashboard/StatsCard';
+import { PageLayout } from "../components/layout/PageLayout";
+import { StatsCard } from "../components/dashboard/StatsCard";
 
 export default function DashboardPage() {
   return (
@@ -567,8 +567,8 @@ export default function DashboardPage() {
 ### Example 2: Form Page
 
 ```tsx
-import { PageLayout } from '../components/layout/PageLayout';
-import { FormField } from '../components/forms/FormField';
+import { PageLayout } from "../components/layout/PageLayout";
+import { FormField } from "../components/forms/FormField";
 
 export default function CreateAccountPage() {
   return (
@@ -579,7 +579,11 @@ export default function CreateAccountPage() {
           <FormField label="Last Name" name="lastName" />
           <FormField label="Email" name="email" className="md:col-span-2" />
           <FormField label="Password" name="password" type="password" />
-          <FormField label="Confirm Password" name="confirmPassword" type="password" />
+          <FormField
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+          />
         </form>
       </div>
     </PageLayout>
@@ -599,7 +603,7 @@ export default function HomePage() {
           The ultimate platform for coaches and teams
         </p>
       </div>
-      
+
       <div className="grid-hero">
         <FeatureTile icon="users" title="Team Management" />
         <FeatureTile icon="calendar" title="Event Planning" />
@@ -618,7 +622,7 @@ export default function PlaybookPage() {
   return (
     <PageLayout title="Playbook" variant="list">
       <div className="grid-cards">
-        {plays.map(play => (
+        {plays.map((play) => (
           <PlayCard key={play.id} play={play} />
         ))}
       </div>
@@ -634,7 +638,7 @@ export default function AnalyticsPage() {
   return (
     <div className="container-page container-padding py-8">
       <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-      
+
       {/* Hero tiles */}
       <div className="grid-hero mb-8">
         <MetricTile label="Total Views" value="12,345" />
@@ -642,7 +646,7 @@ export default function AnalyticsPage() {
         <MetricTile label="Conversion" value="4.2%" />
         <MetricTile label="Revenue" value="$45,678" />
       </div>
-      
+
       {/* Charts */}
       <div className="grid-dashboard">
         <ChartCard title="Views Over Time" />
@@ -726,6 +730,7 @@ export default function AnalyticsPage() {
 **Problem**: Navigation doesn't work after changes.
 
 **Solution**: **You modified a safe zone component!** Revert changes to:
+
 - `src/components/layout/AppHeader.tsx`
 - `src/components/layout/Sidebar.tsx`
 - `src/components/layout/Layout.tsx`
@@ -796,6 +801,6 @@ Questions? Issues? Check:
 
 ---
 
-*Last updated: October 6, 2025*  
-*Version: 1.0.0*  
-*Status: ✅ Production Ready*
+_Last updated: October 6, 2025_  
+_Version: 1.0.0_  
+_Status: ✅ Production Ready_

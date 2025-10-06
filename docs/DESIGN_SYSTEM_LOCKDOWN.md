@@ -37,11 +37,13 @@ After completing the massive **Color Standardization Project** (340+ violations 
 ### ⚠️ Gaps (What Needs Fixing)
 
 **Quick Wins (< 1 day):**
+
 - 3 files with duplicate `border border` classes
 - 4 story files using `bg-gray-100` instead of tokens
 - 1 file (TeamOnboardingWizard) with 20+ direct blue/slate colors
 
 **Medium Effort (1-3 days):**
+
 - No pre-commit hooks (can commit broken code)
 - No CI quality gates (can merge broken code)
 - ESLint only catches color violations, not spacing/sizing arbitrary values
@@ -49,6 +51,7 @@ After completing the massive **Color Standardization Project** (340+ violations 
 - Zero visual regression tests
 
 **Long-term Investments (1-2 weeks):**
+
 - Large page components (PlaybookPage 833 lines, RosterPage 996 lines)
 - No token usage monitoring/dashboard
 - Manual token audits (should be automated)
@@ -76,20 +79,23 @@ After completing the massive **Color Standardization Project** (340+ violations 
 ### 1.1 Fix Duplicate Border Classes
 
 **Files:**
+
 - `src/components/playbook/play-card/PlayCardDetails.tsx:118`
 - `src/components/playbook/play-card/PlayCardTileHeader.tsx:155`
 - `src/components/dev/DatabasePerformanceMonitor.tsx:106`
 
 **Problem:**
+
 ```tsx
 // ❌ Duplicate 'border' class
-className="border border rounded-full"
+className = "border border rounded-full";
 ```
 
 **Fix:**
+
 ```tsx
 // ✅ Use semantic token
-className="border-subtle rounded-full"
+className = "border-subtle rounded-full";
 ```
 
 **Impact**: Fixes TypeScript lint errors, improves clarity
@@ -99,12 +105,14 @@ className="border-subtle rounded-full"
 ### 1.2 Story File Token Cleanup
 
 **Files:**
+
 - `src/components/profile/ProfileEditModal.stories.tsx`
 - `src/components/team/TeamMemberInviteModal.stories.tsx`
 - `src/components/practice/PracticeScriptModal/index.stories.tsx`
 - `src/components/mobile/MobileBottomNavigation.stories.tsx`
 
 **Pattern:**
+
 ```tsx
 // ❌ Before
 <div className="min-h-screen bg-gray-100 p-4">
@@ -122,6 +130,7 @@ className="border-subtle rounded-full"
 **File:** `src/components/onboarding/TeamOnboardingWizard.tsx` (20+ violations)
 
 **Replace:**
+
 ```tsx
 // ❌ Direct colors
 bg-blue-50 dark:bg-blue-900/20
@@ -145,6 +154,7 @@ bg-surface-muted
 ### 2.1 Enhanced ESLint Rule - Arbitrary Values
 
 **Current State:**
+
 ```javascript
 // Only detects:
 text-[#ff0000]
@@ -152,6 +162,7 @@ bg-blue-600
 ```
 
 **Enhanced Detection:**
+
 ```javascript
 // Also detect:
 text-[11px] → Use text-xs or text-sm
@@ -162,20 +173,22 @@ m-[0.875rem] → Use m-3.5 or spacing token
 ```
 
 **Implementation:**
+
 ```javascript
 // eslint-rules/no-raw-tailwind-colors.js
 const ARBITRARY_VALUE_PATTERNS = {
   text: /text-\[([0-9.]+)(px|rem|em)\]/gi,
   spacing: /(p|m|gap|space)-(x|y|t|r|b|l)?-\[([0-9.]+)(px|rem|em)\]/gi,
-  sizing: /(w|h|min-w|min-h|max-w|max-h)-\[([0-9.]+)(px|rem|em|svh|vh|svw|vw|%)\]/gi,
+  sizing:
+    /(w|h|min-w|min-h|max-w|max-h)-\[([0-9.]+)(px|rem|em|svh|vh|svw|vw|%)\]/gi,
 };
 
 const SUGGESTIONS = {
-  'text-[11px]': 'text-xs (12px) or adjust token',
-  'text-[14px]': 'text-sm (14px base)',
-  'p-[24px]': 'p-6 (6 * 4px = 24px)',
-  'gap-[1.75rem]': 'gap-7 (1.75rem = 28px)',
-  'w-[90svh]': 'max-h-[90vh] with h-screen',
+  "text-[11px]": "text-xs (12px) or adjust token",
+  "text-[14px]": "text-sm (14px base)",
+  "p-[24px]": "p-6 (6 * 4px = 24px)",
+  "gap-[1.75rem]": "gap-7 (1.75rem = 28px)",
+  "w-[90svh]": "max-h-[90vh] with h-screen",
 };
 ```
 
@@ -186,12 +199,14 @@ const SUGGESTIONS = {
 ### 2.2 Pre-Commit Hooks with Husky
 
 **Setup:**
+
 ```bash
 npm install -D husky lint-staged
 npx husky install
 ```
 
 **`.husky/pre-commit`:**
+
 ```bash
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
@@ -218,6 +233,7 @@ echo "✅ All pre-commit checks passed!"
 ```
 
 **`package.json` additions:**
+
 ```json
 {
   "scripts": {
@@ -225,13 +241,8 @@ echo "✅ All pre-commit checks passed!"
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --max-warnings 0",
-      "prettier --write"
-    ],
-    "*.{json,md,css}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --max-warnings 0", "prettier --write"],
+    "*.{json,md,css}": ["prettier --write"]
   }
 }
 ```
@@ -243,6 +254,7 @@ echo "✅ All pre-commit checks passed!"
 ### 2.3 CI Quality Gates (GitHub Actions)
 
 **`.github/workflows/quality-gate.yml`:**
+
 ```yaml
 name: Quality Gate
 
@@ -256,35 +268,35 @@ jobs:
   quality:
     name: Quality Checks
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Type check
         run: npm run type-check
-      
+
       - name: Lint (strict)
         run: npm run lint -- --max-warnings 0
-      
+
       - name: Format check
         run: npm run format:check
-      
+
       - name: Unit tests
         run: npm run test:coverage
-      
+
       - name: Token audit
         run: npm run tokens:audit
-      
+
       - name: Build check
         run: npm run build
-      
+
       - name: Bundle size check
         uses: andresz1/size-limit-action@v1
         with:
@@ -293,23 +305,23 @@ jobs:
   accessibility:
     name: Accessibility Audit
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright
         run: npx playwright install --with-deps
-      
+
       - name: Run a11y tests
         run: npm run test:e2e -- tests/accessibility.spec.ts
-      
+
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
@@ -320,23 +332,23 @@ jobs:
   visual-regression:
     name: Visual Regression
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright
         run: npx playwright install --with-deps
-      
+
       - name: Run visual tests
         run: npm run test:visual
-      
+
       - name: Upload diff images
         if: failure()
         uses: actions/upload-artifact@v4
@@ -346,6 +358,7 @@ jobs:
 ```
 
 **Branch Protection Rules:**
+
 - Require status checks: `quality`, `accessibility`, `visual-regression`
 - Require review from code owners
 - Block merge if checks fail
@@ -361,50 +374,58 @@ jobs:
 **Target Components (Priority Order):**
 
 **Tier 1 - Core UI (5 components):**
+
 1. `Button` - All 9 variants with token usage
 2. `Card` - Elevation states, padding variants
 3. `Input` - Focus states, validation states
 4. `Badge` - All status variants
 5. `Typography` - Complete type scale
 
-**Tier 2 - Layout (5 components):**
-6. `Aurora` - All background variants
-7. `PageLayout` - Title, subtitle, breadcrumb patterns
-8. `Modal` - Size variants, focus trap demo
-9. `Dropdown` - Menu patterns, positioning
-10. `Tabs` - Segment control variants
+**Tier 2 - Layout (5 components):** 6. `Aurora` - All background variants 7. `PageLayout` - Title, subtitle, breadcrumb patterns 8. `Modal` - Size variants, focus trap demo 9. `Dropdown` - Menu patterns, positioning 10. `Tabs` - Segment control variants
 
 **Tier 3 - Complex (10 components):**
 11-20. Form fields, navigation, data display, feedback components
 
 **Story Template:**
+
 ```tsx
 // Button.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./Button";
 
 const meta = {
-  title: 'UI/Button',
+  title: "UI/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
-        component: 'Primary action button using semantic tokens. See [Design Language](/?path=/docs/design-system-tokens--docs) for token reference.',
+        component:
+          "Primary action button using semantic tokens. See [Design Language](/?path=/docs/design-system-tokens--docs) for token reference.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['primary', 'secondary', 'outline', 'subtle', 'ghost', 'danger', 'success', 'warning', 'link'],
-      description: 'Visual style variant',
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "outline",
+        "subtle",
+        "ghost",
+        "danger",
+        "success",
+        "warning",
+        "link",
+      ],
+      description: "Visual style variant",
     },
     size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg'],
-      description: 'Size variant: sm (40px), md (48px), lg (56px)',
+      control: "select",
+      options: ["sm", "md", "lg"],
+      description: "Size variant: sm (40px), md (48px), lg (56px)",
     },
   },
 } satisfies Meta<typeof Button>;
@@ -415,16 +436,16 @@ type Story = StoryObj<typeof meta>;
 // Stories
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    children: 'Primary Action',
+    variant: "primary",
+    children: "Primary Action",
   },
 };
 
 export const WithIcon: Story = {
   args: {
-    variant: 'primary',
-    icon: 'plus',
-    children: 'Add Player',
+    variant: "primary",
+    icon: "plus",
+    children: "Add Player",
   },
 };
 
@@ -453,28 +474,29 @@ export const TokenDemo: Story = {
 **Tool**: Playwright with built-in visual testing
 
 **Setup:**
+
 ```typescript
 // tests/visual-regression.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Visual Regression - Core Components', () => {
-  test('Button variants', async ({ page }) => {
-    await page.goto('/storybook/?path=/story/ui-button--all-variants');
-    await expect(page).toHaveScreenshot('button-variants.png', {
+test.describe("Visual Regression - Core Components", () => {
+  test("Button variants", async ({ page }) => {
+    await page.goto("/storybook/?path=/story/ui-button--all-variants");
+    await expect(page).toHaveScreenshot("button-variants.png", {
       fullPage: true,
-      animations: 'disabled',
+      animations: "disabled",
     });
   });
 
-  test('Button dark mode', async ({ page }) => {
-    await page.goto('/storybook/?path=/story/ui-button--all-variants');
-    await page.emulateMedia({ colorScheme: 'dark' });
-    await expect(page).toHaveScreenshot('button-variants-dark.png');
+  test("Button dark mode", async ({ page }) => {
+    await page.goto("/storybook/?path=/story/ui-button--all-variants");
+    await page.emulateMedia({ colorScheme: "dark" });
+    await expect(page).toHaveScreenshot("button-variants-dark.png");
   });
 
-  test('Card elevation states', async ({ page }) => {
-    await page.goto('/storybook/?path=/story/ui-card--elevation-states');
-    await expect(page).toHaveScreenshot('card-elevation.png');
+  test("Card elevation states", async ({ page }) => {
+    await page.goto("/storybook/?path=/story/ui-card--elevation-states");
+    await expect(page).toHaveScreenshot("card-elevation.png");
   });
 
   // Add 30+ more component snapshots...
@@ -482,6 +504,7 @@ test.describe('Visual Regression - Core Components', () => {
 ```
 
 **Baseline Creation:**
+
 ```bash
 # Generate baseline images (one-time)
 npm run test:visual:update
@@ -494,6 +517,7 @@ npm run test:visual:ui
 ```
 
 **CI Integration:**
+
 - Store baseline images in Git LFS
 - Fail PR if visual diffs detected
 - Upload diff images as artifacts
@@ -508,8 +532,8 @@ npm run test:visual:ui
 **New Script:** `scripts/token-usage-dashboard.ts`
 
 ```typescript
-import { glob } from 'glob';
-import { readFileSync, writeFileSync } from 'fs';
+import { glob } from "glob";
+import { readFileSync, writeFileSync } from "fs";
 
 interface TokenMetrics {
   file: string;
@@ -521,43 +545,48 @@ interface TokenMetrics {
 }
 
 async function analyzeTokenUsage(): Promise<TokenMetrics[]> {
-  const files = await glob('src/**/*.{tsx,ts}', {
-    ignore: ['**/*.test.tsx', '**/*.stories.tsx', '**/generated-tokens.css'],
+  const files = await glob("src/**/*.{tsx,ts}", {
+    ignore: ["**/*.test.tsx", "**/*.stories.tsx", "**/generated-tokens.css"],
   });
 
   const metrics: TokenMetrics[] = [];
 
   for (const file of files) {
-    const content = readFileSync(file, 'utf-8');
-    
+    const content = readFileSync(file, "utf-8");
+
     // Detect all className uses
     const classNameMatches = content.matchAll(/className="([^"]*)"/g);
-    
+
     const violations: string[] = [];
     let totalClasses = 0;
     let arbitraryCount = 0;
-    
+
     for (const match of classNameMatches) {
       const classes = match[1].split(/\s+/);
       totalClasses += classes.length;
-      
+
       for (const cls of classes) {
         // Check for arbitrary values
         if (/\[.*\]/.test(cls)) {
           arbitraryCount++;
           violations.push(`${file}: ${cls}`);
         }
-        
+
         // Check for direct colors
-        if (/(text|bg|border)-(gray|slate|red|green|yellow|blue)-(50|100|200|300|400|500|600|700|800|900)/.test(cls)) {
+        if (
+          /(text|bg|border)-(gray|slate|red|green|yellow|blue)-(50|100|200|300|400|500|600|700|800|900)/.test(
+            cls
+          )
+        ) {
           violations.push(`${file}: ${cls} (direct color)`);
         }
       }
     }
-    
+
     const tokenClasses = totalClasses - arbitraryCount;
-    const coverage = totalClasses > 0 ? (tokenClasses / totalClasses) * 100 : 100;
-    
+    const coverage =
+      totalClasses > 0 ? (tokenClasses / totalClasses) * 100 : 100;
+
     metrics.push({
       file,
       totalClasses,
@@ -573,7 +602,7 @@ async function analyzeTokenUsage(): Promise<TokenMetrics[]> {
 
 async function generateReport() {
   const metrics = await analyzeTokenUsage();
-  
+
   // Calculate totals
   const totals = metrics.reduce(
     (acc, m) => ({
@@ -584,9 +613,9 @@ async function generateReport() {
     }),
     { totalClasses: 0, tokenClasses: 0, arbitraryClasses: 0, violations: 0 }
   );
-  
+
   const overallCoverage = (totals.tokenClasses / totals.totalClasses) * 100;
-  
+
   // Generate HTML report
   const html = `
 <!DOCTYPE html>
@@ -645,7 +674,7 @@ async function generateReport() {
         .map(
           (m) => `
         <tr>
-          <td>${m.file.replace('src/', '')}</td>
+          <td>${m.file.replace("src/", "")}</td>
           <td>${m.totalClasses}</td>
           <td>${m.tokenClasses}</td>
           <td>${m.arbitraryClasses}</td>
@@ -656,26 +685,28 @@ async function generateReport() {
             ${m.coverage.toFixed(1)}%
           </td>
           <td>
-            ${m.violations.length > 0 ? `<div class="violation">${m.violations.length} issues</div>` : '✅'}
+            ${m.violations.length > 0 ? `<div class="violation">${m.violations.length} issues</div>` : "✅"}
           </td>
         </tr>
       `
         )
-        .join('')}
+        .join("")}
     </tbody>
   </table>
 </body>
 </html>
   `;
-  
-  writeFileSync('reports/token-usage-dashboard.html', html);
-  console.log('✅ Token usage dashboard generated: reports/token-usage-dashboard.html');
+
+  writeFileSync("reports/token-usage-dashboard.html", html);
+  console.log(
+    "✅ Token usage dashboard generated: reports/token-usage-dashboard.html"
+  );
   console.log(`📊 Overall coverage: ${overallCoverage.toFixed(1)}%`);
   console.log(`⚠️  Total violations: ${totals.violations}`);
-  
+
   // Exit with error if coverage below threshold
   if (overallCoverage < 95) {
-    console.error('❌ Token coverage below 95% threshold');
+    console.error("❌ Token coverage below 95% threshold");
     process.exit(1);
   }
 }
@@ -684,6 +715,7 @@ generateReport();
 ```
 
 **Add to package.json:**
+
 ```json
 {
   "scripts": {
@@ -704,16 +736,19 @@ generateReport();
 **Large Files Needing Refactoring:**
 
 **PlaybookPage (833 lines):**
+
 - Extract: `PlaybookFilters`, `PlaybookModals`, `PlaybookTable`
 - Create: `usePlaybookFilters` hook, `usePlaybookModals` hook
 - Pattern: Container → Smart Components → Presentational Components
 
 **RosterPage (996 lines):**
+
 - Extract: `RosterTable`, `RosterFilters`, `PlayerImportModal`
 - Create: `useRosterState` hook, `usePlayerImport` hook
 - Pattern: Feature module with sub-components
 
 **Refactoring Template:**
+
 ```tsx
 // Before: PlaybookPage.tsx (833 lines)
 export default function PlaybookPage() {
@@ -735,7 +770,7 @@ export default function PlaybookPage() {
 export function PlaybookContainer() {
   const { plays, filters } = usePlaybook();
   const { isModalOpen, openModal } = usePlaybookModals();
-  
+
   return (
     <>
       <PlaybookFilters filters={filters} />
@@ -764,6 +799,7 @@ export function usePlaybook() {
 **Create:** `docs/COMPONENT_PATTERNS.md`
 
 **Contents:**
+
 1. **Page Pattern** - Aurora + PageLayout wrapper
 2. **Form Pattern** - Form state management with react-hook-form
 3. **Table Pattern** - Data grid with pagination, sorting, filtering
@@ -774,14 +810,15 @@ export function usePlaybook() {
 8. **Error Pattern** - Error boundaries, fallback UI
 
 **Example Section:**
-```markdown
+
+````markdown
 ## Page Pattern
 
 Every page should follow this structure:
 
 ```tsx
-import { Aurora } from '@/components/ui/Aurora';
-import { PageLayout } from '@/components/layout/PageLayout';
+import { Aurora } from "@/components/ui/Aurora";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 export default function MyPage() {
   return (
@@ -790,10 +827,7 @@ export default function MyPage() {
         title="Page Title"
         subtitle="Optional description"
         variant="default"
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Current Page' },
-        ]}
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Current Page" }]}
       >
         <PageContent />
       </PageLayout>
@@ -801,12 +835,15 @@ export default function MyPage() {
   );
 }
 ```
+````
 
 **Why:**
+
 - Consistent page structure
 - Aurora provides background theming
 - PageLayout handles title, breadcrumbs, spacing
 - Easy to maintain, test, document
+
 ```
 
 **Impact**: Clear patterns for all developers to follow
@@ -921,3 +958,4 @@ We create a **bulletproof, future-proof design system** that enforces itself and
 > 🎯 **Remember**: The goal isn't perfection. The goal is **making it impossible to ship non-compliant code** while **making it easy to ship great code**.
 
 Let's lock this down! 🔒
+```

@@ -70,11 +70,7 @@ export const HealthCheckPage: React.FC = () => {
     );
   }
 
-  return (
-    <pre className="font-mono p-5">
-      {JSON.stringify(health, null, 2)}
-    </pre>
-  );
+  return <pre className="font-mono p-5">{JSON.stringify(health, null, 2)}</pre>;
 };
 
 export default HealthCheckPage;

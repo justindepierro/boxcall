@@ -254,10 +254,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
                 >
                   Multiple Ways to Add Players
                 </Typography>
-                <Typography
-                  variant="body-sm"
-                  className="text-secondary"
-                >
+                <Typography variant="body-sm" className="text-secondary">
                   Upload a CSV roster, add players manually, or send invite
                   links for self-registration. Parents can also be included in
                   communications.

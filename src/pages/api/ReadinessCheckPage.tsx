@@ -46,9 +46,7 @@ export const ReadinessCheckPage: React.FC = () => {
   }
 
   return (
-    <pre className="font-mono p-5">
-      {JSON.stringify(readiness, null, 2)}
-    </pre>
+    <pre className="font-mono p-5">{JSON.stringify(readiness, null, 2)}</pre>
   );
 };
 
