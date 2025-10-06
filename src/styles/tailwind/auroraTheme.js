@@ -1,36 +1,16 @@
-const plugin = require("tailwindcss/plugin");
+import plugin from "tailwindcss/plugin";
 
 const linear = (stops) => ({
   backgroundImage: `linear-gradient(135deg, ${stops.join(", ")})`,
 });
 
-module.exports = plugin(({ addUtilities }) => {
+export default plugin(({ addUtilities }) => {
   const gradientUtilities = {
-    ".bg-aurora-amber": linear([
-      "#FEF3C7 0%",
-      "#FFF7ED 50%",
-      "#FFE4E6 100%",
-    ]),
-    ".bg-aurora-emerald": linear([
-      "#D1FAE5 0%",
-      "#ECFDF5 55%",
-      "#CCFBF1 100%",
-    ]),
-    ".bg-aurora-indigo": linear([
-      "#E0E7FF 0%",
-      "#F0F9FF 55%",
-      "#F3E8FF 100%",
-    ]),
-    ".bg-aurora-violet": linear([
-      "#EDE9FE 0%",
-      "#FAF5FF 55%",
-      "#DBEAFE 100%",
-    ]),
-    ".bg-aurora-teal": linear([
-      "#CCFBF1 0%",
-      "#ECFDF5 55%",
-      "#D1FAE5 100%",
-    ]),
+    ".bg-aurora-amber": linear(["#FEF3C7 0%", "#FFF7ED 50%", "#FFE4E6 100%"]),
+    ".bg-aurora-emerald": linear(["#D1FAE5 0%", "#ECFDF5 55%", "#CCFBF1 100%"]),
+    ".bg-aurora-indigo": linear(["#E0E7FF 0%", "#F0F9FF 55%", "#F3E8FF 100%"]),
+    ".bg-aurora-violet": linear(["#EDE9FE 0%", "#FAF5FF 55%", "#DBEAFE 100%"]),
+    ".bg-aurora-teal": linear(["#CCFBF1 0%", "#ECFDF5 55%", "#D1FAE5 100%"]),
     ".bg-aurora-slatewave": linear([
       "#F1F5F9 0%",
       "rgba(248, 250, 252, 0.9) 50%",

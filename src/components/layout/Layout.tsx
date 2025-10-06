@@ -7,11 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { supabase } from "../../lib/supabase";
 import type { Database } from "../../types/database";
-import {
-  getNavigationItems,
-  getRoleDisplayInfo,
-  toSidebarItems,
-} from "../../utils/navigation";
+import { getNavigationItems, toSidebarItems } from "../../utils/navigation";
 import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
@@ -57,6 +53,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("👤 Profile:", profile);
   const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
+  const [headerVisible, setHeaderVisible] = React.useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const { activeTeamId, setActiveTeamId } = useActiveTeamStore();
@@ -109,10 +106,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       }),
     [navigationItems, currentRole, navigate, toggleSidebar]
   );
-  const roleInfo = useMemo(
-    () => getRoleDisplayInfo(currentRole),
-    [currentRole]
-  );
 
   const navigationLoading = profileLoading && !profile;
 
@@ -131,7 +124,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         className="pointer-events-none fixed inset-0 z-0 bg-aurora-radial opacity-25 transition-opacity duration-500 dark:opacity-15"
       />
       {/* App Header */}
-      <AppHeader onMenuToggle={() => toggleSidebar()} />
+      <AppHeader
+        onMenuToggle={() => toggleSidebar()}
+        onVisibilityChange={setHeaderVisible}
+      />
 
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative z-[1] pt-16">
@@ -140,36 +136,38 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           items={sidebarItems}
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
+          onToggle={() => toggleSidebar()}
           showOverlay={true}
           loading={navigationLoading && sidebarItems.length === 0}
+          headerVisible={headerVisible}
           header={
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 flex items-center justify-center">
+            <div className="flex items-center gap-3 py-1">
+              <div className="flex-shrink-0">
                 <SidebarLogo />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <Typography
                   variant="headline-sm"
-                  as="h3"
-                  className="text-jade-600"
+                  className="text-jade-600 dark:text-jade-400 font-bold tracking-tight leading-tight whitespace-nowrap"
                 >
                   BoxCall
                 </Typography>
-                <div className="flex items-center space-x-2">
-                  <p className="text-xs text-text-secondary">
-                    {roleInfo.display}
-                  </p>
-                  {isDevMode && (
-                    <span className="text-xs bg-surface-warning text-text-warning dark:bg-surface-warning dark:text-text-warning px-1.5 py-0.5 rounded font-medium">
+                <div className="flex items-center gap-1.5 text-xs leading-tight">
+                  <span className="text-text-secondary truncate">
+                    {profile?.role === "admin"
+                      ? "Super Admin"
+                      : profile?.role === "coach"
+                        ? "Coach"
+                        : profile?.role === "player"
+                          ? "Player"
+                          : "User"}
+                  </span>
+                  {devMode && devMode !== "production" && (
+                    <span className="text-warning-600 dark:text-warning-400 font-medium">
                       DEV
                     </span>
                   )}
                 </div>
-                {isDevMode && currentRole !== profile?.role && (
-                  <p className="text-xs text-text-warning dark:text-text-warning italic">
-                    Simulating: {currentRole}
-                  </p>
-                )}
               </div>
             </div>
           }

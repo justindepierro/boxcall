@@ -9,23 +9,19 @@ async function loadTheme(
       return (await import("./dark")).default;
     case "high-contrast":
       return (await import("./highContrast")).default;
-    // For cupertino themes, fallback to static registry for now
-    default: {
-      // Static fallback for cupertino themes
-      const { getTheme } = await import("./registry");
-      return getTheme(name);
-    }
+    default:
+      // Unknown theme, return light as fallback
+      console.warn(`Unknown theme "${name}", falling back to light theme`);
+      return (await import("./light")).default;
   }
 }
 
 const THEME_STORAGE_KEY = "app-theme";
-// Explicit theme id union (keep in sync with registry contents)
+// Explicit theme id union (only active themes)
 export const THEME_IDS = [
   "light",
   "dark",
   "high-contrast",
-  "cupertino-light",
-  "cupertino-dark",
 ] as const;
 export type ThemeName = (typeof THEME_IDS)[number];
 export const DEFAULT_THEME: ThemeName = "light";

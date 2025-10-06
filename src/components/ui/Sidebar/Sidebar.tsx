@@ -29,6 +29,8 @@ export interface SidebarProps {
   isOpen: boolean;
   /** Function to close the sidebar */
   onClose?: () => void;
+  /** Function to toggle the sidebar */
+  onToggle?: () => void;
   /** Optional header content */
   header?: ReactNode;
   /** Optional footer content */
@@ -43,6 +45,8 @@ export interface SidebarProps {
   position?: "left" | "right";
   /** Whether the sidebar is loading */
   loading?: boolean;
+  /** Whether the main header is visible (to adjust sidebar position) */
+  headerVisible?: boolean;
 }
 const getSidebarWidth = (width: SidebarProps["width"]) => {
   switch (width) {
@@ -69,9 +73,10 @@ const getSidebarPosition = (
     ${isOpen ? openTransform : baseTransform}
   `;
 };
-const getSidebarStyles = () => {
+const getSidebarStyles = (headerVisible: boolean) => {
+  const topPosition = headerVisible ? "top-16" : "top-0";
   return `
-    fixed top-0 bottom-0 z-[70] flex flex-col
+    fixed ${topPosition} bottom-0 z-[50] flex flex-col
     bg-surface-primary/95 dark:bg-surface-secondary/95
     shadow-2xl backdrop-blur-md
     transform transition-all duration-300 ease-out
@@ -175,6 +180,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   items,
   isOpen,
   onClose,
+  onToggle,
   header,
   footer,
   width = "md",
@@ -182,6 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   className = "",
   position = "left",
   loading = false,
+  headerVisible = true,
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [touchStart, setTouchStart] = React.useState<number | null>(null);
@@ -317,17 +324,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-  // Prevent body scroll when sidebar is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+
+  // Note: Body scroll is NOT prevented to allow scrolling with sidebar open
+  // The sidebar itself is scrollable via overflow-y-auto
+
   const handleItemClick = () => {
     // Close sidebar when item is clicked (for mobile)
     if (window.innerWidth < 768) {
@@ -340,7 +340,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Overlay */}
       {showOverlay && (
         <div
-          className="fixed inset-0 z-[60] bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
+          className="fixed inset-0 top-16 z-[40] bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -349,7 +349,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div
         ref={sidebarRef}
         className={`
-          ${getSidebarStyles()}
+          ${getSidebarStyles(headerVisible)}
           ${getSidebarWidth(width)}
           ${getSidebarPosition(position, isOpen)}
           ${className}
@@ -363,17 +363,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        {/* Header */}
-        {header && (
-          <div className="px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">{header}</div>
+        {/* Header - Only show when main header is hidden (scrolled down) */}
+        {!headerVisible && (
+          <div className="px-4 py-4 border-b border-border/10">
+            <div className="flex items-center gap-3">
+              {onToggle && (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={onToggle}
+                  className="!p-spacing-sm rounded-radius-md flex-shrink-0"
+                  aria-label="Toggle menu"
+                >
+                  <Icon name="menu" size="md" />
+                </Button>
+              )}
+              {header && <div className="flex-1 min-w-0">{header}</div>}
               <Tooltip content="Close sidebar (Esc)">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onClose}
-                  className="ml-4 p-2 hover:bg-surface-hover rounded-lg transition-colors duration-200"
+                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors duration-200 flex-shrink-0"
                   aria-label="Close sidebar"
                 >
                   <svg
@@ -394,7 +405,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
         )}
-        {/* Content */}
         {/* Content */}
         <div
           className="flex-1 overflow-y-auto focus-scroll scrollbar-thin scrollbar-thumb-surface-hover scrollbar-track-transparent"

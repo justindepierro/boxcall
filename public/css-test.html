@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Diagnostic</title>
+    <style>
+      body {
+        font-family: system-ui;
+        padding: 20px;
+      }
+      .test-box {
+        margin: 20px 0;
+        padding: 20px;
+        border: 2px solid #ccc;
+      }
+      .success {
+        border-color: green;
+        background: #e8f5e9;
+      }
+      .failure {
+        border-color: red;
+        background: #ffebee;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CSS Diagnostic Test</h1>
+
+    <div class="test-box" id="tokenTest">
+      <h2>Test 1: CSS Custom Properties</h2>
+      <p>Checking if design tokens are defined...</p>
+      <div id="tokenResults"></div>
+    </div>
+
+    <div class="test-box" id="tailwindTest">
+      <h2>Test 2: Tailwind Classes</h2>
+      <div class="p-spacing-lg bg-surface-card text-text-primary">
+        This should have large padding, card background, and primary text color.
+      </div>
+      <div id="tailwindResults"></div>
+    </div>
+
+    <script>
+      // Test CSS custom properties
+      const root = document.documentElement;
+      const computed = getComputedStyle(root);
+
+      const tokensToTest = [
+        "--semantic-primary",
+        "--semantic-bg-primary",
+        "--semantic-text-primary",
+        "--spacing-4",
+        "--spacing-lg",
+        "--elevation-card-resting",
+      ];
+
+      let tokenResults = "<ul>";
+      let allTokensPresent = true;
+
+      tokensToTest.forEach((token) => {
+        const value = computed.getPropertyValue(token).trim();
+        if (value) {
+          tokenResults += `<li style="color: green;">✓ ${token}: ${value}</li>`;
+        } else {
+          tokenResults += `<li style="color: red;">✗ ${token}: NOT DEFINED</li>`;
+          allTokensPresent = false;
+        }
+      });
+
+      tokenResults += "</ul>";
+      document.getElementById("tokenResults").innerHTML = tokenResults;
+      document.getElementById("tokenTest").className = allTokensPresent
+        ? "test-box success"
+        : "test-box failure";
+
+      // Test Tailwind classes
+      setTimeout(() => {
+        const testDiv = document.querySelector(".p-spacing-lg");
+        const styles = getComputedStyle(testDiv);
+
+        let tailwindResults = "<ul>";
+        let allClassesWork = true;
+
+        const tests = [
+          {
+            name: "padding (p-spacing-lg)",
+            property: "padding",
+            expected: "should not be 0px",
+          },
+          {
+            name: "background (bg-surface-card)",
+            property: "background-color",
+            expected: "should not be transparent",
+          },
+          {
+            name: "color (text-text-primary)",
+            property: "color",
+            expected: "should not be default",
+          },
+        ];
+
+        tests.forEach((test) => {
+          const value = styles.getPropertyValue(test.property);
+          if (test.property === "padding" && value !== "0px") {
+            tailwindResults += `<li style="color: green;">✓ ${test.name}: ${value}</li>`;
+          } else if (
+            test.property === "background-color" &&
+            value !== "rgba(0, 0, 0, 0)"
+          ) {
+            tailwindResults += `<li style="color: green;">✓ ${test.name}: ${value}</li>`;
+          } else if (test.property === "color" && value !== "rgb(0, 0, 0)") {
+            tailwindResults += `<li style="color: green;">✓ ${test.name}: ${value}</li>`;
+          } else {
+            tailwindResults += `<li style="color: red;">✗ ${test.name}: ${value} (${test.expected})</li>`;
+            allClassesWork = false;
+          }
+        });
+
+        tailwindResults += "</ul>";
+        document.getElementById("tailwindResults").innerHTML = tailwindResults;
+        document.getElementById("tailwindTest").className = allClassesWork
+          ? "test-box success"
+          : "test-box failure";
+      }, 100);
+    </script>
+  </body>
+</html>

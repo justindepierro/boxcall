@@ -24,8 +24,9 @@
     "analytics"
   ],
   "scripts": {
-    "dev": "vite",
-    "dev:clean": "lsof -ti :5173 | xargs kill -9 2>/dev/null || true && npm run dev",
+    "predev": "lsof -ti :5173 | xargs kill -9 2>/dev/null || true",
+    "dev": "npm run predev && vite --open",
+    "dev:debug": "npm run predev && vite --debug",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx --max-warnings 20",

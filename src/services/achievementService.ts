@@ -9,8 +9,15 @@
  * 
  * Phase 3B: Properly consolidated Achievement Services (2→1)
  * Previous consolidation corrupted (commit 55bea84) - this is the corrected version.
+ * 
+ * NOTE: achievement_definitions and achievement_progress tables don't exist in current schema.
+ * Service gracefully degrades to empty achievements until tables are created.
  */
 import { supabase } from "../lib/supabase";
+import type { Player } from "../app/store";
+
+// Feature flag - disable advanced achievement features until DB tables exist
+const ACHIEVEMENT_SYSTEM_ENABLED = false;
 
 // ============================================================================
 // Types from achievementTracker.ts
@@ -110,32 +117,31 @@ class AchievementTracker {
   /**
    * Track a user action and check for achievement unlocks
    */
-  static async trackAction(
-    userId: string,
+  static async trackPlayerAction(
+    player: Player,
     action: AchievementTrigger,
     additionalData?: Record<string, any>
   ): Promise<EarnedAchievement[]> {
     try {
-      console.log(`[Achievement] Tracking action: ${action} for user: ${userId}`);
-
-      // Get the player's profile record (since player_roster doesn't exist)
-      const { data: player } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (!player) {
-        console.log('[Achievement] No player record found for user');
+      // Achievement system not enabled until DB tables are created
+      if (!ACHIEVEMENT_SYSTEM_ENABLED) {
         return [];
       }
 
-      // Get all active achievements that could be triggered by this action
-      const { data: relevantAchievements } = await supabase
+      if (!player?.id) {
+        return [];
+      }      // Get all active achievements that could be triggered by this action
+      // Note: achievement_definitions table doesn't exist yet in schema
+      const { data: relevantAchievements, error: definitionsError } = await supabase
         .from('achievement_definitions')
         .select('*')
         .eq('is_active', true)
         .eq('trigger_target', action);
+
+      if (definitionsError) {
+        console.warn('[Achievement] achievement_definitions table not available:', definitionsError.message);
+        return []; // Gracefully return empty if table doesn't exist
+      }
 
       if (!relevantAchievements?.length) {
         return [];
@@ -368,39 +374,46 @@ class AchievementTracker {
     definitions: AchievementDefinition[];
   }> {
     try {
+      // Achievement system not enabled until DB tables are created
+      if (!ACHIEVEMENT_SYSTEM_ENABLED) {
+        return { earned: [], progress: [], definitions: [] };
+      }
+
       // Get player record from profiles table (since player_roster doesn't exist)
-      const { data: player } = await supabase
+      const { data: player, error: playerError } = await supabase
         .from('profiles')
         .select('id')
         .eq('id', userId)
         .maybeSingle();
 
+      if (playerError) {
+        console.warn('[Achievement] Error fetching player:', playerError.message);
+        return { earned: [], progress: [], definitions: [] };
+      }
+
       if (!player) {
         return { earned: [], progress: [], definitions: [] };
       }
 
-      // Get earned achievements
-      const { data: earned } = await supabase
+      // Try to get earned achievements - handle if tables don't exist
+      const { data: earned, error: earnedError } = await supabase
         .from('achievements')
-        .select('*, achievement_definitions(*)')
-        .eq('player_id', player.id);
-
-      // Get progress
-      const { data: progress } = await supabase
-        .from('achievement_progress')
-        .select('*, achievement_definitions(*)')
-        .eq('player_id', player.id);
-
-      // Get all active definitions
-      const { data: definitions } = await supabase
-        .from('achievement_definitions')
         .select('*')
-        .eq('is_active', true);
+        .eq('player_id', player.id);
 
+      if (earnedError) {
+        console.warn('[Achievement] achievement_definitions or achievement_progress tables may not exist:', earnedError.message);
+        console.info('[Achievement] Returning empty achievements - system not fully initialized');
+        return { earned: [], progress: [], definitions: [] };
+      }
+
+      // Skip queries for tables that don't exist yet
+      // achievement_progress and achievement_definitions are not in the current schema
+      // Return simple achievements only
       return {
         earned: earned || [],
-        progress: progress || [],
-        definitions: definitions || []
+        progress: [],  // Table doesn't exist yet
+        definitions: []  // Table doesn't exist yet
       };
 
     } catch (error) {
@@ -539,7 +552,22 @@ export class AchievementService {
     action: 'play_created' | 'post_sent' | 'player_added' | 'game_won' | 'game_won_streak',
     additionalData?: Record<string, any>
   ): Promise<EarnedAchievement[]> {
-    return AchievementTracker.trackAction(userId, action, additionalData);
+    // Achievement system not enabled until DB tables are created
+    if (!ACHIEVEMENT_SYSTEM_ENABLED) {
+      return [];
+    }
+    
+    // Create minimal player object for tracking
+    const player: Player = {
+      id: userId,
+      name: '',
+      jersey: 0,
+      position: '',
+      parentEmails: [],
+      stats: { gamesPlayed: 0, touchdowns: 0, yards: 0, tackles: 0 }
+    };
+    
+    return AchievementTracker.trackPlayerAction(player, action, additionalData);
   }
 
   /**

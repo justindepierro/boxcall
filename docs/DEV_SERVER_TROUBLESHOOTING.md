@@ -8,6 +8,7 @@
 ## Problem Summary
 
 The development server was experiencing two main issues:
+
 1. **Port conflicts**: "Port 5173 is already in use" errors on startup
 2. **HMR disconnections**: Server losing connection during file changes
 
@@ -16,11 +17,13 @@ The development server was experiencing two main issues:
 ## Root Causes Identified
 
 ### 1. Zombie Node Processes
+
 **Symptom**: Port 5173 already in use when trying to start dev server
 
 **Cause**: Previous dev server instances not properly terminated, leaving zombie node processes holding the port
 
 **Evidence**:
+
 ```bash
 $ lsof -i :5173
 COMMAND   PID           USER   FD   TYPE DEVICE NODE NAME
@@ -28,6 +31,7 @@ node    67378 justindepierro   16u  IPv6  0t0  TCP *:5173 (LISTEN)
 ```
 
 ### 2. HMR Overlay Configuration
+
 **Current setting**: `hmr: { overlay: false }`
 
 **Impact**: HMR errors might not be visible, making debugging harder. However, this doesn't cause disconnections - it just hides error overlays.
@@ -37,6 +41,7 @@ node    67378 justindepierro   16u  IPv6  0t0  TCP *:5173 (LISTEN)
 ## Solutions Applied
 
 ### Immediate Fix: Kill Zombie Processes
+
 ```bash
 # Find process using port 5173
 lsof -i :5173
@@ -52,6 +57,7 @@ npm run dev
 ```
 
 ### Automated Fix: Helper Script
+
 Create a script to automatically kill and restart:
 
 ```bash
@@ -69,11 +75,13 @@ npm run dev
 ```
 
 Make executable:
+
 ```bash
 chmod +x kill-dev.sh
 ```
 
 Add to package.json:
+
 ```json
 {
   "scripts": {
@@ -102,6 +110,7 @@ server: {
 ### Recommended HMR Settings
 
 **For active development** (better error visibility):
+
 ```typescript
 hmr: {
   overlay: true,  // Show errors in overlay
@@ -110,6 +119,7 @@ hmr: {
 ```
 
 **Current production-ready setting** (cleaner UX):
+
 ```typescript
 hmr: {
   overlay: false,  // No overlay during development
@@ -121,7 +131,9 @@ hmr: {
 ## Common Dev Server Issues & Fixes
 
 ### Issue: "EADDRINUSE: address already in use"
+
 **Solution**: Kill process on port 5173
+
 ```bash
 npm run dev:clean  # If script added
 # OR
@@ -129,13 +141,16 @@ lsof -ti :5173 | xargs kill -9
 ```
 
 ### Issue: "HMR disconnected" or "WebSocket connection failed"
+
 **Causes**:
+
 1. Firewall blocking WebSocket connections
 2. Network changes (switching WiFi)
 3. Browser extension interference
 4. HTTPS/HTTP mismatch
 
 **Solutions**:
+
 ```typescript
 // vite.config.ts
 server: {
@@ -148,9 +163,11 @@ server: {
 ```
 
 ### Issue: "Failed to fetch dynamically imported module"
+
 **Cause**: Stale cache after significant changes
 
 **Solution**:
+
 ```bash
 # Clear Vite cache
 rm -rf node_modules/.vite
@@ -160,12 +177,15 @@ npm run dev
 ```
 
 ### Issue: Server starts but pages don't load
+
 **Causes**:
+
 1. TypeScript errors blocking build
 2. Missing dependencies
 3. Circular imports
 
 **Diagnostic steps**:
+
 ```bash
 # 1. Check for TypeScript errors
 npm run type-check
@@ -182,7 +202,9 @@ npm run lint
 ## Best Practices
 
 ### Starting Dev Server
+
 1. **Always check for running processes first**
+
    ```bash
    lsof -i :5173
    ```
@@ -198,11 +220,13 @@ npm run lint
    ```
 
 ### Stopping Dev Server
+
 1. **Clean shutdown**: `Ctrl+C` in terminal (once)
 2. **If hanging**: `Ctrl+C` twice or `Ctrl+Z` then `kill %1`
 3. **Verify cleanup**: `lsof -i :5173` should return nothing
 
 ### Development Workflow
+
 ```bash
 # Morning start
 npm run dev:clean  # Kills zombies and starts fresh
@@ -222,6 +246,7 @@ lsof -i :5173  # Verify no zombies
 ## Monitoring Dev Server Health
 
 ### Check Server Status
+
 ```bash
 # Is server running?
 curl http://localhost:5173
@@ -232,23 +257,27 @@ curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
 ```
 
 ### Watch for Common Errors
+
 Terminal output to watch for:
+
 - ✅ `VITE vX.X.X ready in XXXms` - Good start
-- ⚠️  `Port 5173 is already in use` - Kill zombie
-- ⚠️  `HMR update error` - Check console
-- ⚠️  `Transform error` - TypeScript/import issue
-- ⚠️  `[vite] Internal server error` - Code error
+- ⚠️ `Port 5173 is already in use` - Kill zombie
+- ⚠️ `HMR update error` - Check console
+- ⚠️ `Transform error` - TypeScript/import issue
+- ⚠️ `[vite] Internal server error` - Code error
 
 ---
 
 ## Advanced Debugging
 
 ### Enable Verbose Logging
+
 ```bash
 DEBUG=vite:* npm run dev
 ```
 
 ### Check Network Issues
+
 ```bash
 # Test if port is accessible
 nc -zv localhost 5173
@@ -258,6 +287,7 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
 ```
 
 ### Browser DevTools
+
 1. Open Network tab
 2. Filter by `WS` (WebSocket)
 3. Should see connection to `ws://localhost:5173`
@@ -268,6 +298,7 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
 ## Configuration Recommendations
 
 ### For Stable Development
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
@@ -276,11 +307,11 @@ export default defineConfig({
     host: true,
     strictPort: true,
     hmr: {
-      overlay: true,  // ← Enable for better error visibility
+      overlay: true, // ← Enable for better error visibility
       clientPort: 5173,
     },
     watch: {
-      usePolling: false,  // Use native fs.watch (faster)
+      usePolling: false, // Use native fs.watch (faster)
       interval: 100,
     },
   },
@@ -289,6 +320,7 @@ export default defineConfig({
 ```
 
 ### For Network Development (testing on mobile)
+
 ```typescript
 server: {
   host: '0.0.0.0',  // Listen on all interfaces
@@ -333,17 +365,20 @@ npm run type-check && npm run lint && npm run dev
 ## Status After Fix
 
 **Before**:
+
 - ❌ Port conflicts on startup
 - ❌ HMR disconnections during development
 - ❌ Frequent need to restart server
 
 **After**:
+
 - ✅ Clean startup on port 5173
 - ✅ HMR connections stable
 - ✅ Server ready in 145ms
 - ✅ No zombie processes
 
 **Server Info**:
+
 ```
 VITE v7.1.9  ready in 145 ms
 ➜  Local:   http://localhost:5173/
@@ -355,11 +390,13 @@ VITE v7.1.9  ready in 145 ms
 ## Next Steps
 
 ### Short-term
+
 - [ ] Add `dev:clean` script to package.json
 - [ ] Consider enabling HMR overlay for development
 - [ ] Document in team onboarding
 
 ### Long-term
+
 - [ ] Add pre-dev check script to CI
 - [ ] Create health check endpoint
 - [ ] Monitor server uptime during development

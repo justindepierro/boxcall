@@ -1,6 +1,7 @@
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
 import auroraTheme from "./src/styles/tailwind/auroraTheme.js";
+import boxcallTheme from "./src/styles/tailwind/boxcallTheme.js";
 
 const colorSteps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 const statusSteps = [50, 500, 600, 700];
@@ -14,32 +15,32 @@ const createScale = (tokenName, steps = colorSteps) =>
 const semanticColor = (name) => `var(--semantic-${name})`;
 
 const spacingTokens = {
-  0: "var(--spacing-0)",
+  0: "var(--space-0)",
   0.5: "var(--spacing-fine-0.5)",
-  1: "var(--spacing-1)",
+  1: "var(--space-1)",
   1.5: "var(--spacing-fine-1.5)",
-  2: "var(--spacing-2)",
+  2: "var(--space-2)",
   2.5: "var(--spacing-fine-2.5)",
-  3: "var(--spacing-3)",
+  3: "var(--space-3)",
   3.5: "var(--spacing-fine-3.5)",
-  4: "var(--spacing-4)",
-  5: "var(--spacing-5)",
-  6: "var(--spacing-6)",
-  8: "var(--spacing-8)",
-  10: "var(--spacing-10)",
-  12: "var(--spacing-12)",
-  16: "var(--spacing-16)",
+  4: "var(--space-4)",
+  5: "var(--space-5)",
+  6: "var(--space-6)",
+  8: "var(--space-8)",
+  10: "var(--space-10)",
+  12: "var(--space-12)",
+  16: "var(--space-16)",
   px: "1px",
   18: "4.5rem",
   88: "22rem",
   128: "32rem",
-  "spacing-xs": "var(--spacing-2)",
-  "spacing-sm": "var(--spacing-3)",
-  "spacing-md": "var(--spacing-4)",
-  "spacing-lg": "var(--spacing-6)",
-  "spacing-xl": "var(--spacing-8)",
-  "spacing-2xl": "var(--spacing-12)",
-  "spacing-3xl": "var(--spacing-16)",
+  "spacing-xs": "var(--space-2)",
+  "spacing-sm": "var(--space-3)",
+  "spacing-md": "var(--space-4)",
+  "spacing-lg": "var(--space-6)",
+  "spacing-xl": "var(--space-8)",
+  "spacing-2xl": "var(--space-12)",
+  "spacing-3xl": "var(--space-16)",
   "button-padding": "var(--spacing-buttonPadding)",
   "button-padding-lg": "var(--spacing-buttonPaddingLarge)",
   "card-padding": "var(--spacing-cardPadding)",
@@ -231,5 +232,5 @@ export default {
       },
     },
   },
-  plugins: [forms, typography, auroraTheme],
+  plugins: [forms, typography, auroraTheme, boxcallTheme],
 };

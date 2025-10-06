@@ -20,9 +20,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    strictPort: true,
+    strictPort: false, // Allow Vite to try next available port if 5173 is busy
+    open: true, // Auto-open browser on server start
     hmr: {
-      overlay: false,
+      overlay: true, // Show error overlay for better debugging
     },
   },
   resolve: {

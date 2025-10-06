@@ -1,13 +1,13 @@
 /* Import centralized design tokens first */
-/* @import "./styles/tokens.css"; */ /* Removed - using generated-themes.css as single source */
 @import "./styles/mobile.css";
 /* Self-hosted fonts (optional until WOFF2 files are added) */
 @import "./styles/fonts.css";
 /* Generated CSS variables (design tokens) */
 @import "./styles/generated-tokens.css";
-@import "./styles/generated-themes.css";
 /* Density and spacing utilities */
 @import "./styles/density.css";
+/* Panel and glass effects */
+@import "./styles/panels.css";
 /* Page layout system */
 @import "./styles/page-layout.css";
 /* Responsive dashboard layout */
