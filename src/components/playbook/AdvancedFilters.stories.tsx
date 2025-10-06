@@ -171,7 +171,7 @@ const AdvancedFiltersDemo = (args: any) => {
         {/* Props Documentation */}
         <div className="space-y-4">
           <h4 className="font-medium">Component Props</h4>
-          <div className="text-sm space-y-2 text-gray-600">
+          <div className="text-sm space-y-2 text-secondary">
             <div>
               <code>onFiltersChange: (filters) =&gt; void</code> - Callback when
               filters change
@@ -325,7 +325,7 @@ const AdvancedFiltersDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Filter Statistics</h5>
-              <div className="space-y-2 text-sm text-gray-600">
+              <div className="space-y-2 text-sm text-secondary">
                 <div>Total Active Filters: {activeFilters.length}</div>
                 <div>
                   Unique Fields:{" "}
@@ -404,7 +404,7 @@ export const WithActiveFilters: StoryObj<typeof AdvancedFilters> = {
             />
           </div>
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             <strong>Active Filters:</strong> {activeFilters.length}
           </div>
         </div>
@@ -444,7 +444,7 @@ export const AddingFilters: StoryObj<typeof AdvancedFilters> = {
             />
           </div>
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             <div>
               <strong>Instructions:</strong>
             </div>

@@ -146,10 +146,10 @@ const MobileErrorHandlerDemo = () => {
                   Clear
                 </Button>
               </div>
-              <h5 className="font-medium text-red-800 mb-1">
+              <h5 className="font-medium text-error-800 mb-1">
                 {errorState.title}
               </h5>
-              <p className="text-sm text-red-700">{errorState.message}</p>
+              <p className="text-sm text-error-700">{errorState.message}</p>
             </div>
           ) : (
             <div className="p-4 border rounded-lg text-center text-gray-500">
@@ -161,7 +161,7 @@ const MobileErrorHandlerDemo = () => {
         {/* Hook Methods */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Methods</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>handleError(error)</code> - Process and display an error
             </div>

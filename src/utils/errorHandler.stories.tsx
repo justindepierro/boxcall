@@ -193,7 +193,7 @@ const ErrorHandlerDemo = () => {
               Clear Stored Errors
             </Button>
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             Check browser console for error logging and localStorage for
             persistence.
           </div>
@@ -206,7 +206,7 @@ const ErrorHandlerDemo = () => {
           {storedErrors.length > 0 ? (
             <div className="space-y-3 max-h-64 overflow-y-auto">
               {storedErrors.map((error, index) => (
-                <div key={index} className="p-3 border rounded-lg bg-red-50">
+                <div key={index} className="p-3 border rounded-lg bg-error-bg">
                   <div className="flex items-start justify-between mb-2">
                     <Badge variant="danger" className="text-xs">
                       Error {index + 1}
@@ -268,7 +268,7 @@ const ErrorHandlerDemo = () => {
         {/* Function Signatures */}
         <div className="space-y-4">
           <h4 className="font-medium">Function Signatures</h4>
-          <div className="text-sm space-y-2 text-gray-600">
+          <div className="text-sm space-y-2 text-secondary">
             <div>
               <code>handleApiError(error, context?): void</code>
             </div>
@@ -459,7 +459,7 @@ export const ErrorHandlingHook: StoryObj = {
       <Card className="p-6 max-w-2xl">
         <h3 className="text-lg font-semibold mb-4">useErrorHandler Hook</h3>
         <div className="space-y-4">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             Click buttons to trigger different types of errors. Check console
             for logging.
           </div>
@@ -478,7 +478,7 @@ export const ErrorHandlingHook: StoryObj = {
           </div>
 
           {lastAction && (
-            <div className="p-3 border rounded-lg bg-blue-50">
+            <div className="p-3 border rounded-lg bg-status-info-bg">
               <div className="text-sm">
                 <strong>Last Action:</strong> {lastAction}
               </div>
@@ -488,7 +488,7 @@ export const ErrorHandlingHook: StoryObj = {
             </div>
           )}
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             <div>
               <strong>Hook Methods:</strong>
             </div>
@@ -561,7 +561,7 @@ export const ErrorQueueManagement: StoryObj = {
             </Button>
           </div>
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             Errors are queued and stored in localStorage for offline scenarios.
             Only the last 10 errors are kept to prevent storage bloat.
           </div>

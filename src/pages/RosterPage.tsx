@@ -462,7 +462,7 @@ export default function RosterPage() {
                     {players.filter((p) => p.is_active === true).length}
                   </Typography>
                 </div>
-                <Icon name="check-circle" className="w-8 h-8 text-green-500" />
+                <Icon name="check-circle" className="w-8 h-8 text-success-500" />
               </div>
             </Card>
             <Card className="p-spacing-md">
@@ -473,7 +473,7 @@ export default function RosterPage() {
                   </Typography>
                   <Typography variant="headline-lg">{0}</Typography>
                 </div>
-                <Icon name="alert-triangle" className="w-8 h-8 text-red-500" />
+                <Icon name="alert-triangle" className="w-8 h-8 text-error-500" />
               </div>
             </Card>
             <Card className="p-spacing-md">
@@ -592,7 +592,7 @@ export default function RosterPage() {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleDeletePlayer(player.id)}
-                        className="text-error-500 hover:text-red-700"
+                        className="text-error-500 hover:text-error-700"
                       >
                         <Icon name="delete" className="w-4 h-4" />
                       </Button>

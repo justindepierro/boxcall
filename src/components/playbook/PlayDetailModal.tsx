@@ -149,7 +149,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               {onDelete && (
                 <button
                   onClick={onDelete}
-                  className="w-9 h-9 rounded-lg bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/40 flex items-center justify-center transition-all hover:scale-105"
+                  className="w-9 h-9 rounded-lg bg-error-bg dark:bg-error-900/30 hover:bg-error-200 dark:hover:bg-error-800/40 flex items-center justify-center transition-all hover:scale-105"
                   aria-label="Delete play"
                 >
                   <Icon

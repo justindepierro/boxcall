@@ -79,25 +79,25 @@ const UserTeamMembershipsDemo = () => {
               <div className="text-2xl font-bold text-blue-600">
                 {memberships.length}
               </div>
-              <div className="text-sm text-gray-600">Total Memberships</div>
+              <div className="text-sm text-secondary">Total Memberships</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-green-600">
                 {activeMemberships.length}
               </div>
-              <div className="text-sm text-gray-600">Active</div>
+              <div className="text-sm text-secondary">Active</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-yellow-600">
                 {pendingMemberships.length}
               </div>
-              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-sm text-secondary">Pending</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {new Set(memberships.map((m: any) => m.role)).size}
               </div>
-              <div className="text-sm text-gray-600">Unique Roles</div>
+              <div className="text-sm text-secondary">Unique Roles</div>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ const UserTeamMembershipsDemo = () => {
         {loading && (
           <div className="space-y-4">
             <h4 className="font-medium">Loading State</h4>
-            <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="p-4 border rounded-lg bg-status-info-bg">
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 <span>Loading user team memberships...</span>
@@ -119,7 +119,7 @@ const UserTeamMembershipsDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <Badge variant="danger" className="mb-2">
                 Membership Fetch Error
               </Badge>
@@ -148,7 +148,7 @@ const UserTeamMembershipsDemo = () => {
                     <div>
                       <h5 className="font-medium">{membership.teams?.name}</h5>
                       {membership.teams?.school_name && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-secondary">
                           {membership.teams.school_name}
                         </p>
                       )}
@@ -159,13 +159,13 @@ const UserTeamMembershipsDemo = () => {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Badge variant="info">{membership.role}</Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-secondary">
                         Joined:{" "}
                         {new Date(membership.joined_at).toLocaleDateString()}
                       </span>
                     </div>
 
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       <span className="font-medium">Team ID:</span>{" "}
                       {membership.team_id.slice(0, 8)}...
                     </div>
@@ -193,7 +193,7 @@ const UserTeamMembershipsDemo = () => {
                     <div>
                       <h5 className="font-medium">{membership.teams?.name}</h5>
                       {membership.teams?.school_name && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-secondary">
                           {membership.teams.school_name}
                         </p>
                       )}
@@ -204,13 +204,13 @@ const UserTeamMembershipsDemo = () => {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Badge variant="neutral">{membership.role}</Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-secondary">
                         Requested:{" "}
                         {new Date(membership.joined_at).toLocaleDateString()}
                       </span>
                     </div>
 
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       <span className="font-medium">Team ID:</span>{" "}
                       {membership.team_id.slice(0, 8)}...
                     </div>
@@ -258,7 +258,7 @@ const UserTeamMembershipsDemo = () => {
                             {membership.teams?.name}
                           </div>
                           {membership.teams?.school_name && (
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-secondary">
                               {membership.teams.school_name}
                             </div>
                           )}
@@ -295,7 +295,7 @@ const UserTeamMembershipsDemo = () => {
         {/* Hook Methods */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Return Values</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>data</code> - Array of team membership objects (from React
               Query)
@@ -511,25 +511,25 @@ export const MembershipStats: StoryObj = {
                   <div className="text-xl font-bold text-blue-600">
                     {memberships.length}
                   </div>
-                  <div className="text-sm text-gray-600">Total</div>
+                  <div className="text-sm text-secondary">Total</div>
                 </div>
                 <div className="p-3 border rounded-lg text-center">
                   <div className="text-xl font-bold text-green-600">
                     {activeMemberships.length}
                   </div>
-                  <div className="text-sm text-gray-600">Active</div>
+                  <div className="text-sm text-secondary">Active</div>
                 </div>
                 <div className="p-3 border rounded-lg text-center">
                   <div className="text-xl font-bold text-yellow-600">
                     {pendingMemberships.length}
                   </div>
-                  <div className="text-sm text-gray-600">Pending</div>
+                  <div className="text-sm text-secondary">Pending</div>
                 </div>
                 <div className="p-3 border rounded-lg text-center">
                   <div className="text-xl font-bold text-purple-600">
                     {Object.keys(roleStats).length}
                   </div>
-                  <div className="text-sm text-gray-600">Roles</div>
+                  <div className="text-sm text-secondary">Roles</div>
                 </div>
               </div>
 

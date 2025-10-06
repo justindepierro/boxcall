@@ -75,25 +75,25 @@ const TeamsDataDemo = () => {
               <div className="text-2xl font-bold text-blue-600">
                 {teams.length}
               </div>
-              <div className="text-sm text-gray-600">Teams</div>
+              <div className="text-sm text-secondary">Teams</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-green-600">
                 {playbooks.length}
               </div>
-              <div className="text-sm text-gray-600">Playbooks</div>
+              <div className="text-sm text-secondary">Playbooks</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {plays.length}
               </div>
-              <div className="text-sm text-gray-600">Plays</div>
+              <div className="text-sm text-secondary">Plays</div>
             </div>
             <div className="p-4 border rounded-lg text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {totalCount}
               </div>
-              <div className="text-sm text-gray-600">Total Items</div>
+              <div className="text-sm text-secondary">Total Items</div>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@ const TeamsDataDemo = () => {
         {loading && (
           <div className="space-y-4">
             <h4 className="font-medium">Loading State</h4>
-            <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="p-4 border rounded-lg bg-status-info-bg">
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 <span>Loading teams, playbooks, and plays data...</span>
@@ -115,7 +115,7 @@ const TeamsDataDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <Badge variant="danger" className="mb-2">
                 Data Fetch Error
               </Badge>
@@ -143,7 +143,7 @@ const TeamsDataDemo = () => {
                       <div>
                         <h5 className="font-medium">{team.name}</h5>
                         {team.school_name && (
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-secondary">
                             {team.school_name}
                           </p>
                         )}
@@ -190,7 +190,7 @@ const TeamsDataDemo = () => {
                       <div>
                         <h5 className="font-medium">{playbook.name}</h5>
                         {playbook.description && (
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-secondary">
                             {playbook.description}
                           </p>
                         )}
@@ -259,7 +259,7 @@ const TeamsDataDemo = () => {
         {/* Hook Methods */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Return Values</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>teams</code> - Array of team objects
             </div>
@@ -377,7 +377,7 @@ export const LoadingState: StoryObj = {
           </div>
 
           <div className="p-4 border rounded-lg">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               The hook loads teams, playbooks, and plays data simultaneously.
             </p>
           </div>
@@ -411,30 +411,30 @@ export const DataOverview: StoryObj = {
               <div className="text-xl font-bold text-blue-600">
                 {teams.length}
               </div>
-              <div className="text-sm text-gray-600">Teams</div>
+              <div className="text-sm text-secondary">Teams</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
               <div className="text-xl font-bold text-green-600">
                 {playbooks.length}
               </div>
-              <div className="text-sm text-gray-600">Playbooks</div>
+              <div className="text-sm text-secondary">Playbooks</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
               <div className="text-xl font-bold text-purple-600">
                 {plays.length}
               </div>
-              <div className="text-sm text-gray-600">Plays</div>
+              <div className="text-sm text-secondary">Plays</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
               <div className="text-xl font-bold text-orange-600">
                 {totalCount}
               </div>
-              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-sm text-secondary">Total</div>
             </div>
           </div>
 
           <div className="p-3 border rounded-lg bg-gray-50">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               Combined count of all teams, playbooks, and plays in the system.
             </p>
           </div>

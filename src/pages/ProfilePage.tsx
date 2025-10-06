@@ -791,7 +791,7 @@ export const ProfilePage: React.FC = () => {
                 as="h2"
                 className="mb-spacing-lg text-blue-600 font-bold flex items-center"
               >
-                <span className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-spacing-sm">
+                <span className="w-8 h-8 bg-status-info-bg0/20 rounded-lg flex items-center justify-center mr-spacing-sm">
                   <Trophy className="text-blue-600 w-4 h-4" />
                 </span>
                 Coaching Information

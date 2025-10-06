@@ -355,16 +355,16 @@ export function withErrorBoundary<P extends object>(
       }
 
       return (
-        <div className="p-4 border border-error-200 rounded-lg bg-red-50">
-          <h3 className="text-red-800 font-semibold mb-2">
+        <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
+          <h3 className="text-error-800 font-semibold mb-2">
             Something went wrong
           </h3>
-          <p className="text-red-600 text-sm mb-4">
+          <p className="text-error-600 text-sm mb-4">
             {(error as Error)?.message || "Unknown error"}
           </p>
           <button
             onClick={resetError}
-            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+            className="px-3 py-1 bg-error-600 text-white rounded text-sm hover:bg-error-700"
           >
             Try again
           </button>

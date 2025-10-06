@@ -183,7 +183,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => {}}
               variant="ghost"
               size="sm"
-              className="p-2.5 bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 border border-amber-200/50 dark:border-amber-700/50 text-warning-600 dark:text-warning-500 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
+              className="p-2.5 bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 border border-warning-200/50 dark:border-warning-700/50 text-warning-600 dark:text-warning-500 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
               title="Weekly Challenges"
             >
               <Icon name="trophy" className="h-5 w-5" />
@@ -195,7 +195,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 onClick={onOpenSettings}
                 variant="ghost"
                 size="sm"
-                className="px-3 py-2.5 bg-blue-50/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/50 text-blue-700 dark:text-blue-400 rounded-xl backdrop-blur-sm transition-all duration-200"
+                className="px-3 py-2.5 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/50 text-blue-700 dark:text-blue-400 rounded-xl backdrop-blur-sm transition-all duration-200"
                 icon={<Icon name="settings" />}
                 title="Customize your playbook"
               >

@@ -18,7 +18,7 @@ export const TooltipTest = () => {
             Test 1: Simple Button with Tooltip
           </h2>
           <Tooltip content="This is a tooltip!">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-4 py-2 bg-status-info-bg0 text-white rounded-lg hover:bg-blue-600">
               Hover over me
             </button>
           </Tooltip>
@@ -89,7 +89,7 @@ export const TooltipTest = () => {
             Test 5: Disabled Tooltip (should not show)
           </h2>
           <Tooltip content="You should not see this" disabled>
-            <button className="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+            <button className="px-4 py-2 bg-surface-muted text-white rounded-lg cursor-not-allowed">
               Disabled tooltip
             </button>
           </Tooltip>

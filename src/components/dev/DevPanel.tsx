@@ -130,7 +130,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
                   ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
                   : monitoringData.health.overall === "warning"
                     ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
-                    : "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-error-400"
+                    : "bg-error-bg text-error-800 dark:bg-error-900/20 dark:text-error-400"
               }`}
             >
               {monitoringData.health.overall}
@@ -182,7 +182,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           </div>
         </div>
         {error && (
-          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-red-900/20 border border-error-200 dark:border-error-800 rounded-lg text-sm text-error-600 dark:text-error-400">
+          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg text-sm text-error-600 dark:text-error-400">
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -238,7 +238,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           <button
             onClick={handleRefreshSession}
             disabled={loading}
-            className="px-spacing-sm py-spacing-xs bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50"
+            className="px-spacing-sm py-spacing-xs bg-status-info-bg0 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? "Refreshing..." : "Refresh Session"}
           </button>
@@ -309,7 +309,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       {monitoringData.recentErrors.length > 0 && (
         <div className="space-y-spacing-xs">
           <h4 className="font-medium text-text-secondary">Recent Errors</h4>
-          <div className="max-h-32 overflow-y-auto bg-error-bg dark:bg-red-900/10 border border-error-200 dark:border-error-800 rounded-lg p-spacing-xs text-xs">
+          <div className="max-h-32 overflow-y-auto bg-error-bg dark:bg-error-900/10 border border-error-200 dark:border-error-800 rounded-lg p-spacing-xs text-xs">
             {monitoringData.recentErrors.map((error, index) => (
               <div
                 key={index}

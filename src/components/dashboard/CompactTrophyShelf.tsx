@@ -169,7 +169,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                 {recentAchievements.map((achievement, index) => (
                   <div
                     key={`${achievement.type}-${achievement.id}`}
-                    className="w-7 h-7 bg-white dark:bg-gray-800 rounded-full border-2 border-jade-200 dark:border-jade-700 flex items-center justify-center transition-colors duration-200 hover:bg-jade-50 dark:hover:bg-jade-900/20 hover:border-jade-300 dark:hover:border-jade-600"
+                    className="w-7 h-7 bg-white dark:bg-surface-secondary dark:bg-gray-800 rounded-full border-2 border-jade-200 dark:border-jade-700 flex items-center justify-center transition-colors duration-200 hover:bg-jade-50 dark:hover:bg-jade-900/20 hover:border-jade-300 dark:hover:border-jade-600"
                     style={{ zIndex: recentAchievements.length - index }}
                   >
                     <Icon

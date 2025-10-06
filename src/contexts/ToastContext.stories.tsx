@@ -168,11 +168,11 @@ const ToastDemo = () => {
                 >
                   <div className="flex items-center gap-3">
                     <span className="font-medium capitalize">{toast.type}</span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-secondary">
                       {toast.title && `"${toast.title}"`} "{toast.message}"
                     </span>
                     {toast.action && (
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-status-info-bg text-primary dark:text-blue-300 px-2 py-1 rounded">
                         Has Action
                       </span>
                     )}

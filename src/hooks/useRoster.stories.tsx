@@ -136,7 +136,7 @@ const RosterDemo = () => {
         {loading && (
           <div className="space-y-4">
             <h4 className="font-medium">Loading State</h4>
-            <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="p-4 border rounded-lg bg-status-info-bg">
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 <span>Loading roster data...</span>
@@ -149,7 +149,7 @@ const RosterDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <div className="flex items-center justify-between">
                 <div>
                   <Badge variant="danger" className="mb-2">
@@ -185,7 +185,7 @@ const RosterDemo = () => {
                         <h5 className="font-medium">
                           Player #{player.jersey_number}
                         </h5>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-secondary">
                           {player.position}
                         </p>
                       </div>
@@ -253,7 +253,7 @@ const RosterDemo = () => {
         {/* Hook Methods */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Return Values</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>players</code> - Array of roster player objects
             </div>
@@ -272,7 +272,7 @@ const RosterDemo = () => {
         {/* Player Data Structure */}
         <div className="space-y-4">
           <h4 className="font-medium">Player Data Structure</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>id</code> - Unique player identifier
             </div>
@@ -331,7 +331,7 @@ export const LoadingState: StoryObj = {
           </div>
 
           <div className="p-4 border rounded-lg">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               The hook automatically shows loading state while fetching roster
               data.
             </p>
@@ -358,7 +358,7 @@ export const ErrorState: StoryObj = {
         <h3 className="text-lg font-semibold mb-4">Error State</h3>
         <div className="space-y-4">
           {error ? (
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <Badge variant="danger" className="mb-2">
                 Error
               </Badge>

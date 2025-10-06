@@ -218,7 +218,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Cache Statistics */}
           <div className="bg-status-info-bg p-3 rounded-lg">
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">
+            <h4 className="text-sm font-semibold text-primary dark:text-blue-300 mb-2">
               Cache Statistics
             </h4>
             <div className="space-y-1 text-sm">
@@ -240,7 +240,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
               </div>
               <button
                 onClick={cache.clearCache}
-                className="mt-2 text-xs px-2 py-1 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-300"
+                className="mt-2 text-xs px-2 py-1 bg-status-info-bg text-primary dark:text-blue-300 rounded-lg hover:bg-blue-300"
               >
                 Clear Cache
               </button>

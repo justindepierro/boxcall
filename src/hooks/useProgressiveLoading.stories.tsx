@@ -85,7 +85,7 @@ const ProgressiveLoadingDemo = () => {
             />
           </div>
 
-          <div className="text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-secondary">
             {progressPercentage}% Complete
           </div>
         </div>
@@ -152,7 +152,7 @@ const ProgressiveLoadingDemo = () => {
                     {visible ? "✓" : "○"}
                   </div>
                   <div className="text-sm font-medium">Step {stepNumber}</div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-secondary">
                     {visible ? "Visible" : "Hidden"}
                   </div>
                 </div>
@@ -225,7 +225,7 @@ const ProgressiveLoadingDemo = () => {
         {/* Hook Methods */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Methods</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>currentStep</code> - Current step number (0 to totalSteps)
             </div>
@@ -242,7 +242,7 @@ const ProgressiveLoadingDemo = () => {
         {/* Parameters */}
         <div className="space-y-4">
           <h4 className="font-medium">Parameters</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>totalSteps</code> - Total number of steps in the sequence
               (default: 4)

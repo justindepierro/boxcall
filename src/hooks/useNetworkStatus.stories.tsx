@@ -107,7 +107,7 @@ const NetworkStatusDemo: React.FC = () => {
           >
             {currentStatus.label}
           </Badge>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             {currentStatus.description}
           </div>
         </div>
@@ -121,7 +121,7 @@ const NetworkStatusDemo: React.FC = () => {
                 <span className="text-2xl">{currentConnection.icon}</span>
                 <div>
                   <div className="font-medium">{currentConnection.label}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-secondary">
                     {currentConnection.description}
                   </div>
                 </div>
@@ -139,7 +139,7 @@ const NetworkStatusDemo: React.FC = () => {
                     <div className="font-medium text-orange-600">
                       Slow Connection
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       Limited functionality available
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const NetworkStatusDemo: React.FC = () => {
                     <div className="font-medium text-green-600">
                       Fast Connection
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       Full functionality available
                     </div>
                   </div>
@@ -211,8 +211,8 @@ const ConditionalFeaturesDemo: React.FC = () => {
   );
 
   const FastConnectionFeature = () => (
-    <div className="p-4 bg-blue-100 border border-blue-200 rounded-lg">
-      <h4 className="font-semibold text-blue-800">
+    <div className="p-4 bg-status-info-bg border border-blue-200 rounded-lg">
+      <h4 className="font-semibold text-primary dark:text-blue-300">
         ⚡ Fast Connection Feature
       </h4>
       <p className="text-sm text-blue-700">
@@ -239,7 +239,7 @@ const ConditionalFeaturesDemo: React.FC = () => {
           <Badge variant={isOnline ? "success" : "danger"} className="mb-2">
             {isOnline ? "ONLINE" : "OFFLINE"}
           </Badge>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             Connection: {connectionType} {isSlowConnection && "(Slow)"}
           </div>
         </div>

@@ -102,7 +102,7 @@ const MobileNavigationDemo = () => {
                 key={item.id}
                 className={`p-4 border rounded-lg ${
                   item.isActive
-                    ? "border-blue-500 bg-blue-50"
+                    ? "border-blue-500 bg-status-info-bg"
                     : "border"
                 }`}
               >
@@ -115,7 +115,7 @@ const MobileNavigationDemo = () => {
                     </div>
                     <div>
                       <h5 className="font-medium">{item.label}</h5>
-                      <p className="text-sm text-gray-600">{item.href}</p>
+                      <p className="text-sm text-secondary">{item.href}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ const MobileNavigationDemo = () => {
         {/* Hook Return Values */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Return Values</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>items</code> - Array of navigation items with badges and
               active states
@@ -166,7 +166,7 @@ const MobileNavigationDemo = () => {
         {/* Navigation Item Properties */}
         <div className="space-y-4">
           <h4 className="font-medium">Navigation Item Properties</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>id</code> - Unique identifier for the navigation item
             </div>

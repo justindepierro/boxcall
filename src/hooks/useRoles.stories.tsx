@@ -91,7 +91,7 @@ const RolesDemo: React.FC = () => {
   if (error) {
     return (
       <Card className="p-6">
-        <div className="p-3 bg-red-100 border border-red-400 text-error-600 rounded mb-4">
+        <div className="p-3 bg-error-bg border border-red-400 text-error-600 rounded mb-4">
           Error: {error}
         </div>
       </Card>

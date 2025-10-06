@@ -154,7 +154,7 @@ const PlaySelectorModalDemo = (args: any) => {
                     <div className="font-medium">
                       {play.formation} - {play.play_name}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       {play.p_type} • {play.times_called} calls •{" "}
                       {Math.round(
                         (play.times_successful / play.times_called) * 100
@@ -215,7 +215,7 @@ const PlaySelectorModalDemo = (args: any) => {
         {/* Props Documentation */}
         <div className="space-y-4">
           <h4 className="font-medium">Component Props</h4>
-          <div className="text-sm space-y-2 text-gray-600">
+          <div className="text-sm space-y-2 text-secondary">
             <div>
               <code>isOpen: boolean</code> - Whether the modal is visible
             </div>

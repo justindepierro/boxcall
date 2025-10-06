@@ -23,7 +23,7 @@ const getRoleConfig = (role: string) => {
         label: "Platform Admin",
         icon: Shield,
         colors:
-          "bg-red-100 text-red-800 border-error-200 dark:bg-red-900/20 dark:text-error-500 dark:border-error-800",
+          "bg-error-bg text-error-800 border-error-200 dark:bg-error-900/20 dark:text-error-500 dark:border-error-800",
         iconColor: "text-error-600 dark:text-error-500",
       };
     case "head_coach":
@@ -39,7 +39,7 @@ const getRoleConfig = (role: string) => {
         label: "Coach",
         icon: Users,
         colors:
-          "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800",
+          "bg-blue-100 text-primary dark:text-blue-300 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800",
         iconColor: "text-blue-600 dark:text-blue-400",
       };
     case "free_coach":
@@ -71,7 +71,7 @@ const getRoleConfig = (role: string) => {
         label: role.charAt(0).toUpperCase() + role.slice(1),
         icon: User,
         colors:
-          "bg-surface-muted text-primary border dark:bg-gray-900/20 dark:text-gray-400 dark:border-gray-800",
+          "bg-surface-muted text-primary border dark:bg-surface-primary dark:bg-gray-900/20 dark:text-gray-400 dark:border-gray-800",
         iconColor: "text-secondary dark:text-gray-400",
       };
   }
@@ -150,13 +150,13 @@ export const SubscriptionBadge: React.FC<SubscriptionBadgeProps> = ({
         return {
           label: "Free",
           colors:
-            "bg-surface-muted text-primary dark:bg-gray-800 dark:text-gray-200",
+            "bg-surface-muted text-primary dark:bg-surface-secondary dark:bg-gray-800 dark:text-gray-200",
         };
       default:
         return {
           label: tier.charAt(0).toUpperCase() + tier.slice(1),
           colors:
-            "bg-surface-muted text-primary dark:bg-gray-800 dark:text-gray-200",
+            "bg-surface-muted text-primary dark:bg-surface-secondary dark:bg-gray-800 dark:text-gray-200",
         };
     }
   };

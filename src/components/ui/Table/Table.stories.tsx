@@ -386,7 +386,7 @@ export const CompleteExample: Story = {
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-lg font-semibold">Player Roster</h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               {selectedRows.length} of {comprehensivePlayers.length} players
               selected
             </p>

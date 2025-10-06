@@ -163,7 +163,7 @@ const CollaborationDemo: React.FC = () => {
 
         {/* Error Display */}
         {error && (
-          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-error-600 rounded">
+          <div className="mt-4 p-3 bg-error-bg border border-red-400 text-error-600 rounded">
             Error: {error}
           </div>
         )}
@@ -318,7 +318,7 @@ const CollaborativeCursorDemo: React.FC = () => {
       <h3 className="text-lg font-semibold mb-4">Collaborative Cursor Demo</h3>
 
       <div className="space-y-4">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-secondary">
           Move your mouse over the area below to see cursor tracking in action.
           Check the browser console for cursor update events.
         </p>
@@ -330,7 +330,7 @@ const CollaborativeCursorDemo: React.FC = () => {
           <span className="text-muted">Move mouse here</span>
         </div>
 
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-secondary">
           <strong>Note:</strong> This demo shows cursor tracking functionality.
           In a real collaboration session, other users would see your cursor
           movements.

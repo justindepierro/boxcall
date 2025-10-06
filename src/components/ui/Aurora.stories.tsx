@@ -209,7 +209,7 @@ export const ComplexLayout: Story = {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
-          <h1 className="text-3xl font-bold text-slate-50">
+          <h1 className="text-3xl font-bold text-primary dark:text-slate-50">
             Complex Page Layout
           </h1>
         </div>

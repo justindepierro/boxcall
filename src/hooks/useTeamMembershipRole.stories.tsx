@@ -134,25 +134,25 @@ const TeamMembershipRoleDemo = () => {
           <h4 className="font-medium">Query State</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Loading</div>
+              <div className="text-sm font-medium text-secondary">Loading</div>
               <Badge variant={isLoading ? "warning" : "neutral"}>
                 {isLoading ? "true" : "false"}
               </Badge>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Error</div>
+              <div className="text-sm font-medium text-secondary">Error</div>
               <Badge variant={error ? "danger" : "neutral"}>
                 {error ? "true" : "false"}
               </Badge>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Has Data</div>
+              <div className="text-sm font-medium text-secondary">Has Data</div>
               <Badge variant={role !== undefined ? "success" : "neutral"}>
                 {role !== undefined ? "true" : "false"}
               </Badge>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Role</div>
+              <div className="text-sm font-medium text-secondary">Role</div>
               <Badge variant={getRoleColor(role)}>{role || "none"}</Badge>
             </div>
           </div>
@@ -163,7 +163,7 @@ const TeamMembershipRoleDemo = () => {
           <h4 className="font-medium">Current Role</h4>
 
           {isLoading && (
-            <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="p-4 border rounded-lg bg-status-info-bg">
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 <span>Loading role data...</span>
@@ -172,7 +172,7 @@ const TeamMembershipRoleDemo = () => {
           )}
 
           {error && (
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <Badge variant="danger" className="mb-2">
                 Query Error
               </Badge>
@@ -192,7 +192,7 @@ const TeamMembershipRoleDemo = () => {
                 >
                   {role || "No Role"}
                 </Badge>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-secondary">
                   Team: {teamId} • User: {userId}
                 </span>
               </div>
@@ -206,7 +206,7 @@ const TeamMembershipRoleDemo = () => {
         {/* Mock Role Simulator */}
         <div className="space-y-4">
           <h4 className="font-medium">Mock Role Simulator</h4>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-secondary">
             This demonstrates what different roles look like (actual hook
             fetches from database).
           </p>
@@ -217,7 +217,7 @@ const TeamMembershipRoleDemo = () => {
                 key={mockRole || "none"}
                 className={`p-3 border rounded-lg cursor-pointer transition-all ${
                   selectedMockRole === mockRole
-                    ? "border-blue-500 bg-blue-50"
+                    ? "border-blue-500 bg-status-info-bg"
                     : "border hover:border-gray-300"
                 }`}
                 onClick={() => setSelectedMockRole(mockRole)}
@@ -226,7 +226,7 @@ const TeamMembershipRoleDemo = () => {
                   <Badge variant={getRoleColor(mockRole)} className="mb-1">
                     {mockRole || "none"}
                   </Badge>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-secondary">
                     {getRoleDescription(mockRole)}
                   </div>
                 </div>
@@ -247,7 +247,7 @@ const TeamMembershipRoleDemo = () => {
         {/* Hook Details */}
         <div className="space-y-4">
           <h4 className="font-medium">Hook Details</h4>
-          <div className="text-sm space-y-2 text-gray-600">
+          <div className="text-sm space-y-2 text-secondary">
             <div>
               <strong>Query Key:</strong>{" "}
               <code>["team", teamId, "membership_role", userId]</code>
@@ -267,7 +267,7 @@ const TeamMembershipRoleDemo = () => {
         {/* Return Values */}
         <div className="space-y-4">
           <h4 className="font-medium">Return Values</h4>
-          <div className="text-sm space-y-1 text-gray-600">
+          <div className="text-sm space-y-1 text-secondary">
             <div>
               <code>data</code> - The user's role string or null
             </div>
@@ -343,7 +343,7 @@ export const LoadingState: StoryObj = {
           </div>
 
           <div className="p-4 border rounded-lg">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               The hook shows loading state while fetching role data from the
               database.
             </p>
@@ -374,7 +374,7 @@ export const ErrorState: StoryObj = {
         <h3 className="text-lg font-semibold mb-4">Error State</h3>
         <div className="space-y-4">
           {error ? (
-            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-error-bg">
               <Badge variant="danger" className="mb-2">
                 Error
               </Badge>

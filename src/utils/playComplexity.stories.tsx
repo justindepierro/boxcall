@@ -182,7 +182,7 @@ const PlayComplexityDemo = () => {
                       <h5 className="font-medium">
                         {play.p_type} - {play.formation}
                       </h5>
-                      <p className="text-sm text-gray-600">{play.notes}</p>
+                      <p className="text-sm text-secondary">{play.notes}</p>
                     </div>
                     <Badge variant={badgeInfo.color as any}>
                       {badgeInfo.icon} {badgeInfo.title}
@@ -250,7 +250,7 @@ const PlayComplexityDemo = () => {
                     <div className="flex items-center justify-between text-sm">
                       <span>Success Rate:</span>
                       <span
-                        className={`font-medium ${play.times_called > 0 && play.times_successful / play.times_called < 0.5 ? "text-red-600" : "text-green-600"}`}
+                        className={`font-medium ${play.times_called > 0 && play.times_successful / play.times_called < 0.5 ? "text-error-600" : "text-green-600"}`}
                       >
                         {play.times_called > 0
                           ? Math.round(
@@ -324,7 +324,7 @@ const PlayComplexityDemo = () => {
         {/* Function Signatures */}
         <div className="space-y-spacing-md">
           <h4 className="font-medium">Function Signatures</h4>
-          <div className="text-sm space-y-spacing-xs text-gray-600">
+          <div className="text-sm space-y-spacing-xs text-secondary">
             <div>
               <code>analyzePlayComplexity(play: Play): ComplexityMetrics</code>
             </div>
@@ -412,7 +412,7 @@ export const BadgeSystem: StoryObj = {
                 <div className="text-2xl">{info.icon}</div>
                 <div className="flex-1">
                   <div className="font-medium">{info.title}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-secondary">
                     {info.description}
                   </div>
                 </div>
@@ -466,7 +466,7 @@ export const ComplexityBreakdown: StoryObj = {
             <Badge variant={badgeInfo.color as any} className="mb-spacing-xs">
               {badgeInfo.title}
             </Badge>
-            <div className="text-sm text-gray-600">{badgeInfo.description}</div>
+            <div className="text-sm text-secondary">{badgeInfo.description}</div>
           </div>
 
           <div className="space-y-spacing-sm">
@@ -498,7 +498,7 @@ export const ComplexityBreakdown: StoryObj = {
           </div>
 
           <div className="pt-spacing-sm border-t">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-secondary">
               <div>
                 <strong>Play Type:</strong> {testPlay.p_type}
               </div>

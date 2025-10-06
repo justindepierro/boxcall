@@ -146,7 +146,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               )}
               <Suspense
                 fallback={
-                  <div className="w-64 h-10 animate-pulse bg-surface-muted dark:bg-gray-700 rounded-lg" />
+                  <div className="w-64 h-10 animate-pulse bg-surface-muted dark:bg-surface-secondary dark:bg-gray-700 rounded-lg" />
                 }
               >
                 <GlobalSearch />

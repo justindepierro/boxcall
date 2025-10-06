@@ -191,7 +191,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
                     className="p-3 bg-status-info-bg border border-blue-200 rounded-lg"
                   >
                     <div className="font-medium">{action.title}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       {action.description}
                     </div>
                     <Badge variant="info" className="mt-1">

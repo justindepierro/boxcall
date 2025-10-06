@@ -386,13 +386,13 @@ export const CreateTeam: React.FC = () => {
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-gray-100 last:border-b-0"
+                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-subtle last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">
                         {suggestion.streetAddress}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-secondary">
                         {suggestion.city}, {suggestion.state}{" "}
                         {suggestion.zipCode}
                       </div>
@@ -666,7 +666,7 @@ export const CreateTeam: React.FC = () => {
                         ? "bg-blue-600 text-white"
                         : currentStepIndex > index
                           ? "bg-green-600 text-white"
-                          : "bg-surface-muted text-gray-600"
+                          : "bg-surface-muted text-secondary"
                     }`}
                   >
                     {index + 1}

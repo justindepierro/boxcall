@@ -131,7 +131,7 @@ export const AvailableActions: Story = {
 
       <div className="mt-6 p-4 bg-surface-secondary rounded-lg">
         <h4 className="font-medium mb-2">Usage Context:</h4>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-secondary">
           This toolbar appears as a floating element at the bottom of the screen
           when users select multiple plays in the playbook grid. It provides
           quick access to common bulk operations without cluttering the main

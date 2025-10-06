@@ -224,7 +224,7 @@ const PlayCardDemo = (args: any) => {
         {/* Props Documentation */}
         <div className="space-y-4">
           <h4 className="font-medium">Component Props</h4>
-          <div className="text-sm space-y-2 text-gray-600">
+          <div className="text-sm space-y-2 text-secondary">
             <div>
               <code>play: PlayType</code> - The play data object
             </div>

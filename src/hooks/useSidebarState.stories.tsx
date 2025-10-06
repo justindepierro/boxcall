@@ -109,23 +109,23 @@ const SidebarStateDemo = () => {
           <h4 className="font-medium">Current State</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Mode</div>
+              <div className="text-sm font-medium text-secondary">Mode</div>
               <Badge variant={mode === "expanded" ? "success" : "info"}>
                 {mode}
               </Badge>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">
+              <div className="text-sm font-medium text-secondary">
                 Expanded Groups
               </div>
               <div className="text-lg font-bold">{expanded.size}</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">Favorites</div>
+              <div className="text-sm font-medium text-secondary">Favorites</div>
               <div className="text-lg font-bold">{favorites.size}</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-gray-600">
+              <div className="text-sm font-medium text-secondary">
                 Total Groups
               </div>
               <div className="text-lg font-bold">{mockGroups.length}</div>
@@ -266,8 +266,8 @@ const SidebarStateDemo = () => {
         {/* Persistence Info */}
         <div className="space-y-4">
           <h4 className="font-medium">Persistence</h4>
-          <div className="p-4 border rounded-lg bg-blue-50">
-            <p className="text-sm text-blue-800">
+          <div className="p-4 border rounded-lg bg-status-info-bg">
+            <p className="text-sm text-primary dark:text-blue-300">
               All state changes are automatically persisted to localStorage with
               the key "sidebar:prefs". Refresh the page to see persistence in
               action.
@@ -281,7 +281,7 @@ const SidebarStateDemo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <h5 className="font-medium mb-2">Mode Management</h5>
-              <div className="space-y-1 text-gray-600">
+              <div className="space-y-1 text-secondary">
                 <div>
                   <code>mode</code> - Current sidebar mode
                 </div>
@@ -296,7 +296,7 @@ const SidebarStateDemo = () => {
 
             <div>
               <h5 className="font-medium mb-2">Group Management</h5>
-              <div className="space-y-1 text-gray-600">
+              <div className="space-y-1 text-secondary">
                 <div>
                   <code>isExpanded(id)</code> - Check if group is expanded
                 </div>
@@ -314,7 +314,7 @@ const SidebarStateDemo = () => {
 
             <div>
               <h5 className="font-medium mb-2">Favorites</h5>
-              <div className="space-y-1 text-gray-600">
+              <div className="space-y-1 text-secondary">
                 <div>
                   <code>isFavorite(id)</code> - Check if item is favorited
                 </div>
@@ -329,7 +329,7 @@ const SidebarStateDemo = () => {
 
             <div>
               <h5 className="font-medium mb-2">State</h5>
-              <div className="space-y-1 text-gray-600">
+              <div className="space-y-1 text-secondary">
                 <div>
                   <code>expanded</code> - Set of expanded group IDs
                 </div>

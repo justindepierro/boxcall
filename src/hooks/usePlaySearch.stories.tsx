@@ -102,7 +102,7 @@ const PlaySearchDemo: React.FC<{
                   <div className="flex justify-between items-start">
                     <div>
                       <h5 className="font-medium">Play {play.play_id}</h5>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-secondary">
                         {play.source} search • Rank: {play.rank || "N/A"}
                       </p>
                     </div>
@@ -130,7 +130,7 @@ const PlaySearchDemo: React.FC<{
 
         {error && (
           <div className="p-3 bg-error-bg border border-error-200 rounded">
-            <p className="text-sm text-red-800">Error: {error}</p>
+            <p className="text-sm text-error-800">Error: {error}</p>
           </div>
         )}
       </div>
