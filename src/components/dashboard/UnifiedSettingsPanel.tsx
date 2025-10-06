@@ -243,7 +243,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
 
       {isDev && showDevTools && (
         <div className="fixed inset-0 bg-text-primary/50 z-[60] flex items-center justify-center">
-          <div className="bg-surface-card rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
+          <div className="bg-surface-card rounded-lg shadow-xl max-w-4xl max-h-[80svh] w-full mx-4 overflow-hidden">
             <div className="p-4 border-b border-subtle flex justify-between items-center">
               <Typography variant="headline-sm">Development Tools</Typography>
               <Button variant="ghost" onClick={() => setShowDevTools(false)}>

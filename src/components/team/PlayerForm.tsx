@@ -150,7 +150,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   };
   return (
     <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50 p-4">
-      <div className="surface-card elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="surface-card elevation-modal rounded-lg max-w-2xl w-full max-h-[90svh] overflow-y-auto">
         {/* Header */}
         <div className="bc-card-padding border-b border-subtle dark:border-border-light">
           <Typography variant="headline-sm" as="h2">

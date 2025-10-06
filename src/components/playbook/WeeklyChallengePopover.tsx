@@ -33,7 +33,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay-modal">
-      <div className="bg-surface-primary rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
+      <div className="bg-surface-primary rounded-xl shadow-2xl max-w-md w-full max-h-[80svh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-primary p-6 text-text-inverse">
           <div className="flex items-center justify-between">

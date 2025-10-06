@@ -23,7 +23,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
       aria-modal="true"
       aria-labelledby="diagram-help-title"
     >
-      <div className="panel-cupertino max-w-3xl w-[min(90vw,900px)] max-h-[85vh] overflow-auto p-5 relative">
+      <div className="panel-cupertino max-w-3xl w-[min(90vw,900px)] max-h-[85svh] overflow-auto p-5 relative">
         <div className="absolute top-2 right-2">
           <Button
             size="xs"
