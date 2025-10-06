@@ -7,21 +7,16 @@ import { colorTokens } from "../design-system/tokens";
  */
 export const MinimalTooltipTest = () => {
   return (
-    <div style={{ padding: "100px", backgroundColor: "#f0f0f0" }}>
+    <div className="p-24 bg-surface-muted">
       <h1>Minimal Tooltip Test</h1>
       <p>Hover over the button below:</p>
       <br />
 
       <Tooltip content="Hello! I am a tooltip 👋">
         <button
+          className="px-6 py-3 text-white border-0 rounded-xl cursor-pointer text-base"
           style={{
-            padding: "12px 24px",
             backgroundColor: colorTokens.blue[500],
-            color: "white",
-            border: "none",
-            borderRadius: "12px", // Tier 1: rounded-lg standard
-            cursor: "pointer",
-            fontSize: "16px",
           }}
         >
           Hover me!
@@ -33,14 +28,9 @@ export const MinimalTooltipTest = () => {
 
       <Tooltip content="Bottom tooltip!" placement="bottom">
         <button
+          className="px-6 py-3 text-white border-0 rounded-xl cursor-pointer text-base"
           style={{
-            padding: "12px 24px",
             backgroundColor: colorTokens.emerald[500],
-            color: "white",
-            border: "none",
-            borderRadius: "12px", // Tier 1: rounded-lg standard
-            cursor: "pointer",
-            fontSize: "16px",
           }}
         >
           Bottom tooltip
@@ -52,14 +42,9 @@ export const MinimalTooltipTest = () => {
 
       <Tooltip content="Instant tooltip!" delay={0}>
         <button
+          className="px-6 py-3 text-white border-0 rounded-xl cursor-pointer text-base"
           style={{
-            padding: "12px 24px",
             backgroundColor: colorTokens.amber[500],
-            color: "white",
-            border: "none",
-            borderRadius: "12px", // Tier 1: rounded-lg standard
-            cursor: "pointer",
-            fontSize: "16px",
           }}
         >
           No delay tooltip

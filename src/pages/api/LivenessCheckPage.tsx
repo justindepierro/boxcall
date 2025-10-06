@@ -25,14 +25,14 @@ export const LivenessCheckPage: React.FC = () => {
 
   if (!liveness) {
     return (
-      <pre style={{ fontFamily: "monospace", padding: "20px" }}>
+      <pre className="font-mono p-5">
         {JSON.stringify({ alive: false }, null, 2)}
       </pre>
     );
   }
 
   return (
-    <pre style={{ fontFamily: "monospace", padding: "20px" }}>
+    <pre className="font-mono p-5">
       {JSON.stringify(liveness, null, 2)}
     </pre>
   );

@@ -253,7 +253,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         {/* Right: Scrollable Achievements Section */}
         <div className="flex-1">
           {/* Container matching the height of the 4 stat boxes */}
-          <div className="flex flex-col gap-2" style={{ height: "176px" }}>
+          <div className="flex flex-col gap-2 h-44">
             {/* Achievement List - Scrollable within the constrained container */}
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-jade-300 scrollbar-track-transparent pr-1">
               {allAchievements.length > 0 ? (

@@ -53,28 +53,21 @@ export function AuthDebugPanel() {
 
   return (
     <div
+      className="fixed bottom-5 right-5 p-3 text-white rounded-xl text-xs max-w-xs"
       style={{
-        position: "fixed",
-        bottom: 20,
-        right: 20,
-        padding: "12px",
         background: authState.hasSession
           ? colorTokens.emerald[500]
           : colorTokens.red[500],
-        color: "white",
-        borderRadius: "12px", // Tier 1: rounded-lg standard (10-12px)
-        fontSize: "12px",
         zIndex: 9999,
-        maxWidth: "300px",
       }}
     >
-      <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
+      <div className="font-bold mb-1">
         🔐 Auth Status
       </div>
       <div>Session: {authState.hasSession ? "✅ ACTIVE" : "❌ NONE"}</div>
       <div>User ID: {authState.userId || "NULL"}</div>
       {authState.error && (
-        <div style={{ marginTop: "4px", fontSize: "10px" }}>
+        <div className="mt-1" style={{ fontSize: "0.625rem" }}>
           Error: {authState.error}
         </div>
       )}

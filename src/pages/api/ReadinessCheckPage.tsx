@@ -39,14 +39,14 @@ export const ReadinessCheckPage: React.FC = () => {
 
   if (loading) {
     return (
-      <pre style={{ fontFamily: "monospace", padding: "20px" }}>
+      <pre className="font-mono p-5">
         {JSON.stringify({ status: "checking" }, null, 2)}
       </pre>
     );
   }
 
   return (
-    <pre style={{ fontFamily: "monospace", padding: "20px" }}>
+    <pre className="font-mono p-5">
       {JSON.stringify(readiness, null, 2)}
     </pre>
   );
