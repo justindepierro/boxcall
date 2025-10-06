@@ -353,7 +353,7 @@ export default function RosterPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
               {[...Array(6)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-32 bg-gray-200 rounded-lg"></div>
+                  <div className="h-32 bg-surface-muted rounded-lg"></div>
                 </Card>
               ))}
             </div>
@@ -628,7 +628,7 @@ export default function RosterPage() {
                         className={`capitalize px-spacing-xs py-spacing-xs rounded-lg text-xs ${
                           player.is_active
                             ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                            : "bg-surface-muted text-gray-800"
                         }`}
                       >
                         {player.is_active ? "Active" : "Inactive"}

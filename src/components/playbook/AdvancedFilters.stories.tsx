@@ -68,7 +68,7 @@ const AdvancedFiltersDemo = (args: any) => {
           <h3 className="text-xl font-semibold mb-2">
             AdvancedFilters Component
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Dynamic filtering system with multiple criteria and input types for
             playbook plays.
           </p>
@@ -110,7 +110,7 @@ const AdvancedFiltersDemo = (args: any) => {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">{filter.label}</div>
-                      <div className="text-xs text-gray-600 mt-1">
+                      <div className="text-xs text-secondary mt-1">
                         Field: {filter.field} | Operator: {filter.operator} |
                         Value:{" "}
                         {Array.isArray(filter.value)
@@ -142,7 +142,7 @@ const AdvancedFiltersDemo = (args: any) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Filter Types</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Text fields (Name, Description, Personnel, Tags)</div>
                 <div>• Select dropdowns (Formation, Play Type, Category)</div>
                 <div>
@@ -155,7 +155,7 @@ const AdvancedFiltersDemo = (args: any) => {
 
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Available Fields</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Formation (Shotgun, Pistol, Wildcat, etc.)</div>
                 <div>• Play Type (Pass, Run, RPO, Special)</div>
                 <div>• Category (Run, Pass, RPO, Play Action)</div>
@@ -181,7 +181,7 @@ const AdvancedFiltersDemo = (args: any) => {
               active filters
             </div>
           </div>
-          <div className="text-sm space-y-2 text-gray-600 mt-4">
+          <div className="text-sm space-y-2 text-secondary mt-4">
             <div>
               <strong>ActiveFilter interface:</strong>
             </div>
@@ -210,7 +210,7 @@ const AdvancedFiltersDemo = (args: any) => {
           <div className="space-y-3">
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Basic Usage</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`const [activeFilters, setActiveFilters] = useState([]);
 
 <AdvancedFilters
@@ -224,7 +224,7 @@ const AdvancedFiltersDemo = (args: any) => {
               <h5 className="font-medium text-sm mb-2">
                 With Filter Application
               </h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`function PlaybookGrid({ plays }) {
   const [filters, setFilters] = useState([]);
 
@@ -252,7 +252,7 @@ const AdvancedFiltersDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Filter Persistence</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`function PersistentFilters() {
   const [filters, setFilters] = useState(() => {
     const saved = localStorage.getItem('playbook-filters');
@@ -391,7 +391,7 @@ export const WithActiveFilters: StoryObj<typeof AdvancedFilters> = {
             <h3 className="text-xl font-semibold mb-2">
               AdvancedFilters with Active Filters
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-secondary mb-4">
               Component showing multiple active filters with removal options.
             </p>
           </div>
@@ -431,7 +431,7 @@ export const AddingFilters: StoryObj<typeof AdvancedFilters> = {
             <h3 className="text-xl font-semibold mb-2">
               AdvancedFilters - Adding Filters
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-secondary mb-4">
               Interactive demo showing how to add new filters to the component.
             </p>
           </div>

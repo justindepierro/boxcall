@@ -111,7 +111,7 @@ const ErrorHandlerDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Error Handler System</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Global error handling with custom error classes, queue management,
             and offline support.
           </p>
@@ -163,10 +163,10 @@ const ErrorHandlerDemo = () => {
                     {errorType.example.code}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-secondary mb-2">
                   {errorType.description}
                 </p>
-                <div className="text-xs text-gray-500 space-y-1">
+                <div className="text-xs text-muted space-y-1">
                   <div>
                     <strong>Message:</strong> {errorType.example.message}
                   </div>
@@ -215,10 +215,10 @@ const ErrorHandlerDemo = () => {
                       {new Date(error.timestamp).toLocaleString()}
                     </span>
                   </div>
-                  <div className="text-sm text-red-700 mb-2">
+                  <div className="text-sm text-error-600 mb-2">
                     {error.message}
                   </div>
-                  <div className="text-xs text-gray-600 space-y-1">
+                  <div className="text-xs text-secondary space-y-1">
                     <div>
                       <strong>URL:</strong> {error.url}
                     </div>
@@ -245,7 +245,7 @@ const ErrorHandlerDemo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Global Error Handling</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Catches uncaught JavaScript errors</div>
                 <div>• Handles unhandled promise rejections</div>
                 <div>• Queues errors when offline</div>
@@ -255,7 +255,7 @@ const ErrorHandlerDemo = () => {
 
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Error Types</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Network errors with retry logic</div>
                 <div>• Validation errors with field details</div>
                 <div>• Authentication errors</div>
@@ -382,7 +382,7 @@ export const ErrorClasses: StoryObj = {
                     <strong>Validation Errors:</strong>
                     <div className="mt-2 space-y-1">
                       {error.validationErrors.map((ve, i) => (
-                        <div key={i} className="p-2 bg-red-50 rounded text-xs">
+                        <div key={i} className="p-2 bg-error-bg rounded text-xs">
                           <Badge variant="danger" className="mr-2">
                             {ve.field}
                           </Badge>
@@ -482,7 +482,7 @@ export const ErrorHandlingHook: StoryObj = {
               <div className="text-sm">
                 <strong>Last Action:</strong> {lastAction}
               </div>
-              <div className="text-xs text-gray-600 mt-1">
+              <div className="text-xs text-secondary mt-1">
                 Error logged to console and stored for reporting.
               </div>
             </div>
@@ -573,7 +573,7 @@ export const ErrorQueueManagement: StoryObj = {
             {storedErrors.slice(-3).map((error, index) => (
               <div key={index} className="p-2 border rounded text-xs">
                 <div className="font-medium">{error.message}</div>
-                <div className="text-gray-500">
+                <div className="text-muted">
                   {new Date(error.timestamp).toLocaleString()}
                 </div>
               </div>

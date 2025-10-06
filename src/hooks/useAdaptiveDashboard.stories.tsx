@@ -120,18 +120,18 @@ const AdaptiveDashboardDemo: React.FC = () => {
             {userActivity?.length ? (
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {userActivity.slice(-3).map((activity, index) => (
-                  <div key={index} className="p-2 bg-gray-50 rounded text-sm">
+                  <div key={index} className="p-2 bg-surface-secondary rounded text-sm">
                     <div>
                       <strong>{activity.widgetId}</strong> - {activity.action}
                     </div>
-                    <div className="text-gray-500">
+                    <div className="text-muted">
                       {new Date(activity.timestamp).toLocaleTimeString()}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-gray-500 text-sm">No recent activity</div>
+              <div className="text-muted text-sm">No recent activity</div>
             )}
           </div>
         </div>
@@ -188,7 +188,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
                 {adaptiveActions.map((action, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-blue-50 border border-blue-200 rounded-lg"
+                    className="p-3 bg-status-info-bg border border-blue-200 rounded-lg"
                   >
                     <div className="font-medium">{action.title}</div>
                     <div className="text-sm text-gray-600">
@@ -201,7 +201,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-gray-500 text-sm">
+              <div className="text-muted text-sm">
                 No contextual actions available
               </div>
             )}
@@ -216,7 +216,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-gray-500 text-sm">
+              <div className="text-muted text-sm">
                 No recommendations available
               </div>
             )}

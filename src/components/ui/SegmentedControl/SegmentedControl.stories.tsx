@@ -168,7 +168,7 @@ export const WithCustomClassName: Story = {
         value={value}
         onChange={setValue}
         ariaLabel="Size selection"
-        className="bg-blue-50 border-blue-200"
+        className="bg-status-info-bg border-blue-200"
       />
     );
   },

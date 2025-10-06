@@ -91,7 +91,7 @@ const RolesDemo: React.FC = () => {
   if (error) {
     return (
       <Card className="p-6">
-        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded mb-4">
+        <div className="p-3 bg-red-100 border border-red-400 text-error-600 rounded mb-4">
           Error: {error}
         </div>
       </Card>
@@ -122,7 +122,7 @@ const RolesDemo: React.FC = () => {
             {roleContext?.teamMemberships?.length ? (
               <div className="space-y-2">
                 {roleContext.teamMemberships.map((membership, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="p-3 bg-surface-secondary rounded-lg">
                     <div>Team: {membership.teamId}</div>
                     <div>Role: {membership.teamRole}</div>
                     <div>Active: {membership.isActive ? "Yes" : "No"}</div>
@@ -130,7 +130,7 @@ const RolesDemo: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-gray-500">No team memberships</div>
+              <div className="text-muted">No team memberships</div>
             )}
           </div>
 
@@ -153,7 +153,7 @@ const RolesDemo: React.FC = () => {
           </Button>
 
           {capabilityResult !== null && (
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface-secondary rounded-lg">
               <strong>Has Capability:</strong> {capabilityResult ? "Yes" : "No"}
             </div>
           )}

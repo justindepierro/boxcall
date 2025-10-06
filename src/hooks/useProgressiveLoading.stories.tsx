@@ -63,7 +63,7 @@ const ProgressiveLoadingDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Progressive Loading</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Smooth, staggered content loading with customizable timing and
             steps.
           </p>
@@ -78,7 +78,7 @@ const ProgressiveLoadingDemo = () => {
             </Badge>
           </div>
 
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-surface-muted rounded-full h-3">
             <div
               className="bg-blue-600 h-3 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
@@ -145,7 +145,7 @@ const ProgressiveLoadingDemo = () => {
                   className={`p-4 border rounded-lg text-center transition-all duration-500 ${
                     visible
                       ? "border-green-500 bg-green-50 opacity-100 transform scale-100"
-                      : "border-gray-200 bg-gray-50 opacity-50 transform scale-95"
+                      : "border bg-surface-secondary opacity-50 transform scale-95"
                   }`}
                 >
                   <div className="text-2xl font-bold mb-1">
@@ -166,7 +166,7 @@ const ProgressiveLoadingDemo = () => {
           <h4 className="font-medium">Content Preview</h4>
           <div className="space-y-3">
             {isStepVisible(1) && (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded animate-fade-in">
+              <div className="p-3 bg-status-info-bg border border-blue-200 rounded animate-fade-in">
                 <Badge variant="info" className="mb-1">
                   Step 1
                 </Badge>
@@ -288,7 +288,7 @@ export const FastLoading: StoryObj = {
               className={`p-3 border rounded transition-all duration-200 ${
                 isStepVisible(step)
                   ? "bg-green-50 border-green-200"
-                  : "bg-gray-50 border-gray-200"
+                  : "bg-surface-secondary border-gray-200"
               }`}
             >
               Step {step}: {isStepVisible(step) ? "Visible" : "Hidden"}
@@ -323,8 +323,8 @@ export const SlowLoading: StoryObj = {
               key={step}
               className={`p-3 border rounded transition-all duration-500 ${
                 isStepVisible(step)
-                  ? "bg-blue-50 border-blue-200"
-                  : "bg-gray-50 border-gray-200"
+                  ? "bg-status-info-bg border-blue-200"
+                  : "bg-surface-secondary border-gray-200"
               }`}
             >
               Step {step}: {isStepVisible(step) ? "Visible" : "Hidden"}

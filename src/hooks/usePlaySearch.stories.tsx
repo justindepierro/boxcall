@@ -70,7 +70,7 @@ const PlaySearchDemo: React.FC<{
       <div className="space-y-4">
         <div>
           <h3 className="text-lg font-semibold mb-2">Play Search Demo</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Search for plays in the playbook. Try queries like "shotgun",
             "pass", or "run".
           </p>
@@ -129,7 +129,7 @@ const PlaySearchDemo: React.FC<{
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded">
+          <div className="p-3 bg-error-bg border border-error-200 rounded">
             <p className="text-sm text-red-800">Error: {error}</p>
           </div>
         )}

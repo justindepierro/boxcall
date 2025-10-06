@@ -93,7 +93,7 @@ const PlaySelectorModalDemo = (args: any) => {
           <h3 className="text-xl font-semibold mb-2">
             PlaySelectorModal Component
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Modal for selecting plays to add to practice scripts or game plans
             with search and filtering.
           </p>
@@ -190,7 +190,7 @@ const PlaySelectorModalDemo = (args: any) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Search & Filtering</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Search by play name, formation, or notes</div>
                 <div>• Filter by formation (Shotgun, Pistol, etc.)</div>
                 <div>• Filter by play type (Pass, Run, RPO)</div>
@@ -201,7 +201,7 @@ const PlaySelectorModalDemo = (args: any) => {
 
             <div className="space-y-3">
               <h5 className="font-medium text-sm">Play Information</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Formation and directional information</div>
                 <div>• Success rate based on historical data</div>
                 <div>• Play type and personnel badges</div>
@@ -243,7 +243,7 @@ const PlaySelectorModalDemo = (args: any) => {
           <div className="space-y-3">
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Basic Usage</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`<PlaySelectorModal
   isOpen={isModalOpen}
   onClose={() => setIsModalOpen(false)}
@@ -256,7 +256,7 @@ const PlaySelectorModalDemo = (args: any) => {
               <h5 className="font-medium text-sm mb-2">
                 With Selected Plays Exclusion
               </h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`<PlaySelectorModal
   isOpen={isModalOpen}
   onClose={() => setIsModalOpen(false)}
@@ -270,7 +270,7 @@ const PlaySelectorModalDemo = (args: any) => {
               <h5 className="font-medium text-sm mb-2">
                 In Practice Script Builder
               </h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`function PracticeScriptBuilder() {
   const [selectedPlays, setSelectedPlays] = useState([]);
 

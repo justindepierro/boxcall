@@ -113,7 +113,7 @@ const DashboardDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Dashboard Context Demo</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Manage dashboard state including profile, notifications, and UI
             settings.
           </p>

@@ -199,7 +199,7 @@ export const SettingsOverview: Story = {
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+      <div className="mt-6 p-4 bg-status-info-bg rounded-lg">
         <h4 className="font-medium mb-2">Key Features:</h4>
         <ul className="text-sm space-y-1">
           <li>

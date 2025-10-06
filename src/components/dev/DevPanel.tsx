@@ -182,7 +182,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           </div>
         </div>
         {error && (
-          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-red-900/20 border border-error-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-red-900/20 border border-error-200 dark:border-red-800 rounded-lg text-sm text-error-600 dark:text-red-300">
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -313,7 +313,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
             {monitoringData.recentErrors.map((error, index) => (
               <div
                 key={index}
-                className="mb-spacing-xs text-red-700 dark:text-red-300"
+                className="mb-spacing-xs text-error-600 dark:text-red-300"
               >
                 <div className="font-medium">{error.operation}</div>
                 <div className="text-error-600 dark:text-red-400">
@@ -333,7 +333,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       {monitoringData.recentEvents.length > 0 && (
         <div className="space-y-spacing-xs">
           <h4 className="font-medium text-text-secondary">Monitoring Events</h4>
-          <div className="max-h-32 overflow-y-auto bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-spacing-xs text-xs">
+          <div className="max-h-32 overflow-y-auto bg-status-info-bg dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-spacing-xs text-xs">
             {monitoringData.recentEvents.map((event, index) => (
               <div
                 key={index}

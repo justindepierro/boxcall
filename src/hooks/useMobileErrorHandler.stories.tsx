@@ -100,7 +100,7 @@ const MobileErrorHandlerDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Mobile Error Handler</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Simulate different types of mobile errors and see how they're
             handled.
           </p>
@@ -137,7 +137,7 @@ const MobileErrorHandlerDemo = () => {
           <h4 className="font-medium">Current Error State</h4>
 
           {errorState ? (
-            <div className="p-4 border rounded-lg bg-red-50 border-red-200">
+            <div className="p-4 border rounded-lg bg-error-bg border-red-200">
               <div className="flex items-start justify-between mb-2">
                 <Badge variant={getErrorTypeColor(errorState.type)}>
                   {errorState.type.toUpperCase()}
@@ -263,7 +263,7 @@ export const ServerError: StoryObj = {
       <Card className="p-6 max-w-md">
         <h3 className="text-lg font-semibold mb-4">Server Error Example</h3>
         {errorState && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded">
+          <div className="p-4 bg-error-bg border border-error-200 rounded">
             <Badge variant="danger" className="mb-2">
               SERVER
             </Badge>

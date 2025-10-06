@@ -202,12 +202,12 @@ const PlayGridDemo = (args: any) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-surface-secondary p-6">
       <Card className="w-full max-w-7xl mx-auto p-6">
         <div className="space-y-6">
           <div>
             <h3 className="text-xl font-semibold mb-2">PlayGrid Component</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-secondary mb-4">
               Virtualized playbook grid with advanced filtering, bulk
               operations, and performance optimizations.
             </p>
@@ -311,7 +311,7 @@ const PlayGridDemo = (args: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <h5 className="font-medium text-sm">Filtering & Search</h5>
-                <div className="text-sm text-gray-600 space-y-1">
+                <div className="text-sm text-secondary space-y-1">
                   <div>• Text search across play names, formations, notes</div>
                   <div>
                     • Category-based filtering (Run, Pass, RPO, Special)
@@ -324,7 +324,7 @@ const PlayGridDemo = (args: any) => {
 
               <div className="space-y-3">
                 <h5 className="font-medium text-sm">Performance & UX</h5>
-                <div className="text-sm text-gray-600 space-y-1">
+                <div className="text-sm text-secondary space-y-1">
                   <div>• Virtualized rendering for large playbooks</div>
                   <div>• Bulk selection with select-all functionality</div>
                   <div>• One-word vs full play name toggle</div>
@@ -391,7 +391,7 @@ const PlayGridDemo = (args: any) => {
             <div className="space-y-3">
               <div className="p-3 border rounded-lg">
                 <h5 className="font-medium text-sm mb-2">Basic Grid</h5>
-                <pre className="text-xs bg-gray-100 p-2 rounded">
+                <pre className="text-xs bg-surface-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   filters={filters}
@@ -404,7 +404,7 @@ const PlayGridDemo = (args: any) => {
                 <h5 className="font-medium text-sm mb-2">
                   With Bulk Operations
                 </h5>
-                <pre className="text-xs bg-gray-100 p-2 rounded">
+                <pre className="text-xs bg-surface-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   filters={filters}
@@ -420,7 +420,7 @@ const PlayGridDemo = (args: any) => {
                 <h5 className="font-medium text-sm mb-2">
                   With Category Filtering
                 </h5>
-                <pre className="text-xs bg-gray-100 p-2 rounded">
+                <pre className="text-xs bg-surface-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   selectedCategory="run"

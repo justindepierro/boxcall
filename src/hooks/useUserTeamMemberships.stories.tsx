@@ -59,7 +59,7 @@ const UserTeamMembershipsDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">User Team Memberships</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Manage user team memberships with roles, permissions, and status
             tracking.
           </p>
@@ -119,11 +119,11 @@ const UserTeamMembershipsDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <Badge variant="danger" className="mb-2">
                 Membership Fetch Error
               </Badge>
-              <p className="text-red-700">{error.message}</p>
+              <p className="text-error-600">{error.message}</p>
               <Button size="sm" onClick={() => refetch()} className="mt-2">
                 Retry
               </Button>
@@ -187,7 +187,7 @@ const UserTeamMembershipsDemo = () => {
               {pendingMemberships.map((membership: any) => (
                 <div
                   key={membership.id}
-                  className="p-4 border rounded-lg hover:bg-gray-50 border-yellow-200 bg-yellow-50"
+                  className="p-4 border rounded-lg hover:bg-surface-secondary border-yellow-200 bg-yellow-50"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -231,7 +231,7 @@ const UserTeamMembershipsDemo = () => {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-surface-secondary">
                     <th className="border border-gray-300 px-4 py-2 text-left">
                       Team
                     </th>
@@ -400,7 +400,7 @@ export const ActiveMemberships: StoryObj = {
                 </div>
               ))}
               {activeMemberships.length === 0 && (
-                <p className="text-gray-500 text-center py-4">
+                <p className="text-muted text-center py-4">
                   No active memberships
                 </p>
               )}
@@ -457,7 +457,7 @@ export const PendingMemberships: StoryObj = {
                 </div>
               ))}
               {pendingMemberships.length === 0 && (
-                <p className="text-gray-500 text-center py-4">
+                <p className="text-muted text-center py-4">
                   No pending memberships
                 </p>
               )}

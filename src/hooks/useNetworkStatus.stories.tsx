@@ -116,7 +116,7 @@ const NetworkStatusDemo: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <strong>Connection Type:</strong>
-            <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="p-4 bg-surface-secondary rounded-lg">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{currentConnection.icon}</span>
                 <div>
@@ -131,7 +131,7 @@ const NetworkStatusDemo: React.FC = () => {
 
           <div className="space-y-3">
             <strong>Connection Quality:</strong>
-            <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="p-4 bg-surface-secondary rounded-lg">
               {isSlowConnection ? (
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🐌</span>
@@ -162,7 +162,7 @@ const NetworkStatusDemo: React.FC = () => {
         </div>
 
         {/* Status Summary */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="p-4 bg-status-info-bg border border-blue-200 rounded-lg">
           <strong>Status Summary:</strong>
           <ul className="mt-2 text-sm space-y-1">
             <li>• Online: {isOnline ? "Yes" : "No"}</li>
@@ -202,7 +202,7 @@ const ConditionalFeaturesDemo: React.FC = () => {
   );
 
   const OfflineFeature = () => (
-    <div className="p-4 bg-gray-100 border border-gray-200 rounded-lg">
+    <div className="p-4 bg-surface-muted border border rounded-lg">
       <h4 className="font-semibold text-gray-800">💾 Offline Feature</h4>
       <p className="text-sm text-gray-700">
         This feature works without internet
@@ -252,7 +252,7 @@ const ConditionalFeaturesDemo: React.FC = () => {
             <FastConnectionFeature />
           )}
 
-          <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+          <div className="p-4 bg-surface-secondary border border rounded-lg">
             <strong>Conditional Logic:</strong>
             <ul className="mt-2 text-sm space-y-1">
               <li>• Online features show when connected</li>

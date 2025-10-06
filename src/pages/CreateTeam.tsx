@@ -327,7 +327,7 @@ export const CreateTeam: React.FC = () => {
             </Typography>
 
             {/* Location Helper */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-spacing-md">
+            <div className="bg-status-info-bg border border-blue-200 rounded-lg p-spacing-md">
               <div className="flex items-start gap-spacing-sm">
                 <Icon
                   name="map-pin"
@@ -382,11 +382,11 @@ export const CreateTeam: React.FC = () => {
 
               {/* Address Suggestions */}
               {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-spacing-xs bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-spacing-xs bg-white border border rounded-lg shadow-lg max-h-48 overflow-y-auto">
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-gray-100 last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">
@@ -435,7 +435,7 @@ export const CreateTeam: React.FC = () => {
 
             {/* Duplicate Check Loading */}
             {duplicateCheckLoading && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-spacing-md">
+              <div className="bg-status-info-bg border border-blue-200 rounded-lg p-spacing-md">
                 <div className="flex items-center gap-spacing-sm">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                   <Typography variant="body-sm">
@@ -486,11 +486,11 @@ export const CreateTeam: React.FC = () => {
                                 {similar.schoolName} {similar.teamName}
                               </div>
                               {similar.schoolCity && similar.schoolState && (
-                                <div className="text-gray-600">
+                                <div className="text-secondary">
                                   {similar.schoolCity}, {similar.schoolState}
                                 </div>
                               )}
-                              <div className="text-xs text-gray-500 mt-spacing-xs">
+                              <div className="text-xs text-muted mt-spacing-xs">
                                 Match reasons: {similar.matchReasons.join(", ")}
                               </div>
                             </div>
@@ -547,7 +547,7 @@ export const CreateTeam: React.FC = () => {
               </div>
             )}
 
-            <div className="bg-gray-50 p-spacing-md rounded-lg space-y-spacing-xs">
+            <div className="bg-surface-secondary p-spacing-md rounded-lg space-y-spacing-xs">
               <div>
                 <span className="font-medium">School:</span>{" "}
                 {formData.schoolName}
@@ -583,7 +583,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {createError && !showDuplicateWarning && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-spacing-md py-spacing-sm rounded-lg">
+              <div className="bg-error-bg border border-error-200 text-error-600 px-spacing-md py-spacing-sm rounded-lg">
                 {createError}
               </div>
             )}
@@ -666,7 +666,7 @@ export const CreateTeam: React.FC = () => {
                         ? "bg-blue-600 text-white"
                         : currentStepIndex > index
                           ? "bg-green-600 text-white"
-                          : "bg-gray-200 text-gray-600"
+                          : "bg-surface-muted text-gray-600"
                     }`}
                   >
                     {index + 1}
@@ -676,7 +676,7 @@ export const CreateTeam: React.FC = () => {
                       className={`flex-1 h-1 mx-spacing-md ${
                         currentStepIndex > index
                           ? "bg-green-600"
-                          : "bg-gray-200"
+                          : "bg-surface-muted"
                       }`}
                     />
                   )}

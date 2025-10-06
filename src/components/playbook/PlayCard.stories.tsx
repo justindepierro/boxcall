@@ -125,7 +125,7 @@ const PlayCardDemo = (args: any) => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">PlayCard Component</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Interactive play card with inline editing, field management, and
             bulk operations.
           </p>
@@ -198,7 +198,7 @@ const PlayCardDemo = (args: any) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <h5 className="font-medium text-sm">Formation Fields</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Formation (Shotgun, Pistol, etc.)</div>
                 <div>• Formation Type (Spread, Tight, etc.)</div>
                 <div>• Formation Direction (Balanced, Right, Left)</div>
@@ -210,7 +210,7 @@ const PlayCardDemo = (args: any) => {
 
             <div className="space-y-2">
               <h5 className="font-medium text-sm">Play Details Fields</h5>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-secondary space-y-1">
                 <div>• Play Name (descriptive name)</div>
                 <div>• Play Direction (Right, Left, Middle)</div>
                 <div>• Play Type (Pass, Run, RPO)</div>
@@ -273,7 +273,7 @@ const PlayCardDemo = (args: any) => {
           <div className="space-y-3">
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Basic Display</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   density="compact"
@@ -283,7 +283,7 @@ const PlayCardDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">With Editing</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   onSave={handleSave}
@@ -295,7 +295,7 @@ const PlayCardDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Bulk Selection</h5>
-              <pre className="text-xs bg-gray-100 p-2 rounded">
+              <pre className="text-xs bg-surface-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   isSelected={selectedPlays.has(play.id)}

@@ -41,7 +41,7 @@ Used for detailed practice planning where coaches need to break down practice ti
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-gray-100 p-4">
+      <div className="min-h-screen bg-surface-muted p-4">
         <Story />
       </div>
     ),

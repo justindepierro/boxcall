@@ -93,7 +93,7 @@ const ToastDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Toast Context Demo</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Test different types of toast notifications. Active toasts:{" "}
             {toasts.length}
           </p>

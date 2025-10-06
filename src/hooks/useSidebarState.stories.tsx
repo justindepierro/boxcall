@@ -98,7 +98,7 @@ const SidebarStateDemo = () => {
           <h3 className="text-lg font-semibold mb-2">
             Sidebar State Management
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Manage sidebar mode, group expansion, and favorites with local
             storage persistence.
           </p>
@@ -158,7 +158,7 @@ const SidebarStateDemo = () => {
             <p className="text-sm">
               <strong>Current mode:</strong> {mode}
             </p>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-secondary mt-1">
               {mode === "expanded"
                 ? "Full sidebar with labels and content"
                 : "Compact rail with icons only"}

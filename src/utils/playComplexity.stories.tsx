@@ -122,7 +122,7 @@ const PlayComplexityDemo = () => {
           <h3 className="text-lg font-semibold mb-spacing-xs">
             Play Complexity Analysis
           </h3>
-          <p className="text-sm text-gray-600 mb-spacing-md">
+          <p className="text-sm text-secondary mb-spacing-md">
             Analyze football plays for complexity and award appropriate badges
             based on routes, formations, personnel, and concepts.
           </p>
@@ -197,7 +197,7 @@ const PlayComplexityDemo = () => {
                         {play.metrics.totalScore}/100
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-surface-muted rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{ width: `${progressPercentage}%` }}
@@ -260,7 +260,7 @@ const PlayComplexityDemo = () => {
                         %
                       </span>
                     </div>
-                    <div className="text-xs text-gray-600 mt-spacing-xs">
+                    <div className="text-xs text-secondary mt-spacing-xs">
                       Called: {play.times_called} | Successful:{" "}
                       {play.times_successful}
                     </div>
@@ -581,11 +581,11 @@ export const MilestoneTracking: StoryObj = {
           })}
         </div>
 
-        <div className="mt-spacing-md p-spacing-sm bg-blue-50 rounded-lg">
+        <div className="mt-spacing-md p-spacing-sm bg-status-info-bg rounded-lg">
           <h5 className="font-medium text-sm mb-spacing-xs">
             Milestone Thresholds
           </h5>
-          <div className="text-sm text-gray-600 space-y-spacing-xs">
+          <div className="text-sm text-secondary space-y-spacing-xs">
             <div>• 26+ points: First Intermediate Play</div>
             <div>• 51+ points: Advanced Play Designer</div>
             <div>• 76+ points: Expert Level Reached</div>

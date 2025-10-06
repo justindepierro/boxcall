@@ -110,7 +110,7 @@ const RosterDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Team Roster Management</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Fetch and manage team player data with loading states and error
             handling.
           </p>
@@ -149,13 +149,13 @@ const RosterDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <div className="flex items-center justify-between">
                 <div>
                   <Badge variant="danger" className="mb-2">
                     Error
                   </Badge>
-                  <p className="text-red-700">{error}</p>
+                  <p className="text-error-600">{error}</p>
                 </div>
                 <Button size="sm" onClick={refresh}>
                   Retry
@@ -231,7 +231,7 @@ const RosterDemo = () => {
         <div className="space-y-4">
           <h4 className="font-medium">Mock Data Preview</h4>
           <div className="p-4 border rounded-lg bg-gray-50">
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-sm text-secondary mb-3">
               This hook would typically fetch real data from the roster service.
               Here's what the mock data looks like:
             </p>
@@ -358,11 +358,11 @@ export const ErrorState: StoryObj = {
         <h3 className="text-lg font-semibold mb-4">Error State</h3>
         <div className="space-y-4">
           {error ? (
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <Badge variant="danger" className="mb-2">
                 Error
               </Badge>
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-error-600 text-sm">{error}</p>
               <Button size="sm" onClick={refresh} className="mt-2">
                 Retry
               </Button>

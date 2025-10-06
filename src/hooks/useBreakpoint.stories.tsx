@@ -92,7 +92,7 @@ const BreakpointDemo: React.FC = () => {
                 className={`p-3 rounded-lg border-2 ${
                   key === breakpoint
                     ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-gray-50"
+                    : "border bg-gray-50"
                 }`}
               >
                 <div className="text-sm font-medium">{info.label}</div>
@@ -107,7 +107,7 @@ const BreakpointDemo: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div className="p-4 bg-surface-secondary rounded-lg">
           <strong>Resize your browser window</strong> to see the breakpoint
           change in real-time. This hook automatically updates when the window
           is resized.
@@ -245,7 +245,7 @@ const ConditionalRenderingDemo: React.FC = () => {
           )}
           {breakpoint === "desktop" && <DesktopComponent />}
 
-          <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+          <div className="p-4 bg-surface-secondary border border rounded-lg">
             <strong>Conditional Logic:</strong>
             <ul className="mt-2 text-sm space-y-1">
               <li>• Mobile: Shows mobile-specific component</li>

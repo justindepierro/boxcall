@@ -55,7 +55,7 @@ const TeamsDataDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Teams Data Management</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Fetch and manage teams, playbooks, and plays data with loading
             states and refresh functionality.
           </p>
@@ -115,11 +115,11 @@ const TeamsDataDemo = () => {
         {error && (
           <div className="space-y-4">
             <h4 className="font-medium">Error State</h4>
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <Badge variant="danger" className="mb-2">
                 Data Fetch Error
               </Badge>
-              <p className="text-red-700">{error}</p>
+              <p className="text-error-600">{error}</p>
               <Button size="sm" onClick={refreshData} className="mt-2">
                 Retry
               </Button>
@@ -236,7 +236,7 @@ const TeamsDataDemo = () => {
                       </Badge>
                     </div>
 
-                    <div className="text-xs text-gray-600 space-y-1">
+                    <div className="text-xs text-secondary space-y-1">
                       <div>
                         <span className="font-medium">Type:</span> {play.p_type}
                       </div>
@@ -290,7 +290,7 @@ const TeamsDataDemo = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="space-y-2">
               <h5 className="font-medium">Team</h5>
-              <div className="text-gray-600 space-y-1">
+              <div className="text-secondary space-y-1">
                 <div>
                   <code>id, name</code>
                 </div>
@@ -308,7 +308,7 @@ const TeamsDataDemo = () => {
 
             <div className="space-y-2">
               <h5 className="font-medium">Playbook</h5>
-              <div className="text-gray-600 space-y-1">
+              <div className="text-secondary space-y-1">
                 <div>
                   <code>id, team_id, name</code>
                 </div>
@@ -326,7 +326,7 @@ const TeamsDataDemo = () => {
 
             <div className="space-y-2">
               <h5 className="font-medium">Play</h5>
-              <div className="text-gray-600 space-y-1">
+              <div className="text-secondary space-y-1">
                 <div>
                   <code>id, playbook_id</code>
                 </div>

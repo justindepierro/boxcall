@@ -69,7 +69,7 @@ const MobileNavigationDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Mobile Navigation</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Manage mobile bottom navigation with badges and active states.
           </p>
         </div>
@@ -103,12 +103,12 @@ const MobileNavigationDemo = () => {
                 className={`p-4 border rounded-lg ${
                   item.isActive
                     ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200"
+                    : "border"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-surface-muted rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium">
                         {item.icon.charAt(0).toUpperCase()}
                       </span>
@@ -142,7 +142,7 @@ const MobileNavigationDemo = () => {
             {Object.entries(notifications).map(([key, count]) => (
               <div key={key} className="p-3 border rounded-lg text-center">
                 <div className="text-2xl font-bold text-blue-600">{count}</div>
-                <div className="text-sm text-gray-600 capitalize">{key}</div>
+                <div className="text-sm text-secondary capitalize">{key}</div>
               </div>
             ))}
           </div>

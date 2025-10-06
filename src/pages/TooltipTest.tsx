@@ -63,7 +63,7 @@ export const TooltipTest = () => {
           </h2>
           <Tooltip content="Close">
             <button
-              className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="w-8 h-8 flex items-center justify-center bg-surface-muted rounded-lg hover:bg-gray-300"
               aria-label="Close"
             >
               ✕

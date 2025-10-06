@@ -23,7 +23,7 @@ const getRoleConfig = (role: string) => {
         label: "Platform Admin",
         icon: Shield,
         colors:
-          "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
+          "bg-red-100 text-red-800 border-error-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
         iconColor: "text-error-600 dark:text-red-400",
       };
     case "head_coach":

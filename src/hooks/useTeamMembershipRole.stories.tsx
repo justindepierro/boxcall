@@ -98,7 +98,7 @@ const TeamMembershipRoleDemo = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2">Team Membership Role</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-secondary mb-4">
             Query user's role within a specific team using React Query.
           </p>
         </div>
@@ -172,11 +172,11 @@ const TeamMembershipRoleDemo = () => {
           )}
 
           {error && (
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <Badge variant="danger" className="mb-2">
                 Query Error
               </Badge>
-              <p className="text-red-700 text-sm">{error.message}</p>
+              <p className="text-error-600 text-sm">{error.message}</p>
               <Button size="sm" onClick={() => refetch()} className="mt-2">
                 Retry
               </Button>
@@ -218,7 +218,7 @@ const TeamMembershipRoleDemo = () => {
                 className={`p-3 border rounded-lg cursor-pointer transition-all ${
                   selectedMockRole === mockRole
                     ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
+                    : "border hover:border-gray-300"
                 }`}
                 onClick={() => setSelectedMockRole(mockRole)}
               >
@@ -374,11 +374,11 @@ export const ErrorState: StoryObj = {
         <h3 className="text-lg font-semibold mb-4">Error State</h3>
         <div className="space-y-4">
           {error ? (
-            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="p-4 border border-error-200 rounded-lg bg-red-50">
               <Badge variant="danger" className="mb-2">
                 Error
               </Badge>
-              <p className="text-red-700 text-sm">{error.message}</p>
+              <p className="text-error-600 text-sm">{error.message}</p>
               <Button size="sm" onClick={() => refetch()} className="mt-2">
                 Retry
               </Button>

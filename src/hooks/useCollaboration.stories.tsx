@@ -141,7 +141,7 @@ const CollaborationDemo: React.FC = () => {
                 {participants.map((participant, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-gray-50 rounded flex items-center gap-2"
+                    className="p-2 bg-surface-secondary rounded flex items-center gap-2"
                   >
                     <img
                       src={participant.avatar}
@@ -156,14 +156,14 @@ const CollaborationDemo: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-gray-500 text-sm">No participants</div>
+              <div className="text-muted text-sm">No participants</div>
             )}
           </div>
         </div>
 
         {/* Error Display */}
         {error && (
-          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-error-600 rounded">
             Error: {error}
           </div>
         )}
@@ -238,24 +238,24 @@ const CollaborationDemo: React.FC = () => {
           {recentUpdates.length ? (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {recentUpdates.map((update, index) => (
-                <div key={index} className="p-3 bg-gray-50 rounded text-sm">
+                <div key={index} className="p-3 bg-surface-secondary rounded text-sm">
                   <div className="flex justify-between items-start">
                     <div>
                       <strong>{update.type}</strong>
                       {update.widgetId && <span> - {update.widgetId}</span>}
                     </div>
-                    <span className="text-gray-500">
+                    <span className="text-muted">
                       {new Date(update.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <div className="text-gray-600 mt-1">
+                  <div className="text-secondary mt-1">
                     User: {update.userId}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-gray-500 text-sm">No recent updates</div>
+            <div className="text-muted text-sm">No recent updates</div>
           )}
         </div>
       </Card>
@@ -271,7 +271,7 @@ const CollaborationDemo: React.FC = () => {
               {cursors.map((cursor, index) => (
                 <div
                   key={index}
-                  className="p-2 bg-blue-50 rounded flex items-center gap-2"
+                  className="p-2 bg-status-info-bg rounded flex items-center gap-2"
                 >
                   <div
                     className="w-3 h-3 rounded-full"
@@ -288,7 +288,7 @@ const CollaborationDemo: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-gray-500 text-sm">No active cursors</div>
+            <div className="text-muted text-sm">No active cursors</div>
           )}
         </div>
       </Card>
@@ -325,9 +325,9 @@ const CollaborativeCursorDemo: React.FC = () => {
 
         <div
           ref={elementRef}
-          className="w-full h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-crosshair"
+          className="w-full h-48 bg-surface-muted border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-crosshair"
         >
-          <span className="text-gray-500">Move mouse here</span>
+          <span className="text-muted">Move mouse here</span>
         </div>
 
         <div className="text-sm text-gray-600">

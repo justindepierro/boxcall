@@ -355,7 +355,7 @@ export function withErrorBoundary<P extends object>(
       }
 
       return (
-        <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+        <div className="p-4 border border-error-200 rounded-lg bg-red-50">
           <h3 className="text-red-800 font-semibold mb-2">
             Something went wrong
           </h3>
