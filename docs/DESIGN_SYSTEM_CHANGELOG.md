@@ -1,4 +1,5 @@
 # Design System Changelog
+
 **Started:** October 6, 2025  
 **Purpose:** Track all design token changes, component updates, and breaking changes
 
@@ -9,11 +10,13 @@
 ## [Unreleased]
 
 ### In Progress
+
 - Phase 1: Foundation Solidification (Steps 1-3)
 - Typography Phase 3+: Additional standardization opportunities
 - Color semantic token completion
 
 ### Completed
+
 - ✅ Spacing audit and standardization (100% complete - 83 violations fixed)
 - ✅ Typography Phase 1 & 2 (40% complete - 38 violations fixed, 58 intentional whitelisted)
 
@@ -24,18 +27,23 @@
 ### 🎨 Minor: Typography Standardization (Phase 1 & 2)
 
 #### Summary
+
 Fixed 38 typography violations and established ESLint enforcement with smart whitelist for 58 intentional design decisions.
 
 #### Phase 1: Font Size Standardization (38 violations fixed)
+
 **Tailwind Extension:**
+
 - Added `text-2xs` custom font size (0.625rem = 10px)
 - Enables standard Tailwind class for previously arbitrary 10px text
 
 **Global Replacements:**
+
 - `text-[10px]` → `text-2xs` (30 instances)
 - `text-[12px]` → `text-xs` (8 instances)
 
 **Files Modified (12 total):**
+
 - **Player Components:** PlayerSidebar.tsx (v1 & v2) - Compact player roster UI
 - **Tool Palettes:** ToolPalette.tsx (v1 & v2), AuroraToolPalette.tsx - Diagram toolbars and keyboard shortcuts
 - **Play Cards:** PlayCardDetails.tsx, PlayCardListHeader.tsx, PlayCardTileHeader.tsx - Play card layouts
@@ -43,12 +51,15 @@ Fixed 38 typography violations and established ESLint enforcement with smart whi
 - **Team Dashboard:** TeamBulletinHeader.tsx - Team dashboard headers
 
 #### Phase 2: ESLint Enforcement (58 intentional whitelisted)
+
 **Created Rule:** `boxcall-design/no-arbitrary-typography`
+
 - Detects arbitrary font size values in text utilities
 - Enforces Tailwind standard classes (text-xs, text-sm, etc.)
 - Smart whitelist for intentional design decisions
 
 **Whitelisted Values (17 total, 58 instances):**
+
 - **text-[11px]** (55 instances)
   - Purpose: Compact labels/badges requiring size between xs (12px) and 2xs (10px)
   - Used in: Player rosters, tool palettes, compact badges
@@ -66,6 +77,7 @@ Fixed 38 typography violations and established ESLint enforcement with smart whi
   - Rationale: Design system component definitions, not violations
 
 **Rule Features:**
+
 - ✅ Catches unauthorized arbitrary font sizes
 - ✅ Provides standard Tailwind suggestions (e.g., text-[14px] → text-sm)
 - ✅ Works with className, clsx, cn, classnames utilities
@@ -73,12 +85,14 @@ Fixed 38 typography violations and established ESLint enforcement with smart whi
 - ✅ No false positives on whitelisted values
 
 **Testing:**
+
 - Verified rule catches text-[14px] violation ❌
 - Verified rule allows text-[11px] (whitelisted) ✅
 - Confirmed standard Tailwind classes pass ✅
 - Type check passing ✅
 
 #### Benefits
+
 - ✅ 38 violations fixed with standard Tailwind classes
 - ✅ 58 intentional exceptions documented and protected
 - ✅ ESLint enforcement prevents regression
@@ -87,6 +101,7 @@ Fixed 38 typography violations and established ESLint enforcement with smart whi
 - ✅ Clear documentation of typography decisions
 
 #### Documentation
+
 - **Created:** `docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md`
   - Complete audit results breakdown
   - Decision rationale (extend vs round)
@@ -101,9 +116,11 @@ Fixed 38 typography violations and established ESLint enforcement with smart whi
   - Compliance statistics
 
 #### Breaking Changes
+
 None - all changes use standard/whitelisted values, maintain visual appearance
 
 #### Future Work
+
 - Phase 3+: Continue standardization where applicable
 - Expand typography token documentation
 - Create comprehensive typography usage guide
@@ -115,9 +132,11 @@ None - all changes use standard/whitelisted values, maintain visual appearance
 ### 🎉 Major: Spacing Standardization Complete
 
 #### Summary
+
 Fixed all 83 spacing violations across 54 files through systematic 5-phase approach.
 
 #### Phase 1: Touch Target Standardization (10 violations)
+
 - **ProfileCard.tsx** (6 fixes)
   - Header container: `min-h-[44px]` → `min-h-11`
   - Edit button: `min-w-[44px] min-h-[44px]` → `min-w-11 min-h-11`
@@ -129,6 +148,7 @@ Fixed all 83 spacing violations across 54 files through systematic 5-phase appro
 **Impact:** iOS accessibility compliance (44px minimum touch targets)
 
 #### Phase 2: Component Height Standardization (12 violations)
+
 - **Select.tsx** (3 fixes): `min-h-[32px/40px/48px]` → `min-h-8/10/12`
 - **AccessibleButton.tsx** (3 fixes): Same pattern
 - **AccessibleInput.tsx** (3 fixes): Same pattern
@@ -137,7 +157,9 @@ Fixed all 83 spacing violations across 54 files through systematic 5-phase appro
 **Impact:** Consistent component sizing across all UI elements
 
 #### Phase 3: Modal Height Standardization (15 violations)
+
 Converted all viewport heights from `vh` to `svh` (small viewport height) for better mobile support:
+
 - **Practice Modals** (4 files): PracticeScriptModal, ScriptSelectorModal, PracticePlannerModal, PlayerPerformanceDashboard
 - **Dashboard Modals** (2 files): UnifiedSettingsPanel, DashboardCustomizationPanel
 - **Playbook Modals** (5 files): DiagramPaneRoute, KeyboardShortcutsGuide, WeeklyChallengePopover, HelpOverlay (v1 & v2)
@@ -148,6 +170,7 @@ Converted all viewport heights from `vh` to `svh` (small viewport height) for be
 **Impact:** Prevents mobile overflow issues, better iOS Safari compatibility
 
 #### Phase 4: Width Constraint Standardization (29 violations)
+
 - **Badge Counters** (4 fixes): `min-w-[18px/20px/24px]` → `min-w-5/6`
 - **Button/Input Widths** (9 fixes): `min-w-[140px/160px/180px/220px/240px]` → `min-w-36/40/44/56/60`
 - **ActionBar Containers** (4 fixes): `min-w-[180px]` → `min-w-44`
@@ -158,6 +181,7 @@ Converted all viewport heights from `vh` to `svh` (small viewport height) for be
 **Impact:** Consistent width constraints, better responsive behavior
 
 #### Phase 5: Final Verification Sweep (16 violations)
+
 - **Tile Heights** (2 fixes): `min-h-[160px/180px]` → `min-h-40/44`
 - **Builder Canvas** (2 fixes): `min-h-[620px]` → `min-h-[37.5rem]`
 - **Modal Heights** (3 fixes): `max-h-[94vh/60vh]`, `min-h-[40vh]` → svh equivalents
@@ -168,6 +192,7 @@ Converted all viewport heights from `vh` to `svh` (small viewport height) for be
 **Impact:** Zero spacing violations remaining
 
 #### Benefits
+
 - ✅ 100% spacing compliance (83/83 violations fixed)
 - ✅ Mobile-safe viewport units (svh) throughout
 - ✅ iOS accessibility compliance (44px touch targets)
@@ -176,6 +201,7 @@ Converted all viewport heights from `vh` to `svh` (small viewport height) for be
 - ✅ Type check passing
 
 #### Breaking Changes
+
 None - all changes maintain existing visual appearance and functionality
 
 ---
@@ -185,6 +211,7 @@ None - all changes maintain existing visual appearance and functionality
 ### 🎉 Major: Corner Radius Standardization
 
 #### Added
+
 - **2-Tier Corner Radius System**
   - Tier 1: `rounded-lg` (10-12px) for interactive elements
   - Tier 2: `rounded-xl` (16px) for cards and containers
@@ -194,6 +221,7 @@ None - all changes maintain existing visual appearance and functionality
   - Updated `docs/BOXCALL_DESIGN_LANGUAGE.md`
 
 #### Changed
+
 - **Card Component** (`src/components/ui/Card/Card.tsx`)
   - Base class: `rounded-[var(--radius-card)]` → `rounded-xl`
   - Eliminated CSS variable fallback for consistency
@@ -205,12 +233,14 @@ None - all changes maintain existing visual appearance and functionality
   - Updated CSS hardcoded values in `team-dashboard.css`
 
 #### Removed
+
 - **GlassCard Component** (`src/components/ui/GlassCard.tsx`)
   - Consolidated into `Card variant="glass"`
   - Eliminated duplicate glass styling logic
   - Migration: `<GlassCard>` → `<Card variant="glass">`
 
 #### Migration Guide
+
 ```tsx
 // Before
 <GlassCard className="rounded">
@@ -232,6 +262,7 @@ None - all changes maintain existing visual appearance and functionality
 ### Token Generation Fix
 
 #### Fixed
+
 - **Token Generation** (`src/design-system/generateTokens.ts`)
   - Fixed to output all 15 token groups (was only generating 9)
   - Generated 376 CSS variables (up from 267)
@@ -239,6 +270,7 @@ None - all changes maintain existing visual appearance and functionality
   - Increased corner radius values to iOS standard
 
 #### Added
+
 - **Missing Token Groups**
   - opacityTokens
   - contrastTokens
@@ -254,6 +286,7 @@ None - all changes maintain existing visual appearance and functionality
 ### Initial Design System
 
 #### Added
+
 - **Token System** (`src/design-system/tokens.ts`)
   - colorTokens (brand palette: jade, navy, electric)
   - semanticTokens (UI-ready values)
@@ -273,6 +306,7 @@ None - all changes maintain existing visual appearance and functionality
   - Glass variants with backdrop blur
 
 #### Design Principles
+
 - Token-driven (no ad-hoc values)
 - Accessible-first (WCAG AA minimum)
 - iOS/iPad-inspired aesthetic
@@ -284,11 +318,13 @@ None - all changes maintain existing visual appearance and functionality
 ## Changelog Format Guide
 
 ### Version Numbers
+
 - **Major (X.0.0)**: Breaking changes, significant visual updates
 - **Minor (1.X.0)**: New tokens, new components, non-breaking additions
 - **Patch (1.0.X)**: Bug fixes, documentation updates
 
 ### Change Types
+
 - **Added**: New tokens, components, or features
 - **Changed**: Updates to existing tokens or components
 - **Deprecated**: Soon-to-be removed features (with migration path)
@@ -297,12 +333,14 @@ None - all changes maintain existing visual appearance and functionality
 - **Security**: Security-related changes
 
 ### Entry Template
+
 ```markdown
 ## [Version] - YYYY-MM-DD
 
 ### Category Name
 
 #### Change Type
+
 - **Component/Token Name** (`file/path`)
   - Description of change
   - Migration instructions if breaking
@@ -314,17 +352,20 @@ None - all changes maintain existing visual appearance and functionality
 ## Upcoming Changes
 
 ### Planned for 2.1.0
+
 - [ ] Complete spacing audit and standardization
 - [ ] Typography system standardization
 - [ ] Semantic color token completion
 - [ ] Dark mode token coverage expansion
 
 ### Planned for 2.2.0
+
 - [ ] Component API standardization
 - [ ] Component variant system
 - [ ] Motion & animation system
 
 ### Planned for 3.0.0 (Breaking)
+
 - [ ] Component prop pattern breaking changes (if needed)
 - [ ] Deprecated token removal
 - [ ] Major visual refresh (if planned)
@@ -334,12 +375,14 @@ None - all changes maintain existing visual appearance and functionality
 ## Maintenance Notes
 
 ### How to Update This Changelog
+
 1. **Before Making Changes**: Create entry in "Unreleased" section
 2. **During Development**: Update entry with details as you work
 3. **Before PR Merge**: Move entry to new version section with date
 4. **After Release**: Tag the commit with version number
 
 ### Breaking Change Checklist
+
 - [ ] Document in changelog with migration guide
 - [ ] Add deprecation warnings in code
 - [ ] Update all usage examples in docs

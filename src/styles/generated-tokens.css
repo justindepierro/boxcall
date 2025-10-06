@@ -184,9 +184,9 @@
   --semantic-diagram-minimap-background: #ffffff;
   --semantic-boxcall-brand: #047857;
   --semantic-coach-authority: #475569;
-  --font-family-display: Bebas Neue,system-ui,sans-serif;
-  --font-family-interface: Inter,system-ui,sans-serif;
-  --font-family-mono: JetBrains Mono,Consolas,monospace;
+  --font-family-display: Bebas Neue, system-ui, sans-serif;
+  --font-family-interface: Inter, system-ui, sans-serif;
+  --font-family-mono: JetBrains Mono, Consolas, monospace;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -315,18 +315,26 @@
   --semantic-border-hover-style: solid;
   --elevation-none: none;
   --elevation-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --elevation-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --elevation-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --elevation-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --elevation-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --elevation-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --elevation-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --elevation-card-resting: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --elevation-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --elevation-card-resting:
+    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --elevation-card-hover:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --elevation-card-active: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --elevation-button-resting: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --elevation-button-hover: 0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --elevation-button-hover:
+    0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --elevation-button-active: inset 0 1px 2px 0 rgb(0 0 0 / 0.1);
-  --elevation-modal: 0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
-  --elevation-dropdown: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --elevation-modal:
+    0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
+  --elevation-dropdown:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --elevation-focus: 0 0 0 2px rgb(4 120 87 / 0.2);
   --contrast-text-on-light: #111827;
   --contrast-text-on-dark: #ffffff;

@@ -83,7 +83,10 @@ const TeamBulletin: React.FC = React.memo(() => {
       id: teamId || "unknown",
       name: "BoxCall Dev Team",
       season: "2025-2026", // Default season
-      colors: { primary: "colorTokens.jade[500]", secondary: colorTokens.blue[900] },
+      colors: {
+        primary: "colorTokens.jade[500]",
+        secondary: colorTokens.blue[900],
+      },
       logo: "eagle",
       record: { wins: 8, losses: 2 },
       nextGame: "Friday vs. Central Lions",
@@ -182,7 +185,10 @@ const TeamBulletin: React.FC = React.memo(() => {
             id: data.id,
             name: data.name,
             season: seasonDisplay,
-            colors: { primary: "colorTokens.jade[500]", secondary: colorTokens.blue[900] },
+            colors: {
+              primary: "colorTokens.jade[500]",
+              secondary: colorTokens.blue[900],
+            },
             logo: "generic",
             record: { wins: 0, losses: 0 },
             nextGame: "TBD",

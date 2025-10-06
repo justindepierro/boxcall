@@ -380,7 +380,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       accentOverlayClass: "bg-aurora-slatewave",
       glowClassName: "glow-aurora-slate",
       statusBadge: "Strategy",
-      iconClassName: "text-slate-600",
+      iconClassName: "text-secondary",
       footnote:
         selectedView === "game-planning" ? "Active view" : "Tap to open",
       buttonLabel: "Game Planning",

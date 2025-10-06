@@ -1,4 +1,5 @@
 # Color Standardization Audit
+
 **Date:** January 20, 2025  
 **Status:** Phase 1 - Audit & Categorization  
 **Design System Step:** 3 (Color Semantic Token Completion)
@@ -10,12 +11,14 @@
 Found **624 instances** of direct Tailwind color scale usage (e.g., `text-gray-600`, `bg-slate-900`) across **100+ component files**. These bypass our semantic token system and need to be replaced with semantic color tokens.
 
 ### Key Metrics
+
 - **Total Violations:** 624
 - **Files Affected:** ~100+ in `src/components/`
 - **Most Common Colors:** `slate` (224x), `gray` (186x)
 - **Most Common Utilities:** `text-*`, `bg-*`, `border-*`
 
 ### Impact
+
 - ❌ **Theming:** Hard to maintain consistent color palette
 - ❌ **Dark Mode:** Direct colors don't respect theme switching
 - ❌ **Accessibility:** No guarantee of sufficient contrast
@@ -99,6 +102,7 @@ Count  Color Class       Semantic Meaning
 ### 1. Text Colors (287 violations)
 
 #### Primary Text (48 instances)
+
 - `text-gray-9` (26x) → `text-primary`
 - `text-gray-8` (8x) → `text-primary`
 - `text-gray-7` (13x) → `text-primary`
@@ -106,70 +110,84 @@ Count  Color Class       Semantic Meaning
 - `text-slate-7` (12x) → `text-primary-dark`
 - `text-slate-1` (17x) → `text-inverse`
 
-**Semantic Token Needed:** 
+**Semantic Token Needed:**
+
 - `text-primary` (light mode)
 - `text-primary-dark` (dark mode)
 - `text-inverse` (inverse/contrast)
 
 #### Secondary Text (95 instances)
+
 - `text-gray-6` (67x) → `text-secondary`
 - `text-gray-5` (35x) → `text-secondary`
 - `text-slate-6` (16x) → `text-secondary-dark`
 - `text-slate-5` (17x) → `text-secondary-dark`
 
 **Semantic Token Needed:**
+
 - `text-secondary` (helper text, labels)
 - `text-secondary-dark` (dark mode secondary)
 
 #### Muted/Disabled Text (59 instances)
+
 - `text-slate-4` (35x) → `text-muted`
 - `text-gray-4` (14x) → `text-muted`
 - `text-slate-3` (24x) → `text-muted-dark`
 
 **Semantic Token Needed:**
+
 - `text-muted` (disabled, placeholder)
 - `text-muted-dark` (dark mode muted)
 
 #### Interactive/Link Colors (38 instances)
+
 - `text-blue-6` (20x) → `text-link`
 - `text-blue-7` (11x) → `text-link-hover`
 - `text-blue-8` (7x) → `text-link-active`
 
 **Semantic Token Needed:**
+
 - `text-link` (default link color)
 - `text-link-hover` (hover state)
 - `text-link-active` (active/pressed)
 
 #### Status Colors (47 instances)
+
 **Success:**
+
 - `text-green-6` (15x) → `text-success`
 - `text-emerald-6` (4x) → `text-success`
 - `text-green-8` (5x) → `text-success-dark`
 - `text-emerald-4` (6x) → `text-success-light`
 
 **Error:**
+
 - `text-red-6` (14x) → `text-error`
 - `text-red-5` (9x) → `text-error`
 - `text-red-4` (5x) → `text-error-light`
 - `text-red-7` (4x) → `text-error-dark`
 
 **Warning:**
+
 - `text-yellow-6` (6x) → `text-warning`
 - `text-amber-6` (5x) → `text-warning`
 
 **Semantic Tokens Needed:**
+
 - `text-success`, `text-success-dark`, `text-success-light`
 - `text-error`, `text-error-dark`, `text-error-light`
 - `text-warning`, `text-warning-dark`, `text-warning-light`
 - `text-info`, `text-info-dark`, `text-info-light`
 
 #### Premium/Special (20 instances)
+
 - `text-purple-6` (11x) → `text-premium`
 - `text-purple-7` (5x) → `text-premium-dark`
 - `text-purple-8` (4x) → `text-premium-strong`
 - `text-purple-3` (4x) → `text-premium-light`
 
 **Semantic Token Needed:**
+
 - `text-premium` (premium features badge/indicator)
 
 ---
@@ -179,12 +197,14 @@ Count  Color Class       Semantic Meaning
 #### Surface Backgrounds (98 instances)
 
 **Light Mode Surfaces:**
+
 - `bg-gray-1` (32x) → `bg-subtle` (subtle background tint)
 - `bg-gray-2` (12x) → `bg-subtle`
 - `bg-gray-5` (26x) → `bg-muted` (more visible muted bg)
 - `bg-gray-8` (5x) → `bg-surface-elevated`
 
 **Dark Mode Surfaces:**
+
 - `bg-slate-9` (18x) → `bg-surface-dark` (dark primary surface)
 - `bg-slate-8` (41x) → `bg-surface-elevated-dark` (elevated dark surface)
 - `bg-slate-7` (13x) → `bg-surface-elevated-dark`
@@ -192,6 +212,7 @@ Count  Color Class       Semantic Meaning
 - `bg-slate-2` (6x) → `bg-subtle-dark`
 
 **Semantic Tokens Needed:**
+
 - `bg-surface` (base surface - white)
 - `bg-surface-elevated` (elevated surface - gray-50/100)
 - `bg-subtle` (subtle tint - gray-50/100)
@@ -204,22 +225,27 @@ Count  Color Class       Semantic Meaning
 #### Status Backgrounds (43 instances)
 
 **Success:**
+
 - `bg-green-5` (8x) → `bg-success`
 - `bg-green-1` (7x) → `bg-success-subtle`
 
 **Error:**
+
 - `bg-red-5` (11x) → `bg-error`
 - `bg-red-9` (5x) → `bg-error-dark`
 
 **Warning:**
+
 - `bg-yellow-5` (7x) → `bg-warning`
 
 **Info:**
+
 - `bg-blue-5` (12x) → `bg-info`
 - `bg-blue-1` (6x) → `bg-info-subtle`
 - `bg-blue-9` (5x) → `bg-info-dark`
 
 **Semantic Tokens Needed:**
+
 - `bg-success`, `bg-success-subtle`, `bg-success-dark`
 - `bg-error`, `bg-error-subtle`, `bg-error-dark`
 - `bg-warning`, `bg-warning-subtle`, `bg-warning-dark`
@@ -232,16 +258,19 @@ Count  Color Class       Semantic Meaning
 #### Neutral Borders (82 instances)
 
 **Light Mode:**
+
 - `border-gray-3` (6x) → `border` (default border)
 - `border-gray-2` (15x) → `border-subtle` (subtle border)
 
 **Dark Mode:**
+
 - `border-slate-7` (34x) → `border-dark` (dark default border)
 - `border-slate-8` (7x) → `border-dark`
 - `border-slate-6` (7x) → `border-subtle-dark`
 - `border-slate-2` (16x) → `border-subtle-dark`
 
 **Semantic Tokens Needed:**
+
 - `border` (default - gray-200)
 - `border-subtle` (lighter - gray-100/200)
 - `border-strong` (darker - gray-300)
@@ -251,13 +280,16 @@ Count  Color Class       Semantic Meaning
 #### Status Borders (21 instances)
 
 **Error:**
+
 - `border-red-5` (10x) → `border-error`
 - `border-red-2` (6x) → `border-error-subtle`
 
 **Info:**
+
 - `border-blue-2` (7x) → `border-info`
 
 **Semantic Tokens Needed:**
+
 - `border-error`, `border-error-subtle`
 - `border-success`, `border-success-subtle`
 - `border-warning`, `border-warning-subtle`
@@ -272,6 +304,7 @@ Count  Color Class       Semantic Meaning
 - Plus various `ring-*-500/20` opacity variants
 
 **Semantic Tokens Needed:**
+
 - `ring-primary` (default focus ring)
 - `ring-error` (error field focus)
 - `ring-success` (success field focus)
@@ -338,19 +371,22 @@ Count  Color Class       Semantic Meaning
 ### File Categories
 
 **High Priority (Core Components):**
+
 - Diagram Editor (PlayDiagramBuilder, ToolPalette)
 - Modals (PlayDetailModal, various modals)
 - Forms (EnhancedFormFields, AccessibleInput)
 - Buttons (AccessibleButton)
 
 **Medium Priority (Feature Components):**
+
 - Play Cards (PlayCard, PlayCardDetails)
 - Dashboard widgets
 - Profile components
 
 **Low Priority (Demos/Stories):**
-- Storybook stories (*.stories.tsx)
-- Demo components (*Demo.tsx)
+
+- Storybook stories (\*.stories.tsx)
+- Demo components (\*Demo.tsx)
 
 ---
 
@@ -359,6 +395,7 @@ Count  Color Class       Semantic Meaning
 ### Currently Missing Semantic Tokens
 
 #### Text Tokens
+
 - ❌ `text-muted-dark` - Dark mode muted text
 - ❌ `text-secondary-dark` - Dark mode secondary
 - ❌ `text-link-hover` - Link hover state
@@ -377,6 +414,7 @@ Count  Color Class       Semantic Meaning
 - ❌ `text-premium-light` - Light premium text
 
 #### Background Tokens
+
 - ❌ `bg-surface-elevated` - Elevated surface (cards)
 - ❌ `bg-subtle` - Subtle background tint
 - ❌ `bg-muted` - More visible muted bg
@@ -395,6 +433,7 @@ Count  Color Class       Semantic Meaning
 - ❌ `bg-info-dark` - Dark info bg
 
 #### Border Tokens
+
 - ❌ `border-subtle` - Subtle border
 - ❌ `border-strong` - Strong/visible border
 - ❌ `border-dark` - Dark mode border
@@ -408,6 +447,7 @@ Count  Color Class       Semantic Meaning
 - ❌ `border-info-subtle` - Light info border
 
 #### Ring/Focus Tokens
+
 - ❌ `ring-primary` - Default focus ring
 - ❌ `ring-error` - Error field focus
 - ❌ `ring-success` - Success field focus
@@ -424,126 +464,126 @@ export const semanticColorTokens = {
   // ===== TEXT COLORS =====
   text: {
     // Primary hierarchy
-    primary: colorTokens.gray[900],           // Main text
-    primaryDark: colorTokens.slate[100],      // Dark mode primary
-    secondary: colorTokens.gray[600],         // Helper text, labels
-    secondaryDark: colorTokens.slate[400],    // Dark mode secondary
-    muted: colorTokens.gray[500],             // Disabled, placeholder
-    mutedDark: colorTokens.slate[500],        // Dark mode muted
-    inverse: "#FFFFFF",                       // Text on dark backgrounds
-    
+    primary: colorTokens.gray[900], // Main text
+    primaryDark: colorTokens.slate[100], // Dark mode primary
+    secondary: colorTokens.gray[600], // Helper text, labels
+    secondaryDark: colorTokens.slate[400], // Dark mode secondary
+    muted: colorTokens.gray[500], // Disabled, placeholder
+    mutedDark: colorTokens.slate[500], // Dark mode muted
+    inverse: "#FFFFFF", // Text on dark backgrounds
+
     // Interactive
-    link: colorTokens.blue[600],              // Links
-    linkHover: colorTokens.blue[700],         // Link hover
-    linkActive: colorTokens.blue[800],        // Link active/pressed
-    linkVisited: colorTokens.purple[700],     // Visited links
-    
+    link: colorTokens.blue[600], // Links
+    linkHover: colorTokens.blue[700], // Link hover
+    linkActive: colorTokens.blue[800], // Link active/pressed
+    linkVisited: colorTokens.purple[700], // Visited links
+
     // Status
-    success: colorTokens.green[600],          // Success text
-    successDark: colorTokens.green[800],      // Dark success
-    successLight: colorTokens.green[400],     // Light success
-    
-    error: colorTokens.red[600],              // Error text
-    errorDark: colorTokens.red[700],          // Dark error
-    errorLight: colorTokens.red[400],         // Light error
-    
-    warning: colorTokens.yellow[600],         // Warning text
-    warningDark: colorTokens.yellow[700],     // Dark warning
-    warningLight: colorTokens.yellow[500],    // Light warning
-    
-    info: colorTokens.blue[600],              // Info text
-    infoDark: colorTokens.blue[800],          // Dark info
-    infoLight: colorTokens.blue[400],         // Light info
-    
+    success: colorTokens.green[600], // Success text
+    successDark: colorTokens.green[800], // Dark success
+    successLight: colorTokens.green[400], // Light success
+
+    error: colorTokens.red[600], // Error text
+    errorDark: colorTokens.red[700], // Dark error
+    errorLight: colorTokens.red[400], // Light error
+
+    warning: colorTokens.yellow[600], // Warning text
+    warningDark: colorTokens.yellow[700], // Dark warning
+    warningLight: colorTokens.yellow[500], // Light warning
+
+    info: colorTokens.blue[600], // Info text
+    infoDark: colorTokens.blue[800], // Dark info
+    infoLight: colorTokens.blue[400], // Light info
+
     // Special
-    premium: colorTokens.purple[600],         // Premium features
-    premiumDark: colorTokens.purple[700],     // Dark premium
-    premiumLight: colorTokens.purple[300],    // Light premium
-    
-    brand: colorTokens.jade[600],             // Brand color text
+    premium: colorTokens.purple[600], // Premium features
+    premiumDark: colorTokens.purple[700], // Dark premium
+    premiumLight: colorTokens.purple[300], // Light premium
+
+    brand: colorTokens.jade[600], // Brand color text
   },
-  
+
   // ===== BACKGROUND COLORS =====
   bg: {
     // Surfaces (light mode)
-    surface: "#FFFFFF",                       // Base surface
-    surfaceElevated: colorTokens.gray[50],    // Elevated cards
-    subtle: colorTokens.gray[50],             // Subtle tint
-    muted: colorTokens.gray[200],             // More visible
-    
+    surface: "#FFFFFF", // Base surface
+    surfaceElevated: colorTokens.gray[50], // Elevated cards
+    subtle: colorTokens.gray[50], // Subtle tint
+    muted: colorTokens.gray[200], // More visible
+
     // Surfaces (dark mode)
-    surfaceDark: colorTokens.slate[900],      // Dark base
+    surfaceDark: colorTokens.slate[900], // Dark base
     surfaceElevatedDark: colorTokens.slate[800], // Dark elevated
-    subtleDark: colorTokens.slate[700],       // Dark subtle
-    mutedDark: colorTokens.slate[600],        // Dark muted
-    
+    subtleDark: colorTokens.slate[700], // Dark subtle
+    mutedDark: colorTokens.slate[600], // Dark muted
+
     // Status
-    success: colorTokens.green[500],          // Success bg
-    successSubtle: colorTokens.green[50],     // Light success bg
-    successDark: colorTokens.green[900],      // Dark success bg
-    
-    error: colorTokens.red[500],              // Error bg
-    errorSubtle: colorTokens.red[50],         // Light error bg
-    errorDark: colorTokens.red[900],          // Dark error bg
-    
-    warning: colorTokens.yellow[500],         // Warning bg
-    warningSubtle: colorTokens.yellow[50],    // Light warning bg
-    warningDark: colorTokens.yellow[900],     // Dark warning bg
-    
-    info: colorTokens.blue[500],              // Info bg
-    infoSubtle: colorTokens.blue[50],         // Light info bg
-    infoDark: colorTokens.blue[900],          // Dark info bg
-    
+    success: colorTokens.green[500], // Success bg
+    successSubtle: colorTokens.green[50], // Light success bg
+    successDark: colorTokens.green[900], // Dark success bg
+
+    error: colorTokens.red[500], // Error bg
+    errorSubtle: colorTokens.red[50], // Light error bg
+    errorDark: colorTokens.red[900], // Dark error bg
+
+    warning: colorTokens.yellow[500], // Warning bg
+    warningSubtle: colorTokens.yellow[50], // Light warning bg
+    warningDark: colorTokens.yellow[900], // Dark warning bg
+
+    info: colorTokens.blue[500], // Info bg
+    infoSubtle: colorTokens.blue[50], // Light info bg
+    infoDark: colorTokens.blue[900], // Dark info bg
+
     // Interactive
-    hover: colorTokens.gray[100],             // Hover background
-    hoverDark: colorTokens.slate[800],        // Dark hover
-    active: colorTokens.gray[200],            // Active/pressed
-    activeDark: colorTokens.slate[700],       // Dark active
-    
+    hover: colorTokens.gray[100], // Hover background
+    hoverDark: colorTokens.slate[800], // Dark hover
+    active: colorTokens.gray[200], // Active/pressed
+    activeDark: colorTokens.slate[700], // Dark active
+
     // Brand
-    brand: colorTokens.jade[50],              // Brand bg
-    brandDark: colorTokens.jade[900],         // Dark brand bg
+    brand: colorTokens.jade[50], // Brand bg
+    brandDark: colorTokens.jade[900], // Dark brand bg
   },
-  
+
   // ===== BORDER COLORS =====
   border: {
     // Neutral
-    default: colorTokens.gray[200],           // Default border
-    subtle: colorTokens.gray[100],            // Subtle border
-    strong: colorTokens.gray[300],            // Strong border
-    
+    default: colorTokens.gray[200], // Default border
+    subtle: colorTokens.gray[100], // Subtle border
+    strong: colorTokens.gray[300], // Strong border
+
     // Dark mode
-    dark: colorTokens.slate[700],             // Dark default
-    subtleDark: colorTokens.slate[600],       // Dark subtle
-    strongDark: colorTokens.slate[800],       // Dark strong
-    
+    dark: colorTokens.slate[700], // Dark default
+    subtleDark: colorTokens.slate[600], // Dark subtle
+    strongDark: colorTokens.slate[800], // Dark strong
+
     // Status
-    success: colorTokens.green[600],          // Success border
-    successSubtle: colorTokens.green[200],    // Light success
-    
-    error: colorTokens.red[500],              // Error border
-    errorSubtle: colorTokens.red[200],        // Light error
-    
-    warning: colorTokens.warning[500],        // Warning border
-    warningSubtle: colorTokens.warning[200],  // Light warning
-    
-    info: colorTokens.blue[500],              // Info border
-    infoSubtle: colorTokens.blue[200],        // Light info
-    
+    success: colorTokens.green[600], // Success border
+    successSubtle: colorTokens.green[200], // Light success
+
+    error: colorTokens.red[500], // Error border
+    errorSubtle: colorTokens.red[200], // Light error
+
+    warning: colorTokens.warning[500], // Warning border
+    warningSubtle: colorTokens.warning[200], // Light warning
+
+    info: colorTokens.blue[500], // Info border
+    infoSubtle: colorTokens.blue[200], // Light info
+
     // Interactive
-    focus: colorTokens.jade[500],             // Focus state
-    hover: colorTokens.gray[300],             // Hover state
+    focus: colorTokens.jade[500], // Focus state
+    hover: colorTokens.gray[300], // Hover state
   },
-  
+
   // ===== FOCUS RING COLORS =====
   ring: {
-    primary: colorTokens.jade[500],           // Default focus ring
-    error: colorTokens.red[500],              // Error focus
-    success: colorTokens.green[500],          // Success focus
-    info: colorTokens.blue[500],              // Info focus
-    warning: colorTokens.warning[500],        // Warning focus
+    primary: colorTokens.jade[500], // Default focus ring
+    error: colorTokens.red[500], // Error focus
+    success: colorTokens.green[500], // Success focus
+    info: colorTokens.blue[500], // Info focus
+    warning: colorTokens.warning[500], // Warning focus
   },
-}
+};
 ```
 
 ---
@@ -551,6 +591,7 @@ export const semanticColorTokens = {
 ## Implementation Strategy
 
 ### Phase 1: Token Definition (Week 1)
+
 1. ✅ Audit complete (624 violations identified)
 2. 🔄 **Current:** Define comprehensive semantic token system
 3. Add all missing tokens to `tokens.ts`
@@ -558,6 +599,7 @@ export const semanticColorTokens = {
 5. Document usage guidelines for each token
 
 ### Phase 2: High Priority Replacements (Week 2-3)
+
 1. **Core Components** (150 violations)
    - Diagram Editor components
    - Modal components
@@ -575,6 +617,7 @@ export const semanticColorTokens = {
    - Replace `bg-slate-9` → `bg-surface-dark`
 
 ### Phase 3: Medium Priority (Week 4)
+
 1. **Feature Components** (200 violations)
    - Play Cards
    - Dashboard widgets
@@ -586,12 +629,14 @@ export const semanticColorTokens = {
    - Alert backgrounds
 
 ### Phase 4: Low Priority (Week 5)
+
 1. **Storybook Stories** (100 violations)
    - Demo components
    - Example code
    - Documentation
 
 ### Phase 5: ESLint Enforcement (Week 6)
+
 1. Update existing `no-raw-tailwind-colors` rule
 2. Add suggestions for common violations
 3. Test across codebase
@@ -602,6 +647,7 @@ export const semanticColorTokens = {
 ## Success Metrics
 
 ### Completion Criteria
+
 - ✅ 0 direct Tailwind color scale usage (except whitelisted)
 - ✅ All semantic tokens defined with dark mode
 - ✅ ESLint rule prevents new violations
@@ -609,6 +655,7 @@ export const semanticColorTokens = {
 - ✅ All WCAG AA contrast requirements met
 
 ### Target Timeline
+
 - **Phase 1:** 1 week (token definition)
 - **Phase 2-3:** 3 weeks (replacements)
 - **Phase 4-5:** 2 weeks (cleanup + ESLint)
@@ -619,18 +666,23 @@ export const semanticColorTokens = {
 ## Notes & Considerations
 
 ### Whitelist Candidates
+
 Some direct color usage may be intentional:
+
 - Storybook color palette demonstrations
 - Color picker examples
 - Diagram-specific player colors (already have semantic tokens)
 
 ### Dark Mode Strategy
+
 Every semantic token needs both light and dark variants:
+
 - Use CSS variables with theme switching
 - Light/dark tokens in `tokens.ts`
 - Test all components in both modes
 
 ### Migration Approach
+
 - ✅ **Systematic:** File-by-file, category-by-category
 - ✅ **Testable:** Type check after each change
 - ✅ **Reversible:** Git commits per category

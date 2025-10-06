@@ -14,6 +14,7 @@ Prevents arbitrary spacing values that bypass the design system. Enforces use of
 #### Rule Details
 
 This rule detects and reports arbitrary spacing values in:
+
 - Height utilities: `h-[200px]`, `min-h-[44px]`, `max-h-[90vh]`
 - Width utilities: `w-[100px]`, `min-w-[160px]`, `max-w-[220px]`
 - Viewport units without `svh`: `max-h-[90vh]` (should be `max-h-[90svh]`)
@@ -57,19 +58,20 @@ This rule detects and reports arbitrary spacing values in:
 
 The rule provides suggestions for common violations:
 
-| Arbitrary Value | Suggested Replacement | Actual Size |
-|----------------|----------------------|-------------|
-| `min-h-[44px]` | `min-h-11` | 44px (iOS touch target) |
-| `h-[200px]` | `h-48` | 192px |
-| `w-[100px]` | `w-24` | 96px |
-| `min-w-[160px]` | `min-w-40` | 160px |
-| `max-h-[90vh]` | `max-h-[90svh]` | 90svh (mobile-safe) |
+| Arbitrary Value | Suggested Replacement | Actual Size             |
+| --------------- | --------------------- | ----------------------- |
+| `min-h-[44px]`  | `min-h-11`            | 44px (iOS touch target) |
+| `h-[200px]`     | `h-48`                | 192px                   |
+| `w-[100px]`     | `w-24`                | 96px                    |
+| `min-w-[160px]` | `min-w-40`            | 160px                   |
+| `max-h-[90vh]`  | `max-h-[90svh]`       | 90svh (mobile-safe)     |
 
 See the full suggestion table in `eslint-rules/no-arbitrary-spacing.js`.
 
 #### Exceptions
 
 The rule allows:
+
 - **Design system tokens:** `spacing-*` classes (e.g., `p-spacing-lg`)
 - **Already standardized:** `svh` units (e.g., `max-h-[90svh]`)
 - **Large layout containers:** `rem` values > 40rem (e.g., `min-h-[37.5rem]`)
@@ -77,15 +79,18 @@ The rule allows:
 #### Why This Rule?
 
 **Design System Compliance:**
+
 - Ensures consistent spacing across the entire app
 - Prevents arbitrary "magic numbers" in code
 - Makes components easier to maintain
 
 **Mobile Support:**
+
 - Enforces `svh` (small viewport height) for better mobile browser support
 - Prevents content overflow on iOS Safari (dynamic address bar)
 
 **Accessibility:**
+
 - Suggests iOS-compliant touch targets (44px minimum)
 - Maintains accessible component sizing
 
@@ -108,6 +113,7 @@ Prevents arbitrary typography values that bypass the design system. Enforces use
 #### Rule Details
 
 This rule detects and reports arbitrary font size values in:
+
 - Font size utilities: `text-[14px]`, `text-[1.5rem]`, etc.
 
 The rule includes a whitelist of intentional arbitrary values used in the Typography variant system and specific design cases.
@@ -141,15 +147,16 @@ The rule includes a whitelist of intentional arbitrary values used in the Typogr
 
 The following arbitrary values are allowed (intentional design decisions):
 
-| Value | Usage | Rationale |
-|-------|-------|-----------|
-| `text-[11px]` | Compact labels, badges | Between xs (12px) and 2xs (10px) |
-| `text-[13px]` | Compact mode | Between xs (12px) and sm (14px) |
-| Typography variants | See below | Design system definitions |
+| Value               | Usage                  | Rationale                        |
+| ------------------- | ---------------------- | -------------------------------- |
+| `text-[11px]`       | Compact labels, badges | Between xs (12px) and 2xs (10px) |
+| `text-[13px]`       | Compact mode           | Between xs (12px) and sm (14px)  |
+| Typography variants | See below              | Design system definitions        |
 
 **Typography Variant System (allowed):**
+
 - `text-[2rem]`, `text-[3.25rem]`, `text-[2.75rem]`, `text-[2.25rem]` - Display/headline variants
-- `text-[1.625rem]`, `text-[1.375rem]`, `text-[1.125rem]` - Headline variants  
+- `text-[1.625rem]`, `text-[1.375rem]`, `text-[1.125rem]` - Headline variants
 - `text-[0.95rem]`, `text-[0.9rem]`, `text-[0.82rem]`, `text-[0.72rem]` - Body variants
 - `text-[0.85rem]`, `text-[0.78rem]` - Code/button variants
 - `text-[0.7rem]`, `text-[0.62rem]` - Label variants
@@ -159,28 +166,31 @@ See `docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md` for complete rationale.
 #### Suggested Replacements
 
 | Arbitrary Value | Suggested Replacement | Actual Size |
-|----------------|----------------------|-------------|
-| `text-[10px]` | `text-2xs` | 10px |
-| `text-[12px]` | `text-xs` | 12px |
-| `text-[14px]` | `text-sm` | 14px |
-| `text-[16px]` | `text-base` | 16px |
-| `text-[18px]` | `text-lg` | 18px |
-| `text-[20px]` | `text-xl` | 20px |
-| `text-[24px]` | `text-2xl` | 24px |
+| --------------- | --------------------- | ----------- |
+| `text-[10px]`   | `text-2xs`            | 10px        |
+| `text-[12px]`   | `text-xs`             | 12px        |
+| `text-[14px]`   | `text-sm`             | 14px        |
+| `text-[16px]`   | `text-base`           | 16px        |
+| `text-[18px]`   | `text-lg`             | 18px        |
+| `text-[20px]`   | `text-xl`             | 20px        |
+| `text-[24px]`   | `text-2xl`            | 24px        |
 
 #### Why This Rule?
 
 **Design System Compliance:**
+
 - Ensures consistent typography across the app
 - Prevents arbitrary font sizes
 - Maintains typographic hierarchy
 
 **Developer Experience:**
+
 - Clear semantic meaning (text-sm vs text-[14px])
 - Better IDE autocomplete
 - Easier to maintain
 
 **Flexibility:**
+
 - Whitelists intentional design decisions
 - Allows Typography variant system
 - Documents exceptions clearly
@@ -202,6 +212,7 @@ Prevents raw Tailwind color utilities that bypass the design token pipeline.
 #### Rule Details
 
 This rule detects and reports arbitrary color values in:
+
 - Background utilities: `bg-[#fff]`, `bg-[rgba(...)]`
 - Text utilities: `text-[#000]`
 - Border utilities: `border-[#ccc]`
@@ -293,6 +304,7 @@ When adding new design system standards:
 ## Maintenance
 
 These rules should be updated whenever:
+
 - New design system standards are established
 - Spacing scale changes
 - New token patterns are introduced
@@ -301,6 +313,7 @@ These rules should be updated whenever:
 ## Support
 
 For questions about these rules or design system compliance:
+
 - See [Design System Roadmap](../docs/DESIGN_SYSTEM_ROADMAP.md)
 - Review [Design System Changelog](../docs/DESIGN_SYSTEM_CHANGELOG.md)
 - Check [Design System Baseline](../docs/DESIGN_SYSTEM_BASELINE.md)

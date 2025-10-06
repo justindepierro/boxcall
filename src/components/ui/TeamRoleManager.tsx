@@ -50,7 +50,7 @@ export const TeamRoleManager: React.FC<TeamRoleManagerProps> = ({
   return (
     <div className="space-y-6">
       <div className="text-center py-12">
-        <Icon name="users" size="xl" className="mx-auto mb-4 text-slate-400" />
+        <Icon name="users" size="xl" className="mx-auto mb-4 text-muted" />
         <Typography variant="headline-md" className="mb-2">
           Team Role Management
         </Typography>

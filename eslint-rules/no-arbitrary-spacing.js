@@ -15,8 +15,7 @@ export default {
             'Arbitrary spacing "{{utility}}" found. Use Tailwind standard classes or design tokens instead.',
           arbitraryViewport:
             'Arbitrary viewport unit "{{utility}}" found. Use "svh" (small viewport height) for better mobile support.',
-          suggestion:
-            'Consider: {{suggestions}}',
+          suggestion: "Consider: {{suggestions}}",
         },
       },
       create(context) {

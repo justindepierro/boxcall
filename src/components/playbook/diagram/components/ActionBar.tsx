@@ -38,7 +38,13 @@ export const ActionBar: React.FC<{
   const allLocked =
     selectedPlayers.length > 0 && selectedPlayers.every((p) => !!p.locked);
 
-  const colors = [colorTokens.blue[900], colorTokens.blue[600], colorTokens.emerald[700], colorTokens.amber[800], colorTokens.red[700]];
+  const colors = [
+    colorTokens.blue[900],
+    colorTokens.blue[600],
+    colorTokens.emerald[700],
+    colorTokens.amber[800],
+    colorTokens.red[700],
+  ];
   const roles = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "C"];
 
   return (

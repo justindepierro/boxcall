@@ -103,9 +103,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
   }
 
   return (
-    <div
-      className={`bg-white border border rounded-lg shadow-sm ${className}`}
-    >
+    <div className={`bg-white border border rounded-lg shadow-sm ${className}`}>
       {/* Header */}
       <div className="px-4 py-3 border-b border flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -164,7 +162,9 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Queries */}
         <div className="bg-surface-secondary p-3 rounded-lg">
-          <div className="text-xs text-secondary font-medium">Total Queries</div>
+          <div className="text-xs text-secondary font-medium">
+            Total Queries
+          </div>
           <div className="text-lg font-bold text-primary">
             {databaseMetrics.totalQueries}
           </div>

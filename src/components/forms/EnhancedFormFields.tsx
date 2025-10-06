@@ -302,7 +302,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
         </select>
 
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <Icon name="chevron-down" size="sm" className="text-slate-400" />
+          <Icon name="chevron-down" size="sm" className="text-muted" />
         </div>
       </div>
 

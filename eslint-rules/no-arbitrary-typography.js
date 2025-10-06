@@ -13,34 +13,35 @@ export default {
         messages: {
           arbitraryFontSize:
             'Arbitrary font size "{{utility}}" found. Use Tailwind standard classes instead.',
-          suggestion: 'Consider: {{suggestions}}',
+          suggestion: "Consider: {{suggestions}}",
         },
       },
       create(context) {
         // Pattern to match arbitrary font sizes
         // Matches: text-[10px], text-[12px], text-[1.5rem], etc.
-        const ARBITRARY_FONT_SIZE_PATTERN = /\btext-\[(?:\d+(?:\.\d+)?(?:px|rem|em))\]/gi;
+        const ARBITRARY_FONT_SIZE_PATTERN =
+          /\btext-\[(?:\d+(?:\.\d+)?(?:px|rem|em))\]/gi;
 
         // Whitelist of allowed arbitrary font sizes
         // These are intentional design decisions documented in:
         // docs/TYPOGRAPHY_STANDARDIZATION_STRATEGY.md
         const ALLOWED_ARBITRARY_SIZES = new Set([
-          "text-[11px]",    // Intentional: between xs (12px) and 2xs (10px) for compact labels/badges
-          "text-[13px]",    // Intentional: between xs (12px) and sm (14px) for compact mode
-          "text-[2rem]",    // Typography variant system (headline-xl)
+          "text-[11px]", // Intentional: between xs (12px) and 2xs (10px) for compact labels/badges
+          "text-[13px]", // Intentional: between xs (12px) and sm (14px) for compact mode
+          "text-[2rem]", // Typography variant system (headline-xl)
           "text-[3.25rem]", // Typography variant system (display-xl)
           "text-[2.75rem]", // Typography variant system (display-lg)
           "text-[2.25rem]", // Typography variant system (display-md)
-          "text-[1.625rem]",// Typography variant system (headline-lg)
-          "text-[1.375rem]",// Typography variant system (headline-md)
-          "text-[1.125rem]",// Typography variant system (headline-sm)
+          "text-[1.625rem]", // Typography variant system (headline-lg)
+          "text-[1.375rem]", // Typography variant system (headline-md)
+          "text-[1.125rem]", // Typography variant system (headline-sm)
           "text-[0.95rem]", // Typography variant system (body-lg)
-          "text-[0.9rem]",  // Typography variant system (body-md)
+          "text-[0.9rem]", // Typography variant system (body-md)
           "text-[0.82rem]", // Typography variant system (body-sm)
           "text-[0.72rem]", // Typography variant system (body-xs)
           "text-[0.85rem]", // Typography variant system (code-md, button)
           "text-[0.78rem]", // Typography variant system (code-sm)
-          "text-[0.7rem]",  // Typography variant system (label-lg, caption)
+          "text-[0.7rem]", // Typography variant system (label-lg, caption)
           "text-[0.62rem]", // Typography variant system (label-md)
         ]);
 
@@ -76,7 +77,9 @@ export default {
 
         function getSuggestion(utility) {
           const normalized = utility.toLowerCase();
-          return SUGGESTIONS[normalized] || "Use a standard Tailwind text size class";
+          return (
+            SUGGESTIONS[normalized] || "Use a standard Tailwind text size class"
+          );
         }
 
         function reportMatches(value, node) {
