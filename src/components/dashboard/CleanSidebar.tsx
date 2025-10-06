@@ -120,7 +120,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                   {item.badge && item.badge > 0 && (
                     <span
                       className={`
-                      px-2 py-1 text-xs font-medium rounded-full min-w-[20px] text-center
+                      px-2 py-1 text-xs font-medium rounded-full min-w-5 text-center
                       ${
                         item.isActive
                           ? "bg-surface-primary bg-opacity-20 text-text-on-primary"

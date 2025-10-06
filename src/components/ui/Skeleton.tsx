@@ -93,7 +93,7 @@ export const NavigationSkeleton: React.FC = () => (
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="flex flex-col items-center justify-center min-w-[60px] py-2"
+            className="flex flex-col items-center justify-center min-w-16 py-2"
           >
             <SkeletonBase width="24px" height="24px" className="rounded mb-1" />
             <SkeletonBase width="3rem" height="0.75rem" />

@@ -346,7 +346,7 @@ const DiagramTopBar: React.FC<{
 }> = ({ formState, onChange }) => {
   return (
     <div className="flex flex-wrap items-center gap-4 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 backdrop-blur-xl border-b border-slate-800/60 px-6 py-5 shadow-lg">
-      <div className="flex flex-col gap-1.5 min-w-[220px]">
+      <div className="flex flex-col gap-1.5 min-w-56">
         <Typography
           variant="label-lg"
           className="text-xs uppercase tracking-[0.2em] text-slate-400"
@@ -360,7 +360,7 @@ const DiagramTopBar: React.FC<{
           className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1.5 min-w-[180px]">
+      <div className="flex flex-col gap-1.5 min-w-44">
         <Typography
           variant="label-lg"
           className="text-xs uppercase tracking-[0.2em] text-slate-400"
@@ -374,7 +374,7 @@ const DiagramTopBar: React.FC<{
           className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1.5 min-w-[160px]">
+      <div className="flex flex-col gap-1.5 min-w-40">
         <Typography
           variant="label-lg"
           className="text-xs uppercase tracking-[0.2em] text-slate-400"
@@ -388,7 +388,7 @@ const DiagramTopBar: React.FC<{
           className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
         />
       </div>
-      <div className="flex flex-col gap-1.5 min-w-[150px]">
+      <div className="flex flex-col gap-1.5 min-w-36">
         <Typography
           variant="label-lg"
           className="text-xs uppercase tracking-[0.2em] text-slate-400"
@@ -408,7 +408,7 @@ const DiagramTopBar: React.FC<{
           ))}
         </select>
       </div>
-      <div className="flex flex-col gap-1.5 min-w-[150px]">
+      <div className="flex flex-col gap-1.5 min-w-36">
         <Typography
           variant="label-lg"
           className="text-xs uppercase tracking-[0.2em] text-slate-400"

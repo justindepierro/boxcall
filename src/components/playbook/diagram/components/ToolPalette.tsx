@@ -35,7 +35,7 @@ export const ToolPalette: React.FC = () => {
   );
   return (
     <div className="absolute left-3 right-3 top-3 z-20 pointer-events-none">
-      <div className="mx-auto max-w-[1120px] pointer-events-auto flex flex-wrap items-center gap-4 panel-cupertino px-4 py-2">
+      <div className="mx-auto max-w-screen-xl pointer-events-auto flex flex-wrap items-center gap-4 panel-cupertino px-4 py-2">
         <div
           className="flex items-center gap-2 pr-3 border-r border-border-light"
           aria-label="Primary tools"

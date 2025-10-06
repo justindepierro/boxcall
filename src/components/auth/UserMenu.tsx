@@ -75,7 +75,7 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
         size="sm"
-        className="gap-2 px-4 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-[180px]"
+        className="gap-2 px-4 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-44"
         disabled={loading}
       >
         {/* Profile picture matching ProfileCard style */}
@@ -84,7 +84,7 @@ export const UserMenu: React.FC = () => {
             {getInitials(userName)}
           </Typography>
         </div>
-        <span className="hidden sm:inline-block font-medium truncate text-left min-w-0 max-w-[120px]">
+        <span className="hidden sm:inline-block font-medium truncate text-left min-w-0 max-w-30">
           {userName}
         </span>
         <svg

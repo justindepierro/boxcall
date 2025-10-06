@@ -63,7 +63,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="relative w-full max-w-[220px]">
+      <div className="relative w-full max-w-56">
         {onSelectionChange && (
           <label
             className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"

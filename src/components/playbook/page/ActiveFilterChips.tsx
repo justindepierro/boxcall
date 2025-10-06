@@ -172,7 +172,7 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     >
       {chips.map((chip) => (
         <span key={chip.id} role="listitem" className={chipClass}>
-          <span className="truncate max-w-[120px]" title={chip.label}>
+          <span className="truncate max-w-30" title={chip.label}>
             {chip.label}
           </span>
           <Button

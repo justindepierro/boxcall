@@ -36,7 +36,7 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
                 }}
                 variant={action.variant || "secondary"}
                 size="sm"
-                className="transition-colors duration-200 min-w-[160px] justify-start"
+                className="transition-colors duration-200 min-w-40 justify-start"
                 title={
                   action.shortcut
                     ? `${action.label} (${action.shortcut})`

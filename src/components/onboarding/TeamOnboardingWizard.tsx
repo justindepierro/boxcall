@@ -193,7 +193,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
             onClick={handlePrimaryAction}
             variant="primary"
             size="md"
-            className="min-w-[140px]"
+            className="min-w-36"
           >
             {currentStepConfig.primaryAction}
           </Button>
@@ -203,7 +203,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
               onClick={handleSecondaryAction}
               variant="ghost"
               size="md"
-              className="min-w-[140px]"
+              className="min-w-36"
             >
               {currentStepConfig.secondaryAction}
             </Button>

@@ -122,7 +122,7 @@ const MobileNavigationDemo = () => {
                     {(item.badge ?? 0) > 0 && (
                       <Badge
                         variant="danger"
-                        className="min-w-[20px] h-5 flex items-center justify-center text-xs"
+                        className="min-w-5 h-5 flex items-center justify-center text-xs"
                       >
                         {item.badge}
                       </Badge>

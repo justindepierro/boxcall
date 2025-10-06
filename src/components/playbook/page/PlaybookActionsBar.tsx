@@ -113,7 +113,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-border-light rounded-lg px-2 py-1 min-w-[240px]"
+                  className="text-sm border-border-light rounded-lg px-2 py-1 min-w-60"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
@@ -230,7 +230,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                     className="h-3 w-3 ml-1 text-text-secondary"
                   />
                 </Button>
-                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-[180px] surface-popover rounded-lg shadow-lg border border-subtle py-1 z-40">
+                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-subtle py-1 z-40">
                   <Button
                     variant="ghost"
                     size="xs"

@@ -103,7 +103,7 @@ export const ActionBar: React.FC<{
                 </option>
               ))}
             </select>
-            <div className="grow min-w-[180px]">
+            <div className="grow min-w-44">
               <input
                 value={assignment}
                 onChange={(e) => setAssignment(e.target.value)}

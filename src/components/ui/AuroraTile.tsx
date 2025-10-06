@@ -117,7 +117,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
         <Typography
           variant="body-sm"
           color="muted"
-          className="max-w-[220px] leading-snug text-text-secondary opacity-90 dark:text-slate-300"
+          className="max-w-56 leading-snug text-text-secondary opacity-90 dark:text-slate-300"
         >
           {description}
         </Typography>

@@ -34,7 +34,7 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
       <Button
         variant="primary"
         size="sm"
-        className="ml-4 whitespace-nowrap px-4 py-2 h-10 min-w-[140px]"
+        className="ml-4 whitespace-nowrap px-4 py-2 h-10 min-w-36"
         onClick={() => navigate(ROUTES.CREATE_TEAM)}
         icon={<Icon name="plus" size="sm" />}
         iconPosition="left"
@@ -51,7 +51,7 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="px-3">
           <Icon name="users" size="sm" className="mr-2" />
-          <span className="truncate max-w-[10rem] text-left">
+          <span className="truncate max-w-40 text-left">
             {activeTeam?.name ?? "Select Team"}
           </span>
           <Icon name="chevron-down" size="xs" className="ml-2" />
