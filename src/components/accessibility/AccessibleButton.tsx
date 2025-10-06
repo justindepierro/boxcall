@@ -107,13 +107,13 @@ export const AccessibleButton = forwardRef<
       active:bg-blue-800
     `,
       secondary: `
-      bg-gray-100
-      border-gray-300
-      text-gray-900
-      hover:bg-gray-200
-      hover:border-gray-400
+      bg-surface-secondary
+      border
+      text-primary
+      hover:bg-surface-muted
+      hover:border-focus
       focus:ring-gray-500
-      active:bg-gray-300
+      active:bg-surface-muted
     `,
       danger: `
       bg-red-600
@@ -127,11 +127,11 @@ export const AccessibleButton = forwardRef<
       ghost: `
       bg-transparent
       border-transparent
-      text-gray-600
-      hover:bg-gray-100
-      hover:text-gray-900
+      text-secondary
+      hover:bg-surface-secondary
+      hover:text-primary
       focus:ring-gray-500
-      active:bg-gray-200
+      active:bg-surface-muted
     `,
     };
 
