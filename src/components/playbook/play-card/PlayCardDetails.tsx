@@ -119,7 +119,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           />
         )}
         {phaseLabel && (
-          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold uppercase border border-warning-600">
+          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-gray-900 rounded-full text-2xs font-semibold uppercase border border-warning-600">
             {phaseLabel}
           </span>
         )}

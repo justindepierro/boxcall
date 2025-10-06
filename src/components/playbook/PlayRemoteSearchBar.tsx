@@ -94,17 +94,17 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
                 >
                   <span className="truncate flex-1">{r.play_id}</span>
                   {r.rank !== undefined && (
-                    <span className="ml-2 text-[10px] text-text-muted">
+                    <span className="ml-2 text-2xs text-text-muted">
                       r:{r.rank?.toFixed(3)}
                     </span>
                   )}
                   {r.similarity !== undefined && (
-                    <span className="ml-2 text-[10px] text-text-muted">
+                    <span className="ml-2 text-2xs text-text-muted">
                       s:{r.similarity?.toFixed(3)}
                     </span>
                   )}
                   {r.source === "fuzzy" && (
-                    <span className="ml-2 rounded-lg surface-subtle0/15 text-text-warning px-1 py-0.5 text-[10px]">
+                    <span className="ml-2 rounded-lg surface-subtle0/15 text-text-warning px-1 py-0.5 text-2xs">
                       fuzzy
                     </span>
                   )}
@@ -114,7 +114,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           {attemptedFuzzy &&
             results.length > 0 &&
             results[0].source === "fuzzy" && (
-              <div className="px-3 py-1 border-t-subtle text-[10px] text-text-muted flex justify-between">
+              <div className="px-3 py-1 border-t-subtle text-2xs text-text-muted flex justify-between">
                 <span>Fuzzy fallback results</span>
                 <span className="opacity-70">pg_trgm</span>
               </div>

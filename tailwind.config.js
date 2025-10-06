@@ -199,6 +199,7 @@ export default {
         mono: ["JetBrains Mono", "Consolas", "monospace"],
       },
       fontSize: {
+        "2xs": ["0.625rem", { lineHeight: "0.875rem", fontWeight: "400" }], // 10px - for ultra-compact UI (badges, labels)
         xs: ["0.75rem", { lineHeight: "1rem", fontWeight: "400" }],
         sm: ["0.875rem", { lineHeight: "1.25rem", fontWeight: "400" }],
         base: ["1rem", { lineHeight: "1.5rem", fontWeight: "400" }],

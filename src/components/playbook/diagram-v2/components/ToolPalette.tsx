@@ -208,7 +208,7 @@ export const ToolPalette: React.FC = () => {
                     | "both",
                 })
               }
-              className="text-[12px] border border-border-light rounded-lg px-2 py-1"
+              className="text-xs border border-border-light rounded-lg px-2 py-1"
               title="Arrowhead"
             >
               <option value="none">Head: None</option>
@@ -242,7 +242,7 @@ export const ToolPalette: React.FC = () => {
               className="w-32"
               title="Stroke width"
             />
-            <span className="text-[12px] text-text-xssssssrimary w-9 text-right">
+            <span className="text-xs text-text-xssssssrimary w-9 text-right">
               {state.ui.drawWidth || 3}px
             </span>
           </div>
@@ -356,7 +356,7 @@ export const ToolPalette: React.FC = () => {
                 spacing: Number(e.target.value),
               })
             }
-            className="w-16 text-[12px] border border-border-light rounded-lg px-2 py-1"
+            className="w-16 text-xs border border-border-light rounded-lg px-2 py-1"
             title="Fixed spacing (%)"
           />
           <Button

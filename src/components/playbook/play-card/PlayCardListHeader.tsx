@@ -71,7 +71,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             </span>
           )}
           {phaseLabel && (
-            <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold tracking-wide uppercase border border-warning-600">
+            <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
               {phaseLabel}
             </span>
           )}

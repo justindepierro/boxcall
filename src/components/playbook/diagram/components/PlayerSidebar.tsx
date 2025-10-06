@@ -33,17 +33,17 @@ export const PlayerSidebar: React.FC = () => {
         <div>
           <div className="text-[11px] font-semibold text-text-xssssssssssssssssssrimary mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>
-            <span className="text-[10px] font-normal text-text-tertiary">
+            <span className="text-2xs font-normal text-text-tertiary">
               {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}
               {state.doc.players.filter((p) => p.side === "D").length} D
             </span>
           </div>
           {state.ui.selectedIds && state.ui.selectedIds.length > 1 && (
             <div className="mb-2 p-2 rounded-lg border border-text-warning bg-surface-warning/70 space-y-2">
-              <div className="text-[10px] font-medium text-text-warning tracking-wide">
+              <div className="text-2xs font-medium text-text-warning tracking-wide">
                 {state.ui.selectedIds.length} selected – bulk edit
               </div>
-              <div className="text-[10px] text-text-warning">
+              <div className="text-2xs text-text-warning">
                 Roles:{" "}
                 {Array.from(
                   new Set(
@@ -54,7 +54,7 @@ export const PlayerSidebar: React.FC = () => {
                 ).join(", ")}
               </div>
               <div className="flex flex-wrap gap-2 items-center">
-                <label className="flex items-center gap-1 text-[10px]">
+                <label className="flex items-center gap-1 text-2xs">
                   <input
                     type="color"
                     className="h-5 w-5 p-0 border border-subtle rounded-lg cursor-pointer"
@@ -68,7 +68,7 @@ export const PlayerSidebar: React.FC = () => {
                   />
                   <span>Color</span>
                 </label>
-                <label className="flex items-center gap-1 text-[10px]">
+                <label className="flex items-center gap-1 text-2xs">
                   <input
                     type="color"
                     className="h-5 w-5 p-0 border border-subtle rounded-lg cursor-pointer"
@@ -124,7 +124,7 @@ export const PlayerSidebar: React.FC = () => {
                       patch: { outlineColor: undefined },
                     })
                   }
-                  className="text-[10px]"
+                  className="text-2xs"
                 >
                   Clear Outline
                 </Button>
@@ -138,7 +138,7 @@ export const PlayerSidebar: React.FC = () => {
                         pending: true,
                       })
                     }
-                    className="text-[10px] text-text-error"
+                    className="text-2xs text-text-error"
                   >
                     Delete Selected
                   </Button>
@@ -205,7 +205,7 @@ export const PlayerSidebar: React.FC = () => {
                 if (!group.length) return;
                 rendered.push(
                   <li key={cat.label + "_hdr"} className="mt-2 first:mt-0">
-                    <div className="text-[10px] font-semibold tracking-wide text-text-secondary px-1">
+                    <div className="text-2xs font-semibold tracking-wide text-text-secondary px-1">
                       {cat.label}
                     </div>
                   </li>

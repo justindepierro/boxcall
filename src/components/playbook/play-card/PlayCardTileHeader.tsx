@@ -116,7 +116,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
               />
             </svg>
             <span
-              className={`relative text-[10px] font-bold ${confidenceTextClass}`}
+              className={`relative text-2xs font-bold ${confidenceTextClass}`}
             >
               {optimisticPlay.confidence_base}
             </span>
@@ -157,13 +157,13 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           </span>
         )}
         {phaseLabel && (
-          <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-[10px] font-semibold tracking-wide uppercase border border-warning-600">
+          <span className="px-2 py-0.5 bg-warning-500 text-gray-900 rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
             {phaseLabel}
           </span>
         )}
         {optimisticPlay.created_by && (
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-text-muted">by</span>
+            <span className="text-2xs text-text-muted">by</span>
             <UserAvatar
               userId={optimisticPlay.created_by}
               size="xs"

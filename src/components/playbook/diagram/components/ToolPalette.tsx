@@ -154,7 +154,7 @@ export const ToolPalette: React.FC = () => {
                 });
               }
             }}
-            className="text-[12px] rounded-lg px-2 py-1 bg-surface-card border border-border"
+            className="text-xs rounded-lg px-2 py-1 bg-surface-card border border-border"
             title="Formation Templates"
           >
             <option value="">Formations</option>
@@ -190,7 +190,7 @@ export const ToolPalette: React.FC = () => {
                 });
               }
             }}
-            className="text-[12px] rounded-lg px-2 py-1 bg-surface-card border border-border"
+            className="text-xs rounded-lg px-2 py-1 bg-surface-card border border-border"
             title="Formation Templates"
           >
             <option value="">Formations</option>
@@ -356,7 +356,7 @@ export const ToolPalette: React.FC = () => {
                     | "both",
                 })
               }
-              className="text-[12px] rounded-lg px-2 py-1"
+              className="text-xs rounded-lg px-2 py-1"
               title="Arrowhead"
             >
               <option value="none">Head: None</option>
@@ -390,7 +390,7 @@ export const ToolPalette: React.FC = () => {
               className="w-32"
               title="Stroke width"
             />
-            <span className="text-[12px] text-text-xssssssssrimary w-9 text-right">
+            <span className="text-xs text-text-xssssssssrimary w-9 text-right">
               {state.ui.drawWidth || 3}px
             </span>
           </div>
@@ -501,7 +501,7 @@ export const ToolPalette: React.FC = () => {
                 spacing: Number(e.target.value),
               })
             }
-            className="w-16 text-[12px] rounded-lg px-2 py-1"
+            className="w-16 text-xs rounded-lg px-2 py-1"
             title="Fixed spacing (%)"
           />
           <Button

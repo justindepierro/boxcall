@@ -52,7 +52,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 />
               }
             >
-              <span className="text-[10px] font-medium leading-tight">
+              <span className="text-2xs font-medium leading-tight">
                 {category.label}
               </span>
             </Button>

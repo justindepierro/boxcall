@@ -113,7 +113,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               ) : (
                 <div className="text-center flex flex-col items-center text-text-secondary dark:text-border-light">
                   <LogoIcon size="lg" color="brand" />
-                  <span className="text-[10px] font-medium mt-1">
+                  <span className="text-2xs font-medium mt-1">
                     {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
                   </span>
                 </div>
