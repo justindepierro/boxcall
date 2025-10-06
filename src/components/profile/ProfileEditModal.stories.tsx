@@ -63,7 +63,7 @@ The modal is typically opened from profile pages or user management interfaces. 
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-gray-100 p-4">
+      <div className="min-h-screen bg-surface-muted p-4">
         <Story />
       </div>
     ),

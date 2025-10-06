@@ -51,7 +51,7 @@ Used in team management interfaces to invite new coaches, coordinators, managers
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-gray-100 p-4">
+      <div className="min-h-screen bg-surface-muted p-4">
         <Story />
       </div>
     ),
@@ -126,7 +126,7 @@ export const WithPreFilledData: Story = {
       // This decorator would pre-fill the form in a real implementation
       // For now, it just shows the empty state
       return (
-        <div className="min-h-screen bg-gray-100 p-4">
+        <div className="min-h-screen bg-surface-muted p-4">
           <Story />
         </div>
       );

@@ -42,7 +42,7 @@ Used in mobile layouts to provide primary navigation between major app sections.
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-surface-muted">
         <div className="pb-20">
           {" "}
           {/* Add padding to account for fixed navigation */}
