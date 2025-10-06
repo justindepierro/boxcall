@@ -651,6 +651,101 @@ export const contrastTokens = {
     },
   },
 } as const; // ============================================================================
+// LAYOUT TOKENS - Container, Grid, Content Area System
+// ============================================================================
+
+export const layoutTokens = {
+  // Container widths - systematic sizing scale
+  container: {
+    xs: "20rem", // 320px - Mobile, narrow content
+    sm: "24rem", // 384px - Small cards, modals
+    md: "28rem", // 448px - Standard modals
+    lg: "32rem", // 512px - Large modals, forms
+    xl: "36rem", // 576px - Extra large modals
+    "2xl": "42rem", // 672px - Wide modals
+    "3xl": "48rem", // 768px - Very wide content
+    "4xl": "56rem", // 896px - Maximum readable width
+    "5xl": "64rem", // 1024px - Large dashboards
+    "6xl": "72rem", // 1152px - Extra large dashboards
+    "7xl": "80rem", // 1280px - Full width layouts
+    full: "100%", // Full width
+  },
+
+  // Grid gaps - consistent spacing between grid items
+  grid: {
+    gapTight: spacingTokens[2], // 0.5rem (8px) - Compact grids
+    gapNormal: spacingTokens[4], // 1rem (16px) - Standard spacing
+    gapLoose: spacingTokens[6], // 1.5rem (24px) - Relaxed spacing
+    gapWide: spacingTokens[8], // 2rem (32px) - Wide spacing
+  },
+
+  // Content area sizing - app-level layout dimensions
+  content: {
+    maxWidth: "80rem", // 1280px - Maximum content width
+    readableWidth: "65ch", // ~65 characters - Optimal reading width
+  },
+
+  // Sidebar widths
+  sidebar: {
+    narrow: "12rem", // 192px - Collapsed sidebar
+    standard: "16rem", // 256px - Standard sidebar
+    wide: "20rem", // 320px - Wide sidebar
+    extraWide: "24rem", // 384px - Extra wide sidebar
+  },
+
+  // Header/navbar heights
+  header: {
+    compact: "3rem", // 48px - Compact header
+    standard: "4rem", // 64px - Standard header
+    tall: "5rem", // 80px - Tall header
+  },
+
+  // Footer heights
+  footer: {
+    compact: "4rem", // 64px - Compact footer
+    standard: "6rem", // 96px - Standard footer
+  },
+
+  // Modal sizing presets
+  modal: {
+    small: "28rem", // 448px - Small modals (alerts, confirmations)
+    medium: "36rem", // 576px - Medium modals (forms)
+    large: "48rem", // 768px - Large modals (detailed views)
+    xlarge: "64rem", // 1024px - Extra large modals (wizards)
+    full: "calc(100vw - 2rem)", // Full width with margin
+  },
+
+  // Dashboard card dimensions
+  card: {
+    minHeight: "10rem", // 160px - Minimum card height
+    standardHeight: "12rem", // 192px - Standard card height
+    tallHeight: "16rem", // 256px - Tall cards
+  },
+} as const;
+
+// Semantic layout tokens for common patterns
+export const semanticLayoutTokens = {
+  // Page containers
+  pageContainer: layoutTokens.container["7xl"], // 1280px max width
+  pageContentWidth: layoutTokens.content.maxWidth, // 1280px
+  articleWidth: layoutTokens.content.readableWidth, // 65ch
+
+  // Dashboard layouts
+  dashboardSidebar: layoutTokens.sidebar.standard, // 256px
+  dashboardHeader: layoutTokens.header.standard, // 64px
+  dashboardContent: "calc(100vw - 16rem)", // Full minus sidebar
+
+  // Form layouts
+  formContainerSmall: layoutTokens.container.md, // 448px
+  formContainerLarge: layoutTokens.container.xl, // 576px
+
+  // Grid layouts
+  gridGap: layoutTokens.grid.gapNormal, // 16px
+  gridGapTight: layoutTokens.grid.gapTight, // 8px
+  gridGapLoose: layoutTokens.grid.gapLoose, // 24px
+} as const;
+
+// ============================================================================
 // COMPONENT TOKENS - Specific Use Cases
 // ============================================================================
 
@@ -801,4 +896,6 @@ export {
   borderRadiusTokens as borderRadius,
   semanticBorderRadiusTokens as semanticBorderRadius,
   elevationTokens as elevation,
+  layoutTokens as layout,
+  semanticLayoutTokens as semanticLayout,
 };

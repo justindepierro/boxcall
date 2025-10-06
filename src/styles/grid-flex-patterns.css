@@ -1,0 +1,500 @@
+/**
+ * Grid & Flex Pattern Library
+ * 
+ * Systematic layout patterns based on design tokens
+ * Common compositions for consistent layouts
+ */
+
+/* ============================================================================
+   FLEX PATTERNS - Alignment & Distribution
+   ============================================================================ */
+
+/* Horizontal layouts */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+/* Vertical layouts */
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-col-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+/* Horizontal alignment */
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-evenly {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* Vertical alignment */
+.flex-items-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+.flex-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.flex-items-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+.flex-items-baseline {
+  display: flex;
+  align-items: baseline;
+}
+
+.flex-items-stretch {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Combined patterns (common use cases) */
+.flex-center-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-start-center {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-end-center {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Wrapping */
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* Gap utilities with tokens */
+.flex-gap-tight {
+  display: flex;
+  gap: var(--layout-grid-gap-tight);
+}
+
+.flex-gap-normal {
+  display: flex;
+  gap: var(--layout-grid-gap-normal);
+}
+
+.flex-gap-loose {
+  display: flex;
+  gap: var(--layout-grid-gap-loose);
+}
+
+.flex-gap-wide {
+  display: flex;
+  gap: var(--layout-grid-gap-wide);
+}
+
+/* ============================================================================
+   GRID PATTERNS - Systematic Grid Layouts
+   ============================================================================ */
+
+/* Auto-fill responsive grids */
+.grid-auto-sm {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-auto-md {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-auto-lg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-auto-xl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Fixed column grids */
+.grid-cols-1 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-cols-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-cols-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-cols-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+.grid-cols-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Responsive grid breakpoints */
+@media (max-width: 640px) {
+  .grid-cols-responsive {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-cols-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid-cols-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============================================================================
+   STACK PATTERNS - Vertical Stacking with Spacing
+   ============================================================================ */
+
+.stack-tight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-tight);
+}
+
+.stack-normal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-normal);
+}
+
+.stack-relaxed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-relaxed);
+}
+
+.stack-loose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-loose);
+}
+
+/* ============================================================================
+   SIDEBAR LAYOUTS - Sidebar + Main Content
+   ============================================================================ */
+
+/* Left sidebar layout */
+.layout-sidebar-left {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-standard) 1fr;
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Right sidebar layout */
+.layout-sidebar-right {
+  display: grid;
+  grid-template-columns: 1fr var(--layout-sidebar-standard);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Two sidebars layout */
+.layout-two-sidebars {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(--layout-sidebar-narrow);
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Collapsible sidebar (mobile-first) */
+.layout-sidebar-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--semantic-layout-grid-gap);
+}
+
+@media (min-width: 768px) {
+  .layout-sidebar-responsive {
+    grid-template-columns: var(--layout-sidebar-standard) 1fr;
+  }
+}
+
+/* ============================================================================
+   HEADER + CONTENT LAYOUTS - Full Page Structure
+   ============================================================================ */
+
+.layout-header-content {
+  display: grid;
+  grid-template-rows: var(--layout-header-standard) 1fr;
+  min-height: 100vh;
+}
+
+.layout-header-footer {
+  display: grid;
+  grid-template-rows: var(--layout-header-standard) 1fr var(--layout-footer-compact);
+  min-height: 100vh;
+}
+
+/* ============================================================================
+   CARD GRID PATTERNS - Card Collections
+   ============================================================================ */
+
+/* Compact cards (mobile-friendly) */
+.card-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--semantic-layout-grid-gap-tight);
+}
+
+/* Standard cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Wide cards (dashboards) */
+.card-grid-wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  gap: var(--semantic-layout-grid-gap-loose);
+}
+
+/* Large hero cards */
+.card-grid-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  gap: var(--semantic-layout-grid-gap-wide);
+}
+
+/* ============================================================================
+   FORM PATTERNS - Form Layouts
+   ============================================================================ */
+
+/* Vertical form (default) */
+.form-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-item-spacing);
+}
+
+/* Horizontal form fields */
+.form-horizontal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--semantic-spacing-item-spacing);
+  align-items: center;
+}
+
+/* Two-column form */
+.form-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--semantic-spacing-item-spacing);
+}
+
+@media (max-width: 640px) {
+  .form-two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Inline form (actions + inputs) */
+.form-inline {
+  display: flex;
+  flex-direction: row;
+  gap: var(--semantic-spacing-item-spacing);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   LIST PATTERNS - Vertical Lists
+   ============================================================================ */
+
+.list-tight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-list-gap);
+}
+
+.list-normal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-item-spacing);
+}
+
+.list-relaxed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-relaxed);
+}
+
+/* ============================================================================
+   UTILITY PATTERNS - Common Compositions
+   ============================================================================ */
+
+/* Split view (50/50) */
+.split-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--semantic-layout-grid-gap);
+}
+
+@media (max-width: 768px) {
+  .split-view {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Master-detail (1/3 + 2/3) */
+.master-detail {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--semantic-layout-grid-gap);
+}
+
+@media (max-width: 768px) {
+  .master-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Toolbar layout (actions on right) */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--semantic-spacing-item-spacing);
+  flex-wrap: wrap;
+}
+
+/* Action bar (buttons on right) */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--semantic-spacing-list-gap);
+  flex-wrap: wrap;
+}
+
+/* Section with title + content */
+.section-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-spacing-stack-normal);
+}
+
+/* Inline label + value */
+.inline-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--semantic-spacing-item-spacing);
+}
+
+/* ============================================================================
+   RESPONSIVE UTILITIES
+   ============================================================================ */
+
+/* Show/hide based on breakpoint */
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) {
+  .show-mobile-only {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hide-tablet {
+    display: none;
+  }
+}
+
+@media (min-width: 1025px) {
+  .show-tablet-only {
+    display: none;
+  }
+}

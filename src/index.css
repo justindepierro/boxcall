@@ -4,6 +4,10 @@
 @import "./styles/fonts.css";
 /* Generated CSS variables (design tokens) */
 @import "./styles/generated-tokens.css";
+/* Layout utility classes (containers, grids, patterns) */
+@import "./styles/layout-utilities.css";
+/* Grid & Flex pattern library (systematic layouts) */
+@import "./styles/grid-flex-patterns.css";
 /* Density and spacing utilities */
 @import "./styles/density.css";
 /* Panel and glass effects */

@@ -1,0 +1,322 @@
+/**
+ * Layout Utility Classes
+ * 
+ * Systematic layout utilities based on design tokens
+ * Use these classes instead of arbitrary Tailwind values
+ */
+
+/* ============================================================================
+   CONTAINER UTILITIES
+   ============================================================================ */
+
+.container-xs {
+  max-width: var(--layout-container-xs);
+  margin-inline: auto;
+}
+
+.container-sm {
+  max-width: var(--layout-container-sm);
+  margin-inline: auto;
+}
+
+.container-md {
+  max-width: var(--layout-container-md);
+  margin-inline: auto;
+}
+
+.container-lg {
+  max-width: var(--layout-container-lg);
+  margin-inline: auto;
+}
+
+.container-xl {
+  max-width: var(--layout-container-xl);
+  margin-inline: auto;
+}
+
+.container-2xl {
+  max-width: var(--layout-container-2-xl);
+  margin-inline: auto;
+}
+
+.container-3xl {
+  max-width: var(--layout-container-3-xl);
+  margin-inline: auto;
+}
+
+.container-4xl {
+  max-width: var(--layout-container-4-xl);
+  margin-inline: auto;
+}
+
+.container-5xl {
+  max-width: var(--layout-container-5-xl);
+  margin-inline: auto;
+}
+
+.container-6xl {
+  max-width: var(--layout-container-6-xl);
+  margin-inline: auto;
+}
+
+.container-7xl {
+  max-width: var(--layout-container-7-xl);
+  margin-inline: auto;
+}
+
+.container-full {
+  max-width: var(--layout-container-full);
+}
+
+/* ============================================================================
+   PAGE LAYOUT UTILITIES
+   ============================================================================ */
+
+.page-container {
+  max-width: var(--semantic-layout-page-container);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.page-content {
+  max-width: var(--semantic-layout-page-content-width);
+  margin-inline: auto;
+}
+
+.article-width {
+  max-width: var(--semantic-layout-article-width);
+  margin-inline: auto;
+}
+
+/* ============================================================================
+   GRID UTILITIES
+   ============================================================================ */
+
+.grid-gap-tight {
+  gap: var(--layout-grid-gap-tight);
+}
+
+.grid-gap-normal {
+  gap: var(--layout-grid-gap-normal);
+}
+
+.grid-gap-loose {
+  gap: var(--layout-grid-gap-loose);
+}
+
+.grid-gap-wide {
+  gap: var(--layout-grid-gap-wide);
+}
+
+/* Semantic grid gaps */
+.grid-gap {
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* ============================================================================
+   DASHBOARD LAYOUT
+   ============================================================================ */
+
+.dashboard-sidebar {
+  width: var(--semantic-layout-dashboard-sidebar);
+}
+
+.dashboard-header {
+  height: var(--semantic-layout-dashboard-header);
+}
+
+.dashboard-content {
+  width: var(--semantic-layout-dashboard-content);
+}
+
+/* ============================================================================
+   FORM LAYOUTS
+   ============================================================================ */
+
+.form-container-small {
+  max-width: var(--semantic-layout-form-container-small);
+  margin-inline: auto;
+}
+
+.form-container-large {
+  max-width: var(--semantic-layout-form-container-large);
+  margin-inline: auto;
+}
+
+/* ============================================================================
+   MODAL SIZING
+   ============================================================================ */
+
+.modal-small {
+  max-width: var(--layout-modal-small);
+}
+
+.modal-medium {
+  max-width: var(--layout-modal-medium);
+}
+
+.modal-large {
+  max-width: var(--layout-modal-large);
+}
+
+.modal-xlarge {
+  max-width: var(--layout-modal-xlarge);
+}
+
+.modal-full {
+  max-width: var(--layout-modal-full);
+}
+
+/* ============================================================================
+   CARD SIZING
+   ============================================================================ */
+
+.card-min-height {
+  min-height: var(--layout-card-min-height);
+}
+
+.card-standard-height {
+  min-height: var(--layout-card-standard-height);
+}
+
+.card-tall-height {
+  min-height: var(--layout-card-tall-height);
+}
+
+/* ============================================================================
+   SIDEBAR WIDTHS
+   ============================================================================ */
+
+.sidebar-narrow {
+  width: var(--layout-sidebar-narrow);
+}
+
+.sidebar-standard {
+  width: var(--layout-sidebar-standard);
+}
+
+.sidebar-wide {
+  width: var(--layout-sidebar-wide);
+}
+
+.sidebar-extra-wide {
+  width: var(--layout-sidebar-extra-wide);
+}
+
+/* ============================================================================
+   HEADER HEIGHTS
+   ============================================================================ */
+
+.header-compact {
+  height: var(--layout-header-compact);
+}
+
+.header-standard {
+  height: var(--layout-header-standard);
+}
+
+.header-tall {
+  height: var(--layout-header-tall);
+}
+
+/* ============================================================================
+   FOOTER HEIGHTS
+   ============================================================================ */
+
+.footer-compact {
+  height: var(--layout-footer-compact);
+}
+
+.footer-standard {
+  height: var(--layout-footer-standard);
+}
+
+/* ============================================================================
+   RESPONSIVE CONTAINER (Mobile-first)
+   ============================================================================ */
+
+.container-responsive {
+  max-width: var(--layout-container-full);
+  padding-inline: var(--space-4);
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    max-width: var(--layout-container-sm);
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: var(--layout-container-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: var(--layout-container-lg);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: var(--layout-container-7-xl);
+  }
+}
+
+/* ============================================================================
+   COMMON LAYOUT PATTERNS
+   ============================================================================ */
+
+/* Centered content column */
+.centered-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: var(--semantic-layout-page-container);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Two-column layout (sidebar + content) */
+.two-column-layout {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-standard) 1fr;
+  gap: var(--layout-grid-gap-normal);
+}
+
+/* Three-column layout (sidebar + content + aside) */
+.three-column-layout {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(--layout-sidebar-narrow);
+  gap: var(--layout-grid-gap-normal);
+}
+
+/* Stack layout with standard spacing */
+.stack-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Grid of cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--semantic-layout-grid-gap);
+}
+
+/* Compact card grid */
+.card-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--semantic-layout-grid-gap-tight);
+}
+
+/* Wide card grid */
+.card-grid-wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  gap: var(--semantic-layout-grid-gap-loose);
+}

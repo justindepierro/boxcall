@@ -14,6 +14,8 @@ import {
   elevationTokens,
   contrastTokens,
   componentTokens,
+  layoutTokens,
+  semanticLayoutTokens,
 } from "../../src/design-system/tokens";
 import { writeFileSync } from "fs";
 
@@ -91,6 +93,10 @@ export function generateTokensCSS(): string {
   emitObj("space", spacingTokens as Record<string, unknown>, lines);
   emitObj("fine-spacing", fineSpacingTokens as Record<string, unknown>, lines);
   emitObj("semantic-spacing", semanticSpacingTokens as Record<string, unknown>, lines);
+  
+  // Layout tokens
+  emitObj("layout", layoutTokens as Record<string, unknown>, lines);
+  emitObj("semantic-layout", semanticLayoutTokens as Record<string, unknown>, lines);
   
   // Layout
   emitObj("density", densityTokens as Record<string, unknown>, lines);
