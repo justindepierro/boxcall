@@ -238,7 +238,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 font-medium surface-subtle text-text-secondary rounded"
+                        className="inline-block px-2 py-1 font-medium surface-subtle text-text-secondary rounded-lg"
                       >
                         <Typography variant="caption" as="span">
                           #{position}

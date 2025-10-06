@@ -159,7 +159,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             <Typography
               key={index}
               variant="caption"
-              className="bg-surface-success text-text-success px-2 py-1 rounded"
+              className="bg-surface-success text-text-success px-2 py-1 rounded-lg"
               as="span"
             >
               {benefit}

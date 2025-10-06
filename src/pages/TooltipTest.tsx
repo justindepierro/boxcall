@@ -31,25 +31,25 @@ export const TooltipTest = () => {
           </h2>
           <div className="flex gap-4 items-center justify-center p-8">
             <Tooltip content="Top tooltip" placement="top">
-              <button className="px-4 py-2 bg-green-500 text-white rounded">
+              <button className="px-4 py-2 bg-green-500 text-white rounded-lg">
                 Top
               </button>
             </Tooltip>
 
             <Tooltip content="Bottom tooltip" placement="bottom">
-              <button className="px-4 py-2 bg-green-500 text-white rounded">
+              <button className="px-4 py-2 bg-green-500 text-white rounded-lg">
                 Bottom
               </button>
             </Tooltip>
 
             <Tooltip content="Left tooltip" placement="left">
-              <button className="px-4 py-2 bg-green-500 text-white rounded">
+              <button className="px-4 py-2 bg-green-500 text-white rounded-lg">
                 Left
               </button>
             </Tooltip>
 
             <Tooltip content="Right tooltip" placement="right">
-              <button className="px-4 py-2 bg-green-500 text-white rounded">
+              <button className="px-4 py-2 bg-green-500 text-white rounded-lg">
                 Right
               </button>
             </Tooltip>

@@ -583,7 +583,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {createError && !showDuplicateWarning && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-spacing-md py-spacing-sm rounded">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-spacing-md py-spacing-sm rounded-lg">
                 {createError}
               </div>
             )}

@@ -167,7 +167,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
               onChange={(e) =>
                 updateFieldValue(definition.field_name, e.target.checked)
               }
-              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded"
+              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded-lg"
             />
             <span className="text-sm text-text-primary">
               {definition.field_label}
@@ -211,7 +211,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
                       : selectedValues.filter((v) => v !== option);
                     updateFieldValue(definition.field_name, newValues);
                   }}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded"
+                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded-lg"
                 />
                 <span className="text-sm text-text-primary">{option}</span>
               </label>
@@ -238,9 +238,9 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
     return (
       <div className={`animate-pulse space-y-4 ${className}`}>
         <div className="h-4 bg-surface-secondary rounded-lg w-3/4"></div>
-        <div className="h-10 bg-surface-secondary rounded"></div>
+        <div className="h-10 bg-surface-secondary rounded-lg"></div>
         <div className="h-4 bg-surface-secondary rounded-lg w-1/2"></div>
-        <div className="h-10 bg-surface-secondary rounded"></div>
+        <div className="h-10 bg-surface-secondary rounded-lg"></div>
       </div>
     );
   }
@@ -358,7 +358,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
             <div className="h-6 bg-surface-secondary rounded-lg w-1/3"></div>
             <div className="space-y-2">
               <div className="h-4 bg-surface-secondary rounded-lg w-2/3"></div>
-              <div className="h-10 bg-surface-secondary rounded"></div>
+              <div className="h-10 bg-surface-secondary rounded-lg"></div>
             </div>
           </div>
         ))}

@@ -71,8 +71,8 @@ export const GamePlanSkeleton: React.FC = () => (
       </div>
       {/* Action buttons */}
       <div className="flex space-x-1">
-        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded" />
-        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded" />
+        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded-lg" />
+        <SkeletonBase width="1.5rem" height="1.5rem" className="rounded-lg" />
       </div>
     </div>
     {/* Footer stats */}

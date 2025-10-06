@@ -9,7 +9,7 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - iOS-inspired glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-[var(--radius-card)] bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
+  base: "rounded-xl bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
   variants: {
     default: "hover:bg-surface-muted hover:shadow-card-hover",
     glass:

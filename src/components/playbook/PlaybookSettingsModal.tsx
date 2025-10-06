@@ -444,7 +444,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                                       { count: parseInt(e.target.value) || 1 }
                                     )
                                   }
-                                  className="w-16 px-2 py-1 rounded"
+                                  className="w-16 px-2 py-1 rounded-lg"
                                 />
                               </Typography>
                             </div>

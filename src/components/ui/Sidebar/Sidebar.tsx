@@ -451,8 +451,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-9 h-4 bg-surface-hover rounded"></div>
-                    <div className="flex-1 h-4 bg-surface-hover rounded"></div>
+                    <div className="w-9 h-4 bg-surface-hover rounded-lg"></div>
+                    <div className="flex-1 h-4 bg-surface-hover rounded-lg"></div>
                   </div>
                 </div>
               ))

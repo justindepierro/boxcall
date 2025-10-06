@@ -1369,7 +1369,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <span className="font-medium">User ID:</span>{" "}
-              <code className="text-xs surface-subtle dark:bg-text-primary px-spacing-xs py-1 rounded">
+              <code className="text-xs surface-subtle dark:bg-text-primary px-spacing-xs py-1 rounded-lg">
                 {profile.id.substring(0, 8)}...
               </code>
             </div>

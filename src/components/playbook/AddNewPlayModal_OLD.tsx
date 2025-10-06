@@ -1031,7 +1031,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                       >
                         How confident are you in this play?
                       </Typography>
-                      <span className="text-sm font-medium text-text-primary bg-surface-primary px-2 py-1 rounded">
+                      <span className="text-sm font-medium text-text-primary bg-surface-primary px-2 py-1 rounded-lg">
                         {formData.confidence}%
                       </span>
                     </div>

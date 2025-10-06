@@ -134,7 +134,7 @@ export const RosterQuickAdd: React.FC = () => {
         <div className="animate-pulse">
           <div className="h-4 bg-gray-200 rounded-lg w-3/4 mb-4"></div>
           <div className="space-y-2">
-            <div className="h-3 bg-gray-200 rounded"></div>
+            <div className="h-3 bg-gray-200 rounded-lg"></div>
             <div className="h-3 bg-gray-200 rounded-lg w-5/6"></div>
           </div>
         </div>
@@ -170,7 +170,7 @@ export const RosterQuickAdd: React.FC = () => {
               {recentPlayers.map((player) => (
                 <div
                   key={player.id}
-                  className="flex items-center space-x-3 p-2 bg-surface-subtle rounded"
+                  className="flex items-center space-x-3 p-2 bg-surface-subtle rounded-lg"
                 >
                   <div className="w-8 h-8 bg-surface-info rounded-full flex items-center justify-center">
                     <Typography

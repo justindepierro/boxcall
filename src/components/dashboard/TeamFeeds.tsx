@@ -200,7 +200,7 @@ const TeamFeeds: React.FC = () => {
             <textarea
               value={quickMessage}
               onChange={(e) => setQuickMessage(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
               rows={3}
               placeholder="Type your message..."
             />

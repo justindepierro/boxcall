@@ -340,7 +340,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 <Typography variant="body-sm" className="text-text-secondary">
                   How confident are you in this play?
                 </Typography>
-                <span className="text-sm font-medium text-text-primary bg-surface-primary px-spacing-xs py-spacing-xs rounded">
+                <span className="text-sm font-medium text-text-primary bg-surface-primary px-spacing-xs py-spacing-xs rounded-lg">
                   {confidence}%
                 </span>
               </div>

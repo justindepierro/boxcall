@@ -23,7 +23,7 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
   }
 
   return (
-    <div className="mb-4 p-2 surface-subtle border border-subtle rounded">
+    <div className="mb-4 p-2 surface-subtle border border-subtle rounded-lg">
       <div className="flex items-center justify-between">
         <Typography variant="body-sm" className="text-text-warning">
           <Icon name="settings" size="sm" className="mr-1" />

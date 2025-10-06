@@ -210,7 +210,7 @@ export function LoginForm({
           type="checkbox"
           checked={formData.rememberMe}
           onChange={(e) => handleInputChange("rememberMe", e.target.checked)}
-          className="h-4 w-4 text-text-primary focus:ring-text-primary rounded"
+          className="h-4 w-4 text-text-primary focus:ring-text-primary rounded-lg"
           disabled={loading}
         />
         <label

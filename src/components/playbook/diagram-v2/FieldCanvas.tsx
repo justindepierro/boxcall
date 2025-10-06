@@ -1326,7 +1326,7 @@ export const FieldCanvas: React.FC<{
                           patch: { color: e.target.value },
                         })
                       }
-                      className="w-9 h-9 p-0 border border-border-light rounded"
+                      className="w-9 h-9 p-0 border border-border-light rounded-lg"
                       title="Color"
                     />
                     <span className="mx-spacing-xs w-px h-5 bg-border-light" />
@@ -1564,7 +1564,7 @@ export const FieldCanvas: React.FC<{
                               patch: { color: e.target.value },
                             })
                           }
-                          className="w-9 h-9 p-0 border border-border-light rounded"
+                          className="w-9 h-9 p-0 border border-border-light rounded-lg"
                           title="Color"
                         />
                         <input

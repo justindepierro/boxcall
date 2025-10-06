@@ -173,7 +173,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {!showAddFilter && (
               <button
                 onClick={() => setShowAddFilter(true)}
-                className="p-1 text-text-muted hover:text-text-secondary hover:bg-surface-muted rounded"
+                className="p-1 text-text-muted hover:text-text-secondary hover:bg-surface-muted rounded-lg"
                 title="Add filter"
               >
                 <Icon name="plus" className="h-3 w-3" />
@@ -182,7 +182,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.length > 0 && (
               <button
                 onClick={clearAllFilters}
-                className="p-1 text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded"
+                className="p-1 text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded-lg"
                 title="Clear all filters"
               >
                 <Icon name="close" className="h-3 w-3" />

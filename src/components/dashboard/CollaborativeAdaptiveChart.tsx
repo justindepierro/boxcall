@@ -159,7 +159,7 @@ export const CollaborativeAdaptiveChart: React.FC<
                     onChange={(e) =>
                       handleLocalDataEdit(Number(e.target.value), index)
                     }
-                    className="w-12 px-1 py-0.5 text-xs border border-border-primary rounded"
+                    className="w-12 px-1 py-0.5 text-xs border border-border-primary rounded-lg"
                     step="0.1"
                   />
                 </div>

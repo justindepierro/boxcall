@@ -390,11 +390,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                   {Object.entries(summary.suggestedMappings).map(
                     ([original, mapped]) => (
                       <div key={original}>
-                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded">
+                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded-lg">
                           {original}
                         </span>
                         {" → "}
-                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded">
+                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded-lg">
                           {mapped}
                         </span>
                       </div>

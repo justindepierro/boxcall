@@ -189,7 +189,7 @@ export const DashboardCustomizationPanel: React.FC<
               <Typography variant="body-md" className="font-medium">
                 {layout.name}
                 {layout.isDefault && (
-                  <span className="ml-spacing-xs px-spacing-xs py-1 text-xs bg-jade-100 text-jade-800 rounded">
+                  <span className="ml-spacing-xs px-spacing-xs py-1 text-xs bg-jade-100 text-jade-800 rounded-lg">
                     Default
                   </span>
                 )}

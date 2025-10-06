@@ -169,7 +169,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
         <h3 className="text-sm font-medium text-text-primary">Drawing Tools</h3>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="p-1 hover:bg-surface-secondary rounded"
+          className="p-1 hover:bg-surface-secondary rounded-lg"
         >
           <Settings size={14} />
         </button>

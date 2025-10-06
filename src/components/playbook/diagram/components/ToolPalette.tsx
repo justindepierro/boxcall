@@ -371,7 +371,7 @@ export const ToolPalette: React.FC = () => {
               onChange={(e) =>
                 dispatch({ type: "SET_DRAW_COLOR", color: e.target.value })
               }
-              className="w-10 h-10 p-0 rounded"
+              className="w-10 h-10 p-0 rounded-lg"
               title="Stroke color"
             />
             <input

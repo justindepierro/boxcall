@@ -171,7 +171,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
-                  className="p-1 text-text-muted hover:text-text-secondary rounded"
+                  className="p-1 text-text-muted hover:text-text-secondary rounded-lg"
                 >
                   <MoreVertical className="w-4 h-4" />
                 </button>

@@ -474,10 +474,10 @@ export function DesignSystemShowcase() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-success text-success text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-success text-success text-xs rounded-lg">
                         Run
                       </span>
-                      <span className="px-2 py-1 bg-surface-info text-info text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-info text-info text-xs rounded-lg">
                         Popular
                       </span>
                     </div>
@@ -500,10 +500,10 @@ export function DesignSystemShowcase() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-warning text-warning text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-warning text-warning text-xs rounded-lg">
                         Pass
                       </span>
-                      <span className="px-2 py-1 bg-surface-error text-error text-xs rounded">
+                      <span className="px-2 py-1 bg-surface-error text-error text-xs rounded-lg">
                         Complex
                       </span>
                     </div>
