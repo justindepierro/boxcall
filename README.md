@@ -81,3 +81,38 @@ Playbook View → Practice Script View → Game Plan View
 - **[🔌 API Reference](docs/API.md)** - API documentation and integration guides
 - **[🗄️ Database](docs/database/)** - Schema, rebuild guides, and audit reports
 - **[🎨 Design System](docs/roadmaps/DESIGN_SYSTEM_ROADMAP.md)** - Component library and theming
+
+## Code Quality & Standards
+
+### ESLint Design System Rules
+
+BoxCall enforces design system compliance through custom ESLint rules that catch violations at development time:
+
+- **`boxcall-design/no-arbitrary-spacing`** - Prevents arbitrary spacing values (e.g., `min-h-[44px]`)
+  - Enforces Tailwind standard classes
+  - Suggests iOS-compliant touch targets (44px)
+  - Requires mobile-safe viewport units (`svh` instead of `vh`)
+  
+- **`boxcall-design/no-raw-tailwind-colors`** - Prevents raw color values
+  - Enforces semantic design tokens
+  - Maintains consistent color system
+
+**Benefits:**
+- ✅ 100% design system compliance (83 spacing violations fixed)
+- ✅ Automatic enforcement - violations blocked at commit time
+- ✅ Helpful suggestions for standard replacements
+
+See [eslint-rules/README.md](eslint-rules/README.md) for complete documentation.
+
+### Quality Gates
+
+All code must pass before merging:
+- **TypeScript:** Strict mode, zero errors
+- **ESLint:** Zero errors, zero warnings
+- **Tests:** All tests passing
+- **Build:** Production build successful
+
+```bash
+# Run all quality checks
+npm run lint && npm run type-check && npm run test && npm run build
+```
