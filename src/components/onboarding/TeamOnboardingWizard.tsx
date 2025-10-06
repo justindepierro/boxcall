@@ -240,23 +240,23 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
         )}
 
         {currentStep === "add-players" && (
-          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="mt-8 p-4 bg-status-info-bg rounded-lg border border-status-info">
             <div className="flex items-start gap-3">
               <Icon
                 name="upload"
                 size="sm"
-                className="text-blue-600 dark:text-blue-400 mt-0.5"
+                className="text-status-info mt-0.5"
               />
               <div className="text-left">
                 <Typography
                   variant="body-sm"
-                  className="font-medium text-blue-800 dark:text-blue-200 mb-1"
+                  className="font-medium text-primary mb-1"
                 >
                   Multiple Ways to Add Players
                 </Typography>
                 <Typography
                   variant="body-sm"
-                  className="text-blue-700 dark:text-blue-300"
+                  className="text-secondary"
                 >
                   Upload a CSV roster, add players manually, or send invite
                   links for self-registration. Parents can also be included in
@@ -271,7 +271,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-aurora-mist dark:bg-slate-900/80 py-8">
+    <div className="min-h-screen bg-aurora-mist dark:bg-surface-inverse py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Progress bar */}
         {currentStep !== "welcome" && (
@@ -284,7 +284,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
                 Team Setup
               </Typography>
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+            <div className="w-full bg-surface-muted rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-jade-500 to-emerald-600 h-2 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
@@ -294,7 +294,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
         )}
 
         {/* Step content */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-8">
+        <div className="bg-white dark:bg-surface-secondary rounded-xl shadow-lg border p-8">
           {renderStepContent()}
         </div>
 
@@ -320,7 +320,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
               onClick={onSkip}
               variant="ghost"
               size="sm"
-              className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              className="text-muted hover:text-secondary"
             >
               Skip Setup
             </Button>
