@@ -1,4 +1,5 @@
 # Diagram Refactor - Revised Pragmatic Approach
+
 **Date**: October 7, 2025  
 **Status**: 🔄 **REVISED STRATEGY**
 
@@ -7,6 +8,7 @@
 ## 🎯 Reality Check
 
 After starting the refactor, I realized:
+
 - **72 total files** across both systems
 - **~16,000 lines of code**
 - **Multiple test files** that would break
@@ -29,6 +31,7 @@ diagram-v2/  → diagram-canvas/
 ```
 
 **Benefits**:
+
 - ✅ Immediate clarity on system purpose
 - ✅ Low risk (just path updates)
 - ✅ Can be done in 2-3 hours
@@ -49,6 +52,7 @@ diagram-shared/
 ```
 
 **Benefits**:
+
 - ✅ Eliminates 158-line duplication
 - ✅ Low risk (just utility function)
 - ✅ Can test thoroughly
@@ -62,6 +66,7 @@ diagram-shared/
 Create clear documentation so developers know which system to use.
 
 **Benefits**:
+
 - ✅ Zero risk
 - ✅ High value for team
 - ✅ Prevents future confusion
@@ -71,8 +76,9 @@ Create clear documentation so developers know which system to use.
 ### **Phase 4: Future - Extract Components** (Later, 10-15 hours)
 
 When you have dedicated time, extract truly shared components:
+
 - Toolbar
-- HelpOverlay  
+- HelpOverlay
 - CanvasPane
 
 This requires careful analysis and testing.
@@ -83,6 +89,7 @@ This requires careful analysis and testing.
 
 Major refactor of the 3,283 and 1,321 line files.
 This is a separate project that needs:
+
 - Dedicated sprint
 - Comprehensive testing
 - Possible UI regression testing
@@ -102,6 +109,7 @@ This gives you:
 ✅ Immediate value
 
 **Save Phase 4 & 5 for later** when you have:
+
 - Dedicated sprint time
 - Full test coverage
 - Time for thorough QA

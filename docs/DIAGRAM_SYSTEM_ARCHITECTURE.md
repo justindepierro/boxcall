@@ -1,4 +1,5 @@
 # Diagram System Architecture Guide
+
 **Last Updated**: October 7, 2025  
 **Status**: ✅ **PRODUCTION**
 
@@ -8,10 +9,10 @@
 
 BoxCall has **two distinct diagram systems** for different use cases:
 
-| System | Purpose | When to Use | Entry Point |
-|--------|---------|-------------|-------------|
+| System              | Purpose                   | When to Use                                             | Entry Point         |
+| ------------------- | ------------------------- | ------------------------------------------------------- | ------------------- |
 | **diagram-editor/** | Full-featured play editor | Editing plays with metadata, formations, field settings | `DiagramEditor.tsx` |
-| **diagram-canvas/** | Lightweight canvas | Quick diagram sketching, modal diagrams | `DiagramCanvas.tsx` |
+| **diagram-canvas/** | Lightweight canvas        | Quick diagram sketching, modal diagrams                 | `DiagramCanvas.tsx` |
 
 ---
 
@@ -71,9 +72,11 @@ src/components/playbook/
 ## 🏗️ System 1: diagram-editor/
 
 ### **Purpose**
+
 Full-featured diagram editor with comprehensive play metadata editing.
 
 ### **Features**
+
 ✅ Play metadata form (name, formation, personnel, play type, VS front)  
 ✅ Field settings panel (field slice presets, display options)  
 ✅ Ball hash configuration (left/middle/right)  
@@ -81,14 +84,18 @@ Full-featured diagram editor with comprehensive play metadata editing.
 ✅ Player and route property panels  
 ✅ Formation presets  
 ✅ Comprehensive save/export functionality  
-✅ Tool palette with all diagram tools  
+✅ Tool palette with all diagram tools
 
 ### **Usage**
 
 **In PlaybookPage.tsx**:
+
 ```tsx
 import { DiagramEditor } from "../components/playbook/diagram-editor/DiagramEditor";
-import type { DiagramMetadata, DiagramDocument } from "../components/playbook/diagram-editor/types/types";
+import type {
+  DiagramMetadata,
+  DiagramDocument,
+} from "../components/playbook/diagram-editor/types/types";
 
 // Lazy load for code splitting
 const DiagramEditor = lazy(() =>
@@ -104,15 +111,17 @@ const DiagramEditor = lazy(() =>
     onClose={closeDiagram}
     onSave={handleSaveDiagram}
   />
-</Modal>
+</Modal>;
 ```
 
 **Props**:
+
 ```tsx
 interface DiagramEditorProps {
-  play: Play;                           // Play data to edit
-  onClose: () => void;                  // Close handler
-  onSave?: (payload: {                  // Save handler
+  play: Play; // Play data to edit
+  onClose: () => void; // Close handler
+  onSave?: (payload: {
+    // Save handler
     doc: DiagramDocument;
     metadata: DiagramMetadata;
   }) => Promise<void>;
@@ -121,14 +130,14 @@ interface DiagramEditorProps {
 
 ### **Components**
 
-| Component | Purpose | Lines |
-|-----------|---------|-------|
-| `DiagramEditor.tsx` | Main editor shell | 604 |
-| `ModernToolPalette.tsx` | Tool selection UI | ~200 |
-| `FootballFieldCanvas.tsx` | Field rendering | ~300 |
-| `PlayerPropertiesPanel.tsx` | Edit player properties | ~150 |
-| `RoutePropertiesPanel.tsx` | Edit route properties | ~150 |
-| `ShapeManipulator.tsx` | Handle shape dragging/resizing | ~250 |
+| Component                   | Purpose                        | Lines |
+| --------------------------- | ------------------------------ | ----- |
+| `DiagramEditor.tsx`         | Main editor shell              | 604   |
+| `ModernToolPalette.tsx`     | Tool selection UI              | ~200  |
+| `FootballFieldCanvas.tsx`   | Field rendering                | ~300  |
+| `PlayerPropertiesPanel.tsx` | Edit player properties         | ~150  |
+| `RoutePropertiesPanel.tsx`  | Edit route properties          | ~150  |
+| `ShapeManipulator.tsx`      | Handle shape dragging/resizing | ~250  |
 
 ### **Context**
 
@@ -138,16 +147,16 @@ import { DiagramEditorProvider, useDiagramEditor } from "../context";
 // Provider wraps the entire editor
 <DiagramEditorProvider>
   <YourComponent />
-</DiagramEditorProvider>
+</DiagramEditorProvider>;
 
 // Hook to access diagram state
 const { state, dispatch } = useDiagramEditor();
 
 // State structure
-state.doc       // DiagramDocument - players, routes, field config
-state.ui        // UI state - tool, selection, zoom, pan
-state.dirty     // Has unsaved changes?
-state.history   // Undo/redo history
+state.doc; // DiagramDocument - players, routes, field config
+state.ui; // UI state - tool, selection, zoom, pan
+state.dirty; // Has unsaved changes?
+state.history; // Undo/redo history
 ```
 
 ---
@@ -155,19 +164,22 @@ state.history   // Undo/redo history
 ## 🎨 System 2: diagram-canvas/
 
 ### **Purpose**
+
 Lightweight, canvas-only diagram editor for quick sketching and modal use.
 
 ### **Features**
+
 ✅ Canvas and tools only (minimal UI)  
 ✅ Simple document change callback  
 ✅ Help overlay with keyboard shortcuts  
 ✅ Export to PNG functionality  
 ✅ Fast loading (smaller bundle)  
-✅ No metadata forms (focus on diagram)  
+✅ No metadata forms (focus on diagram)
 
 ### **Usage**
 
 **In DiagramPaneRoute.tsx**:
+
 ```tsx
 import { DiagramCanvas } from "./diagram-canvas/DiagramCanvas";
 
@@ -176,17 +188,18 @@ import { DiagramCanvas } from "./diagram-canvas/DiagramCanvas";
     // Handle document changes
     telemetry.enqueue({
       type: TelemetryEventTypes.PlayDiagramUpdated,
-      data: { routes: doc.routes.length }
+      data: { routes: doc.routes.length },
     });
   }}
   onClose={() => navigate("/playbook")}
   onRequestExport={(exporter) => {
     // Provide export function
   }}
-/>
+/>;
 ```
 
 **Props**:
+
 ```tsx
 interface DiagramCanvasProps {
   onDocumentChange?: (doc: DiagramDocument) => void;
@@ -202,23 +215,24 @@ The canvas has its own route for modal-style usage:
 **Route**: `/playbook/diagram?playId=<id>`
 
 **Usage**:
+
 ```tsx
 import { DiagramCanvasRoute } from "./diagram-canvas/DiagramCanvasRoute";
 
 // In your route config
-<Route path="/playbook/diagram" element={<DiagramCanvasRoute />} />
+<Route path="/playbook/diagram" element={<DiagramCanvasRoute />} />;
 ```
 
 ### **Components**
 
-| Component | Purpose | Lines |
-|-----------|---------|-------|
-| `DiagramCanvas.tsx` | Main canvas shell | 154 |
-| `FieldCanvas.tsx` | SVG field rendering | 3,283 ⚠️ |
-| `Toolbar.tsx` | Tool palette | ~83 |
-| `CanvasPane.tsx` | Canvas wrapper | ~50 |
-| `FieldPlayers.tsx` | Player rendering | ~200 |
-| `FieldRoutes.tsx` | Route rendering | ~200 |
+| Component           | Purpose             | Lines    |
+| ------------------- | ------------------- | -------- |
+| `DiagramCanvas.tsx` | Main canvas shell   | 154      |
+| `FieldCanvas.tsx`   | SVG field rendering | 3,283 ⚠️ |
+| `Toolbar.tsx`       | Tool palette        | ~83      |
+| `CanvasPane.tsx`    | Canvas wrapper      | ~50      |
+| `FieldPlayers.tsx`  | Player rendering    | ~200     |
+| `FieldRoutes.tsx`   | Route rendering     | ~200     |
 
 ⚠️ **Note**: `FieldCanvas.tsx` (3,283 lines) and `context.tsx` (1,321 lines) are monolithic files marked for future refactoring.
 
@@ -230,7 +244,7 @@ import { DiagramEditorProvider, useDiagramEditor } from "./context";
 // Provider wraps the canvas
 <DiagramEditorProvider>
   <DiagramCanvas />
-</DiagramEditorProvider>
+</DiagramEditorProvider>;
 
 // Hook to access diagram state
 const { state, dispatch } = useDiagramEditor();
@@ -245,12 +259,13 @@ const { state, dispatch } = useDiagramEditor();
 Unified SVG → PNG conversion utilities used by both systems.
 
 **Functions**:
+
 ```tsx
 import {
   svgElementToDataUrl,
   svgFullToPngDataUrl,
   svgFullToString,
-  type ThumbnailOptions
+  type ThumbnailOptions,
 } from "../diagram-shared/utils/thumbnail";
 
 // Convert SVG element to data URL
@@ -259,20 +274,20 @@ const dataUrl = await svgElementToDataUrl(svgElement, {
   height: 225,
   background: "#1e293b",
   type: "image/png",
-  quality: 0.92
+  quality: 0.92,
 });
 
 // Convert SVG to full-size PNG (resets zoom/pan)
 const fullPng = await svgFullToPngDataUrl(svgElement, {
   width: 1600,
   height: 900,
-  background: "#1e293b"
+  background: "#1e293b",
 });
 
 // Get SVG as string (for saving)
 const svgString = svgFullToString(svgElement, {
   width: 1600,
-  height: 900
+  height: 900,
 });
 ```
 
@@ -281,6 +296,7 @@ const svgString = svgFullToString(svgElement, {
 ## 🎯 Decision Guide: Which System to Use?
 
 ### **Use diagram-editor/ when:**
+
 - ✅ Editing existing plays in the playbook
 - ✅ Need to edit play metadata (name, formation, personnel)
 - ✅ Need field configuration options
@@ -289,6 +305,7 @@ const svgString = svgFullToString(svgElement, {
 - ✅ Example: PlaybookPage play editor modal
 
 ### **Use diagram-canvas/ when:**
+
 - ✅ Quick diagram sketching
 - ✅ Standalone diagram view (no metadata)
 - ✅ Modal/overlay diagram editing
@@ -298,14 +315,14 @@ const svgString = svgFullToString(svgElement, {
 
 ### **Decision Matrix**
 
-| Feature | diagram-editor | diagram-canvas |
-|---------|---------------|----------------|
-| **UI Complexity** | High (forms + canvas) | Low (canvas only) |
-| **Bundle Size** | Larger (~600 lines main) | Smaller (~150 lines main) |
-| **Metadata Editing** | ✅ Yes | ❌ No |
-| **Field Settings** | ✅ Yes | ❌ No |
-| **Quick Sketch** | ⚠️ Overkill | ✅ Perfect |
-| **Full Play Edit** | ✅ Perfect | ⚠️ Missing features |
+| Feature              | diagram-editor           | diagram-canvas            |
+| -------------------- | ------------------------ | ------------------------- |
+| **UI Complexity**    | High (forms + canvas)    | Low (canvas only)         |
+| **Bundle Size**      | Larger (~600 lines main) | Smaller (~150 lines main) |
+| **Metadata Editing** | ✅ Yes                   | ❌ No                     |
+| **Field Settings**   | ✅ Yes                   | ❌ No                     |
+| **Quick Sketch**     | ⚠️ Overkill              | ✅ Perfect                |
+| **Full Play Edit**   | ✅ Perfect               | ⚠️ Missing features       |
 
 ---
 
@@ -317,33 +334,33 @@ Both systems use the same document structure:
 
 ```tsx
 interface DiagramDocument {
-  players: DiagramPlayer[];      // Player positions
-  routes: DiagramRoute[];        // Route paths
-  field: DiagramFieldConfig;     // Field configuration
-  annotations?: Annotation[];    // Text/shapes
+  players: DiagramPlayer[]; // Player positions
+  routes: DiagramRoute[]; // Route paths
+  field: DiagramFieldConfig; // Field configuration
+  annotations?: Annotation[]; // Text/shapes
 }
 
 interface DiagramPlayer {
-  id: string;                    // Player ID
-  label: string;                 // Position label (QB, WR, etc.)
-  x: number;                     // X coordinate
-  y: number;                     // Y coordinate
-  color: string;                 // Player color
-  role?: "offense" | "defense";  // Team role
+  id: string; // Player ID
+  label: string; // Position label (QB, WR, etc.)
+  x: number; // X coordinate
+  y: number; // Y coordinate
+  color: string; // Player color
+  role?: "offense" | "defense"; // Team role
 }
 
 interface DiagramRoute {
-  id: string;                    // Route ID
-  playerId: string;              // Associated player
-  segments: RouteSegment[];      // Route path segments
-  color?: string;                // Route color
-  style?: "solid" | "dashed";    // Line style
+  id: string; // Route ID
+  playerId: string; // Associated player
+  segments: RouteSegment[]; // Route path segments
+  color?: string; // Route color
+  style?: "solid" | "dashed"; // Line style
 }
 
 interface DiagramFieldConfig {
-  backYards: number;             // Yards behind LOS
-  forwardYards: number;          // Yards forward from LOS
-  losYards: number;              // LOS position
+  backYards: number; // Yards behind LOS
+  forwardYards: number; // Yards forward from LOS
+  losYards: number; // LOS position
   ballHash?: "left" | "middle" | "right";
   hashLayout?: "highschool" | "college" | "nfl";
   showPlayerLabels?: boolean;
@@ -356,11 +373,11 @@ interface DiagramFieldConfig {
 
 ```tsx
 interface DiagramMetadata {
-  play_name: string;             // Play name
-  formation: string;             // Formation name
-  p_type?: string;               // Play type (Run, Pass, RPO, etc.)
-  personnel?: string;            // Personnel grouping
-  pref_front?: string;           // Preferred defensive front
+  play_name: string; // Play name
+  formation: string; // Formation name
+  p_type?: string; // Play type (Run, Pass, RPO, etc.)
+  personnel?: string; // Personnel grouping
+  pref_front?: string; // Preferred defensive front
 }
 ```
 
@@ -371,12 +388,14 @@ interface DiagramMetadata {
 ### **From diagram/ to diagram-editor/**
 
 **Old**:
+
 ```tsx
 import { PlayDiagramBuilder } from "../components/playbook/diagram/PlayDiagramBuilder";
 import type { DiagramMetadata } from "../components/playbook/diagram/PlayDiagramBuilder";
 ```
 
 **New**:
+
 ```tsx
 import { DiagramEditor } from "../components/playbook/diagram-editor/DiagramEditor";
 import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
@@ -387,11 +406,13 @@ import type { DiagramMetadata } from "../components/playbook/diagram-editor/Diag
 ### **From diagram-v2/ to diagram-canvas/**
 
 **Old**:
+
 ```tsx
 import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
 ```
 
 **New**:
+
 ```tsx
 import { DiagramCanvas } from "./diagram-canvas/DiagramCanvas";
 ```
@@ -419,6 +440,7 @@ import { DiagramCanvas } from "./diagram-canvas/DiagramCanvas";
 ### **Duplicate Components**
 
 Some components exist in both systems with minor differences:
+
 - `Toolbar.tsx` (nearly identical)
 - `CanvasPane.tsx` (nearly identical)
 - `HelpOverlay.tsx` (nearly identical)

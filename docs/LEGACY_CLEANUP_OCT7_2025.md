@@ -22,6 +22,7 @@
 Deleted entire `/archive/` folder as scheduled per `archive/README.md`:
 
 **Services (13 files)**:
+
 - `services/cross-platform/` - ExternalIntegrationService, MobileWebBridgeService, RealTimeSyncService, UnifiedApiGateway
 - `services/phase1/` - EquipmentService, PracticeScheduleService
 - `services/phase2/` - GamePlanService, GamePlanServiceSimple
@@ -30,27 +31,33 @@ Deleted entire `/archive/` folder as scheduled per `archive/README.md`:
 - `services/mobile/` - index
 
 **Database Scripts (2 files)**:
+
 - `database/legacy/fix-rls-policies.sql`
 - `database/legacy/temp-disable-rls.sql`
 
 **Legacy Docs (3 files)**:
+
 - `docs/code-smells.json`
 - `docs/dependency-graph.dot`
 - `docs/legacy_docs/AUTH_SECURITY_GAMEPLAN.md`
 
 **Navigation (2 files)**:
+
 - `navigation/nav.schema.ts`
 - `navigation/nav.schema.test.ts`
 
 **Scripts (2 files)**:
+
 - `scripts/legacy_scripts/fix-rls-policies.ts`
 - `scripts/legacy_scripts/temp-disable-rls.ts`
 
 **Stories (2 files)**:
+
 - `stories/navigation.stories.tsx`
 - `stories/usePermissions.stories.tsx`
 
 **Other**:
+
 - `boxcall_schema` - obsolete schema file
 - `README.md` - archive documentation
 
@@ -61,9 +68,11 @@ Deleted entire `/archive/` folder as scheduled per `archive/README.md`:
 All files contained only `export {};` and were not imported anywhere:
 
 **Telemetry**:
+
 - `src/telemetry/hooks.ts` - "intentionally emptied placeholder to satisfy legacy import paths"
 
 **Icon System** (13 files):
+
 - `src/components/ui/Icon/StreamlinedIcon.tsx` - "Deprecated legacy icon module"
 - `src/components/ui/Icon/ProfessionalIcon.tsx` - "Deprecated legacy icon module"
 - `src/components/ui/Icon/registry.ts` - empty
@@ -78,6 +87,7 @@ All files contained only `export {};` and were not imported anywhere:
 - `src/components/ui/Icon/categories/SystemIcons.ts` - empty
 
 **Diagram System**:
+
 - `src/components/playbook/diagram-canvas/DiagramCanvasRoute.tsx` - "Archived: see archive/2025-08-14-diagram-legacy"
 
 ---
@@ -127,36 +137,41 @@ ls src/tests/  # directory not found ✅
 
 ## 📊 Impact
 
-| Metric | Before | After | Change |
-|--------|--------|-------|--------|
-| **Total Files** | +40 files | 40 files | -40 ✅ |
-| **Lines of Code** | +12,217 lines | 0 lines | -12,217 ✅ |
-| **Archive Size** | 428 KB | 0 KB | -428 KB ✅ |
-| **Empty Placeholders** | 14 files | 0 files | -14 ✅ |
-| **Empty Directories** | 5 dirs | 0 dirs | -5 ✅ |
-| **TypeScript Errors** | 0 | 0 | No change ✅ |
+| Metric                 | Before        | After    | Change       |
+| ---------------------- | ------------- | -------- | ------------ |
+| **Total Files**        | +40 files     | 40 files | -40 ✅       |
+| **Lines of Code**      | +12,217 lines | 0 lines  | -12,217 ✅   |
+| **Archive Size**       | 428 KB        | 0 KB     | -428 KB ✅   |
+| **Empty Placeholders** | 14 files      | 0 files  | -14 ✅       |
+| **Empty Directories**  | 5 dirs        | 0 dirs   | -5 ✅        |
+| **TypeScript Errors**  | 0             | 0        | No change ✅ |
 
 ---
 
 ## 🎉 Benefits
 
 ### **1. Reduced Maintenance Burden**
+
 - No more wondering "should I update this?"
 - Clear signal: if it's in the repo, it's active
 
 ### **2. Faster Searches**
+
 - 40 fewer files to search through
 - No false positives from archived code
 
 ### **3. Cleaner Git History**
+
 - Removed files are still in git history if needed
 - `git log --follow` works for moved files
 
 ### **4. Reduced Confusion**
+
 - No more "is this the right file?" moments
 - No duplicate service implementations
 
 ### **5. Build Performance**
+
 - 12,217 fewer lines to parse
 - Faster TypeScript compilation
 
@@ -179,6 +194,7 @@ git checkout <commit-hash> -- path/to/deleted/file
 ## 📝 Related Cleanup Sessions
 
 This cleanup follows:
+
 1. **Diagram Refactor** (Oct 7, 2025) - Renamed diagram/ → diagram-editor/, diagram-v2/ → diagram-canvas/
 2. **Diagram Deprecated Files Cleanup** (Oct 7, 2025) - Removed 6 deprecated diagram files
 
@@ -252,6 +268,7 @@ Based on `docs/architecture/CLEANUP_AUDIT.md`:
 
 **Cleanup Completed**: October 7, 2025, 9:15 PM  
 **Total Time**: ~30 minutes  
-**Commits**: 
+**Commits**:
+
 - 5850659: refactor(diagram): rename diagram systems for clarity
 - 62a2d59: chore: remove archived code and empty placeholder files

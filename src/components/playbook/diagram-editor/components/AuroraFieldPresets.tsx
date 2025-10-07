@@ -1,4 +1,3 @@
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
 /*
  * Aurora components use intentional dark theme colors (slate-*) matching
  * the diagram editor's always-dark interface (like Figma/VS Code dark theme).

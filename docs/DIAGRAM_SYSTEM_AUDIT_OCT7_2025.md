@@ -1,4 +1,5 @@
 # Play Diagram System Audit Report
+
 **Date**: October 7, 2025  
 **Auditor**: GitHub Copilot  
 **Scope**: Diagram, PlayBuilder, Playbook Drawer systems
@@ -21,9 +22,11 @@
 ### **Active Systems** ✅
 
 #### 1. **diagram-v2/** (CURRENT - ACTIVE)
+
 **Path**: `src/components/playbook/diagram-v2/`  
 **Status**: ✅ **IN USE** (imported in DiagramPaneRoute.tsx, PlaybookPage.tsx)  
 **Components**:
+
 ```
 diagram-v2/
 ├── VisualPlayBuilderV2.tsx ✅ (ACTIVE - used in DiagramPaneRoute)
@@ -54,6 +57,7 @@ diagram-v2/
 ```
 
 **Import Pattern**:
+
 ```tsx
 // Active usage in DiagramPaneRoute.tsx
 import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
@@ -62,9 +66,11 @@ import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
 ---
 
 #### 2. **diagram/** (OLD - STILL PARTIALLY USED)
+
 **Path**: `src/components/playbook/diagram/`  
 **Status**: ⚠️ **MIXED** (PlayDiagramBuilder still used, but VisualPlayBuilder deprecated)  
 **Components**:
+
 ```
 diagram/
 ├── PlayDiagramBuilder.tsx ✅ (STILL USED - lazy loaded in PlaybookPage)
@@ -84,14 +90,16 @@ diagram/
 ```
 
 **Import Pattern**:
+
 ```tsx
 // Still used in PlaybookPage.tsx (lazy loaded)
-const PlayDiagramBuilder = lazy(() =>
-  import("../components/playbook/diagram/PlayDiagramBuilder")
+const PlayDiagramBuilder = lazy(
+  () => import("../components/playbook/diagram/PlayDiagramBuilder")
 );
 ```
 
 **❌ Deprecated but has tests**:
+
 ```tsx
 // diagram/__tests__/VisualPlayBuilder.integration.test.tsx
 import { VisualPlayBuilder } from "../VisualPlayBuilder";
@@ -102,6 +110,7 @@ import { VisualPlayBuilder } from "../VisualPlayBuilder";
 ### **Deprecated Files** ❌
 
 #### 1. **AddNewPlayModal_OLD.tsx**
+
 **Path**: `src/components/playbook/AddNewPlayModal_OLD.tsx`  
 **Size**: 1,323 lines  
 **Status**: ❌ **DEAD CODE** - Not imported anywhere  
@@ -109,23 +118,27 @@ import { VisualPlayBuilder } from "../VisualPlayBuilder";
 **Action**: 🗑️ **DELETE**
 
 #### 2. **PlayDetailModal.tsx.clean**
+
 **Path**: `src/components/playbook/PlayDetailModal.tsx.clean`  
 **Status**: ❌ **BACKUP FILE** - Not a real component  
 **Action**: 🗑️ **DELETE**
 
 #### 3. **visual/VisualPlayBuilder.tsx**
+
 **Path**: `src/components/playbook/visual/VisualPlayBuilder.tsx`  
 **Content**: `// Archived: see archive/2025-08-14-diagram-legacy/VisualPlayBuilder.tsx`  
 **Status**: ❌ **ARCHIVED PLACEHOLDER** - 1 line stub  
 **Action**: 🗑️ **DELETE**
 
 #### 4. **PlayBuilder/DiagramEditorMVP.tsx**
+
 **Path**: `src/components/playbook/PlayBuilder/DiagramEditorMVP.tsx`  
 **Content**: `// Archived: see archive/2025-08-14-diagram-legacy/DiagramEditorMVP.tsx`  
 **Status**: ❌ **ARCHIVED PLACEHOLDER** - 1 line stub  
 **Action**: 🗑️ **DELETE**
 
 #### 5. **diagram/VisualPlayBuilder.tsx** (Maybe)
+
 **Path**: `src/components/playbook/diagram/VisualPlayBuilder.tsx`  
 **Status**: ⚠️ **HAS TESTS BUT NOT IMPORTED**  
 **Test File**: `diagram/__tests__/VisualPlayBuilder.integration.test.tsx`  
@@ -136,11 +149,14 @@ import { VisualPlayBuilder } from "../VisualPlayBuilder";
 ## 🚨 Key Issues Identified
 
 ### **Issue 1: Duplicate Diagram Systems**
+
 **Problem**: Two parallel diagram implementations exist:
+
 - `diagram/` (old)
 - `diagram-v2/` (new)
 
 **Evidence**:
+
 ```tsx
 // OLD system context
 import { DiagramEditorContext } from "../context/DiagramEditorContext";
@@ -151,11 +167,13 @@ import { DiagramEditorProvider, useDiagramEditor } from "./context";
 ```
 
 **Impact**:
+
 - Confusing for developers
 - Duplicate code maintenance
 - Potential bugs if wrong one is used
 
-**Recommendation**: 
+**Recommendation**:
+
 - ✅ Keep `diagram-v2/` (actively used in routes)
 - ⚠️ Verify if `diagram/PlayDiagramBuilder.tsx` can be migrated to v2
 - 🗑️ Remove `diagram/VisualPlayBuilder.tsx` after confirming tests are obsolete
@@ -163,9 +181,11 @@ import { DiagramEditorProvider, useDiagramEditor } from "./context";
 ---
 
 ### **Issue 2: Old Test Files with No Active Component**
+
 **Problem**: `diagram/__tests__/VisualPlayBuilder.integration.test.tsx` tests a component that may be deprecated
 
 **Test File Content**:
+
 ```tsx
 import { VisualPlayBuilder } from "../VisualPlayBuilder";
 
@@ -177,6 +197,7 @@ describe("Integration: VisualPlayBuilder", () => {
 **Component Status**: Not imported in any active code
 
 **Action Required**:
+
 1. Check if tests run in CI/CD
 2. If tests pass but component unused → Delete both test and component
 3. If tests fail → Component already broken, safe to delete
@@ -184,18 +205,22 @@ describe("Integration: VisualPlayBuilder", () => {
 ---
 
 ### **Issue 3: Archived Placeholder Files**
+
 **Problem**: Two files are just 1-line stubs pointing to archive
 
 **Files**:
+
 1. `src/components/playbook/visual/VisualPlayBuilder.tsx`
 2. `src/components/playbook/PlayBuilder/DiagramEditorMVP.tsx`
 
 **Content**:
+
 ```tsx
 // Archived: see archive/2025-08-14-diagram-legacy/VisualPlayBuilder.tsx
 ```
 
 **Why this is bad**:
+
 - Confuses developers
 - Shows up in file searches
 - Wastes mental energy
@@ -204,12 +229,14 @@ describe("Integration: VisualPlayBuilder", () => {
 
 ---
 
-### **Issue 4: _OLD Suffix Files**
+### **Issue 4: \_OLD Suffix Files**
+
 **Problem**: `AddNewPlayModal_OLD.tsx` is 1,323 lines of dead code
 
 **Why it exists**: Likely backup before refactor
 
 **Current Status**:
+
 - ❌ Not imported anywhere
 - ✅ New version exists (`AddNewPlayModal.tsx`)
 - 🗑️ Safe to delete
@@ -220,29 +247,30 @@ describe("Integration: VisualPlayBuilder", () => {
 
 ### **Components Actually Used**
 
-| Component | Location | Used In | Status |
-|-----------|----------|---------|--------|
-| `VisualPlayBuilderV2` | `diagram-v2/` | DiagramPaneRoute | ✅ ACTIVE |
-| `PlayDiagramBuilder` | `diagram/` | PlaybookPage (lazy) | ✅ ACTIVE |
-| `DiagramPaneRoute` | `playbook/` | App routes | ✅ ACTIVE |
-| `AddNewPlayModal` | `playbook/` | PlaybookPage | ✅ ACTIVE |
-| `PlayDetailModal` | `playbook/` | PlaybookPage | ✅ ACTIVE |
+| Component             | Location      | Used In             | Status    |
+| --------------------- | ------------- | ------------------- | --------- |
+| `VisualPlayBuilderV2` | `diagram-v2/` | DiagramPaneRoute    | ✅ ACTIVE |
+| `PlayDiagramBuilder`  | `diagram/`    | PlaybookPage (lazy) | ✅ ACTIVE |
+| `DiagramPaneRoute`    | `playbook/`   | App routes          | ✅ ACTIVE |
+| `AddNewPlayModal`     | `playbook/`   | PlaybookPage        | ✅ ACTIVE |
+| `PlayDetailModal`     | `playbook/`   | PlaybookPage        | ✅ ACTIVE |
 
 ### **Components Not Used**
 
-| Component | Location | Reason | Action |
-|-----------|----------|--------|--------|
-| `VisualPlayBuilder` | `diagram/` | Superseded by V2 | 🗑️ DELETE |
-| `AddNewPlayModal_OLD` | `playbook/` | Backup file | 🗑️ DELETE |
-| `PlayDetailModal.tsx.clean` | `playbook/` | Backup file | 🗑️ DELETE |
-| `visual/VisualPlayBuilder` | `visual/` | Placeholder | 🗑️ DELETE |
-| `DiagramEditorMVP` | `PlayBuilder/` | Placeholder | 🗑️ DELETE |
+| Component                   | Location       | Reason           | Action    |
+| --------------------------- | -------------- | ---------------- | --------- |
+| `VisualPlayBuilder`         | `diagram/`     | Superseded by V2 | 🗑️ DELETE |
+| `AddNewPlayModal_OLD`       | `playbook/`    | Backup file      | 🗑️ DELETE |
+| `PlayDetailModal.tsx.clean` | `playbook/`    | Backup file      | 🗑️ DELETE |
+| `visual/VisualPlayBuilder`  | `visual/`      | Placeholder      | 🗑️ DELETE |
+| `DiagramEditorMVP`          | `PlayBuilder/` | Placeholder      | 🗑️ DELETE |
 
 ---
 
 ## 🎯 Recommended Actions
 
 ### **Priority 1: Safe Deletions** 🔥
+
 These are 100% safe to delete immediately:
 
 ```bash
@@ -291,12 +319,14 @@ npm run test -- diagram
 **Goal**: Migrate `diagram/PlayDiagramBuilder.tsx` to `diagram-v2/` or deprecate
 
 **Steps**:
+
 1. Analyze `PlayDiagramBuilder` usage in `PlaybookPage.tsx`
 2. Check if `VisualPlayBuilderV2` can replace it
 3. If yes → Migrate PlaybookPage to use V2
 4. If no → Document why both are needed
 
 **Code to check**:
+
 ```tsx
 // PlaybookPage.tsx lines 52-56
 const PlayDiagramBuilder = lazy(() =>
@@ -312,10 +342,11 @@ const PlayDiagramBuilder = lazy(() =>
   initialDocument={diagramDocument}
   onSave={handleSaveDiagram}
   onClose={() => setShowDiagramBuilder(false)}
-/>
+/>;
 ```
 
 **Questions to answer**:
+
 - Does `VisualPlayBuilderV2` support all features of `PlayDiagramBuilder`?
 - Are there different use cases?
 - Can we merge them?
@@ -325,6 +356,7 @@ const PlayDiagramBuilder = lazy(() =>
 ### **Priority 4: Clean Up Test Files** 🧪
 
 **Orphaned Tests to Review**:
+
 ```
 diagram/__tests__/VisualPlayBuilder.integration.test.tsx
 diagram/__tests__/ActionBar.unit.test.tsx
@@ -335,6 +367,7 @@ diagram/__tests__/Toolbar.integration.test.tsx
 ```
 
 **Action**:
+
 1. Run test suite
 2. Any tests that fail/skip → Delete them and their components
 3. Any tests that pass for unused components → Delete both
@@ -353,11 +386,13 @@ diagram/__tests__/Toolbar.integration.test.tsx
 **Path**: `src/components/playbook/diagram-v2/`
 
 ### Components
+
 - **VisualPlayBuilderV2**: Main diagram editor (used in routes)
 - **DiagramV2Route**: Standalone diagram route
 - **FieldCanvas**: SVG rendering engine
 
 ### Usage
+
 - Accessible via `/playbook/diagram?playId=123`
 - Used in DiagramPaneRoute component
 - Context: `DiagramEditorProvider` + `useDiagramEditor`
@@ -400,6 +435,7 @@ npm run build
 ## 📈 Expected Impact
 
 ### **Before Cleanup**:
+
 - **Files**: 250+ diagram-related
 - **Lines of Code**: ~15,000
 - **Duplicate Systems**: 2
@@ -407,6 +443,7 @@ npm run build
 - **Confusion**: High
 
 ### **After Cleanup**:
+
 - **Files**: ~230 (-20)
 - **Lines of Code**: ~13,600 (-1,400)
 - **Duplicate Systems**: 1 (diagram-v2)
@@ -414,6 +451,7 @@ npm run build
 - **Confusion**: Low
 
 ### **Benefits**:
+
 ✅ Faster builds (fewer files to process)  
 ✅ Easier onboarding (clearer structure)  
 ✅ Reduced maintenance (no duplicate code)  
@@ -425,17 +463,20 @@ npm run build
 ## 🗂️ File Deletion Checklist
 
 ### **Immediate Deletions** (100% Safe):
+
 - [ ] `src/components/playbook/AddNewPlayModal_OLD.tsx`
 - [ ] `src/components/playbook/PlayDetailModal.tsx.clean`
 - [ ] `src/components/playbook/visual/VisualPlayBuilder.tsx`
 - [ ] `src/components/playbook/PlayBuilder/DiagramEditorMVP.tsx`
 
 ### **After Investigation**:
+
 - [ ] `src/components/playbook/diagram/VisualPlayBuilder.tsx`
 - [ ] `src/components/playbook/diagram/__tests__/VisualPlayBuilder.integration.test.tsx`
 - [ ] Potentially entire `diagram/` folder (if PlayDiagramBuilder can be migrated)
 
 ### **Directories to Remove**:
+
 - [ ] `src/components/playbook/visual/` (after deleting VisualPlayBuilder)
 - [ ] `src/components/playbook/PlayBuilder/` (after deleting DiagramEditorMVP)
 
@@ -444,6 +485,7 @@ npm run build
 ## 🚀 Next Steps
 
 1. **Run dead code detection**:
+
    ```bash
    npm run deadcode:scan
    ```

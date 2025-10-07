@@ -1,5 +1,4 @@
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
-/* 
+/*
  * DiagramEditor uses an intentionally dark-themed interface (like Figma, VS Code)
  * that doesn't respond to system theme. Slate colors are intentional design choices.
  */
@@ -597,9 +596,7 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
   );
 };
 
-export const DiagramEditor: React.FC<DiagramEditorProps> = (
-  props
-) => {
+export const DiagramEditor: React.FC<DiagramEditorProps> = (props) => {
   return (
     <DiagramEditorProvider>
       <DiagramEditorInner {...props} />
