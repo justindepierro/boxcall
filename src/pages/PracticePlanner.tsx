@@ -284,7 +284,7 @@ export function PracticePlanner() {
                           ref={provided.innerRef}
                           className={`space-y-3 min-h-48 p-4 rounded-lg placeholder-zone transition-colors ${
                             snapshot.isDraggingOver
-                              ? "border-jade-400 surface-subtle"
+                              ? "border-component-badge-primary surface-subtle"
                               : "border-subtle surface-subtle"
                           }`}
                         >

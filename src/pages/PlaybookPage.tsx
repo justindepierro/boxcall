@@ -24,8 +24,8 @@ import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
-import type { DiagramMetadata } from "../components/playbook/diagram/PlayDiagramBuilder";
-import type { DiagramDocument } from "../components/playbook/diagram/types/types";
+import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
+import type { DiagramDocument } from "../components/playbook/diagram-editor/types/types";
 import { useActiveTeamStore } from "../state/activeTeamStore";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { Card } from "../components/ui/Card";
@@ -50,9 +50,9 @@ const KeyboardShortcutsGuide = lazy(() =>
   }))
 );
 const PlayDiagramBuilder = lazy(() =>
-  import("../components/playbook/diagram/PlayDiagramBuilder").then(
+  import("../components/playbook/diagram-editor/DiagramEditor").then(
     (module) => ({
-      default: module.PlayDiagramBuilder,
+      default: module.DiagramEditor,
     })
   )
 );

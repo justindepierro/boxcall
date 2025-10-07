@@ -1,0 +1,452 @@
+/**
+ * Animation Utility Classes
+ * 
+ * Systematic animation utilities based on design tokens
+ * Duration, easing, transition presets, reduced motion support
+ */
+
+/* ============================================================================
+   DURATION UTILITIES
+   ============================================================================ */
+
+.duration-instant {
+  animation-duration: var(--animation-duration-instant);
+  transition-duration: var(--animation-duration-instant);
+}
+
+.duration-quick {
+  animation-duration: var(--animation-duration-quick);
+  transition-duration: var(--animation-duration-quick);
+}
+
+.duration-smooth {
+  animation-duration: var(--animation-duration-smooth);
+  transition-duration: var(--animation-duration-smooth);
+}
+
+.duration-confident {
+  animation-duration: var(--animation-duration-confident);
+  transition-duration: var(--animation-duration-confident);
+}
+
+.duration-deliberate {
+  animation-duration: var(--animation-duration-deliberate);
+  transition-duration: var(--animation-duration-deliberate);
+}
+
+/* ============================================================================
+   TIMING FUNCTION (EASING) UTILITIES
+   ============================================================================ */
+
+.ease-linear {
+  animation-timing-function: var(--animation-timing-linear);
+  transition-timing-function: var(--animation-timing-linear);
+}
+
+.ease-in {
+  animation-timing-function: var(--animation-timing-ease-in);
+  transition-timing-function: var(--animation-timing-ease-in);
+}
+
+.ease-out {
+  animation-timing-function: var(--animation-timing-ease-out);
+  transition-timing-function: var(--animation-timing-ease-out);
+}
+
+.ease-in-out {
+  animation-timing-function: var(--animation-timing-ease-in-out);
+  transition-timing-function: var(--animation-timing-ease-in-out);
+}
+
+/* BoxCall custom easing curves */
+.ease-square {
+  animation-timing-function: var(--animation-timing-square-ease);
+  transition-timing-function: var(--animation-timing-square-ease);
+}
+
+.ease-snap {
+  animation-timing-function: var(--animation-timing-square-snap);
+  transition-timing-function: var(--animation-timing-square-snap);
+}
+
+.ease-punch {
+  animation-timing-function: var(--animation-timing-square-punch);
+  transition-timing-function: var(--animation-timing-square-punch);
+}
+
+.ease-bounce {
+  animation-timing-function: var(--animation-timing-square-bounce);
+  transition-timing-function: var(--animation-timing-square-bounce);
+}
+
+/* ============================================================================
+   TRANSITION PRESETS - All-Property Transitions
+   ============================================================================ */
+
+.transition-fast {
+  transition: var(--animation-transition-fast);
+}
+
+.transition-normal {
+  transition: var(--animation-transition-normal);
+}
+
+.transition-slow {
+  transition: var(--animation-transition-slow);
+}
+
+/* Semantic transitions for common interactions */
+.transition-hover {
+  transition: var(--semantic-animation-hover-transition);
+}
+
+.transition-press {
+  transition: var(--semantic-animation-press-transition);
+}
+
+.transition-base {
+  transition: var(--semantic-animation-base-transition);
+}
+
+.transition-modal {
+  transition: var(--semantic-animation-modal-transition);
+}
+
+/* ============================================================================
+   PROPERTY-SPECIFIC TRANSITIONS
+   ============================================================================ */
+
+/* Opacity transitions (fade) */
+.transition-opacity-fast {
+  transition: opacity var(--animation-duration-quick)
+    var(--animation-timing-ease-out);
+}
+
+.transition-opacity {
+  transition: opacity var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+.transition-opacity-slow {
+  transition: opacity var(--animation-duration-confident)
+    var(--animation-timing-ease-out);
+}
+
+/* Transform transitions (move, scale, rotate) */
+.transition-transform-fast {
+  transition: transform var(--animation-duration-quick)
+    var(--animation-timing-ease-out);
+}
+
+.transition-transform {
+  transition: transform var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+.transition-transform-slow {
+  transition: transform var(--animation-duration-confident)
+    var(--animation-timing-ease-out);
+}
+
+/* Color transitions */
+.transition-colors-fast {
+  transition:
+    color var(--animation-duration-quick) var(--animation-timing-ease-out),
+    background-color var(--animation-duration-quick)
+      var(--animation-timing-ease-out),
+    border-color var(--animation-duration-quick)
+      var(--animation-timing-ease-out);
+}
+
+.transition-colors {
+  transition:
+    color var(--animation-duration-smooth) var(--animation-timing-ease-out),
+    background-color var(--animation-duration-smooth)
+      var(--animation-timing-ease-out),
+    border-color var(--animation-duration-smooth)
+      var(--animation-timing-ease-out);
+}
+
+/* Shadow transitions */
+.transition-shadow-fast {
+  transition: box-shadow var(--animation-duration-quick)
+    var(--animation-timing-ease-out);
+}
+
+.transition-shadow {
+  transition: box-shadow var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+/* ============================================================================
+   COMMON ANIMATION PATTERNS
+   ============================================================================ */
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+.animate-fade-in-fast {
+  animation: fade-in var(--animation-duration-quick)
+    var(--animation-timing-ease-out);
+}
+
+/* Fade out animation */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-fade-out {
+  animation: fade-out var(--animation-duration-smooth)
+    var(--animation-timing-ease-in);
+}
+
+/* Slide up animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+/* Slide down animation */
+@keyframes slide-down {
+  from {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+/* Scale in animation */
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in var(--animation-duration-smooth)
+    var(--animation-timing-ease-out);
+}
+
+/* Spin animation (loading) */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin var(--semantic-animation-loading-duration)
+    var(--animation-timing-linear) infinite;
+}
+
+.animate-spin-fast {
+  animation: spin var(--animation-duration-smooth)
+    var(--animation-timing-linear) infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse var(--semantic-animation-loading-duration)
+    var(--animation-timing-ease-in-out) infinite;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: var(--animation-timing-ease-in);
+  }
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: var(--animation-timing-ease-out);
+  }
+}
+
+.animate-bounce {
+  animation: bounce var(--animation-duration-confident) infinite;
+}
+
+/* ============================================================================
+   REDUCED MOTION SUPPORT - Accessibility
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable animations for users who prefer reduced motion */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Override animation utilities to respect reduced motion */
+  .duration-instant,
+  .duration-quick,
+  .duration-smooth,
+  .duration-confident,
+  .duration-deliberate {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Disable spinning animations completely */
+  .animate-spin,
+  .animate-spin-fast {
+    animation: none !important;
+  }
+
+  /* Keep opacity changes but make them instant */
+  .animate-fade-in,
+  .animate-fade-in-fast,
+  .animate-fade-out {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+   HOVER/FOCUS STATE UTILITIES
+   ============================================================================ */
+
+/* Hover lift effect */
+.hover-lift {
+  transition:
+    transform var(--semantic-animation-hover-duration)
+      var(--semantic-animation-hover-timing),
+    box-shadow var(--semantic-animation-hover-duration)
+      var(--semantic-animation-hover-timing);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Hover scale effect */
+.hover-scale {
+  transition: transform var(--semantic-animation-hover-duration)
+    var(--semantic-animation-hover-timing);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Hover glow effect */
+.hover-glow {
+  transition: box-shadow var(--semantic-animation-hover-duration)
+    var(--semantic-animation-hover-timing);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgb(var(--color-jade-500-rgb) / 0.3);
+}
+
+/* Press effect (active state) */
+.press-effect {
+  transition: transform var(--semantic-animation-press-duration)
+    var(--semantic-animation-press-timing);
+}
+
+.press-effect:active {
+  transform: scale(0.98);
+}
+
+/* ============================================================================
+   ANIMATION DELAYS - Staggered Animations
+   ============================================================================ */
+
+.delay-75 {
+  animation-delay: 75ms;
+  transition-delay: 75ms;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+  transition-delay: 150ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+  transition-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+  transition-delay: 500ms;
+}
+
+/* ============================================================================
+   WILL-CHANGE OPTIMIZATION
+   ============================================================================ */
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-contents {
+  will-change: contents;
+}
+
+/* Remove will-change after animation completes */
+.will-change-auto {
+  will-change: auto;
+}

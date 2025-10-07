@@ -65,9 +65,7 @@ export function AuthDebugPanel() {
       <div>Session: {authState.hasSession ? "✅ ACTIVE" : "❌ NONE"}</div>
       <div>User ID: {authState.userId || "NULL"}</div>
       {authState.error && (
-        <div className="mt-1 text-xs">
-          Error: {authState.error}
-        </div>
+        <div className="mt-1 text-xs">Error: {authState.error}</div>
       )}
     </div>
   );

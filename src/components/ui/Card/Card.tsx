@@ -7,14 +7,14 @@
 import { forwardRef } from "react";
 
 import type { CardProps, CardStylesConfig } from "./Card.types";
-// Card styles configuration - iOS-inspired glassmorphism and clean design
+// Card styles configuration - Using component token system (Priority 5)
 const cardStyles: CardStylesConfig = {
-  base: "rounded-xl bg-surface-secondary shadow-card transition-all duration-200 ease-in-out",
+  base: "card rounded-xl transition-all duration-200 ease-in-out",
   variants: {
-    default: "hover:bg-surface-muted hover:shadow-card-hover",
+    default: "card-interactive", // Uses component tokens for hover
     glass:
-      "bg-surface-base/80 backdrop-blur-md hover:bg-surface-base/90 shadow-lg",
-    elevated: "shadow-lg hover:shadow-xl bg-white dark:bg-surface-secondary",
+      "bg-surface-base/80 backdrop-blur-md hover:bg-surface-base/90 shadow-lg", // Custom glass effect
+    elevated: "card-elevated bg-white dark:bg-surface-secondary", // Uses component token shadow
     outlined: "border-card-elevated bg-surface-secondary",
     filled: "bg-surface-muted hover:bg-surface-muted/90 shadow-sm",
     accent:
@@ -27,7 +27,7 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2",
+    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus:ring",
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

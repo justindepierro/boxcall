@@ -17,12 +17,12 @@
 .dashboard-hero-section [class*="card"],
 .dashboard-hero-section .collaborative-widget,
 .dashboard-hero-section .surface-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: var(--semantic-bg-primary);
+  border: 1px solid var(--component-card-border);
   border-radius: 16px;
   box-shadow:
-    0 1px 3px rgb(var(--color-black-rgb) / 0.02),
-    0 1px 2px rgb(var(--color-black-rgb) / 0.04);
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: visible;
   position: relative;
@@ -36,10 +36,10 @@
 .dashboard-hero-section [class*="card"]:hover,
 .dashboard-hero-section .collaborative-widget:hover,
 .dashboard-hero-section .surface-card:hover {
-  border-color: var(--color-gray-300);
+  border-color: var(--component-card-border-hover);
   box-shadow:
-    0 8px 25px rgb(var(--color-black-rgb) / 0.08),
-    0 3px 10px rgb(var(--color-black-rgb) / 0.06);
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 10px rgba(0, 0, 0, 0.06);
   transform: translateY(-2px);
 }
 
@@ -59,8 +59,8 @@
   height: 4px;
   background: linear-gradient(
     135deg,
-    var(--color-jade-500) 0%,
-    var(--color-jade-400) 100%
+    var(--component-badge-success-border) 0%,
+    var(--component-badge-success-text) 100%
   );
   border-radius: 16px 16px 0 0;
   z-index: 1;
@@ -81,8 +81,8 @@
   height: 4px;
   background: linear-gradient(
     135deg,
-    var(--color-navy-500) 0%,
-    var(--color-navy-400) 100%
+    var(--semantic-secondary) 0%,
+    var(--semantic-secondary-hover) 100%
   );
   border-radius: 16px 16px 0 0;
   z-index: 1;
@@ -101,8 +101,8 @@
   height: 4px;
   background: linear-gradient(
     135deg,
-    var(--color-amber-500) 0%,
-    var(--color-amber-400) 100%
+    var(--component-badge-warning-border) 0%,
+    var(--component-badge-warning-text) 100%
   );
   border-radius: 16px 16px 0 0;
   z-index: 1;
@@ -121,8 +121,8 @@
   height: 4px;
   background: linear-gradient(
     135deg,
-    var(--color-red-500) 0%,
-    var(--color-red-400) 100%
+    var(--component-badge-error-border) 0%,
+    var(--component-badge-error-text) 100%
   );
   border-radius: 16px 16px 0 0;
   z-index: 1;
@@ -134,7 +134,7 @@
 .dashboard-hero-section [data-testid*="headline"] {
   font-size: 1.125rem !important;
   font-weight: 700 !important;
-  color: var(--color-gray-800) !important;
+  color: var(--semantic-text-primary) !important;
   margin-bottom: 0.5rem !important;
   display: flex !important;
   align-items: center !important;
@@ -152,7 +152,7 @@
   font-size: 0.9rem !important;
   line-height: 1.6 !important;
   margin-bottom: 0.75rem !important;
-  color: var(--color-gray-500) !important;
+  color: var(--semantic-text-muted) !important;
   font-weight: 400;
 }
 
@@ -186,7 +186,7 @@
 .dashboard-hero-section .card-actions {
   margin-top: auto;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-gray-100);
+  border-top: 1px solid var(--semantic-border);
 }
 
 .dashboard-hero-section .card-actions button {
@@ -196,17 +196,17 @@
   padding: 0.875rem 1.25rem !important;
   border-radius: 12px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--color-gray-200);
-  background: var(--color-gray-50) !important;
-  color: var(--color-gray-600) !important;
+  border: 1px solid var(--component-card-border);
+  background: var(--semantic-bg-muted) !important;
+  color: var(--semantic-text-secondary) !important;
   letter-spacing: -0.025em;
   position: relative;
   overflow: hidden;
 }
 
 .dashboard-hero-section .card-actions button:hover {
-  background: var(--color-gray-100) !important;
-  border-color: var(--color-gray-300);
+  background: var(--semantic-border) !important;
+  border-color: var(--component-card-border-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -229,11 +229,11 @@
   padding: 1rem;
   background: linear-gradient(
     135deg,
-    var(--color-gray-50) 0%,
-    var(--color-gray-100) 100%
+    var(--semantic-bg-muted) 0%,
+    var(--semantic-border) 100%
   );
   border-radius: 12px;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--component-card-border);
   transition: all 0.2s ease;
 }
 
@@ -246,7 +246,7 @@
   font-size: 1.5rem !important;
   font-weight: 800;
   line-height: 1.2;
-  color: var(--color-gray-800);
+  color: var(--semantic-text-primary);
   letter-spacing: -0.025em;
 }
 
@@ -255,7 +255,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-top: 0.5rem;
-  color: var(--color-gray-500);
+  color: var(--semantic-text-muted);
   font-weight: 600;
 }
 
@@ -296,9 +296,9 @@
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--color-gray-500);
+  color: var(--semantic-text-muted);
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--semantic-border);
   position: relative;
   padding-left: 1.5rem;
 }
@@ -315,8 +315,8 @@
   top: 0.5rem;
   background: linear-gradient(
     135deg,
-    var(--color-blue-500),
-    var(--color-blue-400)
+    var(--component-badge-info-border),
+    var(--component-badge-info-text)
   );
   color: white;
   font-size: 0.75rem;
@@ -335,10 +335,10 @@
 
 /* Filter Button Improvements */
 .dashboard-hero-section .bg-surface-secondary {
-  background-color: var(--color-gray-100) !important;
+  background-color: var(--semantic-border) !important;
   border-radius: 12px; /* Tier 1: rounded-lg standard */
   padding: 0.25rem;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--component-card-border);
 }
 
 .dashboard-hero-section .bg-surface-secondary button {
@@ -351,15 +351,15 @@
 
 /* Progress Bar Enhancements */
 .dashboard-hero-section .bg-border-secondary {
-  background-color: var(--color-gray-200) !important;
+  background-color: var(--component-card-border) !important;
   border-radius: 12px; /* Tier 1: rounded-lg standard */
 }
 
 .dashboard-hero-section .bg-primary {
   background: linear-gradient(
     135deg,
-    var(--color-navy-500) 0%,
-    var(--color-navy-400) 100%
+    var(--semantic-secondary) 0%,
+    var(--semantic-secondary-hover) 100%
   ) !important;
   border-radius: 12px; /* Tier 1: rounded-lg standard */
 }
@@ -369,12 +369,12 @@
 /* Remove any outdated styling overrides */
 .team-dashboard-container .surface-card,
 .dashboard-main-content .surface-card {
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--component-card-border);
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.02),
     0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-white);
+  background: var(--semantic-bg-primary);
   border-radius: 16px;
 }
 
@@ -383,7 +383,7 @@
   box-shadow:
     0 8px 25px rgba(0, 0, 0, 0.08),
     0 3px 10px rgba(0, 0, 0, 0.06);
-  border-color: var(--color-gray-300);
+  border-color: var(--component-card-border-hover);
 }
 
 /* Global text overflow prevention with modern approach */
@@ -419,7 +419,7 @@
 
 /* Enhanced accessibility and focus states */
 .dashboard-hero-section button:focus {
-  outline: 2px solid var(--color-blue-500);
+  outline: 2px solid var(--component-badge-info-border);
   outline-offset: 2px;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
@@ -514,7 +514,7 @@
 
 /* Quick actions styling improvements with overflow protection */
 .quick-actions-card {
-  background: linear-gradient(to bottom right, var(--color-gray-50), white);
+  background: linear-gradient(to bottom right, var(--semantic-bg-muted), white);
   transition: all 0.3s ease;
   overflow: hidden;
 }
@@ -552,18 +552,18 @@
 }
 
 .roster-card::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: var(--semantic-border);
   border-radius: 4px;
 }
 
 .roster-card::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
+  background: var(--component-card-border-hover);
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
 .roster-card::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
+  background: var(--semantic-text-muted);
 }
 
 /* Roster item text overflow prevention */
@@ -713,7 +713,7 @@
 /* Focus states for accessibility */
 .team-dashboard-container [role="region"]:focus-within,
 .team-dashboard-container .surface-card:focus-within {
-  outline: 2px solid var(--color-emerald-400);
+  outline: 2px solid var(--component-button-primary-bg);
   outline-offset: 2px;
 }
 

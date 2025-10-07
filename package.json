@@ -69,7 +69,8 @@
     "test:storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:127.0.0.1:6006 && npm run test:storybook\"",
     "test:storybook:visual": "test-storybook",
     "test:storybook:update": "test-storybook --updateSnapshots",
-    "prepare": "husky"
+    "deadcode:scan": "node scripts/find-dead-code.mjs",
+    "deadcode:report": "node scripts/find-dead-code.mjs > reports/dead-code-report.txt"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",

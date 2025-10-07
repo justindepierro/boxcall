@@ -24,6 +24,12 @@
 @import "./styles/animations.css";
 /* Modern transitions and micro-interactions */
 @import "./styles/transitions.css";
+/* Animation utility classes (design token-based) */
+@import "./styles/animation-utilities.css";
+/* Typography utility classes (design token-based) */
+@import "./styles/typography-utilities.css";
+/* Component utility classes (design token-based) */
+@import "./styles/component-utilities.css";
 
 @tailwind base;
 @tailwind components;
@@ -163,28 +169,16 @@ body,
 @layer base {
   :root {
     color-scheme: light dark;
-    /* Bridge legacy custom properties to semantic tokens */
-    --panel-bg: var(--semantic-bg-secondary);
-    --panel-border: var(--semantic-border);
+    /* Updated October 6, 2025 - Using component tokens directly */
+    --panel-bg: var(--component-card-background);
+    --panel-border: var(--component-card-border);
     --panel-radius: var(--radius-card, 12px);
     --panel-blur: 16px;
     --panel-shadow: var(--elevation-card-resting);
     --button-border-radius: var(--radius-button, 8px);
     --button-shadow: var(--elevation-button-resting);
-    --navigation-background: var(--semantic-bg-primary);
-    --navigation-border: var(--semantic-border);
-    --navigation-linkHover: var(--semantic-bg-muted);
-    --color-bgBase: var(--semantic-bg-primary);
-    --color-bgSecondary: var(--semantic-bg-secondary);
-    --color-bgMuted: var(--semantic-bg-muted);
-    --color-bgBrand: var(--color-bgBrand, var(--semantic-bg-secondary));
-    --color-border: var(--semantic-border);
-    --color-textPrimary: var(--semantic-text-primary);
-    --color-textSecondary: var(--semantic-text-secondary);
-    --color-textMuted: var(--semantic-text-muted);
-    --color-primary: var(--semantic-primary);
-    --color-primaryHover: var(--semantic-primary-hover);
-    --color-primaryActive: var(--semantic-primary-active);
+    --navigation-background: var(--component-navigation-bg);
+    --navigation-border: var(--component-navigation-border);
   }
   html {
     font-family: "Inter", system-ui, sans-serif;
@@ -272,26 +266,23 @@ body,
     border-radius: var(--panel-radius);
     box-shadow: var(--panel-shadow);
   }
-  /* Semantic Surface Utilities */
+  /* Semantic Surface Utilities - Updated October 6, 2025 */
   .surface-app {
     background-color: var(--semantic-bg-primary);
     color: var(--semantic-text-primary);
   }
-  .surface-header {
+  .surface-card {
     background-color: var(--semantic-bg-secondary);
     color: var(--semantic-text-primary);
   }
-  .surface-card {
-    background-color: var(--semantic-bg-secondary);
-  }
-  .surface-subtle {
+  .surface-muted {
     background-color: var(--semantic-bg-muted);
   }
-  /* New: Navigation surface (tokens-driven) */
+  /* New: Navigation surface (component tokens) */
   .surface-nav {
-    background: var(--navigation-background);
-    border-bottom: 1px solid var(--navigation-border);
-    color: var(--semantic-text-secondary);
+    background: var(--component-navigation-bg);
+    border-bottom: 1px solid var(--component-navigation-border);
+    color: var(--component-navigation-item-text);
   }
 
   /* Aurora-style ambient gradient backed by brand tokens */
@@ -320,7 +311,7 @@ body,
     background: var(--semantic-bg-muted);
   }
 
-  /* Nav item base + states (tokens-based) */
+  /* Nav item base + states (using component navigation tokens - Priority 5) */
   .nav-item-base {
     display: inline-flex;
     align-items: center;
@@ -330,23 +321,23 @@ body,
     font-weight: 500;
     border-radius: 0.5rem;
     line-height: 1.25rem;
-    color: var(--semantic-text-secondary);
+    color: var(--component-navigation-item-text);
     position: relative;
     transition:
       background-color 120ms ease,
       color 120ms ease;
   }
   .nav-item-base:hover {
-    background: var(--navigation-linkHover);
-    color: var(--semantic-text-primary);
+    background: var(--component-navigation-item-bg-hover);
+    color: var(--component-navigation-item-text-hover);
   }
   .nav-item-active {
-    background: var(--color-bgBrand);
-    color: var(--color-primaryHover);
+    background: var(--component-navigation-item-bg-active);
+    color: var(--component-navigation-item-text-active);
   }
   .dark .nav-item-active {
     background: rgba(4, 120, 87, 0.15); /* jade 700 w/ alpha */
-    color: var(--color-primary);
+    color: var(--component-navigation-item-text-active);
   }
   .nav-item-active::before {
     content: "";

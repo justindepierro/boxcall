@@ -2,6 +2,9 @@ import {
   colorTokens,
   semanticTokens,
   typographyTokens,
+  semanticTypographyTokens,
+  animationTokens,
+  semanticAnimationTokens,
   spacingTokens,
   fineSpacingTokens,
   semanticSpacingTokens,
@@ -88,6 +91,14 @@ export function generateTokensCSS(): string {
   const typo = typographyTokens as unknown as TypographyDef;
   emitObj("font-family", typo.fontFamily as Nested, lines);
   emitObj("font-size", typo.fontSize as Nested, lines);
+  emitObj("font-weight", typo.fontWeight as Nested, lines);
+  emitObj("line-height", typo.lineHeight as Nested, lines);
+  emitObj("letter-spacing", typo.letterSpacing as Nested, lines);
+  emitObj("semantic-typography", semanticTypographyTokens as Record<string, unknown>, lines);
+  
+  // Animation system
+  emitObj("animation", animationTokens as Record<string, unknown>, lines);
+  emitObj("semantic-animation", semanticAnimationTokens as Record<string, unknown>, lines);
   
   // Spacing system
   emitObj("space", spacingTokens as Record<string, unknown>, lines);

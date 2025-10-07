@@ -567,7 +567,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     {/* Center - Team Activity Feed */}
                     <main className="xl:col-span-6 order-1 xl:order-2">
                       <div className="space-y-6">
-                        <div className="team-activity-header bg-aurora-emerald rounded-aurora p-8 border border-jade-100/50 shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
+                        <div className="team-activity-header bg-aurora-emerald rounded-aurora p-8 border border-component-border-subtle shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
                           <div className="text-center lg:text-left">
                             <Typography
                               variant="headline-lg"
@@ -595,11 +595,11 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                             {/* Team engagement stats */}
                             <div className="flex flex-wrap justify-center lg:justify-start gap-3 text-sm">
-                              <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-jade-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
+                              <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-component-border-subtle shadow-sm hover:shadow-md transition-shadow badge-safe">
                                 <Icon
                                   name="message"
                                   size="xs"
-                                  className="text-jade-500 flex-shrink-0"
+                                  className="text-component-badge-primary flex-shrink-0"
                                 />
                                 <span className="text-text-secondary text-truncate font-medium">
                                   12 new posts

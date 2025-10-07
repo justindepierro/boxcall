@@ -279,7 +279,9 @@
 /* Two sidebars layout */
 .layout-two-sidebars {
   display: grid;
-  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(--layout-sidebar-narrow);
+  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(
+      --layout-sidebar-narrow
+    );
   gap: var(--semantic-layout-grid-gap);
 }
 
@@ -308,7 +310,9 @@
 
 .layout-header-footer {
   display: grid;
-  grid-template-rows: var(--layout-header-standard) 1fr var(--layout-footer-compact);
+  grid-template-rows: var(--layout-header-standard) 1fr var(
+      --layout-footer-compact
+    );
   min-height: 100vh;
 }
 

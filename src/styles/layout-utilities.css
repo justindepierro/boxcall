@@ -289,7 +289,9 @@
 /* Three-column layout (sidebar + content + aside) */
 .three-column-layout {
   display: grid;
-  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(--layout-sidebar-narrow);
+  grid-template-columns: var(--layout-sidebar-narrow) 1fr var(
+      --layout-sidebar-narrow
+    );
   gap: var(--layout-grid-gap-normal);
 }
 

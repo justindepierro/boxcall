@@ -158,7 +158,7 @@ export const DashboardCustomizationPanel: React.FC<
               placeholder="Layout name..."
               className="flex-1 px-spacing-sm py-spacing-xs bg-surface-app border border-subtle rounded-lg 
                          text-text-primary placeholder-text-muted focus:outline-none 
-                         focus:ring-2 focus:ring-jade-500 focus:border-text-info"
+                         focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
               onKeyDown={(e) => e.key === "Enter" && handleCreateLayout()}
             />
             <Button
@@ -180,8 +180,8 @@ export const DashboardCustomizationPanel: React.FC<
           key={layout.id}
           className={`p-spacing-md bg-surface-card rounded-lg border transition-colors ${
             currentLayout?.id === layout.id
-              ? "border-jade-500 bg-jade-50"
-              : "border-subtle hover:border-jade-200"
+              ? "border-component-badge-primary bg-component-badge-primary-bg"
+              : "border-subtle hover:border-border-medium"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -257,8 +257,8 @@ export const DashboardCustomizationPanel: React.FC<
                   compactMode: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
-                         focus:ring-jade-500 focus:ring-2"
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+                         focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Compact mode</Typography>
           </label>
@@ -273,8 +273,8 @@ export const DashboardCustomizationPanel: React.FC<
                   showWelcomeMessages: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
-                         focus:ring-jade-500 focus:ring-2"
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+                         focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Show welcome messages</Typography>
           </label>
@@ -298,8 +298,8 @@ export const DashboardCustomizationPanel: React.FC<
                   enableNotifications: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
-                         focus:ring-jade-500 focus:ring-2"
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+                         focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Enable notifications</Typography>
           </label>
@@ -314,8 +314,8 @@ export const DashboardCustomizationPanel: React.FC<
                   autoRefresh: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-jade-600 bg-surface-app border-border-medium rounded-lg 
-                         focus:ring-jade-500 focus:ring-2"
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+                         focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Auto-refresh dashboard</Typography>
           </label>
@@ -337,8 +337,8 @@ export const DashboardCustomizationPanel: React.FC<
             })
           }
           className="w-full px-spacing-sm py-spacing-xs bg-surface-app border border-subtle rounded-lg 
-                     text-text-primary focus:outline-none focus:ring-2 focus:ring-jade-500 
-                     focus:border-text-info"
+                     text-text-primary focus:outline-none focus:ring-2 focus:ring-interaction-focus 
+                     focus:border-interaction-focus"
           disabled={!personalizationSettings.autoRefresh}
         >
           <option value={60}>1 minute</option>
@@ -420,7 +420,7 @@ export const DashboardCustomizationPanel: React.FC<
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex items-center space-x-spacing-xs py-spacing-md border-b-2 transition-colors ${
                   activeTab === tab.id
-                    ? "border-jade-500 text-jade-600"
+                    ? "border-component-badge-primary text-component-badge-primary"
                     : "border-border text-text-muted hover:text-text-primary"
                 }`}
               >
@@ -440,7 +440,7 @@ export const DashboardCustomizationPanel: React.FC<
         >
           {loading ? (
             <div className="flex items-center justify-center py-spacing-2xl">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-500" />
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-component-spinner-primary" />
             </div>
           ) : (
             <>

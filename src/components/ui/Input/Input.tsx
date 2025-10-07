@@ -14,9 +14,9 @@ import type {
   InputSizeConfig,
   InputStylesConfig,
 } from "./Input.types";
-// Input base styles configuration - iOS-style rounded-lg inputs with semantic design system
+// Input base styles configuration - Using component token system (Priority 5)
 const inputStyles: InputStylesConfig = {
-  base: "block w-full rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)] bg-surface-primary text-text-primary placeholder-text-muted font-sans",
+  base: "input block w-full rounded-lg transition-all duration-200 focus:outline-none font-sans",
   sizes: {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-3 text-sm",
@@ -32,15 +32,13 @@ const inputStyles: InputStylesConfig = {
     search: "",
   },
   statuses: {
-    default:
-      "focus:border-[var(--semantic-primary)] focus:ring-[var(--semantic-primary)]",
-    error: "focus:border-error focus:ring-error bg-surface-secondary",
-    success: "focus:border-success focus:ring-success bg-surface-secondary",
-    warning: "focus:border-warning focus:ring-warning bg-surface-secondary",
+    default: "", // .input class handles default state
+    error: "input-error",
+    success: "input-success",
+    warning: "input-warning",
   },
-  focus: "focus:ring-2 focus:ring-offset-1",
-  disabled:
-    "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed",
+  focus: "", // Handled by .input class
+  disabled: "", // Handled by .input:disabled
 };
 // Size configuration
 const sizeConfig: InputSizeConfig = {
@@ -118,7 +116,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       inputStyles.base,
       inputStyles.sizes[size],
       inputStyles.statuses[status],
-      inputStyles.disabled,
       leftIcon ? "pl-10" : "",
       rightIcon || (variant === "password" && showPasswordToggle)
         ? "pr-10"
@@ -236,7 +233,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           {loading && (
             <div className={`${sizeConfig.icon} right-3`}>
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-jade-500 border-t-transparent"></div>
+              <div
+                className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent"
+                style={{ borderColor: "var(--component-button-primary-bg)" }}
+              ></div>
             </div>
           )}
         </div>

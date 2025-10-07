@@ -2,7 +2,7 @@
 
 **Date**: October 6, 2025  
 **Status**: ✅ Complete - Analysis Phase  
-**Phase**: Priority 3 of Design System Enhancement  
+**Phase**: Priority 3 of Design System Enhancement
 
 ## Executive Summary
 
@@ -16,27 +16,28 @@ Comprehensive performance analysis of BoxCall production build, identifying curr
 
 **Total CSS**: 193.48 KB (gzipped: 31.53 KB)  
 **Total Assets**: ~2.5 MB (uncompressed JS)  
-**Build Time**: Acceptable (<2 minutes)  
+**Build Time**: Acceptable (<2 minutes)
 
 ### Largest JavaScript Bundles
 
-| Bundle | Size (Uncompressed) | Category | Optimization Priority |
-|--------|-------------------|----------|---------------------|
-| `react-pdf.browser-*.js` | **1.4 MB** | External Library | 🔴 **High** - Heavy dependency |
-| `index-*.js` | **385 KB** | Main Bundle | 🟡 Medium - Core application |
-| `calendar-*.js` | **254 KB** | Feature Module | 🟡 Medium - Code splitting candidate |
-| `PlaybookPage-*.js` | **151 KB** | Feature Module | 🟡 Medium - Code splitting candidate |
-| `supabase-*.js` | **120 KB** | External Library | 🟢 Low - Required for auth/DB |
-| `dnd-*.js` | **94 KB** | External Library | 🟢 Low - Required for diagram |
-| `TeamBulletin-*.js` | **61 KB** | Feature Module | 🟢 Low - Already code-split |
-| `AnalyticsPage-*.js` | **50 KB** | Feature Module | 🟢 Low - Already code-split |
+| Bundle                   | Size (Uncompressed) | Category         | Optimization Priority                |
+| ------------------------ | ------------------- | ---------------- | ------------------------------------ |
+| `react-pdf.browser-*.js` | **1.4 MB**          | External Library | 🔴 **High** - Heavy dependency       |
+| `index-*.js`             | **385 KB**          | Main Bundle      | 🟡 Medium - Core application         |
+| `calendar-*.js`          | **254 KB**          | Feature Module   | 🟡 Medium - Code splitting candidate |
+| `PlaybookPage-*.js`      | **151 KB**          | Feature Module   | 🟡 Medium - Code splitting candidate |
+| `supabase-*.js`          | **120 KB**          | External Library | 🟢 Low - Required for auth/DB        |
+| `dnd-*.js`               | **94 KB**           | External Library | 🟢 Low - Required for diagram        |
+| `TeamBulletin-*.js`      | **61 KB**           | Feature Module   | 🟢 Low - Already code-split          |
+| `AnalyticsPage-*.js`     | **50 KB**           | Feature Module   | 🟢 Low - Already code-split          |
 
 ### CSS Analysis
 
 **Total CSS Size**: 193.38 KB (uncompressed) → 31.53 KB (gzipped)  
-**Compression Ratio**: **83.7% reduction** ✅ Excellent  
+**Compression Ratio**: **83.7% reduction** ✅ Excellent
 
 **Breakdown**:
+
 - `index-*.css`: 193.38 KB (main stylesheet)
 - `CalendarShellPage-*.css`: 0.10 KB (feature-specific)
 
@@ -47,12 +48,14 @@ Comprehensive performance analysis of BoxCall production build, identifying curr
 ### Current Status
 
 ✅ **Excellent Achievements**:
+
 1. **CSS Compression**: 83.7% gzip reduction (industry best practice: >70%)
 2. **Code Splitting**: 50+ feature modules already split
 3. **Icon Tree-Shaking**: Individual icon imports (0.35-0.40 KB each)
 4. **Token System**: CSS custom properties (no runtime overhead)
 
 🟡 **Improvement Opportunities**:
+
 1. **react-pdf**: 1.4 MB bundle (heavy PDF rendering library)
 2. **Main Bundle**: 385 KB (could benefit from dynamic imports)
 3. **Calendar Module**: 254 KB (large feature, not always needed)
@@ -85,16 +88,19 @@ Core Application:    ~400 KB (6% of total)
 #### 1.1 React-PDF Optimization (1.4 MB → ~400 KB savings)
 
 **Current State**:
+
 ```typescript
-import { Document, Page } from 'react-pdf';  // Entire library
+import { Document, Page } from "react-pdf"; // Entire library
 ```
 
 **Optimization Strategy**:
+
 1. **Lazy Loading**: Only load react-pdf when PDF features are accessed
 2. **Dynamic Import**: Use `React.lazy()` for PDF components
 3. **Worker Externalization**: Move PDF worker to CDN (reduce bundle size)
 
 **Recommended Implementation**:
+
 ```typescript
 // Before: Static import
 import { Document, Page } from 'react-pdf';
@@ -117,6 +123,7 @@ const PdfViewer = React.lazy(() => import('./components/pdf/PdfViewer'));
 **Current State**: Calendar module imported statically in some pages
 
 **Optimization Strategy**:
+
 ```typescript
 // Before: Static import
 import { BoxCallCalendar } from '@/components/calendar';
@@ -139,20 +146,22 @@ const CalendarPage = React.lazy(() => import('@/pages/CalendarPage'));
 **Target**: Split `index-*.js` (385 KB) into smaller chunks
 
 **Recommended Splits**:
+
 ```typescript
 // Heavy features to lazy-load:
-const PlaybookBuilder = lazy(() => import('./features/PlaybookBuilder'));
-const PracticeScheduler = lazy(() => import('./features/PracticeScheduler'));
-const TeamAnalytics = lazy(() => import('./features/TeamAnalytics'));
-const SocialFeed = lazy(() => import('./features/SocialFeed'));
+const PlaybookBuilder = lazy(() => import("./features/PlaybookBuilder"));
+const PracticeScheduler = lazy(() => import("./features/PracticeScheduler"));
+const TeamAnalytics = lazy(() => import("./features/TeamAnalytics"));
+const SocialFeed = lazy(() => import("./features/SocialFeed"));
 ```
 
 **Expected Savings**: 150-200 KB from initial bundle  
-**User Impact**: Faster initial page load, features load on-demand  
+**User Impact**: Faster initial page load, features load on-demand
 
 #### 2.2 Icon Consolidation
 
-**Current State**: Excellent ✅ (already tree-shaking individual icons)  
+**Current State**: Excellent ✅ (already tree-shaking individual icons)
+
 ```javascript
 dist/assets/chevron-down-*.js    0.36 kB
 dist/assets/chevron-up-*.js      0.36 kB
@@ -166,12 +175,14 @@ dist/assets/plus-*.js            0.39 kB
 #### 3.1 Current CSS Performance ✅
 
 **Metrics**:
+
 - Uncompressed: 193.38 KB
 - Gzipped: 31.53 KB
 - Compression: **83.7%** (excellent)
 - Per-page CSS: Feature-specific stylesheets code-split
 
 **CSS Architecture**:
+
 ```css
 /* Main stylesheet (193 KB → 31 KB gzipped) */
 dist/assets/css/index-*.css         193.38 KB │ gzip: 31.53 KB
@@ -182,6 +193,7 @@ dist/assets/css/CalendarShellPage-*.css   0.10 KB │ gzip: 0.11 KB
 
 **Status**: **No immediate action needed**  
 **Reasoning**:
+
 1. CSS already using design tokens (no duplication)
 2. Excellent gzip compression (83.7%)
 3. Feature-specific CSS already code-split
@@ -192,22 +204,24 @@ dist/assets/css/CalendarShellPage-*.css   0.10 KB │ gzip: 0.11 KB
 If CSS grows beyond 250 KB uncompressed, consider:
 
 1. **Critical CSS Extraction**:
+
    ```javascript
    // Extract above-the-fold CSS
    plugins: [
      viteCriticalCss({
        inline: true,
-       asyncLoad: true
-     })
-   ]
+       asyncLoad: true,
+     }),
+   ];
    ```
 
 2. **Dynamic CSS Loading**:
+
    ```javascript
    // Load route-specific CSS on-demand
    const loadStylesheet = (route) => {
-     const link = document.createElement('link');
-     link.rel = 'stylesheet';
+     const link = document.createElement("link");
+     link.rel = "stylesheet";
      link.href = `/assets/css/${route}.css`;
      document.head.appendChild(link);
    };
@@ -216,7 +230,7 @@ If CSS grows beyond 250 KB uncompressed, consider:
 3. **CSS Modules for Large Components**:
    ```typescript
    // Component-scoped CSS
-   import styles from './HeavyComponent.module.css';
+   import styles from "./HeavyComponent.module.css";
    ```
 
 **Current Verdict**: **CSS is already highly optimized** ✅  
@@ -229,6 +243,7 @@ No immediate action required unless future growth warrants it.
 ### Current Warnings
 
 #### 4.1 Duplicate Package.json Key
+
 ```
 WARNING: Duplicate key "prepare" in object literal
   package.json:32:4 and 72:4
@@ -239,6 +254,7 @@ WARNING: Duplicate key "prepare" in object literal
 **Action**: Cleanup task (non-critical)
 
 #### 4.2 CSS Template String Warning
+
 ```
 WARNING: Expected identifier but found whitespace in CSS
   --tw-scale-x: ${scale};  (line 8698)
@@ -249,6 +265,7 @@ WARNING: Expected identifier but found whitespace in CSS
 **Action**: Review if needed, or suppress warning if intentional
 
 #### 4.3 Dynamic Import Warning
+
 ```
 WARNING: web-vitals is both statically and dynamically imported
   - Static: src/telemetry/initWebVitals.ts
@@ -260,10 +277,11 @@ WARNING: web-vitals is both statically and dynamically imported
 **Action**: Consolidate imports to dynamic-only
 
 **Recommended Fix**:
+
 ```typescript
 // Remove static import from initWebVitals.ts
 // Use dynamic import everywhere:
-const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import("web-vitals");
 ```
 
 ---
@@ -271,6 +289,7 @@ const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
 ## 5. Recommended Action Plan
 
 ### Phase 1: Quick Wins (1-2 hours)
+
 1. ✅ **Fix Package.json Duplicate** (5 min)
    - Remove duplicate "prepare" script
 2. ✅ **Consolidate web-vitals Imports** (15 min)
@@ -279,18 +298,19 @@ const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
    - Baseline metrics captured in this document
 
 ### Phase 2: High-Impact Optimizations (2-4 hours)
+
 1. 🔴 **Lazy-Load react-pdf** (2 hours)
    - Wrap PDF components with React.lazy()
    - Add Suspense boundaries
    - Test PDF functionality
    - **Expected Savings**: ~1 MB initial bundle
-   
 2. 🟡 **Code-Split Calendar Module** (1 hour)
    - Ensure calendar uses route-level lazy loading
    - Test calendar loading
    - **Expected Savings**: 254 KB initial bundle
 
 ### Phase 3: Refinement (2-3 hours)
+
 1. 🟡 **Split Main Bundle** (2 hours)
    - Dynamic imports for heavy features
    - Test feature loading
@@ -307,22 +327,22 @@ const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
 
 ### Initial Load Budget
 
-| Resource Type | Current | Target | Budget |
-|--------------|---------|--------|--------|
-| **Initial JS** | ~800 KB | 400 KB | 500 KB max |
-| **Initial CSS** | 31 KB (gzip) | 31 KB | 40 KB max |
-| **Images** | Varies | <100 KB | 150 KB max |
-| **Fonts** | Minimal | <50 KB | 75 KB max |
-| **Total Initial Load** | ~900 KB | ~500 KB | 700 KB max |
+| Resource Type          | Current      | Target  | Budget     |
+| ---------------------- | ------------ | ------- | ---------- |
+| **Initial JS**         | ~800 KB      | 400 KB  | 500 KB max |
+| **Initial CSS**        | 31 KB (gzip) | 31 KB   | 40 KB max  |
+| **Images**             | Varies       | <100 KB | 150 KB max |
+| **Fonts**              | Minimal      | <50 KB  | 75 KB max  |
+| **Total Initial Load** | ~900 KB      | ~500 KB | 700 KB max |
 
 ### Route-Specific Budgets
 
-| Route | Current | Target | Notes |
-|-------|---------|--------|-------|
-| `/` (Landing) | ~400 KB | 250 KB | Core only |
-| `/playbook` | ~550 KB | 400 KB | Diagram tools lazy |
-| `/calendar` | ~650 KB | 450 KB | Calendar lazy |
-| `/analytics` | ~500 KB | 350 KB | Charts lazy |
+| Route         | Current | Target | Notes              |
+| ------------- | ------- | ------ | ------------------ |
+| `/` (Landing) | ~400 KB | 250 KB | Core only          |
+| `/playbook`   | ~550 KB | 400 KB | Diagram tools lazy |
+| `/calendar`   | ~650 KB | 450 KB | Calendar lazy      |
+| `/analytics`  | ~500 KB | 350 KB | Charts lazy        |
 
 ---
 
@@ -352,21 +372,25 @@ const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
 ## 8. Implementation Checklist
 
 ### Immediate Actions
+
 - [ ] Fix package.json duplicate key
 - [ ] Consolidate web-vitals imports (dynamic only)
 - [ ] Document current performance baseline
 
 ### High-Priority Optimizations
+
 - [ ] Implement react-pdf lazy loading
 - [ ] Verify calendar code splitting
 - [ ] Add Suspense boundaries for lazy components
 
 ### Medium-Priority Enhancements
+
 - [ ] Split main bundle with dynamic imports
 - [ ] Set up bundle size monitoring
 - [ ] Configure performance budgets
 
 ### Monitoring & Validation
+
 - [ ] Run Lighthouse audit (baseline)
 - [ ] Set up bundle size tracking in CI
 - [ ] Create performance dashboard
@@ -379,6 +403,7 @@ const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
 ### Build Configuration
 
 **Current Vite Config** (Excerpt):
+
 ```javascript
 build: {
   rollupOptions: {
@@ -400,6 +425,7 @@ build: {
 ### Optimization Tools
 
 **Recommended Tools**:
+
 1. **Bundle Analyzer**: `rollup-plugin-visualizer`
    ```bash
    npm run build -- --report
@@ -415,6 +441,7 @@ build: {
 ### Current State: ✅ **Strong Foundation**
 
 BoxCall's current build is already well-optimized:
+
 - **CSS**: Excellent compression (83.7%), token-based, no duplication
 - **Icons**: Perfect tree-shaking (0.35-0.40 KB each)
 - **Code Splitting**: 50+ feature modules already separated
@@ -427,6 +454,7 @@ The single largest optimization opportunity is lazy-loading the react-pdf librar
 ### Expected Impact
 
 **After Phase 2 Optimizations**:
+
 - **Initial Bundle**: 800 KB → ~300 KB (62.5% reduction)
 - **Time to Interactive**: Estimated 30-40% improvement
 - **User Experience**: Faster page loads, especially on mobile

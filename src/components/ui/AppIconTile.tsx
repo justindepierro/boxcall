@@ -26,11 +26,11 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div className={`relative overflow-visible p-2 ${className}`}>
+      <div className={`relative p-2 ${className}`}>
         <button
           type="button"
           onClick={onOpen}
-          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 rounded-xl overflow-visible"
+          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-interaction-focus focus:ring-offset-2 rounded-xl"
           aria-label={title}
         >
           {/* Top Label - Optional text above icon */}
@@ -41,10 +41,10 @@ export const AppIconTile = memo<AppIconTileProps>(
           )}
 
           {/* App Icon - iPhone Style - Centered */}
-          <div className="relative w-24 h-24 overflow-visible">
+          <div className="relative w-24 h-24">
             {/* Icon Container with Gradient and shine effect */}
             <div
-              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none overflow-visible shadow-2xl`}
+              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none shadow-2xl`}
             />
 
             {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}

@@ -76,7 +76,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
     <>
       {/* Enhanced Compact Display */}
       <div
-        className="flex items-center gap-4 bg-aurora-emerald rounded-aurora border border-jade-200/60 dark:border-jade-700/60 px-5 py-3 transition-all duration-300 hover:border-jade-300/80 dark:hover:border-jade-600/80 group cursor-pointer"
+        className="flex items-center gap-4 bg-aurora-emerald rounded-aurora border trophy-card px-5 py-3 transition-all duration-300 group cursor-pointer"
         onClick={() => setShowModal(true)}
       >
         {/* Trophy Icon with Animation */}
@@ -84,7 +84,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
           <Icon
             name="trophy"
             size="md"
-            className="text-jade-600 dark:text-jade-400 transition-colors duration-300 group-hover:text-jade-500 dark:group-hover:text-jade-300"
+            className="trophy-icon transition-colors duration-300"
           />
           {totalPoints > 0 && (
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-warning-500 rounded-full animate-pulse"></div>
@@ -110,14 +110,14 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
 
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1 mb-1">
-              <Icon name="star" size="sm" className="text-jade-600" />
-              <span className="text-lg font-bold text-jade-700 dark:text-jade-300">
+              <Icon name="star" size="sm" className="trophy-stat-primary" />
+              <span className="text-lg font-bold trophy-stat-primary">
                 {helmetStickers.length}
               </span>
             </div>
             <Typography
               variant="caption"
-              className="text-jade-700/70 dark:text-jade-300/70 text-xs font-medium"
+              className="trophy-stat-muted text-xs font-medium"
             >
               Stickers
             </Typography>
@@ -125,14 +125,14 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
 
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1 mb-1">
-              <Icon name="award" size="sm" className="text-blue-600" />
-              <span className="text-lg font-bold text-blue-700 dark:text-blue-300">
+              <Icon name="award" size="sm" className="trophy-stat-secondary" />
+              <span className="text-lg font-bold trophy-stat-secondary">
                 {earnedMedals}
               </span>
             </div>
             <Typography
               variant="caption"
-              className="text-blue-700/70 dark:text-blue-300/70 text-xs font-medium"
+              className="trophy-stat-muted text-xs font-medium"
             >
               Medals
             </Typography>
@@ -157,11 +157,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
         {/* Recent Achievement Icons with Animation */}
         {recentAchievements.length > 0 && (
           <>
-            <div className="w-px h-8 bg-gradient-to-b from-jade-200 to-jade-300 dark:from-jade-700 dark:to-jade-600"></div>
+            <div className="w-px h-8 bg-gradient-to-b from-border to-border-subtle"></div>
             <div className="flex flex-col items-center gap-2">
               <Typography
                 variant="caption"
-                className="text-jade-700/70 dark:text-jade-300/70 text-xs font-medium"
+                className="trophy-stat-muted text-xs font-medium"
               >
                 Recent
               </Typography>
@@ -169,13 +169,13 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                 {recentAchievements.map((achievement, index) => (
                   <div
                     key={`${achievement.type}-${achievement.id}`}
-                    className="w-7 h-7 bg-white dark:bg-surface-secondary dark:bg-gray-800 rounded-full border-2 border-jade-200 dark:border-jade-700 flex items-center justify-center transition-colors duration-200 hover:bg-jade-50 dark:hover:bg-jade-900/20 hover:border-jade-300 dark:hover:border-jade-600"
+                    className="w-7 h-7 trophy-badge-item rounded-full flex items-center justify-center transition-colors duration-200"
                     style={{ zIndex: recentAchievements.length - index }}
                   >
                     <Icon
                       name={achievement.icon}
                       size="sm"
-                      className="text-jade-600 dark:text-jade-400"
+                      className="trophy-icon"
                     />
                   </div>
                 ))}
@@ -189,11 +189,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
           <Icon
             name="chevron-right"
             size="sm"
-            className="text-jade-600/60 dark:text-jade-400/60 transition-transform duration-300 group-hover:translate-x-1"
+            className="trophy-icon opacity-60 transition-transform duration-300 group-hover:translate-x-1"
           />
           <Typography
             variant="caption"
-            className="text-jade-700/50 dark:text-jade-300/50 text-xs"
+            className="trophy-stat-muted text-xs opacity-50"
           >
             View All
           </Typography>
@@ -230,42 +230,36 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/30 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-surface-card rounded-lg">
               <Icon
                 name="star"
                 size="md"
-                className="text-jade-600 mx-auto mb-2"
+                className="trophy-stat-primary mx-auto mb-2"
               />
               <Typography
                 variant="headline-sm"
-                className="font-bold text-jade-700 dark:text-jade-300"
+                className="font-bold trophy-stat-primary"
               >
                 {helmetStickers.length}
               </Typography>
-              <Typography
-                variant="caption"
-                className="text-jade-700 dark:text-jade-300"
-              >
+              <Typography variant="caption" className="trophy-stat-primary">
                 Helmet Stickers
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/30 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-surface-card rounded-lg">
               <Icon
                 name="award"
                 size="md"
-                className="text-blue-600 mx-auto mb-2"
+                className="trophy-stat-secondary mx-auto mb-2"
               />
               <Typography
                 variant="headline-sm"
-                className="font-bold text-blue-700 dark:text-blue-300"
+                className="font-bold trophy-stat-secondary"
               >
                 {earnedMedals}
               </Typography>
-              <Typography
-                variant="caption"
-                className="text-blue-700 dark:text-blue-300"
-              >
+              <Typography variant="caption" className="trophy-stat-secondary">
                 Medals Earned
               </Typography>
             </div>
@@ -300,7 +294,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                   variant="headline-sm"
                   className="mb-3 flex items-center gap-2"
                 >
-                  <Icon name="star" size="sm" className="text-jade-600" />
+                  <Icon name="star" size="sm" className="trophy-stat-primary" />
                   Helmet Stickers
                 </Typography>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -309,7 +303,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                       key={sticker.id}
                       className="flex items-center gap-3 p-3 bg-surface-secondary rounded-lg"
                     >
-                      <Icon name="star" size="sm" className="text-jade-600" />
+                      <Icon
+                        name="star"
+                        size="sm"
+                        className="trophy-stat-primary"
+                      />
                       <div>
                         <Typography variant="body-sm" className="font-semibold">
                           {sticker.name}
@@ -334,7 +332,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                   variant="headline-sm"
                   className="mb-3 flex items-center gap-2"
                 >
-                  <Icon name="award" size="sm" className="text-blue-600" />
+                  <Icon
+                    name="award"
+                    size="sm"
+                    className="trophy-stat-secondary"
+                  />
                   BoxCall Medals
                 </Typography>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -351,7 +353,9 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                         name="award"
                         size="sm"
                         className={
-                          medal.earned ? "text-blue-600" : "text-text-muted"
+                          medal.earned
+                            ? "trophy-stat-secondary"
+                            : "text-text-muted"
                         }
                       />
                       <div className="flex-1">
@@ -373,9 +377,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                             <div className="mt-1">
                               <div className="w-full bg-surface-muted rounded-full h-2">
                                 <div
-                                  className="bg-blue-600 h-2 rounded-full"
+                                  className="h-2 rounded-full"
                                   style={{
                                     width: `${(medal.progress / medal.maxProgress) * 100}%`,
+                                    backgroundColor:
+                                      "var(--component-badge-info-bg)",
                                   }}
                                 ></div>
                               </div>
@@ -400,11 +406,11 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                 <Icon
                   name="trophy"
                   size="lg"
-                  className="text-jade-400 mx-auto mb-4 opacity-60"
+                  className="trophy-icon mx-auto mb-4 opacity-60"
                 />
                 <Typography
                   variant="headline-sm"
-                  className="text-jade-700 dark:text-jade-300 mb-2"
+                  className="trophy-stat-primary mb-2"
                 >
                   Ready to Fill Your Trophy Shelf?
                 </Typography>

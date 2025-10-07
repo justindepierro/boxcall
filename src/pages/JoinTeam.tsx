@@ -277,7 +277,7 @@ export const JoinTeam: React.FC = () => {
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center font-mono text-3xl leading-none border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
+                className="w-full px-4 py-3 text-center font-mono text-3xl leading-none border border-border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus tracking-widest"
                 aria-label="Invite code"
               />
               <Typography variant="body-sm" color="muted" className="mt-2">
@@ -337,7 +337,7 @@ export const JoinTeam: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by school or team name..."
-                  className="flex-1 px-4 py-3 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade"
+                  className="flex-1 px-4 py-3 border border-border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
                   onKeyPress={(e) => e.key === "Enter" && handleTeamSearch()}
                 />
                 <Button

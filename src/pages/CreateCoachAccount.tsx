@@ -269,7 +269,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, firstName: e.target.value })
                   }
                   placeholder="John"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -288,7 +288,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, lastName: e.target.value })
                   }
                   placeholder="Smith"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -307,7 +307,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   placeholder="john.smith@example.com"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -326,7 +326,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   placeholder="(555) 123-4567"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -356,7 +356,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, address: e.target.value })
                   }
                   placeholder="123 Main Street"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -375,7 +375,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, city: e.target.value })
                   }
                   placeholder="New York"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -394,7 +394,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, state: e.target.value })
                   }
                   placeholder="NY"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -413,7 +413,7 @@ export const CreateCoachAccount: React.FC = () => {
                     setFormData({ ...formData, zipCode: e.target.value })
                   }
                   placeholder="10001"
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                   required
                 />
               </div>
@@ -441,7 +441,7 @@ export const CreateCoachAccount: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, primarySport: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                 >
                   <option value="Football">Football</option>
                   <option value="Basketball">Basketball</option>
@@ -476,7 +476,7 @@ export const CreateCoachAccount: React.FC = () => {
                       yearsExperience: e.target.value,
                     })
                   }
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                 >
                   <option value="New Coach">New Coach (0 years)</option>
                   <option value="1-3 years">1-3 years</option>
@@ -498,7 +498,7 @@ export const CreateCoachAccount: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, coachingLevel: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                  className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                 >
                   <option value="Youth">Youth (Under 14)</option>
                   <option value="High School">High School</option>
@@ -533,7 +533,7 @@ export const CreateCoachAccount: React.FC = () => {
                       hasSchoolCode: e.target.checked,
                     })
                   }
-                  className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus:ring-jade-500"
+                  className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus-ring"
                 />
                 <Typography
                   variant="body-sm"
@@ -561,7 +561,7 @@ export const CreateCoachAccount: React.FC = () => {
                         setFormData({ ...formData, schoolCode: e.target.value })
                       }
                       placeholder="e.g., BCHS-FB-2024"
-                      className="w-full px-3 py-2 border border-border-medium rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+                      className="w-full px-3 py-2 border border-border-medium rounded-lg focus-ring"
                     />
                   </div>
                   <div>
@@ -594,7 +594,7 @@ export const CreateCoachAccount: React.FC = () => {
                           requestTeamLink: e.target.checked,
                         })
                       }
-                      className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus:ring-jade-500"
+                      className="w-4 h-4 text-text-info surface-subtle border-border-medium rounded-lg focus-ring"
                     />
                     <label htmlFor="requestTeamLink" className="text-sm">
                       Request to be linked to this team (Head Coach will
@@ -663,7 +663,7 @@ export const CreateCoachAccount: React.FC = () => {
             )}
 
             {/* Coach Account Package */}
-            <div className="border-2 border-jade-600 rounded-lg p-6 surface-subtle dark:bg-surface-info/10">
+            <div className="border-2 border-component-badge-primary rounded-lg p-6 surface-subtle dark:bg-surface-info/10">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography variant="headline-lg" className="mb-2">
@@ -783,8 +783,11 @@ export const CreateCoachAccount: React.FC = () => {
             </div>
             <div className="w-full surface-subtle rounded-full h-2">
               <div
-                className="bg-jade-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
+                className="h-2 rounded-full transition-all duration-300"
+                style={{
+                  width: `${progress}%`,
+                  backgroundColor: "var(--component-button-primary-bg)",
+                }}
               />
             </div>
             <Typography variant="body-sm" className="mt-2 font-medium">

@@ -139,7 +139,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
   const modalContent = (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+      className="modal-backdrop z-modal-backdrop fixed inset-0 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
       aria-hidden={!isOpen}
     >
@@ -150,12 +150,11 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={`
+          modal-container
           relative
           w-full
           ${sizeClasses[size]}
-          bg-white
           rounded-lg
-          shadow-xl
           transform
           transition-all
           duration-200
@@ -166,7 +165,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border">
+        <div className="modal-header flex items-center justify-between p-6">
           <h2 id={titleId} className="text-xl font-semibold text-primary">
             {title}
           </h2>

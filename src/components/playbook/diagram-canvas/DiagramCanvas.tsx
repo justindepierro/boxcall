@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-
+import { DiagramEditorProvider, useDiagramEditor } from "./context";
+import { Toolbar } from "./components/Toolbar";
 // Sidebar hidden for on-canvas editing; keep imports commented for quick restore
 // import { PlayerSidebar } from "./components/PlayerSidebar";
 // import { RoutesPanel } from "./components/RoutesPanel";
 import { CanvasPane } from "./components/CanvasPane";
-import { HelpOverlay } from "./components/HelpOverlay";
-import { Toolbar } from "./components/Toolbar";
-import { DiagramEditorProvider } from "./context/DiagramEditorProvider";
 import { colorTokens } from "../../../design-system/tokens";
-import { useDiagramEditor } from "./context/useDiagramEditor";
-import { svgFullToPngDataUrl } from "./utils/thumbnail";
-
-import type { DiagramDocument } from "./types/types";
+import type { DiagramDocument } from "./types";
+import { HelpOverlay } from "./components/HelpOverlay";
+import { svgFullToPngDataUrl } from "../diagram-shared/utils/thumbnail";
 
 interface ShellProps {
   onDocumentChange?: (doc: DiagramDocument) => void;
@@ -111,10 +108,7 @@ const Shell: React.FC<ShellProps> = ({
   }, [onRequestExport]);
 
   return (
-    <div
-      data-testid="diagram-root"
-      className="flex flex-col h-full min-h-[37.5rem]"
-    >
+    <div className="flex flex-col h-full min-h-[37.5rem]">
       <Toolbar onClose={onClose} svgRef={svgRef} />
       <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
         {/* Sidebar hidden */}
@@ -144,7 +138,7 @@ const Shell: React.FC<ShellProps> = ({
   );
 };
 
-export const VisualPlayBuilder: React.FC<{
+export const DiagramCanvas: React.FC<{
   onDocumentChange?: (doc: DiagramDocument) => void;
   onClose?: () => void;
   onRequestExport?: (exporter: () => Promise<string | null>) => void;
@@ -157,3 +151,6 @@ export const VisualPlayBuilder: React.FC<{
     />
   </DiagramEditorProvider>
 );
+
+// Legacy export for backward compatibility during transition
+export const VisualPlayBuilderV2 = DiagramCanvas;

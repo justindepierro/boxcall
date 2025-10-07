@@ -109,7 +109,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
     showValidation && validationState.isValid && !validationState.isEmpty;
 
   const getInputBorderColor = () => {
-    if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
+    if (isFocused) return "focus-ring";
     if (showError) return "border-error-500";
     if (showSuccess) return "border-success-500";
     return "border dark:border-slate-600";
@@ -184,7 +184,10 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
         {/* Status Icon */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
           {isFocused && (
-            <div className="w-2 h-2 bg-jade-500 rounded-full animate-pulse" />
+            <div
+              className="w-2 h-2 rounded-full animate-pulse"
+              style={{ backgroundColor: "var(--component-button-primary-bg)" }}
+            />
           )}
           {showError && (
             <Icon name="alert" size="sm" className="text-error-500" />
@@ -263,7 +266,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
   const [isFocused, setIsFocused] = useState(false);
 
   const getBorderColor = () => {
-    if (isFocused) return "border-jade-500 ring-2 ring-jade-500/20";
+    if (isFocused) return "focus-ring";
     return "border dark:border-slate-600";
   };
 

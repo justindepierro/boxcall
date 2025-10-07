@@ -27,10 +27,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 **Rationale**: These inline styles are necessary because they use runtime-calculated values.
 
 #### A. **Progress Bars & Percentages** (Most Common)
+
 **Pattern**: `style={{ width: \`${percent}%\` }}`  
 **Why Acceptable**: Width is dynamically calculated based on state/props.
 
 **Instances** (20):
+
 1. `/src/components/onboarding/TeamOnboardingWizard.tsx:287` - `width: ${progress}%`
 2. `/src/pages/CreateCoachAccount.tsx:787` - `width: ${progress}%`
 3. `/src/pages/PlannerPage.tsx:44` - `width: ${progressPercentage}%`
@@ -50,10 +52,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### B. **Animation Delays & Durations** (Staggered Animations)
-**Pattern**: `style={{ animationDelay: \`${index * 100}ms\` }}`  
+
+**Pattern**: `style={{ animationDelay: \`${index \* 100}ms\` }}`  
 **Why Acceptable**: Delay is calculated per-item for staggered effects.
 
 **Instances** (6):
+
 1. `/src/components/design-system/DesignSystemShowcase.tsx:617` - `animationDelay: "0.1s"`
 2. `/src/components/design-system/DesignSystemShowcase.tsx:621` - `animationDelay: "0.2s"`
 3. `/src/components/ui/Sidebar/Sidebar.tsx:137` - `animationDelay: ${index * 50}ms`
@@ -65,10 +69,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### C. **Dynamic Colors** (User/Theme-Dependent)
+
 **Pattern**: `style={{ backgroundColor: color }}`  
 **Why Acceptable**: Color comes from props/state (player colors, user preferences, theme).
 
 **Instances** (10):
+
 1. `/src/components/design-system/DesignSystemShowcase.tsx:131` - `backgroundColor: generatedPalette.accent`
 2. `/src/components/design-system/DesignSystemShowcase.tsx:438` - `backgroundColor: value`
 3. `/src/hooks/useCollaboration.stories.tsx:278` - `backgroundColor: cursor.color`
@@ -84,10 +90,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### D. **Calculated Positions** (Tooltips, Popovers, Cursors)
+
 **Pattern**: `style={{ top: \`${y}px\`, left: \`${x}px\` }}`  
 **Why Acceptable**: Position is calculated based on mouse/element position.
 
 **Instances** (3):
+
 1. `/src/components/playbook/diagram/PlayDiagramBuilder.tsx:314` - `left: ${popupPosition.x}px, top: ${popupPosition.y}px`
 2. (All Tooltip positioning in Tooltip.tsx is dynamic)
 
@@ -96,10 +104,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### E. **Dynamic Sizing** (Image placeholders, optimizations)
+
 **Pattern**: `style={{ width, height }}`  
 **Why Acceptable**: Dimensions come from props, aspect ratios, or calculations.
 
 **Instances** (12):
+
 1. `/src/components/ui/Skeleton.tsx:23` - `width, height` (props)
 2. `/src/components/ui/OptimizedImage.tsx:144` - `width, height, ...placeholderStyle`
 3. `/src/components/ui/OptimizedImage.tsx:154` - `width, height`
@@ -117,10 +127,12 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### F. **Z-Index Management** (Layering)
+
 **Pattern**: `style={{ zIndex: calculatedValue }}`  
 **Why Acceptable**: Z-index is calculated based on array index, modal stack, etc.
 
 **Instances** (3):
+
 1. `/src/components/dashboard/CompactTrophyShelf.tsx:173` - `zIndex: recentAchievements.length - index`
 2. `/src/components/ui/Modal/Modal.tsx:156` - `zIndex: zIndex - 1`
 3. `/src/components/ui/Modal/Modal.tsx:161` - `zIndex: zIndex`
@@ -130,7 +142,9 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### G. **Other Dynamic Styles** (Filters, Transforms, etc.)
+
 **Instances** (6):
+
 1. `/src/components/ui/ProgressiveImage.tsx:78` - `filter: blur(${blur})`
 2. `/src/components/playbook/diagram/components/ShapeManipulator.tsx:362` - `cursor: handle.cursor`
 3. `/src/components/playbook/diagram-v2/components/FieldGuides.tsx:63` - `transition: "opacity 120ms ease"`
@@ -167,7 +181,9 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 **Rationale**: These are intentional for specific technical reasons.
 
 #### A. **Viewport-Based Calculations**
+
 **Instances** (4):
+
 1. `/src/components/dashboard/DashboardCustomizationPanel.tsx:439` - `maxHeight: "calc(90vh - 200px)"`
 2. `/src/components/playbook/PlayGrid.tsx:864` - `height: "calc(100vh - 320px)"`
 
@@ -176,7 +192,9 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### B. **Fixed Dimensions (Intentional)**
+
 **Instances** (5):
+
 1. `/src/components/mobile/MobileBottomNavigation.tsx:99` - `minHeight: "60px"`
 2. `/src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx:79` - `minWidth: "3px"`
 3. `/src/components/playbook/diagram/FieldCanvas/Toolbar.tsx:41` - `minHeight: 56`
@@ -188,7 +206,9 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### C. **CSS Variable References (Modern Syntax)**
+
 **Instances** (2):
+
 1. `/src/components/playbook/diagram-v2/components/ActionBar.tsx:52` - `backgroundColor: "rgb(var(--color-black-rgb) / 0.14)"`
 2. `/src/components/playbook/diagram/components/ActionBar.tsx:56` - `backgroundColor: "rgb(var(--color-black-rgb) / 0.14)"`
 
@@ -197,7 +217,9 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ---
 
 #### D. **Canvas & Display Properties**
+
 **Instances** (2):
+
 1. `/src/components/playbook/diagram-v2/components/FieldMinimap.tsx:101` - `display: "block", cursor: "pointer"`
 2. `/src/components/ui/Select/Select.tsx:482` - `maxHeight: maxHeight` (dropdown constraint)
 
@@ -224,6 +246,7 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 
 **Total**: 97 instances  
 **Breakdown**:
+
 - Progress bars: 20 instances (21%)
 - Animation delays: 6 instances (6%)
 - Dynamic colors: 10 instances (10%)
@@ -234,6 +257,7 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 - Other dynamic: 6 instances (6%)
 
 **Verdict**: All remaining inline styles are either:
+
 - Dynamically calculated at runtime ✅
 - Intentionally using modern CSS variable syntax ✅
 - Required for technical reasons (viewport calcs, canvas) ✅
@@ -248,7 +272,7 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 ✅ **Conversions Made**: 4 static inline styles converted to Tailwind  
 ✅ **Documentation Created**: Comprehensive audit report with rationale  
 ✅ **Type Safety**: All changes passed TypeScript compilation  
-✅ **Best Practices**: Confirmed 88% of inline styles are appropriate  
+✅ **Best Practices**: Confirmed 88% of inline styles are appropriate
 
 ### Files Modified
 
@@ -271,6 +295,7 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 **Estimated Time**: 2-3 hours
 
 **Example**:
+
 ```css
 /* BEFORE */
 --semantic-border: #e5e7eb;
@@ -283,13 +308,13 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 
 ## 📊 STATISTICS
 
-| Metric | Count | Percentage |
-|--------|-------|------------|
-| **Total Inline Styles** | 99 | 100% |
-| **Dynamic/Acceptable** | 87 | 88% |
-| **Converted to Classes** | 2 | 2% |
-| **Edge Cases** | 10 | 10% |
-| **Remaining (By Design)** | 97 | 98% |
+| Metric                    | Count | Percentage |
+| ------------------------- | ----- | ---------- |
+| **Total Inline Styles**   | 99    | 100%       |
+| **Dynamic/Acceptable**    | 87    | 88%        |
+| **Converted to Classes**  | 2     | 2%         |
+| **Edge Cases**            | 10    | 10%        |
+| **Remaining (By Design)** | 97    | 98%        |
 
 ### Conversion Success Rate
 
@@ -309,6 +334,7 @@ Comprehensive audit of all `style={{}}` usage across the codebase. Identified 99
 4. **No regressions introduced** (TypeScript compilation passes)
 
 The BoxCall codebase has excellent inline style hygiene. Remaining inline styles are either:
+
 - Dynamically calculated (progress bars, animations, positions)
 - Using modern CSS variable syntax (`rgb(var(--color) / opacity)`)
 - Required for technical reasons (viewport calculations, canvas elements)

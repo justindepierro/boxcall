@@ -647,7 +647,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
               />
             </div>
           </Card>
@@ -765,7 +765,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("grade_level", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
                   >
                     <option value="">Select grade level</option>
                     <option value="9th">9th Grade</option>
@@ -880,7 +880,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
                   />
                 </div>
                 <div className="md:col-span-2">

@@ -309,6 +309,108 @@ export const typographyTokens = {
     semibold: "600",
     bold: "700",
   },
+
+  // Line height scale for vertical rhythm
+  lineHeight: {
+    none: "1",
+    tight: "1.25",
+    snug: "1.375",
+    normal: "1.5",
+    relaxed: "1.625",
+    loose: "2",
+  },
+
+  // Letter spacing scale for typography fine-tuning
+  letterSpacing: {
+    tighter: "-0.05em",
+    tight: "-0.025em",
+    normal: "0",
+    wide: "0.025em",
+    wider: "0.05em",
+    widest: "0.1em",
+  },
+} as const;
+
+// Semantic typography tokens for common patterns
+export const semanticTypographyTokens = {
+  // Heading typography
+  headingLineHeight: typographyTokens.lineHeight.tight, // 1.25
+  headingLetterSpacing: typographyTokens.letterSpacing.tight, // -0.025em
+
+  // Body text typography
+  bodyLineHeight: typographyTokens.lineHeight.normal, // 1.5
+  bodyLetterSpacing: typographyTokens.letterSpacing.normal, // 0
+
+  // Caption/small text typography
+  captionLineHeight: typographyTokens.lineHeight.snug, // 1.375
+  captionLetterSpacing: typographyTokens.letterSpacing.normal, // 0
+
+  // Display/hero text typography
+  displayLineHeight: typographyTokens.lineHeight.none, // 1
+  displayLetterSpacing: typographyTokens.letterSpacing.tighter, // -0.05em
+} as const;
+
+// ============================================================================
+// ANIMATION TOKENS - Duration, Easing, Transitions
+// ============================================================================
+
+export const animationTokens = {
+  // Duration scale - semantic names for animation timing
+  duration: {
+    instant: "75ms", // Press/snap interactions (< 100ms feels instant)
+    quick: "150ms", // Hover states, quick transitions (standard quick)
+    smooth: "300ms", // Smooth animations (standard smooth)
+    confident: "400ms", // Meaningful transitions (feels deliberate)
+    deliberate: "600ms", // Intentional, noticeable changes (user waits)
+  },
+
+  // Timing functions - cubic-bezier curves for different feels
+  timing: {
+    // Standard easing curves
+    linear: "linear",
+    easeIn: "cubic-bezier(0.4, 0, 1, 1)", // Slow start, fast end
+    easeOut: "cubic-bezier(0, 0, 0.2, 1)", // Fast start, slow end (most natural)
+    easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)", // Slow start & end
+
+    // Custom BoxCall curves
+    squareEase: "cubic-bezier(0.4, 0, 0.2, 1)", // Smooth, professional
+    squareSnap: "cubic-bezier(0.4, 0, 1, 1)", // Snappy exit
+    squarePunch: "cubic-bezier(0.4, 0, 0.6, 1)", // Punchy feel
+    squareBounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)", // Bounce effect (use sparingly)
+  },
+
+  // Transition presets - common animation combinations
+  transition: {
+    fast: "150ms ease-out", // Quick transitions
+    normal: "300ms ease-out", // Standard transitions
+    slow: "500ms ease-out", // Slow transitions
+  },
+} as const;
+
+// Semantic animation tokens for common use cases
+export const semanticAnimationTokens = {
+  // Interaction animations
+  hoverDuration: animationTokens.duration.quick, // 150ms
+  hoverTiming: animationTokens.timing.easeOut,
+  hoverTransition: animationTokens.transition.fast, // 150ms ease-out
+
+  pressDuration: animationTokens.duration.instant, // 75ms
+  pressTiming: animationTokens.timing.squareSnap,
+  pressTransition: "75ms cubic-bezier(0.4, 0, 1, 1)", // Instant snap
+
+  // State change animations
+  baseDuration: animationTokens.duration.smooth, // 300ms
+  baseTiming: animationTokens.timing.squareEase,
+  baseTransition: animationTokens.transition.normal, // 300ms ease-out
+
+  // Modal/overlay animations
+  modalDuration: animationTokens.duration.confident, // 400ms
+  modalTiming: animationTokens.timing.easeInOut,
+  modalTransition: "400ms cubic-bezier(0.4, 0, 0.2, 1)", // Smooth modal
+
+  // Loading/skeleton animations
+  loadingDuration: animationTokens.duration.deliberate, // 600ms
+  loadingTiming: animationTokens.timing.linear,
 } as const;
 
 // ============================================================================
@@ -331,10 +433,10 @@ export const spacingTokens = {
 
 // Fine-grained spacing for precision layouts
 export const fineSpacingTokens = {
-  0.5: "0.125rem", // 2px - hairline spacing
-  1.5: "0.375rem", // 6px - fine spacing
-  2.5: "0.625rem", // 10px - between standard steps
-  3.5: "0.875rem", // 14px - precise layouts
+  "0-5": "0.125rem", // 2px - hairline spacing (was 0.5)
+  "1-5": "0.375rem", // 6px - fine spacing (was 1.5)
+  "2-5": "0.625rem", // 10px - between standard steps (was 2.5)
+  "3-5": "0.875rem", // 14px - precise layouts (was 3.5)
 } as const;
 
 // Semantic spacing tokens for common use cases
@@ -750,42 +852,351 @@ export const semanticLayoutTokens = {
 // ============================================================================
 
 export const componentTokens = {
-  // Icon colors (replaces hardcoded values)
-  icon: {
-    default: "currentColor",
-    jade: semanticTokens.boxcallBrand, // #047857
-    navy: semanticTokens.coachAuthority, // #475569
-    slate: colorTokens.gray[500], // #6B7280
-    success: semanticTokens.success, // #22C55E
-    warning: semanticTokens.warning, // #F59E0B
-    error: semanticTokens.error, // #EF4444
-    info: colorTokens.jade[500], // #00A86B - Using brand jade for info
-  },
-
-  // Button variants
+  // ============================================================================
+  // BUTTON COMPONENT TOKENS
+  // ============================================================================
   button: {
+    // Primary variant
     primaryBg: semanticTokens.primary,
     primaryBgHover: semanticTokens.primaryHover,
+    primaryBgActive: colorTokens.jade[700],
+    primaryBgDisabled: colorTokens.gray[300],
     primaryText: "#FFFFFF",
-
-    secondaryBg: "transparent",
-    secondaryBorder: semanticTokens.secondary,
-    secondaryText: semanticTokens.secondary,
-    secondaryBgHover: semanticTokens.bgNavy,
+    primaryTextDisabled: colorTokens.gray[500],
+    primaryShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    primaryShadowHover: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+    
+    // Secondary variant
+    secondaryBg: colorTokens.gray[100],
+    secondaryBgHover: colorTokens.gray[200],
+    secondaryBgActive: colorTokens.gray[300],
+    secondaryBgDisabled: colorTokens.gray[100],
+    secondaryText: colorTokens.gray[900],
+    secondaryTextDisabled: colorTokens.gray[400],
+    secondaryBorder: "transparent",
+    secondaryShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    
+    // Outline variant
+    outlineBg: "transparent",
+    outlineBgHover: `${semanticTokens.primary}10`, // 10% opacity
+    outlineBgActive: `${semanticTokens.primary}20`, // 20% opacity
+    outlineBgDisabled: "transparent",
+    outlineText: semanticTokens.primary,
+    outlineTextDisabled: colorTokens.gray[400],
+    outlineBorder: semanticTokens.primary,
+    outlineBorderHover: semanticTokens.primaryHover,
+    outlineBorderDisabled: colorTokens.gray[300],
+    
+    // Ghost variant (transparent background, visible on hover)
+    ghostBg: "transparent",
+    ghostBgHover: colorTokens.gray[100],
+    ghostBgActive: colorTokens.gray[200],
+    ghostBgDisabled: "transparent",
+    ghostText: colorTokens.gray[900],
+    ghostTextDisabled: colorTokens.gray[400],
+    
+    // Danger/Destructive variant
+    dangerBg: colorTokens.error[500],
+    dangerBgHover: colorTokens.error[600],
+    dangerBgActive: colorTokens.error[700],
+    dangerBgDisabled: colorTokens.gray[300], // Use gray since error[300] doesn't exist
+    dangerText: "#FFFFFF",
+    dangerTextDisabled: colorTokens.gray[400], // Use gray since error[200] doesn't exist
+    
+    // Success variant
+    successBg: colorTokens.success[600],
+    successBgHover: colorTokens.success[700],
+    successBgActive: colorTokens.success[700],
+    successBgDisabled: colorTokens.gray[300], // Use gray since success[300] doesn't exist
+    successText: "#FFFFFF",
+    successTextDisabled: colorTokens.gray[400], // Use gray since success[200] doesn't exist
+    
+    // Warning variant
+    warningBg: colorTokens.warning[600],
+    warningBgHover: colorTokens.warning[700],
+    warningBgActive: colorTokens.warning[700],
+    warningBgDisabled: colorTokens.gray[300], // Use gray since warning[300] doesn't exist
+    warningText: colorTokens.gray[900],
+    warningTextDisabled: colorTokens.gray[400], // Use gray since warning[200] doesn't exist
+    
+    // Link variant
+    linkText: colorTokens.blue[600],
+    linkTextHover: colorTokens.blue[700],
+    linkTextActive: colorTokens.blue[800],
+    linkTextDisabled: colorTokens.blue[300],
+    
+    // Focus states (consistent across all variants)
+    focusRing: semanticTokens.primary,
+    focusRingOffset: "2px",
+    focusRingWidth: "2px",
+    
+    // Loading states
+    loadingSpinnerPrimary: "#FFFFFF",
+    loadingSpinnerSecondary: semanticTokens.primary,
+    loadingOpacity: "0.6",
+    
+    // Size tokens (heights)
+    heightXs: "32px", // 2rem / 8 rhythm
+    heightSm: "36px", // 2.25rem
+    heightMd: "40px", // 2.5rem
+    heightLg: "44px", // 2.75rem
+    heightXl: "48px", // 3rem
   },
-
-  // Card backgrounds
+  
+  // ============================================================================
+  // INPUT/FORM COMPONENT TOKENS
+  // ============================================================================
+  input: {
+    // Default state
+    bg: "#FFFFFF",
+    border: colorTokens.gray[300],
+    text: colorTokens.gray[900],
+    placeholder: colorTokens.gray[400],
+    
+    // Hover state
+    borderHover: colorTokens.gray[400],
+    
+    // Focus state
+    bgFocus: "#FFFFFF",
+    borderFocus: semanticTokens.primary,
+    ringFocus: semanticTokens.primary,
+    ringFocusOpacity: "0.1",
+    
+    // Disabled state
+    bgDisabled: colorTokens.gray[50],
+    borderDisabled: colorTokens.gray[200],
+    textDisabled: colorTokens.gray[400],
+    placeholderDisabled: colorTokens.gray[300],
+    
+    // Error state
+    bgError: colorTokens.error[50],
+    borderError: colorTokens.error[500],
+    textError: colorTokens.error[700], // Use 700 since 900 doesn't exist
+    ringError: colorTokens.error[500],
+    
+    // Success state
+    bgSuccess: colorTokens.success[50],
+    borderSuccess: colorTokens.success[500],
+    textSuccess: colorTokens.success[700], // Use 700 since 900 doesn't exist
+    ringSuccess: colorTokens.success[500],
+    
+    // Warning state
+    bgWarning: colorTokens.warning[50],
+    borderWarning: colorTokens.warning[500],
+    textWarning: colorTokens.warning[700], // Use 700 since 900 doesn't exist
+    ringWarning: colorTokens.warning[500],
+  },
+  
+  // ============================================================================
+  // CARD COMPONENT TOKENS
+  // ============================================================================
   card: {
+    // Default card
     background: semanticTokens.bgPrimary,
     border: semanticTokens.border,
     shadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+    shadowHover: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+    
+    // Interactive card (hover states)
+    bgHover: colorTokens.gray[50],
+    borderHover: colorTokens.gray[300],
+    
+    // Selected card
+    bgSelected: colorTokens.jade[50],
+    borderSelected: semanticTokens.primary,
+    
+    // Elevation variants
+    shadowFlat: "none",
+    shadowRaised: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    shadowElevated: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
   },
-
-  // Navigation
+  
+  // ============================================================================
+  // BADGE/TAG COMPONENT TOKENS
+  // ============================================================================
+  badge: {
+    // Neutral badge
+    neutralBg: colorTokens.gray[100],
+    neutralText: colorTokens.gray[700],
+    neutralBorder: colorTokens.gray[200],
+    
+    // Primary badge
+    primaryBg: colorTokens.jade[100],
+    primaryText: colorTokens.jade[700],
+    primaryBorder: colorTokens.jade[200],
+    
+    // Success badge
+    successBg: colorTokens.success[50], // Use 50 since 100 doesn't exist
+    successText: colorTokens.success[700],
+    successBorder: colorTokens.success[600], // Use 600 since 200 doesn't exist
+    
+    // Warning badge
+    warningBg: colorTokens.warning[50], // Use 50 since 100 doesn't exist
+    warningText: colorTokens.warning[700],
+    warningBorder: colorTokens.warning[600], // Use 600 since 200 doesn't exist
+    
+    // Error badge
+    errorBg: colorTokens.error[50], // Use 50 since 100 doesn't exist
+    errorText: colorTokens.error[700],
+    errorBorder: colorTokens.error[600], // Use 600 since 200 doesn't exist
+    
+    // Info badge
+    infoBg: colorTokens.blue[100],
+    infoText: colorTokens.blue[700],
+    infoBorder: colorTokens.blue[200],
+  },
+  
+  // ============================================================================
+  // MODAL/OVERLAY COMPONENT TOKENS
+  // ============================================================================
+  modal: {
+    // Backdrop
+    backdropBg: "rgba(0, 0, 0, 0.5)",
+    backdropBlur: "8px",
+    
+    // Modal container
+    bg: "#FFFFFF",
+    border: colorTokens.gray[200],
+    shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    
+    // Header
+    headerBg: "#FFFFFF",
+    headerBorder: colorTokens.gray[200],
+    headerText: colorTokens.gray[900],
+    
+    // Footer
+    footerBg: colorTokens.gray[50],
+    footerBorder: colorTokens.gray[200],
+    
+    // Close button
+    closeBtnBg: "transparent",
+    closeBtnBgHover: colorTokens.gray[100],
+    closeBtnText: colorTokens.gray[500],
+    closeBtnTextHover: colorTokens.gray[900],
+  },
+  
+  // ============================================================================
+  // NAVIGATION COMPONENT TOKENS
+  // ============================================================================
   navigation: {
+    // Default navigation
     background: semanticTokens.bgPrimary,
     border: semanticTokens.border,
-    linkHover: semanticTokens.bgBrand,
+    
+    // Navigation items
+    itemText: colorTokens.gray[700],
+    itemTextHover: colorTokens.gray[900],
+    itemTextActive: semanticTokens.primary,
+    itemBgHover: colorTokens.gray[100],
+    itemBgActive: colorTokens.jade[50],
+    
+    // Mobile navigation
+    mobileHeaderBg: "#FFFFFF",
+    mobileHeaderBorder: colorTokens.gray[200],
+    mobileHeaderShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+    
+    // Sidebar navigation
+    sidebarBg: "#FFFFFF",
+    sidebarBorder: colorTokens.gray[200],
+    sidebarHeaderBg: colorTokens.gray[50],
+  },
+  
+  // ============================================================================
+  // TOOLTIP COMPONENT TOKENS
+  // ============================================================================
+  tooltip: {
+    bg: colorTokens.gray[900],
+    text: "#FFFFFF",
+    shadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    maxWidth: "320px",
+    padding: "8px 12px",
+    fontSize: "0.875rem", // 14px
+    borderRadius: "8px",
+  },
+  
+  // ============================================================================
+  // LOADING/SKELETON COMPONENT TOKENS
+  // ============================================================================
+  skeleton: {
+    bg: colorTokens.gray[200],
+    highlight: colorTokens.gray[100],
+    animationDuration: "1.5s",
+    borderRadius: "8px",
+  },
+  
+  // ============================================================================
+  // DROPDOWN/SELECT COMPONENT TOKENS
+  // ============================================================================
+  dropdown: {
+    // Container
+    bg: "#FFFFFF",
+    border: colorTokens.gray[200],
+    shadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    
+    // Items
+    itemText: colorTokens.gray[900],
+    itemTextHover: colorTokens.gray[900],
+    itemTextSelected: semanticTokens.primary,
+    itemBgHover: colorTokens.gray[100],
+    itemBgSelected: colorTokens.jade[50],
+    
+    // Divider
+    divider: colorTokens.gray[200],
+  },
+  
+  // ============================================================================
+  // ICON COMPONENT TOKENS (Enhanced)
+  // ============================================================================
+  icon: {
+    // Contextual colors
+    default: "currentColor",
+    primary: semanticTokens.primary,
+    secondary: colorTokens.gray[500],
+    muted: colorTokens.gray[400],
+    
+    // Semantic colors
+    success: semanticTokens.success,
+    warning: semanticTokens.warning,
+    error: semanticTokens.error,
+    info: colorTokens.blue[500],
+    
+    // Brand colors
+    jade: semanticTokens.boxcallBrand,
+    navy: semanticTokens.coachAuthority,
+    
+    // Size scale (matches icon component)
+    sizeXs: "16px",
+    sizeSm: "20px",
+    sizeMd: "24px",
+    sizeLg: "32px",
+    sizeXl: "40px",
+  },
+  
+  // ============================================================================
+  // Z-INDEX SCALE (Stacking Order)
+  // ============================================================================
+  zIndex: {
+    base: "0",
+    dropdown: "1000",
+    sticky: "1020",
+    fixed: "1030",
+    modalBackdrop: "1040",
+    modal: "1050",
+    popover: "1060",
+    tooltip: "1070",
+    toast: "1080",
+    max: "9999",
+  },
+  
+  // ============================================================================
+  // FOCUS RING SYSTEM (Accessibility)
+  // ============================================================================
+  focus: {
+    ringColor: semanticTokens.primary,
+    ringWidth: "2px",
+    ringOffset: "2px",
+    ringOpacity: "0.5",
+    ringStyle: "solid",
   },
 } as const;
 
@@ -888,6 +1299,9 @@ export {
   semanticTokens as semantic,
   componentTokens as component,
   typographyTokens as typography,
+  semanticTypographyTokens as semanticTypography,
+  animationTokens as animation,
+  semanticAnimationTokens as semanticAnimation,
   spacingTokens as spacing,
   fineSpacingTokens as fineSpacing,
   semanticSpacingTokens as semanticSpacing,

@@ -37,7 +37,7 @@ BoxCall already has a **strong accessibility foundation** in place:
    // src/config/accessibility.ts
    export const accessibilityConfig = {
      colorContrast: {
-       minRatio: 4.5,      // WCAG AA
+       minRatio: 4.5, // WCAG AA
        enhancedRatio: 7.0, // WCAG AAA
      },
      keyboardNavigation: {
@@ -52,7 +52,7 @@ BoxCall already has a **strong accessibility foundation** in place:
        announceErrors: true,
      },
      interactive: {
-       minTouchTarget: 44,  // iOS/Android standard
+       minTouchTarget: 44, // iOS/Android standard
        focusIndicatorWidth: 2,
      },
    };
@@ -67,6 +67,7 @@ BoxCall already has a **strong accessibility foundation** in place:
 **Current State**: Inconsistent focus ring implementations across components
 
 **Issue**: Mixed focus ring approaches found in component audit:
+
 ```tsx
 // ❌ INCONSISTENT:
 focus:ring-2 focus:ring-jade-500          // Some components
@@ -74,7 +75,8 @@ focus:outline-none focus:ring-2 focus:ring-offset-1  // Other components
 focus:ring-2 focus:ring-brand-primary/60  // Yet another approach
 ```
 
-**Impact**: 
+**Impact**:
+
 - Inconsistent keyboard navigation experience
 - Some focus indicators may have insufficient contrast
 - Not using `:focus-visible` (shows focus on mouse clicks)
@@ -90,7 +92,7 @@ focus:ring-2 focus:ring-brand-primary/60  // Yet another approach
   --focus-ring-color: var(--color-jade-500);
   --focus-ring-color-error: var(--color-red-500);
   --focus-ring-color-warning: var(--color-amber-500);
-  
+
   /* High Contrast Mode */
   @media (prefers-contrast: high) {
     --focus-ring-width: 3px;
@@ -122,12 +124,14 @@ focus:ring-2 focus:ring-brand-primary/60  // Yet another approach
 ```
 
 **Implementation**:
+
 1. Add tokens to `generated-tokens.css`
 2. Update `Button.tsx`, `Input.tsx`, `Select.tsx`, `IconButton.tsx`
 3. Test keyboard navigation (Tab through all interactive elements)
 4. Validate with Lighthouse accessibility audit
 
 **Affected Components** (from audit):
+
 - `Input.tsx` (high priority)
 - `AppIconTile.tsx`
 - `PlayCardTileHeader.tsx`
@@ -135,6 +139,7 @@ focus:ring-2 focus:ring-brand-primary/60  // Yet another approach
 - `Select.tsx`, `TextArea.tsx`, `Checkbox.tsx`
 
 **Expected Improvement**:
+
 - Consistent focus indicators across application
 - Better keyboard navigation experience
 - Lighthouse accessibility score +5-10 points
@@ -146,6 +151,7 @@ focus:ring-2 focus:ring-brand-primary/60  // Yet another approach
 **Current State**: Basic high contrast support exists
 
 **Existing Implementation** ✅:
+
 ```typescript
 // src/themes/highContrast.ts
 export const highContrastTheme = {
@@ -181,41 +187,47 @@ export const highContrastTheme = {
     --high-contrast-bg: #ffffff;
     --high-contrast-bg-inverse: #000000;
     --high-contrast-border: #000000;
-    
+
     /* Interactive States */
     --focus-ring-width: 3px;
     --focus-ring-color: #000000;
-    
+
     /* Status Colors (must maintain contrast) */
     --high-contrast-success: #166534;
     --high-contrast-warning: #854d0e;
     --high-contrast-error: #991b1b;
   }
-  
+
   /* Force high contrast on key elements */
   body {
     filter: contrast(1.5);
   }
-  
+
   .glass-card,
   .bc-card {
     background-color: var(--high-contrast-bg);
     border: 2px solid var(--high-contrast-border);
   }
-  
-  button, a, input, select, textarea {
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
     border: 2px solid var(--high-contrast-border);
   }
 }
 ```
 
 **Implementation**:
+
 1. Audit current high contrast support (Lighthouse + manual testing)
 2. Add high contrast tokens to token system
 3. Update key components (Card, Button, Input)
 4. Test with OS high contrast settings (Windows High Contrast, macOS Increase Contrast)
 
 **Expected Improvement**:
+
 - Better support for users with visual impairments
 - Compliance with WCAG AAA contrast requirements
 - Improved usability in bright/outdoor environments
@@ -227,6 +239,7 @@ export const highContrastTheme = {
 **Current State**: Configuration exists, but implementation needs verification
 
 **Existing Config** ✅:
+
 ```typescript
 // src/config/accessibility.ts
 interactive: {
@@ -237,6 +250,7 @@ interactive: {
 **Gap**: Need to audit and ensure all interactive elements meet 44px minimum
 
 **Components to Audit**:
+
 1. Icon buttons (most likely to be too small)
 2. Dropdown triggers
 3. Checkbox/radio buttons
@@ -260,6 +274,7 @@ interactive: {
 ```
 
 **CSS Utility**:
+
 ```css
 /* Add to generated-tokens.css */
 .touch-target {
@@ -277,12 +292,14 @@ interactive: {
 ```
 
 **Implementation**:
+
 1. Run automated audit (Lighthouse accessibility)
 2. Manual testing on mobile device
 3. Fix identified components (add padding, min-width/height)
 4. Document standard touch target patterns
 
 **Expected Improvement**:
+
 - Better mobile usability
 - Reduced mis-taps on small targets
 - WCAG 2.1 Level AAA compliance (2.5.5 Target Size)
@@ -294,6 +311,7 @@ interactive: {
 **Current State**: Infrastructure exists, needs consistent implementation
 
 **Existing Config** ✅:
+
 ```typescript
 // src/config/accessibility.ts
 export const ARIA_LIVE_REGIONS = {
@@ -313,6 +331,7 @@ screenReader: {
 **Gap**: Ensure all dynamic content uses ARIA live regions
 
 **Components needing live regions**:
+
 1. **Toast notifications** (success, error, warning)
 2. **Loading states** (spinner, skeleton screens)
 3. **Form validation** (error messages appearing dynamically)
@@ -329,9 +348,9 @@ screenReader: {
 </div>
 
 // After: Toast with ARIA live region
-<div 
-  role="status" 
-  aria-live="polite" 
+<div
+  role="status"
+  aria-live="polite"
   aria-atomic="true"
   className="toast"
 >
@@ -339,9 +358,9 @@ screenReader: {
 </div>
 
 // Assertive for errors
-<div 
-  role="alert" 
-  aria-live="assertive" 
+<div
+  role="alert"
+  aria-live="assertive"
   aria-atomic="true"
   className="toast toast-error"
 >
@@ -350,12 +369,14 @@ screenReader: {
 ```
 
 **Implementation**:
+
 1. Audit dynamic content (toast, loading, validation)
 2. Add `aria-live` to identified components
 3. Test with screen reader (VoiceOver/NVDA)
 4. Document live region patterns
 
 **Expected Improvement**:
+
 - Better screen reader experience
 - Real-time feedback for dynamic changes
 - WCAG 4.1.3 Status Messages compliance
@@ -371,6 +392,7 @@ screenReader: {
 **Risk**: Low (additive enhancement)
 
 **Tasks**:
+
 1. ✅ Define focus ring tokens in `generated-tokens.css`
    - `--focus-ring-width`, `--focus-ring-offset`, `--focus-ring-color`
    - High contrast mode overrides
@@ -397,6 +419,7 @@ screenReader: {
    - Fix any focus-related issues
 
 **Success Criteria**:
+
 - All interactive elements have consistent focus indicators
 - Focus rings meet 3:1 contrast ratio (WCAG)
 - `:focus-visible` prevents focus on mouse clicks
@@ -411,6 +434,7 @@ screenReader: {
 **Risk**: Low (improves usability)
 
 **Tasks**:
+
 1. ✅ Audit current touch targets
    - Run Lighthouse accessibility audit
    - Manual testing on mobile device
@@ -437,6 +461,7 @@ screenReader: {
    - Create reusable icon button patterns
 
 **Success Criteria**:
+
 - All interactive elements ≥44px in both dimensions
 - 8px minimum spacing between adjacent touch targets
 - Comfortable mobile interaction
@@ -451,6 +476,7 @@ screenReader: {
 **Risk**: Low (uses media queries, no breaking changes)
 
 **Tasks**:
+
 1. ✅ Audit current high contrast support
    - Test with OS high contrast mode (Windows/macOS)
    - Document components needing enhancement
@@ -475,6 +501,7 @@ screenReader: {
    - Document testing procedures
 
 **Success Criteria**:
+
 - All text meets 7:1 contrast (WCAG AAA)
 - Interactive elements visible in high contrast mode
 - Glass cards have solid backgrounds when needed
@@ -489,6 +516,7 @@ screenReader: {
 **Risk**: Low (additive enhancement)
 
 **Tasks**:
+
 1. ✅ Audit dynamic content
    - Toast notifications
    - Loading states
@@ -512,6 +540,7 @@ screenReader: {
    - Document when to use polite vs assertive
 
 **Success Criteria**:
+
 - All dynamic content announced to screen readers
 - Toasts use `role="status"` or `role="alert"`
 - Loading states announce when complete
@@ -527,6 +556,7 @@ screenReader: {
 **Risk**: None
 
 **Tasks**:
+
 1. ✅ Update accessibility docs
    - Consolidate existing 6+ accessibility docs
    - Create single source of truth
@@ -549,6 +579,7 @@ screenReader: {
    - Common pitfalls to avoid
 
 **Success Criteria**:
+
 - Single comprehensive accessibility doc
 - Automated accessibility testing in CI
 - Clear guidelines for developers
@@ -559,6 +590,7 @@ screenReader: {
 ## 4. Implementation Timeline
 
 ### Week 1: High-Priority Enhancements
+
 - **Days 1-2**: Phase 15 (Focus Ring System)
 - **Days 3-4**: Phase 16 (Touch Target Optimization)
 - **Day 5**: Testing and validation
@@ -566,6 +598,7 @@ screenReader: {
 **Expected Outcome**: Core accessibility improvements, Lighthouse 95+ score
 
 ### Week 2: Medium-Priority Enhancements
+
 - **Days 1-2**: Phase 17 (High Contrast Mode)
 - **Days 2-3**: Phase 18 (ARIA Live Regions)
 - **Day 4-5**: Documentation and testing setup
@@ -584,21 +617,21 @@ screenReader: {
 
 ### WCAG 2.1 Compliance
 
-| Level | Current Status | Target | Priority |
-|-------|---------------|--------|----------|
-| **A** | ✅ Likely compliant | ✅ 100% | N/A (baseline) |
-| **AA** | 🟡 90-95% compliant | ✅ 100% | **HIGH** |
-| **AAA** | 🟡 70-80% compliant | 🟢 85%+ | Medium |
+| Level   | Current Status      | Target  | Priority       |
+| ------- | ------------------- | ------- | -------------- |
+| **A**   | ✅ Likely compliant | ✅ 100% | N/A (baseline) |
+| **AA**  | 🟡 90-95% compliant | ✅ 100% | **HIGH**       |
+| **AAA** | 🟡 70-80% compliant | 🟢 85%+ | Medium         |
 
 ### Specific WCAG Criteria
 
-| Success Criterion | Current | Target | Phase |
-|-------------------|---------|--------|-------|
-| 2.4.7 Focus Visible | 🟡 Partial | ✅ Pass | Phase 15 |
-| 2.5.5 Target Size | 🟡 Partial | ✅ Pass | Phase 16 |
-| 1.4.3 Contrast (Minimum) | ✅ Pass | ✅ Pass | ✅ Done |
+| Success Criterion         | Current    | Target  | Phase    |
+| ------------------------- | ---------- | ------- | -------- |
+| 2.4.7 Focus Visible       | 🟡 Partial | ✅ Pass | Phase 15 |
+| 2.5.5 Target Size         | 🟡 Partial | ✅ Pass | Phase 16 |
+| 1.4.3 Contrast (Minimum)  | ✅ Pass    | ✅ Pass | ✅ Done  |
 | 1.4.6 Contrast (Enhanced) | 🟡 Partial | 🟢 80%+ | Phase 17 |
-| 4.1.3 Status Messages | 🟡 Partial | ✅ Pass | Phase 18 |
+| 4.1.3 Status Messages     | 🟡 Partial | ✅ Pass | Phase 18 |
 
 ---
 
@@ -607,6 +640,7 @@ screenReader: {
 ### Automated Testing
 
 **Tools**:
+
 1. **Lighthouse CI** (GitHub Actions)
    - Run on every PR
    - Minimum score: 95
@@ -621,6 +655,7 @@ screenReader: {
    - Generate reports
 
 **Implementation**:
+
 ```yaml
 # .github/workflows/accessibility.yml
 name: Accessibility Audit
@@ -644,12 +679,14 @@ jobs:
 ### Manual Testing
 
 **Keyboard Navigation** (15 min):
+
 1. Tab through entire page
 2. Verify all interactive elements reachable
 3. Verify focus indicators visible
 4. Verify logical tab order
 
 **Screen Reader** (30 min):
+
 1. VoiceOver (macOS): `Cmd+F5`
 2. NVDA (Windows): Free download
 3. Navigate with screen reader only
@@ -657,12 +694,14 @@ jobs:
 5. Verify ARIA labels correct
 
 **Mobile Testing** (15 min):
+
 1. Test on actual device (not emulator)
 2. Verify touch targets comfortable
 3. Verify no accidental mis-taps
 4. Test pinch-to-zoom works
 
 **High Contrast** (10 min):
+
 1. Enable OS high contrast mode
 2. Verify all text readable
 3. Verify borders visible
@@ -715,13 +754,13 @@ BoxCall has an **industry-leading accessibility foundation**:
 
 ### Implementation Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Focus ring breaks existing styles | Low | Medium | Use `:focus-visible`, test thoroughly |
-| Touch targets break layouts | Low | Low | Use `min-width/height`, not `width/height` |
-| High contrast mode unreadable | Low | Medium | Test with OS settings, provide overrides |
-| ARIA live too chatty | Medium | Low | Use `polite`, not `assertive` by default |
-| Lighthouse score decreases | Low | Low | Run baseline first, track changes |
+| Risk                              | Likelihood | Impact | Mitigation                                 |
+| --------------------------------- | ---------- | ------ | ------------------------------------------ |
+| Focus ring breaks existing styles | Low        | Medium | Use `:focus-visible`, test thoroughly      |
+| Touch targets break layouts       | Low        | Low    | Use `min-width/height`, not `width/height` |
+| High contrast mode unreadable     | Low        | Medium | Test with OS settings, provide overrides   |
+| ARIA live too chatty              | Medium     | Low    | Use `polite`, not `assertive` by default   |
+| Lighthouse score decreases        | Low        | Low    | Run baseline first, track changes          |
 
 ### Mitigation Strategies
 
@@ -771,6 +810,7 @@ BoxCall has an **industry-leading accessibility foundation**:
 ### Current State: ✅ **Strong Foundation**
 
 BoxCall has an **exceptional accessibility infrastructure**:
+
 - Comprehensive configuration system
 - Global accessibility provider
 - High contrast theme support
@@ -780,6 +820,7 @@ BoxCall has an **exceptional accessibility infrastructure**:
 ### Primary Opportunities: 🎯 **Standardization & Polish**
 
 The main opportunities are **not** building new systems, but rather:
+
 1. **Standardizing** focus ring implementation across components (Phase 15)
 2. **Validating** touch target sizes meet 44px minimum (Phase 16)
 3. **Enhancing** high contrast mode support (Phase 17)
@@ -788,6 +829,7 @@ The main opportunities are **not** building new systems, but rather:
 ### Expected Impact
 
 **After Enhancement Phases 15-18**:
+
 - **Lighthouse Score**: 95+ (from current baseline)
 - **WCAG AA Compliance**: 100% (from ~90-95%)
 - **WCAG AAA Compliance**: 85%+ (stretch goal)
@@ -814,6 +856,7 @@ The main opportunities are **not** building new systems, but rather:
 ## Appendix: Quick Reference
 
 ### Focus Ring Implementation
+
 ```css
 :root {
   --focus-ring-width: 2px;
@@ -828,6 +871,7 @@ The main opportunities are **not** building new systems, but rather:
 ```
 
 ### Touch Target Utility
+
 ```css
 .touch-target {
   min-width: 44px;
@@ -839,6 +883,7 @@ The main opportunities are **not** building new systems, but rather:
 ```
 
 ### ARIA Live Region
+
 ```tsx
 <div role="status" aria-live="polite" aria-atomic="true">
   Success! Changes saved.
@@ -846,6 +891,7 @@ The main opportunities are **not** building new systems, but rather:
 ```
 
 ### High Contrast Mode
+
 ```css
 @media (prefers-contrast: high) {
   :root {

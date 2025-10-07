@@ -24,7 +24,7 @@ export interface DiagramMetadata {
   pref_front?: string;
 }
 
-export interface PlayDiagramBuilderProps {
+export interface DiagramEditorProps {
   play: Play;
   onClose: () => void;
   onSave?: (payload: {
@@ -426,7 +426,7 @@ const DiagramTopBar: React.FC<{
   );
 };
 
-const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
+const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
   play,
   onClose,
   onSave,
@@ -592,12 +592,15 @@ const PlayDiagramBuilderInner: React.FC<PlayDiagramBuilderProps> = ({
   );
 };
 
-export const PlayDiagramBuilder: React.FC<PlayDiagramBuilderProps> = (
+export const DiagramEditor: React.FC<DiagramEditorProps> = (
   props
 ) => {
   return (
     <DiagramEditorProvider>
-      <PlayDiagramBuilderInner {...props} />
+      <DiagramEditorInner {...props} />
     </DiagramEditorProvider>
   );
 };
+
+// Legacy export for backward compatibility during transition
+export const PlayDiagramBuilder = DiagramEditor;

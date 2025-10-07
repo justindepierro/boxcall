@@ -1,4 +1,5 @@
 # Component Library Audit - Priorities 2-4
+
 **Date**: Post-Phase 14 Completion  
 **Coverage**: ~99% Token System  
 **Scope**: Component patterns, performance, accessibility enhancements
@@ -10,12 +11,14 @@
 **Overall Health**: ✅ **EXCELLENT** (95%+ token compliance, consistent patterns)
 
 The component library demonstrates:
+
 - ✅ **Consistent token usage** across 50+ components
 - ✅ **Strong layout patterns** with semantic classes
 - ✅ **Good accessibility foundation** (focus rings, ARIA attributes)
 - ⚠️ **Opportunities for improvement** in animations, focus management, high contrast
 
 **Key Statistics**:
+
 - 185+ design tokens defined and in use
 - ~99% token coverage (Phase 14 complete)
 - 50+ production-ready components
@@ -28,6 +31,7 @@ The component library demonstrates:
 ### 1. **Token Usage Patterns** (EXCELLENT)
 
 #### Semantic Token References
+
 ```tsx
 // ✅ EXCELLENT: Using CSS custom properties via text-[] syntax
 text-[var(--semantic-text-primary)]
@@ -43,11 +47,12 @@ focus:ring-[var(--semantic-primary)]
 ---
 
 #### Layout Token Adoption
+
 ```tsx
 // ✅ EXCELLENT: Consistent container patterns
-className="container-page container-padding"
-className="container-content"
-className="bc-card-padding"
+className = "container-page container-padding";
+className = "container-content";
+className = "bc-card-padding";
 ```
 
 **Found in**: `AppGrid.tsx`, `PageLayout.tsx`, `TeamOnboardingWizard.tsx`, `LoginForm.tsx`
@@ -57,13 +62,14 @@ className="bc-card-padding"
 ---
 
 #### Spacing Token Usage
+
 ```tsx
 // ✅ EXCELLENT: Full spacing token adoption
-p-spacing-lg
-p-spacing-md
-space-y-spacing-lg
-gap-spacing-xs
-mb-spacing-md
+p - spacing - lg;
+p - spacing - md;
+space - y - spacing - lg;
+gap - spacing - xs;
+mb - spacing - md;
 ```
 
 **Found in**: `RosterImportModal.tsx` (extensive use), `CalendarShell.tsx`, `ConflictsPanel.tsx`
@@ -75,6 +81,7 @@ mb-spacing-md
 ### 2. **Component Composition Patterns** (STRONG)
 
 #### Card Component Consistency
+
 ```tsx
 // ✅ PATTERN: Consistent Card usage with variants
 <Card variant="elevated" className="p-6">
@@ -90,6 +97,7 @@ mb-spacing-md
 ---
 
 #### Typography Component Integration
+
 ```tsx
 // ✅ PATTERN: Typography component for all text
 <Typography variant="h1" className="text-text-primary mb-2">
@@ -104,6 +112,7 @@ mb-spacing-md
 ---
 
 #### Icon System Usage
+
 ```tsx
 // ✅ PATTERN: Consistent Icon component
 <Icon name="upload" className="h-5 w-5 mr-spacing-xs" />
@@ -121,9 +130,9 @@ mb-spacing-md
 
 ```tsx
 // ✅ PATTERN: Mobile-first responsive design
-className="flex flex-col sm:flex-row gap-3 justify-center"
-className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-className="flex flex-wrap justify-center items-center gap-4 md:gap-6"
+className = "flex flex-col sm:flex-row gap-3 justify-center";
+className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+className = "flex flex-wrap justify-center items-center gap-4 md:gap-6";
 ```
 
 **Found in**: `PageLayout.tsx`, `Footer.tsx`, `TeamOnboardingWizard.tsx`, `PlayerPerformanceDashboard.tsx`
@@ -136,12 +145,12 @@ className="flex flex-wrap justify-center items-center gap-4 md:gap-6"
 
 ```tsx
 // ✅ PATTERN: Surface tokens for state changes
-surface-card
-surface-subtle
-surface-muted
-surface-info
-surface-error
-surface-warning
+surface - card;
+surface - subtle;
+surface - muted;
+surface - info;
+surface - error;
+surface - warning;
 ```
 
 **Found in**: `Skeleton.tsx`, `CalendarSkeletons.tsx`, `LoginForm.tsx`, `RosterImportModal.tsx`
@@ -166,15 +175,14 @@ transition-transform duration-500
 **Found in**: 50+ components (widespread pattern)
 
 **Available Tokens**:
+
 ```css
---duration-instant: 75ms
---duration-quick: 150ms
---duration-smooth: 300ms
---duration-confident: 400ms
---duration-deliberate: 600ms
+--duration-instant: 75ms --duration-quick: 150ms --duration-smooth: 300ms
+  --duration-confident: 400ms --duration-deliberate: 600ms;
 ```
 
 **Recommendation**: Create Tailwind utility classes
+
 ```javascript
 // tailwind.config.js
 theme: {
@@ -191,6 +199,7 @@ theme: {
 ```
 
 **Usage**:
+
 ```tsx
 // ✅ IMPROVED:
 transition-all duration-quick
@@ -227,6 +236,7 @@ focus:ring-2 focus:ring-brand-primary/60
 ```
 
 **Tailwind classes**:
+
 ```css
 /* Add to base layer */
 .focus-ring {
@@ -239,6 +249,7 @@ focus:ring-2 focus:ring-brand-primary/60
 ```
 
 **Usage**:
+
 ```tsx
 // ✅ IMPROVED:
 <button className="focus-ring">
@@ -265,7 +276,7 @@ focus:ring-2 focus:ring-brand-primary/60
     --semantic-border: #000000;
     --focus-ring-width: 3px; /* Thicker in high contrast */
   }
-  
+
   :root[data-theme="dark"] {
     --semantic-text-primary: #ffffff;
     --semantic-text-secondary: #e5e5e5;
@@ -285,6 +296,7 @@ focus:ring-2 focus:ring-brand-primary/60
 **Issue**: Some interactive elements don't meet 44×44px minimum touch target.
 
 **Found**:
+
 ```tsx
 // ❌ TOO SMALL:
 <Icon name="close" className="h-5 w-5" /> // 20×20px
@@ -308,6 +320,7 @@ focus:ring-2 focus:ring-brand-primary/60
 ```
 
 **Usage**:
+
 ```tsx
 // ✅ IMPROVED:
 <button className="min-touch p-2">
@@ -327,27 +340,26 @@ focus:ring-2 focus:ring-brand-primary/60
 ### ✅ Approved Patterns
 
 #### 1. **Modal/Dialog Pattern**
+
 ```tsx
 // ✅ STANDARD PATTERN:
 <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-spacing-md">
   <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-    <div className="p-spacing-lg">
-      {/* Header */}
-    </div>
+    <div className="p-spacing-lg">{/* Header */}</div>
     <div className="p-spacing-lg overflow-y-auto max-h-[60vh]">
       {/* Content */}
     </div>
-    <div className="p-spacing-lg bg-surface-secondary">
-      {/* Footer */}
-    </div>
+    <div className="p-spacing-lg bg-surface-secondary">{/* Footer */}</div>
   </div>
 </div>
 ```
+
 **Examples**: `RosterImportModal.tsx`, `PlayDetailModal.tsx`
 
 ---
 
 #### 2. **Card List Pattern**
+
 ```tsx
 // ✅ STANDARD PATTERN:
 <div className="space-y-spacing-md">
@@ -368,11 +380,13 @@ focus:ring-2 focus:ring-brand-primary/60
   ))}
 </div>
 ```
+
 **Examples**: `ConflictsPanel.tsx`, `PlayerPerformanceDashboard.tsx`
 
 ---
 
 #### 3. **Empty State Pattern**
+
 ```tsx
 // ✅ STANDARD PATTERN:
 <div className="text-center py-12">
@@ -388,11 +402,13 @@ focus:ring-2 focus:ring-brand-primary/60
   <Button variant="primary">Call to Action</Button>
 </div>
 ```
+
 **Examples**: `RosterImportModal.tsx`, `PlayerPerformanceDashboard.tsx`
 
 ---
 
 #### 4. **Loading State Pattern**
+
 ```tsx
 // ✅ STANDARD PATTERN:
 <div className="text-center py-12">
@@ -402,11 +418,13 @@ focus:ring-2 focus:ring-brand-primary/60
   </Typography>
 </div>
 ```
+
 **Examples**: `RosterImportModal.tsx`, `RoleBasedDashboard.tsx`, `PlayerPerformanceDashboard.tsx`
 
 ---
 
 #### 5. **Skeleton Loading Pattern**
+
 ```tsx
 // ✅ STANDARD PATTERN:
 <div className="space-y-spacing-md">
@@ -419,6 +437,7 @@ focus:ring-2 focus:ring-brand-primary/60
   ))}
 </div>
 ```
+
 **Examples**: `CalendarSkeletons.tsx`, `Skeleton.tsx`
 
 ---
@@ -426,6 +445,7 @@ focus:ring-2 focus:ring-brand-primary/60
 ## 🚫 Anti-Patterns (Avoid These)
 
 ### 1. ❌ Hardcoded Hex Colors
+
 ```tsx
 // ❌ NEVER:
 style={{ backgroundColor: "#e5e7eb" }}
@@ -439,6 +459,7 @@ style={{ backgroundColor: "var(--semantic-bg-secondary)" }}
 ---
 
 ### 2. ❌ Arbitrary Values (Unless Dynamic)
+
 ```tsx
 // ❌ AVOID:
 className="text-[14px]" // Use text-sm
@@ -453,6 +474,7 @@ style={{ transform: `translateX(${offset}px)` }}
 ---
 
 ### 3. ❌ Inline Styles for Static Values
+
 ```tsx
 // ❌ NEVER:
 style={{ padding: "8px", margin: "16px" }}
@@ -464,6 +486,7 @@ className="p-2 m-4"
 ---
 
 ### 4. ❌ Inconsistent Focus States
+
 ```tsx
 // ❌ MIXED APPROACHES:
 <button className="focus:ring-2 focus:ring-jade-500">
@@ -481,6 +504,7 @@ className="p-2 m-4"
 ### Code Splitting Opportunities
 
 **Large Components** (>10KB uncompressed):
+
 1. `ProfilePage.tsx` (1371 lines) - Consider lazy loading
 2. `RosterPage.tsx` (974 lines) - Split into subcomponents
 3. `PlaybookPage.tsx` (827 lines) - Consider route-based splitting
@@ -490,12 +514,12 @@ className="p-2 m-4"
 
 ```tsx
 // Route configuration
-const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 // Usage
 <Suspense fallback={<SkeletonPageLoader />}>
   <ProfilePage />
-</Suspense>
+</Suspense>;
 ```
 
 ---
@@ -503,12 +527,14 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 ### Bundle Size Analysis Needed
 
 **Action Items**:
+
 1. Run `npm run build` and analyze bundle size
 2. Check for duplicate dependencies (multiple versions)
 3. Identify heavy dependencies (>50KB)
 4. Consider tree-shaking opportunities
 
 **Tools**:
+
 ```bash
 # Analyze bundle
 npm run build
@@ -523,12 +549,14 @@ npm ls
 ### CSS Optimization
 
 **Current State**: Multiple CSS files loaded
+
 - `generated-tokens.css` (~5KB)
 - `animations.css` (~3KB)
 - `density.css` (~1KB)
 - Component-specific styles
 
-**Recommendation**: 
+**Recommendation**:
+
 1. ✅ **Keep separate** - Allows selective loading
 2. Consider purging unused CSS in production
 3. Check for duplicate token definitions
@@ -538,10 +566,12 @@ npm ls
 ## 🎯 Action Items (Prioritized)
 
 ### Phase 15: Focus Ring System (HIGH PRIORITY)
+
 **Effort**: 2-3 hours  
 **Impact**: HIGH (accessibility compliance)
 
 **Tasks**:
+
 1. Add focus ring tokens to `generated-tokens.css`
 2. Create `.focus-ring` utility classes
 3. Update all interactive components (Button, Input, Select, IconButton)
@@ -549,6 +579,7 @@ npm ls
 5. Validate with accessibility audit tool
 
 **Files**:
+
 - `src/styles/generated-tokens.css` (add tokens)
 - `src/components/ui/Button/Button.tsx`
 - `src/components/ui/Input/Input.tsx`
@@ -558,10 +589,12 @@ npm ls
 ---
 
 ### Phase 16: Touch Target Optimization (HIGH PRIORITY)
+
 **Effort**: 1-2 hours  
 **Impact**: HIGH (mobile usability)
 
 **Tasks**:
+
 1. Add `--touch-target-min` token
 2. Create `.min-touch` utility class
 3. Audit all icon-only buttons
@@ -569,6 +602,7 @@ npm ls
 5. Test on mobile devices (iOS/Android)
 
 **Files**:
+
 - `src/styles/generated-tokens.css` (add token)
 - `src/components/mobile/MobileBottomNavigation.tsx`
 - `src/components/roster/RosterImportModal.tsx` (close button)
@@ -578,10 +612,12 @@ npm ls
 ---
 
 ### Phase 17: Animation Token Integration (MODERATE PRIORITY)
+
 **Effort**: 2-3 hours  
 **Impact**: MODERATE (consistency, future flexibility)
 
 **Tasks**:
+
 1. Update `tailwind.config.js` with duration tokens
 2. Create transition utility classes
 3. Replace hardcoded duration values across components
@@ -589,31 +625,37 @@ npm ls
 5. Validate visual consistency
 
 **Files**:
+
 - `tailwind.config.js` (extend theme)
 - 50+ components with `duration-200/300/500`
 
 ---
 
 ### Phase 18: High Contrast Mode (MODERATE PRIORITY)
+
 **Effort**: 1-2 hours  
 **Impact**: MODERATE (accessibility, WCAG AAA)
 
 **Tasks**:
+
 1. Add `@media (prefers-contrast: more)` overrides
 2. Test in Chrome DevTools with contrast emulation
 3. Validate text contrast ratios
 4. Update documentation
 
 **Files**:
+
 - `src/styles/generated-tokens.css` (add media query)
 
 ---
 
 ### Phase 19: Performance Audit (MODERATE PRIORITY)
+
 **Effort**: 3-4 hours  
 **Impact**: MODERATE (load time, UX)
 
 **Tasks**:
+
 1. Run bundle size analysis
 2. Identify code splitting opportunities
 3. Implement lazy loading for large pages
@@ -621,6 +663,7 @@ npm ls
 5. Document performance metrics
 
 **Tools**:
+
 - `vite-bundle-visualizer`
 - Chrome DevTools Performance tab
 - Lighthouse audit
@@ -630,7 +673,9 @@ npm ls
 ## 📝 Documentation Recommendations
 
 ### 1. **Component Pattern Guide** (NEEDED)
+
 Document approved patterns for:
+
 - Modal/dialog components
 - Card layouts
 - Empty states
@@ -643,7 +688,9 @@ Document approved patterns for:
 ---
 
 ### 2. **Accessibility Guide** (NEEDED)
+
 Document requirements for:
+
 - Focus management
 - Keyboard navigation
 - ARIA attributes
@@ -656,7 +703,9 @@ Document requirements for:
 ---
 
 ### 3. **Performance Benchmarks** (NEEDED)
+
 Track metrics for:
+
 - Bundle size (JS/CSS)
 - First Contentful Paint (FCP)
 - Time to Interactive (TTI)
@@ -669,12 +718,14 @@ Track metrics for:
 ## ✅ Conclusion
 
 **Overall Assessment**: The component library is in **EXCELLENT** shape with:
+
 - Near-complete token adoption (~99%)
 - Consistent component patterns
 - Strong foundation for accessibility
 - Clear improvement path
 
 **Next Steps**:
+
 1. ✅ **COMPLETE**: Documentation (this audit)
 2. ⏳ **NEXT**: Focus ring system (Phase 15)
 3. ⏳ **NEXT**: Touch target optimization (Phase 16)

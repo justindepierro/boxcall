@@ -12,162 +12,154 @@ import type {
   ButtonStylesConfig,
 } from "./Button.types";
 
-// Button variant styles configuration - Updated with semantic design system
+// Button variant styles configuration - Using component token system (Priority 5)
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "text-text-inverse bg-brand-primary transition-colors duration-200 shadow-sm",
-    hover: "hover:bg-brand-hover hover:shadow-md",
-    active: "active:bg-brand-active active:shadow-sm",
-    disabled:
-      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    base: "btn-primary transition-colors duration-200",
+    hover: "", // Handled by .btn-primary:hover
+    active: "", // Handled by .btn-primary:active
+    disabled: "", // Handled by .btn-primary:disabled
+    focus: "focus-ring",
   },
   secondary: {
-    base: "text-text-primary bg-surface-secondary transition-colors duration-200 shadow-sm",
-    hover: "hover:bg-surface-muted hover:shadow-md",
-    active: "active:bg-surface-base active:shadow-sm",
-    disabled:
-      "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    base: "btn-secondary transition-colors duration-200",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   outline: {
-    base: "text-brand-primary bg-surface-base/50 backdrop-blur-sm transition-all duration-200 ring-1 ring-inset ring-brand-primary/30",
-    hover: "hover:bg-brand-primary/10 hover:ring-brand-primary/50",
-    active: "active:bg-brand-primary/20 active:ring-brand-primary",
-    disabled:
-      "disabled:text-text-muted disabled:ring-gray-200 disabled:bg-transparent disabled:cursor-not-allowed disabled:opacity-60",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    base: "btn-outline transition-all duration-200",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   gradient: {
+    // Gradient not in component tokens - keep custom
     base: "text-text-inverse bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
     hover: "hover:from-electric-500 hover:to-electric-600",
     active: "active:from-electric-700 active:to-electric-800",
     disabled:
       "disabled:from-electric-300 disabled:to-electric-400 disabled:cursor-not-allowed disabled:opacity-60",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-electric-500 focus-visible:ring-offset-2",
+    focus: "focus-ring",
   },
   glass: {
+    // Glass not in component tokens - keep custom
     base: "bg-surface-base/10 backdrop-blur-md text-text-primary transition-colors duration-200",
     hover: "hover:bg-surface-base/20",
     active: "active:bg-surface-base/30",
     disabled:
       "disabled:bg-surface-base/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    focus: "focus-ring",
   },
   ghost: {
-    base: "text-text-primary bg-transparent transition-colors duration-200",
-    hover: "hover:bg-surface-muted",
-    active: "active:bg-surface-base",
-    disabled:
-      "disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    base: "btn-ghost transition-colors duration-200",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   subtle: {
-    base: "bg-surface-secondary text-text-secondary transition-colors duration-200",
-    hover: "hover:bg-surface-muted hover:text-text-primary",
-    active: "active:bg-surface-base active:text-text-primary",
-    disabled:
-      "disabled:bg-surface-secondary disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
-    focus:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
+    // Subtle is like secondary - use secondary tokens
+    base: "btn-secondary transition-colors duration-200",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   link: {
-    base: "text-brand-hover p-0 h-auto",
-    hover: "hover:text-brand-active hover:underline",
-    active: "active:text-brand-active",
-    disabled: "disabled:text-brand-primary/40 disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset focus:rounded-lg",
+    base: "btn-link",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   brandLink: {
+    // Keep custom (brand-specific variant)
     base: "text-brand-active p-0 h-auto font-medium",
     hover: "hover:text-brand-hover hover:underline",
     active: "active:text-brand-hover",
     disabled: "disabled:text-brand-primary/40 disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset focus:rounded-lg",
+    focus: "focus-ring",
   },
   neutralLink: {
+    // Keep custom (neutral link variant)
     base: "text-text-secondary p-0 h-auto",
     hover: "hover:text-text-primary hover:underline",
     active: "active:text-text-primary",
     disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset focus:rounded-lg",
+    focus: "focus-ring",
   },
   infoLink: {
-    base: "text-navy-600 p-0 h-auto",
-    hover: "hover:text-navy-700 hover:underline",
-    active: "active:text-navy-700",
-    disabled: "disabled:text-navy-300 disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset focus:rounded-lg",
+    // Info link variant using text-info (semantic color for info text)
+    base: "btn-link text-info",
+    hover: "", // Handled by .btn-link:hover
+    active: "", // Handled by .btn-link:active
+    disabled: "", // Handled by .btn-link:disabled
+    focus: "focus-ring",
   },
   dangerLink: {
+    // Danger link variant using text-error
     base: "text-error-600 p-0 h-auto",
     hover: "hover:text-error-700 hover:underline",
     active: "active:text-error-700",
     disabled: "disabled:text-error-500/40 disabled:cursor-not-allowed",
-    focus: "focus-ring focus-ring-offset focus:rounded-lg",
+    focus: "focus-ring",
   },
   danger: {
-    base: "text-text-inverse bg-status-error",
-    hover: "hover:bg-error-600",
-    active: "active:bg-error-700",
-    disabled:
-      "disabled:bg-error-500/60 disabled:cursor-not-allowed disabled:opacity-70",
-    focus: "focus-ring focus-ring-offset",
+    base: "btn-danger",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   success: {
-    base: "text-text-inverse bg-success-600",
-    hover: "hover:bg-success-700",
-    active: "active:bg-success-700",
-    disabled:
-      "disabled:bg-success-500/60 disabled:cursor-not-allowed disabled:opacity-70",
-    focus: "focus-ring focus-ring-offset",
+    base: "btn-success",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
   warning: {
-    base: "text-text-primary bg-warning-600",
-    hover: "hover:bg-warning-700",
-    active: "active:bg-warning-700",
-    disabled:
-      "disabled:bg-warning-500/60 disabled:cursor-not-allowed disabled:opacity-70",
-    focus: "focus-ring focus-ring-offset",
+    base: "btn-warning",
+    hover: "",
+    active: "",
+    disabled: "",
+    focus: "focus-ring",
   },
 };
-// Button size styles configuration - aligned to 8px rhythm
+// Button size styles configuration - Using component token heights (Priority 5)
 const buttonSizes: ButtonSizeConfig = {
   xs: {
     padding: "px-3 py-2",
     fontSize: "text-xs font-medium",
     iconSize: "w-4 h-4",
-    height: "h-8",
+    height: "btn-xs", // Uses --component-button-height-xs (32px)
   },
   sm: {
     padding: "px-4 py-2",
     fontSize: "text-sm font-medium",
     iconSize: "w-4 h-4",
-    height: "h-10",
+    height: "btn-sm", // Uses --component-button-height-sm (36px)
   },
   md: {
     padding: "px-6 py-3",
     fontSize: "text-sm font-semibold",
     iconSize: "w-5 h-5",
-    height: "h-12",
+    height: "btn-md", // Uses --component-button-height-md (40px)
   },
   lg: {
     padding: "px-6 py-3",
     fontSize: "text-base font-semibold",
     iconSize: "w-5 h-5",
-    height: "h-14",
+    height: "btn-lg", // Uses --component-button-height-lg (44px)
   },
   xl: {
     padding: "px-8 py-4",
     fontSize: "text-lg font-semibold font-display",
     iconSize: "w-6 h-6",
-    height: "h-16",
+    height: "btn-xl", // Uses --component-button-height-xl (48px)
   },
 };
 // Loading spinner component

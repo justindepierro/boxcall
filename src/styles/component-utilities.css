@@ -1,0 +1,678 @@
+/**
+ * Component Utility Classes
+ * 
+ * Utility classes that use component tokens for rapid development
+ * All classes use CSS custom properties from generated-tokens.css
+ */
+
+/* ============================================================================
+   BUTTON UTILITIES
+   ============================================================================ */
+
+/* Button variant base classes */
+.btn-primary {
+  background-color: var(--component-button-primary-bg);
+  color: var(--component-button-primary-text);
+  box-shadow: var(--component-button-primary-shadow);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--component-button-primary-bg-hover);
+  box-shadow: var(--component-button-primary-shadow-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--component-button-primary-bg-active);
+}
+
+.btn-primary:disabled {
+  background-color: var(--component-button-primary-bg-disabled);
+  color: var(--component-button-primary-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-secondary {
+  background-color: var(--component-button-secondary-bg);
+  color: var(--component-button-secondary-text);
+  box-shadow: var(--component-button-secondary-shadow);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--component-button-secondary-bg-hover);
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-color: var(--component-button-secondary-bg-active);
+}
+
+.btn-secondary:disabled {
+  background-color: var(--component-button-secondary-bg-disabled);
+  color: var(--component-button-secondary-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-outline {
+  background-color: var(--component-button-outline-bg);
+  color: var(--component-button-outline-text);
+  border: 1px solid var(--component-button-outline-border);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--component-button-outline-bg-hover);
+  border-color: var(--component-button-outline-border-hover);
+}
+
+.btn-outline:active:not(:disabled) {
+  background-color: var(--component-button-outline-bg-active);
+}
+
+.btn-outline:disabled {
+  background-color: var(--component-button-outline-bg-disabled);
+  color: var(--component-button-outline-text-disabled);
+  border-color: var(--component-button-outline-border-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-ghost {
+  background-color: var(--component-button-ghost-bg);
+  color: var(--component-button-ghost-text);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: var(--component-button-ghost-bg-hover);
+}
+
+.btn-ghost:active:not(:disabled) {
+  background-color: var(--component-button-ghost-bg-active);
+}
+
+.btn-ghost:disabled {
+  background-color: var(--component-button-ghost-bg-disabled);
+  color: var(--component-button-ghost-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-danger {
+  background-color: var(--component-button-danger-bg);
+  color: var(--component-button-danger-text);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--component-button-danger-bg-hover);
+}
+
+.btn-danger:active:not(:disabled) {
+  background-color: var(--component-button-danger-bg-active);
+}
+
+.btn-danger:disabled {
+  background-color: var(--component-button-danger-bg-disabled);
+  color: var(--component-button-danger-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-success {
+  background-color: var(--component-button-success-bg);
+  color: var(--component-button-success-text);
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: var(--component-button-success-bg-hover);
+}
+
+.btn-success:active:not(:disabled) {
+  background-color: var(--component-button-success-bg-active);
+}
+
+.btn-success:disabled {
+  background-color: var(--component-button-success-bg-disabled);
+  color: var(--component-button-success-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-warning {
+  background-color: var(--component-button-warning-bg);
+  color: var(--component-button-warning-text);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: var(--component-button-warning-bg-hover);
+}
+
+.btn-warning:active:not(:disabled) {
+  background-color: var(--component-button-warning-bg-active);
+}
+
+.btn-warning:disabled {
+  background-color: var(--component-button-warning-bg-disabled);
+  color: var(--component-button-warning-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Link button (no background, text-only) */
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  height: auto;
+  color: var(--component-button-link-text);
+  text-decoration: none;
+}
+
+.btn-link:hover:not(:disabled) {
+  color: var(--component-button-link-text-hover);
+  text-decoration: underline;
+}
+
+.btn-link:active:not(:disabled) {
+  color: var(--component-button-link-text-active);
+}
+
+.btn-link:disabled {
+  color: var(--component-button-link-text-disabled);
+  cursor: not-allowed;
+}
+
+/* ============================================
+   SPINNER UTILITIES
+   ============================================ */
+
+/* Primary spinner (uses primary button color) */
+.spinner-primary {
+  border-color: var(--component-button-primary-bg);
+  border-top-color: transparent;
+}
+
+/* Secondary spinner (uses secondary/muted color) */
+.spinner-secondary {
+  border-color: var(--semantic-border);
+  border-top-color: transparent;
+}
+
+/* ============================================
+   TROPHY/ACHIEVEMENT UTILITIES
+   ============================================ */
+
+/* Trophy card background (emerald aurora) */
+.trophy-card {
+  border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.3);
+}
+
+.dark .trophy-card {
+  border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.4);
+}
+
+.trophy-card:hover {
+  border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.5);
+}
+
+.dark .trophy-card:hover {
+  border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.6);
+}
+
+/* Trophy icon colors */
+.trophy-icon {
+  color: var(--component-badge-success-text);
+}
+
+.dark .trophy-icon {
+  color: var(--component-badge-success-text);
+}
+
+/* Trophy stat primary (points/xp) */
+.trophy-stat-primary {
+  color: var(--component-badge-success-text);
+}
+
+.dark .trophy-stat-primary {
+  color: var(--component-badge-success-text);
+}
+
+/* Trophy stat secondary (badges/medals) */
+.trophy-stat-secondary {
+  color: var(--component-badge-info-text);
+}
+
+.dark .trophy-stat-secondary {
+  color: var(--component-badge-info-text);
+}
+
+/* Trophy stat muted (labels) */
+.trophy-stat-muted {
+  color: rgb(var(--color-jade-700-rgb, 5 95 70) / 0.7);
+}
+
+.dark .trophy-stat-muted {
+  color: rgb(var(--color-jade-300-rgb, 110 231 183) / 0.7);
+}
+
+/* Trophy badge item */
+.trophy-badge-item {
+  background-color: var(--semantic-bg-primary);
+  border: 2px solid rgb(var(--color-jade-200-rgb, 167 243 208) / 1);
+}
+
+.dark .trophy-badge-item {
+  background-color: var(--semantic-bg-secondary);
+  border-color: rgb(var(--color-jade-700-rgb, 5 95 70) / 1);
+}
+
+.trophy-badge-item:hover {
+  background-color: rgb(var(--color-jade-50-rgb, 236 253 245) / 1);
+  border-color: rgb(var(--color-jade-300-rgb, 110 231 183) / 1);
+}
+
+.dark .trophy-badge-item:hover {
+  background-color: rgb(var(--color-jade-900-rgb, 5 46 22) / 0.2);
+  border-color: rgb(var(--color-jade-600-rgb, 4 120 87) / 1);
+}
+
+/* Button focus states (apply to all variants) */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline:focus-visible,
+.btn-ghost:focus-visible,
+.btn-danger:focus-visible,
+.btn-success:focus-visible,
+.btn-warning:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--component-focus-ring-width)
+    var(--component-focus-ring-color);
+  outline-offset: var(--component-focus-ring-offset);
+}
+
+/* Button sizes */
+.btn-xs {
+  height: var(--component-button-height-xs);
+}
+
+.btn-sm {
+  height: var(--component-button-height-sm);
+}
+
+.btn-md {
+  height: var(--component-button-height-md);
+}
+
+.btn-lg {
+  height: var(--component-button-height-lg);
+}
+
+.btn-xl {
+  height: var(--component-button-height-xl);
+}
+
+/* ============================================================================
+   CARD UTILITIES
+   ============================================================================ */
+
+.card {
+  background-color: var(--component-card-background);
+  border: 1px solid var(--component-card-border);
+  box-shadow: var(--component-card-shadow);
+}
+
+.card-interactive {
+  background-color: var(--component-card-background);
+  border: 1px solid var(--component-card-border);
+  box-shadow: var(--component-card-shadow);
+  transition: all 0.2s ease;
+}
+
+.card-interactive:hover {
+  background-color: var(--component-card-bg-hover);
+  border-color: var(--component-card-border-hover);
+  box-shadow: var(--component-card-shadow-hover);
+}
+
+.card-selected {
+  background-color: var(--component-card-bg-selected);
+  border-color: var(--component-card-border-selected);
+}
+
+.card-flat {
+  box-shadow: var(--component-card-shadow-flat);
+}
+
+.card-raised {
+  box-shadow: var(--component-card-shadow-raised);
+}
+
+.card-elevated {
+  box-shadow: var(--component-card-shadow-elevated);
+}
+
+/* ============================================================================
+   BADGE UTILITIES
+   ============================================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+}
+
+.badge-neutral {
+  background-color: var(--component-badge-neutral-bg);
+  color: var(--component-badge-neutral-text);
+  border: 1px solid var(--component-badge-neutral-border);
+}
+
+.badge-primary {
+  background-color: var(--component-badge-primary-bg);
+  color: var(--component-badge-primary-text);
+  border: 1px solid var(--component-badge-primary-border);
+}
+
+.badge-success {
+  background-color: var(--component-badge-success-bg);
+  color: var(--component-badge-success-text);
+  border: 1px solid var(--component-badge-success-border);
+}
+
+.badge-warning {
+  background-color: var(--component-badge-warning-bg);
+  color: var(--component-badge-warning-text);
+  border: 1px solid var(--component-badge-warning-border);
+}
+
+.badge-error {
+  background-color: var(--component-badge-error-bg);
+  color: var(--component-badge-error-text);
+  border: 1px solid var(--component-badge-error-border);
+}
+
+.badge-info {
+  background-color: var(--component-badge-info-bg);
+  color: var(--component-badge-info-text);
+  border: 1px solid var(--component-badge-info-border);
+}
+
+/* ============================================================================
+   INPUT UTILITIES
+   ============================================================================ */
+
+.input {
+  background-color: var(--component-input-bg);
+  border: 1px solid var(--component-input-border);
+  color: var(--component-input-text);
+}
+
+.input::placeholder {
+  color: var(--component-input-placeholder);
+}
+
+.input:hover:not(:disabled):not(:focus) {
+  border-color: var(--component-input-border-hover);
+}
+
+.input:focus {
+  background-color: var(--component-input-bg-focus);
+  border-color: var(--component-input-border-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--component-input-ring-focus-opacity);
+}
+
+.input:disabled {
+  background-color: var(--component-input-bg-disabled);
+  border-color: var(--component-input-border-disabled);
+  color: var(--component-input-text-disabled);
+  cursor: not-allowed;
+}
+
+.input:disabled::placeholder {
+  color: var(--component-input-placeholder-disabled);
+}
+
+/* Input validation states */
+.input-error {
+  background-color: var(--component-input-bg-error);
+  border-color: var(--component-input-border-error);
+  color: var(--component-input-text-error);
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px var(--component-input-ring-error);
+}
+
+.input-success {
+  background-color: var(--component-input-bg-success);
+  border-color: var(--component-input-border-success);
+  color: var(--component-input-text-success);
+}
+
+.input-success:focus {
+  box-shadow: 0 0 0 3px var(--component-input-ring-success);
+}
+
+.input-warning {
+  background-color: var(--component-input-bg-warning);
+  border-color: var(--component-input-border-warning);
+  color: var(--component-input-text-warning);
+}
+
+.input-warning:focus {
+  box-shadow: 0 0 0 3px var(--component-input-ring-warning);
+}
+
+/* ============================================================================
+   MODAL UTILITIES
+   ============================================================================ */
+
+.modal-backdrop {
+  background-color: var(--component-modal-backdrop-bg);
+  backdrop-filter: blur(var(--component-modal-backdrop-blur));
+}
+
+.modal-container {
+  background-color: var(--component-modal-bg);
+  border: 1px solid var(--component-modal-border);
+  box-shadow: var(--component-modal-shadow);
+}
+
+.modal-header {
+  background-color: var(--component-modal-header-bg);
+  border-bottom: 1px solid var(--component-modal-header-border);
+  color: var(--component-modal-header-text);
+}
+
+.modal-footer {
+  background-color: var(--component-modal-footer-bg);
+  border-top: 1px solid var(--component-modal-footer-border);
+}
+
+.modal-close-btn {
+  background-color: var(--component-modal-close-btn-bg);
+  color: var(--component-modal-close-btn-text);
+}
+
+.modal-close-btn:hover {
+  background-color: var(--component-modal-close-btn-bg-hover);
+  color: var(--component-modal-close-btn-text-hover);
+}
+
+/* ============================================================================
+   NAVIGATION UTILITIES
+   ============================================================================ */
+
+.nav {
+  background-color: var(--component-navigation-background);
+  border-bottom: 1px solid var(--component-navigation-border);
+}
+
+.nav-item {
+  color: var(--component-navigation-item-text);
+}
+
+.nav-item:hover {
+  color: var(--component-navigation-item-text-hover);
+  background-color: var(--component-navigation-item-bg-hover);
+}
+
+.nav-item-active {
+  color: var(--component-navigation-item-text-active);
+  background-color: var(--component-navigation-item-bg-active);
+}
+
+.nav-mobile {
+  background-color: var(--component-navigation-mobile-header-bg);
+  border-bottom: 1px solid var(--component-navigation-mobile-header-border);
+  box-shadow: var(--component-navigation-mobile-header-shadow);
+}
+
+.nav-sidebar {
+  background-color: var(--component-navigation-sidebar-bg);
+  border-right: 1px solid var(--component-navigation-sidebar-border);
+}
+
+.nav-sidebar-header {
+  background-color: var(--component-navigation-sidebar-header-bg);
+}
+
+/* ============================================================================
+   TOOLTIP UTILITIES
+   ============================================================================ */
+
+.tooltip {
+  background-color: var(--component-tooltip-bg);
+  color: var(--component-tooltip-text);
+  box-shadow: var(--component-tooltip-shadow);
+  max-width: var(--component-tooltip-max-width);
+  padding: var(--component-tooltip-padding);
+  font-size: var(--component-tooltip-font-size);
+  border-radius: var(--component-tooltip-border-radius);
+}
+
+/* ============================================================================
+   SKELETON UTILITIES
+   ============================================================================ */
+
+.skeleton {
+  background-color: var(--component-skeleton-bg);
+  border-radius: var(--component-skeleton-border-radius);
+  animation: skeleton-pulse var(--component-skeleton-animation-duration)
+    ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--component-skeleton-bg) 0%,
+    var(--component-skeleton-highlight) 50%,
+    var(--component-skeleton-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ============================================================================
+   DROPDOWN UTILITIES
+   ============================================================================ */
+
+.dropdown {
+  background-color: var(--component-dropdown-bg);
+  border: 1px solid var(--component-dropdown-border);
+  box-shadow: var(--component-dropdown-shadow);
+}
+
+.dropdown-item {
+  color: var(--component-dropdown-item-text);
+}
+
+.dropdown-item:hover {
+  background-color: var(--component-dropdown-item-bg-hover);
+  color: var(--component-dropdown-item-text-hover);
+}
+
+.dropdown-item-selected {
+  background-color: var(--component-dropdown-item-bg-selected);
+  color: var(--component-dropdown-item-text-selected);
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--component-dropdown-divider);
+}
+
+/* ============================================================================
+   Z-INDEX UTILITIES
+   ============================================================================ */
+
+.z-base {
+  z-index: var(--component-z-index-base);
+}
+.z-dropdown {
+  z-index: var(--component-z-index-dropdown);
+}
+.z-sticky {
+  z-index: var(--component-z-index-sticky);
+}
+.z-fixed {
+  z-index: var(--component-z-index-fixed);
+}
+.z-modal-backdrop {
+  z-index: var(--component-z-index-modal-backdrop);
+}
+.z-modal {
+  z-index: var(--component-z-index-modal);
+}
+.z-popover {
+  z-index: var(--component-z-index-popover);
+}
+.z-tooltip {
+  z-index: var(--component-z-index-tooltip);
+}
+.z-toast {
+  z-index: var(--component-z-index-toast);
+}
+.z-max {
+  z-index: var(--component-z-index-max);
+}
+
+/* ============================================================================
+   FOCUS RING UTILITIES (Accessibility)
+   ============================================================================ */
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: var(--component-focus-ring-width) var(--component-focus-ring-style)
+    var(--component-focus-ring-color);
+  outline-offset: var(--component-focus-ring-offset);
+}
+
+/* Keyboard-only focus (mouse clicks don't show ring) */
+.focus-ring:focus:not(:focus-visible) {
+  outline: none;
+}

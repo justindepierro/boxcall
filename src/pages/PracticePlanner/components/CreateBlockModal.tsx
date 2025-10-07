@@ -68,7 +68,7 @@ export function CreateBlockModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the practice block..."
-              className="w-full p-3 border border-subtle rounded-lg focus:ring-jade-500 focus:border-jade-500"
+              className="w-full p-3 border border-subtle rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
               rows={3}
             />
           </div>

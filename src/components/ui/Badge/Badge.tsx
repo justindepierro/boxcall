@@ -121,34 +121,16 @@ export const Badge: React.FC<BadgeProps> = ({
     lg: "px-3 py-1 text-sm h-8", // 14px font, 32px height
   } as const;
 
-  // Color variants using our psychological color system
+  // Color variants using component token system (Priority 5)
   const variantStyles: Record<CanonicalBadgeVariant, string> = {
-    neutral: cn(
-      "surface-subtle text-text-primary border-card-elevated",
-      "surface-subtle-hover hover:text-text-primary"
-    ),
-    info: cn(
-      "surface-subtle text-text-info border-card-elevated",
-      "hover:bg-surface-info hover:text-text-info"
-    ),
-    success: cn(
-      "surface-subtle text-text-success border-card-elevated",
-      "hover:bg-surface-success hover:text-text-success"
-    ),
-    warning: cn(
-      "surface-subtle text-text-warning border-card-elevated",
-      "hover:bg-surface-warning hover:text-text-warning"
-    ),
-    danger: cn(
-      "surface-subtle text-text-error border-card-elevated",
-      "hover:bg-surface-error hover:text-text-error"
-    ),
-    accent: cn(
-      "surface-subtle text-text-accent border-card-elevated",
-      "hover:bg-surface-accent hover:text-text-accent"
-    ),
+    neutral: "badge badge-neutral",
+    info: "badge badge-info",
+    success: "badge badge-success",
+    warning: "badge badge-warning",
+    danger: "badge badge-error", // maps to error variant
+    accent: "badge badge-primary", // maps to primary variant
     premium: cn(
-      "premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-surface-info text-text-accent border-card-elevated",
+      "badge premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-surface-info text-text-accent border-card-elevated",
       "hover:from-surface-accent hover:to-surface-info hover:text-text-accent"
     ),
   };
