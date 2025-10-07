@@ -36,10 +36,14 @@ jobs:
       - name: 🧪 Run Tests
         id: test
         run: npm run test
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: 📦 Build Check
         id: build
         run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: 📊 Generate PR Comment
         if: always()

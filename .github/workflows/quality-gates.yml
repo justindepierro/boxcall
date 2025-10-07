@@ -30,12 +30,17 @@ jobs:
 
       - name: Lint
         run: npm run lint
+        continue-on-error: false
 
       - name: Run Tests
         run: npm run test
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Build
         run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Upload build artifacts
         if: success()
@@ -50,6 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: quality-checks
+    if: false  # Disabled until test:a11y script is created
 
     steps:
       - name: Checkout code
@@ -91,6 +97,7 @@ jobs:
 
       - name: Check Prettier formatting
         run: npm run format:check || echo "⚠️ Run 'npm run format' locally"
+        continue-on-error: true  # Non-blocking until formatting cleanup is done
 
       - name: Design Token Coverage Report
         run: |
