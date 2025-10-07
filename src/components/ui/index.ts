@@ -13,8 +13,6 @@ export { Select } from "./Select";
 export type { SelectOption, SelectProps } from "./Select";
 export { Modal } from "./Modal";
 export type { ModalProps } from "./Modal";
-export { NotificationBell } from "./NotificationBell";
-export type { NotificationBellProps } from "./NotificationBell";
 export { LoadingScreen } from "./LoadingScreen";
 export { AuroraTile } from "./AuroraTile";
 export type { AuroraTileProps } from "./AuroraTile";

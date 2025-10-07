@@ -113,7 +113,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className={`w-full px-3 py-2 text-sm border-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
+              className={`w-full px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-electric-500/20 focus:border-electric-500 appearance-none pr-10 ${className}`}
             >
               {allowEmpty && <option value="">{emptyLabel}</option>}
               {options.map((option) => (

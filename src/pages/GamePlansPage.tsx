@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
-import { Icon } from "../components/ui/Icon";
+import { Icon, type IconName } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
@@ -48,7 +48,7 @@ export default function GamePlansPage() {
         key: "create",
         title: "Build New Plan",
         description: "Design scripted drives and install packages.",
-        icon: "target",
+        icon: "target" as IconName,
         accentOverlayClass: "bg-aurora-emerald",
         glowClassName: "glow-aurora-emerald",
         statusBadge: "Creator",
@@ -78,7 +78,7 @@ export default function GamePlansPage() {
         key: "film",
         title: "Film Script",
         description: "Tag cutups and align plays with opponent looks.",
-        icon: "play",
+        icon: "play" as IconName,
         accentOverlayClass: "bg-aurora-indigo",
         glowClassName: "glow-aurora-indigo",
         statusBadge: "Scouting",
@@ -102,7 +102,7 @@ export default function GamePlansPage() {
         key: "share",
         title: "Share Packet",
         description: "Distribute call sheets to staff in one tap.",
-        icon: "mail",
+        icon: "mail" as IconName,
         accentOverlayClass: "bg-aurora-violet",
         glowClassName: "glow-aurora-violet",
         statusBadge: "Collab",

@@ -168,7 +168,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 <div className="space-y-6">
                   {/* Diagram Preview */}
                   {play.diagram_url && (
-                    <div className="relative rounded-2xl overflow-hidden border-2 border dark:border-slate-700 shadow-lg">
+                    <div className="relative rounded-2xl overflow-hidden border-2 dark:border-slate-700 shadow-lg">
                       <img
                         src={play.diagram_url}
                         alt={`${play.formation} ${play.play_name} diagram`}
