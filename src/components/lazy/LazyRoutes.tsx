@@ -1,13 +1,9 @@
-import React from "react";
-
-import { Typography } from "../design-system/Typography";
 /**
  * Lazy Route Components
  *
  * Implements route-based code splitting to dramatically reduce initial bundle size
  * Each page component is loaded only when the user navigates to it
  */
-import { Button } from "../ui";
 import { lazyRoute } from "../ui/performance-utils";
 
 // Lazy load all major page components
@@ -231,71 +227,4 @@ export const RouteLoadingSpinner = () => (
   </div>
 );
 
-// Error boundary for lazy loading failures
-export class LazyLoadErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback?: React.ReactNode },
-  { hasError: boolean }
-> {
-  constructor(props: {
-    children: React.ReactNode;
-    fallback?: React.ReactNode;
-  }) {
-    super(props);
-    this.state = { hasError: false };
-  }
 
-  static getDerivedStateFromError(): { hasError: boolean } {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error("Lazy loading error:", error, errorInfo);
-  }
-
-  render(): React.ReactNode {
-    if (this.state.hasError) {
-      return (
-        this.props.fallback || (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-text-error mb-4">
-                <svg
-                  className="w-12 h-12 mx-auto"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L4.316 15c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
-              </div>
-              <Typography
-                variant="headline-sm"
-                as="h2"
-                className="text-text-primary mb-2"
-              >
-                Failed to load page
-              </Typography>
-              <p className="text-text-secondary mb-4">
-                There was an error loading this page. Please try refreshing.
-              </p>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => window.location.reload()}
-              >
-                Refresh Page
-              </Button>
-            </div>
-          </div>
-        )
-      );
-    }
-
-    return this.props.children;
-  }
-}

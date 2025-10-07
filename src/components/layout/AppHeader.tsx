@@ -3,13 +3,12 @@ import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
 import { SidebarLogo } from "../ui/Logo";
 import { UserMenu } from "../auth/UserMenu";
-import { NotificationBell } from "../ui/NotificationBell";
+import { Icon } from "../ui/Icon/Icon";
 import { TeamSwitcher } from "./TeamSwitcher";
 import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
-import { Icon } from "../ui/Icon/Icon";
 import {
   isPWAInstallAvailable,
   requestPWAInstallPrompt,
@@ -156,10 +155,20 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {/* Right side - TeamSwitcher and User Actions */}
             <div className="flex-1 flex items-center justify-end gap-3">
               <TeamSwitcher teams={teams} />
-              <NotificationBell
-                unreadCount={0} // TODO: Connect to actual notification count
+              {/* TODO: Add notification system - see NotificationsBell in components/social */}
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => console.log("Notifications clicked")}
-              />
+                className="p-2 hover:bg-surface-hover rounded-lg transition-colors relative"
+                aria-label="Notifications"
+              >
+                <Icon
+                  name="bell"
+                  size="md"
+                  className="text-text-secondary hover:text-text-primary transition-colors"
+                />
+              </Button>
               <UserMenu />
             </div>
           </div>
