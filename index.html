@@ -10,10 +10,11 @@
       content="BoxCall - The comprehensive football program management platform. Everything Hudl is not."
     />
 
-    <!-- Self-hosted font preloads (enable once WOFF2 files exist) -->
+    <!-- Self-hosted font preloads - Only critical fonts -->
+    <!-- Inter-400 and Inter-600 are used immediately in body text and headings -->
     <link
       rel="preload"
-      href="/assets/fonts/Inter-500.woff2"
+      href="/assets/fonts/Inter-400.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -25,6 +26,14 @@
       type="font/woff2"
       crossorigin
     />
+    <!-- Other fonts loaded on demand
+    <link
+      rel="preload"
+      href="/assets/fonts/Inter-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       rel="preload"
       href="/assets/fonts/Jetbrains-Mono-400.woff2"
@@ -32,6 +41,7 @@
       type="font/woff2"
       crossorigin
     />
+    -->
 
     <title>BoxCall - Football Management Platform</title>
   </head>
