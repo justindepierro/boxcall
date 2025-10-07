@@ -22,8 +22,8 @@ import {
   applyFormationIdempotent,
   type FormationId,
 } from "./formations";
-
-const HISTORY_CAP = 100;
+import { ActionTypes } from "./actions";
+import { pushHistory } from "./utils";
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),
   ui: {
@@ -46,29 +46,6 @@ const initialState: DiagramEditorState = {
   history: [],
   historyIndex: -1,
 };
-
-function pushHistory(state: DiagramEditorState, nextDoc: DiagramDocument) {
-  const trimmed = state.history.slice(0, state.historyIndex + 1);
-  let newHistory = [...trimmed, nextDoc];
-  if (newHistory.length > HISTORY_CAP) {
-    const before = newHistory.length;
-    newHistory = newHistory.slice(newHistory.length - HISTORY_CAP);
-    telemetry.enqueue({
-      type: TelemetryEventTypes.PlayDiagramHistory,
-      data: {
-        action: "cap-trim",
-        dropped: before - newHistory.length,
-        length: newHistory.length,
-        cap: HISTORY_CAP,
-      },
-    });
-  }
-  return {
-    ...state,
-    history: newHistory,
-    historyIndex: newHistory.length - 1,
-  };
-}
 
 function reducer(
   state: DiagramEditorState,
