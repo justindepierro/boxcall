@@ -9,6 +9,7 @@
 **Root Cause:** Dev server is not running or has crashed
 
 **Solutions:**
+
 ```bash
 # Check if server is running
 lsof -ti :5173
@@ -29,20 +30,23 @@ npm run dev
 **Solutions:**
 
 #### Option A: Remove unused preloads (Quick Fix)
+
 ```html
 <!-- Remove or comment out in index.html -->
 <!-- Only preload fonts used in critical rendering -->
 ```
 
 #### Option B: Ensure fonts are actually used immediately
+
 ```css
 /* In your CSS, make sure these fonts are used right away */
 body {
-  font-family: 'Inter', sans-serif; /* Uses Inter-400/500/600 */
+  font-family: "Inter", sans-serif; /* Uses Inter-400/500/600 */
 }
 ```
 
 #### Option C: Add `fetchpriority="low"` for non-critical fonts
+
 ```html
 <link
   rel="preload"
@@ -59,14 +63,16 @@ body {
 **Root Cause:** Browser extension (usually Chrome extensions) trying to communicate
 
 **Solutions:**
+
 - This is NOT your code - it's a browser extension issue
 - Safe to ignore in development
 - Test in incognito mode to confirm
 - Disable extensions one by one to find culprit
 
 Common culprits:
+
 - React DevTools
-- Redux DevTools  
+- Redux DevTools
 - LastPass
 - Grammarly
 - Ad blockers
@@ -78,39 +84,42 @@ Common culprits:
 **Recommendations:**
 
 #### Create a Logger Utility
+
 ```typescript
 // src/utils/devLogger.ts
 const isDev = import.meta.env.DEV;
 
 export const devLogger = {
   error: (...args: any[]) => {
-    if (isDev) console.error('[DEV]', ...args);
+    if (isDev) console.error("[DEV]", ...args);
   },
   warn: (...args: any[]) => {
-    if (isDev) console.warn('[DEV]', ...args);
+    if (isDev) console.warn("[DEV]", ...args);
   },
   info: (...args: any[]) => {
-    if (isDev) console.info('[DEV]', ...args);
+    if (isDev) console.info("[DEV]", ...args);
   },
   debug: (...args: any[]) => {
     if (isDev && import.meta.env.VITE_DEBUG) {
-      console.debug('[DEBUG]', ...args);
+      console.debug("[DEBUG]", ...args);
     }
-  }
+  },
 };
 ```
 
 #### Replace Console Statements Gradually
+
 ```typescript
 // Old
-console.error('Failed to fetch user');
+console.error("Failed to fetch user");
 
 // New
-import { devLogger } from '@/utils/devLogger';
-devLogger.error('Failed to fetch user');
+import { devLogger } from "@/utils/devLogger";
+devLogger.error("Failed to fetch user");
 ```
 
 #### Add Debug Mode
+
 ```bash
 # .env.local
 VITE_DEBUG=true  # Enable verbose debugging
@@ -119,6 +128,7 @@ VITE_DEBUG=true  # Enable verbose debugging
 ### 5. Vite HMR (Hot Module Replacement) Issues
 
 **Symptoms:**
+
 - Changes not reflecting
 - Full page reload instead of HMR
 - Multiple reloads
@@ -126,17 +136,19 @@ VITE_DEBUG=true  # Enable verbose debugging
 **Solutions:**
 
 #### Check vite.config.ts
+
 ```typescript
 export default defineConfig({
   server: {
     hmr: {
-      overlay: true  // Show errors in browser overlay
-    }
-  }
+      overlay: true, // Show errors in browser overlay
+    },
+  },
 });
 ```
 
 #### Clear Vite cache
+
 ```bash
 rm -rf node_modules/.vite
 npm run dev
@@ -145,26 +157,29 @@ npm run dev
 ## Performance Monitoring
 
 ### Enable Vite Debug Logging
+
 ```bash
 DEBUG=vite:* npm run dev
 ```
 
 ### Check Bundle Size
+
 ```bash
 npm run build -- --debug
 ```
 
 ### Profile Page Load
+
 ```javascript
 // Add to main.tsx temporarily
 if (import.meta.env.DEV) {
-  performance.mark('app-start');
-  
-  window.addEventListener('load', () => {
-    performance.mark('app-loaded');
-    performance.measure('app-load-time', 'app-start', 'app-loaded');
-    
-    const measure = performance.getEntriesByName('app-load-time')[0];
+  performance.mark("app-start");
+
+  window.addEventListener("load", () => {
+    performance.mark("app-loaded");
+    performance.measure("app-load-time", "app-start", "app-loaded");
+
+    const measure = performance.getEntriesByName("app-load-time")[0];
     console.log(`App loaded in ${measure.duration}ms`);
   });
 }
@@ -241,11 +256,13 @@ echo "Run 'npm run dev' to start server"
 ```
 
 ### Network Tab Filters
+
 - Filter: `localhost:5173`
 - Hide: `chrome-extension://`
 - Focus on failed requests (red)
 
 ### React DevTools Profiler
+
 1. Open React DevTools
 2. Go to Profiler tab
 3. Click record
@@ -255,16 +272,19 @@ echo "Run 'npm run dev' to start server"
 ## Action Items
 
 ### Immediate (5 min)
+
 - [ ] Comment out unused font preloads in index.html
 - [ ] Test in incognito mode to verify extension errors
 - [ ] Add `.vite` to `.gitignore` if not already there
 
 ### Short Term (1 hour)
+
 - [ ] Create devLogger utility
 - [ ] Replace top 10 noisiest console.error/warn calls
 - [ ] Add VITE_DEBUG environment variable
 
 ### Long Term (ongoing)
+
 - [ ] Gradually replace all console statements with devLogger
 - [ ] Set up error boundary for production
 - [ ] Add Sentry or similar error tracking for production
@@ -283,13 +303,13 @@ In production, these dev server errors won't exist. Monitor production with:
 ```typescript
 // src/utils/errorTracking.ts
 if (import.meta.env.PROD) {
-  window.addEventListener('error', (event) => {
+  window.addEventListener("error", (event) => {
     // Send to error tracking service
-    console.error('Production error:', event.error);
+    console.error("Production error:", event.error);
   });
-  
-  window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
+
+  window.addEventListener("unhandledrejection", (event) => {
+    console.error("Unhandled promise rejection:", event.reason);
   });
 }
 ```

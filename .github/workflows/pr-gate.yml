@@ -36,7 +36,7 @@ jobs:
       - name: 🧪 Run Tests
         id: test
         run: npm run test
-        continue-on-error: true  # Temporarily non-blocking due to storybook test memory issues
+        continue-on-error: true # Temporarily non-blocking due to storybook test memory issues
         env:
           NODE_OPTIONS: --max-old-space-size=4096
 

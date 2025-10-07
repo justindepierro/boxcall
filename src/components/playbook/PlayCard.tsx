@@ -361,6 +361,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             getConfidenceColor={getConfidenceColor}
             onAddToPracticeScript={onAddToPracticeScript}
             onAddToGamePlan={onAddToGamePlan}
+            onCreateDiagram={handleCreateDiagram}
           />
         )}
       </div>
