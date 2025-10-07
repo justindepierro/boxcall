@@ -17,13 +17,13 @@ const semanticColor = (name) => `var(--semantic-${name})`;
 
 const spacingTokens = {
   0: "var(--space-0)",
-  0.5: "var(--spacing-fine-0.5)",
+  0.5: "var(--spacing-fine-0-5)",
   1: "var(--space-1)",
-  1.5: "var(--spacing-fine-1.5)",
+  1.5: "var(--spacing-fine-1-5)",
   2: "var(--space-2)",
-  2.5: "var(--spacing-fine-2.5)",
+  2.5: "var(--spacing-fine-2-5)",
   3: "var(--space-3)",
-  3.5: "var(--spacing-fine-3.5)",
+  3.5: "var(--spacing-fine-3-5)",
   4: "var(--space-4)",
   5: "var(--space-5)",
   6: "var(--space-6)",
