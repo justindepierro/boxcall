@@ -1,6 +1,8 @@
+/* eslint-disable boxcall-design/no-raw-tailwind-colors */
 /*
  * DiagramEditor uses an intentionally dark-themed interface (like Figma, VS Code)
  * that doesn't respond to system theme. Slate colors are intentional design choices.
+ * All slate-* colors in this file are exempt from design token requirements.
  */
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
