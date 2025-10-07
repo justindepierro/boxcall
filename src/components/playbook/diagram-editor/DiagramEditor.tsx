@@ -1,8 +1,18 @@
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
-/*
- * DiagramEditor uses an intentionally dark-themed interface (like Figma, VS Code)
- * that doesn't respond to system theme. Slate colors are intentional design choices.
- * All slate-* colors in this file are exempt from design token requirements.
+/**
+ * DiagramEditor - Football Play Diagram Builder
+ *
+ * Design Philosophy:
+ * - Uses Aurora design system with glass morphism
+ * - Light theme with excellent readability
+ * - Proper color tokens for maintainability
+ * - WCAG AA compliant contrast ratios
+ * - Consistent with rest of application
+ *
+ * Key Features:
+ * - Visual play creation with drag-and-drop
+ * - Player positioning and route drawing
+ * - Field configuration (midfield, redzone, etc.)
+ * - Real-time preview and manipulation
  */
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -111,10 +121,10 @@ const FieldSettingsPanel: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Field Slice Section */}
-      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+      <div className="rounded-glass border border-subtle surface-card backdrop-blur-sm p-5">
         <Typography
           variant="label-lg"
-          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-muted"
         >
           Field Slice
         </Typography>
@@ -128,7 +138,7 @@ const FieldSettingsPanel: React.FC = () => {
             return (
               <label
                 key={key}
-                className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors"
+                className="flex items-center gap-3 text-sm text-secondary cursor-pointer hover:text-primary transition-colors"
               >
                 <input
                   type="radio"
@@ -136,7 +146,7 @@ const FieldSettingsPanel: React.FC = () => {
                   value={key}
                   checked={activePreset === key}
                   onChange={() => handlePresetChange(key)}
-                  className="h-4 w-4 text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+                  className="h-4 w-4 text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-primary border-border bg-surface-secondary"
                 />
                 <span>{preset.label}</span>
               </label>
@@ -146,38 +156,38 @@ const FieldSettingsPanel: React.FC = () => {
       </div>
 
       {/* Display Options Section */}
-      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+      <div className="rounded-glass border border-subtle surface-card backdrop-blur-sm p-5">
         <Typography
           variant="label-lg"
-          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-muted"
         >
           Display
         </Typography>
         <div className="space-y-3">
-          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
+          <label className="flex items-center gap-3 text-sm text-secondary cursor-pointer hover:text-primary transition-colors">
             <input
               type="checkbox"
               checked={field.showPlayerLabels}
               onChange={() => toggleFlag("showPlayerLabels")}
-              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-primary border-border bg-surface-secondary"
             />
             <span>Show Player Labels</span>
           </label>
-          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
+          <label className="flex items-center gap-3 text-sm text-secondary cursor-pointer hover:text-primary transition-colors">
             <input
               type="checkbox"
               checked={field.showDefensePlayers}
               onChange={() => toggleFlag("showDefensePlayers")}
-              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-primary border-border bg-surface-secondary"
             />
             <span>Show Defense</span>
           </label>
-          <label className="flex items-center gap-3 text-sm text-slate-300 cursor-pointer hover:text-slate-100 transition-colors">
+          <label className="flex items-center gap-3 text-sm text-secondary cursor-pointer hover:text-primary transition-colors">
             <input
               type="checkbox"
               checked={field.showRedZone ?? false}
               onChange={() => toggleFlag("showRedZone")}
-              className="h-4 w-4 rounded-lg text-jade-600 focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:ring-offset-slate-900 border-slate-600 bg-slate-700"
+              className="h-4 w-4 rounded-lg text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-surface-primary border-border bg-surface-secondary"
             />
             <span>Highlight Red Zone</span>
           </label>
@@ -185,10 +195,10 @@ const FieldSettingsPanel: React.FC = () => {
       </div>
 
       {/* Ball Hash Section */}
-      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+      <div className="rounded-glass border border-subtle surface-card backdrop-blur-sm p-5">
         <Typography
           variant="label-lg"
-          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-muted"
         >
           Ball Hash
         </Typography>
@@ -209,7 +219,7 @@ const FieldSettingsPanel: React.FC = () => {
               className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
                 field.ballHash === option.id
                   ? "border-jade-500 bg-jade-500/20 text-jade-100 shadow-lg shadow-jade-500/25"
-                  : "border-slate-700 bg-slate-900/60 text-slate-300 hover:border-jade-600 hover:bg-slate-800/80"
+                  : "border-border bg-surface-secondary text-secondary hover:border-brand-primary hover:bg-surface-secondary/80"
               }`}
             >
               {option.label}
@@ -219,10 +229,10 @@ const FieldSettingsPanel: React.FC = () => {
       </div>
 
       {/* Hash Layout Section */}
-      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-5">
+      <div className="rounded-glass border border-subtle surface-card backdrop-blur-sm p-5">
         <Typography
           variant="label-lg"
-          className="mb-4 text-xs uppercase tracking-[0.2em] text-slate-300"
+          className="mb-4 text-xs uppercase tracking-[0.2em] text-muted"
         >
           Hash Layout
         </Typography>
@@ -245,7 +255,7 @@ const FieldSettingsPanel: React.FC = () => {
               className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
                 field.hashLayout === option.id
                   ? "border-jade-500 bg-jade-500/20 text-jade-100 shadow-lg shadow-jade-500/25"
-                  : "border-slate-700 bg-slate-900/60 text-slate-300 hover:border-jade-600 hover:bg-slate-800/80"
+                  : "border-border bg-surface-secondary text-secondary hover:border-brand-primary hover:bg-surface-secondary/80"
               }`}
             >
               {option.label}
@@ -259,7 +269,7 @@ const FieldSettingsPanel: React.FC = () => {
 
 const DiagramCanvas: React.FC = () => {
   return (
-    <div className="relative flex-1 overflow-hidden rounded-glass bg-slate-900/40 border border-slate-800 shadow-inner">
+    <div className="relative flex-1 overflow-hidden rounded-glass bg-surface-secondary/40 border border-border shadow-inner">
       <ShapeManipulator zoom={1} panX={0} panY={0} snapToGrid={true}>
         <FootballFieldCanvas />
       </ShapeManipulator>
@@ -316,11 +326,11 @@ const ElementPropertiesPopup: React.FC<{ className?: string }> = ({
 
   return (
     <div
-      className={`absolute z-50 bg-slate-900/95 border border-slate-700 rounded-lg shadow-xl p-3 min-w-64 ${className}`}
+      className={`absolute z-50 surface-card/95 border border-subtle rounded-lg shadow-xl p-3 min-w-64 ${className}`}
       style={{ left: `${popupPosition.x}px`, top: `${popupPosition.y}px` }}
     >
       <div className="flex justify-between items-center mb-2">
-        <Typography variant="body-sm" className="text-slate-200">
+        <Typography variant="body-sm" className="text-primary">
           {selectedPlayerId
             ? "Player Properties"
             : selectedRouteId
@@ -329,7 +339,7 @@ const ElementPropertiesPopup: React.FC<{ className?: string }> = ({
         </Typography>
         <button
           onClick={() => dispatch({ type: "CLEAR_SELECTION" })}
-          className="text-slate-400 hover:text-slate-100 p-1"
+          className="text-muted hover:text-primary p-1"
           title="Close"
         >
           ×
@@ -338,7 +348,7 @@ const ElementPropertiesPopup: React.FC<{ className?: string }> = ({
       {selectedPlayerId && <PlayerPropertiesPanel />}
       {selectedRouteId && !selectedPlayerId && <RoutePropertiesPanel />}
       {!selectedPlayerId && !selectedRouteId && (
-        <Typography variant="caption" className="text-slate-400">
+        <Typography variant="caption" className="text-muted">
           Select a player or route to edit settings
         </Typography>
       )}
@@ -351,11 +361,11 @@ const DiagramTopBar: React.FC<{
   onChange: (updates: Partial<DiagramMetadata>) => void;
 }> = ({ formState, onChange }) => {
   return (
-    <div className="flex flex-wrap items-center gap-4 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 backdrop-blur-xl border-b border-slate-800/60 px-6 py-5 shadow-lg">
+    <div className="flex flex-wrap items-center gap-4 bg-gradient-to-r from-surface-primary/95 via-surface-primary/90 to-surface-primary/95 backdrop-blur-xl border-b border-border px-6 py-5 shadow-glass">
       <div className="flex flex-col gap-1.5 min-w-56">
         <Typography
           variant="label-lg"
-          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+          className="text-xs uppercase tracking-[0.2em] text-muted"
         >
           Play Name
         </Typography>
@@ -363,13 +373,13 @@ const DiagramTopBar: React.FC<{
           size="sm"
           value={formState.play_name}
           onChange={(e) => onChange({ play_name: e.target.value })}
-          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
+          className="bg-surface-secondary/60 border-border text-primary focus:border-brand-primary focus:ring-brand-primary/20"
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-44">
         <Typography
           variant="label-lg"
-          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+          className="text-xs uppercase tracking-[0.2em] text-muted"
         >
           Formation
         </Typography>
@@ -377,13 +387,13 @@ const DiagramTopBar: React.FC<{
           size="sm"
           value={formState.formation}
           onChange={(e) => onChange({ formation: e.target.value })}
-          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
+          className="bg-surface-secondary/60 border-border text-primary focus:border-brand-primary focus:ring-brand-primary/20"
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-40">
         <Typography
           variant="label-lg"
-          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+          className="text-xs uppercase tracking-[0.2em] text-muted"
         >
           Personnel
         </Typography>
@@ -391,20 +401,20 @@ const DiagramTopBar: React.FC<{
           size="sm"
           value={formState.personnel ?? ""}
           onChange={(e) => onChange({ personnel: e.target.value })}
-          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
+          className="bg-surface-secondary/60 border-border text-primary focus:border-brand-primary focus:ring-brand-primary/20"
         />
       </div>
       <div className="flex flex-col gap-1.5 min-w-36">
         <Typography
           variant="label-lg"
-          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+          className="text-xs uppercase tracking-[0.2em] text-muted"
         >
           Play Type
         </Typography>
         <select
           value={formState.p_type ?? ""}
           onChange={(e) => onChange({ p_type: e.target.value })}
-          className="rounded-lg border border-slate-700/50 bg-slate-800/60 text-sm text-slate-100 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500 transition-colors"
+          className="rounded-lg border border-border bg-surface-secondary/60 text-sm text-primary px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-colors"
         >
           <option value="">Select type</option>
           {playTypeOptions.map((opt) => (
@@ -417,7 +427,7 @@ const DiagramTopBar: React.FC<{
       <div className="flex flex-col gap-1.5 min-w-36">
         <Typography
           variant="label-lg"
-          className="text-xs uppercase tracking-[0.2em] text-slate-400"
+          className="text-xs uppercase tracking-[0.2em] text-muted"
         >
           VS Front
         </Typography>
@@ -425,7 +435,7 @@ const DiagramTopBar: React.FC<{
           size="sm"
           value={formState.pref_front ?? ""}
           onChange={(e) => onChange({ pref_front: e.target.value })}
-          className="bg-slate-800/60 border-slate-700/50 text-slate-100 focus:border-jade-500 focus:ring-jade-500/20"
+          className="bg-surface-secondary/60 border-border text-primary focus:border-brand-primary focus:ring-brand-primary/20"
         />
       </div>
     </div>
@@ -507,17 +517,17 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
   const canSave = state.dirty || dirtyMetadata;
 
   return (
-    <div className="flex h-full w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+    <div className="flex h-full w-full bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-primary">
       {/* Sidebar - Field Settings */}
-      <aside className="hidden lg:block w-72 border-r border-slate-800/60 bg-slate-900/50 backdrop-blur-xl px-6 py-8 overflow-y-auto">
+      <aside className="hidden lg:block w-72 border-r border-border bg-surface-primary/80 backdrop-blur-xl px-6 py-8 overflow-y-auto">
         <div className="mb-6">
           <Typography
             variant="headline-sm"
-            className="text-slate-100 font-semibold"
+            className="text-primary font-semibold"
           >
             Field Settings
           </Typography>
-          <Typography variant="caption" className="text-slate-400 mt-1">
+          <Typography variant="caption" className="text-muted mt-1">
             Configure field view and display options
           </Typography>
         </div>
@@ -536,10 +546,10 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
 
             {/* Properties Panel - Desktop */}
             <div className="hidden xl:block w-80 space-y-4">
-              <Card className="p-5 space-y-5 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl shadow-xl">
+              <Card className="p-5 space-y-5 surface-card border border-subtle backdrop-blur-xl rounded-glass shadow-glass">
                 <Typography
                   variant="caption"
-                  className="uppercase tracking-[0.2em] text-slate-400 font-semibold"
+                  className="uppercase tracking-[0.2em] text-muted font-semibold"
                 >
                   Properties
                 </Typography>
@@ -550,7 +560,7 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
           </div>
 
           {/* Bottom Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl rounded-2xl px-5 py-4 shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-4 surface-card border border-subtle backdrop-blur-xl rounded-glass px-5 py-4 shadow-glass">
             <ModernToolPalette
               orientation="horizontal"
               className="bg-transparent p-0"
@@ -560,7 +570,7 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleUndo}
-                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+                className="text-secondary hover:text-primary hover:bg-surface-secondary/60"
               >
                 <Icon name="undo" size="sm" />
               </Button>
@@ -568,11 +578,11 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleRedo}
-                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+                className="text-secondary hover:text-primary hover:bg-surface-secondary/60"
               >
                 <Icon name="refresh-cw" size="sm" />
               </Button>
-              <div className="h-5 w-px bg-slate-700" />
+              <div className="h-5 w-px bg-border" />
               <Button
                 variant="gradient"
                 size="sm"
@@ -586,7 +596,7 @@ const DiagramEditorInner: React.FC<DiagramEditorProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="text-slate-300 hover:text-slate-100 hover:bg-slate-800/60"
+                className="text-secondary hover:text-primary hover:bg-surface-secondary/60"
               >
                 Close
               </Button>

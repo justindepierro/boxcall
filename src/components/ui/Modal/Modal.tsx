@@ -157,14 +157,14 @@ export const Modal: React.FC<ModalProps> = ({
       />
       {/* Modal Container */}
       <div
-        className={`fixed inset-0 ${size === "fullscreen" ? "" : "flex items-center justify-center p-4"}`}
+        className={`fixed inset-0 ${size === "fullscreen" ? "p-4" : "flex items-center justify-center p-4"}`}
         style={{ zIndex }}
       >
         {/* Modal */}
         <div
           ref={modalRef}
           className={`
-            ${size === "fullscreen" ? "w-full h-full" : `w-full ${getModalSizeStyles(size)}`}
+            ${size === "fullscreen" ? "w-full h-full rounded-glass border-2 border-border shadow-glass overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
             ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
             transform transition-all duration-300 scale-100 opacity-100
             ${className}
@@ -176,23 +176,23 @@ export const Modal: React.FC<ModalProps> = ({
         >
           {/* Header - Enhanced with display font and substantial styling */}
           {(title || headerContent) && (
-            <div className="bc-card-padding divider-b-medium">
+            <div className="bc-card-padding divider-b-medium flex-shrink-0">
               {headerContent ? (
                 headerContent
               ) : (
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-4">
                   <Typography
                     id="modal-title"
                     variant="headline-sm"
                     as="h3"
-                    className={`${type === "alert" ? "text-text-error dark:text-surface-error" : ""} text-text-primary`}
+                    className={`${type === "alert" ? "text-text-error dark:text-surface-error" : ""} text-text-primary truncate flex-1 min-w-0`}
                   >
                     {title}
                   </Typography>
                   <IconButton
                     aria-label="Close modal"
                     onClick={onClose}
-                    className="ml-2"
+                    className="flex-shrink-0"
                     tooltip="Close"
                   >
                     <svg
@@ -214,7 +214,9 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
           )}
           {/* Content - More substantial padding */}
-          <div className="bc-card-padding flex-1 overflow-y-auto min-h-0">
+          <div
+            className={`${size === "fullscreen" ? "" : "bc-card-padding"} flex-1 overflow-y-auto min-h-0`}
+          >
             {children}
           </div>
           {/* Footer - Enhanced styling */}

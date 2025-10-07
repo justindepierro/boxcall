@@ -1,4 +1,3 @@
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
 /*
  * Aurora components use intentional dark theme colors (slate-*) matching
  * the diagram editor's always-dark interface (like Figma/VS Code dark theme).
@@ -59,9 +58,9 @@ export const AuroraFieldPresets = memo<AuroraFieldPresetsProps>(
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border dark:border-slate-700">
           <Icon
             name="book"
-            className="w-5 h-5 text-slate-600 dark:text-slate-400"
+            className="w-5 h-5 text-secondary dark:text-slate-400"
           />
-          <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+          <h3 className="font-bold text-lg text-primary dark:text-white">
             Field View
           </h3>
         </div>

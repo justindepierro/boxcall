@@ -1,4 +1,3 @@
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
 /*
  * Aurora components use intentional dark theme colors (slate-*) matching
  * the diagram editor's always-dark interface (like Figma/VS Code dark theme).
@@ -79,9 +78,9 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border dark:border-slate-700">
           <Icon
             name="wrench"
-            className="w-5 h-5 text-slate-600 dark:text-slate-400"
+            className="w-5 h-5 text-secondary dark:text-slate-400"
           />
-          <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+          <h3 className="font-bold text-lg text-primary dark:text-white">
             Tools
           </h3>
         </div>
@@ -122,7 +121,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
                       className={`w-6 h-6 ${
                         isActive
                           ? "text-white"
-                          : "text-slate-700 dark:text-slate-300"
+                          : "text-primary dark:text-slate-300"
                       }`}
                     />
                   </div>
@@ -130,7 +129,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
                     className={`text-sm font-semibold ${
                       isActive
                         ? "text-white"
-                        : "text-slate-700 dark:text-slate-300"
+                        : "text-primary dark:text-slate-300"
                     }`}
                   >
                     {tool.label}
@@ -148,7 +147,7 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
 
         {/* Quick Actions */}
         <div className="pt-3 border-t border dark:border-slate-700">
-          <div className="text-xssss font-semibold text-slate-500 dark:text-slate-400 mb-2">
+          <div className="text-xs font-semibold text-muted dark:text-slate-400 mb-2">
             Quick Actions
           </div>
           <div className="flex gap-2">
@@ -156,16 +155,16 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
               <button
                 key={action.id}
                 onClick={() => onToolSelect(action.id)}
-                className="flex-1 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                className="flex-1 px-3 py-2 rounded-xl bg-surface-secondary dark:bg-surface-tertiary hover:bg-surface-muted dark:hover:bg-surface-tertiary/80 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
                 title={action.label}
               >
                 <Icon
                   name={action.icon as any}
-                  className={`w-4 h-4 text-slate-600 dark:text-slate-400 ${
+                  className={`w-4 h-4 text-secondary dark:text-slate-400 ${
                     action.id === "redo" ? "scale-x-[-1]" : ""
                   }`}
                 />
-                <span className="text-xssss font-medium text-slate-700 dark:text-slate-300">
+                <span className="text-xs font-medium text-primary dark:text-slate-300">
                   {action.label}
                 </span>
               </button>
@@ -175,22 +174,22 @@ export const AuroraToolPalette = memo<AuroraToolPaletteProps>(
 
         {/* Keyboard Shortcuts Hint */}
         <div className="mt-4 pt-3 border-t border dark:border-slate-700">
-          <div className="text-xssss text-slate-500 dark:text-slate-400 space-y-1">
+          <div className="text-xs text-muted dark:text-slate-400 space-y-1">
             <div className="flex items-center justify-between">
               <span>Select</span>
-              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-2xs">
+              <kbd className="px-2 py-0.5 rounded-lg bg-surface-secondary dark:bg-slate-700 text-primary dark:text-slate-300 font-mono text-xs">
                 V
               </kbd>
             </div>
             <div className="flex items-center justify-between">
               <span>Player</span>
-              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-2xs">
+              <kbd className="px-2 py-0.5 rounded-lg bg-surface-secondary dark:bg-slate-700 text-primary dark:text-slate-300 font-mono text-xs">
                 P
               </kbd>
             </div>
             <div className="flex items-center justify-between">
               <span>Route</span>
-              <kbd className="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-2xs">
+              <kbd className="px-2 py-0.5 rounded-lg bg-surface-secondary dark:bg-slate-700 text-primary dark:text-slate-300 font-mono text-xs">
                 R
               </kbd>
             </div>

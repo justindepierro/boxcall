@@ -5,6 +5,8 @@ import type { Play as PlayType } from "../../../types/play";
 
 type ToggleHandler = () => void;
 
+type PlayActionHandler = (play: PlayType) => void;
+
 type StyleResolver = (value: string) => string;
 
 interface PlayCardListHeaderProps {
@@ -13,9 +15,14 @@ interface PlayCardListHeaderProps {
   displayName: string;
   subtitleText: string | null;
   showOneWordCalls: boolean;
+  isSelected?: boolean;
+  onSelectionChange?: (playId: string, selected: boolean) => void;
   isCompact: boolean;
   isExpanded: boolean;
   onToggleExpand: ToggleHandler;
+  onEdit?: PlayActionHandler;
+  onDuplicate?: PlayActionHandler;
+  onCreateDiagram?: () => void;
   getPlayTypeColor: StyleResolver;
   getConfidenceColor: (confidence: number) => string;
   phaseLabel: string | null;
@@ -27,9 +34,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   displayName,
   subtitleText,
   showOneWordCalls,
+  isSelected: _isSelected,
+  onSelectionChange: _onSelectionChange,
   isCompact,
   isExpanded,
   onToggleExpand,
+  onEdit: _onEdit,
+  onDuplicate: _onDuplicate,
+  onCreateDiagram: _onCreateDiagram,
   getPlayTypeColor,
   getConfidenceColor,
   phaseLabel,

@@ -20,6 +20,10 @@ import {
 import type { Play as PlayType } from "../../../types/play";
 import { Badge } from "../../ui/Badge";
 import type { FieldDefinitionMap } from "./fieldDefinitions";
+import {
+  getDiagramButtonIcon,
+  getDiagramButtonText,
+} from "../../../utils/diagramHelpers";
 
 interface PlayCardDetailsProps {
   play: PlayType;
@@ -47,6 +51,7 @@ interface PlayCardDetailsProps {
   getConfidenceColor: (confidence: number) => string;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
+  onCreateDiagram?: (play: PlayType) => void;
 }
 
 export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
@@ -69,6 +74,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   getConfidenceColor,
   onAddToPracticeScript,
   onAddToGamePlan,
+  onCreateDiagram,
 }) => {
   const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
   const [newFlag, setNewFlag] = useState("");
@@ -644,6 +650,23 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </p>
         </div>
         <div className="flex items-center gap-spacing-xs">
+          <Button
+            variant={play.diagram_url ? "primary" : "secondary"}
+            size="xs"
+            onClick={() => onCreateDiagram?.(play)}
+            title={getDiagramButtonText(Boolean(play.diagram_url))}
+            className={
+              play.diagram_url
+                ? ""
+                : "surface-subtle hover:bg-surface-warning text-text-warning border-surface-primary"
+            }
+          >
+            <Icon
+              name={getDiagramButtonIcon(Boolean(play.diagram_url))}
+              className="h-3 w-3 mr-spacing-xs"
+            />{" "}
+            {getDiagramButtonText(Boolean(play.diagram_url))}
+          </Button>
           <Button
             variant="secondary"
             size="xs"

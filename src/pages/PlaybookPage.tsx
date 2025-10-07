@@ -32,6 +32,13 @@ import { Card } from "../components/ui/Card";
 import { Aurora } from "../components/ui/Aurora";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
+import {
+  createWhiteboardPlay,
+  getDiagramMode,
+  getDiagramActionText,
+  DiagramMode,
+} from "../utils/diagramHelpers";
+import { saveDiagram } from "../services/diagramService";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -269,6 +276,12 @@ export default function PlaybookPage() {
     setShowPlaybookSettingsModal(true);
   };
 
+  const handleOpenWhiteboard = () => {
+    // Open diagram builder in whiteboard mode
+    const whiteboardPlay = createWhiteboardPlay(activeTeamId || "");
+    setDiagramPlay(whiteboardPlay);
+  };
+
   const handleEditPlay = (play: Play) => {
     setEditingPlay(play);
     setShowAddNewPlayModal(true);
@@ -294,39 +307,62 @@ export default function PlaybookPage() {
       doc: DiagramDocument;
       metadata: DiagramMetadata;
     }) => {
-      if (!diagramPlay) return;
-      const updates: Partial<Play> = {
-        play_name: metadata.play_name,
-        formation: metadata.formation,
-        diagram_url: JSON.stringify(doc),
-      };
-      if (metadata.p_type) updates.p_type = metadata.p_type;
-      if (metadata.personnel !== undefined)
-        updates.personnel = metadata.personnel;
-      if (metadata.pref_front !== undefined)
-        updates.pref_front = metadata.pref_front;
+      if (!diagramPlay || !activeTeamId) return;
+
+      // Get the diagram mode and appropriate messaging
+      const mode = getDiagramMode(diagramPlay);
+      const actionText = getDiagramActionText(mode);
 
       try {
-        await PlaysService.updatePlay(diagramPlay.id, updates);
-        dispatch({ type: "INCREMENT_REFRESH" });
-        setDiagramPlay((prev) =>
-          prev
-            ? {
-                ...prev,
-                ...updates,
-                diagram_url: updates.diagram_url,
-                updated_at: new Date(),
-              }
-            : prev
+        // Use the service to handle the save logic
+        const result = await saveDiagram(
+          diagramPlay,
+          activeTeamId,
+          doc,
+          metadata
         );
-        toast.success("Diagram saved", metadata.play_name);
+
+        if (result.success) {
+          dispatch({ type: "INCREMENT_REFRESH" });
+
+          // Handle post-save actions based on mode
+          if (mode === DiagramMode.WHITEBOARD) {
+            // Close the diagram editor after creating play from whiteboard
+            setDiagramPlay(null);
+            toast.success(actionText.successMessage, metadata.play_name);
+
+            if (result.play) {
+              info("Created play from whiteboard:", result.play);
+            }
+          } else {
+            // Update the current diagram play state
+            setDiagramPlay((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    play_name: metadata.play_name,
+                    formation: metadata.formation,
+                    diagram_url: JSON.stringify(doc),
+                    updated_at: new Date(),
+                  }
+                : prev
+            );
+            toast.success(actionText.successMessage, metadata.play_name);
+          }
+        } else {
+          throw new Error(result.error || actionText.errorMessage);
+        }
       } catch (error) {
+        const actionText = getDiagramActionText(mode);
         logError("Failed to save diagram:", error);
-        toast.error("Failed to save diagram", "Please try again");
+        toast.error(
+          actionText.errorMessage,
+          error instanceof Error ? error.message : "Please try again"
+        );
         throw error;
       }
     },
-    [diagramPlay, dispatch, toast]
+    [diagramPlay, dispatch, toast, activeTeamId]
   );
 
   const handleDuplicatePlay = (play: Play) => {
@@ -507,6 +543,14 @@ export default function PlaybookPage() {
               icon="plus"
               gradient="from-jade-500 to-emerald-500"
               onOpen={handleOpenBuilder}
+            />
+
+            <AppIconTile
+              title="Whiteboard"
+              subtitle="Free draw"
+              icon="pen-tool"
+              gradient="from-indigo-500 to-purple-500"
+              onOpen={handleOpenWhiteboard}
             />
 
             <AppIconTile

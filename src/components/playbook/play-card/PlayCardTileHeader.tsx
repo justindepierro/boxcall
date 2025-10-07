@@ -8,6 +8,7 @@ import {
   getTileGradient,
   getTileIcon,
 } from "./helpers";
+import { getDiagramButtonText } from "../../../utils/diagramHelpers";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -123,9 +124,18 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           </div>
 
           {play.diagram_url && (
-            <div className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCreateDiagram();
+              }}
+              className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
+              title="Edit diagram"
+              aria-label="Edit diagram"
+            >
               <Icon name="image" className="w-4 h-4 text-white" />
-            </div>
+            </button>
           )}
         </button>
       </div>
@@ -218,7 +228,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
                 className="w-full text-left px-3 py-2 hover:bg-surface-secondary/50 flex items-center gap-2"
               >
                 <Icon name="image" className="h-4 w-4" />
-                Create diagram
+                {getDiagramButtonText(Boolean(play.diagram_url))}
               </button>
             </div>
           )}
