@@ -308,7 +308,7 @@ export const FootballFieldCanvas: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden bg-gray-900"
+      className="relative w-full h-full overflow-hidden bg-surface-dark"
     >
       <canvas
         ref={canvasRef}

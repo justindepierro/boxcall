@@ -1,3 +1,8 @@
+/* eslint-disable boxcall-design/no-raw-tailwind-colors */
+/* 
+ * DiagramEditor uses an intentionally dark-themed interface (like Figma, VS Code)
+ * that doesn't respond to system theme. Slate colors are intentional design choices.
+ */
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "../../ui/Button";
