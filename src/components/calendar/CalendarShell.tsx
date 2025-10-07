@@ -103,7 +103,9 @@ export const CalendarShell: React.FC = () => {
               onPrev={() => calendarRef.current?.prev()}
               onNext={() => calendarRef.current?.next()}
             />
-            <div className="h-[37.5rem]">
+            {/* Fixed height (600px) required by FullCalendar library for proper rendering */}
+            {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing -- FullCalendar requires fixed height */}
+            <div className="h-[600px]">
               <BoxCallCalendar
                 ref={calendarRef}
                 events={events}
