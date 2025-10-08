@@ -12,6 +12,7 @@ import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { useCopyPaste } from "./hooks/useCopyPaste";
+import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 
@@ -34,6 +35,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   // Enable copy/paste (Ctrl/Cmd+C/V/D)
   useCopyPaste({ app, enabled: true });
+
+  // Enable drag box selection (click+drag on empty field)
+  useDragBoxSelection({ app, enabled: true });
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
