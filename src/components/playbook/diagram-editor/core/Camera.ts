@@ -178,12 +178,22 @@ export class Camera {
       const fieldWidthPixels = this.fieldDimensions.width * this.fieldDimensions.pixelsPerYard;
       const fieldHeightPixels = this.fieldDimensions.height * this.fieldDimensions.pixelsPerYard;
       
-      this.targetX = (this.viewportWidth - fieldWidthPixels) / 2;
-      this.targetY = (this.viewportHeight - fieldHeightPixels) / 2;
+      const newX = (this.viewportWidth - fieldWidthPixels) / 2;
+      const newY = (this.viewportHeight - fieldHeightPixels) / 2;
+      
+      // Set both target AND current position immediately (no smooth interpolation on first center)
+      this.targetX = newX;
+      this.targetY = newY;
+      this.stage.x = newX;
+      this.stage.y = newY;
+      
+      console.log('📍 Field centered at:', { x: newX, y: newY });
     } else {
       // Fallback to origin if viewport not set yet
       this.targetX = 0;
       this.targetY = 0;
+      this.stage.x = 0;
+      this.stage.y = 0;
     }
   }
 
