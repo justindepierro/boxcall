@@ -54,29 +54,48 @@ export class FieldLayer extends Container {
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const fieldHeightPixels = this.config.height * pixelsPerYard;
     
+    console.log('🏈 Rendering field:', {
+      dimensions: `${this.config.width} × ${this.config.height} yards`,
+      pixels: `${fieldWidthPixels} × ${fieldHeightPixels} px`,
+      pixelsPerYard,
+    });
+    
     // Clear previous graphics
     this.fieldGraphics.clear();
     
-    // Draw field background
-    this.fieldGraphics
-      .rect(0, 0, fieldWidthPixels, fieldHeightPixels)
-      .fill(this.config.backgroundColor);
-    
-    // Draw yard lines every 5 yards
-    this.drawYardLines();
-    
-    // Draw hash marks if enabled
-    if (this.config.showHashes) {
-      this.drawHashMarks();
+    try {
+      // Draw field background (simple rectangle fill - no stroke issues)
+      this.fieldGraphics
+        .rect(0, 0, fieldWidthPixels, fieldHeightPixels)
+        .fill(this.config.backgroundColor);
+      
+      console.log('✅ Field background drawn');
+      
+      // Draw yard lines every 5 yards
+      this.drawYardLines();
+      console.log('✅ Yard lines drawn');
+      
+      // Draw hash marks if enabled
+      if (this.config.showHashes) {
+        this.drawHashMarks();
+        console.log('✅ Hash marks drawn');
+      }
+      
+      // Draw yard numbers if enabled
+      if (this.config.showNumbers) {
+        this.drawYardNumbers();
+        console.log('✅ Yard numbers drawn');
+      }
+      
+      // Draw sidelines
+      this.drawSidelines();
+      console.log('✅ Sidelines drawn');
+      
+      console.log('🏈 Field rendering complete!');
+    } catch (error) {
+      console.error('❌ Field rendering error:', error);
+      throw error;
     }
-    
-    // Draw yard numbers if enabled
-    if (this.config.showNumbers) {
-      this.drawYardNumbers();
-    }
-    
-    // Draw sidelines
-    this.drawSidelines();
   }
 
   /**
@@ -86,24 +105,16 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     
-    // Draw all lines in one stroke call for better performance
-    this.fieldGraphics.setStrokeStyle({
-      width: 1,
-      color: this.config.lineColor,
-    });
-    
-    // Draw line every 5 yards
+    // Draw line every 5 yards - use simple rect for each line
     for (let yard = 0; yard <= this.config.height; yard += 5) {
       const yPixels = yard * pixelsPerYard;
       const lineWidth = (yard % 10 === 0) ? 2 : 1;
       
+      // Draw as a thin rectangle instead of stroke (avoids shader issues)
       this.fieldGraphics
-        .setStrokeStyle({ width: lineWidth, color: this.config.lineColor })
-        .moveTo(0, yPixels)
-        .lineTo(fieldWidthPixels, yPixels);
+        .rect(0, yPixels - lineWidth / 2, fieldWidthPixels, lineWidth)
+        .fill(this.config.lineColor);
     }
-    
-    this.fieldGraphics.stroke();
   }
 
   /**
@@ -121,28 +132,33 @@ export class FieldLayer extends Container {
     
     const leftHashPixels = leftHashYards * pixelsPerYard;
     const rightHashPixels = rightHashYards * pixelsPerYard;
-    const hashLengthPixels = 0.5 * pixelsPerYard; // 6 inches = 0.5 feet = ~0.17 yards
+    const hashLengthPixels = 0.5 * pixelsPerYard; // 6 inches
+    const hashWidth = 1;
     
-    // Set stroke style once
-    this.fieldGraphics.setStrokeStyle({ width: 1, color: this.config.hashColor });
-    
-    // Draw hash marks every yard
+    // Draw hash marks every yard - as rectangles to avoid stroke shader
     for (let yard = 1; yard < this.config.height; yard++) {
       const yPixels = yard * pixelsPerYard;
       
-      // Left hash
+      // Left hash (thin horizontal rectangle)
       this.fieldGraphics
-        .moveTo(leftHashPixels - hashLengthPixels / 2, yPixels)
-        .lineTo(leftHashPixels + hashLengthPixels / 2, yPixels);
+        .rect(
+          leftHashPixels - hashLengthPixels / 2,
+          yPixels - hashWidth / 2,
+          hashLengthPixels,
+          hashWidth
+        )
+        .fill(this.config.hashColor);
       
-      // Right hash
+      // Right hash (thin horizontal rectangle)
       this.fieldGraphics
-        .moveTo(rightHashPixels - hashLengthPixels / 2, yPixels)
-        .lineTo(rightHashPixels + hashLengthPixels / 2, yPixels);
+        .rect(
+          rightHashPixels - hashLengthPixels / 2,
+          yPixels - hashWidth / 2,
+          hashLengthPixels,
+          hashWidth
+        )
+        .fill(this.config.hashColor);
     }
-    
-    // Single stroke call for all hash marks
-    this.fieldGraphics.stroke();
   }
 
   /**
@@ -186,11 +202,28 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const fieldHeightPixels = this.config.height * pixelsPerYard;
+    const borderWidth = 3;
     
-    // Draw border around field
+    // Draw border as 4 rectangles (top, right, bottom, left) to avoid stroke shader
+    // Top
     this.fieldGraphics
-      .rect(0, 0, fieldWidthPixels, fieldHeightPixels)
-      .stroke({ width: 3, color: this.config.lineColor });
+      .rect(0, 0, fieldWidthPixels, borderWidth)
+      .fill(this.config.lineColor);
+    
+    // Right
+    this.fieldGraphics
+      .rect(fieldWidthPixels - borderWidth, 0, borderWidth, fieldHeightPixels)
+      .fill(this.config.lineColor);
+    
+    // Bottom
+    this.fieldGraphics
+      .rect(0, fieldHeightPixels - borderWidth, fieldWidthPixels, borderWidth)
+      .fill(this.config.lineColor);
+    
+    // Left
+    this.fieldGraphics
+      .rect(0, 0, borderWidth, fieldHeightPixels)
+      .fill(this.config.lineColor);
   }
 
   /**
