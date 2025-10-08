@@ -86,16 +86,24 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     
+    // Draw all lines in one stroke call for better performance
+    this.fieldGraphics.setStrokeStyle({
+      width: 1,
+      color: this.config.lineColor,
+    });
+    
     // Draw line every 5 yards
     for (let yard = 0; yard <= this.config.height; yard += 5) {
       const yPixels = yard * pixelsPerYard;
-      const lineWidth = (yard % 10 === 0) ? 2 : 1; // Thicker every 10 yards
+      const lineWidth = (yard % 10 === 0) ? 2 : 1;
       
       this.fieldGraphics
+        .setStrokeStyle({ width: lineWidth, color: this.config.lineColor })
         .moveTo(0, yPixels)
-        .lineTo(fieldWidthPixels, yPixels)
-        .stroke({ width: lineWidth, color: this.config.lineColor });
+        .lineTo(fieldWidthPixels, yPixels);
     }
+    
+    this.fieldGraphics.stroke();
   }
 
   /**
@@ -115,6 +123,9 @@ export class FieldLayer extends Container {
     const rightHashPixels = rightHashYards * pixelsPerYard;
     const hashLengthPixels = 0.5 * pixelsPerYard; // 6 inches = 0.5 feet = ~0.17 yards
     
+    // Set stroke style once
+    this.fieldGraphics.setStrokeStyle({ width: 1, color: this.config.hashColor });
+    
     // Draw hash marks every yard
     for (let yard = 1; yard < this.config.height; yard++) {
       const yPixels = yard * pixelsPerYard;
@@ -122,15 +133,16 @@ export class FieldLayer extends Container {
       // Left hash
       this.fieldGraphics
         .moveTo(leftHashPixels - hashLengthPixels / 2, yPixels)
-        .lineTo(leftHashPixels + hashLengthPixels / 2, yPixels)
-        .stroke({ width: 1, color: this.config.hashColor });
+        .lineTo(leftHashPixels + hashLengthPixels / 2, yPixels);
       
       // Right hash
       this.fieldGraphics
         .moveTo(rightHashPixels - hashLengthPixels / 2, yPixels)
-        .lineTo(rightHashPixels + hashLengthPixels / 2, yPixels)
-        .stroke({ width: 1, color: this.config.hashColor });
+        .lineTo(rightHashPixels + hashLengthPixels / 2, yPixels);
     }
+    
+    // Single stroke call for all hash marks
+    this.fieldGraphics.stroke();
   }
 
   /**

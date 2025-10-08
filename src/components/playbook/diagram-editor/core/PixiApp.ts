@@ -91,6 +91,10 @@ export class DiagramPixiApp {
    */
   private async initializeApp(config: PixiAppConfig): Promise<void> {
     try {
+      console.log('🎨 Initializing Pixi application...');
+      console.log('Canvas:', config.canvas);
+      console.log('Dimensions:', config.width, 'x', config.height);
+      
       await this.app.init({
         canvas: config.canvas,
         width: config.width,
@@ -100,7 +104,11 @@ export class DiagramPixiApp {
         backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
         antialias: true,
         eventMode: 'static', // Enable interaction
+        preference: 'webgl', // Prefer WebGL over WebGPU
       });
+
+      console.log('✅ Pixi app initialized');
+      console.log('Renderer type:', this.app.renderer.type);
 
       // Add stage to app
       this.app.stage.addChild(this.stage);
@@ -113,8 +121,10 @@ export class DiagramPixiApp {
       
       // Mark as initialized
       this.isInitialized = true;
+      
+      console.log('✅ Pixi application ready');
     } catch (error) {
-      console.error('Failed to initialize Pixi app:', error);
+      console.error('❌ Failed to initialize Pixi app:', error);
       throw error;
     }
   }
