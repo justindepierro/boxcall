@@ -74,6 +74,8 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
           left: 0,
           width: "100%",
           height: "100%",
+          border: "5px solid lime", // DEBUG: Make canvas visible
+          backgroundColor: "purple", // DEBUG: Should be overwritten by Pixi
         }}
       />
 

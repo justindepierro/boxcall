@@ -104,7 +104,7 @@ export class DiagramPixiApp {
         backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
         antialias: true,
         eventMode: 'static', // Enable interaction
-        preference: 'webgpu', // Try WebGPU first to avoid WebGL shader issues
+        preference: 'webgl', // BACK TO WEBGL - WebGPU renderer type 2 not rendering
         hello: false, // Disable Pixi banner
       });
 
@@ -120,6 +120,15 @@ export class DiagramPixiApp {
       testRect.rect(50, 50, 200, 100).fill(0xFF0000); // Bright red rectangle
       this.app.stage.addChild(testRect);
       console.log('🔴 Added red test rectangle at (50, 50)');
+      console.log('Test rect position:', testRect.x, testRect.y);
+      console.log('Test rect size:', testRect.width, testRect.height);
+      console.log('Test rect visible:', testRect.visible);
+      console.log('Test rect alpha:', testRect.alpha);
+      console.log('App stage children count:', this.app.stage.children.length);
+      
+      // Force a render to see if anything appears
+      this.app.render();
+      console.log('🎨 Forced initial render');
 
       // Add stage to app
       this.app.stage.addChild(this.stage);
@@ -242,14 +251,15 @@ export class DiagramPixiApp {
   debugCoordinates(testX: number = 400, testY: number = 300): void {
     console.group('🔍 Pixi Coordinate System Debug');
     
-    // Canvas info
-    if (!this.app.canvas) {
-      console.error('❌ Canvas is null! App not fully initialized.');
+    // Canvas info - Access through renderer.view instead of app.canvas (Pixi v8)
+    const canvas = this.app.renderer.view.canvas as HTMLCanvasElement;
+    
+    if (!canvas) {
+      console.error('❌ Canvas is null! Renderer not fully initialized.');
       console.groupEnd();
       return;
     }
     
-    const canvas = this.app.canvas as HTMLCanvasElement;
     const rect = canvas.getBoundingClientRect();
     console.log('Canvas:', {
       cssSize: { width: rect.width, height: rect.height },
