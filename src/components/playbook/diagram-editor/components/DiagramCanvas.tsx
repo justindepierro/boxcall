@@ -74,37 +74,10 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
           left: 0,
           width: "100%",
           height: "100%",
-          border: "5px solid lime", // DEBUG: Make canvas visible
-          backgroundColor: "purple", // DEBUG: Should be overwritten by Pixi
         }}
       />
 
       {!isReady && <LoadingSpinner message="Initializing diagram editor..." />}
-
-      {/* Debug overlay */}
-      {isReady && (
-        <div
-          style={{
-            position: "absolute",
-            top: 10,
-            left: 10,
-            background: "rgba(0,0,0,0.7)",
-            color: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            fontSize: "12px",
-            pointerEvents: "none",
-            zIndex: 1000,
-          }}
-        >
-          <div>
-            Canvas: {canvasRef.current?.width}x{canvasRef.current?.height}
-          </div>
-          <div>App: {app ? "✅" : "❌"}</div>
-          <div>Field: {app?.fieldLayer ? "✅" : "❌"}</div>
-          <div>Players: {app?.playersLayer ? "✅" : "❌"}</div>
-        </div>
-      )}
     </div>
   );
 };

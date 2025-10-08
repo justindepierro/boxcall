@@ -64,10 +64,10 @@ export class FieldLayer extends Container {
     this.fieldGraphics.clear();
     
     try {
-      // Draw field background (simple rectangle fill - no stroke issues)
-      this.fieldGraphics
-        .rect(0, 0, fieldWidthPixels, fieldHeightPixels)
-        .fill(this.config.backgroundColor);
+      // Draw field background using v7 API
+      this.fieldGraphics.beginFill(this.config.backgroundColor);
+      this.fieldGraphics.drawRect(0, 0, fieldWidthPixels, fieldHeightPixels);
+      this.fieldGraphics.endFill();
       
       console.log('✅ Field background drawn');
       
@@ -105,15 +105,15 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     
-    // Draw line every 5 yards - use simple rect for each line
+    // Draw line every 5 yards using v7 API
     for (let yard = 0; yard <= this.config.height; yard += 5) {
       const yPixels = yard * pixelsPerYard;
       const lineWidth = (yard % 10 === 0) ? 2 : 1;
       
-      // Draw as a thin rectangle instead of stroke (avoids shader issues)
-      this.fieldGraphics
-        .rect(0, yPixels - lineWidth / 2, fieldWidthPixels, lineWidth)
-        .fill(this.config.lineColor);
+      // Draw as a thin rectangle using v7 API
+      this.fieldGraphics.beginFill(this.config.lineColor);
+      this.fieldGraphics.drawRect(0, yPixels - lineWidth / 2, fieldWidthPixels, lineWidth);
+      this.fieldGraphics.endFill();
     }
   }
 
@@ -135,29 +135,29 @@ export class FieldLayer extends Container {
     const hashLengthPixels = 0.5 * pixelsPerYard; // 6 inches
     const hashWidth = 1;
     
-    // Draw hash marks every yard - as rectangles to avoid stroke shader
+    // Draw hash marks every yard using v7 API
     for (let yard = 1; yard < this.config.height; yard++) {
       const yPixels = yard * pixelsPerYard;
       
-      // Left hash (thin horizontal rectangle)
-      this.fieldGraphics
-        .rect(
-          leftHashPixels - hashLengthPixels / 2,
-          yPixels - hashWidth / 2,
-          hashLengthPixels,
-          hashWidth
-        )
-        .fill(this.config.hashColor);
+      // Left hash
+      this.fieldGraphics.beginFill(this.config.hashColor);
+      this.fieldGraphics.drawRect(
+        leftHashPixels - hashLengthPixels / 2,
+        yPixels - hashWidth / 2,
+        hashLengthPixels,
+        hashWidth
+      );
+      this.fieldGraphics.endFill();
       
-      // Right hash (thin horizontal rectangle)
-      this.fieldGraphics
-        .rect(
-          rightHashPixels - hashLengthPixels / 2,
-          yPixels - hashWidth / 2,
-          hashLengthPixels,
-          hashWidth
-        )
-        .fill(this.config.hashColor);
+      // Right hash
+      this.fieldGraphics.beginFill(this.config.hashColor);
+      this.fieldGraphics.drawRect(
+        rightHashPixels - hashLengthPixels / 2,
+        yPixels - hashWidth / 2,
+        hashLengthPixels,
+        hashWidth
+      );
+      this.fieldGraphics.endFill();
     }
   }
 
@@ -182,13 +182,13 @@ export class FieldLayer extends Container {
       const fieldWidthPixels = this.config.width * pixelsPerYard;
       
       // Left side number
-      const leftText = new Text({ text: number, style: textStyle });
+      const leftText = new Text(number, textStyle);
       leftText.anchor.set(0.5);
       leftText.position.set(fieldWidthPixels * 0.15, yPixels);
       this.addChild(leftText);
       
       // Right side number
-      const rightText = new Text({ text: number, style: textStyle });
+      const rightText = new Text(number, textStyle);
       rightText.anchor.set(0.5);
       rightText.position.set(fieldWidthPixels * 0.85, yPixels);
       this.addChild(rightText);
@@ -206,24 +206,24 @@ export class FieldLayer extends Container {
     
     // Draw border as 4 rectangles (top, right, bottom, left) to avoid stroke shader
     // Top
-    this.fieldGraphics
-      .rect(0, 0, fieldWidthPixels, borderWidth)
-      .fill(this.config.lineColor);
+    this.fieldGraphics.beginFill(this.config.lineColor);
+    this.fieldGraphics.drawRect(0, 0, fieldWidthPixels, borderWidth);
+    this.fieldGraphics.endFill();
     
     // Right
-    this.fieldGraphics
-      .rect(fieldWidthPixels - borderWidth, 0, borderWidth, fieldHeightPixels)
-      .fill(this.config.lineColor);
+    this.fieldGraphics.beginFill(this.config.lineColor);
+    this.fieldGraphics.drawRect(fieldWidthPixels - borderWidth, 0, borderWidth, fieldHeightPixels);
+    this.fieldGraphics.endFill();
     
     // Bottom
-    this.fieldGraphics
-      .rect(0, fieldHeightPixels - borderWidth, fieldWidthPixels, borderWidth)
-      .fill(this.config.lineColor);
+    this.fieldGraphics.beginFill(this.config.lineColor);
+    this.fieldGraphics.drawRect(0, fieldHeightPixels - borderWidth, fieldWidthPixels, borderWidth);
+    this.fieldGraphics.endFill();
     
     // Left
-    this.fieldGraphics
-      .rect(0, 0, borderWidth, fieldHeightPixels)
-      .fill(this.config.lineColor);
+    this.fieldGraphics.beginFill(this.config.lineColor);
+    this.fieldGraphics.drawRect(0, 0, borderWidth, fieldHeightPixels);
+    this.fieldGraphics.endFill();
   }
 
   /**

@@ -35,8 +35,6 @@ export class DiagramPixiApp {
   // Future layers can be added as needed
   
   private isDestroyed: boolean = false;
-  private isInitialized: boolean = false;
-  private initPromise: Promise<void> | null = null;
 
   // Performance monitoring (development only)
   private fpsMonitor: FPSMonitor | null = null;
@@ -52,19 +50,28 @@ export class DiagramPixiApp {
     // Validate field dimensions
     validateFieldDimensions(config.fieldDimensions.width, config.fieldDimensions.height);
 
-    // Create Pixi application
-    this.app = new Application();
+    // Create Pixi application - v7 uses constructor pattern, not init()
+    this.app = new Application({
+      view: config.canvas, // v7 uses 'view' instead of 'canvas'
+      width: config.width,
+      height: config.height,
+      resolution: config.resolution || window.devicePixelRatio || 1,
+      autoDensity: true,
+      backgroundColor: config.backgroundColor || 0xF5F7ED,
+      antialias: true,
+      // v7 doesn't have eventMode in app options
+    });
+
+    console.log('✅ Pixi v7 app initialized');
+    console.log('Renderer type:', this.app.renderer.type);
+    console.log('Canvas:', this.app.view);
     
     // Initialize coordinate system
     this.coordinates = new CoordinateSystem(config.fieldDimensions);
     
-    // Initialize app (async, store promise for awaiting)
-    this.initPromise = this.initializeApp(config);
-    
     // Create main stage container (this gets transformed by Camera)
     this.stage = new Container();
-    this.stage.label = 'CameraStage';
-    this.stage.eventMode = 'static'; // Enable interaction on stage
+    this.stage.interactive = true; // v7 uses 'interactive' instead of 'eventMode'
     
     // Create camera controller with optional config
     this.camera = new Camera(this.stage, config.fieldDimensions, config.cameraConfig);
@@ -73,80 +80,40 @@ export class DiagramPixiApp {
     if (import.meta.env.DEV) {
       this.fpsMonitor = new FPSMonitor();
     }
+
+    // Add stage to app
+    this.app.stage.addChild(this.stage);
+    
+    // Set initial viewport size and center field
+    this.camera.setViewportSize(config.width, config.height);
+    
+    // Start render loop
+    this.app.ticker.add(this.update.bind(this));
+    
+    console.log('🏈 Pixi application ready');
   }
 
   /**
    * Wait for initialization to complete
-   * Call this before using the app!
+   * In v7, initialization is synchronous, so this just returns immediately
    */
   async waitForReady(): Promise<void> {
-    if (this.isInitialized) return;
-    if (this.initPromise) {
-      await this.initPromise;
-    }
+    // v7 is synchronous, always ready
+    return Promise.resolve();
   }
 
   /**
-   * Initialize Pixi application (async)
+   * Add the field layer to the stage
    */
-  private async initializeApp(config: PixiAppConfig): Promise<void> {
-    try {
-      console.log('🎨 Initializing Pixi application...');
-      console.log('Canvas:', config.canvas);
-      console.log('Dimensions:', config.width, 'x', config.height);
-      
-      await this.app.init({
-        canvas: config.canvas,
-        width: config.width,
-        height: config.height,
-        resolution: config.resolution || window.devicePixelRatio || 1,
-        autoDensity: true,
-        backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
-        antialias: true,
-        eventMode: 'static', // Enable interaction
-        preference: 'webgl', // BACK TO WEBGL - WebGPU renderer type 2 not rendering
-        hello: false, // Disable Pixi banner
-      });
-
-      console.log('✅ Pixi app initialized');
-      console.log('Renderer type:', this.app.renderer.type);
-      console.log('Canvas element:', this.app.canvas);
-      console.log('Canvas in DOM:', config.canvas);
-      console.log('Are they the same?', this.app.canvas === config.canvas);
-
-      // CRITICAL DEBUG: Draw a bright test rectangle directly on app.stage
-      const { Graphics } = await import('pixi.js');
-      const testRect = new Graphics();
-      testRect.rect(50, 50, 200, 100).fill(0xFF0000); // Bright red rectangle
-      this.app.stage.addChild(testRect);
-      console.log('🔴 Added red test rectangle at (50, 50)');
-      console.log('Test rect position:', testRect.x, testRect.y);
-      console.log('Test rect size:', testRect.width, testRect.height);
-      console.log('Test rect visible:', testRect.visible);
-      console.log('Test rect alpha:', testRect.alpha);
-      console.log('App stage children count:', this.app.stage.children.length);
-      
-      // Force a render to see if anything appears
-      this.app.render();
-      console.log('🎨 Forced initial render');
-
-      // Add stage to app
-      this.app.stage.addChild(this.stage);
-      
-      // Set initial viewport size and center field
-      this.camera.setViewportSize(config.width, config.height);
-      
-      // Start render loop
-      this.app.ticker.add(this.update.bind(this));
-      
-      // Mark as initialized
-      this.isInitialized = true;
-      
-      console.log('✅ Pixi application ready');
-    } catch (error) {
-      console.error('❌ Failed to initialize Pixi app:', error);
-      throw error;
+  addFieldLayer(layer: FieldLayer): void {
+    if (this.fieldLayer) {
+      console.warn('⚠️ Field layer already added, removing old one');
+      this.stage.removeChild(this.fieldLayer);
     }
+    
+    this.fieldLayer = layer;
+    this.stage.addChild(layer);
+    console.log('🏈 Field layer added to stage');
   }
 
   /**
@@ -251,8 +218,8 @@ export class DiagramPixiApp {
   debugCoordinates(testX: number = 400, testY: number = 300): void {
     console.group('🔍 Pixi Coordinate System Debug');
     
-    // Canvas info - Access through renderer.view instead of app.canvas (Pixi v8)
-    const canvas = this.app.renderer.view.canvas as HTMLCanvasElement;
+    // Canvas info - v7 uses app.view
+    const canvas = this.app.view as HTMLCanvasElement;
     
     if (!canvas) {
       console.error('❌ Canvas is null! Renderer not fully initialized.');
@@ -277,13 +244,12 @@ export class DiagramPixiApp {
       position: { x: this.stage.x, y: this.stage.y },
       scale: { x: this.stage.scale.x, y: this.stage.scale.y },
       pivot: { x: this.stage.pivot.x, y: this.stage.pivot.y },
-      label: this.stage.label,
     });
     
     // Layer hierarchy
     console.log('Layers:', {
-      fieldLayer: this.fieldLayer?.label || 'not added',
-      playersLayer: this.playersLayer?.label || 'not added',
+      fieldLayer: this.fieldLayer ? 'added' : 'not added',
+      playersLayer: this.playersLayer ? 'added' : 'not added',
     });
     
     // Test coordinate conversion

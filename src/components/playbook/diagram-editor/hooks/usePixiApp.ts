@@ -125,13 +125,13 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
         showHashes: true,
       });
       
-      fieldLayer.label = 'FieldLayer';
+      // Note: v7 doesn't have .label property
       pixiApp.stage.addChild(fieldLayer); // Add directly to stage!
       pixiApp.fieldLayer = fieldLayer; // Store reference
       fieldLayerRef.current = fieldLayer;
       
       console.log('🏈 Field Layer added:', {
-        parent: fieldLayer.parent?.label || 'none',
+        parent: fieldLayer.parent?.constructor.name || 'none',
         position: { x: fieldLayer.x, y: fieldLayer.y },
         visible: fieldLayer.visible,
         alpha: fieldLayer.alpha,
@@ -145,7 +145,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
         onPlayerMoved: handlePlayerMoved,
       });
       
-      playersLayer.label = 'PlayersLayer';
+      // Note: v7 doesn't have .label property
       pixiApp.stage.addChild(playersLayer); // Add directly to stage!
       pixiApp.playersLayer = playersLayer; // Store reference
       playersLayerRef.current = playersLayer;

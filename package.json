@@ -98,7 +98,7 @@
     "gtag": "^1.0.1",
     "jszip": "^3.10.1",
     "lucide-react": "^0.536.0",
-    "pixi.js": "^8.5.2",
+    "pixi.js": "^7.4.2",
     "posthog-js": "^1.268.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

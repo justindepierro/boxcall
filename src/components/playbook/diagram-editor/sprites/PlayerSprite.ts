@@ -34,7 +34,7 @@ export class PlayerSprite extends Container {
     this.coords = coords;
 
     // Enable interactivity
-    this.eventMode = 'static';
+    this.interactive = true;
     this.cursor = 'pointer';
 
     // Create graphics
@@ -62,9 +62,10 @@ export class PlayerSprite extends Container {
 
     // Draw main circle
     this.circle.clear();
-    this.circle.circle(0, 0, radiusPixels);
-    this.circle.fill({ color: colors.fill });
-    this.circle.stroke({ color: colors.stroke, width: strokePixels });
+    this.circle.lineStyle(strokePixels, colors.stroke);
+    this.circle.beginFill(colors.fill);
+    this.circle.drawCircle(0, 0, radiusPixels);
+    this.circle.endFill();
 
     // Draw selection ring (initially hidden)
     this.updateSelectionRing();
@@ -83,8 +84,8 @@ export class PlayerSprite extends Container {
     this.selectionRing.clear();
     
     if (this._isSelected) {
-      this.selectionRing.circle(0, 0, radiusPixels + ringWidth);
-      this.selectionRing.stroke({ color: SELECTION_COLOR, width: ringWidth });
+      this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
+      this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth);
     }
   }
 

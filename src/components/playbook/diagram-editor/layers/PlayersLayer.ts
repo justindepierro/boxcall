@@ -47,7 +47,7 @@ export class PlayersLayer extends Container {
     super();
     this.coords = coords;
     this.events = events;
-    this.label = 'PlayersLayer';
+    // Note: v7 doesn't have .label property
   }
 
   /**
@@ -303,7 +303,7 @@ export class PlayersLayer extends Container {
     }
     
     // 6. Log parent hierarchy for verification
-    console.log('6. Parent chain:', this.parent?.label || this.parent?.constructor.name);
+    console.log('6. Parent chain:', this.parent?.constructor.name || 'unknown');
     
     console.groupEnd();
 
