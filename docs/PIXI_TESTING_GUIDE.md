@@ -6,6 +6,7 @@
 ## 🎯 What You Should See
 
 ### Initial Load (White Screen is CORRECT!)
+
 When you first open the diagram editor, you should see:
 
 1. **Canvas Background**: Cream/white color (0xF5F7ED)
@@ -22,7 +23,9 @@ When you first open the diagram editor, you should see:
 4. **Camera Controls**: Bottom-right corner with zoom buttons
 
 ### If You See ONLY White
+
 This means the field layer is not rendering. Check console for:
+
 - ✅ `📐 Canvas sized: [width]x[height]`
 - ✅ `🎨 Initializing Pixi application...`
 - ✅ `✅ Pixi application ready`
@@ -45,6 +48,7 @@ The field is already configured with proper NFHS dimensions:
 ```
 
 ### Why These Dimensions?
+
 - **Width: 53.333 yards** (160 feet) - Standard high school/college field width
 - **Height: 35 yards** - Typical playbook "slice" showing offense/defense positions
 - **Not full 100 yards** - Playbooks focus on a section of field (redzone, midfield, etc.)
@@ -54,12 +58,14 @@ The field is already configured with proper NFHS dimensions:
 ## 🧪 Testing the Diagram Editor
 
 ### Step 1: Verify Field Renders
+
 1. Open browser to `http://localhost:5173`
 2. Navigate to the diagram editor page
 3. **Expected**: Green football field with white yard lines
 4. **If white**: Check browser console for errors
 
 ### Step 2: Add Players
+
 1. Click **"+ Offense"** button (blue)
 2. **Expected**: Blue circle sprite appears on field
 3. Counter shows "Players (1)"
@@ -68,8 +74,9 @@ The field is already configured with proper NFHS dimensions:
 6. Counter shows "Players (2)"
 
 ### Step 3: Test Dragging
+
 1. Click and drag a player sprite
-2. **Expected**: 
+2. **Expected**:
    - Player follows mouse/touch
    - Console shows "🎯 Drag Coordinate Debug" messages
    - Player position updates smoothly
@@ -77,6 +84,7 @@ The field is already configured with proper NFHS dimensions:
 4. **Expected**: Player briefly fades to 70% opacity (bounds feedback!)
 
 ### Step 4: Test Selection
+
 1. Click a player sprite
 2. **Expected**:
    - Player gets highlighted (selection ring)
@@ -84,6 +92,7 @@ The field is already configured with proper NFHS dimensions:
    - "Remove Selected" button becomes enabled
 
 ### Step 5: Test Camera
+
 1. Use camera controls (bottom-right):
    - **Zoom In**: Click "+" button
    - **Zoom Out**: Click "-" button
@@ -98,57 +107,68 @@ The field is already configured with proper NFHS dimensions:
 ## 🐛 Troubleshooting
 
 ### Problem: White screen, no field
+
 **Possible Causes:**
+
 1. Field layer not rendering
 2. Canvas size 0x0 (ResizeObserver should fix this)
 3. WebGL context lost
 
 **Debug Steps:**
+
 ```javascript
 // Open browser console and check:
-app.stage.children.length  // Should be > 0
-app.fieldLayer             // Should exist
-app.playersLayer          // Should exist
-app.camera                // Should exist
+app.stage.children.length; // Should be > 0
+app.fieldLayer; // Should exist
+app.playersLayer; // Should exist
+app.camera; // Should exist
 
 // Check canvas size
-canvas.width              // Should be > 0
-canvas.height             // Should be > 0
+canvas.width; // Should be > 0
+canvas.height; // Should be > 0
 ```
 
 ### Problem: Players don't appear when added
+
 **Possible Causes:**
+
 1. Players added but z-index behind field
 2. Player sprites not created
 3. Coordinate system issue
 
 **Debug Steps:**
+
 ```javascript
 // Check store
 const { players } = useDiagramStore.getState();
-console.log('Players:', players);  // Should show array
+console.log("Players:", players); // Should show array
 
 // Check if sprites exist
-app.playersLayer.children.length  // Should match player count
+app.playersLayer.children.length; // Should match player count
 ```
 
 ### Problem: Dragging doesn't work
+
 **Possible Causes:**
+
 1. Event handlers not attached
 2. `pointerdown` not firing
 3. Camera transform interfering
 
 **Debug Steps:**
+
 ```javascript
 // Check sprite setup
-sprite.eventMode  // Should be 'static' or 'dynamic'
-sprite.cursor     // Should be 'pointer' or 'grab'
+sprite.eventMode; // Should be 'static' or 'dynamic'
+sprite.cursor; // Should be 'pointer' or 'grab'
 
 // Check for console errors during drag
 ```
 
 ### Problem: Bounds feedback not showing
+
 **Possible Causes:**
+
 1. Player not hitting actual boundary
 2. Alpha change too subtle
 3. Timeout clearing too fast
@@ -161,6 +181,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ## 🎨 Visual Reference
 
 ### Field Appearance
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  10    20    30    40    50    40    30    20   │ ← Yard numbers
@@ -179,6 +200,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ```
 
 ### Player Sprites
+
 - **Offense**: Blue circles with jersey numbers
 - **Defense**: Red circles with jersey numbers
 - **Selected**: Highlight ring around sprite
@@ -190,6 +212,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ## 📊 Console Messages Reference
 
 ### Successful Initialization
+
 ```
 📐 Canvas sized: 800x525
 🎨 Initializing Pixi application...
@@ -203,6 +226,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ```
 
 ### During Drag
+
 ```
 🎯 Drag Coordinate Debug
   1. Global (CSS pixels): {x: 456, y: 234}
@@ -213,6 +237,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ```
 
 ### Player Added
+
 ```
 ➕ Player added: player-1234567890
 📍 Position: (26.5, 17.3) yards
@@ -222,33 +247,35 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 
 ## ✅ Expected Behavior Summary
 
-| Action | Expected Result | New Feature |
-|--------|----------------|-------------|
-| Page Load | Green field renders with lines | LoadingSpinner shows |
-| Click "+ Offense" | Blue player sprite appears | - |
-| Click "+ Defense" | Red player sprite appears | - |
-| Click player | Selection highlight shows | - |
-| Drag player | Position updates smoothly | Console logs coordinates |
-| Drag to edge | Player snaps to boundary | ✨ **Alpha feedback!** |
-| Zoom in/out | Field scales smoothly | ✨ **Configurable smoothing** |
-| Remove player | Sprite disappears | - |
+| Action            | Expected Result                | New Feature                   |
+| ----------------- | ------------------------------ | ----------------------------- |
+| Page Load         | Green field renders with lines | LoadingSpinner shows          |
+| Click "+ Offense" | Blue player sprite appears     | -                             |
+| Click "+ Defense" | Red player sprite appears      | -                             |
+| Click player      | Selection highlight shows      | -                             |
+| Drag player       | Position updates smoothly      | Console logs coordinates      |
+| Drag to edge      | Player snaps to boundary       | ✨ **Alpha feedback!**        |
+| Zoom in/out       | Field scales smoothly          | ✨ **Configurable smoothing** |
+| Remove player     | Sprite disappears              | -                             |
 
 ---
 
 ## 🎯 Phase 3 Features Just Added
 
 ### 1. Camera Smooth Factor Config (✅ Complete)
+
 - **Feature**: Configurable camera interpolation
 - **Default**: 0.2 (smooth)
 - **Test**: Set to 1.0 for instant camera moves
-- **Usage**: 
+- **Usage**:
   ```typescript
-  <DiagramCanvas 
-    cameraConfig={{ smoothFactor: 1.0 }} 
+  <DiagramCanvas
+    cameraConfig={{ smoothFactor: 1.0 }}
   />
   ```
 
 ### 2. Bounds Visual Feedback (✅ Complete)
+
 - **Feature**: Alpha feedback when hitting field edges
 - **Effect**: Player fades to 70% opacity for 150ms
 - **Test**: Drag player all the way to any field boundary
@@ -259,14 +286,17 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ## 📝 Known Issues
 
 ### Issue: Field doesn't render on first load
+
 **Status**: Should be fixed by ResizeObserver (Phase 2)
 **Workaround**: Refresh page
 
 ### Issue: Players appear "under" field
+
 **Status**: Should not occur (z-order managed)
 **Debug**: Check `stage.children` order
 
 ### Issue: Dragging feels laggy
+
 **Status**: Should be fixed by throttling (Phase 2)
 **Expected**: 60 FPS during drag (check console)
 
@@ -275,6 +305,7 @@ Drag player ALL the way to edge - should snap to 0 or fieldWidth/fieldHeight exa
 ## 🚀 Next Steps
 
 If the diagram editor is working:
+
 1. ✅ Test all features above
 2. ✅ Verify bounds feedback works
 3. ✅ Verify camera smoothing works
@@ -282,6 +313,7 @@ If the diagram editor is working:
 5. 🎯 Ready for Phase 3 testing (unit tests, telemetry)
 
 If NOT working:
+
 1. Check browser console for errors
 2. Verify dev server is running (`npm run dev`)
 3. Check that you're on the diagram editor route
@@ -297,5 +329,6 @@ If NOT working:
 **Last Updated:** October 8, 2025
 
 **Recent Commits:**
+
 - `feat(pixi): Make camera smoothFactor configurable` (2d682d1)
 - `feat(pixi): Add bounds visual feedback during drag` (885056a)

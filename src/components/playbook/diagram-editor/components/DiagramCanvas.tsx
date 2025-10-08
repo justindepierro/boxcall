@@ -65,10 +65,38 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
         style={{
           display: "block",
           touchAction: "none", // Prevent browser gestures
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
         }}
       />
 
       {!isReady && <LoadingSpinner message="Initializing diagram editor..." />}
+      
+      {/* Debug overlay */}
+      {isReady && (
+        <div 
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            background: "rgba(0,0,0,0.7)",
+            color: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            fontSize: "12px",
+            pointerEvents: "none",
+            zIndex: 1000,
+          }}
+        >
+          <div>Canvas: {canvasRef.current?.width}x{canvasRef.current?.height}</div>
+          <div>App: {app ? "✅" : "❌"}</div>
+          <div>Field: {app?.fieldLayer ? "✅" : "❌"}</div>
+          <div>Players: {app?.playersLayer ? "✅" : "❌"}</div>
+        </div>
+      )}
     </div>
   );
 };
