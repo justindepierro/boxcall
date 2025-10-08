@@ -51,7 +51,8 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
           <DiagramCanvas
             fieldWidth={53.333}
             fieldHeight={35}
-            pixelsPerYard={15}
+            pixelsPerYard={20}
+            backgroundColor={0x222222}
             onReady={handleReady}
           />
           <CameraControls app={app} />
