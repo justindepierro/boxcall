@@ -54,21 +54,34 @@ export class AlignmentGuidesLayer extends Container {
     const fieldWidthPixels = this.coords.fieldWidth * this.coords.pixelsPerYard;
     const fieldHeightPixels = this.coords.fieldHeight * this.coords.pixelsPerYard;
 
-    this.graphics.lineStyle(lineWidth, this.GUIDE_COLOR, this.GUIDE_ALPHA);
-
+    // Group guides by color for batching
+    const guidesByColor = new Map<number, AlignmentGuide[]>();
     for (const guide of this.currentGuides) {
-      if (guide.type === 'vertical') {
-        // Vertical line (spans full height)
-        const xPixels = guide.position * this.coords.pixelsPerYard;
-        this.graphics.moveTo(xPixels, 0);
-        this.graphics.lineTo(xPixels, fieldHeightPixels);
-      } else {
-        // Horizontal line (spans full width)
-        const yPixels = guide.position * this.coords.pixelsPerYard;
-        this.graphics.moveTo(0, yPixels);
-        this.graphics.lineTo(fieldWidthPixels, yPixels);
+      const color = guide.color || this.GUIDE_COLOR;
+      if (!guidesByColor.has(color)) {
+        guidesByColor.set(color, []);
       }
+      guidesByColor.get(color)!.push(guide);
     }
+
+    // Draw each color group
+    guidesByColor.forEach((guides, color) => {
+      this.graphics.lineStyle(lineWidth, color, this.GUIDE_ALPHA);
+
+      for (const guide of guides) {
+        if (guide.type === 'vertical') {
+          // Vertical line (spans full height)
+          const xPixels = guide.position * this.coords.pixelsPerYard;
+          this.graphics.moveTo(xPixels, 0);
+          this.graphics.lineTo(xPixels, fieldHeightPixels);
+        } else {
+          // Horizontal line (spans full width)
+          const yPixels = guide.position * this.coords.pixelsPerYard;
+          this.graphics.moveTo(0, yPixels);
+          this.graphics.lineTo(fieldWidthPixels, yPixels);
+        }
+      }
+    });
   }
 
   /**

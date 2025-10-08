@@ -188,7 +188,16 @@ export function findAlignmentGuides(
       snapPoints: playerIds,
     });
   });
-  
+
+  // EQUAL SPACING DETECTION
+  // Check if dragged player creates equal spacing with other players
+  const equalSpacingGuides = detectEqualSpacingGuides(
+    { id: draggedPlayerId, x: snappedX, y: snappedY, radius: draggedRadius },
+    otherPlayers,
+    0.5 // 0.5 yard threshold for equal spacing detection
+  );
+  guides.push(...equalSpacingGuides);
+
   return {
     x: snappedX,
     y: snappedY,
@@ -198,6 +207,99 @@ export function findAlignmentGuides(
   };
 }
 
+/**
+ * Detect equal spacing patterns and create visual guides
+ * Shows when a dragged player creates equal spacing with 2+ other players
+ */
+function detectEqualSpacingGuides(
+  draggedPlayer: { id: string; x: number; y: number; radius: number },
+  otherPlayers: Array<{ id: string; x: number; y: number; radius: number }>,
+  threshold: number = 0.5
+): AlignmentGuide[] {
+  const guides: AlignmentGuide[] = [];
+
+  // HORIZONTAL EQUAL SPACING (players in a horizontal line with equal X gaps)
+  // Find players on roughly the same Y level (within 2 yards)
+  const horizontalRow = otherPlayers.filter(p => 
+    Math.abs(p.y - draggedPlayer.y) < 2.0
+  );
+
+  if (horizontalRow.length >= 2) {
+    // Include dragged player in the analysis
+    const allHorizontal = [...horizontalRow, draggedPlayer].sort((a, b) => a.x - b.x);
+    
+    // Calculate spacing between consecutive players
+    const spacings: number[] = [];
+    for (let i = 1; i < allHorizontal.length; i++) {
+      spacings.push(allHorizontal[i].x - allHorizontal[i - 1].x);
+    }
+
+    // Check if spacings are equal (within threshold)
+    if (spacings.length >= 2) {
+      const avgSpacing = spacings.reduce((sum, s) => sum + s, 0) / spacings.length;
+      const allEqual = spacings.every(s => Math.abs(s - avgSpacing) <= threshold);
+
+      if (allEqual) {
+        // Draw spacing indicators between each pair
+        for (let i = 1; i < allHorizontal.length; i++) {
+          const leftPlayer = allHorizontal[i - 1];
+          const rightPlayer = allHorizontal[i];
+          const midY = (leftPlayer.y + rightPlayer.y) / 2;
+
+          // Create a horizontal guide at the midpoint to show equal spacing
+          guides.push({
+            type: 'horizontal',
+            position: midY,
+            color: 0x00FF00, // Green for equal spacing
+            snapPoints: [leftPlayer.id, rightPlayer.id],
+          });
+        }
+      }
+    }
+  }
+
+  // VERTICAL EQUAL SPACING (players in a vertical line with equal Y gaps)
+  // Find players on roughly the same X level (within 2 yards)
+  const verticalColumn = otherPlayers.filter(p => 
+    Math.abs(p.x - draggedPlayer.x) < 2.0
+  );
+
+  if (verticalColumn.length >= 2) {
+    // Include dragged player in the analysis
+    const allVertical = [...verticalColumn, draggedPlayer].sort((a, b) => a.y - b.y);
+    
+    // Calculate spacing between consecutive players
+    const spacings: number[] = [];
+    for (let i = 1; i < allVertical.length; i++) {
+      spacings.push(allVertical[i].y - allVertical[i - 1].y);
+    }
+
+    // Check if spacings are equal (within threshold)
+    if (spacings.length >= 2) {
+      const avgSpacing = spacings.reduce((sum, s) => sum + s, 0) / spacings.length;
+      const allEqual = spacings.every(s => Math.abs(s - avgSpacing) <= threshold);
+
+      if (allEqual) {
+        // Draw spacing indicators between each pair
+        for (let i = 1; i < allVertical.length; i++) {
+          const topPlayer = allVertical[i - 1];
+          const bottomPlayer = allVertical[i];
+          const midX = (topPlayer.x + bottomPlayer.x) / 2;
+
+          // Create a vertical guide at the midpoint to show equal spacing
+          guides.push({
+            type: 'vertical',
+            position: midX,
+            color: 0x00FF00, // Green for equal spacing
+            snapPoints: [topPlayer.id, bottomPlayer.id],
+          });
+        }
+      }
+    }
+  }
+
+  return guides;
+}
 /**
  * Detect equal spacing between 3 or more players (for distribution guides)
  * Returns spacing guides if players are evenly distributed
