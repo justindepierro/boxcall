@@ -40,6 +40,9 @@ export class PlayersLayer extends Container {
     event: FederatedPointerEvent;
   } | null = null;
 
+  // Bounds feedback: track when player hits boundary
+  private boundsHitTimeout: ReturnType<typeof setTimeout> | null = null;
+
   constructor(coords: CoordinateSystem, events: PlayersLayerEvents = {}) {
     super();
     this.coords = coords;
@@ -293,8 +296,14 @@ export class PlayersLayer extends Container {
     const clampedY = Math.max(0, Math.min(this.coords.fieldHeight, yardPos.y));
     console.log('4. Clamped (yards):', { x: clampedX, y: clampedY });
     
-    // 5. Log parent hierarchy for verification
-    console.log('5. Parent chain:', this.parent?.label || this.parent?.constructor.name);
+    // 5. Check if clamping occurred (player hit a boundary)
+    const hitBounds = clampedX !== yardPos.x || clampedY !== yardPos.y;
+    if (hitBounds) {
+      this.showBoundsFeedback(sprite);
+    }
+    
+    // 6. Log parent hierarchy for verification
+    console.log('6. Parent chain:', this.parent?.label || this.parent?.constructor.name);
     
     console.groupEnd();
 
@@ -303,6 +312,25 @@ export class PlayersLayer extends Container {
 
     // Update sprite position
     sprite.updatePlayer({ x: clampedX, y: clampedY });
+  }
+
+  /**
+   * Show visual feedback when player hits field bounds
+   */
+  private showBoundsFeedback(sprite: PlayerSprite): void {
+    // Clear any existing timeout
+    if (this.boundsHitTimeout) {
+      clearTimeout(this.boundsHitTimeout);
+    }
+
+    // Add subtle red tint to indicate bounds hit
+    sprite.alpha = 0.7;
+
+    // Reset after brief delay
+    this.boundsHitTimeout = setTimeout(() => {
+      sprite.alpha = 1.0;
+      this.boundsHitTimeout = null;
+    }, 150);
   }
 
   /**
@@ -343,6 +371,12 @@ export class PlayersLayer extends Container {
    * Cleanup
    */
   destroy(): void {
+    // Clear bounds feedback timeout
+    if (this.boundsHitTimeout) {
+      clearTimeout(this.boundsHitTimeout);
+      this.boundsHitTimeout = null;
+    }
+    
     this.clear();
     super.destroy();
   }
