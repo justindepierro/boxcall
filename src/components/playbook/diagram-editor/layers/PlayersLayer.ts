@@ -279,12 +279,7 @@ export class PlayersLayer extends Container {
    * Global drag move handler - listens on the entire layer
    */
   private onDragMove = (event: FederatedPointerEvent): void => {
-    if (!this.dragState) {
-      console.log('[PlayersLayer] Move event but no drag state');
-      return;
-    }
-
-    console.log('[PlayersLayer] Drag move event received');
+    if (!this.dragState) return;
 
     // Get the main dragged sprite
     const draggedSprite = this.sprites.get(this.dragState.playerIds[0]);
@@ -310,7 +305,6 @@ export class PlayersLayer extends Container {
    * Global drag end handler - listens on the entire layer
    */
   private onDragEnd = (): void => {
-    console.log('[PlayersLayer] Drag end event received');
     if (!this.dragState) return;
 
     const draggedSprite = this.sprites.get(this.dragState.playerIds[0]);
@@ -346,7 +340,6 @@ export class PlayersLayer extends Container {
 
     // Attach global drag event listeners to this layer
     // This ensures drag continues even when cursor moves off the sprite
-    console.log('[PlayersLayer] Attaching drag event listeners to layer');
     this.on('pointermove', this.onDragMove);
     this.on('pointerup', this.onDragEnd);
     this.on('pointerupoutside', this.onDragEnd);
@@ -471,7 +464,6 @@ export class PlayersLayer extends Container {
     this.alignmentGuidesLayer?.hideGuides();
 
     // Remove global drag event listeners
-    console.log('[PlayersLayer] Removing drag event listeners from layer');
     this.off('pointermove', this.onDragMove);
     this.off('pointerup', this.onDragEnd);
     this.off('pointerupoutside', this.onDragEnd);

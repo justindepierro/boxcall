@@ -10,6 +10,7 @@ import { DiagramCanvas } from "./components/DiagramCanvas";
 import { CameraControls } from "./components/CameraControls";
 import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
+import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 
@@ -26,6 +27,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
   const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
+
+  // Enable keyboard controls (arrow keys, delete, escape)
+  useKeyboardControls({ app, enabled: true });
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
