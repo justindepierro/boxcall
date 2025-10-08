@@ -11,6 +11,7 @@ import { CameraControls } from "./components/CameraControls";
 import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
+import { useCopyPaste } from "./hooks/useCopyPaste";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 
@@ -30,6 +31,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   // Enable keyboard controls (arrow keys, delete, escape)
   useKeyboardControls({ app, enabled: true });
+
+  // Enable copy/paste (Ctrl/Cmd+C/V/D)
+  useCopyPaste({ app, enabled: true });
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
@@ -54,7 +58,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   const handleFieldPositionChange = (position: FieldPosition) => {
     setFieldPosition(position);
-    
+
     // Update line of scrimmage based on position
     if (app) {
       const fieldLayer = app.getFieldLayer();
@@ -88,7 +92,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
           {/* Field Position Selector */}
           <select
             value={fieldPosition}
-            onChange={(e) => handleFieldPositionChange(e.target.value as FieldPosition)}
+            onChange={(e) =>
+              handleFieldPositionChange(e.target.value as FieldPosition)
+            }
             className="px-3 py-1.5 rounded-md bg-surface-secondary hover:bg-surface-tertiary text-content-primary transition-colors text-sm font-medium border border-border cursor-pointer"
             title="Select field position"
           >
