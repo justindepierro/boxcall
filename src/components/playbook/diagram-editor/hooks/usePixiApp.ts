@@ -129,6 +129,15 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       pixiApp.stage.addChild(fieldLayer); // Add directly to stage!
       pixiApp.fieldLayer = fieldLayer; // Store reference
       fieldLayerRef.current = fieldLayer;
+      
+      console.log('🏈 Field Layer added:', {
+        parent: fieldLayer.parent?.label || 'none',
+        position: { x: fieldLayer.x, y: fieldLayer.y },
+        visible: fieldLayer.visible,
+        alpha: fieldLayer.alpha,
+        childIndex: pixiApp.stage.getChildIndex(fieldLayer),
+        totalChildren: pixiApp.stage.children.length,
+      });
 
       // Create and add players layer DIRECTLY to stage
       const playersLayer = new PlayersLayer(pixiApp.coordinates, {

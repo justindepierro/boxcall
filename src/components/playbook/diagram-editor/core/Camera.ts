@@ -197,10 +197,19 @@ export class Camera {
     
     this.viewportWidth = width;
     this.viewportHeight = height;
-    // Re-center if needed
-    if (this.targetX === 0 && this.targetY === 0) {
-      this.centerOnField();
-    }
+    
+    // Always re-center when viewport size changes
+    this.centerOnField();
+    
+    console.log('📷 Camera viewport set:', {
+      viewport: { width, height },
+      fieldPixels: {
+        width: this.fieldDimensions.width * this.fieldDimensions.pixelsPerYard,
+        height: this.fieldDimensions.height * this.fieldDimensions.pixelsPerYard,
+      },
+      position: { x: this.targetX, y: this.targetY },
+      zoom: this.targetZoom,
+    });
   }
 
   /**
