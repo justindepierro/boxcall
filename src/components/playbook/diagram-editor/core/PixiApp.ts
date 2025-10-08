@@ -10,6 +10,8 @@ import { Camera } from './Camera';
 import { CoordinateSystem, type FieldDimensions } from './CoordinateSystem';
 import type { FieldLayer } from '../layers/FieldLayer';
 import type { PlayersLayer } from '../layers/PlayersLayer';
+import { validateCanvas, validateDimension, validateFieldDimensions } from '../utils/validation';
+import { FPSMonitor } from '../utils/performance';
 
 export interface PixiAppConfig {
   canvas: HTMLCanvasElement;
@@ -35,7 +37,20 @@ export class DiagramPixiApp {
   private isInitialized: boolean = false;
   private initPromise: Promise<void> | null = null;
 
+  // Performance monitoring (development only)
+  private fpsMonitor: FPSMonitor | null = null;
+
   constructor(config: PixiAppConfig) {
+    // Validate canvas element
+    validateCanvas(config.canvas);
+
+    // Validate dimensions
+    validateDimension(config.width, 'Canvas width', { min: 100, max: 10000 });
+    validateDimension(config.height, 'Canvas height', { min: 100, max: 10000 });
+
+    // Validate field dimensions
+    validateFieldDimensions(config.fieldDimensions.width, config.fieldDimensions.height);
+
     // Create Pixi application
     this.app = new Application();
     
@@ -52,6 +67,11 @@ export class DiagramPixiApp {
     
     // Create camera controller
     this.camera = new Camera(this.stage, config.fieldDimensions);
+
+    // Initialize FPS monitor in development
+    if (import.meta.env.DEV) {
+      this.fpsMonitor = new FPSMonitor();
+    }
   }
 
   /**
@@ -104,6 +124,11 @@ export class DiagramPixiApp {
   private update(): void {
     if (this.isDestroyed) return;
     
+    // Track FPS in development
+    if (this.fpsMonitor) {
+      this.fpsMonitor.tick();
+    }
+
     // Update camera (smooth zoom/pan)
     this.camera.update();
     
@@ -171,6 +196,22 @@ export class DiagramPixiApp {
    */
   getFPS(): number {
     return this.app?.ticker?.FPS ?? 0;
+  }
+
+  /**
+   * Get detailed FPS statistics (development only)
+   */
+  getFPSStats() {
+    return this.fpsMonitor?.getStats() ?? null;
+  }
+
+  /**
+   * Log FPS statistics to console (development only)
+   */
+  logFPSStats(): void {
+    if (this.fpsMonitor) {
+      this.fpsMonitor.logStats();
+    }
   }
 
   /**

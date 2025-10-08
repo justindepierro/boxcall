@@ -12,6 +12,7 @@ import { Container, FederatedPointerEvent } from 'pixi.js';
 import { PlayerSprite } from '../sprites/PlayerSprite';
 import type { Player } from '../types/Player';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
+import { validatePlayerId, validatePlayerPosition } from '../utils/validation';
 
 export interface PlayersLayerEvents {
   onPlayerSelected?: (playerId: string | null) => void;
@@ -32,6 +33,13 @@ export class PlayersLayer extends Container {
   // Event callbacks
   private events: PlayersLayerEvents;
 
+  // Performance: throttle drag updates with requestAnimationFrame
+  private dragUpdateScheduled: boolean = false;
+  private pendingDragEvent: {
+    sprite: PlayerSprite;
+    event: FederatedPointerEvent;
+  } | null = null;
+
   constructor(coords: CoordinateSystem, events: PlayersLayerEvents = {}) {
     super();
     this.coords = coords;
@@ -43,6 +51,10 @@ export class PlayersLayer extends Container {
    * Add a player to the layer
    */
   addPlayer(player: Player): PlayerSprite {
+    // Validate player data
+    validatePlayerId(player.id);
+    validatePlayerPosition(player.x, player.y);
+
     // Remove existing sprite if updating
     if (this.sprites.has(player.id)) {
       this.removePlayer(player.id);
@@ -65,6 +77,9 @@ export class PlayersLayer extends Container {
    * Remove a player from the layer
    */
   removePlayer(playerId: string): void {
+    // Validate player ID
+    validatePlayerId(playerId);
+
     const sprite = this.sprites.get(playerId);
     if (sprite) {
       // Clear selection if this player was selected
@@ -86,6 +101,20 @@ export class PlayersLayer extends Container {
    * Update a player's data
    */
   updatePlayer(playerId: string, updates: Partial<Player>): void {
+    // Validate player ID
+    validatePlayerId(playerId);
+
+    // Validate position if being updated
+    if (updates.x !== undefined || updates.y !== undefined) {
+      const sprite = this.sprites.get(playerId);
+      if (sprite) {
+        const currentPlayer = sprite.getPlayer();
+        const x = updates.x ?? currentPlayer.x;
+        const y = updates.y ?? currentPlayer.y;
+        validatePlayerPosition(x, y);
+      }
+    }
+
     const sprite = this.sprites.get(playerId);
     if (sprite) {
       sprite.updatePlayer(updates);
@@ -110,6 +139,9 @@ export class PlayersLayer extends Container {
    * Select a player
    */
   selectPlayer(playerId: string): void {
+    // Validate player ID
+    validatePlayerId(playerId);
+
     // Clear previous selection
     if (this.selectedPlayerId) {
       const prevSprite = this.sprites.get(this.selectedPlayerId);
@@ -180,10 +212,23 @@ export class PlayersLayer extends Container {
       }
     });
 
-    // Enable drag
+    // Enable drag - throttle with requestAnimationFrame for performance
     sprite.on('pointermove', (event: FederatedPointerEvent) => {
       if (this.dragState && this.dragState.playerId === sprite.getId()) {
-        this.updateDrag(sprite, event);
+        // Store the latest event
+        this.pendingDragEvent = { sprite, event };
+
+        // Schedule update if not already scheduled
+        if (!this.dragUpdateScheduled) {
+          this.dragUpdateScheduled = true;
+          requestAnimationFrame(() => {
+            if (this.pendingDragEvent) {
+              this.updateDrag(this.pendingDragEvent.sprite, this.pendingDragEvent.event);
+              this.pendingDragEvent = null;
+            }
+            this.dragUpdateScheduled = false;
+          });
+        }
       }
     });
 
@@ -252,6 +297,9 @@ export class PlayersLayer extends Container {
     console.log('5. Parent chain:', this.parent?.label || this.parent?.constructor.name);
     
     console.groupEnd();
+
+    // Validate position before updating
+    validatePlayerPosition(clampedX, clampedY);
 
     // Update sprite position
     sprite.updatePlayer({ x: clampedX, y: clampedY });

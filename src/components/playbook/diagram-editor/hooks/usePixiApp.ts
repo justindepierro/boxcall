@@ -4,7 +4,7 @@
  * Handles creation, updates, and cleanup of the Pixi app.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { DiagramPixiApp, type PixiAppConfig } from '../core/PixiApp';
 import { FieldLayer } from '../layers/FieldLayer';
 import { PlayersLayer } from '../layers/PlayersLayer';
@@ -20,21 +20,76 @@ export interface UsePixiAppOptions {
 export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>, options: UsePixiAppOptions) {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [canvasSize, setCanvasSize] = useState<{ width: number; height: number } | null>(null);
   const fieldLayerRef = useRef<FieldLayer | null>(null);
   const playersLayerRef = useRef<PlayersLayer | null>(null);
 
-  // Get store actions
+  // Get store actions - use refs to prevent recreation
   const { selectPlayer, updatePlayer, players } = useDiagramStore();
+  const selectPlayerRef = useRef(selectPlayer);
+  const updatePlayerRef = useRef(updatePlayer);
 
-  // Initialize Pixi app
+  // Keep refs updated
+  useEffect(() => {
+    selectPlayerRef.current = selectPlayer;
+    updatePlayerRef.current = updatePlayer;
+  }, [selectPlayer, updatePlayer]);
+
+  // Stable callback wrappers
+  const handlePlayerSelected = useCallback((playerId: string | null) => {
+    selectPlayerRef.current(playerId);
+  }, []);
+
+  const handlePlayerMoved = useCallback((playerId: string, x: number, y: number) => {
+    updatePlayerRef.current(playerId, { x, y });
+  }, []);
+
+  // Watch for canvas to become visible and get dimensions
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Get canvas dimensions
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        // Only update state if we have VALID dimensions (not 0)
+        if (width > 0 && height > 0) {
+          console.log('📐 Canvas sized:', { width, height });
+          setCanvasSize({ width, height });
+        } else {
+          console.log('⏳ Canvas not yet sized (0x0), waiting...');
+        }
+      }
+    });
+
+    observer.observe(canvas);
+
+    // Also check immediately in case canvas already has size
     const rect = canvas.getBoundingClientRect();
-    const width = rect.width || 800;
-    const height = rect.height || 600;
+    if (rect.width > 0 && rect.height > 0) {
+      console.log('📐 Canvas already sized:', { width: rect.width, height: rect.height });
+      setCanvasSize({ width: rect.width, height: rect.height });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [canvasRef]);
+
+  // Initialize Pixi app
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !canvasSize) return;
+
+    const { width, height } = canvasSize;
+
+    // Extra safety: don't initialize with invalid dimensions
+    if (width <= 0 || height <= 0) {
+      console.warn('⚠️ Skipping initialization - invalid dimensions:', { width, height });
+      return;
+    }
+
+    console.log('🎨 Initializing Pixi with canvas dimensions:', { width, height });
 
     // Create config
     const config: PixiAppConfig = {
@@ -74,12 +129,8 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
 
       // Create and add players layer DIRECTLY to stage
       const playersLayer = new PlayersLayer(pixiApp.coordinates, {
-        onPlayerSelected: (playerId) => {
-          selectPlayer(playerId);
-        },
-        onPlayerMoved: (playerId, x, y) => {
-          updatePlayer(playerId, { x, y });
-        },
+        onPlayerSelected: handlePlayerSelected,
+        onPlayerMoved: handlePlayerMoved,
       });
       
       playersLayer.label = 'PlayersLayer';
@@ -96,24 +147,37 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
 
     // Cleanup
     return () => {
-      pixiApp.destroy();
+      // Wait for initialization to complete before destroying
+      pixiApp.waitForReady()
+        .then(() => {
+          pixiApp.destroy();
+        })
+        .catch(() => {
+          // If initialization failed, still try to clean up
+          pixiApp.destroy();
+        });
+      
       setApp(null);
       setIsReady(false);
       fieldLayerRef.current = null;
       playersLayerRef.current = null;
     };
-  }, [canvasRef, options.fieldWidth, options.fieldHeight, options.pixelsPerYard, options.backgroundColor, selectPlayer, updatePlayer]);
+  }, [canvasRef, canvasSize, options.fieldWidth, options.fieldHeight, options.pixelsPerYard, options.backgroundColor, handlePlayerSelected, handlePlayerMoved]);
 
   // Handle resize
   useEffect(() => {
-    if (!app || !canvasRef.current) return;
+    if (!app || !canvasRef.current || !isReady) return;
 
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
       const rect = canvas.getBoundingClientRect();
-      app.resize(rect.width, rect.height);
+      
+      // Only resize if we have valid dimensions
+      if (rect.width > 0 && rect.height > 0) {
+        app.resize(rect.width, rect.height);
+      }
     };
 
     // Initial resize
@@ -130,7 +194,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       window.removeEventListener('resize', handleResize);
       resizeObserver.disconnect();
     };
-  }, [app, canvasRef]);
+  }, [app, canvasRef, isReady]);
 
   // Sync players from store to PlayersLayer
   useEffect(() => {

@@ -5,6 +5,13 @@
  * Pixi handles screen-to-world conversion automatically via transforms.
  */
 
+import {
+  validateFieldDimensions,
+  validatePixelsPerYard,
+  validateCoordinate,
+  clamp,
+} from '../utils/validation';
+
 export interface YardCoordinate {
   x: number; // 0 to FIELD_WIDTH (53.333 yards)
   y: number; // 0 to visible field length (usually 35-40 yards)
@@ -22,6 +29,10 @@ export class CoordinateSystem {
   public readonly pixelsPerYard: number;
 
   constructor(dimensions: FieldDimensions) {
+    // Validate inputs
+    validateFieldDimensions(dimensions.width, dimensions.height);
+    validatePixelsPerYard(dimensions.pixelsPerYard);
+
     this.fieldWidth = dimensions.width;
     this.fieldHeight = dimensions.height;
     this.pixelsPerYard = dimensions.pixelsPerYard;
@@ -31,6 +42,10 @@ export class CoordinateSystem {
    * Convert yard coordinates to pixel coordinates
    */
   yardsToPixels(yards: YardCoordinate): { x: number; y: number } {
+    // Validate yards (allow some buffer outside field)
+    validateCoordinate(yards.x, 'Yards X', { min: -10, max: this.fieldWidth + 10 });
+    validateCoordinate(yards.y, 'Yards Y', { min: -10, max: this.fieldHeight + 10 });
+
     return {
       x: yards.x * this.pixelsPerYard,
       y: yards.y * this.pixelsPerYard,
@@ -74,8 +89,8 @@ export class CoordinateSystem {
    */
   clampToField(yards: YardCoordinate): YardCoordinate {
     return {
-      x: Math.max(0, Math.min(this.fieldWidth, yards.x)),
-      y: Math.max(0, Math.min(this.fieldHeight, yards.y)),
+      x: clamp(yards.x, 0, this.fieldWidth),
+      y: clamp(yards.y, 0, this.fieldHeight),
     };
   }
 

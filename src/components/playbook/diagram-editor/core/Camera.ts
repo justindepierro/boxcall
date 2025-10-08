@@ -7,6 +7,7 @@
 
 import { Container } from 'pixi.js';
 import type { FieldDimensions } from './CoordinateSystem';
+import { validateZoom, validateDimension, clamp } from '../utils/validation';
 
 export interface CameraState {
   x: number;      // Pan offset in pixels
@@ -116,6 +117,8 @@ export class Camera {
    * Set zoom level directly (for gesture handling)
    */
   setZoom(zoom: number): void {
+    // Validate zoom level
+    validateZoom(zoom, { min: this.minZoom, max: this.maxZoom });
     const clampedZoom = this.clampZoom(zoom);
     this.targetZoom = clampedZoom;
     this.stage.scale.set(clampedZoom);
@@ -177,6 +180,10 @@ export class Camera {
    * Set viewport size (should be called on resize)
    */
   setViewportSize(width: number, height: number): void {
+    // Validate viewport dimensions
+    validateDimension(width, 'Viewport width', { min: 100, max: 10000 });
+    validateDimension(height, 'Viewport height', { min: 100, max: 10000 });
+    
     this.viewportWidth = width;
     this.viewportHeight = height;
     // Re-center if needed
@@ -214,7 +221,7 @@ export class Camera {
    * Clamp zoom to valid range
    */
   private clampZoom(zoom: number): number {
-    return Math.max(this.minZoom, Math.min(this.maxZoom, zoom));
+    return clamp(zoom, this.minZoom, this.maxZoom);
   }
 
   /**

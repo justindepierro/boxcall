@@ -1,13 +1,14 @@
 /**
  * Pixi-powered Diagram Canvas Component
- * 
+ *
  * This is the main React component that renders the football field
  * using Pixi.js for hardware-accelerated WebGL rendering.
  */
 
-import React, { useRef, useEffect } from 'react';
-import { usePixiApp } from '../hooks/usePixiApp';
-import { useGestures } from '../hooks/useGestures';
+import React, { useRef, useEffect } from "react";
+import { usePixiApp } from "../hooks/usePixiApp";
+import { useGestures } from "../hooks/useGestures";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export interface DiagramCanvasProps {
   fieldWidth?: number;
@@ -22,8 +23,8 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   fieldWidth = 53.333,
   fieldHeight = 35,
   pixelsPerYard = 15,
-  backgroundColor = 0xF5F7ED,
-  className = '',
+  backgroundColor = 0xf5f7ed,
+  className = "",
   onReady,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,7 +52,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   // Debug: Log coordinate system on mount
   useEffect(() => {
     if (isReady && debugCoordinates) {
-      console.log('🚀 DiagramCanvas mounted and ready');
+      console.log("🚀 DiagramCanvas mounted and ready");
       debugCoordinates();
     }
   }, [isReady, debugCoordinates]);
@@ -62,18 +63,12 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
         ref={canvasRef}
         className="w-full h-full"
         style={{
-          display: 'block',
-          touchAction: 'none', // Prevent browser gestures
+          display: "block",
+          touchAction: "none", // Prevent browser gestures
         }}
       />
-      
-      {!isReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-surface-secondary/50">
-          <div className="text-content-secondary">
-            Loading field...
-          </div>
-        </div>
-      )}
+
+      {!isReady && <LoadingSpinner message="Initializing diagram editor..." />}
     </div>
   );
 };

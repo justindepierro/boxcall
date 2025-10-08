@@ -1,12 +1,12 @@
 /**
  * Error Boundary for Pixi.js Components
- * 
+ *
  * Catches errors in Pixi rendering and prevents full app crashes.
  * Provides user-friendly error UI and recovery options.
  */
 
-import { Component } from 'react';
-import type { ErrorInfo, ReactNode } from 'react';
+import { Component } from "react";
+import type { ErrorInfo, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -39,8 +39,8 @@ export class PixiErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log error to console
-    console.error('Pixi Error Boundary caught error:', error, errorInfo);
-    
+    console.error("Pixi Error Boundary caught error:", error, errorInfo);
+
     // Call optional error callback
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -86,11 +86,11 @@ export class PixiErrorBoundary extends Component<Props, State> {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
-            
+
             <h2 className="text-xl font-semibold text-error-700 mb-2">
               Diagram Editor Error
             </h2>
-            
+
             <p className="text-secondary mb-4">
               The diagram editor encountered an error and needs to restart.
             </p>
@@ -104,22 +104,19 @@ export class PixiErrorBoundary extends Component<Props, State> {
                   {this.state.error.toString()}
                   {this.state.errorInfo && (
                     <>
-                      {'\n\n'}
+                      {"\n\n"}
                       {this.state.errorInfo.componentStack}
                     </>
                   )}
                 </pre>
               </details>
             )}
-            
+
             <div className="flex gap-3 justify-center">
-              <button
-                onClick={this.handleReset}
-                className="btn btn-primary"
-              >
+              <button onClick={this.handleReset} className="btn btn-primary">
                 Try Again
               </button>
-              
+
               <button
                 onClick={() => window.location.reload()}
                 className="btn btn-secondary"
