@@ -601,11 +601,11 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = React.memo(
       // Convert to pixels
       const playerDiameterYards = 2;
       const sizeInPixels = playerDiameterYards * pixelsPerYard;
-      
+
       // Convert percentage coordinates to pixel coordinates
       const xPixels = (cursorPosition.x / 100) * fieldWidth * pixelsPerYard;
       const yPixels = (cursorPosition.y / 100) * fieldHeight * pixelsPerYard;
-      
+
       const color = state.ui.drawColor || "#6366F1"; // brand-primary fallback
 
       switch (playerShape) {
@@ -640,7 +640,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = React.memo(
           const w = sizeInPixels / 2;
           return (
             <polygon
-              points={`${xPixels},${yPixels - h/2} ${xPixels - w},${yPixels + h/2} ${xPixels + w},${yPixels + h/2}`}
+              points={`${xPixels},${yPixels - h / 2} ${xPixels - w},${yPixels + h / 2} ${xPixels + w},${yPixels + h / 2}`}
               fill={color}
               opacity={0.6}
               stroke="#334155"
@@ -663,7 +663,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = React.memo(
         case "add-player":
           return "none"; // We'll show custom preview
         case "draw":
-          return "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"><path d=\"M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z\"/></svg>') 0 16, crosshair";
+          return 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>\') 0 16, crosshair';
         case "route":
           return "crosshair";
         default:
@@ -679,7 +679,7 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = React.memo(
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        style={{ 
+        style={{
           touchAction: "none",
           cursor: getCursorStyle(),
         }}
@@ -694,8 +694,8 @@ export const ShapeManipulator: React.FC<ShapeManipulatorProps> = React.memo(
           height={fieldHeight * pixelsPerYard}
           viewBox={`0 0 ${fieldWidth * pixelsPerYard} ${fieldHeight * pixelsPerYard}`}
           style={{
-            width: '100%',
-            height: '100%',
+            width: "100%",
+            height: "100%",
           }}
         >
           {renderSelectionHandles()}
