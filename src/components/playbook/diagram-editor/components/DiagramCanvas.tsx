@@ -74,10 +74,10 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
       />
 
       {!isReady && <LoadingSpinner message="Initializing diagram editor..." />}
-      
+
       {/* Debug overlay */}
       {isReady && (
-        <div 
+        <div
           style={{
             position: "absolute",
             top: 10,
@@ -91,7 +91,9 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
             zIndex: 1000,
           }}
         >
-          <div>Canvas: {canvasRef.current?.width}x{canvasRef.current?.height}</div>
+          <div>
+            Canvas: {canvasRef.current?.width}x{canvasRef.current?.height}
+          </div>
           <div>App: {app ? "✅" : "❌"}</div>
           <div>Field: {app?.fieldLayer ? "✅" : "❌"}</div>
           <div>Players: {app?.playersLayer ? "✅" : "❌"}</div>

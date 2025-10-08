@@ -110,6 +110,16 @@ export class DiagramPixiApp {
 
       console.log('✅ Pixi app initialized');
       console.log('Renderer type:', this.app.renderer.type);
+      console.log('Canvas element:', this.app.canvas);
+      console.log('Canvas in DOM:', config.canvas);
+      console.log('Are they the same?', this.app.canvas === config.canvas);
+
+      // CRITICAL DEBUG: Draw a bright test rectangle directly on app.stage
+      const { Graphics } = await import('pixi.js');
+      const testRect = new Graphics();
+      testRect.rect(50, 50, 200, 100).fill(0xFF0000); // Bright red rectangle
+      this.app.stage.addChild(testRect);
+      console.log('🔴 Added red test rectangle at (50, 50)');
 
       // Add stage to app
       this.app.stage.addChild(this.stage);
