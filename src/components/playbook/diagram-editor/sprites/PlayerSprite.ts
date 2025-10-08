@@ -22,10 +22,10 @@ export class PlayerSprite extends Container {
   private _isSelected: boolean = false;
   private _isDragging: boolean = false;
 
-  // Visual constants
-  private readonly RADIUS_YARDS = 1.0;  // Player circle radius in yards
-  private readonly STROKE_WIDTH = 0.15; // Border width in yards
-  private readonly SELECTION_RING_WIDTH = 0.2; // Selection ring width in yards
+  // Visual constants - reduced by 40% for better field proportions
+  private readonly RADIUS_YARDS = 0.6;   // Player circle radius in yards (was 1.0)
+  private readonly STROKE_WIDTH = 0.09;  // Border width in yards (was 0.15)
+  private readonly SELECTION_RING_WIDTH = 0.12; // Selection ring width in yards (was 0.2)
 
   constructor(player: Player, coords: CoordinateSystem) {
     super();
