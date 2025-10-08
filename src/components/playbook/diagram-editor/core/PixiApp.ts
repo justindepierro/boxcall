@@ -112,6 +112,13 @@ export class DiagramPixiApp {
     this.fieldLayer = layer;
     this.stage.addChild(layer);
   }
+  
+  /**
+   * Get the field layer
+   */
+  getFieldLayer(): FieldLayer | null {
+    return this.fieldLayer;
+  }
 
   /**
    * Main update loop (called every frame)

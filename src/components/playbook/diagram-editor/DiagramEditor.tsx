@@ -11,6 +11,7 @@ import { CameraControls } from "./components/CameraControls";
 import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import type { DiagramPixiApp } from "./core/PixiApp";
+import type { FieldColorMode } from "./layers/FieldLayer";
 
 // Re-export types for backwards compatibility with PlaybookPage
 export type { DiagramMetadata, DiagramDocument } from "./types/DiagramTypes";
@@ -21,11 +22,27 @@ export interface DiagramEditorProps {
 
 export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
+  const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
     console.log(`📊 FPS: ${pixiApp.getFPS()}`);
     setApp(pixiApp);
+  };
+
+  const handleColorModeChange = () => {
+    const modes: FieldColorMode[] = ["jade", "blackwhite", "darkgray"];
+    const currentIndex = modes.indexOf(colorMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setColorMode(nextMode);
+
+    // Update field layer color mode
+    if (app) {
+      const fieldLayer = app.getFieldLayer();
+      if (fieldLayer) {
+        fieldLayer.setColorMode(nextMode);
+      }
+    }
   };
 
   return (
@@ -35,14 +52,26 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         <h1 className="text-xl font-bold text-content-primary">
           🏈 Diagram Editor (Pixi.js)
         </h1>
-        {onClose && (
+        <div className="flex items-center gap-3">
+          {/* Color Mode Toggle */}
           <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-surface-secondary hover:bg-surface-tertiary text-content-primary transition-colors"
+            onClick={handleColorModeChange}
+            className="px-3 py-1.5 rounded-md bg-surface-secondary hover:bg-surface-tertiary text-content-primary transition-colors text-sm font-medium border border-border"
+            title="Toggle field color mode"
           >
-            Close
+            {colorMode === "jade" && "🟢 Jade"}
+            {colorMode === "blackwhite" && "⚫ B&W"}
+            {colorMode === "darkgray" && "⬛ Dark"}
           </button>
-        )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg bg-surface-secondary hover:bg-surface-tertiary text-content-primary transition-colors"
+            >
+              Close
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Canvas Container */}

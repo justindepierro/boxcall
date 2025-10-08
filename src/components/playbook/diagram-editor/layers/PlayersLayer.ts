@@ -23,11 +23,10 @@ export interface PlayersLayerEvents {
 export class PlayersLayer extends Container {
   private coords: CoordinateSystem;
   private sprites: Map<string, PlayerSprite> = new Map();
-  private selectedPlayerId: string | null = null;
+  private selectedPlayerIds: Set<string> = new Set(); // Changed from single ID to Set
   private dragState: {
-    playerId: string;
-    startX: number;
-    startY: number;
+    playerIds: string[]; // Support dragging multiple players
+    startPositions: Map<string, { x: number; y: number }>; // Track each player's start position
   } | null = null;
 
   // Event callbacks
@@ -86,8 +85,8 @@ export class PlayersLayer extends Container {
     const sprite = this.sprites.get(playerId);
     if (sprite) {
       // Clear selection if this player was selected
-      if (this.selectedPlayerId === playerId) {
-        this.clearSelection();
+      if (this.selectedPlayerIds.has(playerId)) {
+        this.deselectPlayer(playerId);
       }
 
       // Clean up event listeners
@@ -139,22 +138,19 @@ export class PlayersLayer extends Container {
   }
 
   /**
-   * Select a player
+   * Select a player (supports multi-select with addToSelection parameter)
    */
-  selectPlayer(playerId: string): void {
+  selectPlayer(playerId: string, addToSelection: boolean = false): void {
     // Validate player ID
     validatePlayerId(playerId);
 
-    // Clear previous selection
-    if (this.selectedPlayerId) {
-      const prevSprite = this.sprites.get(this.selectedPlayerId);
-      if (prevSprite) {
-        prevSprite.setSelected(false);
-      }
+    // Clear previous selection if not adding
+    if (!addToSelection) {
+      this.clearSelection();
     }
 
-    // Set new selection
-    this.selectedPlayerId = playerId;
+    // Add to selection
+    this.selectedPlayerIds.add(playerId);
     const sprite = this.sprites.get(playerId);
     if (sprite) {
       sprite.setSelected(true);
@@ -169,28 +165,48 @@ export class PlayersLayer extends Container {
   }
 
   /**
-   * Clear selection
+   * Deselect a specific player
    */
-  clearSelection(): void {
-    if (this.selectedPlayerId) {
-      const sprite = this.sprites.get(this.selectedPlayerId);
+  deselectPlayer(playerId: string): void {
+    if (this.selectedPlayerIds.has(playerId)) {
+      const sprite = this.sprites.get(playerId);
       if (sprite) {
         sprite.setSelected(false);
       }
-      this.selectedPlayerId = null;
-
-      // Notify
-      if (this.events.onPlayerSelected) {
-        this.events.onPlayerSelected(null);
-      }
+      this.selectedPlayerIds.delete(playerId);
     }
   }
 
   /**
-   * Get selected player ID
+   * Clear all selections
    */
-  getSelectedPlayerId(): string | null {
-    return this.selectedPlayerId;
+  clearSelection(): void {
+    this.selectedPlayerIds.forEach(playerId => {
+      const sprite = this.sprites.get(playerId);
+      if (sprite) {
+        sprite.setSelected(false);
+      }
+    });
+    this.selectedPlayerIds.clear();
+
+    // Notify
+    if (this.events.onPlayerSelected) {
+      this.events.onPlayerSelected(null);
+    }
+  }
+
+  /**
+   * Get all selected player IDs
+   */
+  getSelectedPlayerIds(): string[] {
+    return Array.from(this.selectedPlayerIds);
+  }
+
+  /**
+   * Check if a player is selected
+   */
+  isPlayerSelected(playerId: string): boolean {
+    return this.selectedPlayerIds.has(playerId);
   }
 
   /**
@@ -202,11 +218,21 @@ export class PlayersLayer extends Container {
       event.stopPropagation();
       
       const playerId = sprite.getId();
+      const isShiftHeld = event.shiftKey;
       
-      // Select the player
-      this.selectPlayer(playerId);
+      // Multi-select with Shift, or toggle selection if already selected
+      if (isShiftHeld) {
+        if (this.selectedPlayerIds.has(playerId)) {
+          this.deselectPlayer(playerId);
+        } else {
+          this.selectPlayer(playerId, true); // Add to selection
+        }
+      } else {
+        // Single select
+        this.selectPlayer(playerId, false);
+      }
       
-      // Start drag
+      // Start drag for all selected players
       this.startDrag(sprite, event);
 
       // Notify click
@@ -217,7 +243,7 @@ export class PlayersLayer extends Container {
 
     // Enable drag - throttle with requestAnimationFrame for performance
     sprite.on('pointermove', (event: FederatedPointerEvent) => {
-      if (this.dragState && this.dragState.playerId === sprite.getId()) {
+      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
         // Store the latest event
         this.pendingDragEvent = { sprite, event };
 
@@ -236,13 +262,13 @@ export class PlayersLayer extends Container {
     });
 
     sprite.on('pointerup', () => {
-      if (this.dragState && this.dragState.playerId === sprite.getId()) {
+      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
         this.endDrag(sprite);
       }
     });
 
     sprite.on('pointerupoutside', () => {
-      if (this.dragState && this.dragState.playerId === sprite.getId()) {
+      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
         this.endDrag(sprite);
       }
     });
@@ -259,23 +285,40 @@ export class PlayersLayer extends Container {
   }
 
   /**
-   * Start dragging a player
+   * Start dragging player(s)
    */
   private startDrag(sprite: PlayerSprite, _event: FederatedPointerEvent): void {
-    const player = sprite.getPlayer();
+    // Get all selected players (or just this one if not selected)
+    const playerIds = this.selectedPlayerIds.size > 0 
+      ? Array.from(this.selectedPlayerIds)
+      : [sprite.getId()];
+    
+    // Store start positions for all players being dragged
+    const startPositions = new Map<string, { x: number; y: number }>();
+    playerIds.forEach(id => {
+      const s = this.sprites.get(id);
+      if (s) {
+        const player = s.getPlayer();
+        startPositions.set(id, { x: player.x, y: player.y });
+        s.setDragging(true);
+      }
+    });
+    
     this.dragState = {
-      playerId: player.id,
-      startX: player.x,
-      startY: player.y,
+      playerIds,
+      startPositions,
     };
-    sprite.setDragging(true);
   }
 
   /**
-   * Update drag position
+   * Update drag position - moves all selected players together
    */
-  private updateDrag(sprite: PlayerSprite, event: FederatedPointerEvent): void {
+  private updateDrag(draggedSprite: PlayerSprite, event: FederatedPointerEvent): void {
     if (!this.dragState) return;
+
+    const draggedPlayerId = draggedSprite.getId();
+    const startPos = this.dragState.startPositions.get(draggedPlayerId);
+    if (!startPos) return;
 
     // Get local position (pixels in this layer's space, accounting for camera transform)
     const localPos = event.getLocalPosition(this);
@@ -283,21 +326,41 @@ export class PlayersLayer extends Container {
     // Convert to yards
     const yardPos = this.coords.pixelsToYards(localPos);
 
-    // Clamp to field bounds
-    const clampedX = Math.max(0, Math.min(this.coords.fieldWidth, yardPos.x));
-    const clampedY = Math.max(0, Math.min(this.coords.fieldHeight, yardPos.y));
-    
-    // Check if clamping occurred (player hit a boundary)
-    const hitBounds = clampedX !== yardPos.x || clampedY !== yardPos.y;
-    if (hitBounds) {
-      this.showBoundsFeedback(sprite);
+    // Calculate delta from start position
+    const deltaX = yardPos.x - startPos.x;
+    const deltaY = yardPos.y - startPos.y;
+
+    // Move all selected players by the same delta
+    let anyHitBounds = false;
+    this.dragState.playerIds.forEach(playerId => {
+      const sprite = this.sprites.get(playerId);
+      const playerStartPos = this.dragState!.startPositions.get(playerId);
+      if (!sprite || !playerStartPos) return;
+
+      // Calculate new position
+      const newX = playerStartPos.x + deltaX;
+      const newY = playerStartPos.y + deltaY;
+
+      // Clamp to field bounds
+      const clampedX = Math.max(0, Math.min(this.coords.fieldWidth, newX));
+      const clampedY = Math.max(0, Math.min(this.coords.fieldHeight, newY));
+      
+      // Check if clamping occurred
+      if (clampedX !== newX || clampedY !== newY) {
+        anyHitBounds = true;
+      }
+
+      // Validate position before updating
+      validatePlayerPosition(clampedX, clampedY);
+
+      // Update sprite position
+      sprite.updatePlayer({ x: clampedX, y: clampedY });
+    });
+
+    // Show feedback if any player hit bounds
+    if (anyHitBounds) {
+      this.showBoundsFeedback(draggedSprite);
     }
-
-    // Validate position before updating
-    validatePlayerPosition(clampedX, clampedY);
-
-    // Update sprite position
-    sprite.updatePlayer({ x: clampedX, y: clampedY });
   }
 
   /**
@@ -320,21 +383,28 @@ export class PlayersLayer extends Container {
   }
 
   /**
-   * End dragging
+   * End dragging - finalize all selected players' movements
    */
-  private endDrag(sprite: PlayerSprite): void {
+  private endDrag(_sprite: PlayerSprite): void {
     if (!this.dragState) return;
 
-    sprite.setDragging(false);
-    
-    const player = sprite.getPlayer();
-    
-    // Notify if position changed
-    if (player.x !== this.dragState.startX || player.y !== this.dragState.startY) {
-      if (this.events.onPlayerMoved) {
-        this.events.onPlayerMoved(player.id, player.x, player.y);
+    // End drag state for all players and notify of changes
+    this.dragState.playerIds.forEach(playerId => {
+      const playerSprite = this.sprites.get(playerId);
+      if (!playerSprite) return;
+
+      playerSprite.setDragging(false);
+      
+      const player = playerSprite.getPlayer();
+      const startPos = this.dragState!.startPositions.get(playerId);
+      
+      // Notify if this player's position changed
+      if (startPos && (player.x !== startPos.x || player.y !== startPos.y)) {
+        if (this.events.onPlayerMoved) {
+          this.events.onPlayerMoved(player.id, player.x, player.y);
+        }
       }
-    }
+    });
 
     this.dragState = null;
   }
@@ -348,7 +418,7 @@ export class PlayersLayer extends Container {
       sprite.destroy();
     });
     this.sprites.clear();
-    this.selectedPlayerId = null;
+    this.selectedPlayerIds.clear();
     this.dragState = null;
     this.removeChildren();
   }

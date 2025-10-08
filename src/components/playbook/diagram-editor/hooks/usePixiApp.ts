@@ -107,14 +107,11 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     
     // Wait for initialization before creating layers
     pixiApp.waitForReady().then(() => {
-      // Create and add field layer DIRECTLY to stage
+      // Create and add field layer DIRECTLY to stage with jade color mode
       const fieldLayer = new FieldLayer(pixiApp.coordinates, {
         width: options.fieldWidth,
         height: options.fieldHeight,
-        backgroundColor: 0x82C91E, // Green
-        lineColor: 0xFFFFFF,
-        hashColor: 0xFFFFFF,
-        numbersColor: 0xFFFFFF,
+        colorMode: 'jade', // Default to jade mode (soft jade background)
         showNumbers: true,
         showHashes: true,
       });

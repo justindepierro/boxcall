@@ -56,7 +56,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
       try {
         debugCoordinates();
       } catch (error) {
-        console.error('Debug coordinates failed:', error);
+        console.error("Debug coordinates failed:", error);
       }
     }
   }, [isReady, debugCoordinates, app]);
