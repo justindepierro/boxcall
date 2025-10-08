@@ -120,7 +120,11 @@ export class DiagramPixiApp {
    */
   destroy(): void {
     this.isDestroyed = true;
-    this.app.ticker.stop();
+    
+    // Stop ticker if it exists
+    if (this.app?.ticker) {
+      this.app.ticker.stop();
+    }
     
     // Destroy all layers if they exist
     if (this.fieldLayer) {
@@ -131,17 +135,21 @@ export class DiagramPixiApp {
     }
     // Future layers will be destroyed here as they're added
     
-    this.stage.destroy({ children: true });
+    if (this.stage) {
+      this.stage.destroy({ children: true });
+    }
     
-    // Destroy app
-    this.app.destroy(true, { children: true });
+    // Destroy app if it exists
+    if (this.app) {
+      this.app.destroy(true, { children: true });
+    }
   }
 
   /**
    * Get current FPS for debugging
    */
   getFPS(): number {
-    return this.app.ticker.FPS;
+    return this.app?.ticker?.FPS ?? 0;
   }
 
   /**
