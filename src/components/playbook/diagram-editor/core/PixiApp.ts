@@ -243,6 +243,12 @@ export class DiagramPixiApp {
     console.group('🔍 Pixi Coordinate System Debug');
     
     // Canvas info
+    if (!this.app.canvas) {
+      console.error('❌ Canvas is null! App not fully initialized.');
+      console.groupEnd();
+      return;
+    }
+    
     const canvas = this.app.canvas as HTMLCanvasElement;
     const rect = canvas.getBoundingClientRect();
     console.log('Canvas:', {

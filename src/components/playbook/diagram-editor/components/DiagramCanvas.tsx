@@ -51,11 +51,15 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
 
   // Debug: Log coordinate system on mount
   useEffect(() => {
-    if (isReady && debugCoordinates) {
+    if (isReady && debugCoordinates && app) {
       console.log("🚀 DiagramCanvas mounted and ready");
-      debugCoordinates();
+      try {
+        debugCoordinates();
+      } catch (error) {
+        console.error('Debug coordinates failed:', error);
+      }
     }
-  }, [isReady, debugCoordinates]);
+  }, [isReady, debugCoordinates, app]);
 
   return (
     <div className={`relative w-full h-full ${className}`}>
