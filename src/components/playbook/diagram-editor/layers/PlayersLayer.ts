@@ -8,11 +8,13 @@
  * - Maintain player z-order (selected on top)
  */
 
-import { Container, FederatedPointerEvent } from 'pixi.js';
+import { Container, FederatedPointerEvent, Rectangle } from 'pixi.js';
 import { PlayerSprite } from '../sprites/PlayerSprite';
 import type { Player } from '../types/Player';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
 import { validatePlayerId, validatePlayerPosition } from '../utils/validation';
+import { findAlignmentGuides } from '../utils/alignmentGuides';
+import type { AlignmentGuidesLayer } from './AlignmentGuidesLayer';
 
 export interface PlayersLayerEvents {
   onPlayerSelected?: (playerId: string | null) => void;
@@ -32,6 +34,9 @@ export class PlayersLayer extends Container {
   // Event callbacks
   private events: PlayersLayerEvents;
 
+  // Alignment guides layer reference (optional, set by PixiApp)
+  private alignmentGuidesLayer: AlignmentGuidesLayer | null = null;
+
   // Performance: throttle drag updates with requestAnimationFrame
   private dragUpdateScheduled: boolean = false;
   private pendingDragEvent: {
@@ -46,7 +51,24 @@ export class PlayersLayer extends Container {
     super();
     this.coords = coords;
     this.events = events;
+    
+    // Make layer interactive and cover the entire field area for drag events
+    // Use 'dynamic' to capture all pointer events even when cursor is outside children
+    this.eventMode = 'dynamic';
+    this.hitArea = new Rectangle(
+      0,
+      0,
+      coords.fieldWidth * coords.pixelsPerYard,
+      coords.fieldHeight * coords.pixelsPerYard
+    );
     // Note: v7 doesn't have .label property
+  }
+
+  /**
+   * Set the alignment guides layer reference
+   */
+  setAlignmentGuidesLayer(layer: AlignmentGuidesLayer): void {
+    this.alignmentGuidesLayer = layer;
   }
 
   /**
@@ -213,7 +235,11 @@ export class PlayersLayer extends Container {
    * Setup event handlers for a sprite
    */
   private setupSpriteEvents(sprite: PlayerSprite): void {
-    // Click to select
+    // Make sprite interactive for pointer events
+    sprite.eventMode = 'static';
+    sprite.cursor = 'pointer';
+
+    // Click to select and start drag
     sprite.on('pointerdown', (event: FederatedPointerEvent) => {
       event.stopPropagation();
       
@@ -240,38 +266,6 @@ export class PlayersLayer extends Container {
         this.events.onPlayerClicked(playerId);
       }
     });
-
-    // Enable drag - throttle with requestAnimationFrame for performance
-    sprite.on('pointermove', (event: FederatedPointerEvent) => {
-      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
-        // Store the latest event
-        this.pendingDragEvent = { sprite, event };
-
-        // Schedule update if not already scheduled
-        if (!this.dragUpdateScheduled) {
-          this.dragUpdateScheduled = true;
-          requestAnimationFrame(() => {
-            if (this.pendingDragEvent) {
-              this.updateDrag(this.pendingDragEvent.sprite, this.pendingDragEvent.event);
-              this.pendingDragEvent = null;
-            }
-            this.dragUpdateScheduled = false;
-          });
-        }
-      }
-    });
-
-    sprite.on('pointerup', () => {
-      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
-        this.endDrag(sprite);
-      }
-    });
-
-    sprite.on('pointerupoutside', () => {
-      if (this.dragState && this.dragState.playerIds.includes(sprite.getId())) {
-        this.endDrag(sprite);
-      }
-    });
   }
 
   /**
@@ -279,10 +273,51 @@ export class PlayersLayer extends Container {
    */
   private cleanupSpriteEvents(sprite: PlayerSprite): void {
     sprite.off('pointerdown');
-    sprite.off('pointermove');
-    sprite.off('pointerup');
-    sprite.off('pointerupoutside');
   }
+
+  /**
+   * Global drag move handler - listens on the entire layer
+   */
+  private onDragMove = (event: FederatedPointerEvent): void => {
+    if (!this.dragState) {
+      console.log('[PlayersLayer] Move event but no drag state');
+      return;
+    }
+
+    console.log('[PlayersLayer] Drag move event received');
+
+    // Get the main dragged sprite
+    const draggedSprite = this.sprites.get(this.dragState.playerIds[0]);
+    if (!draggedSprite) return;
+
+    // Store the latest event
+    this.pendingDragEvent = { sprite: draggedSprite, event };
+
+    // Schedule update if not already scheduled
+    if (!this.dragUpdateScheduled) {
+      this.dragUpdateScheduled = true;
+      requestAnimationFrame(() => {
+        if (this.pendingDragEvent) {
+          this.updateDrag(this.pendingDragEvent.sprite, this.pendingDragEvent.event);
+          this.pendingDragEvent = null;
+        }
+        this.dragUpdateScheduled = false;
+      });
+    }
+  };
+
+  /**
+   * Global drag end handler - listens on the entire layer
+   */
+  private onDragEnd = (): void => {
+    console.log('[PlayersLayer] Drag end event received');
+    if (!this.dragState) return;
+
+    const draggedSprite = this.sprites.get(this.dragState.playerIds[0]);
+    if (draggedSprite) {
+      this.endDrag(draggedSprite);
+    }
+  };
 
   /**
    * Start dragging player(s)
@@ -308,10 +343,17 @@ export class PlayersLayer extends Container {
       playerIds,
       startPositions,
     };
+
+    // Attach global drag event listeners to this layer
+    // This ensures drag continues even when cursor moves off the sprite
+    console.log('[PlayersLayer] Attaching drag event listeners to layer');
+    this.on('pointermove', this.onDragMove);
+    this.on('pointerup', this.onDragEnd);
+    this.on('pointerupoutside', this.onDragEnd);
   }
 
   /**
-   * Update drag position - moves all selected players together
+   * Update drag position - moves all selected players together with alignment guides
    */
   private updateDrag(draggedSprite: PlayerSprite, event: FederatedPointerEvent): void {
     if (!this.dragState) return;
@@ -326,9 +368,46 @@ export class PlayersLayer extends Container {
     // Convert to yards
     const yardPos = this.coords.pixelsToYards(localPos);
 
-    // Calculate delta from start position
-    const deltaX = yardPos.x - startPos.x;
-    const deltaY = yardPos.y - startPos.y;
+    // Calculate desired position
+    let targetX = yardPos.x;
+    let targetY = yardPos.y;
+
+    // Apply alignment snapping if guides layer is available
+    if (this.alignmentGuidesLayer) {
+      // Get all other players for alignment checking
+      const otherPlayers = Array.from(this.sprites.values())
+        .filter(s => s.getId() !== draggedPlayerId)
+        .map(s => {
+          const player = s.getPlayer();
+          return {
+            id: player.id,
+            x: player.x,
+            y: player.y,
+            radius: 0.6, // Match PlayerSprite RADIUS_YARDS
+          };
+        });
+
+      // Find alignment guides and snap position
+      const snapResult = findAlignmentGuides(
+        draggedPlayerId,
+        targetX,
+        targetY,
+        0.6, // Match PlayerSprite RADIUS_YARDS
+        otherPlayers,
+        0.05 // 0.05 yard snap threshold (very small for minimal stickiness)
+      );
+
+      // Show guides
+      this.alignmentGuidesLayer.showGuides(snapResult.guides);
+
+      // Apply snapping
+      targetX = snapResult.x;
+      targetY = snapResult.y;
+    }
+
+    // Calculate delta from start position (using potentially snapped target)
+    const deltaX = targetX - startPos.x;
+    const deltaY = targetY - startPos.y;
 
     // Move all selected players by the same delta
     let anyHitBounds = false;
@@ -387,6 +466,15 @@ export class PlayersLayer extends Container {
    */
   private endDrag(_sprite: PlayerSprite): void {
     if (!this.dragState) return;
+
+    // Hide alignment guides
+    this.alignmentGuidesLayer?.hideGuides();
+
+    // Remove global drag event listeners
+    console.log('[PlayersLayer] Removing drag event listeners from layer');
+    this.off('pointermove', this.onDragMove);
+    this.off('pointerup', this.onDragEnd);
+    this.off('pointerupoutside', this.onDragEnd);
 
     // End drag state for all players and notify of changes
     this.dragState.playerIds.forEach(playerId => {

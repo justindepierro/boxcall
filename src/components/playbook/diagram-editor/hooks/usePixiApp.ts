@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { DiagramPixiApp, type PixiAppConfig } from '../core/PixiApp';
 import { FieldLayer } from '../layers/FieldLayer';
+import { AlignmentGuidesLayer } from '../layers/AlignmentGuidesLayer';
 import { PlayersLayer } from '../layers/PlayersLayer';
 import { useDiagramStore } from '../stores/diagramStore';
 import type { CameraConfig } from '../core/Camera';
@@ -121,6 +122,10 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       pixiApp.fieldLayer = fieldLayer; // Store reference
       fieldLayerRef.current = fieldLayer;
 
+      // Create and add alignment guides layer (between field and players)
+      const alignmentGuidesLayer = new AlignmentGuidesLayer(pixiApp.coordinates);
+      pixiApp.stage.addChild(alignmentGuidesLayer); // Add directly to stage!
+
       // Create and add players layer DIRECTLY to stage
       const playersLayer = new PlayersLayer(pixiApp.coordinates, {
         onPlayerSelected: handlePlayerSelected,
@@ -131,6 +136,9 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       pixiApp.stage.addChild(playersLayer); // Add directly to stage!
       pixiApp.playersLayer = playersLayer; // Store reference
       playersLayerRef.current = playersLayer;
+
+      // Connect alignment guides to players layer
+      playersLayer.setAlignmentGuidesLayer(alignmentGuidesLayer);
 
       setApp(pixiApp);
       setIsReady(true);
