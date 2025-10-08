@@ -6,7 +6,7 @@
  */
 
 import { Application, Container } from 'pixi.js';
-import { Camera } from './Camera';
+import { Camera, type CameraConfig } from './Camera';
 import { CoordinateSystem, type FieldDimensions } from './CoordinateSystem';
 import type { FieldLayer } from '../layers/FieldLayer';
 import type { PlayersLayer } from '../layers/PlayersLayer';
@@ -20,6 +20,7 @@ export interface PixiAppConfig {
   fieldDimensions: FieldDimensions;
   backgroundColor?: number;
   resolution?: number;
+  cameraConfig?: CameraConfig; // Optional camera configuration
 }
 
 export class DiagramPixiApp {
@@ -65,8 +66,8 @@ export class DiagramPixiApp {
     this.stage.label = 'CameraStage';
     this.stage.eventMode = 'static'; // Enable interaction on stage
     
-    // Create camera controller
-    this.camera = new Camera(this.stage, config.fieldDimensions);
+    // Create camera controller with optional config
+    this.camera = new Camera(this.stage, config.fieldDimensions, config.cameraConfig);
 
     // Initialize FPS monitor in development
     if (import.meta.env.DEV) {

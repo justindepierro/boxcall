@@ -15,6 +15,12 @@ export interface CameraState {
   zoom: number;   // Zoom level (1.0 = 100%)
 }
 
+export interface CameraConfig {
+  minZoom?: number;      // Minimum zoom level (default: 0.5)
+  maxZoom?: number;      // Maximum zoom level (default: 3.0)
+  smoothFactor?: number; // Interpolation speed 0-1 (default: 0.2, set to 1.0 for instant)
+}
+
 export class Camera {
   private stage: Container;
   private fieldDimensions: FieldDimensions;
@@ -22,18 +28,23 @@ export class Camera {
   private viewportHeight: number = 0;
   
   // Zoom constraints
-  private minZoom: number = 0.5;   // 50% - see whole field
-  private maxZoom: number = 3.0;   // 300% - detailed view
+  private minZoom: number;
+  private maxZoom: number;
   
   // Smooth zoom/pan
   private targetZoom: number = 1.0;
   private targetX: number = 0;
   private targetY: number = 0;
-  private smoothFactor: number = 0.2; // Lerp factor (0-1)
+  private smoothFactor: number;
 
-  constructor(stage: Container, fieldDimensions: FieldDimensions) {
+  constructor(stage: Container, fieldDimensions: FieldDimensions, config: CameraConfig = {}) {
     this.stage = stage;
     this.fieldDimensions = fieldDimensions;
+    
+    // Apply configuration with defaults
+    this.minZoom = config.minZoom ?? 0.5;
+    this.maxZoom = config.maxZoom ?? 3.0;
+    this.smoothFactor = config.smoothFactor ?? 0.2;
     
     // Center field immediately at (0,0) - will adjust when viewport size is known
     this.centerOnField();

@@ -9,12 +9,14 @@ import { DiagramPixiApp, type PixiAppConfig } from '../core/PixiApp';
 import { FieldLayer } from '../layers/FieldLayer';
 import { PlayersLayer } from '../layers/PlayersLayer';
 import { useDiagramStore } from '../stores/diagramStore';
+import type { CameraConfig } from '../core/Camera';
 
 export interface UsePixiAppOptions {
   fieldWidth: number;
   fieldHeight: number;
   pixelsPerYard: number;
   backgroundColor?: number;
+  cameraConfig?: CameraConfig;
 }
 
 export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>, options: UsePixiAppOptions) {
@@ -103,6 +105,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       },
       backgroundColor: options.backgroundColor,
       resolution: window.devicePixelRatio || 1,
+      cameraConfig: options.cameraConfig,
     };
 
     // Create app
@@ -162,7 +165,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       fieldLayerRef.current = null;
       playersLayerRef.current = null;
     };
-  }, [canvasRef, canvasSize, options.fieldWidth, options.fieldHeight, options.pixelsPerYard, options.backgroundColor, handlePlayerSelected, handlePlayerMoved]);
+  }, [canvasRef, canvasSize, options.fieldWidth, options.fieldHeight, options.pixelsPerYard, options.backgroundColor, options.cameraConfig, handlePlayerSelected, handlePlayerMoved]);
 
   // Handle resize
   useEffect(() => {
