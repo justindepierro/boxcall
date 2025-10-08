@@ -56,10 +56,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
         const { width, height } = entry.contentRect;
         // Only update state if we have VALID dimensions (not 0)
         if (width > 0 && height > 0) {
-          console.log('📐 Canvas sized:', { width, height });
           setCanvasSize({ width, height });
-        } else {
-          console.log('⏳ Canvas not yet sized (0x0), waiting...');
         }
       }
     });
@@ -69,7 +66,6 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     // Also check immediately in case canvas already has size
     const rect = canvas.getBoundingClientRect();
     if (rect.width > 0 && rect.height > 0) {
-      console.log('📐 Canvas already sized:', { width: rect.width, height: rect.height });
       setCanvasSize({ width: rect.width, height: rect.height });
     }
 
@@ -90,8 +86,6 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       console.warn('⚠️ Skipping initialization - invalid dimensions:', { width, height });
       return;
     }
-
-    console.log('🎨 Initializing Pixi with canvas dimensions:', { width, height });
 
     // Create config
     const config: PixiAppConfig = {
@@ -129,15 +123,6 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       pixiApp.stage.addChild(fieldLayer); // Add directly to stage!
       pixiApp.fieldLayer = fieldLayer; // Store reference
       fieldLayerRef.current = fieldLayer;
-      
-      console.log('🏈 Field Layer added:', {
-        parent: fieldLayer.parent?.constructor.name || 'none',
-        position: { x: fieldLayer.x, y: fieldLayer.y },
-        visible: fieldLayer.visible,
-        alpha: fieldLayer.alpha,
-        childIndex: pixiApp.stage.getChildIndex(fieldLayer),
-        totalChildren: pixiApp.stage.children.length,
-      });
 
       // Create and add players layer DIRECTLY to stage
       const playersLayer = new PlayersLayer(pixiApp.coordinates, {

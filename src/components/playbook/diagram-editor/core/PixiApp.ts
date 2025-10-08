@@ -50,21 +50,21 @@ export class DiagramPixiApp {
     // Validate field dimensions
     validateFieldDimensions(config.fieldDimensions.width, config.fieldDimensions.height);
 
-    // Create Pixi application - v7 uses constructor pattern, not init()
+    // Create Pixi application - v7 uses constructor, not async init()
     this.app = new Application({
-      view: config.canvas, // v7 uses 'view' instead of 'canvas'
       width: config.width,
       height: config.height,
       resolution: config.resolution || window.devicePixelRatio || 1,
       autoDensity: true,
       backgroundColor: config.backgroundColor || 0xF5F7ED,
       antialias: true,
-      // v7 doesn't have eventMode in app options
     });
 
-    console.log('✅ Pixi v7 app initialized');
-    console.log('Renderer type:', this.app.renderer.type);
-    console.log('Canvas:', this.app.view);
+    // Replace the React canvas with Pixi's canvas
+    const pixiCanvas = this.app.view as HTMLCanvasElement;
+    if (config.canvas.parentElement) {
+      config.canvas.parentElement.replaceChild(pixiCanvas, config.canvas);
+    }
     
     // Initialize coordinate system
     this.coordinates = new CoordinateSystem(config.fieldDimensions);
@@ -89,8 +89,6 @@ export class DiagramPixiApp {
     
     // Start render loop
     this.app.ticker.add(this.update.bind(this));
-    
-    console.log('🏈 Pixi application ready');
   }
 
   /**
@@ -113,7 +111,6 @@ export class DiagramPixiApp {
     
     this.fieldLayer = layer;
     this.stage.addChild(layer);
-    console.log('🏈 Field layer added to stage');
   }
 
   /**
@@ -213,59 +210,24 @@ export class DiagramPixiApp {
   }
 
   /**
-   * Debug: Log complete coordinate system state
+   * Debug coordinate system
    */
-  debugCoordinates(testX: number = 400, testY: number = 300): void {
-    console.group('🔍 Pixi Coordinate System Debug');
-    
-    // Canvas info - v7 uses app.view
-    const canvas = this.app.view as HTMLCanvasElement;
-    
-    if (!canvas) {
-      console.error('❌ Canvas is null! Renderer not fully initialized.');
-      console.groupEnd();
-      return;
-    }
-    
-    const rect = canvas.getBoundingClientRect();
-    console.log('Canvas:', {
-      cssSize: { width: rect.width, height: rect.height },
-      bufferSize: { width: canvas.width, height: canvas.height },
-      devicePixelRatio: window.devicePixelRatio,
-      resolution: this.app.renderer.resolution,
-    });
-    
-    // Camera state
-    const cameraState = this.camera.getState();
-    console.log('Camera:', cameraState);
-    
-    // Stage transform
-    console.log('Stage:', {
-      position: { x: this.stage.x, y: this.stage.y },
-      scale: { x: this.stage.scale.x, y: this.stage.scale.y },
-      pivot: { x: this.stage.pivot.x, y: this.stage.pivot.y },
-    });
-    
-    // Layer hierarchy
-    console.log('Layers:', {
-      fieldLayer: this.fieldLayer ? 'added' : 'not added',
-      playersLayer: this.playersLayer ? 'added' : 'not added',
-    });
-    
+  debugCoordinates(testX: number = 100, testY: number = 100): void {
     // Test coordinate conversion
     const worldCoords = this.screenToWorld(testX, testY);
     const backToScreen = this.worldToScreen(worldCoords.x, worldCoords.y);
-    console.log('Test Conversion:', {
-      screen: { x: testX, y: testY },
-      world: worldCoords,
-      backToScreen: backToScreen,
-      error: { 
-        x: Math.abs(backToScreen.x - testX),
-        y: Math.abs(backToScreen.y - testY),
-      },
-    });
     
-    console.groupEnd();
+    // Only log if there's a significant error (for debugging)
+    const errorX = Math.abs(backToScreen.x - testX);
+    const errorY = Math.abs(backToScreen.y - testY);
+    if (errorX > 0.1 || errorY > 0.1) {
+      console.warn('Coordinate conversion error:', {
+        screen: { x: testX, y: testY },
+        world: worldCoords,
+        backToScreen: backToScreen,
+        error: { x: errorX, y: errorY },
+      });
+    }
   }
 
   /**

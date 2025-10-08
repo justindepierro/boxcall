@@ -54,48 +54,29 @@ export class FieldLayer extends Container {
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const fieldHeightPixels = this.config.height * pixelsPerYard;
     
-    console.log('🏈 Rendering field:', {
-      dimensions: `${this.config.width} × ${this.config.height} yards`,
-      pixels: `${fieldWidthPixels} × ${fieldHeightPixels} px`,
-      pixelsPerYard,
-    });
-    
     // Clear previous graphics
     this.fieldGraphics.clear();
     
-    try {
-      // Draw field background using v7 API
-      this.fieldGraphics.beginFill(this.config.backgroundColor);
-      this.fieldGraphics.drawRect(0, 0, fieldWidthPixels, fieldHeightPixels);
-      this.fieldGraphics.endFill();
-      
-      console.log('✅ Field background drawn');
-      
-      // Draw yard lines every 5 yards
-      this.drawYardLines();
-      console.log('✅ Yard lines drawn');
-      
-      // Draw hash marks if enabled
-      if (this.config.showHashes) {
-        this.drawHashMarks();
-        console.log('✅ Hash marks drawn');
-      }
-      
-      // Draw yard numbers if enabled
-      if (this.config.showNumbers) {
-        this.drawYardNumbers();
-        console.log('✅ Yard numbers drawn');
-      }
-      
-      // Draw sidelines
-      this.drawSidelines();
-      console.log('✅ Sidelines drawn');
-      
-      console.log('🏈 Field rendering complete!');
-    } catch (error) {
-      console.error('❌ Field rendering error:', error);
-      throw error;
+    // Draw field background using v7 API
+    this.fieldGraphics.beginFill(this.config.backgroundColor);
+    this.fieldGraphics.drawRect(0, 0, fieldWidthPixels, fieldHeightPixels);
+    this.fieldGraphics.endFill();
+    
+    // Draw yard lines every 5 yards
+    this.drawYardLines();
+    
+    // Draw hash marks if enabled
+    if (this.config.showHashes) {
+      this.drawHashMarks();
     }
+    
+    // Draw yard numbers if enabled
+    if (this.config.showNumbers) {
+      this.drawYardNumbers();
+    }
+    
+    // Draw sidelines
+    this.drawSidelines();
   }
 
   /**

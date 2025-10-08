@@ -277,35 +277,21 @@ export class PlayersLayer extends Container {
   private updateDrag(sprite: PlayerSprite, event: FederatedPointerEvent): void {
     if (!this.dragState) return;
 
-    // DEBUG: Log all coordinate transformations
-    console.group('🎯 Drag Coordinate Debug');
-    
-    // 1. Global position (CSS pixels from browser)
-    console.log('1. Global (CSS pixels):', { x: event.global.x, y: event.global.y });
-    
-    // 2. Local position (pixels in this layer's space, accounting for camera transform)
+    // Get local position (pixels in this layer's space, accounting for camera transform)
     const localPos = event.getLocalPosition(this);
-    console.log('2. Local (layer pixels):', { x: localPos.x, y: localPos.y });
     
-    // 3. Convert to yards
+    // Convert to yards
     const yardPos = this.coords.pixelsToYards(localPos);
-    console.log('3. Yards:', { x: yardPos.x, y: yardPos.y });
 
-    // 4. Clamp to field bounds
+    // Clamp to field bounds
     const clampedX = Math.max(0, Math.min(this.coords.fieldWidth, yardPos.x));
     const clampedY = Math.max(0, Math.min(this.coords.fieldHeight, yardPos.y));
-    console.log('4. Clamped (yards):', { x: clampedX, y: clampedY });
     
-    // 5. Check if clamping occurred (player hit a boundary)
+    // Check if clamping occurred (player hit a boundary)
     const hitBounds = clampedX !== yardPos.x || clampedY !== yardPos.y;
     if (hitBounds) {
       this.showBoundsFeedback(sprite);
     }
-    
-    // 6. Log parent hierarchy for verification
-    console.log('6. Parent chain:', this.parent?.constructor.name || 'unknown');
-    
-    console.groupEnd();
 
     // Validate position before updating
     validatePlayerPosition(clampedX, clampedY);

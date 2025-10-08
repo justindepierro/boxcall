@@ -186,8 +186,6 @@ export class Camera {
       this.targetY = newY;
       this.stage.x = newX;
       this.stage.y = newY;
-      
-      console.log('📍 Field centered at:', { x: newX, y: newY });
     } else {
       // Fallback to origin if viewport not set yet
       this.targetX = 0;
@@ -210,16 +208,6 @@ export class Camera {
     
     // Always re-center when viewport size changes
     this.centerOnField();
-    
-    console.log('📷 Camera viewport set:', {
-      viewport: { width, height },
-      fieldPixels: {
-        width: this.fieldDimensions.width * this.fieldDimensions.pixelsPerYard,
-        height: this.fieldDimensions.height * this.fieldDimensions.pixelsPerYard,
-      },
-      position: { x: this.targetX, y: this.targetY },
-      zoom: this.targetZoom,
-    });
   }
 
   /**
