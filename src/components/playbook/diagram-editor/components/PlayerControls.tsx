@@ -147,6 +147,7 @@ export const PlayerControls: React.FC = () => {
           <li>• Drag to move players</li>
           <li>• Shift+Click for multi-select</li>
           <li>• Click+Drag empty field for box select</li>
+          <li>• Alt/Option to snap to yard lines/hashes</li>
           <li>• Arrow keys to nudge</li>
           <li>• Ctrl/Cmd+C/V/D to copy/paste</li>
           <li>• Delete key to remove</li>

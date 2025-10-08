@@ -14,6 +14,7 @@ import type { Player } from '../types/Player';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
 import { validatePlayerId, validatePlayerPosition } from '../utils/validation';
 import { findAlignmentGuides } from '../utils/alignmentGuides';
+import { applySnapToFeatures } from '../utils/snapToFeatures';
 import type { AlignmentGuidesLayer } from './AlignmentGuidesLayer';
 
 export interface PlayersLayerEvents {
@@ -365,7 +366,27 @@ export class PlayersLayer extends Container {
     let targetX = yardPos.x;
     let targetY = yardPos.y;
 
-    // Apply alignment snapping if guides layer is available
+    // Check if Alt/Option key is held for snap-to-features
+    const snapToFeaturesEnabled = event.altKey;
+
+    // Apply snap-to-features first (yard lines, hash marks)
+    if (snapToFeaturesEnabled) {
+      const snapResult = applySnapToFeatures(
+        targetX,
+        targetY,
+        this.coords.fieldWidth,
+        this.coords.fieldHeight,
+        true
+      );
+      targetX = snapResult.x;
+      targetY = snapResult.y;
+      
+      if (snapResult.snapped) {
+        console.log(`🎯 Snapped to: ${snapResult.targets.map(t => t.label).join(', ')}`);
+      }
+    }
+
+    // Apply alignment snapping if guides layer is available (takes precedence over snap-to-features)
     if (this.alignmentGuidesLayer) {
       // Get all other players for alignment checking
       const otherPlayers = Array.from(this.sprites.values())
@@ -393,7 +414,7 @@ export class PlayersLayer extends Container {
       // Show guides
       this.alignmentGuidesLayer.showGuides(snapResult.guides);
 
-      // Apply snapping
+      // Apply snapping (alignment guides override snap-to-features)
       targetX = snapResult.x;
       targetY = snapResult.y;
     }
