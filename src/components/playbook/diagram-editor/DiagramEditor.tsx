@@ -137,7 +137,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar */}
         <div className="w-64 bg-surface-card border-r border-border flex-shrink-0 overflow-y-auto">
-          <PlayerControls />
+          <PlayerControls app={app} />
         </div>
 
         {/* Canvas Area */}

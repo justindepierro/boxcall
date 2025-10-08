@@ -1,11 +1,22 @@
 import React from "react";
 import { useDiagramStore } from "../stores/diagramStore";
 import type { Player, TeamSide } from "../types/Player";
+import type { DiagramPixiApp } from "../core/PixiApp";
+import {
+  alignPlayersHorizontal,
+  alignPlayersVertical,
+  distributePlayersHorizontal,
+  distributePlayersVertical,
+} from "../utils/alignmentUtils";
+
+interface PlayerControlsProps {
+  app: DiagramPixiApp | null;
+}
 
 /**
  * Player Controls - Sidebar UI for adding/removing players
  */
-export const PlayerControls: React.FC = () => {
+export const PlayerControls: React.FC<PlayerControlsProps> = ({ app }) => {
   const { players, addPlayer, removePlayer, selectedPlayerId, clearPlayers } =
     useDiagramStore();
 
@@ -37,6 +48,73 @@ export const PlayerControls: React.FC = () => {
     if (window.confirm("Remove all players?")) {
       clearPlayers();
     }
+  };
+
+  // Alignment handlers
+  const handleAlign = (mode: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
+    if (!app?.playersLayer) return;
+    
+    const selectedIds = app.playersLayer.getSelectedPlayerIds();
+    if (selectedIds.length < 2) {
+      alert('Please select 2 or more players to align');
+      return;
+    }
+
+    // Get selected players
+    const selectedPlayers: Player[] = [];
+    selectedIds.forEach((id: string) => {
+      const sprite = app.playersLayer!.getPlayer(id);
+      if (sprite) {
+        selectedPlayers.push(sprite.getPlayer());
+      }
+    });
+
+    // Apply alignment
+    let aligned: Player[];
+    if (mode === 'left' || mode === 'center' || mode === 'right') {
+      aligned = alignPlayersHorizontal(selectedPlayers, mode);
+    } else {
+      aligned = alignPlayersVertical(selectedPlayers, mode as 'top' | 'middle' | 'bottom');
+    }
+
+    // Update positions
+    aligned.forEach(player => {
+      app.playersLayer!.updatePlayer(player.id, { x: player.x, y: player.y });
+    });
+
+    console.log(`📐 Aligned ${aligned.length} players: ${mode}`);
+  };
+
+  // Distribute handlers
+  const handleDistribute = (direction: 'horizontal' | 'vertical') => {
+    if (!app?.playersLayer) return;
+    
+    const selectedIds = app.playersLayer.getSelectedPlayerIds();
+    if (selectedIds.length < 3) {
+      alert('Please select 3 or more players to distribute');
+      return;
+    }
+
+    // Get selected players
+    const selectedPlayers: Player[] = [];
+    selectedIds.forEach((id: string) => {
+      const sprite = app.playersLayer!.getPlayer(id);
+      if (sprite) {
+        selectedPlayers.push(sprite.getPlayer());
+      }
+    });
+
+    // Apply distribution
+    const distributed = direction === 'horizontal'
+      ? distributePlayersHorizontal(selectedPlayers)
+      : distributePlayersVertical(selectedPlayers);
+
+    // Update positions
+    distributed.forEach(player => {
+      app.playersLayer!.updatePlayer(player.id, { x: player.x, y: player.y });
+    });
+
+    console.log(`📏 Distributed ${distributed.length} players: ${direction}`);
   };
 
   const buttonBaseClasses =
@@ -106,6 +184,86 @@ export const PlayerControls: React.FC = () => {
               title="Clear All Players"
             >
               Clear All
+            </button>
+          </div>
+        </div>
+
+        {/* Align Section */}
+        <div className="pt-4 border-t border-border">
+          <h3 className="text-sm font-semibold text-content-primary mb-2">
+            Align (2+ selected)
+          </h3>
+          <div className="space-y-2">
+            {/* Horizontal alignment */}
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => handleAlign('left')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Align Left"
+              >
+                ⫣ Left
+              </button>
+              <button
+                onClick={() => handleAlign('center')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Center Horizontal"
+              >
+                ⫯ Center
+              </button>
+              <button
+                onClick={() => handleAlign('right')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Align Right"
+              >
+                ⫤ Right
+              </button>
+            </div>
+            {/* Vertical alignment */}
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => handleAlign('top')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Align Top"
+              >
+                ⫪ Top
+              </button>
+              <button
+                onClick={() => handleAlign('middle')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Center Vertical"
+              >
+                ⊟ Middle
+              </button>
+              <button
+                onClick={() => handleAlign('bottom')}
+                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                title="Align Bottom"
+              >
+                ⫫ Bottom
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Distribute Section */}
+        <div className="pt-4 border-t border-border">
+          <h3 className="text-sm font-semibold text-content-primary mb-2">
+            Distribute (3+ selected)
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => handleDistribute('horizontal')}
+              className="px-3 py-2 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+              title="Distribute Horizontal - Space evenly left to right"
+            >
+              ↔ Horizontal
+            </button>
+            <button
+              onClick={() => handleDistribute('vertical')}
+              className="px-3 py-2 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+              title="Distribute Vertical - Space evenly top to bottom"
+            >
+              ↕ Vertical
             </button>
           </div>
         </div>
