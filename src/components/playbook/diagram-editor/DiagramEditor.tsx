@@ -16,6 +16,8 @@ import type { FieldColorMode } from "./layers/FieldLayer";
 // Re-export types for backwards compatibility with PlaybookPage
 export type { DiagramMetadata, DiagramDocument } from "./types/DiagramTypes";
 
+export type FieldPosition = "midfield" | "backed-up" | "red-zone" | "free-draw";
+
 export interface DiagramEditorProps {
   onClose?: () => void;
 }
@@ -23,6 +25,7 @@ export interface DiagramEditorProps {
 export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
+  const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
@@ -45,14 +48,52 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     }
   };
 
+  const handleFieldPositionChange = (position: FieldPosition) => {
+    setFieldPosition(position);
+    
+    // Update line of scrimmage based on position
+    if (app) {
+      const fieldLayer = app.getFieldLayer();
+      if (fieldLayer) {
+        switch (position) {
+          case "midfield":
+            fieldLayer.setLineOfScrimmage(25, true); // 50-yard line (middle)
+            break;
+          case "backed-up":
+            fieldLayer.setLineOfScrimmage(5, true); // 10-yard line (backed up)
+            break;
+          case "red-zone":
+            fieldLayer.setLineOfScrimmage(30, true); // 10-yard line from endzone
+            break;
+          case "free-draw":
+            fieldLayer.setLineOfScrimmage(25, false); // Hide line of scrimmage
+            break;
+        }
+      }
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-surface-card border-b border-border">
         <h1 className="text-xl font-bold text-content-primary">
-          🏈 Diagram Editor (Pixi.js)
+          🏈 Diagram Editor
         </h1>
         <div className="flex items-center gap-3">
+          {/* Field Position Selector */}
+          <select
+            value={fieldPosition}
+            onChange={(e) => handleFieldPositionChange(e.target.value as FieldPosition)}
+            className="px-3 py-1.5 rounded-md bg-surface-secondary hover:bg-surface-tertiary text-content-primary transition-colors text-sm font-medium border border-border cursor-pointer"
+            title="Select field position"
+          >
+            <option value="midfield">🏟️ Midfield</option>
+            <option value="backed-up">🔙 Backed Up</option>
+            <option value="red-zone">🎯 Red Zone</option>
+            <option value="free-draw">✏️ Free Draw</option>
+          </select>
+
           {/* Color Mode Toggle */}
           <button
             onClick={handleColorModeChange}
@@ -74,19 +115,26 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         </div>
       </div>
 
-      {/* Canvas Container */}
-      <div className="flex-1 relative overflow-hidden bg-surface-secondary">
-        <PixiErrorBoundary>
-          <DiagramCanvas
-            fieldWidth={53.333}
-            fieldHeight={35}
-            pixelsPerYard={20}
-            backgroundColor={0x222222}
-            onReady={handleReady}
-          />
-          <CameraControls app={app} />
+      {/* Main Content: Sidebar + Canvas */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Sidebar */}
+        <div className="w-64 bg-surface-card border-r border-border flex-shrink-0 overflow-y-auto">
           <PlayerControls />
-        </PixiErrorBoundary>
+        </div>
+
+        {/* Canvas Area */}
+        <div className="flex-1 relative overflow-hidden bg-surface-secondary">
+          <PixiErrorBoundary>
+            <DiagramCanvas
+              fieldWidth={53.333}
+              fieldHeight={35}
+              pixelsPerYard={20}
+              backgroundColor={0x222222}
+              onReady={handleReady}
+            />
+            <CameraControls app={app} />
+          </PixiErrorBoundary>
+        </div>
       </div>
 
       {/* Status Bar */}
