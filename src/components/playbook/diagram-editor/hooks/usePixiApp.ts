@@ -53,40 +53,46 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     // Create app
     const pixiApp = new DiagramPixiApp(config);
     
-    // Create and add field layer DIRECTLY to stage
-    const fieldLayer = new FieldLayer(pixiApp.coordinates, {
-      width: options.fieldWidth,
-      height: options.fieldHeight,
-      backgroundColor: 0x82C91E, // Green
-      lineColor: 0xFFFFFF,
-      hashColor: 0xFFFFFF,
-      numbersColor: 0xFFFFFF,
-      showNumbers: true,
-      showHashes: true,
-    });
-    
-    fieldLayer.label = 'FieldLayer';
-    pixiApp.stage.addChild(fieldLayer); // Add directly to stage!
-    pixiApp.fieldLayer = fieldLayer; // Store reference
-    fieldLayerRef.current = fieldLayer;
+    // Wait for initialization before creating layers
+    pixiApp.waitForReady().then(() => {
+      // Create and add field layer DIRECTLY to stage
+      const fieldLayer = new FieldLayer(pixiApp.coordinates, {
+        width: options.fieldWidth,
+        height: options.fieldHeight,
+        backgroundColor: 0x82C91E, // Green
+        lineColor: 0xFFFFFF,
+        hashColor: 0xFFFFFF,
+        numbersColor: 0xFFFFFF,
+        showNumbers: true,
+        showHashes: true,
+      });
+      
+      fieldLayer.label = 'FieldLayer';
+      pixiApp.stage.addChild(fieldLayer); // Add directly to stage!
+      pixiApp.fieldLayer = fieldLayer; // Store reference
+      fieldLayerRef.current = fieldLayer;
 
-    // Create and add players layer DIRECTLY to stage
-    const playersLayer = new PlayersLayer(pixiApp.coordinates, {
-      onPlayerSelected: (playerId) => {
-        selectPlayer(playerId);
-      },
-      onPlayerMoved: (playerId, x, y) => {
-        updatePlayer(playerId, { x, y });
-      },
-    });
-    
-    playersLayer.label = 'PlayersLayer';
-    pixiApp.stage.addChild(playersLayer); // Add directly to stage!
-    pixiApp.playersLayer = playersLayer; // Store reference
-    playersLayerRef.current = playersLayer;
+      // Create and add players layer DIRECTLY to stage
+      const playersLayer = new PlayersLayer(pixiApp.coordinates, {
+        onPlayerSelected: (playerId) => {
+          selectPlayer(playerId);
+        },
+        onPlayerMoved: (playerId, x, y) => {
+          updatePlayer(playerId, { x, y });
+        },
+      });
+      
+      playersLayer.label = 'PlayersLayer';
+      pixiApp.stage.addChild(playersLayer); // Add directly to stage!
+      pixiApp.playersLayer = playersLayer; // Store reference
+      playersLayerRef.current = playersLayer;
 
-    setApp(pixiApp);
-    setIsReady(true);
+      setApp(pixiApp);
+      setIsReady(true);
+    }).catch((error) => {
+      console.error('Failed to initialize Pixi app:', error);
+      setIsReady(false);
+    });
 
     // Cleanup
     return () => {

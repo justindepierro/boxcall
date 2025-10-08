@@ -72,6 +72,9 @@ export class PlayersLayer extends Container {
         this.clearSelection();
       }
 
+      // Clean up event listeners
+      this.cleanupSpriteEvents(sprite);
+
       // Remove from container and map
       this.removeChild(sprite);
       sprite.destroy();
@@ -198,6 +201,16 @@ export class PlayersLayer extends Container {
   }
 
   /**
+   * Clean up event handlers for a sprite
+   */
+  private cleanupSpriteEvents(sprite: PlayerSprite): void {
+    sprite.off('pointerdown');
+    sprite.off('pointermove');
+    sprite.off('pointerup');
+    sprite.off('pointerupoutside');
+  }
+
+  /**
    * Start dragging a player
    */
   private startDrag(sprite: PlayerSprite, _event: FederatedPointerEvent): void {
@@ -268,7 +281,10 @@ export class PlayersLayer extends Container {
    * Clear all players
    */
   clear(): void {
-    this.sprites.forEach(sprite => sprite.destroy());
+    this.sprites.forEach(sprite => {
+      this.cleanupSpriteEvents(sprite);
+      sprite.destroy();
+    });
     this.sprites.clear();
     this.selectedPlayerId = null;
     this.dragState = null;

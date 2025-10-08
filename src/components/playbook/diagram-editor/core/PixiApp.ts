@@ -32,6 +32,8 @@ export class DiagramPixiApp {
   // Future layers can be added as needed
   
   private isDestroyed: boolean = false;
+  private isInitialized: boolean = false;
+  private initPromise: Promise<void> | null = null;
 
   constructor(config: PixiAppConfig) {
     // Create Pixi application
@@ -40,8 +42,8 @@ export class DiagramPixiApp {
     // Initialize coordinate system
     this.coordinates = new CoordinateSystem(config.fieldDimensions);
     
-    // Initialize app (async, but we'll start render loop immediately)
-    this.initializeApp(config);
+    // Initialize app (async, store promise for awaiting)
+    this.initPromise = this.initializeApp(config);
     
     // Create main stage container (this gets transformed by Camera)
     this.stage = new Container();
@@ -53,28 +55,47 @@ export class DiagramPixiApp {
   }
 
   /**
+   * Wait for initialization to complete
+   * Call this before using the app!
+   */
+  async waitForReady(): Promise<void> {
+    if (this.isInitialized) return;
+    if (this.initPromise) {
+      await this.initPromise;
+    }
+  }
+
+  /**
    * Initialize Pixi application (async)
    */
   private async initializeApp(config: PixiAppConfig): Promise<void> {
-    await this.app.init({
-      canvas: config.canvas,
-      width: config.width,
-      height: config.height,
-      resolution: config.resolution || window.devicePixelRatio || 1,
-      autoDensity: true,
-      backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
-      antialias: true,
-      eventMode: 'static', // Enable interaction
-    });
+    try {
+      await this.app.init({
+        canvas: config.canvas,
+        width: config.width,
+        height: config.height,
+        resolution: config.resolution || window.devicePixelRatio || 1,
+        autoDensity: true,
+        backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
+        antialias: true,
+        eventMode: 'static', // Enable interaction
+      });
 
-    // Add stage to app
-    this.app.stage.addChild(this.stage);
-    
-    // Set initial viewport size and center field
-    this.camera.setViewportSize(config.width, config.height);
-    
-    // Start render loop
-    this.app.ticker.add(this.update.bind(this));
+      // Add stage to app
+      this.app.stage.addChild(this.stage);
+      
+      // Set initial viewport size and center field
+      this.camera.setViewportSize(config.width, config.height);
+      
+      // Start render loop
+      this.app.ticker.add(this.update.bind(this));
+      
+      // Mark as initialized
+      this.isInitialized = true;
+    } catch (error) {
+      console.error('Failed to initialize Pixi app:', error);
+      throw error;
+    }
   }
 
   /**

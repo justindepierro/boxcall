@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { DiagramCanvas } from "./components/DiagramCanvas";
 import { CameraControls } from "./components/CameraControls";
 import { PlayerControls } from "./components/PlayerControls";
+import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import type { DiagramPixiApp } from "./core/PixiApp";
 
 // Re-export types for backwards compatibility with PlaybookPage
@@ -46,14 +47,16 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       {/* Canvas Container */}
       <div className="flex-1 relative overflow-hidden bg-surface-secondary">
-        <DiagramCanvas
-          fieldWidth={53.333}
-          fieldHeight={35}
-          pixelsPerYard={15}
-          onReady={handleReady}
-        />
-        <CameraControls app={app} />
-        <PlayerControls />
+        <PixiErrorBoundary>
+          <DiagramCanvas
+            fieldWidth={53.333}
+            fieldHeight={35}
+            pixelsPerYard={15}
+            onReady={handleReady}
+          />
+          <CameraControls app={app} />
+          <PlayerControls />
+        </PixiErrorBoundary>
       </div>
 
       {/* Status Bar */}
