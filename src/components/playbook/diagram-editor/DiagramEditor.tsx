@@ -13,6 +13,7 @@ import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
+import { useUndoRedo } from "./hooks/useUndoRedo";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 
@@ -38,6 +39,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   // Enable drag box selection (click+drag on empty field)
   useDragBoxSelection({ app, enabled: true });
+
+  // Enable undo/redo (Ctrl+Z/Ctrl+Shift+Z)
+  useUndoRedo({ app, enabled: true });
 
   const handleReady = (pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);

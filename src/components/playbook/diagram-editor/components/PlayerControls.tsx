@@ -150,6 +150,7 @@ export const PlayerControls: React.FC = () => {
           <li>• Alt/Option to snap to yard lines/hashes</li>
           <li>• Arrow keys to nudge</li>
           <li>• Ctrl/Cmd+C/V/D to copy/paste</li>
+          <li>• Ctrl/Cmd+Z to undo, Ctrl/Cmd+Shift+Z to redo</li>
           <li>• Delete key to remove</li>
         </ul>
       </div>
