@@ -104,7 +104,8 @@ export class DiagramPixiApp {
         backgroundColor: config.backgroundColor || 0xF5F7ED, // Light greenish
         antialias: true,
         eventMode: 'static', // Enable interaction
-        preference: 'webgl', // Prefer WebGL over WebGPU
+        preference: 'webgpu', // Try WebGPU first to avoid WebGL shader issues
+        hello: false, // Disable Pixi banner
       });
 
       console.log('✅ Pixi app initialized');
