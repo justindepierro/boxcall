@@ -18,6 +18,7 @@ export class PlayerSprite extends Container {
   private coords: CoordinateSystem;
   private circle: Graphics;
   private selectionRing: Graphics;
+  private dropShadow: Graphics; // NEW: Drop shadow for drag effect
   private numberText: Text;
   private _isSelected: boolean = false;
   private _isDragging: boolean = false;
@@ -26,6 +27,8 @@ export class PlayerSprite extends Container {
   private readonly RADIUS_YARDS = 0.6;   // Player circle radius in yards (was 1.0)
   private readonly STROKE_WIDTH = 0.09;  // Border width in yards (was 0.15)
   private readonly SELECTION_RING_WIDTH = 0.12; // Selection ring width in yards (was 0.2)
+  private readonly DRAG_SCALE = 1.05;    // NEW: Subtle scale during drag
+  private readonly SHADOW_OFFSET_YARDS = 0.15; // NEW: Shadow offset in yards
 
   constructor(player: Player, coords: CoordinateSystem) {
     super();
@@ -35,14 +38,16 @@ export class PlayerSprite extends Container {
 
     // Enable interactivity
     this.interactive = true;
-    this.cursor = 'pointer';
+    this.cursor = 'grab'; // Changed from 'pointer' to 'grab'
 
     // Create graphics
+    this.dropShadow = new Graphics(); // Initialize drop shadow
     this.circle = new Graphics();
     this.selectionRing = new Graphics();
     this.numberText = new Text();
 
-    // Add to container in order
+    // Add to container in order (shadow first, on bottom)
+    this.addChild(this.dropShadow);
     this.addChild(this.selectionRing);
     this.addChild(this.circle);
     this.addChild(this.numberText);
@@ -75,7 +80,7 @@ export class PlayerSprite extends Container {
   }
 
   /**
-   * Update selection ring visibility and style
+   * Update selection ring visibility and style with team color glow
    */
   private updateSelectionRing(): void {
     const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
@@ -84,6 +89,14 @@ export class PlayerSprite extends Container {
     this.selectionRing.clear();
     
     if (this._isSelected) {
+      const colors = this.getColors();
+      
+      // Draw outer glow with team color (subtle)
+      this.selectionRing.beginFill(colors.fill, 0.15);
+      this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth * 2);
+      this.selectionRing.endFill();
+      
+      // Draw selection ring (bright)
       this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
       this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth);
     }
@@ -168,16 +181,56 @@ export class PlayerSprite extends Container {
     if (this._isSelected !== selected) {
       this._isSelected = selected;
       this.updateSelectionRing();
-      this.cursor = selected ? 'move' : 'pointer';
+      // Update cursor: selected = grab, not selected = pointer
+      this.cursor = selected ? 'grab' : 'pointer';
     }
   }
 
   /**
-   * Set dragging state
+   * Set dragging state with visual feedback
    */
   setDragging(dragging: boolean): void {
-    this._isDragging = dragging;
-    this.alpha = dragging ? 0.7 : 1.0;
+    if (this._isDragging !== dragging) {
+      this._isDragging = dragging;
+      
+      if (dragging) {
+        // DRAGGING EFFECTS:
+        // 1. Change cursor to grabbing
+        this.cursor = 'grabbing';
+        
+        // 2. Subtle scale up (1.05x)
+        this.scale.set(this.DRAG_SCALE);
+        
+        // 3. Draw drop shadow
+        this.updateDropShadow(true);
+        
+        // 4. Slight transparency
+        this.alpha = 0.9;
+      } else {
+        // RELEASE EFFECTS: Reset to normal
+        this.cursor = this._isSelected ? 'grab' : 'pointer';
+        this.scale.set(1.0);
+        this.updateDropShadow(false);
+        this.alpha = 1.0;
+      }
+    }
+  }
+
+  /**
+   * Update drop shadow visibility and position
+   */
+  private updateDropShadow(visible: boolean): void {
+    const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
+    const shadowOffset = this.SHADOW_OFFSET_YARDS * this.coords.pixelsPerYard;
+
+    this.dropShadow.clear();
+    
+    if (visible) {
+      // Draw shadow as a semi-transparent dark circle, offset down-right
+      this.dropShadow.beginFill(0x000000, 0.25);
+      this.dropShadow.drawCircle(shadowOffset, shadowOffset, radiusPixels);
+      this.dropShadow.endFill();
+    }
   }
 
   /**
@@ -212,6 +265,7 @@ export class PlayerSprite extends Container {
    * Cleanup
    */
   destroy(): void {
+    this.dropShadow.destroy();
     this.circle.destroy();
     this.selectionRing.destroy();
     this.numberText.destroy();
