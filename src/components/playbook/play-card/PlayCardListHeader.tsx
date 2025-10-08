@@ -78,7 +78,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             {optimisticPlay.p_type}
           </span>
           {optimisticPlay.f_type && (
-            <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-xs font-medium">
+            <span className="px-2 py-0.5 bg-surface-muted text-primary border border-border rounded-full text-xs font-medium">
               {optimisticPlay.f_type}
             </span>
           )}

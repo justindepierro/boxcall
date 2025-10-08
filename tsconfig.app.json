@@ -57,5 +57,13 @@
     "src",
     "src/components/ui/Icon/*.ts",
     "src/components/ui/Icon/*.d.ts"
+  ],
+  "exclude": [
+    "archive/**/*",
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

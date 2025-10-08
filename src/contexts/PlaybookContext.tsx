@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useMemo, useReducer } from "react";
-import { DiagramEditorProvider } from "../components/playbook/diagram-editor/context/DiagramEditorProvider";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
@@ -250,7 +249,7 @@ export const PlaybookProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = useMemo(() => ({ state, dispatch }), [state]);
   return (
     <PlaybookContext.Provider value={value}>
-      <DiagramEditorProvider>{children}</DiagramEditorProvider>
+      {children}
     </PlaybookContext.Provider>
   );
 };
