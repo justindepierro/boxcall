@@ -36,8 +36,8 @@ export class PlayerSprite extends Container {
     this.player = player;
     this.coords = coords;
 
-    // Enable interactivity
-    this.interactive = true;
+    // Enable interactivity (v7.2+ uses eventMode)
+    this.eventMode = 'static';
     this.cursor = 'grab'; // Changed from 'pointer' to 'grab'
 
     // Create graphics
@@ -65,11 +65,21 @@ export class PlayerSprite extends Container {
     const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
     const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
 
-    // Draw main circle
+    // Draw main shape (circle for regular, square for center)
     this.circle.clear();
     this.circle.lineStyle(strokePixels, colors.stroke);
     this.circle.beginFill(colors.fill);
-    this.circle.drawCircle(0, 0, radiusPixels);
+    
+    const isCenter = this.player.position === 'center';
+    if (isCenter) {
+      // Draw square/rectangle for center position
+      const size = radiusPixels * 1.6; // Slightly wider than circle diameter
+      this.circle.drawRect(-size / 2, -size / 2, size, size);
+    } else {
+      // Draw circle for regular players
+      this.circle.drawCircle(0, 0, radiusPixels);
+    }
+    
     this.circle.endFill();
 
     // Draw selection ring (initially hidden)
@@ -90,15 +100,32 @@ export class PlayerSprite extends Container {
     
     if (this._isSelected) {
       const colors = this.getColors();
+      const isCenter = this.player.position === 'center';
       
-      // Draw outer glow with team color (subtle)
-      this.selectionRing.beginFill(colors.fill, 0.15);
-      this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth * 2);
-      this.selectionRing.endFill();
-      
-      // Draw selection ring (bright)
-      this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
-      this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth);
+      if (isCenter) {
+        // Draw rectangular selection for center
+        const size = radiusPixels * 1.6;
+        const outerSize = size + ringWidth * 4;
+        
+        // Draw outer glow with team color (subtle)
+        this.selectionRing.beginFill(colors.fill, 0.15);
+        this.selectionRing.drawRect(-outerSize / 2, -outerSize / 2, outerSize, outerSize);
+        this.selectionRing.endFill();
+        
+        // Draw selection border (bright)
+        this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
+        this.selectionRing.drawRect(-size / 2 - ringWidth, -size / 2 - ringWidth, size + ringWidth * 2, size + ringWidth * 2);
+      } else {
+        // Draw circular selection for regular players
+        // Draw outer glow with team color (subtle)
+        this.selectionRing.beginFill(colors.fill, 0.15);
+        this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth * 2);
+        this.selectionRing.endFill();
+        
+        // Draw selection ring (bright)
+        this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
+        this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth);
+      }
     }
   }
 

@@ -121,6 +121,13 @@ export class FieldLayer extends Container {
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const fieldHeightPixels = this.config.height * pixelsPerYard;
     
+    // Guard: Ensure fieldGraphics exists (might have been destroyed)
+    if (!this.fieldGraphics) {
+      console.warn('⚠️ FieldLayer: fieldGraphics was null, recreating...');
+      this.fieldGraphics = new Graphics();
+      this.addChildAt(this.fieldGraphics, 0); // Add at index 0 to keep it as background
+    }
+    
     // Clear previous graphics
     this.fieldGraphics.clear();
     

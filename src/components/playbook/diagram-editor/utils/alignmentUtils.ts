@@ -161,3 +161,49 @@ export function detectEqualSpacingVertical(
 
   return allEqual ? avgSpacing : null;
 }
+
+/**
+ * Space players uniformly with a specific distance horizontally
+ * Maintains the leftmost player position, spaces others to the right
+ */
+export function spacePlayersUniformHorizontal(
+  players: Player[],
+  spacing: number = 1.5 // Default 1.5 yards
+): Player[] {
+  if (players.length < 2) return players;
+
+  // Sort by X position
+  const sorted = [...players].sort((a, b) => a.x - b.x);
+  
+  // Start from leftmost player
+  const startX = sorted[0].x;
+
+  // Apply uniform spacing
+  return sorted.map((p, index) => ({
+    ...p,
+    x: startX + (spacing * index),
+  }));
+}
+
+/**
+ * Space players uniformly with a specific distance vertically
+ * Maintains the topmost player position, spaces others downward
+ */
+export function spacePlayersUniformVertical(
+  players: Player[],
+  spacing: number = 1.5 // Default 1.5 yards
+): Player[] {
+  if (players.length < 2) return players;
+
+  // Sort by Y position
+  const sorted = [...players].sort((a, b) => a.y - b.y);
+  
+  // Start from topmost player
+  const startY = sorted[0].y;
+
+  // Apply uniform spacing
+  return sorted.map((p, index) => ({
+    ...p,
+    y: startY + (spacing * index),
+  }));
+}

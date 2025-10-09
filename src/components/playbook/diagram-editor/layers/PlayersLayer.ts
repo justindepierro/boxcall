@@ -15,6 +15,7 @@ import type { CoordinateSystem } from '../core/CoordinateSystem';
 import { validatePlayerId, validatePlayerPosition } from '../utils/validation';
 import { findAlignmentGuides } from '../utils/alignmentGuides';
 import { applySnapToFeatures } from '../utils/snapToFeatures';
+import { applySmartSnap } from '../utils/smartSnap';
 import type { AlignmentGuidesLayer } from './AlignmentGuidesLayer';
 
 export interface PlayersLayerEvents {
@@ -47,6 +48,9 @@ export class PlayersLayer extends Container {
 
   // Bounds feedback: track when player hits boundary
   private boundsHitTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  // Track last dropped player position for smart placement
+  private lastDroppedPosition: { x: number; y: number } | null = null;
 
   constructor(coords: CoordinateSystem, events: PlayersLayerEvents = {}) {
     super();
@@ -246,17 +250,23 @@ export class PlayersLayer extends Container {
       
       const playerId = sprite.getId();
       const isShiftHeld = event.shiftKey;
+      const isAlreadySelected = this.selectedPlayerIds.has(playerId);
       
       // Multi-select with Shift, or toggle selection if already selected
       if (isShiftHeld) {
-        if (this.selectedPlayerIds.has(playerId)) {
+        if (isAlreadySelected) {
           this.deselectPlayer(playerId);
         } else {
           this.selectPlayer(playerId, true); // Add to selection
         }
       } else {
-        // Single select
-        this.selectPlayer(playerId, false);
+        // If clicking on a player that's already part of a multi-selection,
+        // keep the group selected to enable group dragging
+        if (!isAlreadySelected || this.selectedPlayerIds.size === 1) {
+          // Clear selection and select only this player
+          this.selectPlayer(playerId, false);
+        }
+        // Otherwise, keep the existing selection (player is already selected)
       }
       
       // Start drag for all selected players
@@ -423,7 +433,32 @@ export class PlayersLayer extends Container {
     const deltaX = targetX - startPos.x;
     const deltaY = targetY - startPos.y;
 
-    // Move all selected players by the same delta
+    // Get current positions of all players being dragged
+    const draggedPlayers = this.dragState.playerIds
+      .map(id => {
+        const sprite = this.sprites.get(id);
+        const playerStartPos = this.dragState!.startPositions.get(id);
+        if (!sprite || !playerStartPos) return null;
+        
+        return {
+          ...sprite.getPlayer(),
+          x: playerStartPos.x + deltaX,
+          y: playerStartPos.y + deltaY,
+        };
+      })
+      .filter((p): p is Player => p !== null);
+
+    // Apply smart snap if dragging multiple players AND holding Shift key
+    // Shift+Drag = Auto-align formation with equal spacing
+    const smartSnapResult = (draggedPlayers.length >= 3 && event.shiftKey)
+      ? applySmartSnap(draggedPlayers, 1.0, 1.5)
+      : { snapped: false, adjustments: new Map(), snapType: 'none' as const };
+
+    if (smartSnapResult.snapped) {
+      console.log(`✨ Smart snap applied: ${smartSnapResult.snapType}`);
+    }
+
+    // Move all selected players by the same delta (with smart snap adjustments)
     let anyHitBounds = false;
     this.dragState.playerIds.forEach(playerId => {
       const sprite = this.sprites.get(playerId);
@@ -431,8 +466,15 @@ export class PlayersLayer extends Container {
       if (!sprite || !playerStartPos) return;
 
       // Calculate new position
-      const newX = playerStartPos.x + deltaX;
-      const newY = playerStartPos.y + deltaY;
+      let newX = playerStartPos.x + deltaX;
+      let newY = playerStartPos.y + deltaY;
+
+      // Apply smart snap adjustment if available
+      const snapAdjustment = smartSnapResult.adjustments.get(playerId);
+      if (snapAdjustment) {
+        newX = snapAdjustment.x;
+        newY = snapAdjustment.y;
+      }
 
       // Clamp to field bounds
       const clampedX = Math.max(0, Math.min(this.coords.fieldWidth, newX));
@@ -507,7 +549,24 @@ export class PlayersLayer extends Container {
       }
     });
 
+    // Store the last dropped position (use the first player's position)
+    if (this.dragState.playerIds.length > 0) {
+      const firstPlayerId = this.dragState.playerIds[0];
+      const firstSprite = this.sprites.get(firstPlayerId);
+      if (firstSprite) {
+        const player = firstSprite.getPlayer();
+        this.lastDroppedPosition = { x: player.x, y: player.y };
+      }
+    }
+
     this.dragState = null;
+  }
+
+  /**
+   * Get the last dropped player position (for smart placement)
+   */
+  getLastDroppedPosition(): { x: number; y: number } | null {
+    return this.lastDroppedPosition;
   }
 
   /**

@@ -3,6 +3,7 @@
  */
 
 export type TeamSide = 'offense' | 'defense';
+export type PlayerPosition = 'regular' | 'center';
 
 export interface Player {
   id: string;
@@ -12,6 +13,7 @@ export interface Player {
   team: TeamSide;
   color?: number;         // Custom color override (hex)
   role?: string;          // Position role (QB, WR, RB, etc.)
+  position?: PlayerPosition; // Shape type: 'regular' (circle) or 'center' (square/rectangle)
 }
 
 export interface PlayerColors {

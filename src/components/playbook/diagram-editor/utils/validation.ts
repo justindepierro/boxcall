@@ -179,7 +179,23 @@ export function validateCanvas(canvas: unknown): canvas is HTMLCanvasElement {
 
   const rect = canvas.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) {
-    throw new Error('Canvas must have non-zero dimensions');
+    // Provide more helpful error message
+    console.error('❌ Canvas validation failed:', {
+      width: rect.width,
+      height: rect.height,
+      parentElement: canvas.parentElement,
+      parentRect: canvas.parentElement?.getBoundingClientRect(),
+      canvasStyle: {
+        display: getComputedStyle(canvas).display,
+        width: getComputedStyle(canvas).width,
+        height: getComputedStyle(canvas).height,
+        position: getComputedStyle(canvas).position,
+      },
+    });
+    throw new Error(
+      `Canvas must have non-zero dimensions (got ${rect.width}x${rect.height}). ` +
+      'Ensure the canvas container is visible and has size before initializing Pixi.'
+    );
   }
 
   return true;

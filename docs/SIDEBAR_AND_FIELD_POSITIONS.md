@@ -11,6 +11,7 @@ Restructured the diagram editor layout to use a left sidebar for controls instea
 ## Layout Changes
 
 ### Before (Bottom Action Bar)
+
 ```
 ┌─────────────────────────────────────┐
 │          Header                     │
@@ -26,6 +27,7 @@ Restructured the diagram editor layout to use a left sidebar for controls instea
 ```
 
 ### After (Left Sidebar)
+
 ```
 ┌─────────────────────────────────────┐
 │          Header                     │
@@ -42,12 +44,14 @@ Restructured the diagram editor layout to use a left sidebar for controls instea
 ## Benefits
 
 ### Better Use of Space
+
 - **Sidebar width**: 256px (w-64) - fixed width
 - **Canvas area**: Expands to fill remaining space
 - **No overlap**: Controls don't obstruct field view
 - **Scrollable**: Sidebar can scroll for additional controls
 
 ### Coach-Friendly Workflow
+
 - Controls always visible on left
 - Natural reading/editing flow (left to right)
 - Room for more control sections
@@ -58,23 +62,27 @@ Restructured the diagram editor layout to use a left sidebar for controls instea
 Added 4 preset scenarios to help coaches quickly set up plays:
 
 ### 1. 🏟️ Midfield (Default)
+
 - **Line of Scrimmage**: 25 yards (50-yard line / center)
 - **Use Case**: Normal plays, neutral field position
 - **Visible Area**: Full 35-yard section centered on midfield
 
 ### 2. 🔙 Backed Up
+
 - **Line of Scrimmage**: 5 yards (10-yard line)
 - **Use Case**: Backed up against own end zone, limited space
 - **Visible Area**: Shows endzone and 10-20 yard area
 - **Notes**: Good for goal-line stand defense, punt situations
 
 ### 3. 🎯 Red Zone
+
 - **Line of Scrimmage**: 30 yards (10-yard line from opponent's endzone)
 - **Use Case**: Scoring position, red zone plays
 - **Visible Area**: Shows opponent's endzone and scoring area
 - **Notes**: Perfect for touchdown plays, 2-point conversions
 
 ### 4. ✏️ Free Draw
+
 - **Line of Scrimmage**: Hidden (no amber line)
 - **Use Case**: Generic play design, no specific field position
 - **Visible Area**: Full field with all markings
@@ -85,16 +93,18 @@ Added 4 preset scenarios to help coaches quickly set up plays:
 ### DiagramEditor.tsx Changes
 
 **Added State:**
+
 ```typescript
 export type FieldPosition = "midfield" | "backed-up" | "red-zone" | "free-draw";
 const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
 ```
 
 **Field Position Handler:**
+
 ```typescript
 const handleFieldPositionChange = (position: FieldPosition) => {
   setFieldPosition(position);
-  
+
   if (app) {
     const fieldLayer = app.getFieldLayer();
     if (fieldLayer) {
@@ -118,6 +128,7 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ```
 
 **Layout Structure:**
+
 ```tsx
 <div className="flex-1 flex overflow-hidden">
   {/* Left Sidebar */}
@@ -135,11 +146,13 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ### PlayerControls.tsx Changes
 
 **Removed:**
+
 - Absolute positioning (`absolute bottom-4 left-4`)
 - Floating card styles
 - Compact horizontal layout
 
 **Added:**
+
 - Full-height layout (`flex flex-col h-full`)
 - Sectioned organization (Header, Controls, Help)
 - Better visual hierarchy
@@ -148,12 +161,15 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 - Multi-select status display
 
 **New Structure:**
+
 ```tsx
 <div className="flex flex-col h-full">
   {/* Header */}
   <div className="p-4 border-b">
     <h2>Players</h2>
-    <p>{count} total • {selected} selected</p>
+    <p>
+      {count} total • {selected} selected
+    </p>
   </div>
 
   {/* Controls (scrollable) */}
@@ -174,6 +190,7 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ## User Experience Improvements
 
 ### Header Controls
+
 - **Field Position Dropdown**: Easy switching between scenarios
 - **Color Mode Toggle**: Still available, right-aligned
 - **Close Button**: Consistent position
@@ -181,26 +198,31 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ### Sidebar Sections
 
 #### 1. Header
+
 - Shows total player count
 - Shows selected player count
 - Visual hierarchy with larger text
 
 #### 2. Add Players
+
 - Full-width buttons (easier to click)
 - Color-coded (blue = offense, red = defense)
 - Clear labels with "+" prefix
 
 #### 3. Edit Section
+
 - Remove selected (disabled when nothing selected)
 - Clear all (disabled when no players)
 - Tooltips hint at keyboard shortcuts
 
 #### 4. Selection Info (when player selected)
+
 - Jersey number display
 - Team affiliation
 - Hint about Shift+click multi-select
 
 #### 5. Quick Tips Footer
+
 - Always visible at bottom
 - Keyboard shortcuts
 - Interaction hints
@@ -209,6 +231,7 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ## CSS/Tailwind Classes Used
 
 ### Sidebar Container
+
 - `w-64`: Fixed 256px width
 - `bg-surface-card`: Card background token
 - `border-r border-border`: Right border separator
@@ -216,12 +239,14 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 - `overflow-y-auto`: Scroll if content exceeds height
 
 ### Section Styling
+
 - `p-4`: Consistent padding (16px)
 - `border-t` / `border-b`: Section dividers
 - `space-y-2` / `space-y-4`: Vertical spacing
 - `overflow-y-auto`: Scrollable content area
 
 ### Button Styling
+
 - `w-full`: Full width of sidebar
 - `px-4 py-2`: Comfortable click targets
 - `rounded-lg`: Rounded corners
@@ -231,11 +256,13 @@ const handleFieldPositionChange = (position: FieldPosition) => {
 ## Responsive Considerations
 
 ### Current Implementation
+
 - **Desktop**: Sidebar + Canvas layout works perfectly
 - **Tablet**: May need adjustment (sidebar could be narrower)
 - **Mobile**: Will need drawer/overlay approach
 
 ### Future Enhancements (Not Implemented)
+
 ```typescript
 // Mobile breakpoint handling
 const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -248,6 +275,7 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 ## Zoom Removal Rationale
 
 ### Why No Zoom/Pan?
+
 1. **Rendering Complexity**: Camera transforms complicate coordinate systems
 2. **Field Position Presets**: Provide better UX than manual zooming
 3. **Consistent Coordinate System**: Simpler mental model for coaches
@@ -255,7 +283,9 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 5. **Print/Export**: Fixed scale ensures consistent output
 
 ### Alternative Approach
+
 Instead of zoom/pan, we use **field position presets**:
+
 - Coaches think in scenarios (midfield, red zone), not zoom levels
 - Presets are faster than manual adjustment
 - Each preset optimizes for specific use case
@@ -279,10 +309,12 @@ Instead of zoom/pan, we use **field position presets**:
 ## Related Files
 
 ### Modified
+
 - `DiagramEditor.tsx` - Layout structure, field position state
 - `PlayerControls.tsx` - Sidebar styling, sectioned layout
 
 ### Types/Interfaces
+
 ```typescript
 // DiagramEditor.tsx
 export type FieldPosition = "midfield" | "backed-up" | "red-zone" | "free-draw";
@@ -295,18 +327,21 @@ export interface DiagramEditorProps {
 ## Next Steps
 
 ### Priority 1: Smart Alignment Guides
+
 - Pink/magenta guides like Google Slides
 - Vertical/horizontal alignment detection
 - Equal spacing detection (3+ players)
 - Snap-to-guide visual feedback
 
 ### Priority 2: Snap-to Features
+
 - Alt key to enable snapping
 - Snap to other players
 - Snap to yard lines
 - Snap to hash marks
 
 ### Priority 3: Keyboard Controls
+
 - Arrow keys to nudge (0.5 yard)
 - Shift+arrows for larger moves (1 yard)
 - Delete/Backspace to remove selected
@@ -315,9 +350,11 @@ export interface DiagramEditorProps {
 ## Screenshots
 
 ### Before
+
 ![Bottom action bar overlapping field view]
 
 ### After
+
 ![Clean sidebar layout with organized controls]
 
 ## Conclusion

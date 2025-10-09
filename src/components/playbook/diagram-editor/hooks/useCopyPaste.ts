@@ -136,8 +136,17 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           // Clear current selection
           playersLayer.clearSelection();
 
-          // Duplicate with 1 yard offset down and right
-          const offset = 1.0;
+          // Try to get last dropped position for smart placement
+          const lastPos = playersLayer.getLastDroppedPosition();
+          let offset = 1.0; // Default 1 yard offset
+          
+          // If we have a last position, place 2 yards to the right
+          if (lastPos && selectedPlayers.length > 0) {
+            // Calculate offset to place next to last dropped position
+            const firstPlayer = selectedPlayers[0];
+            offset = lastPos.x - firstPlayer.x + 2.0; // 2 yards to the right of last position
+          }
+          
           const newPlayerIds: string[] = [];
           
           selectedPlayers.forEach((player, index) => {
@@ -146,7 +155,7 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
               team: player.team,
               jerseyNumber: player.jerseyNumber,
               x: Math.min(app.coordinates.fieldWidth, player.x + offset),
-              y: Math.min(app.coordinates.fieldHeight, player.y + offset),
+              y: player.y, // Keep same Y position
             };
 
             playersLayer.addPlayer(newPlayer);

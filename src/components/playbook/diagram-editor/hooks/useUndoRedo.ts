@@ -39,7 +39,6 @@ class MoveCommand implements Command {
   
   constructor(
     private playersLayer: any,
-    private _playerIds: string[],
     private oldPositions: Map<string, { x: number; y: number }>,
     private newPositions: Map<string, { x: number; y: number }>
   ) {}
@@ -47,14 +46,14 @@ class MoveCommand implements Command {
   execute(): void {
     // Apply new positions
     this.newPositions.forEach((pos, playerId) => {
-      this.playersLayer.updatePlayerPosition(playerId, pos);
+      this.playersLayer.updatePlayer(playerId, pos);
     });
   }
 
   undo(): void {
     // Restore old positions
     this.oldPositions.forEach((pos, playerId) => {
-      this.playersLayer.updatePlayerPosition(playerId, pos);
+      this.playersLayer.updatePlayer(playerId, pos);
     });
   }
 }
@@ -62,6 +61,7 @@ class MoveCommand implements Command {
 /**
  * Add command - tracks player additions (for future use)
  */
+// @ts-expect-error - Reserved for future undo/redo functionality
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AddCommand implements Command {
   type: 'add' = 'add';
@@ -89,6 +89,7 @@ class AddCommand implements Command {
 /**
  * Delete command - tracks player deletions (for future use)
  */
+// @ts-expect-error - Reserved for future undo/redo functionality
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class DeleteCommand implements Command {
   type: 'delete' = 'delete';
@@ -261,7 +262,6 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
       if (positionsChanged && dragStartPositionsRef.current.size > 0) {
         const moveCommand = new MoveCommand(
           playersLayer,
-          selectedIds,
           dragStartPositionsRef.current,
           endPositions
         );
@@ -306,7 +306,16 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
 
     // HACK: Monitor mouse events on canvas to detect drags
     // This is a workaround until PlayersLayer exposes drag events
-    const canvas = app.app.view as HTMLCanvasElement;
+    const canvas = app.app?.view as HTMLCanvasElement | undefined;
+    
+    // Guard: canvas must exist
+    if (!canvas) {
+      // This is expected during initialization - just return early
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+    
     let isDragging = false;
 
     const handleMouseDown = (): void => {

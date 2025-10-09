@@ -11,6 +11,7 @@ Implemented comprehensive multi-select functionality for the Pixi.js diagram edi
 ## Architecture Changes
 
 ### Previous (Single Select)
+
 ```typescript
 private selectedPlayerId: string | null = null;
 private dragState: {
@@ -21,6 +22,7 @@ private dragState: {
 ```
 
 ### New (Multi-Select)
+
 ```typescript
 private selectedPlayerIds: Set<string> = new Set();
 private dragState: {
@@ -34,11 +36,13 @@ private dragState: {
 ### 1. Selection Management
 
 **Multiple Selection Methods:**
+
 - **Single Click**: Selects one player, clears others
 - **Shift+Click**: Toggles player in/out of selection
 - **Programmatic**: `selectPlayer(id, addToSelection)` method
 
 **API Methods:**
+
 ```typescript
 // Add to selection
 selectPlayer(playerId: string, addToSelection: boolean = false): void
@@ -86,7 +90,7 @@ const deltaX = mousePos.x - draggedPlayerStartPos.x;
 const deltaY = mousePos.y - draggedPlayerStartPos.y;
 
 // Apply to all selected players
-players.forEach(player => {
+players.forEach((player) => {
   const newX = player.startPos.x + deltaX;
   const newY = player.startPos.y + deltaY;
   // Update with clamping
@@ -98,6 +102,7 @@ This ensures the "formation" of players stays intact during movement.
 ### 4. Boundary Handling
 
 Each player is clamped individually to field bounds:
+
 - **Benefit**: Group doesn't "break apart" at field edges
 - **Behavior**: Players hitting boundary stop moving in that direction
 - **Feedback**: Visual feedback (alpha flash) when any player hits bounds
@@ -105,12 +110,14 @@ Each player is clamped individually to field bounds:
 ## User Interaction
 
 ### Selection
+
 1. **Click any player** → Selects single player (yellow highlight)
 2. **Shift+Click another** → Adds to selection (both highlighted)
 3. **Shift+Click selected player** → Removes from selection
 4. **Click empty space or different player** → Clears selection, selects new
 
 ### Dragging
+
 1. **Drag any selected player** → All selected players move together
 2. **Drag unselected player** → Moves only that player
 3. **Players maintain relative positions** → Formation stays intact
@@ -121,6 +128,7 @@ Each player is clamped individually to field bounds:
 ### Files Modified
 
 #### `layers/PlayersLayer.ts`
+
 - **Lines 23-30**: Changed selection/drag state properties
 - **Lines 77-100**: Updated `removePlayer()` to check Set
 - **Lines 138-193**: Rewrote selection methods (5 new methods)
@@ -162,19 +170,23 @@ Each player is clamped individually to field bounds:
 ## Technical Notes
 
 ### Why Set Instead of Array?
+
 - O(1) membership checking (`has()` vs `includes()`)
 - Automatic uniqueness (no duplicate IDs)
 - Simple add/remove operations
 - Efficient iteration with `forEach()`
 
 ### Why Map for Start Positions?
+
 - O(1) position lookup by player ID
 - Preserves insertion order (not critical here)
 - Clear key-value semantics
 - Type-safe with generics
 
 ### Delta Calculation Strategy
+
 The system uses "relative movement" rather than "absolute positioning":
+
 - Calculates how far the dragged player moved from its start
 - Applies that SAME movement to all other selected players
 - Preserves spatial relationships (formation)
@@ -183,6 +195,7 @@ The system uses "relative movement" rather than "absolute positioning":
 ## Examples
 
 ### Selecting Multiple Players
+
 ```typescript
 // User workflow:
 // 1. Click QB → selectedPlayerIds = Set { 'qb-1' }
@@ -192,6 +205,7 @@ The system uses "relative movement" rather than "absolute positioning":
 ```
 
 ### Group Drag Example
+
 ```typescript
 // Initial positions:
 // QB: (25, 17.5)
@@ -219,6 +233,7 @@ The system uses "relative movement" rather than "absolute positioning":
 If you have custom code that references the old single-select API:
 
 ### Before
+
 ```typescript
 const selectedId = playersLayer.getSelectedPlayerId();
 if (selectedId) {
@@ -227,11 +242,12 @@ if (selectedId) {
 ```
 
 ### After
+
 ```typescript
 const selectedIds = playersLayer.getSelectedPlayerIds();
 if (selectedIds.length > 0) {
   // Work with array of players
-  selectedIds.forEach(id => {
+  selectedIds.forEach((id) => {
     // Process each selected player
   });
 }

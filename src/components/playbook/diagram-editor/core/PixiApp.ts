@@ -10,6 +10,7 @@ import { Camera, type CameraConfig } from './Camera';
 import { CoordinateSystem, type FieldDimensions } from './CoordinateSystem';
 import type { FieldLayer } from '../layers/FieldLayer';
 import type { PlayersLayer } from '../layers/PlayersLayer';
+import type { SpacingIndicatorLayer } from '../layers/SpacingIndicatorLayer';
 import { validateCanvas, validateDimension, validateFieldDimensions } from '../utils/validation';
 import { FPSMonitor } from '../utils/performance';
 
@@ -32,6 +33,7 @@ export class DiagramPixiApp {
   // Layer references (actual layer instances, not empty containers)
   public fieldLayer: FieldLayer | null = null;
   public playersLayer: PlayersLayer | null = null;
+  public spacingIndicatorLayer: SpacingIndicatorLayer | null = null;
   // Future layers can be added as needed
   
   private isDestroyed: boolean = false;
@@ -71,7 +73,7 @@ export class DiagramPixiApp {
     
     // Create main stage container (this gets transformed by Camera)
     this.stage = new Container();
-    this.stage.interactive = true; // v7 uses 'interactive' instead of 'eventMode'
+    this.stage.eventMode = 'static'; // v7.2+ uses eventMode instead of interactive
     
     // Create camera controller with optional config
     this.camera = new Camera(this.stage, config.fieldDimensions, config.cameraConfig);
@@ -180,6 +182,9 @@ export class DiagramPixiApp {
     }
     if (this.playersLayer) {
       this.playersLayer.destroy();
+    }
+    if (this.spacingIndicatorLayer) {
+      this.spacingIndicatorLayer.destroy();
     }
     // Future layers will be destroyed here as they're added
     

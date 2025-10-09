@@ -28,12 +28,24 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   onReady,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Don't use state - let usePixiApp check canvas status directly
   const { app, isReady, debugCoordinates } = usePixiApp(canvasRef, {
     fieldWidth,
     fieldHeight,
     pixelsPerYard,
     backgroundColor,
+    // Always enabled - usePixiApp will check canvas status internally
   });
+
+  // Log state changes for debugging
+  useEffect(() => {
+    console.log("📊 DiagramCanvas state:", {
+      hasCanvas: !!canvasRef.current,
+      isReady,
+    });
+  }, [isReady]);
 
   // Enable gesture handling
   useGestures({
@@ -62,16 +74,13 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   }, [isReady, debugCoordinates, app]);
 
   return (
-    <div className={`relative w-full h-full ${className}`}>
+    <div ref={containerRef} className={`relative w-full h-full ${className}`}>
       <canvas
         ref={canvasRef}
         className="w-full h-full"
         style={{
           display: "block",
           touchAction: "none", // Prevent browser gestures
-          position: "absolute",
-          top: 0,
-          left: 0,
           width: "100%",
           height: "100%",
         }}

@@ -48,6 +48,13 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
     // Guard: playersLayer must exist
     if (!playersLayer) return;
     
+    // Guard: stage must exist
+    if (!app.app.stage) {
+      // This can happen during initialization - not an error
+      console.log('⏸️  useDragBoxSelection: Waiting for stage...');
+      return;
+    }
+    
     // Create selection box graphics
     const selectionBox = new Graphics();
     selectionBox.zIndex = 1000; // Above everything
@@ -99,13 +106,11 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
         startY: pos.y,
         currentX: pos.x,
         currentY: pos.y,
-        additive: event.shiftKey, // Shift = add to selection
+        additive: event.shiftKey, // Shift = add to selection (but not required)
       };
 
-      // Clear selection if not additive
-      if (!event.shiftKey) {
-        playersLayer.clearSelection();
-      }
+      // Always clear selection when starting box drag (box drag = new selection)
+      playersLayer.clearSelection();
     };
 
     /**
@@ -169,7 +174,7 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
      * Select all players whose centers are within the drag box
      */
     const selectPlayersInBox = (): void => {
-      const { startX, startY, currentX, currentY, additive } = dragBoxRef.current;
+      const { startX, startY, currentX, currentY } = dragBoxRef.current;
       
       const minX = Math.min(startX, currentX);
       const maxX = Math.max(startX, currentX);
@@ -192,16 +197,11 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
 
       // Select players
       if (selectedIds.length > 0) {
-        if (additive) {
-          // Add to existing selection
-          selectedIds.forEach(id => playersLayer.selectPlayer(id, true));
-        } else {
-          // Replace selection - clear first, then select each
-          playersLayer.clearSelection();
-          selectedIds.forEach(id => playersLayer.selectPlayer(id, false));
-        }
+        // Box selection always selects all players in the box
+        // (selection was already cleared in mousedown)
+        selectedIds.forEach(id => playersLayer.selectPlayer(id, true));
         
-        console.log(`📦 Box selected ${selectedIds.length} players${additive ? ' (added to selection)' : ''}`);
+        console.log(`📦 Box selected ${selectedIds.length} players`);
       }
     };
 
