@@ -23,8 +23,8 @@ export class PlayerSprite extends Container {
   private _isSelected: boolean = false;
   private _isDragging: boolean = false;
 
-  // Visual constants - reduced by 40% for better field proportions
-  private readonly RADIUS_YARDS = 0.6;   // Player circle radius in yards (was 1.0)
+  // Visual constants - Optimized for mobile touch targets (44px+ recommended)
+  private readonly RADIUS_YARDS = 1.0;   // Player circle radius in yards (40px with 20 px/yard)
   private readonly STROKE_WIDTH = 0.09;  // Border width in yards (was 0.15)
   private readonly SELECTION_RING_WIDTH = 0.12; // Selection ring width in yards (was 0.2)
   private readonly DRAG_SCALE = 1.05;    // NEW: Subtle scale during drag

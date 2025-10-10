@@ -1422,7 +1422,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <span className="text-xs text-content-secondary">
                       Type:
                     </span>
-                    <span className="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-bold text-xs">
+                    <span className="px-4 py-3 rounded bg-blue-600/20 text-blue-400 font-bold text-xs">
                       {formationAnalysis.type.toUpperCase()}
                     </span>
                   </div>
@@ -1509,7 +1509,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 {formationAnalysis &&
                   players.filter((p) => p.team === "defense").length > 0 && (
                     <div className="mt-3 flex items-center justify-between p-2 rounded-lg bg-surface-secondary/30 border border-border/30">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <span className="text-xs font-medium text-content-primary">
                           Auto-Adjust on Formation Change
                         </span>
@@ -1545,7 +1545,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 {/* Formation Change Prompt */}
                 {showFormationChangePrompt && formationAnalysis && (
                   <div className="mt-3 p-3 rounded-lg bg-warning-600/10 border border-warning-600/30">
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-3">
                       <span className="text-lg">⚠️</span>
                       <div className="flex-1">
                         <p className="text-xs font-medium text-warning-400 mb-1">
@@ -1554,19 +1554,19 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                         <p className="text-xs text-content-secondary mb-2">
                           Adjust defensive coverage?
                         </p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-3">
                           <button
                             onClick={() => {
                               handleAutoAdjustCoverage();
                               setShowFormationChangePrompt(false);
                             }}
-                            className="flex-1 px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
+                            className="flex-1 px-4 py-3 text-xs font-medium bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
                           >
                             Yes, Adjust
                           </button>
                           <button
                             onClick={() => setShowFormationChangePrompt(false)}
-                            className="flex-1 px-3 py-1.5 text-xs font-medium bg-surface-secondary text-content-primary rounded hover:bg-surface-tertiary transition-colors"
+                            className="flex-1 px-4 py-3 text-xs font-medium bg-surface-secondary text-content-primary rounded hover:bg-surface-tertiary transition-colors"
                           >
                             No, Keep As-Is
                           </button>
@@ -1582,7 +1582,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <button
                       onClick={handleAutoAdjustCoverage}
                       disabled={isAdjusting}
-                      className={`w-full mt-3 px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 ${
+                      className={`w-full mt-3 px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-3 ${
                         isAdjusting
                           ? "bg-primary-600/50 text-white cursor-wait"
                           : "bg-primary-600 text-white hover:bg-primary-700 active:scale-[0.98]"
@@ -1614,48 +1614,48 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           </h3>
           <div className="space-y-2">
             {/* Horizontal alignment */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => handleAlign("left")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Align Left"
               >
                 ⫣ Left
               </button>
               <button
                 onClick={() => handleAlign("center")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Center Horizontal"
               >
                 ⫯ Center
               </button>
               <button
                 onClick={() => handleAlign("right")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Align Right"
               >
                 ⫤ Right
               </button>
             </div>
             {/* Vertical alignment */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => handleAlign("top")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Align Top"
               >
                 ⫪ Top
               </button>
               <button
                 onClick={() => handleAlign("middle")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Center Vertical"
               >
                 ⊟ Middle
               </button>
               <button
                 onClick={() => handleAlign("bottom")}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="Align Bottom"
               >
                 ⫫ Bottom
@@ -1669,7 +1669,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           <h3 className="text-sm font-semibold text-content-primary mb-2">
             Distribute (3+ selected)
           </h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => handleDistribute("horizontal")}
               className="px-3 py-2 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
@@ -1701,24 +1701,24 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
             <p className="text-xs font-medium text-content-secondary mb-1">
               Horizontal:
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => handleUniformSpacing("horizontal", 1)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="1 yard spacing horizontally"
               >
                 1 yd
               </button>
               <button
                 onClick={() => handleUniformSpacing("horizontal", 1.5)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="1.5 yard spacing horizontally"
               >
                 1.5 yd
               </button>
               <button
                 onClick={() => handleUniformSpacing("horizontal", 2)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="2 yard spacing horizontally"
               >
                 2 yd
@@ -1731,24 +1731,24 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
             <p className="text-xs font-medium text-content-secondary mb-1">
               Vertical:
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => handleUniformSpacing("vertical", 1)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="1 yard spacing vertically"
               >
                 1 yd
               </button>
               <button
                 onClick={() => handleUniformSpacing("vertical", 1.5)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="1.5 yard spacing vertically"
               >
                 1.5 yd
               </button>
               <button
                 onClick={() => handleUniformSpacing("vertical", 2)}
-                className="px-2 py-1.5 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
+                className="px-4 py-3 text-xs bg-surface-secondary hover:bg-surface-tertiary rounded border border-border transition-colors"
                 title="2 yard spacing vertically"
               >
                 2 yd
