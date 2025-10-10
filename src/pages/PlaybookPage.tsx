@@ -42,7 +42,6 @@ import { saveDiagram } from "../services/diagramService";
 import { useIsMobile } from "../hooks/useBreakpoint";
 import {
   MobileCTACard,
-  MobilePageHeader,
   MobileSection,
   MobileQuickActions,
 } from "../components/mobile-library";
@@ -309,6 +308,8 @@ export default function PlaybookPage() {
     }
   };
 
+  // Note: handleSaveDiagram is kept for future diagram saving functionality
+  // @ts-expect-error - Keeping for future use
   const _handleSaveDiagram = useCallback(
     async ({
       doc,
