@@ -32,11 +32,10 @@ jobs:
         run: npm run lint
         continue-on-error: false
 
-      - name: Run Tests
-        run: npm run test
-        continue-on-error: true # Temporarily non-blocking due to storybook test memory issues
+      - name: Run Unit Tests
+        run: npm run test:ci
         env:
-          NODE_OPTIONS: --max-old-space-size=4096
+          NODE_OPTIONS: --max-old-space-size=2048
 
       - name: Build
         run: npm run build
