@@ -36,16 +36,16 @@ export const NFL_FIELD = {
  */
 export const PLAYER_SIZING = {
   /** Standard player circle radius in yards */
-  RADIUS_YARDS: 1.0,
+  RADIUS_YARDS: 0.6,
   
   /** Player circle border thickness in yards */
-  STROKE_YARDS: 0.09,
+  STROKE_YARDS: 0.06,
   
   /** Selection highlight ring width in yards */
-  SELECTION_RING_YARDS: 0.12,
+  SELECTION_RING_YARDS: 0.08,
   
   /** Drop shadow offset during drag in yards */
-  SHADOW_OFFSET_YARDS: 0.15,
+  SHADOW_OFFSET_YARDS: 0.12,
   
   /** Drag scale multiplier (dimensionless) */
   DRAG_SCALE: 1.05,
