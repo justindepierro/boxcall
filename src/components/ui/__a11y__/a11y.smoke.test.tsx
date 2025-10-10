@@ -1,7 +1,7 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-
-import { Button } from "../Button";
+import React from "react";
+import { Button } from "../Button/Button";
 
 describe("a11y smoke", () => {
   it("Button renders with accessible role", () => {

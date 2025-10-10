@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import React from "react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { requireCoachOrAdminLoader } from "../loaderAuth";

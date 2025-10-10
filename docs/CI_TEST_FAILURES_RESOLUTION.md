@@ -2,11 +2,14 @@
 
 ## Current Status
 
-✅ **IMMEDIATE FIX DEPLOYED**: Tests are now non-blocking in all CI workflows
+✅ **PHASE 2 COMPLETE**: Test suites split, CI optimized, memory issues resolved
 
-- Quality Gates workflow will now pass
-- CI workflow will now pass
-- PR Gate workflow will now pass
+- Unit tests run fast in CI (~110s vs 250s+)
+- No more heap memory exhaustion
+- Tests are enforceable (blocking on failure)
+- Pre-push hooks work reliably
+
+**See**: `docs/TEST_SUITE_MEMORY_FIX_COMPLETE.md` for full implementation details
 
 ## Root Cause Analysis
 
@@ -182,13 +185,17 @@ afterEach(() => {
 - [x] Deploy to unblock CI
 - [x] Document root cause
 
-### Phase 2: Short Term (1-2 hours)
+### Phase 2: Short Term (1-2 hours) ✅ COMPLETE
 
-- [ ] Split test scripts in package.json
-- [ ] Update workflows to use `test:ci` (unit tests only)
-- [ ] Add separate optional Storybook test job
-- [ ] Test locally
-- [ ] Deploy and verify
+- [x] Split test scripts in package.json
+- [x] Update workflows to use `test:ci` (unit tests only)
+- [x] Add separate optional Storybook test job
+- [x] Test locally
+- [x] Deploy and verify
+
+**Completed**: October 10, 2025  
+**Commit**: bd43a9a  
+**Documentation**: `docs/TEST_SUITE_MEMORY_FIX_COMPLETE.md`
 
 ### Phase 3: Medium Term (1 week)
 

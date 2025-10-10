@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import Typography, { H1, H2, P, Label, Code } from "../Typography";
 

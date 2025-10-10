@@ -38,7 +38,7 @@
     "test": "vitest run",
     "test:unit": "vitest run --project=unit",
     "test:ci": "vitest run --project=unit",
-    "test:storybook": "vitest run --project=storybook",
+    "test:storybook:vitest": "vitest run --project=storybook",
     "test:watch": "vitest --watch --project=unit",
     "test:coverage": "vitest run --project=unit --coverage",
     "test:coverage:ui": "vitest run --project=unit --coverage --ui",
