@@ -60,6 +60,7 @@ export class PlayerSprite extends Container {
     this.coordsObserver = () => {
       this.updateGraphics();
       this.updateSelectionRing();
+      this.updateDropShadow(this._isDragging); // Update shadow if dragging
     };
     this.coords.addObserver(this.coordsObserver);
 
@@ -89,11 +90,13 @@ export class PlayerSprite extends Container {
 
     // Draw main shape (circle for offense, triangle for defense, square for center)
     this.circle.clear();
-    this.circle.lineStyle(strokePixels, colors.stroke);
-    this.circle.beginFill(colors.fill);
     
     const isCenter = this.player.position === 'center';
     const isDefense = this.player.team === 'defense';
+    
+    // Set line style and fill for all shapes
+    this.circle.lineStyle({ width: strokePixels, color: colors.stroke });
+    this.circle.beginFill(colors.fill);
     
     if (isCenter) {
       // Draw square/rectangle for center position
@@ -108,7 +111,7 @@ export class PlayerSprite extends Container {
       this.circle.moveTo(0, height / 2); // Bottom point
       this.circle.lineTo(-width / 2, -height / 2); // Top left
       this.circle.lineTo(width / 2, -height / 2); // Top right
-      this.circle.lineTo(0, height / 2); // Back to bottom point
+      this.circle.closePath(); // CRITICAL: Close the path before endFill
     } else {
       // Draw circle for offense
       this.circle.drawCircle(0, 0, radiusPixels);
