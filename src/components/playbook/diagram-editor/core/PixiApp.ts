@@ -188,7 +188,7 @@ export class DiagramPixiApp {
     
     // Destroy all layers if they exist
     if (this.fieldLayer) {
-      this.fieldLayer.destroy({ children: true });
+      this.fieldLayer.destroy();
     }
     if (this.playersLayer) {
       this.playersLayer.destroy();

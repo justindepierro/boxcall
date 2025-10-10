@@ -1,6 +1,7 @@
 # Resize Handling Fixes - Implementation Summary
 
 ## Date: October 10, 2025
+
 ## Status: ✅ Phase 1 Complete
 
 ---
@@ -10,12 +11,15 @@
 ### 🔴 Critical Issues Resolved
 
 #### 1. **Triple Resize Observation Eliminated**
-**Before**: 
+
+**Before**:
+
 - 3 ResizeObservers on same element
-- 2 window.resize listeners  
+- 2 window.resize listeners
 - Total: 5-9 handlers per resize event
 
 **After**:
+
 - 1 ResizeObserver on canvas
 - 0 window.resize listeners
 - Total: 1 handler per resize event
@@ -25,37 +29,44 @@
 ---
 
 #### 2. **Race Condition Fixed**
+
 **Before**:
+
 ```typescript
 // Effect 1: Update pixelsPerYard (debounced 100ms)
 useEffect(() => {
   app.coordinates.updatePixelsPerYard(ppy);
 }, [ppy]);
 
-// Effect 2: Resize renderer (immediate)  
+// Effect 2: Resize renderer (immediate)
 useEffect(() => {
   app.resize(width, height);
 }, [width, height]);
 ```
+
 ⚠️ **Problem**: Renderer resizes with OLD pixelsPerYard, then 100ms later updates
 
 **After**:
+
 ```typescript
 // Single atomic effect
 useEffect(() => {
   // 1. Update pixelsPerYard FIRST
   app.coordinates.updatePixelsPerYard(ppy);
-  
+
   // 2. THEN resize renderer
   app.resize(width, height);
 }, [ppy, width, height]);
 ```
+
 ✅ **Result**: Always renders at correct scale, no visible jump
 
 ---
 
 #### 3. **Camera View Preserved**
+
 **Before**:
+
 ```typescript
 setViewportSize(width, height) {
   this.viewportWidth = width;
@@ -63,26 +74,31 @@ setViewportSize(width, height) {
   this.centerOnField(); // ← ALWAYS re-centers!
 }
 ```
+
 👎 User zooms in → resizes window → camera snaps back to center
 
 **After**:
+
 ```typescript
 setViewportSizeOnly(width, height) {
   // Calculate what world point is currently centered
   const centerWorldX = (oldWidth / 2 - this.stage.x) / scale;
   const centerWorldY = (oldHeight / 2 - this.stage.y) / scale;
-  
+
   // Recalculate position to keep same world point centered
   this.stage.x = (width / 2) - (centerWorldX * scale);
   this.stage.y = (height / 2) - (centerWorldY * scale);
 }
 ```
+
 👍 User's focus point stays in view during resize
 
 ---
 
 #### 4. **Micro-Adjustment Throttling**
+
 **Added change threshold**:
+
 ```typescript
 // Don't update if change is insignificant
 if (
@@ -95,6 +111,7 @@ if (
 ```
 
 **Prevents**:
+
 - Unnecessary redraws on sub-pixel changes
 - CPU/GPU thrashing during window drag
 - Battery drain on mobile
@@ -102,9 +119,11 @@ if (
 ---
 
 #### 5. **Frame-Perfect Timing**
+
 **Before**: Immediate handler execution (could block main thread)
 
-**After**: 
+**After**:
+
 ```typescript
 rafRef.current = requestAnimationFrame(() => {
   // Update everything in next frame
@@ -112,6 +131,7 @@ rafRef.current = requestAnimationFrame(() => {
 ```
 
 **Benefits**:
+
 - Browser batches updates automatically
 - Guaranteed < 16ms (60fps budget)
 - Smooth window drag experience
@@ -121,28 +141,31 @@ rafRef.current = requestAnimationFrame(() => {
 ## Performance Comparison
 
 ### Before Fix:
-| Metric | Value |
-|--------|-------|
-| Resize handlers | 5-9 per event |
-| Layout shifts | 1-2 visible jumps |
-| Update timing | Async (race conditions) |
+
+| Metric            | Value                    |
+| ----------------- | ------------------------ |
+| Resize handlers   | 5-9 per event            |
+| Layout shifts     | 1-2 visible jumps        |
+| Update timing     | Async (race conditions)  |
 | Camera disruption | 100% (always re-centers) |
-| Frame budget | ~80-150ms ⚠️ |
+| Frame budget      | ~80-150ms ⚠️             |
 
 ### After Fix:
-| Metric | Value |
-|--------|-------|
-| Resize handlers | 1 per event ✅ |
-| Layout shifts | 0 ✅ |
-| Update timing | Atomic (ordered) ✅ |
+
+| Metric            | Value                  |
+| ----------------- | ---------------------- |
+| Resize handlers   | 1 per event ✅         |
+| Layout shifts     | 0 ✅                   |
+| Update timing     | Atomic (ordered) ✅    |
 | Camera disruption | 0% (preserves view) ✅ |
-| Frame budget | < 16ms ✅ |
+| Frame budget      | < 16ms ✅              |
 
 ---
 
 ## Testing Results
 
 ### ✅ Verified Working:
+
 - [x] Window resize (drag edge)
 - [x] Browser zoom (Cmd +/-)
 - [x] Sidebar toggle
@@ -151,6 +174,7 @@ rafRef.current = requestAnimationFrame(() => {
 - [x] Multiple rapid resizes
 
 ### 🎯 User Experience:
+
 - **No more camera "snap back" on resize**
 - **No more visible layout jumps**
 - **Smooth window drag (60fps)**
@@ -189,21 +213,23 @@ rafRef.current = requestAnimationFrame(() => {
 ### New Methods:
 
 #### Camera
+
 ```typescript
 // Preserve user view during resize
-camera.setViewportSizeOnly(width, height)
+camera.setViewportSizeOnly(width, height);
 
 // Explicit re-center (for reset button)
-camera.setViewportSize(width, height)
+camera.setViewportSize(width, height);
 ```
 
 #### PixiApp
+
 ```typescript
 // Normal resize (preserves view)
-app.resize(width, height)
+app.resize(width, height);
 
 // Force re-center (for reset)
-app.resizeAndCenter(width, height)
+app.resizeAndCenter(width, height);
 ```
 
 **Breaking Changes**: None (backward compatible)
@@ -213,6 +239,7 @@ app.resizeAndCenter(width, height)
 ## Future Improvements (Phase 2)
 
 ### Not Yet Implemented:
+
 1. ✨ Create dedicated `useResizeCoordinator` hook
 2. ✨ Remove `useResponsivePixelsPerYard` (consolidate logic)
 3. ✨ Add resize start/end detection
@@ -220,6 +247,7 @@ app.resizeAndCenter(width, height)
 5. ✨ Mobile orientation change handling
 
 **Rationale for deferring**:
+
 - Current fixes solve immediate crisis
 - Phase 2 is optimization, not critical
 - Can be done incrementally without risk
@@ -245,27 +273,28 @@ app.resizeAndCenter(width, height)
 ## Debugging Tips
 
 ### If players still disappear:
+
 ```typescript
 // Check coordinate system observer is firing
 app.coordinates.addObserver((coords) => {
-  console.log('📐 PPY updated:', coords.pixelsPerYard);
+  console.log("📐 PPY updated:", coords.pixelsPerYard);
 });
 ```
 
 ### If camera still jumps:
+
 ```typescript
 // Verify using correct method
-console.log('Camera method:', 
-  app.camera.setViewportSizeOnly ? 'NEW' : 'OLD'
-);
+console.log("Camera method:", app.camera.setViewportSizeOnly ? "NEW" : "OLD");
 ```
 
 ### If resize is slow:
+
 ```typescript
 // Check frame timing
 const start = performance.now();
 handleResize();
-console.log('Resize took:', performance.now() - start, 'ms');
+console.log("Resize took:", performance.now() - start, "ms");
 // Should be < 16ms
 ```
 
@@ -288,14 +317,17 @@ console.log('Resize took:', performance.now() - start, 'ms');
 ## Questions?
 
 **Why not debounce?**
+
 - requestAnimationFrame IS the debounce
 - Browser handles timing better than setTimeout
 
 **Why not throttle?**
+
 - Change threshold provides throttling
 - RAF provides frame-perfect timing
 
 **Why separate resize methods?**
+
 - Explicit intent: preserve vs. reset
 - Future: Could add "smart" mode that auto-detects
 
@@ -304,6 +336,7 @@ console.log('Resize took:', performance.now() - start, 'ms');
 ## Success Criteria
 
 All goals achieved:
+
 - ✅ No duplicate resize handlers
 - ✅ No race conditions
 - ✅ No camera disruption

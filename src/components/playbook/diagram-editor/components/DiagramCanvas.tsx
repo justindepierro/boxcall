@@ -5,16 +5,19 @@
  * using Pixi.js for hardware-accelerated WebGL rendering.
  */
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { usePixiApp } from "../hooks/usePixiApp";
 import { useGestures } from "../hooks/useGestures";
-import { useResponsivePixelsPerYard } from "../hooks/useResponsivePixelsPerYard";
 import { LoadingSpinner } from "./LoadingSpinner";
+import {
+  detectWebGLCapabilities,
+  checkMinimumRequirements,
+  getWebGLErrorMessage,
+} from "../utils/webgl-detection";
 
 export interface DiagramCanvasProps {
   fieldWidth?: number;
   fieldHeight?: number;
-  pixelsPerYard?: number; // Optional: manual override, otherwise calculated responsively
   backgroundColor?: number;
   className?: string;
   onReady?: (app: any) => void;
@@ -23,34 +26,35 @@ export interface DiagramCanvasProps {
 export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   fieldWidth = 53.333,
   fieldHeight = 35,
-  pixelsPerYard: manualPixelsPerYard, // Rename to indicate it's optional override
   backgroundColor = 0xf5f7ed,
   className = "",
   onReady,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [webglError, setWebglError] = useState<string | null>(null);
 
-  // Calculate responsive pixelsPerYard if not manually specified
-  const responsivePixelsPerYard = useResponsivePixelsPerYard({
-    containerRef,
+  // Check WebGL support on mount
+  useEffect(() => {
+    const capabilities = detectWebGLCapabilities();
+    const requirements = checkMinimumRequirements();
+
+    if (!capabilities.supported) {
+      setWebglError(getWebGLErrorMessage(capabilities));
+      console.error("❌ WebGL not supported:", capabilities);
+      return;
+    }
+
+    if (!requirements.meetsRequirements) {
+      console.warn("⚠️ System may not meet minimum requirements:", requirements.issues);
+    }
+  }, []);
+
+  // usePixiApp now handles ALL resize logic internally
+  const { app, isReady, debugCoordinates } = usePixiApp(canvasRef, containerRef, {
     fieldWidth,
     fieldHeight,
-    minPixelsPerYard: 10,  // Minimum for readability
-    maxPixelsPerYard: 25,  // Maximum for touch targets
-    padding: 20,           // Padding around field
-  });
-
-  // Use manual override if provided, otherwise use responsive calculation
-  const pixelsPerYard = manualPixelsPerYard ?? responsivePixelsPerYard;
-
-  // Don't use state - let usePixiApp check canvas status directly
-  const { app, isReady, debugCoordinates } = usePixiApp(canvasRef, {
-    fieldWidth,
-    fieldHeight,
-    pixelsPerYard,
     backgroundColor,
-    // Always enabled - usePixiApp will check canvas status internally
   });
 
   // Log state changes for debugging
@@ -86,6 +90,23 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
       }
     }
   }, [isReady, debugCoordinates, app]);
+
+  // Show WebGL error if detected
+  if (webglError) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-surface p-8">
+        <div className="max-w-md rounded-lg border border-border bg-surface-card p-6 text-center">
+          <div className="mb-4">
+            <span className="text-4xl">⚠️</span>
+          </div>
+          <h3 className="mb-2 text-lg font-semibold text-content-primary">
+            Graphics Not Supported
+          </h3>
+          <p className="text-sm text-content-secondary">{webglError}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className={`relative w-full h-full ${className}`}>

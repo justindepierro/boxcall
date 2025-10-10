@@ -66,8 +66,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   const [formationAnalysis, setFormationAnalysis] =
     React.useState<FormationAnalysis | null>(null);
 
-  // Coverage adjustment state
-  const [isAdjusting, setIsAdjusting] = React.useState(false);
   const toast = useToast();
 
   // Analyze formation whenever players or alignment changes
@@ -125,9 +123,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     const centerX = getCenterXForAlignment(selectedAlignment, fieldWidth);
     const losY = app.fieldLayer?.getLineOfScrimmage() || 25;
 
-    // Start adjusting
-    setIsAdjusting(true);
-
     try {
       // Call coverage adjustment engine
       const result = adjustCoverage({
@@ -164,8 +159,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         "Failed to adjust coverage",
         error instanceof Error ? error.message : "Check console for details"
       );
-    } finally {
-      setIsAdjusting(false);
     }
   }, [app, formationAnalysis, players, selectedAlignment, toast]);
 

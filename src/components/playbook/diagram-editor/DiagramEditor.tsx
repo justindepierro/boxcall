@@ -399,79 +399,90 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   );
 
   // Get selected player count for conditional toolbar
-  const selectedPlayerCount = app?.playersLayer?.getSelectedPlayerIds().length ?? 0;
+  const selectedPlayerCount =
+    app?.playersLayer?.getSelectedPlayerIds().length ?? 0;
 
   // Align selected players horizontally or vertically
-  const handleAlignPlayers = useCallback((direction: "horizontal" | "vertical") => {
-    if (!app?.playersLayer) return;
-    
-    const selectedIds = app.playersLayer.getSelectedPlayerIds();
-    if (selectedIds.length < 2) return;
+  const handleAlignPlayers = useCallback(
+    (direction: "horizontal" | "vertical") => {
+      if (!app?.playersLayer) return;
 
-    const selectedPlayers = selectedIds
-      .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
-      .filter((p): p is Player => p !== undefined);
+      const selectedIds = app.playersLayer.getSelectedPlayerIds();
+      if (selectedIds.length < 2) return;
 
-    if (direction === "horizontal") {
-      // Align to average Y position
-      const avgY = selectedPlayers.reduce((sum, p) => sum + p.y, 0) / selectedPlayers.length;
-      selectedIds.forEach((id) => {
-        const sprite = app.playersLayer!.getPlayer(id);
-        if (sprite) {
-          sprite.updatePlayer({ y: avgY });
-        }
-      });
-    } else {
-      // Align to average X position
-      const avgX = selectedPlayers.reduce((sum, p) => sum + p.x, 0) / selectedPlayers.length;
-      selectedIds.forEach((id) => {
-        const sprite = app.playersLayer!.getPlayer(id);
-        if (sprite) {
-          sprite.updatePlayer({ x: avgX });
-        }
-      });
-    }
-  }, [app]);
+      const selectedPlayers = selectedIds
+        .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
+        .filter((p): p is Player => p !== undefined);
+
+      if (direction === "horizontal") {
+        // Align to average Y position
+        const avgY =
+          selectedPlayers.reduce((sum, p) => sum + p.y, 0) /
+          selectedPlayers.length;
+        selectedIds.forEach((id) => {
+          const sprite = app.playersLayer!.getPlayer(id);
+          if (sprite) {
+            sprite.updatePlayer({ y: avgY });
+          }
+        });
+      } else {
+        // Align to average X position
+        const avgX =
+          selectedPlayers.reduce((sum, p) => sum + p.x, 0) /
+          selectedPlayers.length;
+        selectedIds.forEach((id) => {
+          const sprite = app.playersLayer!.getPlayer(id);
+          if (sprite) {
+            sprite.updatePlayer({ x: avgX });
+          }
+        });
+      }
+    },
+    [app]
+  );
 
   // Distribute selected players evenly
-  const handleDistributePlayers = useCallback((direction: "horizontal" | "vertical") => {
-    if (!app?.playersLayer) return;
-    
-    const selectedIds = app.playersLayer.getSelectedPlayerIds();
-    if (selectedIds.length < 3) return;
+  const handleDistributePlayers = useCallback(
+    (direction: "horizontal" | "vertical") => {
+      if (!app?.playersLayer) return;
 
-    const selectedPlayers = selectedIds
-      .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
-      .filter((p): p is Player => p !== undefined);
+      const selectedIds = app.playersLayer.getSelectedPlayerIds();
+      if (selectedIds.length < 3) return;
 
-    if (direction === "horizontal") {
-      // Sort by X position
-      const sorted = [...selectedPlayers].sort((a, b) => a.x - b.x);
-      const minX = sorted[0].x;
-      const maxX = sorted[sorted.length - 1].x;
-      const spacing = (maxX - minX) / (sorted.length - 1);
+      const selectedPlayers = selectedIds
+        .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
+        .filter((p): p is Player => p !== undefined);
 
-      sorted.forEach((player, index) => {
-        const sprite = app.playersLayer!.getPlayer(player.id);
-        if (sprite && index > 0 && index < sorted.length - 1) {
-          sprite.updatePlayer({ x: minX + spacing * index });
-        }
-      });
-    } else {
-      // Sort by Y position
-      const sorted = [...selectedPlayers].sort((a, b) => a.y - b.y);
-      const minY = sorted[0].y;
-      const maxY = sorted[sorted.length - 1].y;
-      const spacing = (maxY - minY) / (sorted.length - 1);
+      if (direction === "horizontal") {
+        // Sort by X position
+        const sorted = [...selectedPlayers].sort((a, b) => a.x - b.x);
+        const minX = sorted[0].x;
+        const maxX = sorted[sorted.length - 1].x;
+        const spacing = (maxX - minX) / (sorted.length - 1);
 
-      sorted.forEach((player, index) => {
-        const sprite = app.playersLayer!.getPlayer(player.id);
-        if (sprite && index > 0 && index < sorted.length - 1) {
-          sprite.updatePlayer({ y: minY + spacing * index });
-        }
-      });
-    }
-  }, [app]);
+        sorted.forEach((player, index) => {
+          const sprite = app.playersLayer!.getPlayer(player.id);
+          if (sprite && index > 0 && index < sorted.length - 1) {
+            sprite.updatePlayer({ x: minX + spacing * index });
+          }
+        });
+      } else {
+        // Sort by Y position
+        const sorted = [...selectedPlayers].sort((a, b) => a.y - b.y);
+        const minY = sorted[0].y;
+        const maxY = sorted[sorted.length - 1].y;
+        const spacing = (maxY - minY) / (sorted.length - 1);
+
+        sorted.forEach((player, index) => {
+          const sprite = app.playersLayer!.getPlayer(player.id);
+          if (sprite && index > 0 && index < sorted.length - 1) {
+            sprite.updatePlayer({ y: minY + spacing * index });
+          }
+        });
+      }
+    },
+    [app]
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">

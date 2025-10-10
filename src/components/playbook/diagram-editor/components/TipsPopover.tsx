@@ -1,6 +1,6 @@
 /**
  * TipsPopover - Collapsible keyboard shortcuts and tips
- * 
+ *
  * Space-saving popover with lightbulb icon that reveals
  * keyboard shortcuts and editor tips for the diagram editor.
  */
@@ -30,7 +30,7 @@ export const TipsPopover: React.FC<TipsPopoverProps> = ({
       acc[tip.category].push(tip);
       return acc;
     },
-    {} as Record<string, Tip[]>,
+    {} as Record<string, Tip[]>
   );
 
   const categories = Object.keys(groupedTips).sort();

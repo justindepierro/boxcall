@@ -16,13 +16,19 @@ import type { CameraConfig } from '../core/Camera';
 export interface UsePixiAppOptions {
   fieldWidth: number;
   fieldHeight: number;
-  pixelsPerYard: number;
   backgroundColor?: number;
   cameraConfig?: CameraConfig;
   enabled?: boolean; // NEW: Allow caller to control when initialization happens
+  minPixelsPerYard?: number; // Minimum for readability (default: 10)
+  maxPixelsPerYard?: number; // Maximum for touch targets (default: 25)
+  padding?: number; // Viewport padding in pixels (default: 20)
 }
 
-export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>, options: UsePixiAppOptions) {
+export function usePixiApp(
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  containerRef: React.RefObject<HTMLElement | null>,
+  options: UsePixiAppOptions
+) {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [canvasSize, setCanvasSize] = useState<{ width: number; height: number } | null>(null);
@@ -214,6 +220,33 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
 
     console.log('✅ Canvas dimensions confirmed:', currentRect);
 
+    // Calculate initial pixelsPerYard from container
+    const container = containerRef.current;
+    let initialPixelsPerYard = 15; // fallback default
+
+    if (container) {
+      const containerRect = container.getBoundingClientRect();
+      const padding = options.padding ?? 20;
+      const availableWidth = containerRect.width - padding * 2;
+      const availableHeight = containerRect.height - padding * 2;
+
+      const widthScale = availableWidth / options.fieldWidth;
+      const heightScale = availableHeight / options.fieldHeight;
+      const optimalScale = Math.min(widthScale, heightScale);
+
+      initialPixelsPerYard = Math.max(
+        options.minPixelsPerYard ?? 10,
+        Math.min(options.maxPixelsPerYard ?? 25, Math.round(optimalScale * 10) / 10)
+      );
+
+      console.log('📐 Initial pixelsPerYard calculation:', {
+        container: { width: containerRect.width, height: containerRect.height },
+        available: { width: availableWidth, height: availableHeight },
+        scales: { width: widthScale.toFixed(2), height: heightScale.toFixed(2) },
+        calculated: initialPixelsPerYard,
+      });
+    }
+
     // Create config
     const config: PixiAppConfig = {
       canvas,
@@ -222,7 +255,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       fieldDimensions: {
         width: options.fieldWidth,
         height: options.fieldHeight,
-        pixelsPerYard: options.pixelsPerYard,
+        pixelsPerYard: initialPixelsPerYard,
       },
       backgroundColor: options.backgroundColor,
       resolution: window.devicePixelRatio || 1,
@@ -328,11 +361,21 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
 
   // PERFORMANCE: Coordinate pixelsPerYard and resize together
   // CRITICAL: Update pixelsPerYard BEFORE resizing renderer to avoid mismatched scales
+  // NOW: Calculate pixelsPerYard responsively from container size
   useEffect(() => {
-    if (!app || !canvasRef.current || !isReady) return;
+    if (!app || !canvasRef.current || !containerRef.current || !isReady) return;
 
     const rafRef = { current: null as number | null };
     const lastState = { width: 0, height: 0, ppy: 0 };
+
+    // Destructure options with defaults
+    const {
+      fieldWidth,
+      fieldHeight,
+      minPixelsPerYard = 10,
+      maxPixelsPerYard = 25,
+      padding = 20,
+    } = options;
 
     const handleResize = () => {
       // Cancel any pending update
@@ -343,12 +386,29 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       // Schedule update on next frame for smooth batching
       rafRef.current = requestAnimationFrame(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        const container = containerRef.current;
+        if (!canvas || !container) return;
 
-        const rect = canvas.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const ppy = options.pixelsPerYard;
+        // Get container dimensions (NOT canvas - canvas follows container)
+        const containerRect = container.getBoundingClientRect();
+        const availableWidth = containerRect.width - padding * 2;
+        const availableHeight = containerRect.height - padding * 2;
+
+        // Calculate optimal pixelsPerYard to fit field in container
+        const widthScale = availableWidth / fieldWidth;
+        const heightScale = availableHeight / fieldHeight;
+        const optimalScale = Math.min(widthScale, heightScale);
+
+        // Apply constraints
+        const ppy = Math.max(
+          minPixelsPerYard,
+          Math.min(maxPixelsPerYard, Math.round(optimalScale * 10) / 10)
+        );
+
+        // Get canvas dimensions (for renderer)
+        const canvasRect = canvas.getBoundingClientRect();
+        const width = canvasRect.width;
+        const height = canvasRect.height;
         
         // Check if anything actually changed (avoid redundant updates)
         if (
@@ -364,6 +424,12 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
         lastState.height = height;
         lastState.ppy = ppy;
 
+        console.log('📐 Unified resize handler:', {
+          container: { width: containerRect.width, height: containerRect.height },
+          canvas: { width, height },
+          calculated: { widthScale: widthScale.toFixed(2), heightScale: heightScale.toFixed(2), ppy },
+        });
+
         // ATOMIC UPDATE: Do everything in correct order
         // 1. Update coordinate system FIRST (so layers render at correct scale)
         app.coordinates.updatePixelsPerYard(ppy);
@@ -378,9 +444,9 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     // Initial resize
     handleResize();
 
-    // Single ResizeObserver (removed window.resize listener - redundant)
+    // Single ResizeObserver on CONTAINER (not canvas)
     const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(canvasRef.current);
+    resizeObserver.observe(containerRef.current);
 
     return () => {
       if (rafRef.current) {
@@ -388,7 +454,7 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       }
       resizeObserver.disconnect();
     };
-  }, [app, canvasRef, isReady, options.pixelsPerYard]);
+  }, [app, canvasRef, containerRef, isReady, options]);
 
   // Sync players from store to PlayersLayer
   useEffect(() => {

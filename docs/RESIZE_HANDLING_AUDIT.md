@@ -1,6 +1,7 @@
 # Resize Handling Comprehensive Audit
 
 ## Date: October 10, 2025
+
 ## Status: 🔴 CRITICAL ISSUES FOUND
 
 ---
@@ -10,6 +11,7 @@
 **Problem**: Field rendering breaks on window resize with multiple duplicate resize handlers and race conditions.
 
 **Root Causes**:
+
 1. **Triple Resize Observation**: Three different ResizeObservers watching the same element
 2. **Debounce Mismatch**: pixelsPerYard updates debounced (100ms) but app.resize() is immediate
 3. **Missing Coordination**: No single source of truth for resize events
@@ -31,7 +33,7 @@ Window Resize Event
    - Updates pixelsPerYard state
   ↓
 2. usePixiApp (immediate)
-   - ResizeObserver on canvasRef  
+   - ResizeObserver on canvasRef
    - window.resize listener
    - Calls app.resize()
   ↓
@@ -51,56 +53,68 @@ Window Resize Event
 ### Issues Identified:
 
 #### 1. **Duplicate ResizeObservers** 🔴
-**Location**: 
+
+**Location**:
+
 - `useResponsivePixelsPerYard.ts:99` - observes `containerRef`
-- `usePixiApp.ts:360` - observes `canvasRef`  
+- `usePixiApp.ts:360` - observes `canvasRef`
 - `usePixiApp.ts:95` (initialization) - observes `canvasRef` again
 
 **Problem**: Same resize event triggers 3 separate handlers with different timing.
 
 #### 2. **Debounce Timing Mismatch** 🔴
+
 **Location**:
+
 - `useResponsivePixelsPerYard`: Debounced 100ms
 - `usePixiApp handleResize`: Immediate
 
-**Problem**: 
+**Problem**:
+
 - Renderer resizes immediately → Field renders at old pixelsPerYard
 - 100ms later pixelsPerYard updates → Field re-renders at new scale
 - Result: Visible "jump" or layout shift
 
 #### 3. **Camera Force Re-center** 🟡
+
 **Location**: `Camera.ts:201-210`
 
 ```typescript
 setViewportSize(width: number, height: number): void {
   this.viewportWidth = width;
   this.viewportHeight = height;
-  
+
   // Always re-center when viewport size changes ← PROBLEM!
   this.centerOnField();
 }
 ```
 
-**Problem**: 
+**Problem**:
+
 - User zooms in on specific play detail
 - Resizes window slightly
 - Camera snaps back to center view
 - User loses their place
 
 #### 4. **Missing Resize Throttling** 🟡
+
 **Location**: `usePixiApp.ts:341-350`
 
 **Problem**:
+
 - No throttling/debouncing on immediate resize handler
 - Rapid resize (e.g., dragging window edge) causes excessive redraws
 - Performance degradation on lower-end devices
 
 #### 5. **Coordinate System Race Condition** 🟠
-**Location**: 
+
+**Location**:
+
 - `usePixiApp.ts:330-335` - updatePixelsPerYard effect
 - `usePixiApp.ts:337-367` - handleResize effect
 
 **Problem**:
+
 - Two separate useEffect hooks with no ordering guarantee
 - pixelsPerYard might update AFTER renderer resize
 - Sprites drawn at wrong scale temporarily
@@ -200,20 +214,20 @@ export function useResizeCoordinator({
 setViewportSizeOnly(width: number, height: number): void {
   validateDimension(width, 'Viewport width', { min: 100, max: 10000 });
   validateDimension(height, 'Viewport height', { min: 100, max: 10000 });
-  
+
   const oldWidth = this.viewportWidth;
   const oldHeight = this.viewportHeight;
-  
+
   this.viewportWidth = width;
   this.viewportHeight = height;
-  
+
   // DON'T re-center - preserve user's current view
   // Only adjust position to keep same content in view
   if (oldWidth > 0 && oldHeight > 0) {
     // Maintain center point of current view
     const centerX = (oldWidth / 2 - this.stage.x) / this.stage.scale.x;
     const centerY = (oldHeight / 2 - this.stage.y) / this.stage.scale.x;
-    
+
     // Recalculate position for new viewport
     this.targetX = (width / 2) - (centerX * this.stage.scale.x);
     this.targetY = (height / 2) - (centerY * this.stage.scale.x);
@@ -299,12 +313,14 @@ setViewportSize(width: number, height: number): void {
 ## Metrics to Monitor
 
 **Before Fix**:
+
 - Resize event count: ~6-9 per window resize
 - Layout shifts: 1-2 visible "jumps"
 - Resize duration: ~80-150ms
 - Camera disruption: 100% (always re-centers)
 
 **After Fix (Target)**:
+
 - Resize event count: 1 per window resize
 - Layout shifts: 0
 - Resize duration: < 16ms (60fps)
@@ -317,13 +333,15 @@ setViewportSize(width: number, height: number): void {
 ### Code Duplication
 
 **useResponsivePixelsPerYard vs. DiagramCanvas logic**:
+
 - Both calculate pixelsPerYard from container size
 - Same algorithm, different locations
 - Should be consolidated
 
 **Window resize listeners**:
+
 - `useResponsivePixelsPerYard:108` - window.resize
-- `usePixiApp:357` - window.resize  
+- `usePixiApp:357` - window.resize
 - Should be single listener or use ResizeObserver only
 
 ### Potential Future Issues
