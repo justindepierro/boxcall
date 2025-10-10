@@ -24,7 +24,9 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
   selectedAlignment,
 }) => {
   const { players, addPlayer } = useDiagramStore();
-  const [selectedFormation, setSelectedFormation] = useState<string | undefined>();
+  const [selectedFormation, setSelectedFormation] = useState<
+    string | undefined
+  >();
   const toast = useToast();
 
   // Helper to get center X based on alignment
@@ -318,7 +320,7 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
 
   const handleFormationSelect = (formationId: string) => {
     haptics.heavy(); // Heavy feedback for major action (formation insert)
-    
+
     setSelectedFormation(formationId);
     addFormation(formationId);
 

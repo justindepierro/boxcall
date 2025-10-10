@@ -236,9 +236,7 @@ export const ContextualToolbar: React.FC<ContextualToolbarProps> = ({
                     >
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          isDanger
-                            ? "bg-error-bg"
-                            : "bg-primary/10"
+                          isDanger ? "bg-error-bg" : "bg-primary/10"
                         }`}
                       >
                         <Icon

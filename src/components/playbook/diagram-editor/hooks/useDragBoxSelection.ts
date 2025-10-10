@@ -154,14 +154,17 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
 
       selectionBox.clear();
       
+      // Scale border and handles with pixelsPerYard for consistency
+      const borderWidth = 0.05 * app.coordinates.pixelsPerYard; // ~2px at 15 ppy, ~1px at 20 ppy
+      const handleSize = 0.15 * app.coordinates.pixelsPerYard; // ~6px at 15 ppy, ~3px at 20 ppy
+      
       // Draw dashed border with semi-transparent fill
-      selectionBox.lineStyle(2, 0x00BFFF, 1); // Bright blue border
+      selectionBox.lineStyle(borderWidth, 0x00BFFF, 1); // Bright blue border
       selectionBox.beginFill(0x00BFFF, 0.1); // Subtle blue fill
       selectionBox.drawRect(x, y, width, height);
       selectionBox.endFill();
 
       // Draw corner handles (small squares)
-      const handleSize = 6;
       selectionBox.beginFill(0x00BFFF, 1);
       selectionBox.drawRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize); // Top-left
       selectionBox.drawRect(x + width - handleSize / 2, y - handleSize / 2, handleSize, handleSize); // Top-right

@@ -635,7 +635,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <DiagramCanvas
               fieldWidth={53.333}
               fieldHeight={35}
-              pixelsPerYard={20}
+              pixelsPerYard={20} // Larger for touch targets (44px minimum)
               backgroundColor={0x222222}
               onReady={handleReady}
             />
@@ -647,7 +647,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <DiagramCanvas
               fieldWidth={53.333}
               fieldHeight={35}
-              pixelsPerYard={20}
+              pixelsPerYard={17} // Medium size for tablet with touch
               backgroundColor={0x222222}
               onReady={handleReady}
             />
@@ -659,7 +659,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <DiagramCanvas
               fieldWidth={53.333}
               fieldHeight={35}
-              pixelsPerYard={20}
+              pixelsPerYard={15} // Smaller for desktop with mouse precision
               backgroundColor={0x222222}
               onReady={handleReady}
             />

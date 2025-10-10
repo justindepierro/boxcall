@@ -162,7 +162,7 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
   // Auto-match defense based on offensive formation
   const handleAutoMatchDefense = () => {
     haptics.medium(); // Medium feedback for analysis start
-    
+
     // Check if there are offensive players
     const offensePlayers = players.filter((p) => p.team === "offense");
     if (offensePlayers.length < 5) {
@@ -186,7 +186,7 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
         recommendation.schemeId === "base43"
       ) {
         addDefenseFormation("nickel425");
-        
+
         haptics.success(); // Success pattern for completion
 
         // Show success toast with matchup info

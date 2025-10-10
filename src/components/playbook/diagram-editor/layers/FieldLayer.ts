@@ -52,6 +52,12 @@ export class FieldLayer extends Container {
   private fieldGraphics: Graphics;
   private currentColorMode: FieldColorMode;
   
+  // Visual constants in YARDS (so they scale with pixelsPerYard)
+  private readonly YARD_LINE_WIDTH_YARDS = 0.05;      // ~2px at 15 ppy, ~1px at 20 ppy
+  private readonly HASH_MARK_WIDTH_YARDS = 0.025;     // ~1px at 15 ppy, ~0.5px at 20 ppy
+  private readonly LINE_OF_SCRIMMAGE_WIDTH_YARDS = 0.1; // ~4px at 15 ppy, ~2px at 20 ppy
+  private readonly SIDELINE_BORDER_WIDTH_YARDS = 0.6; // ~24px at 15 ppy, ~12px at 20 ppy
+  
   constructor(coordinates: CoordinateSystem, config: Partial<FieldConfig> = {}) {
     super();
     
@@ -168,7 +174,7 @@ export class FieldLayer extends Container {
     // Draw line every 5 yards using v7 API
     for (let yard = 0; yard <= this.config.height; yard += 5) {
       const yPixels = yard * pixelsPerYard;
-      const lineWidth = 2; // All yard lines same thickness
+      const lineWidth = this.YARD_LINE_WIDTH_YARDS * pixelsPerYard; // Scale with pixelsPerYard
       
       // Draw as a thin rectangle using v7 API
       this.fieldGraphics.beginFill(this.config.lineColor);
@@ -199,7 +205,7 @@ export class FieldLayer extends Container {
     const rightSidelineHashPixels = (this.config.width - sidelineInsetYards) * pixelsPerYard;
     
     const hashLengthPixels = 0.5 * pixelsPerYard; // 6 inches
-    const hashWidth = 1;
+    const hashWidth = this.HASH_MARK_WIDTH_YARDS * pixelsPerYard; // Scale with pixelsPerYard
     
     // Draw hash marks every yard using v7 API
     for (let yard = 1; yard < this.config.height; yard++) {
@@ -342,7 +348,7 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const fieldHeightPixels = this.config.height * pixelsPerYard;
-    const borderWidth = 24; // Very thick border for prominent sidelines
+    const borderWidth = this.SIDELINE_BORDER_WIDTH_YARDS * pixelsPerYard; // Scale with pixelsPerYard
     
     // Draw border OUTSIDE the field boundaries (expanding outward)
     // Top (extends above the field)
@@ -374,7 +380,7 @@ export class FieldLayer extends Container {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     const fieldWidthPixels = this.config.width * pixelsPerYard;
     const yPixels = (this.config.lineOfScrimmageYard || 25) * pixelsPerYard;
-    const lineWidth = 4; // Thicker than yard lines for emphasis
+    const lineWidth = this.LINE_OF_SCRIMMAGE_WIDTH_YARDS * pixelsPerYard; // Scale with pixelsPerYard
     const lineColor = 0xF59E0B; // amber-500 token color
     
     // Draw line of scrimmage

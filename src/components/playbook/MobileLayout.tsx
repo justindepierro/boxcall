@@ -47,7 +47,7 @@ export function MobileLayout({
   onUndo,
 }: MobileLayoutProps) {
   const [activeTab, setActiveTab] = useState("players");
-  
+
   // Store state
   const {
     players,
@@ -56,7 +56,7 @@ export function MobileLayout({
     updatePlayer,
     removePlayer,
   } = useDiagramStore();
-  
+
   const toast = useToast();
 
   // Get selected player object
@@ -77,7 +77,7 @@ export function MobileLayout({
 
     // Get center X for current alignment
     const centerX = app.coordinates.fieldWidth / 2;
-    
+
     // Calculate flipped X position (mirror across center)
     const distanceFromCenter = player.x - centerX;
     const flippedX = centerX - distanceFromCenter;

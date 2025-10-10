@@ -1,6 +1,6 @@
 /**
  * FormationIcon - SVG icons for offensive formations
- * 
+ *
  * Features:
  * - Visual representation of player positions
  * - Consistent sizing (48x48px)
@@ -8,22 +8,48 @@
  */
 
 interface FormationIconProps {
-  type: "spread2x2" | "spread3x1Right" | "spread3x1Left" | "pro" | "pistol" | "trips";
+  type:
+    | "spread2x2"
+    | "spread3x1Right"
+    | "spread3x1Left"
+    | "pro"
+    | "pistol"
+    | "trips";
   size?: number;
   className?: string;
 }
 
-export function FormationIcon({ type, size = 48, className = "" }: FormationIconProps) {
+export function FormationIcon({
+  type,
+  size = 48,
+  className = "",
+}: FormationIconProps) {
   const viewBox = "0 0 48 48";
 
   // Offense players are blue circles
   const offensePlayer = (x: number, y: number, key: string) => (
-    <circle key={key} cx={x} cy={y} r="2.5" fill="#3B82F6" stroke="#1E40AF" strokeWidth="0.5" />
+    <circle
+      key={key}
+      cx={x}
+      cy={y}
+      r="2.5"
+      fill="#3B82F6"
+      stroke="#1E40AF"
+      strokeWidth="0.5"
+    />
   );
 
   // Line of scrimmage
   const los = (
-    <line x1="4" y1="24" x2="44" y2="24" stroke="#666" strokeWidth="0.5" strokeDasharray="1,1" />
+    <line
+      x1="4"
+      y1="24"
+      x2="44"
+      y2="24"
+      stroke="#666"
+      strokeWidth="0.5"
+      strokeDasharray="1,1"
+    />
   );
 
   const formations = {

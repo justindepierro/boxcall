@@ -2,8 +2,22 @@
  * Spacing Indicator Layer
  * 
  * Displays a draggable horizontal line that shows uniform spacing between players
- * on the X-axis. When players are aligned on the same Y-coordinate, shows the 
- * spacing distance between them.
+ * on the X-axis. When players are aligned on the same Y-coordinate, sh    // Draw handles on both ends of the line
+    const handleSize = this.HANDLE_SIZE_YARDS * this.coords.pixelsPerYard;
+    this.graphics.beginFill(this.HANDLE_COLOR);
+    this.graphics.drawRect(-handleSize / 2, lineY - handleSize / 2, handleSize, handleSize);
+    this.graphics.drawRect(fieldWidthPixels - handleSize / 2, lineY - handleSize / 2, handleSize, handleSize);
+    this.graphics.endFill();
+
+    // Calculate and display spacings
+    const spacingData = this.calculateSpacing();
+    if (!spacingData) {
+      // No aligned players - show helper text
+      const helperText = new Text('← Drag line to measure player spacing →', {
+        fontSize: this.TEXT_SIZE_YARDS * this.coords.pixelsPerYard,
+        fill: this.TEXT_COLOR,
+        fontFamily: 'Arial',
+      });cing distance between them.
  */
 
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
@@ -25,10 +39,12 @@ export class SpacingIndicatorLayer extends Container {
   private readonly LINE_COLOR = 0x4A90E2; // Blue
   private readonly LINE_ALPHA = 0.8;
   private readonly LINE_WIDTH_YARDS = 0.15;
-  private readonly HANDLE_SIZE = 12; // pixels
+  private readonly HANDLE_SIZE_YARDS = 0.3; // ~12px at 15 ppy, scales with zoom
   private readonly HANDLE_COLOR = 0x4A90E2;
   private readonly TEXT_COLOR = 0x333333;
   private readonly TEXT_BACKGROUND = 0xFFFFFF;
+  private readonly TEXT_SIZE_YARDS = 0.35; // ~14px at 15 ppy, scales with zoom
+  private readonly TEXT_SIZE_SMALL_YARDS = 0.3; // ~12px at 15 ppy, scales with zoom
   private readonly TOLERANCE_YARDS = 2.0; // Players within 2 yards on Y-axis are considered "on the line"
 
   constructor(coords: CoordinateSystem) {
@@ -179,6 +195,7 @@ export class SpacingIndicatorLayer extends Container {
     const lineY = this.indicatorY * this.coords.pixelsPerYard;
     const lineWidth = this.LINE_WIDTH_YARDS * this.coords.pixelsPerYard;
     const fieldWidthPixels = this.coords.fieldWidth * this.coords.pixelsPerYard;
+    const handleSize = this.HANDLE_SIZE_YARDS * this.coords.pixelsPerYard;
 
     // Draw the main horizontal line
     this.graphics.lineStyle(lineWidth, this.LINE_COLOR, this.LINE_ALPHA);
@@ -187,8 +204,8 @@ export class SpacingIndicatorLayer extends Container {
 
     // Draw drag handles at the ends
     this.graphics.beginFill(this.HANDLE_COLOR, 1.0);
-    this.graphics.drawRect(-this.HANDLE_SIZE / 2, lineY - this.HANDLE_SIZE / 2, this.HANDLE_SIZE, this.HANDLE_SIZE);
-    this.graphics.drawRect(fieldWidthPixels - this.HANDLE_SIZE / 2, lineY - this.HANDLE_SIZE / 2, this.HANDLE_SIZE, this.HANDLE_SIZE);
+    this.graphics.drawRect(-handleSize / 2, lineY - handleSize / 2, handleSize, handleSize);
+    this.graphics.drawRect(fieldWidthPixels - handleSize / 2, lineY - handleSize / 2, handleSize, handleSize);
     this.graphics.endFill();
 
     // Calculate and display spacings
@@ -196,7 +213,7 @@ export class SpacingIndicatorLayer extends Container {
     if (!spacingData) {
       // No aligned players - show helper text
       const helperText = new Text('← Drag line to measure player spacing →', {
-        fontSize: 14,
+        fontSize: this.TEXT_SIZE_YARDS * this.coords.pixelsPerYard,
         fill: this.TEXT_COLOR,
         fontFamily: 'Arial',
       });
@@ -223,15 +240,17 @@ export class SpacingIndicatorLayer extends Container {
       const midX = (x1 + x2) / 2;
 
       // Draw connector lines from players to the indicator line
-      this.graphics.lineStyle(1, this.LINE_COLOR, 0.4);
+      const connectorWidth = 0.025 * this.coords.pixelsPerYard; // Scale connector line width
+      this.graphics.lineStyle(connectorWidth, this.LINE_COLOR, 0.4);
       this.graphics.moveTo(x1, player1.y * this.coords.pixelsPerYard);
       this.graphics.lineTo(x1, lineY);
       this.graphics.moveTo(x2, player2.y * this.coords.pixelsPerYard);
       this.graphics.lineTo(x2, lineY);
 
       // Draw measurement ticks
-      const tickHeight = 8;
-      this.graphics.lineStyle(2, this.LINE_COLOR, 0.8);
+      const tickHeight = 0.2 * this.coords.pixelsPerYard; // Scale tick height
+      const tickWidth = 0.05 * this.coords.pixelsPerYard; // Scale tick width
+      this.graphics.lineStyle(tickWidth, this.LINE_COLOR, 0.8);
       this.graphics.moveTo(x1, lineY - tickHeight);
       this.graphics.lineTo(x1, lineY + tickHeight);
       this.graphics.moveTo(x2, lineY - tickHeight);
@@ -239,7 +258,7 @@ export class SpacingIndicatorLayer extends Container {
 
       // Create spacing text label
       const spacingText = new Text(`${spacing.toFixed(1)} yd`, {
-        fontSize: 12,
+        fontSize: this.TEXT_SIZE_SMALL_YARDS * this.coords.pixelsPerYard,
         fill: isUniform ? 0x00AA00 : this.TEXT_COLOR, // Green if uniform
         fontFamily: 'Arial',
         fontWeight: isUniform ? 'bold' : 'normal',
@@ -268,7 +287,7 @@ export class SpacingIndicatorLayer extends Container {
     // Show overall status
     if (isUniform && spacings.length > 0) {
       const statusText = new Text(`✓ Uniform spacing: ${avgSpacing.toFixed(1)} yards`, {
-        fontSize: 14,
+        fontSize: this.TEXT_SIZE_YARDS * this.coords.pixelsPerYard,
         fill: 0x00AA00,
         fontFamily: 'Arial',
         fontWeight: 'bold',

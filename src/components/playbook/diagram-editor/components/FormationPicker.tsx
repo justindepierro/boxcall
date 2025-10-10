@@ -5,7 +5,13 @@ export interface Formation {
   name: string;
   description: string;
   category: "spread" | "pro" | "power" | "special";
-  iconType: "spread2x2" | "spread3x1Right" | "spread3x1Left" | "pro" | "pistol" | "trips";
+  iconType:
+    | "spread2x2"
+    | "spread3x1Right"
+    | "spread3x1Left"
+    | "pro"
+    | "pistol"
+    | "trips";
 }
 
 interface FormationPickerProps {
@@ -77,8 +83,10 @@ export function FormationPicker({
   const categoryColors = {
     spread: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
     pro: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
-    power: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300",
-    special: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
+    power:
+      "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300",
+    special:
+      "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
   };
 
   const gridClass = {
