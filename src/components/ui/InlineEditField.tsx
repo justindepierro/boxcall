@@ -271,7 +271,10 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
             )}
             {saveStatus === "success" && (
               <div className="flex items-center justify-center w-8 h-8">
-                <Icon name="check-circle" className="h-4 w-4 text-success-600" />
+                <Icon
+                  name="check-circle"
+                  className="h-4 w-4 text-success-600"
+                />
               </div>
             )}
             {saveStatus === "idle" && (
@@ -297,12 +300,12 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
         {/* Suggestions dropdown */}
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute left-0 top-full mt-2 w-full bg-white border border rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+          <div className="absolute left-0 top-full mt-2 w-full bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto">
             {filteredSuggestions.map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestionSelect(suggestion)}
-                className="w-full text-left px-4 py-3 text-sm hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none border-b border-subtle last:border-b-0 transition-colors"
+                className="w-full text-left px-4 py-3 text-sm text-content-primary hover:bg-surface-secondary/50 focus:bg-surface-secondary/50 focus:outline-none border-b border-subtle last:border-b-0 transition-colors"
               >
                 {suggestion}
               </button>

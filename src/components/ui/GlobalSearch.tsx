@@ -343,7 +343,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       {isOpen && (query.length > 0 || isLoading) && (
         <div
           ref={resultsRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-surface-primary rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-80 overflow-y-auto"
         >
           {isLoading && (
             <div className="px-4 py-3 text-center text-text-muted">

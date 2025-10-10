@@ -37,6 +37,38 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [playName, setPlayName] = useState<string>("");
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
+  const [selectedAlignment, setSelectedAlignment] = useState<
+    "left" | "middle" | "right"
+  >("middle");
+
+  // Modal states
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertTitle, setAlertTitle] = useState<string>("");
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [confirmTitle, setConfirmTitle] = useState<string>("");
+  const [confirmMessage, setConfirmMessage] = useState<string>("");
+  const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
+  const [showUnsavedChanges, setShowUnsavedChanges] = useState<boolean>(false);
+
+  // Helper to show alert modal
+  const showAlertModal = (title: string, message: string) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setShowAlert(true);
+  };
+
+  // Helper to show confirm modal
+  const showConfirmModal = (
+    title: string,
+    message: string,
+    onConfirm: () => void
+  ) => {
+    setConfirmTitle(title);
+    setConfirmMessage(message);
+    setConfirmAction(() => onConfirm);
+    setShowConfirm(true);
+  };
 
   const { players } = useDiagramStore();
 
@@ -46,6 +78,14 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
       setIsDirty(true);
     }
   }, [players]);
+
+  // Cleanup: Clear players when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clear the store when diagram editor closes
+      useDiagramStore.getState().clearPlayers();
+    };
+  }, []);
 
   // Enable keyboard controls (arrow keys, delete, escape)
   useKeyboardControls({ app, enabled: true });
@@ -147,7 +187,10 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       if (error) {
         console.error("❌ Supabase error:", error);
-        alert(`Failed to save play: ${error.message}`);
+        showAlertModal(
+          "❌ Save Failed",
+          `Failed to save play: ${error.message}`
+        );
         return;
       }
 
@@ -157,10 +200,11 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
       setIsDirty(false);
       setShowSaveDialog(false);
 
-      alert(`✅ Play "${name}" saved successfully!`);
+      showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
     } catch (err) {
       console.error("❌ Error saving play:", err);
-      alert(
+      showAlertModal(
+        "❌ Save Failed",
         `Failed to save play: ${err instanceof Error ? err.message : "Unknown error"}`
       );
     }
@@ -179,23 +223,35 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   const handleClose = () => {
     if (isDirty && players.length > 0) {
-      const result = window.confirm(
-        "You have unsaved changes. Do you want to save before closing?\n\n" +
-          "OK = Save and close\n" +
-          "Cancel = Close without saving"
-      );
-
-      if (result) {
-        // User wants to save
-        if (!playName.trim()) {
-          setShowSaveDialog(true);
-          return; // Don't close yet, wait for them to name it
-        } else {
-          performSave(playName);
-        }
-      }
+      setShowUnsavedChanges(true);
+      return;
     }
 
+    // Clear players before closing
+    useDiagramStore.getState().clearPlayers();
+
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleSaveAndClose = () => {
+    if (!playName.trim()) {
+      setShowSaveDialog(true);
+      setShowUnsavedChanges(false);
+      return;
+    }
+    performSave(playName);
+    useDiagramStore.getState().clearPlayers();
+    setShowUnsavedChanges(false);
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleCloseWithoutSaving = () => {
+    useDiagramStore.getState().clearPlayers();
+    setShowUnsavedChanges(false);
     if (onClose) {
       onClose();
     }
@@ -203,11 +259,17 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   const handleClearWhiteboard = () => {
     if (isDirty && players.length > 0) {
-      const confirmed = window.confirm(
-        "Clear whiteboard? This will erase all players.\n\n" +
-          "This action cannot be undone."
+      showConfirmModal(
+        "🗑️ Clear Whiteboard",
+        "Clear whiteboard? This will erase all players.\n\nThis action cannot be undone.",
+        () => {
+          // Clear all players through the store
+          useDiagramStore.getState().clearPlayers();
+          setPlayName("");
+          setIsDirty(false);
+        }
       );
-      if (!confirmed) return;
+      return;
     }
 
     // Clear all players through the store
@@ -216,14 +278,266 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     setIsDirty(false);
   };
 
+  // Toolbar handlers
+  const handleAddSingleOffense = () => {
+    if (!app?.playersLayer) return;
+
+    const number = players.filter((p) => p.team === "offense").length + 1;
+    const lastPos = app.playersLayer.getLastDroppedPosition();
+
+    const x = lastPos
+      ? Math.min(app.coordinates.fieldWidth - 1, lastPos.x + 2.0)
+      : 26.666;
+    const y = lastPos ? lastPos.y : 17.5;
+
+    const newPlayer: Player = {
+      id: `player-${Date.now()}`,
+      x,
+      y,
+      jerseyNumber: number.toString(),
+      team: "offense",
+    };
+
+    useDiagramStore.getState().addPlayer(newPlayer);
+  };
+
+  const handleAddSingleDefense = () => {
+    if (!app?.playersLayer) return;
+
+    const number = players.filter((p) => p.team === "defense").length + 1;
+    const lastPos = app.playersLayer.getLastDroppedPosition();
+
+    const x = lastPos
+      ? Math.min(app.coordinates.fieldWidth - 1, lastPos.x + 2.0)
+      : 26.666;
+    const y = lastPos ? lastPos.y : 27.5;
+
+    const newPlayer: Player = {
+      id: `player-${Date.now()}`,
+      x,
+      y,
+      jerseyNumber: number.toString(),
+      team: "defense",
+    };
+
+    useDiagramStore.getState().addPlayer(newPlayer);
+  };
+
+  const handleDeleteSelected = () => {
+    const selectedPlayerId = useDiagramStore.getState().selectedPlayerId;
+    if (selectedPlayerId) {
+      useDiagramStore.getState().removePlayer(selectedPlayerId);
+    }
+  };
+
+  const handleClearOffense = () => {
+    const offensePlayers = players.filter((p) => p.team === "offense");
+    if (offensePlayers.length === 0) {
+      showAlertModal(
+        "No Offensive Players",
+        "There are no offensive players to clear."
+      );
+      return;
+    }
+    showConfirmModal(
+      "⚪ Clear Offense",
+      `Clear all ${offensePlayers.length} offensive players?`,
+      () => {
+        offensePlayers.forEach((p) =>
+          useDiagramStore.getState().removePlayer(p.id)
+        );
+      }
+    );
+  };
+
+  const handleClearDefense = () => {
+    const defensePlayers = players.filter((p) => p.team === "defense");
+    if (defensePlayers.length === 0) {
+      showAlertModal(
+        "No Defensive Players",
+        "There are no defensive players to clear."
+      );
+      return;
+    }
+    showConfirmModal(
+      "⚫ Clear Defense",
+      `Clear all ${defensePlayers.length} defensive players?`,
+      () => {
+        defensePlayers.forEach((p) =>
+          useDiagramStore.getState().removePlayer(p.id)
+        );
+      }
+    );
+  };
+
+  const handleAlignmentChange = (alignment: "left" | "middle" | "right") => {
+    setSelectedAlignment(alignment);
+    // The PlayerControls component will react to this change
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-surface-card border-b border-border">
-        <h1 className="text-xl font-bold text-content-primary flex items-center gap-2">
-          <Icon name="pen-tool" size="lg" />
-          Diagram Editor
-        </h1>
+        <div className="flex items-center gap-4">
+          {/* Title */}
+          <h1 className="text-xl font-bold text-content-primary flex items-center gap-2">
+            <Icon name="pen-tool" size="lg" />
+            Diagram Editor
+          </h1>
+
+          {/* Toolbar Controls */}
+          <div className="flex items-center gap-2 pl-4 border-l border-border">
+            {/* Add Players */}
+            <button
+              onClick={handleAddSingleOffense}
+              className="px-3 py-1.5 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded font-medium transition-colors flex items-center gap-1.5"
+              title="Add Offense Player"
+            >
+              <Icon name="plus-circle" size="sm" />
+              <span>Offense</span>
+            </button>
+            <button
+              onClick={handleAddSingleDefense}
+              className="px-3 py-1.5 text-xs bg-error-500 text-white hover:bg-error-600 rounded font-medium transition-colors flex items-center gap-1.5"
+              title="Add Defense Player"
+            >
+              <Icon name="plus-circle" size="sm" />
+              <span>Defense</span>
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-border"></div>
+
+            {/* Alignment Toggle */}
+            <div className="flex items-center gap-0.5">
+              <span className="text-xs text-content-secondary mr-1.5">
+                Hash:
+              </span>
+              <button
+                onClick={() => handleAlignmentChange("left")}
+                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                  selectedAlignment === "left"
+                    ? "bg-blue-600 text-white"
+                    : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
+                }`}
+                title="Align to Left Hash"
+              >
+                <Icon name="arrow-left" size="sm" />
+                <span>Left</span>
+              </button>
+              <button
+                onClick={() => handleAlignmentChange("middle")}
+                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                  selectedAlignment === "middle"
+                    ? "bg-blue-600 text-white"
+                    : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
+                }`}
+                title="Align to Middle"
+              >
+                <Icon name="circle" size="sm" />
+                <span>Mid</span>
+              </button>
+              <button
+                onClick={() => handleAlignmentChange("right")}
+                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                  selectedAlignment === "right"
+                    ? "bg-blue-600 text-white"
+                    : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
+                }`}
+                title="Align to Right Hash"
+              >
+                <Icon name="arrow-right" size="sm" />
+                <span>Right</span>
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-border"></div>
+
+            {/* Undo/Redo */}
+            <button
+              onClick={() => alert("Undo coming soon! Use Ctrl/Cmd+Z")}
+              disabled={true}
+              className="px-2.5 py-1 text-xs bg-surface-tertiary text-content-tertiary rounded font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
+              title="Undo (Coming Soon)"
+            >
+              <Icon name="undo" size="sm" />
+              <span>Undo</span>
+            </button>
+            <button
+              onClick={() => alert("Redo coming soon! Use Ctrl/Cmd+Shift+Z")}
+              disabled={true}
+              className="px-2.5 py-1 text-xs bg-surface-tertiary text-content-tertiary rounded font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
+              title="Redo (Coming Soon)"
+            >
+              <Icon name="undo" size="sm" />
+              <span>Redo</span>
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-border"></div>
+
+            {/* Delete/Clear */}
+            <button
+              onClick={handleDeleteSelected}
+              disabled={!useDiagramStore.getState().selectedPlayerId}
+              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+                useDiagramStore.getState().selectedPlayerId
+                  ? "bg-gray-600 text-white hover:bg-gray-700"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+              }`}
+              title="Delete Selected Player"
+            >
+              <Icon name="delete" size="sm" />
+              <span>Delete</span>
+            </button>
+            <button
+              onClick={handleClearOffense}
+              disabled={
+                players.filter((p) => p.team === "offense").length === 0
+              }
+              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+                players.filter((p) => p.team === "offense").length > 0
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+              }`}
+              title="Clear All Offense"
+            >
+              <Icon name="close" size="sm" />
+              <span>Clear O</span>
+            </button>
+            <button
+              onClick={handleClearDefense}
+              disabled={
+                players.filter((p) => p.team === "defense").length === 0
+              }
+              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+                players.filter((p) => p.team === "defense").length > 0
+                  ? "bg-error-600 text-white hover:bg-error-700"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+              }`}
+              title="Clear All Defense"
+            >
+              <Icon name="close" size="sm" />
+              <span>Clear D</span>
+            </button>
+            <button
+              onClick={handleClearWhiteboard}
+              disabled={players.length === 0}
+              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+                players.length > 0
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+              }`}
+              title="Clear All Players"
+            >
+              <Icon name="delete" size="sm" />
+              <span>Clear All</span>
+            </button>
+          </div>
+        </div>
+
         <div className="flex items-center gap-3">
           {/* Field Position Selector */}
           <select
@@ -282,7 +596,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar */}
         <div className="w-64 bg-surface-card border-r border-border flex-shrink-0 overflow-y-auto">
-          <PlayerControls app={app} />
+          <PlayerControls app={app} externalAlignment={selectedAlignment} />
         </div>
 
         {/* Canvas Area */}
@@ -383,6 +697,97 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
                   Cancel
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Alert Modal */}
+      {showAlert && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
+            <h2 className="text-xl font-bold text-content-primary mb-4">
+              {alertTitle}
+            </h2>
+            <p className="text-content-secondary mb-6 whitespace-pre-line">
+              {alertMessage}
+            </p>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
+            <h2 className="text-xl font-bold text-content-primary mb-4">
+              {confirmTitle}
+            </h2>
+            <p className="text-content-secondary mb-6 whitespace-pre-line">
+              {confirmMessage}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  if (confirmAction) {
+                    confirmAction();
+                  }
+                  setShowConfirm(false);
+                  setConfirmAction(null);
+                }}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Yes, Continue
+              </button>
+              <button
+                onClick={() => {
+                  setShowConfirm(false);
+                  setConfirmAction(null);
+                }}
+                className="flex-1 px-4 py-2 bg-surface-secondary text-content-primary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Unsaved Changes Modal */}
+      {showUnsavedChanges && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
+            <h2 className="text-xl font-bold text-content-primary mb-4">
+              💾 Unsaved Changes
+            </h2>
+            <p className="text-content-secondary mb-6">
+              You have unsaved changes. What would you like to do?
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleSaveAndClose}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                💾 Save and Close
+              </button>
+              <button
+                onClick={handleCloseWithoutSaving}
+                className="w-full px-4 py-2 bg-surface-secondary text-content-primary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+              >
+                Close without Saving
+              </button>
+              <button
+                onClick={() => setShowUnsavedChanges(false)}
+                className="w-full px-4 py-2 bg-surface-secondary text-content-secondary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

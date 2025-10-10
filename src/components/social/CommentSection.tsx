@@ -177,14 +177,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 </button>
 
                 {showMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-surface-primary border border-border rounded-lg shadow-lg py-1 z-10">
+                  <div className="absolute right-0 top-full mt-1 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl py-1 z-10">
                     {canEdit && (
                       <button
                         onClick={() => {
                           setIsEditing(true);
                           setShowMenu(false);
                         }}
-                        className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs text-sm text-text-secondary hover:bg-surface-secondary w-full text-left"
+                        className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs text-sm text-content-primary hover:bg-surface-secondary/50 w-full text-left"
                       >
                         <Edit2 className="w-4 h-4" />
                         Edit
@@ -193,7 +193,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     {canDelete && (
                       <button
                         onClick={handleDelete}
-                        className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs text-sm text-text-error hover:bg-surface-error-hover w-full text-left"
+                        className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs text-sm text-error-600 hover:bg-surface-secondary/50 w-full text-left"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete

@@ -70,13 +70,13 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           required={required}
         />
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 bg-surface-primary border border-border-medium rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto mt-spacing-xs">
+          <div className="absolute top-full left-0 right-0 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-40 overflow-y-auto mt-spacing-xs">
             {filteredSuggestions.map((suggestion, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleSelectSuggestion(suggestion)}
-                className="w-full text-left px-spacing-sm py-spacing-xs hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                className="w-full text-left px-spacing-sm py-spacing-xs text-content-primary hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors"
               >
                 <Typography variant="body-sm">{suggestion}</Typography>
               </button>

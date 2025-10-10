@@ -65,18 +65,30 @@ export class PlayerSprite extends Container {
     const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
     const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
 
-    // Draw main shape (circle for regular, square for center)
+    // Draw main shape (circle for offense, triangle for defense, square for center)
     this.circle.clear();
     this.circle.lineStyle(strokePixels, colors.stroke);
     this.circle.beginFill(colors.fill);
     
     const isCenter = this.player.position === 'center';
+    const isDefense = this.player.team === 'defense';
+    
     if (isCenter) {
       // Draw square/rectangle for center position
       const size = radiusPixels * 1.6; // Slightly wider than circle diameter
       this.circle.drawRect(-size / 2, -size / 2, size, size);
+    } else if (isDefense) {
+      // Draw upside-down triangle for defense (wider for better text visibility)
+      const height = radiusPixels * 1.8; // Triangle height
+      const width = radiusPixels * 2.2; // Triangle base width (increased from 1.6 to 2.2)
+      
+      // Upside-down triangle: point at bottom, base at top
+      this.circle.moveTo(0, height / 2); // Bottom point
+      this.circle.lineTo(-width / 2, -height / 2); // Top left
+      this.circle.lineTo(width / 2, -height / 2); // Top right
+      this.circle.lineTo(0, height / 2); // Back to bottom point
     } else {
-      // Draw circle for regular players
+      // Draw circle for offense
       this.circle.drawCircle(0, 0, radiusPixels);
     }
     
