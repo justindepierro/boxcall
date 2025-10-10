@@ -5,7 +5,7 @@
  * for hardware-accelerated WebGL rendering and mobile-first experience.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { DiagramCanvas } from "./components/DiagramCanvas";
 import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
@@ -30,7 +30,7 @@ export interface DiagramEditorProps {
   onClose?: () => void;
 }
 
-export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
+const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
   const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
@@ -52,14 +52,14 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [showUnsavedChanges, setShowUnsavedChanges] = useState<boolean>(false);
 
   // Helper to show alert modal
-  const showAlertModal = (title: string, message: string) => {
+  const showAlertModal = useCallback((title: string, message: string) => {
     setAlertTitle(title);
     setAlertMessage(message);
     setShowAlert(true);
-  };
+  }, []);
 
   // Helper to show confirm modal
-  const showConfirmModal = (
+  const showConfirmModal = useCallback((
     title: string,
     message: string,
     onConfirm: () => void
@@ -68,7 +68,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     setConfirmMessage(message);
     setConfirmAction(() => onConfirm);
     setShowConfirm(true);
-  };
+  }, []);
 
   const { players } = useDiagramStore();
 
@@ -89,7 +89,6 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   // Enable keyboard controls (arrow keys, delete, escape)
   useKeyboardControls({ app, enabled: true });
-  useKeyboardControls({ app, enabled: true });
 
   // Enable copy/paste (Ctrl/Cmd+C/V/D)
   useCopyPaste({ app, enabled: true });
@@ -100,13 +99,24 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
   // Enable undo/redo (Ctrl+Z/Ctrl+Shift+Z)
   useUndoRedo({ app, enabled: true });
 
-  const handleReady = (pixiApp: DiagramPixiApp) => {
+  // Helper function to detect formation based on player positions
+  const detectFormation = useCallback((playerList: Player[]): string => {
+    const offensivePlayers = playerList.filter((p) => p.team === "offense");
+
+    if (offensivePlayers.length === 0) return "Unknown";
+    if (offensivePlayers.length === 11) return "11 Personnel";
+
+    // Simple detection - can be enhanced
+    return `${offensivePlayers.length} Players`;
+  }, []);
+
+  const handleReady = useCallback((pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
     console.log(`📊 FPS: ${pixiApp.getFPS()}`);
     setApp(pixiApp);
-  };
+  }, []);
 
-  const handleColorModeChange = () => {
+  const handleColorModeChange = useCallback(() => {
     const modes: FieldColorMode[] = ["jade", "blackwhite", "darkgray"];
     const currentIndex = modes.indexOf(colorMode);
     const nextMode = modes[(currentIndex + 1) % modes.length];
@@ -119,9 +129,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         fieldLayer.setColorMode(nextMode);
       }
     }
-  };
+  }, [colorMode, app]);
 
-  const handleFieldPositionChange = (position: FieldPosition) => {
+  const handleFieldPositionChange = useCallback((position: FieldPosition) => {
     setFieldPosition(position);
 
     // Update line of scrimmage based on position
@@ -144,17 +154,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         }
       }
     }
-  };
+  }, [app]);
 
-  const handleSave = () => {
-    if (!playName.trim()) {
-      setShowSaveDialog(true);
-      return;
-    }
-    performSave(playName);
-  };
-
-  const performSave = async (name: string) => {
+  const performSave = useCallback(async (name: string) => {
     try {
       console.log(`💾 Saving play: "${name}"...`);
 
@@ -208,20 +210,17 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         `Failed to save play: ${err instanceof Error ? err.message : "Unknown error"}`
       );
     }
-  };
+  }, [players, detectFormation, showAlertModal]);
 
-  // Helper function to detect formation based on player positions
-  const detectFormation = (playerList: Player[]): string => {
-    const offensivePlayers = playerList.filter((p) => p.team === "offense");
+  const handleSave = useCallback(() => {
+    if (!playName.trim()) {
+      setShowSaveDialog(true);
+      return;
+    }
+    performSave(playName);
+  }, [playName, performSave]);
 
-    if (offensivePlayers.length === 0) return "Unknown";
-    if (offensivePlayers.length === 11) return "11 Personnel";
-
-    // Simple detection - can be enhanced
-    return `${offensivePlayers.length} Players`;
-  };
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (isDirty && players.length > 0) {
       setShowUnsavedChanges(true);
       return;
@@ -233,9 +232,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     if (onClose) {
       onClose();
     }
-  };
+  }, [isDirty, players.length, onClose]);
 
-  const handleSaveAndClose = () => {
+  const handleSaveAndClose = useCallback(() => {
     if (!playName.trim()) {
       setShowSaveDialog(true);
       setShowUnsavedChanges(false);
@@ -247,17 +246,17 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     if (onClose) {
       onClose();
     }
-  };
+  }, [playName, performSave, onClose]);
 
-  const handleCloseWithoutSaving = () => {
+  const handleCloseWithoutSaving = useCallback(() => {
     useDiagramStore.getState().clearPlayers();
     setShowUnsavedChanges(false);
     if (onClose) {
       onClose();
     }
-  };
+  }, [onClose]);
 
-  const handleClearWhiteboard = () => {
+  const handleClearWhiteboard = useCallback(() => {
     if (isDirty && players.length > 0) {
       showConfirmModal(
         "🗑️ Clear Whiteboard",
@@ -276,10 +275,10 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     useDiagramStore.getState().clearPlayers();
     setPlayName("");
     setIsDirty(false);
-  };
+  }, [isDirty, players.length, showConfirmModal]);
 
   // Toolbar handlers
-  const handleAddSingleOffense = () => {
+  const handleAddSingleOffense = useCallback(() => {
     if (!app?.playersLayer) return;
 
     const number = players.filter((p) => p.team === "offense").length + 1;
@@ -299,9 +298,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     };
 
     useDiagramStore.getState().addPlayer(newPlayer);
-  };
+  }, [app, players]);
 
-  const handleAddSingleDefense = () => {
+  const handleAddSingleDefense = useCallback(() => {
     if (!app?.playersLayer) return;
 
     const number = players.filter((p) => p.team === "defense").length + 1;
@@ -321,16 +320,16 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     };
 
     useDiagramStore.getState().addPlayer(newPlayer);
-  };
+  }, [app, players]);
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = useCallback(() => {
     const selectedPlayerId = useDiagramStore.getState().selectedPlayerId;
     if (selectedPlayerId) {
       useDiagramStore.getState().removePlayer(selectedPlayerId);
     }
-  };
+  }, []);
 
-  const handleClearOffense = () => {
+  const handleClearOffense = useCallback(() => {
     const offensePlayers = players.filter((p) => p.team === "offense");
     if (offensePlayers.length === 0) {
       showAlertModal(
@@ -348,9 +347,9 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         );
       }
     );
-  };
+  }, [players, showAlertModal, showConfirmModal]);
 
-  const handleClearDefense = () => {
+  const handleClearDefense = useCallback(() => {
     const defensePlayers = players.filter((p) => p.team === "defense");
     if (defensePlayers.length === 0) {
       showAlertModal(
@@ -368,12 +367,12 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
         );
       }
     );
-  };
+  }, [players, showAlertModal, showConfirmModal]);
 
-  const handleAlignmentChange = (alignment: "left" | "middle" | "right") => {
+  const handleAlignmentChange = useCallback((alignment: "left" | "middle" | "right") => {
     setSelectedAlignment(alignment);
     // The PlayerControls component will react to this change
-  };
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
@@ -816,5 +815,8 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
     </div>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+export const DiagramEditor = React.memo(DiagramEditorComponent);
 
 export default DiagramEditor;
