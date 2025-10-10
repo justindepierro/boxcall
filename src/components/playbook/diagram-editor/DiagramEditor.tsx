@@ -59,16 +59,15 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   }, []);
 
   // Helper to show confirm modal
-  const showConfirmModal = useCallback((
-    title: string,
-    message: string,
-    onConfirm: () => void
-  ) => {
-    setConfirmTitle(title);
-    setConfirmMessage(message);
-    setConfirmAction(() => onConfirm);
-    setShowConfirm(true);
-  }, []);
+  const showConfirmModal = useCallback(
+    (title: string, message: string, onConfirm: () => void) => {
+      setConfirmTitle(title);
+      setConfirmMessage(message);
+      setConfirmAction(() => onConfirm);
+      setShowConfirm(true);
+    },
+    []
+  );
 
   const { players } = useDiagramStore();
 
@@ -131,86 +130,92 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
     }
   }, [colorMode, app]);
 
-  const handleFieldPositionChange = useCallback((position: FieldPosition) => {
-    setFieldPosition(position);
+  const handleFieldPositionChange = useCallback(
+    (position: FieldPosition) => {
+      setFieldPosition(position);
 
-    // Update line of scrimmage based on position
-    if (app) {
-      const fieldLayer = app.getFieldLayer();
-      if (fieldLayer) {
-        switch (position) {
-          case "midfield":
-            fieldLayer.setLineOfScrimmage(25, true); // 50-yard line (middle)
-            break;
-          case "backed-up":
-            fieldLayer.setLineOfScrimmage(5, true); // 10-yard line (backed up)
-            break;
-          case "red-zone":
-            fieldLayer.setLineOfScrimmage(30, true); // 10-yard line from endzone
-            break;
-          case "free-draw":
-            fieldLayer.setLineOfScrimmage(25, false); // Hide line of scrimmage
-            break;
+      // Update line of scrimmage based on position
+      if (app) {
+        const fieldLayer = app.getFieldLayer();
+        if (fieldLayer) {
+          switch (position) {
+            case "midfield":
+              fieldLayer.setLineOfScrimmage(25, true); // 50-yard line (middle)
+              break;
+            case "backed-up":
+              fieldLayer.setLineOfScrimmage(5, true); // 10-yard line (backed up)
+              break;
+            case "red-zone":
+              fieldLayer.setLineOfScrimmage(30, true); // 10-yard line from endzone
+              break;
+            case "free-draw":
+              fieldLayer.setLineOfScrimmage(25, false); // Hide line of scrimmage
+              break;
+          }
         }
       }
-    }
-  }, [app]);
+    },
+    [app]
+  );
 
-  const performSave = useCallback(async (name: string) => {
-    try {
-      console.log(`💾 Saving play: "${name}"...`);
+  const performSave = useCallback(
+    async (name: string) => {
+      try {
+        console.log(`💾 Saving play: "${name}"...`);
 
-      // Build the diagram document
-      const diagramData: DiagramDocument = {
-        version: 2,
-        players,
-        meta: {
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        },
-      };
+        // Build the diagram document
+        const diagramData: DiagramDocument = {
+          version: 2,
+          players,
+          meta: {
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
+        };
 
-      // Prepare the play data
-      const playData = {
-        play_name: name,
-        formation: detectFormation(players),
-        p_type: "Pass" as const, // Default, user can change later
-        diagram_data: diagramData,
-      };
+        // Prepare the play data
+        const playData = {
+          play_name: name,
+          formation: detectFormation(players),
+          p_type: "Pass" as const, // Default, user can change later
+          diagram_data: diagramData,
+        };
 
-      console.log("📊 Diagram data:", diagramData);
+        console.log("📊 Diagram data:", diagramData);
 
-      // Insert into Supabase
-      const { data, error } = await supabase
-        .from("plays")
-        .insert(playData as any) // Type assertion for now until database types are fully synced
-        .select()
-        .single();
+        // Insert into Supabase
+        const { data, error } = await supabase
+          .from("plays")
+          .insert(playData as any) // Type assertion for now until database types are fully synced
+          .select()
+          .single();
 
-      if (error) {
-        console.error("❌ Supabase error:", error);
+        if (error) {
+          console.error("❌ Supabase error:", error);
+          showAlertModal(
+            "❌ Save Failed",
+            `Failed to save play: ${error.message}`
+          );
+          return;
+        }
+
+        console.log("✅ Play saved successfully:", data);
+
+        // Mark as saved
+        setIsDirty(false);
+        setShowSaveDialog(false);
+
+        showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
+      } catch (err) {
+        console.error("❌ Error saving play:", err);
         showAlertModal(
           "❌ Save Failed",
-          `Failed to save play: ${error.message}`
+          `Failed to save play: ${err instanceof Error ? err.message : "Unknown error"}`
         );
-        return;
       }
-
-      console.log("✅ Play saved successfully:", data);
-
-      // Mark as saved
-      setIsDirty(false);
-      setShowSaveDialog(false);
-
-      showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
-    } catch (err) {
-      console.error("❌ Error saving play:", err);
-      showAlertModal(
-        "❌ Save Failed",
-        `Failed to save play: ${err instanceof Error ? err.message : "Unknown error"}`
-      );
-    }
-  }, [players, detectFormation, showAlertModal]);
+    },
+    [players, detectFormation, showAlertModal]
+  );
 
   const handleSave = useCallback(() => {
     if (!playName.trim()) {
@@ -369,10 +374,13 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
     );
   }, [players, showAlertModal, showConfirmModal]);
 
-  const handleAlignmentChange = useCallback((alignment: "left" | "middle" | "right") => {
-    setSelectedAlignment(alignment);
-    // The PlayerControls component will react to this change
-  }, []);
+  const handleAlignmentChange = useCallback(
+    (alignment: "left" | "middle" | "right") => {
+      setSelectedAlignment(alignment);
+      // The PlayerControls component will react to this change
+    },
+    []
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
@@ -707,11 +715,17 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
           <div className="bg-surface-primary border-2 border-stroke rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200">
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-info-100 flex items-center justify-center">
-                <span className="text-3xl">{alertTitle.includes('✅') ? '✅' : alertTitle.includes('❌') ? '❌' : 'ℹ️'}</span>
+                <span className="text-3xl">
+                  {alertTitle.includes("✅")
+                    ? "✅"
+                    : alertTitle.includes("❌")
+                      ? "❌"
+                      : "ℹ️"}
+                </span>
               </div>
               <div className="flex-1 min-w-0">
                 <h2 className="text-2xl font-bold text-content-primary mb-2">
-                  {alertTitle.replace(/✅|❌|⚠️|ℹ️/gu, '').trim()}
+                  {alertTitle.replace(/✅|❌|⚠️|ℹ️/gu, "").trim()}
                 </h2>
                 <p className="text-base text-content-secondary whitespace-pre-line leading-relaxed">
                   {alertMessage}
