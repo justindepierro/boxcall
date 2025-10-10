@@ -98,7 +98,10 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
   return (
     <div className="space-y-3">
       {/* Header */}
-      <Typography variant="headline-sm" className="text-text-primary font-semibold px-1">
+      <Typography
+        variant="headline-sm"
+        className="text-text-primary font-semibold px-1"
+      >
         Quick Actions
       </Typography>
 

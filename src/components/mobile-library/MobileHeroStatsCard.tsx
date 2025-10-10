@@ -83,7 +83,10 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
       <div className="relative">
         {/* Greeting */}
         <div className="mb-4">
-          <Typography variant="headline-md" className="text-text-primary font-bold">
+          <Typography
+            variant="headline-md"
+            className="text-text-primary font-bold"
+          >
             {getGreeting()}, {userName}! 👋
           </Typography>
         </div>
