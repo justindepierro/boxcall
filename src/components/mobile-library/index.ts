@@ -44,3 +44,13 @@ export type {
   MobileCardHeaderProps,
   MobileCardFooterProps,
 } from "./MobileCard";
+
+// Dashboard-specific Components
+export { MobileHeroStatsCard } from "./MobileHeroStatsCard";
+export type { HeroStatsCardProps } from "./MobileHeroStatsCard";
+
+export { MobileQuickActionGrid } from "./MobileQuickActionGrid";
+export type {
+  MobileQuickActionGridProps,
+  QuickAction as QuickActionGridItem,
+} from "./MobileQuickActionGrid";
