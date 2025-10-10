@@ -7,6 +7,7 @@
 
 import { Container, Graphics, Text, TextStyle } from 'pixi.js';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
+import { FIELD_LINES, getClampedFontSize, TYPOGRAPHY } from '../../../../design-tokens/field-dimensions';
 
 export type FieldColorMode = 'jade' | 'blackwhite' | 'darkgray';
 
@@ -52,11 +53,11 @@ export class FieldLayer extends Container {
   private fieldGraphics: Graphics;
   private currentColorMode: FieldColorMode;
   
-  // Visual constants in YARDS (so they scale with pixelsPerYard)
-  private readonly YARD_LINE_WIDTH_YARDS = 0.05;      // ~2px at 15 ppy, ~1px at 20 ppy
-  private readonly HASH_MARK_WIDTH_YARDS = 0.025;     // ~1px at 15 ppy, ~0.5px at 20 ppy
-  private readonly LINE_OF_SCRIMMAGE_WIDTH_YARDS = 0.1; // ~4px at 15 ppy, ~2px at 20 ppy
-  private readonly SIDELINE_BORDER_WIDTH_YARDS = 0.6; // ~24px at 15 ppy, ~12px at 20 ppy
+  // Visual constants in YARDS (imported from design tokens for consistency)
+  private readonly YARD_LINE_WIDTH_YARDS = FIELD_LINES.YARD_LINE_YARDS;
+  private readonly HASH_MARK_WIDTH_YARDS = FIELD_LINES.HASH_MARK_YARDS;
+  private readonly LINE_OF_SCRIMMAGE_WIDTH_YARDS = FIELD_LINES.LINE_OF_SCRIMMAGE_YARDS;
+  private readonly SIDELINE_BORDER_WIDTH_YARDS = FIELD_LINES.SIDELINE_YARDS;
   
   constructor(coordinates: CoordinateSystem, config: Partial<FieldConfig> = {}) {
     super();
@@ -259,9 +260,17 @@ export class FieldLayer extends Container {
   private drawYardNumbers(): void {
     const pixelsPerYard = this.coordinates.pixelsPerYard;
     
+    // Use clamped font size for field numbers (20-48px range for readability)
+    const fontSize = getClampedFontSize(
+      2.5, // 2.5 yards tall
+      pixelsPerYard,
+      TYPOGRAPHY.MIN_FIELD_NUMBER_PX,
+      TYPOGRAPHY.MAX_FIELD_NUMBER_PX
+    );
+    
     const textStyle = new TextStyle({
       fontFamily: 'Bebas Neue, Inter, Arial, sans-serif',
-      fontSize: 2.5 * pixelsPerYard, // 2.5 yards tall
+      fontSize: fontSize,
       fill: this.config.numbersColor,
       fontWeight: '400',
       align: 'center',

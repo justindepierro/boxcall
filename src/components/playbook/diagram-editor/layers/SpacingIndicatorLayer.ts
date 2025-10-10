@@ -23,6 +23,7 @@
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
 import type { Player } from '../types/Player';
+import { UI_ELEMENTS, getClampedFontSize } from '../../../../design-tokens/field-dimensions';
 
 export class SpacingIndicatorLayer extends Container {
   private coords: CoordinateSystem;
@@ -35,16 +36,16 @@ export class SpacingIndicatorLayer extends Container {
   // UI elements
   private spacingTexts: Text[] = [];
   
-  // Visual constants
+  // Visual constants - Imported from design tokens for consistency
   private readonly LINE_COLOR = 0x4A90E2; // Blue
   private readonly LINE_ALPHA = 0.8;
-  private readonly LINE_WIDTH_YARDS = 0.15;
-  private readonly HANDLE_SIZE_YARDS = 0.3; // ~12px at 15 ppy, scales with zoom
+  private readonly LINE_WIDTH_YARDS = UI_ELEMENTS.SPACING_LINE_YARDS;
+  private readonly HANDLE_SIZE_YARDS = UI_ELEMENTS.SPACING_HANDLE_YARDS;
   private readonly HANDLE_COLOR = 0x4A90E2;
   private readonly TEXT_COLOR = 0x333333;
   private readonly TEXT_BACKGROUND = 0xFFFFFF;
-  private readonly TEXT_SIZE_YARDS = 0.35; // ~14px at 15 ppy, scales with zoom
-  private readonly TEXT_SIZE_SMALL_YARDS = 0.3; // ~12px at 15 ppy, scales with zoom
+  private readonly TEXT_SIZE_YARDS = 0.35; // Base size for getClampedFontSize
+  private readonly TEXT_SIZE_SMALL_YARDS = 0.3; // Base size for small text
   private readonly TOLERANCE_YARDS = 2.0; // Players within 2 yards on Y-axis are considered "on the line"
 
   constructor(coords: CoordinateSystem) {
@@ -213,7 +214,7 @@ export class SpacingIndicatorLayer extends Container {
     if (!spacingData) {
       // No aligned players - show helper text
       const helperText = new Text('← Drag line to measure player spacing →', {
-        fontSize: this.TEXT_SIZE_YARDS * this.coords.pixelsPerYard,
+        fontSize: getClampedFontSize(this.TEXT_SIZE_YARDS, this.coords.pixelsPerYard),
         fill: this.TEXT_COLOR,
         fontFamily: 'Arial',
       });
@@ -258,7 +259,7 @@ export class SpacingIndicatorLayer extends Container {
 
       // Create spacing text label
       const spacingText = new Text(`${spacing.toFixed(1)} yd`, {
-        fontSize: this.TEXT_SIZE_SMALL_YARDS * this.coords.pixelsPerYard,
+        fontSize: getClampedFontSize(this.TEXT_SIZE_SMALL_YARDS, this.coords.pixelsPerYard),
         fill: isUniform ? 0x00AA00 : this.TEXT_COLOR, // Green if uniform
         fontFamily: 'Arial',
         fontWeight: isUniform ? 'bold' : 'normal',
@@ -287,7 +288,7 @@ export class SpacingIndicatorLayer extends Container {
     // Show overall status
     if (isUniform && spacings.length > 0) {
       const statusText = new Text(`✓ Uniform spacing: ${avgSpacing.toFixed(1)} yards`, {
-        fontSize: this.TEXT_SIZE_YARDS * this.coords.pixelsPerYard,
+        fontSize: getClampedFontSize(this.TEXT_SIZE_YARDS, this.coords.pixelsPerYard),
         fill: 0x00AA00,
         fontFamily: 'Arial',
         fontWeight: 'bold',

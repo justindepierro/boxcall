@@ -12,6 +12,7 @@ import { Container, Graphics, Text } from 'pixi.js';
 import type { Player, PlayerColors } from '../types/Player';
 import { TEAM_COLORS, SELECTION_COLOR } from '../types/Player';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
+import { PLAYER_SIZING, ensureTouchTarget, getClampedFontSize } from '../../../../design-tokens/field-dimensions';
 
 export class PlayerSprite extends Container {
   private player: Player;
@@ -23,12 +24,13 @@ export class PlayerSprite extends Container {
   private _isSelected: boolean = false;
   private _isDragging: boolean = false;
 
-  // Visual constants - Optimized for mobile touch targets (44px+ recommended)
-  private readonly RADIUS_YARDS = 1.0;   // Player circle radius in yards (40px with 20 px/yard)
-  private readonly STROKE_WIDTH = 0.09;  // Border width in yards (was 0.15)
-  private readonly SELECTION_RING_WIDTH = 0.12; // Selection ring width in yards (was 0.2)
-  private readonly DRAG_SCALE = 1.05;    // NEW: Subtle scale during drag
-  private readonly SHADOW_OFFSET_YARDS = 0.15; // NEW: Shadow offset in yards
+  // Visual constants - Imported from design tokens for consistency
+  // Touch targets automatically enforced to meet WCAG 2.1 AA (44px minimum)
+  private readonly RADIUS_YARDS = PLAYER_SIZING.RADIUS_YARDS;
+  private readonly STROKE_WIDTH = PLAYER_SIZING.STROKE_YARDS;
+  private readonly SELECTION_RING_WIDTH = PLAYER_SIZING.SELECTION_RING_YARDS;
+  private readonly DRAG_SCALE = PLAYER_SIZING.DRAG_SCALE;
+  private readonly SHADOW_OFFSET_YARDS = PLAYER_SIZING.SHADOW_OFFSET_YARDS;
 
   constructor(player: Player, coords: CoordinateSystem) {
     super();
@@ -62,7 +64,15 @@ export class PlayerSprite extends Container {
    */
   private updateGraphics(): void {
     const colors = this.getColors();
-    const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
+    
+    // Enforce WCAG 2.1 AA touch target (44px minimum diameter)
+    const accessibleRadiusYards = ensureTouchTarget(
+      this.RADIUS_YARDS,
+      this.coords.pixelsPerYard,
+      PLAYER_SIZING.MIN_TOUCH_TARGET_PX
+    );
+    
+    const radiusPixels = accessibleRadiusYards * this.coords.pixelsPerYard;
     const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
 
     // Draw main shape (circle for offense, triangle for defense, square for center)
@@ -105,7 +115,14 @@ export class PlayerSprite extends Container {
    * Update selection ring visibility and style with team color glow
    */
   private updateSelectionRing(): void {
-    const radiusPixels = this.RADIUS_YARDS * this.coords.pixelsPerYard;
+    // Enforce WCAG 2.1 AA touch target (44px minimum diameter)
+    const accessibleRadiusYards = ensureTouchTarget(
+      this.RADIUS_YARDS,
+      this.coords.pixelsPerYard,
+      PLAYER_SIZING.MIN_TOUCH_TARGET_PX
+    );
+    
+    const radiusPixels = accessibleRadiusYards * this.coords.pixelsPerYard;
     const ringWidth = this.SELECTION_RING_WIDTH * this.coords.pixelsPerYard;
 
     this.selectionRing.clear();
@@ -145,7 +162,11 @@ export class PlayerSprite extends Container {
    * Update jersey number text
    */
   private updateNumberText(colors: PlayerColors): void {
-    const fontSize = this.RADIUS_YARDS * this.coords.pixelsPerYard * 0.8;
+    // Calculate font size with accessible clamping (10-32px range)
+    const fontSize = getClampedFontSize(
+      this.RADIUS_YARDS * 0.8, // Font size proportional to radius
+      this.coords.pixelsPerYard
+    );
 
     this.numberText.text = this.player.jerseyNumber;
     this.numberText.style = {
