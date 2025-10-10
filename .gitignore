@@ -104,3 +104,10 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 *storybook.log
 storybook-static
+
+# Test artifacts and reports (Playwright/Vitest)
+test-results/
+playwright-report/
+playwright-results.json
+.playwright-artifacts-*/
+error-context.md
