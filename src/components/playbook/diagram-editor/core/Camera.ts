@@ -196,7 +196,41 @@ export class Camera {
   }
 
   /**
-   * Set viewport size (should be called on resize)
+   * Set viewport size WITHOUT re-centering (preserves user's current view)
+   * Use this during window resize to maintain user's focus point
+   */
+  setViewportSizeOnly(width: number, height: number): void {
+    // Validate viewport dimensions
+    validateDimension(width, 'Viewport width', { min: 100, max: 10000 });
+    validateDimension(height, 'Viewport height', { min: 100, max: 10000 });
+    
+    const oldWidth = this.viewportWidth;
+    const oldHeight = this.viewportHeight;
+    
+    this.viewportWidth = width;
+    this.viewportHeight = height;
+    
+    // DON'T re-center - preserve user's current view
+    // Only adjust position proportionally to maintain same content in view
+    if (oldWidth > 0 && oldHeight > 0) {
+      // Calculate what point is currently at the center of the old viewport
+      const centerWorldX = (oldWidth / 2 - this.stage.x) / this.stage.scale.x;
+      const centerWorldY = (oldHeight / 2 - this.stage.y) / this.stage.scale.x;
+      
+      // Recalculate stage position to keep that same world point centered in new viewport
+      this.targetX = (width / 2) - (centerWorldX * this.stage.scale.x);
+      this.targetY = (height / 2) - (centerWorldY * this.stage.scale.x);
+      this.stage.x = this.targetX;
+      this.stage.y = this.targetY;
+    } else {
+      // First time - center on field
+      this.centerOnField();
+    }
+  }
+
+  /**
+   * Set viewport size and force re-center on field
+   * Use this for explicit "reset view" actions, not for window resize
    */
   setViewportSize(width: number, height: number): void {
     // Validate viewport dimensions
@@ -206,7 +240,7 @@ export class Camera {
     this.viewportWidth = width;
     this.viewportHeight = height;
     
-    // Always re-center when viewport size changes
+    // Always re-center when explicitly called (for reset/initial setup)
     this.centerOnField();
   }
 

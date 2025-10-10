@@ -326,45 +326,69 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     handlePlayerMoved
   ]);
 
-  // PERFORMANCE: Handle pixelsPerYard changes without recreating entire app
-  // The CoordinateSystem observer pattern notifies all layers to re-render
-  useEffect(() => {
-    if (!app || !isReady) return;
-    
-    app.coordinates.updatePixelsPerYard(options.pixelsPerYard);
-  }, [app, isReady, options.pixelsPerYard]);
-
-  // Handle resize
+  // PERFORMANCE: Coordinate pixelsPerYard and resize together
+  // CRITICAL: Update pixelsPerYard BEFORE resizing renderer to avoid mismatched scales
   useEffect(() => {
     if (!app || !canvasRef.current || !isReady) return;
 
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
+    const rafRef = { current: null as number | null };
+    const lastState = { width: 0, height: 0, ppy: 0 };
 
-      const rect = canvas.getBoundingClientRect();
-      
-      // Only resize if we have valid dimensions
-      if (rect.width > 0 && rect.height > 0) {
-        app.resize(rect.width, rect.height);
+    const handleResize = () => {
+      // Cancel any pending update
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
+
+      // Schedule update on next frame for smooth batching
+      rafRef.current = requestAnimationFrame(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const ppy = options.pixelsPerYard;
+        
+        // Check if anything actually changed (avoid redundant updates)
+        if (
+          Math.abs(lastState.width - width) < 1 &&
+          Math.abs(lastState.height - height) < 1 &&
+          Math.abs(lastState.ppy - ppy) < 0.1
+        ) {
+          return; // No significant change
+        }
+
+        // Save current state
+        lastState.width = width;
+        lastState.height = height;
+        lastState.ppy = ppy;
+
+        // ATOMIC UPDATE: Do everything in correct order
+        // 1. Update coordinate system FIRST (so layers render at correct scale)
+        app.coordinates.updatePixelsPerYard(ppy);
+
+        // 2. Then resize renderer and camera (preserves user view)
+        if (width > 0 && height > 0) {
+          app.resize(width, height);
+        }
+      });
     };
 
     // Initial resize
     handleResize();
 
-    // Listen for window resize
-    window.addEventListener('resize', handleResize);
-    
-    // Use ResizeObserver for better responsiveness
+    // Single ResizeObserver (removed window.resize listener - redundant)
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(canvasRef.current);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
       resizeObserver.disconnect();
     };
-  }, [app, canvasRef, isReady]);
+  }, [app, canvasRef, isReady, options.pixelsPerYard]);
 
   // Sync players from store to PlayersLayer
   useEffect(() => {

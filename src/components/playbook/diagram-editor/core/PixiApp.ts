@@ -142,10 +142,20 @@ export class DiagramPixiApp {
 
   /**
    * Resize the application
+   * Updates renderer and camera viewport while preserving user's view
    */
   resize(width: number, height: number): void {
     this.app.renderer.resize(width, height);
-    this.camera.setViewportSize(width, height);
+    this.camera.setViewportSizeOnly(width, height); // Changed: preserve view instead of re-centering
+  }
+
+  /**
+   * Resize and force re-center on field
+   * Use this for explicit "reset view" actions
+   */
+  resizeAndCenter(width: number, height: number): void {
+    this.app.renderer.resize(width, height);
+    this.camera.setViewportSize(width, height); // This will re-center
   }
 
   /**
