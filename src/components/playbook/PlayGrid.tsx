@@ -19,6 +19,8 @@ import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
 import { getPlayFlags } from "@utils/localPlayFlags";
 import { Typography } from "../design-system/Typography";
+import { Button } from "../ui/Button/Button";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 import { info, warn, debug } from "../../utils/logger";
 import {
   validatePlaybookData,
@@ -522,6 +524,25 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     return reorderedPlays.length > 0 ? reorderedPlays : filteredPlays;
   }, [reorderedPlays, filteredPlays]);
 
+  // Mobile progressive disclosure - show limited plays initially
+  const isMobile = useIsMobile();
+  const MOBILE_INITIAL_PLAYS = 4;
+  const [showAllPlays, setShowAllPlays] = useState(false);
+
+  const visiblePlays = useMemo(() => {
+    if (
+      !isMobile ||
+      showAllPlays ||
+      displayPlays.length <= MOBILE_INITIAL_PLAYS
+    ) {
+      return displayPlays;
+    }
+    return displayPlays.slice(0, MOBILE_INITIAL_PLAYS);
+  }, [isMobile, showAllPlays, displayPlays]);
+
+  const hasMorePlays =
+    isMobile && displayPlays.length > MOBILE_INITIAL_PLAYS && !showAllPlays;
+
   // Collect unique suggestions from all plays for inline editing
   const collectedSuggestions = useMemo(() => {
     const formations = new Set<string>();
@@ -775,70 +796,29 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
       {/* Play Grid - Conditional Rendering based on view mode */}
       {!showEmpty && !loading && !error && viewMode === "grid" ? (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="play-grid" direction="horizontal">
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible"
-              >
-                {displayPlays.map((play, index) => (
-                  <Draggable key={play.id} draggableId={play.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`flex items-start justify-center overflow-visible ${
-                          snapshot.isDragging ? "opacity-50" : ""
-                        }`}
-                      >
-                        <PlayCard
-                          play={play}
-                          showOneWordCalls={showOneWordCalls}
-                          onEdit={onEdit}
-                          onDuplicate={onDuplicate}
-                          onCreateDiagram={onCreateDiagram}
-                          isSelected={selectedPlayIds.has(play.id)}
-                          onSelectionChange={handlePlaySelect}
-                          variant="tile"
-                          density="comfortable"
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      ) : !showEmpty &&
-        !loading &&
-        !error &&
-        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="play-list">
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className="space-y-6 overflow-visible"
-                role="list"
-              >
-                {displayPlays.map((play, index) => (
-                  <Draggable key={play.id} draggableId={play.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
-                        role="listitem"
-                      >
+        <>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="play-grid" direction="horizontal">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible"
+                >
+                  {visiblePlays.map((play, index) => (
+                    <Draggable
+                      key={play.id}
+                      draggableId={play.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
                         <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="cursor-grab active:cursor-grabbing"
+                          className={`flex items-start justify-center overflow-visible ${
+                            snapshot.isDragging ? "opacity-50" : ""
+                          }`}
                         >
                           <PlayCard
                             play={play}
@@ -848,17 +828,92 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             onCreateDiagram={onCreateDiagram}
                             isSelected={selectedPlayIds.has(play.id)}
                             onSelectionChange={handlePlaySelect}
+                            variant="tile"
+                            density="comfortable"
                           />
                         </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          {hasMorePlays && (
+            <div className="flex justify-center pt-4">
+              <Button
+                onClick={() => setShowAllPlays(true)}
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
+                See All {displayPlays.length} Plays
+              </Button>
+            </div>
+          )}
+        </>
+      ) : !showEmpty &&
+        !loading &&
+        !error &&
+        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        <>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="play-list">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="space-y-6 overflow-visible"
+                  role="list"
+                >
+                  {visiblePlays.map((play, index) => (
+                    <Draggable
+                      key={play.id}
+                      draggableId={play.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
+                          role="listitem"
+                        >
+                          <div
+                            {...provided.dragHandleProps}
+                            className="cursor-grab active:cursor-grabbing"
+                          >
+                            <PlayCard
+                              play={play}
+                              showOneWordCalls={showOneWordCalls}
+                              onEdit={onEdit}
+                              onDuplicate={onDuplicate}
+                              onCreateDiagram={onCreateDiagram}
+                              isSelected={selectedPlayIds.has(play.id)}
+                              onSelectionChange={handlePlaySelect}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          {hasMorePlays && (
+            <div className="flex justify-center pt-4">
+              <Button
+                onClick={() => setShowAllPlays(true)}
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
+                See All {displayPlays.length} Plays
+              </Button>
+            </div>
+          )}
+        </>
       ) : !showEmpty && !loading && !error ? (
         <div
           style={{ height: "calc(100vh - 320px)" }}

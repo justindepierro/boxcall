@@ -1,5 +1,7 @@
 /* Import centralized design tokens first */
 @import "./styles/mobile.css";
+/* Mobile typography system */
+@import "./styles/mobile-typography.css";
 /* Self-hosted fonts (optional until WOFF2 files are added) */
 @import "./styles/fonts.css";
 /* Generated CSS variables (design tokens) */

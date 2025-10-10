@@ -287,7 +287,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         isSelected
           ? "ring-2 ring-brand-primary border-brand-primary shadow-jade"
           : "shadow-card hover:shadow-card-hover hover:border-white"
-      } ${isCompact ? "text-[13px]" : ""}`}
+      } ${isCompact ? "text-[13px]" : ""} min-h-30 md:min-h-0`}
     >
       <div
         className={`${isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"} overflow-visible`}

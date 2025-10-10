@@ -39,6 +39,14 @@ import {
   DiagramMode,
 } from "../utils/diagramHelpers";
 import { saveDiagram } from "../services/diagramService";
+import { useIsMobile } from "../hooks/useBreakpoint";
+import {
+  MobileCTACard,
+  MobilePageHeader,
+  MobileSection,
+  MobileQuickActions,
+} from "../components/mobile-library";
+import { BottomSheet } from "../components/BottomSheet";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -81,10 +89,12 @@ export default function PlaybookPage() {
   const toast = useToast();
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
+  const isMobile = useIsMobile();
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
   const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
+  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [suggestions, setSuggestions] = useState({
     formations: [] as string[],
     playNames: [] as string[],
@@ -299,7 +309,7 @@ export default function PlaybookPage() {
     }
   };
 
-  const handleSaveDiagram = useCallback(
+  const _handleSaveDiagram = useCallback(
     async ({
       doc,
       metadata,
@@ -534,90 +544,76 @@ export default function PlaybookPage() {
           streakDays={state.streakDays}
         />
 
-        {/* Aurora Hero Tiles - iPhone App Style - Tight spacing */}
-        <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 overflow-visible">
-          <div className="flex items-center justify-center gap-6 flex-wrap overflow-visible">
-            <AppIconTile
-              title="New Play"
-              subtitle={`${state.playsCreated} plays`}
-              icon="plus"
-              gradient="from-jade-500 to-emerald-500"
-              onOpen={handleOpenBuilder}
-            />
-
-            <AppIconTile
-              title="Whiteboard"
-              subtitle="Free draw"
-              icon="pen-tool"
-              gradient="from-indigo-500 to-purple-500"
-              onOpen={handleOpenWhiteboard}
-            />
-
-            <AppIconTile
-              title="Practice"
-              subtitle="Quick start"
-              icon="clock"
-              gradient="from-purple-500 to-violet-500"
-              onOpen={handleQuickNewPracticeScript}
-            />
-
-            <AppIconTile
-              title="Game Plan"
-              subtitle="Plan ahead"
-              icon="target"
-              gradient="from-amber-500 to-orange-500"
-              onOpen={handleQuickNewGamePlan}
-            />
-
-            <AppIconTile
-              title="Diagrams"
-              subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
-              icon="image"
-              gradient="from-blue-500 to-cyan-500"
-              badge={state.diagramCoverage}
-              onOpen={() => {}}
-            />
-          </div>
-        </div>
-
-        {/* Main Content - 2 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
-          {/* Left Sidebar - Controls */}
-          <div className="lg:col-span-1 space-y-6 overflow-visible">
-            {/* Filters - Moved to top */}
-            <Card variant="glass">
-              <AdvancedFilters
-                activeFilters={state.advancedFilters}
-                onFiltersChange={handleFiltersChange}
-              />
-            </Card>
-
-            {/* Stats Dashboard */}
-            <Card variant="glass">
-              <PlaybookStatsDashboard stats={playbookStats} />
-            </Card>
-
-            {/* Recent Activity */}
-            <Card variant="glass">
-              <RecentActivityFeed activities={playbookStats.recentActivity} />
-            </Card>
-
-            {/* Bulk Actions - Only show when items are selected */}
-            {(state.selectedPlayIds?.size || 0) > 0 && (
-              <Card variant="glass">
-                <BulkActionsToolbar
-                  selectedCount={state.selectedPlayIds?.size || 0}
-                  onClearSelection={handleClearSelection}
-                  onBulkAction={handleBulkAction}
+        {/* Mobile-First Layout */}
+        {isMobile ? (
+          // Mobile View - Progressive Disclosure
+          <div className="px-4 space-y-6">
+            {/* Empty State - Hero CTA */}
+            {state.playsCreated === 0 && (
+              <MobileSection spacing="comfortable">
+                <MobileCTACard
+                  icon="plus"
+                  title="Create Your First Play"
+                  description="Build offensive and defensive plays with our diagram editor"
+                  action="Get Started"
+                  variant="primary"
+                  onTap={handleOpenBuilder}
                 />
-              </Card>
+              </MobileSection>
             )}
-          </div>
 
-          {/* Right Side - Main Content Area */}
-          <div className="lg:col-span-3 overflow-visible">
-            <Card variant="glass" size="lg">
-              {state.currentView === "playbook" && (
+            {/* Quick Actions - 3 Max for Mobile */}
+            <MobileSection title="Quick Actions" spacing="tight">
+              <MobileQuickActions
+                actions={[
+                  {
+                    id: "new-play",
+                    icon: "plus",
+                    label: "New Play",
+                    onTap: handleOpenBuilder,
+                  },
+                  {
+                    id: "practice",
+                    icon: "clock",
+                    label: "Practice",
+                    onTap: handleQuickNewPracticeScript,
+                  },
+                  {
+                    id: "game-plan",
+                    icon: "target",
+                    label: "Game Plan",
+                    onTap: handleQuickNewGamePlan,
+                  },
+                ]}
+              />
+            </MobileSection>
+
+            {/* Filters - Collapsed by Default */}
+            {state.playsCreated > 0 && (
+              <MobileSection spacing="tight">
+                <Button
+                  onClick={() => setShowFiltersSheet(true)}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Icon name="filter" className="h-4 w-4 mr-2" />
+                  Filters & Search
+                  {Object.keys(state.advancedFilters).length > 0 && (
+                    <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
+                      {Object.keys(state.advancedFilters).length}
+                    </span>
+                  )}
+                </Button>
+              </MobileSection>
+            )}
+
+            {/* Main Content - Plays Grid */}
+            {state.playsCreated > 0 && (
+              <MobileSection
+                title="Your Plays"
+                action={state.playsCreated > 3 ? "See All" : undefined}
+                spacing="comfortable"
+              >
                 <PlayGrid
                   searchQuery={state.searchQuery}
                   filters={state.selectedFilters}
@@ -632,93 +628,207 @@ export default function PlaybookPage() {
                   formationSuggestions={suggestions.formations}
                   playNameSuggestions={suggestions.playNames}
                 />
-              )}
+              </MobileSection>
+            )}
+          </div>
+        ) : (
+          // Desktop View - Keep Existing Layout
+          <>
+            {/* Aurora Hero Tiles - iPhone App Style - Tight spacing */}
+            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 overflow-visible">
+              <div className="flex items-center justify-center gap-6 flex-wrap overflow-visible">
+                <AppIconTile
+                  title="New Play"
+                  subtitle={`${state.playsCreated} plays`}
+                  icon="plus"
+                  gradient="from-jade-500 to-emerald-500"
+                  onOpen={handleOpenBuilder}
+                />
 
-              {state.currentView === "practice-script" && (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <Typography
-                      variant="headline-md"
-                      className="text-text-primary"
-                    >
-                      Practice Scripts
-                    </Typography>
-                    <Button
-                      onClick={handleOpenPracticeScriptBuilder}
-                      variant="primary"
-                    >
-                      <Icon name="plus" className="h-4 w-4 mr-2" />
-                      New Script
-                    </Button>
-                  </div>
+                <AppIconTile
+                  title="Whiteboard"
+                  subtitle="Free draw"
+                  icon="pen-tool"
+                  gradient="from-indigo-500 to-purple-500"
+                  onOpen={handleOpenWhiteboard}
+                />
 
-                  {/* Practice Scripts List */}
-                  {activeTeamId ? (
-                    <PracticeScriptList
-                      teamId={activeTeamId}
-                      onEditScript={(script) => {
-                        setEditingScript(script);
-                        setShowPracticeScriptBuilder(true);
-                      }}
-                      onCreateNew={handleOpenPracticeScriptBuilder}
+                <AppIconTile
+                  title="Practice"
+                  subtitle="Quick start"
+                  icon="clock"
+                  gradient="from-purple-500 to-violet-500"
+                  onOpen={handleQuickNewPracticeScript}
+                />
+
+                <AppIconTile
+                  title="Game Plan"
+                  subtitle="Plan ahead"
+                  icon="target"
+                  gradient="from-amber-500 to-orange-500"
+                  onOpen={handleQuickNewGamePlan}
+                />
+
+                <AppIconTile
+                  title="Diagrams"
+                  subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
+                  icon="image"
+                  gradient="from-blue-500 to-cyan-500"
+                  badge={state.diagramCoverage}
+                  onOpen={() => {}}
+                />
+              </div>
+            </div>
+
+            {/* Main Content - 2 Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
+              {/* Left Sidebar - Controls */}
+              <div className="lg:col-span-1 space-y-6 overflow-visible">
+                {/* Filters - Moved to top */}
+                <Card variant="glass">
+                  <AdvancedFilters
+                    activeFilters={state.advancedFilters}
+                    onFiltersChange={handleFiltersChange}
+                  />
+                </Card>
+
+                {/* Stats Dashboard */}
+                <Card variant="glass">
+                  <PlaybookStatsDashboard stats={playbookStats} />
+                </Card>
+
+                {/* Recent Activity */}
+                <Card variant="glass">
+                  <RecentActivityFeed
+                    activities={playbookStats.recentActivity}
+                  />
+                </Card>
+
+                {/* Bulk Actions - Only show when items are selected */}
+                {(state.selectedPlayIds?.size || 0) > 0 && (
+                  <Card variant="glass">
+                    <BulkActionsToolbar
+                      selectedCount={state.selectedPlayIds?.size || 0}
+                      onClearSelection={handleClearSelection}
+                      onBulkAction={handleBulkAction}
                     />
-                  ) : (
-                    <div className="text-center py-8">
-                      <Typography
-                        variant="body"
-                        className="text-muted-foreground"
-                      >
-                        Please select a team to view practice scripts.
-                      </Typography>
+                  </Card>
+                )}
+              </div>
+
+              {/* Right Side - Main Content Area */}
+              <div className="lg:col-span-3 overflow-visible">
+                <Card variant="glass" size="lg">
+                  {state.currentView === "playbook" && (
+                    <PlayGrid
+                      searchQuery={state.searchQuery}
+                      filters={state.selectedFilters}
+                      onAddToPracticeScript={handleAddToPracticeScript}
+                      onAddToGamePlan={handleAddToGamePlan}
+                      onEdit={handleEditPlay}
+                      onSave={handleSavePlay}
+                      onDuplicate={handleDuplicatePlay}
+                      onOpenBuilder={handleOpenBuilder}
+                      onCreateDiagram={handleCreateDiagram}
+                      refreshTrigger={state.refreshTrigger}
+                      formationSuggestions={suggestions.formations}
+                      playNameSuggestions={suggestions.playNames}
+                    />
+                  )}
+
+                  {state.currentView === "practice-script" && (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <Typography
+                          variant="headline-md"
+                          className="text-text-primary"
+                        >
+                          Practice Scripts
+                        </Typography>
+                        <Button
+                          onClick={handleOpenPracticeScriptBuilder}
+                          variant="primary"
+                        >
+                          <Icon name="plus" className="h-4 w-4 mr-2" />
+                          New Script
+                        </Button>
+                      </div>
+
+                      {/* Practice Scripts List */}
+                      {activeTeamId ? (
+                        <PracticeScriptList
+                          teamId={activeTeamId}
+                          onEditScript={(script) => {
+                            setEditingScript(script);
+                            setShowPracticeScriptBuilder(true);
+                          }}
+                          onCreateNew={handleOpenPracticeScriptBuilder}
+                        />
+                      ) : (
+                        <div className="text-center py-8">
+                          <Typography
+                            variant="body"
+                            className="text-muted-foreground"
+                          >
+                            Please select a team to view practice scripts.
+                          </Typography>
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
-              )}
 
-              {state.currentView === "game-plan" && (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <Typography
-                      variant="headline-md"
-                      className="text-text-primary"
-                    >
-                      Game Plans
-                    </Typography>
-                    <Button onClick={handleQuickNewGamePlan} variant="primary">
-                      <Icon name="plus" className="h-4 w-4 mr-2" />
-                      New Plan
-                    </Button>
-                  </div>
+                  {state.currentView === "game-plan" && (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <Typography
+                          variant="headline-md"
+                          className="text-text-primary"
+                        >
+                          Game Plans
+                        </Typography>
+                        <Button
+                          onClick={handleQuickNewGamePlan}
+                          variant="primary"
+                        >
+                          <Icon name="plus" className="h-4 w-4 mr-2" />
+                          New Plan
+                        </Button>
+                      </div>
 
-                  {/* Placeholder for game plans list */}
-                  <div className="text-center py-12">
-                    <Icon
-                      name="target"
-                      className="h-16 w-16 text-text-muted mx-auto mb-4"
-                    />
-                    <Typography
-                      variant="headline-sm"
-                      className="text-text-secondary mb-2"
-                    >
-                      No Game Plans Yet
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="text-text-muted mb-6"
-                    >
-                      Create your first game plan to strategize plays for
-                      upcoming matches.
-                    </Typography>
-                    <Button onClick={handleQuickNewGamePlan} variant="primary">
-                      <Icon name="plus" className="h-4 w-4 mr-2" />
-                      Create New Plan
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </Card>
-          </div>
-        </div>
+                      {/* Placeholder for game plans list */}
+                      <div className="text-center py-12">
+                        <Icon
+                          name="target"
+                          className="h-16 w-16 text-text-muted mx-auto mb-4"
+                        />
+                        <Typography
+                          variant="headline-sm"
+                          className="text-text-secondary mb-2"
+                        >
+                          No Game Plans Yet
+                        </Typography>
+                        <Typography
+                          variant="body-sm"
+                          className="text-text-muted mb-6"
+                        >
+                          Create your first game plan to strategize plays for
+                          upcoming matches.
+                        </Typography>
+                        <Button
+                          onClick={handleQuickNewGamePlan}
+                          variant="primary"
+                        >
+                          <Icon name="plus" className="h-4 w-4 mr-2" />
+                          Create New Plan
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Sticky Workflow Status Bar */}
         <WorkflowStatusBar />
@@ -862,11 +972,7 @@ export default function PlaybookPage() {
             closeOnEscape={true}
           >
             <Suspense fallback={null}>
-              <PlayDiagramBuilder
-                play={diagramPlay}
-                onClose={() => setDiagramPlay(null)}
-                onSave={handleSaveDiagram}
-              />
+              <PlayDiagramBuilder onClose={() => setDiagramPlay(null)} />
             </Suspense>
           </Modal>
         )}
@@ -884,6 +990,39 @@ export default function PlaybookPage() {
             isOpen={showPracticeScriptBuilder}
           />
         </Suspense>
+
+        {/* Mobile Filters Bottom Sheet */}
+        {isMobile && showFiltersSheet && (
+          <BottomSheet
+            snapPoints={[0.1, 0.6, 0.9]}
+            initialSnapPoint={1}
+            onSnapPointChange={(snapPoint) => {
+              // Close when fully minimized
+              if (snapPoint < 0.15) {
+                setShowFiltersSheet(false);
+              }
+            }}
+          >
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <Typography variant="headline-md" className="text-text-primary">
+                  Filters & Search
+                </Typography>
+                <Button
+                  onClick={() => setShowFiltersSheet(false)}
+                  variant="ghost"
+                  size="sm"
+                >
+                  <Icon name="close" className="h-5 w-5" />
+                </Button>
+              </div>
+              <AdvancedFilters
+                activeFilters={state.advancedFilters}
+                onFiltersChange={handleFiltersChange}
+              />
+            </div>
+          </BottomSheet>
+        )}
       </PageLayout>
     </Aurora>
   );

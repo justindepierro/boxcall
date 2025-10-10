@@ -1,0 +1,308 @@
+/**
+ * Mobile Typography System
+ * 
+ * Mobile-optimized typography classes following iOS/Android best practices.
+ * All text sizes are designed to be readable on small screens and meet
+ * accessibility guidelines (16px minimum for body text).
+ *
+ * Usage:
+ * - Use .text-mobile-* classes for mobile-specific typography
+ * - These classes are larger than desktop equivalents for better readability
+ * - Never use smaller than .text-mobile-body (16px) for interactive text
+ */
+
+/* ============================================================================
+   MOBILE HEADING SCALE
+   ============================================================================ */
+
+.text-mobile-hero {
+  font-size: 1.75rem; /* 28px */
+  line-height: 2rem; /* 32px */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-mobile-h1 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.75rem; /* 28px */
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-mobile-h2 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.5rem; /* 24px */
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.text-mobile-h3 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.375rem; /* 22px */
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ============================================================================
+   MOBILE BODY TEXT SCALE
+   ============================================================================ */
+
+/**
+ * Mobile body text - 16px minimum!
+ * This prevents iOS from zooming in on form inputs
+ * and ensures readability without zooming
+ */
+.text-mobile-body {
+  font-size: 1rem; /* 16px - NEVER SMALLER! */
+  line-height: 1.5rem; /* 24px */
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.text-mobile-small {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/**
+ * Mobile tiny text - 12px minimum
+ * Use sparingly for timestamps, legal text, etc.
+ * Should always be muted color for hierarchy
+ */
+.text-mobile-tiny {
+  font-size: 0.75rem; /* 12px - MINIMUM SIZE! */
+  line-height: 1rem; /* 16px */
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ============================================================================
+   MOBILE TYPOGRAPHY UTILITIES
+   ============================================================================ */
+
+/**
+ * Responsive typography - Mobile first, then scales up
+ * Use these to automatically adjust text size by breakpoint
+ */
+
+/* Hero that scales from mobile to desktop */
+.text-mobile-hero-responsive {
+  font-size: 1.75rem; /* 28px mobile */
+  line-height: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .text-mobile-hero-responsive {
+    font-size: 2.25rem; /* 36px tablet+ */
+    line-height: 2.5rem;
+  }
+}
+
+/* H1 that scales from mobile to desktop */
+.text-mobile-h1-responsive {
+  font-size: 1.5rem; /* 24px mobile */
+  line-height: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .text-mobile-h1-responsive {
+    font-size: 1.875rem; /* 30px tablet+ */
+    line-height: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-mobile-h1-responsive {
+    font-size: 2.25rem; /* 36px desktop */
+    line-height: 2.5rem;
+  }
+}
+
+/* Body text that stays consistent */
+.text-mobile-body-responsive {
+  font-size: 1rem; /* 16px - consistent across all breakpoints */
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+/* ============================================================================
+   MOBILE TEXT ALIGNMENT
+   ============================================================================ */
+
+/* Left-aligned text (default for LTR languages) */
+.text-mobile-left {
+  text-align: left;
+}
+
+/* Center-aligned text (for CTAs, empty states) */
+.text-mobile-center {
+  text-align: center;
+}
+
+/* Right-aligned text (for metadata, trailing content) */
+.text-mobile-right {
+  text-align: right;
+}
+
+/* ============================================================================
+   MOBILE TEXT TRUNCATION
+   ============================================================================ */
+
+/* Single line truncation with ellipsis */
+.text-mobile-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Multi-line truncation (2 lines) */
+.text-mobile-line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Multi-line truncation (3 lines) */
+.text-mobile-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   MOBILE FONT WEIGHT UTILITIES
+   ============================================================================ */
+
+.text-mobile-regular {
+  font-weight: 400;
+}
+
+.text-mobile-medium {
+  font-weight: 500;
+}
+
+.text-mobile-semibold {
+  font-weight: 600;
+}
+
+.text-mobile-bold {
+  font-weight: 700;
+}
+
+/* ============================================================================
+   MOBILE TEXT COLOR UTILITIES
+   ============================================================================ */
+
+/* Use with semantic color tokens */
+.text-mobile-primary {
+  color: var(--semantic-text-primary);
+}
+
+.text-mobile-secondary {
+  color: var(--semantic-text-secondary);
+}
+
+.text-mobile-muted {
+  color: var(--semantic-text-muted);
+}
+
+.text-mobile-inverse {
+  color: var(--semantic-text-inverse);
+}
+
+.text-mobile-brand {
+  color: var(--semantic-text-brand);
+}
+
+/* ============================================================================
+   MOBILE INTERACTIVE TEXT (Links, Buttons)
+   ============================================================================ */
+
+/**
+ * Interactive text should always be 16px minimum
+ * This prevents iOS zoom on tap
+ */
+.text-mobile-interactive {
+  font-size: 1rem; /* 16px minimum */
+  line-height: 1.5rem;
+  font-weight: 500; /* Slightly bolder for tappable text */
+  color: var(--semantic-text-brand);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.text-mobile-interactive:active {
+  opacity: 0.7;
+}
+
+/* ============================================================================
+   MOBILE FORM TEXT
+   ============================================================================ */
+
+/**
+ * Form inputs MUST be 16px to prevent iOS zoom
+ * This is critical for UX on mobile devices
+ */
+.text-mobile-input {
+  font-size: 1rem !important; /* 16px - CRITICAL! */
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+.text-mobile-label {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: var(--semantic-text-secondary);
+}
+
+.text-mobile-helper {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 400;
+  color: var(--semantic-text-muted);
+}
+
+/* ============================================================================
+   MOBILE BADGE TEXT
+   ============================================================================ */
+
+.text-mobile-badge {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+   MOBILE BUTTON TEXT
+   ============================================================================ */
+
+.text-mobile-button {
+  font-size: 1rem; /* 16px - tappable size */
+  line-height: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.text-mobile-button-sm {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+
+.text-mobile-button-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.5rem;
+  font-weight: 600;
+}
