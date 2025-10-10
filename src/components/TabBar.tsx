@@ -50,7 +50,7 @@ export function TabBar({
             onClick={() => onTabChange(tab.id)}
             className={`
               flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2
-              min-h-[48px] touch-manipulation
+              min-h-12 touch-manipulation
               transition-colors
               ${
                 isActive
@@ -67,7 +67,7 @@ export function TabBar({
                 className={isActive ? "text-primary-600" : ""}
               />
               {tab.badge !== undefined && tab.badge > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center text-[10px] font-bold bg-primary-600 text-white rounded-full">
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 flex items-center justify-center text-xs font-bold bg-primary-600 text-white rounded-full">
                   {tab.badge > 99 ? "99+" : tab.badge}
                 </span>
               )}
@@ -75,7 +75,7 @@ export function TabBar({
 
             {/* Label */}
             <span
-              className={`text-[11px] font-medium leading-none ${
+              className={`text-xs font-medium leading-none ${
                 isActive ? "text-primary" : "text-secondary"
               }`}
             >
