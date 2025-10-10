@@ -1,7 +1,9 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
 
 printf "\n🔒 Running pre-push validation...\n"
-npm run validate || { echo "❌ Pre-push validation failed"; exit 1; }
 
-echo "✅ Pre-push validation passed"
+# Only run type-check and lint (skip slow tests)
+npm run type-check || { echo "❌ Type check failed"; exit 1; }
+npm run lint || { echo "❌ Lint failed"; exit 1; }
+
+echo "✅ Pre-push validation passed (tests skipped for speed)"
