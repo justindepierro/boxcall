@@ -8,11 +8,11 @@
  * - Click and drag interactions
  */
 
-import { Container, Graphics, Text } from 'pixi.js';
+import { Container, Graphics, Text, Circle } from 'pixi.js';
 import type { Player, PlayerColors } from '../types/Player';
 import { TEAM_COLORS, SELECTION_COLOR } from '../types/Player';
 import type { CoordinateSystem } from '../core/CoordinateSystem';
-import { PLAYER_SIZING, ensureTouchTarget, getClampedFontSize } from '../../../../design-tokens/field-dimensions';
+import { PLAYER_SIZING, getHitAreaRadius, getClampedFontSize } from '../../../../design-tokens/field-dimensions';
 
 export class PlayerSprite extends Container {
   private player: Player;
@@ -74,15 +74,18 @@ export class PlayerSprite extends Container {
   private updateGraphics(): void {
     const colors = this.getColors();
     
-    // Enforce WCAG 2.1 AA touch target (44px minimum diameter)
-    const accessibleRadiusYards = ensureTouchTarget(
-      this.RADIUS_YARDS,
+    // Use fixed visual radius (what you see on screen)
+    const visualRadiusYards = this.RADIUS_YARDS;
+    const radiusPixels = visualRadiusYards * this.coords.pixelsPerYard;
+    const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
+    
+    // Calculate hit area radius to meet WCAG 2.1 AA touch target (44px minimum)
+    const hitAreaRadiusYards = getHitAreaRadius(
+      visualRadiusYards,
       this.coords.pixelsPerYard,
       PLAYER_SIZING.MIN_TOUCH_TARGET_PX
     );
-    
-    const radiusPixels = accessibleRadiusYards * this.coords.pixelsPerYard;
-    const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
+    const hitAreaRadiusPixels = hitAreaRadiusYards * this.coords.pixelsPerYard;
 
     // Draw main shape (circle for offense, triangle for defense, square for center)
     this.circle.clear();
@@ -112,6 +115,10 @@ export class PlayerSprite extends Container {
     }
     
     this.circle.endFill();
+    
+    // Set hit area to be larger than visual for touch accessibility
+    // This makes it easier to tap/click without making the visual bigger
+    this.hitArea = new Circle(0, 0, hitAreaRadiusPixels);
 
     // Draw selection ring (initially hidden)
     this.updateSelectionRing();
@@ -124,14 +131,9 @@ export class PlayerSprite extends Container {
    * Update selection ring visibility and style with team color glow
    */
   private updateSelectionRing(): void {
-    // Enforce WCAG 2.1 AA touch target (44px minimum diameter)
-    const accessibleRadiusYards = ensureTouchTarget(
-      this.RADIUS_YARDS,
-      this.coords.pixelsPerYard,
-      PLAYER_SIZING.MIN_TOUCH_TARGET_PX
-    );
-    
-    const radiusPixels = accessibleRadiusYards * this.coords.pixelsPerYard;
+    // Use the same visual radius as the main graphics
+    const visualRadiusYards = this.RADIUS_YARDS;
+    const radiusPixels = visualRadiusYards * this.coords.pixelsPerYard;
     const ringWidth = this.SELECTION_RING_WIDTH * this.coords.pixelsPerYard;
 
     this.selectionRing.clear();

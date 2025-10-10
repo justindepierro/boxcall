@@ -35,8 +35,11 @@ export const NFL_FIELD = {
  * These scale proportionally with pixelsPerYard
  */
 export const PLAYER_SIZING = {
-  /** Standard player circle radius in yards */
+  /** Visual player circle radius in yards (what you see) */
   RADIUS_YARDS: 0.6,
+  
+  /** Interaction hit area radius in yards (larger for touch) */
+  HIT_AREA_RADIUS_YARDS: 0.75,
   
   /** Player circle border thickness in yards */
   STROKE_YARDS: 0.06,
@@ -53,8 +56,8 @@ export const PLAYER_SIZING = {
   /** Minimum touch target diameter in pixels (WCAG 2.1 Level AAA) */
   MIN_TOUCH_TARGET_PX: 44,
   
-  /** Target range for player radius in pixels */
-  IDEAL_RADIUS_RANGE_PX: { min: 20, max: 30 },
+  /** Target range for player VISUAL radius in pixels (not hit area) */
+  IDEAL_VISUAL_RADIUS_PX: { min: 12, max: 20 },
 } as const;
 
 /**
@@ -233,20 +236,35 @@ export function yardsToPixelsClamped(
 
 /**
  * Helper: Ensure minimum touch target size
+ * Returns the radius needed for hit area to meet accessibility requirements
  */
 export function ensureTouchTarget(
-  radiusYards: number,
+  visualRadiusYards: number,
   pixelsPerYard: number,
   minDiameterPx: number = ACCESSIBILITY.MIN_TOUCH_TARGET_PX
 ): number {
-  const currentDiameter = radiusYards * pixelsPerYard * 2;
+  const visualDiameter = visualRadiusYards * pixelsPerYard * 2;
   
-  if (currentDiameter < minDiameterPx) {
-    // Scale up radius to meet minimum diameter
+  if (visualDiameter < minDiameterPx) {
+    // Calculate radius needed to meet minimum diameter
     return (minDiameterPx / 2) / pixelsPerYard;
   }
   
-  return radiusYards;
+  // Visual size already meets requirements, return original
+  return visualRadiusYards;
+}
+
+/**
+ * Helper: Get appropriate hit area radius for touch targets
+ * Always returns at least the minimum touch target size, regardless of visual size
+ */
+export function getHitAreaRadius(
+  visualRadiusYards: number,
+  pixelsPerYard: number,
+  minDiameterPx: number = ACCESSIBILITY.MIN_TOUCH_TARGET_PX
+): number {
+  const minRadiusYards = (minDiameterPx / 2) / pixelsPerYard;
+  return Math.max(visualRadiusYards, minRadiusYards);
 }
 
 /**
