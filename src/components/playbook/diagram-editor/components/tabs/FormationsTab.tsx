@@ -4,6 +4,7 @@ import type { Player } from "../../types/Player";
 import type { DiagramPixiApp } from "../../core/PixiApp";
 import { FormationPicker } from "../FormationPicker";
 import { useToast } from "../../../../../hooks/useToast";
+import { haptics } from "../../../../../utils/haptics";
 
 interface FormationsTabProps {
   app: DiagramPixiApp | null;
@@ -316,6 +317,8 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
   };
 
   const handleFormationSelect = (formationId: string) => {
+    haptics.heavy(); // Heavy feedback for major action (formation insert)
+    
     setSelectedFormation(formationId);
     addFormation(formationId);
 

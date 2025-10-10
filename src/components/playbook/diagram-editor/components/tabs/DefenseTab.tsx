@@ -8,6 +8,7 @@ import {
   formatDefenseRecommendation,
 } from "@utils/autoDefense";
 import { useToast } from "@hooks/useToast";
+import { haptics } from "@utils/haptics";
 
 interface DefenseTabProps {
   app: DiagramPixiApp | null;
@@ -160,9 +161,12 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
 
   // Auto-match defense based on offensive formation
   const handleAutoMatchDefense = () => {
+    haptics.medium(); // Medium feedback for analysis start
+    
     // Check if there are offensive players
     const offensePlayers = players.filter((p) => p.team === "offense");
     if (offensePlayers.length < 5) {
+      haptics.error(); // Error pattern for invalid action
       toast.error("Need at least 5 offensive players to analyze formation");
       return;
     }
@@ -182,6 +186,8 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
         recommendation.schemeId === "base43"
       ) {
         addDefenseFormation("nickel425");
+        
+        haptics.success(); // Success pattern for completion
 
         // Show success toast with matchup info
         const matchupText = formatDefenseRecommendation(
@@ -190,12 +196,14 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
         );
         toast.success(matchupText);
       } else {
+        haptics.light(); // Light tap for info
         // Unsupported scheme (for future implementation)
         toast.info(
           `Recommended: ${recommendation.schemeName} (not yet available)`
         );
       }
     } catch (error) {
+      haptics.error(); // Error pattern for failure
       console.error("Auto-defense error:", error);
       toast.error("Failed to analyze formation");
     } finally {

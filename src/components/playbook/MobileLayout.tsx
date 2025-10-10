@@ -12,6 +12,7 @@ import { PlayerPropertiesDrawer } from "./diagram-editor/components/PlayerProper
 import { ContextualToolbar } from "./diagram-editor/components/ContextualToolbar";
 import { useDiagramStore } from "./diagram-editor/stores/diagramStore";
 import { useToast } from "@hooks/useToast";
+import { haptics } from "@utils/haptics";
 import type { DiagramPixiApp } from "./diagram-editor/core/PixiApp";
 
 interface MobileLayoutProps {
@@ -72,6 +73,8 @@ export function MobileLayout({
     const player = players.find((p) => p.id === playerId);
     if (!player || !app) return;
 
+    haptics.medium(); // Tactile feedback for transformation
+
     // Get center X for current alignment
     const centerX = app.coordinates.fieldWidth / 2;
     
@@ -84,6 +87,7 @@ export function MobileLayout({
   };
 
   const handleEditPosition = (_playerId: string) => {
+    haptics.light(); // Light tap for UI action
     // TODO: Open position editor modal
     toast.info("Position editor coming soon");
   };
@@ -91,6 +95,8 @@ export function MobileLayout({
   const handleCopyPlayer = (playerId: string) => {
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
+
+    haptics.medium(); // Tactile feedback for creation
 
     // Create duplicate with slight offset
     const duplicate = {
@@ -104,6 +110,7 @@ export function MobileLayout({
   };
 
   const handleDeletePlayer = (playerId: string) => {
+    haptics.heavy(); // Heavy feedback for destructive action
     removePlayer(playerId);
     toast.success("Player deleted");
   };
