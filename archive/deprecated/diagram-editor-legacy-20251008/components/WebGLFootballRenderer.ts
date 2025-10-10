@@ -51,9 +51,10 @@ export class WebGLFootballRenderer {
 
   constructor(canvas: HTMLCanvasElement, config: WebGLFieldConfig) {
     this.config = config;
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const gl =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (!gl) {
-      throw new Error('WebGL not supported');
+      throw new Error("WebGL not supported");
     }
     this.gl = gl as WebGLRenderingContext;
 
@@ -75,7 +76,7 @@ export class WebGLFootballRenderer {
     const gl = this.gl;
 
     // Enable extensions for better performance
-    const ext = gl.getExtension('OES_vertex_array_object');
+    const ext = gl.getExtension("OES_vertex_array_object");
     if (ext) {
       // Use VAOs if available
     }
@@ -94,7 +95,7 @@ export class WebGLFootballRenderer {
   private createShader(type: number, source: string): WebGLShader {
     const gl = this.gl;
     const shader = gl.createShader(type);
-    if (!shader) throw new Error('Failed to create shader');
+    if (!shader) throw new Error("Failed to create shader");
 
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -108,13 +109,19 @@ export class WebGLFootballRenderer {
     return shader;
   }
 
-  private createProgram(vertexSource: string, fragmentSource: string): WebGLProgram {
+  private createProgram(
+    vertexSource: string,
+    fragmentSource: string
+  ): WebGLProgram {
     const gl = this.gl;
     const program = gl.createProgram();
-    if (!program) throw new Error('Failed to create program');
+    if (!program) throw new Error("Failed to create program");
 
     const vertexShader = this.createShader(gl.VERTEX_SHADER, vertexSource);
-    const fragmentShader = this.createShader(gl.FRAGMENT_SHADER, fragmentSource);
+    const fragmentShader = this.createShader(
+      gl.FRAGMENT_SHADER,
+      fragmentSource
+    );
 
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
@@ -243,7 +250,7 @@ export class WebGLFootballRenderer {
   private createFieldBuffer(): WebGLBuffer {
     const gl = this.gl;
     const buffer = gl.createBuffer();
-    if (!buffer) throw new Error('Failed to create field buffer');
+    if (!buffer) throw new Error("Failed to create field buffer");
 
     // Field geometry will be created dynamically
     return buffer;
@@ -252,7 +259,7 @@ export class WebGLFootballRenderer {
   private createPlayerBuffer(): WebGLBuffer {
     const gl = this.gl;
     const buffer = gl.createBuffer();
-    if (!buffer) throw new Error('Failed to create player buffer');
+    if (!buffer) throw new Error("Failed to create player buffer");
 
     return buffer;
   }
@@ -260,7 +267,7 @@ export class WebGLFootballRenderer {
   private createRouteBuffer(): WebGLBuffer {
     const gl = this.gl;
     const buffer = gl.createBuffer();
-    if (!buffer) throw new Error('Failed to create route buffer');
+    if (!buffer) throw new Error("Failed to create route buffer");
 
     return buffer;
   }
@@ -277,22 +284,36 @@ export class WebGLFootballRenderer {
     gl.useProgram(this.fieldProgram);
 
     // Set uniforms
-    const resolutionLoc = gl.getUniformLocation(this.fieldProgram, 'u_resolution');
-    const translationLoc = gl.getUniformLocation(this.fieldProgram, 'u_translation');
-    const scaleLoc = gl.getUniformLocation(this.fieldProgram, 'u_scale');
+    const resolutionLoc = gl.getUniformLocation(
+      this.fieldProgram,
+      "u_resolution"
+    );
+    const translationLoc = gl.getUniformLocation(
+      this.fieldProgram,
+      "u_translation"
+    );
+    const scaleLoc = gl.getUniformLocation(this.fieldProgram, "u_scale");
 
     gl.uniform2f(resolutionLoc, this.config.width, this.config.height);
     gl.uniform2f(translationLoc, translation[0], translation[1]);
     gl.uniform1f(scaleLoc, scale);
 
     // Generate field geometry (yard lines, hash marks, etc.) with viewport culling
-    const fieldGeometry = this.generateFieldGeometry(fieldWidth, fieldHeight, viewportBounds);
+    const fieldGeometry = this.generateFieldGeometry(
+      fieldWidth,
+      fieldHeight,
+      viewportBounds
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.fieldBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(fieldGeometry.vertices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(fieldGeometry.vertices),
+      gl.STATIC_DRAW
+    );
 
-    const positionLoc = gl.getAttribLocation(this.fieldProgram, 'a_position');
-    const colorLoc = gl.getAttribLocation(this.fieldProgram, 'a_color');
+    const positionLoc = gl.getAttribLocation(this.fieldProgram, "a_position");
+    const colorLoc = gl.getAttribLocation(this.fieldProgram, "a_color");
 
     gl.enableVertexAttribArray(positionLoc);
     gl.enableVertexAttribArray(colorLoc);
@@ -315,9 +336,15 @@ export class WebGLFootballRenderer {
     gl.useProgram(this.playerProgram);
 
     // Set uniforms
-    const resolutionLoc = gl.getUniformLocation(this.playerProgram, 'u_resolution');
-    const translationLoc = gl.getUniformLocation(this.playerProgram, 'u_translation');
-    const scaleLoc = gl.getUniformLocation(this.playerProgram, 'u_scale');
+    const resolutionLoc = gl.getUniformLocation(
+      this.playerProgram,
+      "u_resolution"
+    );
+    const translationLoc = gl.getUniformLocation(
+      this.playerProgram,
+      "u_translation"
+    );
+    const scaleLoc = gl.getUniformLocation(this.playerProgram, "u_scale");
 
     gl.uniform2f(resolutionLoc, this.config.width, this.config.height);
     gl.uniform2f(translationLoc, translation[0], translation[1]);
@@ -325,16 +352,25 @@ export class WebGLFootballRenderer {
 
     // Prepare player data for instanced rendering
     const playerData: number[] = [];
-    players.forEach(player => {
-      playerData.push(player.x, player.y, ...player.color, player.selected ? 12 : 10);
+    players.forEach((player) => {
+      playerData.push(
+        player.x,
+        player.y,
+        ...player.color,
+        player.selected ? 12 : 10
+      );
     });
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.playerBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(playerData), gl.DYNAMIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(playerData),
+      gl.DYNAMIC_DRAW
+    );
 
-    const positionLoc = gl.getAttribLocation(this.playerProgram, 'a_position');
-    const colorLoc = gl.getAttribLocation(this.playerProgram, 'a_color');
-    const sizeLoc = gl.getAttribLocation(this.playerProgram, 'a_size');
+    const positionLoc = gl.getAttribLocation(this.playerProgram, "a_position");
+    const colorLoc = gl.getAttribLocation(this.playerProgram, "a_color");
+    const sizeLoc = gl.getAttribLocation(this.playerProgram, "a_size");
 
     gl.enableVertexAttribArray(positionLoc);
     gl.enableVertexAttribArray(colorLoc);
@@ -358,28 +394,38 @@ export class WebGLFootballRenderer {
     gl.useProgram(this.routeProgram);
 
     // Set uniforms
-    const resolutionLoc = gl.getUniformLocation(this.routeProgram, 'u_resolution');
-    const translationLoc = gl.getUniformLocation(this.routeProgram, 'u_translation');
-    const scaleLoc = gl.getUniformLocation(this.routeProgram, 'u_scale');
+    const resolutionLoc = gl.getUniformLocation(
+      this.routeProgram,
+      "u_resolution"
+    );
+    const translationLoc = gl.getUniformLocation(
+      this.routeProgram,
+      "u_translation"
+    );
+    const scaleLoc = gl.getUniformLocation(this.routeProgram, "u_scale");
 
     gl.uniform2f(resolutionLoc, this.config.width, this.config.height);
     gl.uniform2f(translationLoc, translation[0], translation[1]);
     gl.uniform1f(scaleLoc, scale);
 
-    routes.forEach(route => {
+    routes.forEach((route) => {
       if (route.length === 0) return;
 
       const routeData: number[] = [];
-      route.forEach(point => {
+      route.forEach((point) => {
         routeData.push(point.x, point.y, ...point.color, point.width);
       });
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.routeBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(routeData), gl.DYNAMIC_DRAW);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(routeData),
+        gl.DYNAMIC_DRAW
+      );
 
-      const positionLoc = gl.getAttribLocation(this.routeProgram, 'a_position');
-      const colorLoc = gl.getAttribLocation(this.routeProgram, 'a_color');
-      const widthLoc = gl.getAttribLocation(this.routeProgram, 'a_width');
+      const positionLoc = gl.getAttribLocation(this.routeProgram, "a_position");
+      const colorLoc = gl.getAttribLocation(this.routeProgram, "a_color");
+      const widthLoc = gl.getAttribLocation(this.routeProgram, "a_width");
 
       gl.enableVertexAttribArray(positionLoc);
       gl.enableVertexAttribArray(colorLoc);
@@ -403,13 +449,21 @@ export class WebGLFootballRenderer {
     this.renderRoutes(annotations, translation, scale, _viewportBounds);
   }
 
-  private generateFieldGeometry(fieldWidth: number, fieldHeight: number, viewportBounds?: ViewportBounds) {
+  private generateFieldGeometry(
+    fieldWidth: number,
+    fieldHeight: number,
+    viewportBounds?: ViewportBounds
+  ) {
     const vertices: number[] = [];
     const pixelsPerYard = this.config.pixelsPerYard;
 
     // If viewport bounds are provided, only generate geometry for visible area
-    const minYard = viewportBounds ? Math.max(0, Math.floor(viewportBounds.top)) : 0;
-    const maxYard = viewportBounds ? Math.min(fieldHeight, Math.ceil(viewportBounds.bottom)) : fieldHeight;
+    const minYard = viewportBounds
+      ? Math.max(0, Math.floor(viewportBounds.top))
+      : 0;
+    const maxYard = viewportBounds
+      ? Math.min(fieldHeight, Math.ceil(viewportBounds.bottom))
+      : fieldHeight;
 
     // Yard lines (every yard)
     for (let yard = minYard; yard <= maxYard; yard++) {
@@ -428,10 +482,18 @@ export class WebGLFootballRenderer {
 
         // Left hash
         vertices.push(centerX - hashOffset, y, ...this.config.hashColor);
-        vertices.push(centerX - hashOffset + hashLength, y, ...this.config.hashColor);
+        vertices.push(
+          centerX - hashOffset + hashLength,
+          y,
+          ...this.config.hashColor
+        );
 
         // Right hash
-        vertices.push(centerX + hashOffset - hashLength, y, ...this.config.hashColor);
+        vertices.push(
+          centerX + hashOffset - hashLength,
+          y,
+          ...this.config.hashColor
+        );
         vertices.push(centerX + hashOffset, y, ...this.config.hashColor);
       }
     }
@@ -440,7 +502,11 @@ export class WebGLFootballRenderer {
     vertices.push(0, 0, ...this.config.lineColor);
     vertices.push(fieldWidth * pixelsPerYard, 0, ...this.config.lineColor);
     vertices.push(0, fieldHeight * pixelsPerYard, ...this.config.lineColor);
-    vertices.push(fieldWidth * pixelsPerYard, fieldHeight * pixelsPerYard, ...this.config.lineColor);
+    vertices.push(
+      fieldWidth * pixelsPerYard,
+      fieldHeight * pixelsPerYard,
+      ...this.config.lineColor
+    );
 
     return { vertices };
   }

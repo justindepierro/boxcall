@@ -1,6 +1,6 @@
 /**
  * PlayersLayer - Manages all player sprites on the field
- * 
+ *
  * Responsibilities:
  * - Add/remove/update player sprites
  * - Handle player selection (single select)
@@ -8,15 +8,15 @@
  * - Maintain player z-order (selected on top)
  */
 
-import { Container, FederatedPointerEvent, Rectangle } from 'pixi.js';
-import { PlayerSprite } from '../sprites/PlayerSprite';
-import type { Player } from '../types/Player';
-import type { CoordinateSystem } from '../core/CoordinateSystem';
-import { validatePlayerId, validatePlayerPosition } from '../utils/validation';
-import { findAlignmentGuides } from '../utils/alignmentGuides';
-import { applySnapToFeatures } from '../utils/snapToFeatures';
-import { applySmartSnap } from '../utils/smartSnap';
-import type { AlignmentGuidesLayer } from './AlignmentGuidesLayer';
+import { Container, FederatedPointerEvent, Rectangle } from "pixi.js";
+import { PlayerSprite } from "../sprites/PlayerSprite";
+import type { Player } from "../types/Player";
+import type { CoordinateSystem } from "../core/CoordinateSystem";
+import { validatePlayerId, validatePlayerPosition } from "../utils/validation";
+import { findAlignmentGuides } from "../utils/alignmentGuides";
+import { applySnapToFeatures } from "../utils/snapToFeatures";
+import { applySmartSnap } from "../utils/smartSnap";
+import type { AlignmentGuidesLayer } from "./AlignmentGuidesLayer";
 
 export interface PlayersLayerEvents {
   onPlayerSelected?: (playerId: string | null) => void;
@@ -56,10 +56,10 @@ export class PlayersLayer extends Container {
     super();
     this.coords = coords;
     this.events = events;
-    
+
     // Make layer interactive and cover the entire field area for drag events
     // Use 'dynamic' to capture all pointer events even when cursor is outside children
-    this.eventMode = 'dynamic';
+    this.eventMode = "dynamic";
     this.hitArea = new Rectangle(
       0,
       0,
@@ -91,10 +91,10 @@ export class PlayersLayer extends Container {
 
     // Create new sprite
     const sprite = new PlayerSprite(player, this.coords);
-    
+
     // Setup event handlers
     this.setupSpriteEvents(sprite);
-    
+
     // Add to container and map
     this.addChild(sprite);
     this.sprites.set(player.id, sprite);
@@ -209,11 +209,11 @@ export class PlayersLayer extends Container {
    */
   selectAllOffensivePlayers(): void {
     this.clearSelection();
-    
+
     let count = 0;
     this.sprites.forEach((sprite) => {
       const player = sprite.getPlayer();
-      if (player.team === 'offense') {
+      if (player.team === "offense") {
         this.selectPlayer(player.id, true); // Add to selection
         count++;
       }
@@ -226,7 +226,7 @@ export class PlayersLayer extends Container {
    * Clear all selections
    */
   clearSelection(): void {
-    this.selectedPlayerIds.forEach(playerId => {
+    this.selectedPlayerIds.forEach((playerId) => {
       const sprite = this.sprites.get(playerId);
       if (sprite) {
         sprite.setSelected(false);
@@ -259,39 +259,41 @@ export class PlayersLayer extends Container {
    */
   private setupSpriteEvents(sprite: PlayerSprite): void {
     // Make sprite interactive for pointer events
-    sprite.eventMode = 'static';
-    sprite.cursor = 'pointer';
+    sprite.eventMode = "static";
+    sprite.cursor = "pointer";
 
     // Track double-click for center players
     let lastClickTime = 0;
     const DOUBLE_CLICK_THRESHOLD = 300; // milliseconds
 
     // Click to select and start drag
-    sprite.on('pointerdown', (event: FederatedPointerEvent) => {
+    sprite.on("pointerdown", (event: FederatedPointerEvent) => {
       event.stopPropagation();
-      
+
       const playerId = sprite.getId();
       const player = sprite.getPlayer();
       const isShiftHeld = event.shiftKey;
       const isAlreadySelected = this.selectedPlayerIds.has(playerId);
-      
+
       // Check for double-click on center
       const currentTime = Date.now();
       const timeSinceLastClick = currentTime - lastClickTime;
       lastClickTime = currentTime;
 
       if (
-        player.position === 'center' &&
-        player.team === 'offense' &&
+        player.position === "center" &&
+        player.team === "offense" &&
         timeSinceLastClick < DOUBLE_CLICK_THRESHOLD
       ) {
         // Double-click detected on center - select all offensive players!
-        console.log('🎯 Double-click detected on center! Selecting all offensive players...');
+        console.log(
+          "🎯 Double-click detected on center! Selecting all offensive players..."
+        );
         event.stopPropagation();
         this.selectAllOffensivePlayers();
         return; // Skip normal click handling
       }
-      
+
       // Multi-select with Shift, or toggle selection if already selected
       if (isShiftHeld) {
         if (isAlreadySelected) {
@@ -308,7 +310,7 @@ export class PlayersLayer extends Container {
         }
         // Otherwise, keep the existing selection (player is already selected)
       }
-      
+
       // Start drag for all selected players
       this.startDrag(sprite, event);
 
@@ -323,7 +325,7 @@ export class PlayersLayer extends Container {
    * Clean up event handlers for a sprite
    */
   private cleanupSpriteEvents(sprite: PlayerSprite): void {
-    sprite.off('pointerdown');
+    sprite.off("pointerdown");
   }
 
   /**
@@ -344,7 +346,10 @@ export class PlayersLayer extends Container {
       this.dragUpdateScheduled = true;
       requestAnimationFrame(() => {
         if (this.pendingDragEvent) {
-          this.updateDrag(this.pendingDragEvent.sprite, this.pendingDragEvent.event);
+          this.updateDrag(
+            this.pendingDragEvent.sprite,
+            this.pendingDragEvent.event
+          );
           this.pendingDragEvent = null;
         }
         this.dragUpdateScheduled = false;
@@ -369,13 +374,14 @@ export class PlayersLayer extends Container {
    */
   private startDrag(sprite: PlayerSprite, _event: FederatedPointerEvent): void {
     // Get all selected players (or just this one if not selected)
-    const playerIds = this.selectedPlayerIds.size > 0 
-      ? Array.from(this.selectedPlayerIds)
-      : [sprite.getId()];
-    
+    const playerIds =
+      this.selectedPlayerIds.size > 0
+        ? Array.from(this.selectedPlayerIds)
+        : [sprite.getId()];
+
     // Store start positions for all players being dragged
     const startPositions = new Map<string, { x: number; y: number }>();
-    playerIds.forEach(id => {
+    playerIds.forEach((id) => {
       const s = this.sprites.get(id);
       if (s) {
         const player = s.getPlayer();
@@ -383,7 +389,7 @@ export class PlayersLayer extends Container {
         s.setDragging(true);
       }
     });
-    
+
     this.dragState = {
       playerIds,
       startPositions,
@@ -391,15 +397,18 @@ export class PlayersLayer extends Container {
 
     // Attach global drag event listeners to this layer
     // This ensures drag continues even when cursor moves off the sprite
-    this.on('pointermove', this.onDragMove);
-    this.on('pointerup', this.onDragEnd);
-    this.on('pointerupoutside', this.onDragEnd);
+    this.on("pointermove", this.onDragMove);
+    this.on("pointerup", this.onDragEnd);
+    this.on("pointerupoutside", this.onDragEnd);
   }
 
   /**
    * Update drag position - moves all selected players together with alignment guides
    */
-  private updateDrag(draggedSprite: PlayerSprite, event: FederatedPointerEvent): void {
+  private updateDrag(
+    draggedSprite: PlayerSprite,
+    event: FederatedPointerEvent
+  ): void {
     if (!this.dragState) return;
 
     const draggedPlayerId = draggedSprite.getId();
@@ -408,7 +417,7 @@ export class PlayersLayer extends Container {
 
     // Get local position (pixels in this layer's space, accounting for camera transform)
     const localPos = event.getLocalPosition(this);
-    
+
     // Convert to yards
     const yardPos = this.coords.pixelsToYards(localPos);
 
@@ -430,9 +439,11 @@ export class PlayersLayer extends Container {
       );
       targetX = snapResult.x;
       targetY = snapResult.y;
-      
+
       if (snapResult.snapped) {
-        console.log(`🎯 Snapped to: ${snapResult.targets.map(t => t.label).join(', ')}`);
+        console.log(
+          `🎯 Snapped to: ${snapResult.targets.map((t) => t.label).join(", ")}`
+        );
       }
     }
 
@@ -440,8 +451,8 @@ export class PlayersLayer extends Container {
     if (this.alignmentGuidesLayer) {
       // Get all other players for alignment checking
       const otherPlayers = Array.from(this.sprites.values())
-        .filter(s => s.getId() !== draggedPlayerId)
-        .map(s => {
+        .filter((s) => s.getId() !== draggedPlayerId)
+        .map((s) => {
           const player = s.getPlayer();
           return {
             id: player.id,
@@ -475,11 +486,11 @@ export class PlayersLayer extends Container {
 
     // Get current positions of all players being dragged
     const draggedPlayers = this.dragState.playerIds
-      .map(id => {
+      .map((id) => {
         const sprite = this.sprites.get(id);
         const playerStartPos = this.dragState!.startPositions.get(id);
         if (!sprite || !playerStartPos) return null;
-        
+
         return {
           ...sprite.getPlayer(),
           x: playerStartPos.x + deltaX,
@@ -490,9 +501,10 @@ export class PlayersLayer extends Container {
 
     // Apply smart snap if dragging multiple players AND holding Shift key
     // Shift+Drag = Auto-align formation with equal spacing
-    const smartSnapResult = (draggedPlayers.length >= 3 && event.shiftKey)
-      ? applySmartSnap(draggedPlayers, 1.0, 1.5)
-      : { snapped: false, adjustments: new Map(), snapType: 'none' as const };
+    const smartSnapResult =
+      draggedPlayers.length >= 3 && event.shiftKey
+        ? applySmartSnap(draggedPlayers, 1.0, 1.5)
+        : { snapped: false, adjustments: new Map(), snapType: "none" as const };
 
     if (smartSnapResult.snapped) {
       console.log(`✨ Smart snap applied: ${smartSnapResult.snapType}`);
@@ -500,7 +512,7 @@ export class PlayersLayer extends Container {
 
     // Move all selected players by the same delta (with smart snap adjustments)
     let anyHitBounds = false;
-    this.dragState.playerIds.forEach(playerId => {
+    this.dragState.playerIds.forEach((playerId) => {
       const sprite = this.sprites.get(playerId);
       const playerStartPos = this.dragState!.startPositions.get(playerId);
       if (!sprite || !playerStartPos) return;
@@ -519,7 +531,7 @@ export class PlayersLayer extends Container {
       // Clamp to field bounds
       const clampedX = Math.max(0, Math.min(this.coords.fieldWidth, newX));
       const clampedY = Math.max(0, Math.min(this.coords.fieldHeight, newY));
-      
+
       // Check if clamping occurred
       if (clampedX !== newX || clampedY !== newY) {
         anyHitBounds = true;
@@ -567,20 +579,20 @@ export class PlayersLayer extends Container {
     this.alignmentGuidesLayer?.hideGuides();
 
     // Remove global drag event listeners
-    this.off('pointermove', this.onDragMove);
-    this.off('pointerup', this.onDragEnd);
-    this.off('pointerupoutside', this.onDragEnd);
+    this.off("pointermove", this.onDragMove);
+    this.off("pointerup", this.onDragEnd);
+    this.off("pointerupoutside", this.onDragEnd);
 
     // End drag state for all players and notify of changes
-    this.dragState.playerIds.forEach(playerId => {
+    this.dragState.playerIds.forEach((playerId) => {
       const playerSprite = this.sprites.get(playerId);
       if (!playerSprite) return;
 
       playerSprite.setDragging(false);
-      
+
       const player = playerSprite.getPlayer();
       const startPos = this.dragState!.startPositions.get(playerId);
-      
+
       // Notify if this player's position changed
       if (startPos && (player.x !== startPos.x || player.y !== startPos.y)) {
         if (this.events.onPlayerMoved) {
@@ -613,7 +625,7 @@ export class PlayersLayer extends Container {
    * Clear all players
    */
   clear(): void {
-    this.sprites.forEach(sprite => {
+    this.sprites.forEach((sprite) => {
       this.cleanupSpriteEvents(sprite);
       sprite.destroy();
     });
@@ -632,7 +644,7 @@ export class PlayersLayer extends Container {
       clearTimeout(this.boundsHitTimeout);
       this.boundsHitTimeout = null;
     }
-    
+
     this.clear();
     super.destroy();
   }

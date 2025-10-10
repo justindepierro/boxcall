@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useGesture } from '@use-gesture/react';
-import type { DiagramPixiApp } from '../core/PixiApp';
+import { useEffect } from "react";
+import { useGesture } from "@use-gesture/react";
+import type { DiagramPixiApp } from "../core/PixiApp";
 
 interface UseGesturesOptions {
   app: DiagramPixiApp | null;
@@ -12,7 +12,11 @@ interface UseGesturesOptions {
  * Unified gesture handling for diagram editor
  * Supports: mouse wheel zoom, touch pinch-zoom, drag-to-pan
  */
-export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptions) => {
+export const useGestures = ({
+  app,
+  canvasRef,
+  enabled = true,
+}: UseGesturesOptions) => {
   // Mouse wheel zoom
   useEffect(() => {
     if (!enabled || !app || !canvasRef.current) return;
@@ -21,7 +25,7 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
 
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
-      
+
       // Get mouse position relative to canvas
       const rect = canvas.getBoundingClientRect();
       const mouseX = event.clientX - rect.left;
@@ -51,10 +55,10 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
       app.camera.pan(-worldDeltaX, -worldDeltaY);
     };
 
-    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    canvas.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      canvas.removeEventListener('wheel', handleWheel);
+      canvas.removeEventListener("wheel", handleWheel);
     };
   }, [app, canvasRef, enabled]);
 
@@ -77,7 +81,7 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
 
         // Apply zoom based on pinch scale
         const targetZoom = Math.max(0.5, Math.min(3.0, scale));
-        
+
         // Set zoom directly during pinch (smooth interpolation happens in Camera.update)
         app.camera.setZoom(targetZoom);
 
@@ -87,11 +91,14 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
           const newScreenPos = app.worldToScreen(worldPos.x, worldPos.y);
           const dx = centerX - newScreenPos.x;
           const dy = centerY - newScreenPos.y;
-          
+
           // Convert screen delta to world delta and pan
           const worldDelta = app.screenToWorld(dx, dy);
           const worldOrigin = app.screenToWorld(0, 0);
-          app.camera.pan(worldDelta.x - worldOrigin.x, worldDelta.y - worldOrigin.y);
+          app.camera.pan(
+            worldDelta.x - worldOrigin.x,
+            worldDelta.y - worldOrigin.y
+          );
         }
 
         if (last) {
@@ -106,8 +113,11 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
         // Convert drag delta from screen to world space
         const worldDelta = app.screenToWorld(x, y);
         const worldOrigin = app.screenToWorld(0, 0);
-        
-        app.camera.pan(worldDelta.x - worldOrigin.x, worldDelta.y - worldOrigin.y);
+
+        app.camera.pan(
+          worldDelta.x - worldOrigin.x,
+          worldDelta.y - worldOrigin.y
+        );
       },
     },
     {
@@ -135,20 +145,20 @@ export const useGestures = ({ app, canvasRef, enabled = true }: UseGesturesOptio
     const handleTouchEnd = (event: TouchEvent) => {
       const now = Date.now();
       const timeSinceLastTap = now - lastTap;
-      
+
       if (timeSinceLastTap < 300 && timeSinceLastTap > 0) {
         // Double tap detected
         event.preventDefault();
         app.camera.reset();
       }
-      
+
       lastTap = now;
     };
 
-    canvas.addEventListener('touchend', handleTouchEnd);
+    canvas.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      canvas.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener("touchend", handleTouchEnd);
     };
   }, [app, canvasRef, enabled]);
 };

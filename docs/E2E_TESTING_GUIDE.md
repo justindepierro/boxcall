@@ -421,6 +421,7 @@ jobs:
    - Inspect variables
 
 3. **Headed Mode**
+
    ```bash
    npm run test:e2e:headed
    ```

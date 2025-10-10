@@ -1,6 +1,6 @@
 /**
  * Diagram Editor Tips Data
- * 
+ *
  * Keyboard shortcuts and editor tips for the diagram editor.
  * Separated from component for Fast Refresh compatibility.
  */

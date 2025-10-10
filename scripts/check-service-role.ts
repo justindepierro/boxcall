@@ -28,18 +28,19 @@ async function checkWithAnonKey() {
     });
 
     const { data, error } = await supabase
-      .from('achievement_definitions')
-      .select('name, description');
+      .from("achievement_definitions")
+      .select("name, description");
 
     if (error) {
-      console.log('❌ Anon key query error:', error.message);
+      console.log("❌ Anon key query error:", error.message);
     } else {
       console.log(`✅ Anon key found ${data?.length || 0} achievements:`);
-      data?.slice(0, 3).forEach(a => console.log(`   - ${a.name}`));
-      if (data && data.length > 3) console.log(`   ... and ${data.length - 3} more`);
+      data?.slice(0, 3).forEach((a) => console.log(`   - ${a.name}`));
+      if (data && data.length > 3)
+        console.log(`   ... and ${data.length - 3} more`);
     }
   } catch (error: any) {
-    console.error('❌ Anon key error:', error.message);
+    console.error("❌ Anon key error:", error.message);
   }
 }
 
@@ -51,19 +52,18 @@ async function checkWithServiceRole() {
     });
 
     const { data, error } = await supabase
-      .from('achievement_definitions')
-      .select('name, description')
+      .from("achievement_definitions")
+      .select("name, description")
       .limit(5);
 
     if (error) {
-      console.log('❌ Service role query error:', error.message);
+      console.log("❌ Service role query error:", error.message);
     } else {
       console.log(`✅ Service role found ${data?.length} achievements:`);
-      data?.forEach(a => console.log(`   - ${a.name}`));
+      data?.forEach((a) => console.log(`   - ${a.name}`));
     }
-
   } catch (error: any) {
-    console.error('❌ Service role error:', error.message);
+    console.error("❌ Service role error:", error.message);
   }
 }
 

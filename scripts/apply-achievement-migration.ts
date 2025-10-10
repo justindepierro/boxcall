@@ -25,14 +25,18 @@ async function applyAchievementMigration() {
     console.log("🚀 Applying enhanced achievement system migration...");
 
     // Read the migration file
-    const migrationPath = "../supabase/migrations/061_enhanced_achievement_system.sql";
-    const migrationSQL = readFileSync(join(process.cwd(), migrationPath), "utf8");
+    const migrationPath =
+      "../supabase/migrations/061_enhanced_achievement_system.sql";
+    const migrationSQL = readFileSync(
+      join(process.cwd(), migrationPath),
+      "utf8"
+    );
 
     // Split into individual statements
     const statements = migrationSQL
       .split(";")
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith("--"));
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith("--"));
 
     console.log(`📄 Found ${statements.length} SQL statements to execute`);
 
@@ -41,20 +45,31 @@ async function applyAchievementMigration() {
       const statement = statements[i];
       if (statement.trim()) {
         try {
-          console.log(`⚡ Executing statement ${i + 1}/${statements.length}...`);
-          const { error } = await supabase.rpc("exec_sql", { sql: statement + ";" });
+          console.log(
+            `⚡ Executing statement ${i + 1}/${statements.length}...`
+          );
+          const { error } = await supabase.rpc("exec_sql", {
+            sql: statement + ";",
+          });
 
           if (error) {
             // Try direct query execution for some statements
             console.log("   Trying direct execution...");
-            const { error: directError } = await supabase.from("_temp_query").select("*").limit(1);
+            const { error: directError } = await supabase
+              .from("_temp_query")
+              .select("*")
+              .limit(1);
             if (directError) {
               // For now, just log - we'll handle this differently
-              console.log(`   Statement executed (assuming success): ${statement.substring(0, 50)}...`);
+              console.log(
+                `   Statement executed (assuming success): ${statement.substring(0, 50)}...`
+              );
             }
           }
         } catch (stmtError) {
-          console.log(`   Note: ${statement.substring(0, 50)}... (might need manual execution)`);
+          console.log(
+            `   Note: ${statement.substring(0, 50)}... (might need manual execution)`
+          );
         }
       }
     }
@@ -63,7 +78,6 @@ async function applyAchievementMigration() {
     console.log("🎯 Check database for new achievement tables:");
     console.log("   - achievement_definitions");
     console.log("   - achievement_progress");
-
   } catch (error) {
     console.error("❌ Migration failed:", error);
   }

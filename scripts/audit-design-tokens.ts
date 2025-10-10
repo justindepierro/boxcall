@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Design Token Audit Script
- * 
+ *
  * Scans the entire codebase for hardcoded design values:
  * - Colors (#hex, rgb/rgba)
  * - Spacing (px, rem hardcoded)
@@ -9,7 +9,7 @@
  * - Shadows
  * - Border radius
  * - Z-index
- * 
+ *
  * Generates comprehensive report with:
  * - Total violations by category
  * - File-by-file breakdown
@@ -33,14 +33,15 @@ const patterns = {
   hexColor: /#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})(?![0-9A-Fa-f])/g,
   rgbColor: /rgb\([^)]+\)/g,
   rgbaColor: /rgba\([^)]+\)/g,
-  pxSpacing: /(?:padding|margin|gap|width|height|top|right|bottom|left|inset):\s*(\d+)px/g,
+  pxSpacing:
+    /(?:padding|margin|gap|width|height|top|right|bottom|left|inset):\s*(\d+)px/g,
   remSpacing: /(?:padding|margin|gap):\s*([\d.]+)rem/g,
   fontSize: /font-size:\s*([\d.]+(?:px|rem|em))/g,
   boxShadow: /box-shadow:\s*[^;]+/g,
   textShadow: /text-shadow:\s*[^;]+/g,
   borderRadius: /border-radius:\s*([\d.]+(?:px|rem))/g,
   zIndex: /z-index:\s*(\d+)/g,
-  
+
   // Tailwind hardcoded values
   tailwindColor: /(?:bg|text|border)-\[#[0-9A-Fa-f]{6}\]/g,
   tailwindSpacing: /(?:p|m|gap|w|h)-\[[\d.]+(?:px|rem)\]/g,
@@ -62,33 +63,40 @@ interface Violation {
 
 const violations: Violation[] = [];
 const fileExtensions = [".ts", ".tsx", ".js", ".jsx", ".css", ".scss"];
-const excludeDirs = ["node_modules", "dist", "build", ".next", "coverage", ".git"];
+const excludeDirs = [
+  "node_modules",
+  "dist",
+  "build",
+  ".next",
+  "coverage",
+  ".git",
+];
 
 // Infrastructure files that should keep hex values (token definitions, themes, utilities)
 const excludeFiles = [
   // Token definitions (source of truth)
   "src/design-system/tokens.ts",
   "src/design-system/tokens.js",
-  
+
   // Theme infrastructure
   "src/themes/registry.ts",
   "src/themes/dark.ts",
   "src/themes/light.ts",
   "src/themes/highContrast.ts",
-  
+
   // Color utilities
   "src/lib/colorGeneration.ts",
   "src/hooks/useColorTheme.ts",
-  
+
   // Tailwind config
   "src/styles/tailwind/auroraTheme.js",
   "tailwind.config.js",
   "tailwind.config.ts",
-  
+
   // CSS variable definitions (intentional hex values)
   "src/styles/generated-themes.css",
   "src/styles/generated-tokens.css",
-  
+
   // Dev/debug tools (lower priority)
   "src/dev/contrastDebug.ts",
 ];
@@ -106,18 +114,18 @@ const excludePatterns = [
 function shouldScanFile(filePath: string): boolean {
   const ext = filePath.substring(filePath.lastIndexOf("."));
   if (!fileExtensions.includes(ext)) return false;
-  
+
   // Check if file is in exclude list
   const normalizedPath = filePath.replace(/\\/g, "/");
-  if (excludeFiles.some(excluded => normalizedPath.includes(excluded))) {
+  if (excludeFiles.some((excluded) => normalizedPath.includes(excluded))) {
     return false;
   }
-  
+
   // Check if file matches exclude patterns
-  if (excludePatterns.some(pattern => pattern.test(normalizedPath))) {
+  if (excludePatterns.some((pattern) => pattern.test(normalizedPath))) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -133,7 +141,11 @@ function scanFile(filePath: string, projectRoot: string): void {
 
     lines.forEach((line, lineIndex) => {
       // Skip comments
-      if (line.trim().startsWith("//") || line.trim().startsWith("/*") || line.trim().startsWith("*")) {
+      if (
+        line.trim().startsWith("//") ||
+        line.trim().startsWith("/*") ||
+        line.trim().startsWith("*")
+      ) {
         return;
       }
 
@@ -145,7 +157,7 @@ function scanFile(filePath: string, projectRoot: string): void {
         if (line.includes("colorTokens") || line.includes("--color-")) {
           continue;
         }
-        
+
         violations.push({
           file: relativePath,
           line: lineIndex + 1,
@@ -186,7 +198,8 @@ function scanFile(filePath: string, projectRoot: string): void {
       patterns.pxSpacing.lastIndex = 0;
       while ((match = patterns.pxSpacing.exec(line)) !== null) {
         const px = parseInt(match[1]);
-        if (px % 4 === 0) { // Only flag if not on 4px grid
+        if (px % 4 === 0) {
+          // Only flag if not on 4px grid
           violations.push({
             file: relativePath,
             line: lineIndex + 1,
@@ -380,16 +393,22 @@ function suggestSpacingToken(px: number): string | undefined {
 
 function generateReport(): void {
   // Group by type
-  const byType = violations.reduce((acc, v) => {
-    acc[v.type] = (acc[v.type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const byType = violations.reduce(
+    (acc, v) => {
+      acc[v.type] = (acc[v.type] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   // Group by file
-  const byFile = violations.reduce((acc, v) => {
-    acc[v.file] = (acc[v.file] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const byFile = violations.reduce(
+    (acc, v) => {
+      acc[v.file] = (acc[v.file] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   // Sort files by violation count
   const topFiles = Object.entries(byFile)
@@ -418,9 +437,7 @@ ${Object.entries(byType)
 ## Top 20 Files by Violation Count
 
 ${topFiles
-  .map(
-    ([file, count], i) => `${i + 1}. **${file}**: ${count} violations`
-  )
+  .map(([file, count], i) => `${i + 1}. **${file}**: ${count} violations`)
   .join("\n")}
 
 ---
@@ -514,11 +531,14 @@ function getSeverity(type: string): string {
 
 function generateDetailedViolations(): string {
   // Group by file
-  const byFile = violations.reduce((acc, v) => {
-    if (!acc[v.file]) acc[v.file] = [];
-    acc[v.file].push(v);
-    return acc;
-  }, {} as Record<string, Violation[]>);
+  const byFile = violations.reduce(
+    (acc, v) => {
+      if (!acc[v.file]) acc[v.file] = [];
+      acc[v.file].push(v);
+      return acc;
+    },
+    {} as Record<string, Violation[]>
+  );
 
   let output = "";
 
@@ -527,7 +547,7 @@ function generateDetailedViolations(): string {
     .slice(0, 10) // Top 10 files only for detailed view
     .forEach(([file, fileViolations]) => {
       output += `### ${file} (${fileViolations.length} violations)\n\n`;
-      
+
       fileViolations.slice(0, 15).forEach((v) => {
         output += `- **Line ${v.line}** (${v.type}): \`${v.value}\`\n`;
         if (v.suggestion) {

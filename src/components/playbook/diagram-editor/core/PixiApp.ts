@@ -1,18 +1,22 @@
 /**
  * Main Pixi Application for Football Diagram Editor
- * 
+ *
  * This is the core rendering engine that manages all layers and interactions.
  * Uses Pixi.js for hardware-accelerated WebGL rendering.
  */
 
-import { Application, Container } from 'pixi.js';
-import { Camera, type CameraConfig } from './Camera';
-import { CoordinateSystem, type FieldDimensions } from './CoordinateSystem';
-import type { FieldLayer } from '../layers/FieldLayer';
-import type { PlayersLayer } from '../layers/PlayersLayer';
-import type { SpacingIndicatorLayer } from '../layers/SpacingIndicatorLayer';
-import { validateCanvas, validateDimension, validateFieldDimensions } from '../utils/validation';
-import { FPSMonitor } from '../utils/performance';
+import { Application, Container } from "pixi.js";
+import { Camera, type CameraConfig } from "./Camera";
+import { CoordinateSystem, type FieldDimensions } from "./CoordinateSystem";
+import type { FieldLayer } from "../layers/FieldLayer";
+import type { PlayersLayer } from "../layers/PlayersLayer";
+import type { SpacingIndicatorLayer } from "../layers/SpacingIndicatorLayer";
+import {
+  validateCanvas,
+  validateDimension,
+  validateFieldDimensions,
+} from "../utils/validation";
+import { FPSMonitor } from "../utils/performance";
 
 export interface PixiAppConfig {
   canvas: HTMLCanvasElement;
@@ -29,13 +33,13 @@ export class DiagramPixiApp {
   public stage: Container;
   public camera: Camera;
   public coordinates: CoordinateSystem;
-  
+
   // Layer references (actual layer instances, not empty containers)
   public fieldLayer: FieldLayer | null = null;
   public playersLayer: PlayersLayer | null = null;
   public spacingIndicatorLayer: SpacingIndicatorLayer | null = null;
   // Future layers can be added as needed
-  
+
   private isDestroyed: boolean = false;
 
   // Performance monitoring (development only)
@@ -46,11 +50,14 @@ export class DiagramPixiApp {
     validateCanvas(config.canvas);
 
     // Validate dimensions
-    validateDimension(config.width, 'Canvas width', { min: 100, max: 10000 });
-    validateDimension(config.height, 'Canvas height', { min: 100, max: 10000 });
+    validateDimension(config.width, "Canvas width", { min: 100, max: 10000 });
+    validateDimension(config.height, "Canvas height", { min: 100, max: 10000 });
 
     // Validate field dimensions
-    validateFieldDimensions(config.fieldDimensions.width, config.fieldDimensions.height);
+    validateFieldDimensions(
+      config.fieldDimensions.width,
+      config.fieldDimensions.height
+    );
 
     // Create Pixi application - v7 uses constructor, not async init()
     this.app = new Application({
@@ -58,7 +65,7 @@ export class DiagramPixiApp {
       height: config.height,
       resolution: config.resolution || window.devicePixelRatio || 1,
       autoDensity: true,
-      backgroundColor: config.backgroundColor || 0xF5F7ED,
+      backgroundColor: config.backgroundColor || 0xf5f7ed,
       antialias: true,
     });
 
@@ -67,16 +74,20 @@ export class DiagramPixiApp {
     if (config.canvas.parentElement) {
       config.canvas.parentElement.replaceChild(pixiCanvas, config.canvas);
     }
-    
+
     // Initialize coordinate system
     this.coordinates = new CoordinateSystem(config.fieldDimensions);
-    
+
     // Create main stage container (this gets transformed by Camera)
     this.stage = new Container();
-    this.stage.eventMode = 'static'; // v7.2+ uses eventMode instead of interactive
-    
+    this.stage.eventMode = "static"; // v7.2+ uses eventMode instead of interactive
+
     // Create camera controller with optional config
-    this.camera = new Camera(this.stage, config.fieldDimensions, config.cameraConfig);
+    this.camera = new Camera(
+      this.stage,
+      config.fieldDimensions,
+      config.cameraConfig
+    );
 
     // Initialize FPS monitor in development
     if (import.meta.env.DEV) {
@@ -85,10 +96,10 @@ export class DiagramPixiApp {
 
     // Add stage to app
     this.app.stage.addChild(this.stage);
-    
+
     // Set initial viewport size and center field
     this.camera.setViewportSize(config.width, config.height);
-    
+
     // Start render loop
     this.app.ticker.add(this.update.bind(this));
   }
@@ -107,14 +118,14 @@ export class DiagramPixiApp {
    */
   addFieldLayer(layer: FieldLayer): void {
     if (this.fieldLayer) {
-      console.warn('⚠️ Field layer already added, removing old one');
+      console.warn("⚠️ Field layer already added, removing old one");
       this.stage.removeChild(this.fieldLayer);
     }
-    
+
     this.fieldLayer = layer;
     this.stage.addChild(layer);
   }
-  
+
   /**
    * Get the field layer
    */
@@ -127,7 +138,7 @@ export class DiagramPixiApp {
    */
   private update(): void {
     if (this.isDestroyed) return;
-    
+
     // Track FPS in development
     if (this.fpsMonitor) {
       this.fpsMonitor.tick();
@@ -135,7 +146,7 @@ export class DiagramPixiApp {
 
     // Update camera (smooth zoom/pan)
     this.camera.update();
-    
+
     // Layers can add their own update logic here
     // For now, just camera updates
   }
@@ -180,12 +191,12 @@ export class DiagramPixiApp {
    */
   destroy(): void {
     this.isDestroyed = true;
-    
+
     // Stop ticker if it exists
     if (this.app?.ticker) {
       this.app.ticker.stop();
     }
-    
+
     // Destroy all layers if they exist
     if (this.fieldLayer) {
       this.fieldLayer.destroy();
@@ -197,11 +208,11 @@ export class DiagramPixiApp {
       this.spacingIndicatorLayer.destroy();
     }
     // Future layers will be destroyed here as they're added
-    
+
     if (this.stage) {
       this.stage.destroy({ children: true });
     }
-    
+
     // Destroy app if it exists
     if (this.app) {
       this.app.destroy(true, { children: true });
@@ -238,12 +249,12 @@ export class DiagramPixiApp {
     // Test coordinate conversion
     const worldCoords = this.screenToWorld(testX, testY);
     const backToScreen = this.worldToScreen(worldCoords.x, worldCoords.y);
-    
+
     // Only log if there's a significant error (for debugging)
     const errorX = Math.abs(backToScreen.x - testX);
     const errorY = Math.abs(backToScreen.y - testY);
     if (errorX > 0.1 || errorY > 0.1) {
-      console.warn('Coordinate conversion error:', {
+      console.warn("Coordinate conversion error:", {
         screen: { x: testX, y: testY },
         world: worldCoords,
         backToScreen: backToScreen,

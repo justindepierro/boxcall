@@ -20,14 +20,8 @@ import {
 } from "@services/postsService";
 import { getSeasonStats } from "@services/statsService";
 
-import type {
-  TeamEventListItem,
-  CreateEventInput,
-} from "@services";
-import type {
-  GameResultListItem,
-  LogGameResultInput,
-} from "@services";
+import type { TeamEventListItem, CreateEventInput } from "@services";
+import type { GameResultListItem, LogGameResultInput } from "@services";
 import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys

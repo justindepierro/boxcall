@@ -1,21 +1,21 @@
 /**
  * useUndoRedo - Hook for undo/redo functionality in diagram editor
- * 
+ *
  * Implements command pattern with history stack:
  * - Ctrl+Z / Cmd+Z: Undo last operation
  * - Ctrl+Shift+Z / Cmd+Shift+Z / Ctrl+Y: Redo
  * - Tracks player movements, additions, deletions
  * - Maximum 50 operations in history
- * 
+ *
  * Command types:
  * - MoveCommand: Track player position changes
  * - AddCommand: Track player additions
  * - DeleteCommand: Track player deletions
  */
 
-import { useEffect, useRef } from 'react';
-import type { DiagramPixiApp } from '../core/PixiApp';
-import type { Player } from '../types/Player';
+import { useEffect, useRef } from "react";
+import type { DiagramPixiApp } from "../core/PixiApp";
+import type { Player } from "../types/Player";
 
 interface UndoRedoProps {
   app: DiagramPixiApp | null;
@@ -28,15 +28,15 @@ interface UndoRedoProps {
 interface Command {
   execute(): void;
   undo(): void;
-  type: 'move' | 'add' | 'delete';
+  type: "move" | "add" | "delete";
 }
 
 /**
  * Move command - tracks player position changes
  */
 class MoveCommand implements Command {
-  type: 'move' = 'move';
-  
+  type: "move" = "move";
+
   constructor(
     private playersLayer: any,
     private oldPositions: Map<string, { x: number; y: number }>,
@@ -64,8 +64,8 @@ class MoveCommand implements Command {
 // @ts-expect-error - Reserved for future undo/redo functionality
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AddCommand implements Command {
-  type: 'add' = 'add';
-  
+  type: "add" = "add";
+
   constructor(
     private playersLayer: any,
     private players: Player[]
@@ -73,14 +73,14 @@ class AddCommand implements Command {
 
   execute(): void {
     // Add players
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       this.playersLayer.addPlayer(player);
     });
   }
 
   undo(): void {
     // Remove players
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       this.playersLayer.removePlayer(player.id);
     });
   }
@@ -92,8 +92,8 @@ class AddCommand implements Command {
 // @ts-expect-error - Reserved for future undo/redo functionality
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class DeleteCommand implements Command {
-  type: 'delete' = 'delete';
-  
+  type: "delete" = "delete";
+
   constructor(
     private playersLayer: any,
     private players: Player[]
@@ -101,14 +101,14 @@ class DeleteCommand implements Command {
 
   execute(): void {
     // Delete players
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       this.playersLayer.removePlayer(player.id);
     });
   }
 
   undo(): void {
     // Re-add players
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       this.playersLayer.addPlayer(player);
     });
   }
@@ -144,7 +144,9 @@ class CommandHistory {
       this.currentIndex--;
     }
 
-    console.log(`📝 Command executed: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`);
+    console.log(
+      `📝 Command executed: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`
+    );
   }
 
   /**
@@ -152,7 +154,7 @@ class CommandHistory {
    */
   undo(): boolean {
     if (this.currentIndex < 0) {
-      console.log('⚠️ Nothing to undo');
+      console.log("⚠️ Nothing to undo");
       return false;
     }
 
@@ -160,7 +162,9 @@ class CommandHistory {
     command.undo();
     this.currentIndex--;
 
-    console.log(`↩️ Undo: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`);
+    console.log(
+      `↩️ Undo: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`
+    );
     return true;
   }
 
@@ -169,7 +173,7 @@ class CommandHistory {
    */
   redo(): boolean {
     if (this.currentIndex >= this.history.length - 1) {
-      console.log('⚠️ Nothing to redo');
+      console.log("⚠️ Nothing to redo");
       return false;
     }
 
@@ -177,7 +181,9 @@ class CommandHistory {
     const command = this.history[this.currentIndex];
     command.execute();
 
-    console.log(`↪️ Redo: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`);
+    console.log(
+      `↪️ Redo: ${command.type} (history: ${this.currentIndex + 1}/${this.history.length})`
+    );
     return true;
   }
 
@@ -205,7 +211,10 @@ class CommandHistory {
 const commandHistory = new CommandHistory();
 
 export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
-  const dragStartPositionsRef = useRef<Map<string, { x: number; y: number }> | null>(null);
+  const dragStartPositionsRef = useRef<Map<
+    string,
+    { x: number; y: number }
+  > | null>(null);
 
   useEffect(() => {
     if (!app || !enabled) return;
@@ -248,11 +257,14 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
         if (sprite) {
           const player = sprite.getPlayer();
           const startPos = dragStartPositionsRef.current!.get(id);
-          
+
           endPositions.set(id, { x: player.x, y: player.y });
 
           // Check if position actually changed
-          if (startPos && (startPos.x !== player.x || startPos.y !== player.y)) {
+          if (
+            startPos &&
+            (startPos.x !== player.x || startPos.y !== player.y)
+          ) {
             positionsChanged = true;
           }
         }
@@ -277,22 +289,26 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
     const handleKeyDown = (event: KeyboardEvent): void => {
       // Skip if typing in input
       const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
         return;
       }
 
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
       const modifierKey = isMac ? event.metaKey : event.ctrlKey;
 
       if (!modifierKey) return;
 
       // Ctrl/Cmd+Z: Undo
-      if (event.key === 'z' && !event.shiftKey) {
+      if (event.key === "z" && !event.shiftKey) {
         event.preventDefault();
         commandHistory.undo();
       }
       // Ctrl/Cmd+Shift+Z or Ctrl+Y: Redo
-      else if ((event.key === 'z' && event.shiftKey) || event.key === 'y') {
+      else if ((event.key === "z" && event.shiftKey) || event.key === "y") {
         event.preventDefault();
         commandHistory.redo();
       }
@@ -301,21 +317,21 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
     // Listen to drag events (we need to hook into PlayersLayer's drag lifecycle)
     // For now, we'll use keyboard events and manual tracking
     // TODO: PlayersLayer could emit drag events for cleaner integration
-    
-    document.addEventListener('keydown', handleKeyDown);
+
+    document.addEventListener("keydown", handleKeyDown);
 
     // HACK: Monitor mouse events on canvas to detect drags
     // This is a workaround until PlayersLayer exposes drag events
     const canvas = app.app?.view as HTMLCanvasElement | undefined;
-    
+
     // Guard: canvas must exist
     if (!canvas) {
       // This is expected during initialization - just return early
       return () => {
-        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener("keydown", handleKeyDown);
       };
     }
-    
+
     let isDragging = false;
 
     const handleMouseDown = (): void => {
@@ -333,14 +349,14 @@ export function useUndoRedo({ app, enabled = true }: UndoRedoProps): void {
       }
     };
 
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mouseup", handleMouseUp);
 
     // Cleanup
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("keydown", handleKeyDown);
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mouseup", handleMouseUp);
     };
   }, [app, enabled]);
 }

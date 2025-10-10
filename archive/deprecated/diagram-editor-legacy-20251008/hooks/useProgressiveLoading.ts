@@ -5,7 +5,7 @@
  * viewport visibility, and performance metrics.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export interface ProgressiveLoadingOptions {
   /** Delay before loading (ms) */
@@ -40,14 +40,16 @@ export const useProgressiveLoading = (
     loadOnViewport = false,
     loadOnInteraction = false,
     loadAfterPriority = false,
-    priority = 0
+    priority = 0,
   } = options;
 
-  const [state, setState] = useState<Omit<ProgressiveLoadingState, 'ref' | 'onInteraction'>>({
+  const [state, setState] = useState<
+    Omit<ProgressiveLoadingState, "ref" | "onInteraction">
+  >({
     shouldLoad: false,
     isLoading: false,
     isLoaded: false,
-    error: null
+    error: null,
   });
 
   const elementRef = useRef<Element | null>(null);
@@ -62,13 +64,13 @@ export const useProgressiveLoading = (
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          setState(prev => ({ ...prev, shouldLoad: true }));
+          setState((prev) => ({ ...prev, shouldLoad: true }));
           observerRef.current?.disconnect();
         }
       },
       {
         threshold: 0.1, // Load when 10% visible
-        rootMargin: '50px' // Load 50px before entering viewport
+        rootMargin: "50px", // Load 50px before entering viewport
       }
     );
 
@@ -85,7 +87,7 @@ export const useProgressiveLoading = (
   useEffect(() => {
     if (delay > 0 && !loadOnViewport && !loadOnInteraction) {
       timeoutRef.current = setTimeout(() => {
-        setState(prev => ({ ...prev, shouldLoad: true }));
+        setState((prev) => ({ ...prev, shouldLoad: true }));
       }, delay);
 
       return () => {
@@ -99,7 +101,7 @@ export const useProgressiveLoading = (
   // Handle user interaction loading
   const handleInteraction = useCallback(() => {
     if (loadOnInteraction) {
-      setState(prev => ({ ...prev, shouldLoad: true }));
+      setState((prev) => ({ ...prev, shouldLoad: true }));
     }
   }, [loadOnInteraction]);
 
@@ -109,7 +111,7 @@ export const useProgressiveLoading = (
       // This would be enhanced with a global loading coordinator
       const priorityDelay = (10 - priority) * 100; // Higher priority = shorter delay
       timeoutRef.current = setTimeout(() => {
-        setState(prev => ({ ...prev, shouldLoad: true }));
+        setState((prev) => ({ ...prev, shouldLoad: true }));
       }, priorityDelay);
     }
   }, [loadAfterPriority, priority]);
@@ -117,14 +119,14 @@ export const useProgressiveLoading = (
   // Simulate loading state
   useEffect(() => {
     if (state.shouldLoad && !state.isLoaded) {
-      setState(prev => ({ ...prev, isLoading: true }));
+      setState((prev) => ({ ...prev, isLoading: true }));
 
       // Simulate async loading (in real usage, this would be the actual import)
       const loadingTimeout = setTimeout(() => {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           isLoading: false,
-          isLoaded: true
+          isLoaded: true,
         }));
       }, 100); // Simulate loading time
 
@@ -137,6 +139,6 @@ export const useProgressiveLoading = (
     // Expose ref for viewport observation
     ref: elementRef,
     // Expose interaction handler
-    onInteraction: handleInteraction
+    onInteraction: handleInteraction,
   };
 };

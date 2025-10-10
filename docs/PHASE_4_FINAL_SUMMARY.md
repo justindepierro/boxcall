@@ -11,26 +11,26 @@
 
 ### Bundle Size Improvements
 
-| Metric | Baseline | Final | Improvement |
-|--------|----------|-------|-------------|
-| **Main bundle** | 611 KB | **416 KB** | **-195 KB (-32%)** 🎉 |
-| **Main gzipped** | 184 KB | **126 KB** | **-58 KB (-32%)** 🎉 |
-| **Critical path** | 656 KB | **520 KB** | **-136 KB (-21%)** 🎉 |
+| Metric            | Baseline | Final      | Improvement           |
+| ----------------- | -------- | ---------- | --------------------- |
+| **Main bundle**   | 611 KB   | **416 KB** | **-195 KB (-32%)** 🎉 |
+| **Main gzipped**  | 184 KB   | **126 KB** | **-58 KB (-32%)** 🎉  |
+| **Critical path** | 656 KB   | **520 KB** | **-136 KB (-21%)** 🎉 |
 
 ### Performance Improvements
 
-| Metric | Before | After | Improvement |
-|--------|---------|--------|-------------|
-| **Download (3G)** | ~3.3s | **~2.2s** | **-1.1s (-33%)** ⚡ |
-| **Time to Interactive** | ~5.2s | **~3.2s** | **-2.0s (-38%)** ⚡ |
-| **Parse/Compile** | ~800ms | **~600ms** | **-200ms (-25%)** ⚡ |
+| Metric                  | Before | After      | Improvement          |
+| ----------------------- | ------ | ---------- | -------------------- |
+| **Download (3G)**       | ~3.3s  | **~2.2s**  | **-1.1s (-33%)** ⚡  |
+| **Time to Interactive** | ~5.2s  | **~3.2s**  | **-2.0s (-38%)** ⚡  |
+| **Parse/Compile**       | ~800ms | **~600ms** | **-200ms (-25%)** ⚡ |
 
 ### Cache Benefits
 
-| Scenario | Before | After | Savings |
-|----------|---------|--------|---------|
-| **First visit** | 611 KB | 520 KB + lazy | -91 KB |
-| **Return visit (code change)** | 611 KB | 416 KB | **-195 KB (-32%)** 🎯 |
+| Scenario                       | Before | After         | Savings               |
+| ------------------------------ | ------ | ------------- | --------------------- |
+| **First visit**                | 611 KB | 520 KB + lazy | -91 KB                |
+| **Return visit (code change)** | 611 KB | 416 KB        | **-195 KB (-32%)** 🎯 |
 
 ---
 
@@ -73,12 +73,14 @@
 ## 🎯 Achievement Breakdown
 
 ### Task 1: Bundle Analysis ✅
+
 - Generated bundle treemap visualization
 - Identified top offenders (Supabase, Query, fuse.js)
 - Documented optimization opportunities
 - Created PHASE_4A_ACTION_PLAN.md (351 lines)
 
 ### Task 2: PDF Lazy Loading ✅
+
 - Lazy loaded PracticeScriptList in PlaybookPage
 - Removed Playbook.tsx wrapper defeating lazy loading
 - Fixed LazyRoutes and importers.ts
@@ -86,12 +88,14 @@
 - PlaybookPage: 161 KB → 155 KB (-6 KB)
 
 ### Task 3: Manual Chunk Optimization ✅
+
 - Split Supabase (123 KB) and TanStack Query (35 KB)
 - Main bundle: 611 KB → 465 KB (-146 KB / -24%)
 - Two-line config change with massive impact
 - Perfect for browser caching strategy
 
 ### Task 4: Lazy Load GlobalSearch ✅
+
 - Traced import chain to find fuse.js in main bundle
 - Lazy loaded GlobalSearch with Suspense fallback
 - Main bundle: 465 KB → 416 KB (-49 KB / -11%)
@@ -102,6 +106,7 @@
 ## 📦 Final Bundle Structure
 
 ### Critical Path (Loads First)
+
 ```
 index.html (1 KB)
   ├─ vendor.js (45 KB / 16 KB gz) - React, React DOM, React Router
@@ -113,6 +118,7 @@ Total: 520 KB (~186 KB gzipped)
 ```
 
 ### Lazy Loaded (On Demand)
+
 ```
 playsService.js (34 KB / 11 KB gz) - Search (fuse.js)
 calendar.js (260 KB / 77 KB gz) - FullCalendar
@@ -129,6 +135,7 @@ react-pdf.js (1.5 MB / 501 KB gz) - PDF export
 ### What's in Main Bundle (416 KB)
 
 The remaining 416 KB contains **legitimately needed code**:
+
 - ✅ Core application code (~150 KB)
 - ✅ Layout components (~100 KB)
 - ✅ Core UI components (~100 KB)
@@ -142,38 +149,47 @@ The remaining 416 KB contains **legitimately needed code**:
 ## 🎓 Key Lessons Learned
 
 ### 1. Manual Chunking > Micro-Optimizations
+
 **Impact:** 146 KB reduction from 2 lines of config
+
 ```typescript
 manualChunks: {
   supabase: ["@supabase/supabase-js"],
   query: ["@tanstack/react-query"],
 }
 ```
+
 This beat dozens of potential micro-optimizations combined.
 
 ### 2. Trace Import Chains
+
 **Finding:** GlobalSearch → PlaybookSearchService → fuse.js (70 KB hidden)
 
 Don't just look at direct imports. Trace the full dependency tree to find hidden weight.
 
 ### 3. Lazy Loading Is Powerful
+
 **Components that can be lazy loaded:**
+
 - Heavy UI components not immediately visible
 - Search functionality (users don't always search)
 - Modals and dialogs (only load when opened)
 - Features with heavy dependencies
 
 ### 4. Diminishing Returns
-| Phase | Effort | KB Saved | ROI |
-|-------|--------|----------|-----|
-| 4A | Low | 146 KB | ⭐⭐⭐⭐⭐ |
-| 4B | Low | 49 KB | ⭐⭐⭐⭐ |
-| 4C | High | ~30 KB | ⭐⭐ |
+
+| Phase | Effort | KB Saved | ROI        |
+| ----- | ------ | -------- | ---------- |
+| 4A    | Low    | 146 KB   | ⭐⭐⭐⭐⭐ |
+| 4B    | Low    | 49 KB    | ⭐⭐⭐⭐   |
+| 4C    | High   | ~30 KB   | ⭐⭐       |
 
 After 32% reduction, further optimization = high effort, low return.
 
 ### 5. Verify Lazy Routes Work
+
 **Discovery:** All heavy routes were ALREADY lazy loaded correctly!
+
 - AnalyticsPage ✅
 - TeamSettings ✅
 - SocialFeaturesDemo ✅
@@ -187,14 +203,17 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ## 📊 Performance Impact by Connection Speed
 
 ### 4G (Typical)
+
 - **Before:** ~1.5s → **After:** ~1.0s (**-33%**)
 - Impact: Noticeable but not critical
 
 ### 3G (Common in many regions)
+
 - **Before:** ~5.2s → **After:** ~3.2s (**-38%**)
 - Impact: **Significantly better UX** ✅
 
 ### Slow 3G (Rural, congested)
+
 - **Before:** ~8.5s → **After:** ~5.5s (**-35%**)
 - Impact: **Makes app usable** 🎯
 
@@ -205,23 +224,29 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ## 🚀 User Experience Improvements
 
 ### First Visit
+
 **Before:**
+
 1. Wait 3.3s for main bundle
 2. Parse/compile 800ms
 3. Wait for additional chunks
 4. **Total: ~5.2s to interactive**
 
 **After:**
+
 1. Wait 2.2s for main bundle (-1.1s)
 2. Parse/compile 600ms (-200ms)
 3. Parallel load Supabase + Query
 4. **Total: ~3.2s to interactive (-2.0s / -38%)** ✅
 
 ### Return Visit (After Code Update)
+
 **Before:**
+
 - Re-download: 611 KB main bundle
 
 **After:**
+
 - Re-download: 416 KB main (code changed)
 - Cached: 123 KB Supabase (unchanged)
 - Cached: 35 KB Query (unchanged)
@@ -229,11 +254,14 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 - **Savings: 192 KB (31% less download)** 🎉
 
 ### Search Feature
+
 **Before:**
+
 - fuse.js (70 KB) always loaded
 - Even if user never searches
 
 **After:**
+
 - playsService (34 KB) loads when user opens search
 - Users who don't search save 34 KB
 - Good UX with skeleton loader
@@ -243,6 +271,7 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ## ✅ Verification
 
 ### Build Status
+
 ```bash
 ✓ built in 8.98s
 ✓ 416 KB main bundle (target: < 500 KB)
@@ -251,6 +280,7 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ```
 
 ### Test Status
+
 ```bash
 ✓ 316/316 tests passing (100%)
 ✓ No breaking changes
@@ -258,6 +288,7 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ```
 
 ### Bundle Analysis
+
 ```bash
 ✓ Bundle treemap generated
 ✓ All chunks < 500 KB except calendar (expected)
@@ -283,14 +314,14 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 
 ## 🎯 Targets vs Achievements
 
-| Target | Goal | Achieved | Status |
-|--------|------|----------|---------|
-| Main bundle | < 500 KB | **416 KB** | ✅ **84 KB under** |
-| Gzipped | < 150 KB | **126 KB** | ✅ **24 KB under** |
-| Load time (3G) | < 3.5s | **~3.2s** | ✅ **0.3s under** |
-| No breaking changes | 0 | **0** | ✅ **Perfect** |
-| Tests passing | 100% | **100%** | ✅ **316/316** |
-| Documentation | Good | **Excellent** | ✅ **2,000 lines** |
+| Target              | Goal     | Achieved      | Status             |
+| ------------------- | -------- | ------------- | ------------------ |
+| Main bundle         | < 500 KB | **416 KB**    | ✅ **84 KB under** |
+| Gzipped             | < 150 KB | **126 KB**    | ✅ **24 KB under** |
+| Load time (3G)      | < 3.5s   | **~3.2s**     | ✅ **0.3s under**  |
+| No breaking changes | 0        | **0**         | ✅ **Perfect**     |
+| Tests passing       | 100%     | **100%**      | ✅ **316/316**     |
+| Documentation       | Good     | **Excellent** | ✅ **2,000 lines** |
 
 **All targets exceeded with room to spare!** 🎉
 
@@ -299,7 +330,9 @@ The LazyRoutes system was working perfectly. The issue was libraries in main, no
 ## 💡 Recommendations
 
 ### ✅ Merge to Main Now
+
 **Reasons:**
+
 1. All targets exceeded by significant margins
 2. 32% reduction is excellent for 3 hours of work
 3. 2.0s faster load time is user-perceivable improvement
@@ -341,6 +374,7 @@ If further optimization is needed in the future:
 ## 🎉 Phase 4: SUCCESS!
 
 **Summary:**
+
 - ✅ **195 KB reduction** (611 KB → 416 KB, **-32%**)
 - ✅ **58 KB gzipped reduction** (184 KB → 126 KB, **-32%**)
 - ✅ **2.0s faster TTI** on 3G (5.2s → 3.2s, **-38%**)
@@ -351,6 +385,7 @@ If further optimization is needed in the future:
 - ✅ **100% tests passing** (316/316)
 
 **Impact:**
+
 - Better UX for users on slow connections
 - Faster initial load for all users
 - Better caching strategy (192 KB stable libs)
@@ -381,12 +416,14 @@ If further optimization is needed in the future:
 ## 🙏 Acknowledgments
 
 **Tools Used:**
+
 - Vite 7.0.4 (excellent code splitting)
 - rollup-plugin-visualizer (bundle analysis)
 - React 19 (Suspense for lazy loading)
 - Chrome DevTools (performance profiling)
 
 **Techniques Applied:**
+
 - Manual chunk splitting
 - Lazy loading with Suspense
 - Import chain analysis
@@ -397,4 +434,4 @@ If further optimization is needed in the future:
 
 **Phase 4 Performance Optimization: COMPLETE AND READY TO SHIP! 🚀**
 
-*The BoxCall app is now 32% faster and ready to serve users on any connection speed!*
+_The BoxCall app is now 32% faster and ready to serve users on any connection speed!_

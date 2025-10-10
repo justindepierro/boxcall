@@ -11,16 +11,19 @@ import type {
   CollisionDetectionRequest,
   CollisionDetectionResponse,
   WorkerRequest,
-  WorkerResponse
-} from './workers/workerTypes';
+  WorkerResponse,
+} from "./workers/workerTypes";
 
 export class WebWorkerManager {
   private worker: Worker | null = null;
-  private pendingRequests = new Map<string, {
-    resolve: (value: any) => void;
-    reject: (error: any) => void;
-    timeout: NodeJS.Timeout;
-  }>();
+  private pendingRequests = new Map<
+    string,
+    {
+      resolve: (value: any) => void;
+      reject: (error: any) => void;
+      timeout: NodeJS.Timeout;
+    }
+  >();
 
   constructor() {
     this.initializeWorker();
@@ -30,22 +33,24 @@ export class WebWorkerManager {
     try {
       // Create worker from the routeWorker.ts file
       // Note: Vite will handle bundling this properly
-      this.worker = new Worker(
-        new URL('./routeWorker.ts', import.meta.url),
-        { type: 'module' }
-      );
+      this.worker = new Worker(new URL("./routeWorker.ts", import.meta.url), {
+        type: "module",
+      });
 
       this.worker.onmessage = (e: MessageEvent<WorkerResponse>) => {
         this.handleWorkerResponse(e.data);
       };
 
       this.worker.onerror = (error) => {
-        console.error('Web Worker error:', error);
+        console.error("Web Worker error:", error);
         // Fallback to main thread processing if worker fails
         this.worker = null;
       };
     } catch (error) {
-      console.warn('Web Workers not supported, falling back to main thread:', error);
+      console.warn(
+        "Web Workers not supported, falling back to main thread:",
+        error
+      );
     }
   }
 
@@ -56,7 +61,7 @@ export class WebWorkerManager {
     clearTimeout(pending.timeout);
     this.pendingRequests.delete(response.id);
 
-    if (response.type === 'ERROR') {
+    if (response.type === "ERROR") {
       pending.reject(new Error((response as any).error));
     } else {
       pending.resolve(response);
@@ -70,13 +75,13 @@ export class WebWorkerManager {
     return new Promise<T>((resolve, reject) => {
       if (!this.worker) {
         // Fallback to main thread if worker not available
-        reject(new Error('Web Worker not available'));
+        reject(new Error("Web Worker not available"));
         return;
       }
 
       const timeout = setTimeout(() => {
         this.pendingRequests.delete(request.id);
-        reject(new Error('Worker request timeout'));
+        reject(new Error("Worker request timeout"));
       }, timeoutMs);
 
       this.pendingRequests.set(request.id, { resolve, reject, timeout });
@@ -92,26 +97,27 @@ export class WebWorkerManager {
     endPoint: { x: number; y: number },
     obstacles: Array<{ x: number; y: number; radius: number }> = [],
     fieldBounds: { width: number; height: number },
-    options?: RouteCalculationRequest['options']
+    options?: RouteCalculationRequest["options"]
   ): Promise<Array<{ x: number; y: number }>> {
     const requestId = `route_${Date.now()}_${Math.random()}`;
 
     const request: RouteCalculationRequest = {
-      type: 'CALCULATE_ROUTE',
+      type: "CALCULATE_ROUTE",
       id: requestId,
       startPoint,
       endPoint,
       obstacles,
       fieldBounds,
-      options
+      options,
     };
 
     try {
-      const response = await this.sendRequest<RouteCalculationResponse>(request);
+      const response =
+        await this.sendRequest<RouteCalculationResponse>(request);
       return response.route;
     } catch (error) {
       // Fallback to simple direct route calculation
-      console.warn('Worker route calculation failed, using fallback:', error);
+      console.warn("Worker route calculation failed, using fallback:", error);
       return this.fallbackRouteCalculation(startPoint, endPoint);
     }
   }
@@ -122,26 +128,29 @@ export class WebWorkerManager {
   async detectCollisions(
     players: Array<{ id: string; x: number; y: number; radius: number }>,
     routes: Array<{ id: string; points: Array<{ x: number; y: number }> }> = []
-  ): Promise<Array<{
-    type: 'player-player' | 'player-route' | 'route-route';
-    elements: string[];
-    position?: { x: number; y: number };
-  }>> {
+  ): Promise<
+    Array<{
+      type: "player-player" | "player-route" | "route-route";
+      elements: string[];
+      position?: { x: number; y: number };
+    }>
+  > {
     const requestId = `collision_${Date.now()}_${Math.random()}`;
 
     const request: CollisionDetectionRequest = {
-      type: 'DETECT_COLLISIONS',
+      type: "DETECT_COLLISIONS",
       id: requestId,
       players,
-      routes
+      routes,
     };
 
     try {
-      const response = await this.sendRequest<CollisionDetectionResponse>(request);
+      const response =
+        await this.sendRequest<CollisionDetectionResponse>(request);
       return response.collisions;
     } catch (error) {
       // Fallback to simple collision detection
-      console.warn('Worker collision detection failed, using fallback:', error);
+      console.warn("Worker collision detection failed, using fallback:", error);
       return this.fallbackCollisionDetection(players, routes);
     }
   }
@@ -164,12 +173,12 @@ export class WebWorkerManager {
     players: Array<{ id: string; x: number; y: number; radius: number }>,
     routes: Array<{ id: string; points: Array<{ x: number; y: number }> }>
   ): Array<{
-    type: 'player-player' | 'player-route' | 'route-route';
+    type: "player-player" | "player-route" | "route-route";
     elements: string[];
     position?: { x: number; y: number };
   }> {
     const collisions: Array<{
-      type: 'player-player' | 'player-route' | 'route-route';
+      type: "player-player" | "player-route" | "route-route";
       elements: string[];
       position?: { x: number; y: number };
     }> = [];
@@ -181,11 +190,11 @@ export class WebWorkerManager {
         const p2 = players[j];
         const distance = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
-        if (distance < (p1.radius + p2.radius)) {
+        if (distance < p1.radius + p2.radius) {
           collisions.push({
-            type: 'player-player',
+            type: "player-player",
             elements: [p1.id, p2.id],
-            position: { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+            position: { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 },
           });
         }
       }
@@ -206,7 +215,7 @@ export class WebWorkerManager {
     // Clear all pending requests
     for (const [id, pending] of this.pendingRequests) {
       clearTimeout(pending.timeout);
-      pending.reject(new Error('Worker destroyed'));
+      pending.reject(new Error("Worker destroyed"));
     }
     this.pendingRequests.clear();
   }

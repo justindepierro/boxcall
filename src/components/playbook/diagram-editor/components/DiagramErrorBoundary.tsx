@@ -1,13 +1,13 @@
 /**
  * Diagram Error Boundary
- * 
+ *
  * Catches and gracefully handles errors during Pixi initialization
  * and rendering, providing fallback UI and debugging information.
  */
 
-import React, { Component } from 'react';
-import type { ReactNode } from 'react';
-import { Icon } from '../../../../components/ui/Icon/Icon';
+import React, { Component } from "react";
+import type { ReactNode } from "react";
+import { Icon } from "../../../../components/ui/Icon/Icon";
 
 interface Props {
   children: ReactNode;
@@ -38,9 +38,9 @@ export class DiagramErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error('🔴 Diagram Editor Error:', error);
-    console.error('Error Info:', errorInfo);
-    
+    console.error("🔴 Diagram Editor Error:", error);
+    console.error("Error Info:", errorInfo);
+
     this.setState({
       error,
       errorInfo,
@@ -52,7 +52,7 @@ export class DiagramErrorBoundary extends Component<Props, State> {
     }
 
     // Log to analytics/monitoring service in production
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       // TODO: Send to error tracking service (Sentry, etc.)
       // trackError('DiagramEditorError', { error, errorInfo });
     }
@@ -73,18 +73,18 @@ export class DiagramErrorBoundary extends Component<Props, State> {
   render(): ReactNode {
     if (this.state.hasError) {
       const { error, errorInfo } = this.state;
-      const isWebGLError = error?.message.includes('WebGL') || 
-                          error?.message.includes('context');
-      
+      const isWebGLError =
+        error?.message.includes("WebGL") || error?.message.includes("context");
+
       return (
         <div className="flex h-full w-full items-center justify-center bg-surface p-8">
           <div className="max-w-2xl rounded-lg border border-border bg-surface-card p-8 shadow-lg">
             {/* Error Icon */}
             <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-error-bg p-4">
-                <Icon 
-                  name="warning" 
-                  className="h-10 w-10 text-error-600" 
+                <Icon
+                  name="warning"
+                  className="h-10 w-10 text-error-600"
                   aria-hidden="true"
                 />
               </div>
@@ -92,17 +92,17 @@ export class DiagramErrorBoundary extends Component<Props, State> {
 
             {/* Error Title */}
             <h2 className="mb-2 text-center text-2xl font-bold text-content-primary">
-              {isWebGLError 
-                ? 'Graphics Initialization Failed' 
-                : 'Diagram Editor Error'}
+              {isWebGLError
+                ? "Graphics Initialization Failed"
+                : "Diagram Editor Error"}
             </h2>
 
             {/* Error Description */}
             <p className="mb-6 text-center text-content-secondary">
               {isWebGLError ? (
                 <>
-                  Your browser or device doesn't support WebGL graphics,
-                  which is required for the diagram editor.
+                  Your browser or device doesn't support WebGL graphics, which
+                  is required for the diagram editor.
                 </>
               ) : (
                 <>
@@ -113,7 +113,7 @@ export class DiagramErrorBoundary extends Component<Props, State> {
             </p>
 
             {/* Error Details (Development Only) */}
-            {process.env.NODE_ENV === 'development' && error && (
+            {process.env.NODE_ENV === "development" && error && (
               <details className="mb-6 rounded-md bg-surface-tertiary p-4">
                 <summary className="cursor-pointer font-semibold text-content-primary hover:text-content-secondary">
                   Technical Details
@@ -150,8 +150,13 @@ export class DiagramErrorBoundary extends Component<Props, State> {
                 {isWebGLError ? (
                   <>
                     <li>Update your browser to the latest version</li>
-                    <li>Try a different browser (Chrome, Firefox, or Safari)</li>
-                    <li>Check if hardware acceleration is enabled in browser settings</li>
+                    <li>
+                      Try a different browser (Chrome, Firefox, or Safari)
+                    </li>
+                    <li>
+                      Check if hardware acceleration is enabled in browser
+                      settings
+                    </li>
                     <li>If on mobile, try the desktop version</li>
                   </>
                 ) : (

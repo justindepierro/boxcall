@@ -45,7 +45,9 @@ export type GlobalRole = (typeof GLOBAL_ROLES)[keyof typeof GLOBAL_ROLES];
 /**
  * Type guard for valid global roles
  */
-export function isValidGlobalRole(role: string | null | undefined): role is GlobalRole {
+export function isValidGlobalRole(
+  role: string | null | undefined
+): role is GlobalRole {
   if (!role) return false;
   return Object.values(GLOBAL_ROLES).includes(role as GlobalRole);
 }
@@ -53,7 +55,9 @@ export function isValidGlobalRole(role: string | null | undefined): role is Glob
 /**
  * Type guard for valid team roles
  */
-export function isValidTeamRole(role: string | null | undefined): role is TeamRole {
+export function isValidTeamRole(
+  role: string | null | undefined
+): role is TeamRole {
   if (!role) return false;
   return Object.values(TEAM_ROLES).includes(role as TeamRole);
 }
@@ -76,19 +80,25 @@ export function isGlobalCoach(role: AppRole | null | undefined): boolean {
  * Check if a team role has coach privileges within a team
  */
 export function isTeamCoach(role: TeamMemberRole | null | undefined): boolean {
-  return role === TEAM_ROLES.HEAD_COACH ||
-         role === TEAM_ROLES.ASSISTANT_COACH ||
-         role === TEAM_ROLES.COORDINATOR ||
-         role === TEAM_ROLES.COACH; // Legacy compatibility
+  return (
+    role === TEAM_ROLES.HEAD_COACH ||
+    role === TEAM_ROLES.ASSISTANT_COACH ||
+    role === TEAM_ROLES.COORDINATOR ||
+    role === TEAM_ROLES.COACH
+  ); // Legacy compatibility
 }
 
 /**
  * Check if a team role has management privileges
  */
-export function isTeamManager(role: TeamMemberRole | null | undefined): boolean {
-  return role === TEAM_ROLES.HEAD_COACH ||
-         role === TEAM_ROLES.ASSISTANT_COACH ||
-         role === TEAM_ROLES.MANAGER;
+export function isTeamManager(
+  role: TeamMemberRole | null | undefined
+): boolean {
+  return (
+    role === TEAM_ROLES.HEAD_COACH ||
+    role === TEAM_ROLES.ASSISTANT_COACH ||
+    role === TEAM_ROLES.MANAGER
+  );
 }
 
 /**
@@ -122,15 +132,19 @@ export function validateRoleCombination(
   if (globalRole === GLOBAL_ROLES.PLAYER && isTeamCoach(teamRole)) {
     return {
       valid: false,
-      reason: "Player cannot have coach team role"
+      reason: "Player cannot have coach team role",
     };
   }
 
   // Business rule: If user is a coach globally, they should have appropriate team roles
-  if (globalRole === GLOBAL_ROLES.COACH && !isTeamCoach(teamRole) && teamRole !== TEAM_ROLES.PLAYER) {
+  if (
+    globalRole === GLOBAL_ROLES.COACH &&
+    !isTeamCoach(teamRole) &&
+    teamRole !== TEAM_ROLES.PLAYER
+  ) {
     return {
       valid: false,
-      reason: "Coach should have coach or player team role"
+      reason: "Coach should have coach or player team role",
     };
   }
 
@@ -167,13 +181,18 @@ const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
 ];
 
 function normalizeSubscriptionTier(value: unknown): SubscriptionTier {
-  if (typeof value === "string" && SUBSCRIPTION_TIERS.includes(value as SubscriptionTier)) {
+  if (
+    typeof value === "string" &&
+    SUBSCRIPTION_TIERS.includes(value as SubscriptionTier)
+  ) {
     return value as SubscriptionTier;
   }
   return "free";
 }
 
-async function fetchTeamSubscriptionTier(teamId: string): Promise<SubscriptionTier> {
+async function fetchTeamSubscriptionTier(
+  teamId: string
+): Promise<SubscriptionTier> {
   const { data } = await supabase
     .from("teams")
     .select("subscription_tier")

@@ -466,7 +466,9 @@ export const ComplexityBreakdown: StoryObj = {
             <Badge variant={badgeInfo.color as any} className="mb-spacing-xs">
               {badgeInfo.title}
             </Badge>
-            <div className="text-sm text-secondary">{badgeInfo.description}</div>
+            <div className="text-sm text-secondary">
+              {badgeInfo.description}
+            </div>
           </div>
 
           <div className="space-y-spacing-sm">

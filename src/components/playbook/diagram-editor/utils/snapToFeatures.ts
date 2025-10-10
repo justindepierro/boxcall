@@ -1,18 +1,18 @@
 /**
  * snapToFeatures - Utility for snapping players to field features
- * 
+ *
  * Provides snapping to:
  * - Yard lines (every 5 yards: 0, 5, 10, 15, ..., 100)
  * - Hash marks (4 standard positions across width)
  * - Other players (alignment)
- * 
+ *
  * Alt/Option key toggles snapping mode
  */
 
 export interface SnapTarget {
   x?: number; // Snap x coordinate (yards)
   y?: number; // Snap y coordinate (yards)
-  type: 'yard-line' | 'hash-mark' | 'player';
+  type: "yard-line" | "hash-mark" | "player";
   label?: string; // Display label for the snap target
 }
 
@@ -44,7 +44,7 @@ const SNAP_THRESHOLD_YARDS = 1.0;
 
 /**
  * Apply snap-to-features logic
- * 
+ *
  * @param x Current x position (yards)
  * @param y Current y position (yards)
  * @param fieldWidth Total field width (yards)
@@ -74,29 +74,34 @@ export function applySnapToFeatures(
   const activeTargets: SnapTarget[] = [];
 
   // 1. Snap to yard lines (vertical lines every 5 yards)
-  const nearestYardLine = Math.round(y / YARD_LINE_INTERVAL) * YARD_LINE_INTERVAL;
+  const nearestYardLine =
+    Math.round(y / YARD_LINE_INTERVAL) * YARD_LINE_INTERVAL;
   const distanceToYardLine = Math.abs(y - nearestYardLine);
-  
-  if (distanceToYardLine <= SNAP_THRESHOLD_YARDS && nearestYardLine >= 0 && nearestYardLine <= fieldHeight) {
+
+  if (
+    distanceToYardLine <= SNAP_THRESHOLD_YARDS &&
+    nearestYardLine >= 0 &&
+    nearestYardLine <= fieldHeight
+  ) {
     snappedY = nearestYardLine;
     didSnap = true;
     activeTargets.push({
       y: nearestYardLine,
-      type: 'yard-line',
+      type: "yard-line",
       label: `${nearestYardLine} yard line`,
     });
   }
 
   // 2. Snap to hash marks (horizontal positions)
-  const hashNames = ['Left Hash', 'Left-Center', 'Right-Center', 'Right Hash'];
+  const hashNames = ["Left Hash", "Left-Center", "Right-Center", "Right Hash"];
   let closestHashDistance = Infinity;
   let closestHashIndex = -1;
   let closestHashPosition = 0;
-  
+
   HASH_MARK_POSITIONS.forEach((fraction, index) => {
     const hashX = fraction * fieldWidth;
     const distance = Math.abs(x - hashX);
-    
+
     if (distance <= SNAP_THRESHOLD_YARDS && distance < closestHashDistance) {
       closestHashDistance = distance;
       closestHashIndex = index;
@@ -109,7 +114,7 @@ export function applySnapToFeatures(
     didSnap = true;
     activeTargets.push({
       x: closestHashPosition,
-      type: 'hash-mark',
+      type: "hash-mark",
       label: hashNames[closestHashIndex],
     });
   }
@@ -124,30 +129,33 @@ export function applySnapToFeatures(
 
 /**
  * Get all snap targets for visualization
- * 
+ *
  * @param fieldWidth Total field width (yards)
  * @param fieldHeight Total field height (yards)
  * @returns Array of all possible snap targets
  */
-export function getAllSnapTargets(fieldWidth: number, fieldHeight: number): SnapTarget[] {
+export function getAllSnapTargets(
+  fieldWidth: number,
+  fieldHeight: number
+): SnapTarget[] {
   const targets: SnapTarget[] = [];
 
   // Add yard lines
   for (let y = 0; y <= fieldHeight; y += YARD_LINE_INTERVAL) {
     targets.push({
       y,
-      type: 'yard-line',
+      type: "yard-line",
       label: `${y} yard line`,
     });
   }
 
   // Add hash marks
-  const hashNames = ['Left Hash', 'Left-Center', 'Right-Center', 'Right Hash'];
+  const hashNames = ["Left Hash", "Left-Center", "Right-Center", "Right Hash"];
   HASH_MARK_POSITIONS.forEach((fraction, index) => {
     const hashX = fraction * fieldWidth;
     targets.push({
       x: hashX,
-      type: 'hash-mark',
+      type: "hash-mark",
       label: hashNames[index],
     });
   });

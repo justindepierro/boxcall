@@ -218,8 +218,14 @@ export type DiagramEditorAction =
   | { type: "SET_DRAW_MODE"; mode: NonNullable<EditorToolState["drawMode"]> }
   | { type: "SET_DRAW_COLOR"; color: string }
   | { type: "SET_DRAW_WIDTH"; width: number }
-  | { type: "SET_DRAW_ARROW_HEAD"; arrowHead: NonNullable<EditorToolState["drawArrowHead"]> }
-  | { type: "SET_PLAYER_SHAPE"; shape: NonNullable<EditorToolState["playerShape"]> }
+  | {
+      type: "SET_DRAW_ARROW_HEAD";
+      arrowHead: NonNullable<EditorToolState["drawArrowHead"]>;
+    }
+  | {
+      type: "SET_PLAYER_SHAPE";
+      shape: NonNullable<EditorToolState["playerShape"]>;
+    }
   | { type: "SET_SNAP_PULSE"; enabled: boolean }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
   | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }
@@ -303,7 +309,12 @@ export type DiagramEditorAction =
   | { type: "UNDO" }
   | { type: "REDO" }
   | { type: "MARK_SAVED" }
-  | { type: "SET_FIELD_SLICE"; slice: Partial<Pick<DiagramFieldConfig, "backYards" | "forwardYards" | "losYards">> };
+  | {
+      type: "SET_FIELD_SLICE";
+      slice: Partial<
+        Pick<DiagramFieldConfig, "backYards" | "forwardYards" | "losYards">
+      >;
+    };
 
 export const createEmptyDocument = (): DiagramDocument => ({
   version: 1,

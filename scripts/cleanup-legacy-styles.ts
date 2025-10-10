@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * Cleanup Legacy Style System
- * 
+ *
  * DANGER: This script removes files! Review changes before running.
- * 
+ *
  * Actions:
  * 1. Remove legacy theme generation system
  * 2. Remove duplicate generated-themes.css
@@ -11,7 +11,14 @@
  * 4. Backup files before deletion
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync } from "fs";
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  mkdirSync,
+  copyFileSync,
+  unlinkSync,
+} from "fs";
 import { join } from "path";
 
 const rootDir = process.cwd();
@@ -32,9 +39,7 @@ const filesToRemove = [
   "src/styles/generated-themes.css",
 ];
 
-const filesToUpdate = [
-  "src/index.css",
-];
+const filesToUpdate = ["src/index.css"];
 
 // Step 1: Backup files before deletion
 console.log("📦 Backing up files...\n");
@@ -72,20 +77,20 @@ console.log("\n📝 Updating src/index.css...\n");
 const indexCssPath = join(rootDir, "src/index.css");
 if (existsSync(indexCssPath)) {
   let content = readFileSync(indexCssPath, "utf-8");
-  
+
   // Remove the commented-out old import
   content = content.replace(
     /\/\* @import "\.\/styles\/tokens\.css"; \*\/ \/\* Removed.*?\*\/\n/g,
     ""
   );
-  
+
   // Remove generated-themes.css import
   const beforeChange = content;
   content = content.replace(
     /@import "\.\/styles\/generated-themes\.css";\n/g,
     ""
   );
-  
+
   if (content !== beforeChange) {
     writeFileSync(indexCssPath, content, "utf-8");
     console.log("   ✅ Removed generated-themes.css import");

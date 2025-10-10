@@ -1,6 +1,6 @@
 /**
  * Health Check API
- * 
+ *
  * Provides endpoints for monitoring application health and readiness.
  * Used by load balancers, monitoring systems, and deployment pipelines.
  */
@@ -40,7 +40,7 @@ export interface ReadinessCheck {
  */
 async function checkDatabaseHealth(): Promise<ServiceHealth> {
   const startTime = Date.now();
-  
+
   try {
     // Simple query to check database connectivity
     const { error } = await supabase
@@ -48,9 +48,9 @@ async function checkDatabaseHealth(): Promise<ServiceHealth> {
       .select("id")
       .limit(1)
       .single();
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     if (error) {
       // Check if it's just "no rows" which is still a valid connection
       if (error.code === "PGRST116") {
@@ -58,30 +58,30 @@ async function checkDatabaseHealth(): Promise<ServiceHealth> {
           status: "operational",
           responseTime,
           lastChecked: new Date().toISOString(),
-          message: "Database connected (empty table)"
+          message: "Database connected (empty table)",
         };
       }
-      
+
       return {
         status: "down",
         responseTime,
         lastChecked: new Date().toISOString(),
-        message: error.message
+        message: error.message,
       };
     }
-    
+
     return {
       status: responseTime < 1000 ? "operational" : "degraded",
       responseTime,
       lastChecked: new Date().toISOString(),
-      message: responseTime > 1000 ? "Slow response time" : undefined
+      message: responseTime > 1000 ? "Slow response time" : undefined,
     };
   } catch (err) {
     return {
       status: "down",
       responseTime: Date.now() - startTime,
       lastChecked: new Date().toISOString(),
-      message: err instanceof Error ? err.message : "Unknown error"
+      message: err instanceof Error ? err.message : "Unknown error",
     };
   }
 }
@@ -91,33 +91,33 @@ async function checkDatabaseHealth(): Promise<ServiceHealth> {
  */
 async function checkStorageHealth(): Promise<ServiceHealth> {
   const startTime = Date.now();
-  
+
   try {
     // List buckets to verify storage access
     const { error } = await supabase.storage.listBuckets();
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     if (error) {
       return {
         status: "down",
         responseTime,
         lastChecked: new Date().toISOString(),
-        message: error.message
+        message: error.message,
       };
     }
-    
+
     return {
       status: "operational",
       responseTime,
-      lastChecked: new Date().toISOString()
+      lastChecked: new Date().toISOString(),
     };
   } catch (err) {
     return {
       status: "down",
       responseTime: Date.now() - startTime,
       lastChecked: new Date().toISOString(),
-      message: err instanceof Error ? err.message : "Unknown error"
+      message: err instanceof Error ? err.message : "Unknown error",
     };
   }
 }
@@ -127,33 +127,33 @@ async function checkStorageHealth(): Promise<ServiceHealth> {
  */
 async function checkAuthHealth(): Promise<ServiceHealth> {
   const startTime = Date.now();
-  
+
   try {
     // Check if we can get session (even if null, means auth is responsive)
     const { error } = await supabase.auth.getSession();
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     if (error) {
       return {
         status: "down",
         responseTime,
         lastChecked: new Date().toISOString(),
-        message: error.message
+        message: error.message,
       };
     }
-    
+
     return {
       status: "operational",
       responseTime,
-      lastChecked: new Date().toISOString()
+      lastChecked: new Date().toISOString(),
     };
   } catch (err) {
     return {
       status: "down",
       responseTime: Date.now() - startTime,
       lastChecked: new Date().toISOString(),
-      message: err instanceof Error ? err.message : "Unknown error"
+      message: err instanceof Error ? err.message : "Unknown error",
     };
   }
 }
@@ -164,24 +164,26 @@ async function checkAuthHealth(): Promise<ServiceHealth> {
  */
 export async function healthCheck(): Promise<HealthStatus> {
   const startTime = performance.now();
-  
+
   // Check all services in parallel
   const [database, storage, auth] = await Promise.all([
     checkDatabaseHealth(),
     checkStorageHealth(),
-    checkAuthHealth()
+    checkAuthHealth(),
   ]);
-  
+
   // Determine overall health status
-  const allOperational = [database, storage, auth].every(s => s.status === "operational");
-  const anyDown = [database, storage, auth].some(s => s.status === "down");
-  
-  const status: HealthStatus["status"] = anyDown 
-    ? "unhealthy" 
-    : allOperational 
-    ? "healthy" 
-    : "degraded";
-  
+  const allOperational = [database, storage, auth].every(
+    (s) => s.status === "operational"
+  );
+  const anyDown = [database, storage, auth].some((s) => s.status === "down");
+
+  const status: HealthStatus["status"] = anyDown
+    ? "unhealthy"
+    : allOperational
+      ? "healthy"
+      : "degraded";
+
   return {
     status,
     timestamp: new Date().toISOString(),
@@ -190,8 +192,8 @@ export async function healthCheck(): Promise<HealthStatus> {
     services: {
       database,
       storage,
-      auth
-    }
+      auth,
+    },
   };
 }
 
@@ -205,14 +207,14 @@ export async function readinessCheck(): Promise<ReadinessCheck> {
     // Only check database - the critical dependency
     const dbHealth = await checkDatabaseHealth();
     const databaseReady = dbHealth.status !== "down";
-    
+
     return {
       ready: databaseReady,
       timestamp: new Date().toISOString(),
       checks: {
         database: databaseReady,
-        requiredServices: databaseReady // Add more required services here
-      }
+        requiredServices: databaseReady, // Add more required services here
+      },
     };
   } catch {
     return {
@@ -220,8 +222,8 @@ export async function readinessCheck(): Promise<ReadinessCheck> {
       timestamp: new Date().toISOString(),
       checks: {
         database: false,
-        requiredServices: false
-      }
+        requiredServices: false,
+      },
     };
   }
 }
@@ -233,6 +235,6 @@ export async function readinessCheck(): Promise<ReadinessCheck> {
 export function livenessCheck(): { alive: boolean; timestamp: string } {
   return {
     alive: true,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }

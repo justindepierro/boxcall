@@ -1,6 +1,6 @@
 /**
  * Compatibility Hooks for Legacy Provider Access
- * 
+ *
  * These hooks provide backward compatibility for components
  * that were using the old individual provider hooks.
  * They wrap the new unified useApp hook.
@@ -46,7 +46,7 @@ export const useAdvancedThemeCompat = () => {
 };
 
 /**
- * Legacy hook for accessibility access  
+ * Legacy hook for accessibility access
  * @deprecated Use useApp() instead
  */
 export const useAccessibilityCompat = () => {

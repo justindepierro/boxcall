@@ -22,19 +22,16 @@ async function checkTables() {
   console.log("🔍 Checking database tables...");
 
   const tables = [
-    'profiles',
-    'teams',
-    'team_members',
-    'achievement_definitions',
-    'achievement_progress'
+    "profiles",
+    "teams",
+    "team_members",
+    "achievement_definitions",
+    "achievement_progress",
   ];
 
   for (const table of tables) {
     try {
-      const { error } = await supabase
-        .from(table)
-        .select('*')
-        .limit(1);
+      const { error } = await supabase.from(table).select("*").limit(1);
 
       if (error) {
         console.log(`❌ ${table}: ${error.message}`);

@@ -1,23 +1,23 @@
 /**
  * Camera Controller for Pixi Diagram
- * 
+ *
  * Handles zoom and pan transforms using Pixi's Container transform system.
  * No manual coordinate conversion needed - Pixi does it automatically!
  */
 
-import { Container } from 'pixi.js';
-import type { FieldDimensions } from './CoordinateSystem';
-import { validateZoom, validateDimension, clamp } from '../utils/validation';
+import { Container } from "pixi.js";
+import type { FieldDimensions } from "./CoordinateSystem";
+import { validateZoom, validateDimension, clamp } from "../utils/validation";
 
 export interface CameraState {
-  x: number;      // Pan offset in pixels
-  y: number;      // Pan offset in pixels
-  zoom: number;   // Zoom level (1.0 = 100%)
+  x: number; // Pan offset in pixels
+  y: number; // Pan offset in pixels
+  zoom: number; // Zoom level (1.0 = 100%)
 }
 
 export interface CameraConfig {
-  minZoom?: number;      // Minimum zoom level (default: 0.5)
-  maxZoom?: number;      // Maximum zoom level (default: 3.0)
+  minZoom?: number; // Minimum zoom level (default: 0.5)
+  maxZoom?: number; // Maximum zoom level (default: 3.0)
   smoothFactor?: number; // Interpolation speed 0-1 (default: 0.2, set to 1.0 for instant)
 }
 
@@ -26,26 +26,30 @@ export class Camera {
   private fieldDimensions: FieldDimensions;
   private viewportWidth: number = 0;
   private viewportHeight: number = 0;
-  
+
   // Zoom constraints
   private minZoom: number;
   private maxZoom: number;
-  
+
   // Smooth zoom/pan
   private targetZoom: number = 1.0;
   private targetX: number = 0;
   private targetY: number = 0;
   private smoothFactor: number;
 
-  constructor(stage: Container, fieldDimensions: FieldDimensions, config: CameraConfig = {}) {
+  constructor(
+    stage: Container,
+    fieldDimensions: FieldDimensions,
+    config: CameraConfig = {}
+  ) {
     this.stage = stage;
     this.fieldDimensions = fieldDimensions;
-    
+
     // Apply configuration with defaults
     this.minZoom = config.minZoom ?? 0.5;
     this.maxZoom = config.maxZoom ?? 3.0;
     this.smoothFactor = config.smoothFactor ?? 0.2;
-    
+
     // Center field immediately at (0,0) - will adjust when viewport size is known
     this.centerOnField();
   }
@@ -86,7 +90,7 @@ export class Camera {
   zoomIn(): void {
     const levels = [0.5, 0.75, 1.0, 1.5, 2.0, 3.0];
     const currentZoom = this.stage.scale.x;
-    const currentIndex = levels.findIndex(level => level >= currentZoom);
+    const currentIndex = levels.findIndex((level) => level >= currentZoom);
     const nextIndex = Math.min(levels.length - 1, currentIndex + 1);
     this.targetZoom = levels[nextIndex];
   }
@@ -159,11 +163,11 @@ export class Camera {
   zoomToPoint(worldX: number, worldY: number, zoomDelta: number): void {
     const oldZoom = this.stage.scale.x;
     const newZoom = this.clampZoom(oldZoom + zoomDelta);
-    
+
     // Calculate how much the world point moves in screen space
     const dx = worldX * (newZoom - oldZoom);
     const dy = worldY * (newZoom - oldZoom);
-    
+
     this.targetZoom = newZoom;
     this.targetX -= dx;
     this.targetY -= dy;
@@ -175,12 +179,14 @@ export class Camera {
   centerOnField(): void {
     // Center based on current viewport (will be updated by setViewportSize)
     if (this.viewportWidth > 0 && this.viewportHeight > 0) {
-      const fieldWidthPixels = this.fieldDimensions.width * this.fieldDimensions.pixelsPerYard;
-      const fieldHeightPixels = this.fieldDimensions.height * this.fieldDimensions.pixelsPerYard;
-      
+      const fieldWidthPixels =
+        this.fieldDimensions.width * this.fieldDimensions.pixelsPerYard;
+      const fieldHeightPixels =
+        this.fieldDimensions.height * this.fieldDimensions.pixelsPerYard;
+
       const newX = (this.viewportWidth - fieldWidthPixels) / 2;
       const newY = (this.viewportHeight - fieldHeightPixels) / 2;
-      
+
       // Set both target AND current position immediately (no smooth interpolation on first center)
       this.targetX = newX;
       this.targetY = newY;
@@ -201,25 +207,25 @@ export class Camera {
    */
   setViewportSizeOnly(width: number, height: number): void {
     // Validate viewport dimensions
-    validateDimension(width, 'Viewport width', { min: 100, max: 10000 });
-    validateDimension(height, 'Viewport height', { min: 100, max: 10000 });
-    
+    validateDimension(width, "Viewport width", { min: 100, max: 10000 });
+    validateDimension(height, "Viewport height", { min: 100, max: 10000 });
+
     const oldWidth = this.viewportWidth;
     const oldHeight = this.viewportHeight;
-    
+
     this.viewportWidth = width;
     this.viewportHeight = height;
-    
+
     // DON'T re-center - preserve user's current view
     // Only adjust position proportionally to maintain same content in view
     if (oldWidth > 0 && oldHeight > 0) {
       // Calculate what point is currently at the center of the old viewport
       const centerWorldX = (oldWidth / 2 - this.stage.x) / this.stage.scale.x;
       const centerWorldY = (oldHeight / 2 - this.stage.y) / this.stage.scale.x;
-      
+
       // Recalculate stage position to keep that same world point centered in new viewport
-      this.targetX = (width / 2) - (centerWorldX * this.stage.scale.x);
-      this.targetY = (height / 2) - (centerWorldY * this.stage.scale.x);
+      this.targetX = width / 2 - centerWorldX * this.stage.scale.x;
+      this.targetY = height / 2 - centerWorldY * this.stage.scale.x;
       this.stage.x = this.targetX;
       this.stage.y = this.targetY;
     } else {
@@ -234,12 +240,12 @@ export class Camera {
    */
   setViewportSize(width: number, height: number): void {
     // Validate viewport dimensions
-    validateDimension(width, 'Viewport width', { min: 100, max: 10000 });
-    validateDimension(height, 'Viewport height', { min: 100, max: 10000 });
-    
+    validateDimension(width, "Viewport width", { min: 100, max: 10000 });
+    validateDimension(height, "Viewport height", { min: 100, max: 10000 });
+
     this.viewportWidth = width;
     this.viewportHeight = height;
-    
+
     // Always re-center when explicitly called (for reset/initial setup)
     this.centerOnField();
   }
@@ -247,12 +253,17 @@ export class Camera {
   /**
    * Center camera on a specific point in yards
    */
-  centerOnPoint(yardX: number, yardY: number, viewportWidth: number, viewportHeight: number): void {
+  centerOnPoint(
+    yardX: number,
+    yardY: number,
+    viewportWidth: number,
+    viewportHeight: number
+  ): void {
     const pixelX = yardX * this.fieldDimensions.pixelsPerYard;
     const pixelY = yardY * this.fieldDimensions.pixelsPerYard;
-    
-    this.targetX = (viewportWidth / 2) - (pixelX * this.stage.scale.x);
-    this.targetY = (viewportHeight / 2) - (pixelY * this.stage.scale.x);
+
+    this.targetX = viewportWidth / 2 - pixelX * this.stage.scale.x;
+    this.targetY = viewportHeight / 2 - pixelY * this.stage.scale.x;
   }
 
   /**
@@ -261,7 +272,8 @@ export class Camera {
   update(): void {
     // Smooth zoom
     const currentZoom = this.stage.scale.x;
-    const newZoom = currentZoom + (this.targetZoom - currentZoom) * this.smoothFactor;
+    const newZoom =
+      currentZoom + (this.targetZoom - currentZoom) * this.smoothFactor;
     this.stage.scale.set(newZoom);
 
     // Smooth pan

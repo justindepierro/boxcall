@@ -1,6 +1,6 @@
 /**
  * Authentication Constants
- * 
+ *
  * Centralized configuration values for authentication system.
  * All time values are in milliseconds unless otherwise noted.
  */
@@ -115,9 +115,9 @@ export const NETWORK_TIMEOUT = 30000;
  */
 export const STORAGE_KEYS = {
   /** Key for storing return URL after login */
-  RETURN_URL: 'boxcall_return_url',
+  RETURN_URL: "boxcall_return_url",
   /** Key for Zustand auth state persistence */
-  AUTH_STATE: 'boxcall-auth-store',
+  AUTH_STATE: "boxcall-auth-store",
 } as const;
 
 // ============================================================================
@@ -129,17 +129,17 @@ export const STORAGE_KEYS = {
  * Prevents redirect loops and security issues
  */
 export const EXCLUDED_RETURN_ROUTES = [
-  '/login',
-  '/logout',
-  '/signup',
-  '/auth',
+  "/login",
+  "/logout",
+  "/signup",
+  "/auth",
 ] as const;
 
 /**
  * Default destination after successful login
  * Used when no return URL is specified
  */
-export const DEFAULT_LOGIN_DESTINATION = '/dashboard';
+export const DEFAULT_LOGIN_DESTINATION = "/dashboard";
 
 // ============================================================================
 // ERROR CODES
@@ -149,7 +149,7 @@ export const DEFAULT_LOGIN_DESTINATION = '/dashboard';
  * Postgres error code for "no rows returned"
  * Used when checking if profile exists
  */
-export const POSTGRES_NO_ROWS_CODE = 'PGRST116';
+export const POSTGRES_NO_ROWS_CODE = "PGRST116";
 
 // ============================================================================
 // TYPE EXPORTS
@@ -163,4 +163,4 @@ export type StorageKey = keyof typeof STORAGE_KEYS;
 /**
  * Type for excluded routes
  */
-export type ExcludedRoute = typeof EXCLUDED_RETURN_ROUTES[number];
+export type ExcludedRoute = (typeof EXCLUDED_RETURN_ROUTES)[number];

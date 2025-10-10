@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Style System Cleanup & Audit
- * 
+ *
  * This script:
  * 1. Identifies duplicate CSS definitions
  * 2. Finds legacy token references
@@ -33,7 +33,7 @@ tokenFiles.forEach((file) => {
   if (existsSync(path)) {
     const content = readFileSync(path, "utf-8");
     const matches = content.matchAll(/--([a-z-]+):/g);
-    
+
     for (const match of matches) {
       const token = `--${match[1]}`;
       if (!allTokens[token]) {
@@ -44,13 +44,15 @@ tokenFiles.forEach((file) => {
   }
 });
 
-const duplicates = Object.entries(allTokens).filter(([_, files]) => files.length > 1);
+const duplicates = Object.entries(allTokens).filter(
+  ([_, files]) => files.length > 1
+);
 
 if (duplicates.length > 0) {
   console.log(`❌ FOUND ${duplicates.length} DUPLICATE TOKENS:\n`);
   duplicates.slice(0, 10).forEach(([token, files]) => {
     console.log(`   ${token}`);
-    files.forEach(f => console.log(`      - ${f}`));
+    files.forEach((f) => console.log(`      - ${f}`));
   });
   if (duplicates.length > 10) {
     console.log(`   ... and ${duplicates.length - 10} more`);
@@ -68,9 +70,11 @@ try {
     { encoding: "utf-8" }
   );
   const count = parseInt(result.trim());
-  
+
   if (count > 0) {
-    console.log(`❌ FOUND ${count} legacy --spacing-* references (should be --space-*)`);
+    console.log(
+      `❌ FOUND ${count} legacy --spacing-* references (should be --space-*)`
+    );
   } else {
     console.log("✅ No legacy --spacing-* references found");
   }
@@ -81,7 +85,9 @@ try {
 // Check 3: File Sizes
 console.log("\n📋 CHECK 3: CSS File Sizes\n");
 
-const cssFiles = execSync('find src/styles -name "*.css" -type f', { encoding: "utf-8" })
+const cssFiles = execSync('find src/styles -name "*.css" -type f', {
+  encoding: "utf-8",
+})
   .trim()
   .split("\n")
   .filter(Boolean);
@@ -115,16 +121,18 @@ const indexCssPath = join(rootDir, "src/index.css");
 if (existsSync(indexCssPath)) {
   const content = readFileSync(indexCssPath, "utf-8");
   const imports = content.match(/@import "[^"]+";/g) || [];
-  
+
   console.log("Current import order:");
   imports.forEach((imp, i) => {
     console.log(`   ${i + 1}. ${imp}`);
   });
-  
+
   // Check if tokens come before Tailwind
-  const tokenIndex = imports.findIndex(i => i.includes("generated-tokens.css"));
+  const tokenIndex = imports.findIndex((i) =>
+    i.includes("generated-tokens.css")
+  );
   const tailwindIndex = content.indexOf("@tailwind base");
-  
+
   if (tokenIndex >= 0 && tailwindIndex >= 0 && tokenIndex < tailwindIndex) {
     console.log("\n✅ Tokens loaded before Tailwind (correct order)");
   } else {
@@ -138,7 +146,9 @@ console.log("\n📋 RECOMMENDATIONS\n");
 console.log("1. 🗑️  REMOVE LEGACY FILES:");
 console.log("   - src/themes/build-themes.ts (legacy theme system)");
 console.log("   - src/themes/registry.ts (if it exists)");
-console.log("   - src/styles/generated-themes.css (duplicates generated-tokens.css)");
+console.log(
+  "   - src/styles/generated-themes.css (duplicates generated-tokens.css)"
+);
 
 console.log("\n2. 📝 UPDATE IMPORTS:");
 console.log("   - Remove @import for generated-themes.css from src/index.css");

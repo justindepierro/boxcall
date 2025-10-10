@@ -62,9 +62,21 @@ const PlayerDashboardPage: React.FC = () => {
   ];
 
   const quickActions = [
-    { label: "View Playbook", icon: "book" as const, variant: "primary" as const },
-    { label: "Check Schedule", icon: "calendar" as const, variant: "success" as const },
-    { label: "Team Chat", icon: "message" as const, variant: "secondary" as const },
+    {
+      label: "View Playbook",
+      icon: "book" as const,
+      variant: "primary" as const,
+    },
+    {
+      label: "Check Schedule",
+      icon: "calendar" as const,
+      variant: "success" as const,
+    },
+    {
+      label: "Team Chat",
+      icon: "message" as const,
+      variant: "secondary" as const,
+    },
     { label: "My Profile", icon: "user" as const, variant: "ghost" as const },
   ];
 
@@ -101,7 +113,10 @@ const PlayerDashboardPage: React.FC = () => {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
         <Card className="p-5">
           <div className="flex items-center justify-between pb-4 border-b border/60">
-            <Typography variant="headline-sm" className="flex items-center gap-2">
+            <Typography
+              variant="headline-sm"
+              className="flex items-center gap-2"
+            >
               <Icon name="calendar" /> Upcoming Events
             </Typography>
             <Button variant="ghost" size="sm">
@@ -132,7 +147,10 @@ const PlayerDashboardPage: React.FC = () => {
 
         <Card className="p-5">
           <div className="flex items-center justify-between pb-4 border-b border/60">
-            <Typography variant="headline-sm" className="flex items-center gap-2">
+            <Typography
+              variant="headline-sm"
+              className="flex items-center gap-2"
+            >
               <Icon name="activity" /> Recent Performance
             </Typography>
             <Button variant="ghost" size="sm">
@@ -154,7 +172,10 @@ const PlayerDashboardPage: React.FC = () => {
                   key={metric.label}
                   className="bg-aurora-shell rounded-aurora border border/60 p-3 text-center"
                 >
-                  <Typography variant="headline-sm" className="text-text-primary">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-text-primary"
+                  >
                     {metric.value}
                   </Typography>
                   <Typography variant="caption" className="text-text-secondary">

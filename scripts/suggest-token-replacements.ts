@@ -1,16 +1,16 @@
 #!/usr/bin/env tsx
 /**
  * Token Replacement Suggestion Tool
- * 
+ *
  * This is a SAFE, INTERACTIVE helper tool that:
  * - Finds hardcoded design values in files
  * - Suggests appropriate token replacements
  * - Shows before/after preview
  * - Requires manual confirmation for each change
  * - Does NOT auto-replace anything
- * 
+ *
  * Philosophy: Human in the loop, automation as assistant
- * 
+ *
  * Usage: tsx scripts/suggest-token-replacements.ts [file-path]
  */
 
@@ -24,7 +24,13 @@ import pc from "picocolors";
 // ============================================================================
 
 interface Violation {
-  type: "arbitrary-font" | "arbitrary-height" | "arbitrary-width" | "arbitrary-spacing" | "hex-color" | "rgba-color";
+  type:
+    | "arbitrary-font"
+    | "arbitrary-height"
+    | "arbitrary-width"
+    | "arbitrary-spacing"
+    | "hex-color"
+    | "rgba-color";
   line: number;
   column: number;
   original: string;
@@ -54,7 +60,7 @@ interface FileAnalysis {
  */
 function suggestFontReplacement(value: string): Replacement {
   const pxValue = parseInt(value.replace(/[^\d]/g, ""));
-  
+
   // Tailwind font scale
   const fontScale: Record<string, { px: number; class: string }> = {
     "text-xs": { px: 12, class: "text-xs" },
@@ -83,7 +89,8 @@ function suggestFontReplacement(value: string): Replacement {
   return {
     value: closest,
     reasoning: `Closest standard font size. ${pxValue}px → ${suggestedPx}px (${diffStr})`,
-    tradeoff: Math.abs(diff) > 2 ? "⚠️ Difference > 2px, may be noticeable" : undefined,
+    tradeoff:
+      Math.abs(diff) > 2 ? "⚠️ Difference > 2px, may be noticeable" : undefined,
     confidence: Math.abs(diff) <= 2 ? "high" : "medium",
   };
 }
@@ -93,7 +100,7 @@ function suggestFontReplacement(value: string): Replacement {
  */
 function suggestHeightReplacement(value: string): Replacement {
   const pxValue = parseInt(value.replace(/[^\d]/g, ""));
-  
+
   // Tailwind height scale (4px increments)
   const heightScale: Record<string, number> = {
     "h-4": 16,
@@ -127,7 +134,8 @@ function suggestHeightReplacement(value: string): Replacement {
   return {
     value: closest,
     reasoning: `Aligns with 4px spacing grid. ${pxValue}px → ${suggestedPx}px (${diffStr})`,
-    tradeoff: Math.abs(diff) > 4 ? "⚠️ Large difference, verify visually" : undefined,
+    tradeoff:
+      Math.abs(diff) > 4 ? "⚠️ Large difference, verify visually" : undefined,
     confidence: Math.abs(diff) <= 4 ? "high" : "medium",
   };
 }
@@ -137,7 +145,7 @@ function suggestHeightReplacement(value: string): Replacement {
  */
 function suggestWidthReplacement(value: string): Replacement {
   const pxValue = parseInt(value.replace(/[^\d]/g, ""));
-  
+
   // Similar to height but with w- prefix
   const widthScale: Record<string, number> = {
     "w-4": 16,
@@ -169,7 +177,8 @@ function suggestWidthReplacement(value: string): Replacement {
   return {
     value: closest,
     reasoning: `Standard width utility. ${pxValue}px → ${suggestedPx}px (${diffStr})`,
-    tradeoff: Math.abs(diff) > 4 ? "⚠️ Large difference, verify visually" : undefined,
+    tradeoff:
+      Math.abs(diff) > 4 ? "⚠️ Large difference, verify visually" : undefined,
     confidence: Math.abs(diff) <= 4 ? "high" : "medium",
   };
 }
@@ -177,9 +186,12 @@ function suggestWidthReplacement(value: string): Replacement {
 /**
  * Suggest replacement for arbitrary spacing (padding, margin, gap)
  */
-function suggestSpacingReplacement(value: string, property: string): Replacement {
+function suggestSpacingReplacement(
+  value: string,
+  property: string
+): Replacement {
   const pxValue = parseInt(value.replace(/[^\d]/g, ""));
-  
+
   // Tailwind spacing scale
   const spacingScale: Record<string, number> = {
     "0": 0,
@@ -230,7 +242,7 @@ function suggestSpacingReplacement(value: string, property: string): Replacement
 function findArbitraryFonts(_content: string, lines: string[]): Violation[] {
   const violations: Violation[] = [];
   const pattern = /text-\[(\d+)px\]/g;
-  
+
   lines.forEach((line, index) => {
     let match;
     while ((match = pattern.exec(line)) !== null) {
@@ -254,7 +266,7 @@ function findArbitraryFonts(_content: string, lines: string[]): Violation[] {
 function findArbitraryHeights(_content: string, lines: string[]): Violation[] {
   const violations: Violation[] = [];
   const pattern = /(?:min-)?h-\[(\d+)px\]/g;
-  
+
   lines.forEach((line, index) => {
     let match;
     while ((match = pattern.exec(line)) !== null) {
@@ -278,7 +290,7 @@ function findArbitraryHeights(_content: string, lines: string[]): Violation[] {
 function findArbitraryWidths(_content: string, lines: string[]): Violation[] {
   const violations: Violation[] = [];
   const pattern = /(?:min-|max-)?w-\[(\d+)px\]/g;
-  
+
   lines.forEach((line, index) => {
     let match;
     while ((match = pattern.exec(line)) !== null) {
@@ -302,7 +314,7 @@ function findArbitraryWidths(_content: string, lines: string[]): Violation[] {
 function findArbitrarySpacing(_content: string, lines: string[]): Violation[] {
   const violations: Violation[] = [];
   const pattern = /(p[xytrbl]?|m[xytrbl]?|gap)-\[(\d+)px\]/g;
-  
+
   lines.forEach((line, index) => {
     let match;
     while ((match = pattern.exec(line)) !== null) {
@@ -355,32 +367,40 @@ function analyzeFile(filePath: string): FileAnalysis {
 /**
  * Display violation with suggestion
  */
-function displayViolation(violation: Violation, index: number, total: number): void {
+function displayViolation(
+  violation: Violation,
+  index: number,
+  total: number
+): void {
   console.log("\n" + pc.cyan("═".repeat(80)));
   console.log(pc.bold(`Violation ${index + 1} of ${total}`));
   console.log(pc.cyan("═".repeat(80)));
-  
+
   console.log(pc.dim(`Line ${violation.line}:`));
   console.log(pc.white(violation.context));
   console.log("");
-  
+
   console.log(pc.red(`  ❌ Found: ${violation.original}`));
   console.log(pc.green(`  ✅ Suggest: ${violation.suggestion.value}`));
   console.log("");
-  
+
   console.log(pc.dim(`  💡 ${violation.suggestion.reasoning}`));
-  
+
   if (violation.suggestion.tradeoff) {
     console.log(pc.yellow(`  ${violation.suggestion.tradeoff}`));
   }
-  
+
   const confidenceColor = {
     high: pc.green,
     medium: pc.yellow,
     low: pc.red,
   }[violation.suggestion.confidence];
-  
-  console.log(confidenceColor(`  🎯 Confidence: ${violation.suggestion.confidence.toUpperCase()}`));
+
+  console.log(
+    confidenceColor(
+      `  🎯 Confidence: ${violation.suggestion.confidence.toUpperCase()}`
+    )
+  );
 }
 
 /**
@@ -393,23 +413,20 @@ async function promptAction(): Promise<"accept" | "skip" | "quit"> {
   });
 
   return new Promise((resolve) => {
-    rl.question(
-      pc.bold("\n  [A]ccept | [S]kip | [Q]uit: "),
-      (answer) => {
-        rl.close();
-        const choice = answer.toLowerCase().trim();
-        
-        if (choice === "a" || choice === "accept") {
-          resolve("accept");
-        } else if (choice === "s" || choice === "skip") {
-          resolve("skip");
-        } else if (choice === "q" || choice === "quit") {
-          resolve("quit");
-        } else {
-          resolve("skip"); // default
-        }
+    rl.question(pc.bold("\n  [A]ccept | [S]kip | [Q]uit: "), (answer) => {
+      rl.close();
+      const choice = answer.toLowerCase().trim();
+
+      if (choice === "a" || choice === "accept") {
+        resolve("accept");
+      } else if (choice === "s" || choice === "skip") {
+        resolve("skip");
+      } else if (choice === "q" || choice === "quit") {
+        resolve("quit");
+      } else {
+        resolve("skip"); // default
       }
-    );
+    });
   });
 }
 
@@ -419,11 +436,14 @@ async function promptAction(): Promise<"accept" | "skip" | "quit"> {
 function applyReplacement(filePath: string, violation: Violation): void {
   const content = readFileSync(filePath, "utf-8");
   const lines = content.split("\n");
-  
+
   // Replace the specific occurrence on the specific line
   const line = lines[violation.line - 1];
-  lines[violation.line - 1] = line.replace(violation.original, violation.suggestion.value);
-  
+  lines[violation.line - 1] = line.replace(
+    violation.original,
+    violation.suggestion.value
+  );
+
   writeFileSync(filePath, lines.join("\n"), "utf-8");
   console.log(pc.green(`  ✅ Replacement applied!`));
 }
@@ -434,22 +454,26 @@ function applyReplacement(filePath: string, violation: Violation): void {
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log(pc.red("❌ Error: No file path provided"));
-    console.log(pc.dim("Usage: tsx scripts/suggest-token-replacements.ts <file-path>"));
+    console.log(
+      pc.dim("Usage: tsx scripts/suggest-token-replacements.ts <file-path>")
+    );
     process.exit(1);
   }
 
   const filePath = join(process.cwd(), args[0]);
-  
+
   console.log(pc.bold(pc.cyan("\n🔍 Token Replacement Suggestion Tool\n")));
   console.log(pc.dim(`Analyzing: ${filePath}\n`));
 
   const analysis = analyzeFile(filePath);
 
   if (analysis.violations.length === 0) {
-    console.log(pc.green("✅ No violations found! This file is already token-compliant."));
+    console.log(
+      pc.green("✅ No violations found! This file is already token-compliant.")
+    );
     process.exit(0);
   }
 
@@ -460,11 +484,11 @@ async function main() {
 
   for (let i = 0; i < analysis.violations.length; i++) {
     const violation = analysis.violations[i];
-    
+
     displayViolation(violation, i, analysis.violations.length);
-    
+
     const action = await promptAction();
-    
+
     if (action === "accept") {
       applyReplacement(filePath, violation);
       acceptedCount++;
@@ -487,7 +511,9 @@ async function main() {
   console.log("");
 
   if (acceptedCount > 0) {
-    console.log(pc.green(`🎉 ${acceptedCount} replacements applied to ${filePath}`));
+    console.log(
+      pc.green(`🎉 ${acceptedCount} replacements applied to ${filePath}`)
+    );
     console.log(pc.dim("   Don't forget to test the changes!"));
   }
 }

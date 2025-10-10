@@ -1,6 +1,6 @@
 /**
  * Unified Play Service
- * 
+ *
  * Consolidates play management + playbook search from:
  * - playsService.ts (CRUD operations, database interaction)
  * - playbookSearchService.ts (fuzzy search, filters, suggestions)
@@ -514,7 +514,7 @@ export class PlaysService {
       }
 
       // Get unique values
-      const uniqueFormations = [...new Set(data.map(item => item.formation))];
+      const uniqueFormations = [...new Set(data.map((item) => item.formation))];
       return uniqueFormations.filter(Boolean);
     } catch (error) {
       console.error("❌ PlaysService.getUniqueFormations failed:", error);
@@ -540,7 +540,7 @@ export class PlaysService {
       }
 
       // Get unique values
-      const uniqueNames = [...new Set(data.map(item => item.play_name))];
+      const uniqueNames = [...new Set(data.map((item) => item.play_name))];
       return uniqueNames.filter(Boolean);
     } catch (error) {
       console.error("❌ PlaysService.getUniquePlayNames failed:", error);
@@ -566,7 +566,7 @@ export class PlaysService {
       }
 
       // Get unique values
-      const uniquePersonnel = [...new Set(data.map(item => item.personnel))];
+      const uniquePersonnel = [...new Set(data.map((item) => item.personnel))];
       return uniquePersonnel.filter(Boolean);
     } catch (error) {
       console.error("❌ PlaysService.getUniquePersonnel failed:", error);
@@ -789,10 +789,32 @@ export class PlaybookSearchService {
 
     // Common football terms for suggestions
     const commonTerms = [
-      "slant", "fade", "curl", "comeback", "hitch", "dig", "post", "go",
-      "screen", "draw", "power", "sweep", "dive", "counter", "toss",
-      "shotgun", "pistol", "i-form", "singleback", "twins", "trips",
-      "play action", "rollout", "bootleg", "quick game", "deep ball",
+      "slant",
+      "fade",
+      "curl",
+      "comeback",
+      "hitch",
+      "dig",
+      "post",
+      "go",
+      "screen",
+      "draw",
+      "power",
+      "sweep",
+      "dive",
+      "counter",
+      "toss",
+      "shotgun",
+      "pistol",
+      "i-form",
+      "singleback",
+      "twins",
+      "trips",
+      "play action",
+      "rollout",
+      "bootleg",
+      "quick game",
+      "deep ball",
     ];
 
     const suggestions = [...this.searchHistory, ...commonTerms]

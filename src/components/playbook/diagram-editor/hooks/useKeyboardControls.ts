@@ -1,6 +1,6 @@
 /**
  * Keyboard Controls Hook
- * 
+ *
  * Handles keyboard shortcuts for diagram editor:
  * - Arrow keys: Nudge selected players (0.5 yard)
  * - Shift + Arrow keys: Large nudge (1 yard)
@@ -8,22 +8,29 @@
  * - Escape: Deselect all players
  */
 
-import { useEffect } from 'react';
-import type { DiagramPixiApp } from '../core/PixiApp';
+import { useEffect } from "react";
+import type { DiagramPixiApp } from "../core/PixiApp";
 
 export interface UseKeyboardControlsOptions {
   app: DiagramPixiApp | null;
   enabled?: boolean;
 }
 
-export function useKeyboardControls({ app, enabled = true }: UseKeyboardControlsOptions) {
+export function useKeyboardControls({
+  app,
+  enabled = true,
+}: UseKeyboardControlsOptions) {
   useEffect(() => {
     if (!app || !enabled) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't handle if user is typing in an input
       const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
         return;
       }
 
@@ -31,7 +38,7 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
       if (!playersLayer) return;
 
       const selectedPlayerIds = playersLayer.getSelectedPlayerIds();
-      if (selectedPlayerIds.length === 0 && !['Escape'].includes(event.key)) {
+      if (selectedPlayerIds.length === 0 && !["Escape"].includes(event.key)) {
         return; // No players selected and not escape key
       }
 
@@ -40,7 +47,7 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
       let handled = false;
 
       switch (event.key) {
-        case 'ArrowUp':
+        case "ArrowUp":
           // Nudge up (decrease Y)
           selectedPlayerIds.forEach((id: string) => {
             const sprite = playersLayer.getPlayer(id);
@@ -53,20 +60,23 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
           handled = true;
           break;
 
-        case 'ArrowDown':
+        case "ArrowDown":
           // Nudge down (increase Y)
           selectedPlayerIds.forEach((id: string) => {
             const sprite = playersLayer.getPlayer(id);
             if (sprite) {
               const player = sprite.getPlayer();
-              const newY = Math.min(app.coordinates.fieldHeight, player.y + nudgeAmount);
+              const newY = Math.min(
+                app.coordinates.fieldHeight,
+                player.y + nudgeAmount
+              );
               sprite.updatePlayer({ y: newY });
             }
           });
           handled = true;
           break;
 
-        case 'ArrowLeft':
+        case "ArrowLeft":
           // Nudge left (decrease X)
           selectedPlayerIds.forEach((id: string) => {
             const sprite = playersLayer.getPlayer(id);
@@ -79,21 +89,24 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
           handled = true;
           break;
 
-        case 'ArrowRight':
+        case "ArrowRight":
           // Nudge right (increase X)
           selectedPlayerIds.forEach((id: string) => {
             const sprite = playersLayer.getPlayer(id);
             if (sprite) {
               const player = sprite.getPlayer();
-              const newX = Math.min(app.coordinates.fieldWidth, player.x + nudgeAmount);
+              const newX = Math.min(
+                app.coordinates.fieldWidth,
+                player.x + nudgeAmount
+              );
               sprite.updatePlayer({ x: newX });
             }
           });
           handled = true;
           break;
 
-        case 'Delete':
-        case 'Backspace':
+        case "Delete":
+        case "Backspace":
           // Remove selected players
           selectedPlayerIds.forEach((id: string) => {
             playersLayer.removePlayer(id);
@@ -101,7 +114,7 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
           handled = true;
           break;
 
-        case 'Escape':
+        case "Escape":
           // Deselect all
           playersLayer.clearSelection();
           handled = true;
@@ -116,11 +129,11 @@ export function useKeyboardControls({ app, enabled = true }: UseKeyboardControls
     };
 
     // Attach keyboard event listener
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // Cleanup
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [app, enabled]);
 }

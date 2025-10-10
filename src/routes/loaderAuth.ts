@@ -13,7 +13,9 @@ import type { AuthorizeInput } from "./authorize";
  */
 const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
 
-export function createAuthLoader(authorizeOptions: Omit<AuthorizeInput, 'profile'>) {
+export function createAuthLoader(
+  authorizeOptions: Omit<AuthorizeInput, "profile">
+) {
   return async function authLoader({ params }: LoaderFunctionArgs) {
     const current = await getCurrentUserWithRole();
     if (!current) throw redirect(ROUTES.LOGIN);

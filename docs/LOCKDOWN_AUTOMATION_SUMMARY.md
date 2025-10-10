@@ -1,9 +1,11 @@
 # 🤖 Design System Lockdown - Automation Summary
+
 ## October 6, 2025
 
 ## 📊 Automation Results
 
 ### Starting Point
+
 - **Total violations:** 599 errors
 - **After manual fixes:** 311 errors
 - **Target:** < 100 errors
@@ -11,14 +13,17 @@
 ### Automated Batches Executed
 
 #### Batch 1: Quick Fixes (Commit e301fe7)
+
 ```bash
 ✅ text-[11px] → text-xs (30 files)
 ✅ max-h-[90svh] → max-h-[90vh] (15 instances)
 ✅ min-h-[40svh] → min-h-[40vh] (1 instance)
 ```
+
 **Result:** 351 → 327 errors (-24)
 
 #### Batch 2: Common Colors (Commit 095f21e)
+
 ```bash
 ✅ bg-blue-50 → bg-status-info-bg
 ✅ bg-gray-50 → bg-surface-secondary
@@ -29,9 +34,11 @@
 ✅ text-red-700 → text-error-600
 ✅ border-red-200 → border-error-200
 ```
+
 **Result:** 327 → 311 errors (-16, 36 files)
 
 #### Batch 3: Slate + Status (Commit b795330)
+
 ```bash
 ✅ border-slate-200 → border (19 instances)
 ✅ text-slate-400 → text-muted (16 instances)
@@ -41,9 +48,11 @@
 ✅ text-red-500 → text-error-500 (2 instances)
 ✅ text-green-500 → text-success-500 (1 instance)
 ```
+
 **Result:** 311 → ~256 errors (-55, 18 files)
 
 ### Overall Impact
+
 ```
 Start:      599 errors (100%)
 After:      ~256 errors (43%)
@@ -56,6 +65,7 @@ Commits:    3 focused commits
 ## 🎯 Automation Strategy
 
 ### What We Automated (Safe Patterns)
+
 1. **Arbitrary values** → Standard scale (text-[11px] → text-xs)
 2. **Viewport units** → Browser-compatible (svh → vh)
 3. **Gray surfaces** → Semantic tokens (bg-gray-100 → bg-surface-muted)
@@ -65,6 +75,7 @@ Commits:    3 focused commits
 7. **Slate text** → Semantic tokens (text-slate-400 → text-muted)
 
 ### What We Excluded (Manual Review Needed)
+
 1. **Diagram components** - Intentionally always-dark aesthetic
 2. **Demo files** - Test/showcase components
 3. **Dark: prefix pairs** - Intentional theme-aware colors (kept)
@@ -75,6 +86,7 @@ Commits:    3 focused commits
 ## 📝 Remaining Work (~256 errors)
 
 ### By Category
+
 - **Slate backgrounds**: ~40 (bg-slate-50/800/900 - needs context)
 - **Slate text**: ~30 (text-slate-900/500 - needs hierarchy review)
 - **Blue info**: ~40 (text-blue-600/700 - direct vs semantic)
@@ -84,6 +96,7 @@ Commits:    3 focused commits
 - **Edge cases**: ~100 (complex combinations, one-offs)
 
 ### Next Steps
+
 1. **Manual review blue info** (~40) - Determine semantic vs direct
 2. **Context-aware slate** (~70) - Review component intent
 3. **ESLint rule update** (~12) - Allow vh units (not svh)
@@ -95,6 +108,7 @@ Commits:    3 focused commits
 ## ✅ Safety Measures
 
 ### Every Batch
+
 - ✅ Type check before commit
 - ✅ Excluded diagram components
 - ✅ Excluded demo files
@@ -103,6 +117,7 @@ Commits:    3 focused commits
 - ✅ Focused commits with clear descriptions
 
 ### Zero Breaking Changes
+
 - ✅ 0 TypeScript errors introduced
 - ✅ 0 runtime errors
 - ✅ 0 build failures
@@ -120,18 +135,21 @@ Commits:    3 focused commits
 ## 📚 Lessons Learned
 
 ### Safe to Automate
+
 - ✅ Direct gray → semantic tokens (1:1 mapping)
 - ✅ Status colors → semantic status (clear intent)
 - ✅ Arbitrary values → standard scale (well-defined)
 - ✅ Simple text hierarchy (gray-900/600/500)
 
 ### Needs Manual Review
+
 - ⚠️ Blue colors (info states vs direct)
 - ⚠️ Slate backgrounds (context-dependent)
 - ⚠️ Complex dark: prefix pairs
 - ⚠️ Component-specific styling (glass, aurora, etc.)
 
 ### Don't Automate
+
 - ❌ Diagram components (intentional always-dark)
 - ❌ Demo/test files (showcasing direct colors)
 - ❌ Complex opacity combinations
@@ -146,6 +164,7 @@ Commits:    3 focused commits
 5. 🎯 Target: < 100 errors (83% total reduction)
 
 ---
+
 **Generated:** October 6, 2025  
 **Automation Time:** 45 minutes  
 **Files Modified:** 84  

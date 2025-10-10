@@ -25,7 +25,7 @@ export const PDFColors = {
   warning: colorTokens.warning[600], // colorTokens.amber[600]
   error: colorTokens.error[600], // colorTokens.red[600]
   info: semantic.primary, // Use brand color for info
-  // Neutral colors  
+  // Neutral colors
   white: "#FFFFFF", // Pure white for PDF documents
   black: "#000000", // Pure black for PDF documents
   gray: {

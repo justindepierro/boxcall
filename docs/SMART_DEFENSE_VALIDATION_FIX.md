@@ -6,6 +6,7 @@
 ## Problem
 
 User encountered validation error when adjusting defense coverage:
+
 ```
 Player X must be non-negative, got: -5.340000000000003
 ```
@@ -17,6 +18,7 @@ This error occurred during hash movement when the coverage adjustment engine cal
 The coverage adjustment engine (`coverageAdjustmentEngine.ts`) performed calculations without boundary validation:
 
 **Problematic calculations:**
+
 - `centerX - 8` → Could be negative when offense is on LEFT hash (centerX ≈ 7-8)
 - `leftSlotX + 1` → Could be negative with small leftSlotX values
 - `rightSlotX - 1` → Could be negative or exceed bounds
@@ -24,6 +26,7 @@ The coverage adjustment engine (`coverageAdjustmentEngine.ts`) performed calcula
 - `rightOutsideWRX - 1` → Could generate out-of-bounds values
 
 **Example scenario:**
+
 - Formation on LEFT hash: centerX = 7 yards
 - Safety positioning: `centerX - 8 = -1 yard` ❌
 - Validation error thrown when trying to place player at negative X
@@ -44,15 +47,17 @@ function clampToField(value: number, fieldWidth: number): number {
 ### 2. Applied Clamping to All Coordinate Calculations
 
 **NCB Adjustment:**
+
 ```typescript
 // Before
-newX: targetX
+newX: targetX;
 
 // After
-newX: clampToField(targetX, fieldWidth)
+newX: clampToField(targetX, fieldWidth);
 ```
 
 **Safety Adjustments (3x1 formations):**
+
 ```typescript
 // Before
 const targetLeftX = 11;
@@ -64,36 +69,37 @@ const targetRightX = clampToField(fieldWidth / 2 + 4, fieldWidth);
 ```
 
 **Safety Adjustments (2x2 formations):**
+
 ```typescript
 // Before
-newX: leftSlotX + 1
-newX: rightSlotX - 1
+newX: leftSlotX + 1;
+newX: rightSlotX - 1;
 
 // After
-newX: clampToField(leftSlotX + 1, fieldWidth)
-newX: clampToField(rightSlotX - 1, fieldWidth)
+newX: clampToField(leftSlotX + 1, fieldWidth);
+newX: clampToField(rightSlotX - 1, fieldWidth);
 ```
 
 **Safety Adjustments (Empty formations):**
+
 ```typescript
 // Before
-newX: centerX - 8
-newX: centerX + 8
+newX: centerX - 8;
+newX: centerX + 8;
 
 // After
-newX: clampToField(centerX - 8, fieldWidth)
-newX: clampToField(centerX + 8, fieldWidth)
+newX: clampToField(centerX - 8, fieldWidth);
+newX: clampToField(centerX + 8, fieldWidth);
 ```
 
 **Corner Adjustments:**
+
 ```typescript
 // Before
-const targetX = isLeftCorner 
-  ? leftOutsideWRX + 1
-  : rightOutsideWRX - 1;
+const targetX = isLeftCorner ? leftOutsideWRX + 1 : rightOutsideWRX - 1;
 
 // After
-const targetX = isLeftCorner 
+const targetX = isLeftCorner
   ? clampToField(leftOutsideWRX + 1, fieldWidth)
   : clampToField(rightOutsideWRX - 1, fieldWidth);
 ```
@@ -101,6 +107,7 @@ const targetX = isLeftCorner
 ### 3. Updated Function Signatures
 
 Added `fieldWidth` parameter to `adjustNickelCB()`:
+
 ```typescript
 // Before
 function adjustNickelCB(
@@ -108,7 +115,7 @@ function adjustNickelCB(
   formationAnalysis: FormationAnalysis,
   centerX: number,
   losY: number
-): PlayerAdjustment | null
+): PlayerAdjustment | null;
 
 // After
 function adjustNickelCB(
@@ -116,17 +123,24 @@ function adjustNickelCB(
   formationAnalysis: FormationAnalysis,
   centerX: number,
   losY: number,
-  fieldWidth: number  // ⭐ Added
-): PlayerAdjustment | null
+  fieldWidth: number // ⭐ Added
+): PlayerAdjustment | null;
 ```
 
 Updated call site:
+
 ```typescript
 // Before
 const ncbAdjustment = adjustNickelCB(ncb, formationAnalysis, centerX, losY);
 
 // After
-const ncbAdjustment = adjustNickelCB(ncb, formationAnalysis, centerX, losY, fieldWidth);
+const ncbAdjustment = adjustNickelCB(
+  ncb,
+  formationAnalysis,
+  centerX,
+  losY,
+  fieldWidth
+);
 ```
 
 ### 4. Removed Temporary Clamping from PlayerControls
@@ -136,9 +150,7 @@ Previously applied a temporary fix in `PlayerControls.tsx` that clamped values a
 ```typescript
 // Before (temporary fix)
 const clampedX = Math.max(0, Math.min(fieldWidth, adj.newX));
-const clampedY = adj.newY 
-  ? Math.max(0, Math.min(53.333, adj.newY))
-  : undefined;
+const clampedY = adj.newY ? Math.max(0, Math.min(53.333, adj.newY)) : undefined;
 
 app.playersLayer!.updatePlayer(adj.playerId, {
   x: clampedX,
@@ -155,6 +167,7 @@ app.playersLayer!.updatePlayer(adj.playerId, {
 ## Files Modified
 
 ### `/src/features/defense/engines/coverageAdjustmentEngine.ts`
+
 - **Line 19-21**: Added `clampToField()` helper function
 - **Line 86**: Added `fieldWidth` parameter to `adjustNickelCB()`
 - **Line 127**: Applied clamping to NCB X coordinate
@@ -165,6 +178,7 @@ app.playersLayer!.updatePlayer(adj.playerId, {
 - **Line 332**: Updated `adjustNickelCB()` call to pass `fieldWidth`
 
 ### `/src/components/playbook/diagram-editor/components/PlayerControls.tsx`
+
 - **Line 160-168**: Removed temporary boundary clamping logic
 - Simplified player update to use engine values directly
 
@@ -184,12 +198,14 @@ app.playersLayer!.updatePlayer(adj.playerId, {
 ## Impact
 
 **Before:**
+
 - ❌ Validation errors on certain hash positions
 - ❌ App breaking when adjusting coverage
 - ❌ Negative coordinates calculated
 - ⚠️ Temporary clamping masking root issue
 
 **After:**
+
 - ✅ All coordinates guaranteed within bounds
 - ✅ No validation errors
 - ✅ Coverage engine has native boundary validation
@@ -199,17 +215,20 @@ app.playersLayer!.updatePlayer(adj.playerId, {
 ## Technical Notes
 
 **Field Dimensions:**
+
 - Field width: 53.333 yards (hash mark to hash mark spacing)
 - X coordinates: [0, fieldWidth] (0 = left sideline, fieldWidth = right sideline)
 - Y coordinates: [0, 100] (0 = bottom endzone, 100 = top endzone)
 
 **Clamping Behavior:**
+
 - `clampToField(value, fieldWidth)` ensures: `0 ≤ value ≤ fieldWidth`
 - Applied to ALL `newX` assignments in coverage engine
 - Prevents out-of-bounds coordinates before they reach validation
 - No console warnings needed (engine produces correct values)
 
 **Hash Position Context:**
+
 - LEFT hash: centerX ≈ 7-8 yards from left sideline
 - MIDDLE hash: centerX ≈ 26.666 yards (center of field)
 - RIGHT hash: centerX ≈ 45-46 yards from left sideline
@@ -225,6 +244,7 @@ This fix ensures defensive players can never be positioned outside valid field b
 ## Future Enhancements
 
 Consider making coverage engine "hash-aware":
+
 - Adjust slot/safety positions relative to hash position
 - Example: If centerX < 10, shift left positions right to avoid boundary
 - More intelligent positioning based on available field space

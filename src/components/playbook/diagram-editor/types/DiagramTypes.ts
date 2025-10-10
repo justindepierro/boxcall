@@ -1,11 +1,11 @@
 /**
  * Diagram Editor Types
- * 
+ *
  * Core types for the Pixi.js diagram editor.
  * These will be expanded as we add more features (routes, annotations, etc.)
  */
 
-import type { Player } from './Player';
+import type { Player } from "./Player";
 
 /**
  * Diagram metadata - play information
@@ -35,14 +35,14 @@ export interface DiagramDocument {
 /**
  * Tool types for the diagram editor
  */
-export type ToolType = 
-  | 'select'
-  | 'pan'
-  | 'add-player-offense'
-  | 'add-player-defense'
-  | 'route'
-  | 'annotation'
-  | 'delete';
+export type ToolType =
+  | "select"
+  | "pan"
+  | "add-player-offense"
+  | "add-player-defense"
+  | "route"
+  | "annotation"
+  | "delete";
 
 /**
  * Diagram state for the editor

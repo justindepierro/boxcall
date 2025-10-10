@@ -1,16 +1,19 @@
 /**
  * Unified Team Service
- * 
+ *
  * Consolidates team management functionality from:
  * - teamCreationService.ts (team creation workflow)
  * - teamDuplicatePreventionService.ts (duplicate detection)
  * - teamValidationService.ts (form validation)
- * 
+ *
  * This service handles the complete team lifecycle from validation through creation.
  */
 
 import { supabase } from "../lib/supabase";
-import { createTeamDirectly, createTeamMembershipDirectly } from "../utils/direct-api";
+import {
+  createTeamDirectly,
+  createTeamMembershipDirectly,
+} from "../utils/direct-api";
 import { emitTelemetry } from "../lib/telemetry";
 import { createTeamSchema } from "../schemas/createTeamSchema";
 
@@ -79,11 +82,10 @@ export interface DuplicateCheckResult {
 // ============================================
 
 export class TeamService {
-  
   // ============================================
   // VALIDATION METHODS
   // ============================================
-  
+
   /**
    * Validate team creation form data
    */
@@ -93,16 +95,16 @@ export class TeamService {
     if (!validation.success) {
       const fieldErrors: Record<string, string> = {};
       const errors: Record<string, string[]> = {};
-      
+
       validation.error.issues.forEach((issue) => {
-        const field = issue.path.join('.');
+        const field = issue.path.join(".");
         const message = issue.message;
-        
+
         if (!errors[field]) {
           errors[field] = [];
         }
         errors[field].push(message);
-        
+
         if (!fieldErrors[field]) {
           fieldErrors[field] = message;
         }
@@ -111,31 +113,35 @@ export class TeamService {
       return {
         success: false,
         errors,
-        fieldErrors
+        fieldErrors,
       };
     }
 
     return {
       success: true,
-      data: validation.data
+      data: validation.data,
     };
   }
 
   /**
    * Validate a specific field
    */
-  static validateField(fieldName: string, value: any, formData: any): { isValid: boolean; error?: string } {
+  static validateField(
+    fieldName: string,
+    value: any,
+    formData: any
+  ): { isValid: boolean; error?: string } {
     const fullFormData = { ...formData, [fieldName]: value };
     const result = this.validateTeamForm(fullFormData);
-    
+
     if (result.success) {
       return { isValid: true };
     }
-    
+
     const error = result.fieldErrors?.[fieldName];
     return {
       isValid: !error,
-      error
+      error,
     };
   }
 
@@ -144,18 +150,22 @@ export class TeamService {
    */
   static isStepComplete(stepId: string, formData: any): boolean {
     switch (stepId) {
-      case 'team-info':
+      case "team-info":
         return !!(formData.teamName && formData.sport && formData.season);
-      
-      case 'school-info':
+
+      case "school-info":
         return !!(formData.schoolName && formData.schoolDistrict);
-      
-      case 'contact-info':
-        return !!(formData.ownerFirstName && formData.ownerLastName && formData.ownerEmail);
-      
-      case 'review':
+
+      case "contact-info":
+        return !!(
+          formData.ownerFirstName &&
+          formData.ownerLastName &&
+          formData.ownerEmail
+        );
+
+      case "review":
         return this.validateTeamForm(formData).success;
-      
+
       default:
         return false;
     }
@@ -175,28 +185,29 @@ export class TeamService {
     schoolCity?: string,
     schoolState?: string
   ): Promise<DuplicateCheckResult> {
-    
     try {
       console.log("🔍 Starting duplicate team check...");
-      
+
       // Fetch all existing teams for comparison
       const { data: existingTeams, error } = await supabase
         .from("teams")
-        .select("id, name, school_name, school_district, school_city, school_state")
+        .select(
+          "id, name, school_name, school_district, school_city, school_state"
+        )
         .eq("status", "active");
-      
+
       if (error) {
         console.warn("Could not fetch teams for duplicate check:", error);
         return {
           isDuplicate: false,
           similarTeams: [],
-          requiresApproval: false
+          requiresApproval: false,
         };
       }
-      
+
       const teams = existingTeams || [];
       const similarTeams: TeamSimilarity[] = [];
-      
+
       // Check each existing team for similarity
       for (const team of teams) {
         const similarity = this.calculateSimilarity(
@@ -206,10 +217,10 @@ export class TeamService {
             schoolName: team.school_name,
             schoolDistrict: team.school_district,
             schoolCity: team.school_city,
-            schoolState: team.school_state
+            schoolState: team.school_state,
           }
         );
-        
+
         if (similarity.score > 0.3) {
           similarTeams.push({
             teamId: team.id,
@@ -219,19 +230,19 @@ export class TeamService {
             schoolCity: team.school_city,
             schoolState: team.school_state,
             similarityScore: similarity.score,
-            matchReasons: similarity.reasons
+            matchReasons: similarity.reasons,
           });
         }
       }
-      
+
       similarTeams.sort((a, b) => b.similarityScore - a.similarityScore);
-      
+
       const highestSimilarity = similarTeams[0]?.similarityScore || 0;
       const isDuplicate = highestSimilarity > 0.85;
-      const requiresApproval = highestSimilarity > 0.60;
-      
+      const requiresApproval = highestSimilarity > 0.6;
+
       let warningMessage: string | undefined;
-      
+
       if (isDuplicate) {
         const similar = similarTeams[0];
         warningMessage = `A very similar team already exists: "${similar.schoolName} ${similar.teamName}". This might be a duplicate. Please contact customer support if you believe this is incorrect.`;
@@ -239,34 +250,35 @@ export class TeamService {
         const similar = similarTeams[0];
         warningMessage = `Similar team found: "${similar.schoolName} ${similar.teamName}". Please verify this is not a duplicate before proceeding. If you're the new coach for this team, contact customer support for account transfer.`;
       }
-      
+
       emitTelemetry("team.duplicate_check", {
         potential_duplicates: similarTeams.length,
         highest_similarity: highestSimilarity,
         requires_approval: requiresApproval,
-        is_duplicate: isDuplicate
+        is_duplicate: isDuplicate,
       });
-      
-      console.log(`🔍 Duplicate check completed: ${similarTeams.length} similar teams found`);
-      
+
+      console.log(
+        `🔍 Duplicate check completed: ${similarTeams.length} similar teams found`
+      );
+
       return {
         isDuplicate,
         similarTeams,
         requiresApproval,
-        warningMessage
+        warningMessage,
       };
-      
     } catch (error) {
       console.error("Error in duplicate check:", error);
-      
+
       emitTelemetry("team.duplicate_check.error", {
-        error_message: error instanceof Error ? error.message : String(error)
+        error_message: error instanceof Error ? error.message : String(error),
       });
-      
+
       return {
         isDuplicate: false,
         similarTeams: [],
-        requiresApproval: false
+        requiresApproval: false,
       };
     }
   }
@@ -290,37 +302,50 @@ export class TeamService {
       schoolState?: string;
     }
   ): { score: number; reasons: string[] } {
-    
     const reasons: string[] = [];
     let totalScore = 0;
     let factors = 0;
-    
+
     // Team name similarity (40% weight)
-    const teamNameSimilarity = this.stringSimilarity(team1.teamName, team2.teamName);
+    const teamNameSimilarity = this.stringSimilarity(
+      team1.teamName,
+      team2.teamName
+    );
     if (teamNameSimilarity > 0.8) {
-      reasons.push(`Very similar team names: "${team1.teamName}" vs "${team2.teamName}"`);
+      reasons.push(
+        `Very similar team names: "${team1.teamName}" vs "${team2.teamName}"`
+      );
       totalScore += teamNameSimilarity * 0.4;
     } else if (teamNameSimilarity > 0.5) {
-      reasons.push(`Similar team names: "${team1.teamName}" vs "${team2.teamName}"`);
+      reasons.push(
+        `Similar team names: "${team1.teamName}" vs "${team2.teamName}"`
+      );
       totalScore += teamNameSimilarity * 0.4;
     }
     factors += 0.4;
-    
+
     // School name similarity (35% weight)
-    const schoolNameSimilarity = this.stringSimilarity(team1.schoolName, team2.schoolName);
+    const schoolNameSimilarity = this.stringSimilarity(
+      team1.schoolName,
+      team2.schoolName
+    );
     if (schoolNameSimilarity > 0.8) {
-      reasons.push(`Very similar school names: "${team1.schoolName}" vs "${team2.schoolName}"`);
+      reasons.push(
+        `Very similar school names: "${team1.schoolName}" vs "${team2.schoolName}"`
+      );
       totalScore += schoolNameSimilarity * 0.35;
     } else if (schoolNameSimilarity > 0.5) {
-      reasons.push(`Similar school names: "${team1.schoolName}" vs "${team2.schoolName}"`);
+      reasons.push(
+        `Similar school names: "${team1.schoolName}" vs "${team2.schoolName}"`
+      );
       totalScore += schoolNameSimilarity * 0.35;
     }
     factors += 0.35;
-    
+
     // Location similarity (25% weight)
     let locationScore = 0;
     let locationFactors = 0;
-    
+
     if (team1.schoolState && team2.schoolState) {
       if (team1.schoolState.toLowerCase() === team2.schoolState.toLowerCase()) {
         locationScore += 0.4;
@@ -328,35 +353,42 @@ export class TeamService {
       }
       locationFactors += 0.4;
     }
-    
+
     if (team1.schoolCity && team2.schoolCity) {
       const citySim = this.stringSimilarity(team1.schoolCity, team2.schoolCity);
       if (citySim > 0.8) {
         locationScore += 0.35;
-        reasons.push(`Same/similar city: "${team1.schoolCity}" vs "${team2.schoolCity}"`);
+        reasons.push(
+          `Same/similar city: "${team1.schoolCity}" vs "${team2.schoolCity}"`
+        );
       }
       locationFactors += 0.35;
     }
-    
+
     if (team1.schoolDistrict && team2.schoolDistrict) {
-      const districtSim = this.stringSimilarity(team1.schoolDistrict, team2.schoolDistrict);
+      const districtSim = this.stringSimilarity(
+        team1.schoolDistrict,
+        team2.schoolDistrict
+      );
       if (districtSim > 0.8) {
         locationScore += 0.25;
-        reasons.push(`Same/similar district: "${team1.schoolDistrict}" vs "${team2.schoolDistrict}"`);
+        reasons.push(
+          `Same/similar district: "${team1.schoolDistrict}" vs "${team2.schoolDistrict}"`
+        );
       }
       locationFactors += 0.25;
     }
-    
+
     if (locationFactors > 0) {
       totalScore += (locationScore / locationFactors) * 0.25;
     }
     factors += 0.25;
-    
+
     const finalScore = factors > 0 ? totalScore / factors : 0;
-    
+
     return {
       score: Math.min(1, Math.max(0, finalScore)),
-      reasons
+      reasons,
     };
   }
 
@@ -365,17 +397,17 @@ export class TeamService {
    */
   private static stringSimilarity(str1: string, str2: string): number {
     if (!str1 || !str2) return 0;
-    
+
     const s1 = str1.toLowerCase().trim();
     const s2 = str2.toLowerCase().trim();
-    
+
     if (s1 === s2) return 1;
-    
+
     const longer = s1.length > s2.length ? s1 : s2;
     const shorter = s1.length > s2.length ? s2 : s1;
-    
+
     if (longer.length === 0) return 1;
-    
+
     const distance = this.levenshteinDistance(longer, shorter);
     return (longer.length - distance) / longer.length;
   }
@@ -384,11 +416,13 @@ export class TeamService {
    * Calculate Levenshtein distance between two strings
    */
   private static levenshteinDistance(str1: string, str2: string): number {
-    const matrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
-    
+    const matrix = Array(str2.length + 1)
+      .fill(null)
+      .map(() => Array(str1.length + 1).fill(null));
+
     for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
     for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
-    
+
     for (let j = 1; j <= str2.length; j++) {
       for (let i = 1; i <= str1.length; i++) {
         const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
@@ -399,7 +433,7 @@ export class TeamService {
         );
       }
     }
-    
+
     return matrix[str2.length][str1.length];
   }
 
@@ -417,34 +451,32 @@ export class TeamService {
     similarTeams: TeamSimilarity[],
     userEmail?: string
   ): Promise<void> {
-    
     try {
       console.log("📧 Sending duplicate team report to support...");
-      
+
       const reportData = {
         type: "duplicate_team_attempt",
         user_email: userEmail,
         attempted_team: attemptedTeam,
         similar_teams: similarTeams,
         created_at: new Date().toISOString(),
-        status: "pending_review"
+        status: "pending_review",
       };
-      
+
       const { error } = await supabase
         .from("support_tickets")
         .insert(reportData);
-      
+
       if (error) {
         console.warn("Could not store support ticket:", error);
       }
-      
+
       emitTelemetry("team.duplicate_report_sent", {
         similar_teams_count: similarTeams.length,
-        has_user_email: !!userEmail
+        has_user_email: !!userEmail,
       });
-      
+
       console.log("📧 Duplicate team report sent successfully");
-      
     } catch (error) {
       console.error("Error sending duplicate report:", error);
     }
@@ -476,12 +508,14 @@ export class TeamService {
       console.log("✅ Telemetry completed");
 
       progress.setLoadingMessage("Testing database connection...");
-      console.log("🔄 Skipping connectivity test, proceeding with team creation");
+      console.log(
+        "🔄 Skipping connectivity test, proceeding with team creation"
+      );
 
       // Check for duplicate teams
       console.log("🔍 Checking for duplicate teams...");
       progress.setLoadingMessage("Checking for similar teams...");
-      
+
       try {
         const duplicateCheck = await this.checkForDuplicates(
           formData.teamName,
@@ -490,29 +524,39 @@ export class TeamService {
           formData.schoolCity,
           formData.schoolState
         );
-        
+
         if (duplicateCheck.isDuplicate) {
-          console.error("🚨 Duplicate team detected:", duplicateCheck.warningMessage);
-          throw new Error(duplicateCheck.warningMessage || "A very similar team already exists. Please contact support.");
+          console.error(
+            "🚨 Duplicate team detected:",
+            duplicateCheck.warningMessage
+          );
+          throw new Error(
+            duplicateCheck.warningMessage ||
+              "A very similar team already exists. Please contact support."
+          );
         }
-        
+
         if (duplicateCheck.requiresApproval) {
           console.warn("⚠️ Similar team found:", duplicateCheck.warningMessage);
           emitTelemetry("team.create.similar_team_warning", {
             similar_teams_count: duplicateCheck.similarTeams.length,
-            highest_similarity: duplicateCheck.similarTeams[0]?.similarityScore || 0
+            highest_similarity:
+              duplicateCheck.similarTeams[0]?.similarityScore || 0,
           });
         }
-        
+
         console.log("✅ Duplicate check passed");
       } catch (duplicateError) {
-        console.warn("⚠️ Duplicate check failed, proceeding anyway:", duplicateError);
+        console.warn(
+          "⚠️ Duplicate check failed, proceeding anyway:",
+          duplicateError
+        );
       }
 
       // Create team name
       console.log("🏷️ Creating team name...");
       progress.setLoadingMessage("Creating team...");
-      
+
       const teamName = `${formData.schoolName} ${formData.teamName}`;
       console.log("📝 Team name created:", teamName);
 
@@ -526,7 +570,7 @@ export class TeamService {
       // Create team record
       console.log("🏗️ Creating team record in database...");
       progress.setLoadingMessage("Creating team record...");
-      
+
       const teamData = {
         name: teamName,
         school_name: formData.schoolName,
@@ -536,13 +580,16 @@ export class TeamService {
       console.log("📊 Team data to insert:", teamData);
 
       console.log("🚀 Starting team insert with direct HTTP API...");
-      
+
       const directInsertPromise = createTeamDirectly(teamData);
-      const insertTimeoutPromise = new Promise((_, reject) => 
+      const insertTimeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Team insert timeout")), 20000)
       );
-      
-      const insertResult = await Promise.race([directInsertPromise, insertTimeoutPromise]) as { data: any, error: any };
+
+      const insertResult = (await Promise.race([
+        directInsertPromise,
+        insertTimeoutPromise,
+      ])) as { data: any; error: any };
       const teamInsert = insertResult.data;
       const teamErr = insertResult.error;
 
@@ -550,13 +597,20 @@ export class TeamService {
 
       if (teamErr || !teamInsert) {
         console.error("❌ Team insert failed:", teamErr);
-        
-        if (teamErr?.code === "42501" || teamErr?.message?.includes("row-level security")) {
+
+        if (
+          teamErr?.code === "42501" ||
+          teamErr?.message?.includes("row-level security")
+        ) {
           console.error("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
-          throw new Error("Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support.");
+          throw new Error(
+            "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
+          );
         }
-        
-        throw new Error(`Failed to create team: ${teamErr?.message || "Unknown database error"}`);
+
+        throw new Error(
+          `Failed to create team: ${teamErr?.message || "Unknown database error"}`
+        );
       }
 
       const newTeamId = teamInsert.id;
@@ -569,22 +623,25 @@ export class TeamService {
       // Create team membership
       console.log("👤 Adding team membership...");
       progress.setLoadingMessage("Setting up your account...");
-      
+
       const membershipData = {
         team_id: newTeamId,
         user_id: authUser.id,
         team_role: "head_coach",
         status: "active",
       };
-      
+
       console.log("📊 Membership data to insert:", membershipData);
-      
+
       const memberInsertPromise = createTeamMembershipDirectly(membershipData);
-      const memberTimeoutPromise = new Promise((_, reject) => 
+      const memberTimeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Membership insert timeout")), 15000)
       );
-      
-      const memberResult = await Promise.race([memberInsertPromise, memberTimeoutPromise]) as { data: any, error: any };
+
+      const memberResult = (await Promise.race([
+        memberInsertPromise,
+        memberTimeoutPromise,
+      ])) as { data: any; error: any };
       const memberErr = memberResult.error;
 
       console.log(`👥 Membership insert completed`);
@@ -615,12 +672,11 @@ export class TeamService {
 
       return {
         success: true,
-        teamId: newTeamId
+        teamId: newTeamId,
       };
-
     } catch (error) {
       console.error("❌ Team creation failed:", error);
-      
+
       emitTelemetry("team.create.error", {
         error_message: error instanceof Error ? error.message : String(error),
         sport_ui: formData.sport,
@@ -628,7 +684,7 @@ export class TeamService {
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }

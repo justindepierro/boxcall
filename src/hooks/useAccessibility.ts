@@ -1,53 +1,69 @@
 /**
  * Accessibility Hooks
- * 
+ *
  * React hooks for implementing WCAG 2.1 AA compliance and accessibility features
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { accessibilityConfig, KEYBOARD_KEYS, ARIA_LIVE_REGIONS } from '../config/accessibility';
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  accessibilityConfig,
+  KEYBOARD_KEYS,
+  ARIA_LIVE_REGIONS,
+} from "../config/accessibility";
 
 // Screen Reader Announcements Hook
 export function useScreenReader() {
   const announcementRef = useRef<HTMLDivElement>(null);
 
-  const announce = useCallback((
-    message: string,
-    priority: keyof typeof ARIA_LIVE_REGIONS = 'POLITE'
-  ) => {
-    if (!accessibilityConfig.screenReader.enabled) return;
+  const announce = useCallback(
+    (message: string, priority: keyof typeof ARIA_LIVE_REGIONS = "POLITE") => {
+      if (!accessibilityConfig.screenReader.enabled) return;
 
-    if (announcementRef.current) {
-      // Clear previous announcement
-      announcementRef.current.textContent = '';
-      
-      // Set new announcement with slight delay to ensure screen readers pick it up
-      setTimeout(() => {
-        if (announcementRef.current) {
-          announcementRef.current.setAttribute('aria-live', ARIA_LIVE_REGIONS[priority]);
-          announcementRef.current.textContent = message;
-        }
-      }, 100);
-    }
-  }, []);
+      if (announcementRef.current) {
+        // Clear previous announcement
+        announcementRef.current.textContent = "";
 
-  const announceError = useCallback((message: string) => {
-    if (accessibilityConfig.screenReader.announceErrors) {
-      announce(`Error: ${message}`, 'ASSERTIVE');
-    }
-  }, [announce]);
+        // Set new announcement with slight delay to ensure screen readers pick it up
+        setTimeout(() => {
+          if (announcementRef.current) {
+            announcementRef.current.setAttribute(
+              "aria-live",
+              ARIA_LIVE_REGIONS[priority]
+            );
+            announcementRef.current.textContent = message;
+          }
+        }, 100);
+      }
+    },
+    []
+  );
 
-  const announceSuccess = useCallback((message: string) => {
-    if (accessibilityConfig.screenReader.announceSuccess) {
-      announce(`Success: ${message}`, 'POLITE');
-    }
-  }, [announce]);
+  const announceError = useCallback(
+    (message: string) => {
+      if (accessibilityConfig.screenReader.announceErrors) {
+        announce(`Error: ${message}`, "ASSERTIVE");
+      }
+    },
+    [announce]
+  );
 
-  const announcePageChange = useCallback((pageName: string) => {
-    if (accessibilityConfig.screenReader.announcePageChanges) {
-      announce(`Navigated to ${pageName}`, 'POLITE');
-    }
-  }, [announce]);
+  const announceSuccess = useCallback(
+    (message: string) => {
+      if (accessibilityConfig.screenReader.announceSuccess) {
+        announce(`Success: ${message}`, "POLITE");
+      }
+    },
+    [announce]
+  );
+
+  const announcePageChange = useCallback(
+    (pageName: string) => {
+      if (accessibilityConfig.screenReader.announcePageChanges) {
+        announce(`Navigated to ${pageName}`, "POLITE");
+      }
+    },
+    [announce]
+  );
 
   // Return the announcement ref and functions - JSX will be handled by components
   return {
@@ -76,7 +92,7 @@ export function useKeyboardNavigation(
         }
         case KEYBOARD_KEYS.TAB: {
           // Ensure visible focus indicators
-          document.body.classList.add('keyboard-navigation');
+          document.body.classList.add("keyboard-navigation");
           break;
         }
         default:
@@ -88,15 +104,15 @@ export function useKeyboardNavigation(
 
     const handleMouseDown = () => {
       // Remove keyboard navigation class when mouse is used
-      document.body.classList.remove('keyboard-navigation');
+      document.body.classList.remove("keyboard-navigation");
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleMouseDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleMouseDown);
     };
   }, [onKeyDown]);
 }
@@ -110,7 +126,10 @@ export function useFocusManagement() {
   }, []);
 
   const restoreFocus = useCallback(() => {
-    if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+    if (
+      previousFocusRef.current &&
+      typeof previousFocusRef.current.focus === "function"
+    ) {
       previousFocusRef.current.focus();
     }
   }, []);
@@ -132,7 +151,9 @@ export function useFocusManagement() {
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === KEYBOARD_KEYS.TAB) {
@@ -150,8 +171,8 @@ export function useFocusManagement() {
       }
     };
 
-    container.addEventListener('keydown', handleKeyDown);
-    return () => container.removeEventListener('keydown', handleKeyDown);
+    container.addEventListener("keydown", handleKeyDown);
+    return () => container.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return {
@@ -169,7 +190,7 @@ export function useReducedMotion() {
   useEffect(() => {
     if (!accessibilityConfig.motion.respectReducedMotion) return;
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
 
     const handleChange = (event: MediaQueryListEvent) => {
@@ -200,16 +221,16 @@ export function useSkipLinks() {
 
 // ARIA Attributes Hook
 export function useAriaAttributes() {
-  const generateId = useCallback((prefix: string = 'aria') => {
+  const generateId = useCallback((prefix: string = "aria") => {
     return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
   }, []);
 
   const describedBy = useCallback((ids: string[]) => {
-    return ids.length > 0 ? ids.join(' ') : undefined;
+    return ids.length > 0 ? ids.join(" ") : undefined;
   }, []);
 
   const labelledBy = useCallback((ids: string[]) => {
-    return ids.length > 0 ? ids.join(' ') : undefined;
+    return ids.length > 0 ? ids.join(" ") : undefined;
   }, []);
 
   const expanded = useCallback((isExpanded: boolean) => {
@@ -225,7 +246,7 @@ export function useAriaAttributes() {
   }, []);
 
   const invalid = useCallback((isInvalid: boolean) => {
-    return isInvalid ? 'true' : undefined;
+    return isInvalid ? "true" : undefined;
   }, []);
 
   return {
@@ -251,9 +272,9 @@ export function useA11yTesting() {
     const checkAccessibility = async () => {
       try {
         // Placeholder for axe-core integration
-        console.log('A11y testing enabled in development mode');
+        console.log("A11y testing enabled in development mode");
       } catch (error) {
-        console.error('Accessibility testing error:', error);
+        console.error("Accessibility testing error:", error);
       }
     };
 

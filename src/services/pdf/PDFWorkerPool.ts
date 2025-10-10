@@ -1,6 +1,6 @@
 /**
  * PDF Worker Pool
- * 
+ *
  * Manages a pool of reusable PDF workers to improve performance
  * and reduce the overhead of creating/terminating workers for each PDF generation
  */
@@ -17,14 +17,17 @@ interface WorkerPoolItem {
 class PDFWorkerPool {
   private pool: WorkerPoolItem[] = [];
   private readonly maxWorkers = 2; // Limit concurrent PDF generations
-  private readonly workerUrl = new URL("../workers/pdfWorker.ts", import.meta.url);
+  private readonly workerUrl = new URL(
+    "../workers/pdfWorker.ts",
+    import.meta.url
+  );
 
   /**
    * Get an available worker from the pool
    */
   private async getWorker(): Promise<WorkerPoolItem> {
     // Find available worker
-    const available = this.pool.find(item => !item.busy);
+    const available = this.pool.find((item) => !item.busy);
     if (available) {
       available.busy = true;
       return available;
@@ -42,7 +45,7 @@ class PDFWorkerPool {
     // Wait for available worker
     return new Promise((resolve) => {
       const checkForAvailable = () => {
-        const available = this.pool.find(item => !item.busy);
+        const available = this.pool.find((item) => !item.busy);
         if (available) {
           available.busy = true;
           resolve(available);
@@ -79,7 +82,7 @@ class PDFWorkerPool {
    * Terminate all workers and clear pool
    */
   dispose(): void {
-    this.pool.forEach(item => item.worker.terminate());
+    this.pool.forEach((item) => item.worker.terminate());
     this.pool = [];
   }
 }

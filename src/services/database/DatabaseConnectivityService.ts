@@ -29,7 +29,7 @@ interface ConnectionConfig {
 }
 
 interface CircuitBreakerState {
-  state: 'CLOSED' | 'OPEN' | 'HALF_OPEN';
+  state: "CLOSED" | "OPEN" | "HALF_OPEN";
   failureCount: number;
   lastFailureTime: number;
   nextAttemptTime: number;
@@ -55,7 +55,7 @@ interface ConnectionMetrics {
   activeConnections: number;
   failedConnections: number;
   averageResponseTime: number;
-  circuitBreakerState: CircuitBreakerState['state'];
+  circuitBreakerState: CircuitBreakerState["state"];
   lastHealthCheck: HealthCheckResult;
 }
 
@@ -75,20 +75,20 @@ export class DatabaseConnectivityService {
       maxDelay: 30000, // 30 seconds
       backoffMultiplier: 2,
       retryableErrors: [
-        'PGRST301', // Connection timeout
-        'PGRST302', // Connection failed
-        '08006',    // Connection failure
-        '08003',    // Connection does not exist
-        '08000',    // Connection exception
-        '53300',    // Too many connections
-      ]
+        "PGRST301", // Connection timeout
+        "PGRST302", // Connection failed
+        "08006", // Connection failure
+        "08003", // Connection does not exist
+        "08000", // Connection exception
+        "53300", // Too many connections
+      ],
     };
 
     this.circuitBreaker = {
-      state: 'CLOSED',
+      state: "CLOSED",
       failureCount: 0,
       lastFailureTime: 0,
-      nextAttemptTime: 0
+      nextAttemptTime: 0,
     };
 
     this.metrics = {
@@ -96,30 +96,26 @@ export class DatabaseConnectivityService {
       activeConnections: 0,
       failedConnections: 0,
       averageResponseTime: 0,
-      circuitBreakerState: 'CLOSED',
+      circuitBreakerState: "CLOSED",
       lastHealthCheck: {
         isHealthy: false,
         responseTime: 0,
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      },
     };
 
-    this.primaryClient = createClient<Database>(
-      config.url,
-      config.anonKey,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-          ...config.options?.auth
-        },
-        db: {
-          schema: 'public',
-          ...config.options?.db
-        }
-      }
-    );
+    this.primaryClient = createClient<Database>(config.url, config.anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        ...config.options?.auth,
+      },
+      db: {
+        schema: "public",
+        ...config.options?.db,
+      },
+    });
 
     this.initializeConnectionPool();
     this.startHealthMonitoring();
@@ -139,8 +135,8 @@ export class DatabaseConnectivityService {
           auth: {
             persistSession: true,
             autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
+            detectSessionInUrl: true,
+          },
         }
       );
 
@@ -148,7 +144,7 @@ export class DatabaseConnectivityService {
     }
 
     this.isInitialized = true;
-    console.log('🔗 Database connection pool initialized');
+    console.log("🔗 Database connection pool initialized");
   }
 
   /**
@@ -156,23 +152,28 @@ export class DatabaseConnectivityService {
    */
   async getClient(): Promise<SupabaseClient<Database>> {
     if (!this.isInitialized) {
-      throw new Error('Database connectivity service not initialized');
+      throw new Error("Database connectivity service not initialized");
     }
 
     // Check circuit breaker
-    if (this.circuitBreaker.state === 'OPEN') {
+    if (this.circuitBreaker.state === "OPEN") {
       if (Date.now() < this.circuitBreaker.nextAttemptTime) {
-        throw new Error('Circuit breaker is OPEN - service temporarily unavailable');
+        throw new Error(
+          "Circuit breaker is OPEN - service temporarily unavailable"
+        );
       }
 
       // Move to half-open state
-      this.circuitBreaker.state = 'HALF_OPEN';
-      console.warn('🔄 Circuit breaker moving to HALF_OPEN state');
+      this.circuitBreaker.state = "HALF_OPEN";
+      console.warn("🔄 Circuit breaker moving to HALF_OPEN state");
     }
 
     try {
       // Get client from pool (round-robin)
-      const client = this.connectionPool[this.metrics.activeConnections % this.connectionPool.length];
+      const client =
+        this.connectionPool[
+          this.metrics.activeConnections % this.connectionPool.length
+        ];
 
       // Test connection health
       const healthCheck = await this.performHealthCheck(client);
@@ -206,21 +207,30 @@ export class DatabaseConnectivityService {
         const duration = performance.now() - startTime;
 
         this.updateResponseTime(duration);
-        console.log(`✅ ${operationName} succeeded on attempt ${attempt} (${duration.toFixed(2)}ms)`);
+        console.log(
+          `✅ ${operationName} succeeded on attempt ${attempt} (${duration.toFixed(2)}ms)`
+        );
 
         return result;
       } catch (error) {
         lastError = error as Error;
-        console.warn(`⚠️ ${operationName} failed on attempt ${attempt}:`, error);
+        console.warn(
+          `⚠️ ${operationName} failed on attempt ${attempt}:`,
+          error
+        );
 
         // Check if error is retryable
-        if (!this.isRetryableError(error) || attempt === this.retryConfig.maxAttempts) {
+        if (
+          !this.isRetryableError(error) ||
+          attempt === this.retryConfig.maxAttempts
+        ) {
           break;
         }
 
         // Calculate delay with exponential backoff
         const delay = Math.min(
-          this.retryConfig.baseDelay * Math.pow(this.retryConfig.backoffMultiplier, attempt - 1),
+          this.retryConfig.baseDelay *
+            Math.pow(this.retryConfig.backoffMultiplier, attempt - 1),
           this.retryConfig.maxDelay
         );
 
@@ -237,7 +247,7 @@ export class DatabaseConnectivityService {
    */
   async executeTransaction<T>(
     operations: ((client: SupabaseClient<Database>) => Promise<any>)[],
-    operationName: string = 'transaction'
+    operationName: string = "transaction"
   ): Promise<T[]> {
     const client = await this.getClient();
     const results: T[] = [];
@@ -264,34 +274,39 @@ export class DatabaseConnectivityService {
 
       throw error;
     } finally {
-      this.metrics.activeConnections = Math.max(0, this.metrics.activeConnections - 1);
+      this.metrics.activeConnections = Math.max(
+        0,
+        this.metrics.activeConnections - 1
+      );
     }
   }
 
   /**
    * Perform health check on database connection
    */
-  private async performHealthCheck(client: SupabaseClient<Database>): Promise<HealthCheckResult> {
+  private async performHealthCheck(
+    client: SupabaseClient<Database>
+  ): Promise<HealthCheckResult> {
     const startTime = performance.now();
 
     try {
       // Simple health check query
       const { error } = await client
-        .from('profiles')
-        .select('id')
+        .from("profiles")
+        .select("id")
         .limit(1)
         .single();
 
       const responseTime = performance.now() - startTime;
 
       // Consider healthy if no connection errors (even if no data)
-      const isHealthy = !error || error.code === 'PGRST116'; // Not found is OK for health check
+      const isHealthy = !error || error.code === "PGRST116"; // Not found is OK for health check
 
       return {
         isHealthy,
         responseTime,
         error: error?.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
     } catch (error) {
       const responseTime = performance.now() - startTime;
@@ -300,7 +315,7 @@ export class DatabaseConnectivityService {
         isHealthy: false,
         responseTime,
         error: (error as Error).message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
     }
   }
@@ -317,13 +332,15 @@ export class DatabaseConnectivityService {
         this.metrics.lastHealthCheck = healthResult;
 
         if (!healthResult.isHealthy) {
-          console.warn('⚠️ Database health check failed:', healthResult.error);
+          console.warn("⚠️ Database health check failed:", healthResult.error);
           this.recordFailure(new Error(healthResult.error));
         } else {
-          console.log(`✅ Database healthy (${healthResult.responseTime.toFixed(2)}ms)`);
+          console.log(
+            `✅ Database healthy (${healthResult.responseTime.toFixed(2)}ms)`
+          );
         }
       } catch (error) {
-        console.error('❌ Health check error:', error);
+        console.error("❌ Health check error:", error);
         this.recordFailure(error);
       }
     }, healthCheckInterval);
@@ -335,12 +352,13 @@ export class DatabaseConnectivityService {
   private isRetryableError(error: any): boolean {
     if (!error) return false;
 
-    const errorCode = error.code || error.status?.toString() || '';
-    const errorMessage = error.message || '';
+    const errorCode = error.code || error.status?.toString() || "";
+    const errorMessage = error.message || "";
 
-    return this.retryConfig.retryableErrors.some(code =>
-      errorCode.includes(code) ||
-      errorMessage.toLowerCase().includes(code.toLowerCase())
+    return this.retryConfig.retryableErrors.some(
+      (code) =>
+        errorCode.includes(code) ||
+        errorMessage.toLowerCase().includes(code.toLowerCase())
     );
   }
 
@@ -348,10 +366,10 @@ export class DatabaseConnectivityService {
    * Record successful operation
    */
   private recordSuccess(): void {
-    if (this.circuitBreaker.state === 'HALF_OPEN') {
-      this.circuitBreaker.state = 'CLOSED';
+    if (this.circuitBreaker.state === "HALF_OPEN") {
+      this.circuitBreaker.state = "CLOSED";
       this.circuitBreaker.failureCount = 0;
-      console.log('✅ Circuit breaker CLOSED - service recovered');
+      console.log("✅ Circuit breaker CLOSED - service recovered");
     }
   }
 
@@ -367,12 +385,12 @@ export class DatabaseConnectivityService {
     this.circuitBreaker.failureCount++;
 
     if (this.circuitBreaker.failureCount >= failureThreshold) {
-      this.circuitBreaker.state = 'OPEN';
+      this.circuitBreaker.state = "OPEN";
       this.circuitBreaker.lastFailureTime = Date.now();
       this.circuitBreaker.nextAttemptTime = Date.now() + timeoutPeriod;
 
-      console.error('🚫 Circuit breaker OPEN - service unavailable');
-      console.error('Error details:', error);
+      console.error("🚫 Circuit breaker OPEN - service unavailable");
+      console.error("Error details:", error);
     }
   }
 
@@ -390,7 +408,7 @@ export class DatabaseConnectivityService {
    * Utility delay function
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -399,7 +417,7 @@ export class DatabaseConnectivityService {
   getMetrics(): ConnectionMetrics {
     return {
       ...this.metrics,
-      circuitBreakerState: this.circuitBreaker.state
+      circuitBreakerState: this.circuitBreaker.state,
     };
   }
 
@@ -407,8 +425,10 @@ export class DatabaseConnectivityService {
    * Check if service is healthy
    */
   isHealthy(): boolean {
-    return this.circuitBreaker.state !== 'OPEN' &&
-           this.metrics.lastHealthCheck.isHealthy;
+    return (
+      this.circuitBreaker.state !== "OPEN" &&
+      this.metrics.lastHealthCheck.isHealthy
+    );
   }
 
   /**
@@ -423,7 +443,7 @@ export class DatabaseConnectivityService {
     this.connectionPool.length = 0;
     this.isInitialized = false;
 
-    console.log('🔌 Database connectivity service shut down');
+    console.log("🔌 Database connectivity service shut down");
   }
 }
 
@@ -436,12 +456,12 @@ export function getDatabaseConnectivityService(): DatabaseConnectivityService {
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
     if (!url || !anonKey) {
-      throw new Error('Missing Supabase environment variables');
+      throw new Error("Missing Supabase environment variables");
     }
 
     connectivityService = new DatabaseConnectivityService({
       url,
-      anonKey
+      anonKey,
     });
   }
 

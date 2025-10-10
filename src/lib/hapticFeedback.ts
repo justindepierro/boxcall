@@ -6,14 +6,14 @@
  */
 
 export type HapticType =
-  | "light"      // Light tap feedback
-  | "medium"     // Medium tap feedback
-  | "heavy"      // Heavy tap feedback
-  | "success"    // Success confirmation
-  | "warning"    // Warning notification
-  | "error"      // Error feedback
-  | "selection"  // Selection change
-  | "impact";    // Impact feedback
+  | "light" // Light tap feedback
+  | "medium" // Medium tap feedback
+  | "heavy" // Heavy tap feedback
+  | "success" // Success confirmation
+  | "warning" // Warning notification
+  | "error" // Error feedback
+  | "selection" // Selection change
+  | "impact"; // Impact feedback
 
 /**
  * Haptic feedback patterns for different interaction types

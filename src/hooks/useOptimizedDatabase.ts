@@ -1,18 +1,27 @@
 /**
  * React Hooks for Database Optimization
- * 
+ *
  * Provides React hooks for using optimized database operations
  * with automatic state management, error handling, and performance monitoring
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { OptimizedBaseService, type QueryOptions } from '../services/base/OptimizedBaseService';
-import { dbOptimization, type QueryMetrics } from '../services/database/DatabaseOptimizationService';
-import type { Database } from '../types/database';
+import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  OptimizedBaseService,
+  type QueryOptions,
+} from "../services/base/OptimizedBaseService";
+import {
+  dbOptimization,
+  type QueryMetrics,
+} from "../services/database/DatabaseOptimizationService";
+import type { Database } from "../types/database";
 
-type Tables<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Row"];
-type Inserts<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Insert"];
-type Updates<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Update"];
+type Tables<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Row"];
+type Inserts<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Insert"];
+type Updates<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Update"];
 
 interface UseOptimizedQueryState<T> {
   data: T[] | null;
@@ -55,7 +64,7 @@ export function useOptimizedQuery<T extends keyof Database["public"]["Tables"]>(
     data: null,
     loading: true,
     error: null,
-    refetch: async () => {}
+    refetch: async () => {},
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -77,30 +86,30 @@ export function useOptimizedQuery<T extends keyof Database["public"]["Tables"]>(
     }
 
     abortControllerRef.current = new AbortController();
-    
-    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       const result = await service.optimizedFindMany(filters || {}, options);
-      
+
       if (abortControllerRef.current?.signal.aborted) return;
 
       lastFetchRef.current = now;
-      
+
       setState({
         data: result.data,
         loading: false,
         error: result.error ? new Error(result.error.message) : null,
         metrics: result.metrics,
-        refetch: fetchData
+        refetch: fetchData,
       });
     } catch (error) {
       if (abortControllerRef.current?.signal.aborted) return;
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error : new Error(String(error))
+        error: error instanceof Error ? error : new Error(String(error)),
       }));
     }
   }, [service, filters, options]);
@@ -130,7 +139,9 @@ export function useOptimizedQuery<T extends keyof Database["public"]["Tables"]>(
 /**
  * Hook for optimized single record fetching
  */
-export function useOptimizedRecord<T extends keyof Database["public"]["Tables"]>(
+export function useOptimizedRecord<
+  T extends keyof Database["public"]["Tables"],
+>(
   service: OptimizedBaseService<T>,
   id: string | null,
   options?: QueryOptions & {
@@ -143,7 +154,7 @@ export function useOptimizedRecord<T extends keyof Database["public"]["Tables"]>
     data: null,
     loading: true,
     error: null,
-    refetch: async () => {}
+    refetch: async () => {},
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -151,7 +162,7 @@ export function useOptimizedRecord<T extends keyof Database["public"]["Tables"]>
 
   const fetchData = useCallback(async () => {
     if (!id || options?.enabled === false) {
-      setState(prev => ({ ...prev, loading: false, data: null }));
+      setState((prev) => ({ ...prev, loading: false, data: null }));
       return;
     }
 
@@ -168,30 +179,30 @@ export function useOptimizedRecord<T extends keyof Database["public"]["Tables"]>
     }
 
     abortControllerRef.current = new AbortController();
-    
-    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       const result = await service.optimizedFindById(id, options);
-      
+
       if (abortControllerRef.current?.signal.aborted) return;
 
       lastFetchRef.current = now;
-      
+
       setState({
         data: result.data ? [result.data] : null,
         loading: false,
         error: result.error ? new Error(result.error.message) : null,
         metrics: result.metrics,
-        refetch: fetchData
+        refetch: fetchData,
       });
     } catch (error) {
       if (abortControllerRef.current?.signal.aborted) return;
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error : new Error(String(error))
+        error: error instanceof Error ? error : new Error(String(error)),
       }));
     }
   }, [service, id, options]);
@@ -221,76 +232,85 @@ export function useOptimizedRecord<T extends keyof Database["public"]["Tables"]>
 /**
  * Hook for optimized data mutations (create, update, delete)
  */
-export function useOptimizedMutation<T extends keyof Database["public"]["Tables"]>(
+export function useOptimizedMutation<
+  T extends keyof Database["public"]["Tables"],
+>(
   service: OptimizedBaseService<T>,
-  operation: 'create' | 'update' | 'delete'
+  operation: "create" | "update" | "delete"
 ): UseOptimizedMutationState<Tables<T>> {
   const [state, setState] = useState<UseOptimizedMutationState<Tables<T>>>({
     data: null,
     loading: false,
     error: null,
     mutate: async () => {},
-    reset: () => {}
+    reset: () => {},
   });
 
-  const mutate = useCallback(async (data: any) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+  const mutate = useCallback(
+    async (data: any) => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      let result;
+      try {
+        let result;
 
-      switch (operation) {
-        case 'create':
-          result = await service.optimizedCreate(data as Inserts<T>);
-          break;
-        case 'update':
-          if (!data.id) throw new Error('ID is required for update operation');
-          result = await service.optimizedUpdate(data.id, data as Updates<T>);
-          break;
-        case 'delete':
-          {
-            if (!data.id && typeof data !== 'string') throw new Error('ID is required for delete operation');
-            const deleteResult = await service.optimizedDelete(typeof data === 'string' ? data : data.id);
-            result = {
-              data: deleteResult.success ? {} : null,
-              error: deleteResult.error,
-              metrics: deleteResult.metrics
-            };
-          }
-          break;
-        default:
-          throw new Error(`Unsupported operation: ${operation}`);
+        switch (operation) {
+          case "create":
+            result = await service.optimizedCreate(data as Inserts<T>);
+            break;
+          case "update":
+            if (!data.id)
+              throw new Error("ID is required for update operation");
+            result = await service.optimizedUpdate(data.id, data as Updates<T>);
+            break;
+          case "delete":
+            {
+              if (!data.id && typeof data !== "string")
+                throw new Error("ID is required for delete operation");
+              const deleteResult = await service.optimizedDelete(
+                typeof data === "string" ? data : data.id
+              );
+              result = {
+                data: deleteResult.success ? {} : null,
+                error: deleteResult.error,
+                metrics: deleteResult.metrics,
+              };
+            }
+            break;
+          default:
+            throw new Error(`Unsupported operation: ${operation}`);
+        }
+
+        setState((prev) => ({
+          ...prev,
+          data: result.data as Tables<T>,
+          loading: false,
+          error: result.error ? new Error(result.error.message) : null,
+          metrics: result.metrics,
+        }));
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error : new Error(String(error)),
+        }));
       }
-
-      setState(prev => ({
-        ...prev,
-        data: result.data as Tables<T>,
-        loading: false,
-        error: result.error ? new Error(result.error.message) : null,
-        metrics: result.metrics
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error : new Error(String(error))
-      }));
-    }
-  }, [service, operation]);
+    },
+    [service, operation]
+  );
 
   const reset = useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       data: null,
       error: null,
-      metrics: undefined
+      metrics: undefined,
     }));
   }, []);
 
   return {
     ...state,
     mutate,
-    reset
+    reset,
   };
 }
 
@@ -311,50 +331,55 @@ export function useOptimizedBatch<T extends keyof Database["public"]["Tables"]>(
     data: null as Tables<T>[] | null,
     loading: false,
     error: null as Error | null,
-    metrics: undefined as QueryMetrics | undefined
+    metrics: undefined as QueryMetrics | undefined,
   });
 
-  const batchCreate = useCallback(async (records: Inserts<T>[], batchSize?: number) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+  const batchCreate = useCallback(
+    async (records: Inserts<T>[], batchSize?: number) => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const result = await service.optimizedBatchCreate(records, batchSize);
-      
-      setState({
-        data: result.data,
-        loading: false,
-        error: result.error ? new Error(result.error.message) : null,
-        metrics: result.metrics
-      });
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error : new Error(String(error))
-      }));
-    }
-  }, [service]);
+      try {
+        const result = await service.optimizedBatchCreate(records, batchSize);
+
+        setState({
+          data: result.data,
+          loading: false,
+          error: result.error ? new Error(result.error.message) : null,
+          metrics: result.metrics,
+        });
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error : new Error(String(error)),
+        }));
+      }
+    },
+    [service]
+  );
 
   const reset = useCallback(() => {
     setState({
       data: null,
       loading: false,
       error: null,
-      metrics: undefined
+      metrics: undefined,
     });
   }, []);
 
   return {
     ...state,
     batchCreate,
-    reset
+    reset,
   };
 }
 
 /**
  * Hook for search functionality
  */
-export function useOptimizedSearch<T extends keyof Database["public"]["Tables"]>(
+export function useOptimizedSearch<
+  T extends keyof Database["public"]["Tables"],
+>(
   service: OptimizedBaseService<T>,
   searchColumns: string[]
 ): {
@@ -362,67 +387,72 @@ export function useOptimizedSearch<T extends keyof Database["public"]["Tables"]>
   loading: boolean;
   error: Error | null;
   metrics?: QueryMetrics;
-  search: (term: string, options?: QueryOptions & { fuzzy?: boolean }) => Promise<void>;
+  search: (
+    term: string,
+    options?: QueryOptions & { fuzzy?: boolean }
+  ) => Promise<void>;
   clear: () => void;
 } {
   const [state, setState] = useState({
     data: null as Tables<T>[] | null,
     loading: false,
     error: null as Error | null,
-    metrics: undefined as QueryMetrics | undefined
+    metrics: undefined as QueryMetrics | undefined,
   });
 
-  const search = useCallback(async (
-    term: string, 
-    options?: QueryOptions & { fuzzy?: boolean }
-  ) => {
-    if (!term.trim()) {
-      setState(prev => ({ ...prev, data: null, error: null }));
-      return;
-    }
+  const search = useCallback(
+    async (term: string, options?: QueryOptions & { fuzzy?: boolean }) => {
+      if (!term.trim()) {
+        setState((prev) => ({ ...prev, data: null, error: null }));
+        return;
+      }
 
-    setState(prev => ({ ...prev, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const result = await service.optimizedSearch(term, searchColumns, options);
-      
-      setState({
-        data: result.data,
-        loading: false,
-        error: result.error ? new Error(result.error.message) : null,
-        metrics: result.metrics
-      });
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error : new Error(String(error))
-      }));
-    }
-  }, [service, searchColumns]);
+      try {
+        const result = await service.optimizedSearch(
+          term,
+          searchColumns,
+          options
+        );
+
+        setState({
+          data: result.data,
+          loading: false,
+          error: result.error ? new Error(result.error.message) : null,
+          metrics: result.metrics,
+        });
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error : new Error(String(error)),
+        }));
+      }
+    },
+    [service, searchColumns]
+  );
 
   const clear = useCallback(() => {
     setState({
       data: null,
       loading: false,
       error: null,
-      metrics: undefined
+      metrics: undefined,
     });
   }, []);
 
   return {
     ...state,
     search,
-    clear
+    clear,
   };
 }
 
 /**
  * Hook for monitoring database performance
  */
-export function useOptimizedMetrics(
-  service?: OptimizedBaseService<any>
-): {
+export function useOptimizedMetrics(service?: OptimizedBaseService<any>): {
   databaseMetrics: ReturnType<typeof dbOptimization.getMetrics>;
   serviceMetrics?: any;
   cacheStats: ReturnType<typeof dbOptimization.getCacheStats>;
@@ -431,14 +461,14 @@ export function useOptimizedMetrics(
   const [metrics, setMetrics] = useState({
     databaseMetrics: dbOptimization.getMetrics(),
     serviceMetrics: service?.getServiceMetrics(),
-    cacheStats: dbOptimization.getCacheStats()
+    cacheStats: dbOptimization.getCacheStats(),
   });
 
   const refresh = useCallback(() => {
     setMetrics({
       databaseMetrics: dbOptimization.getMetrics(),
       serviceMetrics: service?.getServiceMetrics(),
-      cacheStats: dbOptimization.getCacheStats()
+      cacheStats: dbOptimization.getCacheStats(),
     });
   }, [service]);
 
@@ -449,7 +479,7 @@ export function useOptimizedMetrics(
 
   return {
     ...metrics,
-    refresh
+    refresh,
   };
 }
 
@@ -477,7 +507,7 @@ export function useOptimizedCache(): UseOptimizedCacheState {
     size: cacheStats.size,
     maxSize: cacheStats.maxSize,
     entries: cacheStats.entries.length,
-    clearCache
+    clearCache,
   };
 }
 
@@ -490,7 +520,7 @@ export function useOptimizedPerformanceMonitor() {
     averageResponseTime: 0,
     errorRate: 0,
     cacheHitRate: 0,
-    totalQueries: 0
+    totalQueries: 0,
   });
 
   useEffect(() => {
@@ -501,7 +531,7 @@ export function useOptimizedPerformanceMonitor() {
         averageResponseTime: metrics.averageResponseTime,
         errorRate: metrics.errorRate,
         cacheHitRate: metrics.cacheHitRate,
-        totalQueries: metrics.totalQueries
+        totalQueries: metrics.totalQueries,
       });
     };
 

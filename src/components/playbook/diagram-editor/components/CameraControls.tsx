@@ -1,5 +1,5 @@
-import React from 'react';
-import type { DiagramPixiApp } from '../core/PixiApp';
+import React from "react";
+import type { DiagramPixiApp } from "../core/PixiApp";
 
 interface CameraControlsProps {
   app: DiagramPixiApp | null;
@@ -30,11 +30,11 @@ export const CameraControls: React.FC<CameraControlsProps> = ({ app }) => {
 
   const handleTogglePan = () => {
     // TODO: Toggle pan mode in Phase 2B
-    console.log('Pan mode toggle - will implement with tool system');
+    console.log("Pan mode toggle - will implement with tool system");
   };
 
   const buttonBaseClasses =
-    'w-12 h-12 rounded-lg bg-white shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center text-gray-700 hover:text-blue-600 border border-gray-200';
+    "w-12 h-12 rounded-lg bg-white shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center text-gray-700 hover:text-blue-600 border border-gray-200";
 
   return (
     <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">

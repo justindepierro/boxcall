@@ -211,6 +211,7 @@ User visits /login
    - Prevents user enumeration
 
 6. **Comprehensive Monitoring**
+
    ```typescript
    AuthMonitoring.recordSignInAttempt();
    AuthMonitoring.recordSignInSuccess();

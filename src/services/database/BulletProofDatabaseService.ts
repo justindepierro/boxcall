@@ -5,12 +5,12 @@
  * for a resilient database layer with automatic recovery
  */
 
-import { dbConnectivity } from './DatabaseConnectivityService';
-import { databaseErrorHandler } from './DatabaseErrorHandler';
-import type { DatabaseError } from './DatabaseErrorHandler';
-import { databaseHealthMonitor } from './DatabaseHealthMonitor';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../../types/database';
+import { dbConnectivity } from "./DatabaseConnectivityService";
+import { databaseErrorHandler } from "./DatabaseErrorHandler";
+import type { DatabaseError } from "./DatabaseErrorHandler";
+import { databaseHealthMonitor } from "./DatabaseHealthMonitor";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "../../types/database";
 
 interface DatabaseOperation<T = any> {
   id: string;
@@ -65,11 +65,11 @@ export class BulletProofDatabaseService {
     } = {}
   ): Promise<OperationResult<T>> {
     const {
-      description = 'Database operation',
+      description = "Database operation",
       critical = false,
       timeout = 30000,
       maxRetries = 3,
-      queueIfUnavailable = false
+      queueIfUnavailable = false,
     } = options;
 
     const operationId = `${description}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -82,7 +82,7 @@ export class BulletProofDatabaseService {
         operation,
         description,
         critical,
-        timeout
+        timeout,
       });
     }
 
@@ -98,7 +98,10 @@ export class BulletProofDatabaseService {
         }
 
         // Execute operation
-        const result = await dbConnectivity.executeWithRetry(operation, description);
+        const result = await dbConnectivity.executeWithRetry(
+          operation,
+          description
+        );
 
         const duration = performance.now() - startTime;
 
@@ -108,16 +111,16 @@ export class BulletProofDatabaseService {
           metrics: {
             duration,
             retries,
-            circuitBreakerState: dbConnectivity.getMetrics().circuitBreakerState
-          }
+            circuitBreakerState:
+              dbConnectivity.getMetrics().circuitBreakerState,
+          },
         };
-
       } catch (error) {
         lastError = databaseErrorHandler.categorizeError(error, {
           operationId,
           description,
           attempt: retries + 1,
-          maxRetries
+          maxRetries,
         });
 
         retries++;
@@ -127,7 +130,9 @@ export class BulletProofDatabaseService {
           break;
         }
 
-        console.warn(`🔄 Retrying ${description} (attempt ${retries}/${maxRetries})`);
+        console.warn(
+          `🔄 Retrying ${description} (attempt ${retries}/${maxRetries})`
+        );
       }
     }
 
@@ -142,7 +147,7 @@ export class BulletProofDatabaseService {
         operation,
         description,
         critical: true,
-        timeout
+        timeout,
       });
     }
 
@@ -152,24 +157,28 @@ export class BulletProofDatabaseService {
       metrics: {
         duration,
         retries: retries - 1,
-        circuitBreakerState: dbConnectivity.getMetrics().circuitBreakerState
-      }
+        circuitBreakerState: dbConnectivity.getMetrics().circuitBreakerState,
+      },
     };
   }
 
   /**
    * Queue operation for later execution when service recovers
    */
-  private queueOperation<T>(dbOperation: DatabaseOperation<T>): Promise<OperationResult<T>> {
+  private queueOperation<T>(
+    dbOperation: DatabaseOperation<T>
+  ): Promise<OperationResult<T>> {
     return new Promise((resolve) => {
       const queuedOperation = {
         ...dbOperation,
         resolve,
-        queuedAt: new Date()
+        queuedAt: new Date(),
       };
 
       this.operationQueue.push(queuedOperation as any);
-      console.log(`📋 Operation queued: ${dbOperation.description} (${this.operationQueue.length} in queue)`);
+      console.log(
+        `📋 Operation queued: ${dbOperation.description} (${this.operationQueue.length} in queue)`
+      );
     });
   }
 
@@ -195,20 +204,16 @@ export class BulletProofDatabaseService {
 
         console.log(`🔄 Processing queued operation: ${operation.description}`);
 
-        const result = await this.execute(
-          operation.operation,
-          {
-            description: operation.description,
-            critical: operation.critical,
-            timeout: operation.timeout,
-            queueIfUnavailable: false // Don't re-queue
-          }
-        );
+        const result = await this.execute(operation.operation, {
+          description: operation.description,
+          critical: operation.critical,
+          timeout: operation.timeout,
+          queueIfUnavailable: false, // Don't re-queue
+        });
 
         (operation as any).resolve(result);
-
       } catch (error) {
-        console.error('Queue processing error:', error);
+        console.error("Queue processing error:", error);
       } finally {
         this.isProcessing = false;
       }
@@ -235,7 +240,7 @@ export class BulletProofDatabaseService {
       connectivity: dbConnectivity.getMetrics(),
       health: databaseHealthMonitor.getHealthStatus(),
       errors: databaseErrorHandler.getErrorStats(),
-      queueLength: this.operationQueue.length
+      queueLength: this.operationQueue.length,
     };
   }
 
@@ -258,23 +263,31 @@ export class BulletProofDatabaseService {
     const healthStatus = this.getHealthStatus();
     const diagnostics = await databaseHealthMonitor.runDiagnostics();
 
-    const overallHealth = healthStatus.connectivity.circuitBreakerState !== 'OPEN' &&
-                         diagnostics.connectivity &&
-                         diagnostics.performance;
+    const overallHealth =
+      healthStatus.connectivity.circuitBreakerState !== "OPEN" &&
+      diagnostics.connectivity &&
+      diagnostics.performance;
 
     const allErrors = [
       ...diagnostics.errors,
-      ...(healthStatus.queueLength > 10 ? [`${healthStatus.queueLength} operations queued`] : [])
+      ...(healthStatus.queueLength > 10
+        ? [`${healthStatus.queueLength} operations queued`]
+        : []),
     ];
 
     const allRecommendations = [
       ...diagnostics.recommendations,
-      ...(healthStatus.queueLength > 10 ? ['Review queued operations and service capacity'] : [])
+      ...(healthStatus.queueLength > 10
+        ? ["Review queued operations and service capacity"]
+        : []),
     ];
 
     // Calculate metrics
-    const errorRate = Object.values(healthStatus.errors)
-      .reduce((sum, count) => sum + count, 0) / Math.max(Object.values(healthStatus.errors).length, 1);
+    const errorRate =
+      Object.values(healthStatus.errors).reduce(
+        (sum, count) => sum + count,
+        0
+      ) / Math.max(Object.values(healthStatus.errors).length, 1);
 
     return {
       overallHealth,
@@ -286,8 +299,8 @@ export class BulletProofDatabaseService {
         queueLength: healthStatus.queueLength,
         errorRate,
         averageResponseTime: healthStatus.connectivity.averageResponseTime,
-        uptime: healthStatus.health.uptime
-      }
+        uptime: healthStatus.health.uptime,
+      },
     };
   }
 
@@ -295,34 +308,36 @@ export class BulletProofDatabaseService {
    * Graceful shutdown
    */
   async shutdown(): Promise<void> {
-    console.log('🛑 Shutting down bullet-proof database service...');
+    console.log("🛑 Shutting down bullet-proof database service...");
 
     databaseHealthMonitor.stopMonitoring();
 
     // Process remaining queue items
     if (this.operationQueue.length > 0) {
-      console.log(`📋 Processing ${this.operationQueue.length} remaining queued operations...`);
+      console.log(
+        `📋 Processing ${this.operationQueue.length} remaining queued operations...`
+      );
 
       for (const operation of this.operationQueue) {
         try {
-          const result = await this.execute(
-            operation.operation,
-            {
-              description: operation.description,
-              critical: operation.critical,
-              timeout: operation.timeout,
-              queueIfUnavailable: false
-            }
-          );
+          const result = await this.execute(operation.operation, {
+            description: operation.description,
+            critical: operation.critical,
+            timeout: operation.timeout,
+            queueIfUnavailable: false,
+          });
           (operation as any).resolve(result);
         } catch (error) {
-          console.error(`Failed to process queued operation ${operation.description}:`, error);
+          console.error(
+            `Failed to process queued operation ${operation.description}:`,
+            error
+          );
         }
       }
     }
 
     await dbConnectivity.shutdown();
-    console.log('✅ Bullet-proof database service shut down');
+    console.log("✅ Bullet-proof database service shut down");
   }
 }
 

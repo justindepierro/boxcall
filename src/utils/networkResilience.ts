@@ -3,20 +3,21 @@
  */
 
 export class NetworkResilience {
-  private static online = typeof navigator !== 'undefined' ? navigator.onLine : true;
+  private static online =
+    typeof navigator !== "undefined" ? navigator.onLine : true;
   private static listeners: Array<(online: boolean) => void> = [];
   private static queuedOperations: Array<() => Promise<void>> = [];
   private static isProcessingQueue = false;
 
   static {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", () => {
         this.online = true;
         this.notifyListeners(true);
         this.processQueuedOperations();
       });
 
-      window.addEventListener('offline', () => {
+      window.addEventListener("offline", () => {
         this.online = false;
         this.notifyListeners(false);
       });
@@ -49,11 +50,11 @@ export class NetworkResilience {
    * Notify all listeners of status change
    */
   private static notifyListeners(online: boolean): void {
-    this.listeners.forEach(callback => {
+    this.listeners.forEach((callback) => {
       try {
         callback(online);
       } catch (error) {
-        console.error('Error in network status listener:', error);
+        console.error("Error in network status listener:", error);
       }
     });
   }
@@ -69,7 +70,11 @@ export class NetworkResilience {
    * Process queued operations when back online
    */
   private static async processQueuedOperations(): Promise<void> {
-    if (this.isProcessingQueue || !this.online || this.queuedOperations.length === 0) {
+    if (
+      this.isProcessingQueue ||
+      !this.online ||
+      this.queuedOperations.length === 0
+    ) {
       return;
     }
 
@@ -81,7 +86,7 @@ export class NetworkResilience {
         try {
           await operation();
         } catch (error) {
-          console.error('Error processing queued operation:', error);
+          console.error("Error processing queued operation:", error);
           // Re-queue failed operations with exponential backoff
           setTimeout(() => {
             this.queuedOperations.unshift(operation);
@@ -122,13 +127,19 @@ export class NetworkResilience {
         }
 
         // Calculate delay with jitter
-        const delay = Math.min(baseDelay * Math.pow(backoffFactor, attempt), maxDelay);
+        const delay = Math.min(
+          baseDelay * Math.pow(backoffFactor, attempt),
+          maxDelay
+        );
         const jitter = Math.random() * 0.1 * delay; // Add up to 10% jitter
         const finalDelay = delay + jitter;
 
-        console.warn(`⚠️ Operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${Math.round(finalDelay)}ms:`, lastError.message);
+        console.warn(
+          `⚠️ Operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${Math.round(finalDelay)}ms:`,
+          lastError.message
+        );
 
-        await new Promise(resolve => setTimeout(resolve, finalDelay));
+        await new Promise((resolve) => setTimeout(resolve, finalDelay));
       }
     }
 
@@ -142,17 +153,25 @@ export class NetworkResilience {
     const message = error.message.toLowerCase();
 
     // Authentication errors
-    if (message.includes('unauthorized') || message.includes('forbidden') || message.includes('invalid credentials')) {
+    if (
+      message.includes("unauthorized") ||
+      message.includes("forbidden") ||
+      message.includes("invalid credentials")
+    ) {
       return true;
     }
 
     // Validation errors
-    if (message.includes('validation') || message.includes('constraint') || message.includes('invalid input')) {
+    if (
+      message.includes("validation") ||
+      message.includes("constraint") ||
+      message.includes("invalid input")
+    ) {
       return true;
     }
 
     // Not found errors (for specific resources)
-    if (message.includes('not found') && !message.includes('network')) {
+    if (message.includes("not found") && !message.includes("network")) {
       return true;
     }
 
@@ -201,7 +220,7 @@ export class NetworkResilience {
     downlink?: number;
     saveData?: boolean;
   } {
-    if (typeof navigator === 'undefined') {
+    if (typeof navigator === "undefined") {
       return { online: true };
     }
 
@@ -223,7 +242,8 @@ export class NetworkResilience {
     if (!info.online) return false;
     if (info.saveData) return false;
     if (info.downlink && info.downlink < 2) return false; // Less than 2 Mbps
-    if (info.effectiveType && ['slow-2g', '2g'].includes(info.effectiveType)) return false;
+    if (info.effectiveType && ["slow-2g", "2g"].includes(info.effectiveType))
+      return false;
 
     return true;
   }

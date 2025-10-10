@@ -93,8 +93,10 @@ type PolymorphicProps<E extends TypographyElement> = TypographyProps & {
 // Typography variant class mappings - Updated with new font families and square aesthetic
 const typographyClasses: Record<TypographyVariant, string> = {
   // Display variants - Bebas Neue for maximum impact
-  "display-xl": "font-display text-[3.25rem] font-normal leading-[0.95] tracking-tight",
-  "display-lg": "font-display text-[2.75rem] font-normal leading-[0.95] tracking-tight",
+  "display-xl":
+    "font-display text-[3.25rem] font-normal leading-[0.95] tracking-tight",
+  "display-lg":
+    "font-display text-[2.75rem] font-normal leading-[0.95] tracking-tight",
   "display-md":
     "font-display text-[2.25rem] font-normal leading-[1.05] tracking-tight",
   // Headlines - Inter Bold for hierarchy
@@ -112,8 +114,10 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "code-md": "font-mono text-[0.85rem] leading-[1.3]",
   "code-sm": "font-mono text-[0.78rem] leading-[1.25]",
   // Labels and UI - Inter Medium
-  "label-lg": "font-sans text-[0.7rem] font-semibold uppercase tracking-[0.18em]",
-  "label-md": "font-sans text-[0.62rem] font-semibold uppercase tracking-[0.18em]",
+  "label-lg":
+    "font-sans text-[0.7rem] font-semibold uppercase tracking-[0.18em]",
+  "label-md":
+    "font-sans text-[0.62rem] font-semibold uppercase tracking-[0.18em]",
   button: "font-sans text-[0.85rem] font-semibold",
   caption: "font-sans text-[0.7rem] text-text-muted leading-[1.3]",
 };

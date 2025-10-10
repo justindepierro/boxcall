@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Accessible Modal Hook for easier usage
 export function useAccessibleModal() {

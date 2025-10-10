@@ -36,7 +36,7 @@ export default defineConfig({
     // Use jsdom so component/unit tests that render React DOM nodes have access
     // to browser APIs. Node env can still be overridden per-file if needed.
     environment: "jsdom",
-    
+
     // Global resource limits to prevent memory exhaustion
     pool: "threads",
     poolOptions: {
@@ -45,11 +45,11 @@ export default defineConfig({
         maxThreads: 4,
       },
     },
-    
+
     // Global timeouts
     testTimeout: 30000,
     hookTimeout: 10000,
-    
+
     coverage: {
       provider: "v8",
       reporter: ["text", "text-summary", "html", "lcov", "json"],
@@ -89,10 +89,7 @@ export default defineConfig({
             "src/**/*.test.ts",
             "src/**/*.test.tsx",
           ],
-          exclude: [
-            "src/**/*.stories.tsx",
-            "src/**/*.stories.ts",
-          ],
+          exclude: ["src/**/*.stories.tsx", "src/**/*.stories.ts"],
           setupFiles: ["./src/test/setup.ts"],
         },
       },

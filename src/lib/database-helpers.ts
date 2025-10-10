@@ -35,7 +35,10 @@ export async function withDatabaseRetry<T>(
   operation: () => Promise<T>,
   config: DatabaseOperationConfig = {}
 ): Promise<T> {
-  const { maxRetries, baseDelay, maxDelay, timeout } = { ...DEFAULT_DB_CONFIG, ...config };
+  const { maxRetries, baseDelay, maxDelay, timeout } = {
+    ...DEFAULT_DB_CONFIG,
+    ...config,
+  };
 
   let lastError: Error = new Error("Unknown error");
 
@@ -43,13 +46,18 @@ export async function withDatabaseRetry<T>(
     try {
       // Create a timeout promise
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error(`Database operation timed out after ${timeout}ms`)), timeout);
+        setTimeout(
+          () =>
+            reject(
+              new Error(`Database operation timed out after ${timeout}ms`)
+            ),
+          timeout
+        );
       });
 
       // Race between the operation and timeout
       const result = await Promise.race([operation(), timeoutPromise]);
       return result;
-
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
 
@@ -61,13 +69,19 @@ export async function withDatabaseRetry<T>(
 
       if (attempt < maxRetries) {
         const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
-        console.warn(`⚠️ Database operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms:`, lastError.message);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        console.warn(
+          `⚠️ Database operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms:`,
+          lastError.message
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
   }
 
-  console.error(`❌ Database operation failed after ${maxRetries + 1} attempts:`, lastError);
+  console.error(
+    `❌ Database operation failed after ${maxRetries + 1} attempts:`,
+    lastError
+  );
   throw lastError;
 }
 
@@ -78,21 +92,25 @@ function isNonRetryableError(error: Error): boolean {
   const message = error.message.toLowerCase();
 
   // Authentication/permission errors
-  if (message.includes('permission denied') ||
-      message.includes('unauthorized') ||
-      message.includes('invalid credentials')) {
+  if (
+    message.includes("permission denied") ||
+    message.includes("unauthorized") ||
+    message.includes("invalid credentials")
+  ) {
     return true;
   }
 
   // Schema/validation errors
-  if (message.includes('violates') ||
-      message.includes('constraint') ||
-      message.includes('invalid input')) {
+  if (
+    message.includes("violates") ||
+    message.includes("constraint") ||
+    message.includes("invalid input")
+  ) {
     return true;
   }
 
   // Not found errors (for specific queries)
-  if (message.includes('not found') && !message.includes('network')) {
+  if (message.includes("not found") && !message.includes("network")) {
     return true;
   }
 
@@ -111,12 +129,15 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
     // We'll try to access a public table or make a simple query
     const { error } = await supabase
       .from("teams")
-      .select("count", { count: 'exact', head: true });
+      .select("count", { count: "exact", head: true });
 
     if (error) {
       // If we get a permission error, that's actually good - it means we can reach the DB
       // but RLS is working as expected
-      if (error.code === "PGRST116" || error.message.includes("permission denied")) {
+      if (
+        error.code === "PGRST116" ||
+        error.message.includes("permission denied")
+      ) {
         console.log("✅ Database reachable (RLS working as expected)");
         return true;
       }
@@ -141,7 +162,9 @@ export async function testDatabaseConnection(): Promise<boolean> {
 
     // Test basic connection - check current user's profile (respects RLS)
     const connectionTest = await withDatabaseRetry(async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error("No authenticated user found for database test");
       }
@@ -180,17 +203,23 @@ export async function testDatabaseConnection(): Promise<boolean> {
     // Test tables with individual retry logic
     const tableTests = testTables.map(async (tableName) => {
       try {
-        await withDatabaseRetry(async () => {
-          const { error } = await supabase.from(tableName).select("id").limit(1);
-          if (!error) {
-            accessibleTables.push(tableName);
-          } else if (
-            error.code === "PGRST116" ||
-            error.message.includes("permission denied")
-          ) {
-            protectedCount.push(tableName);
-          }
-        }, { maxRetries: 1 }); // Only retry once for table tests
+        await withDatabaseRetry(
+          async () => {
+            const { error } = await supabase
+              .from(tableName)
+              .select("id")
+              .limit(1);
+            if (!error) {
+              accessibleTables.push(tableName);
+            } else if (
+              error.code === "PGRST116" ||
+              error.message.includes("permission denied")
+            ) {
+              protectedCount.push(tableName);
+            }
+          },
+          { maxRetries: 1 }
+        ); // Only retry once for table tests
       } catch {
         // Table doesn't exist or access denied
         protectedCount.push(tableName);
@@ -278,7 +307,8 @@ export async function getTeamMembers(teamId: string): Promise<any[]> {
     return await withDatabaseRetry(async () => {
       const { data, error } = await supabase
         .from("team_members")
-        .select(`
+        .select(
+          `
           *,
           profiles:user_id (
             id,
@@ -287,7 +317,8 @@ export async function getTeamMembers(teamId: string): Promise<any[]> {
             role,
             avatar_url
           )
-        `)
+        `
+        )
         .eq("team_id", teamId);
 
       if (error) {
@@ -382,7 +413,7 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
 export async function getUserProfileByUserId(
   userId: string
 ): Promise<UserProfile | null> {
-  const { data, error} = await supabase
+  const { data, error } = await supabase
     .from("user_profiles")
     .select("*")
     .eq("user_id", userId)

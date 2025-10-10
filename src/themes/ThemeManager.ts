@@ -18,11 +18,7 @@ async function loadTheme(
 
 const THEME_STORAGE_KEY = "app-theme";
 // Explicit theme id union (only active themes)
-export const THEME_IDS = [
-  "light",
-  "dark",
-  "high-contrast",
-] as const;
+export const THEME_IDS = ["light", "dark", "high-contrast"] as const;
 export type ThemeName = (typeof THEME_IDS)[number];
 export const DEFAULT_THEME: ThemeName = "light";
 

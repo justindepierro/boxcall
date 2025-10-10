@@ -1,6 +1,6 @@
 /**
  * Database Configuration
- * 
+ *
  * Centralized configuration for database optimization features
  * including caching, performance monitoring, and connection settings
  */
@@ -43,7 +43,7 @@ interface DatabaseConfig {
   // Development Configuration
   development: {
     enableDebugMode: boolean;
-    logLevel: 'debug' | 'info' | 'warn' | 'error';
+    logLevel: "debug" | "info" | "warn" | "error";
     enableQueryExplain: boolean;
     enablePerformanceTracing: boolean;
   };
@@ -62,7 +62,7 @@ function parseNumber(value: string | undefined, fallback: number): number {
  */
 function parseBoolean(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined) return fallback;
-  return value.toLowerCase() === 'true';
+  return value.toLowerCase() === "true";
 }
 
 /**
@@ -72,17 +72,38 @@ export const databaseConfig: DatabaseConfig = {
   cache: {
     defaultTTL: parseNumber(import.meta.env.VITE_DB_CACHE_TTL, 300000), // 5 minutes
     maxSize: parseNumber(import.meta.env.VITE_DB_MAX_CACHE_SIZE, 1000),
-    enableQueryCache: parseBoolean(import.meta.env.VITE_DB_ENABLE_QUERY_CACHE, true),
-    enableServiceCache: parseBoolean(import.meta.env.VITE_DB_ENABLE_SERVICE_CACHE, true),
-    cleanupInterval: parseNumber(import.meta.env.VITE_DB_CACHE_CLEANUP_INTERVAL, 60000), // 1 minute
+    enableQueryCache: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_QUERY_CACHE,
+      true
+    ),
+    enableServiceCache: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_SERVICE_CACHE,
+      true
+    ),
+    cleanupInterval: parseNumber(
+      import.meta.env.VITE_DB_CACHE_CLEANUP_INTERVAL,
+      60000
+    ), // 1 minute
   },
 
   performance: {
-    slowQueryThreshold: parseNumber(import.meta.env.VITE_SLOW_QUERY_THRESHOLD, 1000), // 1 second
+    slowQueryThreshold: parseNumber(
+      import.meta.env.VITE_SLOW_QUERY_THRESHOLD,
+      1000
+    ), // 1 second
     enableMetrics: parseBoolean(import.meta.env.VITE_DB_ENABLE_METRICS, true),
-    enableQueryLogging: parseBoolean(import.meta.env.VITE_DB_ENABLE_QUERY_LOGGING, import.meta.env.DEV),
-    metricsRetention: parseNumber(import.meta.env.VITE_DB_METRICS_RETENTION, 1000), // Keep last 1000 metrics
-    performanceMonitoringInterval: parseNumber(import.meta.env.VITE_DB_PERF_MONITOR_INTERVAL, 5000), // 5 seconds
+    enableQueryLogging: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_QUERY_LOGGING,
+      import.meta.env.DEV
+    ),
+    metricsRetention: parseNumber(
+      import.meta.env.VITE_DB_METRICS_RETENTION,
+      1000
+    ), // Keep last 1000 metrics
+    performanceMonitoringInterval: parseNumber(
+      import.meta.env.VITE_DB_PERF_MONITOR_INTERVAL,
+      5000
+    ), // 5 seconds
   },
 
   connection: {
@@ -94,82 +115,108 @@ export const databaseConfig: DatabaseConfig = {
 
   optimization: {
     enableBatching: parseBoolean(import.meta.env.VITE_DB_ENABLE_BATCHING, true),
-    defaultBatchSize: parseNumber(import.meta.env.VITE_DB_DEFAULT_BATCH_SIZE, 100),
-    enableQueryOptimization: parseBoolean(import.meta.env.VITE_DB_ENABLE_OPTIMIZATION, true),
-    enableConnectionPooling: parseBoolean(import.meta.env.VITE_DB_ENABLE_CONNECTION_POOLING, true),
+    defaultBatchSize: parseNumber(
+      import.meta.env.VITE_DB_DEFAULT_BATCH_SIZE,
+      100
+    ),
+    enableQueryOptimization: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_OPTIMIZATION,
+      true
+    ),
+    enableConnectionPooling: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_CONNECTION_POOLING,
+      true
+    ),
   },
 
   development: {
-    enableDebugMode: parseBoolean(import.meta.env.VITE_DB_DEBUG_MODE, import.meta.env.DEV),
-    logLevel: (import.meta.env.VITE_DB_LOG_LEVEL as 'debug' | 'info' | 'warn' | 'error') || 'info',
-    enableQueryExplain: parseBoolean(import.meta.env.VITE_DB_ENABLE_QUERY_EXPLAIN, false),
-    enablePerformanceTracing: parseBoolean(import.meta.env.VITE_DB_ENABLE_PERF_TRACING, import.meta.env.DEV),
+    enableDebugMode: parseBoolean(
+      import.meta.env.VITE_DB_DEBUG_MODE,
+      import.meta.env.DEV
+    ),
+    logLevel:
+      (import.meta.env.VITE_DB_LOG_LEVEL as
+        | "debug"
+        | "info"
+        | "warn"
+        | "error") || "info",
+    enableQueryExplain: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_QUERY_EXPLAIN,
+      false
+    ),
+    enablePerformanceTracing: parseBoolean(
+      import.meta.env.VITE_DB_ENABLE_PERF_TRACING,
+      import.meta.env.DEV
+    ),
   },
 };
 
 /**
  * Validate database configuration
  */
-export function validateDatabaseConfig(): { isValid: boolean; errors: string[] } {
+export function validateDatabaseConfig(): {
+  isValid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Validate cache configuration
   if (databaseConfig.cache.defaultTTL < 0) {
-    errors.push('Cache TTL must be non-negative');
+    errors.push("Cache TTL must be non-negative");
   }
 
   if (databaseConfig.cache.maxSize < 1) {
-    errors.push('Cache max size must be at least 1');
+    errors.push("Cache max size must be at least 1");
   }
 
   if (databaseConfig.cache.cleanupInterval < 1000) {
-    errors.push('Cache cleanup interval must be at least 1000ms');
+    errors.push("Cache cleanup interval must be at least 1000ms");
   }
 
   // Validate performance configuration
   if (databaseConfig.performance.slowQueryThreshold < 0) {
-    errors.push('Slow query threshold must be non-negative');
+    errors.push("Slow query threshold must be non-negative");
   }
 
   if (databaseConfig.performance.metricsRetention < 1) {
-    errors.push('Metrics retention must be at least 1');
+    errors.push("Metrics retention must be at least 1");
   }
 
   if (databaseConfig.performance.performanceMonitoringInterval < 1000) {
-    errors.push('Performance monitoring interval must be at least 1000ms');
+    errors.push("Performance monitoring interval must be at least 1000ms");
   }
 
   // Validate connection configuration
   if (databaseConfig.connection.poolSize < 1) {
-    errors.push('Connection pool size must be at least 1');
+    errors.push("Connection pool size must be at least 1");
   }
 
   if (databaseConfig.connection.maxRetries < 0) {
-    errors.push('Max retries must be non-negative');
+    errors.push("Max retries must be non-negative");
   }
 
   if (databaseConfig.connection.retryDelay < 0) {
-    errors.push('Retry delay must be non-negative');
+    errors.push("Retry delay must be non-negative");
   }
 
   if (databaseConfig.connection.timeout < 1000) {
-    errors.push('Connection timeout must be at least 1000ms');
+    errors.push("Connection timeout must be at least 1000ms");
   }
 
   // Validate optimization configuration
   if (databaseConfig.optimization.defaultBatchSize < 1) {
-    errors.push('Default batch size must be at least 1');
+    errors.push("Default batch size must be at least 1");
   }
 
   // Validate development configuration
-  const validLogLevels = ['debug', 'info', 'warn', 'error'];
+  const validLogLevels = ["debug", "info", "warn", "error"];
   if (!validLogLevels.includes(databaseConfig.development.logLevel)) {
-    errors.push(`Log level must be one of: ${validLogLevels.join(', ')}`);
+    errors.push(`Log level must be one of: ${validLogLevels.join(", ")}`);
   }
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -179,7 +226,9 @@ export function validateDatabaseConfig(): { isValid: boolean; errors: string[] }
 export function getDatabaseConfigSummary(): Record<string, any> {
   return {
     cache: {
-      enabled: databaseConfig.cache.enableQueryCache || databaseConfig.cache.enableServiceCache,
+      enabled:
+        databaseConfig.cache.enableQueryCache ||
+        databaseConfig.cache.enableServiceCache,
       ttl: `${databaseConfig.cache.defaultTTL / 1000}s`,
       maxSize: databaseConfig.cache.maxSize,
     },
@@ -206,19 +255,19 @@ export function getDatabaseConfigSummary(): Record<string, any> {
  */
 export function initializeDatabaseConfig(): void {
   const validation = validateDatabaseConfig();
-  
+
   if (!validation.isValid) {
-    console.error('❌ Database configuration validation failed:');
-    validation.errors.forEach(error => console.error(`  - ${error}`));
-    throw new Error('Invalid database configuration');
+    console.error("❌ Database configuration validation failed:");
+    validation.errors.forEach((error) => console.error(`  - ${error}`));
+    throw new Error("Invalid database configuration");
   }
 
   if (databaseConfig.development.enableDebugMode) {
-    console.log('🔧 Database Configuration Summary:');
+    console.log("🔧 Database Configuration Summary:");
     console.table(getDatabaseConfigSummary());
   }
 
-  console.log('✅ Database configuration initialized successfully');
+  console.log("✅ Database configuration initialized successfully");
 }
 
 // Export the configuration object and utility functions

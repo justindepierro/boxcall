@@ -19,28 +19,29 @@ async function checkTableStructure() {
 
     // Check if table exists by trying to describe it
     const { error } = await supabase
-      .from('achievement_definitions')
-      .select('*')
+      .from("achievement_definitions")
+      .select("*")
       .limit(0); // Just check if table exists
 
     if (error) {
-      console.log('❌ Table check error:', error.message);
+      console.log("❌ Table check error:", error.message);
     } else {
-      console.log('✅ achievement_definitions table exists');
+      console.log("✅ achievement_definitions table exists");
     }
 
     // Try to get table info
-    const { data: info, error: infoError } = await supabase
-      .rpc('get_table_info', { table_name: 'achievement_definitions' });
+    const { data: info, error: infoError } = await supabase.rpc(
+      "get_table_info",
+      { table_name: "achievement_definitions" }
+    );
 
     if (infoError) {
-      console.log('❌ Could not get table info:', infoError.message);
+      console.log("❌ Could not get table info:", infoError.message);
     } else {
-      console.log('✅ Table info:', info);
+      console.log("✅ Table info:", info);
     }
-
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   }
 }
 

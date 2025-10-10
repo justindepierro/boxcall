@@ -12,44 +12,233 @@ import "../index.css";
 vi.mock("lucide-react/dist/esm/dynamicIconImports.js", () => ({
   default: {
     // Mock all the icons used in ModularIcon - return a simple SVG component for testing
-    menu: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'menu-icon' }) })),
-    x: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'x-icon' }) })),
-    plus: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'plus-icon' }) })),
-    "plus-circle": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'plus-circle-icon' }) })),
-    minus: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'minus-icon' }) })),
-    "edit-3": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'edit-icon' }) })),
-    "trash-2": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'delete-icon' }) })),
-    check: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'check-icon' }) })),
-    "alert-triangle": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'warning-icon' }) })),
-    "alert-circle": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'error-icon' }) })),
-    info: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'info-icon' }) })),
-    tag: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'tag-icon' }) })),
-    calendar: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'calendar-icon' }) })),
-    clock: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'clock-icon' }) })),
-    users: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'users-icon' }) })),
-    user: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'user-icon' }) })),
-    "user-plus": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'user-plus-icon' }) })),
-    target: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'target-icon' }) })),
-    trophy: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'trophy-icon' }) })),
-    award: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'award-icon' }) })),
-    star: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'star-icon' }) })),
-    "trending-up": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'trending-up-icon' }) })),
-    zap: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'zap-icon' }) })),
-    flag: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'flag-icon' }) })),
-    shield: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'shield-icon' }) })),
-    activity: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'activity-icon' }) })),
-    map: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'map-icon' }) })),
-    "map-pin": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'map-pin-icon' }) })),
-    "message-circle": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'message-icon' }) })),
-    home: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'home-icon' }) })),
-    "refresh-cw": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'refresh-cw-icon' }) })),
-    wrench: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'wrench-icon' }) })),
-    "help-circle": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'help-circle-icon' }) })),
-    bug: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'bug-icon' }) })),
-    "wifi-off": vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'wifi-off-icon' }) })),
-    server: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'server-icon' }) })),
-    save: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'save-icon' }) })),
-    download: vi.fn(() => Promise.resolve({ default: () => React.createElement('svg', { 'data-testid': 'download-icon' }) })),
+    menu: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "menu-icon" }),
+      })
+    ),
+    x: vi.fn(() =>
+      Promise.resolve({
+        default: () => React.createElement("svg", { "data-testid": "x-icon" }),
+      })
+    ),
+    plus: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "plus-icon" }),
+      })
+    ),
+    "plus-circle": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "plus-circle-icon" }),
+      })
+    ),
+    minus: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "minus-icon" }),
+      })
+    ),
+    "edit-3": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "edit-icon" }),
+      })
+    ),
+    "trash-2": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "delete-icon" }),
+      })
+    ),
+    check: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "check-icon" }),
+      })
+    ),
+    "alert-triangle": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "warning-icon" }),
+      })
+    ),
+    "alert-circle": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "error-icon" }),
+      })
+    ),
+    info: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "info-icon" }),
+      })
+    ),
+    tag: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "tag-icon" }),
+      })
+    ),
+    calendar: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "calendar-icon" }),
+      })
+    ),
+    clock: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "clock-icon" }),
+      })
+    ),
+    users: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "users-icon" }),
+      })
+    ),
+    user: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "user-icon" }),
+      })
+    ),
+    "user-plus": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "user-plus-icon" }),
+      })
+    ),
+    target: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "target-icon" }),
+      })
+    ),
+    trophy: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "trophy-icon" }),
+      })
+    ),
+    award: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "award-icon" }),
+      })
+    ),
+    star: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "star-icon" }),
+      })
+    ),
+    "trending-up": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "trending-up-icon" }),
+      })
+    ),
+    zap: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "zap-icon" }),
+      })
+    ),
+    flag: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "flag-icon" }),
+      })
+    ),
+    shield: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "shield-icon" }),
+      })
+    ),
+    activity: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "activity-icon" }),
+      })
+    ),
+    map: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "map-icon" }),
+      })
+    ),
+    "map-pin": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "map-pin-icon" }),
+      })
+    ),
+    "message-circle": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "message-icon" }),
+      })
+    ),
+    home: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "home-icon" }),
+      })
+    ),
+    "refresh-cw": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "refresh-cw-icon" }),
+      })
+    ),
+    wrench: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "wrench-icon" }),
+      })
+    ),
+    "help-circle": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "help-circle-icon" }),
+      })
+    ),
+    bug: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "bug-icon" }),
+      })
+    ),
+    "wifi-off": vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "wifi-off-icon" }),
+      })
+    ),
+    server: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "server-icon" }),
+      })
+    ),
+    save: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "save-icon" }),
+      })
+    ),
+    download: vi.fn(() =>
+      Promise.resolve({
+        default: () =>
+          React.createElement("svg", { "data-testid": "download-icon" }),
+      })
+    ),
     upload: vi.fn(() => Promise.resolve({ default: () => null })),
     search: vi.fn(() => Promise.resolve({ default: () => null })),
     filter: vi.fn(() => Promise.resolve({ default: () => null })),
@@ -111,11 +300,11 @@ vi.mock("lucide-react/dist/esm/dynamicIconImports.js", () => ({
 // Mock ModularIcon to prevent state updates after unmount in tests
 vi.mock("../components/ui/Icon/ModularIcon.tsx", () => ({
   ModularIcon: vi.fn(({ name, "aria-label": ariaLabel, role, ...props }) =>
-    React.createElement('svg', {
-      'data-testid': `${name}-icon`,
-      'aria-label': ariaLabel || name,
-      'role': role || 'img',
-      ...props
+    React.createElement("svg", {
+      "data-testid": `${name}-icon`,
+      "aria-label": ariaLabel || name,
+      role: role || "img",
+      ...props,
     })
   ),
   ModularIconName: {},

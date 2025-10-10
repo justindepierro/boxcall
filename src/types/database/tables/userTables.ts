@@ -25,7 +25,13 @@ export interface UserTables {
       full_name: string | null;
       avatar_url: string | null;
       role: AppRole; // Legacy role field (kept for backward compatibility)
-      app_role: 'admin' | 'head_coach' | 'coach' | 'free_coach' | 'player' | 'family'; // New app-level role system
+      app_role:
+        | "admin"
+        | "head_coach"
+        | "coach"
+        | "free_coach"
+        | "player"
+        | "family"; // New app-level role system
       is_admin: boolean; // Simple admin boolean check
       bio: string | null;
       phone: string | null;
@@ -72,7 +78,13 @@ export interface UserTables {
       full_name?: string | null;
       avatar_url?: string | null;
       role?: AppRole; // Legacy role field (kept for backward compatibility)
-      app_role?: 'admin' | 'head_coach' | 'coach' | 'free_coach' | 'player' | 'family'; // New app-level role system
+      app_role?:
+        | "admin"
+        | "head_coach"
+        | "coach"
+        | "free_coach"
+        | "player"
+        | "family"; // New app-level role system
       is_admin?: boolean; // Simple admin boolean check
       bio?: string | null;
       phone?: string | null;

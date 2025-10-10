@@ -1,6 +1,6 @@
 /**
  * Core App Provider Module
- * 
+ *
  * Unified provider consolidating design system, accessibility, SEO, and security
  */
 

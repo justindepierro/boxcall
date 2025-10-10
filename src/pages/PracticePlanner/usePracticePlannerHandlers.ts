@@ -15,7 +15,7 @@ interface UsePracticePlannerHandlersProps {
   setLockedSchedule: Dispatch<SetStateAction<boolean>>;
   lockedSchedule: boolean;
   selectedScheduleId: string;
-  
+
   // API functions
   addBlock: (data: CreatePracticeBlockData) => Promise<PracticeBlock>;
   reorderBlocks: (blocks: PracticeBlock[]) => Promise<void>;

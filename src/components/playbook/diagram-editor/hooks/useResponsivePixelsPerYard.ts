@@ -1,11 +1,11 @@
 /**
  * useResponsivePixelsPerYard
- * 
+ *
  * Calculates optimal pixelsPerYard to fit field in available viewport space.
  * Ensures field fills container while maintaining aspect ratio.
- * 
+ *
  * PERFORMANCE: Debounced by 100ms to prevent excessive recalculations during resize.
- * 
+ *
  * Algorithm:
  * 1. Measure available container dimensions (width × height)
  * 2. Calculate scaling factors for width and height
@@ -14,17 +14,17 @@
  * 5. Debounce updates to avoid performance issues
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import type { RefObject } from 'react';
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { RefObject } from "react";
 
 interface ResponsivePixelsPerYardOptions {
   containerRef: RefObject<HTMLElement | null>;
-  fieldWidth: number;    // Field width in yards (53.333)
-  fieldHeight: number;   // Field height in yards (35)
-  minPixelsPerYard?: number;  // Minimum for readability (10)
-  maxPixelsPerYard?: number;  // Maximum for touch targets (25)
-  padding?: number;      // Padding in pixels (default: 20)
-  debounceMs?: number;   // Debounce delay in ms (default: 100)
+  fieldWidth: number; // Field width in yards (53.333)
+  fieldHeight: number; // Field height in yards (35)
+  minPixelsPerYard?: number; // Minimum for readability (10)
+  maxPixelsPerYard?: number; // Maximum for touch targets (25)
+  padding?: number; // Padding in pixels (default: 20)
+  debounceMs?: number; // Debounce delay in ms (default: 100)
 }
 
 export function useResponsivePixelsPerYard({
@@ -68,8 +68,8 @@ export function useResponsivePixelsPerYard({
     const finalScale = Math.round(constrainedScale * 10) / 10;
 
     setPixelsPerYard(finalScale);
-    
-    console.log('📐 Responsive pixelsPerYard calculation:', {
+
+    console.log("📐 Responsive pixelsPerYard calculation:", {
       containerSize: { width: rect.width, height: rect.height },
       availableSpace: { width: availableWidth, height: availableHeight },
       fieldDimensions: { width: fieldWidth, height: fieldHeight },
@@ -77,7 +77,14 @@ export function useResponsivePixelsPerYard({
       optimal: optimalScale.toFixed(2),
       final: finalScale,
     });
-  }, [containerRef, fieldWidth, fieldHeight, minPixelsPerYard, maxPixelsPerYard, padding]);
+  }, [
+    containerRef,
+    fieldWidth,
+    fieldHeight,
+    minPixelsPerYard,
+    maxPixelsPerYard,
+    padding,
+  ]);
 
   const debouncedCalculate = useCallback(() => {
     // Clear existing timer
@@ -105,7 +112,7 @@ export function useResponsivePixelsPerYard({
     }
 
     // Fallback to window resize (debounced)
-    window.addEventListener('resize', debouncedCalculate);
+    window.addEventListener("resize", debouncedCalculate);
 
     return () => {
       // Clear debounce timer on unmount
@@ -113,7 +120,7 @@ export function useResponsivePixelsPerYard({
         clearTimeout(debounceTimerRef.current);
       }
       resizeObserver.disconnect();
-      window.removeEventListener('resize', debouncedCalculate);
+      window.removeEventListener("resize", debouncedCalculate);
     };
   }, [calculatePixelsPerYard, debouncedCalculate, containerRef]);
 

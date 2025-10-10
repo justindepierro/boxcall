@@ -7,23 +7,27 @@
 import { execSync } from "child_process";
 
 console.log("🔍 BoxCall Dev Server Diagnostic\n");
-console.log("=" .repeat(60));
+console.log("=".repeat(60));
 
 // Check for processes on port 5173
 console.log("\n📡 Checking port 5173...");
 try {
   const processes = execSync("lsof -ti :5173 2>/dev/null").toString().trim();
   if (processes) {
-    console.log(`⚠️  Found ${processes.split("\n").length} process(es) on port 5173:`);
+    console.log(
+      `⚠️  Found ${processes.split("\n").length} process(es) on port 5173:`
+    );
     processes.split("\n").forEach((pid) => {
       try {
         const info = execSync(`ps -p ${pid} -o command=`).toString().trim();
-        console.log(`   PID ${pid}: ${info.slice(0, 80)}${info.length > 80 ? "..." : ""}`);
+        console.log(
+          `   PID ${pid}: ${info.slice(0, 80)}${info.length > 80 ? "..." : ""}`
+        );
       } catch {
         console.log(`   PID ${pid}: (no info)`);
       }
     });
-    
+
     console.log("\n🔧 Killing these processes...");
     execSync("lsof -ti :5173 | xargs kill -9 2>/dev/null || true");
     console.log("✅ Processes killed");
@@ -50,20 +54,20 @@ console.log("\n⚙️  Checking vite.config.ts...");
 const config = require("fs").readFileSync("vite.config.ts", "utf-8");
 
 const checks = [
-  { 
-    pattern: /strictPort:\s*false/, 
-    name: "strictPort: false", 
-    good: true 
+  {
+    pattern: /strictPort:\s*false/,
+    name: "strictPort: false",
+    good: true,
   },
-  { 
-    pattern: /open:\s*true/, 
-    name: "open: true (auto-open browser)", 
-    good: true 
+  {
+    pattern: /open:\s*true/,
+    name: "open: true (auto-open browser)",
+    good: true,
   },
-  { 
-    pattern: /overlay:\s*true/, 
-    name: "HMR overlay: true", 
-    good: true 
+  {
+    pattern: /overlay:\s*true/,
+    name: "HMR overlay: true",
+    good: true,
   },
 ];
 
@@ -78,7 +82,9 @@ checks.forEach((check) => {
 // Check for zombie node processes
 console.log("\n🧟 Checking for zombie node/vite processes...");
 try {
-  const nodeProcesses = execSync("ps aux | grep -E '(node|vite)' | grep -v grep | wc -l")
+  const nodeProcesses = execSync(
+    "ps aux | grep -E '(node|vite)' | grep -v grep | wc -l"
+  )
     .toString()
     .trim();
   const count = parseInt(nodeProcesses, 10);

@@ -462,7 +462,10 @@ export default function RosterPage() {
                     {players.filter((p) => p.is_active === true).length}
                   </Typography>
                 </div>
-                <Icon name="check-circle" className="w-8 h-8 text-success-500" />
+                <Icon
+                  name="check-circle"
+                  className="w-8 h-8 text-success-500"
+                />
               </div>
             </Card>
             <Card className="p-spacing-md">
@@ -473,7 +476,10 @@ export default function RosterPage() {
                   </Typography>
                   <Typography variant="headline-lg">{0}</Typography>
                 </div>
-                <Icon name="alert-triangle" className="w-8 h-8 text-error-500" />
+                <Icon
+                  name="alert-triangle"
+                  className="w-8 h-8 text-error-500"
+                />
               </div>
             </Card>
             <Card className="p-spacing-md">

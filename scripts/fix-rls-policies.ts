@@ -25,7 +25,7 @@ async function applyProperRLSPolicies() {
   const dropPolicies = [
     `DROP POLICY IF EXISTS "Users can view profiles of team members" ON profiles;`,
     `DROP POLICY IF EXISTS "Users can update their own profiles" ON profiles;`,
-    `DROP POLICY IF EXISTS "Users can insert their own profiles" ON profiles;`
+    `DROP POLICY IF EXISTS "Users can insert their own profiles" ON profiles;`,
   ];
 
   // Create proper policies
@@ -47,13 +47,13 @@ async function applyProperRLSPolicies() {
     `CREATE POLICY "Users can update their own profiles" ON profiles
       FOR UPDATE USING (id = auth.uid());`,
     `CREATE POLICY "Users can insert their own profiles" ON profiles
-      FOR INSERT WITH CHECK (id = auth.uid());`
+      FOR INSERT WITH CHECK (id = auth.uid());`,
   ];
 
   try {
     // Execute policy changes
     for (const sql of [...dropPolicies, ...createPolicies]) {
-      const { error } = await supabase.rpc('exec_sql', { sql });
+      const { error } = await supabase.rpc("exec_sql", { sql });
       if (error) {
         console.log(`❌ Error executing: ${sql.substring(0, 50)}...`);
         console.log(`   ${error.message}`);

@@ -293,12 +293,16 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formationTags={formData.formationTags}
             runStrength={formData.runStrength}
             passStrength={formData.passStrength}
-            onFormationTypeChange={(value) => updateField("formationType", value)}
+            onFormationTypeChange={(value) =>
+              updateField("formationType", value)
+            }
             onFormationDirChange={(value) => updateField("formationDir", value)}
             onBackAlignChange={(value) => updateField("backAlign", value)}
             onShiftChange={(value) => updateField("shift", value)}
             onMotionChange={(value) => updateField("motion", value)}
-            onFormationTagsChange={(value) => updateField("formationTags", value)}
+            onFormationTagsChange={(value) =>
+              updateField("formationTags", value)
+            }
             onRunStrengthChange={(value) => updateField("runStrength", value)}
             onPassStrengthChange={(value) => updateField("passStrength", value)}
             // Play details

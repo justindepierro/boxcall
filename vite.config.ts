@@ -119,7 +119,8 @@ export default defineConfig({
             manifest: {
               name: "BoxCall - Team Management",
               short_name: "BoxCall",
-              description: "Professional football team management platform with real-time collaboration",
+              description:
+                "Professional football team management platform with real-time collaboration",
               theme_color: "#1e40af",
               background_color: "#ffffff",
               display: "standalone",
@@ -143,14 +144,18 @@ export default defineConfig({
                   short_name: "Dashboard",
                   description: "View team dashboard",
                   url: "/dashboard",
-                  icons: [{ src: "favicon.svg", sizes: "any", type: "image/svg+xml" }],
+                  icons: [
+                    { src: "favicon.svg", sizes: "any", type: "image/svg+xml" },
+                  ],
                 },
                 {
                   name: "Roster",
-                  short_name: "Roster", 
+                  short_name: "Roster",
                   description: "Manage team roster",
                   url: "/roster",
-                  icons: [{ src: "favicon.svg", sizes: "any", type: "image/svg+xml" }],
+                  icons: [
+                    { src: "favicon.svg", sizes: "any", type: "image/svg+xml" },
+                  ],
                 },
               ],
             },
@@ -183,7 +188,7 @@ export default defineConfig({
           query: ["@tanstack/react-query"],
           calendar: [
             "@fullcalendar/core",
-            "@fullcalendar/daygrid", 
+            "@fullcalendar/daygrid",
             "@fullcalendar/timegrid",
             "@fullcalendar/interaction",
             "@fullcalendar/react",
@@ -194,16 +199,18 @@ export default defineConfig({
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
-          const info = assetInfo.name?.split('.') || [];
+          const info = assetInfo.name?.split(".") || [];
           const extType = info[info.length - 1];
-          
-          if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name || '')) {
+
+          if (
+            /\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name || "")
+          ) {
             return `assets/images/[name]-[hash][extname]`;
           }
-          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name || '')) {
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name || "")) {
             return `assets/fonts/[name]-[hash][extname]`;
           }
-          if (extType === 'css') {
+          if (extType === "css") {
             return `assets/css/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;

@@ -43,15 +43,10 @@ export {
 } from "../../design-system/utils";
 
 // Design system provider for consistency enforcement
-export {
-  DesignSystemProvider,
-} from "./DesignSystemProvider";
+export { DesignSystemProvider } from "./DesignSystemProvider";
 
 // Design system hooks
-export {
-  useDesignSystem,
-  withDesignSystem,
-} from "./design-system-hooks";
+export { useDesignSystem, withDesignSystem } from "./design-system-hooks";
 
 // Spacing system
 export {

@@ -1,6 +1,6 @@
 /**
  * Unified Game Plan Service
- * 
+ *
  * Consolidates game management functionality from:
  * - gamePlanService.ts (game planning with situational organization)
  * - gameResultsService.ts (game results tracking)
@@ -369,13 +369,13 @@ export class GamePlanService {
    */
   static async listGameResults(teamId: string): Promise<GameResultListItem[]> {
     if (!teamId) return [];
-    
+
     const { data, error, status } = await supabase
       .from("game_results")
       .select(GAME_RESULT_COLUMNS)
       .eq("team_id", teamId)
       .order("game_date", { ascending: false });
-    
+
     if (error) {
       const pgErr = error as PostgrestError;
       if (status === 404 || pgErr?.code === "42P01") {
@@ -388,7 +388,7 @@ export class GamePlanService {
       }
       throw error;
     }
-    
+
     return data ?? [];
   }
 
@@ -396,23 +396,32 @@ export class GamePlanService {
    * Log a game result (win/loss/tie)
    */
   static async logGameResult(input: LogGameResultInput) {
-    const { teamId, gameDate, opponent, venue, pointsFor, pointsAgainst, homeAway, notes } = input;
-    
+    const {
+      teamId,
+      gameDate,
+      opponent,
+      venue,
+      pointsFor,
+      pointsAgainst,
+      homeAway,
+      notes,
+    } = input;
+
     // Fetch current user for created_by (required by schema & RLS)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    
+
     if (authError) throw authError;
     if (!user) throw new Error("No authenticated user");
-    
+
     // Calculate result based on scores
     let result: "win" | "loss" | "tie" | null = null;
     if (pointsFor > pointsAgainst) result = "win";
     else if (pointsFor < pointsAgainst) result = "loss";
     else result = "tie";
-    
+
     const { data, error } = await supabase
       .from("game_results")
       .insert({
@@ -428,7 +437,7 @@ export class GamePlanService {
       })
       .select(GAME_RESULT_COLUMNS)
       .single();
-    
+
     if (error) throw error;
     return data;
   }

@@ -1,6 +1,6 @@
 /**
  * Defense Schemes Barrel Export
- * 
+ *
  * Clean imports for defensive schemes
  */
 

@@ -19,20 +19,19 @@ async function checkMigrations() {
 
     // Check if migration 067 ran
     const { data: migrations, error } = await supabase
-      .from('supabase_migrations')
-      .select('version, name')
-      .order('version', { ascending: false })
+      .from("supabase_migrations")
+      .select("version, name")
+      .order("version", { ascending: false })
       .limit(5);
 
     if (error) {
-      console.log('❌ Migration check error:', error.message);
+      console.log("❌ Migration check error:", error.message);
     } else {
-      console.log('✅ Recent migrations:');
-      migrations?.forEach(m => console.log(`   ${m.version}: ${m.name}`));
+      console.log("✅ Recent migrations:");
+      migrations?.forEach((m) => console.log(`   ${m.version}: ${m.name}`));
     }
-
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   }
 }
 

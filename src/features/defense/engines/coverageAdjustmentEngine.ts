@@ -1,8 +1,8 @@
 /**
  * Coverage Adjustment Engine
- * 
+ *
  * Intelligently adjusts defensive secondary alignment based on offensive formation analysis.
- * 
+ *
  * Key adjustments:
  * - NCB aligns to RB side in 2x2
  * - Safeties rotate to strength in 3x1
@@ -26,16 +26,16 @@ function clampToField(value: number, fieldWidth: number): number {
 export interface CoverageAdjustmentParams {
   /** Offensive formation analysis */
   formationAnalysis: FormationAnalysis;
-  
+
   /** Current defensive players on field */
   defensivePlayers: Player[];
-  
+
   /** Center X position (based on hash) */
   centerX: number;
-  
+
   /** Line of scrimmage Y coordinate */
   losY: number;
-  
+
   /** Field width (53.333 yards) */
   fieldWidth: number;
 }
@@ -46,13 +46,13 @@ export interface CoverageAdjustmentParams {
 export interface PlayerAdjustment {
   /** Player ID to update */
   playerId: string;
-  
+
   /** New X position */
   newX: number;
-  
+
   /** New Y position (optional - depth adjustment) */
   newY?: number;
-  
+
   /** Reason for adjustment (for debugging/logging) */
   reason: string;
 }
@@ -63,19 +63,19 @@ export interface PlayerAdjustment {
 export interface CoverageAdjustmentResult {
   /** Player adjustments to apply */
   adjustments: PlayerAdjustment[];
-  
+
   /** Coverage call recommendation */
   recommendedCoverage: string;
-  
+
   /** Adjustment summary for logging */
   summary: string;
 }
 
 /**
  * Adjust Nickel CB position based on RB location
- * 
+ *
  * Rule: NCB aligns to RB side to help with run support and slot receiver
- * 
+ *
  * @param ncb - Nickel cornerback player
  * @param formationAnalysis - Offensive formation data
  * @param centerX - Center X position
@@ -93,17 +93,21 @@ function adjustNickelCB(
   const { rbPosition } = formationAnalysis;
 
   // No RB = Empty formation, NCB stays in default position
-  if (rbPosition === 'none') {
+  if (rbPosition === "none") {
     return null;
   }
 
   // Determine target side based on RB position
-  let targetSide: 'left' | 'right' = 'left'; // Default to left
+  let targetSide: "left" | "right" = "left"; // Default to left
 
-  if (rbPosition === 'right' || rbPosition === 'offset-right') {
-    targetSide = 'right';
-  } else if (rbPosition === 'left' || rbPosition === 'offset-left' || rbPosition === 'pistol') {
-    targetSide = 'left';
+  if (rbPosition === "right" || rbPosition === "offset-right") {
+    targetSide = "right";
+  } else if (
+    rbPosition === "left" ||
+    rbPosition === "offset-left" ||
+    rbPosition === "pistol"
+  ) {
+    targetSide = "left";
   }
 
   // Calculate target X position
@@ -114,9 +118,10 @@ function adjustNickelCB(
   const leftTackleX = centerX - 3;
   const rightTackleX = centerX + 3;
 
-  const targetX = targetSide === 'left'
-    ? (leftTackleX + leftSlotX) / 2
-    : (rightTackleX + rightSlotX) / 2;
+  const targetX =
+    targetSide === "left"
+      ? (leftTackleX + leftSlotX) / 2
+      : (rightTackleX + rightSlotX) / 2;
 
   // Only adjust if significant change (> 2 yards)
   const xDiff = Math.abs(ncb.x - targetX);
@@ -134,12 +139,12 @@ function adjustNickelCB(
 
 /**
  * Adjust safeties based on formation strength
- * 
+ *
  * Rules:
  * - 2x2: Balanced coverage, safeties aligned inside #2 receivers
  * - 3x1: Rotate to strength (3-receiver side), strong safety moves closer
  * - Empty: Safeties stay deep, balanced
- * 
+ *
  * @param safeties - Array of safety players (FS, SS)
  * @param formationAnalysis - Offensive formation data
  * @param losY - Line of scrimmage Y coordinate
@@ -165,87 +170,87 @@ function adjustSafeties(
   }
 
   // 3x1 formations: Rotate to strength
-  if (type.startsWith('3x1')) {
-    const strengthLeft = strengthSide === 'left';
-    
+  if (type.startsWith("3x1")) {
+    const strengthLeft = strengthSide === "left";
+
     // Strong safety moves to strength side
     // Free safety stays middle-deep
     if (strengthLeft) {
       // 3 receivers left
       const targetLeftX = clampToField(11, fieldWidth); // Closer to left side
       const targetRightX = clampToField(fieldWidth / 2 + 4, fieldWidth); // Middle-right
-      
+
       adjustments.push({
         playerId: leftSafety.id,
         newX: targetLeftX,
         newY: losY - 10,
-        reason: '3x1 left: Strong safety to strength',
+        reason: "3x1 left: Strong safety to strength",
       });
-      
+
       adjustments.push({
         playerId: rightSafety.id,
         newX: targetRightX,
         newY: losY - 12,
-        reason: '3x1 left: Free safety middle-deep',
+        reason: "3x1 left: Free safety middle-deep",
       });
     } else {
       // 3 receivers right
       const targetLeftX = clampToField(fieldWidth / 2 - 4, fieldWidth); // Middle-left
       const targetRightX = clampToField(fieldWidth - 11, fieldWidth); // Closer to right side
-      
+
       adjustments.push({
         playerId: leftSafety.id,
         newX: targetLeftX,
         newY: losY - 12,
-        reason: '3x1 right: Free safety middle-deep',
+        reason: "3x1 right: Free safety middle-deep",
       });
-      
+
       adjustments.push({
         playerId: rightSafety.id,
         newX: targetRightX,
         newY: losY - 10,
-        reason: '3x1 right: Strong safety to strength',
+        reason: "3x1 right: Strong safety to strength",
       });
     }
   }
 
   // 2x2: Balanced coverage
-  else if (type === '2x2') {
+  else if (type === "2x2") {
     const leftSlotX = 12;
     const rightSlotX = fieldWidth - 12;
-    
+
     // Safeties inside #2 receivers (slot)
     adjustments.push({
       playerId: leftSafety.id,
       newX: clampToField(leftSlotX + 1, fieldWidth),
       newY: losY - 10,
-      reason: '2x2: Left safety inside slot',
+      reason: "2x2: Left safety inside slot",
     });
-    
+
     adjustments.push({
       playerId: rightSafety.id,
       newX: clampToField(rightSlotX - 1, fieldWidth),
       newY: losY - 10,
-      reason: '2x2: Right safety inside slot',
+      reason: "2x2: Right safety inside slot",
     });
   }
 
   // Empty: Safeties stay deep and balanced
-  else if (type === 'empty') {
+  else if (type === "empty") {
     const centerX = fieldWidth / 2;
-    
+
     adjustments.push({
       playerId: leftSafety.id,
       newX: clampToField(centerX - 8, fieldWidth),
       newY: losY - 12,
-      reason: 'Empty: Deep balanced left',
+      reason: "Empty: Deep balanced left",
     });
-    
+
     adjustments.push({
       playerId: rightSafety.id,
       newX: clampToField(centerX + 8, fieldWidth),
       newY: losY - 12,
-      reason: 'Empty: Deep balanced right',
+      reason: "Empty: Deep balanced right",
     });
   }
 
@@ -254,11 +259,11 @@ function adjustSafeties(
 
 /**
  * Adjust corners based on WR splits
- * 
+ *
  * Rules:
  * - Wider WR splits: Corners play slightly tighter (reduce cushion)
  * - Compressed splits: Corners can play deeper
- * 
+ *
  * @param corners - Array of corner players (CB)
  * @param formationAnalysis - Offensive formation data
  * @param losY - Line of scrimmage Y coordinate
@@ -275,32 +280,35 @@ function adjustCorners(
 
   // Sort corners by X position (left to right)
   const sortedCorners = [...corners].sort((a, b) => a.x - b.x);
-  
+
   // Typical WR positions
   const leftOutsideWRX = 6;
   const rightOutsideWRX = fieldWidth - 6;
 
   sortedCorners.forEach((corner) => {
     const isLeftCorner = corner.x < fieldWidth / 2;
-    
+
     // Default depth: 6 yards
     // Tighter vs wider splits: 5 yards
     let targetDepth = 6;
-    
+
     // Check if this is a wide formation (Empty, Quads)
-    if (formationAnalysis.type === 'empty' || formationAnalysis.type === 'quads') {
+    if (
+      formationAnalysis.type === "empty" ||
+      formationAnalysis.type === "quads"
+    ) {
       targetDepth = 5; // Press coverage vs spread
     }
-    
-    const targetX = isLeftCorner 
-      ? clampToField(leftOutsideWRX + 1, fieldWidth)  // 1 yard inside left outside WR
+
+    const targetX = isLeftCorner
+      ? clampToField(leftOutsideWRX + 1, fieldWidth) // 1 yard inside left outside WR
       : clampToField(rightOutsideWRX - 1, fieldWidth); // 1 yard inside right outside WR
-    
+
     adjustments.push({
       playerId: corner.id,
       newX: targetX,
       newY: losY - targetDepth,
-      reason: `Corner ${isLeftCorner ? 'left' : 'right'}: ${targetDepth}yd depth vs ${formationAnalysis.type}`,
+      reason: `Corner ${isLeftCorner ? "left" : "right"}: ${targetDepth}yd depth vs ${formationAnalysis.type}`,
     });
   });
 
@@ -309,50 +317,72 @@ function adjustCorners(
 
 /**
  * Main coverage adjustment function
- * 
+ *
  * Analyzes offensive formation and generates defensive adjustments
- * 
+ *
  * @param params - Coverage adjustment parameters
  * @returns Coverage adjustment result with player updates
  */
 export function adjustCoverage(
   params: CoverageAdjustmentParams
 ): CoverageAdjustmentResult {
-  const { formationAnalysis, defensivePlayers, centerX, losY, fieldWidth } = params;
-  
+  const { formationAnalysis, defensivePlayers, centerX, losY, fieldWidth } =
+    params;
+
   const adjustments: PlayerAdjustment[] = [];
-  
+
   // Find defensive backs by position
-  const ncb = defensivePlayers.find((p) => p.jerseyNumber === 'NCB');
-  const safeties = defensivePlayers.filter((p) => p.jerseyNumber === 'S' || p.jerseyNumber === 'SS' || p.jerseyNumber === 'FS');
-  const corners = defensivePlayers.filter((p) => p.jerseyNumber === 'CB');
-  
+  const ncb = defensivePlayers.find((p) => p.jerseyNumber === "NCB");
+  const safeties = defensivePlayers.filter(
+    (p) =>
+      p.jerseyNumber === "S" ||
+      p.jerseyNumber === "SS" ||
+      p.jerseyNumber === "FS"
+  );
+  const corners = defensivePlayers.filter((p) => p.jerseyNumber === "CB");
+
   // Adjust NCB to RB side
   if (ncb) {
-    const ncbAdjustment = adjustNickelCB(ncb, formationAnalysis, centerX, losY, fieldWidth);
+    const ncbAdjustment = adjustNickelCB(
+      ncb,
+      formationAnalysis,
+      centerX,
+      losY,
+      fieldWidth
+    );
     if (ncbAdjustment) {
       adjustments.push(ncbAdjustment);
     }
   }
-  
+
   // Adjust safeties based on formation strength
   if (safeties.length >= 2) {
-    const safetyAdjustments = adjustSafeties(safeties, formationAnalysis, losY, fieldWidth);
+    const safetyAdjustments = adjustSafeties(
+      safeties,
+      formationAnalysis,
+      losY,
+      fieldWidth
+    );
     adjustments.push(...safetyAdjustments);
   }
-  
+
   // Adjust corners based on WR splits
   if (corners.length >= 2) {
-    const cornerAdjustments = adjustCorners(corners, formationAnalysis, losY, fieldWidth);
+    const cornerAdjustments = adjustCorners(
+      corners,
+      formationAnalysis,
+      losY,
+      fieldWidth
+    );
     adjustments.push(...cornerAdjustments);
   }
-  
+
   // Generate coverage recommendation
   const recommendedCoverage = getCoverageRecommendation(formationAnalysis);
-  
+
   // Generate summary
   const summary = `Adjusted ${adjustments.length} players for ${formationAnalysis.type} formation (${recommendedCoverage})`;
-  
+
   return {
     adjustments,
     recommendedCoverage,
@@ -362,30 +392,32 @@ export function adjustCoverage(
 
 /**
  * Recommend coverage based on formation
- * 
+ *
  * @param formationAnalysis - Offensive formation data
  * @returns Coverage call string
  */
-function getCoverageRecommendation(formationAnalysis: FormationAnalysis): string {
+function getCoverageRecommendation(
+  formationAnalysis: FormationAnalysis
+): string {
   const { type, strengthSide, tightEndPresent } = formationAnalysis;
-  
-  if (type === 'empty') {
-    return 'Cover 2 Man / Quarter';
+
+  if (type === "empty") {
+    return "Cover 2 Man / Quarter";
   }
-  
-  if (type.startsWith('3x1')) {
-    return tightEndPresent 
-      ? `Cover 3 Sky (${strengthSide})`  // Safety over TE
+
+  if (type.startsWith("3x1")) {
+    return tightEndPresent
+      ? `Cover 3 Sky (${strengthSide})` // Safety over TE
       : `Cover 3 Cloud (${strengthSide})`; // Safety over #2
   }
-  
-  if (type === '2x2') {
-    return 'Cover 2 / Cover 4';
+
+  if (type === "2x2") {
+    return "Cover 2 / Cover 4";
   }
-  
-  if (type === 'trips') {
+
+  if (type === "trips") {
     return `Cover 3 to ${strengthSide}`;
   }
-  
-  return 'Cover 3';
+
+  return "Cover 3";
 }

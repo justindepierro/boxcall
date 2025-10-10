@@ -115,7 +115,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
 
   // Filter plays based on search and filters
   const filteredPlays = useMemo(() => {
-    return plays.filter(play => {
+    return plays.filter((play) => {
       // Exclude already selected plays
       if (selectedPlayIds.includes(play.id)) {
         return false;
@@ -130,23 +130,31 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
         (play.notes && play.notes.toLowerCase().includes(searchLower));
 
       // Formation filter
-      const matchesFormation = !selectedFormation || play.formation === selectedFormation;
+      const matchesFormation =
+        !selectedFormation || play.formation === selectedFormation;
 
       // Play type filter
-      const matchesPlayType = !selectedPlayType || play.p_type === selectedPlayType;
+      const matchesPlayType =
+        !selectedPlayType || play.p_type === selectedPlayType;
 
       return matchesSearch && matchesFormation && matchesPlayType;
     });
-  }, [plays, searchQuery, selectedFormation, selectedPlayType, selectedPlayIds]);
+  }, [
+    plays,
+    searchQuery,
+    selectedFormation,
+    selectedPlayType,
+    selectedPlayIds,
+  ]);
 
   // Get unique values for filters
   const formations = useMemo(() => {
-    const unique = [...new Set(plays.map(p => p.formation))];
+    const unique = [...new Set(plays.map((p) => p.formation))];
     return unique.sort();
   }, [plays]);
 
   const playTypes = useMemo(() => {
-    const unique = [...new Set(plays.map(p => p.p_type))];
+    const unique = [...new Set(plays.map((p) => p.p_type))];
     return unique.sort();
   }, [plays]);
 
@@ -181,7 +189,9 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
           <div>
             <Input
               value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchQuery(e.target.value)
+              }
               placeholder="Search plays by name, formation, or notes..."
               className="w-full"
             />
@@ -194,8 +204,10 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
             >
               <option value="">All Formations</option>
-              {formations.map(formation => (
-                <option key={formation} value={formation}>{formation}</option>
+              {formations.map((formation) => (
+                <option key={formation} value={formation}>
+                  {formation}
+                </option>
               ))}
             </select>
 
@@ -205,8 +217,10 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
             >
               <option value="">All Play Types</option>
-              {playTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
+              {playTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
               ))}
             </select>
           </div>
@@ -222,20 +236,25 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             </div>
           ) : filteredPlays.length === 0 ? (
             <div className="text-center py-8">
-              <Icon name="file" className="h-12 w-12 text-text-muted mx-auto mb-4" />
-              <Typography variant="headline-sm" className="text-text-secondary mb-2">
+              <Icon
+                name="file"
+                className="h-12 w-12 text-text-muted mx-auto mb-4"
+              />
+              <Typography
+                variant="headline-sm"
+                className="text-text-secondary mb-2"
+              >
                 No plays found
               </Typography>
               <Typography variant="body-sm" className="text-text-muted">
                 {searchQuery || selectedFormation || selectedPlayType
                   ? "Try adjusting your search or filters"
-                  : "Add some plays to your playbook first"
-                }
+                  : "Add some plays to your playbook first"}
               </Typography>
             </div>
           ) : (
             <div className="space-y-3">
-              {filteredPlays.map(play => (
+              {filteredPlays.map((play) => (
                 <div
                   key={play.id}
                   className="border border-border rounded-lg p-4 hover:bg-surface-secondary cursor-pointer transition-colors"
@@ -243,7 +262,10 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <Typography variant="body-sm" className="text-text-primary font-medium mb-1">
+                      <Typography
+                        variant="body-sm"
+                        className="text-text-primary font-medium mb-1"
+                      >
                         {getDisplayName(play)}
                       </Typography>
 
@@ -256,7 +278,9 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                         </Badge>
                         {play.times_called > 0 && (
                           <Badge
-                            variant={getSuccessRate(play) >= 70 ? "success" : "warning"}
+                            variant={
+                              getSuccessRate(play) >= 70 ? "success" : "warning"
+                            }
                             size="sm"
                           >
                             {getSuccessRate(play)}% success
@@ -265,7 +289,10 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                       </div>
 
                       {play.notes && (
-                        <Typography variant="caption" className="text-text-secondary line-clamp-2">
+                        <Typography
+                          variant="caption"
+                          className="text-text-secondary line-clamp-2"
+                        >
                           {play.notes}
                         </Typography>
                       )}
@@ -286,7 +313,8 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
         {/* Footer */}
         <div className="flex justify-between items-center pt-4 border-t border-border">
           <Typography variant="caption" className="text-text-secondary">
-            {filteredPlays.length} play{filteredPlays.length !== 1 ? 's' : ''} available
+            {filteredPlays.length} play{filteredPlays.length !== 1 ? "s" : ""}{" "}
+            available
           </Typography>
           <Button variant="ghost" onClick={onClose}>
             Cancel

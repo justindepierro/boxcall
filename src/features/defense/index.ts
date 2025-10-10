@@ -1,13 +1,11 @@
 /**
  * Smart Defense System - Main Barrel Export
- * 
+ *
  * Central export point for all defense features
  */
 
 // Formation Analyzer
-export {
-  analyzeFormation,
-} from "./analyzers/formationAnalyzer";
+export { analyzeFormation } from "./analyzers/formationAnalyzer";
 
 export {
   analyzeTightEnds,

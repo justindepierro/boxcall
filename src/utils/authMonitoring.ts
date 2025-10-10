@@ -80,7 +80,12 @@ export class AuthMonitoring {
   }
 
   // Error tracking
-  static recordError(operation: string, error: string, userId?: string, metadata?: Record<string, any>) {
+  static recordError(
+    operation: string,
+    error: string,
+    userId?: string,
+    metadata?: Record<string, any>
+  ) {
     this.errors.push({
       timestamp: new Date(),
       operation,
@@ -101,7 +106,11 @@ export class AuthMonitoring {
   }
 
   // Event tracking
-  static recordEvent(event: string, userId?: string, metadata?: Record<string, any>) {
+  static recordEvent(
+    event: string,
+    userId?: string,
+    metadata?: Record<string, any>
+  ) {
     this.events.push({
       timestamp: new Date(),
       event,
@@ -138,15 +147,18 @@ export class AuthMonitoring {
   // Calculate success rates
   static getSuccessRates() {
     return {
-      signIn: this.metrics.signInAttempts > 0
-        ? (this.metrics.signInSuccesses / this.metrics.signInAttempts) * 100
-        : 0,
-      signUp: this.metrics.signUpAttempts > 0
-        ? (this.metrics.signUpSuccesses / this.metrics.signUpAttempts) * 100
-        : 0,
-      retry: this.metrics.retryAttempts > 0
-        ? (this.metrics.retrySuccesses / this.metrics.retryAttempts) * 100
-        : 0,
+      signIn:
+        this.metrics.signInAttempts > 0
+          ? (this.metrics.signInSuccesses / this.metrics.signInAttempts) * 100
+          : 0,
+      signUp:
+        this.metrics.signUpAttempts > 0
+          ? (this.metrics.signUpSuccesses / this.metrics.signUpAttempts) * 100
+          : 0,
+      retry:
+        this.metrics.retryAttempts > 0
+          ? (this.metrics.retrySuccesses / this.metrics.retryAttempts) * 100
+          : 0,
     };
   }
 
@@ -156,7 +168,12 @@ export class AuthMonitoring {
     const recentErrors = this.getRecentErrors(5);
 
     return {
-      overall: rates.signIn > 95 && rates.signUp > 95 ? 'healthy' : rates.signIn > 80 ? 'warning' : 'critical',
+      overall:
+        rates.signIn > 95 && rates.signUp > 95
+          ? "healthy"
+          : rates.signIn > 80
+            ? "warning"
+            : "critical",
       signInSuccessRate: rates.signIn,
       signUpSuccessRate: rates.signUp,
       retrySuccessRate: rates.retry,

@@ -1,27 +1,27 @@
 /**
  * Formation Analyzer
- * 
+ *
  * Core intelligence module that analyzes offensive formations and provides
  * structured data about receiver distribution, formation type, strength, and box count.
- * 
+ *
  * This is the foundation for all smart defensive adjustments.
  */
 
-import type { Player } from '@components/playbook/diagram-editor/types/Player';
+import type { Player } from "@components/playbook/diagram-editor/types/Player";
 import type {
   FormationAnalysis,
   FormationType,
   RBPosition,
   FormationStrength,
   HashAlignment,
-} from '../types';
-import { 
-  getEligibleReceivers, 
-  countWideReceiversLeft, 
-  countWideReceiversRight 
-} from '../utils/eligibleReceiverFilter';
-import { analyzeTightEnds } from './tightEndProximityDetector';
-import { getCenterXForHash } from './fieldBoundaryDetector';
+} from "../types";
+import {
+  getEligibleReceivers,
+  countWideReceiversLeft,
+  countWideReceiversRight,
+} from "../utils/eligibleReceiverFilter";
+import { analyzeTightEnds } from "./tightEndProximityDetector";
+import { getCenterXForHash } from "./fieldBoundaryDetector";
 
 /**
  * Standard offensive line count
@@ -35,7 +35,7 @@ const QB_COUNT = 1;
 
 /**
  * Detect running back position relative to QB.
- * 
+ *
  * @param players - All players
  * @param centerX - Field center X coordinate
  * @returns RB position classification
@@ -43,18 +43,20 @@ const QB_COUNT = 1;
 function detectRBPosition(players: Player[], centerX: number): RBPosition {
   // Find QB position
   const qb = players.find(
-    (p) => p.team === 'offense' && p.jerseyNumber === 'QB'
+    (p) => p.team === "offense" && p.jerseyNumber === "QB"
   );
 
   // Find RB (or multiple RBs)
   const rbs = players.filter(
     (p) =>
-      p.team === 'offense' &&
-      (p.jerseyNumber === 'RB' || p.jerseyNumber === 'FB' || p.jerseyNumber === 'HB')
+      p.team === "offense" &&
+      (p.jerseyNumber === "RB" ||
+        p.jerseyNumber === "FB" ||
+        p.jerseyNumber === "HB")
   );
 
   if (rbs.length === 0) {
-    return 'none'; // Empty formation
+    return "none"; // Empty formation
   }
 
   // Use first RB if multiple
@@ -62,7 +64,7 @@ function detectRBPosition(players: Player[], centerX: number): RBPosition {
 
   if (!qb) {
     // Wildcat or no QB scenario
-    return rb.x < centerX ? 'left' : 'right';
+    return rb.x < centerX ? "left" : "right";
   }
 
   // Determine RB position relative to QB
@@ -71,28 +73,28 @@ function detectRBPosition(players: Player[], centerX: number): RBPosition {
 
   // Pistol: RB directly behind QB (small X difference, large Y difference)
   if (xDiff < 1 && yDiff > 3) {
-    return 'pistol';
+    return "pistol";
   }
 
   // Offset pistol: RB slightly offset
   if (xDiff < 2 && yDiff > 3) {
-    return rb.x < qb.x ? 'offset-left' : 'offset-right';
+    return rb.x < qb.x ? "offset-left" : "offset-right";
   }
 
   // Standard offset: RB to left or right of QB
   if (rb.x < qb.x - 1) {
-    return 'left';
+    return "left";
   } else if (rb.x > qb.x + 1) {
-    return 'right';
+    return "right";
   }
 
   // Default to pistol if can't determine
-  return 'pistol';
+  return "pistol";
 }
 
 /**
  * Classify formation type based on receiver distribution.
- * 
+ *
  * @param receiversLeft - Count of eligible receivers left of center
  * @param receiversRight - Count of eligible receivers right of center
  * @param totalReceivers - Total eligible receivers
@@ -106,51 +108,51 @@ function classifyFormationType(
   rbPosition: RBPosition
 ): FormationType {
   // Empty formation: 5+ WR/TE receivers, no RB
-  if (totalReceivers >= 5 && rbPosition === 'none') {
-    return 'empty';
+  if (totalReceivers >= 5 && rbPosition === "none") {
+    return "empty";
   }
 
   // Quads: 4 receivers on one side
   if (receiversLeft === 4 || receiversRight === 4) {
-    return 'quads';
+    return "quads";
   }
 
   // 3x1 formations (check BEFORE trips - more specific)
   if (receiversLeft === 3 && receiversRight === 1) {
-    return '3x1-left';
+    return "3x1-left";
   }
   if (receiversRight === 3 && receiversLeft === 1) {
-    return '3x1-right';
+    return "3x1-right";
   }
 
   // 2x2 balanced (check BEFORE trips - more specific)
   if (receiversLeft === 2 && receiversRight === 2) {
-    return '2x2';
+    return "2x2";
   }
 
   // Trips: 3 receivers on same side (can be with 2 on other side)
   // This catches 3x2, 3x0, etc.
   if (receiversLeft === 3 || receiversRight === 3) {
-    return 'trips';
+    return "trips";
   }
 
   // Doubles: 2 TEs + 2 WRs (special case, check later if needed)
   if (totalReceivers === 4) {
-    return 'doubles';
+    return "doubles";
   }
 
   // Default fallback
-  return '2x2';
+  return "2x2";
 }
 
 /**
  * Calculate formation strength side.
- * 
+ *
  * Strength is determined by:
  * 1. Eligible receiver count per side
  * 2. Tight ends in the box (add to strong side)
  * 3. RB position
- * 
+ *
  * @param receiversLeft - Eligible receivers on left
  * @param receiversRight - Eligible receivers on right
  * @param boxTEsLeft - TEs in box on left side
@@ -170,28 +172,28 @@ function calculateStrength(
   let rightScore = receiversRight + boxTEsRight;
 
   // Add RB to appropriate side
-  if (rbPosition === 'left' || rbPosition === 'offset-left') {
+  if (rbPosition === "left" || rbPosition === "offset-left") {
     leftScore += 1;
-  } else if (rbPosition === 'right' || rbPosition === 'offset-right') {
+  } else if (rbPosition === "right" || rbPosition === "offset-right") {
     rightScore += 1;
   }
   // Pistol RB doesn't affect strength
 
   // Determine strength
   if (leftScore > rightScore) {
-    return 'left';
+    return "left";
   } else if (rightScore > leftScore) {
-    return 'right';
+    return "right";
   } else {
-    return 'balanced';
+    return "balanced";
   }
 }
 
 /**
  * Calculate total players in the box.
- * 
+ *
  * Box count = O-Line (5) + QB (1) + TEs in box + RBs
- * 
+ *
  * @param boxTECount - Number of TEs in the box
  * @param rbCount - Number of running backs
  * @returns Total players in box
@@ -202,14 +204,14 @@ function calculateBoxCount(boxTECount: number, rbCount: number): number {
 
 /**
  * Analyze offensive formation and return complete analysis.
- * 
+ *
  * This is the main entry point for formation intelligence.
  * Call this function whenever you need to understand the offensive setup.
- * 
+ *
  * @param players - All players on field
  * @param hash - Current hash alignment
  * @returns Complete formation analysis
- * 
+ *
  * @example
  * ```typescript
  * const analysis = analyzeFormation(players, 'left');
@@ -226,7 +228,7 @@ export function analyzeFormation(
 
   // Get eligible receivers (all WR, TE, RB, FB)
   const eligibleReceivers = getEligibleReceivers(players);
-  
+
   // Count "wide" receivers (WR + TE only) for formation classification
   // RBs are excluded because they're in the backfield, not "wide"
   const wideReceiversLeft = countWideReceiversLeft(players, centerX);
@@ -237,10 +239,10 @@ export function analyzeFormation(
 
   // Count box TEs per side
   const boxTEsLeft = teAnalysis.positions.filter(
-    (te) => te.side === 'left' && te.inBox
+    (te) => te.side === "left" && te.inBox
   ).length;
   const boxTEsRight = teAnalysis.positions.filter(
-    (te) => te.side === 'right' && te.inBox
+    (te) => te.side === "right" && te.inBox
   ).length;
 
   // Detect RB position
@@ -249,8 +251,10 @@ export function analyzeFormation(
   // Count RBs
   const rbCount = players.filter(
     (p) =>
-      p.team === 'offense' &&
-      (p.jerseyNumber === 'RB' || p.jerseyNumber === 'FB' || p.jerseyNumber === 'HB')
+      p.team === "offense" &&
+      (p.jerseyNumber === "RB" ||
+        p.jerseyNumber === "FB" ||
+        p.jerseyNumber === "HB")
   ).length;
 
   // Classify formation type (using WR/TE counts, not including RBs)
@@ -276,13 +280,13 @@ export function analyzeFormation(
   // Check if line is balanced (5 OL in standard positions)
   const oLineCount = players.filter(
     (p) =>
-      p.team === 'offense' &&
-      (p.jerseyNumber === 'LT' ||
-        p.jerseyNumber === 'LG' ||
-        p.jerseyNumber === 'C' ||
-        p.jerseyNumber === 'RG' ||
-        p.jerseyNumber === 'RT' ||
-        p.position === 'center')
+      p.team === "offense" &&
+      (p.jerseyNumber === "LT" ||
+        p.jerseyNumber === "LG" ||
+        p.jerseyNumber === "C" ||
+        p.jerseyNumber === "RG" ||
+        p.jerseyNumber === "RT" ||
+        p.position === "center")
   ).length;
   const balancedLine = oLineCount === O_LINE_COUNT;
 

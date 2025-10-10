@@ -341,10 +341,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </Typography>
           </div>
           <div>
-            <Typography
-              variant="body-lg"
-              className="font-bold text-text-info"
-            >
+            <Typography variant="body-lg" className="font-bold text-text-info">
               3
             </Typography>
             <Typography variant="caption" color="muted">

@@ -11,10 +11,12 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
 
   const { data, error } = await supabase
     .from("team_members")
-    .select(`
+    .select(
+      `
       *,
       teams (*)
-    `)
+    `
+    )
     .eq("user_id", userId)
     .eq("status", "active");
 

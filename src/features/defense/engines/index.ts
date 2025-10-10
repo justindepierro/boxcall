@@ -1,6 +1,6 @@
 /**
  * Defense Engines Barrel Export
- * 
+ *
  * Clean imports for defensive engines
  */
 

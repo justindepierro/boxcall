@@ -34,17 +34,21 @@ async function checkUserProfile() {
     return;
   }
 
-  console.log(`✅ User authenticated: ${userData.user.id} (${userData.user.email})`);
+  console.log(
+    `✅ User authenticated: ${userData.user.id} (${userData.user.email})`
+  );
 
   // Try to get profile
   const { data: profileData, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userData.user.id)
+    .from("profiles")
+    .select("*")
+    .eq("id", userData.user.id)
     .single();
 
   if (profileError) {
-    console.log(`❌ Profile query error: ${profileError.message} (Code: ${profileError.code})`);
+    console.log(
+      `❌ Profile query error: ${profileError.message} (Code: ${profileError.code})`
+    );
   } else {
     console.log(`✅ Profile found:`, profileData);
   }

@@ -113,7 +113,7 @@ export class DashboardService {
       // Group member counts by team_id
       const memberCountMap = new Map<string, number>();
       if (memberCounts) {
-        memberCounts.forEach(member => {
+        memberCounts.forEach((member) => {
           const teamId = member.team_id;
           memberCountMap.set(teamId, (memberCountMap.get(teamId) || 0) + 1);
         });

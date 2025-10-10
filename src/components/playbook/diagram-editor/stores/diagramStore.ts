@@ -1,6 +1,6 @@
 /**
  * Diagram State Store using Zustand
- * 
+ *
  * Central state management for the diagram editor:
  * - Player list and current positions
  * - Selected player
@@ -8,10 +8,10 @@
  * - Undo/redo history (Phase 6)
  */
 
-import { create } from 'zustand';
-import type { Player, TeamSide } from '../types/Player';
+import { create } from "zustand";
+import type { Player, TeamSide } from "../types/Player";
 
-export type ToolType = 'select' | 'add-player' | 'draw-route' | 'pan';
+export type ToolType = "select" | "add-player" | "draw-route" | "pan";
 
 export interface DiagramState {
   // Players
@@ -40,7 +40,7 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
   // Initial state
   players: [],
   selectedPlayerId: null,
-  activeTool: 'select',
+  activeTool: "select",
 
   // Player actions
   addPlayer: (player: Player) =>
@@ -58,7 +58,8 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
   removePlayer: (playerId: string) =>
     set((state) => ({
       players: state.players.filter((p) => p.id !== playerId),
-      selectedPlayerId: state.selectedPlayerId === playerId ? null : state.selectedPlayerId,
+      selectedPlayerId:
+        state.selectedPlayerId === playerId ? null : state.selectedPlayerId,
     })),
 
   selectPlayer: (playerId: string | null) =>
@@ -71,12 +72,10 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
     }),
 
   // Tool actions
-  setActiveTool: (tool: ToolType) =>
-    set({ activeTool: tool }),
+  setActiveTool: (tool: ToolType) => set({ activeTool: tool }),
 
   // Utilities
-  getPlayer: (playerId: string) =>
-    get().players.find((p) => p.id === playerId),
+  getPlayer: (playerId: string) => get().players.find((p) => p.id === playerId),
 
   getPlayersByTeam: (team: TeamSide) =>
     get().players.filter((p) => p.team === team),

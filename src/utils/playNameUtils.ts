@@ -91,7 +91,12 @@ export function generatePlayNamePlain(play: Play): string {
 /**
  * Gets the display name based on toggle state and optional field order
  */
-export function getDisplayName(play: Play, showOneWord: boolean, formationFieldOrder?: string[], playDetailsFieldOrder?: string[]): string {
+export function getDisplayName(
+  play: Play,
+  showOneWord: boolean,
+  formationFieldOrder?: string[],
+  playDetailsFieldOrder?: string[]
+): string {
   if (showOneWord) {
     const oneWord = safe(play.one_word_play);
     if (oneWord) return oneWord.toUpperCase();
@@ -104,37 +109,37 @@ export function getDisplayName(play: Play, showOneWord: boolean, formationFieldO
 
     // Add formation fields in order
     if (formationFieldOrder) {
-      formationFieldOrder.forEach(fieldKey => {
-        let value = '';
+      formationFieldOrder.forEach((fieldKey) => {
+        let value = "";
         switch (fieldKey) {
-          case 'formation':
+          case "formation":
             value = clean(play.formation);
             break;
-          case 'f_type':
+          case "f_type":
             value = clean(play.f_type);
             break;
-          case 'f_dir':
+          case "f_dir":
             value = clean(play.f_dir);
             break;
-          case 'back_align':
+          case "back_align":
             value = clean(play.back_align);
             break;
-          case 'shift':
+          case "shift":
             value = clean(play.shift);
             break;
-          case 'motion':
+          case "motion":
             value = clean(play.motion);
             break;
-          case 'ftags':
-            [play.ftag1, play.ftag2].forEach(tag => {
+          case "ftags":
+            [play.ftag1, play.ftag2].forEach((tag) => {
               const val = clean(tag);
               if (val) formationParts.push(val);
             });
             return; // Skip adding empty
-          case 'r_str':
+          case "r_str":
             value = clean(play.r_str);
             break;
-          case 'p_str':
+          case "p_str":
             value = clean(play.p_str);
             break;
         }
@@ -144,28 +149,28 @@ export function getDisplayName(play: Play, showOneWord: boolean, formationFieldO
 
     // Add play details fields in order
     if (playDetailsFieldOrder) {
-      playDetailsFieldOrder.forEach(fieldKey => {
-        let value = '';
+      playDetailsFieldOrder.forEach((fieldKey) => {
+        let value = "";
         switch (fieldKey) {
-          case 'play_name':
+          case "play_name":
             value = normalizePlayName(play.play_name || "");
             break;
-          case 'p_dir':
+          case "p_dir":
             value = clean(play.p_dir);
             break;
-          case 'p_type':
+          case "p_type":
             value = clean(play.p_type);
             break;
-          case 'protection':
+          case "protection":
             value = clean(play.protection);
             break;
-          case 'ptags':
-            [play.p_tag1, play.p_tag2].forEach(tag => {
+          case "ptags":
+            [play.p_tag1, play.p_tag2].forEach((tag) => {
               const val = clean(tag);
               if (val) playParts.push(val);
             });
             return; // Skip adding empty
-          case 'one_word_play':
+          case "one_word_play":
             // Skip one_word_play as it's handled separately
             return;
         }

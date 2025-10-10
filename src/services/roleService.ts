@@ -22,7 +22,10 @@ import {
 import { supabase } from "../lib/supabase";
 
 export class RoleService {
-  private static roleContextCache = new Map<string, { context: UserRoleContext; timestamp: number }>();
+  private static roleContextCache = new Map<
+    string,
+    { context: UserRoleContext; timestamp: number }
+  >();
   private static readonly CACHE_DURATION = 30000; // 30 seconds
 
   private static normalizeCapabilities(value: unknown): Capability[] {
@@ -68,8 +71,11 @@ export class RoleService {
     // Check cache first
     this.clearExpiredCache();
     const cached = this.roleContextCache.get(userId);
-    if (cached && (Date.now() - cached.timestamp) < this.CACHE_DURATION) {
-      console.log("🔍 RoleService: Returning cached role context for user:", userId);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      console.log(
+        "🔍 RoleService: Returning cached role context for user:",
+        userId
+      );
       return cached.context;
     }
 
@@ -85,17 +91,25 @@ export class RoleService {
       let profile = null;
       if (profileError) {
         if (import.meta.env.DEV) {
-          console.warn("⚠️ RoleService: Profile query error (common in development):", profileError.message);
+          console.warn(
+            "⚠️ RoleService: Profile query error (common in development):",
+            profileError.message
+          );
         }
       } else if (profileData && profileData.length > 0) {
         profile = profileData[0];
       } else if (import.meta.env.DEV) {
-        console.warn("⚠️ RoleService: No profile found for user (common in development)");
+        console.warn(
+          "⚠️ RoleService: No profile found for user (common in development)"
+        );
       }
 
       // Always try to fetch team memberships, even if profile query failed
       // Team memberships might have different RLS policies and could still be accessible
-      console.log("🔍 RoleService: Fetching team memberships for user:", userId);
+      console.log(
+        "🔍 RoleService: Fetching team memberships for user:",
+        userId
+      );
       const { data: memberships, error: memberError } = await supabase
         .from("team_members")
         .select(
@@ -113,7 +127,10 @@ export class RoleService {
 
       if (memberError) {
         if (import.meta.env.DEV) {
-          console.warn("⚠️ RoleService: Team memberships query error:", memberError.message);
+          console.warn(
+            "⚠️ RoleService: Team memberships query error:",
+            memberError.message
+          );
         }
       }
 
@@ -122,7 +139,9 @@ export class RoleService {
       // If no profile and no memberships, use fallback
       if (!profile && (!memberships || memberships.length === 0)) {
         if (import.meta.env.DEV) {
-          console.log("🔍 RoleService: Using fallback role context for development");
+          console.log(
+            "🔍 RoleService: Using fallback role context for development"
+          );
           const fallbackContext = {
             appRole: "player" as AppRole,
             teamMemberships: [],
@@ -130,7 +149,10 @@ export class RoleService {
             lastUpdated: new Date(),
           };
           // Cache the fallback context
-          this.roleContextCache.set(userId, { context: fallbackContext, timestamp: Date.now() });
+          this.roleContextCache.set(userId, {
+            context: fallbackContext,
+            timestamp: Date.now(),
+          });
           return fallbackContext;
         }
         throw new Error("Failed to fetch user profile and team memberships");
@@ -139,7 +161,7 @@ export class RoleService {
       // Get team names separately
       const teamIds = (memberships || []).map((m) => m.team_id);
       console.log("🔍 RoleService: Team IDs to fetch:", teamIds);
-      
+
       let teams: any[] = [];
       if (teamIds.length > 0) {
         const { data: teamsData, error: teamsError } = await supabase
@@ -149,7 +171,10 @@ export class RoleService {
 
         if (teamsError) {
           if (import.meta.env.DEV) {
-            console.warn("⚠️ RoleService: Team names not available:", teamsError.message);
+            console.warn(
+              "⚠️ RoleService: Team names not available:",
+              teamsError.message
+            );
           }
           // Continue without team names rather than failing completely
         } else {
@@ -175,26 +200,32 @@ export class RoleService {
           roleNotes: membership.role_notes || undefined,
         })
       );
-      
+
       console.log("🔍 RoleService: Final team memberships:", teamMemberships);
-      
+
       // Use profile role if available, otherwise default to 'player' but still include team memberships
       const appRole = profile?.role || "player";
-      
+
       const roleContext = {
         appRole: appRole as AppRole,
         teamMemberships,
         userId,
         lastUpdated: new Date(),
       };
-      
+
       // Cache the successful result
-      this.roleContextCache.set(userId, { context: roleContext, timestamp: Date.now() });
-      
+      this.roleContextCache.set(userId, {
+        context: roleContext,
+        timestamp: Date.now(),
+      });
+
       return roleContext;
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.warn("⚠️ RoleService: Using fallback role due to database setup issues:", error);
+        console.warn(
+          "⚠️ RoleService: Using fallback role due to database setup issues:",
+          error
+        );
       }
       // Return safe fallback
       const fallbackContext = {
@@ -203,10 +234,13 @@ export class RoleService {
         userId,
         lastUpdated: new Date(),
       };
-      
+
       // Cache the fallback context to avoid repeated errors
-      this.roleContextCache.set(userId, { context: fallbackContext, timestamp: Date.now() });
-      
+      this.roleContextCache.set(userId, {
+        context: fallbackContext,
+        timestamp: Date.now(),
+      });
+
       return fallbackContext;
     }
   }

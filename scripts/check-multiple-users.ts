@@ -31,7 +31,9 @@ async function checkMultipleUsers() {
       (user) => user.email === "justindepierro@gmail.com"
     );
 
-    console.log(`Found ${matchingUsers.length} user(s) with email justindepierro@gmail.com\n`);
+    console.log(
+      `Found ${matchingUsers.length} user(s) with email justindepierro@gmail.com\n`
+    );
 
     matchingUsers.forEach((user, i) => {
       console.log(`User ${i + 1}:`);
@@ -39,7 +41,9 @@ async function checkMultipleUsers() {
       console.log(`  - Email: ${user.email}`);
       console.log(`  - Created: ${user.created_at}`);
       console.log(`  - Last Sign In: ${user.last_sign_in_at || "Never"}`);
-      console.log(`  - Email Confirmed: ${user.email_confirmed_at ? "✅" : "❌"}`);
+      console.log(
+        `  - Email Confirmed: ${user.email_confirmed_at ? "✅" : "❌"}`
+      );
       console.log("");
     });
 
@@ -55,7 +59,9 @@ async function checkMultipleUsers() {
     if (profileError) {
       console.log("❌ Failed to query profiles:", profileError.message);
     } else {
-      console.log(`Found ${profiles.length} profile(s) with email justindepierro@gmail.com\n`);
+      console.log(
+        `Found ${profiles.length} profile(s) with email justindepierro@gmail.com\n`
+      );
       profiles.forEach((profile, i) => {
         console.log(`Profile ${i + 1}:`);
         console.log(`  - ID: ${profile.id}`);
@@ -66,7 +72,6 @@ async function checkMultipleUsers() {
         console.log("");
       });
     }
-
   } catch (error) {
     console.error("❌ Error:", error);
   }

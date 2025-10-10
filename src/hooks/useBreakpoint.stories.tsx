@@ -213,7 +213,9 @@ const ConditionalRenderingDemo: React.FC = () => {
 
   const TabletComponent = () => (
     <div className="p-4 bg-status-info-bg border border-blue-200 rounded-lg">
-      <h4 className="font-semibold text-primary dark:text-blue-300">📟 Tablet View</h4>
+      <h4 className="font-semibold text-primary dark:text-blue-300">
+        📟 Tablet View
+      </h4>
       <p className="text-sm text-blue-700">
         Balanced layout for medium screens
       </p>

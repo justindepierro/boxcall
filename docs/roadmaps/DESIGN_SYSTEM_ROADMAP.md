@@ -101,13 +101,13 @@ Our new “Aurora Tiles” visual language powers the Team Bulletin hero row and
 
 **Implementation Tokens**
 
-| Layer | Light Mode | Dark Mode |
-| --- | --- | --- |
-| Base tile | `bg-white/80 border-white/70 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)]` | `bg-slate-900/70 border-slate-700/60 shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]` |
-| Overlay | Gradient accent tied to feature (amber, emerald, indigo, violet) | Same gradient with `opacity-80` and softened stops |
-| Glow | `absolute` blurred orb (`bg-amber-400/40`, etc.) anchored bottom-right | Darkened orb (`bg-amber-500/30`) |
-| Icon capsule | `bg-white/80 shadow-inner` | `bg-slate-800/80 shadow-inner` |
-| Footer CTA | Neutral text tokens + `Icon name="grid" size="xs"` | Same tokens with `dark:text-slate-300` |
+| Layer        | Light Mode                                                                   | Dark Mode                                                                         |
+| ------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Base tile    | `bg-white/80 border-white/70 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.56)]` | `bg-slate-900/70 border-slate-700/60 shadow-[0_20px_45px_-20px_rgba(0,0,0,0.75)]` |
+| Overlay      | Gradient accent tied to feature (amber, emerald, indigo, violet)             | Same gradient with `opacity-80` and softened stops                                |
+| Glow         | `absolute` blurred orb (`bg-amber-400/40`, etc.) anchored bottom-right       | Darkened orb (`bg-amber-500/30`)                                                  |
+| Icon capsule | `bg-white/80 shadow-inner`                                                   | `bg-slate-800/80 shadow-inner`                                                    |
+| Footer CTA   | Neutral text tokens + `Icon name="grid" size="xs"`                           | Same tokens with `dark:text-slate-300`                                            |
 
 **Recommended Layouts**
 

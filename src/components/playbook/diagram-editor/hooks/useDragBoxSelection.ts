@@ -1,6 +1,6 @@
 /**
  * useDragBoxSelection - Hook for drag box selection in diagram editor
- * 
+ *
  * Enables clicking and dragging on empty canvas to select multiple players:
  * - Click on empty field area and drag to create selection rectangle
  * - All players within rectangle become selected
@@ -9,10 +9,10 @@
  * - Ignores drag start on existing players (lets normal drag work)
  */
 
-import { useEffect, useRef } from 'react';
-import { Graphics } from 'pixi.js';
-import type { DiagramPixiApp } from '../core/PixiApp';
-import type { PlayerSprite } from '../sprites/PlayerSprite';
+import { useEffect, useRef } from "react";
+import { Graphics } from "pixi.js";
+import type { DiagramPixiApp } from "../core/PixiApp";
+import type { PlayerSprite } from "../sprites/PlayerSprite";
 
 interface DragBoxSelectionProps {
   app: DiagramPixiApp | null;
@@ -28,7 +28,10 @@ interface DragBoxState {
   additive: boolean; // Shift key held = additive selection
 }
 
-export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionProps): void {
+export function useDragBoxSelection({
+  app,
+  enabled = true,
+}: DragBoxSelectionProps): void {
   const dragBoxRef = useRef<DragBoxState>({
     active: false,
     startX: 0,
@@ -44,17 +47,17 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
 
     const canvas = app.app.view as HTMLCanvasElement;
     const playersLayer = app.playersLayer;
-    
+
     // Guard: playersLayer must exist
     if (!playersLayer) return;
-    
+
     // Guard: stage must exist
     if (!app.app.stage) {
       // This can happen during initialization - not an error
-      console.log('⏸️  useDragBoxSelection: Waiting for stage...');
+      console.log("⏸️  useDragBoxSelection: Waiting for stage...");
       return;
     }
-    
+
     // Create selection box graphics
     const selectionBox = new Graphics();
     selectionBox.zIndex = 1000; // Above everything
@@ -96,7 +99,7 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
       if (event.button !== 0) return;
 
       const pos = getCanvasPosition(event);
-      
+
       // Don't start drag box if over a player (let player drag work)
       if (isOverPlayer(pos.x, pos.y)) return;
 
@@ -146,30 +149,50 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
      */
     const drawSelectionBox = (): void => {
       const { startX, startY, currentX, currentY } = dragBoxRef.current;
-      
+
       const x = Math.min(startX, currentX);
       const y = Math.min(startY, currentY);
       const width = Math.abs(currentX - startX);
       const height = Math.abs(currentY - startY);
 
       selectionBox.clear();
-      
+
       // Scale border and handles with pixelsPerYard for consistency
       const borderWidth = 0.05 * app.coordinates.pixelsPerYard; // ~2px at 15 ppy, ~1px at 20 ppy
       const handleSize = 0.15 * app.coordinates.pixelsPerYard; // ~6px at 15 ppy, ~3px at 20 ppy
-      
+
       // Draw dashed border with semi-transparent fill
-      selectionBox.lineStyle(borderWidth, 0x00BFFF, 1); // Bright blue border
-      selectionBox.beginFill(0x00BFFF, 0.1); // Subtle blue fill
+      selectionBox.lineStyle(borderWidth, 0x00bfff, 1); // Bright blue border
+      selectionBox.beginFill(0x00bfff, 0.1); // Subtle blue fill
       selectionBox.drawRect(x, y, width, height);
       selectionBox.endFill();
 
       // Draw corner handles (small squares)
-      selectionBox.beginFill(0x00BFFF, 1);
-      selectionBox.drawRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize); // Top-left
-      selectionBox.drawRect(x + width - handleSize / 2, y - handleSize / 2, handleSize, handleSize); // Top-right
-      selectionBox.drawRect(x - handleSize / 2, y + height - handleSize / 2, handleSize, handleSize); // Bottom-left
-      selectionBox.drawRect(x + width - handleSize / 2, y + height - handleSize / 2, handleSize, handleSize); // Bottom-right
+      selectionBox.beginFill(0x00bfff, 1);
+      selectionBox.drawRect(
+        x - handleSize / 2,
+        y - handleSize / 2,
+        handleSize,
+        handleSize
+      ); // Top-left
+      selectionBox.drawRect(
+        x + width - handleSize / 2,
+        y - handleSize / 2,
+        handleSize,
+        handleSize
+      ); // Top-right
+      selectionBox.drawRect(
+        x - handleSize / 2,
+        y + height - handleSize / 2,
+        handleSize,
+        handleSize
+      ); // Bottom-left
+      selectionBox.drawRect(
+        x + width - handleSize / 2,
+        y + height - handleSize / 2,
+        handleSize,
+        handleSize
+      ); // Bottom-right
       selectionBox.endFill();
     };
 
@@ -178,7 +201,7 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
      */
     const selectPlayersInBox = (): void => {
       const { startX, startY, currentX, currentY } = dragBoxRef.current;
-      
+
       const minX = Math.min(startX, currentX);
       const maxX = Math.max(startX, currentX);
       const minY = Math.min(startY, currentY);
@@ -193,7 +216,12 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
         const centerY = bounds.y + bounds.height / 2;
 
         // Check if center is within box
-        if (centerX >= minX && centerX <= maxX && centerY >= minY && centerY <= maxY) {
+        if (
+          centerX >= minX &&
+          centerX <= maxX &&
+          centerY >= minY &&
+          centerY <= maxY
+        ) {
           selectedIds.push(sprite.getId());
         }
       });
@@ -202,27 +230,27 @@ export function useDragBoxSelection({ app, enabled = true }: DragBoxSelectionPro
       if (selectedIds.length > 0) {
         // Box selection always selects all players in the box
         // (selection was already cleared in mousedown)
-        selectedIds.forEach(id => playersLayer.selectPlayer(id, true));
-        
+        selectedIds.forEach((id) => playersLayer.selectPlayer(id, true));
+
         console.log(`📦 Box selected ${selectedIds.length} players`);
       }
     };
 
     // Add event listeners to canvas
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
-    
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseup", handleMouseUp);
+
     // Also handle mouse leaving canvas
-    canvas.addEventListener('mouseleave', handleMouseUp);
+    canvas.addEventListener("mouseleave", handleMouseUp);
 
     // Cleanup
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
-      canvas.removeEventListener('mouseleave', handleMouseUp);
-      
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("mouseleave", handleMouseUp);
+
       if (selectionBoxRef.current) {
         selectionBoxRef.current.destroy();
         selectionBoxRef.current = null;

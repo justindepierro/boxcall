@@ -176,6 +176,7 @@ While the automated checks pass, please manually verify:
    - Verify no port conflicts on restart
 
 4. **Production Build**
+
    ```bash
    npm run build
    ```

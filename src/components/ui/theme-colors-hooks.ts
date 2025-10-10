@@ -6,9 +6,11 @@ import { useApp } from "../core/useApp";
 
 export const useThemeColors = () => {
   const { designConfig: config } = useApp();
-  const isDark = config.theme === "dark" ||
-    (config.theme === "auto" && typeof window !== "undefined" &&
-     window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const isDark =
+    config.theme === "dark" ||
+    (config.theme === "auto" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return {
     isDark,
@@ -29,7 +31,9 @@ export const useThemeColors = () => {
     },
     // Interactive colors
     interactive: {
-      hover: isDark ? "hover:bg-dark-interactive-hover" : "hover:bg-surface-tertiary",
+      hover: isDark
+        ? "hover:bg-dark-interactive-hover"
+        : "hover:bg-surface-tertiary",
       active: isDark ? "active:bg-dark-interactive-active" : "active:bg-border",
       focus: "focus:ring-electric-500",
     },

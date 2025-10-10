@@ -105,10 +105,13 @@ export const EMPTY_CAPABILITY_FLAGS: CapabilityFlags = CAPABILITY_KEYS.reduce(
 );
 
 export function capabilityFlagsFromList(list: Capability[]): CapabilityFlags {
-  return list.reduce((acc, key) => {
-    acc[key] = true;
-    return acc;
-  }, { ...EMPTY_CAPABILITY_FLAGS });
+  return list.reduce(
+    (acc, key) => {
+      acc[key] = true;
+      return acc;
+    },
+    { ...EMPTY_CAPABILITY_FLAGS }
+  );
 }
 
 export function capabilityListFromFlags(

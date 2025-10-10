@@ -1,6 +1,6 @@
 /**
  * PlayerSprite - Interactive player sprite for diagram
- * 
+ *
  * Represents a single player on the field with:
  * - Circle graphics with team colors
  * - Jersey number text
@@ -8,11 +8,15 @@
  * - Click and drag interactions
  */
 
-import { Container, Graphics, Text, Circle } from 'pixi.js';
-import type { Player, PlayerColors } from '../types/Player';
-import { TEAM_COLORS, SELECTION_COLOR } from '../types/Player';
-import type { CoordinateSystem } from '../core/CoordinateSystem';
-import { PLAYER_SIZING, getHitAreaRadius, getClampedFontSize } from '../../../../design-tokens/field-dimensions';
+import { Container, Graphics, Text, Circle } from "pixi.js";
+import type { Player, PlayerColors } from "../types/Player";
+import { TEAM_COLORS, SELECTION_COLOR } from "../types/Player";
+import type { CoordinateSystem } from "../core/CoordinateSystem";
+import {
+  PLAYER_SIZING,
+  getHitAreaRadius,
+  getClampedFontSize,
+} from "../../../../design-tokens/field-dimensions";
 
 export class PlayerSprite extends Container {
   private player: Player;
@@ -35,13 +39,13 @@ export class PlayerSprite extends Container {
 
   constructor(player: Player, coords: CoordinateSystem) {
     super();
-    
+
     this.player = player;
     this.coords = coords;
 
     // Enable interactivity (v7.2+ uses eventMode)
-    this.eventMode = 'static';
-    this.cursor = 'grab'; // Changed from 'pointer' to 'grab'
+    this.eventMode = "static";
+    this.cursor = "grab"; // Changed from 'pointer' to 'grab'
 
     // Create graphics
     this.dropShadow = new Graphics(); // Initialize drop shadow
@@ -74,12 +78,12 @@ export class PlayerSprite extends Container {
    */
   private updateGraphics(): void {
     const colors = this.getColors();
-    
+
     // Use fixed visual radius (what you see on screen)
     const visualRadiusYards = this.RADIUS_YARDS;
     const radiusPixels = visualRadiusYards * this.coords.pixelsPerYard;
     const strokePixels = this.STROKE_WIDTH * this.coords.pixelsPerYard;
-    
+
     // Calculate hit area radius to meet WCAG 2.1 AA touch target (44px minimum)
     const hitAreaRadiusYards = getHitAreaRadius(
       visualRadiusYards,
@@ -90,14 +94,14 @@ export class PlayerSprite extends Container {
 
     // Draw main shape (circle for offense, triangle for defense, square for center)
     this.circle.clear();
-    
-    const isCenter = this.player.position === 'center';
-    const isDefense = this.player.team === 'defense';
-    
+
+    const isCenter = this.player.position === "center";
+    const isDefense = this.player.team === "defense";
+
     // Set line style and fill for all shapes
     this.circle.lineStyle({ width: strokePixels, color: colors.stroke });
     this.circle.beginFill(colors.fill);
-    
+
     if (isCenter) {
       // Draw square/rectangle for center position
       const size = radiusPixels * 1.6; // Slightly wider than circle diameter
@@ -106,7 +110,7 @@ export class PlayerSprite extends Container {
       // Draw upside-down triangle for defense (wider for better text visibility)
       const height = radiusPixels * 1.8; // Triangle height
       const width = radiusPixels * 2.2; // Triangle base width (increased from 1.6 to 2.2)
-      
+
       // Upside-down triangle: point at bottom, base at top
       this.circle.moveTo(0, height / 2); // Bottom point
       this.circle.lineTo(-width / 2, -height / 2); // Top left
@@ -116,9 +120,9 @@ export class PlayerSprite extends Container {
       // Draw circle for offense
       this.circle.drawCircle(0, 0, radiusPixels);
     }
-    
+
     this.circle.endFill();
-    
+
     // Set hit area to be larger than visual for touch accessibility
     // This makes it easier to tap/click without making the visual bigger
     this.hitArea = new Circle(0, 0, hitAreaRadiusPixels);
@@ -140,31 +144,41 @@ export class PlayerSprite extends Container {
     const ringWidth = this.SELECTION_RING_WIDTH * this.coords.pixelsPerYard;
 
     this.selectionRing.clear();
-    
+
     if (this._isSelected) {
       const colors = this.getColors();
-      const isCenter = this.player.position === 'center';
-      
+      const isCenter = this.player.position === "center";
+
       if (isCenter) {
         // Draw rectangular selection for center
         const size = radiusPixels * 1.6;
         const outerSize = size + ringWidth * 4;
-        
+
         // Draw outer glow with team color (subtle)
         this.selectionRing.beginFill(colors.fill, 0.15);
-        this.selectionRing.drawRect(-outerSize / 2, -outerSize / 2, outerSize, outerSize);
+        this.selectionRing.drawRect(
+          -outerSize / 2,
+          -outerSize / 2,
+          outerSize,
+          outerSize
+        );
         this.selectionRing.endFill();
-        
+
         // Draw selection border (bright)
         this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
-        this.selectionRing.drawRect(-size / 2 - ringWidth, -size / 2 - ringWidth, size + ringWidth * 2, size + ringWidth * 2);
+        this.selectionRing.drawRect(
+          -size / 2 - ringWidth,
+          -size / 2 - ringWidth,
+          size + ringWidth * 2,
+          size + ringWidth * 2
+        );
       } else {
         // Draw circular selection for regular players
         // Draw outer glow with team color (subtle)
         this.selectionRing.beginFill(colors.fill, 0.15);
         this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth * 2);
         this.selectionRing.endFill();
-        
+
         // Draw selection ring (bright)
         this.selectionRing.lineStyle(ringWidth, SELECTION_COLOR);
         this.selectionRing.drawCircle(0, 0, radiusPixels + ringWidth);
@@ -184,13 +198,13 @@ export class PlayerSprite extends Container {
 
     this.numberText.text = this.player.jerseyNumber;
     this.numberText.style = {
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: "Arial, sans-serif",
       fontSize: fontSize,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fill: colors.text,
-      align: 'center',
+      align: "center",
     };
-    
+
     // Center the text
     this.numberText.anchor.set(0.5);
   }
@@ -204,7 +218,7 @@ export class PlayerSprite extends Container {
       return {
         fill: this.player.color,
         stroke: this.darkenColor(this.player.color, 0.3),
-        text: 0xFFFFFF,
+        text: 0xffffff,
       };
     }
     return TEAM_COLORS[this.player.team];
@@ -214,14 +228,14 @@ export class PlayerSprite extends Container {
    * Darken a color by a factor (0-1)
    */
   private darkenColor(color: number, factor: number): number {
-    const r = (color >> 16) & 0xFF;
-    const g = (color >> 8) & 0xFF;
-    const b = color & 0xFF;
-    
+    const r = (color >> 16) & 0xff;
+    const g = (color >> 8) & 0xff;
+    const b = color & 0xff;
+
     const darkR = Math.floor(r * (1 - factor));
     const darkG = Math.floor(g * (1 - factor));
     const darkB = Math.floor(b * (1 - factor));
-    
+
     return (darkR << 16) | (darkG << 8) | darkB;
   }
 
@@ -229,7 +243,10 @@ export class PlayerSprite extends Container {
    * Update sprite position from player data
    */
   updatePosition(): void {
-    const pos = this.coords.yardsToPixels({ x: this.player.x, y: this.player.y });
+    const pos = this.coords.yardsToPixels({
+      x: this.player.x,
+      y: this.player.y,
+    });
     this.position.set(pos.x, pos.y);
   }
 
@@ -238,12 +255,16 @@ export class PlayerSprite extends Container {
    */
   updatePlayer(player: Partial<Player>): void {
     this.player = { ...this.player, ...player };
-    
+
     if (player.x !== undefined || player.y !== undefined) {
       this.updatePosition();
     }
-    
-    if (player.jerseyNumber !== undefined || player.team !== undefined || player.color !== undefined) {
+
+    if (
+      player.jerseyNumber !== undefined ||
+      player.team !== undefined ||
+      player.color !== undefined
+    ) {
       this.updateGraphics();
     }
   }
@@ -256,7 +277,7 @@ export class PlayerSprite extends Container {
       this._isSelected = selected;
       this.updateSelectionRing();
       // Update cursor: selected = grab, not selected = pointer
-      this.cursor = selected ? 'grab' : 'pointer';
+      this.cursor = selected ? "grab" : "pointer";
     }
   }
 
@@ -266,23 +287,23 @@ export class PlayerSprite extends Container {
   setDragging(dragging: boolean): void {
     if (this._isDragging !== dragging) {
       this._isDragging = dragging;
-      
+
       if (dragging) {
         // DRAGGING EFFECTS:
         // 1. Change cursor to grabbing
-        this.cursor = 'grabbing';
-        
+        this.cursor = "grabbing";
+
         // 2. Subtle scale up (1.05x)
         this.scale.set(this.DRAG_SCALE);
-        
+
         // 3. Draw drop shadow
         this.updateDropShadow(true);
-        
+
         // 4. Slight transparency
         this.alpha = 0.9;
       } else {
         // RELEASE EFFECTS: Reset to normal
-        this.cursor = this._isSelected ? 'grab' : 'pointer';
+        this.cursor = this._isSelected ? "grab" : "pointer";
         this.scale.set(1.0);
         this.updateDropShadow(false);
         this.alpha = 1.0;
@@ -298,7 +319,7 @@ export class PlayerSprite extends Container {
     const shadowOffset = this.SHADOW_OFFSET_YARDS * this.coords.pixelsPerYard;
 
     this.dropShadow.clear();
-    
+
     if (visible) {
       // Draw shadow as a semi-transparent dark circle, offset down-right
       this.dropShadow.beginFill(0x000000, 0.25);
@@ -341,7 +362,7 @@ export class PlayerSprite extends Container {
   destroy(): void {
     // PERFORMANCE: Unsubscribe from coordinate system changes
     this.coords.removeObserver(this.coordsObserver);
-    
+
     this.dropShadow.destroy();
     this.circle.destroy();
     this.selectionRing.destroy();

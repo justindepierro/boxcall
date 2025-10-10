@@ -16,21 +16,21 @@ Reduce the main bundle size by splitting large dependencies into separate chunks
 
 ### Bundle Size Reduction
 
-| Metric | Before | After | Improvement |
-|--------|---------|--------|-------------|
+| Metric                     | Before    | After         | Improvement              |
+| -------------------------- | --------- | ------------- | ------------------------ |
 | **Main bundle (index.js)** | 611.52 KB | **464.73 KB** | **-146.79 KB (-24%)** ✅ |
-| **Gzipped main bundle** | 183.49 KB | **142.23 KB** | **-41.26 KB (-22%)** ✅ |
+| **Gzipped main bundle**    | 183.49 KB | **142.23 KB** | **-41.26 KB (-22%)** ✅  |
 
 ### New Chunks Created
 
-| Chunk | Size | Gzipped | Description |
-|-------|------|---------|-------------|
-| **supabase-*.js** | 123.28 KB | 34.25 KB | Supabase client library |
-| **query-*.js** | 34.59 KB | 10.43 KB | TanStack React Query |
-| **vendor-*.js** | 44.90 KB | 16.04 KB | React, React DOM, React Router (existing) |
-| **forms-*.js** | 47.91 KB | 12.96 KB | React Hook Form, Zod (existing) |
-| **dnd-*.js** | 96.20 KB | 29.91 KB | Drag-and-drop library (existing) |
-| **calendar-*.js** | 259.79 KB | 76.95 KB | FullCalendar (existing) |
+| Chunk              | Size      | Gzipped  | Description                               |
+| ------------------ | --------- | -------- | ----------------------------------------- |
+| **supabase-\*.js** | 123.28 KB | 34.25 KB | Supabase client library                   |
+| **query-\*.js**    | 34.59 KB  | 10.43 KB | TanStack React Query                      |
+| **vendor-\*.js**   | 44.90 KB  | 16.04 KB | React, React DOM, React Router (existing) |
+| **forms-\*.js**    | 47.91 KB  | 12.96 KB | React Hook Form, Zod (existing)           |
+| **dnd-\*.js**      | 96.20 KB  | 29.91 KB | Drag-and-drop library (existing)          |
+| **calendar-\*.js** | 259.79 KB | 76.95 KB | FullCalendar (existing)                   |
 
 ---
 
@@ -47,7 +47,7 @@ manualChunks: {
   query: ["@tanstack/react-query"],              // NEW
   calendar: [
     "@fullcalendar/core",
-    "@fullcalendar/daygrid", 
+    "@fullcalendar/daygrid",
     "@fullcalendar/timegrid",
     "@fullcalendar/interaction",
     "@fullcalendar/react",
@@ -77,13 +77,15 @@ manualChunks: {
 ### Why Manual Chunking Helped
 
 **Before:** All core dependencies were bundled together in the main 611KB bundle, including:
+
 - React ecosystem (44KB)
-- Supabase client (123KB)  
+- Supabase client (123KB)
 - TanStack Query (35KB)
 - Application code
 - Services and utilities
 
 **After:** Dependencies split into logical chunks that can:
+
 - **Load in parallel** via HTTP/2 multiplexing
 - **Cache independently** (library chunks rarely change)
 - **Reduce initial parse time** (smaller main bundle = faster)
@@ -91,6 +93,7 @@ manualChunks: {
 ### Investigation Notes
 
 During this task, I verified that the **heavy route components were ALREADY lazy loaded**:
+
 - ✅ AnalyticsPage (50.64 KB) - separate lazy chunk
 - ✅ TeamSettings (38.84 KB) - separate lazy chunk
 - ✅ SocialFeaturesDemo (38.84 KB) - separate lazy chunk
@@ -109,10 +112,12 @@ The LazyRoutes system was working correctly! The **real optimization was splitti
 ### Initial Load (3G Network)
 
 **Before:**
+
 - Main bundle: 611KB → ~3.3s download @ 3G (slow)
 - Total critical path: ~4.5s
 
 **After:**
+
 - Main bundle: 465KB → ~2.5s download @ 3G ✅ (-0.8s)
 - Supabase: 123KB → loads in parallel
 - Query: 35KB → loads in parallel
@@ -123,9 +128,11 @@ The LazyRoutes system was working correctly! The **real optimization was splitti
 **Scenario:** User returns to the app after a deployment
 
 **Before:**
+
 - 611KB main bundle re-downloaded (code + libraries changed)
 
-**After:**  
+**After:**
+
 - 465KB main bundle re-downloaded (only app code changed)
 - 123KB Supabase chunk cached (library didn't change) ✅
 - 35KB Query chunk cached (library didn't change) ✅
@@ -165,12 +172,12 @@ The LazyRoutes system was working correctly! The **real optimization was splitti
 
 ## ✅ Success Metrics
 
-| Target | Baseline | Current | Status |
-|--------|----------|---------|---------|
-| Main bundle < 500KB | 611KB | **465KB** | ✅ ACHIEVED |
-| Gzipped < 150KB | 183KB | **142KB** | ✅ ACHIEVED |
-| Initial load < 3s (3G) | ~4.5s | **~2.8s** | ✅ ACHIEVED |
-| All tests passing | 316/316 | Verifying... | ⏳ |
+| Target                 | Baseline | Current      | Status      |
+| ---------------------- | -------- | ------------ | ----------- |
+| Main bundle < 500KB    | 611KB    | **465KB**    | ✅ ACHIEVED |
+| Gzipped < 150KB        | 183KB    | **142KB**    | ✅ ACHIEVED |
+| Initial load < 3s (3G) | ~4.5s    | **~2.8s**    | ✅ ACHIEVED |
+| All tests passing      | 316/316  | Verifying... | ⏳          |
 
 ---
 
@@ -179,7 +186,7 @@ The LazyRoutes system was working correctly! The **real optimization was splitti
 **Phase 4A Task 2 is a MAJOR WIN!**
 
 - **Main bundle reduced 24%** (611KB → 465KB)
-- **Gzipped reduced 22%** (183KB → 142KB)  
+- **Gzipped reduced 22%** (183KB → 142KB)
 - **Load time improved ~38%** (4.5s → 2.8s on 3G)
 - **Better caching** (158KB of libraries can be cached independently)
 - **All lazy routes verified working correctly**

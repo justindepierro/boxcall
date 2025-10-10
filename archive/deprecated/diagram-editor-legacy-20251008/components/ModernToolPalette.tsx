@@ -162,7 +162,12 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
     {
       id: "dashed",
       label: "Dashed",
-      icon: <div className="flex gap-1"><div className="w-2 h-0.5 bg-current" /><div className="w-2 h-0.5 bg-current" /></div>,
+      icon: (
+        <div className="flex gap-1">
+          <div className="w-2 h-0.5 bg-current" />
+          <div className="w-2 h-0.5 bg-current" />
+        </div>
+      ),
       action: () => {
         dispatch({ type: "SET_DRAW_MODE", mode: "dashed" });
       },
@@ -170,7 +175,13 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
     {
       id: "dotted",
       label: "Dotted",
-      icon: <div className="flex gap-0.5"><div className="w-1 h-1 rounded-full bg-current" /><div className="w-1 h-1 rounded-full bg-current" /><div className="w-1 h-1 rounded-full bg-current" /></div>,
+      icon: (
+        <div className="flex gap-0.5">
+          <div className="w-1 h-1 rounded-full bg-current" />
+          <div className="w-1 h-1 rounded-full bg-current" />
+          <div className="w-1 h-1 rounded-full bg-current" />
+        </div>
+      ),
       action: () => {
         dispatch({ type: "SET_DRAW_MODE", mode: "dotted" });
       },
@@ -178,7 +189,17 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
     {
       id: "zigzag",
       label: "Zigzag",
-      icon: <svg width="24" height="12" viewBox="0 0 24 12" className="stroke-current" fill="none"><path d="M0 6 L6 0 L12 6 L18 0 L24 6" strokeWidth="2" /></svg>,
+      icon: (
+        <svg
+          width="24"
+          height="12"
+          viewBox="0 0 24 12"
+          className="stroke-current"
+          fill="none"
+        >
+          <path d="M0 6 L6 0 L12 6 L18 0 L24 6" strokeWidth="2" />
+        </svg>
+      ),
       action: () => {
         dispatch({ type: "SET_DRAW_MODE", mode: "zigzag" });
       },
@@ -231,7 +252,8 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
     ) : (
       <div className="w-px h-10 bg-slate-200 dark:bg-slate-700 mx-2" />
     );
-  const buttonSizeClass = orientation === "vertical" ? "w-14 h-14" : "w-12 h-12";
+  const buttonSizeClass =
+    orientation === "vertical" ? "w-14 h-14" : "w-12 h-12";
 
   const currentDrawMode = state.ui.drawMode || "line";
   const currentArrowHead = state.ui.drawArrowHead || "none";
@@ -239,7 +261,9 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
   return (
     <div className={`${containerClasses} ${className}`}>
       {/* Basic Tools */}
-      <div className="text-xs text-content-secondary font-medium px-1 mb-1">Tools</div>
+      <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+        Tools
+      </div>
       {basicTools.map((tool) => (
         <ToolButton
           key={tool.id}
@@ -255,14 +279,18 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
       {separator}
 
       {/* Shape Tools */}
-      <div className="text-xs text-content-secondary font-medium px-1 mb-1">Shapes</div>
+      <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+        Shapes
+      </div>
       {shapeTools.map((tool) => (
         <ToolButton
           key={tool.id}
           icon={tool.icon}
           label={tool.label}
           shortcut={tool.shortcut}
-          isActive={state.ui.tool === "add-player" && state.ui.playerShape === tool.id}
+          isActive={
+            state.ui.tool === "add-player" && state.ui.playerShape === tool.id
+          }
           onClick={tool.action}
           sizeClass={buttonSizeClass}
         />
@@ -271,7 +299,9 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
       {separator}
 
       {/* Line Tools */}
-      <div className="text-xs text-content-secondary font-medium px-1 mb-1">Lines</div>
+      <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+        Lines
+      </div>
       {lineTools.map((tool) => (
         <ToolButton
           key={tool.id}
@@ -302,7 +332,9 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
       {/* Line Styles (collapsible) */}
       {showLineStyles && (
         <>
-          <div className="text-xs text-content-secondary font-medium px-1 mb-1">Style</div>
+          <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+            Style
+          </div>
           {lineStyles.map((style) => (
             <ToolButton
               key={style.id}
@@ -332,7 +364,9 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
       {/* Endpoints (collapsible) */}
       {showEndpoints && (
         <>
-          <div className="text-xs text-content-secondary font-medium px-1 mb-1">Arrows</div>
+          <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+            Arrows
+          </div>
           {endpointStyles.map((style) => (
             <ToolButton
               key={style.id}
@@ -358,7 +392,7 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
         }`}
         title="Color"
       >
-        <div 
+        <div
           className="w-6 h-6 rounded border-2 border-current"
           style={{ backgroundColor: state.ui.drawColor || "#6366F1" }}
         />
@@ -367,7 +401,9 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
       {/* Color Picker (collapsible) */}
       {showColorPicker && (
         <>
-          <div className="text-xs text-content-secondary font-medium px-1 mb-1">Color</div>
+          <div className="text-xs text-content-secondary font-medium px-1 mb-1">
+            Color
+          </div>
           <div className="grid grid-cols-4 gap-2 p-2">
             {[
               { color: "#6366F1", label: "Blue" },
@@ -390,8 +426,8 @@ export const ModernToolPalette: React.FC<ModernToolPaletteProps> = ({
                   state.ui.drawColor === color
                     ? "border-4 border-brand-primary scale-110 shadow-xl"
                     : border
-                    ? "border-2 border-slate-400 dark:border-slate-500"
-                    : "border-2 border-transparent"
+                      ? "border-2 border-slate-400 dark:border-slate-500"
+                      : "border-2 border-transparent"
                 }`}
                 style={{ backgroundColor: color }}
                 title={label}

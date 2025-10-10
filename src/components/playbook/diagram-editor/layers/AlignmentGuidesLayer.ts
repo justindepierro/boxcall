@@ -1,13 +1,13 @@
 /**
  * Alignment Guides Layer
- * 
+ *
  * Renders pink/magenta alignment guides during player drag operations.
  * Shows when players align to each other's snap points.
  */
 
-import { Container, Graphics } from 'pixi.js';
-import type { CoordinateSystem } from '../core/CoordinateSystem';
-import type { AlignmentGuide } from '../utils/alignmentGuides';
+import { Container, Graphics } from "pixi.js";
+import type { CoordinateSystem } from "../core/CoordinateSystem";
+import type { AlignmentGuide } from "../utils/alignmentGuides";
 
 export class AlignmentGuidesLayer extends Container {
   private coords: CoordinateSystem;
@@ -15,7 +15,7 @@ export class AlignmentGuidesLayer extends Container {
   private currentGuides: AlignmentGuide[] = [];
 
   // Visual constants
-  private readonly GUIDE_COLOR = 0xFF00FF; // Magenta
+  private readonly GUIDE_COLOR = 0xff00ff; // Magenta
   private readonly GUIDE_ALPHA = 0.5; // More subtle/transparent
   private readonly GUIDE_WIDTH_YARDS = 0.05; // Thin lines
 
@@ -52,7 +52,8 @@ export class AlignmentGuidesLayer extends Container {
 
     const lineWidth = this.GUIDE_WIDTH_YARDS * this.coords.pixelsPerYard;
     const fieldWidthPixels = this.coords.fieldWidth * this.coords.pixelsPerYard;
-    const fieldHeightPixels = this.coords.fieldHeight * this.coords.pixelsPerYard;
+    const fieldHeightPixels =
+      this.coords.fieldHeight * this.coords.pixelsPerYard;
 
     // Group guides by color for batching
     const guidesByColor = new Map<number, AlignmentGuide[]>();
@@ -69,7 +70,7 @@ export class AlignmentGuidesLayer extends Container {
       this.graphics.lineStyle(lineWidth, color, this.GUIDE_ALPHA);
 
       for (const guide of guides) {
-        if (guide.type === 'vertical') {
+        if (guide.type === "vertical") {
           // Vertical line (spans full height)
           const xPixels = guide.position * this.coords.pixelsPerYard;
           this.graphics.moveTo(xPixels, 0);

@@ -1,40 +1,40 @@
 /**
  * alignmentUtils - Utility functions for aligning and distributing players
- * 
+ *
  * Provides:
  * - Align selected players (left, center, right, top, middle, bottom)
  * - Distribute players evenly (horizontal, vertical)
  */
 
-import type { Player } from '../types/Player';
+import type { Player } from "../types/Player";
 
 /**
  * Align selected players horizontally
  */
 export function alignPlayersHorizontal(
   players: Player[],
-  mode: 'left' | 'center' | 'right'
+  mode: "left" | "center" | "right"
 ): Player[] {
   if (players.length < 2) return players;
 
   let targetX: number;
 
   switch (mode) {
-    case 'left':
+    case "left":
       // Align to leftmost player
-      targetX = Math.min(...players.map(p => p.x));
+      targetX = Math.min(...players.map((p) => p.x));
       break;
-    case 'center':
+    case "center":
       // Align to average X
       targetX = players.reduce((sum, p) => sum + p.x, 0) / players.length;
       break;
-    case 'right':
+    case "right":
       // Align to rightmost player
-      targetX = Math.max(...players.map(p => p.x));
+      targetX = Math.max(...players.map((p) => p.x));
       break;
   }
 
-  return players.map(p => ({ ...p, x: targetX }));
+  return players.map((p) => ({ ...p, x: targetX }));
 }
 
 /**
@@ -42,28 +42,28 @@ export function alignPlayersHorizontal(
  */
 export function alignPlayersVertical(
   players: Player[],
-  mode: 'top' | 'middle' | 'bottom'
+  mode: "top" | "middle" | "bottom"
 ): Player[] {
   if (players.length < 2) return players;
 
   let targetY: number;
 
   switch (mode) {
-    case 'top':
+    case "top":
       // Align to topmost player (lowest Y value)
-      targetY = Math.min(...players.map(p => p.y));
+      targetY = Math.min(...players.map((p) => p.y));
       break;
-    case 'middle':
+    case "middle":
       // Align to average Y
       targetY = players.reduce((sum, p) => sum + p.y, 0) / players.length;
       break;
-    case 'bottom':
+    case "bottom":
       // Align to bottommost player (highest Y value)
-      targetY = Math.max(...players.map(p => p.y));
+      targetY = Math.max(...players.map((p) => p.y));
       break;
   }
 
-  return players.map(p => ({ ...p, y: targetY }));
+  return players.map((p) => ({ ...p, y: targetY }));
 }
 
 /**
@@ -75,7 +75,7 @@ export function distributePlayersHorizontal(players: Player[]): Player[] {
 
   // Sort by X position
   const sorted = [...players].sort((a, b) => a.x - b.x);
-  
+
   const leftmost = sorted[0];
   const rightmost = sorted[sorted.length - 1];
   const totalWidth = rightmost.x - leftmost.x;
@@ -84,7 +84,7 @@ export function distributePlayersHorizontal(players: Player[]): Player[] {
   // Distribute evenly
   return sorted.map((p, index) => ({
     ...p,
-    x: leftmost.x + (spacing * index),
+    x: leftmost.x + spacing * index,
   }));
 }
 
@@ -97,7 +97,7 @@ export function distributePlayersVertical(players: Player[]): Player[] {
 
   // Sort by Y position
   const sorted = [...players].sort((a, b) => a.y - b.y);
-  
+
   const topmost = sorted[0];
   const bottommost = sorted[sorted.length - 1];
   const totalHeight = bottommost.y - topmost.y;
@@ -106,7 +106,7 @@ export function distributePlayersVertical(players: Player[]): Player[] {
   // Distribute evenly
   return sorted.map((p, index) => ({
     ...p,
-    y: topmost.y + (spacing * index),
+    y: topmost.y + spacing * index,
   }));
 }
 
@@ -122,7 +122,7 @@ export function detectEqualSpacingHorizontal(
 
   // Sort by X position
   const sorted = [...players].sort((a, b) => a.x - b.x);
-  
+
   // Calculate spacing between consecutive pairs
   const spacings: number[] = [];
   for (let i = 1; i < sorted.length; i++) {
@@ -131,7 +131,7 @@ export function detectEqualSpacingHorizontal(
 
   // Check if all spacings are equal (within threshold)
   const avgSpacing = spacings.reduce((sum, s) => sum + s, 0) / spacings.length;
-  const allEqual = spacings.every(s => Math.abs(s - avgSpacing) <= threshold);
+  const allEqual = spacings.every((s) => Math.abs(s - avgSpacing) <= threshold);
 
   return allEqual ? avgSpacing : null;
 }
@@ -148,7 +148,7 @@ export function detectEqualSpacingVertical(
 
   // Sort by Y position
   const sorted = [...players].sort((a, b) => a.y - b.y);
-  
+
   // Calculate spacing between consecutive pairs
   const spacings: number[] = [];
   for (let i = 1; i < sorted.length; i++) {
@@ -157,7 +157,7 @@ export function detectEqualSpacingVertical(
 
   // Check if all spacings are equal (within threshold)
   const avgSpacing = spacings.reduce((sum, s) => sum + s, 0) / spacings.length;
-  const allEqual = spacings.every(s => Math.abs(s - avgSpacing) <= threshold);
+  const allEqual = spacings.every((s) => Math.abs(s - avgSpacing) <= threshold);
 
   return allEqual ? avgSpacing : null;
 }
@@ -174,14 +174,14 @@ export function spacePlayersUniformHorizontal(
 
   // Sort by X position
   const sorted = [...players].sort((a, b) => a.x - b.x);
-  
+
   // Start from leftmost player
   const startX = sorted[0].x;
 
   // Apply uniform spacing
   return sorted.map((p, index) => ({
     ...p,
-    x: startX + (spacing * index),
+    x: startX + spacing * index,
   }));
 }
 
@@ -197,13 +197,13 @@ export function spacePlayersUniformVertical(
 
   // Sort by Y position
   const sorted = [...players].sort((a, b) => a.y - b.y);
-  
+
   // Start from topmost player
   const startY = sorted[0].y;
 
   // Apply uniform spacing
   return sorted.map((p, index) => ({
     ...p,
-    y: startY + (spacing * index),
+    y: startY + spacing * index,
   }));
 }

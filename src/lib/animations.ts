@@ -45,7 +45,8 @@ export const hoverAnimations = {
   glow: "hover:shadow-electric-500/25 hover:shadow-lg transition-all duration-300",
 
   /** Combined lift, scale, and glow */
-  premium: "hover:animate-card-hover hover:animate-card-glow transition-all duration-300",
+  premium:
+    "hover:animate-card-hover hover:animate-card-glow transition-all duration-300",
 
   /** Subtle background change */
   subtle: "hover:bg-surface-secondary/50 transition-colors duration-200",
@@ -59,7 +60,8 @@ export const loadingAnimations = {
   pulse: "animate-pulse",
 
   /** Shimmer effect */
-  shimmer: "animate-pulse bg-gradient-to-r from-border via-border-light to-border bg-[length:200%_100%]",
+  shimmer:
+    "animate-pulse bg-gradient-to-r from-border via-border-light to-border bg-[length:200%_100%]",
 
   /** Spin animation */
   spin: "animate-spin",
@@ -178,7 +180,8 @@ export const uiAnimations = {
   buttonPress: "active:scale-95 transition-transform duration-75",
 
   /** Loading spinner */
-  spinner: "animate-spin border-2 border-border border-t-text-primary rounded-full",
+  spinner:
+    "animate-spin border-2 border-border border-t-text-primary rounded-full",
 } as const;
 
 export default {

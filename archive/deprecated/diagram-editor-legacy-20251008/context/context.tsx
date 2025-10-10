@@ -42,11 +42,10 @@ export function reducer(
   if (action.type === "INIT") {
     const doc = {
       ...action.doc,
-      meta:
-        action.doc.meta ?? {
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        },
+      meta: action.doc.meta ?? {
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
     };
     return {
       doc,

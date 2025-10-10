@@ -1,15 +1,15 @@
 /**
  * Copy/Paste Hook
- * 
+ *
  * Handles copy/paste/duplicate operations for players:
  * - Ctrl/Cmd+C: Copy selected players
  * - Ctrl/Cmd+V: Paste at cursor position
  * - Ctrl/Cmd+D: Duplicate in place with offset
  */
 
-import { useEffect, useRef } from 'react';
-import type { DiagramPixiApp } from '../core/PixiApp';
-import type { Player } from '../types/Player';
+import { useEffect, useRef } from "react";
+import type { DiagramPixiApp } from "../core/PixiApp";
+import type { Player } from "../types/Player";
 
 export interface UseCopyPasteOptions {
   app: DiagramPixiApp | null;
@@ -41,20 +41,24 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
     const canvas = app.app.view as HTMLCanvasElement;
     if (canvas) {
       canvasRef.current = canvas;
-      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener("mousemove", handleMouseMove);
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't handle if user is typing in an input
       const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
         return;
       }
 
       const playersLayer = app.playersLayer;
       if (!playersLayer) return;
 
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
       const modifierKey = isMac ? event.metaKey : event.ctrlKey;
 
       if (!modifierKey) return;
@@ -62,13 +66,13 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
       let handled = false;
 
       switch (event.key.toLowerCase()) {
-        case 'c': {
+        case "c": {
           // Copy selected players
           const selectedIds = playersLayer.getSelectedPlayerIds();
           if (selectedIds.length === 0) break;
 
           clipboard = selectedIds
-            .map(id => {
+            .map((id) => {
               const sprite = playersLayer.getPlayer(id);
               return sprite ? sprite.getPlayer() : null;
             })
@@ -79,7 +83,7 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           break;
         }
 
-        case 'v': {
+        case "v": {
           // Paste at cursor position
           if (clipboard.length === 0) break;
 
@@ -89,8 +93,10 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           const mouseY = lastMousePosRef.current.y / coords.pixelsPerYard;
 
           // Calculate centroid of copied players
-          const centroidX = clipboard.reduce((sum, p) => sum + p.x, 0) / clipboard.length;
-          const centroidY = clipboard.reduce((sum, p) => sum + p.y, 0) / clipboard.length;
+          const centroidX =
+            clipboard.reduce((sum, p) => sum + p.x, 0) / clipboard.length;
+          const centroidY =
+            clipboard.reduce((sum, p) => sum + p.y, 0) / clipboard.length;
 
           // Clear current selection
           playersLayer.clearSelection();
@@ -114,20 +120,22 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           });
 
           // Select the newly pasted players
-          newPlayerIds.forEach(id => playersLayer.selectPlayer(id, true));
+          newPlayerIds.forEach((id) => playersLayer.selectPlayer(id, true));
 
-          console.log(`📌 Pasted ${newPlayerIds.length} players at (${mouseX.toFixed(1)}, ${mouseY.toFixed(1)})`);
+          console.log(
+            `📌 Pasted ${newPlayerIds.length} players at (${mouseX.toFixed(1)}, ${mouseY.toFixed(1)})`
+          );
           handled = true;
           break;
         }
 
-        case 'd': {
+        case "d": {
           // Duplicate in place with small offset
           const selectedIds = playersLayer.getSelectedPlayerIds();
           if (selectedIds.length === 0) break;
 
           const selectedPlayers = selectedIds
-            .map(id => {
+            .map((id) => {
               const sprite = playersLayer.getPlayer(id);
               return sprite ? sprite.getPlayer() : null;
             })
@@ -139,16 +147,16 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           // Try to get last dropped position for smart placement
           const lastPos = playersLayer.getLastDroppedPosition();
           let offset = 1.0; // Default 1 yard offset
-          
+
           // If we have a last position, place 2 yards to the right
           if (lastPos && selectedPlayers.length > 0) {
             // Calculate offset to place next to last dropped position
             const firstPlayer = selectedPlayers[0];
             offset = lastPos.x - firstPlayer.x + 2.0; // 2 yards to the right of last position
           }
-          
+
           const newPlayerIds: string[] = [];
-          
+
           selectedPlayers.forEach((player, index) => {
             const newPlayer: Player = {
               id: `${player.team}-${Date.now()}-${index}`,
@@ -163,9 +171,11 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
           });
 
           // Select the duplicated players
-          newPlayerIds.forEach(id => playersLayer.selectPlayer(id, true));
+          newPlayerIds.forEach((id) => playersLayer.selectPlayer(id, true));
 
-          console.log(`📋 Duplicated ${newPlayerIds.length} players with offset`);
+          console.log(
+            `📋 Duplicated ${newPlayerIds.length} players with offset`
+          );
           handled = true;
           break;
         }
@@ -177,12 +187,12 @@ export function useCopyPaste({ app, enabled = true }: UseCopyPasteOptions) {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
       if (canvasRef.current) {
-        canvasRef.current.removeEventListener('mousemove', handleMouseMove);
+        canvasRef.current.removeEventListener("mousemove", handleMouseMove);
       }
     };
   }, [app, enabled]);

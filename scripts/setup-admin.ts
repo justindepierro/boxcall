@@ -48,19 +48,22 @@ async function setupAdmin() {
       console.log("🔄 Admin user not found - creating user...");
 
       // Create the admin user
-      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-        email: adminEmail,
-        password: adminPassword,
-        user_metadata: { role: "admin" },
-        email_confirm: true
-      });
+      const { data: newUser, error: createError } =
+        await supabase.auth.admin.createUser({
+          email: adminEmail,
+          password: adminPassword,
+          user_metadata: { role: "admin" },
+          email_confirm: true,
+        });
 
       if (createError) {
         console.log("❌ Failed to create admin user:", createError.message);
         return;
       }
 
-      console.log(`✅ Admin user created: ${newUser.user.email} (${newUser.user.id})`);
+      console.log(
+        `✅ Admin user created: ${newUser.user.email} (${newUser.user.id})`
+      );
 
       // Ensure profile exists
       await ensureProfile(newUser.user.id);

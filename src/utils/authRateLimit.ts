@@ -18,12 +18,12 @@ class CSRFProtection {
 
     // Generate new token
     this.token = this.generateSecureToken();
-    this.tokenExpiry = now + (15 * 60 * 1000); // 15 minutes
+    this.tokenExpiry = now + 15 * 60 * 1000; // 15 minutes
 
     // Store in session storage for persistence
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('csrf_token', this.token);
-      sessionStorage.setItem('csrf_expiry', this.tokenExpiry.toString());
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("csrf_token", this.token);
+      sessionStorage.setItem("csrf_expiry", this.tokenExpiry.toString());
     }
 
     return this.token;
@@ -41,7 +41,7 @@ class CSRFProtection {
    */
   private generateSecureToken(): string {
     const array = new Uint8Array(32);
-    if (typeof window !== 'undefined' && window.crypto) {
+    if (typeof window !== "undefined" && window.crypto) {
       window.crypto.getRandomValues(array);
     } else {
       // Fallback for server-side or older browsers
@@ -49,17 +49,19 @@ class CSRFProtection {
         array[i] = Math.floor(Math.random() * 256);
       }
     }
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
+      ""
+    );
   }
 
   /**
    * Initialize from stored token
    */
   initialize(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    const storedToken = sessionStorage.getItem('csrf_token');
-    const storedExpiry = sessionStorage.getItem('csrf_expiry');
+    const storedToken = sessionStorage.getItem("csrf_token");
+    const storedExpiry = sessionStorage.getItem("csrf_expiry");
 
     if (storedToken && storedExpiry) {
       const expiry = parseInt(storedExpiry, 10);
@@ -68,8 +70,8 @@ class CSRFProtection {
         this.tokenExpiry = expiry;
       } else {
         // Token expired, clean up
-        sessionStorage.removeItem('csrf_token');
-        sessionStorage.removeItem('csrf_expiry');
+        sessionStorage.removeItem("csrf_token");
+        sessionStorage.removeItem("csrf_expiry");
       }
     }
   }
@@ -80,12 +82,14 @@ class RequestSecurity {
   /**
    * Add security headers to requests
    */
-  static addSecurityHeaders(headers: Record<string, string> = {}): Record<string, string> {
+  static addSecurityHeaders(
+    headers: Record<string, string> = {}
+  ): Record<string, string> {
     return {
       ...headers,
-      'X-Requested-With': 'XMLHttpRequest',
-      'X-Client-Version': import.meta.env.VITE_APP_VERSION || '1.0.0',
-      'X-Client-Platform': 'web',
+      "X-Requested-With": "XMLHttpRequest",
+      "X-Client-Version": import.meta.env.VITE_APP_VERSION || "1.0.0",
+      "X-Client-Platform": "web",
     };
   }
 
@@ -93,23 +97,23 @@ class RequestSecurity {
    * Validate request origin for additional security
    */
   static validateOrigin(): boolean {
-    if (typeof window === 'undefined') return true;
+    if (typeof window === "undefined") return true;
 
     const currentOrigin = window.location.origin;
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
-      'https://boxcall.com',
-      'https://boxcallapp.com',
-      'https://www.boxcallapp.com',
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+      "https://boxcall.com",
+      "https://boxcallapp.com",
+      "https://www.boxcallapp.com",
       // Netlify preview deployments
       /^https:\/\/[a-z0-9-]+--boxcall\.netlify\.app$/,
     ];
 
-    const isValid = allowedOrigins.some(allowed => {
-      if (typeof allowed === 'string') {
+    const isValid = allowedOrigins.some((allowed) => {
+      if (typeof allowed === "string") {
         return allowed === currentOrigin;
       }
       // Handle regex patterns for Netlify previews
@@ -117,7 +121,9 @@ class RequestSecurity {
     });
 
     if (!isValid) {
-      console.warn(`🚨 Origin validation failed. Current origin: ${currentOrigin}, Allowed: ${allowedOrigins.join(', ')}`);
+      console.warn(
+        `🚨 Origin validation failed. Current origin: ${currentOrigin}, Allowed: ${allowedOrigins.join(", ")}`
+      );
     }
 
     return isValid;
@@ -127,7 +133,7 @@ class RequestSecurity {
    * Detect suspicious activity
    */
   static detectSuspiciousActivity(): boolean {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
 
     // Check for automation indicators
     const webdriver = (navigator as any).webdriver;
@@ -152,7 +158,9 @@ class AuthRateLimiter {
     const attempts = this.attempts.get(identifier) || [];
 
     // Remove old attempts outside the window
-    const recentAttempts = attempts.filter(time => now - time < this.windowMs);
+    const recentAttempts = attempts.filter(
+      (time) => now - time < this.windowMs
+    );
     recentAttempts.push(now);
 
     this.attempts.set(identifier, recentAttempts);
@@ -164,7 +172,9 @@ class AuthRateLimiter {
   isRateLimited(identifier: string): boolean {
     const attempts = this.attempts.get(identifier) || [];
     const now = Date.now();
-    const recentAttempts = attempts.filter(time => now - time < this.windowMs);
+    const recentAttempts = attempts.filter(
+      (time) => now - time < this.windowMs
+    );
 
     return recentAttempts.length >= this.maxAttempts;
   }
@@ -176,7 +186,9 @@ class AuthRateLimiter {
     if (!this.isRateLimited(identifier)) return 0;
 
     const attempts = this.attempts.get(identifier) || [];
-    const recentAttempts = attempts.filter(time => Date.now() - time < this.windowMs);
+    const recentAttempts = attempts.filter(
+      (time) => Date.now() - time < this.windowMs
+    );
 
     // Exponential backoff: delay = baseDelay * 2^(attempts - maxAttempts)
     const excessAttempts = recentAttempts.length - this.maxAttempts + 1;
@@ -196,7 +208,9 @@ class AuthRateLimiter {
   cleanup(): void {
     const now = Date.now();
     for (const [key, attempts] of this.attempts.entries()) {
-      const recentAttempts = attempts.filter(time => now - time < this.windowMs);
+      const recentAttempts = attempts.filter(
+        (time) => now - time < this.windowMs
+      );
       if (recentAttempts.length === 0) {
         this.attempts.delete(key);
       } else {
@@ -218,19 +232,26 @@ setInterval(() => authRateLimiter.cleanup(), 5 * 60 * 1000);
 export const getClientIdentifier = (): string => {
   // In a real implementation, this would use a more sophisticated
   // device fingerprinting approach. For now, we'll use a simple approach.
-  return navigator.userAgent + (navigator.language || '');
+  return navigator.userAgent + (navigator.language || "");
 };
 
 /**
  * Check if request should be rate limited
  */
-export const checkRateLimit = (identifier?: string): { allowed: boolean; delayMs: number } => {
+export const checkRateLimit = (
+  identifier?: string
+): { allowed: boolean; delayMs: number } => {
   // Normalize email identifiers to lowercase to match Supabase's email normalization
-  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  const normalizedId = identifier
+    ? identifier.toLowerCase()
+    : getClientIdentifier();
   const isLimited = authRateLimiter.isRateLimited(normalizedId);
 
   if (isLimited) {
-    return { allowed: false, delayMs: authRateLimiter.getDelayMs(normalizedId) };
+    return {
+      allowed: false,
+      delayMs: authRateLimiter.getDelayMs(normalizedId),
+    };
   }
 
   return { allowed: true, delayMs: 0 };
@@ -241,7 +262,9 @@ export const checkRateLimit = (identifier?: string): { allowed: boolean; delayMs
  */
 export const recordFailedAuth = (identifier?: string): void => {
   // Normalize email identifiers to lowercase to match Supabase's email normalization
-  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  const normalizedId = identifier
+    ? identifier.toLowerCase()
+    : getClientIdentifier();
   authRateLimiter.recordFailedAttempt(normalizedId);
 };
 
@@ -250,7 +273,9 @@ export const recordFailedAuth = (identifier?: string): void => {
  */
 export const resetRateLimit = (identifier?: string): void => {
   // Normalize email identifiers to lowercase to match Supabase's email normalization
-  const normalizedId = identifier ? identifier.toLowerCase() : getClientIdentifier();
+  const normalizedId = identifier
+    ? identifier.toLowerCase()
+    : getClientIdentifier();
   authRateLimiter.reset(normalizedId);
 };
 
@@ -259,7 +284,7 @@ export const csrfProtection = new CSRFProtection();
 export { RequestSecurity };
 
 // Initialize CSRF protection on module load
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   csrfProtection.initialize();
 }
 
@@ -296,8 +321,10 @@ export class NetworkResilience {
         const jitter = Math.random() * 0.1 * delay; // Add 10% jitter
         const finalDelay = delay + jitter;
 
-        console.warn(`🔄 Network request failed, retrying in ${finalDelay.toFixed(0)}ms (attempt ${attempt + 1}/${maxRetries + 1})`);
-        await new Promise(resolve => setTimeout(resolve, finalDelay));
+        console.warn(
+          `🔄 Network request failed, retrying in ${finalDelay.toFixed(0)}ms (attempt ${attempt + 1}/${maxRetries + 1})`
+        );
+        await new Promise((resolve) => setTimeout(resolve, finalDelay));
       }
     }
 
@@ -309,16 +336,16 @@ export class NetworkResilience {
    */
   private static isNonRetryableError(error: any): boolean {
     // Authentication errors
-    if (error?.message?.includes('Invalid login credentials')) return true;
-    if (error?.message?.includes('Email not confirmed')) return true;
+    if (error?.message?.includes("Invalid login credentials")) return true;
+    if (error?.message?.includes("Email not confirmed")) return true;
 
     // Client errors (4xx)
     if (error?.status >= 400 && error?.status < 500) return true;
 
     // Network errors that should be retried
-    if (error?.name === 'NetworkError') return false;
-    if (error?.message?.includes('fetch')) return false;
-    if (error?.code === 'NETWORK_ERROR') return false;
+    if (error?.name === "NetworkError") return false;
+    if (error?.message?.includes("fetch")) return false;
+    if (error?.code === "NETWORK_ERROR") return false;
 
     return false;
   }
@@ -327,7 +354,7 @@ export class NetworkResilience {
    * Check if the user is online
    */
   static isOnline(): boolean {
-    if (typeof navigator === 'undefined') return true;
+    if (typeof navigator === "undefined") return true;
     return navigator.onLine;
   }
 
@@ -339,17 +366,17 @@ export class NetworkResilience {
 
     return new Promise((resolve) => {
       const timeoutId = setTimeout(() => {
-        window.removeEventListener('online', onlineHandler);
+        window.removeEventListener("online", onlineHandler);
         resolve(false);
       }, timeout);
 
       const onlineHandler = () => {
         clearTimeout(timeoutId);
-        window.removeEventListener('online', onlineHandler);
+        window.removeEventListener("online", onlineHandler);
         resolve(true);
       };
 
-      window.addEventListener('online', onlineHandler);
+      window.addEventListener("online", onlineHandler);
     });
   }
 
@@ -369,10 +396,10 @@ export class NetworkResilience {
     // Set up online handler if not already set
     if (this.offlineQueue.length === 1) {
       const onlineHandler = () => {
-        window.removeEventListener('online', onlineHandler);
+        window.removeEventListener("online", onlineHandler);
         this.processOfflineQueue();
       };
-      window.addEventListener('online', onlineHandler);
+      window.addEventListener("online", onlineHandler);
     }
   }
 
@@ -384,7 +411,7 @@ export class NetworkResilience {
       try {
         await operation();
       } catch (error) {
-        console.error('Failed to process queued operation:', error);
+        console.error("Failed to process queued operation:", error);
       }
     }
   }

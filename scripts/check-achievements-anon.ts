@@ -17,19 +17,27 @@ async function checkAchievements() {
     console.log("🔍 Checking achievement tables with anon key...");
 
     const { data, error } = await supabase
-      .from('achievement_definitions')
-      .select('name, description, category, rarity')
+      .from("achievement_definitions")
+      .select("name, description, category, rarity")
       .limit(5);
 
     if (error) {
-      console.log('❌ achievement_definitions table not found or not accessible:', error.message);
+      console.log(
+        "❌ achievement_definitions table not found or not accessible:",
+        error.message
+      );
     } else {
-      console.log(`✅ achievement_definitions table exists with ${data.length} achievements:`);
-      data.forEach(ach => console.log(`   - ${ach.name} (${ach.category}, ${ach.rarity}): ${ach.description}`));
+      console.log(
+        `✅ achievement_definitions table exists with ${data.length} achievements:`
+      );
+      data.forEach((ach) =>
+        console.log(
+          `   - ${ach.name} (${ach.category}, ${ach.rarity}): ${ach.description}`
+        )
+      );
     }
-
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   }
 }
 

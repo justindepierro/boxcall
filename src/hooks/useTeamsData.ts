@@ -78,33 +78,36 @@ export function useTeamsData() {
   }, []);
 
   // Function to update a play
-  const updatePlay = useCallback(async (playId: string, updates: Partial<DatabasePlay>) => {
-    try {
-      const { data, error } = await supabase
-        .from("plays")
-        .update(updates)
-        .eq("id", playId)
-        .select()
-        .single();
+  const updatePlay = useCallback(
+    async (playId: string, updates: Partial<DatabasePlay>) => {
+      try {
+        const { data, error } = await supabase
+          .from("plays")
+          .update(updates)
+          .eq("id", playId)
+          .select()
+          .single();
 
-      if (error) {
-        console.error("Error updating play:", error);
-        throw new Error(`Failed to update play: ${error.message}`);
+        if (error) {
+          console.error("Error updating play:", error);
+          throw new Error(`Failed to update play: ${error.message}`);
+        }
+
+        // Update local state
+        setPlays((prevPlays) =>
+          prevPlays.map((play) =>
+            play.id === playId ? { ...play, ...updates } : play
+          )
+        );
+
+        return data;
+      } catch (err) {
+        console.error("Error in updatePlay:", err);
+        throw err;
       }
-
-      // Update local state
-      setPlays((prevPlays) =>
-        prevPlays.map((play) =>
-          play.id === playId ? { ...play, ...updates } : play
-        )
-      );
-
-      return data;
-    } catch (err) {
-      console.error("Error in updatePlay:", err);
-      throw err;
-    }
-  }, []);
+    },
+    []
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -138,7 +141,10 @@ export function useTeamsData() {
             .order("created_at", { ascending: false });
 
           if (playbooksError) {
-            console.warn("Playbooks table not available:", playbooksError.message);
+            console.warn(
+              "Playbooks table not available:",
+              playbooksError.message
+            );
             // Continue without playbooks data
           } else {
             playbooksData = data || [];

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 export interface AccessibilityContextType {
   announceMessage: (message: string, priority?: "POLITE" | "ASSERTIVE") => void;

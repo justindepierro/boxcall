@@ -6,10 +6,16 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Debug logging
-console.log('🔧 Supabase module loading...');
-console.log('🔧 VITE_SUPABASE_URL:', supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : 'MISSING');
-console.log('🔧 VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'PRESENT' : 'MISSING');
-console.log('🔧 import.meta.env.DEV:', import.meta.env.DEV);
+console.log("🔧 Supabase module loading...");
+console.log(
+  "🔧 VITE_SUPABASE_URL:",
+  supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : "MISSING"
+);
+console.log(
+  "🔧 VITE_SUPABASE_ANON_KEY:",
+  supabaseAnonKey ? "PRESENT" : "MISSING"
+);
+console.log("🔧 import.meta.env.DEV:", import.meta.env.DEV);
 
 function createDevStub(): SupabaseClient<Database> {
   // Minimal stub to allow app startup without Supabase env in development.
@@ -58,7 +64,7 @@ let supabaseClient: SupabaseClient<Database>;
 
 if (supabaseUrl && supabaseAnonKey) {
   // Use only anon key for client-side operations - NEVER expose service role key
-  console.log('✅ Creating real Supabase client');
+  console.log("✅ Creating real Supabase client");
   supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
@@ -67,11 +73,11 @@ if (supabaseUrl && supabaseAnonKey) {
     },
   });
 } else if (import.meta.env.DEV) {
-  console.log('⚠️ Using Supabase dev stub - environment variables missing');
+  console.log("⚠️ Using Supabase dev stub - environment variables missing");
   supabaseClient = createDevStub();
 } else {
   // In non-dev environments, fail fast if env is missing
-  console.log('❌ Missing Supabase environment variables in production');
+  console.log("❌ Missing Supabase environment variables in production");
   throw new Error("Missing Supabase environment variables");
 }
 

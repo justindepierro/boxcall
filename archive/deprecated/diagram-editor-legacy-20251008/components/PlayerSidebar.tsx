@@ -26,9 +26,15 @@ export const PlayerSidebar: React.FC = () => {
     : 0;
   return (
     <div data-testid="player-sidebar-root">
-      <div className="text-xsssssssssssssssssss text-text-secondary">Complexity: {complexity}</div>
-      <div className="text-xsssssssssssssssssss text-text-secondary">Players: {playersLength}</div>
-      <div className="text-xsssssssssssssssssss text-text-secondary">Routes: {routesLength}</div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">
+        Complexity: {complexity}
+      </div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">
+        Players: {playersLength}
+      </div>
+      <div className="text-xsssssssssssssssssss text-text-secondary">
+        Routes: {routesLength}
+      </div>
       {playersLength > 0 && (
         <div>
           <div className="text-xs font-semibold text-text-xssssssssssssssssssrimary mt-3 mb-1 flex items-center justify-between">
@@ -342,7 +348,9 @@ export const PlayerSidebar: React.FC = () => {
                             className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                             value={
                               gp.color ||
-                              (gp.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
+                              (gp.side === "D"
+                                ? colorTokens.red[700]
+                                : colorTokens.blue[900])
                             }
                             onChange={(e) =>
                               dispatch({
@@ -596,7 +604,10 @@ export const PlayerSidebar: React.FC = () => {
                           type="color"
                           className="h-6 w-6 p-0 border border-subtle rounded-lg cursor-pointer"
                           value={
-                            p.color || (p.side === "D" ? colorTokens.red[700] : colorTokens.blue[900])
+                            p.color ||
+                            (p.side === "D"
+                              ? colorTokens.red[700]
+                              : colorTokens.blue[900])
                           }
                           onChange={(e) =>
                             dispatch({

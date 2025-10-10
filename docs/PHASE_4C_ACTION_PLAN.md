@@ -14,6 +14,7 @@
 Based on build output analysis, the main bundle contains:
 
 **Large Components/Pages Still in Main:**
+
 - Core application code: ~150 KB
 - Layout components (AppHeader, Navigation): ~100 KB
 - Core UI components: ~100 KB
@@ -56,6 +57,7 @@ Based on build output analysis, the main bundle contains:
 **Target:** Defer modal loading until user interaction
 
 **Implementation Strategy:**
+
 1. Create LazyModal wrapper component
 2. Identify heavy modals:
    - `PracticePDFExportDialog` (22.54 KB) ⭐ HIGH PRIORITY
@@ -67,11 +69,13 @@ Based on build output analysis, the main bundle contains:
 4. Show skeleton/spinner while loading
 
 **Expected Impact:**
+
 - Remove ~40-50 KB from main bundle
 - Modals load in <200ms when opened
 - Most users never open all modals
 
 **Files to Modify:**
+
 - Create: `src/components/lazy/LazyModal.tsx`
 - Modify: Pages that use modals
 - Test: Modal opening functionality
@@ -83,18 +87,20 @@ Based on build output analysis, the main bundle contains:
 **Target:** Bundle services with related pages, lazy load rarely-used services
 
 **Implementation Strategy:**
+
 1. Analyze service usage patterns
 2. Group services by feature area:
+
    ```typescript
    // Instead of importing all services via barrel
    // Import directly from service files
-   
+
    // BEFORE (pulls entire service layer)
-   import { rosterService, practiceService } from '@services';
-   
+   import { rosterService, practiceService } from "@services";
+
    // AFTER (tree-shakeable)
-   import { rosterService } from '@services/rosterService';
-   import { practiceService } from '@services/practiceService';
+   import { rosterService } from "@services/rosterService";
+   import { practiceService } from "@services/practiceService";
    ```
 
 3. Move heavy services to lazy-loaded pages:
@@ -106,11 +112,13 @@ Based on build output analysis, the main bundle contains:
 5. Consider lazy service loader pattern
 
 **Expected Impact:**
+
 - Remove ~15-25 KB from main bundle
 - Services load with pages that use them
 - Better code splitting by feature
 
 **Files to Modify:**
+
 - `src/services/index.ts` (barrel file)
 - Import statements across app
 - Service usage in components
@@ -124,23 +132,21 @@ Based on build output analysis, the main bundle contains:
 **Implementation Strategy:**
 
 1. **Audit Barrel Exports:**
+
    ```typescript
    // PROBLEM: export * pulls everything
-   export * from './services';
-   export * from './utils';
-   
+   export * from "./services";
+   export * from "./utils";
+
    // SOLUTION: Named exports only what's used
-   export { specificFunction1, specificFunction2 } from './utils';
+   export { specificFunction1, specificFunction2 } from "./utils";
    ```
 
 2. **Configure sideEffects in package.json:**
+
    ```json
    {
-     "sideEffects": [
-       "*.css",
-       "*.scss",
-       "./src/telemetry/**/*"
-     ]
+     "sideEffects": ["*.css", "*.scss", "./src/telemetry/**/*"]
    }
    ```
 
@@ -158,11 +164,13 @@ Based on build output analysis, the main bundle contains:
    - Remove unused imports
 
 **Expected Impact:**
+
 - Remove ~10-15 KB dead code
 - Better minification
 - Faster parse/compile time
 
 **Files to Modify:**
+
 - `package.json` (sideEffects)
 - `src/utils/index.ts` (barrel exports)
 - `src/services/index.ts` (barrel exports)
@@ -197,11 +205,13 @@ Based on build output analysis, the main bundle contains:
    - Ensure they're not pulling heavy dependencies
 
 **Expected Impact:**
+
 - Remove ~5-10 KB from main bundle
 - Better component splitting
 - Lighter core components
 
 **Files to Modify:**
+
 - `src/components/ui/UserAvatar.tsx`
 - `src/components/layout/PageLayout.tsx`
 - Component imports in Layout
@@ -212,36 +222,39 @@ Based on build output analysis, the main bundle contains:
 
 ### Projected Bundle Sizes
 
-| Optimization | Current | After | Reduction |
-|-------------|---------|-------|-----------|
-| **Baseline** | 415.68 KB | - | - |
-| + Task 1 (Modals) | - | ~385 KB | -30 KB |
-| + Task 2 (Services) | - | ~365 KB | -20 KB |
-| + Task 3 (Tree-shaking) | - | ~352 KB | -13 KB |
-| + Task 4 (Components) | - | ~345 KB | -7 KB |
-| **Final Target** | 415.68 KB | **~345 KB** | **-70 KB (-17%)** |
+| Optimization            | Current   | After       | Reduction         |
+| ----------------------- | --------- | ----------- | ----------------- |
+| **Baseline**            | 415.68 KB | -           | -                 |
+| + Task 1 (Modals)       | -         | ~385 KB     | -30 KB            |
+| + Task 2 (Services)     | -         | ~365 KB     | -20 KB            |
+| + Task 3 (Tree-shaking) | -         | ~352 KB     | -13 KB            |
+| + Task 4 (Components)   | -         | ~345 KB     | -7 KB             |
+| **Final Target**        | 415.68 KB | **~345 KB** | **-70 KB (-17%)** |
 
 ### Cumulative Phase 4 Impact
 
-| Phase | Reduction | Final Size |
-|-------|-----------|------------|
-| Baseline (start of Phase 4) | - | 611 KB |
-| Phase 4A (manual chunks) | -146 KB | 465 KB |
-| Phase 4B (GlobalSearch lazy) | -49 KB | 416 KB |
-| **Phase 4C (advanced)** | **-70 KB** | **~346 KB** |
-| **Total Phase 4** | **-265 KB (-43%)** | **~346 KB** 🎯 |
+| Phase                        | Reduction          | Final Size     |
+| ---------------------------- | ------------------ | -------------- |
+| Baseline (start of Phase 4)  | -                  | 611 KB         |
+| Phase 4A (manual chunks)     | -146 KB            | 465 KB         |
+| Phase 4B (GlobalSearch lazy) | -49 KB             | 416 KB         |
+| **Phase 4C (advanced)**      | **-70 KB**         | **~346 KB**    |
+| **Total Phase 4**            | **-265 KB (-43%)** | **~346 KB** 🎯 |
 
 ### Performance Impact
 
 **Load Time on 3G:**
+
 - Current: ~3.2s
 - After 4C: **~2.7s** (-0.5s / -16%)
 
 **Gzipped Size:**
+
 - Current: 126 KB
 - After 4C: **~105 KB** (-21 KB / -17%)
 
 **Time to Interactive:**
+
 - Current: ~3.2s
 - After 4C: **~2.6s** (-0.6s / -19%)
 
@@ -250,15 +263,18 @@ Based on build output analysis, the main bundle contains:
 ## ⚠️ Risks and Considerations
 
 ### Low Risk
+
 - ✅ Lazy loading modals (proven pattern)
 - ✅ Tree-shaking configuration (reversible)
 - ✅ Service barrel optimizations (refactor only)
 
 ### Medium Risk
+
 - ⚠️ Service layer restructuring (widespread changes)
 - ⚠️ Component splitting (may affect UX if not careful)
 
 ### Mitigation Strategies
+
 1. Test after each task (don't batch commits)
 2. Verify all tests passing after each change
 3. Check bundle size progressively
@@ -272,16 +288,19 @@ Based on build output analysis, the main bundle contains:
 ### After Each Task:
 
 1. **Build verification:**
+
    ```bash
    npm run build
    ```
 
 2. **Test suite:**
+
    ```bash
    npm run test
    ```
 
 3. **Type checking:**
+
    ```bash
    npm run type-check
    ```
@@ -302,6 +321,7 @@ Based on build output analysis, the main bundle contains:
 ## 📋 Success Criteria
 
 ### Mandatory (Phase 4C ships if met)
+
 - ✅ Main bundle < 370 KB (at least 45 KB reduction)
 - ✅ All 316 tests passing
 - ✅ No breaking changes
@@ -309,6 +329,7 @@ Based on build output analysis, the main bundle contains:
 - ✅ Proper error boundaries for lazy components
 
 ### Stretch Goals (nice to have)
+
 - 🎯 Main bundle < 350 KB (65 KB+ reduction)
 - 🎯 Gzipped < 110 KB
 - 🎯 Load time < 2.5s on 3G
@@ -319,15 +340,15 @@ Based on build output analysis, the main bundle contains:
 
 ## 📅 Estimated Timeline
 
-| Task | Estimated Time | Priority |
-|------|---------------|----------|
-| Task 1: Lazy Modals | 45 min | HIGH ⭐ |
-| Task 2: Service Layer | 60 min | HIGH ⭐ |
-| Task 3: Tree-shaking | 30 min | MEDIUM |
-| Task 4: Components | 30 min | LOW |
-| Testing & Verification | 30 min | HIGH ⭐ |
-| Documentation | 30 min | HIGH ⭐ |
-| **Total** | **~3.5 hours** | - |
+| Task                   | Estimated Time | Priority |
+| ---------------------- | -------------- | -------- |
+| Task 1: Lazy Modals    | 45 min         | HIGH ⭐  |
+| Task 2: Service Layer  | 60 min         | HIGH ⭐  |
+| Task 3: Tree-shaking   | 30 min         | MEDIUM   |
+| Task 4: Components     | 30 min         | LOW      |
+| Testing & Verification | 30 min         | HIGH ⭐  |
+| Documentation          | 30 min         | HIGH ⭐  |
+| **Total**              | **~3.5 hours** | -        |
 
 ---
 
@@ -335,6 +356,6 @@ Based on build output analysis, the main bundle contains:
 
 **Starting Point:** 415.68 KB (126.34 KB gzipped)  
 **Target:** ~345 KB (~105 KB gzipped)  
-**Strategy:** Lazy modals → Service optimization → Tree-shaking → Components  
+**Strategy:** Lazy modals → Service optimization → Tree-shaking → Components
 
 **First Task:** Lazy load PracticePDFExportDialog (22.54 KB) and PlaybookSettingsModal (13.89 KB) - highest impact! 🚀

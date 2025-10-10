@@ -16,6 +16,7 @@ This document details the UI enhancements added to the Smart Defense System, bui
 **Purpose**: Automatically detect when the offensive formation changes and prompt the user to adjust defensive coverage.
 
 **Implementation**:
+
 - **Location**: `PlayerControls.tsx` (lines 182-226)
 - **State Management**:
   - `previousFormationType`: Tracks the last analyzed formation type
@@ -23,6 +24,7 @@ This document details the UI enhancements added to the Smart Defense System, bui
   - `showFormationChangePrompt`: Controls the visibility of the change prompt
 
 **Behavior**:
+
 1. **Watches** `formationAnalysis` changes via useEffect
 2. **Detects** when formation type changes (e.g., `2x2` → `3x1`)
 3. **Two Modes**:
@@ -30,6 +32,7 @@ This document details the UI enhancements added to the Smart Defense System, bui
    - **Manual Mode** (toggle OFF): Shows prompt with "Yes, Adjust" / "No, Keep As-Is" buttons
 
 **User Experience**:
+
 ```
 Offense changes from 2x2 to 3x1
   ├─ Auto mode: Coverage auto-adjusts + "Formation changed to 3X1 - Auto-adjusting defense..." toast
@@ -37,11 +40,15 @@ Offense changes from 2x2 to 3x1
 ```
 
 **Code**:
+
 ```typescript
 React.useEffect(() => {
   if (formationAnalysis.type !== previousFormationType) {
     if (autoAdjustEnabled) {
-      toast.info(`Formation changed to ${formationAnalysis.type}`, "Auto-adjusting defense...");
+      toast.info(
+        `Formation changed to ${formationAnalysis.type}`,
+        "Auto-adjusting defense..."
+      );
       handleAutoAdjustCoverage();
     } else {
       setShowFormationChangePrompt(true);
@@ -58,11 +65,13 @@ React.useEffect(() => {
 **Purpose**: Allow users to enable/disable automatic coverage adjustments on formation changes.
 
 **Implementation**:
+
 - **Location**: `PlayerControls.tsx` (lines ~1485-1511)
 - **UI Component**: iOS-style toggle switch
 - **State**: `autoAdjustEnabled` (boolean)
 
 **Visual Design**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ Auto-Adjust on Formation Change ℹ️        [⚪️] │  ← OFF
@@ -72,6 +81,7 @@ React.useEffect(() => {
 ```
 
 **Accessibility**:
+
 - Tooltip: "Automatically adjust defense when offense changes formation"
 - Visual feedback: Primary blue when enabled, tertiary gray when disabled
 - Smooth toggle animation via CSS `transition-transform`
@@ -83,6 +93,7 @@ React.useEffect(() => {
 **Purpose**: Provide a clear, actionable prompt when formation changes (manual mode only).
 
 **Implementation**:
+
 - **Location**: `PlayerControls.tsx` (lines ~1513-1541)
 - **Conditional Rendering**: Only shows when:
   - `showFormationChangePrompt === true`
@@ -90,6 +101,7 @@ React.useEffect(() => {
   - User has NOT enabled auto-adjust
 
 **Visual Design**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ ⚠️ Formation Changed to 3X1                      │
@@ -101,11 +113,13 @@ React.useEffect(() => {
 ```
 
 **Colors**:
+
 - Border: `border-warning-600/30` (orange)
 - Background: `bg-warning-600/10` (light orange)
 - Title: `text-warning-400` (bright orange)
 
 **Actions**:
+
 - **Yes, Adjust**: Calls `handleAutoAdjustCoverage()` + closes prompt
 - **No, Keep As-Is**: Simply closes prompt, no changes
 
@@ -116,6 +130,7 @@ React.useEffect(() => {
 **Purpose**: Provide quick access to common coverage schemes (auto-adjust + future manual presets).
 
 **Implementation**:
+
 - **Location**: `PlayerControls.tsx` (lines ~1320-1398)
 - **State Management**:
   - `isCoverageDropdownOpen`: Controls dropdown visibility
@@ -123,10 +138,12 @@ React.useEffect(() => {
 
 **Conditional Rendering**:
 Only appears when:
+
 - `formationAnalysis` exists (offense on field)
 - Defensive players exist on field
 
 **Menu Options**:
+
 ```
 📋 Coverage Presets
   ├─ Cover 2                    (Coming soon!)
@@ -137,11 +154,13 @@ Only appears when:
 ```
 
 **Current Behavior**:
+
 - **Cover 2/3/4/6**: Show "Coming soon!" toast notification
 - **Auto-Adjust**: Calls `handleAutoAdjustCoverage()` and closes dropdown
 
 **Future Enhancements**:
 Each preset will:
+
 1. Position safeties according to coverage rules
 2. Set corner/nickel assignments
 3. Adjust LB depths
@@ -154,12 +173,14 @@ Each preset will:
 **Purpose**: Enhanced button with better UX and accessibility.
 
 **Implementation**:
+
 - **Location**: `PlayerControls.tsx` (lines ~1543-1568)
 - **State**: `isAdjusting` (shows loading state)
 
 **Visual States**:
 
 **Default State**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │          🛡️ Auto-Adjust Coverage                │
@@ -167,6 +188,7 @@ Each preset will:
 ```
 
 **Loading State**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │         🔄 Adjusting Coverage...                │
@@ -174,6 +196,7 @@ Each preset will:
 ```
 
 **Button Features**:
+
 - **Tooltip**: "Automatically adjust defensive coverage based on offensive formation"
 - **Disabled State**: `cursor-wait` + 50% opacity during adjustments
 - **Active Animation**: `active:scale-[0.98]` for tactile feedback
@@ -181,6 +204,7 @@ Each preset will:
 
 **Conditional Rendering**:
 Only appears when:
+
 - Formation analysis exists
 - Defensive players are on field
 
@@ -188,32 +212,35 @@ Only appears when:
 
 ## 📊 Feature Comparison
 
-| Feature | Before | After |
-|---------|--------|-------|
-| **Formation Change Detection** | ❌ None | ✅ Real-time detection with prompt |
-| **Auto-Adjust Mode** | ❌ None | ✅ Toggle switch for automatic adjustments |
-| **Coverage Presets** | ❌ Only auto-adjust | ✅ Dropdown with future preset options |
-| **User Feedback** | ❌ Browser alerts | ✅ Professional toast notifications |
-| **Loading States** | ❌ No indication | ✅ Spinner + disabled state |
-| **Accessibility** | ⚠️ Basic | ✅ Tooltips, ARIA labels, keyboard support |
+| Feature                        | Before              | After                                      |
+| ------------------------------ | ------------------- | ------------------------------------------ |
+| **Formation Change Detection** | ❌ None             | ✅ Real-time detection with prompt         |
+| **Auto-Adjust Mode**           | ❌ None             | ✅ Toggle switch for automatic adjustments |
+| **Coverage Presets**           | ❌ Only auto-adjust | ✅ Dropdown with future preset options     |
+| **User Feedback**              | ❌ Browser alerts   | ✅ Professional toast notifications        |
+| **Loading States**             | ❌ No indication    | ✅ Spinner + disabled state                |
+| **Accessibility**              | ⚠️ Basic            | ✅ Tooltips, ARIA labels, keyboard support |
 
 ---
 
 ## 🎨 UI/UX Design Principles
 
 ### Visual Hierarchy
+
 1. **Primary Action**: Auto-Adjust Coverage button (primary blue)
 2. **Secondary Action**: Coverage Presets dropdown (primary blue, less prominent)
 3. **Configuration**: Auto-adjust toggle (subtle, in formation analysis section)
 4. **Feedback**: Formation change prompt (warning orange, only when needed)
 
 ### Color Coding
+
 - **Primary Blue** (`bg-primary-600`): Main actions, enabled states
 - **Warning Orange** (`bg-warning-600`): Formation change alerts
 - **Success Green** (`text-success-400`): Confirmation toasts
 - **Error Red** (`text-error-400`): Error toasts
 
 ### Interaction Patterns
+
 - **Toggle Switch**: iOS-style, visual state feedback
 - **Dropdowns**: Consistent design with formation/defense dropdowns
 - **Buttons**: Hover, active, and disabled states clearly distinguished
@@ -224,6 +251,7 @@ Only appears when:
 ## 🧪 Testing Guide
 
 ### Test Scenario 1: Auto-Adjust Toggle (OFF)
+
 1. Open Diagram Editor
 2. Add Spread 2x2 offensive formation
 3. Add Nickel 4-2-5 defensive formation
@@ -234,6 +262,7 @@ Only appears when:
 8. **Expected**: Toast shows "Coverage adjusted: X players adjusted"
 
 ### Test Scenario 2: Auto-Adjust Toggle (ON)
+
 1. Follow steps 1-3 from Scenario 1
 2. **Enable** auto-adjust toggle (blue background)
 3. Change offense to Spread 3x1
@@ -241,6 +270,7 @@ Only appears when:
 5. **Expected**: Players move to new positions immediately
 
 ### Test Scenario 3: Coverage Presets Dropdown
+
 1. Add offense + defense formations
 2. Click "📋 Coverage Presets"
 3. **Expected**: Dropdown opens with 5 options
@@ -250,6 +280,7 @@ Only appears when:
 7. **Expected**: Coverage adjusts + success toast
 
 ### Test Scenario 4: Button Loading State
+
 1. Add formations
 2. Click "Auto-Adjust Coverage"
 3. **Expected**: Button shows spinner + "Adjusting Coverage..."
@@ -257,6 +288,7 @@ Only appears when:
 5. **Expected**: After completion, button returns to normal state
 
 ### Test Scenario 5: Formation Change Prompt (Dismiss)
+
 1. Auto-adjust toggle OFF
 2. Add formations
 3. Change offensive formation
@@ -270,19 +302,25 @@ Only appears when:
 ## 🔧 Technical Implementation Details
 
 ### State Management
+
 ```typescript
 // Coverage adjustment state
 const [isAdjusting, setIsAdjusting] = React.useState(false);
 const [autoAdjustEnabled, setAutoAdjustEnabled] = React.useState(false);
-const [showFormationChangePrompt, setShowFormationChangePrompt] = React.useState(false);
-const [previousFormationType, setPreviousFormationType] = React.useState<string | null>(null);
+const [showFormationChangePrompt, setShowFormationChangePrompt] =
+  React.useState(false);
+const [previousFormationType, setPreviousFormationType] = React.useState<
+  string | null
+>(null);
 
 // Dropdown state
-const [isCoverageDropdownOpen, setIsCoverageDropdownOpen] = React.useState(false);
+const [isCoverageDropdownOpen, setIsCoverageDropdownOpen] =
+  React.useState(false);
 const coverageDropdownRef = React.useRef<HTMLDivElement>(null);
 ```
 
 ### Hook Dependencies
+
 ```typescript
 const handleAutoAdjustCoverage = React.useCallback(async () => {
   // ... coverage adjustment logic
@@ -290,18 +328,29 @@ const handleAutoAdjustCoverage = React.useCallback(async () => {
 
 React.useEffect(() => {
   // ... formation change watcher
-}, [formationAnalysis, previousFormationType, players, autoAdjustEnabled, toast, handleAutoAdjustCoverage]);
+}, [
+  formationAnalysis,
+  previousFormationType,
+  players,
+  autoAdjustEnabled,
+  toast,
+  handleAutoAdjustCoverage,
+]);
 ```
 
 ### Click-Outside Detection
+
 ```typescript
 React.useEffect(() => {
   const handleClickOutside = (event: MouseEvent) => {
-    if (coverageDropdownRef.current && !coverageDropdownRef.current.contains(event.target as Node)) {
+    if (
+      coverageDropdownRef.current &&
+      !coverageDropdownRef.current.contains(event.target as Node)
+    ) {
       setIsCoverageDropdownOpen(false);
     }
   };
-  
+
   if (isCoverageDropdownOpen) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -314,9 +363,11 @@ React.useEffect(() => {
 ## 🚀 Future Enhancements
 
 ### Phase 4: Coverage Preset Implementation
+
 **Goal**: Implement actual coverage schemes for manual selection
 
 **Presets to Implement**:
+
 1. **Cover 2** (2-deep, 5-underneath)
    - Safeties: Split field in halves
    - Corners: Hard flat zones
@@ -340,6 +391,7 @@ React.useEffect(() => {
    - Hybrid coverage
 
 **Implementation Plan**:
+
 - Create `coverageSchemes.ts` with preset definitions
 - Add `applyCoveragePreset()` function to coverage engine
 - Update dropdown handlers to call preset functions
@@ -347,9 +399,11 @@ React.useEffect(() => {
 - Add preset customization options
 
 ### Phase 5: Player Movement Animations
+
 **Goal**: Smooth animations during coverage adjustments
 
 **Approach**:
+
 - Install PIXI.js tweening library (`@pixi/tween` or similar)
 - Add `animatePlayer()` method to `PlayerSprite`
 - Update `handleAutoAdjustCoverage` to use animated updates
@@ -357,34 +411,54 @@ React.useEffect(() => {
 - Sequential animations (stagger player movements)
 
 **Example**:
+
 ```typescript
 // Instead of instant update
 app.playersLayer.updatePlayer(playerId, { x: newX, y: newY });
 
 // Animated update
-app.playersLayer.animatePlayer(playerId, { x: newX, y: newY }, {
-  duration: 400,
-  easing: 'easeOutQuad',
-  delay: index * 50 // Stagger effect
-});
+app.playersLayer.animatePlayer(
+  playerId,
+  { x: newX, y: newY },
+  {
+    duration: 400,
+    easing: "easeOutQuad",
+    delay: index * 50, // Stagger effect
+  }
+);
 ```
 
 ### Phase 6: Integration Tests
+
 **Goal**: Automated test coverage for all features
 
 **Test Suite**:
+
 ```typescript
-describe('Smart Defense System - Enhancements', () => {
-  it('detects formation changes', () => { /* ... */ });
-  it('prompts user when auto-adjust is off', () => { /* ... */ });
-  it('auto-adjusts when toggle is on', () => { /* ... */ });
-  it('applies coverage presets correctly', () => { /* ... */ });
-  it('shows loading state during adjustments', () => { /* ... */ });
-  it('handles errors gracefully', () => { /* ... */ });
+describe("Smart Defense System - Enhancements", () => {
+  it("detects formation changes", () => {
+    /* ... */
+  });
+  it("prompts user when auto-adjust is off", () => {
+    /* ... */
+  });
+  it("auto-adjusts when toggle is on", () => {
+    /* ... */
+  });
+  it("applies coverage presets correctly", () => {
+    /* ... */
+  });
+  it("shows loading state during adjustments", () => {
+    /* ... */
+  });
+  it("handles errors gracefully", () => {
+    /* ... */
+  });
 });
 ```
 
 **Tools**:
+
 - Vitest for unit tests
 - React Testing Library for component tests
 - Mock PIXI.js app and layers
@@ -394,23 +468,24 @@ describe('Smart Defense System - Enhancements', () => {
 
 ## 📝 Code Locations
 
-| Feature | File | Lines | Description |
-|---------|------|-------|-------------|
-| Import useToast | `PlayerControls.tsx` | 21 | Hook for toast notifications |
-| State declarations | `PlayerControls.tsx` | 79-88 | All coverage-related state |
-| handleAutoAdjustCoverage | `PlayerControls.tsx` | 117-181 | Main coverage adjustment function |
-| Formation change watcher | `PlayerControls.tsx` | 183-226 | useEffect for detecting changes |
-| Dropdown click-outside | `PlayerControls.tsx` | 234-268 | Close dropdowns on outside click |
-| Coverage Presets dropdown | `PlayerControls.tsx` | 1320-1398 | UI for preset selection |
-| Auto-adjust toggle | `PlayerControls.tsx` | 1485-1511 | Toggle switch UI |
-| Formation change prompt | `PlayerControls.tsx` | 1513-1541 | Warning prompt UI |
-| Auto-adjust button | `PlayerControls.tsx` | 1543-1568 | Main action button |
+| Feature                   | File                 | Lines     | Description                       |
+| ------------------------- | -------------------- | --------- | --------------------------------- |
+| Import useToast           | `PlayerControls.tsx` | 21        | Hook for toast notifications      |
+| State declarations        | `PlayerControls.tsx` | 79-88     | All coverage-related state        |
+| handleAutoAdjustCoverage  | `PlayerControls.tsx` | 117-181   | Main coverage adjustment function |
+| Formation change watcher  | `PlayerControls.tsx` | 183-226   | useEffect for detecting changes   |
+| Dropdown click-outside    | `PlayerControls.tsx` | 234-268   | Close dropdowns on outside click  |
+| Coverage Presets dropdown | `PlayerControls.tsx` | 1320-1398 | UI for preset selection           |
+| Auto-adjust toggle        | `PlayerControls.tsx` | 1485-1511 | Toggle switch UI                  |
+| Formation change prompt   | `PlayerControls.tsx` | 1513-1541 | Warning prompt UI                 |
+| Auto-adjust button        | `PlayerControls.tsx` | 1543-1568 | Main action button                |
 
 ---
 
 ## 🎉 Summary
 
 **What We Built**:
+
 1. ✅ Real-time formation change detection
 2. ✅ Auto-adjust toggle for automation
 3. ✅ Formation change prompt for manual control
@@ -420,6 +495,7 @@ describe('Smart Defense System - Enhancements', () => {
 7. ✅ Improved accessibility and UX
 
 **User Benefits**:
+
 - 🚀 **Faster workflow**: Auto-adjust saves clicks
 - 🎯 **More control**: Choose between auto/manual modes
 - 📊 **Better feedback**: Know what's happening at all times
@@ -427,6 +503,7 @@ describe('Smart Defense System - Enhancements', () => {
 - ♿ **Accessible**: Tooltips, keyboard support, screen reader friendly
 
 **Technical Quality**:
+
 - ✅ TypeScript strict mode compliant
 - ✅ React best practices (useCallback, useEffect dependencies)
 - ✅ Proper state management
@@ -434,6 +511,7 @@ describe('Smart Defense System - Enhancements', () => {
 - ✅ No lint warnings
 
 **Next Steps**:
+
 1. Implement coverage presets (Cover 2, 3, 4, 6)
 2. Add player movement animations
 3. Write integration tests
@@ -447,16 +525,20 @@ describe('Smart Defense System - Enhancements', () => {
 _(Add screenshots here after testing in browser)_
 
 **Formation Change Prompt**:
+
 - [ ] Screenshot of orange warning prompt
 
 **Auto-Adjust Toggle**:
+
 - [ ] Screenshot of toggle in OFF state
 - [ ] Screenshot of toggle in ON state
 
 **Coverage Presets Dropdown**:
+
 - [ ] Screenshot of dropdown menu open
 
 **Loading State**:
+
 - [ ] Screenshot of button during adjustment
 
 ---

@@ -108,8 +108,7 @@ export function createDiagramUpdates(
 
   if (options?.playType) updates.p_type = options.playType;
   if (options?.personnel !== undefined) updates.personnel = options.personnel;
-  if (options?.prefFront !== undefined)
-    updates.pref_front = options.prefFront;
+  if (options?.prefFront !== undefined) updates.pref_front = options.prefFront;
 
   return updates;
 }

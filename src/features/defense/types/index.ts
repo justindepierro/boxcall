@@ -1,6 +1,6 @@
 /**
  * Defense Types Barrel Export
- * 
+ *
  * Central export point for all defense-related types and interfaces.
  */
 
@@ -13,7 +13,7 @@ export type {
   TightEndPosition,
   TightEndAnalysis,
   FormationAnalysis,
-} from './formationTypes';
+} from "./formationTypes";
 
 // Scheme types
 export type {
@@ -27,4 +27,4 @@ export type {
   FieldBoundaryInfo,
   CoverageAdjustment,
   FrontAdjustment,
-} from './schemeTypes';
+} from "./schemeTypes";

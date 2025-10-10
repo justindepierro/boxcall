@@ -120,7 +120,9 @@ export const getNavigationItems = (
     id: "calendar",
     label: "Calendar",
     icon: "calendar",
-    href: resolvedTeamId ? teamRoutes.calendar(resolvedTeamId) : ROUTES.CALENDAR,
+    href: resolvedTeamId
+      ? teamRoutes.calendar(resolvedTeamId)
+      : ROUTES.CALENDAR,
     description: "Personal and team calendars",
   });
   // Planner - Available to everyone

@@ -1,16 +1,19 @@
 /**
  * Nickel 4-2-5 Defensive Scheme
- * 
+ *
  * Base defense vs spread offenses:
  * - 4 Defensive Linemen (2 DEs, 2 DTs)
  * - 2 Linebackers
  * - 5 Defensive Backs (2 CBs, 1 NCB, 2 Safeties)
- * 
+ *
  * Personnel: 4 down linemen, 2 inside linebackers, 5 DBs
  * Best vs: 2x2, 3x1, Empty spread formations
  */
 
-import type { Player, TeamSide } from "../../../components/playbook/diagram-editor/types/Player";
+import type {
+  Player,
+  TeamSide,
+} from "../../../components/playbook/diagram-editor/types/Player";
 
 /**
  * Nickel 4-2-5 defensive player position
@@ -18,13 +21,13 @@ import type { Player, TeamSide } from "../../../components/playbook/diagram-edit
 export interface DefensivePlayerPosition {
   /** X coordinate on field */
   x: number;
-  
+
   /** Y coordinate on field (LOS-relative) */
   y: number;
-  
+
   /** Position label (DE, DT, LB, CB, NCB, S) */
   jerseyNumber: string;
-  
+
   /** Team side (always "defense") */
   team: TeamSide;
 }
@@ -35,17 +38,17 @@ export interface DefensivePlayerPosition {
 export interface Nickel425Params {
   /** Center X position based on hash alignment */
   centerX: number;
-  
+
   /** Line of scrimmage Y coordinate */
   losY: number;
-  
+
   /** Field width (53.333 yards) */
   fieldWidth: number;
 }
 
 /**
  * Calculate center X position based on hash alignment
- * 
+ *
  * @param alignment - Hash alignment (left, middle, right)
  * @param fieldWidth - Width of field in yards (53.333)
  * @returns X coordinate for center of formation
@@ -70,7 +73,7 @@ export function getCenterXForAlignment(
 
 /**
  * Create Nickel 4-2-5 defensive formation
- * 
+ *
  * Formation details:
  * - DEs: 1 yard above LOS, outside shade of tackles
  * - DTs: 1 yard above LOS, shade away from NCB
@@ -78,7 +81,7 @@ export function getCenterXForAlignment(
  * - CBs: 6 yards above LOS, 1 yard inside outside WRs
  * - NCB: 5 yards above LOS, split between slot and tackle (RB side)
  * - Safeties: 10 yards above LOS, 1 yard inside slot receivers
- * 
+ *
  * @param params - Formation parameters (centerX, losY, fieldWidth)
  * @returns Array of defensive player positions
  */
@@ -176,7 +179,7 @@ export function createNickel425Formation(
 
 /**
  * Convert defensive positions to full Player objects with IDs
- * 
+ *
  * @param positions - Array of defensive player positions
  * @returns Array of Player objects ready to be added to the field
  */

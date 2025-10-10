@@ -1,15 +1,15 @@
 /**
  * Unified Achievement Service
- * 
+ *
  * Consolidates achievement management from:
  * - achievementService.ts (user-facing API)
  * - achievementTracker.ts (tracking & database operations)
- * 
+ *
  * Handles Xbox-style achievements, progress tracking, and badge/medal systems.
- * 
+ *
  * Phase 3B: Properly consolidated Achievement Services (2→1)
  * Previous consolidation corrupted (commit 55bea84) - this is the corrected version.
- * 
+ *
  * NOTE: achievement_definitions and achievement_progress tables don't exist in current schema.
  * Service gracefully degrades to empty achievements until tables are created.
  */
@@ -25,25 +25,31 @@ const ACHIEVEMENT_SYSTEM_ENABLED = false;
 
 // Achievement trigger types
 export type AchievementTrigger =
-  | 'play_created'
-  | 'post_sent'
-  | 'player_added'
-  | 'game_won'
-  | 'game_won_streak'
-  | 'points_milestone'
-  | 'achievements_earned';
+  | "play_created"
+  | "post_sent"
+  | "player_added"
+  | "game_won"
+  | "game_won_streak"
+  | "points_milestone"
+  | "achievements_earned";
 
 export interface AchievementDefinition {
   id: string;
   name: string;
   description: string;
   icon: string;
-  category: 'gameplay' | 'social' | 'teamwork' | 'leadership' | 'milestone' | 'special';
-  trigger_type: 'action_count' | 'streak' | 'milestone' | 'special';
+  category:
+    | "gameplay"
+    | "social"
+    | "teamwork"
+    | "leadership"
+    | "milestone"
+    | "special";
+  trigger_type: "action_count" | "streak" | "milestone" | "special";
   trigger_target: AchievementTrigger;
   trigger_count: number;
   points: number;
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
   is_active: boolean;
 }
 
@@ -92,7 +98,7 @@ export interface BoxCallMedal {
   progress?: number;
   maxProgress?: number;
   earnedDate?: string;
-  rarity?: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
   points?: number;
 }
 
@@ -113,7 +119,6 @@ export interface AchievementData {
  * Handles achievement progress, unlocking, and awarding
  */
 class AchievementTracker {
-
   /**
    * Track a user action and check for achievement unlocks
    */
@@ -130,16 +135,20 @@ class AchievementTracker {
 
       if (!player?.id) {
         return [];
-      }      // Get all active achievements that could be triggered by this action
+      } // Get all active achievements that could be triggered by this action
       // Note: achievement_definitions table doesn't exist yet in schema
-      const { data: relevantAchievements, error: definitionsError } = await supabase
-        .from('achievement_definitions')
-        .select('*')
-        .eq('is_active', true)
-        .eq('trigger_target', action);
+      const { data: relevantAchievements, error: definitionsError } =
+        await supabase
+          .from("achievement_definitions")
+          .select("*")
+          .eq("is_active", true)
+          .eq("trigger_target", action);
 
       if (definitionsError) {
-        console.warn('[Achievement] achievement_definitions table not available:', definitionsError.message);
+        console.warn(
+          "[Achievement] achievement_definitions table not available:",
+          definitionsError.message
+        );
         return []; // Gracefully return empty if table doesn't exist
       }
 
@@ -150,20 +159,25 @@ class AchievementTracker {
       const earnedAchievements: EarnedAchievement[] = [];
 
       for (const achievement of relevantAchievements) {
-        const earned = await this.checkAndAwardAchievement(player.id, achievement, additionalData);
+        const earned = await this.checkAndAwardAchievement(
+          player.id,
+          achievement,
+          additionalData
+        );
         if (earned) {
           earnedAchievements.push(earned);
         }
       }
 
       // Check milestone achievements
-      const milestoneAchievements = await this.checkMilestoneAchievements(player.id);
+      const milestoneAchievements = await this.checkMilestoneAchievements(
+        player.id
+      );
       earnedAchievements.push(...milestoneAchievements);
 
       return earnedAchievements;
-
     } catch (error) {
-      console.error('[Achievement] Error tracking action:', error);
+      console.error("[Achievement] Error tracking action:", error);
       return [];
     }
   }
@@ -179,21 +193,21 @@ class AchievementTracker {
     try {
       // Get or create progress record
       let { data: progress } = await supabase
-        .from('achievement_progress')
-        .select('*')
-        .eq('player_id', playerId)
-        .eq('achievement_id', achievement.id)
+        .from("achievement_progress")
+        .select("*")
+        .eq("player_id", playerId)
+        .eq("achievement_id", achievement.id)
         .single();
 
       if (!progress) {
         // Create new progress record
         const { data: newProgress, error } = await supabase
-          .from('achievement_progress')
+          .from("achievement_progress")
           .insert({
             player_id: playerId,
             achievement_id: achievement.id,
             current_count: 0,
-            is_completed: false
+            is_completed: false,
           })
           .select()
           .single();
@@ -210,14 +224,14 @@ class AchievementTracker {
       let newCount = progress.current_count;
 
       switch (achievement.trigger_type) {
-        case 'action_count':
+        case "action_count":
           newCount += 1;
           break;
-        case 'streak':
+        case "streak":
           // Handle streak logic (would need additional context)
           newCount = additionalData?.streakCount || 1;
           break;
-        case 'special':
+        case "special":
           // Special achievements handled separately
           return null;
       }
@@ -227,44 +241,45 @@ class AchievementTracker {
 
       // Update progress
       await supabase
-        .from('achievement_progress')
+        .from("achievement_progress")
         .update({
           current_count: newCount,
           is_completed: isComplete,
           completed_at: isComplete ? new Date().toISOString() : null,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', progress.id);
+        .eq("id", progress.id);
 
       if (isComplete) {
         // Award the achievement
         const { data: earnedAchievement, error } = await supabase
-          .from('achievements')
+          .from("achievements")
           .insert({
             player_id: playerId,
             definition_id: achievement.id,
             achievement_type: achievement.name,
             description: achievement.description,
-            earned_date: new Date().toISOString().split('T')[0],
-            points_earned: achievement.points
+            earned_date: new Date().toISOString().split("T")[0],
+            points_earned: achievement.points,
           })
           .select()
           .single();
 
         if (error) throw error;
 
-        console.log(`[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`);
+        console.log(
+          `[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`
+        );
 
         return {
           ...earnedAchievement,
-          definition: achievement
+          definition: achievement,
         };
       }
 
       return null;
-
     } catch (error) {
-      console.error('[Achievement] Error checking achievement:', error);
+      console.error("[Achievement] Error checking achievement:", error);
       return null;
     }
   }
@@ -272,24 +287,30 @@ class AchievementTracker {
   /**
    * Check milestone achievements (points, total achievements earned)
    */
-  private static async checkMilestoneAchievements(playerId: string): Promise<EarnedAchievement[]> {
+  private static async checkMilestoneAchievements(
+    playerId: string
+  ): Promise<EarnedAchievement[]> {
     const earned: EarnedAchievement[] = [];
 
     try {
       // Check total points milestone
       const { data: totalPoints } = await supabase
-        .from('achievements')
-        .select('points_earned')
-        .eq('player_id', playerId);
+        .from("achievements")
+        .select("points_earned")
+        .eq("player_id", playerId);
 
-      const pointsSum = totalPoints?.reduce((sum: number, a: any) => sum + (a.points_earned || 0), 0) || 0;
+      const pointsSum =
+        totalPoints?.reduce(
+          (sum: number, a: any) => sum + (a.points_earned || 0),
+          0
+        ) || 0;
 
       const pointsMilestones = [100, 250, 500, 1000];
       for (const milestone of pointsMilestones) {
         if (pointsSum >= milestone) {
           const earnedAchievement = await this.awardMilestoneAchievement(
             playerId,
-            'points_milestone',
+            "points_milestone",
             milestone,
             `Reach ${milestone} total achievement points`,
             milestone
@@ -306,7 +327,7 @@ class AchievementTracker {
         if (totalAchievements >= milestone) {
           const earnedAchievement = await this.awardMilestoneAchievement(
             playerId,
-            'achievements_earned',
+            "achievements_earned",
             milestone,
             `Earn ${milestone} different achievements`,
             milestone * 10
@@ -314,9 +335,8 @@ class AchievementTracker {
           if (earnedAchievement) earned.push(earnedAchievement);
         }
       }
-
     } catch (error) {
-      console.error('[Achievement] Error checking milestones:', error);
+      console.error("[Achievement] Error checking milestones:", error);
     }
 
     return earned;
@@ -335,22 +355,22 @@ class AchievementTracker {
     try {
       // Check if already earned
       const { data: existing } = await supabase
-        .from('achievements')
-        .select('id')
-        .eq('player_id', playerId)
-        .eq('achievement_type', `Milestone: ${triggerTarget} ${milestone}`);
+        .from("achievements")
+        .select("id")
+        .eq("player_id", playerId)
+        .eq("achievement_type", `Milestone: ${triggerTarget} ${milestone}`);
 
       if (existing?.length) return null;
 
       // Create the achievement
       const { data: earned, error } = await supabase
-        .from('achievements')
+        .from("achievements")
         .insert({
           player_id: playerId,
           achievement_type: `Milestone: ${triggerTarget} ${milestone}`,
           description,
-          earned_date: new Date().toISOString().split('T')[0],
-          points_earned: points
+          earned_date: new Date().toISOString().split("T")[0],
+          points_earned: points,
         })
         .select()
         .single();
@@ -358,9 +378,8 @@ class AchievementTracker {
       if (error) throw error;
 
       return earned;
-
     } catch (error) {
-      console.error('[Achievement] Error awarding milestone:', error);
+      console.error("[Achievement] Error awarding milestone:", error);
       return null;
     }
   }
@@ -381,13 +400,16 @@ class AchievementTracker {
 
       // Get player record from profiles table (since player_roster doesn't exist)
       const { data: player, error: playerError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', userId)
+        .from("profiles")
+        .select("id")
+        .eq("id", userId)
         .maybeSingle();
 
       if (playerError) {
-        console.warn('[Achievement] Error fetching player:', playerError.message);
+        console.warn(
+          "[Achievement] Error fetching player:",
+          playerError.message
+        );
         return { earned: [], progress: [], definitions: [] };
       }
 
@@ -397,13 +419,18 @@ class AchievementTracker {
 
       // Try to get earned achievements - handle if tables don't exist
       const { data: earned, error: earnedError } = await supabase
-        .from('achievements')
-        .select('*')
-        .eq('player_id', player.id);
+        .from("achievements")
+        .select("*")
+        .eq("player_id", player.id);
 
       if (earnedError) {
-        console.warn('[Achievement] achievement_definitions or achievement_progress tables may not exist:', earnedError.message);
-        console.info('[Achievement] Returning empty achievements - system not fully initialized');
+        console.warn(
+          "[Achievement] achievement_definitions or achievement_progress tables may not exist:",
+          earnedError.message
+        );
+        console.info(
+          "[Achievement] Returning empty achievements - system not fully initialized"
+        );
         return { earned: [], progress: [], definitions: [] };
       }
 
@@ -412,12 +439,11 @@ class AchievementTracker {
       // Return simple achievements only
       return {
         earned: earned || [],
-        progress: [],  // Table doesn't exist yet
-        definitions: []  // Table doesn't exist yet
+        progress: [], // Table doesn't exist yet
+        definitions: [], // Table doesn't exist yet
       };
-
     } catch (error) {
-      console.error('[Achievement] Error getting user achievements:', error);
+      console.error("[Achievement] Error getting user achievements:", error);
       return { earned: [], progress: [], definitions: [] };
     }
   }
@@ -425,19 +451,20 @@ class AchievementTracker {
   /**
    * Admin: Create a new achievement definition
    */
-  static async createAchievementDefinition(definition: Omit<AchievementDefinition, 'id'>): Promise<AchievementDefinition | null> {
+  static async createAchievementDefinition(
+    definition: Omit<AchievementDefinition, "id">
+  ): Promise<AchievementDefinition | null> {
     try {
       const { data, error } = await supabase
-        .from('achievement_definitions')
+        .from("achievement_definitions")
         .insert(definition)
         .select()
         .single();
 
       if (error) throw error;
       return data;
-
     } catch (error) {
-      console.error('[Achievement] Error creating definition:', error);
+      console.error("[Achievement] Error creating definition:", error);
       return null;
     }
   }
@@ -448,15 +475,14 @@ class AchievementTracker {
   static async getAllDefinitions(): Promise<AchievementDefinition[]> {
     try {
       const { data } = await supabase
-        .from('achievement_definitions')
-        .select('*')
-        .order('category', { ascending: true })
-        .order('rarity', { ascending: false });
+        .from("achievement_definitions")
+        .select("*")
+        .order("category", { ascending: true })
+        .order("rarity", { ascending: false });
 
       return data || [];
-
     } catch (error) {
-      console.error('[Achievement] Error getting definitions:', error);
+      console.error("[Achievement] Error getting definitions:", error);
       return [];
     }
   }
@@ -471,7 +497,6 @@ class AchievementTracker {
  * Xbox-style achievements for BoxCall
  */
 export class AchievementService {
-
   /**
    * Get all achievements for a user
    */
@@ -489,25 +514,28 @@ export class AchievementService {
       }
 
       // Get real achievements from the new system
-      const { earned, progress, definitions } = await AchievementTracker.getUserAchievements(userId);
+      const { earned, progress, definitions } =
+        await AchievementTracker.getUserAchievements(userId);
 
       // Convert to the expected format
       const boxcallMedals: BoxCallMedal[] = earned.map((achievement: any) => ({
         id: achievement.id,
         name: achievement.achievement_type,
-        icon: achievement.definition?.icon || 'trophy',
-        description: achievement.description || '',
+        icon: achievement.definition?.icon || "trophy",
+        description: achievement.description || "",
         earned: true,
         earnedDate: achievement.earned_date,
         rarity: achievement.definition?.rarity,
-        points: achievement.points_earned
+        points: achievement.points_earned,
       }));
 
       // Add in-progress achievements
       const inProgressMedals: BoxCallMedal[] = progress
         .filter((p: any) => !p.is_completed && p.achievement_id)
         .map((p: any) => {
-          const definition = definitions.find((d: any) => d.id === p.achievement_id);
+          const definition = definitions.find(
+            (d: any) => d.id === p.achievement_id
+          );
           if (!definition) return null;
 
           return {
@@ -519,7 +547,7 @@ export class AchievementService {
             progress: p.current_count,
             maxProgress: definition.trigger_count,
             rarity: definition.rarity,
-            points: definition.points
+            points: definition.points,
           };
         })
         .filter(Boolean) as BoxCallMedal[];
@@ -528,16 +556,18 @@ export class AchievementService {
       const allMedals = [...boxcallMedals, ...inProgressMedals];
 
       // Calculate total points
-      const totalPoints = earned.reduce((sum: number, a: any) => sum + (a.points_earned || 0), 0);
+      const totalPoints = earned.reduce(
+        (sum: number, a: any) => sum + (a.points_earned || 0),
+        0
+      );
 
       return {
         helmetStickers: [], // Legacy - can be removed or repurposed
         boxcallMedals: allMedals,
         weeklyStreak: 0, // TODO: Implement streak tracking
         totalPoints,
-        recentAchievements: allMedals.slice(0, 5)
+        recentAchievements: allMedals.slice(0, 5),
       };
-
     } catch (error) {
       console.error("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
@@ -549,24 +579,29 @@ export class AchievementService {
    */
   static async trackAction(
     userId: string,
-    action: 'play_created' | 'post_sent' | 'player_added' | 'game_won' | 'game_won_streak',
+    action:
+      | "play_created"
+      | "post_sent"
+      | "player_added"
+      | "game_won"
+      | "game_won_streak",
     additionalData?: Record<string, any>
   ): Promise<EarnedAchievement[]> {
     // Achievement system not enabled until DB tables are created
     if (!ACHIEVEMENT_SYSTEM_ENABLED) {
       return [];
     }
-    
+
     // Create minimal player object for tracking
     const player: Player = {
       id: userId,
-      name: '',
+      name: "",
       jersey: 0,
-      position: '',
+      position: "",
       parentEmails: [],
-      stats: { gamesPlayed: 0, touchdowns: 0, yards: 0, tackles: 0 }
+      stats: { gamesPlayed: 0, touchdowns: 0, yards: 0, tackles: 0 },
     };
-    
+
     return AchievementTracker.trackPlayerAction(player, action, additionalData);
   }
 
@@ -587,7 +622,7 @@ export class AchievementService {
    * Admin: Create a new achievement definition
    */
   static async createAchievement(
-    achievement: Omit<AchievementDefinition, 'id'>
+    achievement: Omit<AchievementDefinition, "id">
   ): Promise<AchievementDefinition | null> {
     return AchievementTracker.createAchievementDefinition(achievement);
   }

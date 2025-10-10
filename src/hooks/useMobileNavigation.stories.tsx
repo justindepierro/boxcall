@@ -101,9 +101,7 @@ const MobileNavigationDemo = () => {
               <div
                 key={item.id}
                 className={`p-4 border rounded-lg ${
-                  item.isActive
-                    ? "border-blue-500 bg-status-info-bg"
-                    : "border"
+                  item.isActive ? "border-blue-500 bg-status-info-bg" : "border"
                 }`}
               >
                 <div className="flex items-center justify-between">

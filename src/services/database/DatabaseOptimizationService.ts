@@ -1,13 +1,13 @@
 /**
  * Database Query Optimization Service
- * 
+ *
  * Provides query caching, connection pooling, performance monitoring,
  * and optimization utilities for Supabase database operations
  */
 
-import { supabase } from '../../lib/supabase';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../../types/database';
+import { supabase } from "../../lib/supabase";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "../../types/database";
 
 interface QueryMetrics {
   query: string;
@@ -45,11 +45,14 @@ export class DatabaseOptimizationService {
     this.config = {
       defaultCacheTTL: Number(import.meta.env.VITE_DB_CACHE_TTL) || 300000, // 5 minutes
       maxCacheSize: Number(import.meta.env.VITE_DB_MAX_CACHE_SIZE) || 1000,
-      slowQueryThreshold: Number(import.meta.env.VITE_SLOW_QUERY_THRESHOLD) || 1000, // 1 second
-      enableMetrics: import.meta.env.VITE_DB_ENABLE_METRICS !== 'false',
-      enableQueryLogging: import.meta.env.VITE_DB_ENABLE_QUERY_LOGGING === 'true',
-      connectionPoolSize: Number(import.meta.env.VITE_DB_CONNECTION_POOL_SIZE) || 5,
-      ...config
+      slowQueryThreshold:
+        Number(import.meta.env.VITE_SLOW_QUERY_THRESHOLD) || 1000, // 1 second
+      enableMetrics: import.meta.env.VITE_DB_ENABLE_METRICS !== "false",
+      enableQueryLogging:
+        import.meta.env.VITE_DB_ENABLE_QUERY_LOGGING === "true",
+      connectionPoolSize:
+        Number(import.meta.env.VITE_DB_CONNECTION_POOL_SIZE) || 5,
+      ...config,
     };
 
     this.initializeConnectionPool();
@@ -79,9 +82,13 @@ export class DatabaseOptimizationService {
   /**
    * Generate cache key for a query
    */
-  private generateCacheKey(table: string, filters: any, columns?: string[]): string {
+  private generateCacheKey(
+    table: string,
+    filters: any,
+    columns?: string[]
+  ): string {
     const filterString = JSON.stringify(filters || {});
-    const columnString = columns?.join(',') || '*';
+    const columnString = columns?.join(",") || "*";
     return `${table}:${columnString}:${filterString}`;
   }
 
@@ -110,7 +117,7 @@ export class DatabaseOptimizationService {
       // Remove oldest entries
       const entries = Array.from(this.cache.entries());
       entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
+
       // Remove oldest 20% of entries
       const removeCount = Math.floor(this.config.maxCacheSize * 0.2);
       for (let i = 0; i < removeCount; i++) {
@@ -122,19 +129,19 @@ export class DatabaseOptimizationService {
       data,
       timestamp: Date.now(),
       ttl: ttl || this.config.defaultCacheTTL,
-      key
+      key,
     });
   }
 
   /**
    * Record query metrics
    */
-  private recordMetrics(metrics: Omit<QueryMetrics, 'timestamp'>): void {
+  private recordMetrics(metrics: Omit<QueryMetrics, "timestamp">): void {
     if (!this.config.enableMetrics) return;
 
     const fullMetrics: QueryMetrics = {
       ...metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.metrics.push(fullMetrics);
@@ -146,12 +153,18 @@ export class DatabaseOptimizationService {
 
     // Log slow queries
     if (metrics.duration > this.config.slowQueryThreshold) {
-      console.warn(`🐌 Slow query detected (${metrics.duration}ms):`, metrics.query);
+      console.warn(
+        `🐌 Slow query detected (${metrics.duration}ms):`,
+        metrics.query
+      );
     }
 
     // Log all queries in development
     if (this.config.enableQueryLogging && import.meta.env.DEV) {
-      console.log(`📊 Query (${metrics.duration}ms, cache: ${metrics.cacheHit}):`, metrics.query);
+      console.log(
+        `📊 Query (${metrics.duration}ms, cache: ${metrics.cacheHit}):`,
+        metrics.query
+      );
     }
   }
 
@@ -171,8 +184,12 @@ export class DatabaseOptimizationService {
     } = {}
   ): Promise<{ data: T[] | null; error: any; metrics: QueryMetrics }> {
     const startTime = performance.now();
-    const cacheKey = this.generateCacheKey(table, options.filters, options.columns);
-    
+    const cacheKey = this.generateCacheKey(
+      table,
+      options.filters,
+      options.columns
+    );
+
     let cacheHit = false;
     let data: T[] | null = null;
     let error: any = null;
@@ -184,15 +201,15 @@ export class DatabaseOptimizationService {
         if (cachedData) {
           cacheHit = true;
           data = cachedData;
-          
+
           const duration = performance.now() - startTime;
           const metrics: QueryMetrics = {
-            query: `SELECT ${options.columns?.join(',') || '*'} FROM ${table} (cached)`,
+            query: `SELECT ${options.columns?.join(",") || "*"} FROM ${table} (cached)`,
             duration,
             success: true,
             cacheHit: true,
             rowCount: data?.length,
-            timestamp: new Date()
+            timestamp: new Date(),
           };
 
           this.recordMetrics(metrics);
@@ -206,9 +223,9 @@ export class DatabaseOptimizationService {
 
       // Apply column selection
       if (options.columns && options.columns.length > 0) {
-        query = query.select(options.columns.join(','));
+        query = query.select(options.columns.join(","));
       } else {
-        query = query.select('*');
+        query = query.select("*");
       }
 
       // Apply filters
@@ -216,14 +233,14 @@ export class DatabaseOptimizationService {
         Object.entries(options.filters).forEach(([key, value]) => {
           if (Array.isArray(value)) {
             query = query.in(key, value);
-          } else if (typeof value === 'object' && value !== null) {
+          } else if (typeof value === "object" && value !== null) {
             // Handle range filters, etc.
-            if ('gte' in value) query = query.gte(key, value.gte);
-            if ('lte' in value) query = query.lte(key, value.lte);
-            if ('gt' in value) query = query.gt(key, value.gt);
-            if ('lt' in value) query = query.lt(key, value.lt);
-            if ('like' in value) query = query.like(key, value.like);
-            if ('ilike' in value) query = query.ilike(key, value.ilike);
+            if ("gte" in value) query = query.gte(key, value.gte);
+            if ("lte" in value) query = query.lte(key, value.lte);
+            if ("gt" in value) query = query.gt(key, value.gt);
+            if ("lt" in value) query = query.lt(key, value.lt);
+            if ("like" in value) query = query.like(key, value.like);
+            if ("ilike" in value) query = query.ilike(key, value.ilike);
           } else {
             query = query.eq(key, value);
           }
@@ -232,8 +249,8 @@ export class DatabaseOptimizationService {
 
       // Apply ordering
       if (options.orderBy) {
-        query = query.order(options.orderBy.column, { 
-          ascending: options.orderBy.ascending !== false 
+        query = query.order(options.orderBy.column, {
+          ascending: options.orderBy.ascending !== false,
         });
       }
 
@@ -242,7 +259,10 @@ export class DatabaseOptimizationService {
         query = query.limit(options.limit);
       }
       if (options.offset) {
-        query = query.range(options.offset, options.offset + (options.limit || 1000) - 1);
+        query = query.range(
+          options.offset,
+          options.offset + (options.limit || 1000) - 1
+        );
       }
 
       const result = await query;
@@ -253,20 +273,19 @@ export class DatabaseOptimizationService {
       if (!error && data && !options.skipCache) {
         this.setCache(cacheKey, data, options.cacheTTL);
       }
-
     } catch (err) {
       error = err;
     }
 
     const duration = performance.now() - startTime;
     const metrics: QueryMetrics = {
-      query: `SELECT ${options.columns?.join(',') || '*'} FROM ${table}`,
+      query: `SELECT ${options.columns?.join(",") || "*"} FROM ${table}`,
       duration,
       success: !error,
       cacheHit,
       rowCount: data?.length,
       error: error?.message,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.recordMetrics(metrics);
@@ -285,13 +304,13 @@ export class DatabaseOptimizationService {
     } = {}
   ): Promise<{ data: T[] | null; error: any; metrics: QueryMetrics }> {
     const startTime = performance.now();
-    
+
     try {
       const client = this.getClient();
       let query: any = client.from(table).insert(data);
 
       if (options.returning) {
-        query = query.select(options.returning.join(','));
+        query = query.select(options.returning.join(","));
       } else {
         query = query.select();
       }
@@ -318,12 +337,11 @@ export class DatabaseOptimizationService {
         cacheHit: false,
         rowCount: result.data?.length,
         error: result.error?.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
       return { data: result.data, error: result.error, metrics };
-
     } catch (err) {
       const duration = performance.now() - startTime;
       const metrics: QueryMetrics = {
@@ -332,7 +350,7 @@ export class DatabaseOptimizationService {
         success: false,
         cacheHit: false,
         error: (err as Error).message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
@@ -352,7 +370,7 @@ export class DatabaseOptimizationService {
     } = {}
   ): Promise<{ data: T[] | null; error: any; metrics: QueryMetrics }> {
     const startTime = performance.now();
-    
+
     try {
       const client = this.getClient();
       let query: any = client.from(table).update(updates);
@@ -363,7 +381,7 @@ export class DatabaseOptimizationService {
       });
 
       if (options.returning) {
-        query = query.select(options.returning.join(','));
+        query = query.select(options.returning.join(","));
       } else {
         query = query.select();
       }
@@ -379,14 +397,17 @@ export class DatabaseOptimizationService {
         duration,
         success: !result.error,
         cacheHit: false,
-        rowCount: Array.isArray(result.data) ? result.data.length : (result.data ? 1 : 0),
+        rowCount: Array.isArray(result.data)
+          ? result.data.length
+          : result.data
+            ? 1
+            : 0,
         error: result.error?.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
       return { data: result.data, error: result.error, metrics };
-
     } catch (err) {
       const duration = performance.now() - startTime;
       const metrics: QueryMetrics = {
@@ -395,7 +416,7 @@ export class DatabaseOptimizationService {
         success: false,
         cacheHit: false,
         error: (err as Error).message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
@@ -411,7 +432,7 @@ export class DatabaseOptimizationService {
     filters: Record<string, any>
   ): Promise<{ data: any; error: any; metrics: QueryMetrics }> {
     const startTime = performance.now();
-    
+
     try {
       const client = this.getClient();
       let query = client.from(table).delete();
@@ -433,12 +454,11 @@ export class DatabaseOptimizationService {
         success: !result.error,
         cacheHit: false,
         error: result.error?.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
       return { data: result.data, error: result.error, metrics };
-
     } catch (err) {
       const duration = performance.now() - startTime;
       const metrics: QueryMetrics = {
@@ -447,7 +467,7 @@ export class DatabaseOptimizationService {
         success: false,
         cacheHit: false,
         error: (err as Error).message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
@@ -472,12 +492,12 @@ export class DatabaseOptimizationService {
       for (let i = 0; i < records.length; i += batchSize) {
         const batch = records.slice(i, i + batchSize);
         const result = await this.optimizedInsert(table, batch);
-        
+
         if (result.error) {
           error = result.error;
           break;
         }
-        
+
         if (result.data) {
           results.push(...result.data);
         }
@@ -491,12 +511,11 @@ export class DatabaseOptimizationService {
         cacheHit: false,
         rowCount: results.length,
         error: error?.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
       return { data: results, error, metrics };
-
     } catch (err) {
       const duration = performance.now() - startTime;
       const metrics: QueryMetrics = {
@@ -505,7 +524,7 @@ export class DatabaseOptimizationService {
         success: false,
         cacheHit: false,
         error: (err as Error).message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.recordMetrics(metrics);
@@ -518,14 +537,14 @@ export class DatabaseOptimizationService {
    */
   private invalidateTableCache(table: string): void {
     const keysToDelete: string[] = [];
-    
+
     for (const [key] of this.cache) {
       if (key.startsWith(`${table}:`)) {
         keysToDelete.push(key);
       }
     }
-    
-    keysToDelete.forEach(key => this.cache.delete(key));
+
+    keysToDelete.forEach((key) => this.cache.delete(key));
   }
 
   /**
@@ -547,7 +566,7 @@ export class DatabaseOptimizationService {
     recentMetrics: QueryMetrics[];
   } {
     const totalQueries = this.metrics.length;
-    
+
     if (totalQueries === 0) {
       return {
         totalQueries: 0,
@@ -555,14 +574,16 @@ export class DatabaseOptimizationService {
         cacheHitRate: 0,
         slowQueries: 0,
         errorRate: 0,
-        recentMetrics: []
+        recentMetrics: [],
       };
     }
 
     const totalTime = this.metrics.reduce((sum, m) => sum + m.duration, 0);
-    const cacheHits = this.metrics.filter(m => m.cacheHit).length;
-    const slowQueries = this.metrics.filter(m => m.duration > this.config.slowQueryThreshold).length;
-    const errors = this.metrics.filter(m => !m.success).length;
+    const cacheHits = this.metrics.filter((m) => m.cacheHit).length;
+    const slowQueries = this.metrics.filter(
+      (m) => m.duration > this.config.slowQueryThreshold
+    ).length;
+    const errors = this.metrics.filter((m) => !m.success).length;
 
     return {
       totalQueries,
@@ -570,7 +591,7 @@ export class DatabaseOptimizationService {
       cacheHitRate: (cacheHits / totalQueries) * 100,
       slowQueries,
       errorRate: (errors / totalQueries) * 100,
-      recentMetrics: this.metrics.slice(-10)
+      recentMetrics: this.metrics.slice(-10),
     };
   }
 
@@ -586,17 +607,17 @@ export class DatabaseOptimizationService {
     const entries = Array.from(this.cache.entries()).map(([key, entry]) => ({
       key,
       size: JSON.stringify(entry.data).length,
-      age: Date.now() - entry.timestamp
+      age: Date.now() - entry.timestamp,
     }));
 
-    const totalHits = this.metrics.filter(m => m.cacheHit).length;
+    const totalHits = this.metrics.filter((m) => m.cacheHit).length;
     const totalQueries = this.metrics.length;
 
     return {
       size: this.cache.size,
       maxSize: this.config.maxCacheSize,
       hitRate: totalQueries > 0 ? (totalHits / totalQueries) * 100 : 0,
-      entries
+      entries,
     };
   }
 
@@ -614,10 +635,12 @@ export class DatabaseOptimizationService {
         }
       }
 
-      keysToDelete.forEach(key => this.cache.delete(key));
-      
+      keysToDelete.forEach((key) => this.cache.delete(key));
+
       if (keysToDelete.length > 0) {
-        console.log(`🧹 Cleaned up ${keysToDelete.length} expired cache entries`);
+        console.log(
+          `🧹 Cleaned up ${keysToDelete.length} expired cache entries`
+        );
       }
     }, 60000); // Run every minute
   }
@@ -627,8 +650,14 @@ export class DatabaseOptimizationService {
 export const dbOptimization = new DatabaseOptimizationService();
 
 // Helper types for better TypeScript support
-export type OptimizedSelectOptions = Parameters<typeof dbOptimization.optimizedSelect>[1];
-export type OptimizedInsertOptions = Parameters<typeof dbOptimization.optimizedInsert>[2];
-export type OptimizedUpdateOptions = Parameters<typeof dbOptimization.optimizedUpdate>[3];
+export type OptimizedSelectOptions = Parameters<
+  typeof dbOptimization.optimizedSelect
+>[1];
+export type OptimizedInsertOptions = Parameters<
+  typeof dbOptimization.optimizedInsert
+>[2];
+export type OptimizedUpdateOptions = Parameters<
+  typeof dbOptimization.optimizedUpdate
+>[3];
 
 export { type QueryMetrics };

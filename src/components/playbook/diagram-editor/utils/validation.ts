@@ -1,6 +1,6 @@
 /**
  * Input Validation Utilities for Pixi.js Diagram Editor
- * 
+ *
  * Validates all inputs to prevent crashes from invalid data.
  * Provides clear error messages for debugging.
  */
@@ -15,7 +15,7 @@ export function validateDimension(
 ): void {
   const { min = 0.1, max = 10000 } = options;
 
-  if (typeof value !== 'number' || isNaN(value)) {
+  if (typeof value !== "number" || isNaN(value)) {
     throw new Error(`${name} must be a valid number, got: ${value}`);
   }
 
@@ -46,7 +46,7 @@ export function validateCoordinate(
 ): void {
   const { min = -1000, max = 1000, allowNegative = true } = options;
 
-  if (typeof value !== 'number' || isNaN(value)) {
+  if (typeof value !== "number" || isNaN(value)) {
     throw new Error(`${name} must be a valid number, got: ${value}`);
   }
 
@@ -76,7 +76,7 @@ export function validateZoom(
 ): void {
   const { min = 0.1, max = 10 } = options;
 
-  if (typeof value !== 'number' || isNaN(value)) {
+  if (typeof value !== "number" || isNaN(value)) {
     throw new Error(`Zoom must be a valid number, got: ${value}`);
   }
 
@@ -101,12 +101,12 @@ export function validateZoom(
  * Validate player ID
  */
 export function validatePlayerId(id: string): void {
-  if (typeof id !== 'string') {
+  if (typeof id !== "string") {
     throw new Error(`Player ID must be a string, got: ${typeof id}`);
   }
 
   if (id.trim().length === 0) {
-    throw new Error('Player ID cannot be empty');
+    throw new Error("Player ID cannot be empty");
   }
 
   if (id.length > 100) {
@@ -118,23 +118,23 @@ export function validatePlayerId(id: string): void {
  * Validate player position
  */
 export function validatePlayerPosition(x: number, y: number): void {
-  validateCoordinate(x, 'Player X', { min: 0, max: 200, allowNegative: false });
-  validateCoordinate(y, 'Player Y', { min: 0, max: 200, allowNegative: false });
+  validateCoordinate(x, "Player X", { min: 0, max: 200, allowNegative: false });
+  validateCoordinate(y, "Player Y", { min: 0, max: 200, allowNegative: false });
 }
 
 /**
  * Validate field dimensions
  */
 export function validateFieldDimensions(width: number, height: number): void {
-  validateDimension(width, 'Field width', { min: 10, max: 200 });
-  validateDimension(height, 'Field height', { min: 10, max: 200 });
+  validateDimension(width, "Field width", { min: 10, max: 200 });
+  validateDimension(height, "Field height", { min: 10, max: 200 });
 }
 
 /**
  * Validate pixels per yard
  */
 export function validatePixelsPerYard(value: number): void {
-  validateDimension(value, 'Pixels per yard', { min: 1, max: 100 });
+  validateDimension(value, "Pixels per yard", { min: 1, max: 100 });
 }
 
 /**
@@ -152,8 +152,8 @@ export function toSafeNumber(
   fallback: number,
   options: { min?: number; max?: number } = {}
 ): number {
-  const num = typeof value === 'number' ? value : parseFloat(String(value));
-  
+  const num = typeof value === "number" ? value : parseFloat(String(value));
+
   if (isNaN(num) || !isFinite(num)) {
     return fallback;
   }
@@ -174,13 +174,13 @@ export function toSafeNumber(
  */
 export function validateCanvas(canvas: unknown): canvas is HTMLCanvasElement {
   if (!(canvas instanceof HTMLCanvasElement)) {
-    throw new Error('Canvas must be an HTMLCanvasElement');
+    throw new Error("Canvas must be an HTMLCanvasElement");
   }
 
   const rect = canvas.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) {
     // Provide more helpful error message
-    console.error('❌ Canvas validation failed:', {
+    console.error("❌ Canvas validation failed:", {
       width: rect.width,
       height: rect.height,
       parentElement: canvas.parentElement,
@@ -194,7 +194,7 @@ export function validateCanvas(canvas: unknown): canvas is HTMLCanvasElement {
     });
     throw new Error(
       `Canvas must have non-zero dimensions (got ${rect.width}x${rect.height}). ` +
-      'Ensure the canvas container is visible and has size before initializing Pixi.'
+        "Ensure the canvas container is visible and has size before initializing Pixi."
     );
   }
 

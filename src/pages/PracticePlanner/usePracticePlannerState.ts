@@ -5,15 +5,17 @@ interface UsePracticePlannerStateProps {
   schedules: PracticeSchedule[];
 }
 
-export function usePracticePlannerState({ schedules }: UsePracticePlannerStateProps) {
+export function usePracticePlannerState({
+  schedules,
+}: UsePracticePlannerStateProps) {
   // Schedule selection
   const [selectedScheduleId, setSelectedScheduleId] = useState<string>("");
-  
+
   // Modal states
   const [isCreateBlockModalOpen, setIsCreateBlockModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isPDFExportOpen, setIsPDFExportOpen] = useState(false);
-  
+
   // Practice state
   const [currentBlocks, setCurrentBlocks] = useState<PracticeBlock[]>([]);
   const [practiceStarted, setPracticeStarted] = useState(false);

@@ -30,7 +30,7 @@ export function useBreakpoint(): Breakpoint {
 
   useEffect(() => {
     updateBreakpoint();
-    
+
     // Throttle resize events to improve performance
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleResize = () => {

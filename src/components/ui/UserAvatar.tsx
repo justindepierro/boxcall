@@ -131,7 +131,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <Typography variant="body-sm" className="text-secondary font-semibold">
+          <Typography
+            variant="body-sm"
+            className="text-secondary font-semibold"
+          >
             {getAvatarFallback(name || null)}
           </Typography>
         )}

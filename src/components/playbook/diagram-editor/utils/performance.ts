@@ -1,6 +1,6 @@
 /**
  * Performance monitoring utilities
- * 
+ *
  * Provides FPS tracking and performance metrics for development and debugging.
  */
 
@@ -26,17 +26,17 @@ export class FPSMonitor {
   tick(): void {
     const now = performance.now();
     const delta = now - this.lastTime;
-    
+
     if (delta > 0) {
       const fps = 1000 / delta;
       this.frames.push(fps);
-      
+
       // Keep only last N samples
       if (this.frames.length > this.maxSamples) {
         this.frames.shift();
       }
     }
-    
+
     this.lastTime = now;
     this.frameCount++;
   }
@@ -84,7 +84,7 @@ export class FPSMonitor {
    */
   logStats(): void {
     const stats = this.getStats();
-    console.log('📊 FPS Stats:', {
+    console.log("📊 FPS Stats:", {
       current: `${stats.current} fps`,
       average: `${stats.average} fps`,
       min: `${stats.min} fps`,

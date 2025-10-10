@@ -24,12 +24,12 @@ export class TelemetryDispatcher {
     this.flushIntervalMs = opts.flushIntervalMs ?? 5000;
     this.maxBuffer = opts.maxBuffer ?? 40;
     this.onFlush = opts.onFlush;
-    
+
     // Store handlers for cleanup
     this.visibilityHandler = () => this.flush();
     this.pagehideHandler = () => this.flush();
     this.beforeunloadHandler = () => this.flush();
-    
+
     if (typeof window !== "undefined") {
       window.addEventListener("visibilitychange", this.visibilityHandler);
       window.addEventListener("pagehide", this.pagehideHandler);
@@ -70,14 +70,14 @@ export class TelemetryDispatcher {
 
   shutdown() {
     this.flush();
-    
+
     // Clean up event listeners to prevent memory leaks
     if (typeof window !== "undefined") {
       window.removeEventListener("visibilitychange", this.visibilityHandler);
       window.removeEventListener("pagehide", this.pagehideHandler);
       window.removeEventListener("beforeunload", this.beforeunloadHandler);
     }
-    
+
     // Clear timer
     if (this.timer) {
       clearTimeout(this.timer);

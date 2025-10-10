@@ -18,18 +18,17 @@ async function checkPolicies() {
     console.log("🔍 Checking RLS policies on achievement_definitions...");
 
     // Try to get policy info via RPC if it exists
-    const { data, error } = await supabase.rpc('get_policies', {
-      table_name: 'achievement_definitions'
+    const { data, error } = await supabase.rpc("get_policies", {
+      table_name: "achievement_definitions",
     });
 
     if (error) {
-      console.log('❌ Could not get policies via RPC:', error.message);
+      console.log("❌ Could not get policies via RPC:", error.message);
     } else {
-      console.log('✅ Policies:', data);
+      console.log("✅ Policies:", data);
     }
-
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   }
 }
 

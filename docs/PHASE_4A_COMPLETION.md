@@ -19,6 +19,7 @@ Lazy load the react-pdf library (~1.5MB / 500KB gzipped) to reduce initial bundl
 **Problem:** PracticeScriptList was imported eagerly, which pulled in PDFExportService and therefore the entire react-pdf library.
 
 **Solution:** Convert to lazy import:
+
 ```typescript
 // BEFORE (eager):
 import { PracticeScriptList } from "../components/playbook/PracticeScriptList";
@@ -32,6 +33,7 @@ const PracticeScriptList = lazy(() =>
 ```
 
 **Impact:**
+
 - PlaybookPage chunk: 161KB → 155KB (-6KB)
 - PracticeScriptList now separate lazy chunk: 5.41KB
 - PDF dependencies deferred until user triggers PDF export
@@ -41,6 +43,7 @@ const PracticeScriptList = lazy(() =>
 ### 2. **Remove Playbook.tsx Wrapper** (DELETED)
 
 **Problem:** `src/pages/Playbook.tsx` was a 20-line wrapper that eagerly imported PlaybookPage:
+
 ```tsx
 import PlaybookPage from "./PlaybookPage"; // DEFEATS LAZY LOADING!
 export const Playbook = () => <PlaybookPage />;
@@ -49,6 +52,7 @@ export const Playbook = () => <PlaybookPage />;
 **Solution:** Delete wrapper entirely, import PlaybookPage directly in lazy routes.
 
 **Impact:**
+
 - Removed unnecessary indirection
 - Eliminated extra chunk (0.91KB)
 - Simplified import chain
@@ -58,6 +62,7 @@ export const Playbook = () => <PlaybookPage />;
 ### 3. **Fix LazyRoutes Import** (`src/components/lazy/LazyRoutes.tsx`)
 
 **Problem:** LazyPlaybookPage was importing the wrapper instead of the actual page:
+
 ```typescript
 // BEFORE (imported wrapper):
 () => import("../../pages/Playbook")
@@ -67,6 +72,7 @@ export const Playbook = () => <PlaybookPage />;
 ```
 
 **Impact:**
+
 - Truly lazy loading PlaybookPage now
 - PDF dependencies only loaded when route is accessed
 
@@ -77,6 +83,7 @@ export const Playbook = () => <PlaybookPage />;
 **Problem:** Route importer still referenced deleted Playbook.tsx wrapper.
 
 **Solution:**
+
 ```typescript
 // BEFORE:
 case "/playbook":
@@ -94,6 +101,7 @@ case "/playbook":
 **Problem:** PDFExportService was importing @react-pdf/renderer at the top level.
 
 **Solution:** Dynamic import when PDF generation is triggered:
+
 ```typescript
 private static async loadPDFDependencies() {
   const [{ pdf }, { PracticeScriptPDF }] = await Promise.all([
@@ -110,6 +118,7 @@ public static async exportPracticeScript(...) {
 ```
 
 **Impact:**
+
 - @react-pdf/renderer only loaded when user clicks "Export PDF"
 - PracticeScriptPDF component lazy loaded with it
 
@@ -119,21 +128,21 @@ public static async exportPracticeScript(...) {
 
 ### Bundle Size Changes
 
-| Asset | Before | After | Change |
-|-------|---------|--------|---------|
-| **Main bundle (index.js)** | 611.61 KB | **611.52 KB** | -0.09 KB ⚠️ |
-| **PlaybookPage.js** | 161.58 KB | **155.46 KB** | **-6.12 KB ✅** |
-| **PracticeScriptList.js** | (embedded) | **5.41 KB** | +5.41 KB (new chunk) |
-| **pdfExportService.js** | (embedded) | **1.32 KB** | +1.32 KB (new chunk) |
-| **react-pdf.browser.js** | 1,502.01 KB | **1,502.01 KB** | 0 KB (already lazy) |
+| Asset                      | Before      | After           | Change               |
+| -------------------------- | ----------- | --------------- | -------------------- |
+| **Main bundle (index.js)** | 611.61 KB   | **611.52 KB**   | -0.09 KB ⚠️          |
+| **PlaybookPage.js**        | 161.58 KB   | **155.46 KB**   | **-6.12 KB ✅**      |
+| **PracticeScriptList.js**  | (embedded)  | **5.41 KB**     | +5.41 KB (new chunk) |
+| **pdfExportService.js**    | (embedded)  | **1.32 KB**     | +1.32 KB (new chunk) |
+| **react-pdf.browser.js**   | 1,502.01 KB | **1,502.01 KB** | 0 KB (already lazy)  |
 
 ### Gzipped Sizes
 
-| Asset | Gzipped Before | Gzipped After | Change |
-|-------|---------------|---------------|---------|
-| **Main bundle** | 183.56 KB | **183.49 KB** | -0.07 KB |
-| **PlaybookPage** | 45.97 KB | **44.48 KB** | **-1.49 KB ✅** |
-| **react-pdf** | 501.22 KB | **501.22 KB** | 0 KB |
+| Asset            | Gzipped Before | Gzipped After | Change          |
+| ---------------- | -------------- | ------------- | --------------- |
+| **Main bundle**  | 183.56 KB      | **183.49 KB** | -0.07 KB        |
+| **PlaybookPage** | 45.97 KB       | **44.48 KB**  | **-1.49 KB ✅** |
+| **react-pdf**    | 501.22 KB      | **501.22 KB** | 0 KB            |
 
 ---
 
@@ -154,6 +163,7 @@ public static async exportPracticeScript(...) {
 ## 🚀 What's Actually in the 611KB Main Bundle?
 
 The main bundle includes:
+
 1. **React & React DOM** (~140KB)
 2. **React Router** (~50KB)
 3. **Supabase Client** (~100KB)

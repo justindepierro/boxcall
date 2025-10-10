@@ -1,15 +1,27 @@
 // Social Features Types
 // Comprehensive type definitions for all social interactions
 
-export type ReactionType = 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry';
+export type ReactionType = "like" | "love" | "laugh" | "wow" | "sad" | "angry";
 
-export type ContentType = 'play' | 'game_plan' | 'comment' | 'practice_script';
+export type ContentType = "play" | "game_plan" | "comment" | "practice_script";
 
-export type FollowingType = 'team' | 'user';
+export type FollowingType = "team" | "user";
 
-export type NotificationType = 'reaction' | 'follow' | 'comment' | 'mention' | 'reply' | 'team_invite' | 'game_reminder';
+export type NotificationType =
+  | "reaction"
+  | "follow"
+  | "comment"
+  | "mention"
+  | "reply"
+  | "team_invite"
+  | "game_reminder";
 
-export type ActivityType = 'reaction_added' | 'follow_started' | 'comment_posted' | 'play_created' | 'game_plan_created';
+export type ActivityType =
+  | "reaction_added"
+  | "follow_started"
+  | "comment_posted"
+  | "play_created"
+  | "game_plan_created";
 
 // =============================================================================
 // REACTIONS
@@ -134,7 +146,7 @@ export interface Notification {
   notification_type: NotificationType;
   title: string;
   message: string;
-  related_content_type?: ContentType | 'team' | 'user';
+  related_content_type?: ContentType | "team" | "user";
   related_content_id?: string;
   is_read: boolean;
   read_at?: string;
@@ -156,7 +168,7 @@ export interface ActivityItem {
   id: string;
   user_id: string;
   activity_type: ActivityType;
-  content_type?: ContentType | 'team' | 'user';
+  content_type?: ContentType | "team" | "user";
   content_id?: string;
   metadata: Record<string, any>;
   created_at: string;
@@ -175,26 +187,45 @@ export interface ActivityItem {
 
 export interface SocialService {
   // Reactions
-  getReactions(contentType: ContentType, contentId: string): Promise<ReactionSummary>;
+  getReactions(
+    contentType: ContentType,
+    contentId: string
+  ): Promise<ReactionSummary>;
   addReaction(request: CreateReactionRequest): Promise<Reaction>;
   removeReaction(contentType: ContentType, contentId: string): Promise<void>;
   toggleReaction(request: CreateReactionRequest): Promise<Reaction | null>;
 
   // Follows
-  getFollowStatus(followingType: FollowingType, followingId: string): Promise<FollowSummary>;
+  getFollowStatus(
+    followingType: FollowingType,
+    followingId: string
+  ): Promise<FollowSummary>;
   follow(request: CreateFollowRequest): Promise<Follow>;
   unfollow(followingType: FollowingType, followingId: string): Promise<void>;
-  getFollowers(followingType: FollowingType, followingId: string): Promise<Follow[]>;
+  getFollowers(
+    followingType: FollowingType,
+    followingId: string
+  ): Promise<Follow[]>;
   getFollowing(userId: string): Promise<Follow[]>;
 
   // Comments
-  getComments(contentType: ContentType, contentId: string, parentId?: string): Promise<Comment[]>;
+  getComments(
+    contentType: ContentType,
+    contentId: string,
+    parentId?: string
+  ): Promise<Comment[]>;
   addComment(request: CreateCommentRequest): Promise<Comment>;
-  updateComment(commentId: string, request: UpdateCommentRequest): Promise<Comment>;
+  updateComment(
+    commentId: string,
+    request: UpdateCommentRequest
+  ): Promise<Comment>;
   deleteComment(commentId: string): Promise<void>;
 
   // Notifications
-  getNotifications(limit?: number, offset?: number): Promise<NotificationSummary>;
+  getNotifications(
+    limit?: number,
+    offset?: number
+  ): Promise<NotificationSummary>;
   markNotificationRead(notificationId: string): Promise<void>;
   markAllNotificationsRead(): Promise<void>;
 
@@ -209,16 +240,16 @@ export interface SocialService {
 export interface ReactionButtonProps {
   contentType: ContentType;
   contentId: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   showCount?: boolean;
-  variant?: 'button' | 'icon';
+  variant?: "button" | "icon";
 }
 
 export interface FollowButtonProps {
   followingType: FollowingType;
   followingId: string;
-  variant?: 'button' | 'icon';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "button" | "icon";
+  size?: "sm" | "md" | "lg";
 }
 
 export interface CommentSectionProps {
@@ -229,7 +260,7 @@ export interface CommentSectionProps {
 }
 
 export interface NotificationBellProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   showBadge?: boolean;
 }
 

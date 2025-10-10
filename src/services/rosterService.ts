@@ -92,16 +92,18 @@ export class RosterService {
       last_name: row.last_name ?? null,
       jersey_number: row.jersey_number ?? null,
       position: row.position ?? null,
-      grade_level: row.grade_level as string ?? null,
+      grade_level: (row.grade_level as string) ?? null,
       height_inches: row.height_inches ?? null,
-      weight_lbs: row.weight_lbs as number ?? null,
-      is_active: row.is_active as boolean ?? null,
+      weight_lbs: (row.weight_lbs as number) ?? null,
+      is_active: (row.is_active as boolean) ?? null,
       created_at: row.created_at ?? null,
       updated_at: row.updated_at ?? null,
     }));
   }
 
-  async createPlayer(playerData: PlayerRosterInsert): Promise<RosterPlayerView> {
+  async createPlayer(
+    playerData: PlayerRosterInsert
+  ): Promise<RosterPlayerView> {
     const insertData = {
       ...playerData,
       is_active: playerData.is_active ?? true,
@@ -120,7 +122,10 @@ export class RosterService {
     return this.getPlayerById(data.id);
   }
 
-  async updatePlayer(playerId: string, updateData: PlayerRosterUpdate): Promise<RosterPlayerView> {
+  async updatePlayer(
+    playerId: string,
+    updateData: PlayerRosterUpdate
+  ): Promise<RosterPlayerView> {
     const { data, error } = await this.client
       .from("team_players")
       .update({
@@ -173,7 +178,11 @@ export class RosterService {
     };
   }
 
-  async checkJerseyNumberAvailable(teamId: string, jerseyNumber: number, excludePlayerId?: string): Promise<boolean> {
+  async checkJerseyNumberAvailable(
+    teamId: string,
+    jerseyNumber: number,
+    excludePlayerId?: string
+  ): Promise<boolean> {
     let query = this.client
       .from("team_players")
       .select("id")

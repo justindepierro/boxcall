@@ -24,15 +24,19 @@ async function testProfilesAccess() {
   try {
     // Try to select from profiles
     const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
+      .from("profiles")
+      .select("*")
       .limit(1);
 
     if (error) {
-      console.log(`❌ Profiles access error: ${error.message} (Code: ${error.code})`);
+      console.log(
+        `❌ Profiles access error: ${error.message} (Code: ${error.code})`
+      );
       console.log("This suggests RLS policies are blocking access");
     } else {
-      console.log(`✅ Profiles access successful: ${data?.length || 0} records`);
+      console.log(
+        `✅ Profiles access successful: ${data?.length || 0} records`
+      );
     }
   } catch (err: any) {
     console.log(`❌ Unexpected error: ${err.message}`);

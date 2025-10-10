@@ -20,7 +20,7 @@ async function createAchievementTables() {
 
     // Create achievement_definitions table
     console.log("📋 Creating achievement_definitions table...");
-    const { error: defError } = await supabase.rpc('exec', {
+    const { error: defError } = await supabase.rpc("exec", {
       query: `
         CREATE TABLE IF NOT EXISTS achievement_definitions (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -37,18 +37,21 @@ async function createAchievementTables() {
           created_at TIMESTAMPTZ DEFAULT NOW(),
           updated_at TIMESTAMPTZ DEFAULT NOW()
         );
-      `
+      `,
     });
 
     if (defError) {
-      console.log('❌ Failed to create achievement_definitions:', defError.message);
+      console.log(
+        "❌ Failed to create achievement_definitions:",
+        defError.message
+      );
     } else {
-      console.log('✅ Created achievement_definitions table');
+      console.log("✅ Created achievement_definitions table");
     }
 
     // Create achievement_progress table
     console.log("📊 Creating achievement_progress table...");
-    const { error: progError } = await supabase.rpc('exec', {
+    const { error: progError } = await supabase.rpc("exec", {
       query: `
         CREATE TABLE IF NOT EXISTS achievement_progress (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,23 +64,30 @@ async function createAchievementTables() {
           updated_at TIMESTAMPTZ DEFAULT NOW(),
           UNIQUE(player_id, achievement_id)
         );
-      `
+      `,
     });
 
     if (progError) {
-      console.log('❌ Failed to create achievement_progress:', progError.message);
+      console.log(
+        "❌ Failed to create achievement_progress:",
+        progError.message
+      );
     } else {
-      console.log('✅ Created achievement_progress table');
+      console.log("✅ Created achievement_progress table");
     }
 
     // Enable RLS
     console.log("🔒 Enabling RLS...");
-    await supabase.rpc('exec', { query: 'ALTER TABLE achievement_definitions ENABLE ROW LEVEL SECURITY;' });
-    await supabase.rpc('exec', { query: 'ALTER TABLE achievement_progress ENABLE ROW LEVEL SECURITY;' });
+    await supabase.rpc("exec", {
+      query: "ALTER TABLE achievement_definitions ENABLE ROW LEVEL SECURITY;",
+    });
+    await supabase.rpc("exec", {
+      query: "ALTER TABLE achievement_progress ENABLE ROW LEVEL SECURITY;",
+    });
 
     // Insert default achievements
     console.log("🏆 Inserting default achievements...");
-    const { error: insertError } = await supabase.rpc('exec', {
+    const { error: insertError } = await supabase.rpc("exec", {
       query: `
         INSERT INTO achievement_definitions (name, description, icon, category, trigger_type, trigger_target, trigger_count, points, rarity) VALUES
         ('First Play', 'Create your first play in BoxCall', 'football', 'gameplay', 'action_count', 'play_created', 1, 10, 'common'),
@@ -95,19 +105,21 @@ async function createAchievementTables() {
         ('Century Club', 'Reach 100 total achievement points', 'target', 'milestone', 'special', 'points_milestone', 100, 100, 'rare'),
         ('Achievement Hunter', 'Earn 25 different achievements', 'award', 'milestone', 'special', 'achievements_earned', 25, 250, 'epic'),
         ('BoxCall Legend', 'Earn 50 different achievements', 'gem', 'milestone', 'special', 'achievements_earned', 50, 500, 'legendary');
-      `
+      `,
     });
 
     if (insertError) {
-      console.log('❌ Failed to insert default achievements:', insertError.message);
+      console.log(
+        "❌ Failed to insert default achievements:",
+        insertError.message
+      );
     } else {
-      console.log('✅ Inserted default achievements');
+      console.log("✅ Inserted default achievements");
     }
 
     console.log("🎯 Achievement system setup complete!");
-
   } catch (error: any) {
-    console.error('❌ Error creating tables:', error.message);
+    console.error("❌ Error creating tables:", error.message);
   }
 }
 

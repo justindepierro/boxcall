@@ -1,6 +1,6 @@
 /**
  * Development Logger Utility
- * 
+ *
  * Provides controlled logging that:
  * - Only logs in development mode
  * - Adds consistent prefixes
@@ -9,7 +9,7 @@
  */
 
 const isDev = import.meta.env.DEV;
-const isDebugMode = import.meta.env.VITE_DEBUG === 'true';
+const isDebugMode = import.meta.env.VITE_DEBUG === "true";
 
 export const devLogger = {
   /**
@@ -17,7 +17,7 @@ export const devLogger = {
    */
   error: (...args: any[]) => {
     if (isDev) {
-      console.error('🔴 [ERROR]', ...args);
+      console.error("🔴 [ERROR]", ...args);
     }
   },
 
@@ -26,7 +26,7 @@ export const devLogger = {
    */
   warn: (...args: any[]) => {
     if (isDev) {
-      console.warn('⚠️  [WARN]', ...args);
+      console.warn("⚠️  [WARN]", ...args);
     }
   },
 
@@ -35,7 +35,7 @@ export const devLogger = {
    */
   info: (...args: any[]) => {
     if (isDev) {
-      console.info('ℹ️  [INFO]', ...args);
+      console.info("ℹ️  [INFO]", ...args);
     }
   },
 
@@ -44,7 +44,7 @@ export const devLogger = {
    */
   debug: (...args: any[]) => {
     if (isDev && isDebugMode) {
-      console.debug('🐛 [DEBUG]', ...args);
+      console.debug("🐛 [DEBUG]", ...args);
     }
   },
 
@@ -70,7 +70,7 @@ export const devLogger = {
   api: (method: string, url: string, data?: any) => {
     if (isDev && isDebugMode) {
       console.groupCollapsed(`🌐 [API] ${method} ${url}`);
-      if (data) console.log('Data:', data);
+      if (data) console.log("Data:", data);
       console.groupEnd();
     }
   },
@@ -78,10 +78,15 @@ export const devLogger = {
   /**
    * Log component lifecycle - only when VITE_DEBUG=true
    */
-  component: (name: string, action: 'mount' | 'unmount' | 'update', data?: any) => {
+  component: (
+    name: string,
+    action: "mount" | "unmount" | "update",
+    data?: any
+  ) => {
     if (isDev && isDebugMode) {
-      const emoji = action === 'mount' ? '🟢' : action === 'unmount' ? '🔴' : '🔄';
-      console.log(`${emoji} [COMPONENT] ${name} - ${action}`, data || '');
+      const emoji =
+        action === "mount" ? "🟢" : action === "unmount" ? "🔴" : "🔄";
+      console.log(`${emoji} [COMPONENT] ${name} - ${action}`, data || "");
     }
   },
 
@@ -98,7 +103,7 @@ export const devLogger = {
       fn();
       console.groupEnd();
     }
-  }
+  },
 };
 
 /**
@@ -108,7 +113,7 @@ export const devLogger = {
 export const trackError = (error: Error, context?: Record<string, any>) => {
   if (!isDev) {
     // TODO: Send to Sentry, LogRocket, or similar
-    console.error('Production error:', error, context);
+    console.error("Production error:", error, context);
   } else {
     devLogger.error(error, context);
   }
@@ -116,21 +121,21 @@ export const trackError = (error: Error, context?: Record<string, any>) => {
 
 /**
  * Example usage:
- * 
+ *
  * import { devLogger } from '@/utils/devLogger';
- * 
+ *
  * // Basic logging
  * devLogger.info('User logged in', { userId: 123 });
  * devLogger.error('Failed to fetch data', error);
- * 
+ *
  * // Debug mode only
  * devLogger.debug('Component state:', componentState);
- * 
+ *
  * // Performance monitoring
  * devLogger.perf('fetchUsers', () => {
  *   // expensive operation
  * });
- * 
+ *
  * // Grouped logs
  * devLogger.group('User Actions', () => {
  *   devLogger.info('Action 1');

@@ -9,46 +9,46 @@
  * - Error logging and monitoring
  */
 
-import type { PostgrestError } from '@supabase/supabase-js';
+import type { PostgrestError } from "@supabase/supabase-js";
 
 export enum DatabaseErrorType {
   // Connection errors
-  CONNECTION_LOST = 'CONNECTION_LOST',
-  CONNECTION_TIMEOUT = 'CONNECTION_TIMEOUT',
-  CONNECTION_REFUSED = 'CONNECTION_REFUSED',
+  CONNECTION_LOST = "CONNECTION_LOST",
+  CONNECTION_TIMEOUT = "CONNECTION_TIMEOUT",
+  CONNECTION_REFUSED = "CONNECTION_REFUSED",
 
   // Authentication errors
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  FORBIDDEN = 'FORBIDDEN',
-  TOKEN_EXPIRED = 'TOKEN_EXPIRED',
+  UNAUTHORIZED = "UNAUTHORIZED",
+  FORBIDDEN = "FORBIDDEN",
+  TOKEN_EXPIRED = "TOKEN_EXPIRED",
 
   // Data validation errors
-  VALIDATION_ERROR = 'VALIDATION_ERROR',
-  CONSTRAINT_VIOLATION = 'CONSTRAINT_VIOLATION',
-  FOREIGN_KEY_VIOLATION = 'FOREIGN_KEY_VIOLATION',
-  UNIQUE_VIOLATION = 'UNIQUE_VIOLATION',
+  VALIDATION_ERROR = "VALIDATION_ERROR",
+  CONSTRAINT_VIOLATION = "CONSTRAINT_VIOLATION",
+  FOREIGN_KEY_VIOLATION = "FOREIGN_KEY_VIOLATION",
+  UNIQUE_VIOLATION = "UNIQUE_VIOLATION",
 
   // Resource errors
-  NOT_FOUND = 'NOT_FOUND',
-  CONFLICT = 'CONFLICT',
-  RATE_LIMITED = 'RATE_LIMITED',
+  NOT_FOUND = "NOT_FOUND",
+  CONFLICT = "CONFLICT",
+  RATE_LIMITED = "RATE_LIMITED",
 
   // System errors
-  INTERNAL_ERROR = 'INTERNAL_ERROR',
-  SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
-  MAINTENANCE_MODE = 'MAINTENANCE_MODE',
+  INTERNAL_ERROR = "INTERNAL_ERROR",
+  SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE",
+  MAINTENANCE_MODE = "MAINTENANCE_MODE",
 
   // Unknown errors
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR'
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
 }
 
 export enum RecoveryStrategy {
-  RETRY = 'RETRY',
-  REFRESH_TOKEN = 'REFRESH_TOKEN',
-  REAUTHENTICATE = 'REAUTHENTICATE',
-  USER_INPUT = 'USER_INPUT',
-  SYSTEM_ADMIN = 'SYSTEM_ADMIN',
-  NONE = 'NONE'
+  RETRY = "RETRY",
+  REFRESH_TOKEN = "REFRESH_TOKEN",
+  REAUTHENTICATE = "REAUTHENTICATE",
+  USER_INPUT = "USER_INPUT",
+  SYSTEM_ADMIN = "SYSTEM_ADMIN",
+  NONE = "NONE",
 }
 
 export interface DatabaseError {
@@ -58,7 +58,7 @@ export interface DatabaseError {
   userMessage: string;
   recoveryStrategy: RecoveryStrategy;
   retryable: boolean;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
   context?: Record<string, any>;
   timestamp: Date;
 }
@@ -87,52 +87,54 @@ export class DatabaseErrorHandler {
    */
   categorizeError(error: any, context?: Record<string, any>): DatabaseError {
     const postgrestError = error as PostgrestError;
-    const errorCode = postgrestError.code || error.status?.toString() || '';
-    const errorMessage = postgrestError.message || error.message || 'Unknown error';
+    const errorCode = postgrestError.code || error.status?.toString() || "";
+    const errorMessage =
+      postgrestError.message || error.message || "Unknown error";
 
     let errorType: DatabaseErrorType;
     let userMessage: string;
     let recoveryStrategy: RecoveryStrategy;
     let retryable: boolean;
-    let severity: 'low' | 'medium' | 'high' | 'critical';
+    let severity: "low" | "medium" | "high" | "critical";
 
     // Categorize based on error code and message
     if (this.isConnectionError(errorCode, errorMessage)) {
       errorType = this.getConnectionErrorType(errorCode);
-      userMessage = 'Connection to database lost. Please check your internet connection.';
+      userMessage =
+        "Connection to database lost. Please check your internet connection.";
       recoveryStrategy = RecoveryStrategy.RETRY;
       retryable = true;
-      severity = 'medium';
+      severity = "medium";
     } else if (this.isAuthError(errorCode, errorMessage)) {
       errorType = this.getAuthErrorType(errorCode);
       userMessage = this.getAuthErrorMessage(errorType);
       recoveryStrategy = this.getAuthRecoveryStrategy(errorType);
       retryable = false;
-      severity = 'high';
+      severity = "high";
     } else if (this.isValidationError(errorCode, errorMessage)) {
       errorType = this.getValidationErrorType(errorCode);
       userMessage = this.getValidationErrorMessage(errorType, errorMessage);
       recoveryStrategy = RecoveryStrategy.USER_INPUT;
       retryable = false;
-      severity = 'low';
+      severity = "low";
     } else if (this.isResourceError(errorCode, errorMessage)) {
       errorType = this.getResourceErrorType(errorCode);
       userMessage = this.getResourceErrorMessage(errorType);
       recoveryStrategy = this.getResourceRecoveryStrategy(errorType);
       retryable = errorType === DatabaseErrorType.RATE_LIMITED;
-      severity = errorType === DatabaseErrorType.NOT_FOUND ? 'low' : 'medium';
+      severity = errorType === DatabaseErrorType.NOT_FOUND ? "low" : "medium";
     } else if (this.isSystemError(errorCode, errorMessage)) {
       errorType = DatabaseErrorType.INTERNAL_ERROR;
-      userMessage = 'A system error occurred. Please try again later.';
+      userMessage = "A system error occurred. Please try again later.";
       recoveryStrategy = RecoveryStrategy.RETRY;
       retryable = true;
-      severity = 'high';
+      severity = "high";
     } else {
       errorType = DatabaseErrorType.UNKNOWN_ERROR;
-      userMessage = 'An unexpected error occurred. Please try again.';
+      userMessage = "An unexpected error occurred. Please try again.";
       recoveryStrategy = RecoveryStrategy.RETRY;
       retryable = true;
-      severity = 'medium';
+      severity = "medium";
     }
 
     const databaseError: DatabaseError = {
@@ -144,7 +146,7 @@ export class DatabaseErrorHandler {
       retryable,
       severity,
       context,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Log error
@@ -163,12 +165,7 @@ export class DatabaseErrorHandler {
     operation: () => Promise<T>,
     options: ErrorRecoveryOptions = {}
   ): Promise<T> {
-    const {
-      maxRetries = 3,
-      retryDelay = 1000,
-      onRetry,
-      onFailure
-    } = options;
+    const { maxRetries = 3, retryDelay = 1000, onRetry, onFailure } = options;
 
     let lastError: DatabaseError;
 
@@ -209,24 +206,24 @@ export class DatabaseErrorHandler {
 
       case RecoveryStrategy.REFRESH_TOKEN:
         // Trigger token refresh
-        console.log('🔄 Attempting to refresh authentication token...');
+        console.log("🔄 Attempting to refresh authentication token...");
         // This would integrate with your auth service
         break;
 
       case RecoveryStrategy.REAUTHENTICATE:
         // Trigger re-authentication
-        console.log('🔐 Re-authentication required');
+        console.log("🔐 Re-authentication required");
         // This would redirect to login
         break;
 
       case RecoveryStrategy.USER_INPUT:
         // Error requires user action
-        console.log('👤 User input required to resolve error');
+        console.log("👤 User input required to resolve error");
         break;
 
       case RecoveryStrategy.SYSTEM_ADMIN:
         // System administrator intervention required
-        console.error('🚨 System administrator intervention required');
+        console.error("🚨 System administrator intervention required");
         break;
 
       default:
@@ -238,11 +235,25 @@ export class DatabaseErrorHandler {
    * Check if error is a connection error
    */
   private isConnectionError(code: string, message: string): boolean {
-    const connectionCodes = ['08006', '08003', '08000', '53300', 'PGRST301', 'PGRST302'];
-    const connectionMessages = ['connection', 'timeout', 'refused', 'unreachable'];
+    const connectionCodes = [
+      "08006",
+      "08003",
+      "08000",
+      "53300",
+      "PGRST301",
+      "PGRST302",
+    ];
+    const connectionMessages = [
+      "connection",
+      "timeout",
+      "refused",
+      "unreachable",
+    ];
 
-    return connectionCodes.includes(code) ||
-           connectionMessages.some(msg => message.toLowerCase().includes(msg));
+    return (
+      connectionCodes.includes(code) ||
+      connectionMessages.some((msg) => message.toLowerCase().includes(msg))
+    );
   }
 
   /**
@@ -250,10 +261,10 @@ export class DatabaseErrorHandler {
    */
   private getConnectionErrorType(code: string): DatabaseErrorType {
     switch (code) {
-      case '08006':
-      case '08003':
+      case "08006":
+      case "08003":
         return DatabaseErrorType.CONNECTION_LOST;
-      case 'PGRST301':
+      case "PGRST301":
         return DatabaseErrorType.CONNECTION_TIMEOUT;
       default:
         return DatabaseErrorType.CONNECTION_REFUSED;
@@ -264,18 +275,25 @@ export class DatabaseErrorHandler {
    * Check if error is an authentication error
    */
   private isAuthError(code: string, message: string): boolean {
-    const authCodes = ['PGRST401', '401'];
-    const authMessages = ['unauthorized', 'forbidden', 'token expired', 'invalid token'];
+    const authCodes = ["PGRST401", "401"];
+    const authMessages = [
+      "unauthorized",
+      "forbidden",
+      "token expired",
+      "invalid token",
+    ];
 
-    return authCodes.includes(code) ||
-           authMessages.some(msg => message.toLowerCase().includes(msg));
+    return (
+      authCodes.includes(code) ||
+      authMessages.some((msg) => message.toLowerCase().includes(msg))
+    );
   }
 
   /**
    * Get specific auth error type
    */
   private getAuthErrorType(code: string): DatabaseErrorType {
-    if (code === 'PGRST401' || code === '401') {
+    if (code === "PGRST401" || code === "401") {
       return DatabaseErrorType.UNAUTHORIZED;
     }
     return DatabaseErrorType.UNAUTHORIZED; // Default
@@ -287,13 +305,13 @@ export class DatabaseErrorHandler {
   private getAuthErrorMessage(type: DatabaseErrorType): string {
     switch (type) {
       case DatabaseErrorType.UNAUTHORIZED:
-        return 'You are not authorized to perform this action.';
+        return "You are not authorized to perform this action.";
       case DatabaseErrorType.FORBIDDEN:
-        return 'Access to this resource is forbidden.';
+        return "Access to this resource is forbidden.";
       case DatabaseErrorType.TOKEN_EXPIRED:
-        return 'Your session has expired. Please sign in again.';
+        return "Your session has expired. Please sign in again.";
       default:
-        return 'Authentication error occurred.';
+        return "Authentication error occurred.";
     }
   }
 
@@ -315,11 +333,18 @@ export class DatabaseErrorHandler {
    * Check if error is a validation error
    */
   private isValidationError(code: string, message: string): boolean {
-    const validationCodes = ['23505', '23503', '23502', '23514'];
-    const validationMessages = ['violates', 'constraint', 'null value', 'invalid'];
+    const validationCodes = ["23505", "23503", "23502", "23514"];
+    const validationMessages = [
+      "violates",
+      "constraint",
+      "null value",
+      "invalid",
+    ];
 
-    return validationCodes.includes(code) ||
-           validationMessages.some(msg => message.toLowerCase().includes(msg));
+    return (
+      validationCodes.includes(code) ||
+      validationMessages.some((msg) => message.toLowerCase().includes(msg))
+    );
   }
 
   /**
@@ -327,11 +352,11 @@ export class DatabaseErrorHandler {
    */
   private getValidationErrorType(code: string): DatabaseErrorType {
     switch (code) {
-      case '23505':
+      case "23505":
         return DatabaseErrorType.UNIQUE_VIOLATION;
-      case '23503':
+      case "23503":
         return DatabaseErrorType.FOREIGN_KEY_VIOLATION;
-      case '23502':
+      case "23502":
         return DatabaseErrorType.CONSTRAINT_VIOLATION;
       default:
         return DatabaseErrorType.VALIDATION_ERROR;
@@ -341,16 +366,19 @@ export class DatabaseErrorHandler {
   /**
    * Get user-friendly validation error message
    */
-  private getValidationErrorMessage(type: DatabaseErrorType, _originalMessage: string): string {
+  private getValidationErrorMessage(
+    type: DatabaseErrorType,
+    _originalMessage: string
+  ): string {
     switch (type) {
       case DatabaseErrorType.UNIQUE_VIOLATION:
-        return 'This value already exists. Please choose a different value.';
+        return "This value already exists. Please choose a different value.";
       case DatabaseErrorType.FOREIGN_KEY_VIOLATION:
-        return 'This action would break data relationships. Please check your data.';
+        return "This action would break data relationships. Please check your data.";
       case DatabaseErrorType.CONSTRAINT_VIOLATION:
-        return 'The provided data violates system rules. Please check your input.';
+        return "The provided data violates system rules. Please check your input.";
       default:
-        return 'Please check your input data and try again.';
+        return "Please check your input data and try again.";
     }
   }
 
@@ -358,11 +386,13 @@ export class DatabaseErrorHandler {
    * Check if error is a resource error
    */
   private isResourceError(code: string, message: string): boolean {
-    const resourceCodes = ['PGRST116', '409', '429'];
-    const resourceMessages = ['not found', 'conflict', 'rate limit'];
+    const resourceCodes = ["PGRST116", "409", "429"];
+    const resourceMessages = ["not found", "conflict", "rate limit"];
 
-    return resourceCodes.includes(code) ||
-           resourceMessages.some(msg => message.toLowerCase().includes(msg));
+    return (
+      resourceCodes.includes(code) ||
+      resourceMessages.some((msg) => message.toLowerCase().includes(msg))
+    );
   }
 
   /**
@@ -370,11 +400,11 @@ export class DatabaseErrorHandler {
    */
   private getResourceErrorType(code: string): DatabaseErrorType {
     switch (code) {
-      case 'PGRST116':
+      case "PGRST116":
         return DatabaseErrorType.NOT_FOUND;
-      case '409':
+      case "409":
         return DatabaseErrorType.CONFLICT;
-      case '429':
+      case "429":
         return DatabaseErrorType.RATE_LIMITED;
       default:
         return DatabaseErrorType.NOT_FOUND;
@@ -387,20 +417,22 @@ export class DatabaseErrorHandler {
   private getResourceErrorMessage(type: DatabaseErrorType): string {
     switch (type) {
       case DatabaseErrorType.NOT_FOUND:
-        return 'The requested item was not found.';
+        return "The requested item was not found.";
       case DatabaseErrorType.CONFLICT:
-        return 'This action conflicts with existing data.';
+        return "This action conflicts with existing data.";
       case DatabaseErrorType.RATE_LIMITED:
-        return 'Too many requests. Please wait and try again.';
+        return "Too many requests. Please wait and try again.";
       default:
-        return 'Resource error occurred.';
+        return "Resource error occurred.";
     }
   }
 
   /**
    * Get resource recovery strategy
    */
-  private getResourceRecoveryStrategy(type: DatabaseErrorType): RecoveryStrategy {
+  private getResourceRecoveryStrategy(
+    type: DatabaseErrorType
+  ): RecoveryStrategy {
     switch (type) {
       case DatabaseErrorType.RATE_LIMITED:
         return RecoveryStrategy.RETRY;
@@ -413,11 +445,13 @@ export class DatabaseErrorHandler {
    * Check if error is a system error
    */
   private isSystemError(code: string, message: string): boolean {
-    const systemCodes = ['500', '503', 'PGRST500'];
-    const systemMessages = ['internal', 'service unavailable', 'maintenance'];
+    const systemCodes = ["500", "503", "PGRST500"];
+    const systemMessages = ["internal", "service unavailable", "maintenance"];
 
-    return systemCodes.includes(code) ||
-           systemMessages.some(msg => message.toLowerCase().includes(msg));
+    return (
+      systemCodes.includes(code) ||
+      systemMessages.some((msg) => message.toLowerCase().includes(msg))
+    );
   }
 
   /**
@@ -429,21 +463,21 @@ export class DatabaseErrorHandler {
       message: error.message,
       severity: error.severity,
       context: error.context,
-      timestamp: error.timestamp
+      timestamp: error.timestamp,
     };
 
     switch (error.severity) {
-      case 'critical':
-        console.error('🚨 CRITICAL DATABASE ERROR:', logData);
+      case "critical":
+        console.error("🚨 CRITICAL DATABASE ERROR:", logData);
         break;
-      case 'high':
-        console.error('❌ HIGH DATABASE ERROR:', logData);
+      case "high":
+        console.error("❌ HIGH DATABASE ERROR:", logData);
         break;
-      case 'medium':
-        console.warn('⚠️ MEDIUM DATABASE ERROR:', logData);
+      case "medium":
+        console.warn("⚠️ MEDIUM DATABASE ERROR:", logData);
         break;
-      case 'low':
-        console.info('ℹ️ LOW DATABASE ERROR:', logData);
+      case "low":
+        console.info("ℹ️ LOW DATABASE ERROR:", logData);
         break;
     }
   }
@@ -473,9 +507,10 @@ export class DatabaseErrorHandler {
   getErrorStats(): Record<string, number> {
     const stats: Record<string, number> = {};
 
-    this.errorHistory.forEach(error => {
+    this.errorHistory.forEach((error) => {
       stats[error.type] = (stats[error.type] || 0) + 1;
-      stats[`severity_${error.severity}`] = (stats[`severity_${error.severity}`] || 0) + 1;
+      stats[`severity_${error.severity}`] =
+        (stats[`severity_${error.severity}`] || 0) + 1;
     });
 
     return stats;
@@ -485,7 +520,7 @@ export class DatabaseErrorHandler {
    * Utility delay function
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 

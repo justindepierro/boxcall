@@ -12,10 +12,17 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const serviceRoleKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 console.log("🔍 Debug - SUPABASE_URL:", supabaseUrl ? "SET" : "NOT SET");
-console.log("🔍 Debug - SERVICE_ROLE_KEY:", serviceRoleKey ? "SET (" + serviceRoleKey.substring(0, 10) + "...)" : "NOT SET");
+console.log(
+  "🔍 Debug - SERVICE_ROLE_KEY:",
+  serviceRoleKey
+    ? "SET (" + serviceRoleKey.substring(0, 10) + "...)"
+    : "NOT SET"
+);
 
 if (!supabaseUrl || !serviceRoleKey) {
-  console.error("❌ Missing required environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY");
+  console.error(
+    "❌ Missing required environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY"
+  );
   process.exit(1);
 }
 
@@ -34,12 +41,15 @@ async function applySchema() {
     // Try a simple test query first
     console.log("🧪 Testing database connection...");
     const { error: testError } = await supabase
-      .from('profiles')
-      .select('id')
+      .from("profiles")
+      .select("id")
       .limit(1);
 
     if (testError) {
-      console.log("⚠️  Test query failed (expected if tables don't exist):", testError.message);
+      console.log(
+        "⚠️  Test query failed (expected if tables don't exist):",
+        testError.message
+      );
     } else {
       console.log("✅ Database connection successful");
     }
@@ -48,14 +58,15 @@ async function applySchema() {
     // We'll create a simple script that can be run in Supabase SQL editor
     console.log("📝 Generating SQL script for manual execution...");
     console.log("Copy the following SQL to your Supabase SQL Editor:");
-    console.log("=" .repeat(50));
+    console.log("=".repeat(50));
     console.log(schemaSQL);
-    console.log("=" .repeat(50));
+    console.log("=".repeat(50));
 
-    console.log("💡 Alternatively, you can run this SQL directly in your Supabase dashboard under SQL Editor");
-
+    console.log(
+      "💡 Alternatively, you can run this SQL directly in your Supabase dashboard under SQL Editor"
+    );
   } catch (error: any) {
-    console.error('❌ Error applying schema:', error.message);
+    console.error("❌ Error applying schema:", error.message);
     process.exit(1);
   }
 }

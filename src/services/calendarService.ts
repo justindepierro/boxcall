@@ -5,7 +5,7 @@
  * - CalendarService (facade over infra/calendar modules)
  * - eventsService (team_events table operations)
  * - rsvpService (advanced RSVP management)
- * 
+ *
  * Hooks in state/calendar/hooks remain the preferred integration path inside React components.
  */
 import { CalendarAPI, CalendarRSVP, CalendarComments } from "../infra/calendar";

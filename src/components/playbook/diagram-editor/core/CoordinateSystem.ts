@@ -1,9 +1,9 @@
 /**
  * Unified Coordinate System for Football Diagram
- * 
+ *
  * Everything uses YARD coordinates as the single source of truth.
  * Pixi handles screen-to-world conversion automatically via transforms.
- * 
+ *
  * PERFORMANCE: Now supports in-place updates with observer pattern
  * to avoid expensive Pixi app recreation on resize.
  */
@@ -13,7 +13,7 @@ import {
   validatePixelsPerYard,
   validateCoordinate,
   clamp,
-} from '../utils/validation';
+} from "../utils/validation";
 
 export interface YardCoordinate {
   x: number; // 0 to FIELD_WIDTH (53.333 yards)
@@ -21,7 +21,7 @@ export interface YardCoordinate {
 }
 
 export interface FieldDimensions {
-  width: number;  // Field width in yards (53.333 for NFL)
+  width: number; // Field width in yards (53.333 for NFL)
   height: number; // Visible field height in yards (configurable slice)
   pixelsPerYard: number; // Scale factor for rendering
 }
@@ -60,11 +60,11 @@ export class CoordinateSystem {
    */
   updatePixelsPerYard(newValue: number): void {
     validatePixelsPerYard(newValue);
-    
+
     if (this._pixelsPerYard === newValue) {
       return; // No change, skip notification
     }
-    
+
     this._pixelsPerYard = newValue;
     this.notifyObservers();
   }
@@ -87,7 +87,7 @@ export class CoordinateSystem {
    * Notify all observers of changes
    */
   private notifyObservers(): void {
-    this.observers.forEach(observer => observer(this));
+    this.observers.forEach((observer) => observer(this));
   }
 
   /**
@@ -95,8 +95,14 @@ export class CoordinateSystem {
    */
   yardsToPixels(yards: YardCoordinate): { x: number; y: number } {
     // Validate yards (allow some buffer outside field)
-    validateCoordinate(yards.x, 'Yards X', { min: -10, max: this.fieldWidth + 10 });
-    validateCoordinate(yards.y, 'Yards Y', { min: -10, max: this.fieldHeight + 10 });
+    validateCoordinate(yards.x, "Yards X", {
+      min: -10,
+      max: this.fieldWidth + 10,
+    });
+    validateCoordinate(yards.y, "Yards Y", {
+      min: -10,
+      max: this.fieldHeight + 10,
+    });
 
     return {
       x: yards.x * this.pixelsPerYard,

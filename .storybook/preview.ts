@@ -13,13 +13,27 @@ import { ErrorBoundary } from "../src/components/ui/ErrorBoundary";
 
 // Storybook wrapper with all necessary providers
 const StorybookProviders = ({ children }: { children: React.ReactNode }) =>
-  React.createElement(ErrorBoundary, null,
-    React.createElement(TelemetryProvider, null,
-      React.createElement(QueryClientProvider, { client: queryClient },
-        React.createElement(BrowserRouter, null,
-          React.createElement(ToastProvider, null,
-            React.createElement(ConfirmProvider, null,
-              React.createElement(UndoQueueProvider, null,
+  React.createElement(
+    ErrorBoundary,
+    null,
+    React.createElement(
+      TelemetryProvider,
+      null,
+      React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        React.createElement(
+          BrowserRouter,
+          null,
+          React.createElement(
+            ToastProvider,
+            null,
+            React.createElement(
+              ConfirmProvider,
+              null,
+              React.createElement(
+                UndoQueueProvider,
+                null,
                 React.createElement(RoleProvider, null, children)
               )
             )
@@ -45,7 +59,8 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story: any) => React.createElement(StorybookProviders, null, React.createElement(Story)),
+    (Story: any) =>
+      React.createElement(StorybookProviders, null, React.createElement(Story)),
   ],
 };
 

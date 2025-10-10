@@ -606,12 +606,13 @@ export class PracticeService {
         .in("practice_script_id", scriptIds);
 
       // Map scripts with their plays
-      return data.map((script) => this.mapDatabaseScriptToPracticeScript({
-        ...script,
-        practice_script_plays: plays?.filter(
-          (p: any) => p.practice_script_id === script.id
-        ) || [],
-      }));
+      return data.map((script) =>
+        this.mapDatabaseScriptToPracticeScript({
+          ...script,
+          practice_script_plays:
+            plays?.filter((p: any) => p.practice_script_id === script.id) || [],
+        })
+      );
     } catch (error) {
       console.error("Error searching practice scripts:", error);
       return [];
@@ -732,14 +733,17 @@ export class PracticeService {
         );
       }
 
-      const playsByScriptId = scriptPlays.reduce((acc, play) => {
-        const scriptId = play.practice_script_id;
-        if (!acc[scriptId]) {
-          acc[scriptId] = [];
-        }
-        acc[scriptId].push(play);
-        return acc;
-      }, {} as Record<string, any[]>);
+      const playsByScriptId = scriptPlays.reduce(
+        (acc, play) => {
+          const scriptId = play.practice_script_id;
+          if (!acc[scriptId]) {
+            acc[scriptId] = [];
+          }
+          acc[scriptId].push(play);
+          return acc;
+        },
+        {} as Record<string, any[]>
+      );
 
       return scripts.map((script) => {
         const scriptPlays = playsByScriptId[script.id] || [];
@@ -851,7 +855,7 @@ export class PracticeService {
       const script = existingScripts[0] as any;
       return {
         id: script.id as string,
-        title: script.title || script.name as string,
+        title: script.title || (script.name as string),
         description: script.description as string | undefined,
         teamId: script.team_id as string,
         createdBy: script.created_by as string,

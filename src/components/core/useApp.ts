@@ -1,6 +1,6 @@
 /**
  * App Provider Hook
- * 
+ *
  * Hook for consuming the unified App context
  */
 

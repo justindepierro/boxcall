@@ -133,22 +133,46 @@ export type QuickTimeInterval =
 // Using Tailwind design tokens for consistent theming
 export const PRACTICE_BLOCK_TYPES = {
   WARMUP: { title: "Warm-up", defaultDuration: 15, color: "rgb(16, 185, 129)" }, // emerald-500
-  STRETCH: { title: "Stretching", defaultDuration: 10, color: "rgb(6, 182, 212)" }, // cyan-500
-  DRILLS: { title: "Skill Drills", defaultDuration: 20, color: "rgb(139, 92, 246)" }, // electric-500
-  SCRIMMAGE: { title: "Scrimmage", defaultDuration: 30, color: "rgb(245, 158, 11)" }, // warning-500
+  STRETCH: {
+    title: "Stretching",
+    defaultDuration: 10,
+    color: "rgb(6, 182, 212)",
+  }, // cyan-500
+  DRILLS: {
+    title: "Skill Drills",
+    defaultDuration: 20,
+    color: "rgb(139, 92, 246)",
+  }, // electric-500
+  SCRIMMAGE: {
+    title: "Scrimmage",
+    defaultDuration: 30,
+    color: "rgb(245, 158, 11)",
+  }, // warning-500
   CONDITIONING: {
     title: "Conditioning",
     defaultDuration: 15,
     color: "rgb(239, 68, 68)", // error-500
   },
-  FILM: { title: "Film Review", defaultDuration: 20, color: "rgb(107, 114, 128)" }, // gray-500
-  COOL_DOWN: { title: "Cool Down", defaultDuration: 10, color: "rgb(20, 184, 166)" }, // teal-500
+  FILM: {
+    title: "Film Review",
+    defaultDuration: 20,
+    color: "rgb(107, 114, 128)",
+  }, // gray-500
+  COOL_DOWN: {
+    title: "Cool Down",
+    defaultDuration: 10,
+    color: "rgb(20, 184, 166)",
+  }, // teal-500
   SPECIAL_TEAMS: {
     title: "Special Teams",
     defaultDuration: 25,
     color: "rgb(249, 115, 22)", // orange-600
   },
-  CUSTOM: { title: "Custom Block", defaultDuration: 15, color: "rgb(0, 168, 107)" }, // jade-500 (brand)
+  CUSTOM: {
+    title: "Custom Block",
+    defaultDuration: 15,
+    color: "rgb(0, 168, 107)",
+  }, // jade-500 (brand)
 } as const;
 export type PracticeBlockType =
   (typeof PRACTICE_BLOCK_TYPES)[keyof typeof PRACTICE_BLOCK_TYPES];

@@ -3,7 +3,7 @@
 // Now includes priority-based prefetching and user behavior analysis.
 
 type VoidFn = () => void;
-type PrefetchPriority = 'high' | 'medium' | 'low';
+type PrefetchPriority = "high" | "medium" | "low";
 
 interface PrefetchConfig {
   priority: PrefetchPriority;
@@ -73,7 +73,7 @@ function trackUserActivity(): void {
   };
 
   // Track various interaction events
-  ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(event => {
+  ["mousedown", "keydown", "touchstart", "scroll"].forEach((event) => {
     window.addEventListener(event, updateLastInteraction, { passive: true });
   });
 }
@@ -85,38 +85,38 @@ const prefetchers: Array<{
 }> = [
   {
     load: () => import("../pages/DashboardPage"),
-    config: { priority: 'high' } // Always prefetch dashboard
+    config: { priority: "high" }, // Always prefetch dashboard
   },
   {
     load: () => import("../pages/CalendarShellPage"),
     config: {
-      priority: 'medium',
-      condition: () => userIsActive() // Only if user is active
-    }
+      priority: "medium",
+      condition: () => userIsActive(), // Only if user is active
+    },
   },
   {
     load: () => import("../pages/PlaybookPage"),
     config: {
-      priority: 'medium',
-      condition: () => goodNetwork() // Only on good networks
-    }
+      priority: "medium",
+      condition: () => goodNetwork(), // Only on good networks
+    },
   },
   {
     load: () => import("../pages/ProfilePage"),
-    config: { priority: 'low' } // Lower priority
+    config: { priority: "low" }, // Lower priority
   },
   {
     load: () => import("../pages/TeamSettings"),
     config: {
-      priority: 'low',
-      condition: () => userIsActive() && goodNetwork()
-    }
+      priority: "low",
+      condition: () => userIsActive() && goodNetwork(),
+    },
   },
 ];
 
 function getPriorityDelay(priority: PrefetchPriority, index: number): number {
   const baseDelays = { high: 100, medium: 200, low: 500 };
-  return baseDelays[priority] + (index * 50); // Stagger within priority groups
+  return baseDelays[priority] + index * 50; // Stagger within priority groups
 }
 
 export function initRoutePrefetch(): void {
@@ -127,17 +127,23 @@ export function initRoutePrefetch(): void {
   trackUserActivity();
 
   // Group by priority for better scheduling
-  const groupedPrefetchers = prefetchers.reduce((groups, prefetcher, index) => {
-    const priority = prefetcher.config.priority;
-    if (!groups[priority]) groups[priority] = [];
-    groups[priority].push({ ...prefetcher, index });
-    return groups;
-  }, {} as Record<PrefetchPriority, Array<typeof prefetchers[0] & { index: number }>>);
+  const groupedPrefetchers = prefetchers.reduce(
+    (groups, prefetcher, index) => {
+      const priority = prefetcher.config.priority;
+      if (!groups[priority]) groups[priority] = [];
+      groups[priority].push({ ...prefetcher, index });
+      return groups;
+    },
+    {} as Record<
+      PrefetchPriority,
+      Array<(typeof prefetchers)[0] & { index: number }>
+    >
+  );
 
   // Schedule prefetches by priority
-  const priorities: PrefetchPriority[] = ['high', 'medium', 'low'];
+  const priorities: PrefetchPriority[] = ["high", "medium", "low"];
 
-  priorities.forEach(priority => {
+  priorities.forEach((priority) => {
     const group = groupedPrefetchers[priority];
     if (!group) return;
 

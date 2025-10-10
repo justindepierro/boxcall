@@ -17,17 +17,16 @@ async function checkCount() {
     console.log("🔍 Checking achievement_definitions count...");
 
     const { count, error } = await supabase
-      .from('achievement_definitions')
-      .select('*', { count: 'exact', head: true });
+      .from("achievement_definitions")
+      .select("*", { count: "exact", head: true });
 
     if (error) {
-      console.log('❌ Query error:', error);
+      console.log("❌ Query error:", error);
     } else {
       console.log(`✅ Table has ${count} rows`);
     }
-
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   }
 }
 

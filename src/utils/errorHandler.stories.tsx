@@ -382,7 +382,10 @@ export const ErrorClasses: StoryObj = {
                     <strong>Validation Errors:</strong>
                     <div className="mt-2 space-y-1">
                       {error.validationErrors.map((ve, i) => (
-                        <div key={i} className="p-2 bg-error-bg rounded text-xs">
+                        <div
+                          key={i}
+                          className="p-2 bg-error-bg rounded text-xs"
+                        >
                           <Badge variant="danger" className="mr-2">
                             {ve.field}
                           </Badge>

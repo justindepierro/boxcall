@@ -2,7 +2,7 @@
  * Progress tracking utilities for team creation wizard
  */
 
-const PROGRESS_STORAGE_KEY = 'team_creation_progress';
+const PROGRESS_STORAGE_KEY = "team_creation_progress";
 
 export interface TeamCreationProgress {
   currentStep: string;
@@ -15,13 +15,12 @@ export interface TeamCreationProgress {
  * Service for managing team creation progress persistence
  */
 export class ProgressTrackingService {
-  
   /**
    * Save current progress to localStorage
    */
   static saveProgress(
-    currentStep: string, 
-    formData: Record<string, any>, 
+    currentStep: string,
+    formData: Record<string, any>,
     completedSteps: string[]
   ): void {
     try {
@@ -29,11 +28,14 @@ export class ProgressTrackingService {
         currentStep,
         formData,
         completedSteps,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-      
+
       localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
-      console.log("💾 Progress saved:", { currentStep, completedSteps: completedSteps.length });
+      console.log("💾 Progress saved:", {
+        currentStep,
+        completedSteps: completedSteps.length,
+      });
     } catch (error) {
       console.warn("⚠️ Failed to save progress:", error);
     }
@@ -48,7 +50,7 @@ export class ProgressTrackingService {
       if (!savedData) return null;
 
       const progress: TeamCreationProgress = JSON.parse(savedData);
-      
+
       // Check if progress is not too old (24 hours)
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
       if (Date.now() - progress.timestamp > maxAge) {

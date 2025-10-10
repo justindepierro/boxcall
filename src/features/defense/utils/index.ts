@@ -1,6 +1,6 @@
 /**
  * Defense Utils Barrel Export
- * 
+ *
  * Central export point for all defense utility functions.
  */
 
@@ -13,4 +13,4 @@ export {
   getWideReceivers,
   countWideReceiversLeft,
   countWideReceiversRight,
-} from './eligibleReceiverFilter';
+} from "./eligibleReceiverFilter";

@@ -10,7 +10,7 @@ interface TeamMembershipRow {
 
 async function fetchTeamMembershipRole(teamId: string, userId: string) {
   if (!teamId || !userId) return null;
-  
+
   const { data, error } = await supabase
     .from("team_members")
     .select("team_role")

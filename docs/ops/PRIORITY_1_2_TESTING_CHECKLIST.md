@@ -372,9 +372,9 @@ _Document any issues, unexpected behavior, or follow-up items here._
 - [ ] No performance regressions
 - [ ] Ready for merge to main
 
-**Tester**: ******\_\_\_******  
-**Date**: ******\_\_\_******  
-**Signature**: ******\_\_\_******
+**Tester**: **\*\***\_\_\_**\*\***  
+**Date**: **\*\***\_\_\_**\*\***  
+**Signature**: **\*\***\_\_\_**\*\***
 
 ---
 

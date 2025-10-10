@@ -1,18 +1,24 @@
 /**
  * Enhanced Base Service with Database Optimization
- * 
+ *
  * Extends the existing BaseService with advanced optimization features
  * including query optimization, enhanced caching, and performance monitoring
  */
 
-import { BaseService as OriginalBaseService } from './BaseService';
-import { dbOptimization, type QueryMetrics } from '../database/DatabaseOptimizationService';
-import type { Database } from '../../types/database';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { BaseService as OriginalBaseService } from "./BaseService";
+import {
+  dbOptimization,
+  type QueryMetrics,
+} from "../database/DatabaseOptimizationService";
+import type { Database } from "../../types/database";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-type Tables<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Row"];
-type Inserts<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Insert"];
-type Updates<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Update"];
+type Tables<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Row"];
+type Inserts<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Insert"];
+type Updates<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Update"];
 
 interface OptimizedServiceOptions {
   enableQueryOptimization?: boolean;
@@ -43,7 +49,7 @@ interface ServiceMetrics {
  * Enhanced Base Service with optimization features
  */
 export class OptimizedBaseService<
-  T extends keyof Database["public"]["Tables"]
+  T extends keyof Database["public"]["Tables"],
 > extends OriginalBaseService<T> {
   protected options: OptimizedServiceOptions;
   protected serviceMetrics: ServiceMetrics[] = [];
@@ -54,13 +60,13 @@ export class OptimizedBaseService<
     options: OptimizedServiceOptions = {}
   ) {
     super(supabase, tableName);
-    
+
     this.options = {
       enableQueryOptimization: true,
       defaultCacheTTL: 300000, // 5 minutes
       enableMetrics: true,
       batchSize: 100,
-      ...options
+      ...options,
     };
   }
 
@@ -72,7 +78,10 @@ export class OptimizedBaseService<
     return Promise.resolve();
   }
 
-  protected async validateUpdate(_id: string, _data: Updates<T>): Promise<void> {
+  protected async validateUpdate(
+    _id: string,
+    _data: Updates<T>
+  ): Promise<void> {
     // Default implementation - can be overridden
     return Promise.resolve();
   }
@@ -92,13 +101,13 @@ export class OptimizedBaseService<
         return {
           data: result,
           error: null,
-          metrics: this.createFallbackMetrics('CREATE', true)
+          metrics: this.createFallbackMetrics("CREATE", true),
         };
       } catch (error) {
         return {
           data: null,
           error,
-          metrics: this.createFallbackMetrics('CREATE', false)
+          metrics: this.createFallbackMetrics("CREATE", false),
         };
       }
     }
@@ -106,15 +115,15 @@ export class OptimizedBaseService<
     const result = await dbOptimization.optimizedInsert(
       this.tableName as string,
       data,
-      { returning: ['*'] }
+      { returning: ["*"] }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedCreate',
+      operation: "optimizedCreate",
       duration: result.metrics.duration,
       success: result.metrics.success,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Emit domain event if successful
@@ -122,17 +131,17 @@ export class OptimizedBaseService<
       await this.emitEvent({
         aggregateId: (result.data[0] as any).id,
         aggregateType: String(this.tableName),
-        eventType: 'created',
+        eventType: "created",
         eventData: result.data[0],
-        causedBy: 'system',
-        timestamp: new Date()
+        causedBy: "system",
+        timestamp: new Date(),
       });
     }
 
     return {
       data: result.data?.[0] || null,
       error: result.error,
-      metrics: result.metrics
+      metrics: result.metrics,
     };
   }
 
@@ -154,13 +163,13 @@ export class OptimizedBaseService<
         return {
           data: result,
           error: null,
-          metrics: this.createFallbackMetrics('SELECT', true)
+          metrics: this.createFallbackMetrics("SELECT", true),
         };
       } catch (error) {
         return {
           data: null,
           error,
-          metrics: this.createFallbackMetrics('SELECT', false)
+          metrics: this.createFallbackMetrics("SELECT", false),
         };
       }
     }
@@ -171,23 +180,23 @@ export class OptimizedBaseService<
         columns: options.columns,
         filters: { id },
         cacheTTL: options.cacheTTL || this.options.defaultCacheTTL,
-        skipCache: options.skipCache
+        skipCache: options.skipCache,
       }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedFindById',
+      operation: "optimizedFindById",
       duration: result.metrics.duration,
       success: result.metrics.success,
       cacheHit: result.metrics.cacheHit,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return {
       data: result.data?.[0] || null,
       error: result.error,
-      metrics: result.metrics
+      metrics: result.metrics,
     };
   }
 
@@ -209,13 +218,13 @@ export class OptimizedBaseService<
         return {
           data: result,
           error: null,
-          metrics: this.createFallbackMetrics('SELECT', true)
+          metrics: this.createFallbackMetrics("SELECT", true),
         };
       } catch (error) {
         return {
           data: null,
           error,
-          metrics: this.createFallbackMetrics('SELECT', false)
+          metrics: this.createFallbackMetrics("SELECT", false),
         };
       }
     }
@@ -229,17 +238,17 @@ export class OptimizedBaseService<
         limit: options.limit,
         offset: options.offset,
         cacheTTL: options.cacheTTL || this.options.defaultCacheTTL,
-        skipCache: options.skipCache
+        skipCache: options.skipCache,
       }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedFindMany',
+      operation: "optimizedFindMany",
       duration: result.metrics.duration,
       success: result.metrics.success,
       cacheHit: result.metrics.cacheHit,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return result;
@@ -263,13 +272,13 @@ export class OptimizedBaseService<
         return {
           data: result,
           error: null,
-          metrics: this.createFallbackMetrics('UPDATE', true)
+          metrics: this.createFallbackMetrics("UPDATE", true),
         };
       } catch (error) {
         return {
           data: null,
           error,
-          metrics: this.createFallbackMetrics('UPDATE', false)
+          metrics: this.createFallbackMetrics("UPDATE", false),
         };
       }
     }
@@ -278,15 +287,15 @@ export class OptimizedBaseService<
       this.tableName as string,
       data,
       { id },
-      { returning: ['*'] }
+      { returning: ["*"] }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedUpdate',
+      operation: "optimizedUpdate",
       duration: result.metrics.duration,
       success: result.metrics.success,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Emit domain event if successful
@@ -294,17 +303,17 @@ export class OptimizedBaseService<
       await this.emitEvent({
         aggregateId: id,
         aggregateType: String(this.tableName),
-        eventType: 'updated',
+        eventType: "updated",
         eventData: { id, changes: data },
-        causedBy: 'system',
-        timestamp: new Date()
+        causedBy: "system",
+        timestamp: new Date(),
       });
     }
 
     return {
       data: result.data?.[0] || null,
       error: result.error,
-      metrics: result.metrics
+      metrics: result.metrics,
     };
   }
 
@@ -323,13 +332,13 @@ export class OptimizedBaseService<
         return {
           success: true,
           error: null,
-          metrics: this.createFallbackMetrics('DELETE', true)
+          metrics: this.createFallbackMetrics("DELETE", true),
         };
       } catch (error) {
         return {
           success: false,
           error,
-          metrics: this.createFallbackMetrics('DELETE', false)
+          metrics: this.createFallbackMetrics("DELETE", false),
         };
       }
     }
@@ -340,11 +349,11 @@ export class OptimizedBaseService<
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedDelete',
+      operation: "optimizedDelete",
       duration: result.metrics.duration,
       success: result.metrics.success,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Emit domain event if successful
@@ -352,17 +361,17 @@ export class OptimizedBaseService<
       await this.emitEvent({
         aggregateId: id,
         aggregateType: String(this.tableName),
-        eventType: 'deleted',
+        eventType: "deleted",
         eventData: { id },
-        causedBy: 'system',
-        timestamp: new Date()
+        causedBy: "system",
+        timestamp: new Date(),
       });
     }
 
     return {
       success: result.metrics.success,
       error: result.error,
-      metrics: result.metrics
+      metrics: result.metrics,
     };
   }
 
@@ -384,11 +393,11 @@ export class OptimizedBaseService<
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedBatchCreate',
+      operation: "optimizedBatchCreate",
       duration: result.metrics.duration,
       success: result.metrics.success,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Emit domain events for successful inserts
@@ -397,10 +406,10 @@ export class OptimizedBaseService<
         await this.emitEvent({
           aggregateId: (record as any).id,
           aggregateType: String(this.tableName),
-          eventType: 'created',
+          eventType: "created",
           eventData: record,
-          causedBy: 'system',
-          timestamp: new Date()
+          causedBy: "system",
+          timestamp: new Date(),
         });
       }
     }
@@ -428,12 +437,12 @@ export class OptimizedBaseService<
     // Build text search filters
     if (options.fuzzy) {
       // Use ilike for fuzzy search
-      searchColumns.forEach(column => {
+      searchColumns.forEach((column) => {
         filters[`${column}:ilike`] = `%${searchTerm}%`;
       });
     } else {
       // Use exact match or full-text search if available
-      searchColumns.forEach(column => {
+      searchColumns.forEach((column) => {
         filters[`${column}:like`] = `%${searchTerm}%`;
       });
     }
@@ -447,17 +456,17 @@ export class OptimizedBaseService<
         limit: options.limit,
         offset: options.offset,
         cacheTTL: options.cacheTTL || this.options.defaultCacheTTL,
-        skipCache: options.skipCache
+        skipCache: options.skipCache,
       }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedSearch',
+      operation: "optimizedSearch",
       duration: result.metrics.duration,
       success: result.metrics.success,
       cacheHit: result.metrics.cacheHit,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return result;
@@ -483,15 +492,15 @@ export class OptimizedBaseService<
   }> {
     // Build select with aggregation functions
     const selectParts: string[] = [];
-    
+
     if (aggregations.count) {
-      selectParts.push('count(*)');
+      selectParts.push("count(*)");
     }
-    
-    aggregations.sum?.forEach(col => selectParts.push(`sum(${col})`));
-    aggregations.avg?.forEach(col => selectParts.push(`avg(${col})`));
-    aggregations.min?.forEach(col => selectParts.push(`min(${col})`));
-    aggregations.max?.forEach(col => selectParts.push(`max(${col})`));
+
+    aggregations.sum?.forEach((col) => selectParts.push(`sum(${col})`));
+    aggregations.avg?.forEach((col) => selectParts.push(`avg(${col})`));
+    aggregations.min?.forEach((col) => selectParts.push(`min(${col})`));
+    aggregations.max?.forEach((col) => selectParts.push(`max(${col})`));
 
     const result = await dbOptimization.optimizedSelect(
       this.tableName as string,
@@ -499,23 +508,23 @@ export class OptimizedBaseService<
         columns: selectParts,
         filters,
         cacheTTL: options.cacheTTL || this.options.defaultCacheTTL,
-        skipCache: options.skipCache
+        skipCache: options.skipCache,
       }
     );
 
     this.recordServiceMetrics({
-      operation: 'optimizedAggregate',
+      operation: "optimizedAggregate",
       duration: result.metrics.duration,
       success: result.metrics.success,
       cacheHit: result.metrics.cacheHit,
       queryMetrics: result.metrics,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return {
       data: result.data?.[0] || null,
       error: result.error,
-      metrics: result.metrics
+      metrics: result.metrics,
     };
   }
 
@@ -531,7 +540,7 @@ export class OptimizedBaseService<
     recentMetrics: ServiceMetrics[];
   } {
     const totalOps = this.serviceMetrics.length;
-    
+
     if (totalOps === 0) {
       return {
         totalOperations: 0,
@@ -539,17 +548,21 @@ export class OptimizedBaseService<
         successRate: 0,
         cacheHitRate: 0,
         operationBreakdown: {},
-        recentMetrics: []
+        recentMetrics: [],
       };
     }
 
-    const totalTime = this.serviceMetrics.reduce((sum, m) => sum + m.duration, 0);
-    const successCount = this.serviceMetrics.filter(m => m.success).length;
-    const cacheHits = this.serviceMetrics.filter(m => m.cacheHit).length;
-    
+    const totalTime = this.serviceMetrics.reduce(
+      (sum, m) => sum + m.duration,
+      0
+    );
+    const successCount = this.serviceMetrics.filter((m) => m.success).length;
+    const cacheHits = this.serviceMetrics.filter((m) => m.cacheHit).length;
+
     const operationBreakdown: Record<string, number> = {};
-    this.serviceMetrics.forEach(m => {
-      operationBreakdown[m.operation] = (operationBreakdown[m.operation] || 0) + 1;
+    this.serviceMetrics.forEach((m) => {
+      operationBreakdown[m.operation] =
+        (operationBreakdown[m.operation] || 0) + 1;
     });
 
     return {
@@ -558,7 +571,7 @@ export class OptimizedBaseService<
       successRate: (successCount / totalOps) * 100,
       cacheHitRate: (cacheHits / totalOps) * 100,
       operationBreakdown,
-      recentMetrics: this.serviceMetrics.slice(-10)
+      recentMetrics: this.serviceMetrics.slice(-10),
     };
   }
 
@@ -569,10 +582,10 @@ export class OptimizedBaseService<
     // Clear optimization service cache for this table
     const cacheStats = dbOptimization.getCacheStats();
     const tablePrefix = `${this.tableName}:`;
-    
+
     cacheStats.entries
-      .filter(entry => entry.key.startsWith(tablePrefix))
-      .forEach(entry => {
+      .filter((entry) => entry.key.startsWith(tablePrefix))
+      .forEach((entry) => {
         // Note: This would need to be implemented in the optimization service
         console.log(`Would clear cache key: ${entry.key}`);
       });
@@ -598,13 +611,16 @@ export class OptimizedBaseService<
   /**
    * Create fallback metrics for non-optimized operations
    */
-  private createFallbackMetrics(operation: string, success: boolean): QueryMetrics {
+  private createFallbackMetrics(
+    operation: string,
+    success: boolean
+  ): QueryMetrics {
     return {
       query: `${operation} ${this.tableName} (fallback)`,
       duration: 0,
       success,
       cacheHit: false,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
   }
 
@@ -624,7 +640,9 @@ export class OptimizedBaseService<
 }
 
 // Factory function to create optimized services
-export function createOptimizedService<T extends keyof Database["public"]["Tables"]>(
+export function createOptimizedService<
+  T extends keyof Database["public"]["Tables"],
+>(
   supabase: SupabaseClient<Database>,
   tableName: T,
   options?: OptimizedServiceOptions

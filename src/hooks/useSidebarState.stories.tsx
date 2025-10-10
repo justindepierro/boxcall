@@ -121,7 +121,9 @@ const SidebarStateDemo = () => {
               <div className="text-lg font-bold">{expanded.size}</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <div className="text-sm font-medium text-secondary">Favorites</div>
+              <div className="text-sm font-medium text-secondary">
+                Favorites
+              </div>
               <div className="text-lg font-bold">{favorites.size}</div>
             </div>
             <div className="p-3 border rounded-lg text-center">

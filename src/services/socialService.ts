@@ -1,7 +1,7 @@
 // Social Service
 // Comprehensive service for all social interactions
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 import type {
   Reaction,
   ReactionSummary,
@@ -17,31 +17,37 @@ import type {
   ContentType,
   FollowingType,
   ReactionType,
-  SocialService
-} from '../types/social';
+  SocialService,
+} from "../types/social";
 
 export class SocialServiceImpl implements SocialService {
   // =============================================================================
   // REACTIONS
   // =============================================================================
 
-  async getReactions(contentType: ContentType, contentId: string): Promise<ReactionSummary> {
+  async getReactions(
+    contentType: ContentType,
+    contentId: string
+  ): Promise<ReactionSummary> {
     // Get all reactions for this content
     const { data: reactions, error } = await supabase
-      .from('reactions')
-      .select('*')
-      .eq('content_type', contentType)
-      .eq('content_id', contentId);
+      .from("reactions")
+      .select("*")
+      .eq("content_type", contentType)
+      .eq("content_id", contentId);
 
     if (error) throw error;
 
     // Get current user's reaction
     const { data: userReaction } = await supabase
-      .from('reactions')
-      .select('reaction_type')
-      .eq('content_type', contentType)
-      .eq('content_id', contentId)
-      .eq('user_id', supabase.auth.getUser()?.then(({ data }) => data.user?.id))
+      .from("reactions")
+      .select("reaction_type")
+      .eq("content_type", contentType)
+      .eq("content_id", contentId)
+      .eq(
+        "user_id",
+        supabase.auth.getUser()?.then(({ data }) => data.user?.id)
+      )
       .single();
 
     // Aggregate reactions
@@ -56,16 +62,16 @@ export class SocialServiceImpl implements SocialService {
       content_id: contentId,
       total_count: reactions?.length || 0,
       reactions: reactionCounts,
-      user_reaction: userReaction?.reaction_type
+      user_reaction: userReaction?.reaction_type,
     };
   }
 
   async addReaction(request: CreateReactionRequest): Promise<Reaction> {
     const { data, error } = await supabase
-      .from('reactions')
+      .from("reactions")
       .insert({
         user_id: supabase.auth.getUser()?.then(({ data }) => data.user?.id),
-        ...request
+        ...request,
       })
       .select()
       .single();
@@ -74,28 +80,36 @@ export class SocialServiceImpl implements SocialService {
     return data;
   }
 
-  async removeReaction(contentType: ContentType, contentId: string): Promise<void> {
+  async removeReaction(
+    contentType: ContentType,
+    contentId: string
+  ): Promise<void> {
     const { error } = await supabase
-      .from('reactions')
+      .from("reactions")
       .delete()
-      .eq('content_type', contentType)
-      .eq('content_id', contentId)
-      .eq('user_id', supabase.auth.getUser()?.then(({ data }) => data.user?.id));
+      .eq("content_type", contentType)
+      .eq("content_id", contentId)
+      .eq(
+        "user_id",
+        supabase.auth.getUser()?.then(({ data }) => data.user?.id)
+      );
 
     if (error) throw error;
   }
 
-  async toggleReaction(request: CreateReactionRequest): Promise<Reaction | null> {
+  async toggleReaction(
+    request: CreateReactionRequest
+  ): Promise<Reaction | null> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     // Check if reaction already exists
     const { data: existing } = await supabase
-      .from('reactions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('content_type', request.content_type)
-      .eq('content_id', request.content_id)
+      .from("reactions")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("content_type", request.content_type)
+      .eq("content_id", request.content_id)
       .single();
 
     if (existing) {
@@ -106,9 +120,12 @@ export class SocialServiceImpl implements SocialService {
       } else {
         // Different reaction type - update it
         const { data, error } = await supabase
-          .from('reactions')
-          .update({ reaction_type: request.reaction_type, updated_at: new Date().toISOString() })
-          .eq('id', existing.id)
+          .from("reactions")
+          .update({
+            reaction_type: request.reaction_type,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existing.id)
           .select()
           .single();
 
@@ -125,25 +142,28 @@ export class SocialServiceImpl implements SocialService {
   // FOLLOWS
   // =============================================================================
 
-  async getFollowStatus(followingType: FollowingType, followingId: string): Promise<FollowSummary> {
+  async getFollowStatus(
+    followingType: FollowingType,
+    followingId: string
+  ): Promise<FollowSummary> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
 
     // Get follower count
     const { count: followerCount } = await supabase
-      .from('follows')
-      .select('*', { count: 'exact', head: true })
-      .eq('following_type', followingType)
-      .eq('following_id', followingId);
+      .from("follows")
+      .select("*", { count: "exact", head: true })
+      .eq("following_type", followingType)
+      .eq("following_id", followingId);
 
     // Check if current user is following
     let isFollowing = false;
     if (userId) {
       const { data } = await supabase
-        .from('follows')
-        .select('id')
-        .eq('follower_id', userId)
-        .eq('following_type', followingType)
-        .eq('following_id', followingId)
+        .from("follows")
+        .select("id")
+        .eq("follower_id", userId)
+        .eq("following_type", followingType)
+        .eq("following_id", followingId)
         .single();
 
       isFollowing = !!data;
@@ -153,19 +173,19 @@ export class SocialServiceImpl implements SocialService {
       following_type: followingType,
       following_id: followingId,
       follower_count: followerCount || 0,
-      is_following: isFollowing
+      is_following: isFollowing,
     };
   }
 
   async follow(request: CreateFollowRequest): Promise<Follow> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
-      .from('follows')
+      .from("follows")
       .insert({
         follower_id: userId,
-        ...request
+        ...request,
       })
       .select()
       .single();
@@ -174,30 +194,38 @@ export class SocialServiceImpl implements SocialService {
     return data;
   }
 
-  async unfollow(followingType: FollowingType, followingId: string): Promise<void> {
+  async unfollow(
+    followingType: FollowingType,
+    followingId: string
+  ): Promise<void> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { error } = await supabase
-      .from('follows')
+      .from("follows")
       .delete()
-      .eq('follower_id', userId)
-      .eq('following_type', followingType)
-      .eq('following_id', followingId);
+      .eq("follower_id", userId)
+      .eq("following_type", followingType)
+      .eq("following_id", followingId);
 
     if (error) throw error;
   }
 
-  async getFollowers(followingType: FollowingType, followingId: string): Promise<Follow[]> {
+  async getFollowers(
+    followingType: FollowingType,
+    followingId: string
+  ): Promise<Follow[]> {
     const { data, error } = await supabase
-      .from('follows')
-      .select(`
+      .from("follows")
+      .select(
+        `
         *,
         follower:profiles(id, display_name, avatar_url)
-      `)
-      .eq('following_type', followingType)
-      .eq('following_id', followingId)
-      .order('created_at', { ascending: false });
+      `
+      )
+      .eq("following_type", followingType)
+      .eq("following_id", followingId)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
@@ -205,14 +233,16 @@ export class SocialServiceImpl implements SocialService {
 
   async getFollowing(userId: string): Promise<Follow[]> {
     const { data, error } = await supabase
-      .from('follows')
-      .select(`
+      .from("follows")
+      .select(
+        `
         *,
         following_team:teams(id, name, mascot),
         following_user:profiles(id, display_name, avatar_url)
-      `)
-      .eq('follower_id', userId)
-      .order('created_at', { ascending: false });
+      `
+      )
+      .eq("follower_id", userId)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
@@ -222,21 +252,27 @@ export class SocialServiceImpl implements SocialService {
   // COMMENTS
   // =============================================================================
 
-  async getComments(contentType: ContentType, contentId: string, parentId?: string): Promise<Comment[]> {
+  async getComments(
+    contentType: ContentType,
+    contentId: string,
+    parentId?: string
+  ): Promise<Comment[]> {
     let query = supabase
-      .from('comments')
-      .select(`
+      .from("comments")
+      .select(
+        `
         *,
         user:profiles(id, display_name, avatar_url),
         replies:comments!parent_comment_id(
           *,
           user:profiles(id, display_name, avatar_url)
         )
-      `)
-      .eq('content_type', contentType)
-      .eq('content_id', contentId)
-      .is('parent_comment_id', parentId || null)
-      .order('created_at', { ascending: true });
+      `
+      )
+      .eq("content_type", contentType)
+      .eq("content_id", contentId)
+      .is("parent_comment_id", parentId || null)
+      .order("created_at", { ascending: true });
 
     const { data, error } = await query;
     if (error) throw error;
@@ -244,13 +280,13 @@ export class SocialServiceImpl implements SocialService {
     // Get reaction summaries for each comment
     const commentsWithReactions = await Promise.all(
       (data || []).map(async (comment) => {
-        const reactions = await this.getReactions('comment', comment.id);
+        const reactions = await this.getReactions("comment", comment.id);
         const replyCount = comment.replies?.length || 0;
 
         return {
           ...comment,
           reactions,
-          reply_count: replyCount
+          reply_count: replyCount,
         };
       })
     );
@@ -260,39 +296,46 @@ export class SocialServiceImpl implements SocialService {
 
   async addComment(request: CreateCommentRequest): Promise<Comment> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
-      .from('comments')
+      .from("comments")
       .insert({
         user_id: userId,
-        ...request
+        ...request,
       })
-      .select(`
+      .select(
+        `
         *,
         user:profiles(id, display_name, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
     return data;
   }
 
-  async updateComment(commentId: string, request: UpdateCommentRequest): Promise<Comment> {
+  async updateComment(
+    commentId: string,
+    request: UpdateCommentRequest
+  ): Promise<Comment> {
     const { data, error } = await supabase
-      .from('comments')
+      .from("comments")
       .update({
         content: request.content,
         is_edited: true,
         edited_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', commentId)
-      .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-      .select(`
+      .eq("id", commentId)
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+      .select(
+        `
         *,
         user:profiles(id, display_name, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
@@ -301,10 +344,10 @@ export class SocialServiceImpl implements SocialService {
 
   async deleteComment(commentId: string): Promise<void> {
     const { error } = await supabase
-      .from('comments')
+      .from("comments")
       .delete()
-      .eq('id', commentId)
-      .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+      .eq("id", commentId)
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
 
     if (error) throw error;
   }
@@ -315,55 +358,55 @@ export class SocialServiceImpl implements SocialService {
 
   async getNotifications(limit = 20, offset = 0): Promise<NotificationSummary> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { data, error, count } = await supabase
-      .from('notifications')
-      .select('*', { count: 'exact' })
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      .from("notifications")
+      .select("*", { count: "exact" })
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (error) throw error;
 
     const { count: unreadCount } = await supabase
-      .from('notifications')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('is_read', false);
+      .from("notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("is_read", false);
 
     return {
       total_count: count || 0,
       unread_count: unreadCount || 0,
-      notifications: data || []
+      notifications: data || [],
     };
   }
 
   async markNotificationRead(notificationId: string): Promise<void> {
     const { error } = await supabase
-      .from('notifications')
+      .from("notifications")
       .update({
         is_read: true,
-        read_at: new Date().toISOString()
+        read_at: new Date().toISOString(),
       })
-      .eq('id', notificationId)
-      .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+      .eq("id", notificationId)
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
 
     if (error) throw error;
   }
 
   async markAllNotificationsRead(): Promise<void> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { error } = await supabase
-      .from('notifications')
+      .from("notifications")
       .update({
         is_read: true,
-        read_at: new Date().toISOString()
+        read_at: new Date().toISOString(),
       })
-      .eq('user_id', userId)
-      .eq('is_read', false);
+      .eq("user_id", userId)
+      .eq("is_read", false);
 
     if (error) throw error;
   }
@@ -374,16 +417,18 @@ export class SocialServiceImpl implements SocialService {
 
   async getActivityFeed(limit = 20, offset = 0): Promise<ActivityItem[]> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
+    if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
-      .from('activity_feed')
-      .select(`
+      .from("activity_feed")
+      .select(
+        `
         *,
         user:profiles(id, display_name, avatar_url)
-      `)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      `
+      )
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (error) throw error;

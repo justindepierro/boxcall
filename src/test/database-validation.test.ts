@@ -47,12 +47,22 @@ describe("Database Schema Validation", () => {
 
         if (error) {
           // If table doesn't exist, that's expected for some tables during development
-          if (error.message.includes('relation') && error.message.includes('does not exist')) {
-            console.warn(`⚠️  Table '${tableName}' does not exist - may need migration`);
-            expect(error.message).toContain('does not exist');
-          } else if (error.message.includes('infinite recursion') || error.message.includes('policy')) {
+          if (
+            error.message.includes("relation") &&
+            error.message.includes("does not exist")
+          ) {
+            console.warn(
+              `⚠️  Table '${tableName}' does not exist - may need migration`
+            );
+            expect(error.message).toContain("does not exist");
+          } else if (
+            error.message.includes("infinite recursion") ||
+            error.message.includes("policy")
+          ) {
             // RLS policy issues are also valid - table exists but access is restricted
-            console.warn(`⚠️  Table '${tableName}' has RLS policy issues - may need policy fixes`);
+            console.warn(
+              `⚠️  Table '${tableName}' has RLS policy issues - may need policy fixes`
+            );
             expect(error.message).toMatch(/(infinite recursion|policy)/);
           } else {
             // Other errors are unexpected
@@ -68,10 +78,7 @@ describe("Database Schema Validation", () => {
   });
 
   describe("Analytics Tables Existence", () => {
-    const analyticsTables = [
-      "practice_executions",
-      "practice_analytics",
-    ];
+    const analyticsTables = ["practice_executions", "practice_analytics"];
 
     analyticsTables.forEach((tableName) => {
       it(`validates ${tableName} analytics table status`, async () => {
@@ -81,14 +88,21 @@ describe("Database Schema Validation", () => {
           .limit(1);
 
         if (error) {
-          if (error.message.includes('relation') && error.message.includes('does not exist')) {
-            console.warn(`⚠️  Analytics table '${tableName}' does not exist - may need migration`);
-            expect(error.message).toContain('does not exist');
+          if (
+            error.message.includes("relation") &&
+            error.message.includes("does not exist")
+          ) {
+            console.warn(
+              `⚠️  Analytics table '${tableName}' does not exist - may need migration`
+            );
+            expect(error.message).toContain("does not exist");
           } else {
             throw error;
           }
         } else {
-          console.log(`✅ Analytics table '${tableName}' exists and is accessible`);
+          console.log(
+            `✅ Analytics table '${tableName}' exists and is accessible`
+          );
           expect(data).toBeDefined();
         }
       });
@@ -143,10 +157,14 @@ describe("Database Schema Validation", () => {
     });
 
     it("should validate playbooks table structure", async () => {
-      const { data, error } = await supabase.from("playbooks").select("*").limit(1);
+      const { data, error } = await supabase
+        .from("playbooks")
+        .select("*")
+        .limit(1);
 
       if (!error && data && data.length > 0) {
-        const playbook = data[0] as Database["public"]["Tables"]["playbooks"]["Row"];
+        const playbook =
+          data[0] as Database["public"]["Tables"]["playbooks"]["Row"];
 
         expect(playbook).toHaveProperty("id");
         expect(playbook).toHaveProperty("team_id");
@@ -186,7 +204,10 @@ describe("Database Schema Validation", () => {
 
   describe("Analytics Tables Structure", () => {
     it("should validate practice_executions table", async () => {
-      const { data, error } = await supabase.from("practice_executions").select("*").limit(1);
+      const { data, error } = await supabase
+        .from("practice_executions")
+        .select("*")
+        .limit(1);
 
       if (!error && data && data.length > 0) {
         const execution = data[0] as any; // Using any since types aren't defined yet
@@ -200,7 +221,10 @@ describe("Database Schema Validation", () => {
     });
 
     it("should validate practice_analytics table", async () => {
-      const { data, error } = await supabase.from("practice_analytics").select("*").limit(1);
+      const { data, error } = await supabase
+        .from("practice_analytics")
+        .select("*")
+        .limit(1);
 
       if (!error && data && data.length > 0) {
         const analytics = data[0] as any; // Using any since types aren't defined yet
@@ -249,10 +273,18 @@ describe("Database Schema Validation", () => {
       const startTime = Date.now();
 
       // Test team lookup by sport
-      await supabase.from("teams").select("id").eq("sport", "football").limit(10);
+      await supabase
+        .from("teams")
+        .select("id")
+        .eq("sport", "football")
+        .limit(10);
 
       // Test playbook lookup by team
-      await supabase.from("playbooks").select("id").eq("team_id", "test").limit(10);
+      await supabase
+        .from("playbooks")
+        .select("id")
+        .eq("team_id", "test")
+        .limit(10);
 
       const endTime = Date.now();
       const duration = endTime - startTime;

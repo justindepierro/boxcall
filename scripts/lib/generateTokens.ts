@@ -82,11 +82,11 @@ const HEADER_LINES = [
 
 export function generateTokensCSS(): string {
   const lines: string[] = [...HEADER_LINES, ":root {"];
-  
+
   // Color system
   emitObj("color", colorTokens as Record<string, unknown>, lines);
   emitObj("semantic", semanticTokens as Record<string, unknown>, lines);
-  
+
   // Typography
   const typo = typographyTokens as unknown as TypographyDef;
   emitObj("font-family", typo.fontFamily as Nested, lines);
@@ -94,42 +94,66 @@ export function generateTokensCSS(): string {
   emitObj("font-weight", typo.fontWeight as Nested, lines);
   emitObj("line-height", typo.lineHeight as Nested, lines);
   emitObj("letter-spacing", typo.letterSpacing as Nested, lines);
-  emitObj("semantic-typography", semanticTypographyTokens as Record<string, unknown>, lines);
-  
+  emitObj(
+    "semantic-typography",
+    semanticTypographyTokens as Record<string, unknown>,
+    lines
+  );
+
   // Animation system
   emitObj("animation", animationTokens as Record<string, unknown>, lines);
-  emitObj("semantic-animation", semanticAnimationTokens as Record<string, unknown>, lines);
-  
+  emitObj(
+    "semantic-animation",
+    semanticAnimationTokens as Record<string, unknown>,
+    lines
+  );
+
   // Spacing system
   emitObj("space", spacingTokens as Record<string, unknown>, lines);
   emitObj("fine-spacing", fineSpacingTokens as Record<string, unknown>, lines);
-  emitObj("semantic-spacing", semanticSpacingTokens as Record<string, unknown>, lines);
-  
+  emitObj(
+    "semantic-spacing",
+    semanticSpacingTokens as Record<string, unknown>,
+    lines
+  );
+
   // Layout tokens
   emitObj("layout", layoutTokens as Record<string, unknown>, lines);
-  emitObj("semantic-layout", semanticLayoutTokens as Record<string, unknown>, lines);
-  
+  emitObj(
+    "semantic-layout",
+    semanticLayoutTokens as Record<string, unknown>,
+    lines
+  );
+
   // Layout
   emitObj("density", densityTokens as Record<string, unknown>, lines);
-  
+
   // Visual properties
   emitObj("opacity", opacityTokens as Record<string, unknown>, lines);
-  
+
   // Border system
   emitObj("radius", borderRadiusTokens as Record<string, unknown>, lines);
-  emitObj("semantic-radius", semanticBorderRadiusTokens as Record<string, unknown>, lines);
+  emitObj(
+    "semantic-radius",
+    semanticBorderRadiusTokens as Record<string, unknown>,
+    lines
+  );
   emitObj("border", borderTokens as Record<string, unknown>, lines);
-  emitObj("semantic-border", semanticBorderTokens as Record<string, unknown>, lines);
-  
+  emitObj(
+    "semantic-border",
+    semanticBorderTokens as Record<string, unknown>,
+    lines
+  );
+
   // Elevation
   emitObj("elevation", elevationTokens as Record<string, unknown>, lines);
-  
+
   // Contrast & accessibility
   emitObj("contrast", contrastTokens as Record<string, unknown>, lines);
-  
+
   // Component-specific tokens
   emitObj("component", componentTokens as Record<string, unknown>, lines);
-  
+
   lines.push("}");
   return lines.join("\n") + "\n"; // trailing newline for determinism
 }

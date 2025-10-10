@@ -1,13 +1,13 @@
 // Mentions Service
 // Handles @mention parsing, suggestions, and processing
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 
 export interface MentionSuggestion {
   id: string;
   display_name: string;
   avatar_url?: string;
-  type: 'user' | 'team';
+  type: "user" | "team";
 }
 
 export interface ParsedMention {
@@ -35,7 +35,7 @@ export class MentionsService {
         userId: `user-${mentionText.toLowerCase()}`, // Placeholder
         displayName: mentionText,
         position,
-        length
+        length,
       });
     }
 
@@ -43,50 +43,56 @@ export class MentionsService {
   }
 
   // Get mention suggestions based on query
-  static async getMentionSuggestions(query: string, limit = 5): Promise<MentionSuggestion[]> {
+  static async getMentionSuggestions(
+    query: string,
+    limit = 5
+  ): Promise<MentionSuggestion[]> {
     if (!query || query.length < 2) return [];
 
     try {
       // Search for users by display name or username
       const { data: users, error } = await supabase
-        .from('profiles')
-        .select('id, display_name, avatar_url')
-        .ilike('display_name', `%${query}%`)
+        .from("profiles")
+        .select("id, display_name, avatar_url")
+        .ilike("display_name", `%${query}%`)
         .limit(limit);
 
       if (error) throw error;
 
-      return (users || []).map(user => ({
+      return (users || []).map((user) => ({
         id: user.id,
-        display_name: user.display_name || 'Unknown User',
+        display_name: user.display_name || "Unknown User",
         avatar_url: user.avatar_url,
-        type: 'user' as const
+        type: "user" as const,
       }));
     } catch (error) {
-      console.error('Failed to get mention suggestions:', error);
+      console.error("Failed to get mention suggestions:", error);
       return [];
     }
   }
 
   // Save mentions to database when a comment is posted
-  static async saveMentions(commentId: string, mentions: ParsedMention[]): Promise<void> {
+  static async saveMentions(
+    commentId: string,
+    mentions: ParsedMention[]
+  ): Promise<void> {
     if (mentions.length === 0) return;
 
     try {
-      const mentionRecords = mentions.map(mention => ({
+      const mentionRecords = mentions.map((mention) => ({
         comment_id: commentId,
         mentioned_user_id: mention.userId,
-        mentioner_user_id: supabase.auth.getUser()?.then(({ data }) => data.user?.id),
-        mention_position: mention.position
+        mentioner_user_id: supabase.auth
+          .getUser()
+          ?.then(({ data }) => data.user?.id),
+        mention_position: mention.position,
       }));
 
-      const { error } = await supabase
-        .from('mentions')
-        .insert(mentionRecords);
+      const { error } = await supabase.from("mentions").insert(mentionRecords);
 
       if (error) throw error;
     } catch (error) {
-      console.error('Failed to save mentions:', error);
+      console.error("Failed to save mentions:", error);
     }
   }
 
@@ -94,8 +100,9 @@ export class MentionsService {
   static async getMentionsForUser(userId: string, limit = 20): Promise<any[]> {
     try {
       const { data, error } = await supabase
-        .from('mentions')
-        .select(`
+        .from("mentions")
+        .select(
+          `
           *,
           comment:comments(
             content,
@@ -105,15 +112,16 @@ export class MentionsService {
             user:profiles(display_name, avatar_url)
           ),
           mentioner:profiles(display_name, avatar_url)
-        `)
-        .eq('mentioned_user_id', userId)
-        .order('created_at', { ascending: false })
+        `
+        )
+        .eq("mentioned_user_id", userId)
+        .order("created_at", { ascending: false })
         .limit(limit);
 
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Failed to get mentions for user:', error);
+      console.error("Failed to get mentions for user:", error);
       return [];
     }
   }
@@ -124,7 +132,9 @@ export class MentionsService {
     let offset = 0;
 
     // Sort mentions by position (important for correct offsetting)
-    const sortedMentions = [...mentions].sort((a, b) => a.position - b.position);
+    const sortedMentions = [...mentions].sort(
+      (a, b) => a.position - b.position
+    );
 
     for (const mention of sortedMentions) {
       const startPos = mention.position + offset;

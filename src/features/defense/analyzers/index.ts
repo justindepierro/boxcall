@@ -1,11 +1,11 @@
 /**
  * Defense Analyzers Barrel Export
- * 
+ *
  * Central export point for all formation analysis utilities.
  */
 
 // Formation Analyzer
-export { analyzeFormation } from './formationAnalyzer';
+export { analyzeFormation } from "./formationAnalyzer";
 
 // Tight End Proximity Detector
 export {
@@ -13,7 +13,7 @@ export {
   getDistanceToNearestTackle,
   analyzeTightEnds,
   hasMultipleTightEnds,
-} from './tightEndProximityDetector';
+} from "./tightEndProximityDetector";
 
 // Field Boundary Detector
 export {
@@ -24,4 +24,4 @@ export {
   isMiddleHash,
   getOppositeHash,
   getFieldPositionPercentage,
-} from './fieldBoundaryDetector';
+} from "./fieldBoundaryDetector";

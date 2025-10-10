@@ -1,10 +1,10 @@
 #!/usr/bin/env tsx
 /**
  * Generate CSS custom properties from design tokens
- * 
+ *
  * This script reads the design token definitions and generates
  * CSS custom properties (CSS variables) for use throughout the app.
- * 
+ *
  * Usage: tsx scripts/generate-token-css.ts
  */
 

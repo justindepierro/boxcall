@@ -4,7 +4,7 @@
 export const useNetworkStatus = () => {
   return {
     isOnline: true,
-    connectionType: 'wifi' as const,
+    connectionType: "wifi" as const,
     isSlowConnection: false,
   };
 };

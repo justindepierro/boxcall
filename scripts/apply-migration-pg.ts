@@ -21,10 +21,10 @@ async function applyMigration() {
   const client = new Client({
     host,
     database,
-    user: 'postgres',
+    user: "postgres",
     password: serviceRoleKey,
     port: 5432,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
   });
 
   try {
@@ -35,24 +35,30 @@ async function applyMigration() {
     console.log("🚀 Applying enhanced achievement system migration...");
 
     // Read the migration file
-    const migrationPath = "../supabase/migrations/061_enhanced_achievement_system.sql";
-    const migrationSQL = readFileSync(join(process.cwd(), migrationPath), "utf8");
+    const migrationPath =
+      "../supabase/migrations/061_enhanced_achievement_system.sql";
+    const migrationSQL = readFileSync(
+      join(process.cwd(), migrationPath),
+      "utf8"
+    );
 
     // Split into individual statements (more carefully)
     const statements = migrationSQL
-      .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'))
-      .map(s => s + ';'); // Add semicolon back
+      .split(";")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith("--"))
+      .map((s) => s + ";"); // Add semicolon back
 
     console.log(`📄 Found ${statements.length} SQL statements to execute`);
 
     // Execute each statement
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
-      if (statement.trim() && statement.trim() !== ';') {
+      if (statement.trim() && statement.trim() !== ";") {
         try {
-          console.log(`⚡ Executing statement ${i + 1}/${statements.length}...`);
+          console.log(
+            `⚡ Executing statement ${i + 1}/${statements.length}...`
+          );
           await client.query(statement);
           console.log(`   ✅ Statement ${i + 1} executed successfully`);
         } catch (stmtError: any) {
@@ -66,7 +72,6 @@ async function applyMigration() {
     console.log("🎯 Check database for new achievement tables:");
     console.log("   - achievement_definitions");
     console.log("   - achievement_progress");
-
   } catch (error: any) {
     console.error("❌ Migration failed:", error.message);
   } finally {

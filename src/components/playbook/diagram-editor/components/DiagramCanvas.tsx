@@ -46,16 +46,23 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
     }
 
     if (!requirements.meetsRequirements) {
-      console.warn("⚠️ System may not meet minimum requirements:", requirements.issues);
+      console.warn(
+        "⚠️ System may not meet minimum requirements:",
+        requirements.issues
+      );
     }
   }, []);
 
   // usePixiApp now handles ALL resize logic internally
-  const { app, isReady, debugCoordinates } = usePixiApp(canvasRef, containerRef, {
-    fieldWidth,
-    fieldHeight,
-    backgroundColor,
-  });
+  const { app, isReady, debugCoordinates } = usePixiApp(
+    canvasRef,
+    containerRef,
+    {
+      fieldWidth,
+      fieldHeight,
+      backgroundColor,
+    }
+  );
 
   // Log state changes for debugging
   useEffect(() => {

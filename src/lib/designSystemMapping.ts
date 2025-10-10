@@ -7,39 +7,41 @@
 
 export const DESIGN_SYSTEM_MAPPING = {
   // Background Colors
-  'bg-white': 'bg-surface-primary',
-  'bg-gray-50': 'bg-surface-secondary',
-  'bg-gray-100': 'bg-surface-secondary',
+  "bg-white": "bg-surface-primary",
+  "bg-gray-50": "bg-surface-secondary",
+  "bg-gray-100": "bg-surface-secondary",
 
   // Text Colors
-  'text-gray-900': 'text-text-primary',
-  'text-gray-700': 'text-text-secondary',
-  'text-gray-500': 'text-text-secondary',
-  'text-gray-400': 'text-text-secondary',
-  'text-gray-600': 'text-text-tertiary',
-  'text-white': 'text-surface-primary',
+  "text-gray-900": "text-text-primary",
+  "text-gray-700": "text-text-secondary",
+  "text-gray-500": "text-text-secondary",
+  "text-gray-400": "text-text-secondary",
+  "text-gray-600": "text-text-tertiary",
+  "text-white": "text-surface-primary",
 
   // Border Colors
-  'border-gray-200': 'border-border',
-  'border-gray-300': 'border-border-light',
-  'border-gray-100': 'border-surface-secondary',
+  "border-gray-200": "border-border",
+  "border-gray-300": "border-border-light",
+  "border-gray-100": "border-surface-secondary",
 
   // Hover States
-  'hover:bg-gray-50': 'hover:bg-surface-secondary',
-  'hover:bg-white': 'hover:bg-surface-primary',
-  'hover:text-gray-900': 'hover:text-text-primary',
+  "hover:bg-gray-50": "hover:bg-surface-secondary",
+  "hover:bg-white": "hover:bg-surface-primary",
+  "hover:text-gray-900": "hover:text-text-primary",
 
   // Focus States
-  'focus:border-gray-300': 'focus:border-border-light',
-  'focus:ring-gray-300': 'focus:ring-border-light',
+  "focus:border-gray-300": "focus:border-border-light",
+  "focus:ring-gray-300": "focus:ring-border-light",
 
   // Card Styles
-  'bg-white rounded-lg border border-gray-200': 'surface-card rounded-lg border border-border',
-  'bg-white border border-gray-200': 'surface-card border border-border',
+  "bg-white rounded-lg border border-gray-200":
+    "surface-card rounded-lg border border-border",
+  "bg-white border border-gray-200": "surface-card border border-border",
 
   // Button Styles (these should use Button component variants instead)
-  'bg-gray-100 hover:bg-gray-200': 'bg-surface-secondary hover:bg-border',
-  'text-gray-600 hover:text-gray-900': 'text-text-tertiary hover:text-text-primary',
+  "bg-gray-100 hover:bg-gray-200": "bg-surface-secondary hover:bg-border",
+  "text-gray-600 hover:text-gray-900":
+    "text-text-tertiary hover:text-text-primary",
 } as const;
 
 /**
@@ -81,7 +83,7 @@ export function convertToSemanticClasses(className: string): string {
   let result = className;
 
   Object.entries(DESIGN_SYSTEM_MAPPING).forEach(([hardcoded, semantic]) => {
-    result = result.replace(new RegExp(`\\b${hardcoded}\\b`, 'g'), semantic);
+    result = result.replace(new RegExp(`\\b${hardcoded}\\b`, "g"), semantic);
   });
 
   return result;
@@ -94,39 +96,46 @@ export function convertToSemanticClasses(className: string): string {
  * hardcoded color classes and suggests semantic alternatives.
  */
 export const ESLINT_DESIGN_SYSTEM_RULE = {
-  name: 'design-system-compliance',
+  name: "design-system-compliance",
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce use of semantic design system classes instead of hardcoded colors',
-      category: 'Best Practices',
+      description:
+        "Enforce use of semantic design system classes instead of hardcoded colors",
+      category: "Best Practices",
       recommended: true,
     },
-    fixable: 'code',
+    fixable: "code",
     schema: [],
     messages: {
-      hardcodedColor: 'Use semantic design system class "{{semantic}}" instead of hardcoded "{{hardcoded}}"',
+      hardcodedColor:
+        'Use semantic design system class "{{semantic}}" instead of hardcoded "{{hardcoded}}"',
     },
   },
   create(context: any) {
     return {
       JSXAttribute(node: any) {
-        if (node.name.name === 'className' && node.value?.type === 'Literal') {
+        if (node.name.name === "className" && node.value?.type === "Literal") {
           const className = node.value.value;
-          if (typeof className === 'string') {
-            Object.entries(DESIGN_SYSTEM_MAPPING).forEach(([hardcoded, semantic]) => {
-              if (className.includes(hardcoded)) {
-                context.report({
-                  node,
-                  messageId: 'hardcodedColor',
-                  data: { hardcoded, semantic },
-                  fix(fixer: any) {
-                    const newClassName = className.replace(new RegExp(`\\b${hardcoded}\\b`, 'g'), semantic);
-                    return fixer.replaceText(node.value, `"${newClassName}"`);
-                  },
-                });
+          if (typeof className === "string") {
+            Object.entries(DESIGN_SYSTEM_MAPPING).forEach(
+              ([hardcoded, semantic]) => {
+                if (className.includes(hardcoded)) {
+                  context.report({
+                    node,
+                    messageId: "hardcodedColor",
+                    data: { hardcoded, semantic },
+                    fix(fixer: any) {
+                      const newClassName = className.replace(
+                        new RegExp(`\\b${hardcoded}\\b`, "g"),
+                        semantic
+                      );
+                      return fixer.replaceText(node.value, `"${newClassName}"`);
+                    },
+                  });
+                }
               }
-            });
+            );
           }
         }
       },

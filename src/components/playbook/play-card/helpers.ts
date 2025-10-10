@@ -64,7 +64,9 @@ export const getTileIcon = (type: string): TileIcon => {
   }
 };
 
-export const getTileConfidenceClasses = (confidence: number): {
+export const getTileConfidenceClasses = (
+  confidence: number
+): {
   stroke: string;
   text: string;
 } => {

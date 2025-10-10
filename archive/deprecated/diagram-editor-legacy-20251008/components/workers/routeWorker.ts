@@ -11,8 +11,8 @@ import type {
   CollisionDetectionRequest,
   CollisionDetectionResponse,
   WorkerRequest,
-  WorkerResponse
-} from './workerTypes';
+  WorkerResponse,
+} from "./workerTypes";
 
 // A* pathfinding implementation for route calculation
 class AStarPathfinder {
@@ -23,9 +23,13 @@ class AStarPathfinder {
     end: { x: number; y: number },
     obstacles: Array<{ x: number; y: number; radius: number }>,
     fieldBounds: { width: number; height: number },
-    options: RouteCalculationRequest['options'] = {}
+    options: RouteCalculationRequest["options"] = {}
   ): Array<{ x: number; y: number }> {
-    const { maxSegments = 20, smoothness = 0.5, avoidObstacles = true } = options;
+    const {
+      maxSegments = 20,
+      smoothness = 0.5,
+      avoidObstacles = true,
+    } = options;
 
     // Simple direct route for now - can be enhanced with A* later
     const route: Array<{ x: number; y: number }> = [];
@@ -47,12 +51,12 @@ class AStarPathfinder {
 
         // Add some curvature
         const offset = Math.sin(t * Math.PI) * smoothness * 5;
-        const perpX = -(end.y - start.y) / this.distance(start, end) * offset;
-        const perpY = (end.x - start.x) / this.distance(start, end) * offset;
+        const perpX = (-(end.y - start.y) / this.distance(start, end)) * offset;
+        const perpY = ((end.x - start.x) / this.distance(start, end)) * offset;
 
         route.push({
           x: controlX + perpX,
-          y: controlY + perpY
+          y: controlY + perpY,
         });
       }
 
@@ -62,7 +66,10 @@ class AStarPathfinder {
     return route;
   }
 
-  private distance(a: { x: number; y: number }, b: { x: number; y: number }): number {
+  private distance(
+    a: { x: number; y: number },
+    b: { x: number; y: number }
+  ): number {
     return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
   }
 }
@@ -73,12 +80,12 @@ class CollisionDetector {
     players: Array<{ id: string; x: number; y: number; radius: number }>,
     routes: Array<{ id: string; points: Array<{ x: number; y: number }> }>
   ): Array<{
-    type: 'player-player' | 'player-route' | 'route-route';
+    type: "player-player" | "player-route" | "route-route";
     elements: string[];
     position?: { x: number; y: number };
   }> {
     const collisions: Array<{
-      type: 'player-player' | 'player-route' | 'route-route';
+      type: "player-player" | "player-route" | "route-route";
       elements: string[];
       position?: { x: number; y: number };
     }> = [];
@@ -90,19 +97,19 @@ class CollisionDetector {
         const p2 = players[j];
         const distance = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
-        if (distance < (p1.radius + p2.radius)) {
+        if (distance < p1.radius + p2.radius) {
           collisions.push({
-            type: 'player-player',
+            type: "player-player",
             elements: [p1.id, p2.id],
-            position: { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+            position: { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 },
           });
         }
       }
     }
 
     // Player-to-route collisions
-    players.forEach(player => {
-      routes.forEach(route => {
+    players.forEach((player) => {
+      routes.forEach((route) => {
         route.points.forEach((point, index) => {
           if (index < route.points.length - 1) {
             const nextPoint = route.points[index + 1];
@@ -114,9 +121,9 @@ class CollisionDetector {
 
             if (distance < player.radius) {
               collisions.push({
-                type: 'player-route',
+                type: "player-route",
                 elements: [player.id, route.id],
-                position: point
+                position: point,
               });
             }
           }
@@ -171,7 +178,7 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
 
   try {
     switch (request.type) {
-      case 'CALCULATE_ROUTE': {
+      case "CALCULATE_ROUTE": {
         const route = pathfinder.calculateRoute(
           request.startPoint,
           request.endPoint,
@@ -181,26 +188,26 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
         );
 
         const response: RouteCalculationResponse = {
-          type: 'ROUTE_CALCULATED',
+          type: "ROUTE_CALCULATED",
           id: request.id,
           route,
-          success: true
+          success: true,
         };
 
         self.postMessage(response);
         break;
       }
 
-      case 'DETECT_COLLISIONS': {
+      case "DETECT_COLLISIONS": {
         const collisions = collisionDetector.detectCollisions(
           request.players,
           request.routes
         );
 
         const response: CollisionDetectionResponse = {
-          type: 'COLLISIONS_DETECTED',
+          type: "COLLISIONS_DETECTED",
           id: request.id,
-          collisions
+          collisions,
         };
 
         self.postMessage(response);
@@ -213,9 +220,9 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
   } catch (error) {
     // Send error response
     self.postMessage({
-      type: 'ERROR',
-      id: request.id || 'unknown',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      type: "ERROR",
+      id: request.id || "unknown",
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };

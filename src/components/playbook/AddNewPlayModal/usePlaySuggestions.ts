@@ -64,11 +64,7 @@ export const usePlaySuggestions = () => {
 
   // Filter suggestions based on input
   const filterSuggestions = useCallback(
-    (
-      type: keyof SuggestionState,
-      input: string,
-      maxResults = 5
-    ): string[] => {
+    (type: keyof SuggestionState, input: string, maxResults = 5): string[] => {
       if (!input.trim()) return [];
 
       const suggestionList = suggestions[type];

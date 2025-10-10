@@ -232,12 +232,8 @@ const UserTeamMembershipsDemo = () => {
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-surface-secondary">
-                    <th className="border border px-4 py-2 text-left">
-                      Team
-                    </th>
-                    <th className="border border px-4 py-2 text-left">
-                      Role
-                    </th>
+                    <th className="border border px-4 py-2 text-left">Team</th>
+                    <th className="border border px-4 py-2 text-left">Role</th>
                     <th className="border border px-4 py-2 text-left">
                       Status
                     </th>
