@@ -7,15 +7,17 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { DiagramCanvas } from "./components/DiagramCanvas";
-import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
 import { LandscapePrompt } from "../../LandscapePrompt";
+import { DesktopLayout } from "../DesktopLayout";
+import { MobileLayout } from "../MobileLayout";
+import { TabletLayout } from "../TabletLayout";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
 import { useUndoRedo } from "./hooks/useUndoRedo";
 import { useDiagramStore } from "./stores/diagramStore";
-import { useBreakpoint, useIsMobile } from "../../../hooks/useBreakpoint";
+import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import { useIsMobilePortrait } from "../../../hooks/useOrientation";
 import { supabase } from "../../../lib/supabase";
 import { Icon } from "../../../components/ui/Icon/Icon";
@@ -620,15 +622,16 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
         </div>
       </div>
 
-      {/* Main Content: Sidebar + Canvas */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar */}
-        <div className="w-64 bg-surface-card border-r border-border flex-shrink-0 overflow-y-auto">
-          <PlayerControls app={app} externalAlignment={selectedAlignment} />
-        </div>
-
-        {/* Canvas Area */}
-        <div className="flex-1 relative overflow-hidden bg-surface-secondary">
+      {/* Main Content: Responsive Layouts */}
+      {breakpoint === "mobile" ? (
+        <MobileLayout
+          app={app}
+          selectedAlignment={selectedAlignment}
+          onAddPlayer={handleAddSingleOffense}
+          onAddFormation={() => alert("Formation picker coming soon!")}
+          onClear={handleClearWhiteboard}
+          onUndo={() => alert("Undo coming soon!")}
+        >
           <PixiErrorBoundary>
             <DiagramCanvas
               fieldWidth={53.333}
@@ -638,8 +641,32 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               onReady={handleReady}
             />
           </PixiErrorBoundary>
-        </div>
-      </div>
+        </MobileLayout>
+      ) : breakpoint === "tablet" ? (
+        <TabletLayout app={app} selectedAlignment={selectedAlignment}>
+          <PixiErrorBoundary>
+            <DiagramCanvas
+              fieldWidth={53.333}
+              fieldHeight={35}
+              pixelsPerYard={20}
+              backgroundColor={0x222222}
+              onReady={handleReady}
+            />
+          </PixiErrorBoundary>
+        </TabletLayout>
+      ) : (
+        <DesktopLayout app={app} selectedAlignment={selectedAlignment}>
+          <PixiErrorBoundary>
+            <DiagramCanvas
+              fieldWidth={53.333}
+              fieldHeight={35}
+              pixelsPerYard={20}
+              backgroundColor={0x222222}
+              onReady={handleReady}
+            />
+          </PixiErrorBoundary>
+        </DesktopLayout>
+      )}
 
       {/* Status Bar */}
       <div className="px-4 py-2 bg-surface-card border-t border-border text-xs text-content-secondary">
