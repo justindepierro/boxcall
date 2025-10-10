@@ -56,7 +56,4 @@ export type {
 } from "./MobileQuickActionGrid";
 
 export { MobileEventCard } from "./MobileEventCard";
-export type {
-  MobileEventCardProps,
-  CalendarEvent,
-} from "./MobileEventCard";
+export type { MobileEventCardProps, CalendarEvent } from "./MobileEventCard";
