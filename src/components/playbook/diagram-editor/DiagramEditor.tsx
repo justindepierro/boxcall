@@ -398,6 +398,81 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
     []
   );
 
+  // Get selected player count for conditional toolbar
+  const selectedPlayerCount = app?.playersLayer?.getSelectedPlayerIds().length ?? 0;
+
+  // Align selected players horizontally or vertically
+  const handleAlignPlayers = useCallback((direction: "horizontal" | "vertical") => {
+    if (!app?.playersLayer) return;
+    
+    const selectedIds = app.playersLayer.getSelectedPlayerIds();
+    if (selectedIds.length < 2) return;
+
+    const selectedPlayers = selectedIds
+      .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
+      .filter((p): p is Player => p !== undefined);
+
+    if (direction === "horizontal") {
+      // Align to average Y position
+      const avgY = selectedPlayers.reduce((sum, p) => sum + p.y, 0) / selectedPlayers.length;
+      selectedIds.forEach((id) => {
+        const sprite = app.playersLayer!.getPlayer(id);
+        if (sprite) {
+          sprite.updatePlayer({ y: avgY });
+        }
+      });
+    } else {
+      // Align to average X position
+      const avgX = selectedPlayers.reduce((sum, p) => sum + p.x, 0) / selectedPlayers.length;
+      selectedIds.forEach((id) => {
+        const sprite = app.playersLayer!.getPlayer(id);
+        if (sprite) {
+          sprite.updatePlayer({ x: avgX });
+        }
+      });
+    }
+  }, [app]);
+
+  // Distribute selected players evenly
+  const handleDistributePlayers = useCallback((direction: "horizontal" | "vertical") => {
+    if (!app?.playersLayer) return;
+    
+    const selectedIds = app.playersLayer.getSelectedPlayerIds();
+    if (selectedIds.length < 3) return;
+
+    const selectedPlayers = selectedIds
+      .map((id) => app.playersLayer!.getPlayer(id)?.getPlayer())
+      .filter((p): p is Player => p !== undefined);
+
+    if (direction === "horizontal") {
+      // Sort by X position
+      const sorted = [...selectedPlayers].sort((a, b) => a.x - b.x);
+      const minX = sorted[0].x;
+      const maxX = sorted[sorted.length - 1].x;
+      const spacing = (maxX - minX) / (sorted.length - 1);
+
+      sorted.forEach((player, index) => {
+        const sprite = app.playersLayer!.getPlayer(player.id);
+        if (sprite && index > 0 && index < sorted.length - 1) {
+          sprite.updatePlayer({ x: minX + spacing * index });
+        }
+      });
+    } else {
+      // Sort by Y position
+      const sorted = [...selectedPlayers].sort((a, b) => a.y - b.y);
+      const minY = sorted[0].y;
+      const maxY = sorted[sorted.length - 1].y;
+      const spacing = (maxY - minY) / (sorted.length - 1);
+
+      sorted.forEach((player, index) => {
+        const sprite = app.playersLayer!.getPlayer(player.id);
+        if (sprite && index > 0 && index < sorted.length - 1) {
+          sprite.updatePlayer({ y: minY + spacing * index });
+        }
+      });
+    }
+  }, [app]);
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
       {/* Show landscape prompt on mobile portrait */}
@@ -421,7 +496,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             {/* Add Players */}
             <button
               onClick={handleAddSingleOffense}
-              className="px-3 py-1.5 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded font-medium transition-colors flex items-center gap-1.5"
+              className="px-4 py-1.5 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded-full font-medium transition-colors flex items-center gap-1.5 shadow-sm"
               title="Add Offense Player"
             >
               <Icon name="plus-circle" size="sm" />
@@ -429,7 +504,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             </button>
             <button
               onClick={handleAddSingleDefense}
-              className="px-3 py-1.5 text-xs bg-error-500 text-white hover:bg-error-600 rounded font-medium transition-colors flex items-center gap-1.5"
+              className="px-4 py-1.5 text-xs bg-error-500 text-white hover:bg-error-600 rounded-full font-medium transition-colors flex items-center gap-1.5 shadow-sm"
               title="Add Defense Player"
             >
               <Icon name="plus-circle" size="sm" />
@@ -440,15 +515,15 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <div className="w-px h-6 bg-border"></div>
 
             {/* Alignment Toggle */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <span className="text-xs text-content-secondary mr-1.5">
                 Hash:
               </span>
               <button
                 onClick={() => handleAlignmentChange("left")}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1 shadow-sm ${
                   selectedAlignment === "left"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
                 }`}
                 title="Align to Left Hash"
@@ -458,9 +533,9 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               </button>
               <button
                 onClick={() => handleAlignmentChange("middle")}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1 shadow-sm ${
                   selectedAlignment === "middle"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
                 }`}
                 title="Align to Middle"
@@ -470,9 +545,9 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               </button>
               <button
                 onClick={() => handleAlignmentChange("right")}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1 shadow-sm ${
                   selectedAlignment === "right"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-surface-secondary text-content-secondary hover:bg-surface-tertiary"
                 }`}
                 title="Align to Right Hash"
@@ -489,7 +564,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <button
               onClick={() => alert("Undo coming soon! Use Ctrl/Cmd+Z")}
               disabled={true}
-              className="px-2.5 py-1 text-xs bg-surface-tertiary text-content-tertiary rounded font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
+              className="px-3 py-1.5 text-xs bg-surface-tertiary text-content-tertiary rounded-full font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
               title="Undo (Coming Soon)"
             >
               <Icon name="undo" size="sm" />
@@ -498,7 +573,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <button
               onClick={() => alert("Redo coming soon! Use Ctrl/Cmd+Shift+Z")}
               disabled={true}
-              className="px-2.5 py-1 text-xs bg-surface-tertiary text-content-tertiary rounded font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
+              className="px-3 py-1.5 text-xs bg-surface-tertiary text-content-tertiary rounded-full font-medium cursor-not-allowed opacity-50 flex items-center gap-1"
               title="Redo (Coming Soon)"
             >
               <Icon name="undo" size="sm" />
@@ -512,10 +587,10 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <button
               onClick={handleDeleteSelected}
               disabled={!useDiagramStore.getState().selectedPlayerId}
-              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-xs rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm ${
                 useDiagramStore.getState().selectedPlayerId
                   ? "bg-gray-600 text-white hover:bg-gray-700"
-                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed opacity-50"
               }`}
               title="Delete Selected Player"
             >
@@ -527,10 +602,10 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               disabled={
                 players.filter((p) => p.team === "offense").length === 0
               }
-              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-xs rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm ${
                 players.filter((p) => p.team === "offense").length > 0
                   ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed opacity-50"
               }`}
               title="Clear All Offense"
             >
@@ -542,10 +617,10 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               disabled={
                 players.filter((p) => p.team === "defense").length === 0
               }
-              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-xs rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm ${
                 players.filter((p) => p.team === "defense").length > 0
                   ? "bg-error-600 text-white hover:bg-error-700"
-                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed opacity-50"
               }`}
               title="Clear All Defense"
             >
@@ -555,10 +630,10 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
             <button
               onClick={handleClearWhiteboard}
               disabled={players.length === 0}
-              className={`px-2.5 py-1 text-xs rounded font-medium transition-colors flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-xs rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm ${
                 players.length > 0
                   ? "bg-red-600 text-white hover:bg-red-700"
-                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed opacity-50"
               }`}
               title="Clear All Players"
             >
@@ -677,28 +752,83 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       {/* Status Bar */}
       <div className="px-4 py-2 bg-surface-card border-t border-border text-xs text-content-secondary">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <Icon name="check-circle" size="xs" />
-            Elite Pixi.js Rendering
-          </span>
-          <span className="flex items-center gap-1">
-            <Icon name="sparkles" size="xs" />
-            Mobile-First
-          </span>
-          <span className="flex items-center gap-1">
-            <Icon name="zap" size="xs" />
-            WebGL Accelerated
-          </span>
-          <span className="flex items-center gap-1">
-            <Icon name="target" size="xs" />
-            Single Coordinate System
-          </span>
-          {isDirty && (
-            <span className="text-warning-500 flex items-center gap-1">
-              <Icon name="alert" size="xs" />
-              Unsaved changes
+        <div className="flex items-center justify-between gap-4">
+          {/* Left side: Status indicators */}
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1">
+              <Icon name="check-circle" size="xs" />
+              Elite Pixi.js Rendering
             </span>
+            <span className="flex items-center gap-1">
+              <Icon name="sparkles" size="xs" />
+              Mobile-First
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon name="zap" size="xs" />
+              WebGL Accelerated
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon name="target" size="xs" />
+              Single Coordinate System
+            </span>
+            {isDirty && (
+              <span className="text-warning-500 flex items-center gap-1">
+                <Icon name="alert" size="xs" />
+                Unsaved changes
+              </span>
+            )}
+          </div>
+
+          {/* Right side: Conditional Align/Distribute tools */}
+          {(selectedPlayerCount >= 2 || selectedPlayerCount >= 3) && (
+            <div className="flex items-center gap-2">
+              {/* Align tools (2+ players) */}
+              {selectedPlayerCount >= 2 && (
+                <>
+                  <span className="text-content-tertiary">Align:</span>
+                  <button
+                    onClick={() => handleAlignPlayers("horizontal")}
+                    className="px-3 py-1 text-xs bg-jade-600 text-white hover:bg-jade-700 rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm"
+                    title="Align Horizontally"
+                  >
+                    <Icon name="minus" size="xs" />
+                    <span>Horizontal</span>
+                  </button>
+                  <button
+                    onClick={() => handleAlignPlayers("vertical")}
+                    className="px-3 py-1 text-xs bg-jade-600 text-white hover:bg-jade-700 rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm"
+                    title="Align Vertically"
+                  >
+                    <Icon name="grip-vertical" size="xs" />
+                    <span>Vertical</span>
+                  </button>
+                </>
+              )}
+
+              {/* Distribute tools (3+ players) */}
+              {selectedPlayerCount >= 3 && (
+                <>
+                  <div className="w-px h-4 bg-border mx-1"></div>
+                  <span className="text-content-tertiary">Distribute:</span>
+                  <button
+                    onClick={() => handleDistributePlayers("horizontal")}
+                    className="px-3 py-1 text-xs bg-blue-600 text-white hover:bg-blue-700 rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm"
+                    title="Distribute Horizontally"
+                  >
+                    <Icon name="arrow-right" size="xs" />
+                    <span>Horizontal</span>
+                  </button>
+                  <button
+                    onClick={() => handleDistributePlayers("vertical")}
+                    className="px-3 py-1 text-xs bg-blue-600 text-white hover:bg-blue-700 rounded-full font-medium transition-colors flex items-center gap-1 shadow-sm"
+                    title="Distribute Vertically"
+                  >
+                    <Icon name="arrow-down" size="xs" />
+                    <span>Vertical</span>
+                  </button>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>
