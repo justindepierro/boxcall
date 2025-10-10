@@ -28,7 +28,7 @@ interface FloatingActionButtonProps {
 
 /**
  * FloatingActionButton - Mobile-first FAB with radial menu
- * 
+ *
  * Features:
  * - Large touch target (56px)
  * - Radial menu expansion

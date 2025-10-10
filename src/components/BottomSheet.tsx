@@ -21,7 +21,7 @@ interface BottomSheetProps {
 
 /**
  * BottomSheet - Mobile-first draggable bottom sheet component
- * 
+ *
  * Features:
  * - Draggable with gesture support
  * - Snap points at 80px, 50%, and 90% of viewport height
@@ -67,7 +67,7 @@ export function BottomSheet({
   // Animate to specific snap point
   const animateToSnapPoint = (snapIndex: number) => {
     const targetY = viewportHeight * (1 - snapPoints[snapIndex]);
-    
+
     animate(y, targetY, {
       type: "spring",
       stiffness: 300,
@@ -82,7 +82,7 @@ export function BottomSheet({
   // Find nearest snap point
   const findNearestSnapPoint = (currentY: number): number => {
     const currentPercentage = 1 - currentY / viewportHeight;
-    
+
     let nearestIndex = 0;
     let minDistance = Math.abs(snapPoints[0] - currentPercentage);
 

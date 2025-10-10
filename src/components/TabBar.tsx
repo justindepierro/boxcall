@@ -19,7 +19,7 @@ interface TabBarProps {
 
 /**
  * TabBar - Mobile-optimized tab navigation
- * 
+ *
  * Features:
  * - Icons + labels for clarity
  * - Active indicator animation

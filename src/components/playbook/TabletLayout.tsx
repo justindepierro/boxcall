@@ -11,7 +11,7 @@ interface TabletLayoutProps {
 /**
  * TabletLayout - Hybrid sidebar approach
  * Used on tablet (768px - 1023px)
- * 
+ *
  * For now, uses same layout as desktop but could be enhanced with:
  * - Collapsible sidebar
  * - Floating panels

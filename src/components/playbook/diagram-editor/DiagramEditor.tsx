@@ -64,8 +64,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [showUnsavedChanges, setShowUnsavedChanges] = useState<boolean>(false);
 
   // Show landscape prompt if on mobile in portrait and not dismissed
-  const showLandscapePrompt =
-    isMobilePortrait && !dismissedLandscapePrompt;
+  const showLandscapePrompt = isMobilePortrait && !dismissedLandscapePrompt;
 
   // Helper to show alert modal
   const showAlertModal = useCallback((title: string, message: string) => {
@@ -627,6 +626,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
         <MobileLayout
           app={app}
           selectedAlignment={selectedAlignment}
+          onAlignmentChange={handleAlignmentChange}
           onAddPlayer={handleAddSingleOffense}
           onAddFormation={() => alert("Formation picker coming soon!")}
           onClear={handleClearWhiteboard}

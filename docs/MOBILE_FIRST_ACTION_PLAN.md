@@ -135,17 +135,17 @@ We're transforming the Play Diagram Editor from a **desktop-first tool** into a 
    - [x] Smooth spring animations (Framer Motion)
    - [x] Backdrop with tap-to-close
 
-2. **Split PlayerControls into tabs** (10 hours) 🔄 IN PROGRESS
+2. **Split PlayerControls into tabs** (10 hours) ✅ COMPLETE
    - [x] Created TabBar component with icons + labels
    - [x] Created TabPanel helper component
    - [x] Animated active indicator (layout animation)
    - [x] Tab structure ready in MobileLayout
-   - [ ] Extract "Players" section → `PlayersTab.tsx`
-   - [ ] Extract "Formations" section → `FormationsTab.tsx`
-   - [ ] Extract "Defense" section → `DefenseTab.tsx`
-   - [ ] Extract "Align" section → `AlignTab.tsx`
-   - [ ] Extract "Settings" section → `SettingsTab.tsx`
-   - [ ] Lazy load tab content (only mount active tab)
+   - [x] Extract "Players" section → `PlayersTab.tsx`
+   - [x] Extract "Formations" section → `FormationsTab.tsx`
+   - [x] Extract "Defense" section → `DefenseTab.tsx`
+   - [x] Extract "Align" section → `AlignTab.tsx`
+   - [x] Extract "Settings" section → `SettingsTab.tsx`
+   - [x] Lazy load tab content (only mount active tab)
 
 3. **Floating Action Button** (4 hours) ✅ COMPLETE
    - [x] `components/FloatingActionButton.tsx` - Main FAB
@@ -165,7 +165,9 @@ We're transforming the Play Diagram Editor from a **desktop-first tool** into a 
 **Deliverable**: Bottom sheet works, tabs switch smoothly, FAB is functional ✅  
 **Test**: Swipe gestures, tab switching, FAB radial menu
 
-**Progress**: 3/4 tasks complete (75%) - Tab content extraction remains
+**Progress**: 4/4 tasks complete (100%) ✅ Phase 2 Mobile UI Complete!
+
+**Next Up**: Phase 3 - Smart Workflows (Formation picker, auto-defense, contextual toolbars)
 
 ---
 
