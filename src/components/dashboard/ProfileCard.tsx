@@ -190,15 +190,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       </div>
       {/* Profile Content */}
       <div className="space-y-spacing-sm">
-        {/* Enhanced Avatar & Name */}
-        <div className="flex items-center space-x-spacing-md">
+        {/* Enhanced Avatar & Name - Responsive: Vertical on mobile, Horizontal on desktop */}
+        <div className="flex flex-col items-center space-y-spacing-sm md:flex-row md:items-center md:space-y-0 md:space-x-spacing-md">
           <div className="relative">
             {profile?.avatar_url ? (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/profile")}
-                className="w-20 h-20 md:w-16 md:h-16 p-0 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                className="w-24 h-24 md:w-16 md:h-16 p-0 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
                 aria-label="View profile"
               >
                 <img
@@ -212,12 +212,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/profile")}
-                className="w-20 h-20 md:w-16 md:h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
+                className="w-24 h-24 md:w-16 md:h-16 p-0 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-lg"
                 aria-label="View profile"
               >
                 <Typography
                   variant="body-lg"
-                  className="font-bold text-white text-xl md:text-lg"
+                  className="font-bold text-white text-2xl md:text-lg"
                 >
                   {getInitials(displayName)}
                 </Typography>
@@ -237,12 +237,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </Tooltip>
             )}
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 text-center md:text-left w-full">
             <Button
               variant="link"
               size="sm"
               onClick={() => navigate("/profile")}
-              className="text-left w-full p-0"
+              className="text-center md:text-left w-full p-0 justify-center md:justify-start"
               aria-label="Open profile page"
             >
               <Typography
@@ -252,7 +252,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {displayName}
               </Typography>
             </Button>
-            <div className="flex items-center space-x-spacing-xs mt-1">
+            <div className="flex items-center justify-center md:justify-start space-x-spacing-xs mt-1">
               <MultiBadgeDisplay
                 isAdmin={profile?.is_admin}
                 appRole={profile?.app_role || profile?.role || userRole}
@@ -264,19 +264,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         </div>
 
-        {/* Enhanced Achievements Summary */}
+        {/* Enhanced Achievements Summary - 2x2 on mobile, 4 columns on desktop */}
         {achievements && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-spacing-xs pt-spacing-sm">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2 pt-spacing-sm">
             <div className="bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-primary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-primary font-medium text-xs md:text-xs"
+                className="text-brand-primary font-medium text-xs"
               >
                 Stickers
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-brand-primary text-xl md:text-lg mt-1"
+                className="font-bold text-brand-primary text-2xl md:text-lg mt-1"
               >
                 {achievements.stickers}
               </Typography>
@@ -284,13 +284,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-lg p-3 md:p-spacing-sm text-center border border-success/20">
               <Typography
                 variant="body-xs"
-                className="text-success font-medium text-xs md:text-xs"
+                className="text-success font-medium text-xs"
               >
                 Medals
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-success text-xl md:text-lg mt-1"
+                className="font-bold text-success text-2xl md:text-lg mt-1"
               >
                 {achievements.medals}
               </Typography>
@@ -298,13 +298,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-lg p-3 md:p-spacing-sm text-center border border-warning/20">
               <Typography
                 variant="body-xs"
-                className="text-warning font-medium text-xs md:text-xs"
+                className="text-warning font-medium text-xs"
               >
                 Streak
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-warning text-xl md:text-lg mt-1"
+                className="font-bold text-warning text-2xl md:text-lg mt-1"
               >
                 {achievements.streak}
               </Typography>
@@ -312,13 +312,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="bg-gradient-to-br from-brand-secondary/10 to-brand-secondary/5 rounded-lg p-3 md:p-spacing-sm text-center border border-brand-secondary/20">
               <Typography
                 variant="body-xs"
-                className="text-brand-secondary font-medium text-xs md:text-xs"
+                className="text-brand-secondary font-medium text-xs"
               >
                 Points
               </Typography>
               <Typography
                 variant="body-sm"
-                className="font-bold text-brand-secondary text-xl md:text-lg mt-1"
+                className="font-bold text-brand-secondary text-2xl md:text-lg mt-1"
               >
                 {achievements.points}
               </Typography>
