@@ -138,7 +138,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
               player.first_name && player.last_name
                 ? `${player.first_name} ${player.last_name}`
                 : `Player ${player.jersey_number || "TBD"}`,
-            subText: `${player.position || "Position TBD"} • ${player.status || "Status TBD"}`,
+            subText: `${player.position || "Position TBD"} • ${player.is_active ? "Active" : "Inactive"}`,
           }))
         );
 

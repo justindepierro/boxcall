@@ -1,6 +1,6 @@
 import React from "react";
 import { useDiagramStore } from "../stores/diagramStore";
-import type { Player, TeamSide } from "../types/Player";
+import type { Player } from "../types/Player";
 import type { DiagramPixiApp } from "../core/PixiApp";
 import {
   alignPlayersHorizontal,
@@ -32,7 +32,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   app,
   externalAlignment,
 }) => {
-  const { players, addPlayer, removePlayer, selectedPlayerId, clearPlayers } =
+  const { players, addPlayer, removePlayer, selectedPlayerId } =
     useDiagramStore();
 
   // Count selected players (for multi-select support)
@@ -172,7 +172,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       console.log(`✅ ${result.summary}`);
       console.log(`📞 Coverage Call: ${result.recommendedCoverage}`);
 
-      toast.success(result.summary, `Recommended: ${result.recommendedCoverage}`);
+      toast.success(
+        result.summary,
+        `Recommended: ${result.recommendedCoverage}`
+      );
     } catch (error) {
       console.error("❌ Coverage adjustment error:", error);
       toast.error(
@@ -188,7 +191,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   // Note: We intentionally DON'T watch formationAnalysis to avoid triggering on manual player drags
   React.useEffect(() => {
     const defensivePlayers = players.filter((p) => p.team === "defense");
-    
+
     // Only proceed if we have defensive players
     if (defensivePlayers.length === 0) {
       return;
@@ -293,43 +296,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     setConfirmMessage(message);
     setShowFormationConfirm(true);
     setPendingFormationAction(() => onConfirm);
-  };
-
-  const _handleAddPlayer = (team: TeamSide) => {
-    const number = players.filter((p) => p.team === team).length + 1;
-
-    // Try to place next to the last dropped player
-    let x: number;
-    let y: number;
-
-    if (app?.playersLayer) {
-      const lastPos = app.playersLayer.getLastDroppedPosition();
-      if (lastPos) {
-        // Place 2 yards to the right of the last dropped player
-        x = Math.min(app.coordinates.fieldWidth - 1, lastPos.x + 2.0);
-        y = lastPos.y;
-      } else {
-        // Default: center of field with small offset for team
-        const yOffset = team === "offense" ? 0 : 10;
-        x = 26.666;
-        y = 17.5 + yOffset;
-      }
-    } else {
-      // Fallback if app not ready
-      const yOffset = team === "offense" ? 0 : 10;
-      x = 26.666;
-      y = 17.5 + yOffset;
-    }
-
-    const newPlayer: Player = {
-      id: `player-${Date.now()}`,
-      x,
-      y,
-      jerseyNumber: number.toString(),
-      team,
-    };
-
-    addPlayer(newPlayer);
   };
 
   /**
@@ -1112,21 +1078,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     );
   };
 
-  const _handleRemoveSelected = () => {
-    if (selectedPlayerId) {
-      removePlayer(selectedPlayerId);
-      removePlayer(selectedPlayerId);
-    }
-  };
-
-  const _handleClearAll = () => {
-    showConfirmModal(
-      "This will remove all players from the field. Are you sure?",
-      () => clearPlayers(),
-      "🗑️ Remove All Players"
-    );
-  };
-
   // Alignment handlers
   const handleAlign = (
     mode: "left" | "center" | "right" | "top" | "middle" | "bottom"
@@ -1414,7 +1365,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                         }}
                         className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
                       >
-                        <div className="font-medium">Cover 6 (Quarter-Quarter-Half)</div>
+                        <div className="font-medium">
+                          Cover 6 (Quarter-Quarter-Half)
+                        </div>
                         <div className="text-xs text-content-secondary">
                           Split-field coverage
                         </div>
@@ -1881,29 +1834,37 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       {/* Formation Confirmation Dialog */}
       {showFormationConfirm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-lg">
-          <div 
+          <div
             className="relative rounded-2xl p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200"
             style={{
-              background: 'white',
-              border: '1px solid rgba(229, 231, 235, 0.8)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
+              background: "white",
+              border: "1px solid rgba(229, 231, 235, 0.8)",
+              boxShadow:
+                "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
             }}
           >
             <div className="flex items-start gap-5 mb-7">
-              <div 
+              <div
                 className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
-                  boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+                  background:
+                    "linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",
+                  boxShadow: "0 8px 24px rgba(245, 158, 11, 0.4)",
                 }}
               >
                 <span className="text-5xl drop-shadow-lg">⚠️</span>
               </div>
               <div className="flex-1 min-w-0 pt-1">
-                <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#111827' }}>
-                  {confirmTitle.replace(/⚠️|❌|✅/gu, '').trim()}
+                <h2
+                  className="text-2xl font-bold mb-3 leading-tight"
+                  style={{ color: "#111827" }}
+                >
+                  {confirmTitle.replace(/⚠️|❌|✅/gu, "").trim()}
                 </h2>
-                <p className="text-base whitespace-pre-line leading-relaxed" style={{ color: '#374151' }}>
+                <p
+                  className="text-base whitespace-pre-line leading-relaxed"
+                  style={{ color: "#374151" }}
+                >
                   {confirmMessage}
                 </p>
               </div>
@@ -1928,15 +1889,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 }}
                 className="flex-1 px-6 py-4 rounded-xl font-semibold text-base transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-150 shadow-md"
                 style={{
-                  background: '#F3F4F6',
-                  color: '#111827',
-                  border: '1px solid #D1D5DB'
+                  background: "#F3F4F6",
+                  color: "#111827",
+                  border: "1px solid #D1D5DB",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#E5E7EB';
+                  e.currentTarget.style.background = "#E5E7EB";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#F3F4F6';
+                  e.currentTarget.style.background = "#F3F4F6";
                 }}
               >
                 Cancel
@@ -1949,29 +1910,37 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       {/* Alert Modal (for blocking actions) */}
       {showAlert && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-lg">
-          <div 
+          <div
             className="relative rounded-2xl p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200"
             style={{
-              background: 'white',
-              border: '1px solid rgba(229, 231, 235, 0.8)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
+              background: "white",
+              border: "1px solid rgba(229, 231, 235, 0.8)",
+              boxShadow:
+                "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",
             }}
           >
             <div className="flex items-start gap-5 mb-7">
-              <div 
+              <div
                 className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
-                  boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+                  background:
+                    "linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",
+                  boxShadow: "0 8px 24px rgba(245, 158, 11, 0.4)",
                 }}
               >
                 <span className="text-5xl drop-shadow-lg">⚠️</span>
               </div>
               <div className="flex-1 min-w-0 pt-1">
-                <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#111827' }}>
+                <h2
+                  className="text-2xl font-bold mb-3 leading-tight"
+                  style={{ color: "#111827" }}
+                >
                   Cannot Add Formation
                 </h2>
-                <p className="text-base whitespace-pre-line leading-relaxed" style={{ color: '#374151' }}>
+                <p
+                  className="text-base whitespace-pre-line leading-relaxed"
+                  style={{ color: "#374151" }}
+                >
                   {alertMessage}
                 </p>
               </div>

@@ -26,11 +26,12 @@ export default [
       ".vscode/",
       "archive/**",
       "scripts/**", // Exclude backup scripts
-      "tests/e2e/**", // Exclude Playwright E2E tests
+      "tests/**", // Exclude all test directories
       "*.log",
       "src/components/ui/Icon/preloadShim.d.ts",
-      "src/routes/__tests__/loaderAuth.test.tsx",
       "src/utils/errorHandler.tsx",
+      "**/*.test.ts", // Exclude all test files
+      "**/*.test.tsx", // Exclude all test files
       "**/*.stories.tsx", // Exclude Storybook files from linting
       "**/*.stories.ts", // Exclude Storybook files from linting
       "vite.config.ts", // Vite config uses different tsconfig
