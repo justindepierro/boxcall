@@ -9,11 +9,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import { DiagramCanvas } from "./components/DiagramCanvas";
 import { PlayerControls } from "./components/PlayerControls";
 import { PixiErrorBoundary } from "./components/PixiErrorBoundary";
+import { LandscapePrompt } from "../../LandscapePrompt";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
 import { useUndoRedo } from "./hooks/useUndoRedo";
 import { useDiagramStore } from "./stores/diagramStore";
+import { useBreakpoint, useIsMobile } from "../../../hooks/useBreakpoint";
+import { useIsMobilePortrait } from "../../../hooks/useOrientation";
 import { supabase } from "../../../lib/supabase";
 import { Icon } from "../../../components/ui/Icon/Icon";
 import type { DiagramPixiApp } from "./core/PixiApp";
@@ -41,6 +44,13 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
     "left" | "middle" | "right"
   >("middle");
 
+  // Mobile state
+  const breakpoint = useBreakpoint();
+  const isMobile = useIsMobile();
+  const { isMobilePortrait } = useIsMobilePortrait();
+  const [dismissedLandscapePrompt, setDismissedLandscapePrompt] =
+    useState(false);
+
   // Modal states
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertTitle, setAlertTitle] = useState<string>("");
@@ -50,6 +60,10 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const [confirmMessage, setConfirmMessage] = useState<string>("");
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
   const [showUnsavedChanges, setShowUnsavedChanges] = useState<boolean>(false);
+
+  // Show landscape prompt if on mobile in portrait and not dismissed
+  const showLandscapePrompt =
+    isMobilePortrait && !dismissedLandscapePrompt;
 
   // Helper to show alert modal
   const showAlertModal = useCallback((title: string, message: string) => {
@@ -384,6 +398,13 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-surface">
+      {/* Show landscape prompt on mobile portrait */}
+      {showLandscapePrompt && (
+        <LandscapePrompt
+          onContinueAnyway={() => setDismissedLandscapePrompt(true)}
+        />
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-surface-card border-b border-border">
         <div className="flex items-center gap-4">
