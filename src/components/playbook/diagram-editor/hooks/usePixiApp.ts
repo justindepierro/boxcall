@@ -163,10 +163,17 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       return;
     }
 
-    // CRITICAL: Don't re-initialize if app already exists OR if we're currently initializing
-    if (app || initializingRef.current) {
-      console.log('⏸️  usePixiApp: App already initialized/initializing, skipping');
-      return; // Return without cleanup function - app already exists
+    // If app exists and pixelsPerYard changed, we need to destroy and recreate
+    // The app will be cleaned up by the return function, then this effect runs again
+    if (app && !initializingRef.current) {
+      console.log('🔄 usePixiApp: Existing app will be destroyed due to dependency change');
+      // Don't block re-initialization - let cleanup handle it
+    }
+    
+    // CRITICAL: Don't re-initialize if we're currently initializing
+    if (initializingRef.current) {
+      console.log('⏸️  usePixiApp: Currently initializing, skipping');
+      return;
     }
 
     // Set initializing flag

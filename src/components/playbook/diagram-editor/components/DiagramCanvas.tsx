@@ -8,12 +8,13 @@
 import React, { useRef, useEffect } from "react";
 import { usePixiApp } from "../hooks/usePixiApp";
 import { useGestures } from "../hooks/useGestures";
+import { useResponsivePixelsPerYard } from "../hooks/useResponsivePixelsPerYard";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 export interface DiagramCanvasProps {
   fieldWidth?: number;
   fieldHeight?: number;
-  pixelsPerYard?: number;
+  pixelsPerYard?: number; // Optional: manual override, otherwise calculated responsively
   backgroundColor?: number;
   className?: string;
   onReady?: (app: any) => void;
@@ -22,13 +23,26 @@ export interface DiagramCanvasProps {
 export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   fieldWidth = 53.333,
   fieldHeight = 35,
-  pixelsPerYard = 15,
+  pixelsPerYard: manualPixelsPerYard, // Rename to indicate it's optional override
   backgroundColor = 0xf5f7ed,
   className = "",
   onReady,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Calculate responsive pixelsPerYard if not manually specified
+  const responsivePixelsPerYard = useResponsivePixelsPerYard({
+    containerRef,
+    fieldWidth,
+    fieldHeight,
+    minPixelsPerYard: 10,  // Minimum for readability
+    maxPixelsPerYard: 25,  // Maximum for touch targets
+    padding: 20,           // Padding around field
+  });
+
+  // Use manual override if provided, otherwise use responsive calculation
+  const pixelsPerYard = manualPixelsPerYard ?? responsivePixelsPerYard;
 
   // Don't use state - let usePixiApp check canvas status directly
   const { app, isReady, debugCoordinates } = usePixiApp(canvasRef, {
