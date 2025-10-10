@@ -111,7 +111,7 @@ export default defineConfig({
           },
           // Limit concurrent tests to prevent memory exhaustion
           // Each Storybook test spawns a browser instance
-          maxConcurrency: 3,
+          maxConcurrency: 1, // Only 1 test at a time (was 3, too many)
           // Add timeout to prevent hanging tests from consuming memory
           testTimeout: 30000,
           hookTimeout: 30000,
