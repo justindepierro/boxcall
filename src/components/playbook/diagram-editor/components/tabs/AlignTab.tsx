@@ -47,7 +47,9 @@ export const AlignTab: React.FC<AlignTabProps> = ({
     <div className="space-y-4">
       {/* Hash Mark Selection */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Hash Mark Alignment</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Hash Mark Alignment
+        </h3>
         <div className="space-y-2">
           {alignments.map((alignment) => {
             const isSelected = selectedAlignment === alignment.id;
@@ -66,13 +68,13 @@ export const AlignTab: React.FC<AlignTabProps> = ({
                   <div className="text-2xl">{alignment.icon}</div>
                   <div className="flex-1">
                     <div className="text-sm font-medium">{alignment.label}</div>
-                    <div className={`text-xs mt-0.5 ${isSelected ? "text-white/80" : "text-secondary"}`}>
+                    <div
+                      className={`text-xs mt-0.5 ${isSelected ? "text-white/80" : "text-secondary"}`}
+                    >
                       {alignment.description}
                     </div>
                   </div>
-                  {isSelected && (
-                    <div className="text-lg">✓</div>
-                  )}
+                  {isSelected && <div className="text-lg">✓</div>}
                 </div>
               </button>
             );
@@ -81,12 +83,16 @@ export const AlignTab: React.FC<AlignTabProps> = ({
       </div>
 
       {/* Visual Guide */}
-      <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
-        <p className="text-xs text-green-900 dark:text-green-100">
-          📍 <strong>Current Alignment:</strong> {selectedAlignment.charAt(0).toUpperCase() + selectedAlignment.slice(1)} Hash
+      <div className="bg-success-bg rounded-lg p-3 border border-success-200">
+        <p className="text-xs text-success-fg">
+          📍 <strong>Current Alignment:</strong>{" "}
+          {selectedAlignment.charAt(0).toUpperCase() +
+            selectedAlignment.slice(1)}{" "}
+          Hash
         </p>
-        <p className="text-xs text-green-900 dark:text-green-100 mt-2">
-          💡 <strong>Tip:</strong> All new formations will be centered on the selected hash mark. Existing players are not moved.
+        <p className="text-xs text-success-fg mt-2">
+          💡 <strong>Tip:</strong> All new formations will be centered on the
+          selected hash mark. Existing players are not moved.
         </p>
       </div>
 
@@ -94,15 +100,17 @@ export const AlignTab: React.FC<AlignTabProps> = ({
       <div>
         <h3 className="text-sm font-semibold text-primary mb-2">Field View</h3>
         <div className="bg-surface-secondary rounded-lg p-4">
-          <div className="relative h-32 bg-green-700/20 rounded border-2 border-green-600/30">
+          <div className="relative h-32 bg-success-600/20 rounded border-2 border-success-500/30">
             {/* Sidelines */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/50"></div>
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/50"></div>
 
             {/* Left Hash */}
-            <div className={`absolute left-1/4 top-0 bottom-0 w-1 ${
-              selectedAlignment === "left" ? "bg-primary-500" : "bg-white/30"
-            }`}>
+            <div
+              className={`absolute left-1/4 top-0 bottom-0 w-1 ${
+                selectedAlignment === "left" ? "bg-primary-500" : "bg-white/30"
+              }`}
+            >
               {selectedAlignment === "left" && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl">
                   ⚪
@@ -111,9 +119,13 @@ export const AlignTab: React.FC<AlignTabProps> = ({
             </div>
 
             {/* Middle Hash */}
-            <div className={`absolute left-1/2 top-0 bottom-0 w-1 ${
-              selectedAlignment === "middle" ? "bg-primary-500" : "bg-white/30"
-            }`}>
+            <div
+              className={`absolute left-1/2 top-0 bottom-0 w-1 ${
+                selectedAlignment === "middle"
+                  ? "bg-primary-500"
+                  : "bg-white/30"
+              }`}
+            >
               {selectedAlignment === "middle" && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl">
                   ⚪
@@ -122,9 +134,11 @@ export const AlignTab: React.FC<AlignTabProps> = ({
             </div>
 
             {/* Right Hash */}
-            <div className={`absolute right-1/4 top-0 bottom-0 w-1 ${
-              selectedAlignment === "right" ? "bg-primary-500" : "bg-white/30"
-            }`}>
+            <div
+              className={`absolute right-1/4 top-0 bottom-0 w-1 ${
+                selectedAlignment === "right" ? "bg-primary-500" : "bg-white/30"
+              }`}
+            >
               {selectedAlignment === "right" && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl">
                   ⚪
@@ -133,13 +147,13 @@ export const AlignTab: React.FC<AlignTabProps> = ({
             </div>
 
             {/* Labels */}
-            <div className="absolute bottom-1 left-1/4 -translate-x-1/2 text-[10px] text-white/70">
+            <div className="absolute bottom-1 left-1/4 -translate-x-1/2 text-xs text-white/70">
               Left
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-white/70">
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-xs text-white/70">
               Middle
             </div>
-            <div className="absolute bottom-1 right-1/4 translate-x-1/2 text-[10px] text-white/70">
+            <div className="absolute bottom-1 right-1/4 translate-x-1/2 text-xs text-white/70">
               Right
             </div>
           </div>

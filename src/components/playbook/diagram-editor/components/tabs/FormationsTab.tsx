@@ -52,7 +52,9 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
       if (!confirmed) return;
 
       // Clear existing offense
-      offensePlayers.forEach((p) => useDiagramStore.getState().removePlayer(p.id));
+      offensePlayers.forEach((p) =>
+        useDiagramStore.getState().removePlayer(p.id)
+      );
     }
 
     const centerX = getCenterXForAlignment(selectedAlignment);
@@ -61,49 +63,247 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
     // Spread 2x2 Formation
     if (formationType === "spread2x2") {
       newPlayers.push(
-        { id: `player-${Date.now()}-1`, x: centerX, y: 17.5, jerseyNumber: "7", team: "offense" },
-        { id: `player-${Date.now()}-2`, x: centerX - 3, y: 18, jerseyNumber: "5", team: "offense" },
-        { id: `player-${Date.now()}-3`, x: centerX + 3, y: 18, jerseyNumber: "6", team: "offense" },
-        { id: `player-${Date.now()}-4`, x: centerX - 1, y: 20, jerseyNumber: "2", team: "offense" },
-        { id: `player-${Date.now()}-5`, x: centerX, y: 20, jerseyNumber: "3", team: "offense" },
-        { id: `player-${Date.now()}-6`, x: centerX + 1, y: 20, jerseyNumber: "4", team: "offense" },
-        { id: `player-${Date.now()}-7`, x: centerX - 8, y: 15.5, jerseyNumber: "11", team: "offense" },
-        { id: `player-${Date.now()}-8`, x: centerX - 4, y: 15.5, jerseyNumber: "10", team: "offense" },
-        { id: `player-${Date.now()}-9`, x: centerX + 4, y: 15.5, jerseyNumber: "8", team: "offense" },
-        { id: `player-${Date.now()}-10`, x: centerX + 8, y: 15.5, jerseyNumber: "9", team: "offense" },
-        { id: `player-${Date.now()}-11`, x: centerX, y: 12, jerseyNumber: "1", team: "offense" }
+        {
+          id: `player-${Date.now()}-1`,
+          x: centerX,
+          y: 17.5,
+          jerseyNumber: "7",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-2`,
+          x: centerX - 3,
+          y: 18,
+          jerseyNumber: "5",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-3`,
+          x: centerX + 3,
+          y: 18,
+          jerseyNumber: "6",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-4`,
+          x: centerX - 1,
+          y: 20,
+          jerseyNumber: "2",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-5`,
+          x: centerX,
+          y: 20,
+          jerseyNumber: "3",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-6`,
+          x: centerX + 1,
+          y: 20,
+          jerseyNumber: "4",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-7`,
+          x: centerX - 8,
+          y: 15.5,
+          jerseyNumber: "11",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-8`,
+          x: centerX - 4,
+          y: 15.5,
+          jerseyNumber: "10",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-9`,
+          x: centerX + 4,
+          y: 15.5,
+          jerseyNumber: "8",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-10`,
+          x: centerX + 8,
+          y: 15.5,
+          jerseyNumber: "9",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-11`,
+          x: centerX,
+          y: 12,
+          jerseyNumber: "1",
+          team: "offense",
+        }
       );
     }
     // Spread 3x1 Right
     else if (formationType === "spread3x1Right") {
       newPlayers.push(
-        { id: `player-${Date.now()}-1`, x: centerX, y: 17.5, jerseyNumber: "7", team: "offense" },
-        { id: `player-${Date.now()}-2`, x: centerX - 3, y: 18, jerseyNumber: "5", team: "offense" },
-        { id: `player-${Date.now()}-3`, x: centerX + 3, y: 18, jerseyNumber: "6", team: "offense" },
-        { id: `player-${Date.now()}-4`, x: centerX - 1, y: 20, jerseyNumber: "2", team: "offense" },
-        { id: `player-${Date.now()}-5`, x: centerX, y: 20, jerseyNumber: "3", team: "offense" },
-        { id: `player-${Date.now()}-6`, x: centerX + 1, y: 20, jerseyNumber: "4", team: "offense" },
-        { id: `player-${Date.now()}-7`, x: centerX - 8, y: 15.5, jerseyNumber: "11", team: "offense" },
-        { id: `player-${Date.now()}-8`, x: centerX + 3, y: 15.5, jerseyNumber: "10", team: "offense" },
-        { id: `player-${Date.now()}-9`, x: centerX + 6, y: 15.5, jerseyNumber: "8", team: "offense" },
-        { id: `player-${Date.now()}-10`, x: centerX + 9, y: 15.5, jerseyNumber: "9", team: "offense" },
-        { id: `player-${Date.now()}-11`, x: centerX, y: 12, jerseyNumber: "1", team: "offense" }
+        {
+          id: `player-${Date.now()}-1`,
+          x: centerX,
+          y: 17.5,
+          jerseyNumber: "7",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-2`,
+          x: centerX - 3,
+          y: 18,
+          jerseyNumber: "5",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-3`,
+          x: centerX + 3,
+          y: 18,
+          jerseyNumber: "6",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-4`,
+          x: centerX - 1,
+          y: 20,
+          jerseyNumber: "2",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-5`,
+          x: centerX,
+          y: 20,
+          jerseyNumber: "3",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-6`,
+          x: centerX + 1,
+          y: 20,
+          jerseyNumber: "4",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-7`,
+          x: centerX - 8,
+          y: 15.5,
+          jerseyNumber: "11",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-8`,
+          x: centerX + 3,
+          y: 15.5,
+          jerseyNumber: "10",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-9`,
+          x: centerX + 6,
+          y: 15.5,
+          jerseyNumber: "8",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-10`,
+          x: centerX + 9,
+          y: 15.5,
+          jerseyNumber: "9",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-11`,
+          x: centerX,
+          y: 12,
+          jerseyNumber: "1",
+          team: "offense",
+        }
       );
     }
     // Spread 3x1 Left
     else if (formationType === "spread3x1Left") {
       newPlayers.push(
-        { id: `player-${Date.now()}-1`, x: centerX, y: 17.5, jerseyNumber: "7", team: "offense" },
-        { id: `player-${Date.now()}-2`, x: centerX - 3, y: 18, jerseyNumber: "5", team: "offense" },
-        { id: `player-${Date.now()}-3`, x: centerX + 3, y: 18, jerseyNumber: "6", team: "offense" },
-        { id: `player-${Date.now()}-4`, x: centerX - 1, y: 20, jerseyNumber: "2", team: "offense" },
-        { id: `player-${Date.now()}-5`, x: centerX, y: 20, jerseyNumber: "3", team: "offense" },
-        { id: `player-${Date.now()}-6`, x: centerX + 1, y: 20, jerseyNumber: "4", team: "offense" },
-        { id: `player-${Date.now()}-7`, x: centerX - 9, y: 15.5, jerseyNumber: "11", team: "offense" },
-        { id: `player-${Date.now()}-8`, x: centerX - 6, y: 15.5, jerseyNumber: "10", team: "offense" },
-        { id: `player-${Date.now()}-9`, x: centerX - 3, y: 15.5, jerseyNumber: "8", team: "offense" },
-        { id: `player-${Date.now()}-10`, x: centerX + 8, y: 15.5, jerseyNumber: "9", team: "offense" },
-        { id: `player-${Date.now()}-11`, x: centerX, y: 12, jerseyNumber: "1", team: "offense" }
+        {
+          id: `player-${Date.now()}-1`,
+          x: centerX,
+          y: 17.5,
+          jerseyNumber: "7",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-2`,
+          x: centerX - 3,
+          y: 18,
+          jerseyNumber: "5",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-3`,
+          x: centerX + 3,
+          y: 18,
+          jerseyNumber: "6",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-4`,
+          x: centerX - 1,
+          y: 20,
+          jerseyNumber: "2",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-5`,
+          x: centerX,
+          y: 20,
+          jerseyNumber: "3",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-6`,
+          x: centerX + 1,
+          y: 20,
+          jerseyNumber: "4",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-7`,
+          x: centerX - 9,
+          y: 15.5,
+          jerseyNumber: "11",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-8`,
+          x: centerX - 6,
+          y: 15.5,
+          jerseyNumber: "10",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-9`,
+          x: centerX - 3,
+          y: 15.5,
+          jerseyNumber: "8",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-10`,
+          x: centerX + 8,
+          y: 15.5,
+          jerseyNumber: "9",
+          team: "offense",
+        },
+        {
+          id: `player-${Date.now()}-11`,
+          x: centerX,
+          y: 12,
+          jerseyNumber: "1",
+          team: "offense",
+        }
       );
     }
 
@@ -136,7 +336,9 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
     <div className="space-y-4">
       {/* Formation Grid */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Offensive Formations</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Offensive Formations
+        </h3>
         <div className="space-y-2">
           {formations.map((formation) => (
             <button
@@ -147,8 +349,12 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
               <div className="flex items-start gap-3">
                 <div className="text-2xl">{formation.icon}</div>
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-primary">{formation.name}</div>
-                  <div className="text-xs text-secondary mt-0.5">{formation.description}</div>
+                  <div className="text-sm font-medium text-primary">
+                    {formation.name}
+                  </div>
+                  <div className="text-xs text-secondary mt-0.5">
+                    {formation.description}
+                  </div>
                 </div>
               </div>
             </button>
@@ -159,7 +365,10 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
       {/* Alignment Info */}
       <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 border border-purple-200 dark:border-purple-800">
         <p className="text-xs text-purple-900 dark:text-purple-100">
-          📍 <strong>Alignment:</strong> {selectedAlignment.charAt(0).toUpperCase() + selectedAlignment.slice(1)} hash
+          📍 <strong>Alignment:</strong>{" "}
+          {selectedAlignment.charAt(0).toUpperCase() +
+            selectedAlignment.slice(1)}{" "}
+          hash
         </p>
         <p className="text-xs text-purple-900 dark:text-purple-100 mt-1">
           Change alignment in the "Align" tab or use the header selector.
@@ -169,8 +378,12 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
       {/* Coming Soon */}
       <div className="text-center py-8">
         <div className="text-4xl mb-2">🚧</div>
-        <p className="text-sm font-medium text-secondary">More Formations Coming Soon</p>
-        <p className="text-xs text-secondary mt-1">Pro Set, I-Form, Pistol, and more!</p>
+        <p className="text-sm font-medium text-secondary">
+          More Formations Coming Soon
+        </p>
+        <p className="text-xs text-secondary mt-1">
+          Pro Set, I-Form, Pistol, and more!
+        </p>
       </div>
     </div>
   );

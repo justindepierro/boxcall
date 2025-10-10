@@ -18,7 +18,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = () => {
     <div className="space-y-4">
       {/* Field Appearance */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Field Appearance</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Field Appearance
+        </h3>
         <div className="space-y-2">
           <button
             disabled
@@ -49,7 +51,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = () => {
 
       {/* Grid & Snapping */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Grid & Snapping</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Grid & Snapping
+        </h3>
         <div className="space-y-2">
           <button
             disabled
@@ -80,7 +84,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = () => {
 
       {/* Editor Preferences */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Editor Preferences</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Editor Preferences
+        </h3>
         <div className="space-y-2">
           <button
             disabled
@@ -111,18 +117,28 @@ export const SettingsTab: React.FC<SettingsTabProps> = () => {
 
       {/* About */}
       <div className="bg-surface-secondary rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-primary mb-2">About Diagram Editor</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          About Diagram Editor
+        </h3>
         <div className="text-xs text-secondary space-y-1">
-          <p><strong>Version:</strong> 2.0.0 (Mobile-First)</p>
-          <p><strong>Engine:</strong> Pixi.js v8.5.2 (WebGL)</p>
-          <p><strong>Performance:</strong> 60 FPS target</p>
+          <p>
+            <strong>Version:</strong> 2.0.0 (Mobile-First)
+          </p>
+          <p>
+            <strong>Engine:</strong> Pixi.js v8.5.2 (WebGL)
+          </p>
+          <p>
+            <strong>Performance:</strong> 60 FPS target
+          </p>
         </div>
       </div>
 
       {/* Coming Soon Notice */}
       <div className="text-center py-8">
         <div className="text-4xl mb-2">⚙️</div>
-        <p className="text-sm font-medium text-secondary">Settings Coming Soon</p>
+        <p className="text-sm font-medium text-secondary">
+          Settings Coming Soon
+        </p>
         <p className="text-xs text-secondary mt-1">
           More customization options in Phase 3!
         </p>

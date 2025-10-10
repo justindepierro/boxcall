@@ -52,7 +52,9 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
       if (!confirmed) return;
 
       // Clear existing defense
-      defensePlayers.forEach((p) => useDiagramStore.getState().removePlayer(p.id));
+      defensePlayers.forEach((p) =>
+        useDiagramStore.getState().removePlayer(p.id)
+      );
     }
 
     const centerX = getCenterXForAlignment(selectedAlignment);
@@ -62,19 +64,85 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
     if (formationType === "nickel425") {
       newPlayers.push(
         // DL
-        { id: `player-${Date.now()}-1`, x: centerX - 2.5, y: 22, jerseyNumber: "99", team: "defense" },
-        { id: `player-${Date.now()}-2`, x: centerX - 0.5, y: 22, jerseyNumber: "98", team: "defense" },
-        { id: `player-${Date.now()}-3`, x: centerX + 0.5, y: 22, jerseyNumber: "97", team: "defense" },
-        { id: `player-${Date.now()}-4`, x: centerX + 2.5, y: 22, jerseyNumber: "96", team: "defense" },
+        {
+          id: `player-${Date.now()}-1`,
+          x: centerX - 2.5,
+          y: 22,
+          jerseyNumber: "99",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-2`,
+          x: centerX - 0.5,
+          y: 22,
+          jerseyNumber: "98",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-3`,
+          x: centerX + 0.5,
+          y: 22,
+          jerseyNumber: "97",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-4`,
+          x: centerX + 2.5,
+          y: 22,
+          jerseyNumber: "96",
+          team: "defense",
+        },
         // LB
-        { id: `player-${Date.now()}-5`, x: centerX - 1.5, y: 25, jerseyNumber: "50", team: "defense" },
-        { id: `player-${Date.now()}-6`, x: centerX + 1.5, y: 25, jerseyNumber: "51", team: "defense" },
+        {
+          id: `player-${Date.now()}-5`,
+          x: centerX - 1.5,
+          y: 25,
+          jerseyNumber: "50",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-6`,
+          x: centerX + 1.5,
+          y: 25,
+          jerseyNumber: "51",
+          team: "defense",
+        },
         // DB
-        { id: `player-${Date.now()}-7`, x: centerX - 8, y: 28, jerseyNumber: "20", team: "defense" },
-        { id: `player-${Date.now()}-8`, x: centerX - 4, y: 28, jerseyNumber: "21", team: "defense" },
-        { id: `player-${Date.now()}-9`, x: centerX, y: 33, jerseyNumber: "25", team: "defense" },
-        { id: `player-${Date.now()}-10`, x: centerX + 4, y: 28, jerseyNumber: "22", team: "defense" },
-        { id: `player-${Date.now()}-11`, x: centerX + 8, y: 28, jerseyNumber: "23", team: "defense" }
+        {
+          id: `player-${Date.now()}-7`,
+          x: centerX - 8,
+          y: 28,
+          jerseyNumber: "20",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-8`,
+          x: centerX - 4,
+          y: 28,
+          jerseyNumber: "21",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-9`,
+          x: centerX,
+          y: 33,
+          jerseyNumber: "25",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-10`,
+          x: centerX + 4,
+          y: 28,
+          jerseyNumber: "22",
+          team: "defense",
+        },
+        {
+          id: `player-${Date.now()}-11`,
+          x: centerX + 8,
+          y: 28,
+          jerseyNumber: "23",
+          team: "defense",
+        }
       );
     }
 
@@ -95,7 +163,9 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
     <div className="space-y-4">
       {/* Defense Schemes */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Defensive Schemes</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Defensive Schemes
+        </h3>
         <div className="space-y-2">
           {defenseSchemes.map((scheme) => (
             <button
@@ -106,8 +176,12 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
               <div className="flex items-start gap-3">
                 <div className="text-2xl">{scheme.icon}</div>
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-primary">{scheme.name}</div>
-                  <div className="text-xs text-secondary mt-0.5">{scheme.description}</div>
+                  <div className="text-sm font-medium text-primary">
+                    {scheme.name}
+                  </div>
+                  <div className="text-xs text-secondary mt-0.5">
+                    {scheme.description}
+                  </div>
                 </div>
               </div>
             </button>
@@ -117,7 +191,9 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
 
       {/* Auto-Match Defense (Coming Soon) */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Auto-Match Defense</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Auto-Match Defense
+        </h3>
         <button
           disabled
           className="w-full px-4 py-3 bg-surface-secondary text-secondary rounded-lg transition-colors cursor-not-allowed opacity-50 touch-manipulation"
@@ -132,7 +208,9 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
 
       {/* Coverage Adjustments (Coming Soon) */}
       <div>
-        <h3 className="text-sm font-semibold text-primary mb-2">Coverage Adjustments</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">
+          Coverage Adjustments
+        </h3>
         <div className="grid grid-cols-2 gap-2 opacity-50">
           <button
             disabled
@@ -164,8 +242,12 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
       {/* Coming Soon */}
       <div className="text-center py-8">
         <div className="text-4xl mb-2">🚧</div>
-        <p className="text-sm font-medium text-secondary">More Schemes Coming Soon</p>
-        <p className="text-xs text-secondary mt-1">4-3, 3-4, Dime, Quarter, and more!</p>
+        <p className="text-sm font-medium text-secondary">
+          More Schemes Coming Soon
+        </p>
+        <p className="text-xs text-secondary mt-1">
+          4-3, 3-4, Dime, Quarter, and more!
+        </p>
       </div>
     </div>
   );

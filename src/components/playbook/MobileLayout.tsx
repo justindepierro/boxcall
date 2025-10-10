@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { BottomSheet } from "../BottomSheet";
 import { TabBar, TabPanel, type Tab } from "../TabBar";
-import { FloatingActionButton, FABPresets } from "../FloatingActionButton";
+import { FloatingActionButton } from "../FloatingActionButton";
+import { FABPresets } from "../FABPresets";
 import { PlayersTab } from "./diagram-editor/components/tabs/PlayersTab";
 import { FormationsTab } from "./diagram-editor/components/tabs/FormationsTab";
 import { DefenseTab } from "./diagram-editor/components/tabs/DefenseTab";
@@ -46,7 +47,7 @@ export function MobileLayout({
     { id: "players", label: "Players", icon: "user" },
     { id: "formations", label: "Formations", icon: "grid" },
     { id: "defense", label: "Defense", icon: "shield" },
-    { id: "align", label: "Align", icon: "align-left" },
+    { id: "align", label: "Align", icon: "move" },
     { id: "settings", label: "Settings", icon: "settings" },
   ];
 

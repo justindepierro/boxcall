@@ -48,7 +48,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
   // Mobile state
   const breakpoint = useBreakpoint();
-  const isMobile = useIsMobile();
   const { isMobilePortrait } = useIsMobilePortrait();
   const [dismissedLandscapePrompt, setDismissedLandscapePrompt] =
     useState(false);

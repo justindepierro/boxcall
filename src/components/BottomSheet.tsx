@@ -99,7 +99,7 @@ export function BottomSheet({
 
   // Gesture handler for dragging
   const bind = useDrag(
-    ({ down, movement: [, my], velocity: [, vy], cancel }) => {
+    ({ down, movement: [, my], velocity: [, vy] }) => {
       // Calculate new Y position
       const newY = viewportHeight * (1 - snapPoints[currentSnapIndex]) + my;
 

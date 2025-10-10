@@ -80,17 +80,25 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({ app }) => {
       <div className="bg-surface-secondary rounded-lg p-3">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-medium text-secondary">Total Players</div>
-            <div className="text-2xl font-bold text-primary">{players.length}</div>
+            <div className="text-sm font-medium text-secondary">
+              Total Players
+            </div>
+            <div className="text-2xl font-bold text-primary">
+              {players.length}
+            </div>
           </div>
           <div className="flex gap-4">
             <div className="text-center">
               <div className="text-xs text-secondary">Offense</div>
-              <div className="text-lg font-bold text-blue-600">{offensePlayers.length}</div>
+              <div className="text-lg font-bold text-blue-600">
+                {offensePlayers.length}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-secondary">Defense</div>
-              <div className="text-lg font-bold text-error-600">{defensePlayers.length}</div>
+              <div className="text-lg font-bold text-error-600">
+                {defensePlayers.length}
+              </div>
             </div>
           </div>
         </div>
@@ -139,7 +147,8 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({ app }) => {
       {/* Quick Tip */}
       <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
         <p className="text-xs text-blue-900 dark:text-blue-100">
-          💡 <strong>Tip:</strong> Tap a player on the field to select and drag. Use the FAB (bottom-right) for quick actions.
+          💡 <strong>Tip:</strong> Tap a player on the field to select and drag.
+          Use the FAB (bottom-right) for quick actions.
         </p>
       </div>
     </div>
