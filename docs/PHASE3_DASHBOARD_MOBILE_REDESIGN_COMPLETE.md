@@ -24,6 +24,7 @@ Phase 3 successfully transformed the Dashboard from a desktop-first layout to a 
 ## Before/After Comparison
 
 ### Desktop Experience (≥768px) - **UNCHANGED**
+
 - Aurora hero tiles remain (3-column grid)
 - Horizontal ProfileCard layout maintained
 - Full PersonalCalendar view
@@ -33,6 +34,7 @@ Phase 3 successfully transformed the Dashboard from a desktop-first layout to a 
 ### Mobile Experience (<768px) - **TRANSFORMED**
 
 #### Before Phase 3:
+
 ```
 ┌─────────────────────────────┐
 │ Aurora Tile 1 (300px)       │
@@ -49,6 +51,7 @@ Total: ~1180px before content
 ```
 
 #### After Phase 3:
+
 ```
 ┌─────────────────────────────┐
 │ MobileHeroStatsCard (160px) │  ← 82% reduction
@@ -74,12 +77,14 @@ Total: ~440px before content
 **Purpose:** Compact hero card replacing 900px Aurora tiles on mobile
 
 **Dimensions:**
+
 - Height: 160px
 - Width: 100% (mobile)
 - Padding: 6 (spacing-lg)
 - Border radius: 3xl (24px)
 
 **Features:**
+
 - **Time-based greeting**: "Good morning/afternoon/evening, [Name]"
 - **3 key stats display**:
   - Total Plays (book icon)
@@ -92,6 +97,7 @@ Total: ~440px before content
 - **View Details link** with chevron-right icon
 
 **Props Interface:**
+
 ```typescript
 interface HeroStatsCardProps {
   userName: string;
@@ -106,6 +112,7 @@ interface HeroStatsCardProps {
 ```
 
 **Smart Greeting Logic:**
+
 ```typescript
 const getGreeting = (): string => {
   const hour = new Date().getHours();
@@ -116,6 +123,7 @@ const getGreeting = (): string => {
 ```
 
 **Responsive Behavior:**
+
 - Mobile (<768px): Visible with `block md:hidden`
 - Desktop (≥768px): Hidden, Aurora tiles shown instead
 
@@ -128,12 +136,14 @@ const getGreeting = (): string => {
 **Purpose:** 2×2 grid of thumb-reachable action shortcuts
 
 **Dimensions:**
+
 - Grid: 2 columns × 2 rows
 - Each button: 80px min-height (min-h-20)
 - Gap: 12px (gap-3)
 - Total height: ~172px (80×2 + 12)
 
 **Default Actions:**
+
 1. **New Play** → `/playbook?action=new`
    - Icon: book
    - Color: brand-primary
@@ -148,12 +158,14 @@ const getGreeting = (): string => {
    - Color: info
 
 **Interaction Design:**
+
 - **Hover**: `hover:scale-105` (desktop)
 - **Active**: `active:scale-95` (mobile tap feedback)
 - **Focus**: Keyboard accessible with focus rings
 - **Transition**: `transition-transform duration-150`
 
 **Props Interface:**
+
 ```typescript
 interface QuickAction {
   id: string;
@@ -171,6 +183,7 @@ interface MobileQuickActionGridProps {
 ```
 
 **Accessibility:**
+
 - Touch targets: ≥80px (exceeds 44px minimum)
 - Keyboard navigation: Full Tab support
 - Screen reader: aria-label on each button
@@ -187,16 +200,18 @@ interface MobileQuickActionGridProps {
 **Changes Made:**
 
 #### Avatar/Name Section (Lines 193-223):
+
 ```tsx
 // Before: Always horizontal
 <div className="flex items-center space-x-spacing-md">
 
 // After: Responsive vertical/horizontal
-<div className="flex flex-col items-center space-y-spacing-sm 
+<div className="flex flex-col items-center space-y-spacing-sm
                 md:flex-row md:items-center md:space-y-0 md:space-x-spacing-md">
 ```
 
 **Mobile (<768px):**
+
 - Layout: `flex-col` (vertical stack)
 - Avatar size: `w-24 h-24` (96px)
 - Avatar text: `text-2xl` (larger initials)
@@ -204,6 +219,7 @@ interface MobileQuickActionGridProps {
 - Badge justify: `justify-center`
 
 **Desktop (≥768px):**
+
 - Layout: `flex-row` (horizontal)
 - Avatar size: `w-16 h-16` (64px)
 - Avatar text: `text-lg`
@@ -211,28 +227,33 @@ interface MobileQuickActionGridProps {
 - Badge justify: `justify-start`
 
 #### Stats Grid (Lines 267-319):
+
 ```tsx
 // Grid: 2×2 mobile, 4-column desktop
 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2">
 ```
 
 **Mobile (<768px):**
+
 - Grid: 2×2 (grid-cols-2)
 - Gap: 12px (gap-3)
 - Stats text: `text-2xl` (bold, prominent)
 
 **Desktop (≥768px):**
+
 - Grid: 4-column (grid-cols-4)
 - Gap: 8px (gap-2)
 - Stats text: `text-lg` (compact)
 
 **Stats Displayed:**
+
 1. Stickers
 2. Medals
 3. Streak (days)
 4. Points
 
 **Visual Impact:**
+
 - Mobile: Bold, centered, easy to scan vertically
 - Desktop: Compact, left-aligned, maintains existing feel
 - No prop changes required (CSS-only solution)
@@ -246,11 +267,13 @@ interface MobileQuickActionGridProps {
 **Purpose:** Preview upcoming events without opening calendar
 
 **Dimensions:**
+
 - Height per event: ~80px
 - Max events: 3 (default, configurable)
 - Total height: ~280px (3×80 + header + footer)
 
 **Smart Date Formatting:**
+
 ```typescript
 const formatEventDate = (date: Date) => {
   if (isToday(date)) return `Today • ${format(date, "h:mm a")}`;
@@ -260,16 +283,19 @@ const formatEventDate = (date: Date) => {
 ```
 
 **Examples:**
+
 - Today: "Today • 3:00 PM"
 - Tomorrow: "Tomorrow • 7:00 PM"
 - Future: "Oct 15 • 7:00 PM"
 
 **Event Type Icons & Colors:**
+
 - **Practice**: calendar icon, brand-primary color
 - **Game**: trophy icon, success color
 - **Meeting**: users icon, info color
 
 **Features:**
+
 - Location display (truncated if long)
 - Attendance tracking: "X/Y attending"
 - Empty state: "No upcoming events" with centered icon
@@ -277,6 +303,7 @@ const formatEventDate = (date: Date) => {
 - Hidden event count: "+ N more events" if exceeds maxEvents
 
 **Props Interface:**
+
 ```typescript
 interface CalendarEvent {
   id: string;
@@ -297,6 +324,7 @@ interface MobileEventCardProps {
 ```
 
 **Dependencies:**
+
 - date-fns: isToday, isTomorrow, format
 
 ---
@@ -310,6 +338,7 @@ interface MobileEventCardProps {
 **Changes Made:**
 
 #### State Management:
+
 ```typescript
 const [showAllFeeds, setShowAllFeeds] = useState(false);
 const maxInitialFeeds = 3;
@@ -318,28 +347,28 @@ const hiddenFeedsCount = feeds.length - maxInitialFeeds;
 ```
 
 #### Button Logic (Lines 175-192):
+
 ```tsx
-{!showAllFeeds && feeds.length > maxInitialFeeds ? (
-  <Button
-    variant="brandLink"
-    onClick={() => setShowAllFeeds(true)}
-  >
-    See More Activity ({hiddenFeedsCount}) →
-  </Button>
-) : (
-  <Button variant="brandLink">
-    View All Team Updates
-  </Button>
-)}
+{
+  !showAllFeeds && feeds.length > maxInitialFeeds ? (
+    <Button variant="brandLink" onClick={() => setShowAllFeeds(true)}>
+      See More Activity ({hiddenFeedsCount}) →
+    </Button>
+  ) : (
+    <Button variant="brandLink">View All Team Updates</Button>
+  );
+}
 ```
 
 **Progressive Disclosure Strategy:**
+
 1. **Initial state**: Show 3 most recent posts
 2. **If more posts exist**: Show "See More Activity (N) →" button
 3. **After expansion**: Show all posts + "View All Team Updates" button
 4. **Mobile benefit**: Reduces initial scroll height
 
 **Feed Types Shown:**
+
 - Announcements (info icon)
 - Achievements (trophy icon)
 - Schedule updates (calendar icon)
@@ -351,16 +380,17 @@ const hiddenFeedsCount = feeds.length - maxInitialFeeds;
 **File:** `src/components/dashboard/ResponsiveDashboardLayout.tsx` (Modified)
 
 ### Imports Added (Lines 13-17):
+
 ```typescript
-import {
-  MobileHeroStatsCard,
-  MobileQuickActionGrid,
-} from "../mobile-library";
+import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
 ```
 
 ### Mobile Hero Section (Lines 229-242):
+
 ```tsx
-{/* Mobile Hero Section - Phase 3 Mobile Design */}
+{
+  /* Mobile Hero Section - Phase 3 Mobile Design */
+}
 <div className="dashboard-mobile-hero-section mb-8 block md:hidden">
   <MobileHeroStatsCard
     userName={profile?.display_name || profile?.full_name || "Coach"}
@@ -374,19 +404,23 @@ import {
   <div className="mt-4">
     <MobileQuickActionGrid />
   </div>
-</div>
+</div>;
 ```
 
 ### Aurora Tiles Section (Line 245):
+
 ```tsx
-{/* Aurora hero tiles - Desktop only */}
+{
+  /* Aurora hero tiles - Desktop only */
+}
 <div className="dashboard-hero-section mb-8 hidden md:block">
   {/* Existing Aurora tiles code... */}
-</div>
+</div>;
 ```
 
 ### Responsive Swapping Strategy:
-- **Mobile (<768px)**: 
+
+- **Mobile (<768px)**:
   - Show: MobileHeroStatsCard + MobileQuickActionGrid
   - Hide: Aurora tiles
   - Classes: `block md:hidden`
@@ -396,6 +430,7 @@ import {
   - Classes: `hidden md:block`
 
 **CSS-Only Approach:**
+
 - No JavaScript media queries
 - No device detection
 - Pure Tailwind breakpoint classes
@@ -407,11 +442,11 @@ import {
 
 ### Breakpoint Definitions
 
-| Breakpoint | Range | Layout | Hero Section | ProfileCard | Stats Grid |
-|------------|-------|--------|--------------|-------------|------------|
-| **Mobile** | <768px | Single column | Mobile Hero | Vertical | 2×2 |
-| **Tablet** | 768-1023px | 2-column | Aurora Tiles | Horizontal | 4-column |
-| **Desktop** | ≥1024px | 3-column | Aurora Tiles | Horizontal | 4-column |
+| Breakpoint  | Range      | Layout        | Hero Section | ProfileCard | Stats Grid |
+| ----------- | ---------- | ------------- | ------------ | ----------- | ---------- |
+| **Mobile**  | <768px     | Single column | Mobile Hero  | Vertical    | 2×2        |
+| **Tablet**  | 768-1023px | 2-column      | Aurora Tiles | Horizontal  | 4-column   |
+| **Desktop** | ≥1024px    | 3-column      | Aurora Tiles | Horizontal  | 4-column   |
 
 ### Tailwind Classes Used
 
@@ -443,18 +478,21 @@ import {
 ### ✅ Mobile Testing (<768px)
 
 **Devices Tested:**
+
 - [ ] iPhone SE (375px width)
 - [ ] iPhone 12/13 Pro (390px width)
 - [ ] iPhone 14 Pro Max (430px width)
 - [ ] Android (360px width)
 
 **Touch Target Verification:**
+
 - [x] MobileQuickActionGrid buttons: 80px (✓ exceeds 44px minimum)
 - [x] MobileHeroStatsCard "View Details": 44px min (✓ meets standard)
 - [ ] TeamFeeds "See More" button: Verify 44px
 - [ ] All interactive elements: Manual device testing required
 
 **Layout Verification:**
+
 - [x] MobileHeroStatsCard displays correctly (160px height)
 - [x] QuickActionGrid: 2×2 grid renders properly
 - [x] ProfileCard: Vertical layout, centered avatar (96px)
@@ -463,6 +501,7 @@ import {
 - [ ] No layout shift during load
 
 **Progressive Disclosure:**
+
 - [x] TeamFeeds: Shows 3 posts initially
 - [x] "See More Activity (N)" button appears when >3 posts
 - [ ] Button expands to show all posts
@@ -471,11 +510,13 @@ import {
 ### ✅ Desktop Testing (≥768px)
 
 **Resolutions Tested:**
+
 - [ ] 1440px (MacBook Pro)
 - [ ] 1920px (Full HD)
 - [ ] 2560px (4K)
 
 **Layout Verification:**
+
 - [x] Aurora tiles visible (hidden mobile hero)
 - [x] ProfileCard: Horizontal layout, 64px avatar
 - [x] Stats grid: 4-column layout, compact text (text-lg)
@@ -483,6 +524,7 @@ import {
 - [ ] No regression from before Phase 3
 
 **Interaction Verification:**
+
 - [ ] Aurora tile clicks work
 - [ ] ProfileCard edit button functional
 - [ ] TeamFeeds "View All" button works
@@ -491,6 +533,7 @@ import {
 ### 🔄 Responsive Transitions
 
 **Breakpoint Testing:**
+
 - [ ] Resize from mobile → tablet: Layout switches smoothly
 - [ ] Resize from tablet → desktop: No flash or jump
 - [ ] Avatar size transition: 96px → 64px seamless
@@ -500,18 +543,21 @@ import {
 ### ♿ Accessibility Testing
 
 **Keyboard Navigation:**
+
 - [ ] Tab through QuickActionGrid: All 4 buttons reachable
 - [ ] Tab through TeamFeeds: All posts and buttons accessible
 - [ ] Enter key activates buttons
 - [ ] Esc key closes modals (if any)
 
 **Screen Reader:**
+
 - [ ] MobileHeroStatsCard: Greeting + stats announced
 - [ ] QuickActionGrid: Each action labeled clearly
 - [ ] ProfileCard: Avatar, name, role announced
 - [ ] TeamFeeds: Post content readable
 
 **Focus Management:**
+
 - [ ] Focus visible: `focus:ring-2` classes applied
 - [ ] Focus order logical: Top to bottom, left to right
 - [ ] No focus traps
@@ -519,12 +565,14 @@ import {
 ### 📱 Touch & Gesture Testing
 
 **Mobile Interactions:**
+
 - [ ] Tap QuickActionGrid buttons: Immediate feedback
 - [ ] Tap "View Details": Smooth scroll to profile
 - [ ] Tap "See More Activity": Expands posts
 - [ ] Pull-to-refresh: No conflicts (if enabled)
 
 **Animation Performance:**
+
 - [ ] QuickActionGrid hover/active: Smooth 150ms
 - [ ] Button transitions: No jank
 - [ ] Scroll performance: 60fps maintained
@@ -534,24 +582,28 @@ import {
 ## Performance Metrics
 
 ### Build Output
+
 - **TypeScript Compilation**: ✅ 0 errors
 - **ESLint Warnings**: 81 (pre-existing, not from Phase 3)
 - **Prettier**: ✅ All files formatted
 - **Build Size Impact**: Minimal (+~1KB gzipped for 4 components)
 
 ### Git Workflow Performance
+
 - **Pre-commit**: ~10s (type-check + lint + format-check)
 - **Pre-push**: ~8s (type-check + lint)
 - **Total commit-to-push**: ~18s average
 - **Improvement**: 88% faster than previous workflow (160s → 18s)
 
 ### Component Load Times
+
 - MobileHeroStatsCard: <50ms (lightweight)
 - MobileQuickActionGrid: <30ms (pure CSS)
 - MobileEventCard: <50ms (date-fns adds ~20ms)
 - Progressive loading: useProgressiveLoading(5, 200ms) for staggered render
 
 ### Mobile Scroll Savings
+
 - **Before**: 1180px before main content
 - **After**: 440px before main content
 - **Savings**: 740px (82% reduction)
@@ -562,6 +614,7 @@ import {
 ## Code Quality
 
 ### TypeScript Strictness
+
 - ✅ `strict: true` enabled
 - ✅ `noEmit: true` for type checking
 - ✅ All props interfaces fully typed
@@ -569,6 +622,7 @@ import {
 - ✅ Union types for event types, icon names
 
 ### Component Patterns
+
 - **Single Responsibility**: Each component has one clear purpose
 - **Composition**: MobileHeroStatsCard + QuickActionGrid = Mobile Hero
 - **Props Over State**: Minimal internal state, props-driven
@@ -576,6 +630,7 @@ import {
 - **Accessibility First**: aria-labels, keyboard nav, touch targets
 
 ### Testing Coverage
+
 - **Unit Tests**: TODO (add Vitest tests for date formatting)
 - **Integration Tests**: TODO (test responsive swapping)
 - **E2E Tests**: TODO (Playwright for mobile interactions)
@@ -585,7 +640,8 @@ import {
 ## Known Issues & TODOs
 
 ### High Priority
-1. **Real Data Connection**: 
+
+1. **Real Data Connection**:
    - MobileHeroStatsCard showing 0s for all stats
    - Need to connect to actual dashboard data
    - File: `ResponsiveDashboardLayout.tsx` lines 233-237
@@ -596,6 +652,7 @@ import {
    - Touch target verification in-progress
 
 ### Medium Priority
+
 3. **MobileEventCard Integration**:
    - Component built but not yet integrated into ResponsiveDashboardLayout
    - Could replace or supplement PersonalCalendar on mobile
@@ -607,6 +664,7 @@ import {
    - Consider: `transition-[max-height] duration-300`
 
 ### Low Priority
+
 5. **Unit Test Coverage**:
    - Need tests for `formatEventDate()` function
    - Test responsive class toggling
@@ -704,6 +762,7 @@ Based on Phase 3 learnings, here are recommendations for Phase 4:
 **Goal**: Add thumb-friendly navigation patterns
 
 **Tasks**:
+
 - [ ] Bottom navigation bar (mobile <768px)
 - [ ] Swipe gestures for card navigation
 - [ ] Pull-to-refresh on Dashboard
@@ -719,6 +778,7 @@ Based on Phase 3 learnings, here are recommendations for Phase 4:
 **Goal**: Complete calendar preview integration
 
 **Tasks**:
+
 - [ ] Decide: Replace PersonalCalendar or complement?
 - [ ] Wire real event data
 - [ ] Add event filtering (practices vs games)
@@ -734,6 +794,7 @@ Based on Phase 3 learnings, here are recommendations for Phase 4:
 **Goal**: Mobile-friendly play browsing
 
 **Tasks**:
+
 - [ ] Card-based play tiles (mobile)
 - [ ] Swipe to favorite/archive
 - [ ] Quick view modal (no navigation)
@@ -749,6 +810,7 @@ Based on Phase 3 learnings, here are recommendations for Phase 4:
 **Goal**: Polish existing mobile components
 
 **Tasks**:
+
 - [ ] TeamFeeds expansion animation
 - [ ] MobileQuickActionGrid press feedback
 - [ ] Page transition animations
@@ -764,6 +826,7 @@ Based on Phase 3 learnings, here are recommendations for Phase 4:
 **Goal**: Progressive Web App capabilities
 
 **Tasks**:
+
 - [ ] Service worker implementation
 - [ ] Offline Dashboard view
 - [ ] Sync when online
@@ -782,14 +845,14 @@ Phase 3 successfully delivered a mobile-first Dashboard redesign that reduces sc
 
 ### Key Metrics Summary
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Mobile scroll to content** | 1180px | 440px | **-740px (82%)** |
-| **Mobile components** | 0 | 4 | **+4 new** |
-| **Touch targets** | Variable | ≥80px | **100% compliant** |
-| **TypeScript errors** | 0 | 0 | **Maintained** |
-| **Responsive breakpoints** | 1 | 3 | **+2 (tablet/desktop)** |
-| **Git workflow speed** | 160s | 18s | **88% faster** |
+| Metric                       | Before   | After | Improvement             |
+| ---------------------------- | -------- | ----- | ----------------------- |
+| **Mobile scroll to content** | 1180px   | 440px | **-740px (82%)**        |
+| **Mobile components**        | 0        | 4     | **+4 new**              |
+| **Touch targets**            | Variable | ≥80px | **100% compliant**      |
+| **TypeScript errors**        | 0        | 0     | **Maintained**          |
+| **Responsive breakpoints**   | 1        | 3     | **+2 (tablet/desktop)** |
+| **Git workflow speed**       | 160s     | 18s   | **88% faster**          |
 
 ### Success Criteria: ✅ ACHIEVED
 
@@ -802,16 +865,19 @@ Phase 3 successfully delivered a mobile-first Dashboard redesign that reduces sc
 ### Team Impact
 
 **For Developers:**
+
 - Reusable mobile component library
 - Clear responsive patterns established
 - Fast iteration cycle maintained
 
 **For Users:**
+
 - Faster content access on mobile (740px less scroll)
 - Thumb-friendly interactions (80px buttons)
 - Progressive disclosure reduces overwhelm
 
 **For Product:**
+
 - Mobile-first foundation for future features
 - Scalable component architecture
 - Professional, native-feeling experience
@@ -822,14 +888,14 @@ Phase 3 successfully delivered a mobile-first Dashboard redesign that reduces sc
 
 ### Component File Sizes
 
-| Component | Lines | File Size | Purpose |
-|-----------|-------|-----------|---------|
-| MobileHeroStatsCard.tsx | 133 | ~4.2 KB | Compact hero with stats |
-| MobileQuickActionGrid.tsx | 135 | ~4.4 KB | 2×2 action shortcuts |
-| MobileEventCard.tsx | 225 | ~7.1 KB | Calendar preview |
-| ProfileCard.tsx (modified) | 319 | ~10.5 KB | Responsive profile |
-| TeamFeeds.tsx (modified) | 232 | ~7.8 KB | Progressive disclosure |
-| ResponsiveDashboardLayout.tsx | 345 | ~13.2 KB | Integration layer |
+| Component                     | Lines | File Size | Purpose                 |
+| ----------------------------- | ----- | --------- | ----------------------- |
+| MobileHeroStatsCard.tsx       | 133   | ~4.2 KB   | Compact hero with stats |
+| MobileQuickActionGrid.tsx     | 135   | ~4.4 KB   | 2×2 action shortcuts    |
+| MobileEventCard.tsx           | 225   | ~7.1 KB   | Calendar preview        |
+| ProfileCard.tsx (modified)    | 319   | ~10.5 KB  | Responsive profile      |
+| TeamFeeds.tsx (modified)      | 232   | ~7.8 KB   | Progressive disclosure  |
+| ResponsiveDashboardLayout.tsx | 345   | ~13.2 KB  | Integration layer       |
 
 **Total Phase 3 Code**: ~47.2 KB (uncompressed)  
 **Estimated Gzipped**: ~11-12 KB
@@ -854,6 +920,7 @@ e1c4dd1f - feat(mobile): add progressive disclosure to TeamFeeds for Phase 3
 ### Design Tokens Used
 
 **Colors:**
+
 - `text-brand-primary` (purple)
 - `text-success` (green)
 - `text-info` (blue)
@@ -861,12 +928,14 @@ e1c4dd1f - feat(mobile): add progressive disclosure to TeamFeeds for Phase 3
 - `text-text-primary`, `text-text-secondary`, `text-text-muted`
 
 **Spacing:**
+
 - `spacing-sm` (0.5rem / 8px)
 - `spacing-md` (1rem / 16px)
 - `spacing-lg` (1.5rem / 24px)
 - `gap-3` (0.75rem / 12px)
 
 **Typography:**
+
 - `variant="headline-sm"` (24px)
 - `variant="headline-md"` (28px)
 - `variant="body-md"` (16px)
@@ -874,6 +943,7 @@ e1c4dd1f - feat(mobile): add progressive disclosure to TeamFeeds for Phase 3
 - `variant="body-xs"` (12px)
 
 **Border Radius:**
+
 - `rounded-3xl` (24px) - Hero cards
 - `rounded-2xl` (16px) - Action buttons
 - `rounded-xl` (12px) - List items
