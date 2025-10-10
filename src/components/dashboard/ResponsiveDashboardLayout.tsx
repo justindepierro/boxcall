@@ -10,6 +10,10 @@ import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { AuroraTile } from "../ui/AuroraTile";
 import type { IconName } from "../ui/Icon/Icon";
+import {
+  MobileHeroStatsCard,
+  MobileQuickActionGrid,
+} from "../mobile-library";
 // Onboarding components removed during cleanup
 
 /**
@@ -225,8 +229,24 @@ export const ResponsiveDashboardLayout: React.FC = () => {
       <div className="responsive-dashboard-container">
         {/* Onboarding section removed */}
 
-        {/* Aurora hero tiles */}
-        <div className="dashboard-hero-section mb-8">
+        {/* Mobile Hero Section - Phase 3 Mobile Design */}
+        <div className="dashboard-mobile-hero-section mb-8 block md:hidden">
+          <MobileHeroStatsCard
+            userName={profile?.display_name || profile?.full_name || "Coach"}
+            stats={{
+              totalPlays: 0, // TODO: Connect to real data
+              thisWeekActivity: 0, // TODO: Connect to real data
+              achievements: 0, // TODO: Connect to real data
+            }}
+            onViewDetails={() => scrollToSection("dashboard-profile-section")}
+          />
+          <div className="mt-4">
+            <MobileQuickActionGrid />
+          </div>
+        </div>
+
+        {/* Aurora hero tiles - Desktop only */}
+        <div className="dashboard-hero-section mb-8 hidden md:block">
           <div className="rounded-glass-lg border border/40 bg-aurora-shell p-6 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-8">
             <div className="mb-6">
               <Typography variant="headline-sm" className="text-text-primary">
