@@ -36,6 +36,20 @@ export default defineConfig({
     // Use jsdom so component/unit tests that render React DOM nodes have access
     // to browser APIs. Node env can still be overridden per-file if needed.
     environment: "jsdom",
+    
+    // Global resource limits to prevent memory exhaustion
+    pool: "threads",
+    poolOptions: {
+      threads: {
+        // Limit total threads across all test projects
+        maxThreads: 4,
+      },
+    },
+    
+    // Global timeouts
+    testTimeout: 30000,
+    hookTimeout: 10000,
+    
     coverage: {
       provider: "v8",
       reporter: ["text", "text-summary", "html", "lcov", "json"],
@@ -95,6 +109,12 @@ export default defineConfig({
               },
             ],
           },
+          // Limit concurrent tests to prevent memory exhaustion
+          // Each Storybook test spawns a browser instance
+          maxConcurrency: 3,
+          // Add timeout to prevent hanging tests from consuming memory
+          testTimeout: 30000,
+          hookTimeout: 30000,
           setupFiles: [".storybook/vitest.setup.ts"],
         },
         plugins: [
