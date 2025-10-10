@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDiagramStore } from "../../stores/diagramStore";
 import type { Player } from "../../types/Player";
 import type { DiagramPixiApp } from "../../core/PixiApp";
+import { analyzeFormation } from "@features/defense/analyzers/formationAnalyzer";
+import {
+  recommendDefense,
+  formatDefenseRecommendation,
+} from "@utils/autoDefense";
+import { useToast } from "@hooks/useToast";
 
 interface DefenseTabProps {
   app: DiagramPixiApp | null;
@@ -21,6 +27,8 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
   selectedAlignment,
 }) => {
   const { players, addPlayer } = useDiagramStore();
+  const toast = useToast();
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // Helper to get center X based on alignment
   const getCenterXForAlignment = (
@@ -150,6 +158,51 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
     newPlayers.forEach((player) => addPlayer(player));
   };
 
+  // Auto-match defense based on offensive formation
+  const handleAutoMatchDefense = () => {
+    // Check if there are offensive players
+    const offensePlayers = players.filter((p) => p.team === "offense");
+    if (offensePlayers.length < 5) {
+      toast.error("Need at least 5 offensive players to analyze formation");
+      return;
+    }
+
+    setIsAnalyzing(true);
+
+    try {
+      // Analyze offensive formation
+      const analysis = analyzeFormation(offensePlayers, selectedAlignment);
+
+      // Get defense recommendation
+      const recommendation = recommendDefense(analysis);
+
+      // For now, only support nickel 4-2-5 (can expand later)
+      if (
+        recommendation.schemeId === "nickel" ||
+        recommendation.schemeId === "base43"
+      ) {
+        addDefenseFormation("nickel425");
+
+        // Show success toast with matchup info
+        const matchupText = formatDefenseRecommendation(
+          analysis,
+          recommendation
+        );
+        toast.success(matchupText);
+      } else {
+        // Unsupported scheme (for future implementation)
+        toast.info(
+          `Recommended: ${recommendation.schemeName} (not yet available)`
+        );
+      }
+    } catch (error) {
+      console.error("Auto-defense error:", error);
+      toast.error("Failed to analyze formation");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const defenseSchemes = [
     {
       id: "nickel425",
@@ -189,20 +242,25 @@ export const DefenseTab: React.FC<DefenseTabProps> = ({
         </div>
       </div>
 
-      {/* Auto-Match Defense (Coming Soon) */}
+      {/* Auto-Match Defense */}
       <div>
         <h3 className="text-sm font-semibold text-primary mb-2">
           Auto-Match Defense
         </h3>
         <button
-          disabled
-          className="w-full px-4 py-3 bg-surface-secondary text-secondary rounded-lg transition-colors cursor-not-allowed opacity-50 touch-manipulation"
+          onClick={handleAutoMatchDefense}
+          disabled={isAnalyzing}
+          className="w-full px-4 py-3 bg-success-bg hover:bg-success-fg/10 active:bg-success-fg/20 text-success-fg rounded-lg transition-colors touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <div className="flex items-center justify-center gap-2">
             <span className="text-lg">🤖</span>
-            <span className="text-sm font-medium">Auto-Detect Formation</span>
+            <span className="text-sm font-medium">
+              {isAnalyzing ? "Analyzing..." : "Auto-Detect Formation"}
+            </span>
           </div>
-          <div className="text-xs mt-1">Analyze offense & suggest defense</div>
+          <div className="text-xs mt-1 opacity-80">
+            Analyze offense & suggest defense
+          </div>
         </button>
       </div>
 

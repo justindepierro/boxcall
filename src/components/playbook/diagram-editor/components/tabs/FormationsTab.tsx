@@ -1,7 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import { useDiagramStore } from "../../stores/diagramStore";
 import type { Player } from "../../types/Player";
 import type { DiagramPixiApp } from "../../core/PixiApp";
+import { FormationPicker } from "../FormationPicker";
+import { useToast } from "../../../../../hooks/useToast";
 
 interface FormationsTabProps {
   app: DiagramPixiApp | null;
@@ -12,15 +14,17 @@ interface FormationsTabProps {
  * FormationsTab - Mobile-optimized formation picker
  *
  * Features:
- * - Visual formation grid
+ * - Visual formation grid with SVG icons
  * - Quick formation insertion
- * - Spread, Pro, I-Form, Pistol presets
+ * - Toast notifications on insert
  */
 export const FormationsTab: React.FC<FormationsTabProps> = ({
   app,
   selectedAlignment,
 }) => {
   const { players, addPlayer } = useDiagramStore();
+  const [selectedFormation, setSelectedFormation] = useState<string | undefined>();
+  const toast = useToast();
 
   // Helper to get center X based on alignment
   const getCenterXForAlignment = (
@@ -311,26 +315,22 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
     newPlayers.forEach((player) => addPlayer(player));
   };
 
-  const formations = [
-    {
-      id: "spread2x2",
-      name: "Spread 2x2",
-      description: "Shotgun, 2 WR each side",
-      icon: "🏈",
-    },
-    {
-      id: "spread3x1Right",
-      name: "Spread 3x1 Right",
-      description: "Shotgun, 3 WR right",
-      icon: "▶️",
-    },
-    {
-      id: "spread3x1Left",
-      name: "Spread 3x1 Left",
-      description: "Shotgun, 3 WR left",
-      icon: "◀️",
-    },
-  ];
+  const handleFormationSelect = (formationId: string) => {
+    setSelectedFormation(formationId);
+    addFormation(formationId);
+
+    // Get formation name for toast
+    const formationNames: Record<string, string> = {
+      spread2x2: "Spread 2x2",
+      spread3x1Right: "Spread 3x1 Right",
+      spread3x1Left: "Spread 3x1 Left",
+      pro: "Pro Set",
+      pistol: "Pistol",
+      trips: "Trips Right",
+    };
+
+    toast.success(`${formationNames[formationId]} inserted!`);
+  };
 
   return (
     <div className="space-y-4">
@@ -339,27 +339,10 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
         <h3 className="text-sm font-semibold text-primary mb-2">
           Offensive Formations
         </h3>
-        <div className="space-y-2">
-          {formations.map((formation) => (
-            <button
-              key={formation.id}
-              onClick={() => addFormation(formation.id)}
-              className="w-full px-4 py-3 bg-surface-secondary hover:bg-surface-tertiary active:bg-border rounded-lg transition-colors text-left touch-manipulation"
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-2xl">{formation.icon}</div>
-                <div className="flex-1">
-                  <div className="text-sm font-medium text-primary">
-                    {formation.name}
-                  </div>
-                  <div className="text-xs text-secondary mt-0.5">
-                    {formation.description}
-                  </div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
+        <FormationPicker
+          selectedFormation={selectedFormation}
+          onSelect={handleFormationSelect}
+        />
       </div>
 
       {/* Alignment Info */}
@@ -372,17 +355,6 @@ export const FormationsTab: React.FC<FormationsTabProps> = ({
         </p>
         <p className="text-xs text-purple-900 dark:text-purple-100 mt-1">
           Change alignment in the "Align" tab or use the header selector.
-        </p>
-      </div>
-
-      {/* Coming Soon */}
-      <div className="text-center py-8">
-        <div className="text-4xl mb-2">🚧</div>
-        <p className="text-sm font-medium text-secondary">
-          More Formations Coming Soon
-        </p>
-        <p className="text-xs text-secondary mt-1">
-          Pro Set, I-Form, Pistol, and more!
         </p>
       </div>
     </div>
