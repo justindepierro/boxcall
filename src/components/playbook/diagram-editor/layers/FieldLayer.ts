@@ -52,6 +52,7 @@ export class FieldLayer extends Container {
   private coordinates: CoordinateSystem;
   private fieldGraphics: Graphics;
   private currentColorMode: FieldColorMode;
+  private coordsObserver: () => void; // Store observer for cleanup
   
   // Visual constants in YARDS (imported from design tokens for consistency)
   private readonly YARD_LINE_WIDTH_YARDS = FIELD_LINES.YARD_LINE_YARDS;
@@ -84,7 +85,22 @@ export class FieldLayer extends Container {
     this.fieldGraphics = new Graphics();
     this.addChild(this.fieldGraphics);
     
+    // PERFORMANCE: Subscribe to coordinate system changes
+    this.coordsObserver = () => {
+      this.renderField();
+    };
+    this.coordinates.addObserver(this.coordsObserver);
+    
     this.renderField();
+  }
+  
+  /**
+   * Cleanup
+   */
+  destroy(): void {
+    // PERFORMANCE: Unsubscribe from coordinate system changes
+    this.coordinates.removeObserver(this.coordsObserver);
+    super.destroy();
   }
   
   /**

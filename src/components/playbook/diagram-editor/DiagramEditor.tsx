@@ -21,6 +21,8 @@ import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import { useIsMobilePortrait } from "../../../hooks/useOrientation";
 import { supabase } from "../../../lib/supabase";
 import { Icon } from "../../../components/ui/Icon/Icon";
+import { TipsPopover } from "./components/TipsPopover";
+import { DIAGRAM_EDITOR_TIPS } from "./constants/editorTips";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 import type { DiagramDocument } from "./types/DiagramTypes";
@@ -563,6 +565,12 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
               <Icon name="delete" size="sm" />
               <span>Clear All</span>
             </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-border"></div>
+
+            {/* Quick Tips */}
+            <TipsPopover tips={DIAGRAM_EDITOR_TIPS} side="bottom" align="end" />
           </div>
         </div>
 

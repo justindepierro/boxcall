@@ -86,6 +86,7 @@
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.2",
     "@pixi/events": "^7.4.3",
+    "@radix-ui/react-popover": "^1.1.15",
     "@react-pdf/renderer": "^4.3.0",
     "@sentry/react": "^10.16.0",
     "@sentry/tracing": "^7.120.4",

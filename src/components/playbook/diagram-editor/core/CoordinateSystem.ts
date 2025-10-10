@@ -3,6 +3,9 @@
  * 
  * Everything uses YARD coordinates as the single source of truth.
  * Pixi handles screen-to-world conversion automatically via transforms.
+ * 
+ * PERFORMANCE: Now supports in-place updates with observer pattern
+ * to avoid expensive Pixi app recreation on resize.
  */
 
 import {
@@ -23,10 +26,16 @@ export interface FieldDimensions {
   pixelsPerYard: number; // Scale factor for rendering
 }
 
+/**
+ * Observer callback for coordinate system changes
+ */
+export type CoordinateSystemObserver = (coords: CoordinateSystem) => void;
+
 export class CoordinateSystem {
   public readonly fieldWidth: number;
   public readonly fieldHeight: number;
-  public readonly pixelsPerYard: number;
+  private _pixelsPerYard: number;
+  private observers: Set<CoordinateSystemObserver> = new Set();
 
   constructor(dimensions: FieldDimensions) {
     // Validate inputs
@@ -35,7 +44,50 @@ export class CoordinateSystem {
 
     this.fieldWidth = dimensions.width;
     this.fieldHeight = dimensions.height;
-    this.pixelsPerYard = dimensions.pixelsPerYard;
+    this._pixelsPerYard = dimensions.pixelsPerYard;
+  }
+
+  /**
+   * Get current pixels per yard value
+   */
+  get pixelsPerYard(): number {
+    return this._pixelsPerYard;
+  }
+
+  /**
+   * Update pixels per yard and notify observers
+   * PERFORMANCE: Allows in-place updates without recreating entire Pixi app
+   */
+  updatePixelsPerYard(newValue: number): void {
+    validatePixelsPerYard(newValue);
+    
+    if (this._pixelsPerYard === newValue) {
+      return; // No change, skip notification
+    }
+    
+    this._pixelsPerYard = newValue;
+    this.notifyObservers();
+  }
+
+  /**
+   * Subscribe to coordinate system changes
+   */
+  addObserver(observer: CoordinateSystemObserver): void {
+    this.observers.add(observer);
+  }
+
+  /**
+   * Unsubscribe from coordinate system changes
+   */
+  removeObserver(observer: CoordinateSystemObserver): void {
+    this.observers.delete(observer);
+  }
+
+  /**
+   * Notify all observers of changes
+   */
+  private notifyObservers(): void {
+    this.observers.forEach(observer => observer(this));
   }
 
   /**

@@ -32,6 +32,7 @@ export class SpacingIndicatorLayer extends Container {
   private isDragging: boolean = false;
   private isVisible: boolean = false;
   private players: Player[] = [];
+  private coordsObserver: () => void;
   
   // UI elements
   private spacingTexts: Text[] = [];
@@ -53,6 +54,14 @@ export class SpacingIndicatorLayer extends Container {
     this.coords = coords;
     this.graphics = new Graphics();
     this.addChild(this.graphics);
+    
+    // Observe coordinate system changes for responsive updates
+    this.coordsObserver = () => {
+      if (this.isVisible) {
+        this.renderIndicator();
+      }
+    };
+    this.coords.addObserver(this.coordsObserver);
     
     // Make layer interactive for dragging
     this.eventMode = 'static';
@@ -316,6 +325,7 @@ export class SpacingIndicatorLayer extends Container {
    * Cleanup
    */
   destroy(): void {
+    this.coords.removeObserver(this.coordsObserver);
     this.graphics.clear();
     this.clearTexts();
     super.destroy({ children: true });

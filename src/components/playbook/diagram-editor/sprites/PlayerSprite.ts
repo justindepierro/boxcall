@@ -23,6 +23,7 @@ export class PlayerSprite extends Container {
   private numberText: Text;
   private _isSelected: boolean = false;
   private _isDragging: boolean = false;
+  private coordsObserver: () => void; // Store observer for cleanup
 
   // Visual constants - Imported from design tokens for consistency
   // Touch targets automatically enforced to meet WCAG 2.1 AA (44px minimum)
@@ -53,6 +54,14 @@ export class PlayerSprite extends Container {
     this.addChild(this.selectionRing);
     this.addChild(this.circle);
     this.addChild(this.numberText);
+
+    // PERFORMANCE: Subscribe to coordinate system changes
+    // Re-render graphics when pixelsPerYard changes (e.g., window resize)
+    this.coordsObserver = () => {
+      this.updateGraphics();
+      this.updateSelectionRing();
+    };
+    this.coords.addObserver(this.coordsObserver);
 
     // Initial render
     this.updateGraphics();
@@ -325,6 +334,9 @@ export class PlayerSprite extends Container {
    * Cleanup
    */
   destroy(): void {
+    // PERFORMANCE: Unsubscribe from coordinate system changes
+    this.coords.removeObserver(this.coordsObserver);
+    
     this.dropShadow.destroy();
     this.circle.destroy();
     this.selectionRing.destroy();

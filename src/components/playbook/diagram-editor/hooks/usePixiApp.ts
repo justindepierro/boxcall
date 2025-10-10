@@ -319,12 +319,20 @@ export function usePixiApp(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     canvasSize, 
     options.fieldWidth, 
     options.fieldHeight, 
-    options.pixelsPerYard, 
+    // NOTE: options.pixelsPerYard removed - handled by separate effect below
     options.backgroundColor, 
     options.enabled,
     handlePlayerSelected, 
     handlePlayerMoved
   ]);
+
+  // PERFORMANCE: Handle pixelsPerYard changes without recreating entire app
+  // The CoordinateSystem observer pattern notifies all layers to re-render
+  useEffect(() => {
+    if (!app || !isReady) return;
+    
+    app.coordinates.updatePixelsPerYard(options.pixelsPerYard);
+  }, [app, isReady, options.pixelsPerYard]);
 
   // Handle resize
   useEffect(() => {
