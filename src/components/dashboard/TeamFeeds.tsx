@@ -19,6 +19,7 @@ import { Icon } from "../ui/Icon/Icon";
  */
 const TeamFeeds: React.FC = () => {
   const { devMode } = useDevMode();
+  const [showAllFeeds, setShowAllFeeds] = useState(false);
 
   // Get feeds based on dev mode
   const getFeeds = () => {
@@ -95,6 +96,9 @@ const TeamFeeds: React.FC = () => {
   };
 
   const feeds = getFeeds();
+  const maxInitialFeeds = 3;
+  const displayedFeeds = showAllFeeds ? feeds : feeds.slice(0, maxInitialFeeds);
+  const hiddenFeedsCount = feeds.length - maxInitialFeeds;
 
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [quickMessage, setQuickMessage] = useState("");
@@ -138,7 +142,7 @@ const TeamFeeds: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-tight">
-          {feeds.map((feed) => (
+          {displayedFeeds.map((feed) => (
             <div
               key={feed.id}
               className="flex items-start space-x-3 p-2 rounded-lg surface-subtle-hover transition-colors cursor-pointer"
@@ -169,15 +173,26 @@ const TeamFeeds: React.FC = () => {
               </div>
             </div>
           ))}
-          {/* Show More */}
+          {/* Show More / View All Button */}
           <div className="pt-2">
-            <Button
-              variant="brandLink"
-              size="sm"
-              className="w-full justify-center"
-            >
-              View All Team Updates
-            </Button>
+            {!showAllFeeds && feeds.length > maxInitialFeeds ? (
+              <Button
+                variant="brandLink"
+                size="sm"
+                className="w-full justify-center"
+                onClick={() => setShowAllFeeds(true)}
+              >
+                See More Activity ({hiddenFeedsCount}) →
+              </Button>
+            ) : (
+              <Button
+                variant="brandLink"
+                size="sm"
+                className="w-full justify-center"
+              >
+                View All Team Updates
+              </Button>
+            )}
           </div>
         </div>
       )}
