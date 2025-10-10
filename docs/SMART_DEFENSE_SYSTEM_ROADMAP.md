@@ -1014,7 +1014,7 @@ function recommendSchemes(
 
 **Deliverable**: Defense auto-adjusts intelligently to formations
 
-### Medium-term (Week 4-6)
+### Me/dium-term (Week 4-6)
 
 **Priority**: Polish & Expansion
 

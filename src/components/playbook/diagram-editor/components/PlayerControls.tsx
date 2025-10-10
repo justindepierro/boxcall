@@ -18,6 +18,7 @@ import {
   convertToPlayers,
 } from "@features/defense/schemes";
 import { adjustCoverage } from "@features/defense/engines";
+import { useToast } from "../../../../hooks/useToast";
 
 interface PlayerControlsProps {
   app: DiagramPixiApp | null;
@@ -42,8 +43,11 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     React.useState(false);
   const [isDefenseDropdownOpen, setIsDefenseDropdownOpen] =
     React.useState(false);
+  const [isCoverageDropdownOpen, setIsCoverageDropdownOpen] =
+    React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const defenseDropdownRef = React.useRef<HTMLDivElement>(null);
+  const coverageDropdownRef = React.useRef<HTMLDivElement>(null);
 
   // Formation confirmation dialog state
   const [showFormationConfirm, setShowFormationConfirm] = React.useState(false);
@@ -74,6 +78,16 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   const [formationAnalysis, setFormationAnalysis] =
     React.useState<FormationAnalysis | null>(null);
 
+  // Coverage adjustment state
+  const [isAdjusting, setIsAdjusting] = React.useState(false);
+  const [autoAdjustEnabled, setAutoAdjustEnabled] = React.useState(false);
+  const [showFormationChangePrompt, setShowFormationChangePrompt] =
+    React.useState(false);
+  const [previousAlignment, setPreviousAlignment] = React.useState<
+    "left" | "middle" | "right" | null
+  >(null);
+  const toast = useToast();
+
   // Analyze formation whenever players or alignment changes
   React.useEffect(() => {
     if (players.length > 0 && app) {
@@ -100,6 +114,125 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
   }, [players, selectedAlignment, app]);
 
+  /**
+   * Auto-adjust defensive coverage based on offensive formation
+   */
+  const handleAutoAdjustCoverage = React.useCallback(async () => {
+    // Validation checks
+    if (!app?.playersLayer || !formationAnalysis) {
+      toast.error(
+        "Cannot adjust coverage",
+        "Missing app or formation analysis"
+      );
+      return;
+    }
+
+    // Get defensive players
+    const defensivePlayers = players.filter((p) => p.team === "defense");
+
+    if (defensivePlayers.length === 0) {
+      toast.error(
+        "No defensive players on field",
+        "Please add a defensive formation first"
+      );
+      return;
+    }
+
+    // Get field parameters
+    const fieldWidth = 53.333;
+    const centerX = getCenterXForAlignment(selectedAlignment, fieldWidth);
+    const losY = app.fieldLayer?.getLineOfScrimmage() || 25;
+
+    // Start adjusting
+    setIsAdjusting(true);
+
+    try {
+      // Call coverage adjustment engine
+      const result = adjustCoverage({
+        formationAnalysis,
+        defensivePlayers,
+        centerX,
+        losY,
+        fieldWidth,
+      });
+
+      // Apply adjustments to players
+      // Coverage engine now handles boundary validation internally
+      result.adjustments.forEach((adj) => {
+        app.playersLayer!.updatePlayer(adj.playerId, {
+          x: adj.newX,
+          ...(adj.newY !== undefined && { y: adj.newY }),
+        });
+
+        // Log each adjustment for debugging
+        console.log(`  ✓ ${adj.reason}`);
+      });
+
+      // Show success message with toast
+      console.log(`✅ ${result.summary}`);
+      console.log(`📞 Coverage Call: ${result.recommendedCoverage}`);
+
+      toast.success(result.summary, `Recommended: ${result.recommendedCoverage}`);
+    } catch (error) {
+      console.error("❌ Coverage adjustment error:", error);
+      toast.error(
+        "Failed to adjust coverage",
+        error instanceof Error ? error.message : "Check console for details"
+      );
+    } finally {
+      setIsAdjusting(false);
+    }
+  }, [app, formationAnalysis, players, selectedAlignment, toast]);
+
+  // Watch for ALIGNMENT changes only (hash button clicks), prompt for coverage adjustment
+  // Note: We intentionally DON'T watch formationAnalysis to avoid triggering on manual player drags
+  React.useEffect(() => {
+    const defensivePlayers = players.filter((p) => p.team === "defense");
+    
+    // Only proceed if we have defensive players
+    if (defensivePlayers.length === 0) {
+      return;
+    }
+
+    // Initialize on first run
+    if (!previousAlignment) {
+      setPreviousAlignment(selectedAlignment);
+      return;
+    }
+
+    // Check if alignment (hash) changed
+    const alignmentChanged = selectedAlignment !== previousAlignment;
+
+    // Only trigger on alignment changes (hash button clicks)
+    if (alignmentChanged) {
+      console.log(
+        `🔄 Hash changed: ${previousAlignment.toUpperCase()} → ${selectedAlignment.toUpperCase()}`
+      );
+
+      // Auto-adjust if enabled
+      if (autoAdjustEnabled) {
+        toast.info(
+          `Moved to ${selectedAlignment.toUpperCase()} hash`,
+          "Auto-adjusting defense..."
+        );
+        handleAutoAdjustCoverage();
+      } else {
+        // Show prompt
+        setShowFormationChangePrompt(true);
+      }
+
+      // Update tracked alignment
+      setPreviousAlignment(selectedAlignment);
+    }
+  }, [
+    selectedAlignment,
+    previousAlignment,
+    players,
+    autoAdjustEnabled,
+    toast,
+    handleAutoAdjustCoverage,
+  ]);
+
   // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -115,14 +248,24 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       ) {
         setIsDefenseDropdownOpen(false);
       }
+      if (
+        coverageDropdownRef.current &&
+        !coverageDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCoverageDropdownOpen(false);
+      }
     };
 
-    if (isFormationDropdownOpen || isDefenseDropdownOpen) {
+    if (
+      isFormationDropdownOpen ||
+      isDefenseDropdownOpen ||
+      isCoverageDropdownOpen
+    ) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [isFormationDropdownOpen, isDefenseDropdownOpen]);
+  }, [isFormationDropdownOpen, isDefenseDropdownOpen, isCoverageDropdownOpen]);
 
   // Count offensive players
   const offensivePlayerCount = players.filter(
@@ -379,10 +522,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           single: rightNumbers, // Single to field: at the numbers (wider)
         };
       } else {
-        // 3 to FIELD (right/wide side)
+        // 3 to FIELD (right/wide side) - This is Trips Right
         const spacing = (rightNumbers - rightTackleX) / 3;
         return {
-          single: rightHash - 3, // Single to boundary: 3 yards inside from numbers (between numbers and hash)
+          single: leftNumbers, // Single to boundary (LEFT): at the numbers (~8 yards)
           right3: rightTackleX + spacing, // Inside slot, evenly spaced
           right2: rightTackleX + spacing * 2, // Slot, evenly spaced
           right1: rightNumbers, // Widest - top of numbers
@@ -428,8 +571,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           // Clear existing defensive players
           const defensivePlayers = players.filter((p) => p.team === "defense");
           defensivePlayers.forEach((p) => removePlayer(p.id));
-          // Execute the formation
-          executeDefenseFormation(formationType, selectedAlignment);
+          // Execute the formation at the offense's actual alignment
+          const offenseAlignment = detectOffensiveAlignment();
+          executeDefenseFormation(formationType, offenseAlignment);
         },
         "⚠️ Replace Defense?"
       );
@@ -445,8 +589,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           // Clear existing defensive players
           const defensivePlayers = players.filter((p) => p.team === "defense");
           defensivePlayers.forEach((p) => removePlayer(p.id));
-          // Execute the formation
-          executeDefenseFormation(formationType, selectedAlignment);
+          // Execute the formation at the offense's actual alignment
+          const offenseAlignment = detectOffensiveAlignment();
+          executeDefenseFormation(formationType, offenseAlignment);
         },
         "⚠️ Change Defense?"
       );
@@ -455,8 +600,42 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
 
     // No defensive players yet, proceed directly
-    executeDefenseFormation(formationType, selectedAlignment);
+    // Detect where offense actually is and align defense to it
+    const offenseAlignment = detectOffensiveAlignment();
+    executeDefenseFormation(formationType, offenseAlignment);
     setIsDefenseDropdownOpen(false);
+  };
+
+  /**
+   * Detect current offensive alignment based on center position
+   * Returns the hash alignment that the offense is actually on
+   */
+  const detectOffensiveAlignment = (): "left" | "middle" | "right" => {
+    const centerPlayer = players.find(
+      (p) => p.team === "offense" && p.position === "center"
+    );
+
+    if (!centerPlayer) {
+      // No center found, use selected alignment as fallback
+      return selectedAlignment;
+    }
+
+    const fieldWidth = app?.coordinates.fieldWidth || 53.333;
+    const fieldCenter = fieldWidth / 2; // 26.666 yards
+    const hashOffset = 6.17;
+    const leftHashX = fieldCenter - hashOffset; // ~20.5 yards
+    const rightHashX = fieldCenter + hashOffset; // ~32.8 yards
+
+    // Determine which hash the center is closest to
+    const distToLeft = Math.abs(centerPlayer.x - leftHashX);
+    const distToMiddle = Math.abs(centerPlayer.x - fieldCenter);
+    const distToRight = Math.abs(centerPlayer.x - rightHashX);
+
+    const minDist = Math.min(distToLeft, distToMiddle, distToRight);
+
+    if (minDist === distToLeft) return "left";
+    if (minDist === distToRight) return "right";
+    return "middle";
   };
 
   /**
@@ -506,65 +685,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     console.log(
       `🛡️ Added Nickel 4-2-5 Defense at LOS: ${losYard}, Alignment: ${alignment}`
     );
-  };
-
-  /**
-   * Auto-adjust defensive coverage based on offensive formation
-   */
-  const _handleAutoAdjustCoverage = () => {
-    if (!app?.playersLayer || !formationAnalysis) {
-      console.warn(
-        "⚠️ Cannot adjust coverage: Missing app or formation analysis"
-      );
-      return;
-    }
-
-    // Get defensive players
-    const defensivePlayers = players.filter((p) => p.team === "defense");
-
-    if (defensivePlayers.length === 0) {
-      console.warn("⚠️ Cannot adjust coverage: No defensive players on field");
-      alert("⚠️ Please add a defensive formation first");
-      return;
-    }
-
-    // Get field parameters
-    const fieldWidth = 53.333;
-    const centerX = getCenterXForAlignment(selectedAlignment, fieldWidth);
-    const losY = app.fieldLayer?.getLineOfScrimmage() || 25;
-
-    try {
-      // Call coverage adjustment engine
-      const result = adjustCoverage({
-        formationAnalysis,
-        defensivePlayers,
-        centerX,
-        losY,
-        fieldWidth,
-      });
-
-      // Apply adjustments to players
-      result.adjustments.forEach((adj) => {
-        app.playersLayer!.updatePlayer(adj.playerId, {
-          x: adj.newX,
-          ...(adj.newY && { y: adj.newY }),
-        });
-
-        // Log each adjustment for debugging
-        console.log(`  ✓ ${adj.reason}`);
-      });
-
-      // Show success message
-      console.log(`✅ ${result.summary}`);
-      console.log(`📞 Coverage Call: ${result.recommendedCoverage}`);
-
-      alert(
-        `✅ ${result.summary}\n📞 Recommended: ${result.recommendedCoverage}`
-      );
-    } catch (error) {
-      console.error("❌ Coverage adjustment error:", error);
-      alert("❌ Failed to adjust coverage. Check console for details.");
-    }
   };
 
   /**
@@ -1231,6 +1351,93 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
               )}
             </div>
 
+            {/* Coverage Presets Dropdown */}
+            {formationAnalysis &&
+              players.filter((p) => p.team === "defense").length > 0 && (
+                <div className="relative" ref={coverageDropdownRef}>
+                  <button
+                    onClick={() =>
+                      setIsCoverageDropdownOpen(!isCoverageDropdownOpen)
+                    }
+                    className={`${buttonBaseClasses} bg-primary-600 text-white hover:bg-primary-700 font-medium flex items-center justify-between`}
+                    title="Apply Coverage Preset"
+                  >
+                    <span>📋 Coverage Presets</span>
+                    <span className="ml-2">
+                      {isCoverageDropdownOpen ? "▲" : "▼"}
+                    </span>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isCoverageDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 overflow-hidden">
+                      <button
+                        onClick={() => {
+                          toast.info("Cover 2", "Coming soon!");
+                          setIsCoverageDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
+                      >
+                        <div className="font-medium">Cover 2</div>
+                        <div className="text-xs text-content-secondary">
+                          2-deep safeties, 5 underneath
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          toast.info("Cover 3", "Coming soon!");
+                          setIsCoverageDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
+                      >
+                        <div className="font-medium">Cover 3</div>
+                        <div className="text-xs text-content-secondary">
+                          3-deep zones, 4 underneath
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          toast.info("Cover 4", "Coming soon!");
+                          setIsCoverageDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
+                      >
+                        <div className="font-medium">Cover 4 (Quarters)</div>
+                        <div className="text-xs text-content-secondary">
+                          4-deep zones, pattern match
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          toast.info("Cover 6", "Coming soon!");
+                          setIsCoverageDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
+                      >
+                        <div className="font-medium">Cover 6 (Quarter-Quarter-Half)</div>
+                        <div className="text-xs text-content-secondary">
+                          Split-field coverage
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleAutoAdjustCoverage();
+                          setIsCoverageDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-primary-600/10 transition-colors border-t border-border/30"
+                      >
+                        <div className="font-medium text-primary-400">
+                          🛡️ Auto-Adjust (Smart)
+                        </div>
+                        <div className="text-xs text-content-secondary">
+                          Analyze formation and adjust
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
             {/* Add Center Button (keep this here as it's less commonly used) */}
             <button
               onClick={() => {
@@ -1344,6 +1551,104 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                       </div>
                     )}
                 </div>
+
+                {/* Auto-Adjust Toggle */}
+                {formationAnalysis &&
+                  players.filter((p) => p.team === "defense").length > 0 && (
+                    <div className="mt-3 flex items-center justify-between p-2 rounded-lg bg-surface-secondary/30 border border-border/30">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-content-primary">
+                          Auto-Adjust on Formation Change
+                        </span>
+                        <span
+                          className="text-xs text-content-secondary cursor-help"
+                          title="Automatically adjust defense when offense changes formation"
+                        >
+                          ℹ️
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setAutoAdjustEnabled(!autoAdjustEnabled)}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${
+                          autoAdjustEnabled
+                            ? "bg-primary-600"
+                            : "bg-surface-tertiary"
+                        }`}
+                        title={
+                          autoAdjustEnabled
+                            ? "Disable auto-adjust"
+                            : "Enable auto-adjust"
+                        }
+                      >
+                        <span
+                          className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                            autoAdjustEnabled ? "translate-x-5" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  )}
+
+                {/* Formation Change Prompt */}
+                {showFormationChangePrompt && formationAnalysis && (
+                  <div className="mt-3 p-3 rounded-lg bg-warning-600/10 border border-warning-600/30">
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">⚠️</span>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-warning-400 mb-1">
+                          Moved to {selectedAlignment.toUpperCase()} Hash
+                        </p>
+                        <p className="text-xs text-content-secondary mb-2">
+                          Adjust defensive coverage?
+                        </p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              handleAutoAdjustCoverage();
+                              setShowFormationChangePrompt(false);
+                            }}
+                            className="flex-1 px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
+                          >
+                            Yes, Adjust
+                          </button>
+                          <button
+                            onClick={() => setShowFormationChangePrompt(false)}
+                            className="flex-1 px-3 py-1.5 text-xs font-medium bg-surface-secondary text-content-primary rounded hover:bg-surface-tertiary transition-colors"
+                          >
+                            No, Keep As-Is
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Auto-Adjust Coverage Button */}
+                {formationAnalysis &&
+                  players.filter((p) => p.team === "defense").length > 0 && (
+                    <button
+                      onClick={handleAutoAdjustCoverage}
+                      disabled={isAdjusting}
+                      className={`w-full mt-3 px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 ${
+                        isAdjusting
+                          ? "bg-primary-600/50 text-white cursor-wait"
+                          : "bg-primary-600 text-white hover:bg-primary-700 active:scale-[0.98]"
+                      }`}
+                      title="Automatically adjust defensive coverage based on offensive formation"
+                    >
+                      {isAdjusting ? (
+                        <>
+                          <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>Adjusting Coverage...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-base">🛡️</span>
+                          <span>Auto-Adjust Coverage</span>
+                        </>
+                      )}
+                    </button>
+                  )}
               </div>
             )}
           </div>
@@ -1575,15 +1880,35 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
       {/* Formation Confirmation Dialog */}
       {showFormationConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-bold text-content-primary mb-4">
-              {confirmTitle}
-            </h2>
-            <p className="text-content-secondary mb-6 whitespace-pre-line">
-              {confirmMessage}
-            </p>
-            <div className="flex gap-3">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-lg">
+          <div 
+            className="relative rounded-2xl p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200"
+            style={{
+              background: 'white',
+              border: '1px solid rgba(229, 231, 235, 0.8)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
+            }}
+          >
+            <div className="flex items-start gap-5 mb-7">
+              <div 
+                className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                  boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+                }}
+              >
+                <span className="text-5xl drop-shadow-lg">⚠️</span>
+              </div>
+              <div className="flex-1 min-w-0 pt-1">
+                <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#111827' }}>
+                  {confirmTitle.replace(/⚠️|❌|✅/gu, '').trim()}
+                </h2>
+                <p className="text-base whitespace-pre-line leading-relaxed" style={{ color: '#374151' }}>
+                  {confirmMessage}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => {
                   if (pendingFormationAction) {
@@ -1592,7 +1917,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   setShowFormationConfirm(false);
                   setPendingFormationAction(null);
                 }}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 px-6 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-150"
               >
                 Yes, Continue
               </button>
@@ -1601,7 +1926,18 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   setShowFormationConfirm(false);
                   setPendingFormationAction(null);
                 }}
-                className="flex-1 px-4 py-2 bg-surface-secondary text-content-primary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+                className="flex-1 px-6 py-4 rounded-xl font-semibold text-base transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-150 shadow-md"
+                style={{
+                  background: '#F3F4F6',
+                  color: '#111827',
+                  border: '1px solid #D1D5DB'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#E5E7EB';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#F3F4F6';
+                }}
               >
                 Cancel
               </button>
@@ -1612,17 +1948,37 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
       {/* Alert Modal (for blocking actions) */}
       {showAlert && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-bold text-content-primary mb-4">
-              ⚠️ Cannot Add Formation
-            </h2>
-            <p className="text-content-secondary mb-6 whitespace-pre-line">
-              {alertMessage}
-            </p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-lg">
+          <div 
+            className="relative rounded-2xl p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200"
+            style={{
+              background: 'white',
+              border: '1px solid rgba(229, 231, 235, 0.8)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
+            }}
+          >
+            <div className="flex items-start gap-5 mb-7">
+              <div 
+                className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                  boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+                }}
+              >
+                <span className="text-5xl drop-shadow-lg">⚠️</span>
+              </div>
+              <div className="flex-1 min-w-0 pt-1">
+                <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#111827' }}>
+                  Cannot Add Formation
+                </h2>
+                <p className="text-base whitespace-pre-line leading-relaxed" style={{ color: '#374151' }}>
+                  {alertMessage}
+                </p>
+              </div>
+            </div>
             <button
               onClick={() => setShowAlert(false)}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-150"
             >
               OK
             </button>

@@ -704,17 +704,24 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       {/* Alert Modal */}
       {showAlert && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-bold text-content-primary mb-4">
-              {alertTitle}
-            </h2>
-            <p className="text-content-secondary mb-6 whitespace-pre-line">
-              {alertMessage}
-            </p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md">
+          <div className="bg-surface-primary border-2 border-stroke rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-info-100 flex items-center justify-center">
+                <span className="text-3xl">{alertTitle.includes('✅') ? '✅' : alertTitle.includes('❌') ? '❌' : 'ℹ️'}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-2xl font-bold text-content-primary mb-2">
+                  {alertTitle.replace(/✅|❌|⚠️|ℹ️/gu, '').trim()}
+                </h2>
+                <p className="text-base text-content-secondary whitespace-pre-line leading-relaxed">
+                  {alertMessage}
+                </p>
+              </div>
+            </div>
             <button
               onClick={() => setShowAlert(false)}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="w-full px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-150"
             >
               OK
             </button>
@@ -724,14 +731,21 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       {/* Confirm Modal */}
       {showConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-bold text-content-primary mb-4">
-              {confirmTitle}
-            </h2>
-            <p className="text-content-secondary mb-6 whitespace-pre-line">
-              {confirmMessage}
-            </p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md">
+          <div className="bg-surface-primary border-2 border-stroke rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-warning-100 flex items-center justify-center">
+                <span className="text-3xl">⚠️</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-2xl font-bold text-content-primary mb-2">
+                  {confirmTitle}
+                </h2>
+                <p className="text-base text-content-secondary whitespace-pre-line leading-relaxed">
+                  {confirmMessage}
+                </p>
+              </div>
+            </div>
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -741,7 +755,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
                   setShowConfirm(false);
                   setConfirmAction(null);
                 }}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-150"
               >
                 Yes, Continue
               </button>
@@ -750,7 +764,7 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
                   setShowConfirm(false);
                   setConfirmAction(null);
                 }}
-                className="flex-1 px-4 py-2 bg-surface-secondary text-content-primary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+                className="flex-1 px-5 py-3 bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded-lg font-semibold border-2 border-stroke transform hover:scale-[1.02] transition-all duration-150"
               >
                 Cancel
               </button>
@@ -761,30 +775,37 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({ onClose }) => {
 
       {/* Unsaved Changes Modal */}
       {showUnsavedChanges && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-bold text-content-primary mb-4">
-              💾 Unsaved Changes
-            </h2>
-            <p className="text-content-secondary mb-6">
-              You have unsaved changes. What would you like to do?
-            </p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md">
+          <div className="bg-surface-primary border-2 border-stroke rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] p-8 max-w-lg mx-4 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-info-100 flex items-center justify-center">
+                <span className="text-3xl">💾</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-2xl font-bold text-content-primary mb-2">
+                  Unsaved Changes
+                </h2>
+                <p className="text-base text-content-secondary leading-relaxed">
+                  You have unsaved changes. What would you like to do?
+                </p>
+              </div>
+            </div>
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleSaveAndClose}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="w-full px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-150 flex items-center justify-center gap-2"
               >
-                💾 Save and Close
+                <span>💾</span> Save and Close
               </button>
               <button
                 onClick={handleCloseWithoutSaving}
-                className="w-full px-4 py-2 bg-surface-secondary text-content-primary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+                className="w-full px-5 py-3 bg-surface-secondary hover:bg-surface-tertiary text-content-primary rounded-lg font-semibold border-2 border-stroke transform hover:scale-[1.02] transition-all duration-150"
               >
                 Close without Saving
               </button>
               <button
                 onClick={() => setShowUnsavedChanges(false)}
-                className="w-full px-4 py-2 bg-surface-secondary text-content-secondary rounded-lg font-medium hover:bg-surface-tertiary border border-border transition-colors"
+                className="w-full px-5 py-3 bg-surface-secondary hover:bg-surface-tertiary text-content-secondary rounded-lg font-semibold border-2 border-stroke transform hover:scale-[1.02] transition-all duration-150"
               >
                 Cancel
               </button>

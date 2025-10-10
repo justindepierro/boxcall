@@ -14,6 +14,13 @@ import type { FormationAnalysis } from "../types/formationTypes";
 import type { Player } from "../../../components/playbook/diagram-editor/types/Player";
 
 /**
+ * Clamp a coordinate value to valid field bounds
+ */
+function clampToField(value: number, fieldWidth: number): number {
+  return Math.max(0, Math.min(fieldWidth, value));
+}
+
+/**
  * Coverage adjustment parameters
  */
 export interface CoverageAdjustmentParams {
@@ -73,13 +80,15 @@ export interface CoverageAdjustmentResult {
  * @param formationAnalysis - Offensive formation data
  * @param centerX - Center X position
  * @param losY - Line of scrimmage Y coordinate
+ * @param fieldWidth - Field width for boundary validation
  * @returns Adjustment for NCB position
  */
 function adjustNickelCB(
   ncb: Player,
   formationAnalysis: FormationAnalysis,
   centerX: number,
-  losY: number
+  losY: number,
+  fieldWidth: number
 ): PlayerAdjustment | null {
   const { rbPosition } = formationAnalysis;
 
@@ -117,7 +126,7 @@ function adjustNickelCB(
 
   return {
     playerId: ncb.id,
-    newX: targetX,
+    newX: clampToField(targetX, fieldWidth),
     newY: losY - 5, // NCB depth: 5 yards
     reason: `Align NCB to ${targetSide} (RB side: ${rbPosition})`,
   };
@@ -163,8 +172,8 @@ function adjustSafeties(
     // Free safety stays middle-deep
     if (strengthLeft) {
       // 3 receivers left
-      const targetLeftX = 11; // Closer to left side
-      const targetRightX = fieldWidth / 2 + 4; // Middle-right
+      const targetLeftX = clampToField(11, fieldWidth); // Closer to left side
+      const targetRightX = clampToField(fieldWidth / 2 + 4, fieldWidth); // Middle-right
       
       adjustments.push({
         playerId: leftSafety.id,
@@ -181,8 +190,8 @@ function adjustSafeties(
       });
     } else {
       // 3 receivers right
-      const targetLeftX = fieldWidth / 2 - 4; // Middle-left
-      const targetRightX = fieldWidth - 11; // Closer to right side
+      const targetLeftX = clampToField(fieldWidth / 2 - 4, fieldWidth); // Middle-left
+      const targetRightX = clampToField(fieldWidth - 11, fieldWidth); // Closer to right side
       
       adjustments.push({
         playerId: leftSafety.id,
@@ -208,14 +217,14 @@ function adjustSafeties(
     // Safeties inside #2 receivers (slot)
     adjustments.push({
       playerId: leftSafety.id,
-      newX: leftSlotX + 1,
+      newX: clampToField(leftSlotX + 1, fieldWidth),
       newY: losY - 10,
       reason: '2x2: Left safety inside slot',
     });
     
     adjustments.push({
       playerId: rightSafety.id,
-      newX: rightSlotX - 1,
+      newX: clampToField(rightSlotX - 1, fieldWidth),
       newY: losY - 10,
       reason: '2x2: Right safety inside slot',
     });
@@ -227,14 +236,14 @@ function adjustSafeties(
     
     adjustments.push({
       playerId: leftSafety.id,
-      newX: centerX - 8,
+      newX: clampToField(centerX - 8, fieldWidth),
       newY: losY - 12,
       reason: 'Empty: Deep balanced left',
     });
     
     adjustments.push({
       playerId: rightSafety.id,
-      newX: centerX + 8,
+      newX: clampToField(centerX + 8, fieldWidth),
       newY: losY - 12,
       reason: 'Empty: Deep balanced right',
     });
@@ -284,8 +293,8 @@ function adjustCorners(
     }
     
     const targetX = isLeftCorner 
-      ? leftOutsideWRX + 1  // 1 yard inside left outside WR
-      : rightOutsideWRX - 1; // 1 yard inside right outside WR
+      ? clampToField(leftOutsideWRX + 1, fieldWidth)  // 1 yard inside left outside WR
+      : clampToField(rightOutsideWRX - 1, fieldWidth); // 1 yard inside right outside WR
     
     adjustments.push({
       playerId: corner.id,
@@ -320,7 +329,7 @@ export function adjustCoverage(
   
   // Adjust NCB to RB side
   if (ncb) {
-    const ncbAdjustment = adjustNickelCB(ncb, formationAnalysis, centerX, losY);
+    const ncbAdjustment = adjustNickelCB(ncb, formationAnalysis, centerX, losY, fieldWidth);
     if (ncbAdjustment) {
       adjustments.push(ncbAdjustment);
     }

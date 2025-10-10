@@ -205,6 +205,24 @@ export class PlayersLayer extends Container {
   }
 
   /**
+   * Select all offensive players at once
+   */
+  selectAllOffensivePlayers(): void {
+    this.clearSelection();
+    
+    let count = 0;
+    this.sprites.forEach((sprite) => {
+      const player = sprite.getPlayer();
+      if (player.team === 'offense') {
+        this.selectPlayer(player.id, true); // Add to selection
+        count++;
+      }
+    });
+
+    console.log(`✅ Selected all ${count} offensive players`);
+  }
+
+  /**
    * Clear all selections
    */
   clearSelection(): void {
@@ -244,13 +262,35 @@ export class PlayersLayer extends Container {
     sprite.eventMode = 'static';
     sprite.cursor = 'pointer';
 
+    // Track double-click for center players
+    let lastClickTime = 0;
+    const DOUBLE_CLICK_THRESHOLD = 300; // milliseconds
+
     // Click to select and start drag
     sprite.on('pointerdown', (event: FederatedPointerEvent) => {
       event.stopPropagation();
       
       const playerId = sprite.getId();
+      const player = sprite.getPlayer();
       const isShiftHeld = event.shiftKey;
       const isAlreadySelected = this.selectedPlayerIds.has(playerId);
+      
+      // Check for double-click on center
+      const currentTime = Date.now();
+      const timeSinceLastClick = currentTime - lastClickTime;
+      lastClickTime = currentTime;
+
+      if (
+        player.position === 'center' &&
+        player.team === 'offense' &&
+        timeSinceLastClick < DOUBLE_CLICK_THRESHOLD
+      ) {
+        // Double-click detected on center - select all offensive players!
+        console.log('🎯 Double-click detected on center! Selecting all offensive players...');
+        event.stopPropagation();
+        this.selectAllOffensivePlayers();
+        return; // Skip normal click handling
+      }
       
       // Multi-select with Shift, or toggle selection if already selected
       if (isShiftHeld) {
