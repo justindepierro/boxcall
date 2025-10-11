@@ -51,7 +51,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               >
                 {title}
               </Typography>
-              <div className="flex items-center space-x-2 mt-1.5 overflow-visible">
+              <div className="flex items-center flex-wrap gap-2 mt-1.5 overflow-visible">
                 <ProgressBadge
                   progress={Math.round((playsCreated / 100) * 100)}
                 >
@@ -67,9 +67,9 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 )}
               </div>
             </div>
-            {/* Team Type Toggle - moved inline with title */}
+            {/* Team Type Toggle - responsive: hidden on mobile, shows on md+ */}
             {currentTeamType && onTeamTypeChange && (
-              <div className="ml-6">
+              <div className="hidden md:block md:ml-6">
                 <TeamTypeToggle
                   currentType={currentTeamType}
                   onTypeChange={onTeamTypeChange}
@@ -77,18 +77,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               </div>
             )}
           </div>
-
-          {/* Universal Search */}
-          <div className="flex-1 max-w-md mx-8">
-            {/* Search now handled by GlobalSearch in AppHeader */}
-          </div>
-
-          {/* Empty space for balance */}
-          <div className="w-24"></div>
         </div>
 
         {/* Bottom row: Navigation tabs and actions */}
-        <div className="flex items-center justify-between pb-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-2">
           {/* View Tabs - Left side */}
           <div className="flex items-center gap-2">
             <Button
@@ -117,7 +109,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               }
               iconPosition="left"
             >
-              Playbook
+              <span className="hidden md:inline">Playbook</span>
             </Button>
             <Button
               id="tab-practice-script"
@@ -145,7 +137,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               }
               iconPosition="left"
             >
-              Practice Scripts
+              <span className="hidden md:inline">Practice Scripts</span>
             </Button>
             <Button
               id="tab-game-plan"
@@ -173,7 +165,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               }
               iconPosition="left"
             >
-              Game Plans
+              <span className="hidden md:inline">Game Plans</span>
             </Button>
           </div>
 
@@ -205,7 +197,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 title="Customize your playbook"
               >
                 <Icon name="settings" className="h-5 w-5" />
-                <span>Customize</span>
+                <span className="hidden lg:inline">Customize</span>
               </Button>
             )}
 
@@ -222,7 +214,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 title="New Play"
               >
                 <Icon name="plus" className="h-5 w-5" />
-                <span>New Play</span>
+                <span className="hidden lg:inline">New Play</span>
               </Button>
             )}
           </div>
