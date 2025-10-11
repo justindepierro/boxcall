@@ -63,11 +63,11 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
     getTileConfidenceClasses(optimisticPlay.confidence_base);
 
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="relative w-full max-w-56 mx-auto">
+    <div className="flex flex-col items-center text-center overflow-visible">
+      <div className="relative w-full max-w-80 mx-auto overflow-visible">
         {onSelectionChange && (
           <label
-            className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+            className="absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
             onClick={(e) => e.stopPropagation()}
           >
             <input
@@ -91,7 +91,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             aria-hidden="true"
           />
 
-          <div className="absolute -top-2 -right-2 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
+          <div className="absolute -top-3 -right-3 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
             <svg
               className="absolute w-11 h-11 -rotate-90"
               viewBox="0 0 44 44"
@@ -130,7 +130,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
                 e.stopPropagation();
                 onCreateDiagram();
               }}
-              className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
+              className="absolute -bottom-3 -right-3 w-9 h-9 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
               title="Edit diagram"
               aria-label="Edit diagram"
             >

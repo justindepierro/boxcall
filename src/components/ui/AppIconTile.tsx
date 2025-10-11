@@ -26,11 +26,11 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div className={`relative p-2 ${className}`}>
+      <div className={`relative p-2 overflow-visible ${className}`}>
         <button
           type="button"
           onClick={onOpen}
-          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-interaction-focus focus:ring-offset-2 rounded-xl"
+          className="group relative flex flex-col items-center justify-center gap-2 transition-transform duration-base active:scale-press focus:outline-none focus:ring-2 focus:ring-interaction-focus focus:ring-offset-2 rounded-xl overflow-visible"
           aria-label={title}
         >
           {/* Top Label - Optional text above icon */}
@@ -41,10 +41,10 @@ export const AppIconTile = memo<AppIconTileProps>(
           )}
 
           {/* App Icon - iPhone Style - Centered */}
-          <div className="relative w-24 h-24">
+          <div className="relative w-24 h-24 overflow-visible">
             {/* Icon Container with Gradient and shine effect */}
             <div
-              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none shadow-2xl`}
+              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none shadow-2xl overflow-visible`}
             />
 
             {/* Icon - Absolutely centered - Dynamic sizing: 50% of container */}
@@ -56,7 +56,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
             {/* Badge (like notification count) - Positioned outside container */}
             {badge !== undefined && badge !== null && (
-              <div className="absolute -top-2 -right-2 min-w-6 h-6 px-2 rounded-full bg-error-bg0 border-[3px] border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
+              <div className="absolute -top-3 -right-3 min-w-6 h-6 px-2 rounded-full bg-error-bg0 border-[3px] border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
                 <span className="text-white text-xs font-bold leading-none">
                   {badge}
                 </span>
