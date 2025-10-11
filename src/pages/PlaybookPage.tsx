@@ -635,14 +635,14 @@ export default function PlaybookPage() {
         ) : (
           // Desktop View - Keep Existing Layout
           <>
-            {/* Aurora Hero Tiles - iPhone App Style - Tight spacing */}
+            {/* Aurora Hero Tiles - Football-Specific Actions */}
             <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 overflow-visible">
               <div className="flex items-center justify-center gap-6 flex-wrap overflow-visible">
                 <AppIconTile
                   title="New Play"
                   subtitle={`${state.playsCreated} plays`}
-                  icon="plus"
-                  gradient="from-jade-500 to-emerald-500"
+                  icon="plus-circle"
+                  gradient="from-jade-500 to-emerald-600"
                   onOpen={handleOpenBuilder}
                 />
 
@@ -650,31 +650,31 @@ export default function PlaybookPage() {
                   title="Whiteboard"
                   subtitle="Free draw"
                   icon="pen-tool"
-                  gradient="from-indigo-500 to-purple-500"
+                  gradient="from-purple-500 to-violet-600"
                   onOpen={handleOpenWhiteboard}
                 />
 
                 <AppIconTile
                   title="Practice"
-                  subtitle="Quick start"
-                  icon="clock"
-                  gradient="from-purple-500 to-violet-500"
+                  subtitle="Build script"
+                  icon="clipboard-list"
+                  gradient="from-blue-500 to-indigo-600"
                   onOpen={handleQuickNewPracticeScript}
                 />
 
                 <AppIconTile
                   title="Game Plan"
-                  subtitle="Plan ahead"
+                  subtitle="Strategy"
                   icon="target"
-                  gradient="from-amber-500 to-orange-500"
+                  gradient="from-orange-500 to-red-500"
                   onOpen={handleQuickNewGamePlan}
                 />
 
                 <AppIconTile
                   title="Diagrams"
                   subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
-                  icon="image"
-                  gradient="from-blue-500 to-cyan-500"
+                  icon="grid"
+                  gradient="from-cyan-500 to-blue-500"
                   badge={state.diagramCoverage}
                   onOpen={() => {}}
                 />
