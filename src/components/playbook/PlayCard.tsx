@@ -283,11 +283,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
   return (
     <div
-      className={`rounded-glass border border-white/70 bg-white/80 dark:border-slate-700/60 dark:bg-slate-900/70 backdrop-blur-xl transition-all duration-200 overflow-visible ${
+      className={`rounded-xl border bg-surface-base/90 backdrop-blur-xl transition-all duration-200 overflow-visible ${
         isSelected
-          ? "ring-2 ring-brand-primary border-brand-primary shadow-jade"
-          : "shadow-card hover:shadow-card-hover hover:border-white"
-      } ${isCompact ? "text-[13px]" : ""} min-h-30 md:min-h-0`}
+          ? "ring-2 ring-brand-primary border-brand-primary shadow-lg"
+          : "shadow-card hover:shadow-card-hover hover:border-brand-primary/30 hover:scale-[1.01]"
+      } ${isCompact ? "text-[13px]" : ""} md:min-h-0`}
     >
       <div
         className={`${isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"} overflow-visible`}
