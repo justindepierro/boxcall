@@ -693,31 +693,29 @@ export default function PlaybookPage() {
             )}
 
             {/* Main Content - Plays Grid */}
-            {state.playsCreated > 0 && (
-              <MobileSection
-                title="Your Plays"
-                action={state.playsCreated > 3 ? "See All" : undefined}
-                spacing="comfortable"
-              >
-                <PullToRefresh onRefresh={handlePullRefresh}>
-                  <PlayGrid
-                    searchQuery={debouncedSearchQuery}
-                    filters={state.selectedFilters}
-                    onAddToPracticeScript={handleAddToPracticeScript}
-                    onAddToGamePlan={handleAddToGamePlan}
-                    onEdit={handleEditPlay}
-                    onSave={handleSavePlay}
-                    onDuplicate={handleDuplicatePlay}
-                    onOpenBuilder={handleOpenBuilder}
-                    onCreateDiagram={handleCreateDiagram}
-                    refreshTrigger={state.refreshTrigger}
-                    onPlayCountChange={handlePlayCountChange}
-                    formationSuggestions={suggestions.formations}
-                    playNameSuggestions={suggestions.playNames}
-                  />
-                </PullToRefresh>
-              </MobileSection>
-            )}
+            <MobileSection
+              title="Your Plays"
+              action={state.playsCreated > 3 ? "See All" : undefined}
+              spacing="comfortable"
+            >
+              <PullToRefresh onRefresh={handlePullRefresh}>
+                <PlayGrid
+                  searchQuery={debouncedSearchQuery}
+                  filters={state.selectedFilters}
+                  onAddToPracticeScript={handleAddToPracticeScript}
+                  onAddToGamePlan={handleAddToGamePlan}
+                  onEdit={handleEditPlay}
+                  onSave={handleSavePlay}
+                  onDuplicate={handleDuplicatePlay}
+                  onOpenBuilder={handleOpenBuilder}
+                  onCreateDiagram={handleCreateDiagram}
+                  refreshTrigger={state.refreshTrigger}
+                  onPlayCountChange={handlePlayCountChange}
+                  formationSuggestions={suggestions.formations}
+                  playNameSuggestions={suggestions.playNames}
+                />
+              </PullToRefresh>
+            </MobileSection>
 
             {/* Floating Action Button for Quick Actions */}
             <FloatingActionButton
