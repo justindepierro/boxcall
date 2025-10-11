@@ -27,16 +27,19 @@ export function usePreference<K extends keyof UserPreferences>(
   ) => void,
   boolean,
 ] {
-  const [value, setValue] = useState<UserPreferences[K]>(defaultValue);
-  const [isLoading, setIsLoading] = useState(true);
+  // OPTIMIZATION: Load from localStorage synchronously to prevent flash
+  // This gives instant render, then we sync with server in background
+  const initialValue = getFromLocalStorage(key, defaultValue);
+  const [value, setValue] = useState<UserPreferences[K]>(initialValue);
+  const [isLoading, setIsLoading] = useState(false); // Changed to false - we have a value immediately
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const isMountedRef = useRef(true);
 
-  // Load initial value on mount
+  // Sync with server in background (non-blocking)
   useEffect(() => {
     let cancelled = false;
 
-    async function loadInitialValue() {
+    async function syncWithServer() {
       try {
         // Check if user is authenticated
         const {
@@ -44,43 +47,36 @@ export function usePreference<K extends keyof UserPreferences>(
         } = await supabase.auth.getUser();
 
         if (user && !cancelled) {
-          // User is authenticated - try to load from server
+          // User is authenticated - load from server and update if different
           const serverValue = await PreferenceService.getPreference(key);
+          
           if (serverValue !== undefined && !cancelled) {
-            console.log(
-              `[usePreference] Loaded ${String(key)} from server:`,
-              serverValue
-            );
-            setValue(serverValue);
-            setIsLoading(false);
-            return;
-          }
-        }
-
-        // Fall back to localStorage if not authenticated or server value not found
-        const localValue = getFromLocalStorage(key, defaultValue);
-        if (!cancelled) {
-          console.log(
-            `[usePreference] Loaded ${String(key)} from localStorage:`,
-            localValue
-          );
-          setValue(localValue);
-
-          // If we have a local value and user is authenticated, migrate to server
-          if (user && localValue !== defaultValue) {
-            console.log(
-              `[usePreference] Migrating ${String(key)} to server:`,
-              localValue
-            );
-            await PreferenceService.savePreference(key, localValue);
+            // Only update if server value is different from current value
+            // This prevents unnecessary re-renders
+            if (JSON.stringify(serverValue) !== JSON.stringify(value)) {
+              console.log(
+                `[usePreference] Synced ${String(key)} from server:`,
+                serverValue
+              );
+              setValue(serverValue);
+              // Also update localStorage cache for next load
+              saveToLocalStorage(key, serverValue);
+            }
+          } else if (!cancelled) {
+            // Server has no value but we have a localStorage value - migrate it
+            const localValue = getFromLocalStorage(key, defaultValue);
+            if (localValue !== defaultValue) {
+              console.log(
+                `[usePreference] Migrating ${String(key)} to server:`,
+                localValue
+              );
+              await PreferenceService.savePreference(key, localValue);
+            }
           }
         }
       } catch (error) {
-        console.error(`[usePreference] Error loading ${String(key)}:`, error);
-        // Fall back to localStorage on error
-        if (!cancelled) {
-          setValue(getFromLocalStorage(key, defaultValue));
-        }
+        console.error(`[usePreference] Error syncing ${String(key)}:`, error);
+        // Keep using localStorage value on error
       } finally {
         if (!cancelled) {
           setIsLoading(false);
@@ -88,12 +84,12 @@ export function usePreference<K extends keyof UserPreferences>(
       }
     }
 
-    loadInitialValue();
+    syncWithServer();
 
     return () => {
       cancelled = true;
     };
-  }, [key, defaultValue]);
+  }, [key, defaultValue, value]);
 
   // Cleanup on unmount
   useEffect(() => {
