@@ -287,6 +287,11 @@ export default function PlaybookPage() {
   };
   const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
   const handleBulkAction = (_action: string) => {};
+  
+  // Play count handler - updates state when PlayGrid reports actual play count
+  const handlePlayCountChange = useCallback((count: number) => {
+    dispatch({ type: "SET_PLAYS_CREATED", count });
+  }, [dispatch]);
 
   // Modal handlers
   const handleOpenBuilder = () => {
@@ -703,6 +708,7 @@ export default function PlaybookPage() {
                     onOpenBuilder={handleOpenBuilder}
                     onCreateDiagram={handleCreateDiagram}
                     refreshTrigger={state.refreshTrigger}
+                    onPlayCountChange={handlePlayCountChange}
                     formationSuggestions={suggestions.formations}
                     playNameSuggestions={suggestions.playNames}
                   />
@@ -724,7 +730,7 @@ export default function PlaybookPage() {
           // Desktop View - Keep Existing Layout
           <>
             {/* Aurora Hero Tiles - Football-Specific Actions */}
-            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-8 overflow-visible">
+            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-8 py-4 overflow-visible">
               <div className="flex items-center justify-center gap-8 flex-wrap overflow-visible">
                 <AppIconTile
                   title="New Play"
@@ -820,6 +826,7 @@ export default function PlaybookPage() {
                       onOpenBuilder={handleOpenBuilder}
                       onCreateDiagram={handleCreateDiagram}
                       refreshTrigger={state.refreshTrigger}
+                      onPlayCountChange={handlePlayCountChange}
                       formationSuggestions={suggestions.formations}
                       playNameSuggestions={suggestions.playNames}
                     />

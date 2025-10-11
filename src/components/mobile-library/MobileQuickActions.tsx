@@ -75,7 +75,7 @@ export function MobileQuickActions({
   return (
     <div
       className={`
-        grid gap-3 px-4
+        grid gap-3 px-4 overflow-visible
         ${actions.length === 2 ? "grid-cols-2" : ""}
         ${actions.length === 3 ? "grid-cols-3" : ""}
         ${actions.length === 4 ? "grid-cols-2 sm:grid-cols-4" : ""}
@@ -141,6 +141,7 @@ function QuickActionButton({
         p-5 rounded-2xl
         min-h-28
         transition-all duration-200
+        overflow-visible
         ${variantStyles[variant]}
       `}
     >
