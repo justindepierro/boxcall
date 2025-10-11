@@ -49,7 +49,7 @@ export function usePreference<K extends keyof UserPreferences>(
         if (user && !cancelled) {
           // User is authenticated - load from server and update if different
           const serverValue = await PreferenceService.getPreference(key);
-          
+
           if (serverValue !== undefined && !cancelled) {
             // Only update if server value is different from current value
             // This prevents unnecessary re-renders
