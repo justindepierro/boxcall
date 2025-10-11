@@ -577,8 +577,7 @@ export default function PlaybookPage() {
         {/* Mobile-First Layout */}
         {isMobile ? (
           // Mobile View - Progressive Disclosure
-          <div className="px-4 space-y-6">
-            {/* Empty State - Hero CTA */}
+          <div className="px-4 py-6 space-y-6">{/* Empty State - Hero CTA */}
             {state.playsCreated === 0 && (
               <MobileSection spacing="comfortable">
                 <MobileCTACard
@@ -627,7 +626,7 @@ export default function PlaybookPage() {
                     setShowFiltersSheet(true);
                   }}
                   variant="secondary"
-                  className="w-full"
+                  className="w-full h-12"
                 >
                   <Icon name="filter" className="h-4 w-4 mr-2" />
                   Filters & Search
@@ -655,7 +654,7 @@ export default function PlaybookPage() {
                     onChange={(e) =>
                       dispatch({ type: "SET_SEARCH", query: e.target.value })
                     }
-                    className="w-full pl-10 pr-10 py-3 bg-surface-secondary border border-border-subtle rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
+                    className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-border-subtle rounded-lg text-base text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
                   />
                   {state.searchQuery && (
                     <motion.button
@@ -667,10 +666,11 @@ export default function PlaybookPage() {
                         stiffness: 400,
                         damping: 20,
                       }}
-                      onClick={() =>
-                        dispatch({ type: "SET_SEARCH", query: "" })
-                      }
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-surface-tertiary rounded-full transition-colors"
+                      onClick={() => {
+                        triggerHapticFeedback("light");
+                        dispatch({ type: "SET_SEARCH", query: "" });
+                      }}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center hover:bg-surface-tertiary rounded-full transition-colors"
                       aria-label="Clear search"
                     >
                       <Icon
