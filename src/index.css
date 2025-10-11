@@ -190,6 +190,14 @@ body,
     outline: none;
   }
 
+  /* Override Tailwind forms plugin - remove borders from buttons */
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    border: 0 !important;
+  }
+
   /* MonoSpace font family for PlayBuilder inputs */
   .playbuilder-input,
   .mono-input {
