@@ -16,6 +16,12 @@ export interface UserPreferences {
   bc_formation_field_visibility?: Record<string, boolean>;
   bc_play_details_field_visibility?: Record<string, boolean>;
 
+  // Quick Wins: Recently viewed plays
+  bc_recently_viewed_plays?: string[]; // Play IDs, max 10
+
+  // Quick Wins: Favorite plays
+  bc_favorite_plays?: string[]; // Play IDs
+
   // Expandable for future preferences
   [key: string]: unknown;
 }

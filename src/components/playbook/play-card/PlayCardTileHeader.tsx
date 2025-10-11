@@ -30,6 +30,8 @@ interface PlayCardTileHeaderProps {
   onCreateDiagram: () => void;
   getPlayTypeColor: StyleResolver;
   phaseLabel: string | null;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
 export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
@@ -45,6 +47,8 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   onCreateDiagram,
   getPlayTypeColor,
   phaseLabel,
+  isFavorite,
+  onToggleFavorite,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const tileTitle =
@@ -95,6 +99,24 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             aria-hidden="true"
           />
 
+          {/* Star button for favorites - top-left */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
+            className="absolute -top-3 -left-3 w-11 h-11 rounded-full bg-surface-secondary shadow-lg flex items-center justify-center border-2 border-surface transition-colors cursor-pointer z-10"
+            title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Icon
+              name="star"
+              className={`w-5 h-5 ${isFavorite ? "text-warning-500 fill-current" : "text-muted"}`}
+            />
+          </button>
+
+          {/* Confidence badge - top-right */}
           <div className="absolute -top-3 -right-3 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
             <svg
               className="absolute w-11 h-11 -rotate-90"

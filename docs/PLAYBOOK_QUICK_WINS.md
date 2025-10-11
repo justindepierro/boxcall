@@ -1,14 +1,17 @@
 # Playbook UX Quick Wins - Implementation Guide
+
 **Ready to ship in < 1 week each**
 
 ## 🌟 Priority 1: Recent Plays History (2 days)
 
 ### What It Does
+
 Shows the last 5 plays the coach viewed, making it easy to return to frequently referenced plays.
 
 ### Implementation
 
 #### 1. Update PreferenceService to track history
+
 ```typescript
 // src/services/preferenceService.ts
 export interface UserPreferences {
@@ -18,30 +21,35 @@ export interface UserPreferences {
 ```
 
 #### 2. Create hook for tracking views
+
 ```typescript
 // src/hooks/useRecentPlays.ts
-import { usePreference } from './usePreferences';
-import { useCallback } from 'react';
+import { usePreference } from "./usePreferences";
+import { useCallback } from "react";
 
 export function useRecentPlays() {
   const [recentPlayIds, setRecentPlayIds] = usePreference(
-    'bc_recently_viewed_plays',
+    "bc_recently_viewed_plays",
     []
   );
 
-  const trackPlayView = useCallback((playId: string) => {
-    setRecentPlayIds((prev = []) => {
-      // Remove if exists, add to front, keep max 10
-      const filtered = prev.filter(id => id !== playId);
-      return [playId, ...filtered].slice(0, 10);
-    });
-  }, [setRecentPlayIds]);
+  const trackPlayView = useCallback(
+    (playId: string) => {
+      setRecentPlayIds((prev = []) => {
+        // Remove if exists, add to front, keep max 10
+        const filtered = prev.filter((id) => id !== playId);
+        return [playId, ...filtered].slice(0, 10);
+      });
+    },
+    [setRecentPlayIds]
+  );
 
   return { recentPlayIds, trackPlayView };
 }
 ```
 
 #### 3. Add to PlayCard onClick
+
 ```typescript
 // src/components/playbook/PlayCard.tsx
 import { useRecentPlays } from '../../hooks/useRecentPlays';
@@ -59,6 +67,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play, ...props }) => {
 ```
 
 #### 4. Create RecentPlays component
+
 ```typescript
 // src/components/playbook/RecentPlays.tsx
 import React from 'react';
@@ -95,6 +104,7 @@ export const RecentPlays: React.FC<{ plays: Play[] }> = ({ plays }) => {
 ```
 
 #### 5. Add to PlaybookPage
+
 ```tsx
 // In PlaybookPage or PlayGrid header
 <RecentPlays plays={allPlays} />
@@ -105,11 +115,13 @@ export const RecentPlays: React.FC<{ plays: Play[] }> = ({ plays }) => {
 ## ⭐ Priority 2: Favorite/Star Plays (3 days)
 
 ### What It Does
+
 Let coaches mark plays as favorites for quick access. Adds "Favorites" filter preset.
 
 ### Implementation
 
 #### 1. Add to preferences
+
 ```typescript
 // src/services/preferenceService.ts
 export interface UserPreferences {
@@ -118,38 +130,43 @@ export interface UserPreferences {
 ```
 
 #### 2. Create favorites hook
+
 ```typescript
 // src/hooks/useFavoritePlays.ts
-import { usePreference } from './usePreferences';
-import { useCallback } from 'react';
+import { usePreference } from "./usePreferences";
+import { useCallback } from "react";
 
 export function useFavoritePlays() {
-  const [favoriteIds, setFavoriteIds] = usePreference(
-    'bc_favorite_plays',
-    []
+  const [favoriteIds, setFavoriteIds] = usePreference("bc_favorite_plays", []);
+
+  const toggleFavorite = useCallback(
+    (playId: string) => {
+      setFavoriteIds((prev = []) => {
+        if (prev.includes(playId)) {
+          return prev.filter((id) => id !== playId);
+        }
+        return [...prev, playId];
+      });
+    },
+    [setFavoriteIds]
   );
 
-  const toggleFavorite = useCallback((playId: string) => {
-    setFavoriteIds((prev = []) => {
-      if (prev.includes(playId)) {
-        return prev.filter(id => id !== playId);
-      }
-      return [...prev, playId];
-    });
-  }, [setFavoriteIds]);
-
-  const isFavorite = useCallback((playId: string) => {
-    return favoriteIds.includes(playId);
-  }, [favoriteIds]);
+  const isFavorite = useCallback(
+    (playId: string) => {
+      return favoriteIds.includes(playId);
+    },
+    [favoriteIds]
+  );
 
   return { favoriteIds, toggleFavorite, isFavorite };
 }
 ```
 
 #### 3. Add star icon to PlayCard
+
 ```tsx
 // src/components/playbook/PlayCard.tsx
-import { useFavoritePlays } from '../../hooks/useFavoritePlays';
+import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 
 export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
   const { toggleFavorite, isFavorite } = useFavoritePlays();
@@ -163,15 +180,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
           toggleFavorite(play.id);
         }}
         className="absolute top-2 right-2 p-1 hover:bg-surface-muted rounded"
-        aria-label={isFavorite(play.id) ? 'Remove from favorites' : 'Add to favorites'}
+        aria-label={
+          isFavorite(play.id) ? "Remove from favorites" : "Add to favorites"
+        }
       >
         <Icon
-          name={isFavorite(play.id) ? 'star' : 'star-outline'}
-          className={isFavorite(play.id) ? 'text-yellow-500' : 'text-muted'}
+          name={isFavorite(play.id) ? "star" : "star-outline"}
+          className={isFavorite(play.id) ? "text-yellow-500" : "text-muted"}
           size={20}
         />
       </button>
-      
+
       {/* Rest of PlayCard */}
     </div>
   );
@@ -179,14 +198,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
 ```
 
 #### 4. Add Favorites filter preset
+
 ```typescript
 // src/components/playbook/filterPresets.ts
 export const FILTER_PRESETS: FilterPreset[] = [
   {
-    id: 'favorites',
-    name: '⭐ Favorites',
-    icon: 'star',
-    description: 'Your starred plays',
+    id: "favorites",
+    name: "⭐ Favorites",
+    icon: "star",
+    description: "Your starred plays",
     filters: [], // Handled specially in PlayGrid
   },
   // ... existing presets
@@ -194,6 +214,7 @@ export const FILTER_PRESETS: FilterPreset[] = [
 ```
 
 #### 5. Handle in PlayGrid filtering
+
 ```tsx
 // src/components/playbook/PlayGrid.tsx
 const { favoriteIds } = useFavoritePlays();
@@ -216,15 +237,17 @@ const filteredPlays = useMemo(() => {
 ## ⌨️ Priority 3: Enhanced Keyboard Shortcuts (2 days)
 
 ### What It Does
+
 Power user shortcuts for navigation and actions. Adds command palette.
 
 ### Implementation
 
 #### 1. Extend keyboard shortcuts hook
+
 ```typescript
 // src/components/playbook/usePlaybookShortcuts.ts
-import { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ShortcutHandlers {
   onSearch: () => void;
@@ -237,19 +260,19 @@ export function usePlaybookShortcuts(handlers: ShortcutHandlers) {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       // Cmd/Ctrl + K: Command palette
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         handlers.onCommandPalette();
       }
 
       // Cmd/Ctrl + F: Focus search
-      if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "f") {
         e.preventDefault();
         handlers.onSearch();
       }
 
       // Cmd/Ctrl + N: New play
-      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "n") {
         e.preventDefault();
         handlers.onNewPlay();
       }
@@ -257,24 +280,25 @@ export function usePlaybookShortcuts(handlers: ShortcutHandlers) {
       // G then L: List view
       // G then G: Grid view
       // V: Toggle view
-      if (e.key === 'v' && !e.metaKey && !e.ctrlKey) {
+      if (e.key === "v" && !e.metaKey && !e.ctrlKey) {
         handlers.onToggleView();
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, [handlers]);
 }
 ```
 
 #### 2. Create Command Palette component
+
 ```tsx
 // src/components/playbook/CommandPalette.tsx
-import React, { useState, useEffect } from 'react';
-import { Modal } from '../ui/Modal';
-import { Input } from '../ui/Input';
-import { Icon } from '../ui/Icon/Icon';
+import React, { useState, useEffect } from "react";
+import { Modal } from "../ui/Modal";
+import { Input } from "../ui/Input";
+import { Icon } from "../ui/Icon/Icon";
 
 interface Command {
   id: string;
@@ -289,10 +313,10 @@ export const CommandPalette: React.FC<{
   onClose: () => void;
   commands: Command[];
 }> = ({ isOpen, onClose, commands }) => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const filtered = commands.filter(cmd =>
+  const filtered = commands.filter((cmd) =>
     cmd.label.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -314,7 +338,7 @@ export const CommandPalette: React.FC<{
                 onClose();
               }}
               className={`w-full flex items-center gap-3 p-2 rounded hover:bg-surface-muted ${
-                idx === selectedIndex ? 'bg-surface-muted' : ''
+                idx === selectedIndex ? "bg-surface-muted" : ""
               }`}
             >
               <Icon name={cmd.icon} size={20} />
@@ -334,15 +358,33 @@ export const CommandPalette: React.FC<{
 ```
 
 #### 3. Integrate in PlaybookPage
+
 ```tsx
 const [showCommandPalette, setShowCommandPalette] = useState(false);
 
 const commands = [
-  { id: 'new', label: 'New Play', icon: 'plus', action: handleNewPlay, shortcut: '⌘N' },
-  { id: 'search', label: 'Search', icon: 'search', action: focusSearch, shortcut: '⌘F' },
-  { id: 'favorites', label: 'Show Favorites', icon: 'star', action: showFavorites },
-  { id: 'grid', label: 'Grid View', icon: 'grid', action: setGridView },
-  { id: 'list', label: 'List View', icon: 'list', action: setListView },
+  {
+    id: "new",
+    label: "New Play",
+    icon: "plus",
+    action: handleNewPlay,
+    shortcut: "⌘N",
+  },
+  {
+    id: "search",
+    label: "Search",
+    icon: "search",
+    action: focusSearch,
+    shortcut: "⌘F",
+  },
+  {
+    id: "favorites",
+    label: "Show Favorites",
+    icon: "star",
+    action: showFavorites,
+  },
+  { id: "grid", label: "Grid View", icon: "grid", action: setGridView },
+  { id: "list", label: "List View", icon: "list", action: setListView },
   // Add more commands...
 ];
 
@@ -357,7 +399,7 @@ usePlaybookShortcuts({
   isOpen={showCommandPalette}
   onClose={() => setShowCommandPalette(false)}
   commands={commands}
-/>
+/>;
 ```
 
 ---
@@ -365,6 +407,7 @@ usePlaybookShortcuts({
 ## 💡 Priority 4: Smart Empty States (1 day)
 
 ### What It Does
+
 When search/filter returns no results, show helpful suggestions.
 
 ### Implementation
@@ -377,26 +420,29 @@ export const PlayGridEmptyState: React.FC<{
   onClearFilters: () => void;
   onSuggestedSearch?: (query: string) => void;
   allPlaysCount: number;
-}> = ({ hasFilters, searchQuery, onClearFilters, onSuggestedSearch, allPlaysCount }) => {
+}> = ({
+  hasFilters,
+  searchQuery,
+  onClearFilters,
+  onSuggestedSearch,
+  allPlaysCount,
+}) => {
   const suggestions = [
-    { label: 'Try "screen"', query: 'screen' },
-    { label: 'Try "shotgun"', query: 'shotgun' },
-    { label: 'Try "pass"', query: 'pass' },
+    { label: 'Try "screen"', query: "screen" },
+    { label: 'Try "shotgun"', query: "shotgun" },
+    { label: 'Try "pass"', query: "pass" },
   ];
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4">
       <Icon name="search-x" size={48} className="text-muted mb-4" />
-      
-      <h3 className="text-lg font-semibold mb-2">
-        No plays found
-      </h3>
-      
+
+      <h3 className="text-lg font-semibold mb-2">No plays found</h3>
+
       <p className="text-secondary mb-6 text-center">
         {searchQuery
           ? `No plays match "${searchQuery}"`
-          : 'No plays match your current filters'
-        }
+          : "No plays match your current filters"}
       </p>
 
       {/* Suggestions */}
@@ -445,11 +491,13 @@ export const PlayGridEmptyState: React.FC<{
 ## 📊 Priority 5: Usage Stats Badge (2 days)
 
 ### What It Does
+
 Shows how many times a play has been called, making frequently-used plays visible.
 
 ### Implementation
 
 #### 1. Add to PlayCard header
+
 ```tsx
 // src/components/playbook/PlayCard.tsx
 export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
@@ -457,7 +505,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
     <div className="play-card">
       <div className="flex items-center gap-2">
         <h3>{play.play_name}</h3>
-        
+
         {/* Usage badge */}
         {play.times_called > 0 && (
           <Badge variant="info" size="sm">
@@ -468,11 +516,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
 
         {/* Success rate */}
         {play.times_called > 0 && (
-          <Badge 
-            variant={getSuccessVariant(play.times_successful / play.times_called)}
+          <Badge
+            variant={getSuccessVariant(
+              play.times_successful / play.times_called
+            )}
             size="sm"
           >
-            {Math.round((play.times_successful / play.times_called) * 100)}% success
+            {Math.round((play.times_successful / play.times_called) * 100)}%
+            success
           </Badge>
         )}
       </div>
@@ -481,13 +532,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({ play }) => {
 };
 
 function getSuccessVariant(rate: number): BadgeVariant {
-  if (rate >= 0.7) return 'success';
-  if (rate >= 0.5) return 'warning';
-  return 'danger';
+  if (rate >= 0.7) return "success";
+  if (rate >= 0.5) return "warning";
+  return "danger";
 }
 ```
 
 #### 2. Add "Most Used" filter preset
+
 ```typescript
 // src/components/playbook/filterPresets.ts
 {
@@ -534,9 +586,9 @@ Track these for each feature:
 
 ## 💬 User Testing Script
 
-"Hi Coach! We added a new feature called [FEATURE NAME]. 
+"Hi Coach! We added a new feature called [FEATURE NAME].
 
-Can you try to [TASK]? 
+Can you try to [TASK]?
 
 Think aloud as you go - what are you thinking?
 

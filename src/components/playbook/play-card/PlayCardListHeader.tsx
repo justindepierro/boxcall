@@ -26,6 +26,8 @@ interface PlayCardListHeaderProps {
   getPlayTypeColor: StyleResolver;
   getConfidenceColor: (confidence: number) => string;
   phaseLabel: string | null;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
 export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
@@ -45,6 +47,8 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   getPlayTypeColor,
   getConfidenceColor,
   phaseLabel,
+  isFavorite,
+  onToggleFavorite,
 }) => {
   return (
     <div className="flex items-center justify-between overflow-visible">
@@ -92,10 +96,54 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           >
             {optimisticPlay.confidence_base}%
           </span>
+          
+          {/* Quick Win: Usage stats badges */}
+          {optimisticPlay.times_called && optimisticPlay.times_called > 0 && (
+            <>
+              <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
+                <Icon name="trending-up" size={12} />
+                {optimisticPlay.times_called}x called
+              </span>
+              
+              {optimisticPlay.times_successful !== undefined && (
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    getSuccessRateBadgeColor(
+                      optimisticPlay.times_successful / optimisticPlay.times_called
+                    )
+                  }`}
+                >
+                  {Math.round(
+                    (optimisticPlay.times_successful / optimisticPlay.times_called) * 100
+                  )}% success
+                </span>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      <div className="flex items-center ml-4">
+      <div className="flex items-center gap-1 ml-4">
+        {/* Star button for favorites */}
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          variant="ghost"
+          size="sm"
+          icon={
+            <Icon
+              name={isFavorite ? "star" : "star"}
+              className={isFavorite ? "text-warning-500 fill-current" : "text-muted"}
+            />
+          }
+          iconPosition="only"
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        />
+        
+        {/* Expand/collapse button */}
         <Button
           onClick={onToggleExpand}
           variant="ghost"
@@ -117,3 +165,16 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
     </div>
   );
 };
+
+/**
+ * Helper function to get badge color based on success rate
+ */
+function getSuccessRateBadgeColor(rate: number): string {
+  if (rate >= 0.7) {
+    return "bg-success-50 text-success-700 border border-success-200";
+  }
+  if (rate >= 0.5) {
+    return "bg-warning-50 text-warning-700 border border-warning-200";
+  }
+  return "bg-error-50 text-error-700 border border-error-200";
+}

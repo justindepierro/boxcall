@@ -29,6 +29,10 @@ export interface PlayGridEmptyStateProps {
   onClearFilters?: () => void;
   /** Total number of plays in the playbook (for filtered state messaging) */
   totalPlayCount?: number;
+  /** Current search query */
+  searchQuery?: string;
+  /** Callback when user clicks a suggested search */
+  onSuggestedSearch?: (query: string) => void;
 }
 
 export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
@@ -38,7 +42,17 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
     hasActiveFilters = false,
     onClearFilters,
     totalPlayCount = 0,
+    searchQuery,
+    onSuggestedSearch,
   }) => {
+    // Suggested searches for quick hints
+    const searchSuggestions = [
+      { label: 'Try "screen"', query: "screen" },
+      { label: 'Try "shotgun"', query: "shotgun" },
+      { label: 'Try "pass"', query: "pass" },
+      { label: 'Try "run"', query: "run" },
+    ];
+
     // Different messaging based on whether it's filtered or truly empty
     if (hasActiveFilters) {
       return (
@@ -119,9 +133,33 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               variant="body"
               className="text-text-secondary mb-8 text-center max-w-md"
             >
-              Your filters are hiding all plays. Try adjusting your criteria or
-              start fresh.
+              {searchQuery
+                ? `No plays match "${searchQuery}"`
+                : "Your filters are hiding all plays. Try adjusting your criteria or start fresh."}
             </Typography>
+
+            {/* Quick Win: Search suggestions */}
+            {onSuggestedSearch && searchQuery && (
+              <div className="mb-6 space-y-2">
+                <Typography
+                  variant="body-sm"
+                  className="text-muted text-center"
+                >
+                  Try searching for:
+                </Typography>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  {searchSuggestions.map(({ label, query }) => (
+                    <button
+                      key={query}
+                      onClick={() => onSuggestedSearch(query)}
+                      className="px-3 py-1 text-sm bg-surface-secondary hover:bg-surface-muted rounded-lg border border-subtle transition-colors"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-3">
               {onClearFilters && (

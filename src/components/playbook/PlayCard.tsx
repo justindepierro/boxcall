@@ -7,6 +7,8 @@ import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
 import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import { usePreference } from "../../hooks/usePreferences";
+import { useRecentPlays } from "../../hooks/useRecentPlays";
+import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
@@ -116,6 +118,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
     INITIAL_FORMATION_ORDER
   );
+
+  // Quick Wins: Recent plays tracking and favorites
+  const { trackPlayView } = useRecentPlays();
+  const { toggleFavorite, isFavorite } = useFavoritePlays();
 
   // Use server-synced preferences for field visibility
   const [formationFieldVisibility, setFormationFieldVisibility] = usePreference(
@@ -300,6 +306,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isCompact = !isTile && density === "compact";
 
   const handleToggleExpand = useCallback(() => {
+    // Track play view when expanding
+    if (!isExpanded) {
+      trackPlayView(play.id);
+    }
+    
     if (onToggleExpand) {
       // Controlled mode - notify parent
       onToggleExpand(play.id);
@@ -307,7 +318,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       // Uncontrolled mode - manage internally
       setInternalIsExpanded((prev) => !prev);
     }
-  }, [onToggleExpand, play.id]);
+  }, [onToggleExpand, play.id, isExpanded, trackPlayView]);
 
   return (
     <div
@@ -346,6 +357,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             onCreateDiagram={handleCreateDiagram}
             getPlayTypeColor={getPlayTypeColor}
             phaseLabel={phaseLabel}
+            isFavorite={isFavorite(play.id)}
+            onToggleFavorite={() => toggleFavorite(play.id)}
           />
         ) : (
           <PlayCardListHeader
@@ -365,6 +378,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
             phaseLabel={phaseLabel}
+            isFavorite={isFavorite(play.id)}
+            onToggleFavorite={() => toggleFavorite(play.id)}
           />
         )}
 

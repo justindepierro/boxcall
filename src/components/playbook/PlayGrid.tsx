@@ -22,6 +22,7 @@ import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import { usePreference } from "../../hooks/usePreferences";
+import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { info, warn, debug } from "../../utils/logger";
 import {
   validatePlaybookData,
@@ -132,6 +133,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     "bc_playgrid_view",
     "list" as "list" | "grid"
   );
+
+  // Quick Wins: Favorites hook
+  const { favoriteIds } = useFavoritePlays();
 
   // Track which play card is currently expanded (only one at a time)
   const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
@@ -335,7 +339,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
-    return plays.filter((play) => {
+    let result = plays.filter((play) => {
       // Search query filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -357,8 +361,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         }
       }
 
+      // Quick Win: Favorites filter
+      if (selectedCategory === "favorites") {
+        return favoriteIds.includes(play.id);
+      }
+
       // Category-based filtering from Smart Playbook Glossary
-      if (selectedCategory) {
+      if (selectedCategory && selectedCategory !== "most-used") {
         const playCategories = getPlayCategory(play);
         if (!playCategories.includes(selectedCategory)) {
           return false;
@@ -383,7 +392,16 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
       return true;
     });
-  }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory]);
+
+    // Quick Win: Most Used sorting
+    if (selectedCategory === "most-used") {
+      result = [...result].sort(
+        (a, b) => (b.times_called || 0) - (a.times_called || 0)
+      );
+    }
+
+    return result;
+  }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory, favoriteIds]);
 
   // Telemetry: emit filter.apply when filter state meaningfully changes.
   // Guard against infinite loops if telemetry enqueue triggers a context update that re-renders PlayGrid.

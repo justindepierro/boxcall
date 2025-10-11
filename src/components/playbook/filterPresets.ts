@@ -17,6 +17,18 @@ export const QUICK_PRESETS: FilterPreset[] = [
     filters: [],
   },
   {
+    id: "favorites",
+    label: "⭐ Favorites",
+    icon: "star",
+    filters: [], // Handled specially in PlayGrid
+  },
+  {
+    id: "most-used",
+    label: "🔥 Most Used",
+    icon: "trending-up",
+    filters: [], // Handled specially in PlayGrid with sorting
+  },
+  {
     id: "run",
     label: "Run Only",
     icon: "trending-up",
