@@ -287,11 +287,14 @@ export default function PlaybookPage() {
   };
   const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
   const handleBulkAction = (_action: string) => {};
-  
+
   // Play count handler - updates state when PlayGrid reports actual play count
-  const handlePlayCountChange = useCallback((count: number) => {
-    dispatch({ type: "SET_PLAYS_CREATED", count });
-  }, [dispatch]);
+  const handlePlayCountChange = useCallback(
+    (count: number) => {
+      dispatch({ type: "SET_PLAYS_CREATED", count });
+    },
+    [dispatch]
+  );
 
   // Modal handlers
   const handleOpenBuilder = () => {

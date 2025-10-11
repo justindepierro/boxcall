@@ -28,7 +28,10 @@ export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
               onClick={() => onPresetSelect(preset)}
               className="justify-start active:scale-95 transition-transform text-xs md:text-sm"
             >
-              <Icon name={preset.icon as any} className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0" />
+              <Icon
+                name={preset.icon as any}
+                className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0"
+              />
               <span className="truncate">{preset.label}</span>
             </Button>
           );
