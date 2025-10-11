@@ -115,13 +115,37 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
     INITIAL_FORMATION_ORDER
   );
+  
+  // Initialize field visibility from localStorage with fallback to defaults
   const [formationFieldVisibility, setFormationFieldVisibility] =
-    useState<FieldVisibility>(INITIAL_FORMATION_VISIBILITY);
+    useState<FieldVisibility>(() => {
+      try {
+        const stored = localStorage.getItem('bc_formation_field_visibility');
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch (error) {
+        console.warn('Failed to load formation field visibility:', error);
+      }
+      return INITIAL_FORMATION_VISIBILITY;
+    });
+    
   const [playDetailsFieldOrder, setPlayDetailsFieldOrder] = useState<string[]>(
     INITIAL_PLAY_DETAILS_ORDER
   );
+  
   const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
-    useState<FieldVisibility>(INITIAL_PLAY_DETAILS_VISIBILITY);
+    useState<FieldVisibility>(() => {
+      try {
+        const stored = localStorage.getItem('bc_play_details_field_visibility');
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch (error) {
+        console.warn('Failed to load play details field visibility:', error);
+      }
+      return INITIAL_PLAY_DETAILS_VISIBILITY;
+    });
   
   // Use controlled expansion if provided, otherwise use internal state
   const [internalIsExpanded, setInternalIsExpanded] = useState(false);
@@ -262,15 +286,33 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const toggleFieldVisibility = useCallback(
     (fieldKey: string, section: "formation" | "playDetails") => {
       if (section === "formation") {
-        setFormationFieldVisibility((prev) => ({
-          ...prev,
-          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-        }));
+        setFormationFieldVisibility((prev) => {
+          const updated = {
+            ...prev,
+            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+          };
+          // Persist to localStorage
+          try {
+            localStorage.setItem('bc_formation_field_visibility', JSON.stringify(updated));
+          } catch (error) {
+            console.warn('Failed to save formation field visibility:', error);
+          }
+          return updated;
+        });
       } else {
-        setPlayDetailsFieldVisibility((prev) => ({
-          ...prev,
-          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-        }));
+        setPlayDetailsFieldVisibility((prev) => {
+          const updated = {
+            ...prev,
+            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+          };
+          // Persist to localStorage
+          try {
+            localStorage.setItem('bc_play_details_field_visibility', JSON.stringify(updated));
+          } catch (error) {
+            console.warn('Failed to save play details field visibility:', error);
+          }
+          return updated;
+        });
       }
     },
     []

@@ -841,12 +841,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             play={play}
                             showOneWordCalls={showOneWordCalls}
                             onEdit={onEdit}
+                            onSave={handlePlaySave}
                             onDuplicate={onDuplicate}
                             onCreateDiagram={onCreateDiagram}
                             isSelected={selectedPlayIds.has(play.id)}
                             onSelectionChange={handlePlaySelect}
                             variant="tile"
                             density="comfortable"
+                            formationSuggestions={collectedSuggestions.formations}
+                            playNameSuggestions={collectedSuggestions.playNames}
+                            playTypeSuggestions={collectedSuggestions.playTypes}
+                            directionDisplayFormat={directionDisplayFormat}
                             isExpanded={expandedPlayId === play.id}
                             onToggleExpand={handleToggleExpand}
                           />
@@ -906,10 +911,15 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               play={play}
                               showOneWordCalls={showOneWordCalls}
                               onEdit={onEdit}
+                              onSave={handlePlaySave}
                               onDuplicate={onDuplicate}
                               onCreateDiagram={onCreateDiagram}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={handlePlaySelect}
+                              formationSuggestions={collectedSuggestions.formations}
+                              playNameSuggestions={collectedSuggestions.playNames}
+                              playTypeSuggestions={collectedSuggestions.playTypes}
+                              directionDisplayFormat={directionDisplayFormat}
                               isExpanded={expandedPlayId === play.id}
                               onToggleExpand={handleToggleExpand}
                             />
