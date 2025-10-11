@@ -577,7 +577,8 @@ export default function PlaybookPage() {
         {/* Mobile-First Layout */}
         {isMobile ? (
           // Mobile View - Progressive Disclosure
-          <div className="px-4 py-6 space-y-6">{/* Empty State - Hero CTA */}
+          <div className="px-4 py-6 space-y-6">
+            {/* Empty State - Hero CTA */}
             {state.playsCreated === 0 && (
               <MobileSection spacing="comfortable">
                 <MobileCTACard
