@@ -108,6 +108,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     try {
       const { error } = await supabase
         .from("profiles")
+        // @ts-expect-error - Supabase type issue with profiles table update
         .update({ bio: bioText.trim() || null })
         .eq("id", profile.id);
 

@@ -94,6 +94,7 @@ export function useTeamsData() {
       try {
         const { data, error } = await supabase
           .from("plays")
+          // @ts-expect-error - Supabase type issue with plays table update
           .update(updates)
           .eq("id", playId)
           .select()
