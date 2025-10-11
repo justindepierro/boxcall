@@ -26,7 +26,7 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div className={`relative p-6 overflow-visible ${className}`}>
+      <div className={`relative p-10 overflow-visible ${className}`}>
         <button
           type="button"
           onClick={onOpen}
@@ -56,7 +56,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
             {/* Badge (like notification count) - Positioned outside container */}
             {badge !== undefined && badge !== null && (
-              <div className="absolute -top-3 -right-3 min-w-6 h-6 px-2 rounded-full bg-error-bg0 border-[3px] border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
+              <div className="absolute -top-3 -right-3 min-w-6 h-6 px-2 rounded-full bg-error-500 border-[3px] border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
                 <span className="text-white text-xs font-bold leading-none">
                   {badge}
                 </span>
