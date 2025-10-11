@@ -196,6 +196,18 @@ body,
   [type="reset"],
   [type="submit"] {
     border: 0 !important;
+    /* Also remove any box-shadow that might look like a border */
+    box-shadow: none !important;
+  }
+  
+  /* Restore box-shadow only when button has explicit shadow classes */
+  button.shadow,
+  button.shadow-sm,
+  button.shadow-md,
+  button.shadow-lg,
+  button.shadow-xl,
+  button.shadow-2xl {
+    box-shadow: var(--tw-shadow) !important;
   }
 
   /* MonoSpace font family for PlayBuilder inputs */
