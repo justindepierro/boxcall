@@ -25,7 +25,7 @@ export function usePreference<K extends keyof UserPreferences>(
       | UserPreferences[K]
       | ((prev: UserPreferences[K]) => UserPreferences[K])
   ) => void,
-  boolean
+  boolean,
 ] {
   const [value, setValue] = useState<UserPreferences[K]>(defaultValue);
   const [isLoading, setIsLoading] = useState(true);

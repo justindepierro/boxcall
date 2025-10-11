@@ -50,7 +50,7 @@ export class PreferenceService {
       // Handle JSONB settings field - Supabase returns Json type
       // Type cast needed because Supabase query builder types don't include settings
       const settings = (data as { settings?: unknown })?.settings;
-      
+
       console.log(
         "[PreferenceService] Loaded preferences from server:",
         settings
