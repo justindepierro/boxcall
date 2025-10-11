@@ -17,15 +17,15 @@ interface PullToRefreshProps {
 
 /**
  * PullToRefresh Component
- * 
+ *
  * Native mobile pull-to-refresh gesture with smooth animations.
- * 
+ *
  * Features:
  * - Touch gesture detection
  * - Smooth spring animations
  * - Loading indicator
  * - Haptic-ready (visual feedback)
- * 
+ *
  * @example
  * ```tsx
  * <PullToRefresh onRefresh={async () => await refetchData()}>
@@ -95,7 +95,7 @@ export function PullToRefresh({
     if (distance >= threshold) {
       // Trigger refresh
       setIsRefreshing(true);
-      
+
       // Animate to threshold position
       await animate(pullDistance, threshold, {
         type: "spring",

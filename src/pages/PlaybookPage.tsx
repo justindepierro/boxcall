@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
@@ -629,6 +630,45 @@ export default function PlaybookPage() {
               </MobileSection>
             )}
 
+            {/* Search Bar - Sticky on Mobile */}
+            {state.playsCreated > 0 && (
+              <MobileSection spacing="tight">
+                <div className="relative">
+                  <Icon
+                    name="search"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted pointer-events-none"
+                  />
+                  <input
+                    type="search"
+                    placeholder="Search plays..."
+                    value={state.searchQuery}
+                    onChange={(e) =>
+                      dispatch({ type: "SET_SEARCH", query: e.target.value })
+                    }
+                    className="w-full pl-10 pr-10 py-3 bg-surface-secondary border border-border-subtle rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
+                  />
+                  {state.searchQuery && (
+                    <motion.button
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                      onClick={() =>
+                        dispatch({ type: "SET_SEARCH", query: "" })
+                      }
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-surface-tertiary rounded-full transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <Icon
+                        name="close"
+                        className="h-4 w-4 text-text-secondary hover:text-text-primary"
+                      />
+                    </motion.button>
+                  )}
+                </div>
+              </MobileSection>
+            )}
+
             {/* Main Content - Plays Grid */}
             {state.playsCreated > 0 && (
               <MobileSection
@@ -1037,8 +1077,9 @@ export default function PlaybookPage() {
               }
             }}
           >
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 pb-4 border-b border-border-subtle">
                 <Typography variant="headline-md" className="text-text-primary">
                   Filters & Search
                 </Typography>
@@ -1050,10 +1091,45 @@ export default function PlaybookPage() {
                   <Icon name="close" className="h-5 w-5" />
                 </Button>
               </div>
-              <AdvancedFilters
-                activeFilters={state.advancedFilters}
-                onFiltersChange={handleFiltersChange}
-              />
+
+              {/* Scrollable Filters Content */}
+              <div className="flex-1 overflow-y-auto p-6 pb-20">
+                <AdvancedFilters
+                  activeFilters={state.advancedFilters}
+                  onFiltersChange={handleFiltersChange}
+                />
+              </div>
+
+              {/* Action Footer - Fixed at Bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-surface-primary border-t border-border-subtle shadow-lg">
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => {
+                      dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+                      setShowFiltersSheet(false);
+                    }}
+                    variant="secondary"
+                    className="flex-1"
+                  >
+                    Clear All
+                  </Button>
+                  <Button
+                    onClick={() => setShowFiltersSheet(false)}
+                    variant="primary"
+                    className="flex-1"
+                  >
+                    <Icon name="check" className="h-4 w-4 mr-2" />
+                    Apply Filters
+                  </Button>
+                </div>
+                {Object.keys(state.advancedFilters).length > 0 && (
+                  <p className="text-center text-xs text-text-secondary mt-2">
+                    {Object.keys(state.advancedFilters).length} filter
+                    {Object.keys(state.advancedFilters).length === 1 ? "" : "s"}{" "}
+                    active
+                  </p>
+                )}
+              </div>
             </div>
           </BottomSheet>
         )}

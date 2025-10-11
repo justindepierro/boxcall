@@ -39,7 +39,7 @@ export const FABPresets = {
       onClick: handlers.onPractice,
     },
   ],
-  
+
   diagramEditor: (handlers: {
     onAddPlayer: () => void;
     onAddFormation: () => void;
