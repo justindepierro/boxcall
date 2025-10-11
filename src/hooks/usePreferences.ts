@@ -18,7 +18,15 @@ export function usePreference<K extends keyof UserPreferences>(
   key: K,
   defaultValue: UserPreferences[K],
   debounceMs: number = 500
-): [UserPreferences[K], (value: UserPreferences[K]) => void, boolean] {
+): [
+  UserPreferences[K],
+  (
+    value:
+      | UserPreferences[K]
+      | ((prev: UserPreferences[K]) => UserPreferences[K])
+  ) => void,
+  boolean
+] {
   const [value, setValue] = useState<UserPreferences[K]>(defaultValue);
   const [isLoading, setIsLoading] = useState(true);
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);

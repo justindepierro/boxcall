@@ -272,15 +272,19 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const toggleFieldVisibility = useCallback(
     (fieldKey: string, section: "formation" | "playDetails") => {
       if (section === "formation") {
-        setFormationFieldVisibility((prev) => ({
-          ...prev,
-          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-        }));
+        setFormationFieldVisibility(
+          (prev: Record<string, boolean> | undefined) => ({
+            ...(prev || INITIAL_FORMATION_VISIBILITY),
+            [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
+          })
+        );
       } else {
-        setPlayDetailsFieldVisibility((prev) => ({
-          ...prev,
-          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-        }));
+        setPlayDetailsFieldVisibility(
+          (prev: Record<string, boolean> | undefined) => ({
+            ...(prev || INITIAL_PLAY_DETAILS_VISIBILITY),
+            [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
+          })
+        );
       }
     },
     [setFormationFieldVisibility, setPlayDetailsFieldVisibility]
