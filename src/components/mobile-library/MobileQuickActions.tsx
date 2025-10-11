@@ -1,7 +1,9 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { Icon } from "../ui/Icon";
 import type { IconName } from "../ui/Icon/Icon";
 import { Badge } from "../ui/Badge";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 export interface QuickAction {
   /** Unique identifier */
@@ -100,54 +102,85 @@ function QuickActionButton({
 }: QuickAction) {
   const variantStyles = {
     default: "bg-surface-secondary hover:bg-surface-subtle",
-    primary: "bg-brand-primary/10 hover:bg-brand-primary/20",
+    primary: "bg-gradient-to-br from-brand-jade/10 to-emerald-500/10 hover:from-brand-jade/20 hover:to-emerald-500/20",
     secondary: "bg-surface-secondary hover:bg-surface-subtle",
   };
 
   const iconColorStyles = {
     default: "text-primary",
-    primary: "text-brand-primary",
+    primary: "text-brand-jade",
     secondary: "text-secondary",
   };
 
+  const iconContainerStyles = {
+    default: "bg-surface-base",
+    primary: "bg-gradient-to-br from-brand-jade to-emerald-500 shadow-lg shadow-jade-500/25",
+    secondary: "bg-surface-base",
+  };
+
+  const handleTap = () => {
+    triggerHapticFeedback("light");
+    onTap();
+  };
+
   return (
-    <button
-      onClick={onTap}
+    <motion.button
+      onClick={handleTap}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 17,
+      }}
       className={`
         relative
-        flex flex-col items-center justify-center gap-2
-        p-4 rounded-xl
-        min-h-24
-        transition-all duration-150
-        active:scale-95
+        flex flex-col items-center justify-center gap-2.5
+        p-5 rounded-2xl
+        min-h-28
+        transition-all duration-200
         ${variantStyles[variant]}
       `}
     >
       {/* Icon Container */}
-      <div
+      <motion.div
+        whileHover={variant === "primary" ? { rotate: [0, -10, 10, -10, 0] } : {}}
+        transition={{ duration: 0.5 }}
         className={`
-          w-14 h-14 rounded-full
+          w-16 h-16 rounded-full
           flex items-center justify-center
-          ${variant === "primary" ? "bg-brand-primary/20" : "bg-surface-base"}
+          ${iconContainerStyles[variant]}
         `}
       >
-        <Icon name={icon} size="lg" className={iconColorStyles[variant]} />
-      </div>
+        <Icon 
+          name={icon} 
+          className={`w-7 h-7 ${variant === "primary" ? "text-white" : iconColorStyles[variant]}`} 
+        />
+      </motion.div>
 
       {/* Label */}
-      <span className="text-sm font-medium text-primary text-center line-clamp-1">
+      <span className="text-sm font-semibold text-primary text-center line-clamp-1">
         {label}
       </span>
 
       {/* Badge */}
       {badge !== undefined && badge > 0 && (
-        <div className="absolute top-2 right-2">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 500,
+            damping: 15,
+          }}
+          className="absolute top-2.5 right-2.5"
+        >
           <Badge variant="danger" size="sm">
             {badge > 99 ? "99+" : badge}
           </Badge>
-        </div>
+        </motion.div>
       )}
-    </button>
+    </motion.button>
   );
 }
 

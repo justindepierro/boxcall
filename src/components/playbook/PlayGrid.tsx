@@ -649,6 +649,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             document.dispatchEvent(new CustomEvent("playgrid:open-import"));
           }}
           hasActiveFilters={!!hasFilters}
+          totalPlayCount={plays.length}
           onClearFilters={() => {
             document.dispatchEvent(new CustomEvent("playgrid:clear-filters"));
           }}

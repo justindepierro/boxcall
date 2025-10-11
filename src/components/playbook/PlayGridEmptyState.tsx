@@ -27,6 +27,8 @@ export interface PlayGridEmptyStateProps {
   hasActiveFilters?: boolean;
   /** Clear filters callback */
   onClearFilters?: () => void;
+  /** Total number of plays in the playbook (for filtered state messaging) */
+  totalPlayCount?: number;
 }
 
 export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
@@ -35,16 +37,59 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
     onImportPlays,
     hasActiveFilters = false,
     onClearFilters,
+    totalPlayCount = 0,
   }) => {
     // Different messaging based on whether it's filtered or truly empty
     if (hasActiveFilters) {
       return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="flex flex-col items-center justify-center py-16 px-4"
-        >
+        <div className="space-y-4">
+          {/* Smart Banner - Show when filters hide existing plays */}
+          {totalPlayCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 rounded-xl bg-gradient-to-r from-warning-500/10 to-warning-600/10 border-2 border-warning-500/30"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-warning-500 flex items-center justify-center flex-shrink-0">
+                  <Icon name="alert" className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-text-primary mb-1"
+                  >
+                    {totalPlayCount} {totalPlayCount === 1 ? "Play" : "Plays"}{" "}
+                    Hidden by Filters
+                  </Typography>
+                  <Typography variant="body-xs" className="text-text-secondary">
+                    Your active filters are hiding all plays. Tap below to see
+                    your entire playbook.
+                  </Typography>
+                </div>
+              </div>
+              {onClearFilters && (
+                <Button
+                  onClick={onClearFilters}
+                  variant="primary"
+                  size="lg"
+                  className="w-full mt-3"
+                >
+                  <Icon name="eye" className="w-5 h-5 mr-2" />
+                  Show All {totalPlayCount}{" "}
+                  {totalPlayCount === 1 ? "Play" : "Plays"}
+                </Button>
+              )}
+            </motion.div>
+          )}
+
+          {/* Filtered Empty State */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center justify-center py-16 px-4"
+          >
           {/* Search Icon with Animation */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
@@ -112,6 +157,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             </div>
           </motion.div>
         </motion.div>
+        </div>
       );
     }
 
