@@ -275,5 +275,11 @@ export default {
       },
     },
   },
-  plugins: [forms, typography, auroraTheme, boxcallTheme, layoutTokens],
+  plugins: [
+    forms({ strategy: "class" }), // Only apply form styles when using form-* classes
+    typography,
+    auroraTheme,
+    boxcallTheme,
+    layoutTokens,
+  ],
 };
