@@ -13,6 +13,7 @@ import {
   isPWAInstallAvailable,
   requestPWAInstallPrompt,
 } from "../pwa/PWAIntegration";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 // Lazy load GlobalSearch to defer fuse.js (70KB) until user interacts
 const GlobalSearch = lazy(() =>
@@ -159,8 +160,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => console.log("Notifications clicked")}
-                className="p-2 hover:bg-surface-hover rounded-lg transition-colors relative"
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  console.log("Notifications clicked");
+                }}
+                className="w-11 h-11 !p-0 flex items-center justify-center hover:bg-surface-hover rounded-lg transition-colors relative"
                 aria-label="Notifications"
               >
                 <Icon
@@ -191,8 +195,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <Button
             variant="primary"
             size="md"
-            onClick={onMenuToggle}
-            className="!p-spacing-sm rounded-radius-md flex-shrink-0"
+            onClick={() => {
+              triggerHapticFeedback("light");
+              onMenuToggle();
+            }}
+            className="w-11 h-11 !p-0 flex items-center justify-center rounded-radius-md flex-shrink-0"
             aria-label="Toggle menu"
           >
             <Icon name="menu" size="md" />
@@ -229,10 +236,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       <Button
         variant="primary"
         size="md"
-        onClick={onMenuToggle}
+        onClick={() => {
+          triggerHapticFeedback("light");
+          onMenuToggle();
+        }}
         className={`
           fixed top-4 left-4 z-[55]
-          !p-spacing-sm rounded-radius-md
+          w-11 h-11 !p-0 flex items-center justify-center
+          rounded-radius-md
           shadow-elevation-md
           transition-all duration-300 ease-out
           ${isVisible ? "opacity-0 invisible pointer-events-none scale-75" : "opacity-100 visible pointer-events-auto scale-100 delay-150"}

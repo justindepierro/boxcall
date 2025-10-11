@@ -4,6 +4,7 @@ import { Button } from "../../ui/Button/Button";
 import { Badge, ProgressBadge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
 import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
 
@@ -180,10 +181,12 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           <div className="flex items-center gap-2 overflow-visible">
             {/* Weekly Challenges - moved here */}
             <Button
-              onClick={() => {}}
+              onClick={() => {
+                triggerHapticFeedback("light");
+              }}
               variant="ghost"
               size="sm"
-              className="p-2.5 bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 border border-warning-200/50 dark:border-warning-700/50 text-warning-600 dark:text-warning-500 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
+              className="w-11 h-11 !p-0 flex items-center justify-center bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 border border-warning-200/50 dark:border-warning-700/50 text-warning-600 dark:text-warning-500 rounded-xl backdrop-blur-sm transition-all duration-200 overflow-visible"
               title="Weekly Challenges"
             >
               <Icon name="trophy" className="h-5 w-5" />
@@ -192,28 +195,34 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
             {/* Settings */}
             {onOpenSettings && (
               <Button
-                onClick={onOpenSettings}
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  onOpenSettings();
+                }}
                 variant="ghost"
                 size="sm"
-                className="px-3 py-2.5 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/50 text-blue-700 dark:text-blue-400 rounded-xl backdrop-blur-sm transition-all duration-200"
-                icon={<Icon name="settings" />}
+                className="h-11 px-4 !py-0 flex items-center gap-2 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/50 text-blue-700 dark:text-blue-400 rounded-xl backdrop-blur-sm transition-all duration-200"
                 title="Customize your playbook"
               >
-                Customize
+                <Icon name="settings" className="h-5 w-5" />
+                <span>Customize</span>
               </Button>
             )}
 
             {/* New Play */}
             {onOpenBuilder && (
               <Button
-                onClick={onOpenBuilder}
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  onOpenBuilder();
+                }}
                 variant="primary"
                 size="sm"
-                className="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border border-emerald-600 rounded-xl shadow-lg shadow-emerald-500/25 transition-all duration-200"
-                icon={<Icon name="plus" />}
+                className="h-11 px-4 !py-0 flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border border-emerald-600 rounded-xl shadow-lg shadow-emerald-500/25 transition-all duration-200"
                 title="New Play"
               >
-                New Play
+                <Icon name="plus" className="h-5 w-5" />
+                <span>New Play</span>
               </Button>
             )}
           </div>
