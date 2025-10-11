@@ -83,7 +83,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         <motion.button
           type="button"
           onClick={() => onEdit?.(play)}
-          className={`relative w-full aspect-square rounded-[1.75rem] bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)} shadow-lg hover:shadow-2xl transition-shadow duration-200 before:absolute before:inset-0 before:rounded-[1.75rem] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand-primary/60`}
+          className={`relative w-full aspect-square rounded-[1.75rem] bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)} shadow-lg hover:shadow-2xl transition-shadow duration-200 overflow-visible before:absolute before:inset-0 before:rounded-[1.75rem] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand-primary/60`}
           aria-label={`Edit ${tileTitle}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

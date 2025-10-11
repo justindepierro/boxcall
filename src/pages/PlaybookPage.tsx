@@ -733,7 +733,7 @@ export default function PlaybookPage() {
           // Desktop View - Keep Existing Layout
           <>
             {/* Aurora Hero Tiles - Football-Specific Actions */}
-            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-8 py-4 overflow-visible">
+            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-8 py-8 overflow-visible">
               <div className="flex items-center justify-center gap-8 flex-wrap overflow-visible">
                 <AppIconTile
                   title="New Play"
