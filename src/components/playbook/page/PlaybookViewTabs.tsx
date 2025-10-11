@@ -186,7 +186,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               }}
               variant="ghost"
               size="sm"
-              className="w-11 h-11 !p-0 flex items-center justify-center bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 border border-warning-200/50 dark:border-warning-700/50 text-warning-600 dark:text-warning-500 rounded-xl transition-all duration-200 overflow-visible"
+              className="w-11 h-11 !p-0 flex items-center justify-center bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 text-warning-600 dark:text-warning-500 rounded-xl transition-all duration-200 overflow-visible"
               title="Weekly Challenges"
             >
               <Icon name="trophy" className="h-5 w-5" />
@@ -201,7 +201,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 }}
                 variant="ghost"
                 size="sm"
-                className="h-11 px-4 !py-0 flex items-center gap-2 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/50 text-blue-700 dark:text-blue-400 rounded-xl transition-all duration-200"
+                className="h-11 px-4 !py-0 flex items-center gap-2 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-xl transition-all duration-200"
                 title="Customize your playbook"
               >
                 <Icon name="settings" className="h-5 w-5" />
@@ -218,7 +218,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 }}
                 variant="primary"
                 size="sm"
-                className="h-11 px-4 !py-0 flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white border border-emerald-600 rounded-xl shadow-lg shadow-emerald-500/25 transition-all duration-200"
+                className="h-11 px-4 !py-0 flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white rounded-xl shadow-lg shadow-emerald-500/25 transition-all duration-200"
                 title="New Play"
               >
                 <Icon name="plus" className="h-5 w-5" />

@@ -1,9 +1,9 @@
 /* Overflow Prevention CSS - Global fixes for text and icon overflow issues */
 
-/* Base button overflow prevention */
-button {
+/* Base button overflow prevention - REMOVED: was causing visual artifacts */
+/* button {
   overflow: hidden;
-}
+} */
 
 button span {
   display: inline-block;
