@@ -40,6 +40,7 @@ import {
 } from "../utils/diagramHelpers";
 import { saveDiagram } from "../services/diagramService";
 import { useIsMobile } from "../hooks/useBreakpoint";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import {
   MobileCTACard,
   MobileSection,
@@ -89,6 +90,10 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
+  
+  // Debounce search query to avoid excessive filtering on every keystroke
+  const debouncedSearchQuery = useDebouncedValue(state.searchQuery, 300);
+  
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
@@ -616,7 +621,7 @@ export default function PlaybookPage() {
                 spacing="comfortable"
               >
                 <PlayGrid
-                  searchQuery={state.searchQuery}
+                  searchQuery={debouncedSearchQuery}
                   filters={state.selectedFilters}
                   onAddToPracticeScript={handleAddToPracticeScript}
                   onAddToGamePlan={handleAddToGamePlan}
@@ -722,7 +727,7 @@ export default function PlaybookPage() {
                 <Card variant="glass" size="lg">
                   {state.currentView === "playbook" && (
                     <PlayGrid
-                      searchQuery={state.searchQuery}
+                      searchQuery={debouncedSearchQuery}
                       filters={state.selectedFilters}
                       onAddToPracticeScript={handleAddToPracticeScript}
                       onAddToGamePlan={handleAddToGamePlan}
