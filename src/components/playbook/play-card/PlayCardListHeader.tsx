@@ -96,7 +96,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           >
             {optimisticPlay.confidence_base}%
           </span>
-          
+
           {/* Quick Win: Usage stats badges */}
           {optimisticPlay.times_called && optimisticPlay.times_called > 0 && (
             <>
@@ -104,18 +104,20 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
                 <Icon name="trending-up" size={12} />
                 {optimisticPlay.times_called}x called
               </span>
-              
+
               {optimisticPlay.times_successful !== undefined && (
                 <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    getSuccessRateBadgeColor(
-                      optimisticPlay.times_successful / optimisticPlay.times_called
-                    )
-                  }`}
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
+                    optimisticPlay.times_successful /
+                      optimisticPlay.times_called
+                  )}`}
                 >
                   {Math.round(
-                    (optimisticPlay.times_successful / optimisticPlay.times_called) * 100
-                  )}% success
+                    (optimisticPlay.times_successful /
+                      optimisticPlay.times_called) *
+                      100
+                  )}
+                  % success
                 </span>
               )}
             </>
@@ -135,14 +137,16 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           icon={
             <Icon
               name={isFavorite ? "star" : "star"}
-              className={isFavorite ? "text-warning-500 fill-current" : "text-muted"}
+              className={
+                isFavorite ? "text-warning-500 fill-current" : "text-muted"
+              }
             />
           }
           iconPosition="only"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
           title={isFavorite ? "Remove from favorites" : "Add to favorites"}
         />
-        
+
         {/* Expand/collapse button */}
         <Button
           onClick={onToggleExpand}

@@ -401,7 +401,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     }
 
     return result;
-  }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory, favoriteIds]);
+  }, [
+    plays,
+    searchQuery,
+    filters,
+    selectedCategory,
+    selectedSubcategory,
+    favoriteIds,
+  ]);
 
   // Telemetry: emit filter.apply when filter state meaningfully changes.
   // Guard against infinite loops if telemetry enqueue triggers a context update that re-renders PlayGrid.

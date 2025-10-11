@@ -310,7 +310,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     if (!isExpanded) {
       trackPlayView(play.id);
     }
-    
+
     if (onToggleExpand) {
       // Controlled mode - notify parent
       onToggleExpand(play.id);

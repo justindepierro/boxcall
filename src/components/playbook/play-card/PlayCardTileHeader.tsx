@@ -108,7 +108,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             }}
             className="absolute -top-3 -left-3 w-11 h-11 rounded-full bg-surface-secondary shadow-lg flex items-center justify-center border-2 border-surface transition-colors cursor-pointer z-10"
             title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
           >
             <Icon
               name="star"

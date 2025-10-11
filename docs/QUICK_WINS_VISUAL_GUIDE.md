@@ -5,6 +5,7 @@
 ### 1. ⭐ Favorite Plays
 
 **List View:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  I Form Right Dive                                  ⭐ ⌄ │
@@ -14,6 +15,7 @@
 ```
 
 **Tile View:**
+
 ```
 ┌──────────────────┐
 │  ⭐            📈│
@@ -26,6 +28,7 @@
 ```
 
 **Key Features:**
+
 - Yellow star = favorited
 - Gray star = not favorited
 - Click to toggle
@@ -42,6 +45,7 @@
 ```
 
 **Behavior:**
+
 - Shows last 5 viewed plays
 - Horizontal scroll if needed
 - Click to jump to play
@@ -70,6 +74,7 @@
 ```
 
 **Keyboard Shortcuts:**
+
 - `Cmd/Ctrl + K` - Open palette
 - `Cmd/Ctrl + F` - Focus search
 - `Cmd/Ctrl + N` - New play
@@ -81,6 +86,7 @@
 ### 4. 💡 Smart Empty State
 
 **No Results Found:**
+
 ```
 ┌──────────────────────────────────────────────────────┐
 │                      🔍                              │
@@ -108,6 +114,7 @@
 ```
 
 **Badge Colors:**
+
 - 🟢 Green: ≥70% success (bg-success-50)
 - 🟡 Yellow: 50-69% success (bg-warning-50)
 - 🔴 Red: <50% success (bg-error-50)
@@ -117,6 +124,7 @@
 ### 6. 🔥 Filter Presets
 
 **Filter Bar:**
+
 ```
 ┌────────────────────────────────────────────────────────┐
 │  [All Plays] [⭐ Favorites] [🔥 Most Used]             │
@@ -125,6 +133,7 @@
 ```
 
 **New Presets:**
+
 - ⭐ Favorites - Shows only starred plays
 - 🔥 Most Used - Sorted by times_called (descending)
 
@@ -133,6 +142,7 @@
 ## 🎨 Design Tokens Used
 
 ### Colors:
+
 ```css
 /* Favorites */
 text-warning-500     /* Star icon filled */
@@ -158,6 +168,7 @@ hover:border-brand-primary /* Hover state */
 ```
 
 ### Spacing:
+
 ```css
 gap-2      /* Small gaps (8px) */
 gap-3      /* Medium gaps (12px) */
@@ -171,6 +182,7 @@ rounded-lg /* Large border radius */
 ## 🚀 User Flows
 
 ### Flow 1: Favorite a Play
+
 ```
 1. Browse playbook
 2. See play you like
@@ -182,9 +194,10 @@ rounded-lg /* Large border radius */
 ```
 
 ### Flow 2: Use Recent Plays
+
 ```
 1. View play A
-2. View play B  
+2. View play B
 3. View play C
 4. Look at "Recent" bar
 5. See [C] [B] [A]
@@ -193,6 +206,7 @@ rounded-lg /* Large border radius */
 ```
 
 ### Flow 3: Command Palette
+
 ```
 1. Press Cmd+K
 2. Palette opens
@@ -204,6 +218,7 @@ rounded-lg /* Large border radius */
 ```
 
 ### Flow 4: Find Most Used Plays
+
 ```
 1. Click "🔥 Most Used"
 2. Plays sorted by times_called
@@ -217,16 +232,19 @@ rounded-lg /* Large border radius */
 ## 📱 Mobile Considerations
 
 ### Touch Targets:
+
 - ⭐ Star button: 44x44px minimum (iOS guideline)
 - Recent play chips: 48px height (Material Design)
 - Command palette items: 56px height
 
 ### Gestures:
+
 - Tap star to favorite
 - Swipe recent plays horizontally
 - Long-press for context menu (future)
 
 ### Responsive Breakpoints:
+
 ```css
 /* Mobile */
 @media (max-width: 640px) {
@@ -254,6 +272,7 @@ rounded-lg /* Large border radius */
 ## 🧪 Testing Scenarios
 
 ### Test Case 1: Favorite Persistence
+
 ```
 ✅ Favorite play A
 ✅ Reload page
@@ -262,6 +281,7 @@ rounded-lg /* Large border radius */
 ```
 
 ### Test Case 2: Recent Plays Ordering
+
 ```
 ✅ View plays: A, B, C, D, E
 ✅ Recent shows: E, D, C, B, A
@@ -270,6 +290,7 @@ rounded-lg /* Large border radius */
 ```
 
 ### Test Case 3: Empty States
+
 ```
 ✅ Search for "xyz123"
 ✅ See suggestions
@@ -279,6 +300,7 @@ rounded-lg /* Large border radius */
 ```
 
 ### Test Case 4: Usage Stats
+
 ```
 ✅ Play with 0 calls: No badges
 ✅ Play with 10 calls, 8 success: Green badge "80%"
@@ -291,16 +313,17 @@ rounded-lg /* Large border radius */
 ## 💻 Code Examples
 
 ### Using Favorites in a Component:
+
 ```tsx
-import { useFavoritePlays } from '@/hooks/useFavoritePlays';
+import { useFavoritePlays } from "@/hooks/useFavoritePlays";
 
 function MyComponent() {
   const { favoriteIds, toggleFavorite, isFavorite } = useFavoritePlays();
-  
+
   return (
     <button onClick={() => toggleFavorite(playId)}>
-      <Icon 
-        name="star" 
+      <Icon
+        name="star"
         className={isFavorite(playId) ? "text-warning-500" : "text-muted"}
       />
     </button>
@@ -309,24 +332,22 @@ function MyComponent() {
 ```
 
 ### Using Recent Plays:
+
 ```tsx
-import { useRecentPlays } from '@/hooks/useRecentPlays';
-import { RecentPlays } from '@/components/playbook/RecentPlays';
+import { useRecentPlays } from "@/hooks/useRecentPlays";
+import { RecentPlays } from "@/components/playbook/RecentPlays";
 
 function PlaybookPage() {
   const { trackPlayView } = useRecentPlays();
-  
+
   const handlePlayClick = (play) => {
     trackPlayView(play.id);
     navigate(`/playbook/${play.id}`);
   };
-  
+
   return (
     <>
-      <RecentPlays 
-        plays={allPlays} 
-        onPlayClick={handlePlayClick} 
-      />
+      <RecentPlays plays={allPlays} onPlayClick={handlePlayClick} />
       {/* ... */}
     </>
   );
@@ -334,40 +355,41 @@ function PlaybookPage() {
 ```
 
 ### Setting Up Command Palette:
+
 ```tsx
-import { CommandPalette, Command } from '@/components/playbook/CommandPalette';
-import { usePlaybookShortcuts } from '@/hooks/usePlaybookShortcuts';
+import { CommandPalette, Command } from "@/components/playbook/CommandPalette";
+import { usePlaybookShortcuts } from "@/hooks/usePlaybookShortcuts";
 
 function Playbook() {
   const [showPalette, setShowPalette] = useState(false);
-  
+
   const commands: Command[] = [
     {
-      id: 'new',
-      label: 'New Play',
-      icon: 'plus',
+      id: "new",
+      label: "New Play",
+      icon: "plus",
       action: () => setShowAddModal(true),
-      shortcut: '⌘N',
+      shortcut: "⌘N",
     },
     {
-      id: 'favorites',
-      label: 'Show Favorites',
-      icon: 'star',
-      action: () => setFilter('favorites'),
-      shortcut: 'F',
-      keywords: ['starred', 'bookmarks'],
+      id: "favorites",
+      label: "Show Favorites",
+      icon: "star",
+      action: () => setFilter("favorites"),
+      shortcut: "F",
+      keywords: ["starred", "bookmarks"],
     },
     // ... more commands
   ];
-  
+
   usePlaybookShortcuts({
     onCommandPalette: () => setShowPalette(true),
     onSearch: () => searchRef.current?.focus(),
     onNewPlay: () => setShowAddModal(true),
-    onFavorites: () => setFilter('favorites'),
-    onToggleView: () => setView(v => v === 'list' ? 'grid' : 'list'),
+    onFavorites: () => setFilter("favorites"),
+    onToggleView: () => setView((v) => (v === "list" ? "grid" : "list")),
   });
-  
+
   return (
     <>
       <CommandPalette

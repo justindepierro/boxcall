@@ -118,7 +118,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 }`}
               >
                 <Icon name={cmd.icon} size={20} className="flex-shrink-0" />
-                <span className="flex-1 text-left font-medium">{cmd.label}</span>
+                <span className="flex-1 text-left font-medium">
+                  {cmd.label}
+                </span>
                 {cmd.shortcut && (
                   <kbd className="px-2 py-1 text-xs bg-surface-secondary rounded border border-subtle font-mono">
                     {cmd.shortcut}
