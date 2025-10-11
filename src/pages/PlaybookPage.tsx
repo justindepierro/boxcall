@@ -51,6 +51,7 @@ import { BottomSheet } from "../components/BottomSheet";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
 import { PullToRefresh } from "../components/PullToRefresh";
+import { triggerHapticFeedback } from "../lib/hapticFeedback";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -280,17 +281,21 @@ export default function PlaybookPage() {
   const handleTeamTypeChange = (
     teamType: "offense" | "defense" | "special-teams"
   ) => dispatch({ type: "SET_TEAM_TYPE", teamType });
-  const handleFiltersChange = (filters: PlaybookState["advancedFilters"]) =>
+  const handleFiltersChange = (filters: PlaybookState["advancedFilters"]) => {
+    triggerHapticFeedback("selection");
     dispatch({ type: "SET_ADVANCED_FILTERS", filters });
+  };
   const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
   const handleBulkAction = (_action: string) => {};
 
   // Modal handlers
   const handleOpenBuilder = () => {
+    triggerHapticFeedback("light");
     setShowAddNewPlayModal(true);
   };
 
   const handleOpenSettings = () => {
+    triggerHapticFeedback("light");
     setShowPlaybookSettingsModal(true);
   };
 
@@ -399,6 +404,7 @@ export default function PlaybookPage() {
   );
 
   const handleDuplicatePlay = (play: Play) => {
+    triggerHapticFeedback("selection");
     // Create a copy of the play with a modified name
     const duplicatedPlay: Play = {
       ...play,
@@ -416,6 +422,7 @@ export default function PlaybookPage() {
 
   // Workflow handlers
   const handleAddToPracticeScript = async (play: Play) => {
+    triggerHapticFeedback("success");
     try {
       const teamId = "current-team"; // TODO: Get from context/auth
       const script = await PracticeScriptService.createQuickScript(
@@ -615,7 +622,10 @@ export default function PlaybookPage() {
             {state.playsCreated > 0 && (
               <MobileSection spacing="tight">
                 <Button
-                  onClick={() => setShowFiltersSheet(true)}
+                  onClick={() => {
+                    triggerHapticFeedback("light");
+                    setShowFiltersSheet(true);
+                  }}
                   variant="secondary"
                   className="w-full"
                 >
@@ -652,7 +662,11 @@ export default function PlaybookPage() {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                      }}
                       onClick={() =>
                         dispatch({ type: "SET_SEARCH", query: "" })
                       }
@@ -1125,7 +1139,9 @@ export default function PlaybookPage() {
                 {Object.keys(state.advancedFilters).length > 0 && (
                   <p className="text-center text-xs text-text-secondary mt-2">
                     {Object.keys(state.advancedFilters).length} filter
-                    {Object.keys(state.advancedFilters).length === 1 ? "" : "s"}{" "}
+                    {Object.keys(state.advancedFilters).length === 1
+                      ? ""
+                      : "s"}{" "}
                     active
                   </p>
                 )}

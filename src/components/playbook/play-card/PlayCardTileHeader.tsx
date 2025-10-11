@@ -68,14 +68,14 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
       <div className="relative w-full max-w-80 mx-auto overflow-visible">
         {onSelectionChange && (
           <label
-            className="absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+            className="absolute -top-3 -left-3 z-10 w-11 h-11 rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
             onClick={(e) => e.stopPropagation()}
           >
             <input
               type="checkbox"
               checked={Boolean(isSelected)}
               onChange={(e) => onSelectionChange(play.id, e.target.checked)}
-              className="w-4 h-4 rounded-lg border-0 text-brand-primary focus:ring-2 focus:ring-brand-primary/30 cursor-pointer"
+              className="w-5 h-5 rounded-lg border-0 text-brand-primary focus:ring-2 focus:ring-brand-primary/30 cursor-pointer"
             />
           </label>
         )}
@@ -134,11 +134,11 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
                 e.stopPropagation();
                 onCreateDiagram();
               }}
-              className="absolute -bottom-3 -right-3 w-9 h-9 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
+              className="absolute -bottom-3 -right-3 w-11 h-11 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
               title="Edit diagram"
               aria-label="Edit diagram"
             >
-              <Icon name="image" className="w-4 h-4 text-white" />
+              <Icon name="image" className="w-5 h-5 text-white" />
             </button>
           )}
         </motion.button>
