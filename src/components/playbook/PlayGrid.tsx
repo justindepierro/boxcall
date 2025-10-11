@@ -257,13 +257,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     };
   }, [hasManualViewModeOverride, setViewMode]);
 
-  // Get real data from database with refresh capability
+  // Get real data from database with refresh capability and pagination
   const {
     plays: allPlays,
     loading,
     error,
     refreshData,
     updatePlay,
+    hasMorePlays: hasMorePlaysFromDB,
+    loadingMorePlays,
+    totalPlaysCount,
+    loadMorePlays,
   } = useTeamsData();
 
   // Refresh data when refreshTrigger changes
@@ -925,6 +929,40 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             overscan={200}
             computeItemKey={(_: number, playItem: Play) => playItem.id}
             itemContent={renderPlayItem}
+            endReached={() => {
+              // Load more plays when user scrolls near the end
+              if (hasMorePlaysFromDB && !loadingMorePlays) {
+                debug("Virtuoso endReached - loading more plays");
+                loadMorePlays();
+              }
+            }}
+            components={{
+              Footer: () =>
+                loadingMorePlays ? (
+                  <div className="flex justify-center py-4">
+                    <div className="flex items-center gap-2 text-muted">
+                      <Icon name="refresh-cw" className="h-4 w-4 animate-spin" />
+                      <Typography variant="body-sm">
+                        Loading more plays...
+                      </Typography>
+                    </div>
+                  </div>
+                ) : hasMorePlaysFromDB ? (
+                  <div className="flex justify-center py-2">
+                    <Typography variant="body-sm" className="text-muted">
+                      Scroll down to load more
+                    </Typography>
+                  </div>
+                ) : totalPlaysCount !== null &&
+                  totalPlaysCount > 0 &&
+                  displayPlays.length >= totalPlaysCount ? (
+                  <div className="flex justify-center py-4">
+                    <Typography variant="body-sm" className="text-muted">
+                      All {totalPlaysCount} plays loaded
+                    </Typography>
+                  </div>
+                ) : null,
+            }}
           />
         </div>
       ) : null}

@@ -61,6 +61,8 @@ interface DatabasePlay {
   updated_at: string;
 }
 
+const PAGE_SIZE = 50; // Fetch 50 plays at a time
+
 export function useTeamsData() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
@@ -70,10 +72,19 @@ export function useTeamsData() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
+  // Pagination state for plays
+  const [playsPage, setPlaysPage] = useState(0);
+  const [hasMorePlays, setHasMorePlays] = useState(true);
+  const [loadingMorePlays, setLoadingMorePlays] = useState(false);
+  const [totalPlaysCount, setTotalPlaysCount] = useState<number | null>(null);
+
   // Use main supabase client (now configured with service role key for demo)
 
-  // Function to manually refresh data
+  // Function to manually refresh data (resets pagination)
   const refreshData = useCallback(() => {
+    setPlaysPage(0);
+    setHasMorePlays(true);
+    setPlays([]);
     setRefreshTrigger((prev) => prev + 1);
   }, []);
 
@@ -133,7 +144,7 @@ export function useTeamsData() {
         setTeams(teamsData || []);
 
         // Fetch playbooks
-        let playbooksData = [];
+        let playbooksData: Playbook[] = [];
         try {
           const { data, error: playbooksError } = await supabase
             .from("playbooks")
@@ -156,19 +167,40 @@ export function useTeamsData() {
 
         setPlaybooks(playbooksData);
 
-        // Fetch plays
-        let playsData = [];
+        // Fetch total play count first
         try {
+          const { count, error: countError } = await supabase
+            .from("plays")
+            .select("*", { count: "exact", head: true });
+
+          if (countError) {
+            console.warn("Error fetching play count:", countError.message);
+          } else {
+            setTotalPlaysCount(count ?? 0);
+          }
+        } catch (err) {
+          console.warn("Error fetching play count:", err);
+        }
+
+        // Fetch first page of plays (paginated)
+        let playsData: DatabasePlay[] = [];
+        try {
+          const from = 0;
+          const to = PAGE_SIZE - 1;
+
           const { data, error: playsError } = await supabase
             .from("plays")
             .select("*")
-            .order("created_at", { ascending: false });
+            .order("created_at", { ascending: false })
+            .range(from, to);
 
           if (playsError) {
             console.warn("Plays table not available:", playsError.message);
             // Continue without plays data
           } else {
             playsData = data || [];
+            // Check if there are more plays to load
+            setHasMorePlays(playsData.length === PAGE_SIZE);
           }
         } catch (err) {
           console.warn("Error fetching plays:", err);
@@ -176,6 +208,7 @@ export function useTeamsData() {
         }
 
         setPlays(playsData);
+        setPlaysPage(0);
 
         setLoading(false);
       } catch (err) {
@@ -188,6 +221,46 @@ export function useTeamsData() {
     fetchData();
   }, [refreshTrigger]);
 
+  // Function to load more plays (for infinite scroll)
+  const loadMorePlays = useCallback(async () => {
+    if (loadingMorePlays || !hasMorePlays) {
+      return;
+    }
+
+    try {
+      setLoadingMorePlays(true);
+      const nextPage = playsPage + 1;
+      const from = nextPage * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      const { data, error } = await supabase
+        .from("plays")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      if (error) {
+        console.error("Error loading more plays:", error);
+        setError(`Failed to load more plays: ${error.message}`);
+        return;
+      }
+
+      const newPlays = data || [];
+      
+      // Append new plays to existing ones
+      setPlays((prevPlays) => [...prevPlays, ...newPlays]);
+      setPlaysPage(nextPage);
+      
+      // Check if there are more plays to load
+      setHasMorePlays(newPlays.length === PAGE_SIZE);
+    } catch (err) {
+      console.error("Error in loadMorePlays:", err);
+      setError("Failed to load more plays");
+    } finally {
+      setLoadingMorePlays(false);
+    }
+  }, [loadingMorePlays, hasMorePlays, playsPage]);
+
   return {
     teams,
     playbooks,
@@ -197,5 +270,10 @@ export function useTeamsData() {
     refreshData,
     updatePlay,
     totalCount: teams.length + playbooks.length + plays.length,
+    // Pagination state and functions
+    hasMorePlays,
+    loadingMorePlays,
+    totalPlaysCount,
+    loadMorePlays,
   };
 }
