@@ -9,7 +9,7 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Using component token system (Priority 5)
 const cardStyles: CardStylesConfig = {
-  base: "card rounded-xl transition-all duration-200 ease-in-out",
+  base: "card rounded-xl transition-all duration-200 ease-in-out overflow-visible",
   variants: {
     default: "card-interactive", // Uses component tokens for hover
     glass:
