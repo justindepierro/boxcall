@@ -25,6 +25,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 **Why First:** Quick wins, establishes visual baseline, doesn't block mobile work.
 
 #### Tasks:
+
 1. **Audit Desktop Dashboard Cards** (15 min)
    - ProfileCard: Check spacing, shadows, borders, hover states
    - Quick Actions area (if visible): Color tokens, layout consistency
@@ -47,6 +48,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
    - Verify no mobile regressions
 
 **Expected Outcome:**
+
 - Desktop cards visually consistent with mobile redesign quality
 - All design tokens applied correctly
 - Professional, polished visual appearance on large screens
@@ -58,6 +60,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 **Why Second:** Enables real data testing for mobile components, critical for production readiness.
 
 #### Tasks:
+
 1. **Connect MobileHeroStatsCard to Real Data** (45 min)
    - Wire `totalPlays` from dashboard service or DashboardContext
    - Wire `thisWeekActivity` from activity/practice service
@@ -80,6 +83,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
    - Ensure TypeScript types match service responses
 
 **Expected Outcome:**
+
 - MobileHeroStatsCard shows real user stats
 - MobileEventCard displays real calendar events
 - No hardcoded mock data remaining in mobile components
@@ -91,6 +95,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 **Why Third:** Builds on data-connected components, enables full mobile navigation story.
 
 #### Tasks:
+
 1. **Design Bottom Navigation** (30 min)
    - Define 4-5 primary nav items (Dashboard, Playbook, Calendar, Roster, More?)
    - Icon selection (lucide-react icons)
@@ -128,6 +133,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
    - Keyboard accessibility
 
 **Expected Outcome:**
+
 - Thumb-reachable bottom navigation on mobile
 - Desktop sidebar unchanged
 - Seamless navigation between Dashboard, Playbook, Calendar, Roster
@@ -140,6 +146,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 **Why Fourth:** Nice-to-have interactions, builds on nav foundation, requires touch testing.
 
 #### Tasks:
+
 1. **Research Gesture Libraries** (15 min)
    - Options: react-swipeable, framer-motion gestures, custom touch events
    - Decision criteria: Bundle size, TypeScript support, iOS/Android compatibility
@@ -182,6 +189,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
    - Desktop (no gestures expected)
 
 **Expected Outcome:**
+
 - Swipe-to-dismiss on TeamFeeds posts
 - Pull-to-refresh on Dashboard
 - Haptic feedback on interactions
@@ -195,6 +203,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 **Why Last:** Nice-to-have, purely visual enhancement, can be skipped if time-constrained.
 
 #### Tasks:
+
 1. **Progressive Disclosure Animation** (30 min)
    - Target: TeamFeeds "See More Activity" button
    - Current: Instant reveal (no animation)
@@ -218,6 +227,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
    - Ensure animations respect `prefers-reduced-motion`
 
 **Expected Outcome:**
+
 - Smooth progressive disclosure on TeamFeeds
 - Professional swipe animations
 - Optional route transitions
@@ -230,6 +240,7 @@ Phase 4 expands on Phase 3's mobile redesign foundation with **three parallel tr
 ### New Components to Build:
 
 #### 1. MobileBottomNav.tsx
+
 ```tsx
 interface MobileBottomNavProps {
   items?: NavItem[];
@@ -249,6 +260,7 @@ interface NavItem {
 ```
 
 #### 2. SwipeableCard.tsx (HOC or wrapper)
+
 ```tsx
 interface SwipeableCardProps {
   children: React.ReactNode;
@@ -262,6 +274,7 @@ interface SwipeableCardProps {
 ```
 
 #### 3. PullToRefresh.tsx (wrapper)
+
 ```tsx
 interface PullToRefreshProps {
   children: React.ReactNode;
@@ -276,20 +289,24 @@ interface PullToRefreshProps {
 ### Components to Update:
 
 #### 1. ResponsiveDashboardLayout.tsx
+
 - Add data connections for MobileHeroStatsCard
 - Integrate MobileEventCard (decision: replace or complement PersonalCalendar)
 - Wrap mobile view in PullToRefresh component
 
 #### 2. TeamFeeds.tsx
+
 - Wrap individual posts in SwipeableCard
 - Add swipe-to-dismiss handler
 
 #### 3. ProfileCard.tsx (Desktop Polish)
+
 - Update colors to design tokens
 - Add hover states
 - Improve spacing
 
 #### 4. PlayCard.tsx (Desktop Polish)
+
 - Update colors to design tokens
 - Improve shadows and spacing
 - Better hover/active states
@@ -299,6 +316,7 @@ interface PullToRefreshProps {
 ## Design Tokens to Apply (Desktop Polish)
 
 ### Colors:
+
 ```css
 /* Before (hardcoded) */
 bg-gray-50, text-gray-700, border-gray-200
@@ -308,6 +326,7 @@ bg-surface-secondary, text-primary, border
 ```
 
 ### Shadows:
+
 ```css
 /* Before (arbitrary or missing) */
 shadow-lg, shadow-xl, or no shadow
@@ -319,6 +338,7 @@ shadow-md (for elevated cards)
 ```
 
 ### Spacing:
+
 ```css
 /* Before (arbitrary) */
 p-6, gap-4, space-y-3
@@ -328,6 +348,7 @@ p-space-4, gap-space-3, space-y-space-2
 ```
 
 ### Hover States:
+
 ```css
 /* Add to all interactive cards */
 hover:shadow-lg
@@ -340,6 +361,7 @@ transition-all duration-200
 ## Testing Strategy
 
 ### Desktop Polish Testing:
+
 1. **Visual Regression:**
    - Compare before/after screenshots at 1920px, 1440px, 1024px
    - Check Dashboard cards, PlayCard tile/list views
@@ -351,6 +373,7 @@ transition-all duration-200
    - No layout shift on hover
 
 ### Data Connection Testing:
+
 1. **Real Data:**
    - Create test user with plays, activities, achievements
    - Verify stats display correctly in MobileHeroStatsCard
@@ -364,6 +387,7 @@ transition-all duration-200
    - Error states (service failures)
 
 ### Mobile Navigation Testing:
+
 1. **Functionality:**
    - Tap each nav item → Correct route
    - Active state highlights current route
@@ -379,6 +403,7 @@ transition-all duration-200
    - Desktop (≥768px): Bottom nav hidden, Sidebar visible
 
 ### Gesture Testing:
+
 1. **Swipe-to-Dismiss:**
    - Swipe left <30% → Card returns to position
    - Swipe left ≥30% → Card dismisses with animation
@@ -395,6 +420,7 @@ transition-all duration-200
    - Unsupported devices: No errors, graceful fallback
 
 ### Animation Testing:
+
 1. **Performance:**
    - All animations 60fps on mobile
    - No jank during swipes or transitions
@@ -410,14 +436,16 @@ transition-all duration-200
 ## Dependencies & Tools
 
 ### New Dependencies (if needed):
+
 ```json
 {
   "react-swipeable": "^7.0.0", // Swipe gesture library (optional)
-  "framer-motion": "^10.16.4"  // Already installed? For animations
+  "framer-motion": "^10.16.4" // Already installed? For animations
 }
 ```
 
 ### Existing Tools to Use:
+
 - `utils/haptics.ts` - Haptic feedback wrapper (check if exists)
 - `utils/touchUtils.ts` - Touch event helpers (if exists)
 - `hooks/useBreakpoint.ts` - Already used in Phase 3
@@ -428,18 +456,21 @@ transition-all duration-200
 ## Risk Assessment
 
 ### High Risk:
+
 - **Gesture library compatibility:** iOS Safari touch events can be tricky
   - Mitigation: Use battle-tested library (react-swipeable), test on real devices
 - **Data connection types:** Service response types may not match component props
   - Mitigation: Review TypeScript interfaces before implementation, use strict types
 
 ### Medium Risk:
+
 - **Pull-to-refresh conflicts:** Native browser pull-to-refresh on iOS
   - Mitigation: Disable native PTR with CSS (`overscroll-behavior-y: contain`)
 - **Bottom nav z-index:** May conflict with modals or overlays
   - Mitigation: Establish z-index scale (nav: 40, modal: 50)
 
 ### Low Risk:
+
 - **Desktop polish regressions:** Changes may affect mobile layout
   - Mitigation: Test all breakpoints after each change
 - **Animation performance:** Too many animations may cause jank
@@ -450,18 +481,21 @@ transition-all duration-200
 ## Success Metrics
 
 ### Phase 4A: Desktop Polish
+
 - ✅ All dashboard cards use design tokens (0 hardcoded colors)
 - ✅ PlayCard tile/list views visually consistent
 - ✅ Hover states smooth and visible
 - ✅ TypeScript: 0 errors maintained
 
 ### Phase 4B: Data Connections
+
 - ✅ MobileHeroStatsCard displays real stats (not 0s)
 - ✅ MobileEventCard shows real calendar events
 - ✅ Loading/error states handled gracefully
 - ✅ TypeScript: 0 errors maintained
 
 ### Phase 4C: Mobile Navigation
+
 - ✅ Bottom nav functional on mobile (<768px)
 - ✅ 4-5 nav items with correct routing
 - ✅ Active state highlights current route
@@ -470,6 +504,7 @@ transition-all duration-200
 - ✅ TypeScript: 0 errors maintained
 
 ### Phase 4D: Gesture System
+
 - ✅ Swipe-to-dismiss on TeamFeeds posts
 - ✅ Pull-to-refresh on Dashboard mobile
 - ✅ Haptic feedback on iOS/Android
@@ -477,6 +512,7 @@ transition-all duration-200
 - ✅ TypeScript: 0 errors maintained
 
 ### Phase 4E: Animation Polish
+
 - ✅ Progressive disclosure animates smoothly
 - ✅ Swipe gestures have visual feedback
 - ✅ Respects `prefers-reduced-motion`
@@ -488,22 +524,25 @@ transition-all duration-200
 
 **Total Time:** ~10-12 hours (split across multiple sessions)
 
-| Sub-Phase | Time Estimate | Priority | Can Skip? |
-|-----------|---------------|----------|-----------|
-| 4A: Desktop Polish | 2 hours | HIGH | No |
-| 4B: Data Connections | 2 hours | HIGH | No |
-| 4C: Mobile Navigation | 2.5 hours | HIGH | No |
-| 4D: Gesture System | 3 hours | MEDIUM | Yes (defer to Phase 5) |
-| 4E: Animation Polish | 1.5 hours | LOW | Yes |
+| Sub-Phase             | Time Estimate | Priority | Can Skip?              |
+| --------------------- | ------------- | -------- | ---------------------- |
+| 4A: Desktop Polish    | 2 hours       | HIGH     | No                     |
+| 4B: Data Connections  | 2 hours       | HIGH     | No                     |
+| 4C: Mobile Navigation | 2.5 hours     | HIGH     | No                     |
+| 4D: Gesture System    | 3 hours       | MEDIUM   | Yes (defer to Phase 5) |
+| 4E: Animation Polish  | 1.5 hours     | LOW      | Yes                    |
 
 **Recommended First Session (Today):**
+
 - 4A: Desktop Polish (2 hours) ✅ Quick wins
 - 4B: Data Connections (2 hours) ✅ Critical for production
 
 **Second Session:**
+
 - 4C: Mobile Navigation (2.5 hours) ✅ Core mobile UX
 
 **Third Session (Optional):**
+
 - 4D: Gesture System (3 hours) ⏭️ Advanced interactions
 - 4E: Animation Polish (1.5 hours) ⏭️ Visual enhancement
 
@@ -524,6 +563,7 @@ If we defer 4D/4E or finish Phase 4 completely, Phase 5 could include:
 ## Next Steps
 
 **Start with Sub-Phase 4A: Desktop Polish**
+
 1. Audit ProfileCard desktop styling
 2. Audit PlayCard desktop styling
 3. Apply design tokens
