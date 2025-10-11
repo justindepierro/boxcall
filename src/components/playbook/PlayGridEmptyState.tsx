@@ -90,73 +90,81 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             transition={{ duration: 0.3 }}
             className="flex flex-col items-center justify-center py-16 px-4"
           >
-          {/* Search Icon with Animation */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 20,
-              delay: 0.1,
-            }}
-            className="w-24 h-24 rounded-2xl bg-gradient-to-br from-warning-500/10 to-warning-600/10 border-2 border-warning-500/20 flex items-center justify-center mb-6"
-          >
-            <Icon
-              name="search"
-              className="w-12 h-12 text-warning-600 dark:text-warning-400"
-            />
-          </motion.div>
+            {/* Search Icon with Animation */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+                delay: 0.1,
+              }}
+              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-warning-500/10 to-warning-600/10 border-2 border-warning-500/20 flex items-center justify-center mb-6"
+            >
+              <Icon
+                name="search"
+                className="w-12 h-12 text-warning-600 dark:text-warning-400"
+              />
+            </motion.div>
 
-          <Typography
-            variant="headline-lg"
-            className="text-text-primary mb-2 text-center"
-          >
-            No Plays Found
-          </Typography>
+            <Typography
+              variant="headline-lg"
+              className="text-text-primary mb-2 text-center"
+            >
+              No Plays Found
+            </Typography>
 
-          <Typography
-            variant="body"
-            className="text-text-secondary mb-8 text-center max-w-md"
-          >
-            Your filters are hiding all plays. Try adjusting your criteria or start fresh.
-          </Typography>
+            <Typography
+              variant="body"
+              className="text-text-secondary mb-8 text-center max-w-md"
+            >
+              Your filters are hiding all plays. Try adjusting your criteria or
+              start fresh.
+            </Typography>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            {onClearFilters && (
-              <Button onClick={onClearFilters} variant="primary" size="lg">
-                <Icon name="close" className="w-5 h-5 mr-2" />
-                Clear All Filters
-              </Button>
-            )}
-            {onCreatePlay && (
-              <Button onClick={onCreatePlay} variant="secondary" size="lg">
-                <Icon name="plus" className="w-5 h-5 mr-2" />
-                Create New Play
-              </Button>
-            )}
-          </div>
-
-          {/* Quick filter tips */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8 p-4 rounded-xl bg-surface-secondary max-w-md w-full"
-          >
-            <div className="flex items-start gap-3">
-              <Icon name="lightbulb" className="w-5 h-5 text-warning-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <Typography variant="body-sm" className="font-semibold mb-1 text-text-primary">
-                  Quick Tip
-                </Typography>
-                <Typography variant="body-xs" className="text-text-secondary">
-                  Clear individual filters in the filter menu, or use the button above to reset everything at once.
-                </Typography>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              {onClearFilters && (
+                <Button onClick={onClearFilters} variant="primary" size="lg">
+                  <Icon name="close" className="w-5 h-5 mr-2" />
+                  Clear All Filters
+                </Button>
+              )}
+              {onCreatePlay && (
+                <Button onClick={onCreatePlay} variant="secondary" size="lg">
+                  <Icon name="plus" className="w-5 h-5 mr-2" />
+                  Create New Play
+                </Button>
+              )}
             </div>
+
+            {/* Quick filter tips */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-8 p-4 rounded-xl bg-surface-secondary max-w-md w-full"
+            >
+              <div className="flex items-start gap-3">
+                <Icon
+                  name="lightbulb"
+                  className="w-5 h-5 text-warning-500 flex-shrink-0 mt-0.5"
+                />
+                <div>
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold mb-1 text-text-primary"
+                  >
+                    Quick Tip
+                  </Typography>
+                  <Typography variant="body-xs" className="text-text-secondary">
+                    Clear individual filters in the filter menu, or use the
+                    button above to reset everything at once.
+                  </Typography>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
         </div>
       );
     }

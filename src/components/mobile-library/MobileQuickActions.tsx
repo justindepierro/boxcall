@@ -102,7 +102,8 @@ function QuickActionButton({
 }: QuickAction) {
   const variantStyles = {
     default: "bg-surface-secondary hover:bg-surface-subtle",
-    primary: "bg-gradient-to-br from-brand-jade/10 to-emerald-500/10 hover:from-brand-jade/20 hover:to-emerald-500/20",
+    primary:
+      "bg-gradient-to-br from-brand-jade/10 to-emerald-500/10 hover:from-brand-jade/20 hover:to-emerald-500/20",
     secondary: "bg-surface-secondary hover:bg-surface-subtle",
   };
 
@@ -114,7 +115,8 @@ function QuickActionButton({
 
   const iconContainerStyles = {
     default: "bg-surface-base",
-    primary: "bg-gradient-to-br from-brand-jade to-emerald-500 shadow-lg shadow-jade-500/25",
+    primary:
+      "bg-gradient-to-br from-brand-jade to-emerald-500 shadow-lg shadow-jade-500/25",
     secondary: "bg-surface-base",
   };
 
@@ -144,7 +146,9 @@ function QuickActionButton({
     >
       {/* Icon Container */}
       <motion.div
-        whileHover={variant === "primary" ? { rotate: [0, -10, 10, -10, 0] } : {}}
+        whileHover={
+          variant === "primary" ? { rotate: [0, -10, 10, -10, 0] } : {}
+        }
         transition={{ duration: 0.5 }}
         className={`
           w-16 h-16 rounded-full
@@ -152,9 +156,9 @@ function QuickActionButton({
           ${iconContainerStyles[variant]}
         `}
       >
-        <Icon 
-          name={icon} 
-          className={`w-7 h-7 ${variant === "primary" ? "text-white" : iconColorStyles[variant]}`} 
+        <Icon
+          name={icon}
+          className={`w-7 h-7 ${variant === "primary" ? "text-white" : iconColorStyles[variant]}`}
         />
       </motion.div>
 
