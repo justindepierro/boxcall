@@ -87,7 +87,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         >
           <Icon
             name={getTileIcon(optimisticPlay.p_type)}
-            className="absolute inset-0 m-auto w-[58%] h-[58%] text-white drop-shadow-lg"
+            className="absolute inset-0 m-auto w-[65%] h-[65%] text-white drop-shadow-lg"
             aria-hidden="true"
           />
 
@@ -142,9 +142,10 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
       <div className="mt-4 space-y-1 w-full">
         <h3
-          className={`font-mono font-bold text-lg leading-tight text-text-xsssssrimary line-clamp-2 ${
+          className={`font-mono font-bold text-lg leading-tight text-text-primary line-clamp-2 ${
             showOneWordCalls && play.one_word_play ? "text-text-info" : ""
           }`}
+          title={tileTitle}
         >
           {tileTitle}
         </h3>
