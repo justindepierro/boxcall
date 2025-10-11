@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { UserAvatar } from "../../ui/UserAvatar";
@@ -79,11 +80,14 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           </label>
         )}
 
-        <button
+        <motion.button
           type="button"
           onClick={() => onEdit?.(play)}
-          className={`relative w-full aspect-square rounded-[1.75rem] bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)} shadow-lg hover:shadow-2xl transition-transform duration-200 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:rounded-[1.75rem] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand-primary/60`}
+          className={`relative w-full aspect-square rounded-[1.75rem] bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)} shadow-lg hover:shadow-2xl transition-shadow duration-200 before:absolute before:inset-0 before:rounded-[1.75rem] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand-primary/60`}
           aria-label={`Edit ${tileTitle}`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <Icon
             name={getTileIcon(optimisticPlay.p_type)}
@@ -137,7 +141,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
               <Icon name="image" className="w-4 h-4 text-white" />
             </button>
           )}
-        </button>
+        </motion.button>
       </div>
 
       <div className="mt-4 space-y-1 w-full">

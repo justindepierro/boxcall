@@ -47,6 +47,9 @@ import {
   MobileQuickActions,
 } from "../components/mobile-library";
 import { BottomSheet } from "../components/BottomSheet";
+import { FloatingActionButton } from "../components/FloatingActionButton";
+import { FABPresets } from "../components/FABPresets";
+import { PullToRefresh } from "../components/PullToRefresh";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -312,6 +315,19 @@ export default function PlaybookPage() {
       throw error; // Re-throw so the UI can show the error
     }
   };
+
+  // Handle pull-to-refresh on mobile
+  const handlePullRefresh = useCallback(async () => {
+    try {
+      // Simulate a small delay for better UX
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch({ type: "INCREMENT_REFRESH" });
+      toast.success("Plays refreshed");
+    } catch (error) {
+      logError("Failed to refresh plays:", error);
+      toast.error("Failed to refresh plays");
+    }
+  }, [dispatch, toast]);
 
   // Note: handleSaveDiagram is kept for future diagram saving functionality
   // @ts-expect-error - Keeping for future use
@@ -620,22 +636,34 @@ export default function PlaybookPage() {
                 action={state.playsCreated > 3 ? "See All" : undefined}
                 spacing="comfortable"
               >
-                <PlayGrid
-                  searchQuery={debouncedSearchQuery}
-                  filters={state.selectedFilters}
-                  onAddToPracticeScript={handleAddToPracticeScript}
-                  onAddToGamePlan={handleAddToGamePlan}
-                  onEdit={handleEditPlay}
-                  onSave={handleSavePlay}
-                  onDuplicate={handleDuplicatePlay}
-                  onOpenBuilder={handleOpenBuilder}
-                  onCreateDiagram={handleCreateDiagram}
-                  refreshTrigger={state.refreshTrigger}
-                  formationSuggestions={suggestions.formations}
-                  playNameSuggestions={suggestions.playNames}
-                />
+                <PullToRefresh onRefresh={handlePullRefresh}>
+                  <PlayGrid
+                    searchQuery={debouncedSearchQuery}
+                    filters={state.selectedFilters}
+                    onAddToPracticeScript={handleAddToPracticeScript}
+                    onAddToGamePlan={handleAddToGamePlan}
+                    onEdit={handleEditPlay}
+                    onSave={handleSavePlay}
+                    onDuplicate={handleDuplicatePlay}
+                    onOpenBuilder={handleOpenBuilder}
+                    onCreateDiagram={handleCreateDiagram}
+                    refreshTrigger={state.refreshTrigger}
+                    formationSuggestions={suggestions.formations}
+                    playNameSuggestions={suggestions.playNames}
+                  />
+                </PullToRefresh>
               </MobileSection>
             )}
+
+            {/* Floating Action Button for Quick Actions */}
+            <FloatingActionButton
+              actions={FABPresets.playbook({
+                onNewPlay: handleOpenBuilder,
+                onWhiteboard: handleOpenWhiteboard,
+                onPractice: handleQuickNewPracticeScript,
+              })}
+              icon="plus"
+            />
           </div>
         ) : (
           // Desktop View - Keep Existing Layout

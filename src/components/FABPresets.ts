@@ -12,6 +12,34 @@ export interface FABAction {
  * Preset FAB configurations
  */
 export const FABPresets = {
+  playbook: (handlers: {
+    onNewPlay: () => void;
+    onWhiteboard: () => void;
+    onPractice: () => void;
+  }): FABAction[] => [
+    {
+      id: "new-play",
+      label: "New Play",
+      icon: "plus-circle" as IconName,
+      color: "bg-jade-600 text-white",
+      onClick: handlers.onNewPlay,
+    },
+    {
+      id: "whiteboard",
+      label: "Whiteboard",
+      icon: "pen-tool" as IconName,
+      color: "bg-purple-600 text-white",
+      onClick: handlers.onWhiteboard,
+    },
+    {
+      id: "practice",
+      label: "Practice",
+      icon: "clipboard-list" as IconName,
+      color: "bg-blue-600 text-white",
+      onClick: handlers.onPractice,
+    },
+  ],
+  
   diagramEditor: (handlers: {
     onAddPlayer: () => void;
     onAddFormation: () => void;
