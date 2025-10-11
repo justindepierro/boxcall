@@ -8,6 +8,7 @@ import { RosterQuickAdd } from "../dashboard/RosterQuickAdd";
 import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
+import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { AuroraTile } from "../ui/AuroraTile";
 import type { IconName } from "../ui/Icon/Icon";
 import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
@@ -30,6 +31,9 @@ import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
 export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, profileLoading, error } = useAuth();
   const { isStepVisible } = useProgressiveLoading(5, 200);
+
+  // Fetch real dashboard statistics
+  const dashboardStats = useDashboardStats(user?.id);
 
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
@@ -231,9 +235,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <MobileHeroStatsCard
             userName={profile?.display_name || profile?.full_name || "Coach"}
             stats={{
-              totalPlays: 0, // TODO: Connect to real data
-              thisWeekActivity: 0, // TODO: Connect to real data
-              achievements: 0, // TODO: Connect to real data
+              totalPlays: dashboardStats.totalPlays,
+              thisWeekActivity: dashboardStats.thisWeekActivity,
+              achievements: dashboardStats.achievements,
             }}
             onViewDetails={() => scrollToSection("dashboard-profile-section")}
           />
