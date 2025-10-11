@@ -941,7 +941,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 loadingMorePlays ? (
                   <div className="flex justify-center py-4">
                     <div className="flex items-center gap-2 text-muted">
-                      <Icon name="refresh-cw" className="h-4 w-4 animate-spin" />
+                      <Icon
+                        name="refresh-cw"
+                        className="h-4 w-4 animate-spin"
+                      />
                       <Typography variant="body-sm">
                         Loading more plays...
                       </Typography>

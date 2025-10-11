@@ -246,11 +246,11 @@ export function useTeamsData() {
       }
 
       const newPlays = data || [];
-      
+
       // Append new plays to existing ones
       setPlays((prevPlays) => [...prevPlays, ...newPlays]);
       setPlaysPage(nextPage);
-      
+
       // Check if there are more plays to load
       setHasMorePlays(newPlays.length === PAGE_SIZE);
     } catch (err) {
