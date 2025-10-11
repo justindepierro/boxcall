@@ -122,6 +122,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     }
   });
 
+  // Track which play card is currently expanded (only one at a time)
+  const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
+
   // Direction display format: 'full', 'abbrev', or 'letter'
   const [directionDisplayFormat, setDirectionDisplayFormat] = useState<
     "full" | "abbrev" | "letter"
@@ -384,6 +387,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     [onPlaySelectionChange, selectedPlayIds]
   );
 
+  // Handle expanding/collapsing play cards - only one can be expanded at a time
+  const handleToggleExpand = useCallback((playId: string) => {
+    setExpandedPlayId((current) => (current === playId ? null : playId));
+  }, []);
+
   const handleSelectAll = () => {
     if (!onPlaySelectionChange) return;
     const currentIds = new Set(displayPlays.map((p) => p.id));
@@ -614,6 +622,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           playNameSuggestions={collectedSuggestions.playNames}
           playTypeSuggestions={collectedSuggestions.playTypes}
           directionDisplayFormat={directionDisplayFormat}
+          isExpanded={expandedPlayId === play.id}
+          onToggleExpand={handleToggleExpand}
         />
       </div>
     ),
@@ -627,6 +637,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       handlePlaySelect,
       collectedSuggestions,
       directionDisplayFormat,
+      expandedPlayId,
+      handleToggleExpand,
     ]
   );
 
@@ -835,6 +847,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             onSelectionChange={handlePlaySelect}
                             variant="tile"
                             density="comfortable"
+                            isExpanded={expandedPlayId === play.id}
+                            onToggleExpand={handleToggleExpand}
                           />
                         </div>
                       )}
@@ -896,6 +910,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onCreateDiagram={onCreateDiagram}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={handlePlaySelect}
+                              isExpanded={expandedPlayId === play.id}
+                              onToggleExpand={handleToggleExpand}
                             />
                           </div>
                         </div>

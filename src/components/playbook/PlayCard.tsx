@@ -39,6 +39,9 @@ interface PlayCardProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
+  // Controlled expansion state
+  isExpanded?: boolean;
+  onToggleExpand?: (playId: string) => void;
 }
 
 type FieldVisibility = Record<string, boolean>;
@@ -104,6 +107,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   formationSuggestions = [],
   playNameSuggestions = [],
   playTypeSuggestions = [],
+  isExpanded: controlledIsExpanded,
+  onToggleExpand,
 }) => {
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
@@ -117,7 +122,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   );
   const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
     useState<FieldVisibility>(INITIAL_PLAY_DETAILS_VISIBILITY);
-  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Use controlled expansion if provided, otherwise use internal state
+  const [internalIsExpanded, setInternalIsExpanded] = useState(false);
+  const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
   useEffect(() => {
     setOptimisticPlay(play);
@@ -277,9 +285,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isTile = variant === "tile";
   const isCompact = !isTile && density === "compact";
 
-  const onToggleExpand = useCallback(() => {
-    setIsExpanded((prev) => !prev);
-  }, []);
+  const handleToggleExpand = useCallback(() => {
+    if (onToggleExpand) {
+      // Controlled mode - notify parent
+      onToggleExpand(play.id);
+    } else {
+      // Uncontrolled mode - manage internally
+      setInternalIsExpanded((prev) => !prev);
+    }
+  }, [onToggleExpand, play.id]);
 
   return (
     <div
@@ -330,7 +344,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             onSelectionChange={onSelectionChange}
             isCompact={isCompact}
             isExpanded={isExpanded}
-            onToggleExpand={onToggleExpand}
+            onToggleExpand={handleToggleExpand}
             onEdit={onEdit}
             onDuplicate={onDuplicate}
             onCreateDiagram={handleCreateDiagram}
