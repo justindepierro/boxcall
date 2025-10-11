@@ -12,8 +12,7 @@ const cardStyles: CardStylesConfig = {
   base: "card rounded-xl transition-all duration-200 ease-in-out overflow-visible",
   variants: {
     default: "card-interactive", // Uses component tokens for hover
-    glass:
-      "bg-surface-base/80 hover:bg-surface-base/90 shadow-lg", // Custom glass effect (backdrop-blur removed for testing)
+    glass: "bg-surface-base/80 hover:bg-surface-base/90 shadow-lg", // Custom glass effect (backdrop-blur removed for testing)
     elevated: "card-elevated bg-white dark:bg-surface-secondary", // Uses component token shadow
     outlined: "border-card-elevated bg-surface-secondary",
     filled: "bg-surface-muted hover:bg-surface-muted/90 shadow-sm",

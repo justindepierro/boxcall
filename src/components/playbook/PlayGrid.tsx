@@ -21,6 +21,7 @@ import { getPlayFlags } from "@utils/localPlayFlags";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { useIsMobile } from "../../hooks/useBreakpoint";
+import { usePreference } from "../../hooks/usePreferences";
 import { info, warn, debug } from "../../utils/logger";
 import {
   validatePlaybookData,
@@ -113,121 +114,43 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   formationSuggestions: _formationSuggestions = [], // Not used in V2
   playNameSuggestions: _playNameSuggestions = [], // Not used in V2
 }) => {
-  // Toggle for play name display mode (true = one-word calls, false = full names)
-  const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem("bc_playgrid_oneword") === "1";
-    } catch {
-      return false;
-    }
-  });
+  // Use server-synced preferences
+  const [showOneWordCalls, setShowOneWordCalls] = usePreference(
+    "bc_playgrid_oneword",
+    false
+  );
+
+  const [directionDisplayFormat, setDirectionDisplayFormat] = usePreference(
+    "bc_playgrid_direction_format",
+    "full" as "full" | "abbrev" | "letter"
+  );
+
+  const [hasManualViewModeOverride, setHasManualViewModeOverride] =
+    usePreference("bc_playgrid_view_manual", false);
+
+  const [viewMode, setViewModeState] = usePreference(
+    "bc_playgrid_view",
+    "list" as "list" | "grid"
+  );
 
   // Track which play card is currently expanded (only one at a time)
   const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
 
-  // Direction display format: 'full', 'abbrev', or 'letter'
-  const [directionDisplayFormat, setDirectionDisplayFormat] = useState<
-    "full" | "abbrev" | "letter"
-  >(() => {
-    try {
-      const stored = localStorage.getItem("bc_playgrid_direction_format");
-      if (stored === "full" || stored === "abbrev" || stored === "letter") {
-        return stored;
-      }
-      return "full";
-    } catch {
-      return "full";
-    }
-  });
-
-  // View mode: 'list' or 'grid' (app icons)
-  const [hasManualViewModeOverride, setHasManualViewModeOverride] =
-    useState<boolean>(() => {
-      try {
-        if (typeof window === "undefined") return false;
-        return localStorage.getItem("bc_playgrid_view_manual") === "1";
-      } catch {
-        return false;
-      }
-    });
-
-  const [viewMode, setViewModeState] = useState<"list" | "grid">(() => {
-    try {
-      if (typeof window === "undefined") {
-        return "list";
-      }
-
-      const storedView = localStorage.getItem("bc_playgrid_view");
-      const hasManualOverride =
-        localStorage.getItem("bc_playgrid_view_manual") === "1";
-
-      if (
-        hasManualOverride &&
-        (storedView === "list" || storedView === "grid")
-      ) {
-        return storedView;
-      }
-
-      const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
-
-      if (isMobileViewport) {
-        return "grid";
-      }
-
-      if (storedView === "list" || storedView === "grid") {
-        return storedView;
-      }
-
-      return "list";
-    } catch {
-      return "list";
-    }
-  });
-
-  const setViewMode = useCallback((mode: "list" | "grid", manual = true) => {
-    setViewModeState((prev) => (prev === mode ? prev : mode));
-
-    if (manual) {
-      setHasManualViewModeOverride(true);
-      try {
-        localStorage.setItem("bc_playgrid_view_manual", "1");
-      } catch {
-        // Ignore persistence errors (private browsing, etc.)
-      }
-    }
-  }, []);
-
   // Drag and drop state for play reordering
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
-  // Persist user preferences
-  useEffect(() => {
-    try {
-      localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
-    } catch {
-      // ignore persistence errors (private browsing, etc.)
-    }
-  }, [showOneWordCalls]);
+  const setViewMode = useCallback(
+    (mode: "list" | "grid", manual = true) => {
+      setViewModeState(mode);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        "bc_playgrid_direction_format",
-        directionDisplayFormat
-      );
-    } catch {
-      // ignore persistence errors (private browsing, etc.)
-    }
-  }, [directionDisplayFormat]);
+      if (manual) {
+        setHasManualViewModeOverride(true);
+      }
+    },
+    [setViewModeState, setHasManualViewModeOverride]
+  );
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("bc_playgrid_view", viewMode);
-    } catch {
-      // ignore persistence errors
-    }
-  }, [viewMode]);
-
+  // Auto-detect mobile viewport for initial view mode (unless user has manual override)
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (hasManualViewModeOverride) return;
@@ -621,7 +544,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           formationSuggestions={collectedSuggestions.formations}
           playNameSuggestions={collectedSuggestions.playNames}
           playTypeSuggestions={collectedSuggestions.playTypes}
-          directionDisplayFormat={directionDisplayFormat}
+          directionDisplayFormat={directionDisplayFormat || "full"}
           isExpanded={expandedPlayId === play.id}
           onToggleExpand={handleToggleExpand}
         />
@@ -782,15 +705,15 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             {/* Direction Display Format Toggle */}
             <div className="flex items-center gap-2">
               <IconButton
-                aria-label={`Direction format: ${directionDisplayFormat}`}
-                tooltip={`Direction format: ${directionDisplayFormat === "full" ? "Full words" : directionDisplayFormat === "abbrev" ? "Abbreviations" : "Letters"}`}
+                aria-label={`Direction format: ${directionDisplayFormat || "full"}`}
+                tooltip={`Direction format: ${(directionDisplayFormat || "full") === "full" ? "Full words" : (directionDisplayFormat || "full") === "abbrev" ? "Abbreviations" : "Letters"}`}
                 onClick={() => {
                   const formats: ("full" | "abbrev" | "letter")[] = [
                     "full",
                     "abbrev",
                     "letter",
                   ];
-                  const currentIndex = formats.indexOf(directionDisplayFormat);
+                  const currentIndex = formats.indexOf(directionDisplayFormat || "full");
                   const nextIndex = (currentIndex + 1) % formats.length;
                   setDirectionDisplayFormat(formats[nextIndex]);
                 }}
@@ -800,9 +723,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 <Icon name="move" className="h-5 w-5 text-text-info" />
               </IconButton>
               <span className="text-sm text-text-secondary">
-                {directionDisplayFormat === "full"
+                {(directionDisplayFormat || "full") === "full"
                   ? "Right/Left"
-                  : directionDisplayFormat === "abbrev"
+                  : (directionDisplayFormat || "full") === "abbrev"
                     ? "Rt/Lt"
                     : "R/L"}
               </span>
@@ -851,7 +774,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             formationSuggestions={collectedSuggestions.formations}
                             playNameSuggestions={collectedSuggestions.playNames}
                             playTypeSuggestions={collectedSuggestions.playTypes}
-                            directionDisplayFormat={directionDisplayFormat}
+                            directionDisplayFormat={directionDisplayFormat || "full"}
                             isExpanded={expandedPlayId === play.id}
                             onToggleExpand={handleToggleExpand}
                           />
@@ -919,7 +842,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               formationSuggestions={collectedSuggestions.formations}
                               playNameSuggestions={collectedSuggestions.playNames}
                               playTypeSuggestions={collectedSuggestions.playTypes}
-                              directionDisplayFormat={directionDisplayFormat}
+                              directionDisplayFormat={directionDisplayFormat || "full"}
                               isExpanded={expandedPlayId === play.id}
                               onToggleExpand={handleToggleExpand}
                             />

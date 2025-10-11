@@ -6,6 +6,7 @@ import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
 import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
+import { usePreference } from "../../hooks/usePreferences";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
@@ -115,38 +116,23 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
     INITIAL_FORMATION_ORDER
   );
-  
-  // Initialize field visibility from localStorage with fallback to defaults
-  const [formationFieldVisibility, setFormationFieldVisibility] =
-    useState<FieldVisibility>(() => {
-      try {
-        const stored = localStorage.getItem('bc_formation_field_visibility');
-        if (stored) {
-          return JSON.parse(stored);
-        }
-      } catch (error) {
-        console.warn('Failed to load formation field visibility:', error);
-      }
-      return INITIAL_FORMATION_VISIBILITY;
-    });
-    
+
+  // Use server-synced preferences for field visibility
+  const [formationFieldVisibility, setFormationFieldVisibility] = usePreference(
+    "bc_formation_field_visibility",
+    INITIAL_FORMATION_VISIBILITY
+  );
+
   const [playDetailsFieldOrder, setPlayDetailsFieldOrder] = useState<string[]>(
     INITIAL_PLAY_DETAILS_ORDER
   );
-  
+
   const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
-    useState<FieldVisibility>(() => {
-      try {
-        const stored = localStorage.getItem('bc_play_details_field_visibility');
-        if (stored) {
-          return JSON.parse(stored);
-        }
-      } catch (error) {
-        console.warn('Failed to load play details field visibility:', error);
-      }
-      return INITIAL_PLAY_DETAILS_VISIBILITY;
-    });
-  
+    usePreference(
+      "bc_play_details_field_visibility",
+      INITIAL_PLAY_DETAILS_VISIBILITY
+    );
+
   // Use controlled expansion if provided, otherwise use internal state
   const [internalIsExpanded, setInternalIsExpanded] = useState(false);
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
@@ -190,7 +176,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const visibleFormationFields = useMemo(
     () =>
       formationFieldOrder.filter(
-        (key) => formationFieldVisibility[key] !== false
+        (key) => (formationFieldVisibility?.[key] ?? true) !== false
       ),
     [formationFieldOrder, formationFieldVisibility]
   );
@@ -198,7 +184,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const visiblePlayDetailsFields = useMemo(
     () =>
       playDetailsFieldOrder.filter(
-        (key) => playDetailsFieldVisibility[key] !== false
+        (key) => (playDetailsFieldVisibility?.[key] ?? true) !== false
       ),
     [playDetailsFieldOrder, playDetailsFieldVisibility]
   );
@@ -286,36 +272,18 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const toggleFieldVisibility = useCallback(
     (fieldKey: string, section: "formation" | "playDetails") => {
       if (section === "formation") {
-        setFormationFieldVisibility((prev) => {
-          const updated = {
-            ...prev,
-            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-          };
-          // Persist to localStorage
-          try {
-            localStorage.setItem('bc_formation_field_visibility', JSON.stringify(updated));
-          } catch (error) {
-            console.warn('Failed to save formation field visibility:', error);
-          }
-          return updated;
-        });
+        setFormationFieldVisibility((prev) => ({
+          ...prev,
+          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+        }));
       } else {
-        setPlayDetailsFieldVisibility((prev) => {
-          const updated = {
-            ...prev,
-            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-          };
-          // Persist to localStorage
-          try {
-            localStorage.setItem('bc_play_details_field_visibility', JSON.stringify(updated));
-          } catch (error) {
-            console.warn('Failed to save play details field visibility:', error);
-          }
-          return updated;
-        });
+        setPlayDetailsFieldVisibility((prev) => ({
+          ...prev,
+          [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+        }));
       }
     },
-    []
+    [setFormationFieldVisibility, setPlayDetailsFieldVisibility]
   );
 
   const handleCreateDiagram = useCallback(() => {
@@ -406,12 +374,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             savingFields={savingFields}
             formationFieldOrder={formationFieldOrder}
             formationFields={formationFields}
-            formationFieldVisibility={formationFieldVisibility}
+            formationFieldVisibility={formationFieldVisibility || INITIAL_FORMATION_VISIBILITY}
             toggleFieldVisibility={toggleFieldVisibility}
             handleFormationDragEnd={handleFormationDragEnd}
             playDetailsFieldOrder={playDetailsFieldOrder}
             playDetailsFields={playDetailsFields}
-            playDetailsFieldVisibility={playDetailsFieldVisibility}
+            playDetailsFieldVisibility={playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY}
             handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
