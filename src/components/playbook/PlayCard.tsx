@@ -286,7 +286,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       className={`rounded-xl border bg-surface-base/90 backdrop-blur-xl transition-all duration-200 overflow-visible ${
         isSelected
           ? "ring-2 ring-brand-primary border-brand-primary shadow-lg"
-          : "shadow-card hover:shadow-card-hover hover:border-brand-primary/30 hover:scale-[1.01]"
+          : "shadow-card hover:shadow-xl hover:border-brand-primary/40 hover:scale-[1.02] hover:-translate-y-1"
       } ${isCompact ? "text-[13px]" : ""} md:min-h-0`}
     >
       <div
