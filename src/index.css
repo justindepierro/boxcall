@@ -199,7 +199,20 @@ body,
     /* Also remove any box-shadow that might look like a border */
     box-shadow: none !important;
   }
-  
+
+  /* Remove focus rings that look like borders - override Tailwind focus utilities */
+  button:focus,
+  button:focus-visible,
+  [type="button"]:focus,
+  [type="button"]:focus-visible,
+  [type="reset"]:focus,
+  [type="reset"]:focus-visible,
+  [type="submit"]:focus,
+  [type="submit"]:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   /* Restore box-shadow only when button has explicit shadow classes */
   button.shadow,
   button.shadow-sm,
