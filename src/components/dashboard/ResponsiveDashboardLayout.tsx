@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalFeed } from "../dashboard/PersonalFeed";
@@ -9,6 +10,8 @@ import { Typography } from "../design-system";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
+import { useMobileNavigation } from "../../hooks/useMobileNavigation";
+import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { AuroraTile } from "../ui/AuroraTile";
 import type { IconName } from "../ui/Icon/Icon";
 import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
@@ -31,9 +34,14 @@ import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
 export const ResponsiveDashboardLayout: React.FC = () => {
   const { user, profile, loading, profileLoading, error } = useAuth();
   const { isStepVisible } = useProgressiveLoading(5, 200);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Fetch real dashboard statistics
   const dashboardStats = useDashboardStats(user?.id);
+
+  // Mobile navigation
+  const { items: mobileNavItems } = useMobileNavigation(location.pathname);
 
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
@@ -341,6 +349,12 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation - Phase 4C */}
+      <MobileBottomNavigation
+        items={mobileNavItems}
+        onNavigate={(href) => navigate(href)}
+      />
     </>
   );
 };
