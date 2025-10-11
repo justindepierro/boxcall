@@ -807,7 +807,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 py-8 px-4 overflow-visible"
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 py-8 px-4"
                 >
                   {visiblePlays.map((play, index) => (
                     <Draggable
@@ -820,7 +820,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className={`flex items-start justify-center overflow-visible ${
+                          className={`w-full ${
                             snapshot.isDragging ? "opacity-50" : ""
                           }`}
                         >
