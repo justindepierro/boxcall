@@ -354,7 +354,11 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                   <button
                     onClick={() => {
                       setShowAddFilter(false);
-                      setNewFilter({ field: "", operator: "equals", value: "" });
+                      setNewFilter({
+                        field: "",
+                        operator: "equals",
+                        value: "",
+                      });
                     }}
                     className="px-3 py-1.5 text-text-muted hover:text-text-secondary text-xs border border-border-subtle rounded-lg hover:bg-surface-muted active:scale-95 transition-all"
                   >
