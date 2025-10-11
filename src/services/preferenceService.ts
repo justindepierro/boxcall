@@ -54,7 +54,11 @@ export class PreferenceService {
 
       // Handle JSONB settings field - Supabase returns Json type
       const settings = (data as { settings: unknown })?.settings;
-      if (!settings || typeof settings !== "object" || Array.isArray(settings)) {
+      if (
+        !settings ||
+        typeof settings !== "object" ||
+        Array.isArray(settings)
+      ) {
         return {};
       }
 
@@ -81,9 +85,7 @@ export class PreferenceService {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        console.log(
-          "[PreferenceService] No user authenticated, skipping save"
-        );
+        console.log("[PreferenceService] No user authenticated, skipping save");
         return false;
       }
 
@@ -145,8 +147,15 @@ export class PreferenceService {
       localPrefs.bc_playgrid_oneword = oneword === "1";
     }
 
-    const directionFormat = localStorage.getItem("bc_playgrid_direction_format");
-    if (directionFormat && (directionFormat === "full" || directionFormat === "abbrev" || directionFormat === "letter")) {
+    const directionFormat = localStorage.getItem(
+      "bc_playgrid_direction_format"
+    );
+    if (
+      directionFormat &&
+      (directionFormat === "full" ||
+        directionFormat === "abbrev" ||
+        directionFormat === "letter")
+    ) {
       localPrefs.bc_playgrid_direction_format = directionFormat;
     }
 

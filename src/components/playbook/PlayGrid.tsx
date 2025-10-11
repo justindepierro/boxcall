@@ -713,7 +713,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     "abbrev",
                     "letter",
                   ];
-                  const currentIndex = formats.indexOf(directionDisplayFormat || "full");
+                  const currentIndex = formats.indexOf(
+                    directionDisplayFormat || "full"
+                  );
                   const nextIndex = (currentIndex + 1) % formats.length;
                   setDirectionDisplayFormat(formats[nextIndex]);
                 }}
@@ -771,10 +773,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             onSelectionChange={handlePlaySelect}
                             variant="tile"
                             density="comfortable"
-                            formationSuggestions={collectedSuggestions.formations}
+                            formationSuggestions={
+                              collectedSuggestions.formations
+                            }
                             playNameSuggestions={collectedSuggestions.playNames}
                             playTypeSuggestions={collectedSuggestions.playTypes}
-                            directionDisplayFormat={directionDisplayFormat || "full"}
+                            directionDisplayFormat={
+                              directionDisplayFormat || "full"
+                            }
                             isExpanded={expandedPlayId === play.id}
                             onToggleExpand={handleToggleExpand}
                           />
@@ -839,10 +845,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onCreateDiagram={onCreateDiagram}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={handlePlaySelect}
-                              formationSuggestions={collectedSuggestions.formations}
-                              playNameSuggestions={collectedSuggestions.playNames}
-                              playTypeSuggestions={collectedSuggestions.playTypes}
-                              directionDisplayFormat={directionDisplayFormat || "full"}
+                              formationSuggestions={
+                                collectedSuggestions.formations
+                              }
+                              playNameSuggestions={
+                                collectedSuggestions.playNames
+                              }
+                              playTypeSuggestions={
+                                collectedSuggestions.playTypes
+                              }
+                              directionDisplayFormat={
+                                directionDisplayFormat || "full"
+                              }
                               isExpanded={expandedPlayId === play.id}
                               onToggleExpand={handleToggleExpand}
                             />

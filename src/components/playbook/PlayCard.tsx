@@ -374,12 +374,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             savingFields={savingFields}
             formationFieldOrder={formationFieldOrder}
             formationFields={formationFields}
-            formationFieldVisibility={formationFieldVisibility || INITIAL_FORMATION_VISIBILITY}
+            formationFieldVisibility={
+              formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
+            }
             toggleFieldVisibility={toggleFieldVisibility}
             handleFormationDragEnd={handleFormationDragEnd}
             playDetailsFieldOrder={playDetailsFieldOrder}
             playDetailsFields={playDetailsFields}
-            playDetailsFieldVisibility={playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY}
+            playDetailsFieldVisibility={
+              playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
+            }
             handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}

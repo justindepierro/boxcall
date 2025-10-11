@@ -68,10 +68,7 @@ export function usePreference<K extends keyof UserPreferences>(
           }
         }
       } catch (error) {
-        console.error(
-          `[usePreference] Error loading ${String(key)}:`,
-          error
-        );
+        console.error(`[usePreference] Error loading ${String(key)}:`, error);
         // Fall back to localStorage on error
         if (!cancelled) {
           setValue(getFromLocalStorage(key, defaultValue));
@@ -103,12 +100,21 @@ export function usePreference<K extends keyof UserPreferences>(
 
   // Update value with debounced server sync
   const updateValue = useCallback(
-    (newValueOrUpdater: UserPreferences[K] | ((prev: UserPreferences[K]) => UserPreferences[K])) => {
+    (
+      newValueOrUpdater:
+        | UserPreferences[K]
+        | ((prev: UserPreferences[K]) => UserPreferences[K])
+    ) => {
       // Handle both direct values and updater functions (like React setState)
-      const newValue = typeof newValueOrUpdater === 'function'
-        ? (newValueOrUpdater as (prev: UserPreferences[K]) => UserPreferences[K])(value)
-        : newValueOrUpdater;
-      
+      const newValue =
+        typeof newValueOrUpdater === "function"
+          ? (
+              newValueOrUpdater as (
+                prev: UserPreferences[K]
+              ) => UserPreferences[K]
+            )(value)
+          : newValueOrUpdater;
+
       setValue(newValue);
 
       // Save to localStorage immediately for offline support
