@@ -798,6 +798,19 @@ export default function PlaybookPage() {
                 />
 
                 <AppIconTile
+                  title="Formation Builder"
+                  subtitle="Visual tool"
+                  icon="grid"
+                  gradient="from-indigo-500 to-purple-600"
+                  onOpen={() => {
+                    // TODO: Open FormationBuilderModal
+                    alert(
+                      "Formation Builder modal will open here - visual formation creator"
+                    );
+                  }}
+                />
+
+                <AppIconTile
                   title="Bulk Actions"
                   subtitle="Mass edit"
                   icon="list"
