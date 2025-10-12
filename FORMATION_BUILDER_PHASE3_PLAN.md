@@ -29,12 +29,14 @@ PlaybookPage
 ## Step-by-Step Implementation
 
 ### Step 1: Create FormationBuilderModal Shell ✅
+
 - [ ] Create `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`
 - [ ] Basic modal structure with header/body/footer
 - [ ] Props: `isOpen`, `onClose`, `playbookId`, `formationId?` (for editing)
 - [ ] Integration with PlaybookPage state
 
 ### Step 2: Build FormationBuilderCanvas
+
 - [ ] Create `FormationBuilderCanvas.tsx`
 - [ ] Canvas dimensions: Match field proportions (53.3 yards wide x ~30 yards deep)
 - [ ] Coordinate system: Pixels to yard conversion
@@ -42,6 +44,7 @@ PlaybookPage
 - [ ] Line of scrimmage (LOS) indicator
 
 ### Step 3: Add Player Positioning
+
 - [ ] Create `DraggablePlayer.tsx` component
 - [ ] Default 11 player positions (standard formation)
 - [ ] Drag-drop functionality (react-dnd or custom)
@@ -50,23 +53,27 @@ PlaybookPage
 - [ ] Snap to grid option
 
 ### Step 4: Personnel Integration
+
 - [ ] Fetch personnel configurations for playbook
 - [ ] Personnel selector dropdown
 - [ ] Apply personnel labels to player positions
 - [ ] Auto-assign labels based on position (X/Y/Z get WR labels, H gets RB/TE, etc.)
 
 ### Step 5: Strength Player Selection
+
 - [ ] UI to mark one player as "strength setter"
 - [ ] Visual indicator (different color, star icon)
 - [ ] Updates `strength_player_position` and `strength_player_label`
 
 ### Step 6: Left/Right Variant Preview
+
 - [ ] Toggle buttons: Base | Left | Right
 - [ ] Preview flipped positions without saving
 - [ ] Use `FormationService.flipPositions()` logic
 - [ ] Show both variants side-by-side
 
 ### Step 7: Save/Update Flow
+
 - [ ] Name input field
 - [ ] Category selector (spread, pro, power, etc.)
 - [ ] Tags input (multi-select or chip input)
@@ -75,12 +82,14 @@ PlaybookPage
 - [ ] Validation feedback
 
 ### Step 8: Edit Mode
+
 - [ ] Load existing formation by ID
 - [ ] Populate fields with existing data
 - [ ] Update button → calls `FormationService.updateFormation()`
 - [ ] Delete button with confirmation
 
 ### Step 9: Connect to PlaybookPage
+
 - [ ] Add state: `const [showFormationBuilder, setShowFormationBuilder] = useState(false)`
 - [ ] Update hero button onClick: `setShowFormationBuilder(true)`
 - [ ] Add FormationBuilderModal to render tree
@@ -90,6 +99,7 @@ PlaybookPage
 ## UI/UX Design
 
 ### Layout
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  Formation Builder                          [X] │  ← Header
@@ -118,6 +128,7 @@ PlaybookPage
 ```
 
 ### Colors & Styling
+
 - **Field:** Green gradient (#166534 → #15803d)
 - **Players:** Circular markers, team colors
 - **Strength Player:** Gold/yellow highlight
@@ -129,6 +140,7 @@ PlaybookPage
 ## Data Flow
 
 ### Create New Formation
+
 ```typescript
 1. User clicks "Formation Builder" hero button
 2. Modal opens with empty canvas
@@ -145,6 +157,7 @@ PlaybookPage
 ```
 
 ### Edit Existing Formation
+
 ```typescript
 1. User clicks "Edit" on formation card
 2. Modal opens with loaded data
@@ -160,6 +173,7 @@ PlaybookPage
 ## Technical Details
 
 ### Canvas Coordinate System
+
 - **Field Width:** 53.3 yards (160 feet)
 - **Canvas Width:** 800px (scalable)
 - **Pixel Ratio:** 800px / 53.3 = ~15 pixels per yard
@@ -167,6 +181,7 @@ PlaybookPage
 - **Player Size:** 24px diameter circles
 
 ### Player Position Schema
+
 ```typescript
 {
   position: "X",           // Position code
@@ -180,19 +195,20 @@ PlaybookPage
 ```
 
 ### Default Player Positions (Twins Same Example)
+
 ```typescript
 const defaultPositions = [
   { position: "LT", x: 20, y: 0 },
   { position: "LG", x: 23, y: 0 },
-  { position: "C",  x: 26, y: 0 },
+  { position: "C", x: 26, y: 0 },
   { position: "RG", x: 29, y: 0 },
   { position: "RT", x: 32, y: 0 },
-  { position: "Q",  x: 26, y: 5 },
-  { position: "X",  x: 15, y: 0 },  // Left outside
-  { position: "Y",  x: 18, y: 0 },  // Left slot
-  { position: "Z",  x: 35, y: 0 },  // Right outside
-  { position: "H",  x: 38, y: 0 },  // Right slot
-  { position: "F",  x: 24, y: 5 },  // Backfield
+  { position: "Q", x: 26, y: 5 },
+  { position: "X", x: 15, y: 0 }, // Left outside
+  { position: "Y", x: 18, y: 0 }, // Left slot
+  { position: "Z", x: 35, y: 0 }, // Right outside
+  { position: "H", x: 38, y: 0 }, // Right slot
+  { position: "F", x: 24, y: 5 }, // Backfield
 ];
 ```
 
@@ -201,17 +217,26 @@ const defaultPositions = [
 ## Dependencies
 
 ### Libraries Needed
+
 - ✅ **React** (already installed)
 - ✅ **Tailwind CSS** (already installed)
 - ❓ **react-dnd** or **use-gesture** for drag-drop
 - ❓ **framer-motion** for animations (already installed?)
 
 ### Alternative: Custom Drag-Drop
+
 If we want to avoid new dependencies, we can use native mouse/touch events:
+
 ```typescript
-const handleMouseDown = (e: React.MouseEvent) => { /* start drag */ };
-const handleMouseMove = (e: React.MouseEvent) => { /* update position */ };
-const handleMouseUp = () => { /* end drag */ };
+const handleMouseDown = (e: React.MouseEvent) => {
+  /* start drag */
+};
+const handleMouseMove = (e: React.MouseEvent) => {
+  /* update position */
+};
+const handleMouseUp = () => {
+  /* end drag */
+};
 ```
 
 ---
@@ -219,17 +244,20 @@ const handleMouseUp = () => { /* end drag */ };
 ## Testing Plan
 
 ### Unit Tests
+
 - [ ] `FormationService.flipPositions()` flips correctly
 - [ ] Coordinate conversions (pixels ↔ yards)
 - [ ] Validation catches bad inputs
 
 ### Integration Tests
+
 - [ ] Create formation → appears in playbook
 - [ ] Edit formation → updates in database
 - [ ] Create variants → generates left/right correctly
 - [ ] Personnel linkage → labels apply correctly
 
 ### Manual Tests
+
 - [ ] Drag players on canvas
 - [ ] Select personnel, see labels update
 - [ ] Mark strength player
@@ -242,6 +270,7 @@ const handleMouseUp = () => { /* end drag */ };
 ## Success Criteria
 
 ✅ **Phase 3 is complete when:**
+
 1. FormationBuilderModal renders with field canvas
 2. Can drag 11 players to positions
 3. Can select personnel and see labels apply
@@ -256,11 +285,13 @@ const handleMouseUp = () => { /* end drag */ };
 ## Next Steps After Phase 3
 
 **Phase 4:** Integrate formations into play creation
+
 - Update AddNewPlayModal with formation selector
 - Save `formation_id` when creating plays
 - Display formation badges on PlayCard
 
 **Phase 5:** Duplicate + Flip functionality
+
 - Duplicate play with formation flip
 - Auto-flip diagram positions
 

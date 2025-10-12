@@ -15,6 +15,7 @@ Successfully integrated the FormationSelector component into the play creation w
 ## Changes Made
 
 ### 1. Updated FormationSection Component
+
 **File:** `src/components/playbook/AddNewPlayModal/sections/FormationSection.tsx`
 
 - ✅ Added `FormationSelector` import
@@ -38,13 +39,16 @@ Backwards compatibility maintained - if `playbookId` is not provided, falls back
 ---
 
 ### 2. Updated AddNewPlayModal Component
+
 **File:** `src/components/playbook/AddNewPlayModal.tsx`
 
 #### Interface Changes
+
 - ✅ Added `playbookId?: string` to `AddNewPlayModalProps` interface
 - ✅ Added `playbookId` to component destructuring
 
 #### FormationSection Usage (Lines 304-327)
+
 - ✅ Added `formationId={formData.formation_id}` prop
 - ✅ Added `playbookId={playbookId}` prop
 - ✅ Added `onFormationIdChange` handler:
@@ -59,12 +63,14 @@ Backwards compatibility maintained - if `playbookId` is not provided, falls back
 - Updates both database ID and text name simultaneously
 
 #### Form Submission (Line 88)
+
 - ✅ Added `formation_id: formData.formation_id || undefined` to playData object
 - Database relationship now saved when creating/editing plays
 
 ---
 
 ### 3. Updated PlaybookPage
+
 **File:** `src/pages/PlaybookPage.tsx`
 
 - ✅ Added `playbookId={activeTeamId || ""}` prop when rendering `AddNewPlayModal` (line 1041)
@@ -123,6 +129,7 @@ Database trigger fires:
 ## Backwards Compatibility
 
 ### If playbookId is provided (NEW):
+
 - Uses `FormationSelector` component
 - Loads formations from database
 - Saves `formation_id` relationship
@@ -130,6 +137,7 @@ Database trigger fires:
 - Usage count tracking enabled
 
 ### If playbookId is missing (OLD):
+
 - Falls back to `FuzzySearchInput`
 - Text-based formation entry
 - No database relationship
@@ -142,6 +150,7 @@ This ensures existing code/stories work without modification.
 ## Testing Checklist
 
 ### Manual Tests Needed
+
 - [ ] Open AddNewPlayModal - FormationSelector appears
 - [ ] Click Formation dropdown - formations load by category
 - [ ] Select "Twins Same - Base" - form updates with ID and name
@@ -152,6 +161,7 @@ This ensures existing code/stories work without modification.
 - [ ] Create play without playbookId - falls back to text input
 
 ### Edge Cases
+
 - [ ] Empty formations list - shows "No formations available"
 - [ ] Loading state - shows spinner
 - [ ] Error loading formations - shows error message
@@ -163,17 +173,21 @@ This ensures existing code/stories work without modification.
 ## Database Impact
 
 ### Plays Table
+
 New field now being saved:
+
 ```sql
 formation_id UUID REFERENCES formations(id) ON DELETE SET NULL
 ```
 
 When `formation_id` is saved, the database trigger automatically:
+
 1. Validates formation exists
 2. Increments `formations.usage_count`
 3. Updates `formations.updated_at` timestamp
 
 ### Example Play Record
+
 ```json
 {
   "id": "play-123",
@@ -192,9 +206,11 @@ When `formation_id` is saved, the database trigger automatically:
 ## Next Steps
 
 ### Phase 4 Step 4.3: Update PlayCard to Display Formation Badges
+
 **Goal:** Show formation info on play cards
 
 **Tasks:**
+
 1. Read formation details when rendering PlayCard
 2. Display formation badge with:
    - Formation name
@@ -205,20 +221,24 @@ When `formation_id` is saved, the database trigger automatically:
 4. Handle NULL formation_id gracefully
 
 **Files to Modify:**
+
 - `src/components/playbook/PlayCard.tsx` (or similar component)
 
 ---
 
 ### Phase 4 Step 4.4: Support formation_direction Field
+
 **Goal:** Track which variant (Base/Left/Right) was selected
 
 **Tasks:**
+
 1. Update PlayFormData to include `formation_direction: 'base' | 'left' | 'right' | null`
 2. When user selects formation variant, save direction
 3. FormationSelector already provides this info via `formation.direction`
 4. Update form submission to include `formation_direction`
 
 **Benefits:**
+
 - Can filter plays by formation variant
 - Analytics on which variants are most used
 - Supports duplicate+flip functionality
@@ -226,9 +246,11 @@ When `formation_id` is saved, the database trigger automatically:
 ---
 
 ### Phase 5: Duplicate + Flip
+
 **Goal:** Let users duplicate plays and auto-flip formation
 
 **Tasks:**
+
 1. Add "Duplicate" and "Duplicate & Flip" to play menu
 2. Create `duplicatePlay()` method in PlaysService
 3. If flip:
@@ -244,12 +266,14 @@ When `formation_id` is saved, the database trigger automatically:
 ### Why Both formation AND formation_id?
 
 **formation (TEXT)**
+
 - Legacy field - existing plays have text values
 - Display fallback if formation deleted
 - Human-readable name
 - Backwards compatibility
 
 **formation_id (UUID)**
+
 - Database relationship
 - Enables joins with formations table
 - Usage tracking via triggers
@@ -260,10 +284,12 @@ When `formation_id` is saved, the database trigger automatically:
 ### Decision: Keep both fields, prefer formation_id
 
 When displaying:
+
 1. If `formation_id` exists → Load formation from database, show badges
 2. If `formation_id` NULL → Use `formation` text as fallback
 
 When creating:
+
 - Always save both fields for maximum compatibility
 
 ---
@@ -271,11 +297,13 @@ When creating:
 ## File Summary
 
 ### Modified Files (3)
+
 1. **FormationSection.tsx** - Added FormationSelector support
 2. **AddNewPlayModal.tsx** - Added playbookId prop, formation_id handling
 3. **PlaybookPage.tsx** - Pass playbookId to modal
 
 ### Dependencies
+
 - `FormationSelector` component (created in Phase 4 Step 1)
 - `FormationService.getFormationsByPlaybook()` (created in Phase 2)
 - `PlayFormData.formation_id` field (added in Phase 4 Step 2)

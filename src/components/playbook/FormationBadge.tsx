@@ -16,9 +16,9 @@ interface FormationBadgeProps {
 
 /**
  * FormationBadge Component
- * 
+ *
  * Displays formation information with optional direction arrow, personnel, and usage count.
- * 
+ *
  * Features:
  * - Loads formation details from database if formationId provided
  * - Falls back to formationName text if no ID
@@ -26,11 +26,11 @@ interface FormationBadgeProps {
  * - Shows linked personnel (e.g., "11 Personnel")
  * - Shows usage count (e.g., "5x")
  * - Handles loading and error states gracefully
- * 
+ *
  * @example
  * // With database relationship
  * <FormationBadge formationId="uuid-123" showPersonnel showUsageCount />
- * 
+ *
  * // Backwards compatible with text only
  * <FormationBadge formationName="Shotgun" />
  */
@@ -115,7 +115,7 @@ export const FormationBadge: React.FC<FormationBadgeProps> = ({
         } font-medium`}
       >
         {displayName}
-        
+
         {/* Direction indicator */}
         {showDirection && displayDirection && displayDirection !== "base" && (
           <span className="inline-flex items-center">
@@ -142,16 +142,18 @@ export const FormationBadge: React.FC<FormationBadgeProps> = ({
       )}
 
       {/* Usage count badge */}
-      {showUsageCount && displayUsageCount !== undefined && displayUsageCount > 0 && (
-        <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full ${
-            size === "sm" ? "text-xs" : "text-sm"
-          } font-medium`}
-        >
-          <Icon name="trending-up" className="w-3 h-3" />
-          {displayUsageCount}x
-        </span>
-      )}
+      {showUsageCount &&
+        displayUsageCount !== undefined &&
+        displayUsageCount > 0 && (
+          <span
+            className={`inline-flex items-center gap-1 px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full ${
+              size === "sm" ? "text-xs" : "text-sm"
+            } font-medium`}
+          >
+            <Icon name="trending-up" className="w-3 h-3" />
+            {displayUsageCount}x
+          </span>
+        )}
     </div>
   );
 };

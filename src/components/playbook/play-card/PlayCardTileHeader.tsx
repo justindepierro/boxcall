@@ -150,14 +150,14 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             size="sm"
           />
         )}
-        
+
         {/* Formation type badge (if no formation_id, show old behavior) */}
         {!optimisticPlay.formation_id && optimisticPlay.f_type && (
           <span className="px-2 py-0.5 bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium">
             {optimisticPlay.f_type}
           </span>
         )}
-        
+
         {/* Installation phase badge */}
         {phaseLabel && (
           <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">

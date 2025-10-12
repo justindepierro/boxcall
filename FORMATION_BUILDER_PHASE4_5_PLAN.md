@@ -9,6 +9,7 @@
 ## Phase 4 Tasks
 
 ### Task 1: Create Formation Selector Component
+
 - [ ] Build `FormationSelector.tsx` dropdown
 - [ ] Load formations from FormationService
 - [ ] Group by personnel if needed
@@ -16,6 +17,7 @@
 - [ ] Filter by playbook
 
 ### Task 2: Update AddNewPlayModal
+
 - [ ] Replace formation text input with FormationSelector
 - [ ] Add formation direction dropdown (Base/Left/Right)
 - [ ] Save `formation_id` and `formation_direction` to plays table
@@ -23,11 +25,13 @@
 - [ ] Show selected formation in preview
 
 ### Task 3: Update PlaysService
+
 - [ ] Modify `createPlay()` to save formation_id
 - [ ] Modify `updatePlay()` to save formation_id
 - [ ] Keep formation TEXT synced for backwards compatibility
 
 ### Task 4: Display Formation Badges on PlayCard
+
 - [ ] Show formation name badge
 - [ ] Show direction indicator (Left/Right arrow)
 - [ ] Show personnel badge if linked
@@ -44,17 +48,20 @@
 ## Phase 5 Tasks
 
 ### Task 1: Add Duplicate Button to PlayCard
+
 - [ ] Add "Duplicate" action to play menu
 - [ ] Option: "Duplicate & Flip Formation"
 - [ ] Modal or confirmation dialog
 
 ### Task 2: Implement Duplicate Logic
+
 - [ ] Copy all play data (name, concept, tags, etc.)
 - [ ] If flipping: Get opposite formation variant
 - [ ] If flipping: Mirror diagram_data positions
 - [ ] Update play name (e.g., "Power Right" → "Power Left")
 
 ### Task 3: Diagram Position Flipping
+
 - [ ] Create `flipDiagramPositions()` utility
 - [ ] Use same FIELD_WIDTH constant (53.3 yards)
 - [ ] Flip player.x coordinates in diagram_data
@@ -67,39 +74,47 @@
 ### 🎯 Phase 4 - Step by Step
 
 #### Step 4.1: Create FormationSelector Component
+
 **File:** `src/components/playbook/FormationSelector.tsx`
 
 Features:
+
 - Load formations for current playbook
 - Dropdown with search
 - Group by category or personnel
 - Show "Base / Left / Right" badges
 
 #### Step 4.2: Add Formation Fields to AddNewPlayModal
+
 **File:** `src/components/playbook/AddNewPlayModal/AddNewPlayModal.tsx`
 
 Changes:
+
 - Replace formation text input with FormationSelector
 - Add formation_direction dropdown
 - Update form state to track formation_id
 
 #### Step 4.3: Update PlaysService to Save Formation ID
+
 **File:** `src/services/playsService.ts`
 
 Changes:
+
 ```typescript
 createPlay({
   ...playData,
   formation_id: selectedFormation?.id,
   formation_direction: selectedDirection,
   formation: selectedFormation?.name || playData.formation, // Backwards compat
-})
+});
 ```
 
 #### Step 4.4: Update PlayCard to Display Formation Badge
+
 **File:** `src/components/playbook/PlayCard.tsx`
 
 Add:
+
 - Formation badge with name
 - Direction arrow (← Left / → Right)
 - Personnel badge
@@ -109,13 +124,16 @@ Add:
 ### 🚀 Phase 5 - Step by Step
 
 #### Step 5.1: Add Duplicate Menu Option
+
 **File:** `src/components/playbook/PlayCard.tsx`
 
 Add menu item:
+
 - "Duplicate Play"
 - "Duplicate & Flip"
 
 #### Step 5.2: Implement Duplicate Function
+
 **File:** `src/services/playsService.ts`
 
 ```typescript
@@ -126,12 +144,14 @@ async duplicatePlay(playId: string, options?: {
 ```
 
 Logic:
+
 1. Load original play
 2. If flip: Get opposite formation variant
 3. If flip: Mirror diagram positions
 4. Create new play with duplicated data
 
 #### Step 5.3: Diagram Position Flipping Utility
+
 **File:** `src/utils/diagramHelpers.ts`
 
 ```typescript
@@ -220,11 +240,13 @@ Success! Mirrored play created in seconds!
 ## UI Changes
 
 ### AddNewPlayModal - Before
+
 ```
 Formation: [_________] (text input)
 ```
 
 ### AddNewPlayModal - After
+
 ```
 Formation: [Twins Same ▼] (dropdown)
 Direction: [Base] [Left] [Right] (toggle buttons)
@@ -233,6 +255,7 @@ Preview: 🏈 Twins Same - Left (Blue personnel)
 ```
 
 ### PlayCard - Before
+
 ```
 ┌─────────────────────┐
 │ Power               │
@@ -241,6 +264,7 @@ Preview: 🏈 Twins Same - Left (Blue personnel)
 ```
 
 ### PlayCard - After
+
 ```
 ┌─────────────────────┐
 │ Power               │
@@ -302,6 +326,7 @@ Preview: 🏈 Twins Same - Left (Blue personnel)
 ## Success Criteria
 
 ### ✅ Phase 4 Complete When:
+
 1. Can select formation from dropdown (not text input)
 2. Formation_id saves to plays table
 3. Usage_count auto-increments via trigger
@@ -310,6 +335,7 @@ Preview: 🏈 Twins Same - Left (Blue personnel)
 6. Can edit formation on existing plays
 
 ### ✅ Phase 5 Complete When:
+
 1. Can duplicate any play
 2. Can duplicate with formation flip
 3. Diagram positions flip correctly
@@ -322,12 +348,14 @@ Preview: 🏈 Twins Same - Left (Blue personnel)
 ## Quick Wins
 
 **Immediate value after Phase 4:**
+
 - ✅ Formations are database records (not strings)
 - ✅ Usage tracking automatic
 - ✅ Personnel integration visible
 - ✅ "Everything is connected" architecture working
 
 **Immediate value after Phase 5:**
+
 - ✅ Create 2 plays (Left + Right) in 10 seconds
 - ✅ No manual diagram editing needed
 - ✅ Consistent naming and organization

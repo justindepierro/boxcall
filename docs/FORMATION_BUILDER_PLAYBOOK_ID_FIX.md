@@ -1,10 +1,12 @@
 # Formation Builder Playbook ID Fix
+
 **Date:** October 12, 2025  
 **Issue:** Edit Details tab showed "No formations found" despite having 6 formations in database
 
 ## Root Cause Analysis
 
 ### The Problem
+
 The FormationBuilderModal was receiving **`team_id`** instead of **`playbook_id`**:
 
 ```typescript
@@ -15,12 +17,14 @@ The FormationBuilderModal was receiving **`team_id`** instead of **`playbook_id`
 ```
 
 ### Why It Failed
+
 - **Formations Table Schema:** `formations.playbook_id` → UUID foreign key to `playbooks.id`
 - **Database State:** 6 formations stored with `playbook_id = 291675df-b531-4754-b359-4bec6867542d`
 - **Query:** `FormationService.getFormationsByPlaybook(team_id)` returned 0 results
 - **Result:** Edit Details tab showed empty state
 
 ### Console Logs That Revealed the Issue
+
 ```
 FormationBuilderPanel.tsx:41 🏗️ FormationBuilderPanel MOUNTED with playbookId: e2b03ad6-1660-487a-aa35-5de132f641b8
 formationService.ts:187 📊 FormationService query result: {dataLength: 0, error: undefined, data: Array(0)}
@@ -32,6 +36,7 @@ Meanwhile, FormationLinkingPanel worked because it called `importFormationsFromP
 ## The Solution
 
 ### 1. Import `useTeamsData` Hook
+
 Get access to playbooks array:
 
 ```typescript
@@ -40,7 +45,7 @@ import { useTeamsData } from "../hooks/useTeamsData";
 
 export default function PlaybookPage() {
   const { activeTeamId } = useActiveTeamStore();
-  
+
   // Get playbooks to find the active playbook_id
   const { playbooks } = useTeamsData();
   const activePlaybook = playbooks.find(pb => pb.team_id === activeTeamId && pb.is_active);
@@ -48,6 +53,7 @@ export default function PlaybookPage() {
 ```
 
 ### 2. Update Modal Props
+
 Pass correct `activePlaybookId` to both modals:
 
 ```typescript
@@ -65,6 +71,7 @@ Pass correct `activePlaybookId` to both modals:
 ## Database Architecture Context
 
 ### Table Relationships
+
 ```
 teams (team_id: e2b03ad6...)
   └── playbooks (playbook_id: 291675df..., team_id: e2b03ad6...)
@@ -74,6 +81,7 @@ teams (team_id: e2b03ad6...)
 ```
 
 ### Current State
+
 ```bash
 # Team: e2b03ad6-1660-487a-aa35-5de132f641b8
 Playbook: Test Playbook 2
@@ -86,20 +94,23 @@ Playbook: Test Playbook 2
 ## Bonus Fix: Hide Base Formations with Variants
 
 ### User Request
+
 > "we should hide those base formations IF there is a left and right variant of them made from linking"
 
 ### Implementation
+
 Added filtering logic in `FormationLinkingPanel.tsx`:
 
 ```typescript
 // Filter out base formations if they have left/right variants
-const visibleFormations = allFormations.filter(formation => {
+const visibleFormations = allFormations.filter((formation) => {
   // If direction is 'base', check if variants exist
-  if (formation.direction === 'base') {
-    const hasVariants = allFormations.some(f => 
-      f.name === formation.name && 
-      f.direction !== 'base' &&
-      (f.direction === 'left' || f.direction === 'right')
+  if (formation.direction === "base") {
+    const hasVariants = allFormations.some(
+      (f) =>
+        f.name === formation.name &&
+        f.direction !== "base" &&
+        (f.direction === "left" || f.direction === "right")
     );
     // Only show base formation if no variants exist
     return !hasVariants;
@@ -109,10 +120,13 @@ const visibleFormations = allFormations.filter(formation => {
 });
 
 // Use visibleFormations in both dropdowns
-{visibleFormations.map(renderFormationOption)}
+{
+  visibleFormations.map(renderFormationOption);
+}
 ```
 
 ### Behavior
+
 - **Twins (base)**: Hidden because Twins (left) and Twins (right) exist
 - **Trips (base)**: Hidden because Trips (left) and Trips (right) exist
 - **New Formation (base)**: Would be shown until left/right variants are linked
@@ -121,6 +135,7 @@ const visibleFormations = allFormations.filter(formation => {
 ## Testing Checklist
 
 ### ✅ Edit Details Tab
+
 - [ ] Refresh browser (Cmd+R)
 - [ ] Click "Formation Manager" button
 - [ ] Click "Edit Details" tab
@@ -129,6 +144,7 @@ const visibleFormations = allFormations.filter(formation => {
 - [ ] Edit values and save
 
 ### ✅ Link Formations Tab
+
 - [ ] Refresh browser (Cmd+R)
 - [ ] Click "Formation Manager" button
 - [ ] Click "Link Formations" tab
@@ -136,6 +152,7 @@ const visibleFormations = allFormations.filter(formation => {
 - [ ] **Expected:** Base formations (Twins base, Trips base) hidden
 
 ### ✅ Formation Import
+
 - [ ] Create a new play with formation name "Bunch"
 - [ ] Open Formation Manager → Link Formations
 - [ ] **Expected:** "✨ Imported 1 formation from your plays" message

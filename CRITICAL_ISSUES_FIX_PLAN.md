@@ -15,7 +15,7 @@ The **TypeScript types include diagram fields** but the **database schema does N
 ❌ **DiagramEditor cannot save diagrams** - DB will reject `diagram_data` field  
 ❌ **All diagram saves fail silently** - Using `as any` type assertions hides errors  
 ❌ **Data loss risk** - Diagrams may be "saving" but not persisting  
-❌ **Query failures** - Can't query plays by diagram properties  
+❌ **Query failures** - Can't query plays by diagram properties
 
 ---
 
@@ -26,7 +26,7 @@ The **TypeScript types include diagram fields** but the **database schema does N
 ```typescript
 export interface Play {
   // ... other fields ...
-  
+
   // Diagram fields (NEW - October 12, 2025)
   diagram_data?: DiagramDocument | null; // JSONB - structured diagram document
   diagram_version?: number | null; // integer - diagram format version
@@ -104,7 +104,7 @@ ORDER BY column_name;
 column_name      | data_type | is_nullable
 -----------------+-----------+-------------
 diagram_data     | jsonb     | YES
-diagram_version  | integer   | YES  
+diagram_version  | integer   | YES
 diagram_url      | text      | YES
 ```
 
@@ -148,23 +148,23 @@ ALTER TABLE plays
 ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT false;
 
 -- Create GIN indexes for fast JSONB queries
-CREATE INDEX IF NOT EXISTS idx_plays_diagram_data 
+CREATE INDEX IF NOT EXISTS idx_plays_diagram_data
 ON plays USING GIN (diagram_data);
 
-CREATE INDEX IF NOT EXISTS idx_plays_diagram_players 
+CREATE INDEX IF NOT EXISTS idx_plays_diagram_players
 ON plays USING GIN ((diagram_data->'players'));
 
-CREATE INDEX IF NOT EXISTS idx_plays_diagram_version 
+CREATE INDEX IF NOT EXISTS idx_plays_diagram_version
 ON plays (diagram_version);
 
 -- Add helpful comments
-COMMENT ON COLUMN plays.diagram_data IS 
+COMMENT ON COLUMN plays.diagram_data IS
 'JSONB diagram document (v2+). Contains players, routes, field settings, and drawing elements.';
 
-COMMENT ON COLUMN plays.diagram_version IS 
+COMMENT ON COLUMN plays.diagram_version IS
 'Diagram format version (1-10). Used for backward compatibility during migrations.';
 
-COMMENT ON COLUMN plays.diagram_url IS 
+COMMENT ON COLUMN plays.diagram_url IS
 'PNG thumbnail URL only. Use diagram_data for actual diagram structure.';
 
 COMMIT;
@@ -192,12 +192,12 @@ After confirming columns exist in database, update the schema file:
 CREATE TABLE plays (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   playbook_id UUID REFERENCES playbooks(id) ON DELETE CASCADE,
-  
+
   -- Core play data (required)
   formation TEXT NOT NULL,
   play_name TEXT NOT NULL,
   p_type TEXT NOT NULL CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action')),
-  
+
   -- Optional core fields
   one_word_play TEXT,
   personnel TEXT,
@@ -207,20 +207,20 @@ CREATE TABLE plays (
   p_dir TEXT,
   r_str TEXT,
   p_str TEXT,
-  
+
   -- Preferences
   pref_down TEXT,
   pref_dis TEXT,
   pref_hash TEXT,
   pref_cov TEXT,
   pref_front TEXT,
-  
+
   -- Tags
   ftag1 TEXT,
   ftag2 TEXT,
   p_tag1 TEXT,
   p_tag2 TEXT,
-  
+
   -- Additional data
   back_align TEXT,
   shift TEXT,
@@ -229,17 +229,17 @@ CREATE TABLE plays (
   key_player2 TEXT,
   check_into TEXT,
   notes TEXT,
-  
+
   -- Performance metrics
   confidence_base INTEGER DEFAULT 70,
   times_called INTEGER DEFAULT 0,
   times_successful INTEGER DEFAULT 0,
-  
+
   -- Diagram fields (added Oct 12, 2025)
   diagram_data JSONB,              -- Structured diagram document (v2+)
   diagram_version INTEGER,         -- Format version for migrations
   diagram_url TEXT,                -- PNG thumbnail URL
-  
+
   -- Metadata
   created_by TEXT NOT NULL DEFAULT 'system',
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -264,7 +264,7 @@ After applying migration, test immediately:
 3. **Check browser console** for errors
 4. **Verify in Supabase Dashboard**:
    ```sql
-   SELECT id, play_name, 
+   SELECT id, play_name,
           diagram_data IS NOT NULL as has_diagram,
           diagram_version,
           jsonb_array_length(diagram_data->'players') as player_count
@@ -340,11 +340,13 @@ After completing fixes, you should have:
 ## 📞 Need Help?
 
 **If migration fails:**
+
 - Check Supabase logs for errors
 - Verify you have admin access to database
 - Check if any plays table triggers/policies are blocking
 
 **If tests fail:**
+
 - Check browser console for specific errors
 - Verify network tab shows successful POST to Supabase
 - Check Supabase auth is working

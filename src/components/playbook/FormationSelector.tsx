@@ -1,9 +1,9 @@
 /**
  * FormationSelector
- * 
+ *
  * Dropdown selector for formations stored in database.
  * Replaces text-based formation input with proper database relationships.
- * 
+ *
  * Features:
  * - Loads formations from FormationService
  * - Groups by category or personnel
@@ -12,11 +12,11 @@
  * - Connected to everything!
  */
 
-import { useState, useEffect } from 'react';
-import { ChevronDown, Grid, Link2 } from 'lucide-react';
-import { FormationService } from '../../services/formationService';
-import type { Formation } from '../../types/formation';
-import { FormationMatchingModal } from '../formations/FormationMatchingModal';
+import { useState, useEffect } from "react";
+import { ChevronDown, Grid, Link2 } from "lucide-react";
+import { FormationService } from "../../services/formationService";
+import type { Formation } from "../../types/formation";
+import { FormationMatchingModal } from "../formations/FormationMatchingModal";
 
 interface FormationSelectorProps {
   playbookId: string;
@@ -30,7 +30,7 @@ export function FormationSelector({
   playbookId,
   value,
   onChange,
-  className = '',
+  className = "",
   disabled = false,
 }: FormationSelectorProps) {
   const [formations, setFormations] = useState<Formation[]>([]);
@@ -38,7 +38,9 @@ export function FormationSelector({
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [showMatchingModal, setShowMatchingModal] = useState(false);
-  const [formationToMatch, setFormationToMatch] = useState<Formation | null>(null);
+  const [formationToMatch, setFormationToMatch] = useState<Formation | null>(
+    null
+  );
 
   // Load formations for this playbook
   useEffect(() => {
@@ -51,8 +53,8 @@ export function FormationSelector({
         const data = await FormationService.getFormationsByPlaybook(playbookId);
         setFormations(data);
       } catch (err) {
-        console.error('Error loading formations:', err);
-        setError('Failed to load formations');
+        console.error("Error loading formations:", err);
+        setError("Failed to load formations");
         setFormations([]);
       } finally {
         setIsLoading(false);
@@ -63,12 +65,14 @@ export function FormationSelector({
   }, [playbookId]);
 
   // Get selected formation
-  const selectedFormation = value ? formations.find((f) => f.id === value) : null;
+  const selectedFormation = value
+    ? formations.find((f) => f.id === value)
+    : null;
 
   // Group formations by category
   const groupedFormations = formations.reduce(
     (acc, formation) => {
-      const category = formation.category || 'other';
+      const category = formation.category || "other";
       if (!acc[category]) {
         acc[category] = [];
       }
@@ -80,25 +84,25 @@ export function FormationSelector({
 
   // Category labels
   const categoryLabels: Record<string, string> = {
-    spread: 'Spread',
-    pro: 'Pro',
-    power: 'Power',
-    special: 'Special',
-    goal_line: 'Goal Line',
-    short_yardage: 'Short Yardage',
-    other: 'Other',
+    spread: "Spread",
+    pro: "Pro",
+    power: "Power",
+    special: "Special",
+    goal_line: "Goal Line",
+    short_yardage: "Short Yardage",
+    other: "Other",
   };
 
   // Direction labels
   const getDirectionLabel = (direction: string) => {
     switch (direction) {
-      case 'left':
-        return '← Left';
-      case 'right':
-        return '→ Right';
-      case 'base':
+      case "left":
+        return "← Left";
+      case "right":
+        return "→ Right";
+      case "base":
       default:
-        return 'Base';
+        return "Base";
     }
   };
 
@@ -109,7 +113,10 @@ export function FormationSelector({
   };
 
   // Handle manage variants
-  const handleManageVariants = (formation: Formation, event: React.MouseEvent) => {
+  const handleManageVariants = (
+    formation: Formation,
+    event: React.MouseEvent
+  ) => {
     event.stopPropagation(); // Prevent dropdown from selecting
     setFormationToMatch(formation);
     setShowMatchingModal(true);
@@ -158,14 +165,12 @@ export function FormationSelector({
           )}
         </div>
         <ChevronDown
-          className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {/* Error Message */}
-      {error && (
-        <p className="mt-1 text-xs text-error-500">{error}</p>
-      )}
+      {error && <p className="mt-1 text-xs text-error-500">{error}</p>}
 
       {/* Dropdown Menu */}
       {isOpen && !isLoading && formations.length > 0 && (
@@ -184,7 +189,7 @@ export function FormationSelector({
                 <div
                   key={formation.id}
                   className={`w-full flex items-center justify-between hover:bg-surface-tertiary transition-colors ${
-                    value === formation.id ? 'bg-accent-500/10' : ''
+                    value === formation.id ? "bg-accent-500/10" : ""
                   }`}
                 >
                   <button
@@ -253,10 +258,7 @@ export function FormationSelector({
 
       {/* Close dropdown on outside click */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
 
       {/* Formation Linking Modal (Redesigned) */}

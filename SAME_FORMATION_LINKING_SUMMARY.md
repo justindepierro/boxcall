@@ -10,7 +10,6 @@ Different coaching terminologies handle formation variants differently:
 1. **Your Style**: "Twins" (same name) + direction stored in `formation_dir` column
    - Twins Lt
    - Twins Rt
-   
 2. **Other Coaches**: Different names but still need direction tracking
    - Rip (Left)
    - Liz (Right)
@@ -20,31 +19,39 @@ The system needed to handle both cases consistently while maintaining the `forma
 ## The Solution
 
 ### 1. **Same-Formation Duplication**
+
 When a coach selects the same formation for both left and right sides:
+
 - System automatically **creates a duplicate** for the right side
 - Left formation keeps original ID, becomes base with `direction = 'left'`
 - Right duplicate gets new ID with `direction = 'right'`
 - Both get linked via `base_formation_id`
 
 ### 2. **Confirmation Modal** (`FormationLinkConfirmationModal.tsx`)
+
 Shows coaches exactly what will happen:
+
 - **Same Formation**: "We'll create a duplicate with direction Lt/Rt"
 - **Different Formations**: "We'll update direction to Left/Right"
 - Visual display with link icon showing the relationship
 - Explains that direction fields are updated for consistency
 
 ### 3. **Updated Service** (`FormationService.linkFormations`)
+
 Enhanced logic:
+
 ```typescript
 // SPECIAL CASE: Same formation selected for both sides
 if (leftFormationId === rightFormationId) {
   // Create duplicate for right side
-  const duplicate = await supabase.from('formations').insert([{
-    ...sourceFormation,
-    description: `${description} (Right variant)`,
-    direction: 'right',
-    base_formation_id: baseFormationId,
-  }]);
+  const duplicate = await supabase.from("formations").insert([
+    {
+      ...sourceFormation,
+      description: `${description} (Right variant)`,
+      direction: "right",
+      base_formation_id: baseFormationId,
+    },
+  ]);
   actualRightFormationId = duplicate.id;
 }
 ```
@@ -52,37 +59,43 @@ if (leftFormationId === rightFormationId) {
 ## User Flow
 
 ### Linking Same Formation (e.g., "Twins")
+
 1. Open Formation Manager → Link Formations tab
 2. Select "Twins" in Left dropdown
 3. Select "Twins" in Right dropdown
 4. Click center link button 🔗
 5. **Confirmation Modal Appears:**
+
    ```
-   Since you selected the same formation for both sides, 
+   Since you selected the same formation for both sides,
    we'll create a duplicate with formation_dir set to Lt and Rt.
-   
+
    [Visual Display]
    Twins (Left) ↔️ Twins (Right)
    direction → Lt    direction → Rt
    ```
+
 6. Click "Confirm Link"
 7. System creates:
    - Original "Twins" → `direction = 'left'`, `base_formation_id = self`
    - Duplicate "Twins" → `direction = 'right'`, `base_formation_id = original`
 
 ### Linking Different Formations (e.g., "Rip" and "Liz")
+
 1. Open Formation Manager → Link Formations tab
 2. Select "Rip" in Left dropdown
 3. Select "Liz" in Right dropdown
 4. Click center link button 🔗
 5. **Confirmation Modal Appears:**
+
    ```
    We'll update the formation_dir column to Left and Right.
-   
+
    [Visual Display]
    Rip (Left) ↔️ Liz (Right)
    direction → Left    direction → Right
    ```
+
 6. Click "Confirm Link"
 7. System updates:
    - "Rip" → `direction = 'left'`, `base_formation_id = self`
@@ -91,6 +104,7 @@ if (leftFormationId === rightFormationId) {
 ## Database Impact
 
 ### Before Linking
+
 ```sql
 -- Twins formation exists
 formations: {
@@ -102,6 +116,7 @@ formations: {
 ```
 
 ### After Linking (Same Formation)
+
 ```sql
 -- Original becomes left variant
 formations: {
@@ -122,6 +137,7 @@ formations: {
 ```
 
 ### After Linking (Different Formations)
+
 ```sql
 -- Rip becomes base/left
 formations: {
@@ -151,12 +167,14 @@ formations: {
 ## Files Changed
 
 ### New Files
+
 1. **FormationLinkConfirmationModal.tsx** (127 lines)
    - Confirmation UI with visual relationship display
    - Different messages for same vs different formations
    - Shows direction field updates
 
 ### Updated Files
+
 1. **FormationService.ts** (`linkFormations` method)
    - Added same-formation detection
    - Automatic duplication logic
@@ -180,14 +198,12 @@ formations: {
   - [ ] Left has `direction = 'left'`
   - [ ] Right has `direction = 'right'`
   - [ ] Right has new ID (is a duplicate)
-  
 - [ ] Link different formations (e.g., "Rip" + "Liz")
   - [ ] Confirmation modal shows "Linking as Left/Right" message
   - [ ] After linking, both formations have updated directions
   - [ ] Left has `direction = 'left'`
   - [ ] Right has `direction = 'right'`
   - [ ] No duplication occurred
-  
 - [ ] Duplicate + Flip workflow
   - [ ] Linked formations work in play duplication
   - [ ] Direction fields enable automatic flip

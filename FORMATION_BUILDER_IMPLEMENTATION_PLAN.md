@@ -3,6 +3,7 @@
 ## 🎯 Vision: Fully Integrated Formation System
 
 Everything talks to each other:
+
 - **Personnel Configurations** → Referenced by Formations
 - **Formations** → Referenced by Plays
 - **Plays** → Can duplicate + flip using formation data
@@ -12,19 +13,21 @@ Everything talks to each other:
 ## 📊 Current State Analysis
 
 ### What You Have Now:
+
 1. **2 Plays in Playbook:**
    - "Twins Same Side Power" (formation: "Twins Same")
    - "Trips Iz" (formation: "Trips")
 
 2. **3 Personnel Configurations:**
    - Blue
-   - Black  
+   - Black
    - Green
 
 3. **Template Formations in Code:**
    - Spread 2x2, Spread 3x1 Right/Left, Pro, Pistol, Trips (hardcoded in DiagramEditor)
 
 ### What's Missing:
+
 - ❌ Formations are NOT saved to database
 - ❌ Personnel NOT linked to formations
 - ❌ Can't flip formations (no Left/Right versions stored)
@@ -41,38 +44,38 @@ Everything talks to each other:
 CREATE TABLE formations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   playbook_id UUID REFERENCES playbooks(id) ON DELETE CASCADE,
-  
+
   -- Basic Info
   name TEXT NOT NULL,                    -- "Twins Same", "Trips", "Spread 2x2"
   description TEXT,                      -- "2 WR same side, RB offset"
   category TEXT,                         -- "spread", "pro", "power", "special"
-  
+
   -- Personnel Reference
   personnel_id UUID REFERENCES personnel_configurations(id) ON DELETE SET NULL,
   personnel_name TEXT,                   -- Denormalized for quick access: "11", "12", "21"
-  
+
   -- Left/Right Variants
   base_formation_id UUID REFERENCES formations(id) ON DELETE SET NULL,  -- NULL = this IS the base
   direction TEXT CHECK (direction IN ('base', 'left', 'right')),        -- Which variant this is
   has_left_variant BOOLEAN DEFAULT false,
   has_right_variant BOOLEAN DEFAULT false,
-  
+
   -- Formation Strength
   strength_player_position TEXT,         -- Which position sets the strength: "X", "Y", "Z", "H", "F"
   strength_player_label TEXT,           -- From personnel config: "Blue", "Black", "Green"
-  
+
   -- Player Positions (stored as JSONB)
   player_positions JSONB NOT NULL,      -- Array of {position: "X", x: 10, y: 20, label: "Blue"}
-  
+
   -- Metadata
   tags TEXT[],                          -- ["twins", "compressed", "unbalanced"]
   is_custom BOOLEAN DEFAULT true,       -- vs system template
   usage_count INTEGER DEFAULT 0,        -- How many plays use this
-  
+
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   created_by UUID REFERENCES auth.users(id),
-  
+
   UNIQUE(playbook_id, name)
 );
 
@@ -85,7 +88,7 @@ CREATE INDEX idx_formations_base ON formations(base_formation_id);
 ### Updated Table: `plays`
 
 ```sql
-ALTER TABLE plays 
+ALTER TABLE plays
   ADD COLUMN formation_id UUID REFERENCES formations(id) ON DELETE SET NULL,
   ADD COLUMN formation_direction TEXT CHECK (formation_direction IN ('base', 'left', 'right'));
 
@@ -100,7 +103,7 @@ CREATE INDEX idx_plays_formation ON plays(formation_id);
 interface FormationPlayerPosition {
   position: string;      // "X", "Y", "Z", "H", "F", "Q", "C", "G", "T", etc.
   x: number;            // Field X coordinate
-  y: number;            // Field Y coordinate  
+  y: number;            // Field Y coordinate
   label?: string;       // Personnel label: "Blue", "Black", "Green"
   isStrengthSetter?: boolean;  // TRUE for the player that sets formation strength
   role?: string;        // "WR", "TE", "RB", "QB", "OL"
@@ -128,6 +131,7 @@ interface FormationPlayerPosition {
 **Goal:** Create formations table and relationships
 
 1. **Migration File:** `20251012_create_formations_table.sql`
+
    ```sql
    -- Create formations table
    -- Add formation_id to plays table
@@ -153,27 +157,38 @@ interface FormationPlayerPosition {
 ```typescript
 export class FormationService {
   // Create
-  async createFormation(data: FormationCreate): Promise<Formation>
-  async createLeftVariant(baseFormationId: string): Promise<Formation>  // Flip positions
-  async createRightVariant(baseFormationId: string): Promise<Formation> // Flip positions
-  
+  async createFormation(data: FormationCreate): Promise<Formation>;
+  async createLeftVariant(baseFormationId: string): Promise<Formation>; // Flip positions
+  async createRightVariant(baseFormationId: string): Promise<Formation>; // Flip positions
+
   // Read
-  async getFormationsByPlaybook(playbookId: string): Promise<Formation[]>
-  async getFormationById(id: string): Promise<Formation>
-  async getFormationVariants(baseFormationId: string): Promise<Formation[]>
-  
+  async getFormationsByPlaybook(playbookId: string): Promise<Formation[]>;
+  async getFormationById(id: string): Promise<Formation>;
+  async getFormationVariants(baseFormationId: string): Promise<Formation[]>;
+
   // Update
-  async updateFormation(id: string, updates: FormationUpdate): Promise<Formation>
-  async updatePlayerPositions(id: string, positions: FormationPlayerPosition[]): Promise<Formation>
-  async setStrengthPlayer(id: string, position: string): Promise<Formation>
-  
+  async updateFormation(
+    id: string,
+    updates: FormationUpdate
+  ): Promise<Formation>;
+  async updatePlayerPositions(
+    id: string,
+    positions: FormationPlayerPosition[]
+  ): Promise<Formation>;
+  async setStrengthPlayer(id: string, position: string): Promise<Formation>;
+
   // Delete
-  async deleteFormation(id: string): Promise<void>
-  
+  async deleteFormation(id: string): Promise<void>;
+
   // Utilities
-  async duplicateFormation(id: string, newName: string): Promise<Formation>
-  async flipFormation(positions: FormationPlayerPosition[]): FormationPlayerPosition[]
-  async linkToPersonnel(formationId: string, personnelId: string): Promise<Formation>
+  async duplicateFormation(id: string, newName: string): Promise<Formation>;
+  async flipFormation(
+    positions: FormationPlayerPosition[]
+  ): FormationPlayerPosition[];
+  async linkToPersonnel(
+    formationId: string,
+    personnelId: string
+  ): Promise<Formation>;
 }
 ```
 
@@ -186,6 +201,7 @@ export class FormationService {
 **Component:** `src/components/playbook/FormationBuilderModal.tsx`
 
 #### Features:
+
 1. **Canvas View:**
    - Football field with player positioning
    - Drag-and-drop player placement
@@ -213,6 +229,7 @@ export class FormationService {
    - "Save & Create Variants" button
 
 #### UI Layout:
+
 ```
 ┌─────────────────────────────────────────┐
 │ Formation Builder             [Close]   │
@@ -278,6 +295,7 @@ async duplicatePlay(playId: string, options: {
 ```
 
 **UI:**
+
 - Add "Duplicate" button to PlayCard
 - Modal: "Duplicate to Left" / "Duplicate to Right" / "Duplicate Same"
 - Preview shows flipped formation
@@ -304,6 +322,7 @@ Personnel Config (Blue/Black/Green)
 ## 📋 Migration Checklist
 
 ### Existing Data Migration:
+
 1. **Extract formations from existing plays:**
    - Query: `SELECT DISTINCT formation FROM plays`
    - Result: "Twins Same", "Trips"
@@ -337,6 +356,7 @@ Personnel Config (Blue/Black/Green)
 ## 🧪 Testing Plan
 
 ### Unit Tests:
+
 - [ ] FormationService.createFormation()
 - [ ] FormationService.flipFormation()
 - [ ] FormationService.createLeftVariant()
@@ -344,11 +364,13 @@ Personnel Config (Blue/Black/Green)
 - [ ] Personnel linkage
 
 ### Integration Tests:
+
 - [ ] Create formation → Link to personnel → Use in play
 - [ ] Duplicate play + flip formation
 - [ ] Update formation → Reflects in all plays using it
 
 ### User Acceptance:
+
 - [ ] Create "Twins Same" formation with Blue personnel
 - [ ] Add Left/Right variants
 - [ ] Create play using formation
@@ -371,21 +393,25 @@ Personnel Config (Blue/Black/Green)
 ## 🚀 Next Steps
 
 **IMMEDIATE:**
+
 1. Create database migration (`20251012_create_formations_table.sql`)
 2. Create TypeScript types (`src/types/formation.ts`)
 3. Build FormationService (`src/services/formationService.ts`)
 
 **Week 1 Goal:**
+
 - Database ready
 - Service layer working
 - Can CRUD formations via code
 
 **Week 2 Goal:**
+
 - FormationBuilderModal UI built
 - Can create formations visually
 - Personnel integration working
 
 **Week 3 Goal:**
+
 - Plays use formation_id
 - AddNewPlayModal updated
 - Duplicate + Flip working
@@ -419,7 +445,7 @@ Personnel Config (Blue/Black/Green)
 ---
 
 **READY TO START?** Let me know and I'll create:
+
 1. The migration SQL file
 2. TypeScript types
 3. FormationService skeleton
-

@@ -15,11 +15,13 @@ Successfully added visual formation badges to PlayCard components, showing forma
 ## Changes Made
 
 ### 1. Created FormationBadge Component
+
 **File:** `src/components/playbook/FormationBadge.tsx` (NEW - 169 lines)
 
 **Purpose:** Reusable component for displaying formation information with database integration
 
 **Features:**
+
 - ✅ Loads formation details from database if `formationId` provided
 - ✅ Falls back to `formationName` text if no ID (backwards compatibility)
 - ✅ Shows direction indicator:
@@ -33,20 +35,22 @@ Successfully added visual formation badges to PlayCard components, showing forma
 - ✅ Configurable: `showPersonnel`, `showDirection`, `showUsageCount`, `size`
 
 **Props Interface:**
+
 ```typescript
 interface FormationBadgeProps {
-  formationId?: string | null;        // Database ID
-  formationName?: string;             // Fallback text
+  formationId?: string | null; // Database ID
+  formationName?: string; // Fallback text
   direction?: "base" | "left" | "right" | null;
-  showPersonnel?: boolean;            // Default: true
-  showUsageCount?: boolean;           // Default: false
-  showDirection?: boolean;            // Default: true
-  size?: "sm" | "md";                 // Default: "sm"
+  showPersonnel?: boolean; // Default: true
+  showUsageCount?: boolean; // Default: false
+  showDirection?: boolean; // Default: true
+  size?: "sm" | "md"; // Default: "sm"
   className?: string;
 }
 ```
 
 **Visual Design:**
+
 - **Formation badge**: Purple background (`bg-purple-50`, `text-purple-700`, `border-purple-300`)
 - **Personnel badge**: Jade green background (`bg-jade-100`, `text-jade-700`, `border-jade-300`)
 - **Usage count badge**: Info blue background (`bg-info-50`, `text-info-700`, `border-info-200`)
@@ -55,9 +59,11 @@ interface FormationBadgeProps {
 ---
 
 ### 2. Updated PlayCardTileHeader Component
+
 **File:** `src/components/playbook/play-card/PlayCardTileHeader.tsx`
 
 **Changes:**
+
 - ✅ Added `FormationBadge` import
 - ✅ Replaced manual formation/personnel badges with `<FormationBadge>` (lines 145-170)
 - ✅ Shows formation badge when `formation_id` OR `formation` exists
@@ -65,40 +71,47 @@ interface FormationBadgeProps {
 - ✅ Passes `formationId`, `formationName`, `direction` props
 
 **Before:**
+
 ```tsx
-{optimisticPlay.f_type && (
-  <span>...</span>
-)}
-{optimisticPlay.personnel && (
-  <span>...</span>
-)}
+{
+  optimisticPlay.f_type && <span>...</span>;
+}
+{
+  optimisticPlay.personnel && <span>...</span>;
+}
 ```
 
 **After:**
+
 ```tsx
-{(optimisticPlay.formation_id || optimisticPlay.formation) && (
-  <FormationBadge
-    formationId={optimisticPlay.formation_id}
-    formationName={optimisticPlay.formation}
-    direction={optimisticPlay.formation_direction}
-    showPersonnel={true}
-    showDirection={true}
-  />
-)}
+{
+  (optimisticPlay.formation_id || optimisticPlay.formation) && (
+    <FormationBadge
+      formationId={optimisticPlay.formation_id}
+      formationName={optimisticPlay.formation}
+      direction={optimisticPlay.formation_direction}
+      showPersonnel={true}
+      showDirection={true}
+    />
+  );
+}
 ```
 
 ---
 
 ### 3. Updated PlayCardListHeader Component
+
 **File:** `src/components/playbook/play-card/PlayCardListHeader.tsx`
 
 **Changes:**
+
 - ✅ Added `FormationBadge` import
 - ✅ Replaced manual formation/personnel badges with `<FormationBadge>` (lines 74-100)
 - ✅ Same conditional logic as tile header
 - ✅ Maintains play type, confidence, and usage stats badges
 
 **Badge Order (List View):**
+
 1. Play type (Pass/Run/RPO) - colored badge
 2. **Formation badge** - purple with direction arrow
 3. **Personnel badge** - jade green (auto-shown by FormationBadge)
@@ -150,6 +163,7 @@ Renders badges:
 ### Tile View with Formation Badge
 
 **With database relationship:**
+
 ```
 ┌────────────────────┐
 │                    │
@@ -166,6 +180,7 @@ POWER READ
 ```
 
 **Without database relationship (old plays):**
+
 ```
 ┌────────────────────┐
 │                    │
@@ -184,11 +199,13 @@ POWER READ
 ### List View with Formation Badge
 
 **With database relationship:**
+
 ```
 [Pass] [Twins Same ←] [11] [Phase 2] 75%  [5x called] [80% success]
 ```
 
 **Without database relationship:**
+
 ```
 [Pass] [Pro] [11 Personnel] [Phase 2] 75%  [5x called] [80% success]
 ```
@@ -198,6 +215,7 @@ POWER READ
 ## Backwards Compatibility
 
 ### New Plays (with formation_id)
+
 ✅ Shows `FormationBadge` with database-loaded details  
 ✅ Direction arrow appears if variant selected  
 ✅ Personnel auto-loaded from formation  
@@ -205,6 +223,7 @@ POWER READ
 ✅ No `f_type` badge (redundant)
 
 ### Old Plays (without formation_id)
+
 ✅ Shows `FormationBadge` with text-only formation name  
 ✅ No direction arrow (not tracked)  
 ✅ Personnel shown from play.personnel field  
@@ -212,6 +231,7 @@ POWER READ
 ✅ No database calls made
 
 ### Null Formation
+
 ✅ No formation badge rendered  
 ✅ Other badges still display  
 ✅ No errors or crashes
@@ -220,26 +240,26 @@ POWER READ
 
 ## Badge Color System
 
-| Badge Type | Background | Text Color | Border | Icon |
-|------------|-----------|------------|---------|------|
-| **Formation** | `bg-purple-50` | `text-purple-700` | `border-purple-300` | Arrow (←/→) |
-| **Personnel** | `bg-jade-100` | `text-jade-700` | `border-jade-300` | Users icon |
-| **Usage Count** | `bg-info-50` | `text-info-700` | `border-info-200` | Trending-up icon |
-| **Play Type** | Varies (Pass/Run/RPO) | Contrasting | Matching | None |
-| **Installation Phase** | `bg-warning-500` | `text-primary` | `border-warning-600` | None |
+| Badge Type             | Background            | Text Color        | Border               | Icon             |
+| ---------------------- | --------------------- | ----------------- | -------------------- | ---------------- |
+| **Formation**          | `bg-purple-50`        | `text-purple-700` | `border-purple-300`  | Arrow (←/→)      |
+| **Personnel**          | `bg-jade-100`         | `text-jade-700`   | `border-jade-300`    | Users icon       |
+| **Usage Count**        | `bg-info-50`          | `text-info-700`   | `border-info-200`    | Trending-up icon |
+| **Play Type**          | Varies (Pass/Run/RPO) | Contrasting       | Matching             | None             |
+| **Installation Phase** | `bg-warning-500`      | `text-primary`    | `border-warning-600` | None             |
 
 ---
 
 ## Testing Checklist
 
 ### Visual Tests
+
 - [ ] **Tile View**:
   - [ ] Formation badge displays under play name
   - [ ] Direction arrow (←/→) shows for variants
   - [ ] Personnel badge shows when linked
   - [ ] No personnel badge for formations without personnel
   - [ ] Old plays still show f_type badge
-  
 - [ ] **List View**:
   - [ ] Formation badge appears after play type
   - [ ] Personnel badge auto-included
@@ -247,12 +267,12 @@ POWER READ
   - [ ] No overlap or wrapping issues
 
 ### Functional Tests
+
 - [ ] **Database-linked formation**:
   - [ ] Badge loads formation name from DB
   - [ ] Direction indicator correct (Base/Left/Right)
   - [ ] Personnel shows if linked
   - [ ] Usage count shows if enabled
-  
 - [ ] **Text-only formation**:
   - [ ] Badge shows formation text
   - [ ] No database call made
@@ -266,6 +286,7 @@ POWER READ
   - [ ] API error → fails gracefully, shows fallback
 
 ### Performance Tests
+
 - [ ] Multiple PlayCards render without lag
 - [ ] Formation data cached properly
 - [ ] No redundant API calls
@@ -276,13 +297,16 @@ POWER READ
 ## Database Impact
 
 ### Queries Made
+
 When rendering PlayCard with `formation_id`:
+
 ```sql
-SELECT * FROM formations 
+SELECT * FROM formations
 WHERE id = $1;
 ```
 
 Returns:
+
 ```json
 {
   "id": "uuid-123",
@@ -296,6 +320,7 @@ Returns:
 ```
 
 ### Performance Considerations
+
 - ✅ **Single query per formation** (not per play)
 - ✅ **Results cached** by React useEffect
 - ✅ **No query if formation_id is NULL** (backwards compatible)
@@ -307,14 +332,17 @@ Returns:
 ## Next Steps
 
 ### Phase 4 Step 4: Add formation_direction Field Support
+
 **Goal:** Track and display which variant (Base/Left/Right) was selected
 
 **Current State:**
+
 - Play type has `formation_direction` field ✅
 - Migration has `formation_direction` column ✅
 - PlayFormData interface supports `formation_direction` ❌
 
 **Tasks:**
+
 1. Update `PlayFormData` interface to include `formation_direction`
 2. Update form submission to save `formation_direction`
 3. When user selects formation variant in FormationSelector, capture direction
@@ -322,6 +350,7 @@ Returns:
 5. Test that direction is saved and displayed correctly
 
 **Benefits:**
+
 - More accurate play representation
 - Can filter plays by formation variant
 - Analytics on which variants are most used
@@ -330,13 +359,16 @@ Returns:
 ---
 
 ### Phase 5: Duplicate + Flip
+
 **Goal:** Enable rapid play creation by duplicating and auto-flipping formations
 
 **Dependencies:**
+
 - Requires `formation_direction` support (Phase 4 Step 4)
 - Requires formation variants to exist in database
 
 **Tasks:**
+
 1. Add "Duplicate" and "Duplicate & Flip" to play menu
 2. Implement `duplicatePlay()` method in PlaysService
 3. If flip: Get opposite formation variant (Left ↔ Right, Base → Base)
@@ -364,13 +396,16 @@ None at this time. All TypeScript errors resolved.
 ## File Summary
 
 ### Created Files (1)
+
 1. **FormationBadge.tsx** (169 lines) - Reusable formation badge component
 
 ### Modified Files (2)
+
 1. **PlayCardTileHeader.tsx** - Replaced manual badges with FormationBadge
 2. **PlayCardListHeader.tsx** - Replaced manual badges with FormationBadge
 
 ### Dependencies
+
 - `FormationService.getFormationById()` (created in Phase 2)
 - `Formation` type from `types/formation.ts` (created in Phase 1)
 - `Icon` component (existing)

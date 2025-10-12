@@ -1,25 +1,25 @@
 /**
  * FormationLinkingPanel
- * 
+ *
  * Reusable panel for linking left/right formation variants.
  * Can be used standalone in a modal or embedded in a tabbed interface.
- * 
+ *
  * Supports two linking modes:
  * 1. Same formation (e.g., "Twins") → Creates duplicate with Lt/Rt directions
  * 2. Different formations (e.g., "Rip"/"Liz") → Updates directions to Left/Right
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from '../ui/Button/Button';
-import { Typography } from '../design-system/Typography';
-import { FormationBadge } from '../playbook/FormationBadge';
-import { FormationService } from '../../services/formationService';
-import { PersonnelService } from '../../services/personnelService';
-import { FormationLinkConfirmationModal } from './FormationLinkConfirmationModal';
-import { supabase } from '../../lib/supabase';
-import type { Formation } from '../../types/formation';
-import type { PersonnelConfiguration } from '../../types/personnel';
-import { Link2, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from "react";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
+import { FormationBadge } from "../playbook/FormationBadge";
+import { FormationService } from "../../services/formationService";
+import { PersonnelService } from "../../services/personnelService";
+import { FormationLinkConfirmationModal } from "./FormationLinkConfirmationModal";
+import { supabase } from "../../lib/supabase";
+import type { Formation } from "../../types/formation";
+import type { PersonnelConfiguration } from "../../types/personnel";
+import { Link2, ChevronDown } from "lucide-react";
 
 interface FormationLinkingPanelProps {
   playbookId: string;
@@ -37,60 +37,80 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [allFormations, setAllFormations] = useState<Formation[]>([]);
-  const [availablePersonnel, setAvailablePersonnel] = useState<PersonnelConfiguration[]>([]);
-  const [selectedPersonnelIds, setSelectedPersonnelIds] = useState<string[]>([]);
+  const [availablePersonnel, setAvailablePersonnel] = useState<
+    PersonnelConfiguration[]
+  >([]);
+  const [selectedPersonnelIds, setSelectedPersonnelIds] = useState<string[]>(
+    []
+  );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
-  
-  const [leftFormation, setLeftFormation] = useState<Formation | null>(initialLeftFormation || null);
-  const [rightFormation, setRightFormation] = useState<Formation | null>(initialRightFormation || null);
+
+  const [leftFormation, setLeftFormation] = useState<Formation | null>(
+    initialLeftFormation || null
+  );
+  const [rightFormation, setRightFormation] = useState<Formation | null>(
+    initialRightFormation || null
+  );
 
   const loadFormations = useCallback(async () => {
     setLoading(true);
     setImportStatus(null);
-    console.log('🔍 FormationLinkingPanel: Loading formations for playbookId:', playbookId);
+    console.log(
+      "🔍 FormationLinkingPanel: Loading formations for playbookId:",
+      playbookId
+    );
     try {
       // First, try to import any formations from plays
       const currentUser = await supabase.auth.getUser();
-      console.log('👤 Current user:', currentUser.data.user?.id);
+      console.log("👤 Current user:", currentUser.data.user?.id);
       if (currentUser.data.user) {
         try {
-          console.log('📥 Attempting to import formations from plays...');
+          console.log("📥 Attempting to import formations from plays...");
           const result = await FormationService.importFormationsFromPlays(
             playbookId,
             currentUser.data.user.id
           );
-          
-          console.log('📊 Import result:', result);
-          
+
+          console.log("📊 Import result:", result);
+
           if (result.created > 0) {
-            setImportStatus(`✨ Imported ${result.created} formation${result.created > 1 ? 's' : ''} from your plays`);
+            setImportStatus(
+              `✨ Imported ${result.created} formation${result.created > 1 ? "s" : ""} from your plays`
+            );
           }
-          
+
           // Use the imported formations
-          console.log('✅ Setting formations:', result.formations.length, 'formations');
+          console.log(
+            "✅ Setting formations:",
+            result.formations.length,
+            "formations"
+          );
           setAllFormations(result.formations);
         } catch (importError) {
-          console.error('❌ Failed to import formations:', importError);
+          console.error("❌ Failed to import formations:", importError);
           // Continue with normal load even if import fails
-          const formations = await FormationService.getFormationsByPlaybook(playbookId);
-          console.log('📋 Loaded existing formations:', formations.length);
+          const formations =
+            await FormationService.getFormationsByPlaybook(playbookId);
+          console.log("📋 Loaded existing formations:", formations.length);
           setAllFormations(formations);
         }
       } else {
         // No user, just load existing formations
-        console.log('⚠️ No user, loading existing formations');
-        const formations = await FormationService.getFormationsByPlaybook(playbookId);
-        console.log('📋 Loaded existing formations:', formations.length);
+        console.log("⚠️ No user, loading existing formations");
+        const formations =
+          await FormationService.getFormationsByPlaybook(playbookId);
+        console.log("📋 Loaded existing formations:", formations.length);
         setAllFormations(formations);
       }
 
       // Load available personnel configurations
-      const personnel = await PersonnelService.getPersonnelConfigurations(playbookId);
-      console.log('👥 Loaded personnel:', personnel.length, 'configurations');
+      const personnel =
+        await PersonnelService.getPersonnelConfigurations(playbookId);
+      console.log("👥 Loaded personnel:", personnel.length, "configurations");
       setAvailablePersonnel(personnel);
     } catch (error) {
-      console.error('❌ Failed to load formations:', error);
+      console.error("❌ Failed to load formations:", error);
     } finally {
       setLoading(false);
     }
@@ -103,18 +123,21 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   }, [playbookId, loadFormations]);
 
   const isLinked = (formation: Formation): boolean => {
-    return formation.base_formation_id !== null || 
-           allFormations.some(f => f.base_formation_id === formation.id);
+    return (
+      formation.base_formation_id !== null ||
+      allFormations.some((f) => f.base_formation_id === formation.id)
+    );
   };
 
   // Filter out base formations if they have left/right variants
-  const visibleFormations = allFormations.filter(formation => {
+  const visibleFormations = allFormations.filter((formation) => {
     // If direction is 'base', check if variants exist
-    if (formation.direction === 'base') {
-      const hasVariants = allFormations.some(f => 
-        f.name === formation.name && 
-        f.direction !== 'base' &&
-        (f.direction === 'left' || f.direction === 'right')
+    if (formation.direction === "base") {
+      const hasVariants = allFormations.some(
+        (f) =>
+          f.name === formation.name &&
+          f.direction !== "base" &&
+          (f.direction === "left" || f.direction === "right")
       );
       // Only show base formation if no variants exist
       return !hasVariants;
@@ -126,21 +149,23 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   // Check if left and right formations have the same name (case-insensitive)
   const isSameFormationName = (): boolean => {
     if (!leftFormation || !rightFormation) return false;
-    return leftFormation.name.toLowerCase() === rightFormation.name.toLowerCase();
+    return (
+      leftFormation.name.toLowerCase() === rightFormation.name.toLowerCase()
+    );
   };
 
   // Toggle personnel selection
   const togglePersonnel = (personnelId: string) => {
-    setSelectedPersonnelIds(prev => 
+    setSelectedPersonnelIds((prev) =>
       prev.includes(personnelId)
-        ? prev.filter(id => id !== personnelId)
+        ? prev.filter((id) => id !== personnelId)
         : [...prev, personnelId]
     );
   };
 
   const handleLink = async () => {
     if (!leftFormation || !rightFormation) {
-      alert('Please select both left and right formations');
+      alert("Please select both left and right formations");
       return;
     }
 
@@ -161,43 +186,44 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         selectedPersonnelIds // Pass selected personnel packages
       );
 
-      alert('Formations linked successfully!');
+      alert("Formations linked successfully!");
       await loadFormations();
-      
+
       // Clear personnel selection after successful link
       setSelectedPersonnelIds([]);
-      
+
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error('Failed to link formations:', error);
-      alert('Failed to link formations. Please try again.');
+      console.error("Failed to link formations:", error);
+      alert("Failed to link formations. Please try again.");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleCreateNew = (side: 'left' | 'right') => {
+  const handleCreateNew = (side: "left" | "right") => {
     alert(`Create new ${side} formation - Switch to "Draw Formation" tab!`);
   };
 
   const renderFormationOption = (formation: Formation) => {
     const linked = isLinked(formation);
-    
+
     // Format direction display
-    let directionLabel = '';
-    if (formation.direction === 'left') {
-      directionLabel = ' (Left)';
-    } else if (formation.direction === 'right') {
-      directionLabel = ' (Right)';
-    } else if (formation.direction === 'base') {
-      directionLabel = ' (Base)';
+    let directionLabel = "";
+    if (formation.direction === "left") {
+      directionLabel = " (Left)";
+    } else if (formation.direction === "right") {
+      directionLabel = " (Right)";
+    } else if (formation.direction === "base") {
+      directionLabel = " (Base)";
     }
-    
+
     return (
       <option key={formation.id} value={formation.id}>
-        {linked ? '🔗' : '🔓'} {formation.name}{directionLabel}
+        {linked ? "🔗" : "🔓"} {formation.name}
+        {directionLabel}
       </option>
     );
   };
@@ -214,230 +240,261 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
   return (
     <>
-    <div className="flex flex-col gap-spacing-lg p-spacing-md">
-      {/* Import Status */}
-      {importStatus && (
-        <div className="p-spacing-sm bg-success-50 border border-success-200 rounded-lg">
-          <Typography variant="caption" className="text-success-700">
-            {importStatus}
-          </Typography>
-        </div>
-      )}
-
-      {/* Mirrored Dropdown Layout */}
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start">
-        {/* Left Formation Column */}
-        <div className="flex flex-col gap-spacing-sm">
-          <Typography variant="headline-md" className="text-text-primary">
-            Left Side Formation
-          </Typography>
-
-          <div className="relative">
-            <select
-              value={leftFormation?.id || ''}
-              onChange={(e) => {
-                if (e.target.value === 'CREATE_NEW') {
-                  handleCreateNew('left');
-                } else {
-                  const formation = allFormations.find(f => f.id === e.target.value);
-                  setLeftFormation(formation || null);
-                }
-              }}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
-            >
-              <option value="">Select left formation...</option>
-              {visibleFormations.map(renderFormationOption)}
-              <option value="CREATE_NEW">➕ Create New Formation</option>
-            </select>
-            <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+      <div className="flex flex-col gap-spacing-lg p-spacing-md">
+        {/* Import Status */}
+        {importStatus && (
+          <div className="p-spacing-sm bg-success-50 border border-success-200 rounded-lg">
+            <Typography variant="caption" className="text-success-700">
+              {importStatus}
+            </Typography>
           </div>
+        )}
 
-          {leftFormation && (
-            <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-              <FormationBadge
-                formationId={leftFormation.id}
-                direction={leftFormation.direction}
-              />
-              <div className="mt-spacing-sm space-y-spacing-xs">
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Personnel:</strong> {leftFormation.personnel_name || 'Not set'}
-                </Typography>
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Category:</strong> {leftFormation.category || 'Not set'}
-                </Typography>
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Usage:</strong> {leftFormation.usage_count} plays
-                </Typography>
-                {leftFormation.description && (
-                  <Typography variant="caption" className="text-text-muted italic">
-                    {leftFormation.description}
+        {/* Mirrored Dropdown Layout */}
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start">
+          {/* Left Formation Column */}
+          <div className="flex flex-col gap-spacing-sm">
+            <Typography variant="headline-md" className="text-text-primary">
+              Left Side Formation
+            </Typography>
+
+            <div className="relative">
+              <select
+                value={leftFormation?.id || ""}
+                onChange={(e) => {
+                  if (e.target.value === "CREATE_NEW") {
+                    handleCreateNew("left");
+                  } else {
+                    const formation = allFormations.find(
+                      (f) => f.id === e.target.value
+                    );
+                    setLeftFormation(formation || null);
+                  }
+                }}
+                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+              >
+                <option value="">Select left formation...</option>
+                {visibleFormations.map(renderFormationOption)}
+                <option value="CREATE_NEW">➕ Create New Formation</option>
+              </select>
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+            </div>
+
+            {leftFormation && (
+              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+                <FormationBadge
+                  formationId={leftFormation.id}
+                  direction={leftFormation.direction}
+                />
+                <div className="mt-spacing-sm space-y-spacing-xs">
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Personnel:</strong>{" "}
+                    {leftFormation.personnel_name || "Not set"}
                   </Typography>
-                )}
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Category:</strong>{" "}
+                    {leftFormation.category || "Not set"}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Usage:</strong> {leftFormation.usage_count} plays
+                  </Typography>
+                  {leftFormation.description && (
+                    <Typography
+                      variant="caption"
+                      className="text-text-muted italic"
+                    >
+                      {leftFormation.description}
+                    </Typography>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Same-name notification for left side */}
-          {isSameFormationName() && leftFormation && (
-            <div className="mt-spacing-sm p-spacing-sm bg-blue-50 border border-blue-200 rounded">
-              <Typography variant="caption" className="text-blue-700">
-                ℹ️ <strong>{leftFormation.name} Left</strong> and <strong>{leftFormation.name} Right</strong> variants will be created
-              </Typography>
-            </div>
-          )}
-        </div>
-
-        {/* Center Link Button */}
-        <div className="flex flex-col items-center justify-center pt-spacing-xl">
-          <Button
-            onClick={handleLink}
-            disabled={!leftFormation || !rightFormation || saving}
-            variant="primary"
-            size="lg"
-            className="rounded-full w-16 h-16 flex items-center justify-center"
-          >
-            {saving ? (
-              <div className="animate-spin">⏳</div>
-            ) : (
-              <Link2 className="w-8 h-8" />
             )}
-          </Button>
-          <Typography variant="caption" className="text-text-muted mt-spacing-xs text-center">
-            Click to<br />link
-          </Typography>
-        </div>
 
-        {/* Right Formation Column */}
-        <div className="flex flex-col gap-spacing-sm">
-          <Typography variant="headline-md" className="text-text-primary">
-            Right Side Formation
-          </Typography>
-
-          <div className="relative">
-            <select
-              value={rightFormation?.id || ''}
-              onChange={(e) => {
-                if (e.target.value === 'CREATE_NEW') {
-                  handleCreateNew('right');
-                } else {
-                  const formation = allFormations.find(f => f.id === e.target.value);
-                  setRightFormation(formation || null);
-                }
-              }}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
-            >
-              <option value="">Select right formation...</option>
-              {visibleFormations.map(renderFormationOption)}
-              <option value="CREATE_NEW">➕ Create New Formation</option>
-            </select>
-            <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+            {/* Same-name notification for left side */}
+            {isSameFormationName() && leftFormation && (
+              <div className="mt-spacing-sm p-spacing-sm bg-blue-50 border border-blue-200 rounded">
+                <Typography variant="caption" className="text-blue-700">
+                  ℹ️ <strong>{leftFormation.name} Left</strong> and{" "}
+                  <strong>{leftFormation.name} Right</strong> variants will be
+                  created
+                </Typography>
+              </div>
+            )}
           </div>
 
-          {rightFormation && (
-            <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-              <FormationBadge
-                formationId={rightFormation.id}
-                direction={rightFormation.direction}
-              />
-              <div className="mt-spacing-sm space-y-spacing-xs">
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Personnel:</strong> {rightFormation.personnel_name || 'Not set'}
-                </Typography>
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Category:</strong> {rightFormation.category || 'Not set'}
-                </Typography>
-                <Typography variant="caption" className="text-text-secondary">
-                  <strong>Usage:</strong> {rightFormation.usage_count} plays
-                </Typography>
-                {rightFormation.description && (
-                  <Typography variant="caption" className="text-text-muted italic">
-                    {rightFormation.description}
-                  </Typography>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+          {/* Center Link Button */}
+          <div className="flex flex-col items-center justify-center pt-spacing-xl">
+            <Button
+              onClick={handleLink}
+              disabled={!leftFormation || !rightFormation || saving}
+              variant="primary"
+              size="lg"
+              className="rounded-full w-16 h-16 flex items-center justify-center"
+            >
+              {saving ? (
+                <div className="animate-spin">⏳</div>
+              ) : (
+                <Link2 className="w-8 h-8" />
+              )}
+            </Button>
+            <Typography
+              variant="caption"
+              className="text-text-muted mt-spacing-xs text-center"
+            >
+              Click to
+              <br />
+              link
+            </Typography>
+          </div>
 
-      {/* Personnel Packages Selection */}
-      {(leftFormation || rightFormation) && availablePersonnel.length > 0 && (
-        <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-          <Typography variant="headline-sm" className="text-text-primary mb-spacing-sm">
-            Personnel Packages
-          </Typography>
-          <Typography variant="caption" className="text-text-secondary mb-spacing-md">
-            Select which personnel packages can be run from {isSameFormationName() ? 'these formations' : 'this formation'}:
-          </Typography>
-          
-          <div className="flex flex-wrap gap-spacing-sm">
-            {availablePersonnel.map(personnel => (
-              <button
-                key={personnel.id}
-                onClick={() => togglePersonnel(personnel.id)}
-                className={`
+          {/* Right Formation Column */}
+          <div className="flex flex-col gap-spacing-sm">
+            <Typography variant="headline-md" className="text-text-primary">
+              Right Side Formation
+            </Typography>
+
+            <div className="relative">
+              <select
+                value={rightFormation?.id || ""}
+                onChange={(e) => {
+                  if (e.target.value === "CREATE_NEW") {
+                    handleCreateNew("right");
+                  } else {
+                    const formation = allFormations.find(
+                      (f) => f.id === e.target.value
+                    );
+                    setRightFormation(formation || null);
+                  }
+                }}
+                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+              >
+                <option value="">Select right formation...</option>
+                {visibleFormations.map(renderFormationOption)}
+                <option value="CREATE_NEW">➕ Create New Formation</option>
+              </select>
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+            </div>
+
+            {rightFormation && (
+              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+                <FormationBadge
+                  formationId={rightFormation.id}
+                  direction={rightFormation.direction}
+                />
+                <div className="mt-spacing-sm space-y-spacing-xs">
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Personnel:</strong>{" "}
+                    {rightFormation.personnel_name || "Not set"}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Category:</strong>{" "}
+                    {rightFormation.category || "Not set"}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    <strong>Usage:</strong> {rightFormation.usage_count} plays
+                  </Typography>
+                  {rightFormation.description && (
+                    <Typography
+                      variant="caption"
+                      className="text-text-muted italic"
+                    >
+                      {rightFormation.description}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Personnel Packages Selection */}
+        {(leftFormation || rightFormation) && availablePersonnel.length > 0 && (
+          <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+            <Typography
+              variant="headline-sm"
+              className="text-text-primary mb-spacing-sm"
+            >
+              Personnel Packages
+            </Typography>
+            <Typography
+              variant="caption"
+              className="text-text-secondary mb-spacing-md"
+            >
+              Select which personnel packages can be run from{" "}
+              {isSameFormationName() ? "these formations" : "this formation"}:
+            </Typography>
+
+            <div className="flex flex-wrap gap-spacing-sm">
+              {availablePersonnel.map((personnel) => (
+                <button
+                  key={personnel.id}
+                  onClick={() => togglePersonnel(personnel.id)}
+                  className={`
                   px-spacing-md py-spacing-sm rounded-lg border-2 transition-all
-                  ${selectedPersonnelIds.includes(personnel.id)
-                    ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300'
+                  ${
+                    selectedPersonnelIds.includes(personnel.id)
+                      ? "border-primary-500 bg-primary-50 text-primary-700"
+                      : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300"
                   }
                 `}
-              >
-                <Typography variant="body-sm" className="font-medium">
-                  {selectedPersonnelIds.includes(personnel.id) ? '✓ ' : ''}
-                  {personnel.name}
-                </Typography>
-              </button>
-            ))}
-          </div>
-
-          {selectedPersonnelIds.length > 0 && (
-            <div className="mt-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
-              <Typography variant="caption" className="text-primary-700">
-                ✓ {selectedPersonnelIds.length} personnel package{selectedPersonnelIds.length > 1 ? 's' : ''} selected
-              </Typography>
+                >
+                  <Typography variant="body-sm" className="font-medium">
+                    {selectedPersonnelIds.includes(personnel.id) ? "✓ " : ""}
+                    {personnel.name}
+                  </Typography>
+                </button>
+              ))}
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Help Text */}
-      <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-border-secondary">
-        <Typography variant="caption" className="text-text-muted">
-          <strong>💡 Tip:</strong> Select formations from both sides and click the link button to create a bi-directional relationship. 
-          Linked formations can be used in duplicate + flip workflows.
-        </Typography>
+            {selectedPersonnelIds.length > 0 && (
+              <div className="mt-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
+                <Typography variant="caption" className="text-primary-700">
+                  ✓ {selectedPersonnelIds.length} personnel package
+                  {selectedPersonnelIds.length > 1 ? "s" : ""} selected
+                </Typography>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Help Text */}
+        <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-border-secondary">
+          <Typography variant="caption" className="text-text-muted">
+            <strong>💡 Tip:</strong> Select formations from both sides and click
+            the link button to create a bi-directional relationship. Linked
+            formations can be used in duplicate + flip workflows.
+          </Typography>
+        </div>
+
+        {/* Status Display */}
+        {(leftFormation || rightFormation) && (
+          <div className="flex items-center justify-center gap-spacing-sm text-text-secondary">
+            {leftFormation && (
+              <Typography variant="caption">
+                {isLinked(leftFormation) ? "🔗 Linked" : "🔓 Unlinked"}
+              </Typography>
+            )}
+            {leftFormation && rightFormation && <span>↔</span>}
+            {rightFormation && (
+              <Typography variant="caption">
+                {isLinked(rightFormation) ? "🔗 Linked" : "🔓 Unlinked"}
+              </Typography>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Status Display */}
-      {(leftFormation || rightFormation) && (
-        <div className="flex items-center justify-center gap-spacing-sm text-text-secondary">
-          {leftFormation && (
-            <Typography variant="caption">
-              {isLinked(leftFormation) ? '🔗 Linked' : '🔓 Unlinked'}
-            </Typography>
-          )}
-          {leftFormation && rightFormation && <span>↔</span>}
-          {rightFormation && (
-            <Typography variant="caption">
-              {isLinked(rightFormation) ? '🔗 Linked' : '🔓 Unlinked'}
-            </Typography>
-          )}
-        </div>
+      {/* Confirmation Modal */}
+      {showConfirmModal && leftFormation && rightFormation && (
+        <FormationLinkConfirmationModal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={confirmLink}
+          leftFormation={leftFormation}
+          rightFormation={rightFormation}
+          isSameFormation={leftFormation.id === rightFormation.id}
+        />
       )}
-    </div>
-
-    {/* Confirmation Modal */}
-    {showConfirmModal && leftFormation && rightFormation && (
-      <FormationLinkConfirmationModal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={confirmLink}
-        leftFormation={leftFormation}
-        rightFormation={rightFormation}
-        isSameFormation={leftFormation.id === rightFormation.id}
-      />
-    )}
     </>
   );
 };

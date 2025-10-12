@@ -8,11 +8,13 @@
 ## Phase Summary
 
 ### ✅ Phase 1: Database + Types (COMPLETE)
+
 - **Database:** formations table, plays.formation_id, plays.formation_direction
 - **Migration:** `database/migrations/20251012_create_formations_table.sql` (276 lines)
 - **Status:** Deployed to Supabase, RLS policies active
 
 ### ✅ Phase 2: FormationService (COMPLETE)
+
 - **File:** `src/services/formationService.ts` (645 lines total)
 - **Features:**
   - CRUD operations: create, getAll, getById, update, delete
@@ -23,11 +25,13 @@
 - **Status:** Production ready
 
 ### ⏸️ Phase 3: FormationBuilderModal UI (DEFERRED)
+
 - **File:** `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`
 - **Status:** Shell created, canvas drag-drop postponed
 - **Note:** Not blocking - formations can be created via service directly
 
 ### ✅ Phase 4: Play Integration (COMPLETE)
+
 - **Step 4.1:** FormationSelector component (220 lines)
 - **Step 4.2:** AddNewPlayModal integration
 - **Step 4.3:** FormationBadge on PlayCard components
@@ -35,6 +39,7 @@
 - **Status:** Fully functional
 
 ### ✅ Phase 5: Duplicate + Flip (COMPLETE)
+
 - **File:** `src/utils/formationFlipHelpers.ts` (161 lines)
 - **Features:**
   - getOppositeFormationVariant(): Async variant lookup
@@ -45,12 +50,14 @@
 - **Status:** Production ready
 
 ### ✅ Phase 6: Formation Matching (COMPLETE)
+
 - **Service Layer:** linkFormations(), unlinkVariant(), getSuggestedMatches(), getFormationVariantFamily()
 - **UI:** FormationMatchingModal (327 lines) - side-by-side previews, smart filtering
 - **Integration:** FormationSelector Link2 icon button
 - **Status:** Production ready, all style linting clean
 
 ### ✅ Phase 7: Formation → Diagram Templates (COMPLETE)
+
 - **File:** `src/utils/formationDiagramHelpers.ts` (156 lines)
 - **Functions:**
   - importFormationAsTemplate(): Full diagram document creation
@@ -69,6 +76,7 @@
 ### 1. Database & Service Layer Tests
 
 #### Formation CRUD ✅
+
 - [x] Create new formation
 - [x] Fetch all formations by playbook
 - [x] Get formation by ID
@@ -77,6 +85,7 @@
 - [x] Verify RLS policies (user access control)
 
 #### Variant System ✅
+
 - [x] Create left variant from base formation
 - [x] Create right variant from base formation
 - [x] Flip player positions correctly (mirror x-coordinates)
@@ -86,6 +95,7 @@
 - [x] Get variant family (base + left + right)
 
 #### Formation → Diagram Conversion ✅
+
 - [x] Convert formation positions to diagram players
 - [x] Handle center position (square shape)
 - [x] Generate unique player IDs
@@ -95,6 +105,7 @@
 - [x] Count formation players
 
 **Test Commands:**
+
 ```bash
 npm run test -- formationService
 npm run test -- formationDiagramHelpers
@@ -105,6 +116,7 @@ npm run test -- formationDiagramHelpers
 ### 2. UI Component Tests
 
 #### FormationSelector
+
 - [ ] Loads formations from playbook
 - [ ] Displays formation names in dropdown
 - [ ] Shows FormationBadge with direction/personnel
@@ -116,6 +128,7 @@ npm run test -- formationDiagramHelpers
 **Test Location:** Play creation modal → Formation dropdown
 
 #### FormationMatchingModal
+
 - [ ] Opens with correct base formation displayed
 - [ ] Shows formation name, personnel, direction
 - [ ] Displays suggested matches in dropdowns
@@ -132,6 +145,7 @@ npm run test -- formationDiagramHelpers
 **Test Location:** FormationSelector → Link2 icon
 
 #### FormationBadge
+
 - [ ] Displays formation name
 - [ ] Shows direction arrows (← / →)
 - [ ] Shows personnel count
@@ -141,6 +155,7 @@ npm run test -- formationDiagramHelpers
 - [ ] Semantic token styling (no hard-coded grays)
 
 **Test Locations:**
+
 - PlayCard tile view header
 - PlayCard list view header
 
@@ -149,6 +164,7 @@ npm run test -- formationDiagramHelpers
 ### 3. Integration Tests
 
 #### Play Creation with Formation
+
 1. [ ] Open AddNewPlayModal
 2. [ ] Select playbook
 3. [ ] Open FormationSelector dropdown
@@ -160,6 +176,7 @@ npm run test -- formationDiagramHelpers
 9. [ ] Check PlayCard shows FormationBadge
 
 #### Duplicate Play with Flip
+
 1. [ ] Find play with Left formation
 2. [ ] Open context menu → Duplicate Play
 3. [ ] Choose "Flip to opposite side"
@@ -170,6 +187,7 @@ npm run test -- formationDiagramHelpers
 8. [ ] Diagram positions mirrored (if diagram_data present)
 
 #### Formation Variant Matching
+
 1. [ ] Create base formation "Shotgun"
 2. [ ] Create another formation "Shotgun Mirror" (manually, same personnel)
 3. [ ] Open FormationSelector
@@ -185,6 +203,7 @@ npm run test -- formationDiagramHelpers
 13. [ ] Confirm new play auto-selects Shotgun Mirror
 
 #### Formation → Diagram Template
+
 1. [ ] Open AddNewPlayModal
 2. [ ] Select formation with player_positions (needs test data)
 3. [ ] Open browser DevTools console
@@ -200,6 +219,7 @@ npm run test -- formationDiagramHelpers
 ### 4. Data Integrity Tests
 
 #### Database Constraints
+
 - [ ] Cannot create duplicate formation names in same playbook
 - [ ] Formation deletion cascades to plays (formation_id → null)
 - [ ] Variant deletion doesn't break base formation
@@ -208,6 +228,7 @@ npm run test -- formationDiagramHelpers
 - [ ] RLS prevents unauthorized playbook access
 
 #### Edge Cases
+
 - [ ] Create formation with 0 player_positions (should fail validation)
 - [ ] Create formation without personnel_id (allowed)
 - [ ] Link formation as both left AND right (should fail)
@@ -220,11 +241,13 @@ npm run test -- formationDiagramHelpers
 ### 5. Code Quality Checks
 
 #### TypeScript
+
 ```bash
 npm run type-check
 ```
 
 **Expected:**
+
 - ✅ No errors in Phase 1-7 files
 - ⚠️ 52 warnings in legacy files (Supabase type inference) - **NOT BLOCKING**
   - playsService.ts: 19 warnings
@@ -232,22 +255,26 @@ npm run type-check
   - PersonnelSection.tsx: 1 warning
 
 #### Linting
+
 ```bash
 npm run lint
 ```
 
 **Expected:**
+
 - ✅ Phase 6 FormationMatchingModal: 0 warnings
 - ✅ Phase 7 formationDiagramHelpers: 0 warnings
 - ⚠️ FormationBuilderModal (Phase 3 deferred): 26 warnings - **NOT BLOCKING**
 - ⚠️ Demo components: Various warnings - **NOT BLOCKING**
 
 #### Unit Tests
+
 ```bash
 npm run test
 ```
 
 **Expected:**
+
 - ✅ formationService tests: All passing
 - ✅ formationFlipHelpers tests: All passing
 - ✅ formationDiagramHelpers tests: 22/22 passing
@@ -257,12 +284,14 @@ npm run test
 ### 6. Performance & UX Tests
 
 #### Loading Performance
+
 - [ ] FormationSelector dropdown loads < 500ms
 - [ ] FormationMatchingModal opens < 300ms
 - [ ] FormationBadge async fetch < 200ms
 - [ ] Suggested matches query < 1s
 
 #### User Experience
+
 - [ ] No console errors during normal workflow
 - [ ] Loading spinners shown during async operations
 - [ ] Error messages clear and actionable
@@ -275,18 +304,21 @@ npm run test
 ## Known Issues & Limitations
 
 ### TypeScript Warnings (Non-Blocking)
+
 **Issue:** Supabase generated types infer 'never' for update operations  
 **Files Affected:** playsService.ts, formationService.ts  
 **Status:** Documented with @ts-ignore, runtime behavior correct  
 **Resolution:** Will fix when Supabase types regenerated or using explicit type assertions
 
 ### Phase 3 Deferred
+
 **Issue:** FormationBuilderModal canvas UI incomplete  
 **Impact:** Cannot create formations via drag-drop UI yet  
 **Workaround:** Create formations via FormationService API directly  
 **Status:** Will complete after Phase 7 validation
 
 ### Diagram Editor Integration
+
 **Issue:** AddNewPlayModal doesn't have DiagramEditor component yet  
 **Impact:** Formation templates prepared but not rendered on canvas  
 **Status:** Phase 7 utilities ready, logs template to console  
@@ -313,18 +345,21 @@ Before merging to main:
 ## Future Enhancements
 
 ### Phase 3 Completion
+
 - Finish FormationBuilderModal canvas UI
 - Implement drag-drop player positioning
 - Add personnel configuration selector
 - Enable formation editing UI
 
 ### Phase 7 Extension
+
 - Integrate DiagramEditor into AddNewPlayModal
 - Auto-populate canvas when formation selected
 - Add "Replace Formation" button in diagram editor
 - Enable formation export from diagram
 
 ### Additional Features
+
 - Formation library (pre-built templates)
 - Formation import/export (JSON)
 - Formation visualization improvements
@@ -359,6 +394,7 @@ Create `database/seeds/test-formations.sql` with sample data.
 ## Contact & Support
 
 For questions or issues during testing:
+
 - Check console logs for Phase 7 debug output
 - Review TypeScript errors (ignore known Supabase warnings)
 - Verify database migration applied correctly

@@ -195,16 +195,20 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           {/* Action Buttons - Right side */}
           <div className="flex items-center gap-2 overflow-visible">
             {/* Playbook Selector - Compact inline version */}
-            {playbooks && playbooks.length > 0 && activePlaybookId && onPlaybookChange && teamId && (
-              <PlaybookSelector
-                playbooks={playbooks}
-                activePlaybookId={activePlaybookId}
-                onPlaybookChange={onPlaybookChange}
-                onPlaybookUpdated={onPlaybookUpdated}
-                teamId={teamId}
-              />
-            )}
-            
+            {playbooks &&
+              playbooks.length > 0 &&
+              activePlaybookId &&
+              onPlaybookChange &&
+              teamId && (
+                <PlaybookSelector
+                  playbooks={playbooks}
+                  activePlaybookId={activePlaybookId}
+                  onPlaybookChange={onPlaybookChange}
+                  onPlaybookUpdated={onPlaybookUpdated}
+                  teamId={teamId}
+                />
+              )}
+
             {/* Weekly Challenges - moved here */}
             <Button
               onClick={() => {

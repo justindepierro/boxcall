@@ -15,14 +15,18 @@ Built complete manual formation variant matching system! Coaches can now link fo
 ## All Steps Complete
 
 ### ✅ Step 6.1: Service Layer Functions (190 lines)
+
 Added to `FormationService.ts`:
+
 - `linkFormations()` - Link formations as variants
 - `unlinkVariant()` - Break variant links
 - `getSuggestedMatches()` - Find potential matches
 - `getFormationVariantFamily()` - Get base + left + right
 
 ### ✅ Step 6.2: FormationMatchingModal Component (327 lines)
+
 Created `FormationMatchingModal.tsx`:
+
 - Side-by-side layout with base formation display
 - Dropdowns for selecting left/right variants
 - Unlink buttons for breaking existing links
@@ -30,7 +34,9 @@ Created `FormationMatchingModal.tsx`:
 - Auto-refresh after changes
 
 ### ✅ Step 6.3: UI Integration
+
 Updated `FormationSelector.tsx`:
+
 - Added Link2 icon button to each formation in dropdown
 - Clicking icon opens FormationMatchingModal
 - Modal overlays on top of selector
@@ -77,6 +83,7 @@ Modal closes, FormationSelector reloads formations
 ## Visual Changes to FormationSelector
 
 ### Before (Step 6.3)
+
 ```
 ┌─────────────────────────────────────┐
 │ Spread                              │
@@ -87,6 +94,7 @@ Modal closes, FormationSelector reloads formations
 ```
 
 ### After (Step 6.3)
+
 ```
 ┌──────────────────────────────────────────┐
 │ Spread                                   │
@@ -97,6 +105,7 @@ Modal closes, FormationSelector reloads formations
 ```
 
 **When user clicks [🔗] icon:**
+
 - FormationMatchingModal opens
 - Dropdown stays open briefly, then closes
 - Modal shows matching interface
@@ -108,20 +117,28 @@ Modal closes, FormationSelector reloads formations
 ### FormationSelector.tsx
 
 **Imports Added:**
+
 ```tsx
-import { Link2 } from 'lucide-react';
-import { FormationMatchingModal } from '../formations/FormationMatchingModal';
+import { Link2 } from "lucide-react";
+import { FormationMatchingModal } from "../formations/FormationMatchingModal";
 ```
 
 **State Added:**
+
 ```tsx
 const [showMatchingModal, setShowMatchingModal] = useState(false);
-const [formationToMatch, setFormationToMatch] = useState<Formation | null>(null);
+const [formationToMatch, setFormationToMatch] = useState<Formation | null>(
+  null
+);
 ```
 
 **Handlers Added:**
+
 ```tsx
-const handleManageVariants = (formation: Formation, event: React.MouseEvent) => {
+const handleManageVariants = (
+  formation: Formation,
+  event: React.MouseEvent
+) => {
   event.stopPropagation(); // Prevent dropdown selection
   setFormationToMatch(formation);
   setShowMatchingModal(true);
@@ -136,39 +153,45 @@ const handleMatchingSuccess = () => {
 ```
 
 **UI Changes:**
+
 1. Wrapped formation button in `<div>` to add icon
 2. Added Link2 icon button next to each formation
 3. Added FormationMatchingModal at end of component
 
 **HTML Structure:**
+
 ```tsx
 <div className="flex items-center">
   {/* Main selection button */}
   <button onClick={() => handleSelect(formation)}>
     {/* Formation info */}
   </button>
-  
+
   {/* NEW: Manage variants button */}
-  <button 
+  <button
     onClick={(e) => handleManageVariants(formation, e)}
     title="Manage formation variants"
   >
     <Link2 className="w-4 h-4" />
   </button>
-</div>
+</div>;
 
-{/* NEW: Modal at end */}
-{showMatchingModal && formationToMatch && (
-  <FormationMatchingModal
-    isOpen={showMatchingModal}
-    onClose={() => {
-      setShowMatchingModal(false);
-      setFormationToMatch(null);
-    }}
-    baseFormation={formationToMatch}
-    onSuccess={handleMatchingSuccess}
-  />
-)}
+{
+  /* NEW: Modal at end */
+}
+{
+  showMatchingModal && formationToMatch && (
+    <FormationMatchingModal
+      isOpen={showMatchingModal}
+      onClose={() => {
+        setShowMatchingModal(false);
+        setFormationToMatch(null);
+      }}
+      baseFormation={formationToMatch}
+      onSuccess={handleMatchingSuccess}
+    />
+  );
+}
 ```
 
 ---
@@ -176,26 +199,31 @@ const handleMatchingSuccess = () => {
 ## Benefits
 
 ### 1. **Discoverable UI** 🔍
+
 - Link icon visible next to every formation
 - Hover shows tooltip: "Manage formation variants"
 - No hidden menus or complex navigation
 
 ### 2. **Contextual Access** 🎯
+
 - Access matching from the same place you select formations
 - No need to navigate to separate formation management page
 - Quick workflow: select → match → done
 
 ### 3. **Visual Feedback** 👁️
+
 - Icon color changes on hover (gray → accent)
 - Modal opens immediately
 - FormationSelector refreshes after changes
 
 ### 4. **Non-Disruptive** ✨
+
 - `event.stopPropagation()` prevents accidental selection
 - Dropdown closes when modal opens
 - Modal is separate z-index layer
 
 ### 5. **Flexible** 🔄
+
 - Can match formations at any time
 - Can rematch after unlinking
 - Works with existing formations or newly created ones
@@ -207,18 +235,22 @@ const handleMatchingSuccess = () => {
 ### Where Users Access Matching
 
 #### 1. **AddNewPlayModal → FormationSection → FormationSelector**
+
 **Path:** Creating/editing play → Select formation → Click link icon
 
 **Use Case:**
+
 - Coach creating "Power Right" play
 - Selects "I-Formation Right" formation
 - Clicks link icon to ensure Left variant is matched
 - Confirms Left variant exists for Duplicate & Flip
 
 #### 2. **FormationBuilderModal (Future)**
+
 **Path:** After creating formation → Auto-prompt to match
 
 **Use Case (not yet implemented):**
+
 - Coach creates "Twins Right" formation
 - System prompts: "Create Left variant?"
 - Opens FormationMatchingModal automatically
@@ -229,6 +261,7 @@ const handleMatchingSuccess = () => {
 ## Testing Checklist
 
 ### Integration Tests
+
 - [x] Link icon appears next to each formation
 - [ ] Click link icon opens modal
 - [ ] Modal displays correct base formation
@@ -239,6 +272,7 @@ const handleMatchingSuccess = () => {
 - [ ] Multiple formations can be matched sequentially
 
 ### User Scenarios
+
 - [ ] **Create play with formation, match variants**
   1. Open AddNewPlayModal
   2. Click formation dropdown
@@ -266,16 +300,19 @@ const handleMatchingSuccess = () => {
 ## Known Issues & Notes
 
 ### TypeScript Warnings
+
 - 6 `@ts-ignore` comments in FormationService for Supabase type inference
 - Code runs correctly, TypeScript just can't infer types properly
 - Will resolve when Supabase types regenerated
 
 ### Style Linting (FormationMatchingModal)
+
 - 11 warnings about replacing gray tokens with semantic tokens
 - Non-blocking, can fix later during style audit
 - Examples: `text-gray-900` → `text-primary`
 
 ### Performance
+
 - FormationSelector reloads all formations after matching
 - Could optimize to only reload affected formations
 - Current implementation is simple and works well
@@ -285,25 +322,31 @@ const handleMatchingSuccess = () => {
 ## Future Enhancements
 
 ### 1. **Auto-Match on Creation**
+
 Add matching prompt to FormationBuilderModal:
+
 ```tsx
 // After creating formation
-if (newFormation.direction === 'base') {
-  toast.success('Formation created!', 'Match variants?');
+if (newFormation.direction === "base") {
+  toast.success("Formation created!", "Match variants?");
   setShowMatchingModal(true);
 }
 ```
 
 ### 2. **Batch Matching**
+
 Allow matching multiple formations at once:
+
 ```tsx
 <BatchMatchingModal formations={selectedFormations} />
 ```
 
 ### 3. **Visual Preview**
+
 Show formation diagrams in matching modal:
+
 ```tsx
-<FormationDiagram 
+<FormationDiagram
   positions={formation.player_positions}
   width={200}
   height={150}
@@ -311,12 +354,15 @@ Show formation diagrams in matching modal:
 ```
 
 ### 4. **Smart Suggestions**
+
 Use name similarity to suggest matches:
+
 - "Twins Right" suggests "Twins Left"
 - "Pro Right" suggests "Pro Left"
 - Levenshtein distance matching
 
 ### 5. **Keyboard Shortcuts**
+
 - `Ctrl+M` to open matching modal
 - `Ctrl+L` to select left variant
 - `Ctrl+R` to select right variant
@@ -327,9 +373,11 @@ Use name similarity to suggest matches:
 ## Files Changed
 
 ### Created Files (1)
+
 - `src/components/formations/FormationMatchingModal.tsx` (327 lines)
 
 ### Modified Files (2)
+
 - `src/services/FormationService.ts` (+190 lines, 4 new functions)
 - `src/components/playbook/FormationSelector.tsx` (+40 lines, Link2 integration)
 
@@ -338,12 +386,14 @@ Use name similarity to suggest matches:
 ## Dependencies
 
 ### Phase 6 builds on:
+
 - ✅ Phase 1: formations table structure
 - ✅ Phase 2: FormationService base CRUD
 - ✅ Phase 4: FormationSelector component
 - ✅ Phase 5: getOppositeFormationVariant for Duplicate & Flip
 
 ### Phase 6 enables:
+
 - ✅ Manual variant matching (user control)
 - ✅ Duplicate & Flip with user-defined variants
 - ⏭️ Phase 7: Formation templates (can use matched variants)
@@ -360,17 +410,20 @@ Steps 6.1, 6.2, 6.3 fully implemented
 ✅ **UI Integration**  
 Link icon accessible from FormationSelector
 
-✅ **User Experience**  
+✅ **User Experience**
+
 - Discoverable (icon visible)
 - Intuitive (click icon → modal opens)
 - Fast (no page navigation)
 
-✅ **Data Integrity**  
+✅ **Data Integrity**
+
 - Proper database updates
 - Auto-refresh after changes
 - No orphaned variants
 
-✅ **Error Handling**  
+✅ **Error Handling**
+
 - TypeScript warnings documented
 - Graceful fallbacks
 - User-friendly error messages

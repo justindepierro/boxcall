@@ -1,19 +1,19 @@
 /**
  * FormationBuilderModal - Tabbed Interface (Redesigned)
- * 
+ *
  * Unified formation management with two modes:
  * - Tab 1: Link Formations - Connect left/right variants
  * - Tab 2: Draw Formation - Visual canvas builder (Phase 3 - Coming Soon)
- * 
+ *
  * This gives coaches one place to manage all formation workflows.
  */
 
-import React, { useState } from 'react';
-import { Modal } from '../../ui/Modal/Modal';
-import { Button } from '../../ui/Button/Button';
-import { Typography } from '../../design-system/Typography';
-import { Link2, Pencil } from 'lucide-react';
-import { FormationLinkingPanel } from '../../formations/FormationLinkingPanel';
+import React, { useState } from "react";
+import { Modal } from "../../ui/Modal/Modal";
+import { Button } from "../../ui/Button/Button";
+import { Typography } from "../../design-system/Typography";
+import { Link2, Pencil } from "lucide-react";
+import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ interface FormationBuilderModalProps {
   onSaved?: () => void;
 }
 
-type TabType = 'link' | 'draw';
+type TabType = "link" | "draw";
 
 export function FormationBuilderModal({
   isOpen,
@@ -32,14 +32,14 @@ export function FormationBuilderModal({
   formationId,
   onSaved,
 }: FormationBuilderModalProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('link');
+  const [activeTab, setActiveTab] = useState<TabType>("link");
 
   // If we're editing a specific formation, default to draw tab
   React.useEffect(() => {
     if (formationId) {
-      setActiveTab('draw');
+      setActiveTab("draw");
     } else {
-      setActiveTab('link');
+      setActiveTab("link");
     }
   }, [formationId, isOpen]);
 
@@ -61,28 +61,30 @@ export function FormationBuilderModal({
         {/* Tab Navigation */}
         <div className="flex border-b border-border-primary bg-surface-secondary">
           <button
-            onClick={() => setActiveTab('link')}
+            onClick={() => setActiveTab("link")}
             className={`
               flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
               font-medium transition-colors
-              ${activeTab === 'link' 
-                ? 'bg-surface-primary text-text-primary border-b-2 border-primary-500' 
-                : 'text-text-muted hover:text-text-secondary hover:bg-surface-muted'
+              ${
+                activeTab === "link"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
               }
             `}
           >
             <Link2 className="w-5 h-5" />
             <span className="font-medium">Link Formations</span>
           </button>
-          
+
           <button
-            onClick={() => setActiveTab('draw')}
+            onClick={() => setActiveTab("draw")}
             className={`
               flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
               font-medium transition-colors relative
-              ${activeTab === 'draw' 
-                ? 'bg-surface-primary text-text-primary border-b-2 border-primary-500' 
-                : 'text-text-muted hover:text-text-secondary hover:bg-surface-muted'
+              ${
+                activeTab === "draw"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
               }
             `}
           >
@@ -96,7 +98,7 @@ export function FormationBuilderModal({
 
         {/* Tab Content */}
         <div className="flex-1 overflow-auto">
-          {activeTab === 'link' && (
+          {activeTab === "link" && (
             <FormationLinkingPanel
               playbookId={playbookId}
               onSuccess={handleSuccess}
@@ -105,7 +107,7 @@ export function FormationBuilderModal({
             />
           )}
 
-          {activeTab === 'draw' && (
+          {activeTab === "draw" && (
             <div className="flex flex-col items-center justify-center h-full p-spacing-xl bg-surface-muted min-h-[500px]">
               <div className="text-center max-w-md space-y-spacing-md">
                 <div className="text-6xl mb-spacing-md">✏️</div>
@@ -113,7 +115,8 @@ export function FormationBuilderModal({
                   Visual Formation Builder
                 </Typography>
                 <Typography variant="body-md" className="text-text-secondary">
-                  Drag-and-drop canvas for positioning players visually is coming soon!
+                  Drag-and-drop canvas for positioning players visually is
+                  coming soon!
                 </Typography>
                 <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
                   <Typography variant="caption" className="text-text-muted">
@@ -129,7 +132,7 @@ export function FormationBuilderModal({
                 </div>
                 <div className="mt-spacing-md">
                   <Button
-                    onClick={() => setActiveTab('link')}
+                    onClick={() => setActiveTab("link")}
                     variant="primary"
                   >
                     Try Formation Linking →

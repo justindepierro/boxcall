@@ -1,13 +1,15 @@
 # BoxCall Database Architecture - Live State Analysis
+
 **Date:** October 12, 2025  
 **Analysis Method:** Direct database inspection via Supabase client
 
 ## 📊 Current Database State
 
 ### Core Tables (Verified Active)
+
 ```
 ✅ plays: 2 rows
-✅ formations: 4 rows  
+✅ formations: 4 rows
 ✅ personnel_configurations: 2 rows
 ✅ personnel_players: 10 rows
 ✅ playbooks: 2 rows
@@ -20,6 +22,7 @@
 ## 🏗️ Data Model Architecture
 
 ### **1. PLAYS TABLE** (Central Hub)
+
 **Purpose:** Individual play records - the atomic unit of a playbook
 
 ```
@@ -27,7 +30,7 @@ Current Fields:
 - id, playbook_id (FK)
 - formation (TEXT - legacy string like "Twins", "Trips")
 - formation_id (UUID FK → formations.id) ✨ NEW
-- formation_direction (TEXT: base/left/right) ✨ NEW  
+- formation_direction (TEXT: base/left/right) ✨ NEW
 - personnel (TEXT - legacy string like "11", "12")
 - play_name, one_word_play
 - p_type (Pass/Run/RPO/Play Action)
@@ -36,6 +39,7 @@ Current Fields:
 ```
 
 **Key Relationships:**
+
 - `playbook_id` → playbooks.id
 - `formation` (TEXT) → **legacy field, being phased out**
 - `formation_id` (UUID) → **formations.id (new system)**
@@ -44,6 +48,7 @@ Current Fields:
 ---
 
 ### **2. FORMATIONS TABLE** (New System)
+
 **Purpose:** Reusable formation library with Left/Right variants
 
 ```
@@ -62,6 +67,7 @@ Fields:
 ```
 
 **Key Innovation:**
+
 - **Base + Variants:** One "Trips" base can have "Trips Left" and "Trips Right" linked via `base_formation_id`
 - **Personnel Flexibility:** Can link to MULTIPLE personnel packages
 - **Canvas Ready:** `player_positions` JSONB stores coordinates for diagram editor
@@ -69,9 +75,11 @@ Fields:
 ---
 
 ### **3. PERSONNEL SYSTEM** (2-Table Design)
+
 **Purpose:** Define skill position configurations (11 personnel, 12 personnel, etc.)
 
 #### **A. personnel_configurations** (Parent)
+
 ```
 Fields:
 - id (PK), playbook_id (FK)
@@ -81,6 +89,7 @@ Fields:
 ```
 
 #### **B. personnel_players** (Children)
+
 ```
 Fields:
 - id (PK), config_id (FK → personnel_configurations.id)
@@ -91,6 +100,7 @@ Fields:
 ```
 
 **Example Data Structure:**
+
 ```json
 Personnel Config: "11 Personnel"
   └─ Players:
@@ -126,11 +136,11 @@ Personnel Config: "11 Personnel"
 
 ### **Legacy vs Modern Fields**
 
-| plays Table | Legacy (String) | Modern (Relational) |
-|-------------|----------------|---------------------|
-| Formation | `formation` TEXT | `formation_id` UUID |
-| Direction | `f_dir` TEXT | `formation_direction` TEXT |
-| Personnel | `personnel` TEXT | ← via formations.personnel_packages |
+| plays Table | Legacy (String)  | Modern (Relational)                 |
+| ----------- | ---------------- | ----------------------------------- |
+| Formation   | `formation` TEXT | `formation_id` UUID                 |
+| Direction   | `f_dir` TEXT     | `formation_direction` TEXT          |
+| Personnel   | `personnel` TEXT | ← via formations.personnel_packages |
 
 **Migration Strategy:** Both fields exist. System populates BOTH for backward compatibility.
 
@@ -139,6 +149,7 @@ Personnel Config: "11 Personnel"
 ## 🎯 Current User Workflow Issues
 
 ### Problem: Fragmented UX
+
 Based on your console log showing **"0 formations, 0 personnel"**, here's what's happening:
 
 ```
@@ -158,6 +169,7 @@ Based on your console log showing **"0 formations, 0 personnel"**, here's what's
 ## 💡 Architectural Recommendations
 
 ### 1. **Unified Data Entry Point**
+
 **Problem:** Coach must create personnel → formations → plays in 3 separate flows  
 **Solution:** Single "Play Builder" workflow
 
@@ -180,11 +192,13 @@ Based on your console log showing **"0 formations, 0 personnel"**, here's what's
 ```
 
 ### 2. **Smart Defaults & Auto-Import**
+
 - **Auto-import from legacy:** When coach opens playbook, auto-create formations from `plays.formation` strings
 - **Default personnel:** If no personnel exists, auto-create "11 Personnel" template
 - **Formation linking:** Auto-suggest Left/Right variants when same name detected
 
 ### 3. **Contextual Editing**
+
 **Current:** 3 tabs (Edit Details | Link Formations | Draw Formation)  
 **Better:** Context-aware single view
 
@@ -205,6 +219,7 @@ Formation Card (Inline Edit):
 ## 🚀 Immediate Action Plan
 
 ### Fix #1: Data Import (Run NOW)
+
 The import migration will populate formations from your 2 plays:
 
 ```sql
@@ -213,6 +228,7 @@ The import migration will populate formations from your 2 plays:
 ```
 
 ### Fix #2: Personnel Bootstrap
+
 If personnel is empty, create default "11 Personnel":
 
 ```sql
@@ -233,17 +249,18 @@ VALUES
 ```
 
 ### Fix #3: Simplify Edit Flow
+
 Instead of 3-tab modal, show list of formations with inline edit:
 
 ```tsx
 <FormationList>
-  {formations.map(f => (
-    <FormationCard 
+  {formations.map((f) => (
+    <FormationCard
       key={f.id}
       formation={f}
-      onEdit={openInlineEditor}    // Drawer from side
-      onLink={showLinkPanel}        // Only if needed
-      onDraw={openCanvas}           // Phase 3
+      onEdit={openInlineEditor} // Drawer from side
+      onLink={showLinkPanel} // Only if needed
+      onDraw={openCanvas} // Phase 3
     />
   ))}
 </FormationList>
@@ -254,18 +271,21 @@ Instead of 3-tab modal, show list of formations with inline edit:
 ## 📝 Summary: Cohesive Workflow Vision
 
 ### Current Problems:
+
 1. ❌ Empty state UX (no formations/personnel imported)
 2. ❌ 3 disconnected tabs in modal
 3. ❌ No auto-population from existing data
 4. ❌ Coach must manually link everything
 
 ### Ideal State:
+
 1. ✅ Coach sees plays → formations auto-detected
 2. ✅ Click formation → edit inline (personnel, tags, etc.)
 3. ✅ Link variants suggested automatically ("Create Trips Left?")
 4. ✅ Personnel templates ready to use immediately
 
 **Next Steps:**
+
 1. Run import migration to populate formations
 2. Add default personnel if empty
 3. Test FormationBuilderPanel - should show 2 formations
@@ -273,4 +293,4 @@ Instead of 3-tab modal, show list of formations with inline edit:
 
 ---
 
-*Analysis based on live database inspection October 12, 2025*
+_Analysis based on live database inspection October 12, 2025_

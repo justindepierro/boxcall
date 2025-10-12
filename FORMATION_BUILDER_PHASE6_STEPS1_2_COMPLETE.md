@@ -15,70 +15,86 @@ Implemented manual formation variant matching system. Coaches can now link forma
 ## Changes Made
 
 ### Step 6.1: Service Layer Functions ✅
+
 **File:** `src/services/FormationService.ts` (+190 lines)
 
 **New Functions:**
 
 #### 1. `linkFormations(baseFormationId, leftFormationId?, rightFormationId?)`
+
 Links existing formations as variants by:
+
 - Validating base formation exists and is truly a base (not already a variant)
 - Setting `base_formation_id` and `direction` on left/right variants
 - Ensuring base formation has `direction = 'base'`
 - Atomic updates with error handling
 
 **Usage:**
+
 ```typescript
 await FormationService.linkFormations(
-  'base-formation-uuid',
-  'left-formation-uuid',  // optional
-  'right-formation-uuid'   // optional
+  "base-formation-uuid",
+  "left-formation-uuid", // optional
+  "right-formation-uuid" // optional
 );
 ```
 
 #### 2. `unlinkVariant(formationId)`
+
 Makes a variant formation independent by:
+
 - Setting `base_formation_id = NULL`
 - Setting `direction = 'base'`
 - Allows formations to be unmatched and re-matched differently
 
 **Usage:**
+
 ```typescript
-await FormationService.unlinkVariant('variant-formation-uuid');
+await FormationService.unlinkVariant("variant-formation-uuid");
 ```
 
 #### 3. `getSuggestedMatches(formationId)`
+
 Returns potential matching formations by:
+
 - Querying same playbook
 - Filtering by same personnel_id (same player count)
 - Excluding formations already linked to different base
 - Including independent formations and those in the same variant family
 
 **Usage:**
+
 ```typescript
-const matches = await FormationService.getSuggestedMatches('formation-uuid');
+const matches = await FormationService.getSuggestedMatches("formation-uuid");
 // Returns: Formation[] - formations that could be linked
 ```
 
 #### 4. `getFormationVariantFamily(formationId)`
+
 Returns complete variant family (base + left + right) by:
+
 - Determining base formation ID (handles case where called on variant)
 - Querying all formations with same base_formation_id
 - Returning structured object with base, left, right
 
 **Usage:**
+
 ```typescript
-const family = await FormationService.getFormationVariantFamily('any-variant-uuid');
+const family =
+  await FormationService.getFormationVariantFamily("any-variant-uuid");
 // Returns: { base: Formation | null, left: Formation | null, right: Formation | null }
 ```
 
 ---
 
 ### Step 6.2: FormationMatchingModal Component ✅
+
 **File:** `src/components/formations/FormationMatchingModal.tsx` (NEW - 327 lines)
 
 **Features:**
 
 #### Visual Layout
+
 - **Base Formation Display**: Shows current base formation with personnel and usage count
 - **Left Variant Selector**: Dropdown with suggested matches + unlink button
 - **Right Variant Selector**: Dropdown with suggested matches + unlink button
@@ -87,18 +103,21 @@ const family = await FormationService.getFormationVariantFamily('any-variant-uui
 - **No Matches Warning**: Alerts if no suggested formations found
 
 #### User Interactions
+
 1. **Select from dropdown**: Choose existing formation as variant
 2. **Unlink variant**: Break existing link (makes formation independent)
 3. **Save matches**: Applies changes to database
 4. **Auto-reload**: Refreshes data after unlink operations
 
 #### Smart Filtering
+
 - Left dropdown excludes right variant selection (can't be both)
 - Right dropdown excludes left variant selection
 - Only shows formations with same personnel
 - Filters out formations already linked to different bases
 
 #### Error Handling
+
 - Loading states with spinner
 - Toast notifications for success/errors
 - Graceful fallbacks
@@ -108,6 +127,7 @@ const family = await FormationService.getFormationVariantFamily('any-variant-uui
 ## Data Flow
 
 ### Opening Modal
+
 ```
 User: Opens FormationMatchingModal
     ↓
@@ -123,6 +143,7 @@ Modal displays with current state
 ```
 
 ### Linking Formations
+
 ```
 User: Selects "Twins Left" as left variant
     ↓
@@ -145,6 +166,7 @@ Modal closes
 ```
 
 ### Unlinking Variant
+
 ```
 User: Clicks "Unlink" on left variant
     ↓
@@ -166,6 +188,7 @@ Dropdown resets, variant removed
 ## Database Impact
 
 ### Before Linking
+
 ```sql
 -- Formations are independent
 formations:
@@ -174,6 +197,7 @@ formations:
 ```
 
 ### After Linking
+
 ```sql
 -- Formations are linked as variants
 formations:
@@ -182,6 +206,7 @@ formations:
 ```
 
 ### After Unlinking
+
 ```sql
 -- Formation-2 is independent again
 formations:
@@ -196,9 +221,11 @@ formations:
 ### Where to Add Matching Modal
 
 #### Option 1: FormationSelector Context Menu
+
 **Location:** `src/components/playbook/FormationSelector.tsx`
 
 Add right-click menu:
+
 ```tsx
 <ContextMenu>
   <MenuItem onClick={handleEdit}>Edit Formation</MenuItem>
@@ -209,11 +236,13 @@ Add right-click menu:
 ```
 
 #### Option 2: PlaybookPage Formation Badge
+
 **Location:** `src/components/playbook/FormationBadge.tsx`
 
 Make badge clickable:
+
 ```tsx
-<Badge 
+<Badge
   onClick={() => onManageVariants?.(formation)}
   className="cursor-pointer hover:bg-purple-100"
 >
@@ -222,12 +251,14 @@ Make badge clickable:
 ```
 
 #### Option 3: FormationBuilder Final Step
+
 **Location:** `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`
 
 Add as final step after formation creation:
+
 ```tsx
 // After successful creation
-toast.success('Formation created!', 'Now match variants?');
+toast.success("Formation created!", "Now match variants?");
 setShowMatchingModal(true);
 ```
 
@@ -236,6 +267,7 @@ setShowMatchingModal(true);
 ## User Workflows
 
 ### Scenario A: Link Existing Formations
+
 **User Story:** "I have Twins Right and Twins Left formations. I want to link them."
 
 1. User opens matching modal for "Twins Right"
@@ -253,6 +285,7 @@ setShowMatchingModal(true);
 7. Now Duplicate & Flip works between these formations ✅
 
 ### Scenario B: Unlink Incorrect Match
+
 **User Story:** "I linked the wrong formations. I need to fix it."
 
 1. User opens matching modal for "Twins Right"
@@ -269,6 +302,7 @@ setShowMatchingModal(true);
 8. Formations now correctly linked ✅
 
 ### Scenario C: No Suggested Matches
+
 **User Story:** "I created a new formation but there are no matches."
 
 1. User opens matching modal for "Custom Formation"
@@ -286,6 +320,7 @@ setShowMatchingModal(true);
 ## Technical Notes
 
 ### TypeScript Type Issues
+
 **Problem:** Supabase generated types infer `never` for formations table updates
 
 **Workaround:** Added `@ts-ignore` comments above `.update()` calls
@@ -297,19 +332,21 @@ setShowMatchingModal(true);
 **Future Fix:** Regenerate Supabase types or use explicit type assertions
 
 ### Dropdown Filtering Logic
+
 Ensures users can't select same formation for both left and right:
 
 ```typescript
 const getAvailableMatchesForLeft = () => {
   return suggestedMatches.filter(
-    (f) => 
+    (f) =>
       f.id !== selectedRightId && // Can't be same as right
-      (f.direction === 'base' || f.direction === 'left' || !f.base_formation_id)
+      (f.direction === "base" || f.direction === "left" || !f.base_formation_id)
   );
 };
 ```
 
 ### Refresh Strategy
+
 Uses `refreshTrigger` state to trigger useEffect reload:
 
 ```typescript
@@ -329,26 +366,31 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 ## Benefits
 
 ### 1. **Coach Control** 🎮
+
 - Manually define which formations are opposites
 - Not locked into auto-created variants
 - Can fix mistakes by unlinking and re-matching
 
 ### 2. **Flexibility** 🔄
+
 - Link any two formations with same personnel
 - Unlink at any time
 - Re-match formations as needed
 
 ### 3. **Visual Confirmation** 👀
+
 - See current variant family at a glance
 - Preview selections before saving
 - Clear indication of linked/unlinked state
 
 ### 4. **Smart Suggestions** 🧠
+
 - System suggests formations with same personnel
 - Filters out incompatible formations
 - Reduces user error
 
 ### 5. **Duplicate & Flip Integration** ⚡
+
 - Once linked, Duplicate & Flip automatically works
 - No manual flip configuration needed
 - Seamless workflow
@@ -358,6 +400,7 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 ## Testing Checklist
 
 ### Service Layer Tests
+
 - [ ] `linkFormations()` with left variant only
 - [ ] `linkFormations()` with right variant only
 - [ ] `linkFormations()` with both variants
@@ -368,6 +411,7 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 - [ ] `getFormationVariantFamily()` returns correct base/left/right
 
 ### UI Component Tests
+
 - [ ] Modal opens and loads data
 - [ ] Dropdowns show suggested formations
 - [ ] Selected formations display in preview
@@ -379,6 +423,7 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 - [ ] Error states handled gracefully
 
 ### Integration Tests (Step 6.3)
+
 - [ ] Open modal from FormationSelector
 - [ ] Open modal from FormationBadge
 - [ ] Open modal from FormationBuilder
@@ -390,11 +435,12 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 ## Next Steps
 
 ### Step 6.3: Integration (TODO)
+
 1. **Add context menu to FormationSelector**
    - Right-click → "Manage Variants"
    - Opens FormationMatchingModal
 
-2. **Add click handler to FormationBadge** 
+2. **Add click handler to FormationBadge**
    - Click formation badge → Opens matching modal
    - Shows current variant family
 
@@ -411,9 +457,11 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 ## Files Changed
 
 ### Created Files (1)
+
 - `src/components/formations/FormationMatchingModal.tsx` (327 lines)
 
 ### Modified Files (1)
+
 - `src/services/FormationService.ts` (+190 lines)
 
 ---
@@ -421,11 +469,13 @@ setRefreshTrigger((prev) => prev + 1); // Triggers reload
 ## Dependencies
 
 ### Phase 6 builds on:
+
 - ✅ Phase 1: formations table with base_formation_id and direction fields
 - ✅ Phase 2: FormationService base functionality
 - ✅ Phase 5: getOppositeFormationVariant() for Duplicate & Flip
 
 ### Phase 6 enables:
+
 - ⏭️ Phase 5 enhancement: Duplicate & Flip with manually matched formations
 - ⏭️ Phase 7: Formation templates (can use variant families)
 

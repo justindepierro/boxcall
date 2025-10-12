@@ -1,18 +1,18 @@
 /**
  * FormationLinkConfirmationModal
- * 
+ *
  * Confirms formation linking and explains direction field updates.
  * Shows different messages for:
  * 1. Same formation (will duplicate with Lt/Rt directions)
  * 2. Different formations (will update directions to Left/Right)
  */
 
-import React from 'react';
-import { Modal } from '../ui/Modal/Modal';
-import { Button } from '../ui/Button/Button';
-import { Typography } from '../design-system/Typography';
-import { AlertCircle, Link2 } from 'lucide-react';
-import type { Formation } from '../../types/formation';
+import React from "react";
+import { Modal } from "../ui/Modal/Modal";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
+import { AlertCircle, Link2 } from "lucide-react";
+import type { Formation } from "../../types/formation";
 
 interface FormationLinkConfirmationModalProps {
   isOpen: boolean;
@@ -23,7 +23,9 @@ interface FormationLinkConfirmationModalProps {
   isSameFormation: boolean;
 }
 
-export const FormationLinkConfirmationModal: React.FC<FormationLinkConfirmationModalProps> = ({
+export const FormationLinkConfirmationModal: React.FC<
+  FormationLinkConfirmationModalProps
+> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -44,19 +46,28 @@ export const FormationLinkConfirmationModal: React.FC<FormationLinkConfirmationM
           <AlertCircle className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <Typography variant="label-md" className="text-info-900">
-              {isSameFormation ? 'Creating Left/Right Variants' : 'Linking as Left/Right'}
+              {isSameFormation
+                ? "Creating Left/Right Variants"
+                : "Linking as Left/Right"}
             </Typography>
-            <Typography variant="body-sm" className="text-info-700 mt-spacing-xs">
+            <Typography
+              variant="body-sm"
+              className="text-info-700 mt-spacing-xs"
+            >
               {isSameFormation ? (
                 <>
-                  Since you selected the same formation for both sides, we'll create a 
-                  duplicate with <strong>formation_dir</strong> set to <strong>Lt</strong> and <strong>Rt</strong>.
-                  This is how we handle formations like "Twins Lt" and "Twins Rt" (same name, different directions).
+                  Since you selected the same formation for both sides, we'll
+                  create a duplicate with <strong>formation_dir</strong> set to{" "}
+                  <strong>Lt</strong> and <strong>Rt</strong>. This is how we
+                  handle formations like "Twins Lt" and "Twins Rt" (same name,
+                  different directions).
                 </>
               ) : (
                 <>
-                  We'll update the <strong>formation_dir</strong> column to <strong>Left</strong> and <strong>Right</strong>.
-                  This works for formations with different names like "Rip" (Left) and "Liz" (Right).
+                  We'll update the <strong>formation_dir</strong> column to{" "}
+                  <strong>Left</strong> and <strong>Right</strong>. This works
+                  for formations with different names like "Rip" (Left) and
+                  "Liz" (Right).
                 </>
               )}
             </Typography>
@@ -67,18 +78,27 @@ export const FormationLinkConfirmationModal: React.FC<FormationLinkConfirmationM
         <div className="grid grid-cols-3 gap-spacing-md items-center">
           {/* Left Formation */}
           <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-            <Typography variant="caption" className="text-text-muted uppercase tracking-wide">
+            <Typography
+              variant="caption"
+              className="text-text-muted uppercase tracking-wide"
+            >
               Left Side
             </Typography>
-            <Typography variant="label-md" className="text-text-primary mt-spacing-xs">
+            <Typography
+              variant="label-md"
+              className="text-text-primary mt-spacing-xs"
+            >
               {leftFormation.name}
             </Typography>
             <Typography variant="caption" className="text-text-secondary">
-              Personnel: {leftFormation.personnel_name || 'Not set'}
+              Personnel: {leftFormation.personnel_name || "Not set"}
             </Typography>
             <div className="mt-spacing-sm p-spacing-xs bg-success-50 border border-success-200 rounded">
-              <Typography variant="caption" className="text-success-700 font-medium">
-                direction → {isSameFormation ? 'Lt' : 'Left'}
+              <Typography
+                variant="caption"
+                className="text-success-700 font-medium"
+              >
+                direction → {isSameFormation ? "Lt" : "Left"}
               </Typography>
             </div>
           </div>
@@ -92,18 +112,27 @@ export const FormationLinkConfirmationModal: React.FC<FormationLinkConfirmationM
 
           {/* Right Formation */}
           <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-            <Typography variant="caption" className="text-text-muted uppercase tracking-wide">
+            <Typography
+              variant="caption"
+              className="text-text-muted uppercase tracking-wide"
+            >
               Right Side
             </Typography>
-            <Typography variant="label-md" className="text-text-primary mt-spacing-xs">
+            <Typography
+              variant="label-md"
+              className="text-text-primary mt-spacing-xs"
+            >
               {rightFormation.name}
             </Typography>
             <Typography variant="caption" className="text-text-secondary">
-              Personnel: {rightFormation.personnel_name || 'Not set'}
+              Personnel: {rightFormation.personnel_name || "Not set"}
             </Typography>
             <div className="mt-spacing-sm p-spacing-xs bg-success-50 border border-success-200 rounded">
-              <Typography variant="caption" className="text-success-700 font-medium">
-                direction → {isSameFormation ? 'Rt' : 'Right'}
+              <Typography
+                variant="caption"
+                className="text-success-700 font-medium"
+              >
+                direction → {isSameFormation ? "Rt" : "Right"}
               </Typography>
             </div>
           </div>
@@ -112,23 +141,17 @@ export const FormationLinkConfirmationModal: React.FC<FormationLinkConfirmationM
         {/* Technical Note */}
         <div className="p-spacing-sm bg-surface-muted rounded text-center">
           <Typography variant="caption" className="text-text-muted">
-            💡 This ensures all linked formations have consistent direction fields, 
-            no matter how they're named.
+            💡 This ensures all linked formations have consistent direction
+            fields, no matter how they're named.
           </Typography>
         </div>
 
         {/* Actions */}
         <div className="flex gap-spacing-md justify-end pt-spacing-md border-t border-border-primary">
-          <Button
-            onClick={onClose}
-            variant="ghost"
-          >
+          <Button onClick={onClose} variant="ghost">
             Cancel
           </Button>
-          <Button
-            onClick={onConfirm}
-            variant="primary"
-          >
+          <Button onClick={onConfirm} variant="primary">
             Confirm Link
           </Button>
         </div>

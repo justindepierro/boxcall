@@ -9,6 +9,7 @@
 ## ✅ Good News: CSV Import Already Built!
 
 Your app has a **complete CSV import system** at:
+
 - **UI**: `src/components/playbook/CSVImport/CSVImportModal.tsx`
 - **Service**: `src/services/csvService.ts`
 - **Access**: Playbook Page → "Import CSV" button
@@ -20,6 +21,7 @@ Your app has a **complete CSV import system** at:
 ### Step 1: Create Sample CSV (5 min)
 
 **Option A**: Use Built-in Sample Generator
+
 1. Open app: `http://localhost:5173`
 2. Navigate to your playbook
 3. Click "Import CSV" button
@@ -44,6 +46,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 ```
 
 **CSV Fields Supported**:
+
 - **Required**: `formation`, `play_name`, `p_type`
 - **Optional**: `personnel`, `protection`, `one_word_call`, `f_type`, `f_dir`, `p_dir`, `back_align`, `shift`, `motion`, `r_str`, `p_str`, `notes`
 
@@ -70,6 +73,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 ## 📝 Sample Play Ideas (Copy & Modify)
 
 ### **Pass Plays** (30 plays)
+
 - Slant/Curl
 - Four Verticals
 - Stick/Wheel
@@ -82,6 +86,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 - Shallow Cross
 
 ### **Run Plays** (30 plays)
+
 - Power
 - Counter
 - Iso
@@ -94,6 +99,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 - QB Sneak
 
 ### **RPO Plays** (20 plays)
+
 - Read Option
 - Stick/Draw
 - Bubble/Zone
@@ -103,6 +109,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 - Triple Option
 
 ### **Play Action** (20 plays)
+
 - PA Boot
 - PA Waggle
 - PA Flood
@@ -111,6 +118,7 @@ I-Form,Iso,Run,21,N/A,Iso,Heavy,Middle,Middle,Isolation run play
 - PA Smash
 
 ### **Formations to Use**
+
 - Shotgun (various: Gun Empty, Gun Trips, Gun Ace)
 - I-Form (Pro, Strong, Weak)
 - Pistol
@@ -138,6 +146,7 @@ Trips Right,Flood,Pass,11,5-man,Flood,Spread,Right,Right
 ```
 
 **Pro Tip**: Use Excel formulas to generate variations:
+
 - `="Shotgun"` for formation
 - `=CONCATENATE("Play ", ROW()-1)` for play names
 - Alternate between Pass/Run/RPO
@@ -150,21 +159,33 @@ Trips Right,Flood,Pass,11,5-man,Flood,Spread,Right,Right
 Create `generate-plays.js`:
 
 ```javascript
-const formations = ['Shotgun', 'I-Form', 'Pistol', 'Ace', 'Empty', 'Trips Right', 'Wildcat'];
-const playTypes = ['Pass', 'Run', 'RPO', 'Play Action'];
-const personnel = ['11', '12', '21', '10', '13', '22'];
-const directions = ['Left', 'Right', 'Middle'];
+const formations = [
+  "Shotgun",
+  "I-Form",
+  "Pistol",
+  "Ace",
+  "Empty",
+  "Trips Right",
+  "Wildcat",
+];
+const playTypes = ["Pass", "Run", "RPO", "Play Action"];
+const personnel = ["11", "12", "21", "10", "13", "22"];
+const directions = ["Left", "Right", "Middle"];
 
-console.log('formation,play_name,p_type,personnel,protection,one_word_call,f_type,f_dir,p_dir');
+console.log(
+  "formation,play_name,p_type,personnel,protection,one_word_call,f_type,f_dir,p_dir"
+);
 
 for (let i = 1; i <= 100; i++) {
   const formation = formations[Math.floor(Math.random() * formations.length)];
   const playType = playTypes[Math.floor(Math.random() * playTypes.length)];
   const pers = personnel[Math.floor(Math.random() * personnel.length)];
   const dir = directions[Math.floor(Math.random() * directions.length)];
-  const protection = playType === 'Pass' ? '5-man' : 'N/A';
-  
-  console.log(`${formation},Play ${i},${playType},${pers},${protection},Call${i},Spread,${dir},${dir}`);
+  const protection = playType === "Pass" ? "5-man" : "N/A";
+
+  console.log(
+    `${formation},Play ${i},${playType},${pers},${protection},Call${i},Spread,${dir},${dir}`
+  );
 }
 ```
 
@@ -175,6 +196,7 @@ for (let i = 1; i <= 100; i++) {
 ## 🧪 Testing Checklist After Import
 
 ### **Performance Testing**
+
 - [ ] Playbook page loads in < 2 seconds
 - [ ] Filtering is instant (< 100ms)
 - [ ] Search works smoothly
@@ -182,6 +204,7 @@ for (let i = 1; i <= 100; i++) {
 - [ ] Bulk selection works with 50+ plays
 
 ### **Functionality Testing**
+
 - [ ] Can edit individual plays
 - [ ] Can delete plays
 - [ ] Can add plays to practice scripts
@@ -189,6 +212,7 @@ for (let i = 1; i <= 100; i++) {
 - [ ] Filters work correctly (formation, type, personnel)
 
 ### **Data Quality**
+
 - [ ] All plays have formation
 - [ ] All plays have play_name
 - [ ] All plays have p_type
@@ -199,23 +223,27 @@ for (let i = 1; i <= 100; i++) {
 ## 📊 CSV Import Features
 
 ### **Smart Column Detection**
+
 - Auto-detects column names (case-insensitive)
 - Maps variations: `play_name`, `play name`, `Play Name`
 - Handles missing columns with defaults
 
 ### **Validation**
+
 - Required fields: formation, play_name, p_type
 - Play type normalization: "Pass", "Run", "RPO", "Play Action"
 - Formation validation against known formations
 - Personnel validation (11, 12, 21, etc.)
 
 ### **Error Handling**
+
 - Shows preview before import
 - Displays validation errors
 - Allows fixing issues before import
 - Shows success/failure summary
 
 ### **Bulk Operations**
+
 - Imports up to 1000 plays at once
 - Optimized database queries
 - Progress indicators
@@ -236,18 +264,21 @@ for (let i = 1; i <= 100; i++) {
 ## 📝 Status Update for Refactoring Plan
 
 ### **Completed ✅**
+
 - CSV Import system fully functional
 - Bulk play creation working
 - Play validation in place
 - UI for import complete
 
 ### **In Progress 🔄**
+
 - **Phase 2**: Service Layer (80% complete)
   - DiagramService created ✅
   - DiagramEditor integrated ✅
   - Waiting: Browser testing (need plays with diagrams first!)
 
 ### **Next Priority**
+
 1. Add 100 plays via CSV (this guide)
 2. Add diagrams to 5-10 plays for testing
 3. Test diagram autosave functionality

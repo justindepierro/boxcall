@@ -12,7 +12,10 @@ interface FormationSectionProps {
   formationShowInName: boolean;
   playbookId?: string; // NEW: Required for FormationSelector
   onFormationChange: (formation: string) => void;
-  onFormationIdChange: (formationId: string | null, formation: Formation | null) => void;
+  onFormationIdChange: (
+    formationId: string | null,
+    formation: Formation | null
+  ) => void;
   onFormationDirChange: (dir: string) => void;
   onFormationShowInNameChange: (show: boolean) => void;
   suggestions: string[];

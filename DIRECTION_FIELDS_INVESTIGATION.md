@@ -15,6 +15,7 @@ After thorough investigation, the direction fields are working correctly with a 
 ### 1. **Formation Direction (f_dir) & Play Direction (p_dir)**
 
 **Where Set:** AddNewPlayModal form - toggle buttons
+
 ```tsx
 // FormationSection.tsx & PlayNameSection.tsx
 <Button onClick={() => onFormationDirChange(f_dir === "Left" ? "" : "Left")}>Left</Button>
@@ -26,6 +27,7 @@ After thorough investigation, the direction fields are working correctly with a 
 **Storage:** Saved directly to `plays.f_dir` and `plays.p_dir` columns in database
 
 **Display in PlayCard:** Uses `directionOptions` from `getDirectionOptions(format)`
+
 - Format can be: "full", "abbrev", or "letter"
 - Returns options like: `{ value: "Left", label: "Left" }` or similar
 
@@ -40,6 +42,7 @@ After thorough investigation, the direction fields are working correctly with a 
 **Storage:** Saved to `plays.r_str` and `plays.p_str` columns in database
 
 **Display Options:** Uses `DIRECTION_RL_OPTIONS`:
+
 ```tsx
 { value: "R", label: "Right" }
 { value: "L", label: "Left" }
@@ -56,11 +59,13 @@ After thorough investigation, the direction fields are working correctly with a 
 These are **display preferences** that control whether direction appears in the play name display:
 
 **Purpose:** Toggle visibility of direction in full play name
+
 - Controlled by eye icon buttons in FormationSection/PlayNameSection
 - State: `formationShowInName: boolean` and `playShowInName: boolean`
 - Default: Both `false`
 
 **NOT saved to database** - confirmed by checking:
+
 - ✅ `AddNewPlayModal.tsx` handleSubmit (lines 86-126) - NOT included in `playData`
 - ✅ `src/types/play.ts` - No `show_in_name` fields
 - ✅ `database/schema.sql` - No `show_in_name` columns
@@ -73,16 +78,17 @@ These are **display preferences** that control whether direction appears in the 
 
 ### Current Implementation
 
-| Field | Format | Values | Set In | Edited In |
-|-------|--------|--------|--------|-----------|
-| f_dir | Full | "Left", "Right", "" | AddNewPlayModal | PlayCard inline |
-| p_dir | Full | "Left", "Right", "" | AddNewPlayModal | PlayCard inline |
-| r_str | Abbreviated | "R", "L", "" | N/A (not in form) | PlayCard inline |
-| p_str | Abbreviated | "R", "L", "" | N/A (not in form) | PlayCard inline |
+| Field | Format      | Values              | Set In            | Edited In       |
+| ----- | ----------- | ------------------- | ----------------- | --------------- |
+| f_dir | Full        | "Left", "Right", "" | AddNewPlayModal   | PlayCard inline |
+| p_dir | Full        | "Left", "Right", "" | AddNewPlayModal   | PlayCard inline |
+| r_str | Abbreviated | "R", "L", ""        | N/A (not in form) | PlayCard inline |
+| p_str | Abbreviated | "R", "L", ""        | N/A (not in form) | PlayCard inline |
 
 ### Why Different Formats?
 
 **By Design:** Different fields use different conventions:
+
 1. **Formation/Play Direction** - Full words because they're more prominent, user-facing fields
 2. **Run/Pass Strength** - Abbreviated because they're technical/shorthand notations
 
@@ -93,26 +99,34 @@ This is **intentional differentiation**, not a bug.
 ## Potential Areas of Concern (All Clear ✅)
 
 ### 1. ❓ Do "ShowInName" toggles affect saved data?
+
 **Answer:** ❌ NO - Verified they're not included in save payload
 
 ### 2. ❓ Are direction values normalized before saving?
+
 **Answer:** ✅ YES - Values come from button clicks or select dropdowns with constrained options
+
 - AddNewPlayModal: Buttons only set "Left", "Right", or ""
 - PlayCard inline edit: Dropdowns with fixed options only
 
 ### 3. ❓ Is there a field flip/mirror toggle that changes data?
+
 **Answer:** ❌ NO - The "Flip Side" button in DiagramEditor flips **player positions** on the field canvas, not direction field values
 
 ### 4. ❓ Do direction fields have different options in different views?
+
 **Answer:** ⚠️ MINOR - `directionDisplayFormat` prop can change label display:
-- "full" → "Right"/"Left"  
+
+- "full" → "Right"/"Left"
 - "abbrev" → "Rt"/"Lt"
 - "letter" → "R"/"L"
 
 BUT: The saved **value** is always the same regardless of display format. It's just the label that changes in the dropdown UI.
 
 ### 5. ❓ Can users manually type invalid direction values?
+
 **Answer:** ❌ NO - All direction fields use:
+
 - Toggle buttons (AddNewPlayModal) - fixed values only
 - Select dropdowns (PlayCard inline edit) - fixed options only
 - No free-text input for directions
@@ -156,21 +170,24 @@ ADD CONSTRAINT check_p_str CHECK (p_str IN ('', 'R', 'L'));
 ## Save Flow Verification
 
 ### CreatePlay Flow
+
 ```
-User clicks "Left" button 
+User clicks "Left" button
   → formData.formationDir = "Left"
-  → handleSubmit() 
+  → handleSubmit()
   → playData.f_dir = formData.formationDir || undefined
   → PlaysService.createPlay(playData)
   → Database saves f_dir = "Left"
 ```
 
 ✅ **Verified in code:**
+
 - `AddNewPlayModal.tsx` line 94: `f_dir: formData.formationDir || undefined`
 - `playsService.ts` line 185: `f_dir: playData.f_dir || ""`
 - Value passed through unchanged
 
 ### UpdatePlay Flow (Inline Edit)
+
 ```
 User selects "Left" from dropdown
   → handleInlineSave("f_dir", "Left")
@@ -180,6 +197,7 @@ User selects "Left" from dropdown
 ```
 
 ✅ **Verified in code:**
+
 - `fieldDefinitions.tsx` line 85: `onSave={(value) => handleInlineSave("f_dir", value)}`
 - `playsService.ts` line 375: `f_dir: updates.f_dir`
 - Value passed through unchanged
@@ -193,11 +211,13 @@ User selects "Left" from dropdown
 **Example:** "Shotgun Right - Power Read Left"
 
 **Code:** `PracticeScriptPlayItem.tsx` line 34:
+
 ```tsx
 const displayName = `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`;
 ```
 
 **Result:**
+
 - If f_dir = "Right": "Shotgun Right - ..."
 - If f_dir = "": "Shotgun - ..."
 - If p_dir = "Left": "... - Power Read (Left)"
@@ -211,6 +231,7 @@ const displayName = `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${
 ### ✅ Current State: WORKING CORRECTLY
 
 No changes needed for functionality. Direction fields are:
+
 1. ✅ Saved correctly with consistent values
 2. ✅ Not affected by display toggles
 3. ✅ Constrained to valid values through UI
@@ -221,6 +242,7 @@ No changes needed for functionality. Direction fields are:
 **P3 - Nice to Have:**
 
 1. **Add database constraints** (for data integrity belt-and-suspenders):
+
    ```sql
    ALTER TABLE plays
    ADD CONSTRAINT check_f_dir CHECK (f_dir IN ('', 'Left', 'Right'));
@@ -245,6 +267,7 @@ No changes needed for functionality. Direction fields are:
 ### Manual Test Plan
 
 ✅ **Test 1:** Create play with f_dir="Left"
+
 - Open AddNewPlayModal
 - Enter formation "Shotgun"
 - Click "Left" button (should highlight blue)
@@ -253,6 +276,7 @@ No changes needed for functionality. Direction fields are:
 - **Status:** Ready to test (code verified correct)
 
 ✅ **Test 2:** Edit play direction inline
+
 - Open play in PlayCard (list view)
 - Click f_dir field
 - Select "Right" from dropdown
@@ -260,6 +284,7 @@ No changes needed for functionality. Direction fields are:
 - **Status:** Ready to test (code verified correct)
 
 ✅ **Test 3:** Verify ShowInName doesn't save
+
 - Open AddNewPlayModal
 - Toggle formationShowInName eye icon
 - Save play
@@ -267,6 +292,7 @@ No changes needed for functionality. Direction fields are:
 - **Status:** Verified in code ✅
 
 ✅ **Test 4:** Verify Flip Side doesn't change f_dir
+
 - Open DiagramEditor
 - Add player
 - Click "Flip Side" button
@@ -288,6 +314,7 @@ No changes needed for functionality. Direction fields are:
 **Minor inconsistency** (f_dir uses "Left" but r_str uses "R") is **intentional design choice** for different field semantics.
 
 **User concern about "directions not saving correctly"** was likely:
+
 - Confusion about display toggles (showInName eye icons)
 - OR: Unrelated issue that needs more specific reproduction steps
 

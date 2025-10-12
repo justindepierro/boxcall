@@ -83,7 +83,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           >
             {optimisticPlay.p_type}
           </span>
-          
+
           {/* Formation badge with direction and personnel */}
           {(optimisticPlay.formation_id || optimisticPlay.formation) && (
             <FormationBadge
@@ -95,21 +95,21 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               size="sm"
             />
           )}
-          
+
           {/* Formation type badge (if no formation_id, show old behavior) */}
           {!optimisticPlay.formation_id && optimisticPlay.f_type && (
             <span className="px-2 py-0.5 bg-surface-muted text-primary border border-border rounded-full text-xs font-medium">
               {optimisticPlay.f_type}
             </span>
           )}
-          
+
           {/* Installation phase badge */}
           {phaseLabel && (
             <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
               {phaseLabel}
             </span>
           )}
-          
+
           {/* Confidence */}
           <span
             className={`text-xsssss font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}

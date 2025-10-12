@@ -9,9 +9,11 @@
 ## ✅ File Created
 
 ### **FormationSelector Component** (NEW)
+
 **File:** `src/components/playbook/FormationSelector.tsx`
 
 **Features:**
+
 - ✅ Loads formations from FormationService
 - ✅ Dropdown with search/filter
 - ✅ Groups by category (Spread, Pro, Power, etc.)
@@ -25,6 +27,7 @@
 **Lines of Code:** 220+
 
 **Props:**
+
 ```typescript
 {
   playbookId: string;
@@ -40,6 +43,7 @@
 ## 🎯 UI Design
 
 ### Dropdown Button
+
 ```
 ┌──────────────────────────────────────────┐
 │ 🏈 Twins Same  Base  [Blue]         ▼   │
@@ -47,6 +51,7 @@
 ```
 
 ### Dropdown Open (Grouped by Category)
+
 ```
 ┌────────────────────────────────────────────┐
 │ SPREAD                                     │
@@ -64,6 +69,7 @@
 ```
 
 ### Empty State
+
 ```
 ┌────────────────────────────────────────────┐
 │                                            │
@@ -107,7 +113,9 @@ Parent component receives selected formation
 ## 🎨 Features
 
 ### Grouping
+
 Formations are grouped by category:
+
 - **Spread** - Twins Same, Empty, Spread
 - **Pro** - Pro Twins, Pro Trips
 - **Power** - Power I, Power Split
@@ -117,18 +125,23 @@ Formations are grouped by category:
 - **Other** - Uncategorized
 
 ### Direction Indicators
+
 - **Base** - Default formation
 - **← Left** - Left-side variant
 - **→ Right** - Right-side variant
 
 ### Personnel Badge
+
 Shows the personnel package linked to formation:
+
 - **Blue** - 11 personnel (3 WR, 1 TE, 1 RB)
 - **Black** - 12 personnel (2 WR, 2 TE, 1 RB)
 - **Green** - 21 personnel (2 WR, 1 TE, 2 RB)
 
 ### Usage Count
+
 Shows how many plays use this formation:
+
 - **5x** - Formation used in 5 plays
 - **1x** - Formation used in 1 play
 - (hidden if 0)
@@ -140,16 +153,19 @@ Shows how many plays use this formation:
 ### Phase 4 Step 4.2: Integrate into AddNewPlayModal
 
 **What we'll do:**
+
 1. Update FormationSection to use FormationSelector
 2. Add formation_id state to AddNewPlayModal
 3. Update form state management
 4. Keep formation TEXT for backwards compatibility
 
 **Files to modify:**
+
 - `src/components/playbook/AddNewPlayModal/sections/FormationSection.tsx`
 - `src/components/playbook/AddNewPlayModal/AddNewPlayModal.tsx`
 
 **Changes:**
+
 ```typescript
 // OLD
 <FuzzySearchInput
@@ -173,12 +189,12 @@ Shows how many plays use this formation:
 
 ## 📊 Progress
 
-| Task | Status | Progress |
-|------|--------|----------|
-| 4.1 ✅ Create FormationSelector | **Complete** | 100% |
-| 4.2 ⏳ Update FormationSection | Next | 0% |
-| 4.3 ⏳ Update PlaysService | Pending | 0% |
-| 4.4 ⏳ Update PlayCard Display | Pending | 0% |
+| Task                            | Status       | Progress |
+| ------------------------------- | ------------ | -------- |
+| 4.1 ✅ Create FormationSelector | **Complete** | 100%     |
+| 4.2 ⏳ Update FormationSection  | Next         | 0%       |
+| 4.3 ⏳ Update PlaysService      | Pending      | 0%       |
+| 4.4 ⏳ Update PlayCard Display  | Pending      | 0%       |
 
 **Phase 4 Overall:** 25% complete (1 of 4 steps)
 
@@ -221,7 +237,7 @@ Shows how many plays use this formation:
 ✅ **Personnel linkage visible**  
 ✅ **Usage tracking displayed**  
 ✅ **Empty state handled**  
-✅ **Type-safe implementation**  
+✅ **Type-safe implementation**
 
 ---
 
@@ -230,6 +246,7 @@ Shows how many plays use this formation:
 **Phase 4 Step 4.2:** Integrate FormationSelector into AddNewPlayModal
 
 This will:
+
 - Replace text input with dropdown
 - Connect to form state
 - Save formation_id to plays

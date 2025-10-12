@@ -116,40 +116,52 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
-  
+
   // Get playbooks for this team
   const { playbooks, refreshData } = useTeamsData();
-  const teamPlaybooks = playbooks.filter(pb => pb.team_id === activeTeamId && pb.is_active);
-  
+  const teamPlaybooks = playbooks.filter(
+    (pb) => pb.team_id === activeTeamId && pb.is_active
+  );
+
   // State for selected playbook (with preference persistence)
-  const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>('');
-  
+  const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
+
   // Initialize selected playbook from preferences or default to first playbook with data
   useEffect(() => {
     if (teamPlaybooks.length === 0) return;
-    
+
     // Try to load from preferences
-    const savedPlaybookId = localStorage.getItem(`bc_active_playbook_${activeTeamId}`);
-    
-    if (savedPlaybookId && teamPlaybooks.some(pb => pb.id === savedPlaybookId)) {
+    const savedPlaybookId = localStorage.getItem(
+      `bc_active_playbook_${activeTeamId}`
+    );
+
+    if (
+      savedPlaybookId &&
+      teamPlaybooks.some((pb) => pb.id === savedPlaybookId)
+    ) {
       // Use saved preference if it's valid
       setSelectedPlaybookId(savedPlaybookId);
     } else {
       // Default to first playbook with plays, or first playbook
-      const playbookWithPlays = teamPlaybooks.find(pb => (pb.play_count || 0) > 0);
+      const playbookWithPlays = teamPlaybooks.find(
+        (pb) => (pb.play_count || 0) > 0
+      );
       const defaultPlaybook = playbookWithPlays || teamPlaybooks[0];
       setSelectedPlaybookId(defaultPlaybook.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTeamId, teamPlaybooks.length]);
-  
+
   // Save preference when playbook changes
-  const handlePlaybookChange = useCallback((playbookId: string) => {
-    setSelectedPlaybookId(playbookId);
-    localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
-    console.log('📚 [PlaybookPage] Switched to playbook:', playbookId);
-  }, [activeTeamId]);
-  
+  const handlePlaybookChange = useCallback(
+    (playbookId: string) => {
+      setSelectedPlaybookId(playbookId);
+      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+      console.log("📚 [PlaybookPage] Switched to playbook:", playbookId);
+    },
+    [activeTeamId]
+  );
+
   const activePlaybookId = selectedPlaybookId || activeTeamId || ""; // Fallback to team_id
 
   // Debounce search query to avoid excessive filtering on every keystroke
@@ -690,7 +702,7 @@ export default function PlaybookPage() {
           activePlaybookId={activePlaybookId}
           onPlaybookChange={handlePlaybookChange}
           onPlaybookUpdated={refreshData}
-          teamId={activeTeamId || ''}
+          teamId={activeTeamId || ""}
         />
 
         {/* Mobile-First Layout */}

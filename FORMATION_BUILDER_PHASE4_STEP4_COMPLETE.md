@@ -15,14 +15,17 @@ Added full support for tracking which formation variant (Base/Left/Right) was se
 ## Changes Made
 
 ### 1. Updated PlayFormData Interface
+
 **File:** `src/components/playbook/AddNewPlayModal/usePlayFormState.ts`
 
 **Changes:**
+
 - ✅ Added `formation_direction: "base" | "left" | "right" | null` to PlayFormData interface (line 8)
 - ✅ Added `formation_direction: existingPlay?.formation_direction || null` to initialization (line 67)
 - ✅ Added `formation_direction: null` to resetForm (line 132)
 
 **Before:**
+
 ```typescript
 export interface PlayFormData {
   formation: string;
@@ -33,6 +36,7 @@ export interface PlayFormData {
 ```
 
 **After:**
+
 ```typescript
 export interface PlayFormData {
   formation: string;
@@ -46,13 +50,16 @@ export interface PlayFormData {
 ---
 
 ### 2. Updated Form Submission
+
 **File:** `src/components/playbook/AddNewPlayModal.tsx`
 
 **Changes:**
+
 - ✅ Added `formation_direction: formData.formation_direction || undefined` to playData (line 89)
 - ✅ Updated onChange handler to capture direction from formation object (line 317)
 
 **Form Submission (line 87-90):**
+
 ```typescript
 const playData = {
   formation: formData.formation.trim(),
@@ -64,6 +71,7 @@ const playData = {
 ```
 
 **onChange Handler (lines 314-320):**
+
 ```typescript
 onFormationIdChange={(id, formation) => {
   updateFields({
@@ -121,15 +129,17 @@ Database trigger fires:
 ## Database Impact
 
 ### Plays Table
+
 Now saving `formation_direction` field:
 
 ```sql
-ALTER TABLE plays 
-  ADD COLUMN formation_direction TEXT 
+ALTER TABLE plays
+  ADD COLUMN formation_direction TEXT
   CHECK (formation_direction IN ('base', 'left', 'right'));
 ```
 
 ### Example Play Record
+
 ```json
 {
   "id": "play-123",
@@ -148,21 +158,25 @@ ALTER TABLE plays
 ## Benefits
 
 ### 1. Accurate Play Representation
+
 - ✅ Tracks which formation variant (Base/Left/Right) was used
 - ✅ Distinguishes "Twins Same Base" from "Twins Same Left"
 - ✅ More precise play data for analysis
 
 ### 2. Better Analytics
+
 - ✅ Can query: "How many plays use Left variants?"
 - ✅ Can filter by variant: "Show only Base formations"
 - ✅ Usage tracking per variant (not just per base formation)
 
 ### 3. Enables Duplicate + Flip
+
 - ✅ Required for Phase 5 flip functionality
 - ✅ Can determine opposite variant (Left ↔ Right)
 - ✅ Supports auto-flip when duplicating plays
 
 ### 4. Improved Display
+
 - ✅ FormationBadge can show accurate direction arrow
 - ✅ Direction persists through edit operations
 - ✅ No more guessing which variant was used
@@ -172,28 +186,29 @@ ALTER TABLE plays
 ## Testing Checklist
 
 ### Functional Tests
+
 - [ ] **Create play with Base formation**:
   - [ ] Select formation without variant (Base)
   - [ ] Verify `formation_direction` = "base"
   - [ ] Badge shows no arrow
-  
 - [ ] **Create play with Left variant**:
   - [ ] Select "Twins Same - Left"
   - [ ] Verify `formation_direction` = "left"
   - [ ] Badge shows ← arrow
-  
 - [ ] **Create play with Right variant**:
   - [ ] Select "Twins Same - Right"
   - [ ] Verify `formation_direction` = "right"
   - [ ] Badge shows → arrow
 
 ### Database Tests
+
 - [ ] Check Supabase after creating play
 - [ ] Verify `formation_direction` column populated
 - [ ] Edit play, verify direction persists
 - [ ] NULL direction handled gracefully
 
 ### Edge Cases
+
 - [ ] Old plays without `formation_direction` → NULL, no errors
 - [ ] Text-only formation (no formation_id) → NULL direction
 - [ ] Changing formation variant → direction updates
@@ -203,17 +218,20 @@ ALTER TABLE plays
 ## Backwards Compatibility
 
 ### New Plays
+
 ✅ `formation_direction` saved from FormationSelector  
 ✅ Direction badge displays correctly  
 ✅ Analytics can filter by variant
 
 ### Old Plays (without formation_direction)
+
 ✅ NULL direction handled gracefully  
 ✅ Badge still displays formation name  
 ✅ No arrows shown (no direction info)  
 ✅ No errors or crashes
 
 ### Text-Only Formations (without formation_id)
+
 ✅ `formation_direction` remains NULL  
 ✅ Old behavior maintained  
 ✅ Backwards compatible with legacy data
@@ -223,6 +241,7 @@ ALTER TABLE plays
 ## Next Steps
 
 ### Phase 5: Duplicate + Flip (NOW ENABLED)
+
 With `formation_direction` support, we can now:
 
 1. **Detect current variant**: Read `formation_direction` field
@@ -239,17 +258,20 @@ With `formation_direction` support, we can now:
 ### Why Track formation_direction Separately?
 
 **formation_id (UUID)**
+
 - Points to specific formation record
 - Each variant (Base/Left/Right) is a separate record
 - Already includes direction in formation.direction field
 
-**formation_direction (TEXT)**  
+**formation_direction (TEXT)**
+
 - Denormalized copy for quick access
 - Avoids JOIN query when displaying plays
 - Enables filtering without loading formations
 - Required for analytics queries
 
 **Trade-off:**
+
 - Slight data duplication (formation.direction → play.formation_direction)
 - Benefit: Faster queries, simpler code, better analytics
 

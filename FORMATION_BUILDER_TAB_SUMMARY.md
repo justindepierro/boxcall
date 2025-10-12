@@ -7,6 +7,7 @@ Created a dedicated **"Edit Details"** tab in Formation Manager for editing form
 ## Architecture Decision
 
 **Why a separate tab?**
+
 - **Separation of concerns**: Personnel/category/tags are formation properties, not linking properties
 - **Better UX**: Set these details once when creating formation, not during linking
 - **More flexible**: Can edit metadata independently of left/right relationships
@@ -87,8 +88,8 @@ FormationService.linkFormations(
   baseFormationId,
   leftFormationId,
   rightFormationId,
-  selectedPersonnelIds  // ← Passed to all linked formations
-)
+  selectedPersonnelIds // ← Passed to all linked formations
+);
 ```
 
 **Important**: Personnel set in "Edit Details" tab will be copied to linked variants during the linking process!
@@ -139,47 +140,49 @@ Before using this tab, ensure these columns exist:
 
 ```sql
 -- Migration 1: Add personnel_packages
-ALTER TABLE formations 
+ALTER TABLE formations
   ADD COLUMN IF NOT EXISTS personnel_packages UUID[] DEFAULT ARRAY[]::UUID[];
 
-CREATE INDEX IF NOT EXISTS idx_formations_personnel_packages 
+CREATE INDEX IF NOT EXISTS idx_formations_personnel_packages
   ON formations USING GIN(personnel_packages);
 
 -- Migration 2: Fix unique constraint
-ALTER TABLE formations 
+ALTER TABLE formations
   DROP CONSTRAINT IF EXISTS unique_formation_name_per_playbook;
 
 ALTER TABLE formations
-  ADD CONSTRAINT unique_formation_per_playbook_and_direction 
+  ADD CONSTRAINT unique_formation_per_playbook_and_direction
   UNIQUE(playbook_id, name, direction);
 ```
 
 ## Personnel Package Storage
 
 ### Before Linking
+
 ```json
 {
   "id": "formation-1",
   "name": "Trips",
   "direction": "base",
-  "personnel_packages": ["uuid-11", "uuid-12"]  // Set in Edit Details tab
+  "personnel_packages": ["uuid-11", "uuid-12"] // Set in Edit Details tab
 }
 ```
 
 ### After Linking (Trips + Trips)
+
 ```json
 [
   {
     "id": "formation-1",
     "name": "Trips",
     "direction": "left",
-    "personnel_packages": ["uuid-11", "uuid-12"]  // Copied during link
+    "personnel_packages": ["uuid-11", "uuid-12"] // Copied during link
   },
   {
     "id": "formation-2",
     "name": "Trips",
     "direction": "right",
-    "personnel_packages": ["uuid-11", "uuid-12"]  // Copied during link
+    "personnel_packages": ["uuid-11", "uuid-12"] // Copied during link
   }
 ]
 ```
@@ -223,9 +226,11 @@ ALTER TABLE formations
 ## Files Created/Modified
 
 ### Created
+
 - `src/components/formations/FormationBuilderPanel.tsx` (350+ lines)
 
 ### Modified
+
 - `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`
 - `src/components/formations/FormationLinkingPanel.tsx` (added personnel logging)
 

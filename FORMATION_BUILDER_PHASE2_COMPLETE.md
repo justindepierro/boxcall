@@ -9,9 +9,11 @@ Phase 2 focused on creating the **FormationService** - the complete service laye
 ## ✅ Files Created/Modified
 
 ### 1. **FormationService** (NEW)
+
 **File:** `src/services/formationService.ts`
 
 **Features:**
+
 - ✅ Full CRUD operations (Create, Read, Update, Delete)
 - ✅ Left/Right variant creation (`createLeftVariant`, `createRightVariant`, `createBothVariants`)
 - ✅ Position flipping logic (`flipPositions`)
@@ -28,23 +30,32 @@ Phase 2 focused on creating the **FormationService** - the complete service laye
 ---
 
 ### 2. **Database Types Updated** (MODIFIED)
+
 **File:** `src/types/database/tables/practiceGameTables.ts`
 
 **Added formations table types:**
+
 ```typescript
 formations: {
-  Row: { /* 17 fields */ }
-  Insert: { /* with defaults */ }
-  Update: { /* all optional */ }
+  Row: {
+    /* 17 fields */
+  }
+  Insert: {
+    /* with defaults */
+  }
+  Update: {
+    /* all optional */
+  }
 }
 ```
 
 **Updated plays table types:**
+
 ```typescript
 plays: {
   Row: {
-    formation_id: string | null
-    formation_direction: 'base' | 'left' | 'right' | null
+    formation_id: string | null;
+    formation_direction: "base" | "left" | "right" | null;
   }
 }
 ```
@@ -52,9 +63,11 @@ plays: {
 ---
 
 ### 3. **Database Functions Type** (MODIFIED)
+
 **File:** `src/types/database/index.ts`
 
 **Added:**
+
 - `get_formation_variants` function type definition
 - `Formation` export: `export type Formation = Tables<"formations">`
 
@@ -63,15 +76,16 @@ plays: {
 ## 🎯 Phase 2 Summary
 
 ### Create Operations
+
 ```typescript
 // Create new formation
 const formation = await FormationService.createFormation({
-  playbook_id: 'xxx',
-  name: 'Twins Same',
+  playbook_id: "xxx",
+  name: "Twins Same",
   personnel_id: bluePersonnelId,
-  personnel_name: 'Blue',
+  personnel_name: "Blue",
   player_positions: [
-    { position: 'X', x: 10, y: 20, label: 'Blue' },
+    { position: "X", x: 10, y: 20, label: "Blue" },
     // ... more positions
   ],
 });
@@ -81,36 +95,46 @@ const { left, right } = await FormationService.createBothVariants(formation.id);
 ```
 
 ### Read Operations
+
 ```typescript
 // Get all formations for playbook
 const formations = await FormationService.getFormationsByPlaybook(playbookId);
 
 // Get formation with all variants
-const { base, left, right } = await FormationService.getFormationVariants(formationId);
+const { base, left, right } =
+  await FormationService.getFormationVariants(formationId);
 
 // Get formations by personnel
-const blueFormations = await FormationService.getFormationsByPersonnel(playbookId, bluePersonnelId);
+const blueFormations = await FormationService.getFormationsByPersonnel(
+  playbookId,
+  bluePersonnelId
+);
 ```
 
 ### Update Operations
+
 ```typescript
 // Update formation
 await FormationService.updateFormation(formationId, {
-  name: 'Updated Name',
-  tags: ['updated'],
+  name: "Updated Name",
+  tags: ["updated"],
 });
 
 // Set strength player
-await FormationService.setStrengthPlayer(formationId, 'X', 'Blue');
+await FormationService.setStrengthPlayer(formationId, "X", "Blue");
 
 // Link to personnel
-await FormationService.linkToPersonnel(formationId, personnelId, 'Blue');
+await FormationService.linkToPersonnel(formationId, personnelId, "Blue");
 ```
 
 ### Utility Operations
+
 ```typescript
 // Duplicate formation
-const duplicate = await FormationService.duplicateFormation(formationId, 'Twins Same Copy');
+const duplicate = await FormationService.duplicateFormation(
+  formationId,
+  "Twins Same Copy"
+);
 
 // Validate before save
 const validation = FormationService.validateFormationData(formationData);
@@ -140,6 +164,7 @@ The service includes intelligent position flipping:
 ## 🛡️ Validation
 
 The service validates:
+
 - ✅ Required fields (playbook_id, name, player_positions)
 - ✅ Name length (max 100 chars)
 - ✅ Position coordinates (x: 0-53.3, y: 0-50)
@@ -184,6 +209,7 @@ Diagrams (Visual representation)
 ## ⏭️ Next Steps (Phase 3)
 
 **Build FormationBuilderModal UI:**
+
 1. Canvas component with drag-drop player positioning
 2. Personnel selector integration
 3. Strength player marker UI
@@ -191,6 +217,7 @@ Diagrams (Visual representation)
 5. Save/Update formation flow
 
 **Then connect the hero button:**
+
 ```typescript
 // PlaybookPage.tsx
 const handleFormationBuilder = () => {
@@ -202,13 +229,13 @@ const handleFormationBuilder = () => {
 
 ## 🎯 Status Check
 
-| Phase | Status | Progress |
-|-------|--------|----------|
-| Phase 1: Database + Types | ✅ Complete | 100% |
-| **Phase 2: FormationService** | ✅ **Complete** | **100%** |
-| Phase 3: FormationBuilderModal UI | ⏳ Next | 0% |
-| Phase 4: Play Integration | ⏳ Pending | 0% |
-| Phase 5: Duplicate + Flip | ⏳ Pending | 0% |
+| Phase                             | Status          | Progress |
+| --------------------------------- | --------------- | -------- |
+| Phase 1: Database + Types         | ✅ Complete     | 100%     |
+| **Phase 2: FormationService**     | ✅ **Complete** | **100%** |
+| Phase 3: FormationBuilderModal UI | ⏳ Next         | 0%       |
+| Phase 4: Play Integration         | ⏳ Pending      | 0%       |
+| Phase 5: Duplicate + Flip         | ⏳ Pending      | 0%       |
 
 ---
 
@@ -217,6 +244,7 @@ const handleFormationBuilder = () => {
 **Phase 2 is DONE!** 🎉
 
 We now have a fully functional service layer that can:
+
 - ✅ Create formations with personnel linkage
 - ✅ Generate Left/Right variants automatically
 - ✅ Flip player positions correctly

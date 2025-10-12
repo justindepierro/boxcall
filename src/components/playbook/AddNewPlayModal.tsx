@@ -324,7 +324,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               // When a formation is selected, import its player positions into diagram editor
               if (formation && formation.player_positions?.length > 0) {
                 const diagramTemplate = importFormationAsTemplate(formation);
-                console.log('[Phase 7] Formation diagram template ready:', {
+                console.log("[Phase 7] Formation diagram template ready:", {
                   formationName: formation.name,
                   playerCount: diagramTemplate.players.length,
                   template: diagramTemplate,

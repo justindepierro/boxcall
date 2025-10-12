@@ -8,6 +8,7 @@
 You had "Twins" and "Trips" in your plays table (text column), but no records in the `formations` table. The Formation Manager dropdown was empty because it only loads from the `formations` table.
 
 **Data Structure:**
+
 - **plays table**: Has `formation` column (TEXT) with values like "Twins", "Trips"
 - **formations table**: Separate table with full formation records (id, name, positions, etc.)
 - **Gap**: Legacy plays have formation names but no formation records
@@ -15,19 +16,23 @@ You had "Twins" and "Trips" in your plays table (text column), but no records in
 ## The Solution
 
 ### Auto-Import on Load
+
 When opening the Formation Manager, the system now:
+
 1. **Scans all plays** in the playbook for unique formation names
 2. **Checks formations table** to see which already exist
 3. **Creates missing formations** automatically
 4. **Shows success message**: "✨ Imported 2 formations from your plays"
 
 ### New Service Method
+
 Added `FormationService.importFormationsFromPlays()`:
+
 ```typescript
 static async importFormationsFromPlays(
   playbookId: string,
   createdBy: string
-): Promise<{ 
+): Promise<{
   created: number;      // How many were created
   existing: number;     // How many already existed
   formations: Formation[];  // All formations (existing + new)
@@ -37,61 +42,65 @@ static async importFormationsFromPlays(
 ## How It Works
 
 ### Step 1: Extract Formation Names from Plays
+
 ```typescript
 // Get all plays for this playbook
 const { data: plays } = await supabase
-  .from('plays')
-  .select('formation, personnel')
-  .eq('playbook_id', playbookId);
+  .from("plays")
+  .select("formation, personnel")
+  .eq("playbook_id", playbookId);
 
 // Extract unique formation names
 const uniqueFormations = [
-  ...new Set(plays?.map(p => p.formation).filter(Boolean))
+  ...new Set(plays?.map((p) => p.formation).filter(Boolean)),
 ];
 // Result: ["Twins", "Trips", "I-Form", ...]
 ```
 
 ### Step 2: Check What Already Exists
+
 ```typescript
 const { data: existingFormations } = await supabase
-  .from('formations')
-  .select('name')
-  .eq('playbook_id', playbookId)
-  .in('name', uniqueFormations);
+  .from("formations")
+  .select("name")
+  .eq("playbook_id", playbookId)
+  .in("name", uniqueFormations);
 
-const existingNames = new Set(existingFormations?.map(f => f.name));
+const existingNames = new Set(existingFormations?.map((f) => f.name));
 const formationsToCreate = uniqueFormations.filter(
-  name => !existingNames.has(name)
+  (name) => !existingNames.has(name)
 );
 ```
 
 ### Step 3: Create Missing Formations
+
 ```typescript
-const newFormations = formationsToCreate.map(name => ({
+const newFormations = formationsToCreate.map((name) => ({
   name,
   playbook_id: playbookId,
   created_by: createdBy,
-  direction: 'base',           // Default to base variant
-  category: 'offense',         // Default category
+  direction: "base", // Default to base variant
+  category: "offense", // Default category
   description: `Imported from plays (${name})`,
-  positions: [],               // No positions initially
+  positions: [], // No positions initially
 }));
 
-await supabase.from('formations').insert(newFormations);
+await supabase.from("formations").insert(newFormations);
 ```
 
 ### Step 4: Return All Formations
+
 ```typescript
 // Get complete list (existing + newly created)
 const { data: allFormations } = await supabase
-  .from('formations')
-  .select('*')
-  .eq('playbook_id', playbookId)
-  .in('name', uniqueFormations);
+  .from("formations")
+  .select("*")
+  .eq("playbook_id", playbookId)
+  .in("name", uniqueFormations);
 
 return {
-  created: 2,           // Created "Twins" and "Trips"
-  existing: 0,          // None existed before
+  created: 2, // Created "Twins" and "Trips"
+  existing: 0, // None existed before
   formations: allFormations,
 };
 ```
@@ -99,6 +108,7 @@ return {
 ## User Experience
 
 ### First Time Opening Formation Manager
+
 ```
 [Formation Manager opens]
 
@@ -115,6 +125,7 @@ Left Side Formation                Right Side Formation
 ```
 
 ### Subsequent Opens
+
 ```
 [Formation Manager opens]
 
@@ -129,6 +140,7 @@ Left Side Formation                Right Side Formation
 ## Database Impact
 
 ### Before Opening Formation Manager
+
 ```sql
 -- plays table
 plays: [
@@ -142,6 +154,7 @@ formations: []
 ```
 
 ### After Auto-Import
+
 ```sql
 -- plays table (unchanged)
 plays: [
@@ -178,28 +191,30 @@ formations: [
 ## Integration Points
 
 ### FormationLinkingPanel
+
 ```typescript
 const loadFormations = useCallback(async () => {
   setLoading(true);
   const currentUser = await supabase.auth.getUser();
-  
+
   if (currentUser.data.user) {
     // Auto-import formations from plays
     const result = await FormationService.importFormationsFromPlays(
       playbookId,
       currentUser.data.user.id
     );
-    
+
     if (result.created > 0) {
       setImportStatus(`✨ Imported ${result.created} formation(s)`);
     }
-    
+
     setAllFormations(result.formations);
   }
 }, [playbookId]);
 ```
 
 ### FormationMatchingModal
+
 TODO: Add same auto-import logic to standalone modal accessed via FormationSelector Link2 icon.
 
 ## Benefits
@@ -214,10 +229,12 @@ TODO: Add same auto-import logic to standalone modal accessed via FormationSelec
 ## Files Changed
 
 ### Updated Files
+
 1. **FormationService.ts** - Added `importFormationsFromPlays()` method (80 lines)
 2. **FormationLinkingPanel.tsx** - Auto-import on load, success message display
 
 ### Method Signature
+
 ```typescript
 FormationService.importFormationsFromPlays(
   playbookId: string,
@@ -253,15 +270,12 @@ FormationService.importFormationsFromPlays(
   - [x] Success message shows: "✨ Imported 2 formations from your plays"
   - [x] Both formations appear in dropdowns
   - [x] Formations have correct default values (base, offense, empty positions)
-  
 - [ ] Open Formation Manager again (formations already exist)
   - [ ] No import message (0 created)
   - [ ] Formations still appear in dropdowns
-  
 - [ ] Link "Twins" with "Twins" (same formation)
   - [ ] Confirmation modal appears
   - [ ] After linking, "Twins Lt" and "Twins Rt" both visible
-  
 - [ ] Link "Twins" with "Trips" (different formations)
   - [ ] Confirmation modal appears
   - [ ] After linking, both have updated directions
