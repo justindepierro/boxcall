@@ -262,7 +262,9 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
   const handleAutosave = useCallback(
     async (diagramData: DiagramDocument) => {
       if (!play?.id) {
-        console.log("⏭️  Skipping autosave: no play ID (new play, user must save manually)");
+        console.log(
+          "⏭️  Skipping autosave: no play ID (new play, user must save manually)"
+        );
         return;
       }
 
@@ -295,19 +297,23 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
   );
 
   // Enable autosave with debouncing (only for existing plays)
-  const { status: saveStatus, lastSaved } = useAutosave(players, play?.play_name || "", {
-    enabled: Boolean(play?.id), // Only enable autosave for existing plays
-    debounceMs: 2500, // Save after 2.5 seconds of inactivity
-    onSave: handleAutosave,
-    onSaveSuccess: () => {
-      console.log("✅ Autosave completed");
-      setIsDirty(false);
-    },
-    onSaveError: (error) => {
-      console.error("❌ Autosave error:", error);
-      // Don't show alert for autosave errors, just log them
-    },
-  });
+  const { status: saveStatus, lastSaved } = useAutosave(
+    players,
+    play?.play_name || "",
+    {
+      enabled: Boolean(play?.id), // Only enable autosave for existing plays
+      debounceMs: 2500, // Save after 2.5 seconds of inactivity
+      onSave: handleAutosave,
+      onSaveSuccess: () => {
+        console.log("✅ Autosave completed");
+        setIsDirty(false);
+      },
+      onSaveError: (error) => {
+        console.error("❌ Autosave error:", error);
+        // Don't show alert for autosave errors, just log them
+      },
+    }
+  );
 
   const handleReady = useCallback((pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
@@ -1002,7 +1008,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
               <Icon name="target" size="xs" />
               Single Coordinate System
             </span>
-            
+
             {/* Autosave status indicator */}
             {play?.id && saveStatus === "saving" && (
               <span className="text-info-500 flex items-center gap-1 animate-pulse">
@@ -1022,7 +1028,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
                 Save failed
               </span>
             )}
-            
+
             {/* Show unsaved warning for new plays (no autosave) */}
             {!play?.id && isDirty && (
               <span className="text-warning-500 flex items-center gap-1">

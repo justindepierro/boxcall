@@ -141,7 +141,9 @@ export function useAutosave(
       console.error("❌ Autosave failed:", error);
       setStatus("error");
       setHasUnsavedChanges(true);
-      onSaveError?.(error instanceof Error ? error : new Error("Unknown error"));
+      onSaveError?.(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
 
       // Reset status back to idle after 5 seconds
       setTimeout(() => {
@@ -150,7 +152,14 @@ export function useAutosave(
     } finally {
       isSavingRef.current = false;
     }
-  }, [players, playName, createDiagramDocument, onSave, onSaveSuccess, onSaveError]);
+  }, [
+    players,
+    playName,
+    createDiagramDocument,
+    onSave,
+    onSaveSuccess,
+    onSaveError,
+  ]);
 
   // Trigger save now (manual)
   const saveNow = useCallback(async () => {
@@ -183,7 +192,8 @@ export function useAutosave(
     if (!enabled) return;
 
     // Skip if no meaningful changes
-    const playersChanged = JSON.stringify(players) !== JSON.stringify(lastPlayersRef.current);
+    const playersChanged =
+      JSON.stringify(players) !== JSON.stringify(lastPlayersRef.current);
     const playNameChanged = playName !== lastPlayNameRef.current;
 
     if (!playersChanged && !playNameChanged) {
