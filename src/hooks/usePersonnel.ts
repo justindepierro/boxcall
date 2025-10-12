@@ -140,10 +140,9 @@ export function useDeletePersonnelConfiguration() {
   return useMutation({
     mutationFn: ({
       id,
-      playbookId,
     }: {
       id: string;
-      playbookId: string;
+      playbookId: string; // Keep for query invalidation in onSuccess
     }) => PersonnelService.deletePersonnelConfiguration(id),
     onSuccess: (_, variables) => {
       // Invalidate configurations list

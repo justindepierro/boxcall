@@ -384,6 +384,61 @@ export interface PracticeGameTables {
       updated_at?: string | null;
     };
   };
+  personnel_configurations: {
+    Row: {
+      id: string;
+      playbook_id: string;
+      name: string;
+      description: string | null;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      playbook_id: string;
+      name: string;
+      description?: string | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      playbook_id?: string;
+      name?: string;
+      description?: string | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+  };
+  personnel_players: {
+    Row: {
+      id: string;
+      config_id: string;
+      player_position: "QB" | "RB" | "TE" | "WR";
+      label: string;
+      sort_order: number;
+      is_wildcat_qb: boolean;
+      created_at: string;
+    };
+    Insert: {
+      id?: string;
+      config_id: string;
+      player_position: "QB" | "RB" | "TE" | "WR";
+      label: string;
+      sort_order: number;
+      is_wildcat_qb?: boolean;
+      created_at?: string;
+    };
+    Update: {
+      id?: string;
+      config_id?: string;
+      player_position?: "QB" | "RB" | "TE" | "WR";
+      label?: string;
+      sort_order?: number;
+      is_wildcat_qb?: boolean;
+      created_at?: string;
+    };
+  };
   plays: {
     Row: {
       id: string;
