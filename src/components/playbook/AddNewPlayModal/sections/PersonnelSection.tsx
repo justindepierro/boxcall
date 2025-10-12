@@ -1,7 +1,9 @@
 import React from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
-import { FuzzySearchInput } from "../components/FuzzySearchInput";
+import Select from "../../../ui/Select/Select";
+import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
+import { supabase } from "../../../../lib/supabase";
 
 interface PersonnelSectionProps {
   personnel: string;
@@ -11,60 +13,94 @@ interface PersonnelSectionProps {
   onShowSuggestionsChange: (show: boolean) => void;
 }
 
-const QUICK_PERSONNEL_OPTIONS = [
-  "11 Personnel",
-  "12 Personnel",
-  "21 Personnel",
-  "22 Personnel",
-];
-
 export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   personnel,
   onPersonnelChange,
-  suggestions,
-  showSuggestions,
-  onShowSuggestionsChange,
 }) => {
+  // Get playbook ID from current user
+  const [playbookId, setPlaybookId] = React.useState<string | undefined>();
+
+  React.useEffect(() => {
+    async function fetchPlaybookId() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Get user's first playbook
+        const { data: playbooks } = await supabase
+          .from("playbooks")
+          .select("id")
+          .eq("created_by", user.id)
+          .limit(1);
+
+        if (playbooks && playbooks.length > 0) {
+          setPlaybookId(playbooks[0].id as string);
+        }
+      } catch (error) {
+        console.error("Failed to fetch playbook ID:", error);
+      }
+    }
+
+    fetchPlaybookId();
+  }, []);
+
+  // Fetch personnel configurations from database
+  const { data: configurations, isLoading } = usePersonnelConfigurations(playbookId);
+
+  // Format options for dropdown
+  const personnelOptions = React.useMemo(() => {
+    if (!configurations) return [];
+    return configurations.map((config) => ({
+      value: config.name,
+      label: config.description 
+        ? `${config.name} (${config.description})` 
+        : config.name,
+    }));
+  }, [configurations]);
+
   const handleAddNewPersonnel = () => {
-    // TODO: Navigate to settings to add new personnel
-    alert("Navigate to settings to add new personnel");
+    // TODO: Open PersonnelConfigurationModal
+    alert("Personnel configuration modal will open here (Phase 6)");
   };
 
   return (
     <div>
-      <FuzzySearchInput
+      <Select
         label="Personnel"
         value={personnel}
-        onChange={onPersonnelChange}
-        placeholder="e.g., 11 Personnel, 12 Personnel"
-        suggestions={suggestions}
-        showSuggestions={showSuggestions}
-        onShowSuggestionsChange={onShowSuggestionsChange}
+        onChange={(value) => onPersonnelChange(String(value))}
+        options={personnelOptions}
+        placeholder={isLoading ? "Loading personnel..." : "Select personnel grouping"}
         className="mb-spacing-sm"
+        disabled={isLoading || !playbookId}
       />
-      <div className="flex flex-wrap gap-spacing-xs">
-        {QUICK_PERSONNEL_OPTIONS.map((p) => (
+      
+      {/* Quick-select buttons for common personnel */}
+      {!isLoading && configurations && configurations.length > 0 && (
+        <div className="flex flex-wrap gap-spacing-xs">
+          {configurations.slice(0, 4).map((config) => (
+            <Button
+              key={config.id}
+              type="button"
+              variant={personnel === config.name ? "primary" : "outline"}
+              size="sm"
+              onClick={() => onPersonnelChange(personnel === config.name ? "" : config.name)}
+            >
+              {config.name}
+            </Button>
+          ))}
           <Button
-            key={p}
             type="button"
-            variant={personnel === p ? "primary" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => onPersonnelChange(personnel === p ? "" : p)}
+            onClick={handleAddNewPersonnel}
+            className="border-dashed"
           >
-            {p}
+            <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
+            Add New
           </Button>
-        ))}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleAddNewPersonnel}
-          className="border-dashed"
-        >
-          <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
-          Add New
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
