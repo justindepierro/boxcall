@@ -66,6 +66,11 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
     alert("Personnel configuration modal will open here (Phase 6)");
   };
 
+  const handleFormationBuilder = () => {
+    // TODO: Open FormationBuilderModal
+    alert("Formation Builder modal will open here - visual formation creator");
+  };
+
   return (
     <div>
       <Select
@@ -105,6 +110,16 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
           >
             <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
             Add New
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={handleFormationBuilder}
+            className="ml-auto"
+          >
+            <Icon name="grid" className="h-4 w-4 mr-spacing-xs" />
+            Formation Builder
           </Button>
         </div>
       )}
