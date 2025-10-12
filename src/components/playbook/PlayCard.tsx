@@ -306,20 +306,29 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isTile = variant === "tile";
   const isCompact = !isTile && density === "compact";
 
-  const handleToggleExpand = useCallback(() => {
-    // Track play view when expanding
-    if (!isExpanded) {
-      trackPlayView(play.id);
-    }
+  const handleToggleExpand = useCallback(
+    (event?: React.MouseEvent) => {
+      // Prevent any event bubbling
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
 
-    if (onToggleExpand) {
-      // Controlled mode - notify parent
-      onToggleExpand(play.id);
-    } else {
-      // Uncontrolled mode - manage internally
-      setInternalIsExpanded((prev) => !prev);
-    }
-  }, [onToggleExpand, play.id, isExpanded, trackPlayView]);
+      // Track play view when expanding
+      if (!isExpanded) {
+        trackPlayView(play.id);
+      }
+
+      if (onToggleExpand) {
+        // Controlled mode - notify parent
+        onToggleExpand(play.id);
+      } else {
+        // Uncontrolled mode - manage internally
+        setInternalIsExpanded((prev) => !prev);
+      }
+    },
+    [onToggleExpand, play.id, isExpanded, trackPlayView]
+  );
 
   return (
     <div

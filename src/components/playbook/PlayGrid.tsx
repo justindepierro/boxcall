@@ -140,35 +140,72 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Track which play card is currently expanded (only one at a time)
   const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
 
+  // Log when expanded play changes
+  useEffect(() => {
+    console.log(`[PlayGrid] expandedPlayId changed:`, {
+      expandedPlayId,
+      viewMode,
+      timestamp: new Date().toISOString(),
+    });
+  }, [expandedPlayId, viewMode]);
+
   // Drag and drop state for play reordering
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
   const setViewMode = useCallback(
     (mode: "list" | "grid", manual = true) => {
-      setViewModeState(mode);
+      console.log(`[PlayGrid] setViewMode called:`, {
+        newMode: mode,
+        previousMode: viewMode,
+        manual,
+        hasManualOverride: hasManualViewModeOverride,
+        stackTrace: new Error().stack?.split("\n").slice(1, 4).join("\n"),
+      });
+
+      // Only update if different to avoid unnecessary re-renders
+      if (mode !== viewMode) {
+        setViewModeState(mode);
+      }
 
       if (manual) {
         setHasManualViewModeOverride(true);
       }
     },
-    [setViewModeState, setHasManualViewModeOverride]
+    [
+      setViewModeState,
+      setHasManualViewModeOverride,
+      viewMode,
+      hasManualViewModeOverride,
+    ]
   );
 
   // Auto-detect mobile viewport for initial view mode (unless user has manual override)
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (hasManualViewModeOverride) return;
+    if (hasManualViewModeOverride) {
+      console.log(
+        "[PlayGrid] Skipping auto view mode - user has manual override"
+      );
+      return;
+    }
     if (typeof window.matchMedia !== "function") return;
 
     const mediaQuery = window.matchMedia("(max-width: 768px)");
 
     const applyPreferredView = (matches: boolean) => {
-      setViewMode(matches ? "grid" : "list", false);
+      const newMode = matches ? "grid" : "list";
+      console.log(`[PlayGrid] Auto-switching view mode based on screen size:`, {
+        matches,
+        newMode,
+        screenWidth: window.innerWidth,
+      });
+      setViewMode(newMode, false);
     };
 
     applyPreferredView(mediaQuery.matches);
 
     const handleChange = (event: MediaQueryListEvent) => {
+      console.log("[PlayGrid] Media query changed:", event.matches);
       applyPreferredView(event.matches);
     };
 
@@ -315,9 +352,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   );
 
   // Handle expanding/collapsing play cards - only one can be expanded at a time
-  const handleToggleExpand = useCallback((playId: string) => {
-    setExpandedPlayId((current) => (current === playId ? null : playId));
-  }, []);
+  const handleToggleExpand = useCallback(
+    (playId: string) => {
+      console.log(`[PlayGrid] handleToggleExpand called:`, {
+        playId,
+        currentExpandedId: expandedPlayId,
+        willExpand: expandedPlayId !== playId,
+        currentViewMode: viewMode,
+      });
+      setExpandedPlayId((current) => (current === playId ? null : playId));
+    },
+    [expandedPlayId, viewMode]
+  );
 
   const handleSelectAll = () => {
     if (!onPlaySelectionChange) return;
@@ -669,7 +715,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               <IconButton
                 aria-label="List view"
                 tooltip="List view"
-                onClick={() => setViewMode("list")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setViewMode("list");
+                }}
                 variant="subtle"
                 size="sm"
                 className={
@@ -681,7 +731,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               <IconButton
                 aria-label="Grid view (app icons)"
                 tooltip="Grid view"
-                onClick={() => setViewMode("grid")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setViewMode("grid");
+                }}
                 variant="subtle"
                 size="sm"
                 className={

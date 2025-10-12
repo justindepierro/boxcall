@@ -34,9 +34,16 @@ export function usePreference<K extends keyof UserPreferences>(
   const [isLoading, setIsLoading] = useState(false); // Changed to false - we have a value immediately
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const isMountedRef = useRef(true);
+  const hasSyncedRef = useRef(false); // Track if we've synced to avoid re-syncs
 
   // Sync with server in background (non-blocking)
+  // Only run once on mount to avoid infinite sync loops
   useEffect(() => {
+    // Skip if already synced
+    if (hasSyncedRef.current) {
+      return;
+    }
+
     let cancelled = false;
 
     async function syncWithServer() {
@@ -51,9 +58,12 @@ export function usePreference<K extends keyof UserPreferences>(
           const serverValue = await PreferenceService.getPreference(key);
 
           if (serverValue !== undefined && !cancelled) {
-            // Only update if server value is different from current value
+            // Get the current localStorage value for comparison
+            const localValue = getFromLocalStorage(key, defaultValue);
+            
+            // Only update if server value is different from localStorage value
             // This prevents unnecessary re-renders
-            if (JSON.stringify(serverValue) !== JSON.stringify(value)) {
+            if (JSON.stringify(serverValue) !== JSON.stringify(localValue)) {
               console.log(
                 `[usePreference] Synced ${String(key)} from server:`,
                 serverValue
@@ -80,6 +90,7 @@ export function usePreference<K extends keyof UserPreferences>(
       } finally {
         if (!cancelled) {
           setIsLoading(false);
+          hasSyncedRef.current = true; // Mark as synced
         }
       }
     }
@@ -89,7 +100,7 @@ export function usePreference<K extends keyof UserPreferences>(
     return () => {
       cancelled = true;
     };
-  }, [key, defaultValue, value]);
+  }, [key, defaultValue]); // Only key and defaultValue in deps
 
   // Cleanup on unmount
   useEffect(() => {

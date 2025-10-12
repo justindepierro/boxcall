@@ -161,6 +161,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           <Button
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               onToggleExpand();
             }}
             variant="outline"

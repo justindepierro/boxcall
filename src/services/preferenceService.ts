@@ -27,6 +27,10 @@ export interface UserPreferences {
 }
 
 export class PreferenceService {
+  private static saveQueue: Promise<boolean> = Promise.resolve(true);
+  private static pendingPreferences: Partial<UserPreferences> = {};
+  private static saveTimer: NodeJS.Timeout | null = null;
+
   /**
    * Load all preferences for the current user from the server
    * Returns null if user is not authenticated
@@ -82,42 +86,81 @@ export class PreferenceService {
 
   /**
    * Save preferences to the server for the current user
-   * Merges with existing preferences rather than replacing
+   * Uses debouncing to prevent race conditions from simultaneous saves
    */
   static async savePreferences(
     preferences: Partial<UserPreferences>
   ): Promise<boolean> {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    // Accumulate preferences to save
+    this.pendingPreferences = { ...this.pendingPreferences, ...preferences };
 
-      if (!user) {
-        console.log("[PreferenceService] No user authenticated, skipping save");
-        return false;
-      }
-
-      // Load existing preferences to merge
-      const existing = (await this.loadPreferences()) || {};
-      const merged = { ...existing, ...preferences };
-
-      // Type cast needed because settings is Json type in database
-      const { error } = await supabase
-        .from("profiles")
-        .update({ settings: merged } as never)
-        .eq("id", user.id);
-
-      if (error) {
-        console.error("[PreferenceService] Failed to save preferences:", error);
-        return false;
-      }
-
-      console.log("[PreferenceService] Saved preferences to server:", merged);
-      return true;
-    } catch (error) {
-      console.error("[PreferenceService] Exception saving preferences:", error);
-      return false;
+    // Clear existing timer
+    if (this.saveTimer) {
+      clearTimeout(this.saveTimer);
     }
+
+    // Debounce: wait 100ms for more preference changes before saving
+    return new Promise((resolve) => {
+      this.saveTimer = setTimeout(async () => {
+        // Chain saves to prevent overlapping requests
+        this.saveQueue = this.saveQueue.then(async () => {
+          const prefsToSave = { ...this.pendingPreferences };
+          this.pendingPreferences = {}; // Clear pending
+          
+          console.log(
+            "[PreferenceService] Saving batched preferences:",
+            prefsToSave
+          );
+
+          try {
+            const {
+              data: { user },
+            } = await supabase.auth.getUser();
+
+            if (!user) {
+              console.log(
+                "[PreferenceService] No user authenticated, skipping save"
+              );
+              resolve(false);
+              return false;
+            }
+
+            // Load existing preferences to merge
+            const existing = (await this.loadPreferences()) || {};
+            const merged = { ...existing, ...prefsToSave };
+
+            // Type cast needed because settings is Json type in database
+            const { error } = await supabase
+              .from("profiles")
+              .update({ settings: merged } as never)
+              .eq("id", user.id);
+
+            if (error) {
+              console.error(
+                "[PreferenceService] Failed to save preferences:",
+                error
+              );
+              resolve(false);
+              return false;
+            }
+
+            console.log(
+              "[PreferenceService] Saved preferences to server:",
+              merged
+            );
+            resolve(true);
+            return true;
+          } catch (error) {
+            console.error(
+              "[PreferenceService] Exception saving preferences:",
+              error
+            );
+            resolve(false);
+            return false;
+          }
+        });
+      }, 100); // 100ms debounce
+    });
   }
 
   /**
