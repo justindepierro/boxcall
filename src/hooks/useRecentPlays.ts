@@ -17,9 +17,11 @@ export function useRecentPlays() {
    */
   const trackPlayView = useCallback(
     (playId: string) => {
-      setRecentPlayIds((prev = []) => {
+      setRecentPlayIds((prev) => {
+        // Ensure prev is always an array (handles corrupted localStorage data)
+        const prevArray = Array.isArray(prev) ? prev : [];
         // Remove if already in list
-        const filtered = prev.filter((id) => id !== playId);
+        const filtered = prevArray.filter((id) => id !== playId);
         // Add to front, keep max 10
         return [playId, ...filtered].slice(0, 10);
       });

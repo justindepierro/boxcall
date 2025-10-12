@@ -110,11 +110,24 @@ async function fetchTotalPlays(userId: string): Promise<number> {
 
     const teamIds = memberships.map((m) => (m as { team_id: string }).team_id);
 
-    // Count plays across all teams
+    // Get playbook IDs for these teams
+    const { data: playbooks, error: playbooksError } = await supabase
+      .from("playbooks")
+      .select("id")
+      .in("team_id", teamIds);
+
+    if (playbooksError || !playbooks || playbooks.length === 0) {
+      console.warn("[fetchTotalPlays] Error fetching playbooks:", playbooksError?.message);
+      return 0;
+    }
+
+    const playbookIds = playbooks.map((pb) => (pb as { id: string }).id);
+
+    // Count plays across all playbooks
     const { count, error: playsError } = await supabase
       .from("plays")
       .select("*", { count: "exact", head: true })
-      .in("team_id", teamIds);
+      .in("playbook_id", playbookIds);
 
     if (playsError) {
       console.warn("[fetchTotalPlays] Error:", playsError.message);
@@ -154,9 +167,9 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
 
     const teamIds = memberships.map((m) => (m as { team_id: string }).team_id);
 
-    // Count posts from this week
+    // Count posts from this week (using correct table name: team_posts)
     const { count: postsCount, error: postsError } = await supabase
-      .from("posts")
+      .from("team_posts")
       .select("*", { count: "exact", head: true })
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);

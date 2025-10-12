@@ -13,13 +13,15 @@ export function useFavoritePlays() {
    */
   const toggleFavorite = useCallback(
     (playId: string) => {
-      setFavoriteIds((prev = []) => {
-        if (prev.includes(playId)) {
+      setFavoriteIds((prev) => {
+        // Ensure prev is always an array (handles corrupted localStorage data)
+        const prevArray = Array.isArray(prev) ? prev : [];
+        if (prevArray.includes(playId)) {
           // Remove from favorites
-          return prev.filter((id) => id !== playId);
+          return prevArray.filter((id) => id !== playId);
         }
         // Add to favorites
-        return [...prev, playId];
+        return [...prevArray, playId];
       });
     },
     [setFavoriteIds]

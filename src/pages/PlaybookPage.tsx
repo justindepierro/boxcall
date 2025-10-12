@@ -9,6 +9,7 @@ import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
+import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
 import {
@@ -18,6 +19,7 @@ import {
   GamePlanService,
 } from "@services";
 import type { PlayActivityItem } from "@services";
+import { SecurePlaysService } from "../services/securePlaysService";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
 import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
@@ -62,6 +64,11 @@ const AddNewPlayModal = lazy(() =>
 const PlaybookSettingsModal = lazy(() =>
   import("../components/playbook/PlaybookSettingsModal").then((module) => ({
     default: module.PlaybookSettingsModal,
+  }))
+);
+const PersonnelConfigurationModal = lazy(() =>
+  import("../components/playbook/PersonnelConfigurationModal").then((module) => ({
+    default: module.PersonnelConfigurationModal,
   }))
 );
 const KeyboardShortcutsGuide = lazy(() =>
@@ -175,6 +182,7 @@ export default function PlaybookPage() {
       showComplexity: true,
       theme: "auto",
       gridDensity: "compact",
+      personnelConfigurations: [],
       // Position names for all 11 players
       positionNames: {
         QB: "QB",
@@ -272,6 +280,7 @@ export default function PlaybookPage() {
   const [showAddNewPlayModal, setShowAddNewPlayModal] = useState(false);
   const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
     useState(false);
+  const [showPersonnelModal, setShowPersonnelModal] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
@@ -320,7 +329,7 @@ export default function PlaybookPage() {
 
   const handleSavePlay = async (playId: string, updates: Partial<Play>) => {
     try {
-      await PlaysService.updatePlay(playId, updates);
+      await SecurePlaysService.updatePlay(playId, updates);
       // Trigger a refresh of the playbook data
       dispatch({ type: "INCREMENT_REFRESH" });
       return Promise.resolve();
@@ -699,21 +708,31 @@ export default function PlaybookPage() {
               spacing="comfortable"
             >
               <PullToRefresh onRefresh={handlePullRefresh}>
-                <PlayGrid
-                  searchQuery={debouncedSearchQuery}
-                  filters={state.selectedFilters}
-                  onAddToPracticeScript={handleAddToPracticeScript}
-                  onAddToGamePlan={handleAddToGamePlan}
-                  onEdit={handleEditPlay}
-                  onSave={handleSavePlay}
-                  onDuplicate={handleDuplicatePlay}
-                  onOpenBuilder={handleOpenBuilder}
-                  onCreateDiagram={handleCreateDiagram}
-                  refreshTrigger={state.refreshTrigger}
-                  onPlayCountChange={handlePlayCountChange}
-                  formationSuggestions={suggestions.formations}
-                  playNameSuggestions={suggestions.playNames}
-                />
+                <ErrorBoundary
+                  fallback={
+                    <div className="p-spacing-lg text-center">
+                      <Typography variant="body-md" className="text-text-secondary">
+                        Failed to load plays. Please refresh the page.
+                      </Typography>
+                    </div>
+                  }
+                >
+                  <PlayGrid
+                    searchQuery={debouncedSearchQuery}
+                    filters={state.selectedFilters}
+                    onAddToPracticeScript={handleAddToPracticeScript}
+                    onAddToGamePlan={handleAddToGamePlan}
+                    onEdit={handleEditPlay}
+                    onSave={handleSavePlay}
+                    onDuplicate={handleDuplicatePlay}
+                    onOpenBuilder={handleOpenBuilder}
+                    onCreateDiagram={handleCreateDiagram}
+                    refreshTrigger={state.refreshTrigger}
+                    onPlayCountChange={handlePlayCountChange}
+                    formationSuggestions={suggestions.formations}
+                    playNameSuggestions={suggestions.playNames}
+                  />
+                </ErrorBoundary>
               </PullToRefresh>
             </MobileSection>
 
@@ -731,8 +750,8 @@ export default function PlaybookPage() {
           // Desktop View - Keep Existing Layout
           <>
             {/* Aurora Hero Tiles - Football-Specific Actions */}
-            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-8 py-16 overflow-visible">
-              <div className="flex items-center justify-center gap-8 flex-wrap overflow-visible">
+            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-2 py-2 overflow-visible">
+              <div className="flex items-center justify-center gap-3 md:gap-4 lg:gap-3 xl:gap-4 flex-wrap overflow-visible">
                 <AppIconTile
                   title="New Play"
                   subtitle={`${state.playsCreated} plays`}
@@ -763,6 +782,25 @@ export default function PlaybookPage() {
                   icon="target"
                   gradient="from-orange-500 to-red-500"
                   onOpen={handleQuickNewGamePlan}
+                />
+
+                <AppIconTile
+                  title="Personnel"
+                  subtitle="Configure"
+                  icon="users"
+                  gradient="from-pink-500 to-rose-600"
+                  onOpen={() => setShowPersonnelModal(true)}
+                />
+
+                <AppIconTile
+                  title="Bulk Actions"
+                  subtitle="Mass edit"
+                  icon="list"
+                  gradient="from-teal-500 to-cyan-600"
+                  onOpen={() => {
+                    // Open settings modal to Advanced tab
+                    setShowPlaybookSettingsModal(true);
+                  }}
                 />
 
                 <AppIconTile
@@ -816,21 +854,31 @@ export default function PlaybookPage() {
               <div className="lg:col-span-3 overflow-visible">
                 <Card variant="glass" size="lg">
                   {state.currentView === "playbook" && (
-                    <PlayGrid
-                      searchQuery={debouncedSearchQuery}
-                      filters={state.selectedFilters}
-                      onAddToPracticeScript={handleAddToPracticeScript}
-                      onAddToGamePlan={handleAddToGamePlan}
-                      onEdit={handleEditPlay}
-                      onSave={handleSavePlay}
-                      onDuplicate={handleDuplicatePlay}
-                      onOpenBuilder={handleOpenBuilder}
-                      onCreateDiagram={handleCreateDiagram}
-                      refreshTrigger={state.refreshTrigger}
-                      onPlayCountChange={handlePlayCountChange}
-                      formationSuggestions={suggestions.formations}
-                      playNameSuggestions={suggestions.playNames}
-                    />
+                    <ErrorBoundary
+                      fallback={
+                        <div className="p-spacing-lg text-center">
+                          <Typography variant="body-md" className="text-text-secondary">
+                            Failed to load plays. Please refresh the page.
+                          </Typography>
+                        </div>
+                      }
+                    >
+                      <PlayGrid
+                        searchQuery={debouncedSearchQuery}
+                        filters={state.selectedFilters}
+                        onAddToPracticeScript={handleAddToPracticeScript}
+                        onAddToGamePlan={handleAddToGamePlan}
+                        onEdit={handleEditPlay}
+                        onSave={handleSavePlay}
+                        onDuplicate={handleDuplicatePlay}
+                        onOpenBuilder={handleOpenBuilder}
+                        onCreateDiagram={handleCreateDiagram}
+                        refreshTrigger={state.refreshTrigger}
+                        onPlayCountChange={handlePlayCountChange}
+                        formationSuggestions={suggestions.formations}
+                        playNameSuggestions={suggestions.playNames}
+                      />
+                    </ErrorBoundary>
                   )}
 
                   {state.currentView === "practice-script" && (
@@ -932,39 +980,59 @@ export default function PlaybookPage() {
 
         {/* New Modals - Lazy loaded with Suspense for code splitting */}
         {showAddNewPlayModal && (
-          <Suspense fallback={null}>
-            <AddNewPlayModal
-              isOpen={showAddNewPlayModal}
-              onClose={() => {
-                setShowAddNewPlayModal(false);
-                setEditingPlay(null);
-              }}
-              existingPlay={editingPlay}
-              onCreatePlay={async (playData) => {
-                try {
-                  debug("Processing play:", playData);
+          <ErrorBoundary
+            fallback={
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+                <div className="bg-surface-primary rounded-lg p-spacing-lg max-w-md">
+                  <Typography variant="headline-md" className="mb-spacing-md">
+                    Error Loading Modal
+                  </Typography>
+                  <Typography variant="body-md" className="text-text-secondary mb-spacing-lg">
+                    Failed to load the play editor. Please try again.
+                  </Typography>
+                  <Button onClick={() => {
+                    setShowAddNewPlayModal(false);
+                    setEditingPlay(null);
+                  }}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            }
+          >
+            <Suspense fallback={null}>
+              <AddNewPlayModal
+                isOpen={showAddNewPlayModal}
+                onClose={() => {
+                  setShowAddNewPlayModal(false);
+                  setEditingPlay(null);
+                }}
+                existingPlay={editingPlay}
+                onCreatePlay={async (playData) => {
+                  try {
+                    debug("Processing play:", playData);
 
-                  let resultPlay: Play;
+                    let resultPlay: Play;
 
-                  if (editingPlay) {
-                    // Update existing play
-                    resultPlay = await PlaysService.updatePlay(
-                      editingPlay.id,
-                      playData
-                    );
-                    toast.success(
-                      `Play "${resultPlay.play_name}" updated successfully!`
-                    );
-                  } else {
-                    // Create new play
-                    resultPlay = await PlaysService.createPlay(playData);
-                    toast.success(
-                      `Play "${resultPlay.play_name}" created successfully!`
-                    );
-                  }
+                    if (editingPlay) {
+                      // Update existing play
+                      resultPlay = await SecurePlaysService.updatePlay(
+                        editingPlay.id,
+                        playData
+                      );
+                      toast.success(
+                        `Play "${resultPlay.play_name}" updated successfully!`
+                      );
+                    } else {
+                      // Create new play
+                      resultPlay = await SecurePlaysService.createPlay(playData);
+                      toast.success(
+                        `Play "${resultPlay.play_name}" created successfully!`
+                      );
+                    }
 
-                  // Refresh the playbook data
-                  dispatch({ type: "INCREMENT_REFRESH" });
+                    // Refresh the playbook data
+                    dispatch({ type: "INCREMENT_REFRESH" });
 
                   setShowAddNewPlayModal(false);
                   setEditingPlay(null);
@@ -1015,6 +1083,7 @@ export default function PlaybookPage() {
               }}
             />
           </Suspense>
+          </ErrorBoundary>
         )}
 
         {showPlaybookSettingsModal && (
@@ -1043,6 +1112,42 @@ export default function PlaybookPage() {
                 } catch (error) {
                   logError("Failed to save playbook settings:", error);
                   toast.error("Failed to save settings", "Please try again");
+                }
+              }}
+            />
+          </Suspense>
+        )}
+
+        {showPersonnelModal && (
+          <Suspense fallback={null}>
+            <PersonnelConfigurationModal
+              isOpen={showPersonnelModal}
+              onClose={() => setShowPersonnelModal(false)}
+              configurations={playbookSettings.personnelConfigurations || []}
+              onSave={(configurations) => {
+                try {
+                  debug("Saving personnel configurations:", configurations);
+
+                  // Update local state
+                  const updatedSettings = {
+                    ...playbookSettings,
+                    personnelConfigurations: configurations,
+                  };
+                  setPlaybookSettings(updatedSettings);
+
+                  // Persist settings to localStorage
+                  localStorage.setItem(
+                    "boxcall_playbook_settings",
+                    JSON.stringify(updatedSettings)
+                  );
+
+                  // Show success message
+                  toast.success("Personnel configurations saved successfully!");
+
+                  setShowPersonnelModal(false);
+                } catch (error) {
+                  logError("Failed to save personnel configurations:", error);
+                  toast.error("Failed to save personnel", "Please try again");
                 }
               }}
             />

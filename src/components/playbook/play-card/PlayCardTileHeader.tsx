@@ -98,74 +98,74 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             className="absolute inset-0 m-auto w-[65%] h-[65%] text-white drop-shadow-lg"
             aria-hidden="true"
           />
+        </motion.button>
 
-          {/* Star button for favorites - top-left */}
+        {/* Star button for favorites - top-left */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          className="absolute -top-3 -left-3 w-11 h-11 rounded-full bg-surface-secondary shadow-lg flex items-center justify-center border-2 border-surface transition-colors cursor-pointer z-10"
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={
+            isFavorite ? "Remove from favorites" : "Add to favorites"
+          }
+        >
+          <Icon
+            name="star"
+            className={`w-5 h-5 ${isFavorite ? "text-warning-500 fill-current" : "text-muted"}`}
+          />
+        </button>
+
+        {/* Confidence badge - top-right */}
+        <div className="absolute -top-3 -right-3 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
+          <svg
+            className="absolute w-11 h-11 -rotate-90"
+            viewBox="0 0 44 44"
+            aria-hidden="true"
+          >
+            <circle
+              cx="22"
+              cy="22"
+              r="18"
+              fill="none"
+              className="stroke-slate-200 dark:stroke-slate-700"
+              strokeWidth="3"
+            />
+            <circle
+              cx="22"
+              cy="22"
+              r="18"
+              fill="none"
+              className={confidenceStrokeClass}
+              strokeWidth="3"
+              strokeDasharray={`${(optimisticPlay.confidence_base / 100) * 113} 113`}
+              strokeLinecap="round"
+            />
+          </svg>
+          <span
+            className={`relative text-2xs font-bold ${confidenceTextClass}`}
+          >
+            {optimisticPlay.confidence_base}
+          </span>
+        </div>
+
+        {play.diagram_url && (
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onToggleFavorite();
+              onCreateDiagram();
             }}
-            className="absolute -top-3 -left-3 w-11 h-11 rounded-full bg-surface-secondary shadow-lg flex items-center justify-center border-2 border-surface transition-colors cursor-pointer z-10"
-            title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            aria-label={
-              isFavorite ? "Remove from favorites" : "Add to favorites"
-            }
+            className="absolute -bottom-3 -right-3 w-11 h-11 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer z-10"
+            title="Edit diagram"
+            aria-label="Edit diagram"
           >
-            <Icon
-              name="star"
-              className={`w-5 h-5 ${isFavorite ? "text-warning-500 fill-current" : "text-muted"}`}
-            />
+            <Icon name="image" className="w-5 h-5 text-white" />
           </button>
-
-          {/* Confidence badge - top-right */}
-          <div className="absolute -top-3 -right-3 w-11 h-11 rounded-full bg-white dark:bg-slate-900 shadow-lg flex items-center justify-center border-2 border-white dark:border-slate-800">
-            <svg
-              className="absolute w-11 h-11 -rotate-90"
-              viewBox="0 0 44 44"
-              aria-hidden="true"
-            >
-              <circle
-                cx="22"
-                cy="22"
-                r="18"
-                fill="none"
-                className="stroke-slate-200 dark:stroke-slate-700"
-                strokeWidth="3"
-              />
-              <circle
-                cx="22"
-                cy="22"
-                r="18"
-                fill="none"
-                className={confidenceStrokeClass}
-                strokeWidth="3"
-                strokeDasharray={`${(optimisticPlay.confidence_base / 100) * 113} 113`}
-                strokeLinecap="round"
-              />
-            </svg>
-            <span
-              className={`relative text-2xs font-bold ${confidenceTextClass}`}
-            >
-              {optimisticPlay.confidence_base}
-            </span>
-          </div>
-
-          {play.diagram_url && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onCreateDiagram();
-              }}
-              className="absolute -bottom-3 -right-3 w-11 h-11 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer"
-              title="Edit diagram"
-              aria-label="Edit diagram"
-            >
-              <Icon name="image" className="w-5 h-5 text-white" />
-            </button>
-          )}
-        </motion.button>
+        )}
       </div>
 
       <div className="mt-4 space-y-1 w-full">

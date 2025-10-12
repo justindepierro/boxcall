@@ -5,6 +5,7 @@ import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { AuthGuard } from "./components/auth/AuthGuard";
 import { useTheme } from "./hooks/useTheme";
+import { useSessionMonitor } from "./hooks/useSessionMonitor";
 import { testBasicDatabaseConnectivity } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
@@ -26,8 +27,12 @@ import DevPanel from "./components/dev/DevPanel";
 function App() {
   const [showRQDevtools, setShowRQDevtools] = useState(false);
   const [showDevPanel, setShowDevPanel] = useState(false);
+  
   // Initialize theme system
   useTheme();
+  
+  // Monitor session and auto-refresh
+  useSessionMonitor();
 
   // Test database connection on app start
   useEffect(() => {

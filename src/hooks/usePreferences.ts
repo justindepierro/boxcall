@@ -187,7 +187,9 @@ function getFromLocalStorage<K extends keyof UserPreferences>(
 
     if (
       key === "bc_formation_field_visibility" ||
-      key === "bc_play_details_field_visibility"
+      key === "bc_play_details_field_visibility" ||
+      key === "bc_recently_viewed_plays" ||
+      key === "bc_favorite_plays"
     ) {
       return JSON.parse(stored) as UserPreferences[K];
     }
@@ -218,7 +220,9 @@ function saveToLocalStorage<K extends keyof UserPreferences>(
 
     if (
       key === "bc_formation_field_visibility" ||
-      key === "bc_play_details_field_visibility"
+      key === "bc_play_details_field_visibility" ||
+      key === "bc_recently_viewed_plays" ||
+      key === "bc_favorite_plays"
     ) {
       localStorage.setItem(localStorageKey, JSON.stringify(value));
       return;
