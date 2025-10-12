@@ -90,6 +90,10 @@ export type PracticeSchedule = Tables<"practice_schedules">;
 export type PracticeAttendance = Tables<"practice_attendance">;
 export type Equipment = Tables<"equipment">;
 
+// 🔥 PERSONNEL SYSTEM TABLES - NEW EXPORTS
+export type PersonnelConfiguration = Tables<"personnel_configurations">;
+export type PersonnelPlayer = Tables<"personnel_players">;
+
 // Insert types
 export type AchievementInsert = Inserts<"achievements">;
 export type GameInsert = Inserts<"games">;
@@ -117,11 +121,19 @@ export type PracticeScheduleInsert = Inserts<"practice_schedules">;
 export type PracticeAttendanceInsert = Inserts<"practice_attendance">;
 export type EquipmentInsert = Inserts<"equipment">;
 
+// 🔥 PERSONNEL SYSTEM INSERT TYPES - NEW EXPORTS
+export type PersonnelConfigurationInsert = Inserts<"personnel_configurations">;
+export type PersonnelPlayerInsert = Inserts<"personnel_players">;
+
 // 🔥 PHASE 1 UPDATE TYPES - NEW EXPORTS
 export type CalendarEventUpdate = Updates<"calendar_events">;
 export type PracticeScheduleUpdate = Updates<"practice_schedules">;
 export type PracticeAttendanceUpdate = Updates<"practice_attendance">;
 export type EquipmentUpdate = Updates<"equipment">;
+
+// 🔥 PERSONNEL SYSTEM UPDATE TYPES - NEW EXPORTS
+export type PersonnelConfigurationUpdate = Updates<"personnel_configurations">;
+export type PersonnelPlayerUpdate = Updates<"personnel_players">;
 export type TeamInsert = Inserts<"teams">;
 export type UserProfileInsert = Inserts<"user_profiles">;
 
