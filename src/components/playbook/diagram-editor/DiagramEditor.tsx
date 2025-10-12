@@ -16,6 +16,7 @@ import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
 import { useUndoRedo } from "./hooks/useUndoRedo";
+import { useAutosave } from "./hooks/useAutosave";
 import { useDiagramStore } from "./stores/diagramStore";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import { useIsMobilePortrait } from "../../../hooks/useOrientation";
@@ -38,7 +39,7 @@ export type FieldPosition = "midfield" | "backed-up" | "red-zone" | "free-draw";
 
 export interface DiagramEditorProps {
   onClose?: () => void;
-  play?: Play | null; // Optional play to load personnel from
+  play?: Play | null; // Optional play to load personnel from and enable autosave
 }
 
 const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
@@ -257,6 +258,57 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     return `${offensivePlayers.length} Players`;
   }, []);
 
+  // Autosave callback - saves diagram data to the play
+  const handleAutosave = useCallback(
+    async (diagramData: DiagramDocument) => {
+      if (!play?.id) {
+        console.log("⏭️  Skipping autosave: no play ID (new play, user must save manually)");
+        return;
+      }
+
+      if (!play.play_name?.trim()) {
+        console.log("⏭️  Skipping autosave: no play name");
+        return;
+      }
+
+      console.log(`💾 Autosaving diagram for play ID: ${play.id}...`);
+
+      const updateData: Partial<Play> = {
+        diagram_data: diagramData,
+        diagram_version: 2,
+        formation: detectFormation(players),
+      };
+
+      const { error } = await supabase
+        .from("plays")
+        .update(updateData as any)
+        .eq("id", play.id);
+
+      if (error) {
+        console.error("❌ Autosave failed:", error);
+        throw new Error(error.message);
+      }
+
+      console.log("✅ Autosave successful");
+    },
+    [play, players, detectFormation]
+  );
+
+  // Enable autosave with debouncing (only for existing plays)
+  const { status: saveStatus, lastSaved } = useAutosave(players, play?.play_name || "", {
+    enabled: Boolean(play?.id), // Only enable autosave for existing plays
+    debounceMs: 2500, // Save after 2.5 seconds of inactivity
+    onSave: handleAutosave,
+    onSaveSuccess: () => {
+      console.log("✅ Autosave completed");
+      setIsDirty(false);
+    },
+    onSaveError: (error) => {
+      console.error("❌ Autosave error:", error);
+      // Don't show alert for autosave errors, just log them
+    },
+  });
+
   const handleReady = useCallback((pixiApp: DiagramPixiApp) => {
     console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
     console.log(`📊 FPS: ${pixiApp.getFPS()}`);
@@ -316,27 +368,47 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
           version: 2,
           players,
           meta: {
-            createdAt: Date.now(),
+            createdAt: play?.diagram_data?.meta?.createdAt || Date.now(),
             updatedAt: Date.now(),
           },
         };
 
         // Prepare the play data
-        const playData = {
+        const playData: Partial<Play> = {
           play_name: name,
           formation: detectFormation(players),
-          p_type: "Pass" as const, // Default, user can change later
+          p_type: (play?.p_type || "Pass") as Play["p_type"], // Preserve existing type or default to Pass
           diagram_data: diagramData,
+          diagram_version: 2,
         };
 
         console.log("📊 Diagram data:", diagramData);
 
-        // Insert into Supabase
-        const { data, error } = await supabase
-          .from("plays")
-          .insert(playData as any) // Type assertion for now until database types are fully synced
-          .select()
-          .single();
+        let data;
+        let error;
+
+        // If we have a play ID, update the existing play
+        if (play?.id) {
+          console.log(`🔄 Updating existing play ID: ${play.id}`);
+          const result = await supabase
+            .from("plays")
+            .update(playData as any) // Type assertion for now until database types are fully synced
+            .eq("id", play.id)
+            .select()
+            .single();
+          data = result.data;
+          error = result.error;
+        } else {
+          // Otherwise, insert a new play
+          console.log("➕ Inserting new play");
+          const result = await supabase
+            .from("plays")
+            .insert(playData as any) // Type assertion for now until database types are fully synced
+            .select()
+            .single();
+          data = result.data;
+          error = result.error;
+        }
 
         if (error) {
           console.error("❌ Supabase error:", error);
@@ -362,7 +434,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         );
       }
     },
-    [players, detectFormation, showAlertModal]
+    [players, detectFormation, showAlertModal, play]
   );
 
   const handleSave = useCallback(() => {
@@ -930,7 +1002,29 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
               <Icon name="target" size="xs" />
               Single Coordinate System
             </span>
-            {isDirty && (
+            
+            {/* Autosave status indicator */}
+            {play?.id && saveStatus === "saving" && (
+              <span className="text-info-500 flex items-center gap-1 animate-pulse">
+                <Icon name="clock" size="xs" />
+                Saving...
+              </span>
+            )}
+            {play?.id && saveStatus === "saved" && lastSaved && (
+              <span className="text-success-500 flex items-center gap-1">
+                <Icon name="check-circle" size="xs" />
+                Saved
+              </span>
+            )}
+            {play?.id && saveStatus === "error" && (
+              <span className="text-error-500 flex items-center gap-1">
+                <Icon name="alert" size="xs" />
+                Save failed
+              </span>
+            )}
+            
+            {/* Show unsaved warning for new plays (no autosave) */}
+            {!play?.id && isDirty && (
               <span className="text-warning-500 flex items-center gap-1">
                 <Icon name="alert" size="xs" />
                 Unsaved changes
