@@ -378,7 +378,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         // If we have a play ID, use DiagramService to update
         if (play?.id) {
           console.log(`🔄 Updating existing play ID: ${play.id}`);
-          
+
           const result = await updateDiagramData(play.id, diagramData, {
             updateFormation: true,
           });
@@ -402,7 +402,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         } else {
           // For new plays, use direct Supabase insert (needs playbook_id context)
           console.log("➕ Inserting new play");
-          
+
           const playData: Partial<Play> = {
             play_name: name,
             formation: detectFormation(players),
