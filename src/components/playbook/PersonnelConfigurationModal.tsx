@@ -5,6 +5,7 @@ import { Typography } from "../design-system/Typography";
 import { BottomSheet } from "../BottomSheet";
 import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
+import { Select } from "../ui/Select";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 type PlayerPosition = "QB" | "RB" | "TE" | "WR";
@@ -50,7 +51,30 @@ export const PersonnelConfigurationModal: React.FC<
   }, []);
 
   useEffect(() => {
-    setLocalConfigurations(configurations);
+    // If no configurations exist, start with default 11 Personnel
+    if (configurations.length === 0) {
+      const defaultConfig: PersonnelConfiguration = {
+        id: "default-11-personnel",
+        name: "11 Personnel",
+        players: [
+          { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED QB
+          { id: "p2", label: "R", position: "RB" },
+          { id: "p3", label: "T", position: "TE" },
+          { id: "p4", label: "X", position: "WR" },
+          { id: "p5", label: "Y", position: "WR" },
+        ],
+        line: [
+          { id: "l1", label: "LT" },
+          { id: "l2", label: "LG" },
+          { id: "l3", label: "C" },
+          { id: "l4", label: "RG" },
+          { id: "l5", label: "RT" },
+        ],
+      };
+      setLocalConfigurations([defaultConfig]);
+    } else {
+      setLocalConfigurations(configurations);
+    }
   }, [configurations]);
 
   const handleSave = () => {
@@ -64,12 +88,11 @@ export const PersonnelConfigurationModal: React.FC<
       id: Date.now().toString(),
       name: "11 Personnel",
       players: [
-        { id: "p1", label: "QB", position: "QB", isWildcatQB: false },
-        { id: "p2", label: "RB", position: "RB" },
-        { id: "p3", label: "TE", position: "TE" },
-        { id: "p4", label: "WR", position: "WR" },
-        { id: "p5", label: "WR", position: "WR" },
-        { id: "p6", label: "WR", position: "WR" },
+        { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED - QB always first
+        { id: "p2", label: "R", position: "RB" },
+        { id: "p3", label: "T", position: "TE" },
+        { id: "p4", label: "X", position: "WR" },
+        { id: "p5", label: "Y", position: "WR" },
       ],
       line: [
         { id: "l1", label: "LT" },
@@ -245,7 +268,7 @@ export const PersonnelConfigurationModal: React.FC<
                   Skill Positions
                 </Typography>
 
-                {config.players.map((player) => (
+                {config.players.map((player, index) => (
                   <div key={player.id} className="space-y-1">
                     <div className="flex items-center gap-2">
                       <Input
@@ -257,26 +280,35 @@ export const PersonnelConfigurationModal: React.FC<
                             e.target.value
                           )
                         }
-                        placeholder="QB"
+                        placeholder={index === 0 ? "Q" : "Label"}
                         maxLength={3}
                         className="w-16 h-9 text-center font-mono font-bold uppercase text-sm"
                       />
                       <span className="text-text-tertiary text-sm">—</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          // Cycle through positions: QB → RB → TE → WR → QB
-                          const positions: PlayerPosition[] = ["QB", "RB", "TE", "WR"];
-                          const currentIndex = positions.indexOf(player.position);
-                          const nextPosition = positions[(currentIndex + 1) % positions.length];
-                          updatePlayerPosition(config.id, player.id, nextPosition);
-                        }}
-                        className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-border-default bg-surface-secondary hover:bg-surface-tertiary transition-colors text-sm text-text-secondary font-medium group"
-                      >
-                        <span className="text-text-primary">{player.position}</span>
-                        <Icon name="chevron-down" className="w-4 h-4 text-text-tertiary group-hover:text-text-secondary transition-colors" />
-                      </button>
+                      
+                      {/* QB Position - LOCKED at top, cannot be changed */}
+                      {index === 0 ? (
+                        <div className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-border-default bg-surface-tertiary text-sm font-medium opacity-75 cursor-not-allowed">
+                          <span className="text-text-primary">QB</span>
+                          <Icon name="lock" className="w-4 h-4 text-text-tertiary" />
+                        </div>
+                      ) : (
+                        /* Other Positions - Dropdown selector */
+                        <Select
+                          value={player.position}
+                          onChange={(value) =>
+                            updatePlayerPosition(config.id, player.id, value as PlayerPosition)
+                          }
+                          options={[
+                            { value: "RB", label: "RB (Running Back)" },
+                            { value: "TE", label: "TE (Tight End)" },
+                            { value: "WR", label: "WR (Wide Receiver)" },
+                          ]}
+                          className="flex-1 h-9 text-sm"
+                        />
+                      )}
                     </div>
+                    
                     {/* Wildcat QB checkbox - only show for QB position */}
                     {player.position === "QB" && (
                       <label className="flex items-center gap-1.5 pl-1 cursor-pointer">
