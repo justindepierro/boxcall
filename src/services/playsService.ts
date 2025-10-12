@@ -230,7 +230,9 @@ export class PlaysService {
             ? (playData as unknown as { duplicate_key?: string }).duplicate_key
             : undefined,
 
-        // Media
+        // Diagram data (v2 system with JSONB storage)
+        diagram_data: playData.diagram_data || null,
+        diagram_version: playData.diagram_version || null,
         diagram_url: playData.diagram_url || null,
       };
 
@@ -402,7 +404,9 @@ export class PlaysService {
         is_archived: updates.is_archived,
         updated_at: new Date(),
 
-        // Media
+        // Diagram data (v2 system with JSONB storage)
+        diagram_data: updates.diagram_data,
+        diagram_version: updates.diagram_version,
         diagram_url: updates.diagram_url,
       };
 
