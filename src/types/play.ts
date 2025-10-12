@@ -1,3 +1,6 @@
+// Import diagram types
+import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
+
 // Custom field types
 export type CustomFieldType =
   | "text"
@@ -105,8 +108,10 @@ export interface Play {
   // Installation lifecycle phase (not yet in DB - forward compatibility)
   install_phase?: string; // e.g., 'install1','install2','install3','situational','gameplan'
 
-  // Media/visuals
-  diagram_url?: string; // thumbnail or full diagram image (data URL or remote URL)
+  // Diagram fields (NEW - October 12, 2025)
+  diagram_data?: DiagramDocument | null; // JSONB - structured diagram document
+  diagram_version?: number | null; // integer - diagram format version (1-10)
+  diagram_url?: string | null; // text - PNG thumbnail URL only (not diagram JSON)
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database
