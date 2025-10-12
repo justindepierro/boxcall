@@ -27,6 +27,9 @@ import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 import type { DiagramDocument } from "./types/DiagramTypes";
 import type { Player } from "./types/Player";
+import type { Play } from "../../../types/play";
+import type { PersonnelPlayer } from "../../../types/personnel";
+import { usePersonnelConfigurationByName } from "../../../hooks/usePersonnel";
 
 // Re-export types for backwards compatibility with PlaybookPage
 export type { DiagramMetadata, DiagramDocument } from "./types/DiagramTypes";
@@ -35,9 +38,10 @@ export type FieldPosition = "midfield" | "backed-up" | "red-zone" | "free-draw";
 
 export interface DiagramEditorProps {
   onClose?: () => void;
+  play?: Play | null; // Optional play to load personnel from
 }
 
-const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
+const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose, play }) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
   const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
@@ -53,6 +57,99 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose }) => {
   const { isMobilePortrait } = useIsMobilePortrait();
   const [dismissedLandscapePrompt, setDismissedLandscapePrompt] =
     useState(false);
+
+  // Fetch personnel configuration if play has personnel assigned
+  const personnelName = play?.personnel || "11 Personnel"; // Default to 11 Personnel
+  const playbookId = play?.playbook_id;
+  
+  const { data: personnelConfig } = 
+    usePersonnelConfigurationByName(playbookId, personnelName);
+
+  // Load personnel players into diagram when config is available
+  useEffect(() => {
+    if (!personnelConfig || !personnelConfig.players || personnelConfig.players.length === 0) {
+      return;
+    }
+
+    // Get store actions
+    const { addPlayer, clearPlayers } = useDiagramStore.getState();
+
+    // Clear existing players before adding personnel
+    clearPlayers();
+
+    // Position mapping: Define where each position type should be placed on field
+    // Field is 53.333 yards wide x 35 yards tall (0,0 is top-left)
+    // Center of field is at x: 26.67, typical line of scrimmage around y: 17.5
+    const POSITION_COORDS: Record<string, { x: number; y: number }> = {
+      QB: { x: 26.67, y: 12 }, // Behind center (5.5 yards back)
+      RB: { x: 31, y: 10 }, // In backfield, offset right
+      TE: { x: 21, y: 17.5 }, // On line, tight to tackle
+      WR: { x: 10, y: 17.5 }, // Split out left (will be adjusted by sort_order)
+    };
+
+    // Create diagram players from personnel configuration
+    personnelConfig.players.forEach((personnelPlayer: PersonnelPlayer, index: number) => {
+      const position = personnelPlayer.player_position;
+      let baseCoords = POSITION_COORDS[position] || { x: 26.67, y: 17.5 };
+
+      // Adjust WR positions based on sort_order to spread them out
+      if (position === "WR") {
+        const wrIndex = personnelConfig.players
+          .filter((p: PersonnelPlayer) => p.player_position === "WR")
+          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
+        
+        // Spread WRs across field: X (left), Y (slot left), Z (slot right), etc.
+        const positions = [
+          { x: 10, y: 17.5 },  // X - far left
+          { x: 18, y: 17.5 },  // Y - slot left
+          { x: 35, y: 17.5 },  // Z - slot right
+          { x: 43, y: 17.5 },  // Additional WR - far right
+        ];
+        baseCoords = positions[wrIndex] || positions[0];
+      }
+
+      // Adjust RB positions if multiple RBs
+      if (position === "RB") {
+        const rbIndex = personnelConfig.players
+          .filter((p: PersonnelPlayer) => p.player_position === "RB")
+          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
+        
+        // Spread RBs in backfield
+        if (rbIndex === 0) {
+          baseCoords = { x: 31, y: 10 }; // Right side
+        } else if (rbIndex === 1) {
+          baseCoords = { x: 22, y: 10 }; // Left side
+        }
+      }
+
+      // Adjust TE positions if multiple TEs
+      if (position === "TE") {
+        const teIndex = personnelConfig.players
+          .filter((p: PersonnelPlayer) => p.player_position === "TE")
+          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
+        
+        // Spread TEs on line
+        if (teIndex === 0) {
+          baseCoords = { x: 21, y: 17.5 }; // Left side
+        } else if (teIndex === 1) {
+          baseCoords = { x: 32, y: 17.5 }; // Right side
+        }
+      }
+
+      // Create the diagram player
+      const diagramPlayer: Player = {
+        id: `personnel-${personnelPlayer.id}-${index}`,
+        x: baseCoords.x,
+        y: baseCoords.y,
+        jerseyNumber: personnelPlayer.label,
+        team: "offense" as const,
+        role: position,
+        position: position === "QB" ? "center" : "regular", // QB gets square, others get circles
+      };
+
+      addPlayer(diagramPlayer);
+    });
+  }, [personnelConfig]);
 
   // Modal states
   const [showAlert, setShowAlert] = useState<boolean>(false);
