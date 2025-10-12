@@ -10,6 +10,7 @@
 **Status:** ⚠️ **NEEDS ATTENTION**
 
 ### Critical Issues Found:
+
 1. ❌ **Missing RLS WITH CHECK clause** on plays INSERT policy (blocks all play creation)
 2. ⚠️ **Duplicate RLS policies** on playbooks table (redundant SELECT policies)
 3. ⚠️ **No error boundaries** around critical components (PlayGrid, modals)
@@ -19,6 +20,7 @@
 7. ⚠️ **Missing telemetry** for security events
 
 ### Security Score: **6.5/10**
+
 - Database Security: 7/10 (RLS enabled but policies need fixes)
 - Input Validation: 6/10 (partial validation)
 - Error Handling: 6/10 (basic try/catch, needs boundaries)
@@ -32,6 +34,7 @@
 ### 1. Database Row-Level Security (RLS)
 
 #### ✅ What's Working:
+
 - All critical tables have RLS enabled
 - Team-based access control in place
 - Proper auth.uid() checks
@@ -40,6 +43,7 @@
 #### ❌ Critical Issues:
 
 **A. Broken Plays INSERT Policy**
+
 ```sql
 -- CURRENT (BROKEN):
 CREATE POLICY "Team coaches can manage plays" ON plays
@@ -92,6 +96,7 @@ CREATE POLICY "Coaches can delete plays" ON plays
 ```
 
 **B. Duplicate Playbooks SELECT Policy**
+
 ```sql
 -- Remove this duplicate:
 DROP POLICY "Users can view playbooks for their teams" ON playbooks;
@@ -99,6 +104,7 @@ DROP POLICY "Users can view playbooks for their teams" ON playbooks;
 ```
 
 **C. Missing Policies on New Tables**
+
 - `user_preferences` table (for favorites/recent plays) - needs RLS!
 - Need to add policies for preferences CRUD
 
@@ -107,6 +113,7 @@ DROP POLICY "Users can view playbooks for their teams" ON playbooks;
 ### 2. Input Validation & SQL Injection
 
 #### Current State:
+
 ```typescript
 // playsService.ts - INSUFFICIENT VALIDATION
 static async createPlay(playData: Partial<Play>): Promise<Play> {
@@ -119,12 +126,14 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
 ```
 
 #### Issues:
+
 1. No schema validation before database insert
 2. No length limits enforced
 3. No XSS protection on text fields
 4. No type coercion/sanitization
 
 #### Fix Required:
+
 ```typescript
 import { z } from 'zod';
 
@@ -134,38 +143,38 @@ const PlaySchema = z.object({
     .min(1, "Play name required")
     .max(100, "Play name too long")
     .regex(/^[a-zA-Z0-9\s-]+$/, "Invalid characters in play name"),
-  
+
   formation: z.string()
     .min(1)
     .max(50),
-  
+
   p_type: z.enum(['run', 'pass', 'rpo', 'play-action', 'screen']),
-  
+
   notes: z.string()
     .max(5000, "Notes too long")
     .optional()
     .transform(val => val ? sanitizeHtml(val) : val),
-  
+
   playbook_id: z.string().uuid("Invalid playbook ID"),
-  
+
   // ... other fields
 });
 
 static async createPlay(playData: Partial<Play>): Promise<Play> {
   // Validate input
   const validated = PlaySchema.parse(playData);
-  
+
   // Additional business logic checks
   if (!validated.playbook_id) {
     throw new Error("Playbook ID required");
   }
-  
+
   const { data, error } = await supabase
     .from("plays")
     .insert(validated)
     .select()
     .single();
-    
+
   if (error) throw this.handleDatabaseError(error);
   return data;
 }
@@ -178,6 +187,7 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
 #### Missing Error Boundaries:
 
 **PlaybookPage.tsx:**
+
 ```tsx
 // CURRENT (NO BOUNDARIES):
 return (
@@ -188,22 +198,16 @@ return (
 );
 
 // FIX:
-import { ErrorBoundary } from '../components/ui/ErrorBoundary';
+import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 
 return (
   <PageLayout>
-    <ErrorBoundary 
-      fallback={<PlayGridErrorState />}
-      onError={logError}
-    >
+    <ErrorBoundary fallback={<PlayGridErrorState />} onError={logError}>
       <PlayGrid plays={plays} />
     </ErrorBoundary>
-    
+
     {showAddNewPlayModal && (
-      <ErrorBoundary 
-        fallback={<ModalErrorFallback />}
-        onError={logError}
-      >
+      <ErrorBoundary fallback={<ModalErrorFallback />} onError={logError}>
         <AddNewPlayModal />
       </ErrorBoundary>
     )}
@@ -212,6 +216,7 @@ return (
 ```
 
 **Required Boundaries:**
+
 1. ✅ PlayGrid (exists)
 2. ❌ AddNewPlayModal
 3. ❌ PlaybookSettingsModal
@@ -225,13 +230,16 @@ return (
 ### 4. Authentication & Authorization Checks
 
 #### Current Implementation:
+
 ```typescript
 // PlaybookPage.tsx line 211-219
 useEffect(() => {
   const loadActivities = async () => {
     try {
       // ✅ GOOD: Auth check before data load
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         debug("Skipping activities load - user not authenticated yet");
         return;
@@ -246,36 +254,40 @@ useEffect(() => {
 ```
 
 #### Issues:
+
 1. ⚠️ Auth check is good, but no redirect on failure
 2. ⚠️ activeTeamId dependency might be null (needs guard)
 3. ⚠️ No session expiry handling
 4. ⚠️ No permission checks for specific actions
 
 #### Improved Pattern:
+
 ```typescript
 // Add auth wrapper hook
 const useRequireAuth = () => {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Please sign in to access playbook");
-        navigate('/login');
+        navigate("/login");
       }
     };
     void checkAuth();
-    
+
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event) => {
-        if (event === 'SIGNED_OUT') {
-          navigate('/login');
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        navigate("/login");
       }
-    );
-    
+    });
+
     return () => subscription.unsubscribe();
   }, [navigate, toast]);
 };
@@ -289,31 +301,34 @@ useRequireAuth();
 ### 5. Rate Limiting & Abuse Prevention
 
 #### Current State:
+
 ❌ **NO RATE LIMITING** - Users can spam:
+
 - Play creation
 - Play updates
 - Search queries
 - Filter changes
 
 #### Required Implementation:
+
 ```typescript
 // Add rate limiting service
 class RateLimiter {
   private limits = new Map<string, { count: number; resetAt: number }>();
-  
+
   check(key: string, maxRequests: number, windowMs: number): boolean {
     const now = Date.now();
     const limit = this.limits.get(key);
-    
+
     if (!limit || now > limit.resetAt) {
       this.limits.set(key, { count: 1, resetAt: now + windowMs });
       return true;
     }
-    
+
     if (limit.count >= maxRequests) {
       return false;
     }
-    
+
     limit.count++;
     return true;
   }
@@ -322,11 +337,11 @@ class RateLimiter {
 // Usage in playsService
 static async createPlay(playData: Partial<Play>): Promise<Play> {
   const userId = (await supabase.auth.getUser()).data.user?.id;
-  
+
   if (!rateLimiter.check(`play-create-${userId}`, 10, 60000)) {
     throw new Error("Rate limit exceeded. Please wait before creating more plays.");
   }
-  
+
   // ... rest of create logic
 }
 ```
@@ -336,6 +351,7 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
 ### 6. Telemetry & Security Monitoring
 
 #### Missing Security Events:
+
 1. Failed authentication attempts
 2. RLS policy violations
 3. Invalid input attempts
@@ -343,18 +359,19 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
 5. Suspicious query patterns
 
 #### Required Tracking:
+
 ```typescript
 // Add to telemetry service
 export const trackSecurityEvent = (event: {
-  type: 'auth_failure' | 'rls_violation' | 'invalid_input' | 'rate_limit';
-  severity: 'low' | 'medium' | 'high';
+  type: "auth_failure" | "rls_violation" | "invalid_input" | "rate_limit";
+  severity: "low" | "medium" | "high";
   details: Record<string, any>;
 }) => {
   // Log to monitoring service
-  console.warn('[SECURITY]', event);
-  
+  console.warn("[SECURITY]", event);
+
   // Track in analytics
-  telemetry.track('security_event', {
+  telemetry.track("security_event", {
     ...event,
     timestamp: new Date().toISOString(),
     userId: getCurrentUserId(),
@@ -368,12 +385,14 @@ export const trackSecurityEvent = (event: {
 ### 7. Data Validation & Type Safety
 
 #### Current Gaps:
+
 1. No runtime validation of Play schema
 2. Partial<Play> allows any subset (dangerous)
 3. No validation of JSONB fields (diagram_data)
 4. No file size limits on diagram uploads
 
 #### Fix:
+
 ```typescript
 // Add comprehensive validation
 const DiagramDataSchema = z.object({
@@ -402,6 +421,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 ## 🎯 Immediate Action Items
 
 ### Priority 1 (Critical - Do Now):
+
 1. **Fix RLS Policies** (5 min)
    - Split "manage plays" ALL policy into INSERT/UPDATE/DELETE
    - Remove duplicate playbooks SELECT policy
@@ -418,6 +438,7 @@ static async createPlay(playData: unknown): Promise<Play> {
    - Add to playsService
 
 ### Priority 2 (High - Today):
+
 4. **Add Rate Limiting** (1 hour)
    - Implement RateLimiter class
    - Add to all mutation methods
@@ -429,6 +450,7 @@ static async createPlay(playData: unknown): Promise<Play> {
    - Set up monitoring alerts
 
 ### Priority 3 (Medium - This Week):
+
 6. **Add Auth Wrapper Hook** (30 min)
    - Handle session expiry
    - Auto-redirect on logout
@@ -448,6 +470,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 ## 📋 Security Checklist
 
 ### Database Security:
+
 - [x] RLS enabled on all tables
 - [ ] All policies tested and working
 - [ ] No broken INSERT policies
@@ -456,6 +479,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 - [ ] Query timeouts configured
 
 ### Input Validation:
+
 - [ ] Zod schemas for all inputs
 - [ ] XSS protection on text fields
 - [ ] File upload size limits
@@ -463,6 +487,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 - [ ] Length limits enforced
 
 ### Error Handling:
+
 - [ ] Error boundaries on all major components
 - [ ] Graceful degradation
 - [ ] User-friendly error messages
@@ -470,6 +495,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 - [ ] No sensitive data in error messages
 
 ### Authentication:
+
 - [x] Supabase auth integration
 - [ ] Session expiry handling
 - [ ] Auto-redirect on logout
@@ -477,6 +503,7 @@ static async createPlay(playData: unknown): Promise<Play> {
 - [ ] Permission checks before actions
 
 ### Monitoring:
+
 - [ ] Security event tracking
 - [ ] RLS violation alerts
 - [ ] Failed auth logging

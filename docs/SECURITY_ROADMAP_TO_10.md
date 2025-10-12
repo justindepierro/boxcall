@@ -9,6 +9,7 @@
 ## 📊 Current State Analysis
 
 ### ✅ What We Have (8.4/10)
+
 - ✅ RLS policies fixed (database lockdown)
 - ✅ Input validation (Zod schemas, XSS protection)
 - ✅ Rate limiting (abuse prevention)
@@ -17,6 +18,7 @@
 - ✅ Auth checks (before mutations)
 
 ### ⚠️ What's Missing (1.6 points)
+
 - ⚠️ No persistent security logging (events lost on reload)
 - ⚠️ No real-time security alerts
 - ⚠️ No rate limit UI feedback (users blind to limits)
@@ -33,6 +35,7 @@
 ### Phase 3: Monitoring & Feedback (9.2/10) - **2-3 hours**
 
 #### Task 1: Persistent Security Logging (+0.3 points)
+
 **Current:** Events stored in-memory (lost on reload)  
 **Target:** Events persisted to database
 
@@ -63,10 +66,12 @@ CREATE POLICY "Admins can view all security events" ON security_events
 ```
 
 **Files to Create:**
+
 - `database/migrations/add_security_events_table.sql`
 - `src/services/securityLogger.ts`
 
 **Update:**
+
 - `src/services/securePlaysService.ts` - Write events to DB
 
 **Time:** 1 hour
@@ -74,6 +79,7 @@ CREATE POLICY "Admins can view all security events" ON security_events
 ---
 
 #### Task 2: Real-Time Security Alerts (+0.2 points)
+
 **Current:** Events logged silently  
 **Target:** High-severity events trigger alerts
 
@@ -81,20 +87,18 @@ CREATE POLICY "Admins can view all security events" ON security_events
 // src/services/securityAlerts.ts
 export class SecurityAlerts {
   static async notify(event: SecurityEvent) {
-    if (event.severity === 'high') {
+    if (event.severity === "high") {
       // Send to admin dashboard
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: getAdminUserId(),
-          type: 'security_alert',
-          title: `Security Alert: ${event.type}`,
-          message: event.details,
-          priority: 'high'
-        });
-      
+      await supabase.from("notifications").insert({
+        user_id: getAdminUserId(),
+        type: "security_alert",
+        title: `Security Alert: ${event.type}`,
+        message: event.details,
+        priority: "high",
+      });
+
       // Optional: Send email, Slack, SMS
-      if (process.env.VITE_ENABLE_SECURITY_EMAILS === 'true') {
+      if (process.env.VITE_ENABLE_SECURITY_EMAILS === "true") {
         await sendSecurityEmail(event);
       }
     }
@@ -103,6 +107,7 @@ export class SecurityAlerts {
 ```
 
 **Features:**
+
 - Toast notification for rate limits
 - Admin dashboard alerts for violations
 - Optional email/Slack webhooks
@@ -112,6 +117,7 @@ export class SecurityAlerts {
 ---
 
 #### Task 3: Rate Limit UI Feedback (+0.2 points)
+
 **Current:** Users only see error after hitting limit  
 **Target:** Show remaining attempts, countdown timer
 
@@ -120,11 +126,11 @@ export class SecurityAlerts {
 export function useRateLimitFeedback(action: string) {
   const userId = useAuth().user?.id;
   const key = getUserRateLimitKey(userId, action);
-  
+
   const remaining = rateLimiter.getRemaining(key, 10);
   const resetTime = rateLimiter.getResetTime(key);
   const isNearLimit = remaining <= 2;
-  
+
   return { remaining, resetTime, isNearLimit };
 }
 
@@ -140,6 +146,7 @@ const { remaining, isNearLimit } = useRateLimitFeedback('play-create');
 ```
 
 **UI Components:**
+
 - Badge showing remaining attempts
 - Countdown timer when limited
 - Progress bar (visual indicator)
@@ -149,6 +156,7 @@ const { remaining, isNearLimit } = useRateLimitFeedback('play-create');
 ---
 
 #### Task 4: Security Events Dashboard (+0.3 points)
+
 **Current:** No way to view security events  
 **Target:** Admin dashboard with charts, filters
 
@@ -156,12 +164,12 @@ const { remaining, isNearLimit } = useRateLimitFeedback('play-create');
 // src/pages/SecurityDashboard.tsx
 export const SecurityDashboard = () => {
   const events = useSecurityEvents();
-  
+
   return (
     <PageLayout>
       <SecurityOverview />
       <SecurityEventsChart data={events} />
-      <SecurityEventsTable 
+      <SecurityEventsTable
         events={events}
         filters={{ type, severity, dateRange }}
       />
@@ -172,6 +180,7 @@ export const SecurityDashboard = () => {
 ```
 
 **Features:**
+
 - Line chart: Events over time
 - Pie chart: By type, by severity
 - Table: Filterable, sortable, searchable
@@ -185,6 +194,7 @@ export const SecurityDashboard = () => {
 ### Phase 4: Advanced Security (9.6/10) - **1 week**
 
 #### Task 5: CSP Headers (+0.1 points)
+
 **Current:** No Content Security Policy  
 **Target:** Strict CSP preventing XSS
 
@@ -205,6 +215,7 @@ headers = [
 ```
 
 **Benefits:**
+
 - Blocks inline scripts (XSS prevention)
 - Prevents clickjacking (iframe protection)
 - Restricts resource loading (only trusted sources)
@@ -214,6 +225,7 @@ headers = [
 ---
 
 #### Task 6: Audit Logging (+0.1 points)
+
 **Current:** No persistent record of changes  
 **Target:** Complete audit trail
 
@@ -257,6 +269,7 @@ FOR EACH ROW EXECUTE FUNCTION log_play_changes();
 ```
 
 **Features:**
+
 - Automatic logging via database triggers
 - Tracks all play modifications
 - Stores before/after values
@@ -267,59 +280,58 @@ FOR EACH ROW EXECUTE FUNCTION log_play_changes();
 ---
 
 #### Task 7: Automated Security Tests (+0.1 points)
+
 **Current:** Manual testing only  
 **Target:** Automated test suite
 
 ```typescript
 // tests/security/validation.test.ts
-describe('Input Validation', () => {
-  test('rejects SQL injection attempts', () => {
+describe("Input Validation", () => {
+  test("rejects SQL injection attempts", () => {
     const maliciousInput = "'; DROP TABLE plays; --";
-    expect(() => validatePlayCreate({ play_name: maliciousInput }))
-      .toThrow('Invalid play name');
+    expect(() => validatePlayCreate({ play_name: maliciousInput })).toThrow(
+      "Invalid play name"
+    );
   });
-  
-  test('strips XSS attempts', () => {
+
+  test("strips XSS attempts", () => {
     const xssInput = '<script>alert("xss")</script>Test';
-    const result = validatePlayCreate({ 
-      notes: xssInput 
+    const result = validatePlayCreate({
+      notes: xssInput,
     });
-    expect(result.notes).toBe('Test');
+    expect(result.notes).toBe("Test");
   });
 });
 
 // tests/security/rate-limiting.test.ts
-describe('Rate Limiting', () => {
-  test('allows 10 creates per minute', async () => {
+describe("Rate Limiting", () => {
+  test("allows 10 creates per minute", async () => {
     for (let i = 0; i < 10; i++) {
       await SecurePlaysService.createPlay(validPlayData);
     }
     // 11th should fail
-    await expect(
-      SecurePlaysService.createPlay(validPlayData)
-    ).rejects.toThrow('Rate limit');
+    await expect(SecurePlaysService.createPlay(validPlayData)).rejects.toThrow(
+      "Rate limit"
+    );
   });
 });
 
 // tests/security/rls.test.ts
-describe('RLS Policies', () => {
-  test('coaches can create plays', async () => {
+describe("RLS Policies", () => {
+  test("coaches can create plays", async () => {
     const coach = await createTestCoach();
-    await expect(
-      createPlayAs(coach, validPlayData)
-    ).resolves.toBeTruthy();
+    await expect(createPlayAs(coach, validPlayData)).resolves.toBeTruthy();
   });
-  
-  test('players cannot create plays', async () => {
+
+  test("players cannot create plays", async () => {
     const player = await createTestPlayer();
-    await expect(
-      createPlayAs(player, validPlayData)
-    ).rejects.toThrow('policy');
+    await expect(createPlayAs(player, validPlayData)).rejects.toThrow("policy");
   });
 });
 ```
 
 **Test Coverage:**
+
 - Input validation tests (20+ cases)
 - Rate limiting tests (10+ cases)
 - RLS policy tests (15+ cases)
@@ -331,6 +343,7 @@ describe('RLS Policies', () => {
 ---
 
 #### Task 8: Session Management (+0.1 points)
+
 **Current:** Sessions never expire (client-side)  
 **Target:** Proper session expiry, refresh
 
@@ -338,28 +351,30 @@ describe('RLS Policies', () => {
 // src/services/sessionManager.ts
 export class SessionManager {
   private static CHECK_INTERVAL = 60000; // 1 minute
-  
+
   static async checkSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       // Redirect to login
-      window.location.href = '/login?reason=session_expired';
+      window.location.href = "/login?reason=session_expired";
       return;
     }
-    
+
     // Check if session expires soon (< 5 minutes)
     const expiresAt = new Date(session.expires_at * 1000);
     const now = new Date();
     const minutesUntilExpiry = (expiresAt - now) / 60000;
-    
+
     if (minutesUntilExpiry < 5) {
       // Refresh session
       await supabase.auth.refreshSession();
-      toast.info('Session refreshed');
+      toast.info("Session refreshed");
     }
   }
-  
+
   static startMonitoring() {
     setInterval(this.checkSession, this.CHECK_INTERVAL);
   }
@@ -372,6 +387,7 @@ useEffect(() => {
 ```
 
 **Features:**
+
 - Automatic session refresh
 - Session expiry warnings
 - Graceful logout on expiry
@@ -381,10 +397,12 @@ useEffect(() => {
 ---
 
 #### Task 9: Penetration Testing (+0.1 points)
+
 **Current:** No security testing  
 **Target:** Professional pen test
 
 **Tests to Run:**
+
 1. **SQL Injection**
    - Try malicious input in all forms
    - Test query parameters
@@ -410,6 +428,7 @@ useEffect(() => {
    - Test with different IPs
 
 **Tools:**
+
 - OWASP ZAP (automated scanner)
 - Burp Suite (manual testing)
 - SQLMap (SQL injection testing)
@@ -421,6 +440,7 @@ useEffect(() => {
 ### Phase 5: Bulletproof (10/10) - **1 week**
 
 #### Task 10: Security Hardening Checklist
+
 - ✅ HTTPS enforced (already done via Netlify)
 - ✅ HSTS headers (Strict-Transport-Security)
 - ✅ Secure cookies (httpOnly, secure, sameSite)
@@ -447,6 +467,7 @@ useEffect(() => {
 ### Advanced Features (11/10+)
 
 #### 1. AI-Powered Threat Detection
+
 ```typescript
 // Detect anomalous patterns
 - 10 play creates in 10 seconds → Suspicious
@@ -456,6 +477,7 @@ useEffect(() => {
 ```
 
 #### 2. Blockchain Audit Trail
+
 ```typescript
 // Immutable audit log
 - Store audit hashes on blockchain
@@ -464,6 +486,7 @@ useEffect(() => {
 ```
 
 #### 3. Zero-Trust Architecture
+
 ```typescript
 // Verify every request
 - No implicit trust
@@ -473,6 +496,7 @@ useEffect(() => {
 ```
 
 #### 4. Advanced Rate Limiting
+
 ```typescript
 // Smart rate limiting
 - Per-user quotas
@@ -483,6 +507,7 @@ useEffect(() => {
 ```
 
 #### 5. Security Chaos Engineering
+
 ```typescript
 // Test resilience
 - Random security failures
@@ -496,47 +521,52 @@ useEffect(() => {
 ## 📊 Security Score Breakdown
 
 ### Current (8.4/10)
-| Category | Score | Status |
-|----------|-------|--------|
-| Database Security | 2.0/2.0 | ✅ Complete |
-| Input Validation | 1.8/2.0 | ✅ Good |
-| Rate Limiting | 1.5/2.0 | ⚠️ Missing UI feedback |
-| Error Handling | 1.5/2.0 | ✅ Good |
-| Authentication | 1.0/1.0 | ✅ Complete |
-| Monitoring | 0.6/1.0 | ⚠️ In-memory only |
+
+| Category          | Score   | Status                 |
+| ----------------- | ------- | ---------------------- |
+| Database Security | 2.0/2.0 | ✅ Complete            |
+| Input Validation  | 1.8/2.0 | ✅ Good                |
+| Rate Limiting     | 1.5/2.0 | ⚠️ Missing UI feedback |
+| Error Handling    | 1.5/2.0 | ✅ Good                |
+| Authentication    | 1.0/1.0 | ✅ Complete            |
+| Monitoring        | 0.6/1.0 | ⚠️ In-memory only      |
 
 ### Target (10/10)
-| Category | Score | Required |
-|----------|-------|----------|
-| Database Security | 2.0/2.0 | ✅ RLS policies |
-| Input Validation | 2.0/2.0 | ✅ Validation + CSP |
-| Rate Limiting | 2.0/2.0 | ✅ Limits + UI feedback |
-| Error Handling | 2.0/2.0 | ✅ Boundaries + logging |
-| Authentication | 1.0/1.0 | ✅ Auth + sessions |
-| Monitoring | 1.0/1.0 | ✅ Persistent + alerts |
+
+| Category          | Score   | Required                |
+| ----------------- | ------- | ----------------------- |
+| Database Security | 2.0/2.0 | ✅ RLS policies         |
+| Input Validation  | 2.0/2.0 | ✅ Validation + CSP     |
+| Rate Limiting     | 2.0/2.0 | ✅ Limits + UI feedback |
+| Error Handling    | 2.0/2.0 | ✅ Boundaries + logging |
+| Authentication    | 1.0/1.0 | ✅ Auth + sessions      |
+| Monitoring        | 1.0/1.0 | ✅ Persistent + alerts  |
 
 ---
 
 ## ⏱️ Timeline Summary
 
 ### Phase 3: Monitoring & Feedback (9.2/10)
+
 - Task 1: Persistent logging - **1 hour**
 - Task 2: Real-time alerts - **45 min**
 - Task 3: Rate limit UI - **30 min**
 - Task 4: Security dashboard - **2 hours**
-**Total: 4.25 hours**
+  **Total: 4.25 hours**
 
 ### Phase 4: Advanced Security (9.6/10)
+
 - Task 5: CSP headers - **1 hour**
 - Task 6: Audit logging - **2 hours**
 - Task 7: Automated tests - **1 day**
 - Task 8: Session management - **1 hour**
 - Task 9: Pen testing - **2 days**
-**Total: 3-4 days**
+  **Total: 3-4 days**
 
 ### Phase 5: Bulletproof (10/10)
+
 - Task 10: Security hardening - **3 days**
-**Total: 3 days**
+  **Total: 3 days**
 
 ### **Grand Total: ~1-2 weeks**
 
@@ -545,21 +575,25 @@ useEffect(() => {
 ## 🎯 Recommended Priority Order
 
 ### Must-Have (Critical - Do Next)
+
 1. ✅ Persistent security logging (events lost on reload)
 2. ✅ Rate limit UI feedback (user experience)
 3. ✅ Security dashboard (visibility)
 
 ### Should-Have (High Priority - This Week)
+
 4. ✅ Real-time alerts (incident response)
 5. ✅ Session management (security hygiene)
 6. ✅ CSP headers (defense in depth)
 
 ### Nice-to-Have (Medium Priority - Next Sprint)
+
 7. ✅ Audit logging (compliance)
 8. ✅ Automated tests (continuous security)
 9. ✅ Pen testing (validation)
 
 ### Future (Low Priority - Roadmap)
+
 10. ⏳ Security hardening checklist
 11. ⏳ AI threat detection
 12. ⏳ Advanced features

@@ -10,24 +10,29 @@ This will cause a hydration error.
 ```
 
 ### The Problem
+
 ```tsx
 // ❌ WRONG - Buttons nested inside another button
-<motion.button onClick={onEdit}>  {/* Edit button */}
+<motion.button onClick={onEdit}>
+  {" "}
+  {/* Edit button */}
   <Icon />
-  
-  <button onClick={onToggleFavorite}>  {/* Star button - NESTED! */}
+  <button onClick={onToggleFavorite}>
+    {" "}
+    {/* Star button - NESTED! */}
     <Icon name="star" />
   </button>
-  
   <div>Confidence badge</div>
-  
-  <button onClick={onCreateDiagram}>  {/* Diagram button - NESTED! */}
+  <button onClick={onCreateDiagram}>
+    {" "}
+    {/* Diagram button - NESTED! */}
     <Icon name="image" />
   </button>
 </motion.button>
 ```
 
 **Why this is invalid:**
+
 - HTML spec forbids `<button>` inside another `<button>`
 - Causes React hydration mismatch
 - Unpredictable click behavior
@@ -63,6 +68,7 @@ This will cause a hydration error.
 ### File: `src/components/playbook/play-card/PlayCardTileHeader.tsx`
 
 **Changed Structure:**
+
 ```tsx
 <div className="relative w-full max-w-80 mx-auto overflow-visible">
   {/* Selection checkbox (if enabled) */}
@@ -119,6 +125,7 @@ This will cause a hydration error.
 ## 🎯 Key Changes
 
 ### 1. Edit Button (motion.button)
+
 **Before:** Contained star button, confidence badge, and diagram button  
 **After:** Only contains the play type icon
 
@@ -130,6 +137,7 @@ This will cause a hydration error.
 ```
 
 ### 2. Star Button
+
 **Before:** Nested inside edit button  
 **After:** Sibling of edit button with proper positioning
 
@@ -145,6 +153,7 @@ This will cause a hydration error.
 ```
 
 ### 3. Diagram Button
+
 **Before:** Nested inside edit button  
 **After:** Sibling of edit button with proper positioning
 
@@ -177,6 +186,7 @@ The visual appearance remains **exactly the same**:
 ```
 
 **How it works:**
+
 - All buttons use `position: absolute`
 - Parent div uses `position: relative`
 - Click handlers use `e.stopPropagation()` to prevent event bubbling
@@ -187,6 +197,7 @@ The visual appearance remains **exactly the same**:
 ## 🧪 Testing
 
 ### Before Fix
+
 ```
 ✗ Console error: "<button> cannot contain a nested <button>"
 ✗ React hydration warning
@@ -195,6 +206,7 @@ The visual appearance remains **exactly the same**:
 ```
 
 ### After Fix
+
 ```
 ✓ No console errors
 ✓ Clean React hydration
@@ -230,6 +242,7 @@ Each button properly handles events:
 ```
 
 **Why `stopPropagation()`?**
+
 - Prevents click from bubbling to parent
 - Without it, clicking star/diagram would also trigger edit
 - Each button handles its own action independently
@@ -239,18 +252,22 @@ Each button properly handles events:
 ## 📊 Impact
 
 ### HTML Validity
+
 - ✅ **Before:** Invalid HTML (nested buttons)
 - ✅ **After:** Valid HTML (sibling buttons)
 
 ### Accessibility
+
 - ✅ **Before:** Screen readers confused by nested buttons
 - ✅ **After:** Clear button hierarchy
 
 ### Performance
+
 - ✅ **Before:** React hydration mismatch (re-render)
 - ✅ **After:** Clean hydration (no re-render)
 
 ### User Experience
+
 - ✅ **Before:** Unpredictable clicks
 - ✅ **After:** Reliable click targets
 
@@ -281,6 +298,7 @@ Each button properly handles events:
 ## 📁 Files Changed
 
 ### `src/components/playbook/play-card/PlayCardTileHeader.tsx`
+
 - **Lines 88-169:** Restructured button hierarchy
 - **Removed:** Nested button children
 - **Added:** Sibling button positioning
@@ -301,6 +319,7 @@ Each button properly handles events:
 ## 🚀 Next Steps
 
 1. **Start dev server**
+
    ```bash
    npm run dev
    ```

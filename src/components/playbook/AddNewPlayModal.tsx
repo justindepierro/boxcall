@@ -13,7 +13,10 @@ import {
 import { POSITION_OPTIONS } from "../../utils/localPlayFlags";
 import { usePlayFormState } from "./AddNewPlayModal/usePlayFormState";
 import { usePlaySuggestions } from "./AddNewPlayModal/usePlaySuggestions";
-import { useRateLimitFeedback, formatCountdown } from "../../hooks/useRateLimitFeedback";
+import {
+  useRateLimitFeedback,
+  formatCountdown,
+} from "../../hooks/useRateLimitFeedback";
 import {
   FormationSection,
   PlayNameSection,
@@ -52,7 +55,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   } = usePlaySuggestions();
 
   // Rate limit feedback
-  const rateLimitFeedback = useRateLimitFeedback('play-create', 10);
+  const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
 
   if (!isOpen) return null;
 
@@ -127,14 +130,17 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       onClose();
     } catch (error) {
       console.error("Failed to create play:", error);
-      
+
       // Check if it's a validation error
-      if (error && typeof error === 'object' && 'issues' in error) {
+      if (error && typeof error === "object" && "issues" in error) {
         const issues = (error as { issues: Array<{ message: string }> }).issues;
-        setErrorMessage(issues.map(i => i.message).join(', '));
+        setErrorMessage(issues.map((i) => i.message).join(", "));
       } else if (error instanceof Error) {
         // Check for rate limit errors
-        if (error.message.includes('Rate limit') || error.message.includes('too quickly')) {
+        if (
+          error.message.includes("Rate limit") ||
+          error.message.includes("too quickly")
+        ) {
           setErrorMessage(error.message);
         } else {
           setErrorMessage("Failed to create play. Please try again.");
@@ -234,9 +240,15 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {/* Error Message */}
         {errorMessage && (
           <div className="bg-danger-subtle border border-danger-default rounded-lg p-spacing-md flex items-start gap-spacing-sm">
-            <Icon name="alert-triangle" className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5" />
+            <Icon
+              name="alert-triangle"
+              className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5"
+            />
             <div className="flex-1">
-              <Typography variant="body-sm" className="text-danger-default font-medium">
+              <Typography
+                variant="body-sm"
+                className="text-danger-default font-medium"
+              >
                 {errorMessage}
               </Typography>
             </div>
@@ -255,8 +267,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <div className="bg-warning-subtle border border-warning-default rounded-lg p-spacing-md flex items-center gap-spacing-sm">
             <Icon name="clock" className="h-5 w-5 text-warning-default" />
             <div className="flex-1">
-              <Typography variant="body-sm" className="text-warning-default font-medium">
-                {rateLimitFeedback.remaining} play creation{rateLimitFeedback.remaining === 1 ? '' : 's'} remaining this minute
+              <Typography
+                variant="body-sm"
+                className="text-warning-default font-medium"
+              >
+                {rateLimitFeedback.remaining} play creation
+                {rateLimitFeedback.remaining === 1 ? "" : "s"} remaining this
+                minute
               </Typography>
             </div>
           </div>
@@ -265,10 +282,18 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {/* Rate Limit Exceeded */}
         {!existingPlay && rateLimitFeedback.isLimited && (
           <div className="bg-danger-subtle border border-danger-default rounded-lg p-spacing-md flex items-center gap-spacing-sm">
-            <Icon name="alert-triangle" className="h-5 w-5 text-danger-default" />
+            <Icon
+              name="alert-triangle"
+              className="h-5 w-5 text-danger-default"
+            />
             <div className="flex-1">
-              <Typography variant="body-sm" className="text-danger-default font-medium">
-                Rate limit reached. Please wait {formatCountdown(rateLimitFeedback.secondsUntilReset)} before creating more plays.
+              <Typography
+                variant="body-sm"
+                className="text-danger-default font-medium"
+              >
+                Rate limit reached. Please wait{" "}
+                {formatCountdown(rateLimitFeedback.secondsUntilReset)} before
+                creating more plays.
               </Typography>
             </div>
           </div>

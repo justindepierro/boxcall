@@ -56,8 +56,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   settings,
   onSave,
 }) => {
-  const [localSettings, setLocalSettings] = useState<PersonnelSettings>(settings);
-  const [activeSection, setActiveSection] = useState<"quick" | "advanced">("quick");
+  const [localSettings, setLocalSettings] =
+    useState<PersonnelSettings>(settings);
+  const [activeSection, setActiveSection] = useState<"quick" | "advanced">(
+    "quick"
+  );
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -84,7 +87,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
     setLocalSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const updateBulkSetting = <K extends keyof PersonnelSettings["bulkOperations"]>(
+  const updateBulkSetting = <
+    K extends keyof PersonnelSettings["bulkOperations"],
+  >(
     key: K,
     value: PersonnelSettings["bulkOperations"][K]
   ) => {
@@ -151,10 +156,19 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }`}
                   >
                     <Icon
-                      name={theme === "light" ? "sun" : theme === "dark" ? "moon" : "monitor"}
+                      name={
+                        theme === "light"
+                          ? "sun"
+                          : theme === "dark"
+                            ? "moon"
+                            : "monitor"
+                      }
                       className="w-5 h-5 mx-auto mb-1"
                     />
-                    <Typography variant="caption" className="capitalize text-center">
+                    <Typography
+                      variant="caption"
+                      className="capitalize text-center"
+                    >
                       {theme}
                     </Typography>
                   </button>
@@ -179,7 +193,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                         : "border-border-default hover:border-border-medium"
                     }`}
                   >
-                    <Typography variant="body-sm" className="capitalize text-center">
+                    <Typography
+                      variant="body-sm"
+                      className="capitalize text-center"
+                    >
                       {density}
                     </Typography>
                   </button>
@@ -246,27 +263,39 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
             {/* Bulk Operations */}
             <div className="space-y-4 p-4 rounded-xl bg-surface-secondary">
-              <Typography variant="label-md" className="flex items-center gap-2">
+              <Typography
+                variant="label-md"
+                className="flex items-center gap-2"
+              >
                 <Icon name="plus-circle" className="w-4 h-4" />
                 Bulk Operations
               </Typography>
 
               <div className="space-y-3">
                 <label className="flex items-center justify-between">
-                  <Typography variant="body-sm">Enable Bulk Formation Add</Typography>
+                  <Typography variant="body-sm">
+                    Enable Bulk Formation Add
+                  </Typography>
                   <input
                     type="checkbox"
-                    checked={localSettings.bulkOperations.enableBulkFormationAdd}
+                    checked={
+                      localSettings.bulkOperations.enableBulkFormationAdd
+                    }
                     onChange={(e) => {
                       triggerHapticFeedback("light");
-                      updateBulkSetting("enableBulkFormationAdd", e.target.checked);
+                      updateBulkSetting(
+                        "enableBulkFormationAdd",
+                        e.target.checked
+                      );
                     }}
                     className="w-12 h-6 rounded-full"
                   />
                 </label>
 
                 <label className="flex items-center justify-between">
-                  <Typography variant="body-sm">Enable Bulk Play Add</Typography>
+                  <Typography variant="body-sm">
+                    Enable Bulk Play Add
+                  </Typography>
                   <input
                     type="checkbox"
                     checked={localSettings.bulkOperations.enableBulkPlayAdd}
@@ -279,12 +308,19 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 </label>
 
                 <div className="space-y-1">
-                  <Typography variant="label-md">Default Formation Count</Typography>
+                  <Typography variant="label-md">
+                    Default Formation Count
+                  </Typography>
                   <Input
                     type="number"
-                    value={localSettings.bulkOperations.defaultBulkFormationCount}
+                    value={
+                      localSettings.bulkOperations.defaultBulkFormationCount
+                    }
                     onChange={(e) =>
-                      updateBulkSetting("defaultBulkFormationCount", parseInt(e.target.value) || 5)
+                      updateBulkSetting(
+                        "defaultBulkFormationCount",
+                        parseInt(e.target.value) || 5
+                      )
                     }
                     min={1}
                     max={20}
@@ -298,7 +334,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     type="number"
                     value={localSettings.bulkOperations.defaultBulkPlayCount}
                     onChange={(e) =>
-                      updateBulkSetting("defaultBulkPlayCount", parseInt(e.target.value) || 10)
+                      updateBulkSetting(
+                        "defaultBulkPlayCount",
+                        parseInt(e.target.value) || 10
+                      )
                     }
                     min={1}
                     max={50}
@@ -314,7 +353,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 <Typography variant="label-md">Personnel Grouping</Typography>
                 <Select
                   value={localSettings.personnelGrouping}
-                  onChange={(value) => updateSetting("personnelGrouping", value as string)}
+                  onChange={(value) =>
+                    updateSetting("personnelGrouping", value as string)
+                  }
                   options={[
                     { value: "11", label: "11 Personnel (1 RB, 1 TE, 3 WR)" },
                     { value: "12", label: "12 Personnel (1 RB, 2 TE, 2 WR)" },
@@ -329,7 +370,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 <Typography variant="label-md">Default Formation</Typography>
                 <Input
                   value={localSettings.defaultFormation}
-                  onChange={(e) => updateSetting("defaultFormation", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("defaultFormation", e.target.value)
+                  }
                   placeholder="I-Form, Spread, etc."
                   className="w-full"
                 />
@@ -351,11 +394,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
         >
           Cancel
         </Button>
-        <Button
-          onClick={handleSave}
-          variant="primary"
-          className="flex-1"
-        >
+        <Button onClick={handleSave} variant="primary" className="flex-1">
           Save Settings
         </Button>
       </div>
@@ -407,9 +446,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       title="Playbook Settings"
       size="lg"
     >
-      <div className="p-6">
-        {renderContent()}
-      </div>
+      <div className="p-6">{renderContent()}</div>
     </Modal>
   );
 };

@@ -67,9 +67,11 @@ const PlaybookSettingsModal = lazy(() =>
   }))
 );
 const PersonnelConfigurationModal = lazy(() =>
-  import("../components/playbook/PersonnelConfigurationModal").then((module) => ({
-    default: module.PersonnelConfigurationModal,
-  }))
+  import("../components/playbook/PersonnelConfigurationModal").then(
+    (module) => ({
+      default: module.PersonnelConfigurationModal,
+    })
+  )
 );
 const KeyboardShortcutsGuide = lazy(() =>
   import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
@@ -711,7 +713,10 @@ export default function PlaybookPage() {
                 <ErrorBoundary
                   fallback={
                     <div className="p-spacing-lg text-center">
-                      <Typography variant="body-md" className="text-text-secondary">
+                      <Typography
+                        variant="body-md"
+                        className="text-text-secondary"
+                      >
                         Failed to load plays. Please refresh the page.
                       </Typography>
                     </div>
@@ -857,7 +862,10 @@ export default function PlaybookPage() {
                     <ErrorBoundary
                       fallback={
                         <div className="p-spacing-lg text-center">
-                          <Typography variant="body-md" className="text-text-secondary">
+                          <Typography
+                            variant="body-md"
+                            className="text-text-secondary"
+                          >
                             Failed to load plays. Please refresh the page.
                           </Typography>
                         </div>
@@ -987,13 +995,18 @@ export default function PlaybookPage() {
                   <Typography variant="headline-md" className="mb-spacing-md">
                     Error Loading Modal
                   </Typography>
-                  <Typography variant="body-md" className="text-text-secondary mb-spacing-lg">
+                  <Typography
+                    variant="body-md"
+                    className="text-text-secondary mb-spacing-lg"
+                  >
                     Failed to load the play editor. Please try again.
                   </Typography>
-                  <Button onClick={() => {
-                    setShowAddNewPlayModal(false);
-                    setEditingPlay(null);
-                  }}>
+                  <Button
+                    onClick={() => {
+                      setShowAddNewPlayModal(false);
+                      setEditingPlay(null);
+                    }}
+                  >
                     Close
                   </Button>
                 </div>
@@ -1025,7 +1038,8 @@ export default function PlaybookPage() {
                       );
                     } else {
                       // Create new play
-                      resultPlay = await SecurePlaysService.createPlay(playData);
+                      resultPlay =
+                        await SecurePlaysService.createPlay(playData);
                       toast.success(
                         `Play "${resultPlay.play_name}" created successfully!`
                       );
@@ -1034,55 +1048,55 @@ export default function PlaybookPage() {
                     // Refresh the playbook data
                     dispatch({ type: "INCREMENT_REFRESH" });
 
-                  setShowAddNewPlayModal(false);
-                  setEditingPlay(null);
-                } catch (error) {
-                  logError("Failed to process play:", error);
+                    setShowAddNewPlayModal(false);
+                    setEditingPlay(null);
+                  } catch (error) {
+                    logError("Failed to process play:", error);
 
-                  // Handle specific error types
-                  if (error instanceof Error) {
-                    if (error.message.includes("Duplicate play")) {
-                      toast.error(
-                        "Duplicate play detected",
-                        "A play with this name and formation already exists"
-                      );
-                    } else if (
-                      error.message.includes("User not authenticated")
-                    ) {
-                      toast.error(
-                        "Authentication required",
-                        "You must be logged in to modify plays"
-                      );
+                    // Handle specific error types
+                    if (error instanceof Error) {
+                      if (error.message.includes("Duplicate play")) {
+                        toast.error(
+                          "Duplicate play detected",
+                          "A play with this name and formation already exists"
+                        );
+                      } else if (
+                        error.message.includes("User not authenticated")
+                      ) {
+                        toast.error(
+                          "Authentication required",
+                          "You must be logged in to modify plays"
+                        );
+                      } else {
+                        toast.error("Failed to process play", error.message);
+                      }
+                    } else if (typeof error === "object" && error !== null) {
+                      // Check for PostgREST schema cache errors
+                      const err = error as { code?: string; message?: string };
+                      if (
+                        err.code === "PGRST204" ||
+                        err.message?.includes("schema cache")
+                      ) {
+                        toast.error(
+                          "Database schema cache error",
+                          "Please reload the page. If the issue persists, contact support."
+                        );
+                        logError(
+                          "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
+                        );
+                      } else {
+                        toast.error(
+                          "Failed to process play",
+                          err.message || "Please try again"
+                        );
+                      }
                     } else {
-                      toast.error("Failed to process play", error.message);
+                      toast.error("Failed to process play", "Please try again");
                     }
-                  } else if (typeof error === "object" && error !== null) {
-                    // Check for PostgREST schema cache errors
-                    const err = error as { code?: string; message?: string };
-                    if (
-                      err.code === "PGRST204" ||
-                      err.message?.includes("schema cache")
-                    ) {
-                      toast.error(
-                        "Database schema cache error",
-                        "Please reload the page. If the issue persists, contact support."
-                      );
-                      logError(
-                        "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
-                      );
-                    } else {
-                      toast.error(
-                        "Failed to process play",
-                        err.message || "Please try again"
-                      );
-                    }
-                  } else {
-                    toast.error("Failed to process play", "Please try again");
                   }
-                }
-              }}
-            />
-          </Suspense>
+                }}
+              />
+            </Suspense>
           </ErrorBoundary>
         )}
 

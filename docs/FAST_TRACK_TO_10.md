@@ -10,6 +10,7 @@
 ### Hour 1-2: Quick Wins (+0.6 points → 9.0/10)
 
 #### 1. Add CSP Headers (15 min) +0.1
+
 ```bash
 # netlify.toml
 [[headers]]
@@ -25,6 +26,7 @@
 ```
 
 #### 2. Add Rate Limit UI Feedback (30 min) +0.2
+
 ```typescript
 // In AddNewPlayModal.tsx, add at top:
 const { remaining } = useRateLimitFeedback('play-create');
@@ -39,6 +41,7 @@ const { remaining } = useRateLimitFeedback('play-create');
 ```
 
 #### 3. Improve Rate Limit Error Messages (15 min) +0.1
+
 ```typescript
 // In SecurePlaysService.ts
 catch (error) {
@@ -52,17 +55,20 @@ catch (error) {
 ```
 
 #### 4. Add Session Expiry Check (30 min) +0.1
+
 ```typescript
 // src/hooks/useSessionMonitor.ts
 export function useSessionMonitor() {
   useEffect(() => {
     const check = setInterval(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
-        window.location.href = '/login?reason=expired';
+        window.location.href = "/login?reason=expired";
       }
     }, 60000); // Check every minute
-    
+
     return () => clearInterval(check);
   }, []);
 }
@@ -72,18 +78,19 @@ useSessionMonitor();
 ```
 
 #### 5. Add Security Event Toast (15 min) +0.1
+
 ```typescript
 // In PlaybookPage.tsx, after SecurePlaysService calls:
 try {
   await SecurePlaysService.createPlay(data);
 } catch (error) {
-  if (error.message.includes('Rate limit')) {
+  if (error.message.includes("Rate limit")) {
     toast.error(error.message, {
       duration: 5000,
-      icon: '⏱️'
+      icon: "⏱️",
     });
-  } else if (error.message.includes('validation')) {
-    toast.error('Invalid play data', error.message);
+  } else if (error.message.includes("validation")) {
+    toast.error("Invalid play data", error.message);
   }
 }
 ```
@@ -95,6 +102,7 @@ try {
 ### Hour 3-4: Persistent Logging (+0.3 points → 9.3/10)
 
 #### 6. Create Security Events Table (30 min)
+
 ```sql
 -- database/migrations/add_security_events.sql
 CREATE TABLE IF NOT EXISTS security_events (
@@ -113,7 +121,7 @@ CREATE TABLE IF NOT EXISTS security_events (
   ip_address TEXT,
   user_agent TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  
+
   -- Index for fast queries
   INDEX idx_security_events_user_id ON security_events(user_id),
   INDEX idx_security_events_type ON security_events(event_type),
@@ -137,19 +145,20 @@ CREATE POLICY "Coaches can view security events" ON security_events
 CREATE OR REPLACE FUNCTION cleanup_old_security_events()
 RETURNS void AS $$
 BEGIN
-  DELETE FROM security_events 
+  DELETE FROM security_events
   WHERE created_at < NOW() - INTERVAL '90 days';
 END;
 $$ LANGUAGE plpgsql;
 ```
 
 #### 7. Update SecurePlaysService to Persist Events (1 hour)
+
 ```typescript
 // src/services/securePlaysService.ts
 private static async logSecurityEvent(event: SecurityEvent) {
   // Log to console (keep for debugging)
   this.securityEvents.push(event);
-  
+
   // Persist to database
   try {
     await supabase.from('security_events').insert({
@@ -185,6 +194,7 @@ private static async getClientIP(): Promise<string | null> {
 ### Hour 5-6: Security Dashboard (+0.2 points → 9.5/10)
 
 #### 8. Create Basic Security Dashboard (2 hours)
+
 ```typescript
 // src/pages/SecurityDashboard.tsx
 import { useState, useEffect } from 'react';
@@ -207,40 +217,40 @@ interface SecurityEvent {
 export const SecurityDashboard = () => {
   const [events, setEvents] = useState<SecurityEvent[]>([]);
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
-  
+
   useEffect(() => {
     loadEvents();
   }, [filter]);
-  
+
   const loadEvents = async () => {
     let query = supabase
       .from('security_events')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(100);
-    
+
     if (filter !== 'all') {
       query = query.eq('severity', filter);
     }
-    
+
     const { data, error } = await query;
     if (!error && data) {
       setEvents(data);
     }
   };
-  
+
   const stats = {
     total: events.length,
     high: events.filter(e => e.severity === 'high').length,
     medium: events.filter(e => e.severity === 'medium').length,
     low: events.filter(e => e.severity === 'low').length,
   };
-  
+
   return (
     <PageLayout variant="dashboard">
       <div className="space-y-6">
         <Typography variant="display-sm">Security Dashboard</Typography>
-        
+
         {/* Stats Cards */}
         <div className="grid grid-cols-4 gap-4">
           <Card>
@@ -260,7 +270,7 @@ export const SecurityDashboard = () => {
             <Typography variant="display-xs" className="text-success-default">{stats.low}</Typography>
           </Card>
         </div>
-        
+
         {/* Filter Tabs */}
         <div className="flex gap-2">
           {['all', 'high', 'medium', 'low'].map(f => (
@@ -268,8 +278,8 @@ export const SecurityDashboard = () => {
               key={f}
               onClick={() => setFilter(f as any)}
               className={`px-4 py-2 rounded-lg ${
-                filter === f 
-                  ? 'bg-primary-default text-white' 
+                filter === f
+                  ? 'bg-primary-default text-white'
                   : 'bg-surface-secondary'
               }`}
             >
@@ -277,7 +287,7 @@ export const SecurityDashboard = () => {
             </button>
           ))}
         </div>
-        
+
         {/* Events Table */}
         <Card>
           <table className="w-full">
@@ -334,28 +344,33 @@ export const SecurityDashboard = () => {
 ### Priority Tasks (Choose 3-4)
 
 #### A. Audit Logging (2 hours) +0.2
+
 - Database triggers for all mutations
 - Before/after values stored
 - Queryable audit trail
 
 #### B. Automated Security Tests (2 hours) +0.2
+
 - 20+ validation tests
 - 10+ rate limit tests
 - 10+ RLS tests
 - Run in CI/CD
 
 #### C. Advanced Session Management (1 hour) +0.1
+
 - Auto-refresh before expiry
 - Warn user at 5 min
 - Graceful logout
 
 #### D. Security Hardening Checklist (2 hours) +0.15
+
 - Review all headers
 - Check all endpoints
 - Verify all inputs
 - Document security policies
 
 #### E. Manual Penetration Testing (2 hours) +0.15
+
 - SQL injection attempts
 - XSS attempts
 - Rate limit bypass attempts
@@ -384,16 +399,19 @@ Hour 10-12:   10/10 🎯 [Hardening + Pen test]
 ## 🎮 Choose Your Path
 
 ### Path A: Speed Run (6 hours → 9.5/10)
+
 **Best for:** Quick wins, immediate improvement  
 **Tasks:** 1-8 from above  
 **Result:** Solid security, great UX
 
 ### Path B: Thorough (12 hours → 10/10)
+
 **Best for:** Complete security, production-ready  
 **Tasks:** All tasks (1-8 + A-E)  
 **Result:** Perfect score, bulletproof app
 
 ### Path C: Incremental (1 task/day → 10/10 in 2 weeks)
+
 **Best for:** Learning, understanding each piece  
 **Tasks:** One task per day with deep dive  
 **Result:** Deep security knowledge + perfect score
@@ -403,12 +421,14 @@ Hour 10-12:   10/10 🎯 [Hardening + Pen test]
 ## 🚀 Recommended: Start with Hour 1-2 (Quick Wins)
 
 **Why?**
+
 - Fastest ROI (0.6 points in < 2 hours)
 - Low risk, high impact
 - Immediate user experience improvements
 - Build momentum
 
 **Next Steps:**
+
 1. Add CSP headers → 15 min
 2. Add rate limit UI → 30 min
 3. Improve error messages → 15 min

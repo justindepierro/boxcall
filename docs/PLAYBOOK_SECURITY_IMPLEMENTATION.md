@@ -8,9 +8,11 @@
 ## 🎯 What Was Done
 
 ### 1. Security Audit ✅
+
 **File:** `docs/PLAYBOOK_SECURITY_AUDIT.md`
 
 Complete security analysis of:
+
 - Database RLS policies
 - Input validation gaps
 - Error handling
@@ -19,6 +21,7 @@ Complete security analysis of:
 - Telemetry requirements
 
 **Key Findings:**
+
 - ❌ Broken INSERT policy on plays table (missing WITH CHECK)
 - ❌ Duplicate SELECT policies
 - ⚠️ No input validation
@@ -28,9 +31,11 @@ Complete security analysis of:
 ---
 
 ### 2. RLS Policy Fixes ✅
+
 **File:** `database/migrations/fix_rls_policies.sql`
 
 **Changes:**
+
 1. Split broken `ALL` policy into separate INSERT/UPDATE/DELETE policies
 2. Added proper WITH CHECK clauses for INSERT operations
 3. Removed duplicate SELECT policy on playbooks table
@@ -39,6 +44,7 @@ Complete security analysis of:
 **SQL Script Ready:** Yes, ready to run in Supabase SQL Editor
 
 **Test Plan:**
+
 - Verify coaches can create plays
 - Verify coaches can update plays
 - Verify coaches can delete plays
@@ -48,9 +54,11 @@ Complete security analysis of:
 ---
 
 ### 3. Input Validation System ✅
+
 **File:** `src/validation/playValidation.ts`
 
 **Implemented:**
+
 - Zod schema for play creation (`PlayCreateSchema`)
 - Zod schema for play updates (`PlayUpdateSchema`)
 - Zod schema for bulk operations (`PlayBulkUpdateSchema`)
@@ -61,37 +69,40 @@ Complete security analysis of:
 - UUID validation for IDs
 
 **Validation Rules:**
+
 ```typescript
 // Play Name: 1-100 chars, alphanumeric + spaces/hyphens/periods/apostrophes
 play_name: z.string()
   .min(1, "Play name required")
   .max(100, "Play name too long")
-  .regex(/^[a-zA-Z0-9\s\-.']+$/)
+  .regex(/^[a-zA-Z0-9\s\-.']+$/);
 
 // Formation: 1-50 chars, alphanumeric + spaces/hyphens
 formation: z.string()
   .min(1, "Formation required")
   .max(50, "Formation name too long")
-  .regex(/^[a-zA-Z0-9\s-]+$/)
+  .regex(/^[a-zA-Z0-9\s-]+$/);
 
 // Notes: Max 5000 chars, HTML tags stripped
 notes: z.string()
   .max(5000, "Notes too long")
-  .transform(val => val.replace(/<[^>]*>/g, ""))
+  .transform((val) => val.replace(/<[^>]*>/g, ""));
 
 // Diagram: Max 22 players, max 100 routes
 diagram_data: z.object({
   players: z.array().max(22),
-  routes: z.array().max(100)
-})
+  routes: z.array().max(100),
+});
 ```
 
 ---
 
 ### 4. Rate Limiting System ✅
+
 **File:** `src/utils/rateLimiter.ts`
 
 **Implemented:**
+
 - `RateLimiter` class with in-memory storage
 - Automatic cleanup of expired entries
 - Configurable limits per action
@@ -100,6 +111,7 @@ diagram_data: z.object({
 - Rate limit error class with retry-after info
 
 **Rate Limits Configured:**
+
 ```typescript
 PLAY_CREATE: 10 per minute
 PLAY_UPDATE: 30 per minute
@@ -115,9 +127,11 @@ API_CALL: 100 per minute (general)
 ---
 
 ### 5. Secure Service Layer ✅
+
 **File:** `src/services/securePlaysService.ts`
 
 **Implemented:**
+
 - `SecurePlaysService` wrapper class
 - Input validation before all mutations
 - Rate limiting on create/update/delete
@@ -127,6 +141,7 @@ API_CALL: 100 per minute (general)
 - Safe operation methods with detailed errors
 
 **Security Events Tracked:**
+
 - `validation_error` - Invalid input attempts
 - `rate_limit` - Rate limit exceeded
 - `auth_failure` - Not authenticated
@@ -134,13 +149,14 @@ API_CALL: 100 per minute (general)
 - `suspicious_activity` - Unusual patterns
 
 **Usage:**
+
 ```typescript
 // OLD (unsafe):
-import { PlaysService } from './services/playsService';
+import { PlaysService } from "./services/playsService";
 await PlaysService.createPlay(data); // ❌ No validation/rate limiting
 
 // NEW (secure):
-import { SecurePlaysService } from './services/securePlaysService';
+import { SecurePlaysService } from "./services/securePlaysService";
 await SecurePlaysService.createPlay(data); // ✅ Validated + rate limited
 ```
 
@@ -149,6 +165,7 @@ await SecurePlaysService.createPlay(data); // ✅ Validated + rate limited
 ## 📋 Implementation Checklist
 
 ### ✅ Phase 1: Critical Security (COMPLETE)
+
 - [x] Security audit document
 - [x] RLS policy fix SQL script
 - [x] Input validation schemas
@@ -157,6 +174,7 @@ await SecurePlaysService.createPlay(data); // ✅ Validated + rate limited
 - [x] Security event tracking
 
 ### ⏳ Phase 2: Integration (NEXT)
+
 - [ ] Run RLS fix SQL in Supabase (5 min)
 - [ ] Update PlaybookPage to use SecurePlaysService
 - [ ] Update AddNewPlayModal to use SecurePlaysService
@@ -165,12 +183,14 @@ await SecurePlaysService.createPlay(data); // ✅ Validated + rate limited
 - [ ] Test rate limiting UX
 
 ### ⏳ Phase 3: Monitoring (SOON)
+
 - [ ] Add security events dashboard
 - [ ] Set up alerts for high-severity events
 - [ ] Add telemetry integration
 - [ ] Create security metrics tracking
 
 ### ⏳ Phase 4: Advanced Security (LATER)
+
 - [ ] Add CSP headers
 - [ ] Implement audit logging
 - [ ] Add automated RLS tests
@@ -193,6 +213,7 @@ await SecurePlaysService.createPlay(data); // ✅ Validated + rate limited
 Update all imports from `PlaysService` to `SecurePlaysService`:
 
 **Files to Update:**
+
 - `src/pages/PlaybookPage.tsx`
 - `src/components/playbook/AddNewPlayModal.tsx`
 - `src/components/playbook/PlayCard.tsx`
@@ -200,6 +221,7 @@ Update all imports from `PlaysService` to `SecurePlaysService`:
 - Any other files importing PlaysService
 
 **Find/Replace:**
+
 ```typescript
 // Find:
 import { PlaysService } from "@services";
@@ -219,7 +241,7 @@ Wrap critical components:
 import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 
 // Wrap PlayGrid
-<ErrorBoundary 
+<ErrorBoundary
   fallback={<PlayGridErrorState />}
   onError={(error) => console.error('[PlayGrid Error]', error)}
 >
@@ -239,6 +261,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 ### Step 4: Test Everything (1 hour)
 
 **Test Scenarios:**
+
 1. **Play Creation:**
    - Valid play creation (should work)
    - Invalid play name (should show validation error)
@@ -264,6 +287,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 ## 📊 Success Metrics
 
 ### Security Improvements:
+
 - **Before:** 0% input validation
 - **After:** 100% validation on all mutations
 - **Before:** No rate limiting
@@ -272,6 +296,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 - **After:** All security events tracked
 
 ### Expected Outcomes:
+
 - ✅ Zero SQL injection vulnerabilities
 - ✅ Zero XSS vulnerabilities
 - ✅ Abuse prevention via rate limiting
@@ -284,6 +309,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 ## 🔒 Security Score Improvement
 
 **Before:**
+
 - Database Security: 7/10
 - Input Validation: 2/10
 - Error Handling: 6/10
@@ -292,6 +318,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 - **Overall: 3.4/10** ⚠️
 
 **After Phase 1:**
+
 - Database Security: 9/10 (RLS policies fixed)
 - Input Validation: 9/10 (Zod schemas implemented)
 - Error Handling: 7/10 (error boundaries needed)
@@ -300,6 +327,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 - **Overall: 8.4/10** ✅
 
 **Target After Phase 2:**
+
 - Database Security: 10/10
 - Input Validation: 10/10
 - Error Handling: 9/10
@@ -312,6 +340,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 ## 📚 Documentation
 
 **Created:**
+
 1. `docs/PLAYBOOK_SECURITY_AUDIT.md` - Comprehensive security audit
 2. `database/migrations/fix_rls_policies.sql` - RLS policy fixes
 3. `src/validation/playValidation.ts` - Validation schemas
@@ -320,6 +349,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 6. `docs/PLAYBOOK_SECURITY_IMPLEMENTATION.md` - This file
 
 **All files are:**
+
 - ✅ Type-safe (TypeScript)
 - ✅ Well-documented (JSDoc comments)
 - ✅ Production-ready
@@ -354,6 +384,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 ## 🎉 Summary
 
 **Phase 1 is complete!** We've implemented:
+
 - ✅ Comprehensive security audit
 - ✅ Database RLS policy fixes
 - ✅ Input validation system
@@ -364,6 +395,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 **Next:** Run the database migration and integrate the secure service layer.
 
 **Timeline:**
+
 - Phase 1: ✅ Complete (took 2 hours)
 - Phase 2: ⏰ 1-2 hours
 - Phase 3: ⏰ 2-3 hours

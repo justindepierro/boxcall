@@ -27,10 +27,10 @@ import DevPanel from "./components/dev/DevPanel";
 function App() {
   const [showRQDevtools, setShowRQDevtools] = useState(false);
   const [showDevPanel, setShowDevPanel] = useState(false);
-  
+
   // Initialize theme system
   useTheme();
-  
+
   // Monitor session and auto-refresh
   useSessionMonitor();
 

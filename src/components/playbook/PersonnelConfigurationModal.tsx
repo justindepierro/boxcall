@@ -35,13 +35,11 @@ interface PersonnelConfigurationModalProps {
   onSave: (configurations: PersonnelConfiguration[]) => void;
 }
 
-export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalProps> = ({
-  isOpen,
-  onClose,
-  configurations,
-  onSave,
-}) => {
-  const [localConfigurations, setLocalConfigurations] = useState<PersonnelConfiguration[]>(configurations);
+export const PersonnelConfigurationModal: React.FC<
+  PersonnelConfigurationModalProps
+> = ({ isOpen, onClose, configurations, onSave }) => {
+  const [localConfigurations, setLocalConfigurations] =
+    useState<PersonnelConfiguration[]>(configurations);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -90,7 +88,9 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
 
   const updatePersonnelConfigName = (configId: string, name: string) => {
     setLocalConfigurations((prev) =>
-      prev.map((config) => (config.id === configId ? { ...config, name } : config))
+      prev.map((config) =>
+        config.id === configId ? { ...config, name } : config
+      )
     );
   };
 
@@ -102,7 +102,11 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
       .slice(0, 3);
   };
 
-  const updatePlayerLabel = (configId: string, playerId: string, label: string) => {
+  const updatePlayerLabel = (
+    configId: string,
+    playerId: string,
+    label: string
+  ) => {
     const normalized = normalizeLabel(label);
     setLocalConfigurations((prev) =>
       prev.map((config) =>
@@ -110,7 +114,9 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
           ? {
               ...config,
               players: config.players.map((player) =>
-                player.id === playerId ? { ...player, label: normalized } : player
+                player.id === playerId
+                  ? { ...player, label: normalized }
+                  : player
               ),
             }
           : config
@@ -118,7 +124,11 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
     );
   };
 
-  const updatePlayerPosition = (configId: string, playerId: string, position: PlayerPosition) => {
+  const updatePlayerPosition = (
+    configId: string,
+    playerId: string,
+    position: PlayerPosition
+  ) => {
     setLocalConfigurations((prev) =>
       prev.map((config) =>
         config.id === configId
@@ -141,7 +151,9 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
           ? {
               ...config,
               line: config.line.map((linePos) =>
-                linePos.id === lineId ? { ...linePos, label: normalized } : linePos
+                linePos.id === lineId
+                  ? { ...linePos, label: normalized }
+                  : linePos
               ),
             }
           : config
@@ -185,7 +197,9 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
             <div className="flex items-center justify-between mb-4">
               <Input
                 value={config.name}
-                onChange={(e) => updatePersonnelConfigName(config.id, e.target.value)}
+                onChange={(e) =>
+                  updatePersonnelConfigName(config.id, e.target.value)
+                }
                 placeholder="11 Personnel"
                 className="flex-1 mr-2 font-medium"
               />
@@ -206,16 +220,21 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Left Column: Skill Positions */}
               <div className="space-y-3">
-                <Typography variant="label-md" className="flex items-center gap-2">
+                <Typography
+                  variant="label-md"
+                  className="flex items-center gap-2"
+                >
                   <Icon name="users" className="w-4 h-4 text-brand-jade" />
                   Skill Positions
                 </Typography>
-                
+
                 {config.players.map((player) => (
                   <div key={player.id} className="flex items-center gap-2">
                     <Input
                       value={player.label}
-                      onChange={(e) => updatePlayerLabel(config.id, player.id, e.target.value)}
+                      onChange={(e) =>
+                        updatePlayerLabel(config.id, player.id, e.target.value)
+                      }
                       placeholder="QB"
                       maxLength={3}
                       className="w-20 h-11 text-center font-mono font-bold uppercase"
@@ -223,7 +242,13 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
                     <span className="text-text-secondary">—</span>
                     <Select
                       value={player.position}
-                      onChange={(value) => updatePlayerPosition(config.id, player.id, value as PlayerPosition)}
+                      onChange={(value) =>
+                        updatePlayerPosition(
+                          config.id,
+                          player.id,
+                          value as PlayerPosition
+                        )
+                      }
                       options={[
                         { value: "QB", label: "Quarterback (QB)" },
                         { value: "RB", label: "Running Back (RB)" },
@@ -238,11 +263,14 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
 
               {/* Right Column: Offensive Line */}
               <div className="space-y-3">
-                <Typography variant="label-md" className="flex items-center gap-2">
+                <Typography
+                  variant="label-md"
+                  className="flex items-center gap-2"
+                >
                   <Icon name="shield" className="w-4 h-4 text-brand-jade" />
                   Offensive Line
                 </Typography>
-                
+
                 {config.line.map((linePos, index) => (
                   <div key={linePos.id} className="flex items-center gap-2">
                     <span className="text-xs text-text-secondary w-8">
@@ -250,15 +278,21 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
                     </span>
                     <Input
                       value={linePos.label}
-                      onChange={(e) => updateLineLabel(config.id, linePos.id, e.target.value)}
+                      onChange={(e) =>
+                        updateLineLabel(config.id, linePos.id, e.target.value)
+                      }
                       placeholder={["LT", "LG", "C", "RG", "RT"][index]}
                       maxLength={3}
                       className="flex-1 h-11 text-center font-mono font-bold uppercase"
                     />
                   </div>
                 ))}
-                
-                <Typography variant="caption" color="muted" className="text-xs mt-2">
+
+                <Typography
+                  variant="caption"
+                  color="muted"
+                  className="text-xs mt-2"
+                >
                   Default: LT, LG, C, RG, RT (customize with up to 3 characters)
                 </Typography>
               </div>
@@ -269,7 +303,10 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
         {/* Empty State */}
         {localConfigurations.length === 0 && (
           <div className="text-center py-12 px-4 rounded-xl border-2 border-dashed border-border-default">
-            <Icon name="users" className="w-12 h-12 mx-auto mb-3 text-text-tertiary" />
+            <Icon
+              name="users"
+              className="w-12 h-12 mx-auto mb-3 text-text-tertiary"
+            />
             <Typography variant="body-md" color="muted" className="mb-2">
               No personnel configurations yet
             </Typography>
@@ -303,11 +340,7 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
         >
           Cancel
         </Button>
-        <Button
-          onClick={handleSave}
-          variant="primary"
-          className="flex-1 h-11"
-        >
+        <Button onClick={handleSave} variant="primary" className="flex-1 h-11">
           Save Personnel
         </Button>
       </div>
@@ -359,9 +392,7 @@ export const PersonnelConfigurationModal: React.FC<PersonnelConfigurationModalPr
       title="Personnel Configurations"
       size="lg"
     >
-      <div className="p-6">
-        {renderContent()}
-      </div>
+      <div className="p-6">{renderContent()}</div>
     </Modal>
   );
 };

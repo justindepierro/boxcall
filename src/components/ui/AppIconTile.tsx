@@ -26,7 +26,9 @@ export const AppIconTile = memo<AppIconTileProps>(
     className = "",
   }) => {
     return (
-      <div className={`relative p-2 sm:p-3 md:p-4 overflow-visible ${className}`}>
+      <div
+        className={`relative p-2 sm:p-3 md:p-4 overflow-visible ${className}`}
+      >
         <button
           type="button"
           onClick={onOpen}

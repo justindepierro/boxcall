@@ -9,18 +9,22 @@ Your app currently **cannot create plays** due to a broken RLS policy. This migr
 ## Step-by-Step Instructions
 
 ### 1. Open Supabase Dashboard
+
 1. Go to [https://supabase.com/dashboard](https://supabase.com/dashboard)
 2. Select your project
 3. Click **SQL Editor** in the left sidebar
 
 ### 2. Run the Migration
+
 1. Click **New Query** button
 2. Copy the **entire contents** of `database/migrations/fix_rls_policies.sql`
 3. Paste into the SQL editor
 4. Click **Run** (or press Cmd+Enter)
 
 ### 3. Verify Success
+
 You should see output like:
+
 ```
 DROP POLICY
 CREATE POLICY (Coaches can insert plays)
@@ -30,11 +34,13 @@ DROP POLICY (duplicate removed)
 ```
 
 ### 4. Check Policies
+
 Run this verification query:
+
 ```sql
 -- Should show 4 policies: SELECT, INSERT, UPDATE, DELETE
-SELECT policyname, cmd 
-FROM pg_policies 
+SELECT policyname, cmd
+FROM pg_policies
 WHERE tablename = 'plays'
 ORDER BY cmd;
 ```
@@ -48,10 +54,12 @@ Expected output:
 | Coaches can update plays | UPDATE |
 
 ### 5. Test Play Creation
+
 Run this test as a coach user:
+
 ```sql
 -- Replace 'your-playbook-id' with an actual playbook ID from your account
-INSERT INTO plays (playbook_id, play_name, formation, p_type) 
+INSERT INTO plays (playbook_id, play_name, formation, p_type)
 VALUES ('your-playbook-id', 'Test Security Play', 'I-Form', 'run')
 RETURNING id, play_name;
 ```
@@ -64,19 +72,24 @@ RETURNING id, play_name;
 ## Troubleshooting
 
 ### "permission denied for table plays"
+
 - **Cause:** Not authenticated or no RLS policy allows access
 - **Fix:** Make sure you're logged in with a coach account
 
 ### "violates row-level security policy"
+
 - **Cause:** User is not a coach or not in the team
 - **Fix:** Check `team_members` table for user's role
 
 ### "relation 'plays' does not exist"
+
 - **Cause:** Wrong database or schema
 - **Fix:** Verify you're in the correct Supabase project
 
 ### Rollback (if needed)
+
 If something goes wrong, you can rollback:
+
 ```sql
 -- Recreate the old broken policy
 DROP POLICY IF EXISTS "Coaches can insert plays" ON plays;
@@ -120,6 +133,7 @@ CREATE POLICY "Team coaches can manage plays" ON plays
 ## After Migration
 
 Once complete, you can:
+
 - ✅ Create plays (INSERT will work)
 - ✅ Update plays (UPDATE will work)
 - ✅ Delete plays (DELETE will work)

@@ -19,6 +19,7 @@ Failed to load resource: 400
 Two incorrect database queries in `src/hooks/useDashboardStats.ts`:
 
 ### Problem 1: Wrong column name for plays
+
 ```typescript
 // ❌ WRONG - plays table doesn't have team_id
 .from("plays")
@@ -26,9 +27,11 @@ Two incorrect database queries in `src/hooks/useDashboardStats.ts`:
 ```
 
 **Reality:** The `plays` table has `playbook_id`, not `team_id`
+
 - plays → playbook_id → playbooks → team_id
 
 ### Problem 2: Wrong table name for posts
+
 ```typescript
 // ❌ WRONG - table is called team_posts, not posts
 .from("posts")
@@ -42,6 +45,7 @@ Two incorrect database queries in `src/hooks/useDashboardStats.ts`:
 ## ✅ Solution
 
 ### Fix 1: Query plays via playbooks join
+
 ```typescript
 // ✅ CORRECT - Get playbook IDs first, then query plays
 const { data: playbooks } = await supabase
@@ -49,7 +53,7 @@ const { data: playbooks } = await supabase
   .select("id")
   .in("team_id", teamIds);
 
-const playbookIds = playbooks.map(pb => pb.id);
+const playbookIds = playbooks.map((pb) => pb.id);
 
 const { count } = await supabase
   .from("plays")
@@ -58,11 +62,13 @@ const { count } = await supabase
 ```
 
 **Why this works:**
+
 1. First query gets all playbook IDs for the user's teams
 2. Second query counts plays in those playbooks
 3. Respects the database schema: teams → playbooks → plays
 
 ### Fix 2: Use correct table name
+
 ```typescript
 // ✅ CORRECT - Use team_posts table
 .from("team_posts")
@@ -74,6 +80,7 @@ const { count } = await supabase
 ## 📊 Schema Reference
 
 ### Plays Table Structure
+
 ```sql
 CREATE TABLE plays (
   id UUID PRIMARY KEY,
@@ -85,6 +92,7 @@ CREATE TABLE plays (
 ```
 
 ### Playbooks Table Structure
+
 ```sql
 CREATE TABLE playbooks (
   id UUID PRIMARY KEY,
@@ -95,6 +103,7 @@ CREATE TABLE playbooks (
 ```
 
 ### Team Posts Table Structure
+
 ```sql
 CREATE TABLE team_posts ( -- ← Correct table name
   id UUID PRIMARY KEY,
@@ -110,6 +119,7 @@ CREATE TABLE team_posts ( -- ← Correct table name
 ## 🧪 Testing
 
 ### Before Fix
+
 ```
 ✗ GET /rest/v1/plays?team_id=in.(...) → 400 Bad Request
 ✗ GET /rest/v1/posts?team_id=in.(...) → 404 Not Found
@@ -118,6 +128,7 @@ CREATE TABLE team_posts ( -- ← Correct table name
 ```
 
 ### After Fix
+
 ```
 ✓ GET /rest/v1/playbooks?team_id=in.(...) → 200 OK
 ✓ GET /rest/v1/plays?playbook_id=in.(...) → 200 OK
@@ -133,6 +144,7 @@ CREATE TABLE team_posts ( -- ← Correct table name
 ### `src/hooks/useDashboardStats.ts` (3 changes)
 
 **Change 1: Fixed `fetchTotalPlays` function (lines 110-130)**
+
 ```typescript
 // Added playbooks query
 const { data: playbooks, error: playbooksError } = await supabase
@@ -141,7 +153,10 @@ const { data: playbooks, error: playbooksError } = await supabase
   .in("team_id", teamIds);
 
 if (playbooksError || !playbooks || playbooks.length === 0) {
-  console.warn("[fetchTotalPlays] Error fetching playbooks:", playbooksError?.message);
+  console.warn(
+    "[fetchTotalPlays] Error fetching playbooks:",
+    playbooksError?.message
+  );
   return 0;
 }
 
@@ -155,6 +170,7 @@ const { count, error: playsError } = await supabase
 ```
 
 **Change 2: Fixed `fetchWeeklyActivity` function (line 159)**
+
 ```typescript
 // Changed table name from "posts" to "team_posts"
 const { count: postsCount, error: postsError } = await supabase
@@ -169,12 +185,14 @@ const { count: postsCount, error: postsError } = await supabase
 ## 🎯 Impact
 
 ### Before
+
 - Dashboard broken (400/404 errors)
 - Users see incorrect stats (0 plays, 0 posts)
 - Console flooded with errors
 - Poor user experience
 
 ### After
+
 - ✅ Dashboard loads correctly
 - ✅ Accurate play counts displayed
 - ✅ Accurate post counts displayed
@@ -188,6 +206,7 @@ const { count: postsCount, error: postsError } = await supabase
 The fix respects all RLS policies:
 
 **Plays RLS Policy:**
+
 ```sql
 CREATE POLICY "Team members can view plays" ON plays
   FOR SELECT USING (
@@ -202,12 +221,14 @@ CREATE POLICY "Team members can view plays" ON plays
 ```
 
 **Team Posts RLS Policy:**
+
 ```sql
 -- Assumes similar policy structure for team_posts
 -- Users can only see posts from their teams
 ```
 
 The new queries properly filter by:
+
 1. User's team memberships (via team_members table)
 2. User's playbook access (via playbooks table)
 3. RLS policies enforce security at database level
@@ -219,7 +240,6 @@ The new queries properly filter by:
 1. **Always check schema before writing queries**
    - Don't assume column names
    - Verify table relationships
-   
 2. **Use correct table names**
    - team_posts ≠ posts
    - Check database/schema.sql for truth
@@ -246,6 +266,7 @@ The new queries properly filter by:
 ## 🚀 Next Steps
 
 1. **Start dev server**
+
    ```bash
    npm run dev
    ```

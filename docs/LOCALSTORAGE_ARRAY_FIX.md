@@ -40,6 +40,7 @@ return stored as UserPreferences[K];
 ```
 
 **Result:**
+
 - `bc_recently_viewed_plays` → Returns `"[\"abc-123\"]"` (string)
 - Expected → Returns `["abc-123"]` (array)
 
@@ -48,12 +49,13 @@ return stored as UserPreferences[K];
 ```typescript
 // ❌ UNSAFE - Assumes prev is always an array
 setRecentPlayIds((prev = []) => {
-  const filtered = prev.filter((id) => id !== playId);  // CRASHES if prev is string!
+  const filtered = prev.filter((id) => id !== playId); // CRASHES if prev is string!
   return [playId, ...filtered].slice(0, 10);
 });
 ```
 
 **Result:**
+
 - If `prev` is a string, `.filter()` throws `TypeError`
 - Default parameter `prev = []` doesn't work if `prev` is explicitly a string (not undefined)
 
@@ -70,8 +72,8 @@ setRecentPlayIds((prev = []) => {
 if (
   key === "bc_formation_field_visibility" ||
   key === "bc_play_details_field_visibility" ||
-  key === "bc_recently_viewed_plays" ||      // ← Added
-  key === "bc_favorite_plays"                // ← Added
+  key === "bc_recently_viewed_plays" || // ← Added
+  key === "bc_favorite_plays" // ← Added
 ) {
   return JSON.parse(stored) as UserPreferences[K];
 }
@@ -86,8 +88,8 @@ if (
 if (
   key === "bc_formation_field_visibility" ||
   key === "bc_play_details_field_visibility" ||
-  key === "bc_recently_viewed_plays" ||      // ← Added
-  key === "bc_favorite_plays"                // ← Added
+  key === "bc_recently_viewed_plays" || // ← Added
+  key === "bc_favorite_plays" // ← Added
 ) {
   localStorage.setItem(localStorageKey, JSON.stringify(value));
   return;
@@ -133,11 +135,13 @@ setFavoriteIds((prev) => {
 ### usePreferences.ts (2 changes)
 
 **Change 1: getFromLocalStorage (line ~190)**
+
 - Added `bc_recently_viewed_plays` to JSON.parse condition
 - Added `bc_favorite_plays` to JSON.parse condition
 - Now correctly returns arrays instead of strings
 
 **Change 2: saveToLocalStorage (line ~220)**
+
 - Added `bc_recently_viewed_plays` to JSON.stringify condition
 - Added `bc_favorite_plays` to JSON.stringify condition
 - Now correctly stores arrays as JSON strings
@@ -145,6 +149,7 @@ setFavoriteIds((prev) => {
 ### useRecentPlays.ts (1 change)
 
 **Change: trackPlayView function (line ~20)**
+
 - Removed default parameter `prev = []`
 - Added explicit check: `const prevArray = Array.isArray(prev) ? prev : []`
 - Now handles corrupted localStorage gracefully
@@ -152,6 +157,7 @@ setFavoriteIds((prev) => {
 ### useFavoritePlays.ts (1 change)
 
 **Change: toggleFavorite function (line ~15)**
+
 - Removed default parameter `prev = []`
 - Added explicit check: `const prevArray = Array.isArray(prev) ? prev : []`
 - Now handles corrupted localStorage gracefully
@@ -161,6 +167,7 @@ setFavoriteIds((prev) => {
 ## 🧪 Testing
 
 ### Before Fix
+
 ```
 ✗ Click play card → TypeError: prev.filter is not a function
 ✗ Star/favorite button → TypeError: prev.filter is not a function
@@ -169,6 +176,7 @@ setFavoriteIds((prev) => {
 ```
 
 ### After Fix
+
 ```
 ✓ Click play card → Play tracked successfully
 ✓ Star/favorite button → Favorite toggled successfully
@@ -181,6 +189,7 @@ setFavoriteIds((prev) => {
 ## 📊 localStorage Data Flow
 
 ### Before Fix
+
 ```
 Write:
   setRecentPlayIds(["abc-123"])
@@ -193,6 +202,7 @@ Read:
 ```
 
 ### After Fix
+
 ```
 Write:
   setRecentPlayIds(["abc-123"])
@@ -216,20 +226,23 @@ Read:
 The fix uses **two layers of protection**:
 
 ### Layer 1: Correct parsing (PRIMARY)
+
 ```typescript
 // getFromLocalStorage
 if (key === "bc_recently_viewed_plays" || key === "bc_favorite_plays") {
-  return JSON.parse(stored) as UserPreferences[K];  // Parse correctly
+  return JSON.parse(stored) as UserPreferences[K]; // Parse correctly
 }
 ```
 
 ### Layer 2: Safety check (FALLBACK)
+
 ```typescript
 // trackPlayView
-const prevArray = Array.isArray(prev) ? prev : [];  // Catch corrupted data
+const prevArray = Array.isArray(prev) ? prev : []; // Catch corrupted data
 ```
 
 **Why both?**
+
 1. Layer 1 fixes the root cause (correct parsing)
 2. Layer 2 handles edge cases (corrupted localStorage, migration from old code)
 3. Even if Layer 1 fails, Layer 2 prevents crashes
@@ -244,7 +257,7 @@ Users who clicked play cards before this fix have corrupted localStorage:
 
 ```json
 {
-  "bc_recently_viewed_plays": "abc-123",  // ← Wrong! Should be array
+  "bc_recently_viewed_plays": "abc-123" // ← Wrong! Should be array
 }
 ```
 
@@ -281,11 +294,13 @@ setRecentPlayIds((prev = []) => {
 ```
 
 **Why?**
+
 - Default parameter only applies when `prev` is `undefined`
 - If `prev` is `""` (empty string) or `"[\"id\"]"` (JSON string), default is NOT used
 - Must explicitly check with `Array.isArray(prev)`
 
 **Correct approach:**
+
 ```typescript
 // ✅ WORKS - Explicit check handles all non-array values
 const prevArray = Array.isArray(prev) ? prev : [];
@@ -320,10 +335,11 @@ const prevArray = Array.isArray(prev) ? prev : [];
 ## 🚀 Next Steps
 
 1. **Clear localStorage (optional)**
+
    ```javascript
    // In browser console:
-   localStorage.removeItem('bc_recently_viewed_plays');
-   localStorage.removeItem('bc_favorite_plays');
+   localStorage.removeItem("bc_recently_viewed_plays");
+   localStorage.removeItem("bc_favorite_plays");
    ```
 
 2. **Test play tracking**
