@@ -5,7 +5,6 @@ import { Typography } from "../design-system/Typography";
 import { BottomSheet } from "../BottomSheet";
 import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 type PlayerPosition = "QB" | "RB" | "TE" | "WR";
@@ -14,6 +13,7 @@ interface PersonnelPlayer {
   id: string;
   label: string; // e.g., "QB", "RB1", "3"
   position: PlayerPosition;
+  isWildcatQB?: boolean; // For QB position only - indicates wildcat formation
 }
 
 interface PersonnelLine {
@@ -64,7 +64,7 @@ export const PersonnelConfigurationModal: React.FC<
       id: Date.now().toString(),
       name: "11 Personnel",
       players: [
-        { id: "p1", label: "QB", position: "QB" },
+        { id: "p1", label: "QB", position: "QB", isWildcatQB: false },
         { id: "p2", label: "RB", position: "RB" },
         { id: "p3", label: "TE", position: "TE" },
         { id: "p4", label: "WR", position: "WR" },
@@ -136,6 +136,23 @@ export const PersonnelConfigurationModal: React.FC<
               ...config,
               players: config.players.map((player) =>
                 player.id === playerId ? { ...player, position } : player
+              ),
+            }
+          : config
+      )
+    );
+  };
+
+  const toggleWildcatQB = (configId: string, playerId: string) => {
+    setLocalConfigurations((prev) =>
+      prev.map((config) =>
+        config.id === configId
+          ? {
+              ...config,
+              players: config.players.map((player) =>
+                player.id === playerId
+                  ? { ...player, isWildcatQB: !player.isWildcatQB }
+                  : player
               ),
             }
           : config
@@ -217,55 +234,77 @@ export const PersonnelConfigurationModal: React.FC<
             </div>
 
             {/* Two Column Layout: Players (Left) and Line (Right) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column: Skill Positions */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Typography
                   variant="label-md"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 mb-1"
                 >
                   <Icon name="users" className="w-4 h-4 text-brand-jade" />
                   Skill Positions
                 </Typography>
 
                 {config.players.map((player) => (
-                  <div key={player.id} className="flex items-center gap-2">
-                    <Input
-                      value={player.label}
-                      onChange={(e) =>
-                        updatePlayerLabel(config.id, player.id, e.target.value)
-                      }
-                      placeholder="QB"
-                      maxLength={3}
-                      className="w-20 h-11 text-center font-mono font-bold uppercase"
-                    />
-                    <span className="text-text-secondary">—</span>
-                    <Select
-                      value={player.position}
-                      onChange={(value) =>
-                        updatePlayerPosition(
-                          config.id,
-                          player.id,
-                          value as PlayerPosition
-                        )
-                      }
-                      options={[
-                        { value: "QB", label: "Quarterback (QB)" },
-                        { value: "RB", label: "Running Back (RB)" },
-                        { value: "TE", label: "Tight End (TE)" },
-                        { value: "WR", label: "Wide Receiver (WR)" },
-                      ]}
-                      className="flex-1 h-11"
-                    />
+                  <div key={player.id} className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={player.label}
+                        onChange={(e) =>
+                          updatePlayerLabel(
+                            config.id,
+                            player.id,
+                            e.target.value
+                          )
+                        }
+                        placeholder="QB"
+                        maxLength={3}
+                        className="w-16 h-9 text-center font-mono font-bold uppercase text-sm"
+                      />
+                      <span className="text-text-tertiary text-sm">—</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // Cycle through positions: QB → RB → TE → WR → QB
+                          const positions: PlayerPosition[] = ["QB", "RB", "TE", "WR"];
+                          const currentIndex = positions.indexOf(player.position);
+                          const nextPosition = positions[(currentIndex + 1) % positions.length];
+                          updatePlayerPosition(config.id, player.id, nextPosition);
+                        }}
+                        className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-border-default bg-surface-secondary hover:bg-surface-tertiary transition-colors text-sm text-text-secondary font-medium group"
+                      >
+                        <span className="text-text-primary">{player.position}</span>
+                        <Icon name="chevron-down" className="w-4 h-4 text-text-tertiary group-hover:text-text-secondary transition-colors" />
+                      </button>
+                    </div>
+                    {/* Wildcat QB checkbox - only show for QB position */}
+                    {player.position === "QB" && (
+                      <label className="flex items-center gap-1.5 pl-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={player.isWildcatQB || false}
+                          onChange={() =>
+                            toggleWildcatQB(config.id, player.id)
+                          }
+                          className="w-3.5 h-3.5 rounded border-border-default text-brand-jade focus:ring-brand-jade focus:ring-offset-0"
+                        />
+                        <Typography
+                          variant="caption"
+                          className="text-text-tertiary text-xs"
+                        >
+                          Wildcat QB
+                        </Typography>
+                      </label>
+                    )}
                   </div>
                 ))}
               </div>
 
               {/* Right Column: Offensive Line */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Typography
                   variant="label-md"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 mb-1"
                 >
                   <Icon name="shield" className="w-4 h-4 text-brand-jade" />
                   Offensive Line
@@ -273,7 +312,7 @@ export const PersonnelConfigurationModal: React.FC<
 
                 {config.line.map((linePos, index) => (
                   <div key={linePos.id} className="flex items-center gap-2">
-                    <span className="text-xs text-text-secondary w-8">
+                    <span className="text-xs text-text-tertiary w-6 text-right">
                       {index + 1}.
                     </span>
                     <Input
@@ -283,7 +322,7 @@ export const PersonnelConfigurationModal: React.FC<
                       }
                       placeholder={["LT", "LG", "C", "RG", "RT"][index]}
                       maxLength={3}
-                      className="flex-1 h-11 text-center font-mono font-bold uppercase"
+                      className="flex-1 h-9 text-center font-mono font-bold uppercase text-sm"
                     />
                   </div>
                 ))}
