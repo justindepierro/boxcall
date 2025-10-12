@@ -136,7 +136,9 @@ async function migrateDiagrams() {
   }
 
   if (!plays || plays.length === 0) {
-    console.log("✅ No plays need migration (all diagram_url data already migrated)");
+    console.log(
+      "✅ No plays need migration (all diagram_url data already migrated)"
+    );
     return;
   }
 
@@ -195,7 +197,9 @@ async function migrateDiagrams() {
       console.log(`... and ${validPlays.length - 3} more\n`);
     }
 
-    console.log("✅ Dry run complete. Run without DRY_RUN=true to apply changes.");
+    console.log(
+      "✅ Dry run complete. Run without DRY_RUN=true to apply changes."
+    );
     return;
   }
 
@@ -217,7 +221,9 @@ async function migrateDiagrams() {
         .eq("id", play.id);
 
       if (updateError) {
-        console.error(`${progress} ❌ ${play.play_name}: ${updateError.message}`);
+        console.error(
+          `${progress} ❌ ${play.play_name}: ${updateError.message}`
+        );
         errorCount++;
       } else {
         console.log(`${progress} ✓ ${play.play_name}`);
