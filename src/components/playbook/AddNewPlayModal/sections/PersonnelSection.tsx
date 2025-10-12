@@ -118,7 +118,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
             onClick={handleFormationBuilder}
             className="ml-auto"
           >
-            <Icon name="grid" className="h-4 w-4 mr-spacing-xs" />
+            <Icon name="wrench" className="h-4 w-4 mr-spacing-xs" />
             Formation Builder
           </Button>
         </div>

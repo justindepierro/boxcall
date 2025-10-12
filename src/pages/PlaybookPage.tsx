@@ -800,7 +800,7 @@ export default function PlaybookPage() {
                 <AppIconTile
                   title="Formation Builder"
                   subtitle="Visual tool"
-                  icon="grid"
+                  icon="wrench"
                   gradient="from-indigo-500 to-purple-600"
                   onOpen={() => {
                     // TODO: Open FormationBuilderModal
