@@ -59,6 +59,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const [category, setCategory] = useState<FormationCategory | "">("");
   const [tags, setTags] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [applyToBothSides, setApplyToBothSides] = useState<boolean>(true); // Default to true
 
   console.log("🏗️ [FormationBuilderPanel] Current state:", {
     loading,
@@ -94,6 +95,16 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
           name: f.name,
           direction: f.direction,
           playbook_id: f.playbook_id,
+        })),
+      });
+
+      console.log("👥 [FormationBuilderPanel] Personnel configurations:", {
+        count: personnel.length,
+        personnel: personnel.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          playersCount: p.players?.length || 0,
         })),
       });
 
@@ -151,6 +162,35 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     );
   };
 
+  // Check if selected formation has a linked variant (left/right pair)
+  const getLinkedFormation = (): Formation | null => {
+    if (!selectedFormation) return null;
+
+    // If this is a left formation, find the right one
+    if (selectedFormation.direction === "left") {
+      return allFormations.find(
+        (f) =>
+          f.name === selectedFormation.name &&
+          f.direction === "right" &&
+          f.base_formation_id === selectedFormation.base_formation_id
+      ) || null;
+    }
+
+    // If this is a right formation, find the left one
+    if (selectedFormation.direction === "right") {
+      return allFormations.find(
+        (f) =>
+          f.name === selectedFormation.name &&
+          f.direction === "left" &&
+          f.base_formation_id === selectedFormation.base_formation_id
+      ) || null;
+    }
+
+    return null;
+  };
+
+  const linkedFormation = getLinkedFormation();
+
   const handleSave = async () => {
     if (!selectedFormation) {
       alert("Please select a formation");
@@ -164,14 +204,25 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         .map((t) => t.trim())
         .filter((t) => t.length > 0);
 
-      await FormationService.updateFormation(selectedFormation.id, {
+      const updateData = {
         personnel_packages: selectedPersonnelIds,
         category: category || undefined,
         tags: tagsArray,
         description: description || undefined,
-      });
+      };
 
-      alert("Formation updated successfully!");
+      // Update the selected formation
+      await FormationService.updateFormation(selectedFormation.id, updateData);
+
+      // If "Apply to both sides" is checked and there's a linked formation, update it too
+      if (applyToBothSides && linkedFormation) {
+        console.log("📝 Applying changes to linked formation:", linkedFormation.name, linkedFormation.direction);
+        await FormationService.updateFormation(linkedFormation.id, updateData);
+        alert(`Formation updated successfully!\n✅ Changes applied to both ${selectedFormation.direction} and ${linkedFormation.direction} variants.`);
+      } else {
+        alert("Formation updated successfully!");
+      }
+
       await loadData();
 
       if (onSuccess) {
@@ -195,6 +246,23 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     );
   }
 
+  // Filter out base formations if they have left/right variants
+  const visibleFormations = allFormations.filter((formation) => {
+    // If direction is 'base', check if variants exist
+    if (formation.direction === "base") {
+      const hasVariants = allFormations.some(
+        (f) =>
+          f.name === formation.name &&
+          f.direction !== "base" &&
+          (f.direction === "left" || f.direction === "right")
+      );
+      // Only show base formation if no variants exist
+      return !hasVariants;
+    }
+    // Show all non-base formations
+    return true;
+  });
+
   return (
     <div className="flex flex-col gap-spacing-lg p-spacing-md max-w-4xl mx-auto">
       {/* Formation Selector */}
@@ -207,7 +275,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
           <div className="p-spacing-md text-center text-text-muted">
             Loading formations...
           </div>
-        ) : allFormations.length === 0 ? (
+        ) : visibleFormations.length === 0 ? (
           <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary text-center">
             <Typography variant="body-sm" className="text-text-muted">
               No formations found. Create formations by adding plays with
@@ -219,7 +287,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
             <select
               value={selectedFormation?.id || ""}
               onChange={(e) => {
-                const formation = allFormations.find(
+                const formation = visibleFormations.find(
                   (f) => f.id === e.target.value
                 );
                 console.log("📝 Formation selected:", formation);
@@ -228,9 +296,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
             >
               <option value="">
-                Choose a formation to edit... ({allFormations.length} available)
+                Choose a formation to edit... ({visibleFormations.length} available)
               </option>
-              {allFormations.map((formation) => (
+              {visibleFormations.map((formation) => (
                 <option key={formation.id} value={formation.id}>
                   {formation.name}{" "}
                   {formation.direction !== "base" &&
@@ -248,6 +316,23 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               formationId={selectedFormation.id}
               direction={selectedFormation.direction}
             />
+            {linkedFormation && (
+              <div className="mt-spacing-sm flex items-center gap-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
+                <input
+                  type="checkbox"
+                  id="applyToBothSides"
+                  checked={applyToBothSides}
+                  onChange={(e) => setApplyToBothSides(e.target.checked)}
+                  className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                />
+                <label
+                  htmlFor="applyToBothSides"
+                  className="text-sm text-primary-700 font-medium cursor-pointer"
+                >
+                  Apply changes to both {selectedFormation.direction} and {linkedFormation.direction} variants
+                </label>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -278,6 +363,18 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               </div>
             ) : (
               <>
+                {console.log(
+                  "🎨 [FormationBuilderPanel] Rendering personnel buttons:",
+                  {
+                    availableCount: availablePersonnel.length,
+                    personnel: availablePersonnel.map((p) => ({
+                      id: p.id,
+                      name: p.name,
+                      description: p.description,
+                    })),
+                    selectedIds: selectedPersonnelIds,
+                  }
+                )}
                 <div className="flex flex-wrap gap-spacing-sm">
                   {availablePersonnel.map((personnel) => (
                     <button

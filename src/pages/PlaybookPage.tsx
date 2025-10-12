@@ -18,6 +18,7 @@ import {
   PracticeScriptService,
   GamePlanService,
 } from "@services";
+import { PersonnelService } from "../services/personnelService";
 import type { PlayActivityItem } from "@services";
 import { SecurePlaysService } from "../services/securePlaysService";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
@@ -1259,14 +1260,93 @@ export default function PlaybookPage() {
               isOpen={showPersonnelModal}
               onClose={() => setShowPersonnelModal(false)}
               configurations={playbookSettings.personnelConfigurations || []}
-              onSave={(configurations) => {
+              onSave={async (configurations) => {
                 try {
                   debug("Saving personnel configurations:", configurations);
 
-                  // Update local state
+                  if (!activePlaybookId) {
+                    toast.error("No playbook selected", "Please select a playbook first");
+                    return;
+                  }
+
+                  // Load existing configurations from database to compare
+                  const existingConfigs = await PersonnelService.getPersonnelConfigurations(activePlaybookId);
+                  const existingByName = new Map(existingConfigs.map(c => [c.name, c]));
+
+                  // Detect deletions: find configs that exist in database but not in modal
+                  const currentIds = new Set(configurations.map(c => c.id));
+                  for (const existing of existingConfigs) {
+                    if (!currentIds.has(existing.id)) {
+                      console.log(`🗑️  [PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`);
+                      await PersonnelService.deletePersonnelConfiguration(existing.id);
+                    }
+                  }
+
+                  // Only save new or modified configurations
+                  for (const config of configurations) {
+                    // Convert modal format to database format
+                    const players = config.players.map((p, index) => ({
+                      player_position: p.position,
+                      label: p.label,
+                      sort_order: index,
+                      is_wildcat_qb: p.isWildcatQB || false,
+                    }));
+
+                    // Check if this config already exists in database by name
+                    const existing = existingByName.get(config.name);
+
+                    // Check if this is a new config (non-UUID ID) or existing UUID
+                    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(config.id);
+                    
+                    if (existing) {
+                      // Config exists in database - check if modified
+                      const isModified = 
+                        existing.name !== config.name ||
+                        existing.players?.length !== config.players.length;
+                      
+                      if (isModified) {
+                        console.log(`📝 [PlaybookPage] Updating modified personnel config: ${config.name}`);
+                        await PersonnelService.updatePersonnelConfiguration(existing.id, {
+                          name: config.name,
+                          description: `${config.players.length} skill players`,
+                          players,
+                        });
+                      } else {
+                        console.log(`⏭️  [PlaybookPage] Skipping unchanged personnel config: ${config.name}`);
+                      }
+                    } else if (!isUUID) {
+                      // New config with temporary ID - create it
+                      console.log(`📝 [PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`);
+                      await PersonnelService.createPersonnelConfiguration({
+                        playbook_id: activePlaybookId,
+                        name: config.name,
+                        description: `${config.players.length} skill players`,
+                        players,
+                      });
+                    }
+                  }
+
+                  // Reload personnel configurations from database to get real UUIDs
+                  const savedConfigs = await PersonnelService.getPersonnelConfigurations(activePlaybookId);
+                  
+                  // Convert database format back to modal format
+                  const modalConfigs = savedConfigs.map(config => ({
+                    id: config.id, // Real UUID from database
+                    name: config.name,
+                    players: config.players?.map(p => ({
+                      id: `p-${p.id}`,
+                      label: p.label,
+                      position: p.player_position,
+                      isWildcatQB: p.is_wildcat_qb,
+                    })) || [],
+                    line: [], // Not used in current implementation
+                    isDefault: config.name === "11 Personnel",
+                  }));
+
+                  // Update local state with real UUIDs
                   const updatedSettings = {
                     ...playbookSettings,
-                    personnelConfigurations: configurations,
+                    personnelConfigurations: modalConfigs,
                   };
                   setPlaybookSettings(updatedSettings);
 

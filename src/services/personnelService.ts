@@ -29,12 +29,20 @@ export class PersonnelService {
     playbookId: string
   ): Promise<PersonnelConfiguration[]> {
     try {
+      console.log("🔍 [PersonnelService] getPersonnelConfigurations called with playbookId:", playbookId);
+      
       // Fetch configurations
       const { data: configs, error: configError } = await supabase
         .from("personnel_configurations")
         .select("*")
         .eq("playbook_id", playbookId)
         .order("name");
+
+      console.log("📊 [PersonnelService] Query result:", {
+        count: configs?.length || 0,
+        error: configError,
+        configs: configs as Array<{ id: string; name: string; playbook_id: string }>
+      });
 
       if (configError) throw configError;
       if (!configs) return [];
