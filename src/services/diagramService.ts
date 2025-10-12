@@ -143,9 +143,7 @@ export async function saveDiagram(
 /**
  * Load diagram from a play
  */
-export async function loadDiagram(
-  playId: string
-): Promise<LoadDiagramResult> {
+export async function loadDiagram(playId: string): Promise<LoadDiagramResult> {
   try {
     const { data, error } = await supabase
       .from("plays")
@@ -239,7 +237,9 @@ export async function updateDiagramData(
 /**
  * Delete diagram from a play
  */
-export async function deleteDiagram(playId: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteDiagram(
+  playId: string
+): Promise<{ success: boolean; error?: string }> {
   try {
     const { error } = await supabase
       .from("plays")
@@ -278,7 +278,10 @@ function detectFormation(players: Player[]): string {
     if (positions.includes("QB") && positions.includes("RB")) {
       return "Pistol";
     }
-    if (positions.includes("QB") && positions.filter((p) => p === "WR").length >= 2) {
+    if (
+      positions.includes("QB") &&
+      positions.filter((p) => p === "WR").length >= 2
+    ) {
       return "Shotgun";
     }
   }
