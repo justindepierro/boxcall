@@ -25,12 +25,14 @@ import {
   PreferencesSection,
   AdvancedOptionsSection,
 } from "./AddNewPlayModal/sections";
+import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreatePlay?: (playData: Partial<Play>) => void;
   existingPlay?: Play | null;
+  playbookId?: string; // NEW: Required for FormationSelector
 }
 
 export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
@@ -38,6 +40,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   onClose,
   onCreatePlay,
   existingPlay,
+  playbookId,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -85,6 +88,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
       const playData = {
         formation: formData.formation.trim(),
+        formation_id: formData.formation_id || undefined, // NEW: Formation database ID
+        formation_direction: formData.formation_direction || undefined, // NEW: Formation variant direction
         play_name: formData.playName.trim(),
         p_type: formData.playType || undefined,
         personnel: formData.personnel.trim() || undefined,
@@ -303,9 +308,32 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           {/* Formation Section */}
           <FormationSection
             formation={formData.formation}
+            formationId={formData.formation_id}
             formationDir={formData.formationDir}
             formationShowInName={formData.formationShowInName}
+            playbookId={playbookId}
             onFormationChange={(value) => updateField("formation", value)}
+            onFormationIdChange={(id, formation) => {
+              updateFields({
+                formation_id: id,
+                formation: formation?.name || "",
+                formation_direction: formation?.direction || null,
+              });
+
+              // Phase 7: Formation → Diagram Template System
+              // When a formation is selected, import its player positions into diagram editor
+              if (formation && formation.player_positions?.length > 0) {
+                const diagramTemplate = importFormationAsTemplate(formation);
+                console.log('[Phase 7] Formation diagram template ready:', {
+                  formationName: formation.name,
+                  playerCount: diagramTemplate.players.length,
+                  template: diagramTemplate,
+                });
+                // TODO: When DiagramEditor is integrated into this modal, call:
+                // setDiagramData(diagramTemplate);
+                // This will pre-populate the canvas with formation positions
+              }
+            }}
             onFormationDirChange={(value) => updateField("formationDir", value)}
             onFormationShowInNameChange={(value) =>
               updateField("formationShowInName", value)

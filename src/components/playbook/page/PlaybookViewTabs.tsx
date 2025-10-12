@@ -5,8 +5,20 @@ import { Badge, ProgressBadge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
 import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { PlaybookSelector } from "../PlaybookSelector";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
+
+interface Playbook {
+  id: string;
+  team_id: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  play_count?: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export type PlaybookViewTabsProps = {
   currentView: CoachingView;
@@ -20,6 +32,12 @@ export type PlaybookViewTabsProps = {
   playsCreated: number;
   diagramCoverage: number;
   streakDays: number;
+  // Playbook selector props
+  playbooks?: Playbook[];
+  activePlaybookId?: string;
+  onPlaybookChange?: (playbookId: string) => void;
+  onPlaybookUpdated?: () => void;
+  teamId?: string;
 };
 
 export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
@@ -33,6 +51,11 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   playsCreated,
   diagramCoverage,
   streakDays,
+  playbooks,
+  activePlaybookId,
+  onPlaybookChange,
+  onPlaybookUpdated,
+  teamId,
 }) => {
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
@@ -171,6 +194,17 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
 
           {/* Action Buttons - Right side */}
           <div className="flex items-center gap-2 overflow-visible">
+            {/* Playbook Selector - Compact inline version */}
+            {playbooks && playbooks.length > 0 && activePlaybookId && onPlaybookChange && teamId && (
+              <PlaybookSelector
+                playbooks={playbooks}
+                activePlaybookId={activePlaybookId}
+                onPlaybookChange={onPlaybookChange}
+                onPlaybookUpdated={onPlaybookUpdated}
+                teamId={teamId}
+              />
+            )}
+            
             {/* Weekly Challenges - moved here */}
             <Button
               onClick={() => {

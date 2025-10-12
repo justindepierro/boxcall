@@ -439,11 +439,75 @@ export interface PracticeGameTables {
       created_at?: string;
     };
   };
+  formations: {
+    Row: {
+      id: string;
+      playbook_id: string;
+      name: string;
+      description: string | null;
+      category: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      personnel_id: string | null;
+      personnel_name: string | null;
+      base_formation_id: string | null;
+      direction: "base" | "left" | "right";
+      strength_player_position: string | null;
+      strength_player_label: string | null;
+      player_positions: Json;
+      tags: string[];
+      is_custom: boolean;
+      usage_count: number;
+      created_by: string;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      playbook_id: string;
+      name: string;
+      description?: string | null;
+      category?: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      personnel_id?: string | null;
+      personnel_name?: string | null;
+      base_formation_id?: string | null;
+      direction?: "base" | "left" | "right";
+      strength_player_position?: string | null;
+      strength_player_label?: string | null;
+      player_positions: Json;
+      tags?: string[];
+      is_custom?: boolean;
+      usage_count?: number;
+      created_by: string;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      playbook_id?: string;
+      name?: string;
+      description?: string | null;
+      category?: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      personnel_id?: string | null;
+      personnel_name?: string | null;
+      base_formation_id?: string | null;
+      direction?: "base" | "left" | "right";
+      strength_player_position?: string | null;
+      strength_player_label?: string | null;
+      player_positions?: Json;
+      tags?: string[];
+      is_custom?: boolean;
+      usage_count?: number;
+      created_by?: string;
+      created_at?: string;
+      updated_at?: string;
+    };
+  };
   plays: {
     Row: {
       id: string;
       playbook_id: string;
       formation: string;
+      formation_id: string | null;
+      formation_direction: "base" | "left" | "right" | null;
       f_dir: string | null;
       play_type: string | null;
       concept: string | null;
@@ -477,6 +541,8 @@ export interface PracticeGameTables {
       id?: string;
       playbook_id: string;
       formation: string;
+      formation_id?: string | null;
+      formation_direction?: "base" | "left" | "right" | null;
       f_dir?: string | null;
       play_type?: string | null;
       concept?: string | null;
@@ -510,6 +576,8 @@ export interface PracticeGameTables {
       id?: string;
       playbook_id?: string;
       formation?: string;
+      formation_id?: string | null;
+      formation_direction?: "base" | "left" | "right" | null;
       f_dir?: string | null;
       play_type?: string | null;
       concept?: string | null;

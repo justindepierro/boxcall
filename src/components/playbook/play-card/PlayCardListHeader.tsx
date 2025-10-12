@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
+import { FormationBadge } from "../FormationBadge";
 import type { Play as PlayType } from "../../../types/play";
 
 type ToggleHandler = () => void;
@@ -76,26 +77,40 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             isCompact ? "mt-1" : "mt-2"
           }`}
         >
+          {/* Play type badge */}
           <span
             className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
           >
             {optimisticPlay.p_type}
           </span>
-          {optimisticPlay.f_type && (
+          
+          {/* Formation badge with direction and personnel */}
+          {(optimisticPlay.formation_id || optimisticPlay.formation) && (
+            <FormationBadge
+              formationId={optimisticPlay.formation_id}
+              formationName={optimisticPlay.formation}
+              direction={optimisticPlay.formation_direction}
+              showPersonnel={true}
+              showDirection={true}
+              size="sm"
+            />
+          )}
+          
+          {/* Formation type badge (if no formation_id, show old behavior) */}
+          {!optimisticPlay.formation_id && optimisticPlay.f_type && (
             <span className="px-2 py-0.5 bg-surface-muted text-primary border border-border rounded-full text-xs font-medium">
               {optimisticPlay.f_type}
             </span>
           )}
-          {optimisticPlay.personnel && (
-            <span className="px-2 py-0.5 bg-jade-100 text-jade-700 border border-jade-300 rounded-full text-xs font-medium">
-              {optimisticPlay.personnel}
-            </span>
-          )}
+          
+          {/* Installation phase badge */}
           {phaseLabel && (
             <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
               {phaseLabel}
             </span>
           )}
+          
+          {/* Confidence */}
           <span
             className={`text-xsssss font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
           >

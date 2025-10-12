@@ -19,6 +19,7 @@ interface Playbook {
   name: string;
   description?: string;
   is_active: boolean;
+  play_count?: number;
   created_at: string;
   updated_at: string;
 }
@@ -149,7 +150,10 @@ export function useTeamsData() {
         try {
           const { data, error: playbooksError } = await supabase
             .from("playbooks")
-            .select("*")
+            .select(`
+              *,
+              plays:plays(count)
+            `)
             .order("created_at", { ascending: false });
 
           if (playbooksError) {
@@ -159,7 +163,12 @@ export function useTeamsData() {
             );
             // Continue without playbooks data
           } else {
-            playbooksData = data || [];
+            // Transform the data to include play_count
+            playbooksData = (data || []).map((pb: any) => ({
+              ...pb,
+              play_count: pb.plays?.[0]?.count || 0,
+              plays: undefined, // Remove the nested plays object
+            }));
           }
         } catch (err) {
           console.warn("Error fetching playbooks:", err);

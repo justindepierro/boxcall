@@ -4,6 +4,8 @@ import type { Play } from "../../../types/play";
 export interface PlayFormData {
   // Basic fields
   formation: string;
+  formation_id: string | null; // NEW: Formation database ID
+  formation_direction: "base" | "left" | "right" | null; // NEW: Formation variant direction
   formationShowInName: boolean;
   playName: string;
   playShowInName: boolean;
@@ -61,6 +63,8 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
   const [formData, setFormData] = useState<PlayFormData>(() => ({
     // Basic fields
     formation: existingPlay?.formation || "",
+    formation_id: existingPlay?.formation_id || null,
+    formation_direction: existingPlay?.formation_direction || null,
     formationShowInName: false,
     playName: existingPlay?.play_name || "",
     playShowInName: false,
@@ -124,6 +128,8 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
   const resetForm = useCallback(() => {
     setFormData({
       formation: "",
+      formation_id: null,
+      formation_direction: null,
       formationShowInName: false,
       playName: "",
       playShowInName: false,

@@ -36,7 +36,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
           .limit(1);
 
         if (playbooks && playbooks.length > 0) {
-          setPlaybookId(playbooks[0].id as string);
+          setPlaybookId((playbooks[0] as any).id as string);
         }
       } catch (error) {
         console.error("Failed to fetch playbook ID:", error);

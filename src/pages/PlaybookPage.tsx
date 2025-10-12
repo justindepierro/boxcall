@@ -30,9 +30,16 @@ import { Modal } from "../components/ui/Modal";
 import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
 import type { DiagramDocument } from "../components/playbook/diagram-editor/types/types";
 import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useTeamsData } from "../hooks/useTeamsData";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { Card } from "../components/ui/Card";
 import { Aurora } from "../components/ui/Aurora";
+import {
+  getOppositeFormationVariant,
+  flipDiagramPositions,
+  flipPlayName,
+  flipFormationDirection,
+} from "../utils/formationFlipHelpers";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
 import {
@@ -73,6 +80,11 @@ const PersonnelConfigurationModal = lazy(() =>
     })
   )
 );
+const FormationBuilderModal = lazy(() =>
+  import("../components/playbook/FormationBuilderModal").then((module) => ({
+    default: module.FormationBuilderModal,
+  }))
+);
 const KeyboardShortcutsGuide = lazy(() =>
   import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
     default: module.KeyboardShortcutsGuide,
@@ -104,6 +116,41 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
+  
+  // Get playbooks for this team
+  const { playbooks, refreshData } = useTeamsData();
+  const teamPlaybooks = playbooks.filter(pb => pb.team_id === activeTeamId && pb.is_active);
+  
+  // State for selected playbook (with preference persistence)
+  const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>('');
+  
+  // Initialize selected playbook from preferences or default to first playbook with data
+  useEffect(() => {
+    if (teamPlaybooks.length === 0) return;
+    
+    // Try to load from preferences
+    const savedPlaybookId = localStorage.getItem(`bc_active_playbook_${activeTeamId}`);
+    
+    if (savedPlaybookId && teamPlaybooks.some(pb => pb.id === savedPlaybookId)) {
+      // Use saved preference if it's valid
+      setSelectedPlaybookId(savedPlaybookId);
+    } else {
+      // Default to first playbook with plays, or first playbook
+      const playbookWithPlays = teamPlaybooks.find(pb => (pb.play_count || 0) > 0);
+      const defaultPlaybook = playbookWithPlays || teamPlaybooks[0];
+      setSelectedPlaybookId(defaultPlaybook.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTeamId, teamPlaybooks.length]);
+  
+  // Save preference when playbook changes
+  const handlePlaybookChange = useCallback((playbookId: string) => {
+    setSelectedPlaybookId(playbookId);
+    localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+    console.log('📚 [PlaybookPage] Switched to playbook:', playbookId);
+  }, [activeTeamId]);
+  
+  const activePlaybookId = selectedPlaybookId || activeTeamId || ""; // Fallback to team_id
 
   // Debounce search query to avoid excessive filtering on every keystroke
   const debouncedSearchQuery = useDebouncedValue(state.searchQuery, 300);
@@ -283,6 +330,8 @@ export default function PlaybookPage() {
   const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
     useState(false);
   const [showPersonnelModal, setShowPersonnelModal] = useState(false);
+  const [showFormationBuilderModal, setShowFormationBuilderModal] =
+    useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
@@ -422,10 +471,10 @@ export default function PlaybookPage() {
     [diagramPlay, dispatch, toast, activeTeamId]
   );
 
-  const handleDuplicatePlay = (play: Play) => {
+  const handleDuplicatePlay = async (play: Play, flip: boolean = false) => {
     triggerHapticFeedback("selection");
-    // Create a copy of the play with a modified name
-    const duplicatedPlay: Play = {
+
+    let duplicatedPlay: Play = {
       ...play,
       id: "", // Will be set by the database
       play_name: `Copy of ${play.play_name}`,
@@ -434,6 +483,52 @@ export default function PlaybookPage() {
       times_called: 0,
       times_successful: 0,
     };
+
+    // If flipping, update formation and diagram
+    if (flip) {
+      try {
+        // Get opposite formation variant
+        if (play.formation_id) {
+          const oppositeFormation = await getOppositeFormationVariant(
+            play.formation_id
+          );
+
+          if (oppositeFormation) {
+            duplicatedPlay.formation_id = oppositeFormation.id;
+            duplicatedPlay.formation = oppositeFormation.name;
+            duplicatedPlay.formation_direction = oppositeFormation.direction;
+          }
+        }
+
+        // Flip play name if it contains Left/Right
+        duplicatedPlay.play_name = flipPlayName(play.play_name);
+
+        // Flip formation direction (f_dir field)
+        duplicatedPlay.f_dir = flipFormationDirection(play.f_dir);
+
+        // Flip play direction (p_dir field)
+        duplicatedPlay.p_dir = flipFormationDirection(play.p_dir);
+
+        // Flip diagram positions
+        if (play.diagram_data) {
+          const flippedDiagram = flipDiagramPositions(play.diagram_data);
+          if (flippedDiagram) {
+            duplicatedPlay.diagram_data = flippedDiagram as DiagramDocument;
+          }
+        }
+
+        toast.success(
+          "Play flipped!",
+          `Created flipped version: "${duplicatedPlay.play_name}"`
+        );
+      } catch (error) {
+        console.error("Failed to flip play:", error);
+        toast.error(
+          "Flip failed",
+          "Could not flip formation, creating regular duplicate"
+        );
+      }
+    }
 
     setEditingPlay(duplicatedPlay);
     setShowAddNewPlayModal(true);
@@ -579,7 +674,7 @@ export default function PlaybookPage() {
           className="mb-4"
         />
 
-        {/* Unified Header with Navigation */}
+        {/* Unified Header with Navigation (includes PlaybookSelector) */}
         <PlaybookViewTabs
           currentView={state.currentView}
           onViewChange={handleViewChange}
@@ -591,6 +686,11 @@ export default function PlaybookPage() {
           playsCreated={state.playsCreated}
           diagramCoverage={state.diagramCoverage}
           streakDays={state.streakDays}
+          playbooks={teamPlaybooks}
+          activePlaybookId={activePlaybookId}
+          onPlaybookChange={handlePlaybookChange}
+          onPlaybookUpdated={refreshData}
+          teamId={activeTeamId || ''}
         />
 
         {/* Mobile-First Layout */}
@@ -802,12 +902,7 @@ export default function PlaybookPage() {
                   subtitle="Visual tool"
                   icon="wrench"
                   gradient="from-indigo-500 to-purple-600"
-                  onOpen={() => {
-                    // TODO: Open FormationBuilderModal
-                    alert(
-                      "Formation Builder modal will open here - visual formation creator"
-                    );
-                  }}
+                  onOpen={() => setShowFormationBuilderModal(true)}
                 />
 
                 <AppIconTile
@@ -1034,6 +1129,7 @@ export default function PlaybookPage() {
                   setEditingPlay(null);
                 }}
                 existingPlay={editingPlay}
+                playbookId={activePlaybookId}
                 onCreatePlay={async (playData) => {
                   try {
                     debug("Processing play:", playData);
@@ -1176,6 +1272,21 @@ export default function PlaybookPage() {
                   logError("Failed to save personnel configurations:", error);
                   toast.error("Failed to save personnel", "Please try again");
                 }
+              }}
+            />
+          </Suspense>
+        )}
+
+        {showFormationBuilderModal && (
+          <Suspense fallback={null}>
+            <FormationBuilderModal
+              isOpen={showFormationBuilderModal}
+              onClose={() => setShowFormationBuilderModal(false)}
+              playbookId={activePlaybookId}
+              onSaved={() => {
+                toast.success("Formation linked successfully!");
+                // Don't auto-close - let user continue working
+                // TODO: Refresh formations list when we have it
               }}
             />
           </Suspense>

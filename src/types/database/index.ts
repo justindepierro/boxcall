@@ -38,7 +38,31 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_formation_variants: {
+        Args: {
+          formation_id: string;
+        };
+        Returns: {
+          id: string;
+          playbook_id: string;
+          name: string;
+          description: string | null;
+          category: string | null;
+          personnel_id: string | null;
+          personnel_name: string | null;
+          base_formation_id: string | null;
+          direction: "base" | "left" | "right";
+          strength_player_position: string | null;
+          strength_player_label: string | null;
+          player_positions: Json;
+          tags: string[];
+          is_custom: boolean;
+          usage_count: number;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        }[];
+      };
     };
     Enums: {
       user_role: "player" | "coach" | "family" | "admin";
@@ -93,6 +117,9 @@ export type Equipment = Tables<"equipment">;
 // 🔥 PERSONNEL SYSTEM TABLES - NEW EXPORTS
 export type PersonnelConfiguration = Tables<"personnel_configurations">;
 export type PersonnelPlayer = Tables<"personnel_players">;
+
+// 🔥 FORMATION SYSTEM TABLES - NEW EXPORTS
+export type Formation = Tables<"formations">;
 
 // Insert types
 export type AchievementInsert = Inserts<"achievements">;

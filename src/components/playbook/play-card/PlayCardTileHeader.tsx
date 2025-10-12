@@ -6,6 +6,7 @@ import { ScrollingText } from "../../ui/ScrollingText";
 import { ConfidenceBadge } from "../../ui/ConfidenceBadge";
 import { FavoriteButton } from "../../ui/FavoriteButton";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
+import { FormationBadge } from "../FormationBadge";
 import type { Play as PlayType } from "../../../types/play";
 import { getTileGradient, getTileIcon } from "./helpers";
 
@@ -136,18 +137,28 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         )}
       </div>
 
-      {/* Badges - only show formation and personnel, NOT play type (redundant with tile color) */}
+      {/* Badges - formation with direction/personnel, and installation phase */}
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-        {optimisticPlay.f_type && (
+        {/* Formation badge with direction and personnel */}
+        {(optimisticPlay.formation_id || optimisticPlay.formation) && (
+          <FormationBadge
+            formationId={optimisticPlay.formation_id}
+            formationName={optimisticPlay.formation}
+            direction={optimisticPlay.formation_direction}
+            showPersonnel={true}
+            showDirection={true}
+            size="sm"
+          />
+        )}
+        
+        {/* Formation type badge (if no formation_id, show old behavior) */}
+        {!optimisticPlay.formation_id && optimisticPlay.f_type && (
           <span className="px-2 py-0.5 bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium">
             {optimisticPlay.f_type}
           </span>
         )}
-        {optimisticPlay.personnel && (
-          <span className="px-2 py-0.5 bg-jade-100 text-jade-700 border border-jade-300 rounded-full text-xs font-medium">
-            {optimisticPlay.personnel}
-          </span>
-        )}
+        
+        {/* Installation phase badge */}
         {phaseLabel && (
           <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
             {phaseLabel}
