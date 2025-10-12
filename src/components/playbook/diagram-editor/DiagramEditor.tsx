@@ -20,6 +20,7 @@ import { useAutosave } from "./hooks/useAutosave";
 import { useDiagramStore } from "./stores/diagramStore";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import { useIsMobilePortrait } from "../../../hooks/useOrientation";
+import { updateDiagramData } from "../../../services/diagramService";
 import { supabase } from "../../../lib/supabase";
 import { Icon } from "../../../components/ui/Icon/Icon";
 import { TipsPopover } from "./components/TipsPopover";
@@ -275,25 +276,18 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
 
       console.log(`💾 Autosaving diagram for play ID: ${play.id}...`);
 
-      const updateData: Partial<Play> = {
-        diagram_data: diagramData,
-        diagram_version: 2,
-        formation: detectFormation(players),
-      };
+      const result = await updateDiagramData(play.id, diagramData, {
+        updateFormation: true,
+      });
 
-      const { error } = await supabase
-        .from("plays")
-        .update(updateData as any)
-        .eq("id", play.id);
-
-      if (error) {
-        console.error("❌ Autosave failed:", error);
-        throw new Error(error.message);
+      if (!result.success) {
+        console.error("❌ Autosave failed:", result.error);
+        throw new Error(result.error);
       }
 
       console.log("✅ Autosave successful");
     },
-    [play, players, detectFormation]
+    [play]
   );
 
   // Enable autosave with debouncing (only for existing plays)
@@ -379,59 +373,67 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
           },
         };
 
-        // Prepare the play data
-        const playData: Partial<Play> = {
-          play_name: name,
-          formation: detectFormation(players),
-          p_type: (play?.p_type || "Pass") as Play["p_type"], // Preserve existing type or default to Pass
-          diagram_data: diagramData,
-          diagram_version: 2,
-        };
-
         console.log("📊 Diagram data:", diagramData);
 
-        let data;
-        let error;
-
-        // If we have a play ID, update the existing play
+        // If we have a play ID, use DiagramService to update
         if (play?.id) {
           console.log(`🔄 Updating existing play ID: ${play.id}`);
-          const result = await supabase
-            .from("plays")
-            .update(playData as any) // Type assertion for now until database types are fully synced
-            .eq("id", play.id)
-            .select()
-            .single();
-          data = result.data;
-          error = result.error;
+          
+          const result = await updateDiagramData(play.id, diagramData, {
+            updateFormation: true,
+          });
+
+          if (!result.success) {
+            console.error("❌ DiagramService error:", result.error);
+            showAlertModal(
+              "❌ Save Failed",
+              `Failed to save play: ${result.error}`
+            );
+            return;
+          }
+
+          console.log("✅ Play saved successfully:", result.play);
+
+          // Mark as saved
+          setIsDirty(false);
+          setShowSaveDialog(false);
+
+          showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
         } else {
-          // Otherwise, insert a new play
+          // For new plays, use direct Supabase insert (needs playbook_id context)
           console.log("➕ Inserting new play");
-          const result = await supabase
+          
+          const playData: Partial<Play> = {
+            play_name: name,
+            formation: detectFormation(players),
+            p_type: (play?.p_type || "Pass") as Play["p_type"],
+            diagram_data: diagramData,
+            diagram_version: 2,
+          };
+
+          const { data, error } = await supabase
             .from("plays")
-            .insert(playData as any) // Type assertion for now until database types are fully synced
+            .insert(playData as never)
             .select()
             .single();
-          data = result.data;
-          error = result.error;
+
+          if (error) {
+            console.error("❌ Supabase error:", error);
+            showAlertModal(
+              "❌ Save Failed",
+              `Failed to save play: ${error.message}`
+            );
+            return;
+          }
+
+          console.log("✅ Play saved successfully:", data);
+
+          // Mark as saved
+          setIsDirty(false);
+          setShowSaveDialog(false);
+
+          showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
         }
-
-        if (error) {
-          console.error("❌ Supabase error:", error);
-          showAlertModal(
-            "❌ Save Failed",
-            `Failed to save play: ${error.message}`
-          );
-          return;
-        }
-
-        console.log("✅ Play saved successfully:", data);
-
-        // Mark as saved
-        setIsDirty(false);
-        setShowSaveDialog(false);
-
-        showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
       } catch (err) {
         console.error("❌ Error saving play:", err);
         showAlertModal(
