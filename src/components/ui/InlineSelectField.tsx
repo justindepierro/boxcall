@@ -177,13 +177,10 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
             />
           )}
           {!disabled && !isSaving && (
-            <div className="flex items-center gap-1">
-              <Icon
-                name="edit"
-                className="h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-muted"
-              />
-              <Icon name="chevron-down" className="h-4 w-4 text-muted" />
-            </div>
+            <Icon
+              name="edit"
+              className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-muted"
+            />
           )}
         </div>
       </div>
