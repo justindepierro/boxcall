@@ -39,3 +39,15 @@ export { ErrorBoundary } from "./ErrorBoundary";
 export * from "./IconButton/IconButton";
 export { UserProfilePopover } from "./UserProfilePopover";
 export { UserAvatar } from "./UserAvatar";
+
+// New Reusable Components
+export { ScrollingText } from "./ScrollingText";
+export type { ScrollingTextProps } from "./ScrollingText";
+export { ConfidenceBadge } from "./ConfidenceBadge";
+export type { ConfidenceBadgeProps } from "./ConfidenceBadge";
+export { FavoriteButton } from "./FavoriteButton";
+export type { FavoriteButtonProps } from "./FavoriteButton";
+export { SelectionCheckbox } from "./SelectionCheckbox";
+export type { SelectionCheckboxProps } from "./SelectionCheckbox";
+export { PhaseLabel } from "./PhaseLabel";
+export type { PhaseLabelProps } from "./PhaseLabel";

@@ -47,37 +47,42 @@
 ## Code Changes
 
 ### Before:
+
 ```tsx
 // Cycling button - could cycle through all positions including QB
-<button onClick={() => cyclePosition()}>
-  {player.position}
-</button>
+<button onClick={() => cyclePosition()}>{player.position}</button>
 ```
 
 ### After:
+
 ```tsx
-{/* QB Position - LOCKED */}
-{index === 0 ? (
-  <div className="... cursor-not-allowed">
-    <span>QB</span>
-    <Icon name="lock" />
-  </div>
-) : (
-  /* Other Positions - Dropdown */
-  <Select
-    value={player.position}
-    options={[
-      { value: "RB", label: "RB (Running Back)" },
-      { value: "TE", label: "TE (Tight End)" },
-      { value: "WR", label: "WR (Wide Receiver)" },
-    ]}
-  />
-)}
+{
+  /* QB Position - LOCKED */
+}
+{
+  index === 0 ? (
+    <div className="... cursor-not-allowed">
+      <span>QB</span>
+      <Icon name="lock" />
+    </div>
+  ) : (
+    /* Other Positions - Dropdown */
+    <Select
+      value={player.position}
+      options={[
+        { value: "RB", label: "RB (Running Back)" },
+        { value: "TE", label: "TE (Tight End)" },
+        { value: "WR", label: "WR (Wide Receiver)" },
+      ]}
+    />
+  );
+}
 ```
 
 ## Visual Design
 
 ### QB Row (LOCKED):
+
 ```
 ┌─────────────────────────────────────────────┐
 │  [  Q  ] — [ QB 🔒 ]                       │
@@ -88,6 +93,7 @@
 ```
 
 ### Other Positions (DROPDOWN):
+
 ```
 ┌─────────────────────────────────────────────┐
 │  [  R  ] — [ RB (Running Back) ▼ ]         │
@@ -98,6 +104,7 @@
 ## Default Configuration
 
 **11 Personnel (Standard):**
+
 - **Name:** "11 Personnel"
 - **Description:** 1 RB, 1 TE, 2 WR
 - **Positions:**
@@ -112,6 +119,7 @@
 ## Type Safety
 
 All changes maintain strict TypeScript types:
+
 - `PlayerPosition = "QB" | "RB" | "TE" | "WR"`
 - `isWildcatQB?: boolean` (optional)
 - No type errors, all checks pass ✅
@@ -119,6 +127,7 @@ All changes maintain strict TypeScript types:
 ## Testing Checklist
 
 ### Manual Testing:
+
 - [ ] Open Personnel modal - defaults to 11 Personnel
 - [ ] QB position shows lock icon and is disabled
 - [ ] Other positions show dropdown with RB/TE/WR options
@@ -133,6 +142,7 @@ All changes maintain strict TypeScript types:
 - [ ] Desktop: Modal works correctly
 
 ### Integration Testing (Future):
+
 - [ ] Personnel config saves to database
 - [ ] Play creation shows personnel selector
 - [ ] Diagram loads correct personnel
@@ -141,26 +151,34 @@ All changes maintain strict TypeScript types:
 ## Next Steps
 
 ### Phase 2: Database Schema
+
 Create tables to persist personnel configurations:
+
 - `personnel_configurations` table
 - `personnel_players` table
 - RLS policies for team access
 - Seed with default 11 Personnel
 
 ### Phase 3: Service Layer
+
 Build API service for CRUD operations:
+
 - `personnelService.ts`
 - React hooks for data fetching
 - Mutations for create/update/delete
 
 ### Phase 4: Connect to Plays
+
 Wire personnel into play creation:
+
 - Use existing `plays.personnel` column
 - Show selector in AddNewPlayModal
 - Display badge on PlayCard
 
 ### Phase 5: Diagram Integration
+
 Make diagrams preload personnel:
+
 - Read `play.personnel` from database
 - Fetch configuration by name
 - Preload player sprites (QB, RB, TE, WR)
@@ -169,6 +187,7 @@ Make diagrams preload personnel:
 ## Architecture Alignment
 
 This implementation perfectly aligns with the documented architecture:
+
 - ✅ QB locked at top (center-QB exchange)
 - ✅ Only ONE QB per configuration
 - ✅ Skill positions only (QB/RB/TE/WR)

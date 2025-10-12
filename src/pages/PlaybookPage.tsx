@@ -1188,7 +1188,7 @@ export default function PlaybookPage() {
             closeOnEscape={true}
           >
             <Suspense fallback={null}>
-              <PlayDiagramBuilder 
+              <PlayDiagramBuilder
                 onClose={() => setDiagramPlay(null)}
                 play={diagramPlay}
               />

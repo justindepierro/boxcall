@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { rateLimiter, getUserRateLimitKey } from '../utils/rateLimiter';
-import { useAuthUser } from '../app/auth-store';
+import { useState, useEffect } from "react";
+import { rateLimiter, getUserRateLimitKey } from "../utils/rateLimiter";
+import { useAuthUser } from "../app/auth-store";
 
 interface RateLimitFeedback {
   remaining: number;
@@ -14,15 +14,15 @@ interface RateLimitFeedback {
 /**
  * Hook to provide real-time rate limit feedback to users
  * Shows remaining attempts and countdown timer
- * 
+ *
  * @param action - The action being rate limited (e.g., 'play-create')
  * @param maxRequests - Maximum requests allowed in the time window (default: 10)
  * @returns Rate limit status and feedback
- * 
+ *
  * @example
  * ```tsx
  * const { remaining, isNearLimit, secondsUntilReset } = useRateLimitFeedback('play-create', 10);
- * 
+ *
  * {isNearLimit && (
  *   <Badge variant="warning">
  *     {remaining} creates remaining
@@ -53,9 +53,9 @@ export function useRateLimitFeedback(
       const key = getUserRateLimitKey(user.id, action);
       const remaining = rateLimiter.getRemaining(key, maxRequests);
       const resetTime = rateLimiter.getResetTime(key);
-      
+
       const now = Date.now();
-      const secondsUntilReset = resetTime 
+      const secondsUntilReset = resetTime
         ? Math.ceil((resetTime - now) / 1000)
         : 0;
 
@@ -90,7 +90,7 @@ export function useRateLimitFeedback(
 export function formatCountdown(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
 /**
@@ -100,10 +100,10 @@ export function getRateLimitMessage(feedback: RateLimitFeedback): string {
   if (feedback.isLimited) {
     return `Rate limit reached. Try again in ${formatCountdown(feedback.secondsUntilReset)}.`;
   }
-  
+
   if (feedback.isNearLimit) {
-    return `${feedback.remaining} attempt${feedback.remaining === 1 ? '' : 's'} remaining this minute.`;
+    return `${feedback.remaining} attempt${feedback.remaining === 1 ? "" : "s"} remaining this minute.`;
   }
-  
-  return '';
+
+  return "";
 }

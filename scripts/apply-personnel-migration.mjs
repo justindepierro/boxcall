@@ -46,47 +46,54 @@ async function runPersonnelMigration() {
 
     // Split SQL into individual statements (avoiding DO blocks)
     console.log("⚡ Preparing SQL statements...\n");
-    
+
     // For complex migrations like this, we need to execute via REST API
     // Let's use fetch to call the Supabase SQL editor API
-    const response = await fetch(
-      `${PROJECT_URL}/rest/v1/rpc/exec_sql`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-        },
-        body: JSON.stringify({ query: migrationSQL })
-      }
-    );
+    const response = await fetch(`${PROJECT_URL}/rest/v1/rpc/exec_sql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      },
+      body: JSON.stringify({ query: migrationSQL }),
+    });
 
     if (!response.ok) {
       // If REST API doesn't work, try direct PostgreSQL connection
       console.log("⚠️  REST API not available, trying alternative method...\n");
-      console.log("📝 Please run this migration manually using one of these methods:\n");
+      console.log(
+        "📝 Please run this migration manually using one of these methods:\n"
+      );
       console.log("   Option 1: Supabase Dashboard");
-      console.log("   - Go to: https://supabase.com/dashboard/project/lvmuiqwihlpnwppdqqfl/editor");
+      console.log(
+        "   - Go to: https://supabase.com/dashboard/project/lvmuiqwihlpnwppdqqfl/editor"
+      );
       console.log("   - Copy and paste the SQL from:");
-      console.log("     supabase/migrations/20251011000000_add_personnel_system.sql");
+      console.log(
+        "     supabase/migrations/20251011000000_add_personnel_system.sql"
+      );
       console.log("   - Click 'Run'\n");
       console.log("   Option 2: psql CLI");
       console.log("   - Get connection string from Supabase dashboard");
-      console.log("   - Run: psql <connection_string> -f supabase/migrations/20251011000000_add_personnel_system.sql\n");
+      console.log(
+        "   - Run: psql <connection_string> -f supabase/migrations/20251011000000_add_personnel_system.sql\n"
+      );
       console.log("   Option 3: Supabase CLI");
       console.log("   - Run: supabase db reset (if using local dev)");
       console.log("   - Or: supabase db push (to apply migrations)\n");
-      
+
       // For now, let's create the tables directly using the Supabase client
       console.log("🔄 Attempting to create tables directly...\n");
-      
+
       // This is a workaround - we'll create tables one by one
       console.log("   Creating personnel_configurations table...");
       // We can't create tables via REST API, need to use SQL editor
-      
+
       console.log("\n❌ Automatic migration not possible via REST API.");
-      console.log("✋ Please apply migration manually using one of the options above.\n");
+      console.log(
+        "✋ Please apply migration manually using one of the options above.\n"
+      );
       process.exit(1);
     }
 
@@ -105,11 +112,16 @@ async function runPersonnelMigration() {
       .limit(5);
 
     if (configError) {
-      console.error("   ❌ Error querying personnel_configurations:", configError);
+      console.error(
+        "   ❌ Error querying personnel_configurations:",
+        configError
+      );
     } else {
       console.log(`   ✅ Found ${configs.length} personnel configurations`);
       if (configs.length > 0) {
-        console.log(`   📋 Sample: "${configs[0].name}" - ${configs[0].description}`);
+        console.log(
+          `   📋 Sample: "${configs[0].name}" - ${configs[0].description}`
+        );
       }
     }
 
@@ -129,7 +141,9 @@ async function runPersonnelMigration() {
         const rbCount = players.filter((p) => p.position === "RB").length;
         const teCount = players.filter((p) => p.position === "TE").length;
         const wrCount = players.filter((p) => p.position === "WR").length;
-        console.log(`   📊 Breakdown: ${qbCount} QB, ${rbCount} RB, ${teCount} TE, ${wrCount} WR`);
+        console.log(
+          `   📊 Breakdown: ${qbCount} QB, ${rbCount} RB, ${teCount} TE, ${wrCount} WR`
+        );
       }
     }
 
@@ -144,7 +158,9 @@ async function runPersonnelMigration() {
     if (playError) {
       console.error("   ❌ Error querying plays:", playError);
     } else {
-      console.log(`   ✅ Sample personnel values: ${plays.map((p) => p.personnel).join(", ")}`);
+      console.log(
+        `   ✅ Sample personnel values: ${plays.map((p) => p.personnel).join(", ")}`
+      );
     }
 
     console.log("\n🏈 ============================================");
@@ -156,7 +172,6 @@ async function runPersonnelMigration() {
     console.log("   3. ⏭️  Phase 3: Create personnelService.ts");
     console.log("   4. ⏭️  Phase 4: Connect to plays");
     console.log("   5. ⏭️  Phase 5: Diagram integration\n");
-
   } catch (err) {
     console.error("\n❌ Fatal error:", err);
     process.exit(1);

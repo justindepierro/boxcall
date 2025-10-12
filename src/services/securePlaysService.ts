@@ -113,12 +113,13 @@ export class SecurePlaysService {
               retryAfter: error.retryAfterSeconds,
             },
           });
-          
+
           // Enhance error message with retry time
           const seconds = error.retryAfterSeconds;
-          const message = seconds > 60 
-            ? `You're creating plays too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`
-            : `You're creating plays too quickly. Please wait ${seconds} seconds before trying again.`;
+          const message =
+            seconds > 60
+              ? `You're creating plays too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`
+              : `You're creating plays too quickly. Please wait ${seconds} seconds before trying again.`;
           throw new Error(message);
         }
         throw error;
@@ -206,12 +207,13 @@ export class SecurePlaysService {
               retryAfter: error.retryAfterSeconds,
             },
           });
-          
+
           // Enhance error message with retry time
           const seconds = error.retryAfterSeconds;
-          const message = seconds > 60 
-            ? `You're updating plays too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`
-            : `You're updating plays too quickly. Please wait ${seconds} seconds before trying again.`;
+          const message =
+            seconds > 60
+              ? `You're updating plays too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`
+              : `You're updating plays too quickly. Please wait ${seconds} seconds before trying again.`;
           throw new Error(message);
         }
         throw error;
@@ -220,7 +222,10 @@ export class SecurePlaysService {
       // Validate input (add id to updates for validation)
       let validated: PlayUpdateInput;
       try {
-        validated = validatePlayUpdate({ ...(updates as Record<string, any>), id });
+        validated = validatePlayUpdate({
+          ...(updates as Record<string, any>),
+          id,
+        });
       } catch (error: any) {
         trackSecurityEvent({
           type: "validation_error",
@@ -389,9 +394,7 @@ export class SecurePlaysService {
   /**
    * Get security events by type
    */
-  static getSecurityEventsByType(
-    type: SecurityEvent["type"]
-  ): SecurityEvent[] {
+  static getSecurityEventsByType(type: SecurityEvent["type"]): SecurityEvent[] {
     return securityEvents.filter((event) => event.type === type);
   }
 
@@ -414,5 +417,8 @@ export class SecurePlaysService {
 export default SecurePlaysService;
 
 // Also re-export validation types
-export type { PlayCreateInput, PlayUpdateInput } from "../validation/playValidation";
+export type {
+  PlayCreateInput,
+  PlayUpdateInput,
+} from "../validation/playValidation";
 export { isRateLimitError, RateLimitError } from "../utils/rateLimiter";

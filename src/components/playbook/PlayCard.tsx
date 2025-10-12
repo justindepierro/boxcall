@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../types/play";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
@@ -344,22 +345,70 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         )}
 
         {isTile ? (
-          <PlayCardTileHeader
-            play={play}
-            optimisticPlay={optimisticPlay}
-            displayName={displayName}
-            subtitleText={subtitleText}
-            showOneWordCalls={showOneWordCalls}
-            isSelected={isSelected}
-            onSelectionChange={onSelectionChange}
-            onEdit={onEdit}
-            onDuplicate={onDuplicate}
-            onCreateDiagram={handleCreateDiagram}
-            getPlayTypeColor={getPlayTypeColor}
-            phaseLabel={phaseLabel}
-            isFavorite={isFavorite(play.id)}
-            onToggleFavorite={() => toggleFavorite(play.id)}
-          />
+          <>
+            <PlayCardTileHeader
+              play={play}
+              optimisticPlay={optimisticPlay}
+              displayName={displayName}
+              subtitleText={subtitleText}
+              showOneWordCalls={showOneWordCalls}
+              isSelected={isSelected}
+              onSelectionChange={onSelectionChange}
+              onCreateDiagram={handleCreateDiagram}
+              phaseLabel={phaseLabel}
+              isFavorite={isFavorite(play.id)}
+              onToggleFavorite={() => toggleFavorite(play.id)}
+              isExpanded={isExpanded}
+              onToggleExpand={handleToggleExpand}
+            />
+
+            {/* Animated expansion for tile details */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                    opacity: { duration: 0.2 },
+                  }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-6 mt-6 border-t border-border-subtle">
+                    <PlayCardDetails
+                      play={play}
+                      optimisticPlay={optimisticPlay}
+                      showOneWordCalls={showOneWordCalls}
+                      phaseLabel={phaseLabel}
+                      handleInlineSave={handleInlineSave}
+                      savingFields={savingFields}
+                      formationFieldOrder={formationFieldOrder}
+                      formationFields={formationFields}
+                      formationFieldVisibility={
+                        formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
+                      }
+                      toggleFieldVisibility={toggleFieldVisibility}
+                      handleFormationDragEnd={handleFormationDragEnd}
+                      playDetailsFieldOrder={playDetailsFieldOrder}
+                      playDetailsFields={playDetailsFields}
+                      playDetailsFieldVisibility={
+                        playDetailsFieldVisibility ||
+                        INITIAL_PLAY_DETAILS_VISIBILITY
+                      }
+                      handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+                      getPlayTypeColor={getPlayTypeColor}
+                      getConfidenceColor={getConfidenceColor}
+                      onAddToPracticeScript={onAddToPracticeScript}
+                      onAddToGamePlan={onAddToGamePlan}
+                      onCreateDiagram={handleCreateDiagram}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
         ) : (
           <PlayCardListHeader
             play={play}

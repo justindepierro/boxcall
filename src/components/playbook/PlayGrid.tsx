@@ -770,7 +770,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8 px-4 overflow-visible"
+                  className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8 px-4 overflow-visible auto-rows-max"
+                  style={{
+                    transition: "grid-template-rows 0.3s ease",
+                  }}
                 >
                   {visiblePlays.map((play, index) => (
                     <Draggable
@@ -783,8 +786,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className={`w-full overflow-visible ${
+                          className={`w-full overflow-visible transition-all duration-300 ${
                             snapshot.isDragging ? "opacity-50" : ""
+                          } ${
+                            expandedPlayId === play.id
+                              ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
+                              : ""
                           }`}
                         >
                           <PlayCard

@@ -60,7 +60,8 @@ export class RateLimiter {
   checkOrThrow(key: string, config: RateLimitConfig): void {
     if (!this.check(key, config)) {
       throw new RateLimitError(
-        config.message || `Rate limit exceeded. Please wait before trying again.`,
+        config.message ||
+          `Rate limit exceeded. Please wait before trying again.`,
         config.windowMs
       );
     }
@@ -120,7 +121,9 @@ export class RateLimiter {
     keysToDelete.forEach((key) => this.limits.delete(key));
 
     if (keysToDelete.length > 0) {
-      console.debug(`[RateLimiter] Cleaned up ${keysToDelete.length} expired entries`);
+      console.debug(
+        `[RateLimiter] Cleaned up ${keysToDelete.length} expired entries`
+      );
     }
   }
 

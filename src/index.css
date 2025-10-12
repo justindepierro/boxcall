@@ -55,6 +55,36 @@
     overflow: hidden;
   }
 
+  /* Hover-to-scroll text animation for long play names */
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Back and forth scroll animation (bounce mode) */
+  @keyframes scroll-text-bounce {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(var(--scroll-distance, -100%));
+    }
+  }
+
+  /* Infinite loop scroll animation */
+  @keyframes scroll-text-infinite {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
   /* Modern Border System - iOS-Inspired Subtle Dividers */
 
   /* Divider borders - for separating sections (barely visible, iOS-style) */

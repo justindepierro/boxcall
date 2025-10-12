@@ -1,13 +1,16 @@
 # Personnel System Migration Guide - Phase 2
 
 ## 🎯 Goal
+
 Apply the personnel system database schema to enable:
+
 - Personnel configurations (11 Personnel, 12 Personnel, etc.)
 - Personnel players (QB, RB, TE, WR positions)
 - Integration with existing plays table
 - Diagram preloading support
 
 ## 📋 Prerequisites
+
 - [x] Phase 1 Complete (Personnel Modal UX fixed)
 - [ ] Access to Supabase Dashboard
 - [ ] Service Role Key or database connection
@@ -37,9 +40,9 @@ Apply the personnel system database schema to enable:
 5. **Verify Tables Created:**
    ```sql
    -- Run this query to verify:
-   SELECT table_name 
-   FROM information_schema.tables 
-   WHERE table_schema = 'public' 
+   SELECT table_name
+   FROM information_schema.tables
+   WHERE table_schema = 'public'
    AND table_name LIKE 'personnel%';
    ```
    Should return:
@@ -53,6 +56,7 @@ Apply the personnel system database schema to enable:
    - Copy Connection String (use service_role or postgres role)
 
 2. **Run Migration:**
+
    ```bash
    psql "postgresql://postgres:[YOUR-PASSWORD]@db.lvmuiqwihlpnwppdqqfl.supabase.co:5432/postgres" \
      -f supabase/migrations/20251011000000_add_personnel_system.sql
@@ -66,9 +70,11 @@ Apply the personnel system database schema to enable:
 ### Option 3: Supabase CLI (Local Dev)
 
 1. **Reset Database:**
+
    ```bash
    supabase db reset
    ```
+
    This applies ALL migrations including the new one.
 
 2. **Or Push Single Migration:**
@@ -81,14 +87,16 @@ Apply the personnel system database schema to enable:
 After running the migration, verify:
 
 ### 1. Tables Exist
+
 ```sql
 SELECT COUNT(*) FROM personnel_configurations;
 SELECT COUNT(*) FROM personnel_players;
 ```
 
 ### 2. Default 11 Personnel Created
+
 ```sql
-SELECT 
+SELECT
   pc.name,
   pc.description,
   COUNT(pp.id) as player_count
@@ -97,14 +105,17 @@ LEFT JOIN personnel_players pp ON pp.config_id = pc.id
 WHERE pc.name = '11 Personnel'
 GROUP BY pc.id, pc.name, pc.description;
 ```
+
 Should show:
+
 - Name: "11 Personnel"
 - Description: "1 RB, 1 TE, 2 WR"
 - Player count: 5 (1 QB + 1 RB + 1 TE + 2 WR)
 
 ### 3. QB Always at Position 0
+
 ```sql
-SELECT 
+SELECT
   position,
   label,
   sort_order
@@ -112,7 +123,9 @@ FROM personnel_players
 WHERE config_id = (SELECT id FROM personnel_configurations LIMIT 1)
 ORDER BY sort_order;
 ```
+
 Should show:
+
 ```
 position | label | sort_order
 ---------|-------|------------
@@ -124,8 +137,9 @@ WR       | Y     | 4
 ```
 
 ### 4. RLS Policies Active
+
 ```sql
-SELECT 
+SELECT
   schemaname,
   tablename,
   policyname
@@ -133,34 +147,43 @@ FROM pg_policies
 WHERE tablename LIKE 'personnel%'
 ORDER BY tablename, policyname;
 ```
+
 Should return multiple policies for both tables.
 
 ### 5. Plays Updated
+
 ```sql
-SELECT 
+SELECT
   personnel,
   COUNT(*) as play_count
 FROM plays
 GROUP BY personnel
 ORDER BY play_count DESC;
 ```
+
 Should show "11 Personnel" as most common value.
 
 ## 🐛 Troubleshooting
 
 ### Error: "relation personnel_configurations already exists"
+
 **Solution:** Tables already created. Either:
+
 - Run rollback first: `supabase/migrations/20251011000001_rollback_personnel_system.sql`
 - Or skip this migration (already applied)
 
 ### Error: "permission denied"
+
 **Solution:** Use service_role key or postgres superuser.
 
 ### Error: "foreign key constraint violation"
+
 **Solution:** Ensure playbooks table exists and has data.
 
 ### No default 11 Personnel created
+
 **Solution:** Run the seed SQL manually:
+
 ```sql
 DO $$
 DECLARE
@@ -171,9 +194,9 @@ BEGIN
     INSERT INTO personnel_configurations (playbook_id, name, description)
     VALUES (playbook_record.id, '11 Personnel', '1 RB, 1 TE, 2 WR')
     RETURNING id INTO config_id;
-    
+
     INSERT INTO personnel_players (config_id, position, label, sort_order)
-    VALUES 
+    VALUES
       (config_id, 'QB', 'Q', 0),
       (config_id, 'RB', 'R', 1),
       (config_id, 'TE', 'T', 2),
@@ -199,6 +222,7 @@ You'll know the migration succeeded when:
 ## 📝 After Migration
 
 Once migration is successful, proceed to:
+
 - **Phase 3:** Create `personnelService.ts` and React hooks
 - **Phase 4:** Connect personnel selector to AddNewPlayModal
 - **Phase 5:** Integrate with FieldCanvas diagram system
@@ -206,12 +230,14 @@ Once migration is successful, proceed to:
 ## 🔙 Rollback (If Needed)
 
 If you need to undo this migration:
+
 ```bash
 # Run rollback migration
 psql [connection-string] -f supabase/migrations/20251011000001_rollback_personnel_system.sql
 ```
 
 Or via Supabase Dashboard:
+
 - Open SQL Editor
 - Run contents of `20251011000001_rollback_personnel_system.sql`
 

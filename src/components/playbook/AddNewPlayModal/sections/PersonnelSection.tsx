@@ -23,7 +23,9 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   React.useEffect(() => {
     async function fetchPlaybookId() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) return;
 
         // Get user's first playbook
@@ -45,15 +47,16 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   }, []);
 
   // Fetch personnel configurations from database
-  const { data: configurations, isLoading } = usePersonnelConfigurations(playbookId);
+  const { data: configurations, isLoading } =
+    usePersonnelConfigurations(playbookId);
 
   // Format options for dropdown
   const personnelOptions = React.useMemo(() => {
     if (!configurations) return [];
     return configurations.map((config) => ({
       value: config.name,
-      label: config.description 
-        ? `${config.name} (${config.description})` 
+      label: config.description
+        ? `${config.name} (${config.description})`
         : config.name,
     }));
   }, [configurations]);
@@ -70,11 +73,13 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
         value={personnel}
         onChange={(value) => onPersonnelChange(String(value))}
         options={personnelOptions}
-        placeholder={isLoading ? "Loading personnel..." : "Select personnel grouping"}
+        placeholder={
+          isLoading ? "Loading personnel..." : "Select personnel grouping"
+        }
         className="mb-spacing-sm"
         disabled={isLoading || !playbookId}
       />
-      
+
       {/* Quick-select buttons for common personnel */}
       {!isLoading && configurations && configurations.length > 0 && (
         <div className="flex flex-wrap gap-spacing-xs">
@@ -84,7 +89,9 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
               type="button"
               variant={personnel === config.name ? "primary" : "outline"}
               size="sm"
-              onClick={() => onPersonnelChange(personnel === config.name ? "" : config.name)}
+              onClick={() =>
+                onPersonnelChange(personnel === config.name ? "" : config.name)
+              }
             >
               {config.name}
             </Button>

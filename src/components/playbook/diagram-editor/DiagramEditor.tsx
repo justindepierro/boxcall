@@ -41,7 +41,10 @@ export interface DiagramEditorProps {
   play?: Play | null; // Optional play to load personnel from
 }
 
-const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose, play }) => {
+const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
+  onClose,
+  play,
+}) => {
   const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const [colorMode, setColorMode] = useState<FieldColorMode>("jade");
   const [fieldPosition, setFieldPosition] = useState<FieldPosition>("midfield");
@@ -61,21 +64,51 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose, play })
   // Fetch personnel configuration if play has personnel assigned
   const personnelName = play?.personnel || "11 Personnel"; // Default to 11 Personnel
   const playbookId = play?.playbook_id;
-  
-  const { data: personnelConfig } = 
-    usePersonnelConfigurationByName(playbookId, personnelName);
+
+  const { data: personnelConfig } = usePersonnelConfigurationByName(
+    playbookId,
+    personnelName
+  );
 
   // Load personnel players into diagram when config is available
   useEffect(() => {
-    if (!personnelConfig || !personnelConfig.players || personnelConfig.players.length === 0) {
-      return;
-    }
-
     // Get store actions
     const { addPlayer, clearPlayers } = useDiagramStore.getState();
 
     // Clear existing players before adding personnel
     clearPlayers();
+
+    // If no personnel config found, create a default 11 Personnel formation
+    if (
+      !personnelConfig ||
+      !personnelConfig.players ||
+      personnelConfig.players.length === 0
+    ) {
+      // Create default 11 Personnel formation (QB, RB, TE, WR, WR)
+      const defaultPersonnel = [
+        { position: "QB", label: "Q", x: 26.67, y: 12 },
+        { position: "RB", label: "R", x: 31, y: 10 },
+        { position: "TE", label: "T", x: 21, y: 17.5 },
+        { position: "WR", label: "X", x: 10, y: 17.5 },
+        { position: "WR", label: "Y", x: 43, y: 17.5 },
+      ];
+
+      defaultPersonnel.forEach((player, index) => {
+        const diagramPlayer: Player = {
+          id: `default-${player.position}-${index}`,
+          x: player.x,
+          y: player.y,
+          jerseyNumber: player.label,
+          team: "offense" as const,
+          role: player.position,
+          position: player.position === "QB" ? "center" : "regular",
+        };
+        addPlayer(diagramPlayer);
+      });
+
+      console.log("ℹ️ No personnel config found, loaded default 11 Personnel");
+      return;
+    }
 
     // Position mapping: Define where each position type should be placed on field
     // Field is 53.333 yards wide x 35 yards tall (0,0 is top-left)
@@ -88,67 +121,69 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose, play })
     };
 
     // Create diagram players from personnel configuration
-    personnelConfig.players.forEach((personnelPlayer: PersonnelPlayer, index: number) => {
-      const position = personnelPlayer.player_position;
-      let baseCoords = POSITION_COORDS[position] || { x: 26.67, y: 17.5 };
+    personnelConfig.players.forEach(
+      (personnelPlayer: PersonnelPlayer, index: number) => {
+        const position = personnelPlayer.player_position;
+        let baseCoords = POSITION_COORDS[position] || { x: 26.67, y: 17.5 };
 
-      // Adjust WR positions based on sort_order to spread them out
-      if (position === "WR") {
-        const wrIndex = personnelConfig.players
-          .filter((p: PersonnelPlayer) => p.player_position === "WR")
-          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
-        
-        // Spread WRs across field: X (left), Y (slot left), Z (slot right), etc.
-        const positions = [
-          { x: 10, y: 17.5 },  // X - far left
-          { x: 18, y: 17.5 },  // Y - slot left
-          { x: 35, y: 17.5 },  // Z - slot right
-          { x: 43, y: 17.5 },  // Additional WR - far right
-        ];
-        baseCoords = positions[wrIndex] || positions[0];
-      }
+        // Adjust WR positions based on sort_order to spread them out
+        if (position === "WR") {
+          const wrIndex = personnelConfig.players
+            .filter((p: PersonnelPlayer) => p.player_position === "WR")
+            .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
 
-      // Adjust RB positions if multiple RBs
-      if (position === "RB") {
-        const rbIndex = personnelConfig.players
-          .filter((p: PersonnelPlayer) => p.player_position === "RB")
-          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
-        
-        // Spread RBs in backfield
-        if (rbIndex === 0) {
-          baseCoords = { x: 31, y: 10 }; // Right side
-        } else if (rbIndex === 1) {
-          baseCoords = { x: 22, y: 10 }; // Left side
+          // Spread WRs across field: X (left), Y (slot left), Z (slot right), etc.
+          const positions = [
+            { x: 10, y: 17.5 }, // X - far left
+            { x: 18, y: 17.5 }, // Y - slot left
+            { x: 35, y: 17.5 }, // Z - slot right
+            { x: 43, y: 17.5 }, // Additional WR - far right
+          ];
+          baseCoords = positions[wrIndex] || positions[0];
         }
-      }
 
-      // Adjust TE positions if multiple TEs
-      if (position === "TE") {
-        const teIndex = personnelConfig.players
-          .filter((p: PersonnelPlayer) => p.player_position === "TE")
-          .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
-        
-        // Spread TEs on line
-        if (teIndex === 0) {
-          baseCoords = { x: 21, y: 17.5 }; // Left side
-        } else if (teIndex === 1) {
-          baseCoords = { x: 32, y: 17.5 }; // Right side
+        // Adjust RB positions if multiple RBs
+        if (position === "RB") {
+          const rbIndex = personnelConfig.players
+            .filter((p: PersonnelPlayer) => p.player_position === "RB")
+            .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
+
+          // Spread RBs in backfield
+          if (rbIndex === 0) {
+            baseCoords = { x: 31, y: 10 }; // Right side
+          } else if (rbIndex === 1) {
+            baseCoords = { x: 22, y: 10 }; // Left side
+          }
         }
+
+        // Adjust TE positions if multiple TEs
+        if (position === "TE") {
+          const teIndex = personnelConfig.players
+            .filter((p: PersonnelPlayer) => p.player_position === "TE")
+            .findIndex((p: PersonnelPlayer) => p.id === personnelPlayer.id);
+
+          // Spread TEs on line
+          if (teIndex === 0) {
+            baseCoords = { x: 21, y: 17.5 }; // Left side
+          } else if (teIndex === 1) {
+            baseCoords = { x: 32, y: 17.5 }; // Right side
+          }
+        }
+
+        // Create the diagram player
+        const diagramPlayer: Player = {
+          id: `personnel-${personnelPlayer.id}-${index}`,
+          x: baseCoords.x,
+          y: baseCoords.y,
+          jerseyNumber: personnelPlayer.label,
+          team: "offense" as const,
+          role: position,
+          position: position === "QB" ? "center" : "regular", // QB gets square, others get circles
+        };
+
+        addPlayer(diagramPlayer);
       }
-
-      // Create the diagram player
-      const diagramPlayer: Player = {
-        id: `personnel-${personnelPlayer.id}-${index}`,
-        x: baseCoords.x,
-        y: baseCoords.y,
-        jerseyNumber: personnelPlayer.label,
-        team: "offense" as const,
-        role: position,
-        position: position === "QB" ? "center" : "regular", // QB gets square, others get circles
-      };
-
-      addPlayer(diagramPlayer);
-    });
+    );
   }, [personnelConfig]);
 
   // Modal states
@@ -598,6 +633,22 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({ onClose, play })
             <Icon name="pen-tool" size="lg" />
             Diagram Editor
           </h1>
+
+          {/* Personnel Badge - Show if play has personnel assigned */}
+          {play && personnelName && (
+            <div className="flex items-center gap-2 pl-4 border-l border-border">
+              <span className="text-xs text-content-secondary">Personnel:</span>
+              <div className="px-3 py-1.5 rounded-full bg-jade-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5">
+                <Icon name="users" size="sm" />
+                <span>{personnelName}</span>
+                {personnelConfig && personnelConfig.description && (
+                  <span className="text-jade-100 font-normal">
+                    ({personnelConfig.description})
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Toolbar Controls */}
           <div className="flex items-center gap-2 pl-4 border-l border-border">

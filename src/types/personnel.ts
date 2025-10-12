@@ -70,44 +70,144 @@ export const PERSONNEL_TEMPLATES = {
     name: "11 Personnel",
     description: "1 RB, 1 TE, 3 WR - Balanced spread formation",
     players: [
-      { player_position: "QB" as const, label: "Q", sort_order: 0, is_wildcat_qb: false },
-      { player_position: "RB" as const, label: "R", sort_order: 1, is_wildcat_qb: false },
-      { player_position: "TE" as const, label: "T", sort_order: 2, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "X", sort_order: 3, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "Y", sort_order: 4, is_wildcat_qb: false },
+      {
+        player_position: "QB" as const,
+        label: "Q",
+        sort_order: 0,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "RB" as const,
+        label: "R",
+        sort_order: 1,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "TE" as const,
+        label: "T",
+        sort_order: 2,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "X",
+        sort_order: 3,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "Y",
+        sort_order: 4,
+        is_wildcat_qb: false,
+      },
     ],
   },
   "10 Personnel": {
     name: "10 Personnel",
     description: "1 RB, 0 TE, 4 WR - Four-wide receiver set",
     players: [
-      { player_position: "QB" as const, label: "Q", sort_order: 0, is_wildcat_qb: false },
-      { player_position: "RB" as const, label: "R", sort_order: 1, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "X", sort_order: 2, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "Y", sort_order: 3, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "Z", sort_order: 4, is_wildcat_qb: false },
+      {
+        player_position: "QB" as const,
+        label: "Q",
+        sort_order: 0,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "RB" as const,
+        label: "R",
+        sort_order: 1,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "X",
+        sort_order: 2,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "Y",
+        sort_order: 3,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "Z",
+        sort_order: 4,
+        is_wildcat_qb: false,
+      },
     ],
   },
   "12 Personnel": {
     name: "12 Personnel",
     description: "1 RB, 2 TE, 2 WR - Power running formation",
     players: [
-      { player_position: "QB" as const, label: "Q", sort_order: 0, is_wildcat_qb: false },
-      { player_position: "RB" as const, label: "R", sort_order: 1, is_wildcat_qb: false },
-      { player_position: "TE" as const, label: "Y", sort_order: 2, is_wildcat_qb: false },
-      { player_position: "TE" as const, label: "T", sort_order: 3, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "X", sort_order: 4, is_wildcat_qb: false },
+      {
+        player_position: "QB" as const,
+        label: "Q",
+        sort_order: 0,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "RB" as const,
+        label: "R",
+        sort_order: 1,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "TE" as const,
+        label: "Y",
+        sort_order: 2,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "TE" as const,
+        label: "T",
+        sort_order: 3,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "X",
+        sort_order: 4,
+        is_wildcat_qb: false,
+      },
     ],
   },
   "21 Personnel": {
     name: "21 Personnel",
     description: "2 RB, 1 TE, 2 WR - Traditional I-formation",
     players: [
-      { player_position: "QB" as const, label: "Q", sort_order: 0, is_wildcat_qb: false },
-      { player_position: "RB" as const, label: "H", sort_order: 1, is_wildcat_qb: false },
-      { player_position: "RB" as const, label: "R", sort_order: 2, is_wildcat_qb: false },
-      { player_position: "TE" as const, label: "T", sort_order: 3, is_wildcat_qb: false },
-      { player_position: "WR" as const, label: "X", sort_order: 4, is_wildcat_qb: false },
+      {
+        player_position: "QB" as const,
+        label: "Q",
+        sort_order: 0,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "RB" as const,
+        label: "H",
+        sort_order: 1,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "RB" as const,
+        label: "R",
+        sort_order: 2,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "TE" as const,
+        label: "T",
+        sort_order: 3,
+        is_wildcat_qb: false,
+      },
+      {
+        player_position: "WR" as const,
+        label: "X",
+        sort_order: 4,
+        is_wildcat_qb: false,
+      },
     ],
   },
 } as const;
@@ -115,7 +215,8 @@ export const PERSONNEL_TEMPLATES = {
 /**
  * Helper: Get default personnel template (11 Personnel)
  */
-export const getDefaultPersonnelTemplate = () => PERSONNEL_TEMPLATES["11 Personnel"];
+export const getDefaultPersonnelTemplate = () =>
+  PERSONNEL_TEMPLATES["11 Personnel"];
 
 /**
  * Helper: Validate personnel configuration has QB at position 0

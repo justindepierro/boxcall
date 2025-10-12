@@ -55,10 +55,7 @@ const NotesSchema = z
     return val.replace(/<[^>]*>/g, "");
   });
 
-const UUIDSchema = z
-  .string()
-  .uuid("Invalid UUID format")
-  .min(1, "ID required");
+const UUIDSchema = z.string().uuid("Invalid UUID format").min(1, "ID required");
 
 // ========================================
 // Diagram Data Schema
@@ -75,20 +72,7 @@ const PlayerSchema = z.object({
   label: z.string().max(10).optional(),
   number: z.number().min(0).max(99).optional(),
   role: z
-    .enum([
-      "qb",
-      "rb",
-      "wr",
-      "te",
-      "ol",
-      "dl",
-      "lb",
-      "db",
-      "k",
-      "p",
-      "ls",
-      "h",
-    ])
+    .enum(["qb", "rb", "wr", "te", "ol", "dl", "lb", "db", "k", "p", "ls", "h"])
     .optional(),
 });
 
@@ -102,10 +86,7 @@ const RouteSchema = z.object({
 const DiagramDataSchema = z
   .object({
     version: z.number().min(1).max(10),
-    players: z
-      .array(PlayerSchema)
-      .max(22, "Max 22 players allowed")
-      .optional(),
+    players: z.array(PlayerSchema).max(22, "Max 22 players allowed").optional(),
     routes: z.array(RouteSchema).max(100, "Max 100 routes allowed").optional(),
     fieldType: z.enum(["offense", "defense", "special-teams"]).optional(),
     hash: z.enum(["left", "right", "middle"]).optional(),
@@ -231,7 +212,10 @@ export const PlayUpdateSchema = z.object({
  * Schema for bulk play operations
  */
 export const PlayBulkUpdateSchema = z.object({
-  playIds: z.array(UUIDSchema).min(1, "At least one play required").max(100, "Max 100 plays at once"),
+  playIds: z
+    .array(UUIDSchema)
+    .min(1, "At least one play required")
+    .max(100, "Max 100 plays at once"),
   updates: z.object({
     tags: z.array(z.string().max(50)).max(20).optional(),
     category: z.string().max(50).optional(),

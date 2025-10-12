@@ -128,7 +128,10 @@ export class PersonnelService {
   ): Promise<PersonnelConfiguration> {
     try {
       // Validate QB is at index 0
-      if (config.players.length > 0 && config.players[0].player_position !== "QB") {
+      if (
+        config.players.length > 0 &&
+        config.players[0].player_position !== "QB"
+      ) {
         throw new Error("QB must be at position 0 (sort_order 0)");
       }
 
@@ -201,7 +204,10 @@ export class PersonnelService {
       // If players array provided, replace all players
       if (updates.players) {
         // Validate QB at index 0
-        if (updates.players.length > 0 && updates.players[0].player_position !== "QB") {
+        if (
+          updates.players.length > 0 &&
+          updates.players[0].player_position !== "QB"
+        ) {
           throw new Error("QB must be at position 0 (sort_order 0)");
         }
 

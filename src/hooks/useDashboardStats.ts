@@ -117,7 +117,10 @@ async function fetchTotalPlays(userId: string): Promise<number> {
       .in("team_id", teamIds);
 
     if (playbooksError || !playbooks || playbooks.length === 0) {
-      console.warn("[fetchTotalPlays] Error fetching playbooks:", playbooksError?.message);
+      console.warn(
+        "[fetchTotalPlays] Error fetching playbooks:",
+        playbooksError?.message
+      );
       return 0;
     }
 
