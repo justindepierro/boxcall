@@ -26,6 +26,7 @@ The playbook and diagram systems are **functionally working** but have several a
 #### **Problem 1: Missing diagram_data Field**
 
 **Current Schema** (`database/schema.sql` lines 140-175):
+
 ```sql
 CREATE TABLE plays (
   id UUID PRIMARY KEY,
@@ -41,12 +42,14 @@ CREATE TABLE plays (
 ```
 
 **What's Wrong**:
+
 - `diagram_url` is TEXT field meant for image URLs
 - Currently storing JSON diagram documents as strings in `diagram_url`
 - No proper JSONB field for structured diagram data
 - No indexing or querying capabilities for diagram elements
 
 **Impact**:
+
 - Can't query plays by player positions
 - Can't analyze formation patterns
 - Can't migrate diagram versions easily
@@ -55,6 +58,7 @@ CREATE TABLE plays (
 #### **Problem 2: Type Mismatches**
 
 **Play Interface** (`src/types/play.ts`):
+
 ```typescript
 export interface Play {
   // ... fields ...
@@ -65,12 +69,13 @@ export interface Play {
 ```
 
 **DiagramEditor Save Logic** (`diagram-editor/DiagramEditor.tsx` lines 314-342):
+
 ```typescript
 const playData = {
   play_name: name,
   formation: detectFormation(players),
   p_type: "Pass" as const,
-  diagram_data: diagramData,  // ❌ Sending to DB field that doesn't exist!
+  diagram_data: diagramData, // ❌ Sending to DB field that doesn't exist!
 };
 
 await supabase.from("plays").insert(playData as any); // ⚠️ Type assertion hiding error
@@ -80,12 +85,13 @@ await supabase.from("plays").insert(playData as any); // ⚠️ Type assertion h
 
 #### **Issue 1: Two Separate Diagram Systems**
 
-| System              | Location          | Size        | Purpose                | Status  |
-| ------------------- | ----------------- | ----------- | ---------------------- | ------- |
-| **diagram-editor/** | Full-featured     | ~7,500 LOC  | Pixi.js WebGL editor   | ✅ GOOD |
-| **diagram-canvas/** | Lightweight       | ~4,200 LOC  | SVG canvas sketching   | ⚠️ UNUSED? |
+| System              | Location      | Size       | Purpose              | Status     |
+| ------------------- | ------------- | ---------- | -------------------- | ---------- |
+| **diagram-editor/** | Full-featured | ~7,500 LOC | Pixi.js WebGL editor | ✅ GOOD    |
+| **diagram-canvas/** | Lightweight   | ~4,200 LOC | SVG canvas sketching | ⚠️ UNUSED? |
 
 **Analysis**:
+
 - diagram-editor uses Pixi.js (WebGL) - modern, performant
 - diagram-canvas uses SVG - older, less performant
 - Both try to solve the same problem
@@ -95,6 +101,7 @@ await supabase.from("plays").insert(playData as any); // ⚠️ Type assertion h
 #### **Issue 2: Scattered Save/Load Logic**
 
 **Current Flow**:
+
 ```
 DiagramEditor.tsx (component)
   └─> Directly calls Supabase
@@ -105,6 +112,7 @@ DiagramEditor.tsx (component)
 ```
 
 **What's Missing**:
+
 - ❌ No DiagramService abstraction
 - ❌ No diagram validation layer
 - ❌ No diagram versioning strategy
@@ -114,6 +122,7 @@ DiagramEditor.tsx (component)
 #### **Issue 3: Personnel Integration**
 
 **Good**: DiagramEditor loads personnel from database
+
 ```typescript
 const { data: personnelConfig } = usePersonnelConfigurationByName(
   playbookId,
@@ -122,6 +131,7 @@ const { data: personnelConfig } = usePersonnelConfigurationByName(
 ```
 
 **Issues**:
+
 - Personnel data not stored back in diagram document
 - Can't recreate formation from saved diagram alone
 - Missing link between play.personnel and diagram.players
@@ -145,7 +155,7 @@ ADD COLUMN diagram_data JSONB;
 CREATE INDEX idx_plays_diagram_data ON plays USING GIN (diagram_data);
 
 -- Add diagram metadata index
-CREATE INDEX idx_plays_diagram_players ON plays 
+CREATE INDEX idx_plays_diagram_players ON plays
 USING GIN ((diagram_data->'players'));
 
 -- Migrate existing data from diagram_url if it contains JSON
@@ -159,10 +169,10 @@ WHERE diagram_url IS NOT NULL
 -- (Will be populated by thumbnail generation service)
 
 -- Add comment for documentation
-COMMENT ON COLUMN plays.diagram_data IS 
+COMMENT ON COLUMN plays.diagram_data IS
 'JSONB diagram document (version 2+). Contains players, routes, field settings.';
 
-COMMENT ON COLUMN plays.diagram_url IS 
+COMMENT ON COLUMN plays.diagram_url IS
 'PNG thumbnail URL (S3/Supabase Storage). Generated from diagram_data.';
 ```
 
@@ -178,7 +188,7 @@ CREATE INDEX idx_plays_diagram_version ON plays (diagram_version);
 
 -- Add validation constraint (versions 1-10 allowed)
 ALTER TABLE plays
-ADD CONSTRAINT plays_diagram_version_check 
+ADD CONSTRAINT plays_diagram_version_check
 CHECK (diagram_version BETWEEN 1 AND 10);
 ```
 
@@ -187,16 +197,16 @@ CHECK (diagram_version BETWEEN 1 AND 10);
 **File**: `src/types/play.ts`
 
 ```typescript
-import type { DiagramDocument } from '../components/playbook/diagram-editor/types/DiagramTypes';
+import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
 
 export interface Play {
   // ... existing fields ...
-  
+
   // Diagram fields (updated)
-  diagram_data?: DiagramDocument | null;  // ✅ NEW: JSONB diagram document
-  diagram_url?: string | null;             // ✅ UPDATED: PNG thumbnail only
-  diagram_version?: number;                // ✅ NEW: Version tracking
-  
+  diagram_data?: DiagramDocument | null; // ✅ NEW: JSONB diagram document
+  diagram_url?: string | null; // ✅ UPDATED: PNG thumbnail only
+  diagram_version?: number; // ✅ NEW: Version tracking
+
   // ... rest of fields ...
 }
 ```
@@ -210,7 +220,7 @@ export interface Play {
 ```typescript
 /**
  * DiagramService - Centralized diagram operations
- * 
+ *
  * Handles:
  * - Save/load diagram documents
  * - Thumbnail generation
@@ -219,11 +229,11 @@ export interface Play {
  * - Personnel integration
  */
 
-import { supabase } from '../lib/supabase';
-import type { DiagramDocument } from '../components/playbook/diagram-editor/types/DiagramTypes';
-import type { Play } from '../types/play';
-import { generateThumbnail } from '../utils/diagramThumbnails';
-import { validateDiagram } from '../validation/diagramValidation';
+import { supabase } from "../lib/supabase";
+import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
+import type { Play } from "../types/play";
+import { generateThumbnail } from "../utils/diagramThumbnails";
+import { validateDiagram } from "../validation/diagramValidation";
 
 export class DiagramService {
   /**
@@ -266,14 +276,14 @@ export class DiagramService {
 
       // 5. Save to database
       const { data, error } = await supabase
-        .from('plays')
+        .from("plays")
         .update(updateData)
-        .eq('id', playId)
+        .eq("id", playId)
         .select()
         .single();
 
       if (error) {
-        console.error('❌ Failed to save diagram:', error);
+        console.error("❌ Failed to save diagram:", error);
         return { success: false, error: error.message };
       }
 
@@ -282,10 +292,10 @@ export class DiagramService {
         thumbnailUrl: updateData.diagram_url,
       };
     } catch (err) {
-      console.error('❌ DiagramService.saveDiagram error:', err);
+      console.error("❌ DiagramService.saveDiagram error:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : "Unknown error",
       };
     }
   }
@@ -300,9 +310,9 @@ export class DiagramService {
   }> {
     try {
       const { data, error } = await supabase
-        .from('plays')
-        .select('diagram_data, diagram_version, personnel, playbook_id')
-        .eq('id', playId)
+        .from("plays")
+        .select("diagram_data, diagram_version, personnel, playbook_id")
+        .eq("id", playId)
         .single();
 
       if (error) {
@@ -310,7 +320,7 @@ export class DiagramService {
       }
 
       if (!data.diagram_data) {
-        return { success: false, error: 'No diagram data found' };
+        return { success: false, error: "No diagram data found" };
       }
 
       // Handle version migration if needed
@@ -323,7 +333,7 @@ export class DiagramService {
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : "Unknown error",
       };
     }
   }
@@ -353,7 +363,7 @@ export class DiagramService {
    */
   private static detectFormation(players: any[]): string {
     // TODO: Implement formation detection algorithm
-    return 'Custom';
+    return "Custom";
   }
 
   /**
@@ -378,26 +388,28 @@ export class DiagramService {
 **File**: `src/validation/diagramValidation.ts`
 
 ```typescript
-import { z } from 'zod';
-import type { DiagramDocument } from '../components/playbook/diagram-editor/types/DiagramTypes';
+import { z } from "zod";
+import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
 
 const PlayerSchema = z.object({
   id: z.string(),
   x: z.number().min(0).max(53.333),
   y: z.number().min(0).max(35),
   label: z.string(),
-  team: z.enum(['offense', 'defense']),
+  team: z.enum(["offense", "defense"]),
   position: z.string().optional(),
-  alignment: z.enum(['left', 'middle', 'right']).optional(),
+  alignment: z.enum(["left", "middle", "right"]).optional(),
 });
 
 const DiagramDocumentSchema = z.object({
   version: z.literal(2),
-  players: z.array(PlayerSchema).max(22, 'Max 22 players allowed'),
-  meta: z.object({
-    createdAt: z.number(),
-    updatedAt: z.number(),
-  }).optional(),
+  players: z.array(PlayerSchema).max(22, "Max 22 players allowed"),
+  meta: z
+    .object({
+      createdAt: z.number(),
+      updatedAt: z.number(),
+    })
+    .optional(),
 });
 
 export function validateDiagram(document: unknown): {
@@ -411,10 +423,10 @@ export function validateDiagram(document: unknown): {
     if (err instanceof z.ZodError) {
       return {
         valid: false,
-        error: err.errors.map(e => e.message).join(', '),
+        error: err.errors.map((e) => e.message).join(", "),
       };
     }
-    return { valid: false, error: 'Invalid diagram format' };
+    return { valid: false, error: "Invalid diagram format" };
   }
 }
 ```
@@ -426,77 +438,81 @@ export function validateDiagram(document: unknown): {
 **File**: `src/components/playbook/diagram-editor/DiagramEditor.tsx`
 
 **Before** (lines 310-358):
+
 ```typescript
-const performSave = useCallback(async (name: string) => {
-  const diagramData: DiagramDocument = {
-    version: 2,
-    players,
-    // ...
-  };
+const performSave = useCallback(
+  async (name: string) => {
+    const diagramData: DiagramDocument = {
+      version: 2,
+      players,
+      // ...
+    };
 
-  const playData = {
-    play_name: name,
-    formation: detectFormation(players),
-    p_type: "Pass" as const,
-    diagram_data: diagramData, // ❌ Goes to non-existent field
-  };
+    const playData = {
+      play_name: name,
+      formation: detectFormation(players),
+      p_type: "Pass" as const,
+      diagram_data: diagramData, // ❌ Goes to non-existent field
+    };
 
-  await supabase.from("plays").insert(playData as any);
-}, [players]);
+    await supabase.from("plays").insert(playData as any);
+  },
+  [players]
+);
 ```
 
 **After**:
+
 ```typescript
-import { DiagramService } from '../../../services/diagramService';
+import { DiagramService } from "../../../services/diagramService";
 
-const performSave = useCallback(async (name: string) => {
-  try {
-    // 1. Build diagram document
-    const diagramDoc: DiagramDocument = {
-      version: 2,
-      players,
-      meta: {
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    };
+const performSave = useCallback(
+  async (name: string) => {
+    try {
+      // 1. Build diagram document
+      const diagramDoc: DiagramDocument = {
+        version: 2,
+        players,
+        meta: {
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      };
 
-    // 2. Create play first (without diagram)
-    const { data: play, error: playError } = await supabase
-      .from('plays')
-      .insert({
-        play_name: name,
-        p_type: 'Pass' as const,
-        playbook_id: play?.playbook_id,
-      })
-      .select()
-      .single();
+      // 2. Create play first (without diagram)
+      const { data: play, error: playError } = await supabase
+        .from("plays")
+        .insert({
+          play_name: name,
+          p_type: "Pass" as const,
+          playbook_id: play?.playbook_id,
+        })
+        .select()
+        .single();
 
-    if (playError) throw playError;
+      if (playError) throw playError;
 
-    // 3. Save diagram using service
-    const result = await DiagramService.saveDiagram(
-      play.id,
-      diagramDoc,
-      {
+      // 3. Save diagram using service
+      const result = await DiagramService.saveDiagram(play.id, diagramDoc, {
         generateThumbnail: true,
         updateMetadata: true,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error);
       }
-    );
 
-    if (!result.success) {
-      throw new Error(result.error);
+      // 4. Success
+      setIsDirty(false);
+      setShowSaveDialog(false);
+      showAlertModal("✅ Success", `Play "${name}" saved!`);
+    } catch (err) {
+      console.error("❌ Save failed:", err);
+      showAlertModal("❌ Save Failed", err.message);
     }
-
-    // 4. Success
-    setIsDirty(false);
-    setShowSaveDialog(false);
-    showAlertModal('✅ Success', `Play "${name}" saved!`);
-  } catch (err) {
-    console.error('❌ Save failed:', err);
-    showAlertModal('❌ Save Failed', err.message);
-  }
-}, [players, play?.playbook_id]);
+  },
+  [players, play?.playbook_id]
+);
 ```
 
 #### **Consolidate Diagram Systems**
@@ -504,12 +520,14 @@ const performSave = useCallback(async (name: string) => {
 **Decision**: Keep diagram-editor (Pixi.js), deprecate diagram-canvas (SVG)
 
 **Rationale**:
+
 - Pixi.js is more performant (WebGL vs SVG)
 - Better mobile support
 - More modern codebase
 - Active development
 
 **Action**:
+
 ```bash
 # Move diagram-canvas to archive
 mkdir -p archive/deprecated/diagram-canvas-svg-20251012
@@ -540,6 +558,7 @@ mv src/components/playbook/diagram-canvas archive/deprecated/diagram-canvas-svg-
 ### Week 1: Database & Types
 
 **Day 1: Database Migration**
+
 ```bash
 # Create migration file
 touch database/migrations/20251012_add_diagram_data.sql
@@ -552,12 +571,14 @@ npm run db:verify
 ```
 
 **Day 2: Update TypeScript Types**
+
 - Update Play interface
 - Update DiagramDocument types
 - Run type checks
 - Fix type errors
 
 **Day 3: Testing**
+
 - Test existing diagrams still load
 - Test new diagrams save correctly
 - Verify JSONB queries work
@@ -565,17 +586,20 @@ npm run db:verify
 ### Week 2: Service Layer
 
 **Day 4-5: Create DiagramService**
+
 - Implement save/load methods
 - Add validation
 - Add thumbnail generation
 - Write unit tests
 
 **Day 6: Integrate with DiagramEditor**
+
 - Update save logic
 - Update load logic
 - Test end-to-end flow
 
 **Day 7: Buffer/Testing**
+
 - Fix bugs
 - Performance optimization
 - Documentation
@@ -583,16 +607,19 @@ npm run db:verify
 ### Week 3: Cleanup & Optimization
 
 **Day 8-9: Deprecate diagram-canvas**
+
 - Move to archive
 - Update imports
 - Remove dead code
 
 **Day 10: Performance Optimization**
+
 - Add caching
 - Optimize queries
 - Test mobile performance
 
 **Day 11-12: Documentation**
+
 - Update ARCHITECTURE.md
 - Create DIAGRAM_API.md
 - Document migration path
@@ -629,9 +656,11 @@ Once the foundation is solid:
 ## ⚠️ Breaking Changes
 
 ### For Users
+
 - **None** - Existing diagrams will be migrated automatically
 
 ### For Developers
+
 - Import path changes (diagram-canvas → diagram-editor)
 - Save logic must use DiagramService
 - diagram_url now only stores image URLs (not JSON)

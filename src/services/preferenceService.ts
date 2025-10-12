@@ -106,7 +106,7 @@ export class PreferenceService {
         this.saveQueue = this.saveQueue.then(async () => {
           const prefsToSave = { ...this.pendingPreferences };
           this.pendingPreferences = {}; // Clear pending
-          
+
           console.log(
             "[PreferenceService] Saving batched preferences:",
             prefsToSave

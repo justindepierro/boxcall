@@ -60,9 +60,7 @@ export function validateDiagram(
     return { valid: true, data: validated as unknown as DiagramDocument };
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const errors = err.issues.map(
-        (e) => `${e.path.join(".")}: ${e.message}`
-      );
+      const errors = err.issues.map((e) => `${e.path.join(".")}: ${e.message}`);
       return {
         valid: false,
         error: errors.join("; "),

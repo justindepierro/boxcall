@@ -60,7 +60,7 @@ export function usePreference<K extends keyof UserPreferences>(
           if (serverValue !== undefined && !cancelled) {
             // Get the current localStorage value for comparison
             const localValue = getFromLocalStorage(key, defaultValue);
-            
+
             // Only update if server value is different from localStorage value
             // This prevents unnecessary re-renders
             if (JSON.stringify(serverValue) !== JSON.stringify(localValue)) {
