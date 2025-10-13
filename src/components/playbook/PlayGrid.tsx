@@ -8,7 +8,7 @@ import React, {
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
-import { PlayCard } from "./PlayCard";
+import { PlayCardWrapper } from "./PlayCardWrapper";
 import { PlayGridSkeleton } from "./PlayGridSkeleton";
 import { PlayGridErrorState } from "./PlayGridErrorState";
 import { PlayGridEmptyState } from "./PlayGridEmptyState";
@@ -600,26 +600,24 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Stable callback for item rendering (prevents new function each render)
   const renderPlayItem = useCallback(
     (index: number, play: Play) => (
-      <div className="mb-4" role="listitem" data-index={index}>
-        <PlayCard
-          play={play}
-          showOneWordCalls={showOneWordCalls}
-          onEdit={onEdit}
-          onSave={handlePlaySave}
-          onDuplicate={onDuplicate}
-          onCreateDiagram={onCreateDiagram}
-          isSelected={selectedPlayIds.has(play.id)}
-          onSelectionChange={handlePlaySelect}
-          density="compact"
-          variant="list"
-          formationSuggestions={collectedSuggestions.formations}
-          playNameSuggestions={collectedSuggestions.playNames}
-          playTypeSuggestions={collectedSuggestions.playTypes}
-          directionDisplayFormat={directionDisplayFormat || "full"}
-          isExpanded={expandedPlayId === play.id}
-          onToggleExpand={handleToggleExpand}
-        />
-      </div>
+      <PlayCardWrapper
+        play={play}
+        variant="list"
+        index={index}
+        showOneWordCalls={showOneWordCalls}
+        onEdit={onEdit}
+        onSave={handlePlaySave}
+        onDuplicate={onDuplicate}
+        onCreateDiagram={onCreateDiagram}
+        isSelected={selectedPlayIds.has(play.id)}
+        onSelectionChange={handlePlaySelect}
+        formationSuggestions={collectedSuggestions.formations}
+        playNameSuggestions={collectedSuggestions.playNames}
+        playTypeSuggestions={collectedSuggestions.playTypes}
+        directionDisplayFormat={directionDisplayFormat}
+        expandedPlayId={expandedPlayId}
+        onToggleExpand={handleToggleExpand}
+      />
     ),
     [
       showOneWordCalls,
@@ -848,8 +846,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               : ""
                           }`}
                         >
-                          <PlayCard
+                          <PlayCardWrapper
                             play={play}
+                            variant="tile"
+                            index={index}
                             showOneWordCalls={showOneWordCalls}
                             onEdit={onEdit}
                             onSave={handlePlaySave}
@@ -857,17 +857,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             onCreateDiagram={onCreateDiagram}
                             isSelected={selectedPlayIds.has(play.id)}
                             onSelectionChange={handlePlaySelect}
-                            variant="tile"
-                            density="comfortable"
                             formationSuggestions={
                               collectedSuggestions.formations
                             }
                             playNameSuggestions={collectedSuggestions.playNames}
                             playTypeSuggestions={collectedSuggestions.playTypes}
-                            directionDisplayFormat={
-                              directionDisplayFormat || "full"
-                            }
-                            isExpanded={expandedPlayId === play.id}
+                            directionDisplayFormat={directionDisplayFormat}
+                            expandedPlayId={expandedPlayId}
                             onToggleExpand={handleToggleExpand}
                           />
                         </div>
@@ -922,8 +918,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             {...provided.dragHandleProps}
                             className="cursor-grab active:cursor-grabbing"
                           >
-                            <PlayCard
+                            <PlayCardWrapper
                               play={play}
+                              variant="list"
+                              index={index}
                               showOneWordCalls={showOneWordCalls}
                               onEdit={onEdit}
                               onSave={handlePlaySave}
@@ -940,10 +938,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               playTypeSuggestions={
                                 collectedSuggestions.playTypes
                               }
-                              directionDisplayFormat={
-                                directionDisplayFormat || "full"
-                              }
-                              isExpanded={expandedPlayId === play.id}
+                              directionDisplayFormat={directionDisplayFormat}
+                              expandedPlayId={expandedPlayId}
                               onToggleExpand={handleToggleExpand}
                             />
                           </div>
