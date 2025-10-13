@@ -269,6 +269,42 @@ export class PersonnelService {
   }
 
   /**
+   * Check where a personnel configuration is being used
+   * Returns counts of plays and formations referencing this personnel
+   * @param id - Personnel configuration UUID
+   * @returns Object with playsCount and formationsCount
+   */
+  static async checkPersonnelUsage(
+    id: string
+  ): Promise<{ playsCount: number; formationsCount: number }> {
+    try {
+      // Check plays using this personnel (via personnel_id FK)
+      const { count: playsCount, error: playsError } = await supabase
+        .from("plays")
+        .select("*", { count: "exact", head: true })
+        .eq("personnel_id", id);
+
+      if (playsError) throw playsError;
+
+      // Check formations using this personnel
+      const { count: formationsCount, error: formationsError } = await supabase
+        .from("formations")
+        .select("*", { count: "exact", head: true })
+        .eq("personnel_id", id);
+
+      if (formationsError) throw formationsError;
+
+      return {
+        playsCount: playsCount || 0,
+        formationsCount: formationsCount || 0,
+      };
+    } catch (error) {
+      console.error("Failed to check personnel usage:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete a personnel configuration and its players
    * CASCADE will automatically delete players via foreign key
    * @param id - Configuration UUID

@@ -1265,20 +1265,32 @@ export default function PlaybookPage() {
                   debug("Saving personnel configurations:", configurations);
 
                   if (!activePlaybookId) {
-                    toast.error("No playbook selected", "Please select a playbook first");
+                    toast.error(
+                      "No playbook selected",
+                      "Please select a playbook first"
+                    );
                     return;
                   }
 
                   // Load existing configurations from database to compare
-                  const existingConfigs = await PersonnelService.getPersonnelConfigurations(activePlaybookId);
-                  const existingByName = new Map(existingConfigs.map(c => [c.name, c]));
+                  const existingConfigs =
+                    await PersonnelService.getPersonnelConfigurations(
+                      activePlaybookId
+                    );
+                  const existingByName = new Map(
+                    existingConfigs.map((c) => [c.name, c])
+                  );
 
                   // Detect deletions: find configs that exist in database but not in modal
-                  const currentIds = new Set(configurations.map(c => c.id));
+                  const currentIds = new Set(configurations.map((c) => c.id));
                   for (const existing of existingConfigs) {
                     if (!currentIds.has(existing.id)) {
-                      console.log(`🗑️  [PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`);
-                      await PersonnelService.deletePersonnelConfiguration(existing.id);
+                      console.log(
+                        `🗑️  [PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`
+                      );
+                      await PersonnelService.deletePersonnelConfiguration(
+                        existing.id
+                      );
                     }
                   }
 
@@ -1296,27 +1308,39 @@ export default function PlaybookPage() {
                     const existing = existingByName.get(config.name);
 
                     // Check if this is a new config (non-UUID ID) or existing UUID
-                    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(config.id);
-                    
+                    const isUUID =
+                      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+                        config.id
+                      );
+
                     if (existing) {
                       // Config exists in database - check if modified
-                      const isModified = 
+                      const isModified =
                         existing.name !== config.name ||
                         existing.players?.length !== config.players.length;
-                      
+
                       if (isModified) {
-                        console.log(`📝 [PlaybookPage] Updating modified personnel config: ${config.name}`);
-                        await PersonnelService.updatePersonnelConfiguration(existing.id, {
-                          name: config.name,
-                          description: `${config.players.length} skill players`,
-                          players,
-                        });
+                        console.log(
+                          `📝 [PlaybookPage] Updating modified personnel config: ${config.name}`
+                        );
+                        await PersonnelService.updatePersonnelConfiguration(
+                          existing.id,
+                          {
+                            name: config.name,
+                            description: `${config.players.length} skill players`,
+                            players,
+                          }
+                        );
                       } else {
-                        console.log(`⏭️  [PlaybookPage] Skipping unchanged personnel config: ${config.name}`);
+                        console.log(
+                          `⏭️  [PlaybookPage] Skipping unchanged personnel config: ${config.name}`
+                        );
                       }
                     } else if (!isUUID) {
                       // New config with temporary ID - create it
-                      console.log(`📝 [PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`);
+                      console.log(
+                        `📝 [PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`
+                      );
                       await PersonnelService.createPersonnelConfiguration({
                         playbook_id: activePlaybookId,
                         name: config.name,
@@ -1327,18 +1351,22 @@ export default function PlaybookPage() {
                   }
 
                   // Reload personnel configurations from database to get real UUIDs
-                  const savedConfigs = await PersonnelService.getPersonnelConfigurations(activePlaybookId);
-                  
+                  const savedConfigs =
+                    await PersonnelService.getPersonnelConfigurations(
+                      activePlaybookId
+                    );
+
                   // Convert database format back to modal format
-                  const modalConfigs = savedConfigs.map(config => ({
+                  const modalConfigs = savedConfigs.map((config) => ({
                     id: config.id, // Real UUID from database
                     name: config.name,
-                    players: config.players?.map(p => ({
-                      id: `p-${p.id}`,
-                      label: p.label,
-                      position: p.player_position,
-                      isWildcatQB: p.is_wildcat_qb,
-                    })) || [],
+                    players:
+                      config.players?.map((p) => ({
+                        id: `p-${p.id}`,
+                        label: p.label,
+                        position: p.player_position,
+                        isWildcatQB: p.is_wildcat_qb,
+                      })) || [],
                     line: [], // Not used in current implementation
                     isDefault: config.name === "11 Personnel",
                   }));

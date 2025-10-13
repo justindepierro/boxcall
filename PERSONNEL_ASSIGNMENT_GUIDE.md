@@ -26,6 +26,7 @@ npx supabase db push
 ```
 
 Or manually apply via Supabase Dashboard:
+
 1. Go to https://app.supabase.com
 2. Select your project
 3. Go to **SQL Editor**
@@ -86,10 +87,10 @@ CREATE TABLE formations (
   id UUID PRIMARY KEY,
   playbook_id UUID REFERENCES playbooks(id),
   name TEXT NOT NULL,
-  
+
   -- NEW COLUMN ✨
   personnel_packages UUID[] DEFAULT ARRAY[]::UUID[],
-  
+
   -- Other columns...
   category TEXT,
   tags TEXT[],
@@ -109,10 +110,10 @@ interface Formation {
   id: string;
   playbook_id: string;
   name: string;
-  
+
   // Personnel integration
-  personnel_packages: string[];  // Array of personnel_configuration IDs
-  
+  personnel_packages: string[]; // Array of personnel_configuration IDs
+
   // Other properties...
   category: FormationCategory | null;
   tags: string[];
@@ -137,6 +138,7 @@ Tags: trips, compressed
 ### 2. Filter Plays by Personnel
 
 Later, you can filter:
+
 - "Show me all formations that can run 11 Personnel"
 - "Which formations support 21 Personnel?"
 
@@ -162,6 +164,7 @@ Right Variant (Trips Right)
 **File**: `src/components/formations/FormationBuilderPanel.tsx`
 
 **Features**:
+
 - Formation dropdown selector
 - Multi-select personnel pills
 - Category dropdown
@@ -174,6 +177,7 @@ Right Variant (Trips Right)
 **File**: `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`
 
 **Tabs**:
+
 1. **Edit Details** (⚙️) - Personnel assignment (default tab)
 2. **Link Formations** (🔗) - Create left/right variants
 3. **Draw Formation** (✏️) - Canvas builder (coming soon)
@@ -184,7 +188,7 @@ Right Variant (Trips Right)
 
 ```sql
 -- See formations with personnel assigned
-SELECT 
+SELECT
   id,
   name,
   direction,
@@ -200,10 +204,10 @@ WHERE playbook_id = 'your-playbook-id';
 When selecting a formation in Edit Details tab:
 
 ```
-📝 Formation selected: { 
-  id: "uuid", 
-  name: "Trips", 
-  personnel_packages: ["uuid1", "uuid2"] 
+📝 Formation selected: {
+  id: "uuid",
+  name: "Trips",
+  personnel_packages: ["uuid1", "uuid2"]
 }
 ```
 
@@ -226,6 +230,7 @@ When selecting a formation in Edit Details tab:
 ### Migration failed
 
 If `npx supabase db push` fails:
+
 1. Check your Supabase connection in `.env` or `supabase/config.toml`
 2. Manually run SQL via Supabase Dashboard
 3. Verify you have admin access to the database
@@ -242,9 +247,11 @@ If `npx supabase db push` fails:
 ## Files Modified
 
 ### Created
+
 - `supabase/migrations/20251012000000_add_personnel_packages_to_formations.sql` (NEW)
 
 ### Existing (Already Implemented)
+
 - `src/components/formations/FormationBuilderPanel.tsx` (✅ Complete)
 - `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx` (✅ Complete)
 - `src/types/formation.ts` (✅ personnel_packages field exists)
@@ -257,7 +264,7 @@ If `npx supabase db push` fails:
 ✅ Clicking personnel toggles selection (checkmark appears)  
 ✅ Save button persists personnel to database  
 ✅ Linking formations copies personnel packages  
-✅ Database query shows personnel_packages array populated  
+✅ Database query shows personnel_packages array populated
 
 ---
 

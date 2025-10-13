@@ -18,24 +18,24 @@ You **already have** the feature to assign personnel groupings to formations! Ju
 
 ```sql
 -- Add personnel_packages column to formations table
-ALTER TABLE formations 
+ALTER TABLE formations
   ADD COLUMN IF NOT EXISTS personnel_packages UUID[] DEFAULT ARRAY[]::UUID[];
 
 -- Add index for efficient queries
-CREATE INDEX IF NOT EXISTS idx_formations_personnel_packages 
+CREATE INDEX IF NOT EXISTS idx_formations_personnel_packages
   ON formations USING GIN(personnel_packages);
 
 -- Add documentation
-COMMENT ON COLUMN formations.personnel_packages IS 
+COMMENT ON COLUMN formations.personnel_packages IS
   'Array of personnel_configuration.id values that can run this formation';
 
 -- Verify it worked
-SELECT 
-  column_name, 
-  data_type, 
+SELECT
+  column_name,
+  data_type,
   is_nullable
 FROM information_schema.columns
-WHERE table_name = 'formations' 
+WHERE table_name = 'formations'
   AND column_name = 'personnel_packages';
 ```
 
@@ -156,6 +156,7 @@ Tags: trips, compressed
 ### "No personnel configurations found"
 
 **Fix**: Create personnel packages first:
+
 1. Go to Playbook Settings
 2. Click Personnel Builder
 3. Create "11 Personnel", "12 Personnel", etc.
@@ -163,18 +164,21 @@ Tags: trips, compressed
 ### "No formations found"
 
 **Fix**: Formations are created from plays:
+
 1. Create some plays with formation names
 2. Formations will appear in dropdown
 
 ### Personnel not saving
 
 **Fix**: Check console for errors:
+
 ```javascript
 // Look for:
 ❌ Failed to save formation: [error details]
 ```
 
 Common causes:
+
 - Migration not applied
 - RLS policy blocking updates
 - Network error
@@ -182,6 +186,7 @@ Common causes:
 ## 📚 Full Documentation
 
 See `PERSONNEL_ASSIGNMENT_GUIDE.md` for:
+
 - Complete architecture details
 - Database schema
 - TypeScript types

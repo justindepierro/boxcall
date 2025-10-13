@@ -12,6 +12,7 @@ You successfully applied the database migration that enables assigning personnel
 ### ✅ Migration Applied Successfully
 
 All migrations are now synced:
+
 ```
 ✅ 20251011000000 - Personnel System (applied)
 ✅ 20251011000001 - Personnel Rollback (applied)
@@ -21,6 +22,7 @@ All migrations are now synced:
 ### ✅ Database Changes
 
 Your `formations` table now has:
+
 - **Column**: `personnel_packages` (UUID array)
 - **Index**: `idx_formations_personnel_packages` (GIN index for fast queries)
 - **Default**: Empty array `[]`
@@ -38,6 +40,7 @@ Your `formations` table now has:
 ### Step 2: Select a Formation
 
 Click the dropdown at the top:
+
 ```
 ┌─────────────────────────────────────────┐
 │ Choose a formation to edit... (6 available) │
@@ -64,6 +67,7 @@ Personnel Packages:
 ```
 
 **What happens:**
+
 - Click = adds checkmark ✓
 - Click again = removes checkmark
 - Badge shows count: "✓ 2 personnel packages selected"
@@ -71,16 +75,19 @@ Personnel Packages:
 ### Step 4: Set Other Details (Optional)
 
 **Formation Category:**
+
 ```
 [▼ Spread                    ]
 ```
 
 **Tags** (comma-separated):
+
 ```
 twins, compressed, stack
 ```
 
 **Description:**
+
 ```
 Three receivers bunched to one side
 with compressed splits
@@ -95,6 +102,7 @@ with compressed splits
 ```
 
 You'll see:
+
 - ✅ Success message
 - Personnel saved to database
 - Formation refreshes with your changes
@@ -108,6 +116,7 @@ You'll see:
 Tag formations with multiple personnel packages:
 
 **Example: Trips formation**
+
 - ✓ 11 Personnel (1 RB, 1 TE, 3 WR)
 - ✓ 12 Personnel (1 RB, 2 TE, 2 WR)
 
@@ -116,6 +125,7 @@ This means "Trips" can be run with either 11 or 12 personnel.
 ### 2. Categorize Formations
 
 Set categories for organization:
+
 - **Spread** - Empty, Trips, Quads
 - **Pro** - Pro Twins, Pro Trips
 - **Power** - I-Formation, Power I
@@ -126,6 +136,7 @@ Set categories for organization:
 ### 3. Tag for Filtering
 
 Add tags to find formations later:
+
 - `twins, compressed` - Two receivers close together
 - `trips, unbalanced` - Three receivers, heavy side
 - `stack, vertical` - Vertical stack alignment
@@ -135,17 +146,19 @@ Add tags to find formations later:
 When you link formations, personnel automatically copies!
 
 **Before linking:**
+
 ```
 Trips (base)
   personnel_packages: [11, 12]
 ```
 
 **After linking Trips ↔ Trips:**
+
 ```
 Trips (left)              Trips (right)
   personnel_packages:       personnel_packages:
     [11, 12] ←──────────────→ [11, 12]
-    
+
 Personnel automatically copied to both!
 ```
 
@@ -172,7 +185,7 @@ Run this in Supabase SQL Editor:
 
 ```sql
 -- See all formations with personnel assigned
-SELECT 
+SELECT
   name,
   direction,
   category,
@@ -198,12 +211,14 @@ You should see your personnel assignments!
 ### Frontend Components
 
 **FormationBuilderPanel** (`src/components/formations/FormationBuilderPanel.tsx`)
+
 - Personnel multi-select UI
 - Category dropdown
 - Tags input
 - Save logic
 
 **FormationBuilderModal** (`src/components/playbook/FormationBuilderModal/FormationBuilderModal.tsx`)
+
 - Three-tab interface
 - Edit Details (default)
 - Link Formations
@@ -212,9 +227,10 @@ You should see your personnel assignments!
 ### Backend/Types
 
 **Formation Type** (`src/types/formation.ts`)
+
 ```typescript
 interface Formation {
-  personnel_packages: string[];  // Array of personnel config IDs
+  personnel_packages: string[]; // Array of personnel config IDs
   category: FormationCategory | null;
   tags: string[];
   description: string | null;
@@ -223,12 +239,13 @@ interface Formation {
 ```
 
 **FormationService** (`src/services/formationService.ts`)
+
 ```typescript
 FormationService.updateFormation(formationId, {
   personnel_packages: ["uuid1", "uuid2"],
   category: "spread",
   tags: ["twins", "compressed"],
-  description: "..."
+  description: "...",
 });
 ```
 
@@ -241,6 +258,7 @@ FormationService.updateFormation(formationId, {
 **Problem**: You haven't created any personnel packages yet.
 
 **Solution**:
+
 1. Go to Playbook Settings
 2. Open Personnel Builder
 3. Create "11 Personnel", "12 Personnel", etc.
@@ -251,6 +269,7 @@ FormationService.updateFormation(formationId, {
 **Problem**: No formations exist in database.
 
 **Solution**: Formations are auto-created from plays:
+
 1. Create plays with formation names
 2. Formations will appear in Formation Builder
 
@@ -259,11 +278,13 @@ FormationService.updateFormation(formationId, {
 **Symptoms**: Click save, but personnel doesn't persist.
 
 **Check**:
+
 1. Browser console for errors
 2. Network tab for failed requests
 3. Supabase RLS policies (make sure you can UPDATE formations)
 
-**Fix**: 
+**Fix**:
+
 ```sql
 -- Grant update permissions if needed
 ALTER TABLE formations ENABLE ROW LEVEL SECURITY;
@@ -335,6 +356,7 @@ empty         → No running back
 You now have a fully functional personnel assignment system for formations!
 
 **What you built:**
+
 - ✅ Personnel groupings from Personnel Builder
 - ✅ Formation metadata editor (Edit Details tab)
 - ✅ Multi-select personnel assignment
@@ -344,6 +366,7 @@ You now have a fully functional personnel assignment system for formations!
 - ✅ Database storage with efficient indexing
 
 **Impact:**
+
 - Better organization of formations
 - Clear personnel requirements per formation
 - Foundation for filtering and search
@@ -354,6 +377,7 @@ You now have a fully functional personnel assignment system for formations!
 **Enjoy your new feature!** 🎉
 
 Questions? Check:
+
 - `QUICK_START_PERSONNEL_FORMATIONS.md` - Quick guide
 - `PERSONNEL_ASSIGNMENT_GUIDE.md` - Full documentation
 - `FORMATION_BUILDER_TAB_SUMMARY.md` - Implementation details

@@ -343,6 +343,33 @@ export class FormationService {
   // ===================================================================
 
   /**
+   * Check where a formation is being used
+   * Returns count of plays referencing this formation
+   * @param id - Formation UUID
+   * @returns Object with playsCount
+   */
+  static async checkFormationUsage(
+    id: string
+  ): Promise<{ playsCount: number }> {
+    try {
+      // Check plays using this formation (via formation_id FK)
+      const { count: playsCount, error: playsError } = await supabase
+        .from("plays")
+        .select("*", { count: "exact", head: true })
+        .eq("formation_id", id);
+
+      if (playsError) throw playsError;
+
+      return {
+        playsCount: playsCount || 0,
+      };
+    } catch (error) {
+      console.error("Failed to check formation usage:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete formation
    * Note: Will cascade delete variants if deleting base formation
    */

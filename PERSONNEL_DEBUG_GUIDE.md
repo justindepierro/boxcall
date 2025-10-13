@@ -1,6 +1,7 @@
 # Personnel Not Showing Debug Guide
 
 ## Issue
+
 Only seeing "11 Personnel" instead of Blue, Green, Black personnel configurations.
 
 ## Debug Steps
@@ -44,7 +45,7 @@ Run this in **Supabase SQL Editor**:
 
 ```sql
 -- Check personnel configurations in your playbook
-SELECT 
+SELECT
   pc.id,
   pc.name,
   pc.description,
@@ -60,6 +61,7 @@ ORDER BY pc.name;
 ```
 
 **Expected Results:**
+
 ```
 id                 | name            | description          | player_count
 -------------------|-----------------|---------------------|-------------
@@ -76,6 +78,7 @@ uuid-4             | Green           | Description...      | 5
 **Symptom**: SQL query returns only "11 Personnel"
 
 **Solution**: Create your Blue, Green, Black personnel via:
+
 1. Playbook Settings → Personnel Builder
 2. Or SQL:
 
@@ -97,14 +100,15 @@ RETURNING id;
 
 **Symptom**: Console shows `personnelCount: 0` or only shows default "11 Personnel"
 
-**Solution**: 
+**Solution**:
+
 1. Check which playbook you're viewing
 2. Verify personnel are created for THAT playbook
 3. Personnel are playbook-specific!
 
 ```sql
 -- Find your current playbook
-SELECT id, name FROM playbooks 
+SELECT id, name FROM playbooks
 WHERE id = 'the-id-shown-in-your-url-or-console';
 
 -- Check personnel for that specific playbook
@@ -117,26 +121,30 @@ WHERE playbook_id = 'your-playbook-id-here';
 **Symptom**: Database shows personnel but UI doesn't
 
 **Solution**:
+
 1. Hard refresh: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
 2. Clear browser cache
 3. Close and reopen Formation Manager modal
 
 ### Issue 4: Console Shows Multiple Personnel but UI Shows Only One
 
-**Symptom**: 
+**Symptom**:
+
 ```javascript
 // Console shows:
-count: 4  // ← Multiple personnel loaded
+count: 4; // ← Multiple personnel loaded
 
 // But UI only shows "11 Personnel"
 ```
 
 **Solution**: There might be a rendering issue. Check:
+
 1. Do you see the console log `🎨 Rendering personnel buttons:`?
 2. What does `availableCount` show?
 3. Is the `map()` function being called?
 
 If console shows data but UI doesn't render, it could be:
+
 - CSS hiding buttons (check inspector)
 - React not re-rendering
 - State not updating
@@ -164,11 +172,11 @@ location.reload();
 ```typescript
 // In browser console:
 const { data } = await supabase
-  .from('personnel_configurations')
-  .select('*')
-  .eq('playbook_id', 'YOUR_PLAYBOOK_ID');
-  
-console.log('Personnel from API:', data);
+  .from("personnel_configurations")
+  .select("*")
+  .eq("playbook_id", "YOUR_PLAYBOOK_ID");
+
+console.log("Personnel from API:", data);
 ```
 
 ## What to Share
@@ -176,11 +184,13 @@ console.log('Personnel from API:', data);
 If the issue persists, share these in console:
 
 1. **Personnel load log**:
+
    ```
    👥 [FormationBuilderPanel] Personnel configurations: {...}
    ```
 
 2. **Render log**:
+
    ```
    🎨 [FormationBuilderPanel] Rendering personnel buttons: {...}
    ```

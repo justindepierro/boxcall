@@ -168,22 +168,26 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
     // If this is a left formation, find the right one
     if (selectedFormation.direction === "left") {
-      return allFormations.find(
-        (f) =>
-          f.name === selectedFormation.name &&
-          f.direction === "right" &&
-          f.base_formation_id === selectedFormation.base_formation_id
-      ) || null;
+      return (
+        allFormations.find(
+          (f) =>
+            f.name === selectedFormation.name &&
+            f.direction === "right" &&
+            f.base_formation_id === selectedFormation.base_formation_id
+        ) || null
+      );
     }
 
     // If this is a right formation, find the left one
     if (selectedFormation.direction === "right") {
-      return allFormations.find(
-        (f) =>
-          f.name === selectedFormation.name &&
-          f.direction === "left" &&
-          f.base_formation_id === selectedFormation.base_formation_id
-      ) || null;
+      return (
+        allFormations.find(
+          (f) =>
+            f.name === selectedFormation.name &&
+            f.direction === "left" &&
+            f.base_formation_id === selectedFormation.base_formation_id
+        ) || null
+      );
     }
 
     return null;
@@ -216,9 +220,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
       // If "Apply to both sides" is checked and there's a linked formation, update it too
       if (applyToBothSides && linkedFormation) {
-        console.log("📝 Applying changes to linked formation:", linkedFormation.name, linkedFormation.direction);
+        console.log(
+          "📝 Applying changes to linked formation:",
+          linkedFormation.name,
+          linkedFormation.direction
+        );
         await FormationService.updateFormation(linkedFormation.id, updateData);
-        alert(`Formation updated successfully!\n✅ Changes applied to both ${selectedFormation.direction} and ${linkedFormation.direction} variants.`);
+        alert(
+          `Formation updated successfully!\n✅ Changes applied to both ${selectedFormation.direction} and ${linkedFormation.direction} variants.`
+        );
       } else {
         alert("Formation updated successfully!");
       }
@@ -296,7 +306,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
             >
               <option value="">
-                Choose a formation to edit... ({visibleFormations.length} available)
+                Choose a formation to edit... ({visibleFormations.length}{" "}
+                available)
               </option>
               {visibleFormations.map((formation) => (
                 <option key={formation.id} value={formation.id}>
@@ -329,7 +340,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                   htmlFor="applyToBothSides"
                   className="text-sm text-primary-700 font-medium cursor-pointer"
                 >
-                  Apply changes to both {selectedFormation.direction} and {linkedFormation.direction} variants
+                  Apply changes to both {selectedFormation.direction} and{" "}
+                  {linkedFormation.direction} variants
                 </label>
               </div>
             )}

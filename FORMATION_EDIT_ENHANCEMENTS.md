@@ -14,6 +14,7 @@
 **Solution**: Base formations are now **automatically hidden** if they have left/right variants (just like the Link tab does).
 
 **Example**:
+
 ```
 Before:
 - Trips (Base)  ← Shown even with variants
@@ -33,12 +34,14 @@ After:
 **Solution**: Added **"Apply to both sides" checkbox** that updates both linked formations at once!
 
 **Features**:
+
 - ✅ **Checkbox appears automatically** when editing a linked formation
 - ✅ **Checked by default** (can be unchecked if you only want to update one side)
 - ✅ **Updates personnel, category, tags, and description** to both variants
 - ✅ **Visual indicator** shows which variants will be updated
 
 **UI Preview**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Trips (Left) ← Left                                 │
@@ -52,6 +55,7 @@ After:
 **Problem**: None! Personnel already works with custom configurations.
 
 **Confirmed Working**:
+
 - ✅ Blue, Green, Black personnel show in dropdown
 - ✅ All custom personnel from Personnel Builder appear
 - ✅ Multi-select works with any personnel configurations
@@ -71,6 +75,7 @@ After:
 7. **Both left and right variants update!** 🎉
 
 **Confirmation Message**:
+
 ```
 Formation updated successfully!
 ✅ Changes applied to both left and right variants.
@@ -93,6 +98,7 @@ Formation updated successfully!
 **Scenario**: You want "Trips" to support 11 and 12 personnel for both left and right.
 
 **Steps**:
+
 1. Select "Trips (Left)"
 2. Leave checkbox checked ✓
 3. Select 11 Personnel and 12 Personnel
@@ -101,6 +107,7 @@ Formation updated successfully!
 6. Click Save
 
 **Result**:
+
 - ✅ Trips (Left) → 11, 12 personnel
 - ✅ Trips (Right) → 11, 12 personnel (auto-updated!)
 
@@ -109,6 +116,7 @@ Formation updated successfully!
 **Scenario**: You have "Rip" (left) and "Liz" (right) that need different personnel.
 
 **Steps**:
+
 1. Select "Rip (Left)"
 2. **Uncheck** "Apply to both sides" ☐
 3. Select 11 Personnel only
@@ -119,6 +127,7 @@ Formation updated successfully!
 8. Click Save
 
 **Result**:
+
 - ✅ Rip (Left) → 11 personnel
 - ✅ Liz (Right) → 12 personnel (different!)
 
@@ -127,6 +136,7 @@ Formation updated successfully!
 **Scenario**: You have a new formation "Empty" with no variants yet.
 
 **Steps**:
+
 1. Select "Empty (Base)" ← Shown because no variants
 2. No checkbox appears (not linked)
 3. Set personnel, category, tags
@@ -158,6 +168,7 @@ const visibleFormations = allFormations.filter((formation) => {
 ```
 
 **Logic**:
+
 - Base formation with variants → Hidden
 - Base formation without variants → Shown
 - All left/right formations → Always shown
@@ -170,22 +181,26 @@ const getLinkedFormation = (): Formation | null => {
 
   // If this is a left formation, find the right one
   if (selectedFormation.direction === "left") {
-    return allFormations.find(
-      (f) =>
-        f.name === selectedFormation.name &&
-        f.direction === "right" &&
-        f.base_formation_id === selectedFormation.base_formation_id
-    ) || null;
+    return (
+      allFormations.find(
+        (f) =>
+          f.name === selectedFormation.name &&
+          f.direction === "right" &&
+          f.base_formation_id === selectedFormation.base_formation_id
+      ) || null
+    );
   }
 
   // If this is a right formation, find the left one
   if (selectedFormation.direction === "right") {
-    return allFormations.find(
-      (f) =>
-        f.name === selectedFormation.name &&
-        f.direction === "left" &&
-        f.base_formation_id === selectedFormation.base_formation_id
-    ) || null;
+    return (
+      allFormations.find(
+        (f) =>
+          f.name === selectedFormation.name &&
+          f.direction === "left" &&
+          f.base_formation_id === selectedFormation.base_formation_id
+      ) || null
+    );
   }
 
   return null;
@@ -193,6 +208,7 @@ const getLinkedFormation = (): Formation | null => {
 ```
 
 **Matching Criteria**:
+
 1. Same formation name
 2. Opposite direction (left ↔ right)
 3. Same base_formation_id (linked together)
@@ -227,6 +243,7 @@ const handleSave = async () => {
 ### Scenario 1: Linked Twins Formations
 
 **Database**:
+
 ```
 formations:
   - Twins (base) base_formation_id: null
@@ -235,6 +252,7 @@ formations:
 ```
 
 **Dropdown Shows**:
+
 ```
 - Twins (Left)   ← Only variants shown
 - Twins (Right)
@@ -245,12 +263,14 @@ formations:
 ### Scenario 2: Unlinked Trips Formation
 
 **Database**:
+
 ```
 formations:
   - Trips (base) base_formation_id: null
 ```
 
 **Dropdown Shows**:
+
 ```
 - Trips (Base)   ← Shown because no variants
 ```
@@ -260,6 +280,7 @@ formations:
 ### Scenario 3: Mixed Formations
 
 **Database**:
+
 ```
 formations:
   - Trips (base) base_formation_id: null [has variants]
@@ -271,6 +292,7 @@ formations:
 ```
 
 **Dropdown Shows**:
+
 ```
 - Empty (Base)    ← No variants, show base
 - Trips (Left)    ← Has variants, show left
@@ -288,6 +310,7 @@ formations:
 **Location**: Below formation badge, above personnel section
 
 **Appearance**:
+
 ```tsx
 <div className="flex items-center gap-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
   <input type="checkbox" checked={applyToBothSides} />
@@ -298,6 +321,7 @@ formations:
 ```
 
 **Styling**:
+
 - Light blue background (`bg-primary-50`)
 - Blue border (`border-primary-200`)
 - Blue text (`text-primary-700`)
@@ -305,6 +329,7 @@ formations:
 - Padding and spacing
 
 **Conditional Rendering**:
+
 - Only shows if `linkedFormation` exists
 - Hides for base formations
 - Hides for unlinked formations
@@ -386,17 +411,20 @@ formations:
 ### Lines Changed
 
 1. **Added state** (line 62):
+
    ```typescript
    const [applyToBothSides, setApplyToBothSides] = useState<boolean>(true);
    ```
 
 2. **Added helper function** (lines 147-178):
+
    ```typescript
    const getLinkedFormation = (): Formation | null => { ... }
    const linkedFormation = getLinkedFormation();
    ```
 
 3. **Updated save logic** (lines 180-215):
+
    ```typescript
    if (applyToBothSides && linkedFormation) {
      await FormationService.updateFormation(linkedFormation.id, updateData);
@@ -404,11 +432,13 @@ formations:
    ```
 
 4. **Added filtering logic** (lines 240-255):
+
    ```typescript
    const visibleFormations = allFormations.filter((formation) => { ... });
    ```
 
 5. **Updated dropdown** (line 268, 281-283):
+
    ```typescript
    {visibleFormations.map((formation) => ...)}
    ```
@@ -428,7 +458,7 @@ formations:
 ✅ All existing functionality preserved  
 ✅ Backward compatible  
 ✅ No API changes  
-✅ No migration needed  
+✅ No migration needed
 
 ---
 
