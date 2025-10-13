@@ -17,7 +17,9 @@ import {
 } from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { SaveStateProvider, useSaveState } from "./contexts/SaveStateContext";
+import { UndoRedoProvider } from "./contexts/UndoRedoContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
+import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
@@ -77,11 +79,13 @@ function App() {
         <AnalyticsProvider>
           <DevModeProvider>
             <SaveStateProvider>
-              <div className="App">
-                <DevHealthCheck />
-                <PendingSavesNotification />
-                <ConflictOverlay />
-                <AppGrid>
+              <UndoRedoProvider maxHistorySize={50}>
+                <div className="App">
+                  <DevHealthCheck />
+                  <PendingSavesNotification />
+                  <UndoRedoIndicator />
+                  <ConflictOverlay />
+                  <AppGrid>
                   <AuthGuard>
                     <DataRouterApp />
                   </AuthGuard>
@@ -106,6 +110,7 @@ function App() {
                 {/* Analytics Debug Panel (dev only) */}
                 <AnalyticsDebugger />
               </div>
+              </UndoRedoProvider>
             </SaveStateProvider>
           </DevModeProvider>
         </AnalyticsProvider>
