@@ -103,6 +103,9 @@ export interface Play {
   created_at: Date; // timestamptz DEFAULT NOW()
   updated_at: Date; // timestamptz DEFAULT NOW()
 
+  // Optimistic locking (conflict resolution)
+  version?: number; // integer DEFAULT 1 - incremented on each update
+
   // Optional metadata
   is_archived?: boolean; // boolean DEFAULT false
   last_used_at?: Date; // timestamptz

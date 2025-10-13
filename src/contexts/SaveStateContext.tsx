@@ -14,9 +14,10 @@
  * - Save queue with retry logic (v3.0)
  * - Exponential backoff for failures
  * - Online/offline detection (v3.1)
- * - IndexedDB persistence (v3.2) 🆕
+ * - IndexedDB persistence (v3.2)
+ * - Conflict resolution (v3.3) 🆕
  *
- * @version 3.2.0 - Queue Persistence
+ * @version 3.3.0 - Conflict Resolution
  */
 
 import React, {
@@ -34,8 +35,9 @@ import {
   clearAllOperations,
   type PersistedSaveOperation,
 } from "../utils/saveQueueDB";
+import type { ConflictResolution } from "../types/saveConflict";
 
-export type SaveStatus = "idle" | "success" | "error" | "warning";
+export type SaveStatus = "idle" | "success" | "error" | "warning" | "conflict";
 
 export interface SaveOperation {
   id: string;
@@ -46,6 +48,7 @@ export interface SaveOperation {
   maxRetries: number;
   timestamp: number;
   description?: string;
+  version?: number; // For optimistic locking (v3.3)
 }
 
 interface SaveStateContextValue {
@@ -59,6 +62,8 @@ interface SaveStateContextValue {
   isOnline: boolean;
   /** Whether there are pending operations from last session (v3.2) */
   hasPendingFromLastSession: boolean;
+  /** Current active conflict (v3.3) */
+  activeConflict: ConflictResolution | null;
   /** Start a save operation (shows spinner) */
   startSaving: () => void;
   /** Finish save operation with status (shows color flash) */
@@ -69,6 +74,10 @@ interface SaveStateContextValue {
   retryFailedSaves: () => Promise<void>;
   /** Clear all queued saves */
   clearQueue: () => Promise<void>;
+  /** Show conflict resolution dialog (v3.3) */
+  showConflict: (conflict: ConflictResolution) => void;
+  /** Clear active conflict */
+  clearConflict: () => void;
 }
 
 const SaveStateContext = createContext<SaveStateContextValue | undefined>(
@@ -83,6 +92,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [saveQueue, setSaveQueue] = useState<SaveOperation[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [hasPendingFromLastSession, setHasPendingFromLastSession] = useState(false);
+  const [activeConflict, setActiveConflict] = useState<ConflictResolution | null>(null);
 
   // Track timeout for cleanup
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -335,6 +345,16 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [saveQueue.length, retryFailedSaves]);
 
+  // Conflict resolution methods (v3.3)
+  const showConflict = useCallback((conflict: ConflictResolution) => {
+    setActiveConflict(conflict);
+    finishSaving("conflict"); // Show yellow indicator
+  }, [finishSaving]);
+
+  const clearConflict = useCallback(() => {
+    setActiveConflict(null);
+  }, []);
+
   return (
     <SaveStateContext.Provider
       value={{ 
@@ -343,11 +363,14 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         queueLength: saveQueue.length,
         isOnline,
         hasPendingFromLastSession,
+        activeConflict,
         startSaving, 
         finishSaving,
         queueSave,
         retryFailedSaves,
-        clearQueue
+        clearQueue,
+        showConflict,
+        clearConflict
       }}
     >
       {children}

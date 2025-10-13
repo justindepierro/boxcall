@@ -16,10 +16,23 @@ import {
   AnalyticsDebugger,
 } from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
-import { SaveStateProvider } from "./contexts/SaveStateContext";
+import { SaveStateProvider, useSaveState } from "./contexts/SaveStateContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
+import { ConflictDialog } from "./components/conflicts/ConflictDialog";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
+
+/**
+ * ConflictOverlay - Shows conflict dialog when there's an active conflict
+ */
+function ConflictOverlay() {
+  const { activeConflict } = useSaveState();
+
+  if (!activeConflict) return null;
+
+  return <ConflictDialog conflict={activeConflict} />;
+}
+
 /**
  * App Component
  *
@@ -67,6 +80,7 @@ function App() {
               <div className="App">
                 <DevHealthCheck />
                 <PendingSavesNotification />
+                <ConflictOverlay />
                 <AppGrid>
                   <AuthGuard>
                     <DataRouterApp />

@@ -101,6 +101,9 @@ export interface Formation {
   created_at: string;
   updated_at: string;
   created_by: string | null;
+
+  // Optimistic locking (conflict resolution)
+  version?: number; // integer DEFAULT 1 - incremented on each update
 }
 
 /**
