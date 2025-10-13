@@ -1,6 +1,7 @@
 # Phase 3A Step 2: auth-store.ts Splitting Plan
 
 ## Overview
+
 **File**: `src/app/auth-store.ts`  
 **Size**: 1,271 lines  
 **Risk Level**: MEDIUM  
@@ -9,6 +10,7 @@
 ## Current Structure Analysis
 
 ### Responsibilities Identified
+
 1. **Authentication State** (user, session management)
 2. **User Profile Management** (profile CRUD, caching)
 3. **Session Management** (refresh, monitoring, lifecycle)
@@ -18,6 +20,7 @@
 7. **Profile Caching** (TTL-based cache with Map)
 
 ### Key Components
+
 - **State**: user, session, profile, loading, profileLoading, error
 - **Actions**: signIn, signUp, signOut, resetPassword, refreshSession
 - **Utilities**: getAuthErrorMessage, profile caching, offline handling
@@ -27,6 +30,7 @@
 - **Selector Hooks**: useAuthUser, useAuthProfile, useIsAuthenticated, etc.
 
 ### Dependencies
+
 - Zustand (create, persist)
 - Supabase client
 - authRateLimit utilities
@@ -69,6 +73,7 @@ src/app/auth/
 ## Implementation Strategy
 
 ### Phase 1: Extract Utilities (Low Risk)
+
 1. **types.ts** - Extract interfaces
    - `ProfileCache`
    - Re-export from external types (User, Session, UserProfile)
@@ -98,6 +103,7 @@ src/app/auth/
    - Internal state (refreshInterval, refreshAttempts)
 
 ### Phase 2: Create Core Store (Medium Risk)
+
 1. **stores/authStore.ts** - Main Zustand store
    - Keep persist middleware
    - State: user, session, profile, loading, profileLoading, error
@@ -105,7 +111,9 @@ src/app/auth/
    - Use extracted utilities
 
 ### Phase 3: Extract Actions (Low Risk - Optional Refactor)
+
 If time permits, extract individual actions into separate files for better organization:
+
 - **actions/signIn.ts** - Sign in implementation
 - **actions/signUp.ts** - Sign up implementation
 - **actions/signOut.ts** - Sign out implementation
@@ -113,6 +121,7 @@ If time permits, extract individual actions into separate files for better organ
 - **actions/refreshSession.ts** - Session refresh
 
 ### Phase 4: Create Selector Hooks (Low Risk)
+
 1. **hooks/useAuth.ts** - Main hook (re-exports store)
 2. **hooks/useAuthUser.ts** - User selector
 3. **hooks/useAuthProfile.ts** - Profile selector
@@ -120,29 +129,33 @@ If time permits, extract individual actions into separate files for better organ
 5. **hooks/useAuthRole.ts** - Role selectors (isCoach, isPlayer, etc.)
 
 ### Phase 5: Extract Initialization (Medium Risk)
+
 1. **initialization.ts**
    - `initializeAuth()` function
    - `onAuthStateChange` listener setup
    - Call initialization on module load
 
 ### Phase 6: Create Public API (Low Risk)
+
 1. **index.ts** - Export everything
    - Main `useAuth` hook
    - All selector hooks
    - Types (if needed externally)
 
 ### Phase 7: Backward Compatibility (Critical)
+
 1. Update original `auth-store.ts` to re-export from new structure
 2. Maintain exact same API surface
 
 ## Detailed File Breakdown
 
 ### 1. types.ts (~30 lines)
-```typescript
-import type { User, Session } from '@supabase/supabase-js';
-import type { Database } from '@/types/database.types';
 
-export type UserProfile = Database['public']['Tables']['profiles']['Row'];
+```typescript
+import type { User, Session } from "@supabase/supabase-js";
+import type { Database } from "@/types/database.types";
+
+export type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface ProfileCache {
   data: UserProfile;
@@ -162,6 +175,7 @@ export interface AuthState {
 ```
 
 ### 2. constants.ts (~25 lines)
+
 ```typescript
 // Cache configuration
 export const PROFILE_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
@@ -179,17 +193,19 @@ export const NETWORK_BASE_DELAY = 1000;
 export const NETWORK_MAX_DELAY = 10000;
 
 // Database error codes
-export const POSTGRES_NO_ROWS_CODE = 'PGRST116';
+export const POSTGRES_NO_ROWS_CODE = "PGRST116";
 ```
 
 ### 3. utils/errorMessages.ts (~120 lines)
+
 - Extract entire `getAuthErrorMessage()` function
 - Self-contained, no dependencies on store state
 
 ### 4. utils/profileCache.ts (~80 lines)
+
 ```typescript
-import type { UserProfile, ProfileCache } from '../types';
-import { PROFILE_CACHE_TTL } from '../constants';
+import type { UserProfile, ProfileCache } from "../types";
+import { PROFILE_CACHE_TTL } from "../constants";
 
 const profileCache = new Map<string, ProfileCache>();
 
@@ -220,88 +236,104 @@ export function clearAllProfileCache(): void {
 ```
 
 ### 5. utils/sessionRefresh.ts (~180 lines)
+
 - Extract `startSessionRefresh()` function
 - Extract `stopSessionRefresh()` function
 - Keep internal state (refreshInterval, refreshAttempts)
 - Takes useAuth store as dependency
 
 ### 6. stores/authStore.ts (~600 lines)
+
 - Main Zustand store with persist
 - All auth actions
 - Uses extracted utilities
 - Maintains exact same state shape
 
 ### 7. hooks/useAuth.ts (~15 lines)
+
 ```typescript
-export { useAuth } from '../stores/authStore';
-export * from './useAuthUser';
-export * from './useAuthProfile';
-export * from './useAuthLoading';
-export * from './useAuthRole';
+export { useAuth } from "../stores/authStore";
+export * from "./useAuthUser";
+export * from "./useAuthProfile";
+export * from "./useAuthLoading";
+export * from "./useAuthRole";
 ```
 
 ### 8. hooks/useAuthUser.ts (~5 lines)
+
 ```typescript
-import { useAuth } from '../stores/authStore';
+import { useAuth } from "../stores/authStore";
 export const useAuthUser = () => useAuth((state) => state.user);
 ```
 
 ### 9. hooks/useAuthProfile.ts (~5 lines)
+
 ```typescript
-import { useAuth } from '../stores/authStore';
+import { useAuth } from "../stores/authStore";
 export const useAuthProfile = () => useAuth((state) => state.profile);
 ```
 
 ### 10. hooks/useAuthLoading.ts (~15 lines)
+
 ```typescript
-import { useAuth } from '../stores/authStore';
+import { useAuth } from "../stores/authStore";
 export const useAuthLoading = () => useAuth((state) => state.loading);
-export const useAuthProfileLoading = () => useAuth((state) => state.profileLoading);
+export const useAuthProfileLoading = () =>
+  useAuth((state) => state.profileLoading);
 export const useAuthError = () => useAuth((state) => state.error);
 ```
 
 ### 11. hooks/useAuthRole.ts (~30 lines)
+
 ```typescript
-import { useAuth } from '../stores/authStore';
+import { useAuth } from "../stores/authStore";
 
 export const useIsAuthenticated = () => useAuth((state) => !!state.user);
-export const useIsCoach = () => useAuth((state) => state.profile?.role === 'coach');
-export const useIsPlayer = () => useAuth((state) => state.profile?.role === 'player');
-export const useIsFamily = () => useAuth((state) => state.profile?.role === 'family');
-export const useIsAdmin = () => useAuth((state) => state.profile?.role === 'admin');
+export const useIsCoach = () =>
+  useAuth((state) => state.profile?.role === "coach");
+export const useIsPlayer = () =>
+  useAuth((state) => state.profile?.role === "player");
+export const useIsFamily = () =>
+  useAuth((state) => state.profile?.role === "family");
+export const useIsAdmin = () =>
+  useAuth((state) => state.profile?.role === "admin");
 ```
 
 ### 12. initialization.ts (~200 lines)
+
 - `initializeAuth()` function
 - `onAuthStateChange` listener
 - Executes on module load
 
 ### 13. index.ts (~40 lines)
+
 ```typescript
 // Main hook
-export { useAuth } from './stores/authStore';
+export { useAuth } from "./stores/authStore";
 
 // Selector hooks
-export * from './hooks/useAuthUser';
-export * from './hooks/useAuthProfile';
-export * from './hooks/useAuthLoading';
-export * from './hooks/useAuthRole';
+export * from "./hooks/useAuthUser";
+export * from "./hooks/useAuthProfile";
+export * from "./hooks/useAuthLoading";
+export * from "./hooks/useAuthRole";
 
 // Types (if needed externally)
-export type { UserProfile, AuthState } from './types';
+export type { UserProfile, AuthState } from "./types";
 
 // Initialization happens automatically via side effect
-import './initialization';
+import "./initialization";
 ```
 
 ### 14. Original auth-store.ts (backward compat, ~15 lines)
+
 ```typescript
 // Backward compatibility re-export
-export { useAuth } from './auth';
-export * from './auth';
+export { useAuth } from "./auth";
+export * from "./auth";
 ```
 
 ## Size Breakdown
+
 - **types.ts**: 30 lines
 - **constants.ts**: 25 lines
 - **utils/errorMessages.ts**: 120 lines
@@ -321,6 +353,7 @@ export * from './auth';
 **Original**: 1,271 lines
 
 ## Benefits
+
 1. **Separation of Concerns**: Utils, stores, hooks, initialization separated
 2. **Testability**: Each utility/action can be tested independently
 3. **Maintainability**: Clear boundaries, easier to locate code
@@ -329,6 +362,7 @@ export * from './auth';
 6. **Backward Compatibility**: Existing imports continue working
 
 ## Risks & Mitigation
+
 1. **Zustand Persist**: Keep in authStore.ts, test thoroughly
 2. **Module Initialization**: Ensure initialization.ts runs on import
 3. **Circular Dependencies**: Careful with cross-imports
@@ -336,6 +370,7 @@ export * from './auth';
 5. **State Synchronization**: Profile cache must stay consistent
 
 ## Testing Checklist
+
 - [ ] Type check passes (0 errors)
 - [ ] ESLint passes
 - [ ] Sign in flow works
@@ -353,6 +388,7 @@ export * from './auth';
 - [ ] Backward compatibility maintained
 
 ## Implementation Order
+
 1. Create directory structure
 2. Extract types.ts
 3. Extract constants.ts
@@ -368,6 +404,7 @@ export * from './auth';
 13. Commit and push
 
 ## Estimated Time Breakdown
+
 - Setup & planning: 30 min ✅
 - Extract utilities: 1 hour
 - Migrate authStore: 1.5 hours
@@ -380,9 +417,11 @@ export * from './auth';
 ---
 
 ## Decision: Simplified Approach
+
 Given the complexity and risk of splitting a Zustand store with persist middleware, we'll take a **more conservative approach**:
 
 ### Alternative: Partial Extract (Lower Risk, 2-3 hours)
+
 1. **Extract utilities only** (errorMessages, profileCache, sessionRefresh, constants)
 2. **Keep authStore.ts as single file** but cleaner
 3. **Extract hooks** to separate files
@@ -390,6 +429,7 @@ Given the complexity and risk of splitting a Zustand store with persist middlewa
 5. **Create organized structure** without breaking store apart
 
 This approach:
+
 - **Reduces risk** of breaking persist middleware
 - **Improves organization** significantly
 - **Maintains single source of truth** for state

@@ -25,10 +25,7 @@ export {
 } from "./utils/sessionRefresh";
 
 // Selector hooks
-export {
-  useAuthUser,
-  useAuthProfile,
-} from "./hooks/useAuthUser";
+export { useAuthUser, useAuthProfile } from "./hooks/useAuthUser";
 export {
   useAuthLoading,
   useAuthProfileLoading,

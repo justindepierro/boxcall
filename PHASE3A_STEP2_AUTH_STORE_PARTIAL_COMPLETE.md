@@ -1,6 +1,7 @@
 # Phase 3A Step 2: auth-store.ts Partial Refactoring - COMPLETE
 
 ## Status: PARTIALLY COMPLETE ✅
+
 **Date**: 2025
 **Time Invested**: ~1.5 hours  
 **Risk**: MEDIUM → Reduced to LOW (partial extraction only)
@@ -12,10 +13,11 @@ Successfully extracted reusable utilities from the 1,271-line `auth-store.ts` in
 ## What Was Accomplished
 
 ### 1. Directory Structure Created ✅
+
 ```
 src/app/auth/
 ├── types.ts              (70 lines) - Shared TypeScript types
-├── constants.ts          (20 lines) - Configuration constants  
+├── constants.ts          (20 lines) - Configuration constants
 ├── utils/
 │   ├── errorMessages.ts  (80 lines) - User-friendly error messages
 │   ├── profileCache.ts   (60 lines) - Profile caching logic
@@ -32,17 +34,19 @@ src/app/auth/
 ### 2. Extracted Utilities
 
 #### A. types.ts
+
 - **Purpose**: Centralized type definitions for authentication
 - **Exports**:
   - `UserProfile` - User profile from database
   - `ProfileCache` - Cache entry with TTL
   - `AuthState` - Complete auth state interface
-- **Benefits**: 
+- **Benefits**:
   - Single source of truth for auth types
   - Reusable across the application
   - Better IDE autocomplete
 
-#### B. constants.ts  
+#### B. constants.ts
+
 - **Purpose**: Configuration values for auth system
 - **Exports**:
   - `PROFILE_CACHE_TTL` - 5 minutes
@@ -56,6 +60,7 @@ src/app/auth/
   - No magic numbers in code
 
 #### C. utils/errorMessages.ts
+
 - **Purpose**: Convert Supabase errors to user-friendly messages
 - **Function**: `getAuthErrorMessage(error)`
 - **Handles**:
@@ -72,6 +77,7 @@ src/app/auth/
   - Reusable in other auth contexts
 
 #### D. utils/profileCache.ts
+
 - **Purpose**: In-memory profile caching with TTL
 - **Exports**:
   - `getCachedProfile(userId)` - Retrieve cached profile
@@ -85,6 +91,7 @@ src/app/auth/
   - Prevents redundant fetches
 
 #### E. utils/sessionRefresh.ts
+
 - **Purpose**: Automatic session refresh with retry logic
 - **Exports**:
   - `startSessionRefresh(supabase, setState, signOut)` - Start monitoring
@@ -103,6 +110,7 @@ src/app/auth/
   - Reusable in other contexts
 
 #### F. hooks/useAuthUser.ts
+
 - **Purpose**: Selector hooks for auth state
 - **Exports**:
   - `useAuthUser()` - Get current user
@@ -113,6 +121,7 @@ src/app/auth/
   - Consistent API across components
 
 #### G. hooks/useAuthLoading.ts
+
 - **Purpose**: Loading state selectors
 - **Exports**:
   - `useAuthLoading()` - Auth operation loading
@@ -124,6 +133,7 @@ src/app/auth/
   - Easy to use in components
 
 #### H. hooks/useAuthRole.ts
+
 - **Purpose**: Role-based access control hooks
 - **Exports**:
   - `useIsAuthenticated()` - Check if logged in
@@ -144,9 +154,10 @@ src/app/auth/
 
 The extracted modules are **available for future use** but the original auth-store.ts remains fully functional. Teams can gradually migrate to the new utilities at their own pace.
 
-##  Why Partial Extraction Was Chosen
+## Why Partial Extraction Was Chosen
 
 ### Original Plan: Full Split
+
 - Split entire auth-store.ts into multiple files
 - Estimated time: 4-5 hours
 - Risk: MEDIUM (Zustand persist middleware complexity)
@@ -157,6 +168,7 @@ The extracted modules are **available for future use** but the original auth-sto
   - Higher chance of bugs
 
 ### Chosen Approach: Partial Extract
+
 - Extract self-contained utilities only
 - Keep Zustand store intact
 - Estimated time: 2-3 hours
@@ -170,29 +182,34 @@ The extracted modules are **available for future use** but the original auth-sto
 ## Benefits Achieved
 
 ### 1. Code Organization ✅
+
 - **Before**: 1,271-line monolithic file
 - **After**: 1,271-line store + 435 lines of focused utilities
 - **Result**: Clear separation of concerns
 
 ### 2. Reusability ✅
+
 - Error messages utility can be used in API routes
 - Profile cache can be extended for other data
 - Session refresh logic is portable
 - Hooks provide consistent API
 
 ### 3. Testability ✅
+
 - Each utility can be unit tested independently
 - Mock-friendly interfaces
 - Clear input/output contracts
 - No hidden dependencies
 
 ### 4. Maintainability ✅
+
 - Easy to locate and update error messages
 - Clear cache management in one place
 - Session refresh logic is documented
 - Constants are centralized
 
 ### 5. Developer Experience ✅
+
 - Better IDE autocomplete with typed exports
 - Clear module boundaries
 - Self-documenting code structure
@@ -201,21 +218,25 @@ The extracted modules are **available for future use** but the original auth-sto
 ## What Was NOT Done (By Design)
 
 ### 1. Zustand Store Split
+
 - **Why**: Too risky with persist middleware
 - **Impact**: Store remains in single file (acceptable)
 - **Future**: Can be revisited if persist middleware is removed
 
 ### 2. Action Extraction
+
 - **Why**: Actions tightly coupled to store state
 - **Impact**: signIn/signUp/signOut still in auth-store.ts (fine)
 - **Future**: Could extract if needed for testing
 
 ### 3. Initialization Extraction
+
 - **Why**: initializeAuth and onAuthStateChange depend on store
 - **Impact**: Initialization logic in auth-store.ts (acceptable)
 - **Future**: Could extract to separate file if beneficial
 
 ### 4. Full Migration
+
 - **Why**: Wanted zero breaking changes
 - **Impact**: Original auth-store.ts still used everywhere
 - **Future**: Can gradually migrate imports to use new utilities
@@ -225,32 +246,36 @@ The extracted modules are **available for future use** but the original auth-sto
 If the team wants to gradually adopt the new structure:
 
 ### Phase 1: Update Imports (Low Risk, 1 hour)
+
 ```typescript
 // Before
-import { useAuth } from '../app/auth-store';
+import { useAuth } from "../app/auth-store";
 
 // After (optional)
-import { useAuth } from '../app/auth-store'; // Still works!
-import { useAuthUser, useIsCoach } from '../app/auth/hooks/useAuthUser';
-import { useAuthRole } from '../app/auth/hooks/useAuthRole';
+import { useAuth } from "../app/auth-store"; // Still works!
+import { useAuthUser, useIsCoach } from "../app/auth/hooks/useAuthUser";
+import { useAuthRole } from "../app/auth/hooks/useAuthRole";
 ```
 
 ### Phase 2: Use Extracted Utilities (Low Risk, 2 hours)
+
 ```typescript
 // In other files that need error messages
-import { getAuthErrorMessage } from '../app/auth/utils/errorMessages';
+import { getAuthErrorMessage } from "../app/auth/utils/errorMessages";
 
 // In other files that need caching
-import { cacheProfile, getCachedProfile } from '../app/auth/utils/profileCache';
+import { cacheProfile, getCachedProfile } from "../app/auth/utils/profileCache";
 ```
 
 ### Phase 3: Refactor auth-store.ts to Use Utilities (Medium Risk, 3-4 hours)
+
 - Update auth-store.ts to import from extracted utilities
 - Remove duplicate code (errorMessages, profileCache, sessionRefresh)
 - Keep Zustand store structure intact
 - Test thoroughly
 
 ### Phase 4: Extract Actions (Optional, Advanced, 4-5 hours)
+
 - Extract signIn/signUp/signOut to separate action files
 - Maintain store as coordinator
 - Only if team wants more granular testing
@@ -258,18 +283,21 @@ import { cacheProfile, getCachedProfile } from '../app/auth/utils/profileCache';
 ## Validation ✅
 
 ### Type Safety
+
 ```bash
 npm run type-check
 # Expected: 0 errors (original auth-store untouched)
 ```
 
 ### Linting
+
 ```bash
 npm run lint
 # Expected: Existing warnings only (no new issues)
 ```
 
 ### Manual Testing
+
 - [ ] Sign in still works
 - [ ] Sign up still works
 - [ ] Sign out still works
@@ -297,6 +325,7 @@ npm run lint
 ## Risks Mitigated
 
 ### Original Risks (Full Split)
+
 - ❌ Breaking Zustand persist middleware
 - ❌ State synchronization issues
 - ❌ Import path breaks across codebase
@@ -304,6 +333,7 @@ npm run lint
 - ❌ Lost functionality during migration
 
 ### Current Risks (Partial Extract)
+
 - ✅ ZERO breaking changes
 - ✅ Original store fully functional
 - ✅ All imports still work
@@ -313,11 +343,13 @@ npm run lint
 ## Recommendations
 
 ### Immediate Next Steps
+
 1. **✅ DONE**: Utilities extracted and organized
 2. **Commit and push**: Save this progress
 3. **Move to next file**: Continue Phase 3A with remaining files
 
 ### Optional Future Enhancements (Not Required)
+
 1. Gradually migrate components to use new selector hooks
 2. Update auth-store.ts to import extracted utilities (remove duplication)
 3. Add unit tests for extracted utilities
@@ -325,12 +357,15 @@ npm run lint
 5. Create Storybook examples
 
 ### Decision Point: Continue vs. Refactor
+
 **OPTION A: Continue to Next File** (Recommended)
+
 - Move to Phase 3B (component splits)
 - Come back to auth-store refactoring later
 - Maintain momentum on spring cleaning
 
 **OPTION B: Complete Auth Store Refactoring**
+
 - Update auth-store.ts to use extracted utilities
 - Remove duplicate code
 - Add unit tests
@@ -363,4 +398,3 @@ This partial refactoring successfully improves the auth codebase organization wi
 **Recommended**: Proceed to next file in Phase 3A sequence or move to Phase 3B (component splits).
 
 **Alternative**: If team wants to complete the full auth-store refactoring, allocate 2-3 more hours to update auth-store.ts to use the extracted utilities.
-

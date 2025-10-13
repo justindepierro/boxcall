@@ -4,7 +4,8 @@ import type { AuthState } from "../types";
 /**
  * Get loading state for authentication operations
  */
-export const useAuthLoading = () => useAuth((state: AuthState) => state.loading);
+export const useAuthLoading = () =>
+  useAuth((state: AuthState) => state.loading);
 
 /**
  * Get loading state for profile fetching

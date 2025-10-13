@@ -4,7 +4,8 @@ import type { AuthState } from "../types";
 /**
  * Check if user is authenticated
  */
-export const useIsAuthenticated = () => useAuth((state: AuthState) => !!state.user);
+export const useIsAuthenticated = () =>
+  useAuth((state: AuthState) => !!state.user);
 
 /**
  * Check if user is a coach
