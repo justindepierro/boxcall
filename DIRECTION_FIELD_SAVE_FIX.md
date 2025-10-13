@@ -1,9 +1,11 @@
 # Direction Field Save Fix
 
 ## Problem Summary
+
 When editing play direction fields (`f_dir` and `p_dir`) in the list/grid view inline editor, the changes appeared to save successfully (console showed "Play updated successfully"), but the UI would immediately revert the values back to "None".
 
 ## Root Cause
+
 The issue was in `/src/components/playbook/PlayCard.tsx` at lines 147-149:
 
 ```typescript
@@ -13,6 +15,7 @@ useEffect(() => {
 ```
 
 ### What Was Happening:
+
 1. User changes direction field from "None" to "Right"
 2. `handleInlineSave` sets optimistic state to show "Right" immediately
 3. `onSave` prop is called, which triggers database update
@@ -25,6 +28,7 @@ useEffect(() => {
 The race condition occurred because the useEffect was blindly overwriting optimistic state whenever the play prop changed, without considering whether a save was in progress.
 
 ## Solution
+
 Modified the useEffect to only sync optimistic state when NO saves are in progress:
 
 ```typescript
@@ -32,15 +36,22 @@ useEffect(() => {
   // Only update optimistic play if we're not currently saving any fields
   // This prevents overwriting optimistic updates while saves are in progress
   if (savingFields.size === 0) {
-    console.log("[PlayCard] Syncing optimistic play with prop (no saves in progress):", play);
+    console.log(
+      "[PlayCard] Syncing optimistic play with prop (no saves in progress):",
+      play
+    );
     setOptimisticPlay(play);
   } else {
-    console.log("[PlayCard] Skipping sync - save in progress for:", Array.from(savingFields));
+    console.log(
+      "[PlayCard] Skipping sync - save in progress for:",
+      Array.from(savingFields)
+    );
   }
 }, [play, savingFields]);
 ```
 
 ## Additional Improvements
+
 Added comprehensive console logging throughout the save flow to help debug similar issues:
 
 1. **PlayCard.tsx** - `handleInlineSave`:
@@ -55,6 +66,7 @@ Added comprehensive console logging throughout the save flow to help debug simil
    - Logs the local state after update
 
 ## Testing
+
 1. Navigate to playbook list view at `localhost:5173/playbook`
 2. Expand any play card
 3. Click to edit "Direction" field under Formation section
@@ -63,6 +75,7 @@ Added comprehensive console logging throughout the save flow to help debug simil
 6. Check browser console for detailed logging
 
 ## Files Modified
+
 - `/src/components/playbook/PlayCard.tsx`:
   - Fixed useEffect race condition
   - Added detailed logging in handleInlineSave
@@ -71,7 +84,9 @@ Added comprehensive console logging throughout the save flow to help debug simil
   - Added logging in updatePlay function
 
 ## Related Files
+
 The complete save flow involves:
+
 - `/src/components/playbook/play-card/fieldDefinitions.tsx` - Defines f_dir/p_dir fields
 - `/src/components/playbook/play-card/PlayCardDetails.tsx` - Renders the fields
 - `/src/components/ui/InlineSelectField.tsx` - Select input component
@@ -80,12 +95,15 @@ The complete save flow involves:
 - `/src/hooks/useTeamsData.ts` - Executes database update
 
 ## Technical Details
+
 - **Optimistic Updates**: PlayCard uses optimistic UI updates to show changes immediately before server confirmation
 - **Saving State**: `savingFields` Set tracks which fields are currently being saved
 - **Race Condition**: The fix prevents the useEffect from overwriting optimistic state during the brief window between save initiation and completion
 
 ## Verification
+
 After the fix:
+
 - ✅ Direction fields save and persist correctly
 - ✅ Optimistic updates work smoothly
 - ✅ No UI flashing or value reversion
@@ -93,7 +111,9 @@ After the fix:
 - ✅ All other inline editable fields continue to work
 
 ## Integration Context
+
 This fix ensures that ALL features work together:
+
 - ✅ Play metadata editing (formations, personnel, directions)
 - ✅ Formation linking and management
 - ✅ Personnel assignment

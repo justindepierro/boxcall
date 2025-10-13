@@ -94,7 +94,7 @@ export function useTeamsData() {
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
         console.log("[useTeamsData] Updating play:", { playId, updates });
-        
+
         const { data, error } = await supabase
           .from("plays")
           // @ts-expect-error - Supabase type issue with plays table update
@@ -115,8 +115,9 @@ export function useTeamsData() {
           const updated = prevPlays.map((play) =>
             play.id === playId ? { ...play, ...updates } : play
           );
-          console.log("[useTeamsData] Updated local state for play:", 
-            updated.find(p => p.id === playId)
+          console.log(
+            "[useTeamsData] Updated local state for play:",
+            updated.find((p) => p.id === playId)
           );
           return updated;
         });
@@ -158,10 +159,12 @@ export function useTeamsData() {
         try {
           const { data, error: playbooksError } = await supabase
             .from("playbooks")
-            .select(`
+            .select(
+              `
               *,
               plays:plays(count)
-            `)
+            `
+            )
             .order("created_at", { ascending: false });
 
           if (playbooksError) {

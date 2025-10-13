@@ -148,10 +148,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     // Only update optimistic play if we're not currently saving any fields
     // This prevents overwriting optimistic updates while saves are in progress
     if (savingFields.size === 0) {
-      console.log("[PlayCard] Syncing optimistic play with prop (no saves in progress):", play);
+      console.log(
+        "[PlayCard] Syncing optimistic play with prop (no saves in progress):",
+        play
+      );
       setOptimisticPlay(play);
     } else {
-      console.log("[PlayCard] Skipping sync - save in progress for:", Array.from(savingFields));
+      console.log(
+        "[PlayCard] Skipping sync - save in progress for:",
+        Array.from(savingFields)
+      );
     }
   }, [play, savingFields]);
 
@@ -240,14 +246,21 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     async (field: keyof PlayType, value: string | number) => {
       const fieldName = field as string;
 
-      console.log("[PlayCard] handleInlineSave called:", { field, value, playId: play.id });
-      
+      console.log("[PlayCard] handleInlineSave called:", {
+        field,
+        value,
+        playId: play.id,
+      });
+
       setOptimisticPlay((prev) => {
         const updated = { ...prev, [field]: value };
-        console.log("[PlayCard] Set optimistic state:", { [field]: value, fullPlay: updated });
+        console.log("[PlayCard] Set optimistic state:", {
+          [field]: value,
+          fullPlay: updated,
+        });
         return updated;
       });
-      
+
       setSavingFields((prev) => new Set(prev).add(fieldName));
 
       try {
@@ -257,7 +270,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           console.log("[PlayCard] onSave completed successfully");
         }
       } catch (error) {
-        console.error(`[PlayCard] Failed to save ${fieldName}, reverting:`, error);
+        console.error(
+          `[PlayCard] Failed to save ${fieldName}, reverting:`,
+          error
+        );
         setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
       } finally {
         setSavingFields((prev) => {
