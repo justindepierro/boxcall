@@ -195,7 +195,13 @@ export function FormationIcon({
       aria-label={`${type} formation`}
     >
       {/* Field background */}
-      <rect width="48" height="48" fill={colorTokens.emerald[600]} opacity="0.1" rx="4" />
+      <rect
+        width="48"
+        height="48"
+        fill={colorTokens.emerald[600]}
+        opacity="0.1"
+        rx="4"
+      />
       {formations[type]}
     </svg>
   );

@@ -7,15 +7,15 @@
 
 ## Summary by Type
 
-| Type | Count | Severity |
-|------|-------|----------|
-| px-spacing | 97 | 🟡 Medium |
-| rgba-color | 87 | 🔴 High |
-| hex-color | 60 | 🔴 High |
-| box-shadow | 51 | 🟡 Medium |
-| rgb-color | 49 | ⚪ Info |
-| border-radius | 22 | 🟢 Low |
-| tailwind-spacing | 3 | 🟡 Medium |
+| Type             | Count | Severity  |
+| ---------------- | ----- | --------- |
+| px-spacing       | 97    | 🟡 Medium |
+| rgba-color       | 87    | 🔴 High   |
+| hex-color        | 60    | 🔴 High   |
+| box-shadow       | 51    | 🟡 Medium |
+| rgb-color        | 49    | ⚪ Info   |
+| border-radius    | 22    | 🟢 Low    |
+| tailwind-spacing | 3     | 🟡 Medium |
 
 ---
 
@@ -538,8 +538,6 @@
 - **Line 35** (hex-color): `#869397`
   - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
 
-
-
 ---
 
 ## Recommendations
@@ -582,6 +580,7 @@
 ### Missing Color Tokens
 
 Based on frequent hardcoded colors, consider adding:
+
 - Blue system (blue-500, blue-600 for links/actions)
 - Cyan system (cyan-400 for highlights)
 - Amber system (amber-400, amber-500 for warnings)

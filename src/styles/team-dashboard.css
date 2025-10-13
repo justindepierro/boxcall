@@ -588,7 +588,11 @@
 
 /* Progress sharing and collaboration widget improvements */
 .collaboration-section {
-  background: linear-gradient(to right, var(--color-emerald-50), var(--color-green-50));
+  background: linear-gradient(
+    to right,
+    var(--color-emerald-50),
+    var(--color-green-50)
+  );
   border-radius: 0.5rem;
   padding: 4px;
   transition: all 0.3s ease;
