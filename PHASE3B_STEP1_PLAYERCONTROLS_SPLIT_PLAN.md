@@ -1,6 +1,7 @@
 # Phase 3B Step 1: PlayerControls.tsx Splitting Plan
 
 ## Overview
+
 **File**: `src/components/playbook/diagram-editor/components/PlayerControls.tsx`  
 **Size**: 1,355 lines  
 **Risk Level**: HIGH  
@@ -9,7 +10,9 @@
 ## Current Structure Analysis
 
 ### File Purpose
+
 PlayerControls is a complex sidebar UI component for the diagram editor that handles:
+
 1. Adding/removing players to the football field diagram
 2. Formation templates (offense and defense)
 3. Alignment controls (left/middle/right)
@@ -69,6 +72,7 @@ PlayerControls is a complex sidebar UI component for the diagram editor that han
    - Buttons and controls
 
 ### Dependencies
+
 - `useDiagramStore` - Zustand store for diagram state
 - `DiagramPixiApp` - PixiJS app instance
 - Defense feature modules (analyzers, schemes, engines)
@@ -135,47 +139,45 @@ src/components/playbook/diagram-editor/components/PlayerControls/
 ## Implementation Strategy
 
 ### Phase 1: Extract Types and Constants (Low Risk, 1 hour)
+
 1. Create directory structure
 2. Extract shared types to `types.ts`
 3. Extract formation templates to `constants/`
 4. No breaking changes yet
 
 ### Phase 2: Extract Custom Hooks (Medium Risk, 2-3 hours)
+
 1. **useFormationDropdowns.ts**
    - Extract all dropdown state management
    - Return open/close handlers and refs
-   
 2. **useFormationAnalysis.ts**
    - Extract formation analysis effect
    - Return analysis state
-   
 3. **useCoverageAdjustment.ts**
    - Extract coverage adjustment logic
    - Return adjustment handler
-   
 4. **useAlignmentState.ts**
    - Extract alignment state and sync logic
    - Return alignment state and setter
-   
 5. **useClickOutside.ts**
    - Extract click outside detection logic
    - Make reusable for multiple dropdowns
 
 ### Phase 3: Extract Handlers (Medium Risk, 2 hours)
+
 1. **offenseFormationHandlers.ts**
    - Extract `handleAddOffenseFormation`
    - Extract formation creation functions
    - Export as object or individual functions
-   
 2. **defenseFormationHandlers.ts**
    - Extract `handleAddDefenseFormation`
    - Extract defense formation creation
-   
 3. **playerActionHandlers.ts**
    - Extract add/remove player logic
    - Minimal since it's mostly store calls
 
 ### Phase 4: Extract UI Components (Medium Risk, 2-3 hours)
+
 1. **FormationDropdown.tsx** - Offense formation selector
 2. **DefenseDropdown.tsx** - Defense formation selector
 3. **CoverageDropdown.tsx** - Coverage adjustment selector
@@ -186,11 +188,13 @@ src/components/playbook/diagram-editor/components/PlayerControls/
 8. **FormationAnalysisDisplay.tsx** - Formation metrics
 
 ### Phase 5: Refactor Main Component (Low Risk, 1 hour)
+
 1. Update PlayerControls.tsx to use extracted hooks and components
 2. Keep only orchestration logic
 3. Ensure backward compatibility
 
 ### Phase 6: Testing and Validation (1 hour)
+
 1. Type check (expect 0 errors)
 2. ESLint check
 3. Manual testing:
@@ -204,26 +208,31 @@ src/components/playbook/diagram-editor/components/PlayerControls/
 ## Benefits
 
 ### 1. Separation of Concerns ✅
+
 - **Before**: 1,355-line monolithic component
 - **After**: 20+ focused files (50-200 lines each)
 - Clear boundaries between state, logic, and UI
 
 ### 2. Reusability ✅
+
 - Hooks can be used in other diagram components
 - UI components can be composed differently
 - Formation templates can be imported elsewhere
 
 ### 3. Testability ✅
+
 - Each hook can be tested independently
 - Handlers can be unit tested
 - UI components can be tested in isolation
 
 ### 4. Maintainability ✅
+
 - Easy to locate and update formation logic
 - Clear file structure
 - Self-documenting organization
 
 ### 5. Performance ✅
+
 - Smaller components re-render less
 - Easier to add memoization
 - Better code splitting potential
@@ -231,18 +240,23 @@ src/components/playbook/diagram-editor/components/PlayerControls/
 ## Risks & Mitigation
 
 ### Risk 1: Breaking Drag-and-Drop
+
 **Mitigation**: Keep drag handlers in PlayerListItem, test thoroughly
 
 ### Risk 2: State Synchronization Issues
+
 **Mitigation**: Use proper hook dependencies, test alignment sync
 
 ### Risk 3: Formation Logic Bugs
+
 **Mitigation**: Extract carefully, maintain exact same logic, test each formation
 
 ### Risk 4: Props Drilling
+
 **Mitigation**: Use composition, pass only necessary props to child components
 
 ### Risk 5: Import Path Changes
+
 **Mitigation**: Update all imports, use barrel exports, maintain backward compat
 
 ## Testing Checklist
@@ -294,6 +308,7 @@ src/components/playbook/diagram-editor/components/PlayerControls/
 ## Alternative: Partial Extract (Lower Risk, 3-4 hours)
 
 If full split is too risky:
+
 1. **Extract hooks only** (3-4 hours, MEDIUM risk)
    - Keep UI in main component
    - Extract complex logic to hooks
@@ -313,6 +328,7 @@ If full split is too risky:
 ## Recommendation
 
 Given the **HIGH risk** and complexity:
+
 1. **Start with hooks extraction** (safer, more testable)
 2. **Then extract handlers** (pure logic, low risk)
 3. **Finally extract UI components** if time permits
@@ -325,17 +341,20 @@ This phased approach reduces risk while still achieving significant improvements
 ## Decision Point
 
 **OPTION A: Full Split** (8-11 hours, HIGH risk)
+
 - Complete modular architecture
 - Maximum maintainability
 - Highest risk of bugs
 
 **OPTION B: Partial Extract - Hooks + Handlers** (4-5 hours, MEDIUM risk) ⭐ **RECOMMENDED**
+
 - Extract complex logic to hooks
 - Extract formation handlers
 - Keep UI in main component
 - Good balance of benefit vs. risk
 
 **OPTION C: Minimal Extract - Hooks Only** (3-4 hours, LOW risk)
+
 - Extract only custom hooks
 - Keep everything else
 - Safest approach

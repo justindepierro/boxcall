@@ -6,9 +6,12 @@
 import * as React from "react";
 
 export function useFormationDropdowns() {
-  const [isFormationDropdownOpen, setIsFormationDropdownOpen] = React.useState(false);
-  const [isDefenseDropdownOpen, setIsDefenseDropdownOpen] = React.useState(false);
-  const [isCoverageDropdownOpen, setIsCoverageDropdownOpen] = React.useState(false);
+  const [isFormationDropdownOpen, setIsFormationDropdownOpen] =
+    React.useState(false);
+  const [isDefenseDropdownOpen, setIsDefenseDropdownOpen] =
+    React.useState(false);
+  const [isCoverageDropdownOpen, setIsCoverageDropdownOpen] =
+    React.useState(false);
 
   return {
     isFormationDropdownOpen,

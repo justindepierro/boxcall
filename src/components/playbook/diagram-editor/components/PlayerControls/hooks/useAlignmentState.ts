@@ -11,8 +11,12 @@ interface UseAlignmentStateProps {
   onAlignmentChange: (alignment: Alignment) => void;
 }
 
-export function useAlignmentState({ externalAlignment, onAlignmentChange }: UseAlignmentStateProps) {
-  const [internalAlignment, setInternalAlignment] = React.useState<Alignment>("middle");
+export function useAlignmentState({
+  externalAlignment,
+  onAlignmentChange,
+}: UseAlignmentStateProps) {
+  const [internalAlignment, setInternalAlignment] =
+    React.useState<Alignment>("middle");
   const prevExternalAlignment = React.useRef<Alignment | undefined>(undefined);
 
   // Get the currently selected alignment (prioritize external over internal)

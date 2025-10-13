@@ -21,7 +21,10 @@ export type Alignment = "left" | "middle" | "right";
 /**
  * Formation types for offense
  */
-export type OffenseFormationType = "spread2x2" | "spread3x1Right" | "spread3x1Left";
+export type OffenseFormationType =
+  | "spread2x2"
+  | "spread3x1Right"
+  | "spread3x1Left";
 
 /**
  * Formation types for defense

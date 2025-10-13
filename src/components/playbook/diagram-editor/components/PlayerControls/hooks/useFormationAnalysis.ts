@@ -14,8 +14,12 @@ interface UseFormationAnalysisProps {
   selectedAlignment: Alignment;
 }
 
-export function useFormationAnalysis({ players, selectedAlignment }: UseFormationAnalysisProps) {
-  const [formationAnalysis, setFormationAnalysis] = React.useState<FormationAnalysis | null>(null);
+export function useFormationAnalysis({
+  players,
+  selectedAlignment,
+}: UseFormationAnalysisProps) {
+  const [formationAnalysis, setFormationAnalysis] =
+    React.useState<FormationAnalysis | null>(null);
 
   // Analyze offensive formation whenever players or alignment changes
   React.useEffect(() => {
