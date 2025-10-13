@@ -1,4 +1,5 @@
 # PlayCard & PlayGrid Component Audit
+
 **Date:** October 12, 2025  
 **Purpose:** Comprehensive audit of PlayCard components to identify duplicate code and ensure consistency
 
@@ -7,6 +8,7 @@
 ## Executive Summary
 
 ### Issues Found:
+
 1. ⚠️ **CRITICAL DUPLICATION**: PlayCard component is instantiated **3 times** in PlayGrid.tsx with nearly identical props
 2. ⚠️ **Inconsistent Props**: Grid view uses different `variant` and `density` props than list view
 3. ⚠️ **Scattered Logic**: PlayCard rendering logic duplicated across virtualized list, non-virtualized list, and grid views
@@ -14,6 +16,7 @@
 5. ✅ **Good**: Common save handler (`handlePlaySave`) used across all instances
 
 ### Recommendation:
+
 **REFACTOR REQUIRED** - Consolidate PlayCard instantiation into a single reusable component to eliminate duplication and ensure consistency.
 
 ---
@@ -27,6 +30,7 @@
 **Purpose:** Single, unified component for rendering play cards in both list and grid views
 
 **Key Features:**
+
 - ✅ Supports both `list` and `tile` variants
 - ✅ Inline editing with optimistic updates
 - ✅ Expandable details section
@@ -35,12 +39,14 @@
 - ✅ Controlled expansion state via props
 
 **State Management:**
+
 ```typescript
 const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
 const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
 ```
 
 **Critical Fix Applied:**
+
 ```typescript
 useEffect(() => {
   // Only update optimistic play if we're not currently saving any fields
@@ -60,6 +66,7 @@ useEffect(() => {
 #### Issue #1: Three Separate PlayCard Instantiations
 
 **Instance 1: Virtualized List View (Line 604)**
+
 ```tsx
 const renderPlayItem = useCallback(
   (index: number, play: Play) => (
@@ -84,11 +91,14 @@ const renderPlayItem = useCallback(
       />
     </div>
   ),
-  [/* 13 dependencies */]
+  [
+    /* 13 dependencies */
+  ]
 );
 ```
 
 **Instance 2: Grid View with Tiles (Line 851)**
+
 ```tsx
 <PlayCard
   play={play}
@@ -99,8 +109,8 @@ const renderPlayItem = useCallback(
   onCreateDiagram={onCreateDiagram}
   isSelected={selectedPlayIds.has(play.id)}
   onSelectionChange={handlePlaySelect}
-  variant="tile"                        // ← Different
-  density="comfortable"                 // ← Different
+  variant="tile" // ← Different
+  density="comfortable" // ← Different
   formationSuggestions={collectedSuggestions.formations}
   playNameSuggestions={collectedSuggestions.playNames}
   playTypeSuggestions={collectedSuggestions.playTypes}
@@ -111,6 +121,7 @@ const renderPlayItem = useCallback(
 ```
 
 **Instance 3: Non-Virtualized List View (Line 925)**
+
 ```tsx
 <PlayCard
   play={play}
@@ -133,10 +144,10 @@ const renderPlayItem = useCallback(
 
 #### Issue #2: Inconsistent Prop Defaults
 
-| Instance | Variant | Density | Location |
-|----------|---------|---------|----------|
-| Virtualized List | `list` | `compact` | Line 604 |
-| Grid/Tile | `tile` | `comfortable` | Line 851 |
+| Instance             | Variant          | Density             | Location |
+| -------------------- | ---------------- | ------------------- | -------- |
+| Virtualized List     | `list`           | `compact`           | Line 604 |
+| Grid/Tile            | `tile`           | `comfortable`       | Line 851 |
 | Non-Virtualized List | `list` (default) | `compact` (default) | Line 925 |
 
 **Problem:** Instance 3 relies on component defaults while Instances 1 & 2 explicitly set props. This creates confusion and potential bugs if defaults change.
@@ -144,6 +155,7 @@ const renderPlayItem = useCallback(
 #### Issue #3: Duplicate Prop Spreading
 
 All three instances spread the same 16 props:
+
 - 11 core props (play, handlers, flags)
 - 3 suggestion arrays
 - 2 display format props
@@ -166,7 +178,8 @@ const handlePlaySave = useCallback(
       const dbUpdates: any = {};
 
       // Map all possible editable fields (20+ fields)
-      if (updates.formation !== undefined) dbUpdates.formation = updates.formation;
+      if (updates.formation !== undefined)
+        dbUpdates.formation = updates.formation;
       if (updates.f_dir !== undefined) dbUpdates.f_dir = updates.f_dir;
       if (updates.p_dir !== undefined) dbUpdates.p_dir = updates.p_dir;
       // ... 20+ more fields
@@ -193,16 +206,19 @@ const handlePlaySave = useCallback(
 ### 4. Sub-Components - GOOD
 
 #### PlayCardListHeader.tsx
+
 - ✅ Single implementation
 - ✅ Used for list variant
 - ✅ Shows compact header with formation/play name
 
 #### PlayCardTileHeader.tsx
+
 - ✅ Single implementation
 - ✅ Used for tile/grid variant
 - ✅ Shows larger header with more visual prominence
 
 #### PlayCardDetails.tsx
+
 - ✅ Single implementation
 - ✅ Shared by both list and tile variants
 - ✅ Renders expandable details section with drag-and-drop fields
@@ -249,19 +265,23 @@ export const createPlayDetailsFields = ({
 ## Root Cause Analysis: Direction Field Bug
 
 ### The Bug
+
 When editing direction fields (`f_dir`, `p_dir`) in list/grid view, values would save successfully but then revert to "None".
 
 ### Root Cause
+
 Race condition in PlayCard's `useEffect`:
 
 **Before Fix:**
+
 ```typescript
 useEffect(() => {
-  setOptimisticPlay(play);  // ← Blindly overwrites optimistic state
+  setOptimisticPlay(play); // ← Blindly overwrites optimistic state
 }, [play]);
 ```
 
 **What Happened:**
+
 1. User changes direction to "Right"
 2. Optimistic state set to "Right"
 3. Save completes, updates database
@@ -270,14 +290,21 @@ useEffect(() => {
 6. UI reverts to old value before new value arrives
 
 **After Fix:**
+
 ```typescript
 useEffect(() => {
   // Only update optimistic play if we're not currently saving any fields
   if (savingFields.size === 0) {
-    console.log("[PlayCard] Syncing optimistic play with prop (no saves in progress):", play);
+    console.log(
+      "[PlayCard] Syncing optimistic play with prop (no saves in progress):",
+      play
+    );
     setOptimisticPlay(play);
   } else {
-    console.log("[PlayCard] Skipping sync - save in progress for:", Array.from(savingFields));
+    console.log(
+      "[PlayCard] Skipping sync - save in progress for:",
+      Array.from(savingFields)
+    );
   }
 }, [play, savingFields]);
 ```
@@ -340,7 +367,7 @@ const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     onToggleExpand: handleToggleExpand,
   };
 
-  const variantProps = variant === "tile" 
+  const variantProps = variant === "tile"
     ? { variant: "tile" as const, density: "comfortable" as const }
     : { variant: "list" as const, density: "compact" as const };
 
@@ -371,6 +398,7 @@ const renderPlayItem = useCallback(
 ```
 
 **Benefits:**
+
 - ✅ Single source of truth for PlayCard props
 - ✅ Reduces code from 48 lines to ~10 lines
 - ✅ Eliminates prop inconsistencies
@@ -393,17 +421,17 @@ density = "compact",
 describe('PlayCard Save Flow', () => {
   it('should not revert direction fields after save', async () => {
     const { getByText, getByRole } = render(<PlayCard play={testPlay} onSave={mockSave} />);
-    
+
     // Expand details
     fireEvent.click(getByText('Same Power Read'));
-    
+
     // Edit direction
     const directionField = getByRole('combobox', { name: /direction/i });
     fireEvent.change(directionField, { target: { value: 'Right' } });
-    
+
     // Wait for save
     await waitFor(() => expect(mockSave).toHaveBeenCalledWith(testPlay.id, { f_dir: 'Right' }));
-    
+
     // Verify no revert
     await waitFor(() => expect(directionField).toHaveValue('Right'));
   });
@@ -413,6 +441,7 @@ describe('PlayCard Save Flow', () => {
 ### Priority 4: Add Documentation
 
 Add JSDoc comments explaining:
+
 - Why useEffect checks `savingFields.size`
 - How optimistic updates work
 - When to use list vs tile variant
@@ -422,15 +451,18 @@ Add JSDoc comments explaining:
 ## Files Requiring Changes
 
 ### High Priority (Duplication):
+
 1. **Create:** `src/components/playbook/PlayCardWrapper.tsx` (new file)
 2. **Create:** `src/contexts/PlayGridContext.tsx` (new context for shared props)
 3. **Modify:** `src/components/playbook/PlayGrid.tsx` (replace 3 instances with wrapper)
 
 ### Medium Priority (Documentation):
+
 4. **Modify:** `src/components/playbook/PlayCard.tsx` (add JSDoc comments)
 5. **Create:** `PLAYCARD_ARCHITECTURE.md` (architecture documentation)
 
 ### Low Priority (Tests):
+
 6. **Create:** `src/components/playbook/__tests__/PlayCard.integration.test.tsx`
 
 ---
@@ -456,16 +488,19 @@ After refactoring:
 ## Impact Assessment
 
 ### Code Quality:
+
 - **Before:** 48 lines of duplicated PlayCard instantiation
 - **After:** ~10 lines with PlayCardWrapper + context
 - **Reduction:** 79% code reduction in duplication
 
 ### Maintainability:
+
 - **Before:** Update PlayCard props in 3 places
 - **After:** Update PlayCard props in 1 place
 - **Improvement:** 67% reduction in maintenance burden
 
 ### Bug Risk:
+
 - **Before:** High risk of prop inconsistencies
 - **After:** Low risk, single source of truth
 - **Improvement:** Significantly reduced
