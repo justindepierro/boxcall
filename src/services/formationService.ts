@@ -1,16 +1,16 @@
 /**
  * Formation Service
- * 
+ *
  * Handles all CRUD operations for formations with:
  * - Personnel integration
  * - Left/Right variant creation
  * - Position flipping logic
  * - Usage tracking
- * 
+ *
  * Everything is connected! Formations → Personnel → Plays
  */
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 import type {
   Formation,
   FormationCreate,
@@ -19,7 +19,7 @@ import type {
   FormationWithVariants,
   FormationListItem,
   FormationValidation,
-} from '../types/formation';
+} from "../types/formation";
 
 /**
  * Field width constant for position flipping
@@ -41,11 +41,11 @@ export class FormationService {
     // Validate before creating
     const validation = this.validateFormationData(data);
     if (!validation.valid) {
-      throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
+      throw new Error(`Validation failed: ${validation.errors.join(", ")}`);
     }
 
     const { data: formation, error } = await supabase
-      .from('formations')
+      .from("formations")
       .insert([
         {
           playbook_id: data.playbook_id,
@@ -54,13 +54,13 @@ export class FormationService {
           category: data.category || null,
           personnel_id: data.personnel_id || null,
           personnel_name: data.personnel_name || null,
-          direction: data.direction || 'base',
+          direction: data.direction || "base",
           base_formation_id: data.base_formation_id || null,
           strength_player_position: data.strength_player_position || null,
           strength_player_label: data.strength_player_label || null,
           formation_type: data.formation_type || null,
-          run_strength: data.run_strength || 'balanced',
-          pass_strength: data.pass_strength || 'balanced',
+          run_strength: data.run_strength || "balanced",
+          pass_strength: data.pass_strength || "balanced",
           player_positions: data.player_positions as unknown,
           tags: data.tags || [],
           is_custom: data.is_custom !== undefined ? data.is_custom : true,
@@ -70,7 +70,7 @@ export class FormationService {
       .single();
 
     if (error) {
-      console.error('Error creating formation:', error);
+      console.error("Error creating formation:", error);
       throw new Error(`Failed to create formation: ${error.message}`);
     }
 
@@ -85,8 +85,8 @@ export class FormationService {
     // Get base formation
     const baseFormation = await this.getFormationById(baseFormationId);
 
-    if (baseFormation.direction !== 'base') {
-      throw new Error('Can only create variants from base formation');
+    if (baseFormation.direction !== "base") {
+      throw new Error("Can only create variants from base formation");
     }
 
     // Flip positions
@@ -100,9 +100,10 @@ export class FormationService {
       category: baseFormation.category || undefined,
       personnel_id: baseFormation.personnel_id || undefined,
       personnel_name: baseFormation.personnel_name || undefined,
-      direction: 'left',
+      direction: "left",
       base_formation_id: baseFormation.id,
-      strength_player_position: baseFormation.strength_player_position || undefined,
+      strength_player_position:
+        baseFormation.strength_player_position || undefined,
       strength_player_label: baseFormation.strength_player_label || undefined,
       player_positions: flippedPositions,
       tags: baseFormation.tags,
@@ -118,8 +119,8 @@ export class FormationService {
     // Get base formation
     const baseFormation = await this.getFormationById(baseFormationId);
 
-    if (baseFormation.direction !== 'base') {
-      throw new Error('Can only create variants from base formation');
+    if (baseFormation.direction !== "base") {
+      throw new Error("Can only create variants from base formation");
     }
 
     // Flip positions
@@ -133,9 +134,10 @@ export class FormationService {
       category: baseFormation.category || undefined,
       personnel_id: baseFormation.personnel_id || undefined,
       personnel_name: baseFormation.personnel_name || undefined,
-      direction: 'right',
+      direction: "right",
       base_formation_id: baseFormation.id,
-      strength_player_position: baseFormation.strength_player_position || undefined,
+      strength_player_position:
+        baseFormation.strength_player_position || undefined,
       strength_player_label: baseFormation.strength_player_label || undefined,
       player_positions: flippedPositions,
       tags: baseFormation.tags,
@@ -163,9 +165,9 @@ export class FormationService {
    */
   static async getFormationById(id: string): Promise<Formation> {
     const { data, error } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('id', id)
+      .from("formations")
+      .select("*")
+      .eq("id", id)
       .single();
 
     if (error || !data) {
@@ -178,54 +180,50 @@ export class FormationService {
   /**
    * Get all formations for a playbook
    */
-  static async getFormationsByPlaybook(playbookId: string): Promise<Formation[]> {
-    console.log('🔍 [FormationService] getFormationsByPlaybook called with:', {
-      playbookId,
-      playbookIdType: typeof playbookId,
-      playbookIdLength: playbookId?.length
-    });
-    
+  static async getFormationsByPlaybook(
+    playbookId: string
+  ): Promise<Formation[]> {
     const { data, error } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('playbook_id', playbookId)
-      .order('name', { ascending: true });
-
-    console.log('📊 [FormationService] Query result:', {
-      dataLength: data?.length || 0,
-      error: error?.message || null,
-      data: data?.map(d => ({ id: d.id, name: d.name, playbook_id: d.playbook_id })) || []
-    });
+      .from("formations")
+      .select("*")
+      .eq("playbook_id", playbookId)
+      .order("name", { ascending: true });
 
     if (error) {
-      console.error('❌ [FormationService] Error fetching formations:', error);
+      console.error("❌ [FormationService] Error fetching formations:", error);
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
-    console.log('✅ [FormationService] Returning', (data as Formation[])?.length || 0, 'formations');
+    console.log(
+      "✅ [FormationService] Returning",
+      (data as Formation[])?.length || 0,
+      "formations"
+    );
     return (data as Formation[]) || [];
   }
 
   /**
    * Get formation variants (base + left + right)
    */
-  static async getFormationVariants(formationId: string): Promise<FormationWithVariants> {
-    const { data, error } = await supabase.rpc('get_formation_variants', {
+  static async getFormationVariants(
+    formationId: string
+  ): Promise<FormationWithVariants> {
+    const { data, error } = await supabase.rpc("get_formation_variants", {
       formation_id: formationId,
     } as never);
 
     if (error) {
-      console.error('Error fetching formation variants:', error);
+      console.error("Error fetching formation variants:", error);
       throw new Error(`Failed to fetch variants: ${error.message}`);
     }
 
     const variants = data as Formation[];
-    const base = variants.find((v) => v.direction === 'base');
-    const left = variants.find((v) => v.direction === 'left');
-    const right = variants.find((v) => v.direction === 'right');
+    const base = variants.find((v) => v.direction === "base");
+    const left = variants.find((v) => v.direction === "left");
+    const right = variants.find((v) => v.direction === "right");
 
     if (!base) {
-      throw new Error('Base formation not found');
+      throw new Error("Base formation not found");
     }
 
     return { base, left, right };
@@ -246,7 +244,7 @@ export class FormationService {
       personnel_name: f.personnel_name,
       direction: f.direction,
       usage_count: f.usage_count,
-      has_variants: f.direction === 'base', // Base formations can have variants
+      has_variants: f.direction === "base", // Base formations can have variants
     }));
   }
 
@@ -258,14 +256,14 @@ export class FormationService {
     personnelId: string
   ): Promise<Formation[]> {
     const { data, error } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('playbook_id', playbookId)
-      .eq('personnel_id', personnelId)
-      .order('name', { ascending: true });
+      .from("formations")
+      .select("*")
+      .eq("playbook_id", playbookId)
+      .eq("personnel_id", personnelId)
+      .order("name", { ascending: true });
 
     if (error) {
-      console.error('Error fetching formations by personnel:', error);
+      console.error("Error fetching formations by personnel:", error);
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
@@ -279,16 +277,19 @@ export class FormationService {
   /**
    * Update formation
    */
-  static async updateFormation(id: string, updates: FormationUpdate): Promise<Formation> {
+  static async updateFormation(
+    id: string,
+    updates: FormationUpdate
+  ): Promise<Formation> {
     const { data, error } = await supabase
-      .from('formations')
+      .from("formations")
       .update(updates as never)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating formation:', error);
+      console.error("Error updating formation:", error);
       throw new Error(`Failed to update formation: ${error.message}`);
     }
 
@@ -377,10 +378,10 @@ export class FormationService {
    * Note: Will cascade delete variants if deleting base formation
    */
   static async deleteFormation(id: string): Promise<void> {
-    const { error } = await supabase.from('formations').delete().eq('id', id);
+    const { error } = await supabase.from("formations").delete().eq("id", id);
 
     if (error) {
-      console.error('Error deleting formation:', error);
+      console.error("Error deleting formation:", error);
       throw new Error(`Failed to delete formation: ${error.message}`);
     }
   }
@@ -388,7 +389,9 @@ export class FormationService {
   /**
    * Delete formation and all its variants
    */
-  static async deleteFormationWithVariants(baseFormationId: string): Promise<void> {
+  static async deleteFormationWithVariants(
+    baseFormationId: string
+  ): Promise<void> {
     // Get all variants
     const variants = await this.getFormationVariants(baseFormationId);
 
@@ -405,7 +408,10 @@ export class FormationService {
   /**
    * Duplicate formation
    */
-  static async duplicateFormation(id: string, newName: string): Promise<Formation> {
+  static async duplicateFormation(
+    id: string,
+    newName: string
+  ): Promise<Formation> {
     const original = await this.getFormationById(id);
 
     return this.createFormation({
@@ -415,7 +421,7 @@ export class FormationService {
       category: original.category || undefined,
       personnel_id: original.personnel_id || undefined,
       personnel_name: original.personnel_name || undefined,
-      direction: 'base', // Always create as new base
+      direction: "base", // Always create as new base
       strength_player_position: original.strength_player_position || undefined,
       strength_player_label: original.strength_player_label || undefined,
       player_positions: JSON.parse(JSON.stringify(original.player_positions)), // Deep clone
@@ -428,7 +434,9 @@ export class FormationService {
    * Flip formation positions horizontally
    * Used for creating Left/Right variants
    */
-  static flipPositions(positions: FormationPlayerPosition[]): FormationPlayerPosition[] {
+  static flipPositions(
+    positions: FormationPlayerPosition[]
+  ): FormationPlayerPosition[] {
     return positions.map((p) => ({
       ...p,
       x: FIELD_WIDTH - p.x, // Flip X coordinate
@@ -443,23 +451,26 @@ export class FormationService {
     const warnings: string[] = [];
 
     // Required fields
-    if (!data.playbook_id) errors.push('playbook_id is required');
-    if (!data.name || data.name.trim() === '') errors.push('name is required');
+    if (!data.playbook_id) errors.push("playbook_id is required");
+    if (!data.name || data.name.trim() === "") errors.push("name is required");
     if (!data.player_positions || data.player_positions.length === 0) {
-      errors.push('player_positions cannot be empty');
+      errors.push("player_positions cannot be empty");
     }
 
     // Name validation
     if (data.name && data.name.length > 100) {
-      errors.push('name cannot exceed 100 characters');
+      errors.push("name cannot exceed 100 characters");
     }
 
     // Player position validation
     if (data.player_positions) {
       data.player_positions.forEach((p, index) => {
-        if (!p.position) errors.push(`Player ${index + 1}: position is required`);
+        if (!p.position)
+          errors.push(`Player ${index + 1}: position is required`);
         if (p.x < 0 || p.x > FIELD_WIDTH) {
-          errors.push(`Player ${index + 1}: x must be between 0 and ${FIELD_WIDTH}`);
+          errors.push(
+            `Player ${index + 1}: x must be between 0 and ${FIELD_WIDTH}`
+          );
         }
         if (p.y < 0 || p.y > 50) {
           errors.push(`Player ${index + 1}: y must be between 0 and 50`);
@@ -470,7 +481,7 @@ export class FormationService {
       const positions = data.player_positions.map((p) => p.position);
       const duplicates = positions.filter((p, i) => positions.indexOf(p) !== i);
       if (duplicates.length > 0) {
-        warnings.push(`Duplicate position codes: ${duplicates.join(', ')}`);
+        warnings.push(`Duplicate position codes: ${duplicates.join(", ")}`);
       }
     }
 
@@ -500,19 +511,19 @@ export class FormationService {
   /**
    * Link formations as variants
    * Sets base_formation_id and direction on variant formations
-   * 
+   *
    * @param baseFormationId - The base formation ID
    * @param leftFormationId - Optional left variant formation ID
    * @param rightFormationId - Optional right variant formation ID
    */
   /**
    * Link formations as left/right variants
-   * 
+   *
    * Special handling:
    * - If leftFormationId === rightFormationId: Creates duplicate for right side
    * - Always sets direction to 'left'/'right' (or 'Lt'/'Rt' for same formation)
    * - Base formation gets direction = 'base'
-   * 
+   *
    * @param baseFormationId - The base formation ID (left side becomes base)
    * @param leftFormationId - Formation for left side (optional, will use baseFormationId if not provided)
    * @param rightFormationId - Formation for right side (will duplicate if same as left)
@@ -525,84 +536,110 @@ export class FormationService {
     personnelPackages?: string[]
   ): Promise<void> {
     // Validate base formation exists
-    const { data: baseFormation, error: baseError} = await supabase
-      .from('formations')
-      .select('*')
-      .eq('id', baseFormationId)
+    const { data: baseFormation, error: baseError } = await supabase
+      .from("formations")
+      .select("*")
+      .eq("id", baseFormationId)
       .single();
 
     if (baseError || !baseFormation) {
-      throw new Error('Base formation not found');
+      throw new Error("Base formation not found");
     }
 
     // @ts-ignore - Supabase type inference issue
     // Base formation should not have a base_formation_id (must be the base)
     if (baseFormation.base_formation_id !== null) {
-      throw new Error('Cannot link to a formation that is already a variant. Choose the base formation.');
+      throw new Error(
+        "Cannot link to a formation that is already a variant. Choose the base formation."
+      );
     }
 
     // SPECIAL CASE: Same formation selected for both sides
     // Create a duplicate for the right side, and make original the left side
     let actualRightFormationId = rightFormationId;
     let isSameFormationLink = false;
-    
-    if (leftFormationId && rightFormationId && leftFormationId === rightFormationId) {
+
+    if (
+      leftFormationId &&
+      rightFormationId &&
+      leftFormationId === rightFormationId
+    ) {
       isSameFormationLink = true;
-      // @ts-ignore - Supabase type inference issue
-      const sourceFormation = baseFormation;
-      
+      const sourceFormation = baseFormation as {
+        name: string;
+        playbook_id: string;
+        personnel_id: string | null;
+        category: string;
+        description: string;
+        positions: any;
+        created_by: string;
+      };
+
       // Create duplicate with same properties for RIGHT side
       const { data: duplicate, error: duplicateError } = await supabase
-        .from('formations')
-        .insert([{
-          name: sourceFormation.name,
-          playbook_id: sourceFormation.playbook_id,
-          personnel_id: sourceFormation.personnel_id,
-          personnel_packages: personnelPackages || [],
-          category: sourceFormation.category,
-          description: sourceFormation.description ? `${sourceFormation.description} (Right variant)` : 'Right variant',
-          positions: sourceFormation.positions,
-          created_by: sourceFormation.created_by,
-          direction: 'right' as 'base' | 'left' | 'right',
-          base_formation_id: baseFormationId, // Points to original as base
-        }])
+        .from("formations")
+        // @ts-ignore - Supabase type inference issue with insert
+        .insert([
+          {
+            name: sourceFormation.name,
+            playbook_id: sourceFormation.playbook_id,
+            personnel_id: sourceFormation.personnel_id,
+            personnel_packages: personnelPackages || [],
+            category: sourceFormation.category,
+            description: sourceFormation.description
+              ? `${sourceFormation.description} (Right variant)`
+              : "Right variant",
+            positions: sourceFormation.positions,
+            created_by: sourceFormation.created_by,
+            direction: "right" as "base" | "left" | "right",
+            base_formation_id: baseFormationId, // Points to original as base
+          },
+        ])
         .select()
         .single();
 
       if (duplicateError || !duplicate) {
-        throw new Error(`Failed to create right variant: ${duplicateError?.message || 'Unknown error'}`);
+        throw new Error(
+          `Failed to create right variant: ${duplicateError?.message || "Unknown error"}`
+        );
       }
 
       // @ts-ignore - Supabase type inference issue
       actualRightFormationId = duplicate.id;
-      
+
       // Update original formation to be LEFT side (it's the base, but shows as 'left')
-      // @ts-ignore - Supabase type inference issue
       const { error: leftUpdateError } = await supabase
-        .from('formations')
+        .from("formations")
+        // @ts-ignore - Supabase type inference issue
         .update({
-          direction: 'left' as 'base' | 'left' | 'right',
+          direction: "left" as "base" | "left" | "right",
           base_formation_id: null, // This is the base formation
           personnel_packages: personnelPackages || [],
         })
-        .eq('id', baseFormationId);
+        .eq("id", baseFormationId);
 
       if (leftUpdateError) {
-        throw new Error(`Failed to update left variant: ${leftUpdateError.message}`);
+        throw new Error(
+          `Failed to update left variant: ${leftUpdateError.message}`
+        );
       }
     }
 
     // Link left variant (update direction) - ONLY for different formation linking
-    if (!isSameFormationLink && leftFormationId && leftFormationId !== baseFormationId) {
-      // @ts-ignore - Supabase type inference issue
+    if (
+      !isSameFormationLink &&
+      leftFormationId &&
+      leftFormationId !== baseFormationId
+    ) {
       const { error: leftError } = await supabase
-        .from('formations')
+        .from("formations")
+        // @ts-ignore - Supabase type inference issue
         .update({
           base_formation_id: baseFormationId,
-          direction: 'left' as 'base' | 'left' | 'right',
+          direction: "left" as "base" | "left" | "right",
           personnel_packages: personnelPackages || [],
         })
-        .eq('id', leftFormationId);
+        .eq("id", leftFormationId);
 
       if (leftError) {
         throw new Error(`Failed to link left variant: ${leftError.message}`);
@@ -611,15 +648,15 @@ export class FormationService {
 
     // Link right variant (update direction) - ONLY for different formation linking
     if (!isSameFormationLink && actualRightFormationId) {
-      // @ts-ignore - Supabase type inference issue
       const { error: rightError } = await supabase
-        .from('formations')
+        .from("formations")
+        // @ts-ignore - Supabase type inference issue
         .update({
           base_formation_id: baseFormationId,
-          direction: 'right' as 'base' | 'left' | 'right',
+          direction: "right" as "base" | "left" | "right",
           personnel_packages: personnelPackages || [],
         })
-        .eq('id', actualRightFormationId);
+        .eq("id", actualRightFormationId);
 
       if (rightError) {
         throw new Error(`Failed to link right variant: ${rightError.message}`);
@@ -628,17 +665,19 @@ export class FormationService {
 
     // Update base formation direction - ONLY for different formation linking
     if (!isSameFormationLink) {
-      // @ts-ignore - Supabase type inference issue
       const { error: baseUpdateError } = await supabase
-        .from('formations')
-        .update({ 
-          direction: 'base' as 'base' | 'left' | 'right',
+        .from("formations")
+        // @ts-ignore - Supabase type inference issue
+        .update({
+          direction: "base" as "base" | "left" | "right",
           personnel_packages: personnelPackages || [],
         })
-        .eq('id', baseFormationId);
+        .eq("id", baseFormationId);
 
       if (baseUpdateError) {
-        throw new Error(`Failed to update base formation: ${baseUpdateError.message}`);
+        throw new Error(
+          `Failed to update base formation: ${baseUpdateError.message}`
+        );
       }
     }
   }
@@ -646,18 +685,18 @@ export class FormationService {
   /**
    * Unlink a variant formation (make it independent)
    * Sets base_formation_id to NULL and direction to 'base'
-   * 
+   *
    * @param formationId - The formation ID to unlink
    */
   static async unlinkVariant(formationId: string): Promise<void> {
-    // @ts-ignore - Supabase type inference issue
     const { error } = await supabase
-      .from('formations')
+      .from("formations")
+      // @ts-ignore - Supabase type inference issue
       .update({
         base_formation_id: null,
-        direction: 'base' as 'base' | 'left' | 'right',
+        direction: "base" as "base" | "left" | "right",
       })
-      .eq('id', formationId);
+      .eq("id", formationId);
 
     if (error) {
       throw new Error(`Failed to unlink variant: ${error.message}`);
@@ -668,31 +707,36 @@ export class FormationService {
    * Get suggested formation matches
    * Returns formations in the same playbook with same personnel
    * that could be potential left/right variants
-   * 
+   *
    * @param formationId - The formation to find matches for
    * @returns Array of potential matching formations
    */
   static async getSuggestedMatches(formationId: string): Promise<Formation[]> {
     // Get the source formation
     const { data: sourceFormation, error: sourceError } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('id', formationId)
+      .from("formations")
+      .select("*")
+      .eq("id", formationId)
       .single();
 
     if (sourceError || !sourceFormation) {
-      throw new Error('Formation not found');
+      throw new Error("Formation not found");
     }
 
+    // Type assertion for sourceFormation
+    const typedSource = sourceFormation as {
+      playbook_id: string;
+      personnel_id: string | null;
+    };
+
     // Query formations in same playbook with same personnel
-    // @ts-ignore - Supabase type inference issue
     const { data: matches, error: matchError } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('playbook_id', sourceFormation.playbook_id)
-      .eq('personnel_id', sourceFormation.personnel_id)
-      .neq('id', formationId) // Exclude self
-      .order('name');
+      .from("formations")
+      .select("*")
+      .eq("playbook_id", typedSource.playbook_id)
+      .eq("personnel_id", typedSource.personnel_id ?? "")
+      .neq("id", formationId) // Exclude self
+      .order("name");
 
     if (matchError) {
       throw new Error(`Failed to get suggested matches: ${matchError.message}`);
@@ -700,16 +744,20 @@ export class FormationService {
 
     // Filter out formations that are already linked to a different base
     // (unless they're linked to THIS formation as base)
-    // @ts-ignore - Supabase type inference issue
-    const baseFormationId = sourceFormation.base_formation_id || sourceFormation.id;
-    
+    const typedSourceWithId = sourceFormation as {
+      base_formation_id: string | null;
+      id: string;
+    };
+    const baseFormationId =
+      typedSourceWithId.base_formation_id || typedSourceWithId.id;
+
     const filtered = (matches || []).filter((f: Formation) => {
       // Include if no base (independent formation)
       if (!f.base_formation_id) return true;
-      
+
       // Include if already linked to this formation's base
       if (f.base_formation_id === baseFormationId) return true;
-      
+
       // Exclude if linked to different base
       return false;
     });
@@ -720,26 +768,24 @@ export class FormationService {
   /**
    * Get all variants for a formation (base + left + right)
    * Returns the complete variant family
-   * 
+   *
    * @param formationId - Formation ID (can be base or variant)
    * @returns Object with base, left, and right formations
    */
-  static async getFormationVariantFamily(
-    formationId: string
-  ): Promise<{
+  static async getFormationVariantFamily(formationId: string): Promise<{
     base: Formation | null;
     left: Formation | null;
     right: Formation | null;
   }> {
     // Get the formation to determine base_formation_id
     const { data: formation, error: formationError } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('id', formationId)
+      .from("formations")
+      .select("*")
+      .eq("id", formationId)
       .single();
 
     if (formationError || !formation) {
-      throw new Error('Formation not found');
+      throw new Error("Formation not found");
     }
 
     // Determine the base formation ID
@@ -748,8 +794,8 @@ export class FormationService {
 
     // Query all formations in the variant family
     const { data: allVariants, error: variantError } = await supabase
-      .from('formations')
-      .select('*')
+      .from("formations")
+      .select("*")
       .or(`id.eq.${baseFormationId},base_formation_id.eq.${baseFormationId}`);
 
     if (variantError) {
@@ -759,18 +805,18 @@ export class FormationService {
     const variants = (allVariants || []) as Formation[];
 
     return {
-      base: variants.find((f: Formation) => f.direction === 'base') || null,
-      left: variants.find((f: Formation) => f.direction === 'left') || null,
-      right: variants.find((f: Formation) => f.direction === 'right') || null,
+      base: variants.find((f: Formation) => f.direction === "base") || null,
+      left: variants.find((f: Formation) => f.direction === "left") || null,
+      right: variants.find((f: Formation) => f.direction === "right") || null,
     };
   }
 
   /**
    * Import formations from existing plays
-   * 
+   *
    * Creates formation records from unique formation names in the plays table.
    * Useful for migrating legacy data where plays have formation text but no formation records.
-   * 
+   *
    * @param teamIdOrPlaybookId - Can be either team_id or playbook_id
    * @param createdBy - User ID of the creator
    * @returns Number of formations created
@@ -779,43 +825,43 @@ export class FormationService {
     teamIdOrPlaybookId: string,
     createdBy: string
   ): Promise<{ created: number; existing: number; formations: Formation[] }> {
-    console.log('📦 importFormationsFromPlays called with:', { teamIdOrPlaybookId, createdBy });
-    
+    console.log("📦 importFormationsFromPlays called with:", {
+      teamIdOrPlaybookId,
+      createdBy,
+    });
+
     // First, try to find the playbook for this team
     let playbookId = teamIdOrPlaybookId;
-    
+
     // Check if this is a team_id by trying to find a playbook
     const { data: playbooks } = await supabase
-      .from('playbooks')
-      .select('id')
-      .eq('team_id', teamIdOrPlaybookId)
-      .eq('is_active', true)
+      .from("playbooks")
+      .select("id")
+      .eq("team_id", teamIdOrPlaybookId)
+      .eq("is_active", true)
       .limit(1);
-    
-    console.log('🔍 Playbook lookup result:', playbooks);
-    
+
+    console.log("🔍 Playbook lookup result:", playbooks);
+
     if (playbooks && playbooks.length > 0) {
       // @ts-ignore - Supabase type inference
       playbookId = playbooks[0].id;
-      console.log('✅ Found playbook ID:', playbookId);
+      console.log("✅ Found playbook ID:", playbookId);
     } else {
-      console.log('ℹ️ No playbook found for team, using ID as-is:', playbookId);
+      console.log("ℹ️ No playbook found for team, using ID as-is:", playbookId);
     }
-    
+
     // Get all plays for this playbook to extract formation names
     const { data: plays, error: playsError } = await supabase
-      .from('plays')
-      .select('formation, personnel')
-      .eq('playbook_id', playbookId);
-
-    console.log('🎮 Plays query result:', { plays: plays?.length, error: playsError });
+      .from("plays")
+      .select("formation, personnel")
+      .eq("playbook_id", playbookId);
 
     if (playsError) {
       throw new Error(`Failed to load plays: ${playsError.message}`);
     }
 
     if (!plays || plays.length === 0) {
-      console.log('⚠️ No plays found for playbook:', playbookId);
       // No plays found, return empty result
       return {
         created: 0,
@@ -825,28 +871,30 @@ export class FormationService {
     }
 
     // @ts-ignore - Supabase type inference
-    const uniqueFormations = [...new Set(plays?.map(p => p.formation).filter(Boolean))] as string[];
-    
-    console.log('📋 Unique formations found:', uniqueFormations);
+    const uniqueFormations = [
+      ...new Set(plays?.map((p: any) => p.formation).filter(Boolean)),
+    ] as string[];
 
     // Check which formations already exist
     const { data: existingFormations } = await supabase
-      .from('formations')
-      .select('name')
-      .eq('playbook_id', playbookId)
-      .in('name', uniqueFormations);
+      .from("formations")
+      .select("name")
+      .eq("playbook_id", playbookId)
+      .in("name", uniqueFormations);
 
     // @ts-ignore - Supabase type inference
-    const existingNames = new Set(existingFormations?.map(f => f.name) || []);
-    const formationsToCreate = uniqueFormations.filter(name => !existingNames.has(name));
+    const existingNames = new Set(existingFormations?.map((f) => f.name) || []);
+    const formationsToCreate = uniqueFormations.filter(
+      (name) => !existingNames.has(name)
+    );
 
     if (formationsToCreate.length === 0) {
       // All formations already exist
       const { data: allFormations } = await supabase
-        .from('formations')
-        .select('*')
-        .eq('playbook_id', playbookId)
-        .in('name', uniqueFormations);
+        .from("formations")
+        .select("*")
+        .eq("playbook_id", playbookId)
+        .in("name", uniqueFormations);
 
       return {
         created: 0,
@@ -856,18 +904,19 @@ export class FormationService {
     }
 
     // Create new formations
-    const newFormations = formationsToCreate.map(name => ({
+    const newFormations = formationsToCreate.map((name) => ({
       name,
       playbook_id: playbookId,
       created_by: createdBy,
-      direction: 'base' as const,
-      category: 'spread', // Default category (valid options: spread, pro, power, special, goal_line, short_yardage)
+      direction: "base" as const,
+      category: "spread", // Default category (valid options: spread, pro, power, special, goal_line, short_yardage)
       description: `Imported from plays (${name})`,
       positions: [], // No positions initially
     }));
 
-    const { data: created, error: createError } = await supabase
-      .from('formations')
+    const { data: _created, error: createError } = await supabase
+      .from("formations")
+      // @ts-ignore - Supabase type inference issue
       .insert(newFormations)
       .select();
 
@@ -877,10 +926,10 @@ export class FormationService {
 
     // Get all formations (existing + newly created)
     const { data: allFormations } = await supabase
-      .from('formations')
-      .select('*')
-      .eq('playbook_id', playbookId)
-      .in('name', uniqueFormations);
+      .from("formations")
+      .select("*")
+      .eq("playbook_id", playbookId)
+      .in("name", uniqueFormations);
 
     return {
       created: formationsToCreate.length,

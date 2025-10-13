@@ -88,7 +88,7 @@ export function useAutosave(
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  
+
   // Global save indicator
   const { startSaving, finishSaving } = useSaveState();
 
@@ -112,13 +112,11 @@ export function useAutosave(
   // Perform the save
   const performSave = useCallback(async () => {
     if (isSavingRef.current) {
-      console.log("⏳ Save already in progress, skipping...");
       return;
     }
 
     // Don't save if there are no players or no play name
     if (players.length === 0 || !playName.trim()) {
-      console.log("⏭️  Skipping autosave: no players or play name");
       return;
     }
 
@@ -126,7 +124,7 @@ export function useAutosave(
       isSavingRef.current = true;
       setStatus("saving");
       setHasUnsavedChanges(false);
-      
+
       // Start global save indicator
       startSaving();
 
@@ -140,7 +138,7 @@ export function useAutosave(
       lastPlayNameRef.current = playName;
 
       onSaveSuccess?.();
-      
+
       // Finish with success status
       finishSaving("success");
 
@@ -152,10 +150,10 @@ export function useAutosave(
       console.error("❌ Autosave failed:", error);
       setStatus("error");
       setHasUnsavedChanges(true);
-      
+
       // Finish with error status (auto-queues for retry)
       finishSaving("error");
-      
+
       onSaveError?.(
         error instanceof Error ? error : new Error("Unknown error")
       );
@@ -217,8 +215,18 @@ export function useAutosave(
       return;
     }
 
-    // Reset the timer on every change
-    resetTimer();
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    setHasUnsavedChanges(true);
+
+    // Set new timeout for autosave
+    timeoutRef.current = setTimeout(() => {
+      performSave();
+    }, debounceMs);
 
     // Cleanup: clear timeout on unmount or when dependencies change
     return () => {
@@ -226,7 +234,8 @@ export function useAutosave(
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [players, playName, enabled, resetTimer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [players, playName, enabled, debounceMs]);
 
   // Cleanup on unmount
   useEffect(() => {

@@ -445,7 +445,14 @@ export interface PracticeGameTables {
       playbook_id: string;
       name: string;
       description: string | null;
-      category: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      category:
+        | "spread"
+        | "pro"
+        | "power"
+        | "special"
+        | "goal_line"
+        | "short_yardage"
+        | null;
       personnel_id: string | null;
       personnel_name: string | null;
       base_formation_id: string | null;
@@ -465,7 +472,14 @@ export interface PracticeGameTables {
       playbook_id: string;
       name: string;
       description?: string | null;
-      category?: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      category?:
+        | "spread"
+        | "pro"
+        | "power"
+        | "special"
+        | "goal_line"
+        | "short_yardage"
+        | null;
       personnel_id?: string | null;
       personnel_name?: string | null;
       base_formation_id?: string | null;
@@ -485,7 +499,14 @@ export interface PracticeGameTables {
       playbook_id?: string;
       name?: string;
       description?: string | null;
-      category?: "spread" | "pro" | "power" | "special" | "goal_line" | "short_yardage" | null;
+      category?:
+        | "spread"
+        | "pro"
+        | "power"
+        | "special"
+        | "goal_line"
+        | "short_yardage"
+        | null;
       personnel_id?: string | null;
       personnel_name?: string | null;
       base_formation_id?: string | null;

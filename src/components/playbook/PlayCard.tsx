@@ -181,27 +181,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       // Check if the play prop actually changed from the last time we synced
       // This prevents syncing with stale data immediately after save completes
       if (play !== lastSyncedPlayRef.current) {
-        console.log(
-          "[PlayCard] ⚠️ SYNCING - Play prop changed, updating optimistic state:",
-          {
-            oldPlay: lastSyncedPlayRef.current,
-            newPlay: play,
-            "old f_dir": lastSyncedPlayRef.current?.f_dir,
-            "new f_dir": play.f_dir,
-            "old p_dir": lastSyncedPlayRef.current?.p_dir,
-            "new p_dir": play.p_dir,
-          }
-        );
         lastSyncedPlayRef.current = play;
         setOptimisticPlay(play);
-      } else {
-        console.log("[PlayCard] ✅ Skipping sync - same play object reference");
       }
-    } else {
-      console.log(
-        "[PlayCard] ⏸️ Skipping sync - save in progress for:",
-        Array.from(savingFields)
-      );
     }
     // We intentionally don't include optimisticPlay in deps to avoid sync loops
     // eslint-disable-next-line react-hooks/exhaustive-deps

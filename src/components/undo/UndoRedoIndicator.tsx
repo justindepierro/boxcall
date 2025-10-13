@@ -1,6 +1,6 @@
 /**
  * UndoRedoIndicator Component
- * 
+ *
  * Shows visual indicators for undo/redo availability and keyboard shortcuts.
  * Displays in bottom-right corner of the screen.
  */

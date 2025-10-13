@@ -19,19 +19,21 @@ The **Save History Panel** is a comprehensive dev tools component that provides 
 ✅ **System Stats**: Queue length, undo stack, redo stack counts  
 ✅ **Minimizable UI**: Toggle between button and full panel  
 ✅ **Timing Information**: Duration tracking for each operation  
-✅ **Entity Type Display**: See what kind of entity was modified  
+✅ **Entity Type Display**: See what kind of entity was modified
 
 ---
 
 ## 🎯 Problem Solved
 
 **Before P2.4:**
+
 - No visibility into save operation history
 - Difficult to debug save-related issues
 - No way to track undo/redo patterns
 - Had to rely on console logs or browser devtools
 
 **After P2.4:**
+
 - Complete save operation history in UI
 - Visual display of all operations with timing
 - Easy filtering and export for debugging
@@ -171,6 +173,7 @@ function App() {
 ### Visual Design
 
 **Minimized Button:**
+
 ```
 ┌─────────────────────────┐
 │ 📋 History (12)          │
@@ -178,6 +181,7 @@ function App() {
 ```
 
 **Full Panel:**
+
 ```
 ┌────────────────────────────────────────────┐
 │ 📋 Save History (12 operations)    📥 ✕    │
@@ -206,6 +210,7 @@ function App() {
 ### Status Icons
 
 **Success (Green):**
+
 ```typescript
 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -213,6 +218,7 @@ function App() {
 ```
 
 **Error (Red):**
+
 ```typescript
 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -220,6 +226,7 @@ function App() {
 ```
 
 **Warning (Yellow):**
+
 ```typescript
 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -257,13 +264,9 @@ The panel automatically tracks all operations through the UndoRedoContext:
 const { executeCommand } = useUndoRedo();
 
 executeCommand(
-  createPlayUpdateCommand(
-    originalPlay,
-    updatedPlay,
-    async (play) => {
-      // Save logic
-    }
-  )
+  createPlayUpdateCommand(originalPlay, updatedPlay, async (play) => {
+    // Save logic
+  })
 );
 
 // Operation now appears in SaveHistoryPanel automatically
@@ -272,6 +275,7 @@ executeCommand(
 ### Filtering Operations
 
 Users can filter by status using the tabs:
+
 - **All**: Show all operations
 - **Success**: Show only successful saves
 - **Error**: Show only failed operations
@@ -313,12 +317,14 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 1: Basic Operation Display
 
 **Steps:**
+
 1. Open app, make a change to a play
 2. Click "History" button in bottom-right
 3. Panel should open showing the operation
 4. Verify timestamp, duration, and entity type
 
 **Expected:**
+
 - Operation appears in history list
 - Status icon is green (success)
 - Timestamp shows current time
@@ -327,12 +333,14 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 2: Undo/Redo Tracking
 
 **Steps:**
+
 1. Make a change (create/update play)
 2. Press Cmd+Z to undo
 3. Open history panel
 4. Verify both operations appear
 
 **Expected:**
+
 - Two entries: original and undo
 - Original has success icon
 - Undo has warning icon
@@ -341,12 +349,14 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 3: Filtering
 
 **Steps:**
+
 1. Make several changes (mix of operations)
 2. Undo some operations
 3. Open history panel
 4. Click "Warning" filter tab
 
 **Expected:**
+
 - Only undone operations displayed
 - Count updates to show filtered number
 - Other operations hidden but not lost
@@ -354,12 +364,14 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 4: Export Functionality
 
 **Steps:**
+
 1. Perform several operations
 2. Open history panel
 3. Click export (download) icon
 4. Check downloaded file
 
 **Expected:**
+
 - JSON file downloads automatically
 - Filename includes timestamp
 - File contains all operations
@@ -368,12 +380,14 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 5: System Stats
 
 **Steps:**
+
 1. Create queue of pending saves (go offline)
 2. Perform undo/redo operations
 3. Open history panel
 4. Check stats grid
 
 **Expected:**
+
 - Queue length shows pending count
 - Undo stack shows number of undoable operations
 - Redo stack shows number of redoable operations
@@ -382,11 +396,13 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 6: Status Badges
 
 **Steps:**
+
 1. Start online, open history panel
 2. Go offline (dev tools → offline mode)
 3. Check status badge
 
 **Expected:**
+
 - Online: Green badge with "Online" text
 - Offline: Red badge with "Offline" text
 - Badge updates immediately on connectivity change
@@ -394,10 +410,12 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 7: Empty State
 
 **Steps:**
+
 1. Open app in fresh session (no history)
 2. Open history panel
 
 **Expected:**
+
 - Empty state message displays
 - Icon shows document/clipboard
 - Text: "No operations yet" or similar
@@ -406,11 +424,13 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 8: Long History
 
 **Steps:**
+
 1. Perform 50+ operations (edit plays, formations, etc.)
 2. Open history panel
 3. Scroll through list
 
 **Expected:**
+
 - All operations visible
 - Scroll works smoothly
 - Newest operations at top
@@ -420,11 +440,13 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 9: Minimized State
 
 **Steps:**
+
 1. Open history panel
 2. Click close (X) button
 3. Panel should minimize to button
 
 **Expected:**
+
 - Panel closes smoothly
 - Button appears in bottom-right
 - Button shows operation count
@@ -433,11 +455,13 @@ Filename format: `save-history-{timestamp}.json`
 ### Test 10: Duration Formatting
 
 **Steps:**
+
 1. Perform quick operation (< 1s)
 2. Perform slow operation (> 1s, e.g., offline save)
 3. Open history panel
 
 **Expected:**
+
 - Quick operation: "120ms" format
 - Slow operation: "1.50s" format
 - Formatting is readable and consistent
@@ -487,6 +511,7 @@ const saveHistory: SaveHistoryEntry[] = undoRedoHistory.map((entry) => ({
 ### Memory Management
 
 **History Limit**: Tied to UndoRedoProvider's `maxHistorySize` (default 50)
+
 - When history exceeds limit, oldest entries are removed
 - Prevents unbounded memory growth
 - Adjust via `<UndoRedoProvider maxHistorySize={100}>`
@@ -494,16 +519,19 @@ const saveHistory: SaveHistoryEntry[] = undoRedoHistory.map((entry) => ({
 ### Rendering Optimization
 
 **Virtual Scrolling**: Not implemented (440 lines of code is reasonable)
+
 - For 50 items, standard scrolling is fine
 - If history size increases, consider react-window or similar
 
 **Filter Performance**: O(n) filtering on `saveHistory` array
+
 - Fast for small arrays (< 100 items)
 - Memoization not needed due to history limit
 
 ### Export Performance
 
 **JSON.stringify**: Synchronous operation
+
 - Fast for small arrays (< 100 items)
 - Consider Web Worker for larger exports
 
@@ -515,7 +543,7 @@ const saveHistory: SaveHistoryEntry[] = undoRedoHistory.map((entry) => ({
 **Dependencies**: 2 contexts (SaveStateContext, UndoRedoContext)  
 **State Management**: useState (isOpen, filter)  
 **Memory Footprint**: ~50 entries × ~200 bytes = ~10KB  
-**Render Performance**: < 16ms for 50 items  
+**Render Performance**: < 16ms for 50 items
 
 ---
 
@@ -546,6 +574,7 @@ const saveHistory: SaveHistoryEntry[] = undoRedoHistory.map((entry) => ({
 ### Future Enhancements
 
 **P3 Candidates:**
+
 1. Real-time save operation tracking (not just undo/redo)
 2. Error details popup on click
 3. Search/filter by entity ID or description
@@ -570,13 +599,13 @@ const saveHistory: SaveHistoryEntry[] = undoRedoHistory.map((entry) => ({
 
 ```typescript
 interface SaveHistoryEntry {
-  id: string;              // Unique operation ID
-  timestamp: number;       // Unix timestamp (ms)
+  id: string; // Unique operation ID
+  timestamp: number; // Unix timestamp (ms)
   status: "success" | "error" | "warning" | "conflict";
-  duration: number;        // Operation duration (ms)
-  description: string;     // Human-readable description
-  entityType?: string;     // "play" | "formation" | etc.
-  entityId?: string;       // Entity ID
+  duration: number; // Operation duration (ms)
+  description: string; // Human-readable description
+  entityType?: string; // "play" | "formation" | etc.
+  entityId?: string; // Entity ID
 }
 ```
 
@@ -648,12 +677,14 @@ function getStatusIcon(status: SaveHistoryEntry["status"]): JSX.Element;
 ### Next Steps
 
 With P2.4 complete, we've finished **all P2 features**:
+
 - ✅ P2.1: IndexedDB Queue Persistence
 - ✅ P2.2: Conflict Resolution UI
 - ✅ P2.3: Undo/Redo System
 - ✅ P2.4: Save History Panel
 
 **Ready for:**
+
 - Git commit (P2.4)
 - Git push
 - Update master roadmap

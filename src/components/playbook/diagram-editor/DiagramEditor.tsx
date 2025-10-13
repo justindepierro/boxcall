@@ -108,7 +108,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         addPlayer(diagramPlayer);
       });
 
-      console.log("ℹ️ No personnel config found, loaded default formation");
       return;
     }
 
@@ -262,18 +261,12 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
   const handleAutosave = useCallback(
     async (diagramData: DiagramDocument) => {
       if (!play?.id) {
-        console.log(
-          "⏭️  Skipping autosave: no play ID (new play, user must save manually)"
-        );
         return;
       }
 
       if (!play.play_name?.trim()) {
-        console.log("⏭️  Skipping autosave: no play name");
         return;
       }
-
-      console.log(`💾 Autosaving diagram for play ID: ${play.id}...`);
 
       const result = await updateDiagramData(play.id, diagramData, {
         updateFormation: true,
@@ -283,8 +276,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         console.error("❌ Autosave failed:", result.error);
         throw new Error(result.error);
       }
-
-      console.log("✅ Autosave successful");
     },
     [play]
   );
@@ -298,7 +289,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
       debounceMs: 2500, // Save after 2.5 seconds of inactivity
       onSave: handleAutosave,
       onSaveSuccess: () => {
-        console.log("✅ Autosave completed");
         setIsDirty(false);
       },
       onSaveError: (error) => {
@@ -309,8 +299,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
   );
 
   const handleReady = useCallback((pixiApp: DiagramPixiApp) => {
-    console.log("✅ Pixi Diagram Editor Ready!", pixiApp);
-    console.log(`📊 FPS: ${pixiApp.getFPS()}`);
     setApp(pixiApp);
   }, []);
 
@@ -372,12 +360,8 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
           },
         };
 
-        console.log("📊 Diagram data:", diagramData);
-
         // If we have a play ID, use DiagramService to update
         if (play?.id) {
-          console.log(`🔄 Updating existing play ID: ${play.id}`);
-
           const result = await updateDiagramData(play.id, diagramData, {
             updateFormation: true,
           });
@@ -391,8 +375,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
             return;
           }
 
-          console.log("✅ Play saved successfully:", result.play);
-
           // Mark as saved
           setIsDirty(false);
           setShowSaveDialog(false);
@@ -400,7 +382,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
           showAlertModal("✅ Success", `Play "${name}" saved successfully!`);
         } else {
           // For new plays, use direct Supabase insert (needs playbook_id context)
-          console.log("➕ Inserting new play");
 
           const playData: Partial<Play> = {
             play_name: name,
@@ -410,7 +391,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
             diagram_version: 2,
           };
 
-          const { data, error } = await supabase
+          const { error } = await supabase
             .from("plays")
             .insert(playData as never)
             .select()
@@ -424,8 +405,6 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
             );
             return;
           }
-
-          console.log("✅ Play saved successfully:", data);
 
           // Mark as saved
           setIsDirty(false);

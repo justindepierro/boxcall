@@ -93,8 +93,8 @@ export function useTeamsData() {
   const updatePlay = useCallback(
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
-        console.log("[useTeamsData] Updating play:", { 
-          playId, 
+        console.log("[useTeamsData] Updating play:", {
+          playId,
           updates,
           "updates.f_dir": updates.f_dir,
           "updates.p_dir": updates.p_dir,
@@ -114,8 +114,14 @@ export function useTeamsData() {
         }
 
         console.log("[useTeamsData] Database returned:", data);
-        console.log("[useTeamsData] Database returned f_dir:", (data as any)?.f_dir);
-        console.log("[useTeamsData] Database returned p_dir:", (data as any)?.p_dir);
+        console.log(
+          "[useTeamsData] Database returned f_dir:",
+          (data as any)?.f_dir
+        );
+        console.log(
+          "[useTeamsData] Database returned p_dir:",
+          (data as any)?.p_dir
+        );
 
         // Update local state with the data returned from database
         // Use 'data' instead of 'updates' to ensure we have the actual database values
@@ -128,14 +134,8 @@ export function useTeamsData() {
             "[useTeamsData] Updated local state for play:",
             updatedPlay
           );
-          console.log(
-            "[useTeamsData] Updated play f_dir:",
-            updatedPlay?.f_dir
-          );
-          console.log(
-            "[useTeamsData] Updated play p_dir:",
-            updatedPlay?.p_dir
-          );
+          console.log("[useTeamsData] Updated play f_dir:", updatedPlay?.f_dir);
+          console.log("[useTeamsData] Updated play p_dir:", updatedPlay?.p_dir);
           return updated;
         });
 

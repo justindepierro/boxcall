@@ -21,6 +21,7 @@ Successfully implemented **IndexedDB queue persistence** with metadata-only stor
 **Solution**: Store operation metadata only. On page load, inform users of pending operations and let them decide whether to dismiss or investigate.
 
 **Why This Approach:**
+
 1. **Simplicity**: Minimal code changes
 2. **User Control**: Users see what was pending and choose action
 3. **Safety**: Prevents auto-saving stale data after crashes
@@ -35,6 +36,7 @@ Successfully implemented **IndexedDB queue persistence** with metadata-only stor
 **File**: `src/contexts/SaveStateContext.tsx`
 
 **Changes**:
+
 - ✅ Import IndexedDB utilities (`loadOperations`, `persistOperation`, etc.)
 - ✅ Added `hasPendingFromLastSession` state
 - ✅ Load persisted queue on mount
@@ -43,6 +45,7 @@ Successfully implemented **IndexedDB queue persistence** with metadata-only stor
 - ✅ Exposed `hasPendingFromLastSession` in context API
 
 **Key Features**:
+
 ```typescript
 // On component mount
 useEffect(() => {
@@ -74,6 +77,7 @@ useEffect(() => {
 **File**: `src/components/notifications/PendingSavesNotification.tsx`
 
 **Features**:
+
 - Fixed position notification (top-right corner)
 - Shows count of pending operations
 - Warning-styled (amber/yellow theme)
@@ -81,6 +85,7 @@ useEffect(() => {
 - Auto-hides when no pending operations
 
 **User Experience**:
+
 ```
 ┌─────────────────────────────────────────┐
 │ ⚠️  Pending Saves from Last Session     │
@@ -110,11 +115,13 @@ useEffect(() => {
 ## Files Changed
 
 ### Created (2 files):
+
 1. `src/components/notifications/PendingSavesNotification.tsx` - User notification UI
 2. `P2_INDEXEDDB_ARCHITECTURE.md` - Architecture decision document
 3. `P2_1_INDEXEDDB_COMPLETE.md` - This summary
 
 ### Modified (2 files):
+
 1. `src/contexts/SaveStateContext.tsx` - v3.1.0 → v3.2.0
    - Added IndexedDB integration
    - Load on mount
@@ -195,7 +202,7 @@ queueSave({
 ```typescript
 // SaveStateContext
 const operations = await loadOperations();
-const reconstructed = operations.map(op => ({
+const reconstructed = operations.map((op) => ({
   ...op,
   operation: () => {
     switch (op.entityType) {
@@ -205,7 +212,7 @@ const reconstructed = operations.map(op => ({
         return updateFormation(op.entityId, op.operationData);
       // ... etc
     }
-  }
+  },
 }));
 setSaveQueue(reconstructed);
 processSaveQueue(); // Auto-retry!
@@ -246,6 +253,7 @@ processSaveQueue(); // Auto-retry!
 ## Success Metrics
 
 ### Implementation
+
 - ✅ Queue metadata persists to IndexedDB
 - ✅ Queue loads on mount
 - ✅ User sees notification for pending operations
@@ -254,6 +262,7 @@ processSaveQueue(); // Auto-retry!
 - ✅ All type checks pass
 
 ### User Experience
+
 - ✅ Users aware of pending operations
 - ✅ No silent data loss
 - ✅ Clear notification design
@@ -269,10 +278,10 @@ processSaveQueue(); // Auto-retry!
 ```typescript
 interface SaveStateContextValue {
   // ... existing fields ...
-  
+
   // NEW in v3.2
   hasPendingFromLastSession: boolean;
-  
+
   // UPDATED signature (now async)
   clearQueue: () => Promise<void>; // Was: () => void
 }
@@ -285,12 +294,15 @@ interface SaveStateContextValue {
 ## Next Steps
 
 ### P2.2: Conflict Resolution UI
+
 **Goal**: Detect version conflicts, show merge dialog
 
 ### P2.3: Undo/Redo System
+
 **Goal**: Command pattern with Cmd+Z/Cmd+Shift+Z
 
 ### P2.4: Save History Panel
+
 **Goal**: Dev tools showing recent save operations
 
 ---

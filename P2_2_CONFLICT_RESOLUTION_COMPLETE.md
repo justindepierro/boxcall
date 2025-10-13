@@ -52,6 +52,7 @@ export interface ConflictResolution<T> {
 ```
 
 **Helpers:**
+
 - `detectConflicts()` - Compare two versions, find changed fields
 - `mergeConflictData()` - Apply resolution strategy to data
 
@@ -62,6 +63,7 @@ export interface ConflictResolution<T> {
 Added `version` field to entities:
 
 **Play** (`src/types/play.ts`):
+
 ```typescript
 export interface Play {
   // ... existing fields
@@ -70,6 +72,7 @@ export interface Play {
 ```
 
 **Formation** (`src/types/formation.ts`):
+
 ```typescript
 export interface Formation {
   // ... existing fields
@@ -84,16 +87,23 @@ export interface Formation {
 Updated to v3.3.0 with conflict support:
 
 **New State:**
+
 ```typescript
-const [activeConflict, setActiveConflict] = useState<ConflictResolution | null>(null);
+const [activeConflict, setActiveConflict] = useState<ConflictResolution | null>(
+  null
+);
 ```
 
 **New Methods:**
+
 ```typescript
-const showConflict = useCallback((conflict: ConflictResolution) => {
-  setActiveConflict(conflict);
-  finishSaving("conflict"); // Show yellow indicator
-}, [finishSaving]);
+const showConflict = useCallback(
+  (conflict: ConflictResolution) => {
+    setActiveConflict(conflict);
+    finishSaving("conflict"); // Show yellow indicator
+  },
+  [finishSaving]
+);
 
 const clearConflict = useCallback(() => {
   setActiveConflict(null);
@@ -101,17 +111,17 @@ const clearConflict = useCallback(() => {
 ```
 
 **Updated SaveStatus:**
+
 ```typescript
 export type SaveStatus = "idle" | "success" | "error" | "warning" | "conflict";
 ```
 
 **Provider Value:**
+
 ```typescript
 {
   // ... existing
-  activeConflict,
-  showConflict,
-  clearConflict
+  (activeConflict, showConflict, clearConflict);
 }
 ```
 
@@ -122,6 +132,7 @@ export type SaveStatus = "idle" | "success" | "error" | "warning" | "conflict";
 Full-featured conflict resolution UI:
 
 **Features:**
+
 - ✅ Warning-themed modal overlay
 - ✅ Three resolution strategies (radio buttons)
 - ✅ Side-by-side field comparison
@@ -131,6 +142,7 @@ Full-featured conflict resolution UI:
 - ✅ Cancel and Resolve actions
 
 **Visual Design:**
+
 - Fixed position overlay (z-50)
 - Warning colors (yellow/amber)
 - Grid layout for comparison
@@ -144,33 +156,35 @@ Full-featured conflict resolution UI:
 Helper functions for conflict handling:
 
 **Functions:**
+
 - `isVersionConflict(error)` - Type guard for version conflict errors
 - `detectPlayConflicts()` - Create conflict resolution context for Play
 - `detectFormationConflicts()` - Create conflict resolution context for Formation
 - `createVersionConflictError()` - Throw version conflict from API response
 
 **Usage Example:**
+
 ```typescript
 try {
   // Update with version check
   const { data, error } = await supabase
-    .from('plays')
+    .from("plays")
     .update({ ...updates, version: currentVersion + 1 })
-    .eq('id', playId)
-    .eq('version', currentVersion)
+    .eq("id", playId)
+    .eq("version", currentVersion)
     .select()
     .single();
-  
+
   if (error || !data) {
     // Fetch current version
     const { data: current } = await supabase
-      .from('plays')
+      .from("plays")
       .select()
-      .eq('id', playId)
+      .eq("id", playId)
       .single();
-    
+
     if (current && current.version !== currentVersion) {
-      throw createVersionConflictError('play', playId, updates, current);
+      throw createVersionConflictError("play", playId, updates, current);
     }
   }
 } catch (err) {
@@ -219,35 +233,38 @@ function ConflictOverlay() {
 ### Scenario: Two Users Edit Same Play
 
 **Setup:**
+
 - User A opens Play #123 (version: 5)
 - User B opens Play #123 (version: 5)
 
 **Sequence:**
+
 1. User A changes `play_name` to "Power Right"
 2. User A saves → Server updates to version 6 ✅
 3. User B changes `formation` to "Shotgun"
 4. User B saves → Server rejects (version mismatch) ❌
 
 **Conflict Detection:**
+
 ```typescript
 // User B's save fails
 const { error } = await supabase
-  .from('plays')
-  .update({ formation: 'Shotgun', version: 6 })
-  .eq('id', '123')
-  .eq('version', 5); // ❌ Version is now 6!
+  .from("plays")
+  .update({ formation: "Shotgun", version: 6 })
+  .eq("id", "123")
+  .eq("version", 5); // ❌ Version is now 6!
 
 // Fetch current state
 const { data: serverPlay } = await supabase
-  .from('plays')
+  .from("plays")
   .select()
-  .eq('id', '123')
+  .eq("id", "123")
   .single();
 
 // Detect conflict
 if (serverPlay.version !== yourVersion) {
   const conflict = detectPlayConflicts(
-    { id: '123', formation: 'Shotgun', version: 5 },
+    { id: "123", formation: "Shotgun", version: 5 },
     serverPlay, // version: 6, play_name: "Power Right"
     (strategy, merged) => retrySave(merged),
     () => discardChanges()
@@ -257,6 +274,7 @@ if (serverPlay.version !== yourVersion) {
 ```
 
 **User Sees:**
+
 ```
 ┌─────────────────────────────────────────────┐
 │ ⚠️ Conflict Detected                        │
@@ -283,6 +301,7 @@ if (serverPlay.version !== yourVersion) {
 ```
 
 **Resolution:**
+
 - User picks "Merge Manually"
 - Selects "Shotgun" for formation
 - Selects "Power Right" for play_name
@@ -297,7 +316,7 @@ To enable full conflict resolution, add `version` column:
 
 ```sql
 -- Add version column to plays table
-ALTER TABLE plays 
+ALTER TABLE plays
 ADD COLUMN version INTEGER DEFAULT 1 NOT NULL;
 
 -- Create trigger to auto-increment version
@@ -315,7 +334,7 @@ FOR EACH ROW
 EXECUTE FUNCTION increment_version();
 
 -- Same for formations table
-ALTER TABLE formations 
+ALTER TABLE formations
 ADD COLUMN version INTEGER DEFAULT 1 NOT NULL;
 
 CREATE TRIGGER formations_version_trigger
@@ -326,6 +345,7 @@ EXECUTE FUNCTION increment_version();
 
 **Alternative (Check `updated_at`):**
 Instead of version number, compare timestamps:
+
 ```typescript
 if (serverPlay.updated_at > yourPlay.updated_at) {
   // Conflict detected
@@ -337,6 +357,7 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 ## Testing Scenarios
 
 ### Test 1: Concurrent Edit (Same Field)
+
 1. Open two browser tabs
 2. Edit same play in both tabs
 3. Save in Tab 1 → Success ✅
@@ -345,6 +366,7 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 6. Verify final state in database
 
 ### Test 2: Concurrent Edit (Different Fields)
+
 1. Tab 1 changes `play_name`
 2. Tab 2 changes `formation`
 3. Tab 1 saves → Success ✅
@@ -353,18 +375,21 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 6. Verify both fields updated
 
 ### Test 3: Cancel Conflict
+
 1. Trigger conflict
 2. Click "Cancel" in dialog
 3. Verify changes discarded
 4. Verify UI reverts to server state
 
 ### Test 4: Keep Mine (Force Overwrite)
+
 1. Trigger conflict
 2. Choose "Keep My Changes"
 3. Verify local changes overwrite server
 4. Other user's changes lost (last-write-wins)
 
 ### Test 5: Use Theirs (Discard Local)
+
 1. Trigger conflict
 2. Choose "Use Their Changes"
 3. Verify local changes discarded
@@ -375,30 +400,35 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 ## Success Metrics
 
 ✅ **Type System:**
+
 - VersionConflictError class
 - ConflictResolution interface
 - ConflictResolutionStrategy type
 - Helper functions (detectConflicts, mergeConflictData)
 
 ✅ **Component:**
+
 - ConflictDialog renders correctly
 - Three resolution strategies
 - Side-by-side comparison
 - Manual merge mode
 
 ✅ **Integration:**
+
 - SaveStateContext v3.3.0
 - activeConflict state
 - showConflict/clearConflict methods
 - App.tsx ConflictOverlay
 
 ✅ **Utilities:**
+
 - detectPlayConflicts()
 - detectFormationConflicts()
 - createVersionConflictError()
 - isVersionConflict() type guard
 
 ✅ **Type Safety:**
+
 - All TypeScript checks passing
 - No type errors
 - Proper type inference
@@ -432,6 +462,7 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 ### Future Enhancements (v3.4+):
 
 1. **Automatic Conflict Detection**
+
    ```typescript
    queueSave({
      operation: async () => {
@@ -469,11 +500,13 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 ### SaveStateContext (v3.3)
 
 **New Properties:**
+
 - `activeConflict: ConflictResolution | null` - Current conflict to resolve
 - `showConflict: (conflict) => void` - Display conflict dialog
 - `clearConflict: () => void` - Dismiss conflict dialog
 
 **Updated Types:**
+
 - `SaveStatus` - Added "conflict" status
 - `SaveOperation` - Added `version?: number` field
 
@@ -484,21 +517,23 @@ if (serverPlay.updated_at > yourPlay.updated_at) {
 ### For Services Using Save Queue
 
 Before P2.2:
+
 ```typescript
 try {
   await updatePlay(playId, updates);
-  finishSaving('success');
+  finishSaving("success");
 } catch (error) {
-  finishSaving('error');
+  finishSaving("error");
 }
 ```
 
 After P2.2:
+
 ```typescript
 try {
   const currentVersion = play.version ?? 1;
   await updatePlayWithVersion(playId, updates, currentVersion);
-  finishSaving('success');
+  finishSaving("success");
 } catch (error) {
   if (isVersionConflict(error)) {
     const conflict = detectPlayConflicts(
@@ -515,7 +550,7 @@ try {
     );
     showConflict(conflict);
   } else {
-    finishSaving('error');
+    finishSaving("error");
   }
 }
 ```
@@ -525,12 +560,14 @@ try {
 ## Files Changed
 
 **Created (6 files):**
+
 1. `src/types/saveConflict.ts` - Conflict types
 2. `src/components/conflicts/ConflictDialog.tsx` - UI component
 3. `src/utils/conflictDetection.ts` - Helper utilities
 4. `P2_2_CONFLICT_RESOLUTION_COMPLETE.md` - This doc
 
 **Modified (4 files):**
+
 1. `src/contexts/SaveStateContext.tsx` - v3.2 → v3.3, added conflict methods
 2. `src/types/play.ts` - Added `version?: number` field
 3. `src/types/formation.ts` - Added `version?: number` field
@@ -543,11 +580,13 @@ try {
 ## Next Steps
 
 ### Immediate:
+
 1. ✅ Commit P2.2 changes
 2. ✅ Update roadmap document
 3. ⏭️ Move to P2.3 (Undo/Redo System)
 
 ### Optional (Production Readiness):
+
 1. Add database migration for `version` column
 2. Integrate conflict detection in `playService.ts`
 3. Integrate conflict detection in `formationService.ts`

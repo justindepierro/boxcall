@@ -74,11 +74,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const toast = useContext(ToastContext);
   const { startSaving, finishSaving, isSaving: globalSaving } = useSaveState();
 
-  console.log(
-    "🏗️ [FormationBuilderPanel] Component mounted/re-rendered with playbookId:",
-    playbookId
-  );
-
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [allFormations, setAllFormations] = useState<Formation[]>([]);
@@ -114,6 +109,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     applyToBothSides,
   });
 
+  // Track if we're populating fields from a formation selection (to prevent auto-save)
+  const isPopulatingFieldsRef = useRef(false);
+
   // Update ref on every render (doesn't cause re-renders)
   useEffect(() => {
     formDataRef.current = {
@@ -127,60 +125,17 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       applyToBothSides,
     };
   });
-  console.log("🏗️ [FormationBuilderPanel] Current state:", {
-    loading,
-    formationsCount: allFormations.length,
-    playbookId,
-    formations: allFormations.map((f) => ({
-      id: f.id,
-      name: f.name,
-      direction: f.direction,
-    })),
-  });
 
   const loadData = useCallback(async () => {
-    console.log(
-      "🔄 [FormationBuilderPanel] loadData() called with playbookId:",
-      playbookId
-    );
     setLoading(true);
     try {
-      console.log(
-        "📞 [FormationBuilderPanel] Calling FormationService.getFormationsByPlaybook..."
-      );
       const [formations, personnel] = await Promise.all([
         FormationService.getFormationsByPlaybook(playbookId),
         PersonnelService.getPersonnelConfigurations(playbookId),
       ]);
 
-      console.log("✅ [FormationBuilderPanel] Received data:", {
-        formationsCount: formations.length,
-        personnelCount: personnel.length,
-        formations: formations.map((f) => ({
-          id: f.id,
-          name: f.name,
-          direction: f.direction,
-          playbook_id: f.playbook_id,
-        })),
-      });
-
-      console.log("👥 [FormationBuilderPanel] Personnel configurations:", {
-        count: personnel.length,
-        personnel: personnel.map((p) => ({
-          id: p.id,
-          name: p.name,
-          description: p.description,
-          playersCount: p.players?.length || 0,
-        })),
-      });
-
       setAllFormations(formations);
       setAvailablePersonnel(personnel);
-
-      console.log(
-        "✅ [FormationBuilderPanel] State updated with formations:",
-        formations.length
-      );
     } catch (error) {
       console.error("❌ [FormationBuilderPanel] Failed to load data:", error);
     } finally {
@@ -189,24 +144,16 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   }, [playbookId]);
 
   useEffect(() => {
-    console.log(
-      "⚡ [FormationBuilderPanel] useEffect triggered with playbookId:",
-      playbookId
-    );
     if (playbookId) {
-      console.log(
-        "✅ [FormationBuilderPanel] playbookId is valid, calling loadData()"
-      );
       loadData();
-    } else {
-      console.log(
-        "❌ [FormationBuilderPanel] playbookId is empty/undefined, skipping loadData()"
-      );
     }
-  }, [playbookId, loadData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playbookId]);
 
   // Populate fields when formation is selected
   useEffect(() => {
+    isPopulatingFieldsRef.current = true;
+
     if (selectedFormation) {
       setSelectedPersonnelIds(selectedFormation.personnel_packages || []);
       setCategory(selectedFormation.category || "");
@@ -224,6 +171,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setTags("");
       setDescription("");
     }
+
+    // Allow auto-save after a short delay (fields are populated)
+    setTimeout(() => {
+      isPopulatingFieldsRef.current = false;
+    }, 100);
   }, [selectedFormation]);
 
   const togglePersonnel = (personnelId: string) => {
@@ -232,12 +184,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         ? prev.filter((id) => id !== personnelId)
         : [...prev, personnelId]
     );
-    // Instant save for personnel toggle
-    setTimeout(() => autoSave(), 0);
   };
 
   // Check if selected formation has a linked variant (left/right pair)
-  const getLinkedFormation = (): Formation | null => {
+  // Memoize to prevent unnecessary re-renders
+  const linkedFormation = React.useMemo((): Formation | null => {
     if (!selectedFormation) return null;
 
     // If this is a left formation, find the right one
@@ -265,9 +216,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     }
 
     return null;
-  };
-
-  const linkedFormation = getLinkedFormation();
+  }, [selectedFormation, allFormations]);
 
   // Helper function to mirror strength for linked formations
   const getMirroredStrength = (strength: StrengthType): StrengthType => {
@@ -283,7 +232,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
     // Guard: Don't start new save if already saving
     if (globalSaving) {
-      console.log("⏭️ Save already in progress, skipping...");
       return;
     }
 
@@ -324,8 +272,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         );
       }
 
-      // Reload data to get fresh state
-      await loadData();
+      // Reload data to get fresh state - call directly without depending on the callback
+      const [formations, personnel] = await Promise.all([
+        FormationService.getFormationsByPlaybook(playbookId),
+        PersonnelService.getPersonnelConfigurations(playbookId),
+      ]);
+      setAllFormations(formations);
+      setAvailablePersonnel(personnel);
 
       // Finish with success (green flash)
       finishSaving("success");
@@ -340,20 +293,99 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     globalSaving,
     startSaving,
     finishSaving,
-    loadData,
+    playbookId,
     toast,
   ]);
 
   // Debounce auto-save (wait 500ms after last change)
+  // Trigger on form field changes, not on autoSave function changes
   useEffect(() => {
     if (!selectedFormation) return;
 
+    // Don't auto-save while we're populating fields from a selection
+    if (isPopulatingFieldsRef.current) return;
+
     const timeoutId = setTimeout(() => {
-      autoSave();
+      // Call autoSave directly here to avoid dependency issues
+      const saveFormation = async () => {
+        if (globalSaving) {
+          return;
+        }
+
+        startSaving();
+
+        const data = formDataRef.current;
+        const tagsArray = data.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter((t) => t.length > 0);
+
+        const updateData = {
+          personnel_packages: data.selectedPersonnelIds,
+          category: data.category || undefined,
+          formation_type: data.formationType || undefined,
+          run_strength: data.runStrength,
+          pass_strength: data.passStrength,
+          tags: tagsArray,
+          description: data.description || undefined,
+        };
+
+        try {
+          await FormationService.updateFormation(
+            selectedFormation.id,
+            updateData
+          );
+
+          if (data.applyToBothSides && linkedFormation) {
+            const linkedUpdateData = {
+              ...updateData,
+              run_strength: getMirroredStrength(data.runStrength),
+              pass_strength: getMirroredStrength(data.passStrength),
+            };
+
+            await FormationService.updateFormation(
+              linkedFormation.id,
+              linkedUpdateData
+            );
+          }
+
+          // Reload data
+          const [formations, personnel] = await Promise.all([
+            FormationService.getFormationsByPlaybook(playbookId),
+            PersonnelService.getPersonnelConfigurations(playbookId),
+          ]);
+          setAllFormations(formations);
+          setAvailablePersonnel(personnel);
+
+          finishSaving("success");
+        } catch (error) {
+          console.error("Failed to auto-save formation:", error);
+          toast?.error("Failed to save changes", "Auto-save Failed");
+          finishSaving("error");
+        }
+      };
+
+      saveFormation();
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [selectedFormation, autoSave]);
+  }, [
+    selectedFormation,
+    selectedPersonnelIds,
+    category,
+    formationType,
+    runStrength,
+    passStrength,
+    tags,
+    description,
+    applyToBothSides,
+    linkedFormation,
+    playbookId,
+    globalSaving,
+    startSaving,
+    finishSaving,
+    toast,
+  ]);
 
   const handleSave = async () => {
     if (!selectedFormation) {
@@ -383,12 +415,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
       // If "Apply to both sides" is checked and there's a linked formation, update it too
       if (applyToBothSides && linkedFormation) {
-        console.log(
-          "📝 Applying changes to linked formation:",
-          linkedFormation.name,
-          linkedFormation.direction
-        );
-
         // Mirror the strengths for the linked formation
         const linkedUpdateData = {
           ...updateData,
@@ -409,7 +435,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         toast?.success("Formation updated successfully!", "Formation Saved");
       }
 
-      await loadData();
+      // Reload data to get fresh state
+      const [formations, personnel] = await Promise.all([
+        FormationService.getFormationsByPlaybook(playbookId),
+        PersonnelService.getPersonnelConfigurations(playbookId),
+      ]);
+      setAllFormations(formations);
+      setAvailablePersonnel(personnel);
 
       if (onSuccess) {
         onSuccess();
@@ -476,10 +508,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
             <select
               value={selectedFormation?.id || ""}
               onChange={(e) => {
-                const formation = visibleFormations.find(
+                const formation = allFormations.find(
                   (f) => f.id === e.target.value
                 );
-                console.log("📝 Formation selected:", formation);
                 setSelectedFormation(formation || null);
               }}
               className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
@@ -554,18 +585,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               </div>
             ) : (
               <>
-                {console.log(
-                  "🎨 [FormationBuilderPanel] Rendering personnel buttons:",
-                  {
-                    availableCount: availablePersonnel.length,
-                    personnel: availablePersonnel.map((p) => ({
-                      id: p.id,
-                      name: p.name,
-                      description: p.description,
-                    })),
-                    selectedIds: selectedPersonnelIds,
-                  }
-                )}
                 <div className="flex flex-wrap gap-spacing-xs">
                   {availablePersonnel.map((personnel) => (
                     <button

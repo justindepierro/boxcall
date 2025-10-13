@@ -1,9 +1,9 @@
 /**
  * PendingSavesNotification Component
- * 
+ *
  * Shows a notification when there are pending save operations from the last session.
  * Allows users to manually retry or dismiss pending operations.
- * 
+ *
  * @version 3.2.0
  * @date October 13, 2025
  */
@@ -74,16 +74,13 @@ export const PendingSavesNotification: React.FC = () => {
           </Typography>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleDismiss}
-            >
+            <Button variant="secondary" size="sm" onClick={handleDismiss}>
               Dismiss
             </Button>
 
             <Typography variant="body-xs" color="muted">
-              Note: Automatic retry is not available for operations from previous sessions
+              Note: Automatic retry is not available for operations from
+              previous sessions
             </Typography>
           </div>
         </div>

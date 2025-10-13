@@ -1,6 +1,6 @@
 /**
  * FormationBuilderModal
- * 
+ *
  * Visual formation builder for creating and editing offensive formations.
  * Features:
  * - Drag-drop player positioning on field canvas
@@ -8,19 +8,19 @@
  * - Strength player marking
  * - Left/Right variant preview
  * - Connected to FormationService
- * 
+ *
  * Everything is connected! Personnel → Formations → Plays
  */
 
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { FormationService } from '../../../services/formationService';
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import { FormationService } from "../../../services/formationService";
 import type {
   Formation,
   FormationCreate,
   FormationPlayerPosition,
-} from '../../../types/formation';
-import type { PersonnelConfiguration } from '../../../types/database';
+} from "../../../types/formation";
+import type { PersonnelConfiguration } from "../../../types/database";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;
@@ -41,11 +41,16 @@ export function FormationBuilderModal({
   // STATE
   // ===================================================================
 
-  const [formationName, setFormationName] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedPersonnel, setSelectedPersonnel] = useState<PersonnelConfiguration | null>(null);
-  const [playerPositions, setPlayerPositions] = useState<FormationPlayerPosition[]>([]);
-  const [strengthPlayerPosition, setStrengthPlayerPosition] = useState<string | null>(null);
+  const [formationName, setFormationName] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedPersonnel, setSelectedPersonnel] =
+    useState<PersonnelConfiguration | null>(null);
+  const [playerPositions, setPlayerPositions] = useState<
+    FormationPlayerPosition[]
+  >([]);
+  const [strengthPlayerPosition, setStrengthPlayerPosition] = useState<
+    string | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -70,26 +75,26 @@ export function FormationBuilderModal({
     setIsEditMode(true);
     try {
       const formation = await FormationService.getFormationById(formationId);
-      
+
       setFormationName(formation.name);
-      setDescription(formation.description || '');
+      setDescription(formation.description || "");
       setPlayerPositions(formation.player_positions);
       setStrengthPlayerPosition(formation.strength_player_position || null);
-      
+
       // TODO: Load personnel configuration if exists
-      
+
       setError(null);
     } catch (err) {
-      console.error('Error loading formation:', err);
-      setError('Failed to load formation');
+      console.error("Error loading formation:", err);
+      setError("Failed to load formation");
     } finally {
       setIsLoading(false);
     }
   }
 
   function resetForm() {
-    setFormationName('');
-    setDescription('');
+    setFormationName("");
+    setDescription("");
     setSelectedPersonnel(null);
     setPlayerPositions(getDefaultPositions());
     setStrengthPlayerPosition(null);
@@ -105,23 +110,23 @@ export function FormationBuilderModal({
     // Standard 11-player formation (Twins Same as example)
     return [
       // Offensive Line
-      { position: 'LT', x: 20, y: 0, label: undefined },
-      { position: 'LG', x: 23, y: 0, label: undefined },
-      { position: 'C', x: 26, y: 0, label: undefined },
-      { position: 'RG', x: 29, y: 0, label: undefined },
-      { position: 'RT', x: 32, y: 0, label: undefined },
-      
+      { position: "LT", x: 20, y: 0, label: undefined },
+      { position: "LG", x: 23, y: 0, label: undefined },
+      { position: "C", x: 26, y: 0, label: undefined },
+      { position: "RG", x: 29, y: 0, label: undefined },
+      { position: "RT", x: 32, y: 0, label: undefined },
+
       // Quarterback
-      { position: 'Q', x: 26, y: 5, label: undefined },
-      
+      { position: "Q", x: 26, y: 5, label: undefined },
+
       // Receivers (Twins Same formation)
-      { position: 'X', x: 15, y: 0, label: undefined }, // Left outside
-      { position: 'Y', x: 18, y: 0, label: undefined }, // Left slot
-      { position: 'Z', x: 35, y: 0, label: undefined }, // Right outside
-      { position: 'H', x: 38, y: 0, label: undefined }, // Right slot (TE/RB)
-      
+      { position: "X", x: 15, y: 0, label: undefined }, // Left outside
+      { position: "Y", x: 18, y: 0, label: undefined }, // Left slot
+      { position: "Z", x: 35, y: 0, label: undefined }, // Right outside
+      { position: "H", x: 38, y: 0, label: undefined }, // Right slot (TE/RB)
+
       // Running Back
-      { position: 'F', x: 24, y: 5, label: undefined },
+      { position: "F", x: 24, y: 5, label: undefined },
     ];
   }
 
@@ -132,12 +137,12 @@ export function FormationBuilderModal({
   async function handleSave() {
     // Validation
     if (!formationName.trim()) {
-      setError('Formation name is required');
+      setError("Formation name is required");
       return;
     }
 
     if (playerPositions.length === 0) {
-      setError('Please add player positions');
+      setError("Please add player positions");
       return;
     }
 
@@ -151,10 +156,11 @@ export function FormationBuilderModal({
         description: description || undefined,
         personnel_id: selectedPersonnel?.id,
         personnel_name: selectedPersonnel?.name,
-        direction: 'base',
+        direction: "base",
         strength_player_position: strengthPlayerPosition || undefined,
         strength_player_label: strengthPlayerPosition
-          ? playerPositions.find((p) => p.position === strengthPlayerPosition)?.label
+          ? playerPositions.find((p) => p.position === strengthPlayerPosition)
+              ?.label
           : undefined,
         player_positions: playerPositions,
         tags: [],
@@ -163,7 +169,10 @@ export function FormationBuilderModal({
 
       if (isEditMode && formationId) {
         // Update existing formation
-        const updated = await FormationService.updateFormation(formationId, formationData);
+        const updated = await FormationService.updateFormation(
+          formationId,
+          formationData
+        );
         onSaved?.(updated);
       } else {
         // Create new formation
@@ -174,8 +183,8 @@ export function FormationBuilderModal({
       onClose();
       resetForm();
     } catch (err) {
-      console.error('Error saving formation:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save formation');
+      console.error("Error saving formation:", err);
+      setError(err instanceof Error ? err.message : "Failed to save formation");
     } finally {
       setIsLoading(false);
     }
@@ -184,7 +193,7 @@ export function FormationBuilderModal({
   async function handleSaveWithVariants() {
     // Save base formation first
     await handleSave();
-    
+
     // TODO: Create Left + Right variants
     // const { left, right } = await FormationService.createBothVariants(baseFormation.id);
   }
@@ -204,7 +213,7 @@ export function FormationBuilderModal({
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
           <div>
             <h2 className="text-2xl font-bold text-white">
-              {isEditMode ? 'Edit Formation' : 'Create Formation'}
+              {isEditMode ? "Edit Formation" : "Create Formation"}
             </h2>
             <p className="text-sm text-gray-400 mt-1">
               Drag players to position • Select personnel • Mark strength
@@ -228,7 +237,9 @@ export function FormationBuilderModal({
               {/* TODO: FormationBuilderCanvas component */}
               <div className="text-center text-gray-400">
                 <p className="text-lg font-medium">Field Canvas</p>
-                <p className="text-sm mt-2">Drag-drop player positioning (coming in next step)</p>
+                <p className="text-sm mt-2">
+                  Drag-drop player positioning (coming in next step)
+                </p>
                 <p className="text-xs mt-4 text-gray-500">
                   {playerPositions.length} players positioned
                 </p>
@@ -278,7 +289,7 @@ export function FormationBuilderModal({
                       {selectedPersonnel.name}
                     </span>
                   ) : (
-                    'No personnel selected (coming soon)'
+                    "No personnel selected (coming soon)"
                   )}
                 </div>
               </div>
@@ -289,7 +300,7 @@ export function FormationBuilderModal({
                   Strength Player
                 </label>
                 <div className="text-sm text-gray-400">
-                  {strengthPlayerPosition || 'None selected'}
+                  {strengthPlayerPosition || "None selected"}
                 </div>
               </div>
             </div>
@@ -321,7 +332,7 @@ export function FormationBuilderModal({
                 disabled={isLoading || !formationName.trim()}
                 className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Saving...' : isEditMode ? 'Update' : 'Save'}
+                {isLoading ? "Saving..." : isEditMode ? "Update" : "Save"}
               </button>
 
               {!isEditMode && (

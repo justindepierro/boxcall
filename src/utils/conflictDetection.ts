@@ -1,6 +1,6 @@
 /**
  * Conflict Detection Utility
- * 
+ *
  * Helpers for detecting and handling version conflicts in save operations.
  */
 
@@ -15,7 +15,9 @@ import type { Formation } from "../types/formation";
 /**
  * Check if an error is a version conflict error
  */
-export function isVersionConflict(error: unknown): error is VersionConflictError {
+export function isVersionConflict(
+  error: unknown
+): error is VersionConflictError {
   return error instanceof VersionConflictError;
 }
 
@@ -25,7 +27,10 @@ export function isVersionConflict(error: unknown): error is VersionConflictError
 export function detectPlayConflicts(
   yourPlay: Partial<Play> & { id: string; version?: number },
   serverPlay: Play,
-  onResolve: (strategy: Parameters<ConflictResolution["onResolve"]>[0], mergedData?: Play) => void,
+  onResolve: (
+    strategy: Parameters<ConflictResolution["onResolve"]>[0],
+    mergedData?: Play
+  ) => void,
   onCancel: ConflictResolution["onCancel"]
 ): ConflictResolution<Record<string, unknown>> {
   const conflicts = detectConflicts(
@@ -52,7 +57,10 @@ export function detectPlayConflicts(
 export function detectFormationConflicts(
   yourFormation: Partial<Formation> & { id: string; version?: number },
   serverFormation: Formation,
-  onResolve: (strategy: Parameters<ConflictResolution["onResolve"]>[0], mergedData?: Formation) => void,
+  onResolve: (
+    strategy: Parameters<ConflictResolution["onResolve"]>[0],
+    mergedData?: Formation
+  ) => void,
   onCancel: ConflictResolution["onCancel"]
 ): ConflictResolution<Record<string, unknown>> {
   const conflicts = detectConflicts(
@@ -75,7 +83,7 @@ export function detectFormationConflicts(
 
 /**
  * Helper to throw version conflict errors from API responses
- * 
+ *
  * Usage:
  * ```typescript
  * const { data, error } = await supabase
@@ -85,7 +93,7 @@ export function detectFormationConflicts(
  *   .eq('version', currentVersion)
  *   .select()
  *   .single();
- * 
+ *
  * if (error || !data) {
  *   // Fetch current version to detect conflict
  *   const { data: current } = await supabase
@@ -93,7 +101,7 @@ export function detectFormationConflicts(
  *     .select()
  *     .eq('id', playId)
  *     .single();
- *   
+ *
  *   if (current && current.version !== currentVersion) {
  *     throw createVersionConflictError('play', playId, updates, current);
  *   }

@@ -37,10 +37,12 @@ IndexedDB can only store **structured clone-able data** (JSON-serializable). Jav
 ## Solution Options
 
 ### Option A: Don't Persist Operations (Current v3.1)
+
 **Pros**: Simple, no complexity  
 **Cons**: Queue lost on refresh
 
 ### Option B: Persist Metadata Only ⭐ CHOSEN
+
 **Approach**: Store operation metadata, show user pending saves, let them manually retry
 
 ```typescript
@@ -56,22 +58,26 @@ interface PersistedQueueMetadata {
 ```
 
 **On page load:**
+
 1. Load metadata from IndexedDB
 2. Show notification: "You have 3 pending saves from your last session"
 3. Provide "Retry All" button
 4. User clicks → App reconstructs operations based on entityType/entityId
 5. Queue processes normally
 
-**Pros**: 
+**Pros**:
+
 - User doesn't lose context
 - Can manually recover
 - Simple architecture
 
-**Cons**: 
+**Cons**:
+
 - Not fully automatic (requires user action)
 - Must reconstruct operations manually
 
 ### Option C: Event Sourcing Pattern
+
 **Approach**: Store the DATA that was being saved, not the function
 
 ```typescript
@@ -86,6 +92,7 @@ interface PersistedSaveOperation {
 ```
 
 **On page load:**
+
 1. Load persisted operations
 2. Reconstruct operation functions:
    ```typescript
@@ -94,11 +101,13 @@ interface PersistedSaveOperation {
 3. Auto-retry automatically
 
 **Pros**:
+
 - Fully automatic recovery
 - No user action needed
 - Survives crashes
 
 **Cons**:
+
 - Complex architecture
 - Must capture save payloads everywhere
 - Larger storage footprint
@@ -129,11 +138,13 @@ interface PersistedSaveOperation {
 ## Future Enhancement (v3.3+)
 
 If we need full automatic recovery (Option C), we can:
+
 1. Add `operationData` field to `SaveOperation`
 2. Require components to pass save payloads when queueing
 3. Reconstruct operations on load
 
 Example:
+
 ```typescript
 // Component code
 queueSave({

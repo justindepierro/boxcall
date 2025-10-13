@@ -1,6 +1,6 @@
 /**
  * ConflictDialog Component
- * 
+ *
  * Shows conflict resolution UI when concurrent edits are detected.
  * Displays side-by-side comparison of conflicting changes.
  */
@@ -124,7 +124,9 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                   className="mt-1"
                 />
                 <div>
-                  <div className="font-medium text-primary">Keep My Changes</div>
+                  <div className="font-medium text-primary">
+                    Keep My Changes
+                  </div>
                   <div className="text-sm text-secondary">
                     Overwrite the server version with your local changes
                   </div>
@@ -168,9 +170,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                   className="mt-1"
                 />
                 <div>
-                  <div className="font-medium text-primary">
-                    Merge Manually
-                  </div>
+                  <div className="font-medium text-primary">Merge Manually</div>
                   <div className="text-sm text-secondary">
                     Choose which changes to keep for each field
                   </div>

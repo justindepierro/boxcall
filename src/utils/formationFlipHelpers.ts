@@ -1,6 +1,6 @@
 /**
  * Formation Flip Utilities
- * 
+ *
  * Utilities for flipping formations and diagram positions when duplicating plays.
  * Used for rapid play creation: duplicate "Power Right" → auto-create "Power Left"
  */
@@ -10,12 +10,12 @@ import { FormationService } from "../services/formationService";
 
 /**
  * Get the opposite formation variant
- * 
+ *
  * Rules:
  * - Left → Right
- * - Right → Left  
+ * - Right → Left
  * - Base → Base (no flip)
- * 
+ *
  * @param formationId - Current formation ID
  * @returns Promise<Formation | null> - Opposite variant or null if not found
  */
@@ -26,7 +26,8 @@ export async function getOppositeFormationVariant(
 
   try {
     // Get the current formation
-    const currentFormation = await FormationService.getFormationById(formationId);
+    const currentFormation =
+      await FormationService.getFormationById(formationId);
     if (!currentFormation) return null;
 
     // If it's a base formation, return the same formation (no flip)
@@ -35,10 +36,12 @@ export async function getOppositeFormationVariant(
     }
 
     // Determine the opposite direction
-    const oppositeDirection = currentFormation.direction === "left" ? "right" : "left";
+    const oppositeDirection =
+      currentFormation.direction === "left" ? "right" : "left";
 
     // Get the base formation ID
-    const baseFormationId = currentFormation.base_formation_id || currentFormation.id;
+    const baseFormationId =
+      currentFormation.base_formation_id || currentFormation.id;
 
     // Get all variants for this formation
     const allFormations = await FormationService.getFormationsByPlaybook(
@@ -61,7 +64,7 @@ export async function getOppositeFormationVariant(
 
 /**
  * Flip diagram positions horizontally
- * 
+ *
  * @param diagramData - Diagram data JSONB (DiagramDocument)
  * @param fieldWidth - Field width in yards (default: 53.3)
  * @returns Flipped diagram data or null if input was null
@@ -113,12 +116,12 @@ export function flipDiagramPositions(
 
 /**
  * Flip play name direction if it contains Left/Right
- * 
+ *
  * Examples:
  * - "Power Right" → "Power Left"
  * - "Slant Left" → "Slant Right"
  * - "Inside Zone" → "Inside Zone" (no change)
- * 
+ *
  * @param playName - Original play name
  * @returns Flipped play name
  */
@@ -133,11 +136,13 @@ export function flipPlayName(playName: string): string {
 
 /**
  * Flip formation direction string (f_dir field)
- * 
+ *
  * @param direction - Current direction ("Left", "Right", etc.)
  * @returns Flipped direction
  */
-export function flipFormationDirection(direction: string | null | undefined): string {
+export function flipFormationDirection(
+  direction: string | null | undefined
+): string {
   if (!direction) return "";
   if (direction.toLowerCase() === "left") return "Right";
   if (direction.toLowerCase() === "right") return "Left";

@@ -17,6 +17,7 @@ import type {
   PersonnelPlayer,
   CreatePersonnelConfiguration,
   UpdatePersonnelConfiguration,
+  BadgeCustomization,
 } from "../types/personnel";
 
 export class PersonnelService {
@@ -29,8 +30,6 @@ export class PersonnelService {
     playbookId: string
   ): Promise<PersonnelConfiguration[]> {
     try {
-      console.log("🔍 [PersonnelService] getPersonnelConfigurations called with playbookId:", playbookId);
-      
       // Fetch configurations
       const { data: configs, error: configError } = await supabase
         .from("personnel_configurations")
@@ -38,17 +37,23 @@ export class PersonnelService {
         .eq("playbook_id", playbookId)
         .order("name");
 
-      console.log("📊 [PersonnelService] Query result:", {
-        count: configs?.length || 0,
-        error: configError,
-        configs: configs as Array<{ id: string; name: string; playbook_id: string }>
-      });
-
       if (configError) throw configError;
       if (!configs) return [];
 
+      // Type assertion for database results
+      type DBConfig = {
+        id: string;
+        playbook_id: string;
+        name: string;
+        description: string | null;
+        badge_customization: BadgeCustomization | null;
+        created_at: string;
+        updated_at: string;
+      };
+      const typedConfigs = configs as DBConfig[];
+
       // Fetch all players for these configurations
-      const configIds = configs.map((c) => c.id);
+      const configIds = typedConfigs.map((c) => c.id);
       const { data: players, error: playersError } = await supabase
         .from("personnel_players")
         .select("*")
@@ -57,8 +62,11 @@ export class PersonnelService {
 
       if (playersError) throw playersError;
 
+      // Type assertion for players
+      const typedPlayers = (players || []) as PersonnelPlayer[];
+
       // Group players by config_id
-      const playersByConfig = (players || []).reduce(
+      const playersByConfig = typedPlayers.reduce(
         (acc, player) => {
           if (!acc[player.config_id]) acc[player.config_id] = [];
           acc[player.config_id].push(player);
@@ -68,14 +76,14 @@ export class PersonnelService {
       );
 
       // Combine configurations with their players
-      return configs.map((config) => ({
+      return typedConfigs.map((config) => ({
         id: config.id,
         playbook_id: config.playbook_id,
         name: config.name,
-        description: config.description,
+        description: config.description ?? undefined, // Convert null to undefined
         created_at: config.created_at,
         updated_at: config.updated_at,
-        badgeCustomization: config.badge_customization, // Convert snake_case to camelCase
+        badgeCustomization: config.badge_customization ?? undefined, // Convert null to undefined
         players: playersByConfig[config.id] || [],
       }));
     } catch (error) {
@@ -110,24 +118,39 @@ export class PersonnelService {
       }
       if (!config) return null;
 
+      // Type assertion for database result
+      type DBConfig = {
+        id: string;
+        playbook_id: string;
+        name: string;
+        description: string | null;
+        badge_customization: BadgeCustomization | null;
+        created_at: string;
+        updated_at: string;
+      };
+      const typedConfig = config as DBConfig;
+
       // Fetch players for this configuration
       const { data: players, error: playersError } = await supabase
         .from("personnel_players")
         .select("*")
-        .eq("config_id", config.id)
+        .eq("config_id", typedConfig.id)
         .order("sort_order");
 
       if (playersError) throw playersError;
 
+      // Type assertion for players
+      const typedPlayers = (players || []) as PersonnelPlayer[];
+
       return {
-        id: config.id,
-        playbook_id: config.playbook_id,
-        name: config.name,
-        description: config.description,
-        created_at: config.created_at,
-        updated_at: config.updated_at,
-        badgeCustomization: config.badge_customization, // Convert snake_case to camelCase
-        players: players || [],
+        id: typedConfig.id,
+        playbook_id: typedConfig.playbook_id,
+        name: typedConfig.name,
+        description: typedConfig.description ?? undefined,
+        created_at: typedConfig.created_at,
+        updated_at: typedConfig.updated_at,
+        badgeCustomization: typedConfig.badge_customization ?? undefined,
+        players: typedPlayers,
       };
     } catch (error) {
       console.error(
@@ -158,6 +181,7 @@ export class PersonnelService {
       // Insert configuration
       const { data: newConfig, error: configError } = await supabase
         .from("personnel_configurations")
+        // @ts-ignore - Supabase personnel_configurations types not properly generated
         .insert({
           playbook_id: config.playbook_id,
           name: config.name,
@@ -170,9 +194,21 @@ export class PersonnelService {
       if (configError) throw configError;
       if (!newConfig) throw new Error("Failed to create configuration");
 
+      // Type assertion for database result
+      type DBConfig = {
+        id: string;
+        playbook_id: string;
+        name: string;
+        description: string | null;
+        badge_customization: BadgeCustomization | null;
+        created_at: string;
+        updated_at: string;
+      };
+      const typedNewConfig = newConfig as DBConfig;
+
       // Insert players
       const playersToInsert = config.players.map((player, index) => ({
-        config_id: newConfig.id,
+        config_id: typedNewConfig.id,
         player_position: player.player_position,
         label: player.label,
         sort_order: player.sort_order ?? index,
@@ -181,20 +217,24 @@ export class PersonnelService {
 
       const { data: players, error: playersError } = await supabase
         .from("personnel_players")
+        // @ts-ignore - Supabase personnel_players types not properly generated
         .insert(playersToInsert)
         .select();
 
       if (playersError) throw playersError;
 
+      // Type assertion for players
+      const typedPlayers = (players || []) as PersonnelPlayer[];
+
       return {
-        id: newConfig.id,
-        playbook_id: newConfig.playbook_id,
-        name: newConfig.name,
-        description: newConfig.description,
-        created_at: newConfig.created_at,
-        updated_at: newConfig.updated_at,
-        badgeCustomization: newConfig.badge_customization, // Convert snake_case to camelCase
-        players: players || [],
+        id: typedNewConfig.id,
+        playbook_id: typedNewConfig.playbook_id,
+        name: typedNewConfig.name,
+        description: typedNewConfig.description ?? undefined,
+        created_at: typedNewConfig.created_at,
+        updated_at: typedNewConfig.updated_at,
+        badgeCustomization: typedNewConfig.badge_customization ?? undefined,
+        players: typedPlayers,
       };
     } catch (error) {
       console.error("Failed to create personnel configuration:", error);
@@ -217,6 +257,7 @@ export class PersonnelService {
       // Update configuration metadata
       const { data: updatedConfig, error: configError } = await supabase
         .from("personnel_configurations")
+        // @ts-ignore - Supabase personnel_configurations types not properly generated
         .update({
           name: updates.name,
           description: updates.description,
@@ -228,6 +269,18 @@ export class PersonnelService {
 
       if (configError) throw configError;
       if (!updatedConfig) throw new Error("Configuration not found");
+
+      // Type assertion for database result
+      type DBConfig = {
+        id: string;
+        playbook_id: string;
+        name: string;
+        description: string | null;
+        badge_customization: BadgeCustomization | null;
+        created_at: string;
+        updated_at: string;
+      };
+      const typedUpdatedConfig = updatedConfig as DBConfig;
 
       // If players array provided, replace all players
       if (updates.players) {
@@ -258,20 +311,25 @@ export class PersonnelService {
 
         const { data: players, error: playersError } = await supabase
           .from("personnel_players")
+          // @ts-ignore - Supabase personnel_players types not properly generated
           .insert(playersToInsert)
           .select();
 
         if (playersError) throw playersError;
 
+        // Type assertion for players
+        const typedPlayers = (players || []) as PersonnelPlayer[];
+
         return {
-          id: updatedConfig.id,
-          playbook_id: updatedConfig.playbook_id,
-          name: updatedConfig.name,
-          description: updatedConfig.description,
-          created_at: updatedConfig.created_at,
-          updated_at: updatedConfig.updated_at,
-          badgeCustomization: updatedConfig.badge_customization, // Convert snake_case to camelCase
-          players: players || [],
+          id: typedUpdatedConfig.id,
+          playbook_id: typedUpdatedConfig.playbook_id,
+          name: typedUpdatedConfig.name,
+          description: typedUpdatedConfig.description ?? undefined,
+          created_at: typedUpdatedConfig.created_at,
+          updated_at: typedUpdatedConfig.updated_at,
+          badgeCustomization:
+            typedUpdatedConfig.badge_customization ?? undefined,
+          players: typedPlayers,
         };
       }
 
@@ -284,15 +342,18 @@ export class PersonnelService {
 
       if (playersError) throw playersError;
 
+      // Type assertion for players
+      const typedPlayers = (players || []) as PersonnelPlayer[];
+
       return {
-        id: updatedConfig.id,
-        playbook_id: updatedConfig.playbook_id,
-        name: updatedConfig.name,
-        description: updatedConfig.description,
-        created_at: updatedConfig.created_at,
-        updated_at: updatedConfig.updated_at,
-        badgeCustomization: updatedConfig.badge_customization, // Convert snake_case to camelCase
-        players: players || [],
+        id: typedUpdatedConfig.id,
+        playbook_id: typedUpdatedConfig.playbook_id,
+        name: typedUpdatedConfig.name,
+        description: typedUpdatedConfig.description ?? undefined,
+        created_at: typedUpdatedConfig.created_at,
+        updated_at: typedUpdatedConfig.updated_at,
+        badgeCustomization: typedUpdatedConfig.badge_customization ?? undefined,
+        players: typedPlayers,
       };
     } catch (error) {
       console.error("Failed to update personnel configuration:", error);

@@ -31,7 +31,7 @@ import React, {
 import {
   persistOperation,
   loadOperations,
-  removeOperation,
+  removeOperation as _removeOperation,
   clearAllOperations,
   type PersistedSaveOperation,
 } from "../utils/saveQueueDB";
@@ -91,18 +91,20 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [saveQueue, setSaveQueue] = useState<SaveOperation[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [hasPendingFromLastSession, setHasPendingFromLastSession] = useState(false);
-  const [activeConflict, setActiveConflict] = useState<ConflictResolution | null>(null);
+  const [hasPendingFromLastSession, setHasPendingFromLastSession] =
+    useState(false);
+  const [activeConflict, setActiveConflict] =
+    useState<ConflictResolution | null>(null);
 
   // Track timeout for cleanup
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Track save start time for minimum duration
   const saveStartTimeRef = useRef<number>(0);
-  
+
   // Track if queue is currently processing
   const isProcessingQueue = useRef(false);
-  
+
   // Track if we've loaded persisted operations
   const hasLoadedPersistedQueue = useRef(false);
 
@@ -115,7 +117,9 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const operations = await loadOperations();
         if (operations.length > 0) {
-          console.log(`[SaveQueue] Found ${operations.length} pending operations from last session`);
+          console.log(
+            `[SaveQueue] Found ${operations.length} pending operations from last session`
+          );
           setHasPendingFromLastSession(true);
           // Don't auto-retry - let user decide
           // They can click "Retry Pending Saves" button
@@ -185,21 +189,21 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
   }, []);
-  
+
   // Process save queue
   const processSaveQueue = useCallback(async () => {
     if (isProcessingQueue.current) return;
     if (saveQueue.length === 0) return;
-    
+
     isProcessingQueue.current = true;
     const operation = saveQueue[0];
-    
+
     try {
       await operation.operation();
-      
+
       // Remove successful operation from queue
-      setSaveQueue(prev => prev.slice(1));
-      
+      setSaveQueue((prev) => prev.slice(1));
+
       // Continue processing if more in queue
       isProcessingQueue.current = false;
       if (saveQueue.length > 1) {
@@ -210,33 +214,39 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         id: operation.id,
         retries: operation.retries,
         maxRetries: operation.maxRetries,
-        error
+        error,
       });
-      
+
       if (operation.retries < operation.maxRetries) {
         // Retry with exponential backoff
-        const backoffMs = Math.min(Math.pow(2, operation.retries) * 1000, 30000);
-        
+        const backoffMs = Math.min(
+          Math.pow(2, operation.retries) * 1000,
+          30000
+        );
+
         console.log("[SaveQueue] Retrying after backoff:", {
           id: operation.id,
           retries: operation.retries + 1,
-          backoffMs
+          backoffMs,
         });
-        
+
         setTimeout(() => {
-          setSaveQueue(prev => [
+          setSaveQueue((prev) => [
             { ...prev[0], retries: prev[0].retries + 1 },
-            ...prev.slice(1)
+            ...prev.slice(1),
           ]);
           isProcessingQueue.current = false;
           processSaveQueue();
         }, backoffMs);
       } else {
         // Max retries exceeded - remove from queue
-        console.error("[SaveQueue] Max retries exceeded, removing from queue:", operation.id);
-        setSaveQueue(prev => prev.slice(1));
+        console.error(
+          "[SaveQueue] Max retries exceeded, removing from queue:",
+          operation.id
+        );
+        setSaveQueue((prev) => prev.slice(1));
         isProcessingQueue.current = false;
-        
+
         // Continue with next operation
         if (saveQueue.length > 1) {
           setTimeout(processSaveQueue, 100);
@@ -244,40 +254,43 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }
   }, [saveQueue]);
-  
+
   // Queue a save operation
-  const queueSave = useCallback((operation: SaveOperation) => {
-    console.log("[SaveQueue] Queueing save:", {
-      id: operation.id,
-      entityType: operation.entityType,
-      entityId: operation.entityId
-    });
-    
-    setSaveQueue(prev => [...prev, operation]);
-    
-    // Start processing if not already
-    setTimeout(processSaveQueue, 0);
-  }, [processSaveQueue]);
-  
+  const queueSave = useCallback(
+    (operation: SaveOperation) => {
+      console.log("[SaveQueue] Queueing save:", {
+        id: operation.id,
+        entityType: operation.entityType,
+        entityId: operation.entityId,
+      });
+
+      setSaveQueue((prev) => [...prev, operation]);
+
+      // Start processing if not already
+      setTimeout(processSaveQueue, 0);
+    },
+    [processSaveQueue]
+  );
+
   // Retry all failed saves
   const retryFailedSaves = useCallback(async () => {
     console.log("[SaveQueue] Retrying all failed saves:", saveQueue.length);
-    
+
     // Reset retry count for all operations
-    setSaveQueue(prev => prev.map(op => ({ ...op, retries: 0 })));
-    
+    setSaveQueue((prev) => prev.map((op) => ({ ...op, retries: 0 })));
+
     // Start processing
     isProcessingQueue.current = false;
     processSaveQueue();
   }, [saveQueue, processSaveQueue]);
-  
+
   // Clear queue
   const clearQueue = useCallback(async () => {
     console.log("[SaveQueue] Clearing queue:", saveQueue.length);
     setSaveQueue([]);
     isProcessingQueue.current = false;
     setHasPendingFromLastSession(false);
-    
+
     // Clear persisted queue
     try {
       await clearAllOperations();
@@ -286,14 +299,14 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("[SaveQueue] Failed to clear persisted queue:", error);
     }
   }, [saveQueue]);
-  
+
   // Persist queue to IndexedDB whenever it changes
   useEffect(() => {
     const persistQueue = async () => {
       try {
         // Clear existing persisted operations
         await clearAllOperations();
-        
+
         // Persist current queue (metadata only, not the operation function)
         for (const op of saveQueue) {
           const persistedOp: PersistedSaveOperation = {
@@ -308,8 +321,10 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
           };
           await persistOperation(persistedOp);
         }
-        
-        console.log(`[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`);
+
+        console.log(
+          `[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`
+        );
       } catch (error) {
         console.error("[SaveQueue] Failed to persist queue:", error);
       }
@@ -319,7 +334,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       persistQueue();
     }
   }, [saveQueue]);
-  
+
   // Track online/offline status and auto-retry when back online
   useEffect(() => {
     const handleOnline = () => {
@@ -330,15 +345,15 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         retryFailedSaves();
       }
     };
-    
+
     const handleOffline = () => {
       console.log("[SaveQueue] Gone offline");
       setIsOnline(false);
     };
-    
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    
+
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -346,10 +361,13 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [saveQueue.length, retryFailedSaves]);
 
   // Conflict resolution methods (v3.3)
-  const showConflict = useCallback((conflict: ConflictResolution) => {
-    setActiveConflict(conflict);
-    finishSaving("conflict"); // Show yellow indicator
-  }, [finishSaving]);
+  const showConflict = useCallback(
+    (conflict: ConflictResolution) => {
+      setActiveConflict(conflict);
+      finishSaving("conflict"); // Show yellow indicator
+    },
+    [finishSaving]
+  );
 
   const clearConflict = useCallback(() => {
     setActiveConflict(null);
@@ -357,20 +375,20 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <SaveStateContext.Provider
-      value={{ 
-        isSaving, 
-        saveStatus, 
+      value={{
+        isSaving,
+        saveStatus,
         queueLength: saveQueue.length,
         isOnline,
         hasPendingFromLastSession,
         activeConflict,
-        startSaving, 
+        startSaving,
         finishSaving,
         queueSave,
         retryFailedSaves,
         clearQueue,
         showConflict,
-        clearConflict
+        clearConflict,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 /**
  * Formation Types
- * 
+ *
  * Fully integrated formation system with:
  * - Personnel linkage
  * - Left/Right variants
@@ -11,52 +11,52 @@
 /**
  * Formation category classification
  */
-export type FormationCategory = 
-  | 'spread' 
-  | 'pro' 
-  | 'power' 
-  | 'special' 
-  | 'goal_line' 
-  | 'short_yardage';
+export type FormationCategory =
+  | "spread"
+  | "pro"
+  | "power"
+  | "special"
+  | "goal_line"
+  | "short_yardage";
 
 /**
  * Formation direction (variant type)
  */
-export type FormationDirection = 'base' | 'left' | 'right';
+export type FormationDirection = "base" | "left" | "right";
 
 /**
  * Formation type classification
  */
-export type FormationType = 
-  | 'I Formation'
-  | 'Singleback'
-  | 'Pistol'
-  | 'Shotgun'
-  | 'Empty'
-  | 'Trips'
-  | 'Bunch'
-  | 'Stack'
-  | 'Wing'
-  | 'Other';
+export type FormationType =
+  | "I Formation"
+  | "Singleback"
+  | "Pistol"
+  | "Shotgun"
+  | "Empty"
+  | "Trips"
+  | "Bunch"
+  | "Stack"
+  | "Wing"
+  | "Other";
 
 /**
  * Formation strength (run/pass)
  */
-export type StrengthType = 'left' | 'right' | 'balanced';
+export type StrengthType = "left" | "right" | "balanced";
 
 /**
  * Player position within a formation
- * 
+ *
  * Connects to personnel configuration labels
  */
 export interface FormationPlayerPosition {
-  position: string;           // Position code: "X", "Y", "Z", "H", "F", "Q", "C", "G", "T", etc.
-  x: number;                  // Field X coordinate (0-53.3 yards)
-  y: number;                  // Field Y coordinate (0-50 yards)
-  label?: string;             // Personnel label: "Blue", "Black", "Green" (from personnel_configurations)
+  position: string; // Position code: "X", "Y", "Z", "H", "F", "Q", "C", "G", "T", etc.
+  x: number; // Field X coordinate (0-53.3 yards)
+  y: number; // Field Y coordinate (0-50 yards)
+  label?: string; // Personnel label: "Blue", "Black", "Green" (from personnel_configurations)
   isStrengthSetter?: boolean; // TRUE if this player sets the formation strength
-  role?: string;              // Player role: "WR", "TE", "RB", "QB", "OL", "FB"
-  jerseyNumber?: string;      // Optional jersey number for diagram
+  role?: string; // Player role: "WR", "TE", "RB", "QB", "OL", "FB"
+  jerseyNumber?: string; // Optional jersey number for diagram
 }
 
 /**
@@ -65,38 +65,38 @@ export interface FormationPlayerPosition {
 export interface Formation {
   id: string;
   playbook_id: string;
-  
+
   // Basic Info
   name: string;
   description: string | null;
   category: FormationCategory | null;
-  
+
   // Personnel Integration
-  personnel_id: string | null;           // References personnel_configurations.id
-  personnel_name: string | null;         // Denormalized: "11", "12", "21"
-  personnel_packages: string[];          // Array of personnel_configuration IDs that can run this formation
-  
+  personnel_id: string | null; // References personnel_configurations.id
+  personnel_name: string | null; // Denormalized: "11", "12", "21"
+  personnel_packages: string[]; // Array of personnel_configuration IDs that can run this formation
+
   // Left/Right Variant System
-  base_formation_id: string | null;      // NULL = this IS the base formation
+  base_formation_id: string | null; // NULL = this IS the base formation
   direction: FormationDirection;
-  
+
   // Strength Player
-  strength_player_position: string | null;  // "X", "Y", "Z", "H", "F"
-  strength_player_label: string | null;     // "Blue", "Black", "Green"
-  
+  strength_player_position: string | null; // "X", "Y", "Z", "H", "F"
+  strength_player_label: string | null; // "Blue", "Black", "Green"
+
   // Formation Metadata
-  formation_type: FormationType | null;     // Base formation type: I Formation, Shotgun, etc.
-  run_strength: StrengthType;               // Default run strength: left, right, balanced
-  pass_strength: StrengthType;              // Default pass strength: left, right, balanced
-  
+  formation_type: FormationType | null; // Base formation type: I Formation, Shotgun, etc.
+  run_strength: StrengthType; // Default run strength: left, right, balanced
+  pass_strength: StrengthType; // Default pass strength: left, right, balanced
+
   // Player Positions
   player_positions: FormationPlayerPosition[];
-  
+
   // Metadata
   tags: string[];
   is_custom: boolean;
   usage_count: number;
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
@@ -175,12 +175,12 @@ export interface FormationListItem {
  * Formation selector option (for dropdowns)
  */
 export interface FormationOption {
-  value: string;        // formation ID
-  label: string;        // "Twins Same (Base)"
+  value: string; // formation ID
+  label: string; // "Twins Same (Base)"
   category: FormationCategory | null;
   personnel: string | null;
   direction: FormationDirection;
-  preview?: string;     // Optional preview image
+  preview?: string; // Optional preview image
 }
 
 /**
@@ -199,7 +199,7 @@ export interface FormationTemplate {
   name: string;
   description: string;
   category: FormationCategory;
-  suggested_personnel: string[];  // ["11", "12"]
+  suggested_personnel: string[]; // ["11", "12"]
   player_positions: FormationPlayerPosition[];
   tags: string[];
 }

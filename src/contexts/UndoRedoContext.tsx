@@ -1,19 +1,26 @@
 /**
  * Undo/Redo Context
- * 
+ *
  * Provides undo/redo functionality across the application using command pattern.
  * Integrates with SaveStateContext for visual feedback.
- * 
+ *
  * Features:
  * - Cmd+Z / Ctrl+Z for undo
  * - Cmd+Shift+Z / Ctrl+Shift+Z for redo
  * - Command history with configurable max size
  * - Integration with save queue
- * 
+ *
  * @version 1.0.0
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import type {
   Command,
   UndoRedoState,

@@ -66,9 +66,9 @@ export interface Play {
   p_dir?: string; // text
   r_str?: string; // text (DEPRECATED - use formation.run_strength with modifiers)
   p_str?: string; // text (DEPRECATED - use formation.pass_strength)
-  
+
   // Back position modifiers (affect inherited formation strength)
-  back_left_of_qb?: boolean;  // TRUE if back aligns left of QB
+  back_left_of_qb?: boolean; // TRUE if back aligns left of QB
   back_right_of_qb?: boolean; // TRUE if back aligns right of QB
 
   // Preferences
@@ -119,10 +119,10 @@ export interface Play {
   diagram_data?: DiagramDocument | null; // JSONB - structured diagram document
   diagram_version?: number | null; // integer - diagram format version (1-10)
   diagram_url?: string | null; // text - PNG thumbnail URL only (not diagram JSON)
-  
+
   // Formation relationship (NEW - October 12, 2025)
   formation_id?: string | null; // uuid - references formations.id
-  formation_direction?: 'base' | 'left' | 'right' | null; // text - which variant to use
+  formation_direction?: "base" | "left" | "right" | null; // text - which variant to use
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database

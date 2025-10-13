@@ -49,7 +49,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const profile = useAuthProfile();
   const { devMode } = useDevMode();
   const { activeTeamId: _activeTeamId } = useActiveTeamStore();
-  const { queueLength, retryFailedSaves, clearQueue, isOnline } = useSaveState();
+  const { queueLength, retryFailedSaves, clearQueue, isOnline } =
+    useSaveState();
 
   // Get role display info
   const roleDisplay =

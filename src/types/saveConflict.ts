@@ -1,6 +1,6 @@
 /**
  * Save Conflict Types
- * 
+ *
  * Defines conflict detection and resolution types for the Universal Save System.
  * Used when concurrent edits happen to the same entity.
  */

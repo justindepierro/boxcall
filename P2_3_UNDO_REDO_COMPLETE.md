@@ -25,16 +25,16 @@ export interface Command<T = unknown> {
   entityId: string;
   timestamp: number;
   description: string;
-  execute: () => Promise<void>;  // Apply changes
-  undo: () => Promise<void>;     // Revert changes
-  redo: () => Promise<void>;     // Reapply changes
+  execute: () => Promise<void>; // Apply changes
+  undo: () => Promise<void>; // Revert changes
+  redo: () => Promise<void>; // Reapply changes
   previousState: T;
   newState: T;
 }
 
 export interface UndoRedoState {
-  undoStack: Command[];         // Past commands (can undo)
-  redoStack: Command[];         // Future commands (can redo)
+  undoStack: Command[]; // Past commands (can undo)
+  redoStack: Command[]; // Future commands (can redo)
   currentCommand: Command | null;
   isUndoing: boolean;
   isRedoing: boolean;
@@ -43,6 +43,7 @@ export interface UndoRedoState {
 ```
 
 **Helper Functions:**
+
 - `createCommand()` - Factory for creating commands
 - `createPlayUpdateCommand()` - Shortcut for Play updates
 - `createFormationUpdateCommand()` - Shortcut for Formation updates
@@ -55,6 +56,7 @@ export interface UndoRedoState {
 Full undo/redo state management:
 
 **State:**
+
 ```typescript
 {
   undoStack: Command[];     // Commands that can be undone
@@ -67,19 +69,21 @@ Full undo/redo state management:
 ```
 
 **Methods:**
+
 ```typescript
 const {
-  executeCommand,  // Execute a command and add to history
-  undo,            // Undo last command
-  redo,            // Redo last undone command
-  clearHistory,    // Clear all history
-  canUndo,         // Boolean: can undo?
-  canRedo,         // Boolean: can redo?
-  history,         // Full command history
+  executeCommand, // Execute a command and add to history
+  undo, // Undo last command
+  redo, // Redo last undone command
+  clearHistory, // Clear all history
+  canUndo, // Boolean: can undo?
+  canRedo, // Boolean: can redo?
+  history, // Full command history
 } = useUndoRedo();
 ```
 
 **Features:**
+
 - ✅ Keyboard shortcuts (Cmd+Z, Cmd+Shift+Z, Cmd+Y)
 - ✅ Configurable max history size (default: 50)
 - ✅ Integration with SaveStateContext (visual feedback)
@@ -93,6 +97,7 @@ const {
 Visual UI for undo/redo:
 
 **Features:**
+
 - ✅ Fixed position (bottom-right corner)
 - ✅ Undo button with description tooltip
 - ✅ Redo button with description tooltip
@@ -102,6 +107,7 @@ Visual UI for undo/redo:
 - ✅ Auto-hides when no history
 
 **Visual Design:**
+
 ```
 ┌──────────────────────────────────────┐
 │ [⟲ Undo ⌘Z] [⟳ Redo ⌘⇧Z] [🕐 5] │ (bottom-right)
@@ -141,7 +147,7 @@ const command = createPlayUpdateCommand({
   newValue: "Power Right",
   applyUpdate: async (playId, updates) => {
     await updatePlay(playId, updates);
-  }
+  },
 });
 
 // Execute (applies change)
@@ -164,6 +170,7 @@ await redo();
 ### Example: Play Name Edit
 
 **Scenario:**
+
 1. User changes play name from "Power" to "Power Left"
 2. User changes it again to "Power Right"
 3. User presses Cmd+Z → Reverts to "Power Left"
@@ -171,36 +178,33 @@ await redo();
 5. User presses Cmd+Shift+Z → Reapplies "Power Left"
 
 **Command History:**
+
 ```typescript
 // After step 2:
 undoStack: [
   { description: "Update play_name from 'Power' to 'Power Left'" },
-  { description: "Update play_name from 'Power Left' to 'Power Right'" }
-]
-redoStack: []
+  { description: "Update play_name from 'Power Left' to 'Power Right'" },
+];
+redoStack: [];
 
 // After step 3 (one undo):
-undoStack: [
-  { description: "Update play_name from 'Power' to 'Power Left'" }
-]
+undoStack: [{ description: "Update play_name from 'Power' to 'Power Left'" }];
 redoStack: [
-  { description: "Update play_name from 'Power Left' to 'Power Right'" }
-]
+  { description: "Update play_name from 'Power Left' to 'Power Right'" },
+];
 
 // After step 4 (second undo):
-undoStack: []
+undoStack: [];
 redoStack: [
   { description: "Update play_name from 'Power' to 'Power Left'" },
-  { description: "Update play_name from 'Power Left' to 'Power Right'" }
-]
+  { description: "Update play_name from 'Power Left' to 'Power Right'" },
+];
 
 // After step 5 (one redo):
-undoStack: [
-  { description: "Update play_name from 'Power' to 'Power Left'" }
-]
+undoStack: [{ description: "Update play_name from 'Power' to 'Power Left'" }];
 redoStack: [
-  { description: "Update play_name from 'Power Left' to 'Power Right'" }
-]
+  { description: "Update play_name from 'Power Left' to 'Power Right'" },
+];
 ```
 
 ---
@@ -210,6 +214,7 @@ redoStack: [
 To use undo/redo in your service:
 
 **Before (without undo/redo):**
+
 ```typescript
 const handleSave = async (playId: string, updates: Partial<Play>) => {
   await updatePlay(playId, updates);
@@ -217,6 +222,7 @@ const handleSave = async (playId: string, updates: Partial<Play>) => {
 ```
 
 **After (with undo/redo):**
+
 ```typescript
 import { useUndoRedo } from "../../contexts/UndoRedoContext";
 import { createPlayUpdateCommand } from "../../types/undoRedo";
@@ -236,7 +242,7 @@ const handleSave = async (
     newValue,
     applyUpdate: async (id, updates) => {
       await updatePlay(id, updates);
-    }
+    },
   });
 
   await executeCommand(command);
@@ -247,13 +253,14 @@ const handleSave = async (
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| **Cmd+Z** (Mac) / **Ctrl+Z** (Win) | Undo | Revert last change |
-| **Cmd+Shift+Z** (Mac) / **Ctrl+Shift+Z** (Win) | Redo | Reapply undone change |
-| **Cmd+Y** (Mac) / **Ctrl+Y** (Win) | Redo (alternative) | Same as Shift+Z |
+| Shortcut                                       | Action             | Description           |
+| ---------------------------------------------- | ------------------ | --------------------- |
+| **Cmd+Z** (Mac) / **Ctrl+Z** (Win)             | Undo               | Revert last change    |
+| **Cmd+Shift+Z** (Mac) / **Ctrl+Shift+Z** (Win) | Redo               | Reapply undone change |
+| **Cmd+Y** (Mac) / **Ctrl+Y** (Win)             | Redo (alternative) | Same as Shift+Z       |
 
 **Behavior:**
+
 - Works globally across all pages
 - Disabled when no history available
 - Shows description in tooltip
@@ -264,29 +271,34 @@ const handleSave = async (
 ## Testing Scenarios
 
 ### Test 1: Basic Undo/Redo
+
 1. Edit a play name
 2. Press Cmd+Z → Name reverts ✅
 3. Press Cmd+Shift+Z → Name reapplies ✅
 4. Verify database updated correctly
 
 ### Test 2: Multiple Undo
+
 1. Edit play name 3 times
 2. Press Cmd+Z 3 times → Reverts all changes ✅
 3. Verify back to original state
 4. Press Cmd+Shift+Z 3 times → Reapplies all changes ✅
 
 ### Test 3: History Limit
+
 1. Make 55 changes (exceeds max 50)
 2. Verify oldest 5 commands removed from history ✅
 3. Can only undo 50 most recent changes
 
 ### Test 4: Redo Stack Clear
+
 1. Make 3 changes
 2. Undo 2 times → Redo stack has 2 commands
 3. Make a new change → Redo stack clears ✅
 4. Cannot redo previous commands
 
 ### Test 5: Visual Indicator
+
 1. No history → Indicator hidden ✅
 2. Make change → Indicator appears ✅
 3. Undo available → Undo button enabled ✅
@@ -294,6 +306,7 @@ const handleSave = async (
 5. Hover buttons → Tooltips show descriptions ✅
 
 ### Test 6: Save Integration
+
 1. Execute command → Save indicator spins ✅
 2. Command succeeds → Green flash ✅
 3. Command fails → Red flash ✅
@@ -304,12 +317,14 @@ const handleSave = async (
 ## Success Metrics
 
 ✅ **Type System:**
+
 - Command interface
 - UndoRedoState interface
 - Helper factories (createCommand, createPlayUpdateCommand, etc.)
 - Type guards (canUndo, canRedo)
 
 ✅ **Context:**
+
 - UndoRedoProvider with state management
 - executeCommand() method
 - undo() / redo() methods
@@ -317,6 +332,7 @@ const handleSave = async (
 - Keyboard shortcuts (Cmd+Z, Cmd+Shift+Z, Cmd+Y)
 
 ✅ **UI Component:**
+
 - UndoRedoIndicator visual display
 - Undo/redo buttons
 - History count badge
@@ -324,11 +340,13 @@ const handleSave = async (
 - Tooltips with descriptions
 
 ✅ **Integration:**
+
 - App.tsx provider wrapping
 - SaveStateContext integration
 - Visual feedback (spinning, color flashes)
 
 ✅ **Type Safety:**
+
 - All TypeScript checks passing
 - No type errors
 - Proper generic constraints
@@ -362,6 +380,7 @@ const handleSave = async (
 ### Future Enhancements (v2.0+):
 
 1. **Automatic Command Tracking**
+
    ```typescript
    // Wrap all save operations automatically
    const { enableAutoTracking } = useUndoRedo();
@@ -374,13 +393,14 @@ const handleSave = async (
    - Survive browser restarts
 
 3. **Batch Commands**
+
    ```typescript
    const batchCommand = createBatchCommand([
      updatePlayCommand,
      updateFormationCommand,
-     updatePersonnelCommand
+     updatePersonnelCommand,
    ]);
-   
+
    // One undo reverts all 3 changes
    ```
 
@@ -402,14 +422,14 @@ const handleSave = async (
 
 ```typescript
 const {
-  state,           // Current undo/redo state
-  executeCommand,  // Execute and track command
-  undo,            // Undo last command
-  redo,            // Redo last undone command
-  clearHistory,    // Clear all history
-  canUndo,         // Boolean: undo available?
-  canRedo,         // Boolean: redo available?
-  history,         // Full command history
+  state, // Current undo/redo state
+  executeCommand, // Execute and track command
+  undo, // Undo last command
+  redo, // Redo last undone command
+  clearHistory, // Clear all history
+  canUndo, // Boolean: undo available?
+  canRedo, // Boolean: redo available?
+  history, // Full command history
 } = useUndoRedo();
 ```
 
@@ -424,7 +444,7 @@ const command = createCommand({
   newState: { name: "New Name" },
   applyState: async (state) => {
     await updateDatabase(state);
-  }
+  },
 });
 ```
 
@@ -438,7 +458,7 @@ const command = createPlayUpdateCommand({
   newValue: "New",
   applyUpdate: async (id, updates) => {
     await updatePlay(id, updates);
-  }
+  },
 });
 ```
 
@@ -447,12 +467,14 @@ const command = createPlayUpdateCommand({
 ## Files Changed
 
 **Created (4 files):**
+
 1. `src/types/undoRedo.ts` - Command types
 2. `src/contexts/UndoRedoContext.tsx` - Undo/redo state management
 3. `src/components/undo/UndoRedoIndicator.tsx` - Visual UI
 4. `P2_3_UNDO_REDO_COMPLETE.md` - This doc
 
 **Modified (1 file):**
+
 1. `src/App.tsx` - Added UndoRedoProvider + indicator
 
 **Total:** 5 files changed
@@ -464,18 +486,22 @@ const command = createPlayUpdateCommand({
 ### Memory Usage
 
 **Command Storage:**
+
 - Each command stores `previousState` and `newState`
 - Max 50 commands = 50 × 2 states in memory
 - For large entities (e.g., diagrams), could be ~5-10 MB
 - Recommend storing only changed fields, not full entities
 
 **Optimization:**
+
 ```typescript
 // Bad: Store entire play
-previousState: fullPlay  // ~1 KB per play
+previousState: fullPlay; // ~1 KB per play
 
 // Good: Store only changed field
-previousState: { play_name: "Old Name" }  // ~100 bytes
+previousState: {
+  play_name: "Old Name";
+} // ~100 bytes
 ```
 
 ### Execution Speed

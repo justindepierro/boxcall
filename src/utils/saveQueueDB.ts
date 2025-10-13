@@ -1,7 +1,7 @@
 /**
  * IndexedDB utility for persisting save queue operations
  * Allows queue to survive page refreshes and offline periods
- * 
+ *
  * @version 3.1.0
  * @date October 13, 2025
  */
@@ -42,7 +42,7 @@ function openDB(): Promise<IDBDatabase> {
       // Create object store if it doesn't exist
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         const objectStore = db.createObjectStore(STORE_NAME, { keyPath: "id" });
-        
+
         // Create indexes for efficient querying
         objectStore.createIndex("entityType", "entityType", { unique: false });
         objectStore.createIndex("timestamp", "timestamp", { unique: false });
@@ -94,7 +94,9 @@ export async function loadOperations(): Promise<PersistedSaveOperation[]> {
 
       request.onsuccess = () => {
         const operations = request.result as PersistedSaveOperation[];
-        console.log(`[SaveQueueDB] Loaded ${operations.length} operations from IndexedDB`);
+        console.log(
+          `[SaveQueueDB] Loaded ${operations.length} operations from IndexedDB`
+        );
         resolve(operations);
       };
 

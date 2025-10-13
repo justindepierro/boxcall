@@ -36,44 +36,47 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
     type: "success" | "error";
     text: string;
   } | null>(null);
-  
+
   // Global save indicator
   const { startSaving, finishSaving } = useSaveState();
-  
+
   // Debounce timer ref
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Auto-save function with global indicator
-  const autoSave = useCallback(async (updatedFormData: typeof formData) => {
-    startSaving();
-    setSaving(true);
-    setMessage(null);
-    
-    try {
-      const updatedSettings: TeamSettingsType = {
-        ...teamSettings,
-        name: updatedFormData.name,
-        school: updatedFormData.school,
-        season: updatedFormData.season,
-        logoUrl: updatedFormData.logoUrl,
-        location: {
-          address: updatedFormData.address,
-          city: updatedFormData.city,
-          state: updatedFormData.state,
-          zipCode: updatedFormData.zipCode,
-        },
-      };
-      
-      onUpdate(updatedSettings);
-      finishSaving("success");
-    } catch (error) {
-      console.error("Error auto-saving team settings:", error);
-      finishSaving("error");
-    } finally {
-      setSaving(false);
-    }
-  }, [teamSettings, onUpdate, startSaving, finishSaving]);
-  
+  const autoSave = useCallback(
+    async (updatedFormData: typeof formData) => {
+      startSaving();
+      setSaving(true);
+      setMessage(null);
+
+      try {
+        const updatedSettings: TeamSettingsType = {
+          ...teamSettings,
+          name: updatedFormData.name,
+          school: updatedFormData.school,
+          season: updatedFormData.season,
+          logoUrl: updatedFormData.logoUrl,
+          location: {
+            address: updatedFormData.address,
+            city: updatedFormData.city,
+            state: updatedFormData.state,
+            zipCode: updatedFormData.zipCode,
+          },
+        };
+
+        onUpdate(updatedSettings);
+        finishSaving("success");
+      } catch (error) {
+        console.error("Error auto-saving team settings:", error);
+        finishSaving("error");
+      } finally {
+        setSaving(false);
+      }
+    },
+    [teamSettings, onUpdate, startSaving, finishSaving]
+  );
+
   // Cleanup debounce timer on unmount
   useEffect(() => {
     return () => {
@@ -86,12 +89,12 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   const handleInputChange = (field: string, value: string | number) => {
     const updatedFormData = { ...formData, [field]: value };
     setFormData(updatedFormData);
-    
+
     // Clear existing timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
-    
+
     // Set new timer for auto-save (500ms debounce)
     debounceTimerRef.current = setTimeout(() => {
       autoSave(updatedFormData);
@@ -100,16 +103,16 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Clear debounce timer if manual save triggered
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
-    
+
     // Use auto-save function for consistency
     await autoSave(formData);
-    
+
     // Show success message for manual save
     setMessage({
       type: "success",

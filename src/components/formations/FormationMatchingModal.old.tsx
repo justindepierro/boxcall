@@ -1,18 +1,18 @@
 /**
  * Formation Matching Modal
- * 
+ *
  * Allows coaches to manually link formations as Left/Right variants
  * Shows side-by-side preview and dropdown selectors
  * Can link existing formations or create new variants
  */
 
-import React, { useState, useEffect } from 'react';
-import { FormationService } from '../../services/formationService';
-import type { Formation } from '../../types/formation';
-import { Modal } from '../ui/Modal';
-import { Button } from '../ui/Button';
-import { Icon } from '../ui/Icon';
-import { useToast } from '../../hooks/useToast';
+import React, { useState, useEffect } from "react";
+import { FormationService } from "../../services/formationService";
+import type { Formation } from "../../types/formation";
+import { Modal } from "../ui/Modal";
+import { Button } from "../ui/Button";
+import { Icon } from "../ui/Icon";
+import { useToast } from "../../hooks/useToast";
 
 interface FormationMatchingModalProps {
   isOpen: boolean;
@@ -46,19 +46,26 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
       setLoading(true);
       try {
         // Load suggested matches
-        const matches = await FormationService.getSuggestedMatches(baseFormation.id);
+        const matches = await FormationService.getSuggestedMatches(
+          baseFormation.id
+        );
         setSuggestedMatches(matches);
 
         // Load current variant family
-        const family = await FormationService.getFormationVariantFamily(baseFormation.id);
+        const family = await FormationService.getFormationVariantFamily(
+          baseFormation.id
+        );
         setVariantFamily(family);
 
         // Pre-select current variants
         setSelectedLeftId(family.left?.id || null);
         setSelectedRightId(family.right?.id || null);
       } catch (error) {
-        console.error('Failed to load formation data:', error);
-        toast.error(error instanceof Error ? error.message : 'Unknown error', 'Failed to load formations');
+        console.error("Failed to load formation data:", error);
+        toast.error(
+          error instanceof Error ? error.message : "Unknown error",
+          "Failed to load formations"
+        );
       } finally {
         setLoading(false);
       }
@@ -81,12 +88,18 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
         selectedRightId || undefined
       );
 
-      toast.success('Variants linked!', 'Formation variants updated successfully');
+      toast.success(
+        "Variants linked!",
+        "Formation variants updated successfully"
+      );
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error('Failed to link formations:', error);
-      toast.error('Failed to link formations', error instanceof Error ? error.message : 'Unknown error');
+      console.error("Failed to link formations:", error);
+      toast.error(
+        "Failed to link formations",
+        error instanceof Error ? error.message : "Unknown error"
+      );
     } finally {
       setLoading(false);
     }
@@ -98,11 +111,14 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
     setLoading(true);
     try {
       await FormationService.unlinkVariant(variantFamily.left.id);
-      toast.success('Left variant unlinked', 'Unlinked');
+      toast.success("Left variant unlinked", "Unlinked");
       setRefreshTrigger((prev) => prev + 1); // Trigger reload
     } catch (error) {
-      console.error('Failed to unlink left variant:', error);
-      toast.error('Failed to unlink', error instanceof Error ? error.message : 'Unknown error');
+      console.error("Failed to unlink left variant:", error);
+      toast.error(
+        "Failed to unlink",
+        error instanceof Error ? error.message : "Unknown error"
+      );
     } finally {
       setLoading(false);
     }
@@ -114,11 +130,14 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
     setLoading(true);
     try {
       await FormationService.unlinkVariant(variantFamily.right.id);
-      toast.success('Right variant unlinked', 'Unlinked');
+      toast.success("Right variant unlinked", "Unlinked");
       setRefreshTrigger((prev) => prev + 1); // Trigger reload
     } catch (error) {
-      console.error('Failed to unlink right variant:', error);
-      toast.error('Failed to unlink', error instanceof Error ? error.message : 'Unknown error');
+      console.error("Failed to unlink right variant:", error);
+      toast.error(
+        "Failed to unlink",
+        error instanceof Error ? error.message : "Unknown error"
+      );
     } finally {
       setLoading(false);
     }
@@ -126,17 +145,21 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
 
   const getAvailableMatchesForLeft = () => {
     return suggestedMatches.filter(
-      (f) => 
+      (f) =>
         f.id !== selectedRightId && // Can't be same as right variant
-        (f.direction === 'base' || f.direction === 'left' || !f.base_formation_id) // Only independent or left formations
+        (f.direction === "base" ||
+          f.direction === "left" ||
+          !f.base_formation_id) // Only independent or left formations
     );
   };
 
   const getAvailableMatchesForRight = () => {
     return suggestedMatches.filter(
-      (f) => 
+      (f) =>
         f.id !== selectedLeftId && // Can't be same as left variant
-        (f.direction === 'base' || f.direction === 'right' || !f.base_formation_id) // Only independent or right formations
+        (f.direction === "base" ||
+          f.direction === "right" ||
+          !f.base_formation_id) // Only independent or right formations
     );
   };
 
@@ -156,9 +179,13 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
           <div className="bg-surface-secondary rounded-lg p-4 border border-border-primary">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-text-primary">{variantFamily.base?.name || baseFormation.name}</p>
+                <p className="font-medium text-text-primary">
+                  {variantFamily.base?.name || baseFormation.name}
+                </p>
                 <p className="text-sm text-text-secondary">
-                  {variantFamily.base?.personnel_name || baseFormation.personnel_name} Personnel
+                  {variantFamily.base?.personnel_name ||
+                    baseFormation.personnel_name}{" "}
+                  Personnel
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -193,9 +220,9 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
               </Button>
             )}
           </div>
-          
+
           <select
-            value={selectedLeftId || ''}
+            value={selectedLeftId || ""}
             onChange={(e) => setSelectedLeftId(e.target.value || null)}
             disabled={loading}
             className="w-full px-3 py-2 border border-border-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -204,8 +231,9 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
             {getAvailableMatchesForLeft().map((formation) => (
               <option key={formation.id} value={formation.id}>
                 {formation.name}
-                {formation.direction !== 'base' && ` (${formation.direction})`}
-                {formation.usage_count > 0 && ` - ${formation.usage_count} plays`}
+                {formation.direction !== "base" && ` (${formation.direction})`}
+                {formation.usage_count > 0 &&
+                  ` - ${formation.usage_count} plays`}
               </option>
             ))}
           </select>
@@ -240,9 +268,9 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
               </Button>
             )}
           </div>
-          
+
           <select
-            value={selectedRightId || ''}
+            value={selectedRightId || ""}
             onChange={(e) => setSelectedRightId(e.target.value || null)}
             disabled={loading}
             className="w-full px-3 py-2 border border-border-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -251,8 +279,9 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
             {getAvailableMatchesForRight().map((formation) => (
               <option key={formation.id} value={formation.id}>
                 {formation.name}
-                {formation.direction !== 'base' && ` (${formation.direction})`}
-                {formation.usage_count > 0 && ` - ${formation.usage_count} plays`}
+                {formation.direction !== "base" && ` (${formation.direction})`}
+                {formation.usage_count > 0 &&
+                  ` - ${formation.usage_count} plays`}
               </option>
             ))}
           </select>
@@ -272,11 +301,17 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
         {/* Help Text */}
         <div className="bg-info-50 border border-info-200 rounded-lg p-4">
           <div className="flex gap-3">
-            <Icon name="info" className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
+            <Icon
+              name="info"
+              className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5"
+            />
             <div className="text-sm text-info-900">
               <p className="font-medium mb-1">How Formation Matching Works</p>
               <ul className="list-disc list-inside space-y-1 text-info-800">
-                <li>Link formations that mirror each other (e.g., "Twins Right" ↔ "Twins Left")</li>
+                <li>
+                  Link formations that mirror each other (e.g., "Twins Right" ↔
+                  "Twins Left")
+                </li>
                 <li>Only formations with the same personnel are suggested</li>
                 <li>You can unlink variants to make them independent again</li>
                 <li>Linked formations work with Duplicate & Flip feature</li>
@@ -289,12 +324,16 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
         {!loading && suggestedMatches.length === 0 && (
           <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
             <div className="flex gap-3">
-              <Icon name="alert-triangle" className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+              <Icon
+                name="alert-triangle"
+                className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5"
+              />
               <div className="text-sm text-warning-900">
                 <p className="font-medium mb-1">No Suggested Matches</p>
                 <p className="text-warning-800">
-                  There are no other formations in this playbook with the same personnel.
-                  You'll need to create new formations to link as variants.
+                  There are no other formations in this playbook with the same
+                  personnel. You'll need to create new formations to link as
+                  variants.
                 </p>
               </div>
             </div>
@@ -303,11 +342,7 @@ export const FormationMatchingModal: React.FC<FormationMatchingModalProps> = ({
 
         {/* Actions */}
         <div className="flex justify-end gap-3 pt-4 border-t border-border-primary">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={loading}
-          >
+          <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button

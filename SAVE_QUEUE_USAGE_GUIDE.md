@@ -39,6 +39,7 @@ function MyComponent() {
 ```
 
 **What happens automatically:**
+
 - ✅ Logo spins during save
 - ✅ Green flash on success
 - ✅ Red flash on error
@@ -90,6 +91,7 @@ function FormationBuilder() {
 ```
 
 **Best Practices:**
+
 - Use **500ms debounce** for text inputs
 - Use **1000ms debounce** for canvas/drag operations
 - Call `startSaving()` inside debounced function (not outside)
@@ -132,6 +134,7 @@ function PlayEditForm() {
 ```
 
 **Best Practices:**
+
 - Show user feedback (toast/notification) for manual saves
 - Still call `finishSaving("error")` even if showing error toast
 - Let queue handle retries in background
@@ -181,6 +184,7 @@ function BulkPlayImport() {
 ```
 
 **Best Practices:**
+
 - Use single `startSaving()` for entire batch
 - Use `warning` status for partial successes
 - Log individual failures for debugging
@@ -233,6 +237,7 @@ function AdvancedSaveManager() {
 ```
 
 **When to use:**
+
 - Complex multi-step operations
 - Custom retry limits (default is 5)
 - Need to show custom pending save UI
@@ -247,16 +252,16 @@ function AdvancedSaveManager() {
 ```typescript
 const {
   // Visual indicator control
-  isSaving,           // boolean - Is any save in progress?
-  saveStatus,         // 'idle' | 'success' | 'error' | 'warning'
-  startSaving,        // () => void - Start save indicator
-  finishSaving,       // (status: SaveStatus) => void - Finish with status
-  
+  isSaving, // boolean - Is any save in progress?
+  saveStatus, // 'idle' | 'success' | 'error' | 'warning'
+  startSaving, // () => void - Start save indicator
+  finishSaving, // (status: SaveStatus) => void - Finish with status
+
   // Queue management (v3.0)
-  queueLength,        // number - Pending operations count
-  queueSave,          // (operation: SaveOperation) => void - Add to queue
-  retryFailedSaves,   // () => void - Manually retry all queued
-  clearQueue,         // () => void - Clear all pending operations
+  queueLength, // number - Pending operations count
+  queueSave, // (operation: SaveOperation) => void - Add to queue
+  retryFailedSaves, // () => void - Manually retry all queued
+  clearQueue, // () => void - Clear all pending operations
 } = useSaveState();
 ```
 
@@ -264,14 +269,14 @@ const {
 
 ```typescript
 interface SaveOperation {
-  id: string;                          // Unique ID (e.g., "play-123-1697234567")
-  entityType: EntityType;              // "play" | "formation" | "team" | "personnel" | "other"
-  entityId: string;                    // Entity being saved (e.g., play ID)
-  operation: () => Promise<void>;      // Async save function
-  retries: number;                     // Current retry count
-  maxRetries: number;                  // Max retries before giving up
-  timestamp: number;                   // When queued (Date.now())
-  description?: string;                // Optional description for logs
+  id: string; // Unique ID (e.g., "play-123-1697234567")
+  entityType: EntityType; // "play" | "formation" | "team" | "personnel" | "other"
+  entityId: string; // Entity being saved (e.g., play ID)
+  operation: () => Promise<void>; // Async save function
+  retries: number; // Current retry count
+  maxRetries: number; // Max retries before giving up
+  timestamp: number; // When queued (Date.now())
+  description?: string; // Optional description for logs
 }
 ```
 
@@ -282,6 +287,7 @@ interface SaveOperation {
 ### ✅ DO
 
 1. **Always pair `startSaving()` with `finishSaving()`**
+
    ```typescript
    startSaving();
    try {
@@ -297,6 +303,7 @@ interface SaveOperation {
    - 1000ms for canvas/drag operations
 
 3. **Re-throw errors after `finishSaving("error")`**
+
    ```typescript
    catch (error) {
      finishSaving("error");
@@ -305,8 +312,9 @@ interface SaveOperation {
    ```
 
 4. **Use descriptive operation IDs**
+
    ```typescript
-   id: `${entityType}-${entityId}-${timestamp}`
+   id: `${entityType}-${entityId}-${timestamp}`;
    ```
 
 5. **Log errors for debugging**
@@ -320,11 +328,12 @@ interface SaveOperation {
 ### ❌ DON'T
 
 1. **Don't call `startSaving()` multiple times concurrently**
+
    ```typescript
    // BAD
    startSaving();
    startSaving(); // Overwrites first call
-   
+
    // GOOD
    startSaving();
    await save();
@@ -332,12 +341,13 @@ interface SaveOperation {
    ```
 
 2. **Don't forget to call `finishSaving()`**
+
    ```typescript
    // BAD
    startSaving();
    await save();
    // Indicator stuck spinning!
-   
+
    // GOOD
    startSaving();
    await save();
@@ -345,10 +355,11 @@ interface SaveOperation {
    ```
 
 3. **Don't use queue for every save (basic pattern is better)**
+
    ```typescript
    // BAD (unnecessary complexity)
    queueSave({ operation: async () => await simpleSave() });
-   
+
    // GOOD
    startSaving();
    await simpleSave();
@@ -356,22 +367,24 @@ interface SaveOperation {
    ```
 
 4. **Don't debounce manual save buttons**
+
    ```typescript
    // BAD
    <button onClick={debouncedManualSave}>Save</button>
-   
+
    // GOOD
    <button onClick={handleManualSave}>Save</button>
    ```
 
 5. **Don't catch errors without re-throwing**
+
    ```typescript
    // BAD
    catch (error) {
      finishSaving("error");
      // Error lost - component can't handle it
    }
-   
+
    // GOOD
    catch (error) {
      finishSaving("error");
@@ -386,6 +399,7 @@ interface SaveOperation {
 ### Scenario 1: Network Timeout
 
 **What happens:**
+
 1. User edits play card
 2. Save request times out
 3. Logo flashes red
@@ -395,6 +409,7 @@ interface SaveOperation {
 7. If fails: Retries after 2 seconds (exponential backoff)
 
 **User Experience:**
+
 - Immediate feedback (red flash)
 - Automatic retry in background
 - Can continue working
@@ -406,6 +421,7 @@ interface SaveOperation {
 ### Scenario 2: Rapid Edits
 
 **What happens:**
+
 1. User edits name field rapidly
 2. Debounce waits 500ms after last keystroke
 3. Single save request fires
@@ -413,6 +429,7 @@ interface SaveOperation {
 5. Success → Green flash
 
 **Prevents:**
+
 - API spam (one request instead of 20)
 - Race conditions
 - Unnecessary server load
@@ -423,6 +440,7 @@ interface SaveOperation {
 ### Scenario 3: Offline Editing
 
 **Current Behavior (v3.0):**
+
 1. User goes offline
 2. Edits play card
 3. Save fails immediately
@@ -434,6 +452,7 @@ interface SaveOperation {
 9. Badge disappears
 
 **Future Enhancement (P1 - IndexedDB):**
+
 - Queue persists across refreshes
 - Operations survive browser restart
 - Sync when connection returns
@@ -445,6 +464,7 @@ interface SaveOperation {
 ### From Local Save State
 
 **Before (Local State):**
+
 ```typescript
 function OldComponent() {
   const [isSaving, setIsSaving] = useState(false);
@@ -453,7 +473,7 @@ function OldComponent() {
   const handleSave = async () => {
     setIsSaving(true);
     setSaveError(null);
-    
+
     try {
       await saveData();
     } catch (error) {
@@ -473,13 +493,14 @@ function OldComponent() {
 ```
 
 **After (Global State):**
+
 ```typescript
 function NewComponent() {
   const { startSaving, finishSaving } = useSaveState();
 
   const handleSave = async () => {
     startSaving(); // Global indicator starts
-    
+
     try {
       await saveData();
       finishSaving("success");
@@ -495,6 +516,7 @@ function NewComponent() {
 ```
 
 **Benefits:**
+
 - Less component state
 - Automatic retry logic
 - Consistent UX across app
@@ -509,6 +531,7 @@ function NewComponent() {
 **Cause**: Missing `finishSaving()` call
 
 **Solution:**
+
 ```typescript
 // Always use try/catch with finishSaving
 startSaving();
@@ -516,7 +539,7 @@ try {
   await save();
   finishSaving("success"); // ← Don't forget this!
 } catch (error) {
-  finishSaving("error");   // ← Or this!
+  finishSaving("error"); // ← Or this!
 }
 ```
 
@@ -526,7 +549,8 @@ try {
 
 **Cause**: Operations queued but already successful
 
-**Solution**: 
+**Solution**:
+
 ```typescript
 // Clear queue if no longer needed
 const { clearQueue } = useSaveState();
@@ -540,12 +564,10 @@ clearQueue();
 **Cause**: No debounce on rapid edits
 
 **Solution:**
+
 ```typescript
 // Add debounce
-const debouncedSave = useCallback(
-  debounce(handleSave, 500),
-  [handleSave]
-);
+const debouncedSave = useCallback(debounce(handleSave, 500), [handleSave]);
 ```
 
 ---
@@ -555,6 +577,7 @@ const debouncedSave = useCallback(
 **Cause**: Catching error without checking success
 
 **Solution:**
+
 ```typescript
 try {
   const result = await save();

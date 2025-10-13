@@ -15,11 +15,13 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 ## Test Environment Setup
 
 ### Prerequisites
+
 - Development server running (`npm run dev`)
 - Browser DevTools open (Network tab)
 - Access to Play Grid or Formation Builder
 
 ### Network Throttling Setup
+
 1. Open Chrome/Edge DevTools → Network tab
 2. Set throttle to "Slow 3G" or "Offline"
 3. Use "Disable cache" for consistent testing
@@ -33,11 +35,13 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 **Purpose**: Verify save indicator works without queue
 
 **Steps**:
+
 1. Navigate to Play Grid
 2. Edit any play (change name, tags, etc.)
 3. Observe SaveIndicatorLogo animation
 
 **Expected Results**:
+
 - Logo animates during save
 - Logo shows success state (green checkmark briefly)
 - No queue badge appears
@@ -52,6 +56,7 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 **Purpose**: Verify queue captures failed saves and retries with backoff
 
 **Steps**:
+
 1. Open Network tab → Set to "Offline"
 2. Edit a play in Play Grid
 3. Wait and observe queue badge appear
@@ -59,6 +64,7 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 5. Observe auto-retry
 
 **Expected Results**:
+
 - Save fails initially
 - Queue badge appears with "1"
 - Logo shows error state briefly
@@ -75,6 +81,7 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 **Purpose**: Test queue accumulation and batch retry
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit 3 different plays rapidly
 3. Observe queue badge incrementing
@@ -82,6 +89,7 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 5. Watch queue process all saves
 
 **Expected Results**:
+
 - Queue badge shows "1" → "2" → "3"
 - Each failed save adds to queue
 - When online: Queue processes sequentially
@@ -97,12 +105,14 @@ This guide provides comprehensive testing procedures for the Save Queue system w
 **Purpose**: Verify retry delays increase exponentially
 
 **Steps**:
+
 1. Set Network to "Slow 3G" (not offline, just slow)
 2. Edit a play
 3. Open Console
 4. Watch retry timing in console logs
 
 **Expected Results**:
+
 ```
 Retry 1: ~1 second delay (2^0 * 1000ms)
 Retry 2: ~2 second delay (2^1 * 1000ms)
@@ -121,12 +131,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Verify queue removes operations after max retries
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit a play
 3. Wait for ~5-6 retry attempts
 4. Check console for "Max retries exceeded" message
 
 **Expected Results**:
+
 - Queue badge shows "1"
 - After max retries (default: 5): Badge disappears
 - Console shows: "Save operation failed after 5 retries"
@@ -141,6 +153,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Test user-initiated retry via queue badge
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit a play (badge shows "1")
 3. Click the queue badge
@@ -148,6 +161,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 5. Click badge again
 
 **Expected Results**:
+
 - Clicking badge triggers immediate retry (even if still offline)
 - Console shows: "Retrying failed saves..."
 - When online + clicked: Save succeeds immediately
@@ -162,12 +176,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Test queue clearing via context menu
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit 2-3 plays (badge shows "2" or "3")
 3. Right-click the queue badge
 4. Confirm queue cleared
 
 **Expected Results**:
+
 - Right-click triggers context menu action
 - Queue badge disappears immediately
 - Console shows: "Save queue cleared by user"
@@ -182,6 +198,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Verify queue maintains state during continued editing
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit Play A (badge: "1")
 3. Edit Play B (badge: "2")
@@ -190,6 +207,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 6. Observe save behavior
 
 **Expected Results**:
+
 - Queue shows "2" (not "3" - shouldn't duplicate same play)
 - Both plays save when online
 - No duplicate save operations
@@ -204,6 +222,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Verify queue badge persists across page navigation
 
 **Steps**:
+
 1. Set Network to "Offline"
 2. Edit a play in Play Grid (badge: "1")
 3. Navigate to Formations tab
@@ -211,6 +230,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 5. Check if badge still shows "1"
 
 **Expected Results**:
+
 - Queue badge visible on all pages (fixed in header)
 - Badge persists after navigation
 - Queue state maintained in context
@@ -225,12 +245,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Purpose**: Test queue handling multiple simultaneous saves
 
 **Steps**:
+
 1. Set Network to "Slow 3G"
 2. Rapidly edit 5 plays in quick succession (< 1 second apart)
 3. Observe queue behavior
 4. Check console for processing order
 
 **Expected Results**:
+
 - Queue badge increments rapidly: "1" → "2" → "3" → "4" → "5"
 - Queue processes sequentially (not in parallel)
 - Console shows: "Processing save queue..."
@@ -244,6 +266,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ## Console Output Examples
 
 ### Successful Save
+
 ```
 [SaveStateContext] Save operation queued: play-123
 [SaveStateContext] Processing save queue... (1 operations)
@@ -251,6 +274,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ```
 
 ### Failed Save with Retry
+
 ```
 [SaveStateContext] Save operation queued: play-123
 [SaveStateContext] Processing save queue... (1 operations)
@@ -260,6 +284,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ```
 
 ### Max Retries Exceeded
+
 ```
 [SaveStateContext] Save operation queued: play-123
 [SaveStateContext] Save failed, retrying in 1000ms (attempt 1/5)
@@ -275,12 +300,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ## Visual Indicators Checklist
 
 ### SaveIndicatorLogo States
+
 - [ ] **Idle**: Default logo appearance
 - [ ] **Saving**: Animated pulse/spin during save
 - [ ] **Success**: Brief green checkmark or success state
 - [ ] **Error**: Brief red X or error state
 
 ### Queue Badge States
+
 - [ ] **Hidden**: No pending saves (queueLength === 0)
 - [ ] **Visible**: Shows count when queueLength > 0
 - [ ] **Color**: Amber/warning color (bg-warning-500)
@@ -292,12 +319,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ## Performance Validation
 
 ### Metrics to Check
+
 - [ ] **Queue Processing Time**: < 100ms per operation
 - [ ] **Memory Usage**: No memory leaks after 100+ queued saves
 - [ ] **UI Responsiveness**: No lag during queue processing
 - [ ] **Network Requests**: One request per save (no duplicates)
 
 ### Tools
+
 - Chrome DevTools → Performance tab
 - Memory profiler for leak detection
 - Network tab for request monitoring
@@ -307,14 +336,17 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ## Edge Cases
 
 ### Scenario 1: Browser Refresh with Pending Saves
+
 **Current Behavior**: Queue is lost (in-memory only)  
 **Future**: IndexedDB persistence (P1 feature)
 
 ### Scenario 2: Logout with Pending Saves
+
 **Expected**: Queue should clear on logout  
 **Test**: Verify no stale saves after re-login
 
 ### Scenario 3: Rapid Network Fluctuations
+
 **Test**: Toggle offline/online rapidly during save  
 **Expected**: Queue handles gracefully, no duplicate saves
 
@@ -326,13 +358,14 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 ✅ **Visual indicators work correctly**  
 ✅ **Console output matches expected patterns**  
 ✅ **No performance degradation**  
-✅ **Edge cases handled gracefully**  
+✅ **Edge cases handled gracefully**
 
 ---
 
 ## Discovered Issues Log
 
 ### Issue Template
+
 ```markdown
 **Issue #**: [Number]  
 **Severity**: [Critical / High / Medium / Low]  
@@ -341,10 +374,11 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Expected**: [What should happen]  
 **Actual**: [What actually happened]  
 **Steps to Reproduce**: [Minimal repro steps]  
-**Fix Status**: [Not Started / In Progress / Fixed]  
+**Fix Status**: [Not Started / In Progress / Fixed]
 ```
 
 ### Example Issue (Template Only)
+
 ```markdown
 **Issue #1**: Queue badge doesn't clear after successful retry  
 **Severity**: Medium  
@@ -352,7 +386,7 @@ Retry 6+: ~30 second delay (capped at 30000ms)
 **Description**: Badge remains visible after save succeeds  
 **Expected**: Badge disappears when queueLength === 0  
 **Actual**: Badge shows "0" instead of hiding  
-**Fix Status**: Fixed in v3.0.1  
+**Fix Status**: Fixed in v3.0.1
 ```
 
 ---

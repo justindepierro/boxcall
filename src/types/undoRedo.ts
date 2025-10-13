@@ -1,6 +1,6 @@
 /**
  * Command Pattern Types for Undo/Redo System
- * 
+ *
  * Implements command pattern to enable undo/redo functionality
  * for save operations in the Universal Save System.
  */
@@ -109,7 +109,10 @@ export function createPlayUpdateCommand(params: {
   field: string;
   oldValue: unknown;
   newValue: unknown;
-  applyUpdate: (playId: string, updates: Record<string, unknown>) => Promise<void>;
+  applyUpdate: (
+    playId: string,
+    updates: Record<string, unknown>
+  ) => Promise<void>;
 }): Command {
   const { playId, field, oldValue, newValue, applyUpdate } = params;
 
@@ -133,7 +136,10 @@ export function createFormationUpdateCommand(params: {
   field: string;
   oldValue: unknown;
   newValue: unknown;
-  applyUpdate: (formationId: string, updates: Record<string, unknown>) => Promise<void>;
+  applyUpdate: (
+    formationId: string,
+    updates: Record<string, unknown>
+  ) => Promise<void>;
 }): Command {
   const { formationId, field, oldValue, newValue, applyUpdate } = params;
 

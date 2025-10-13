@@ -494,26 +494,17 @@ export class TeamService {
     authUser: AuthUser,
     progress: TeamCreationProgress
   ): Promise<TeamCreationResult> {
-    console.log("🚀 Starting team creation...");
-    const startTime = performance.now();
-
     try {
       // Emit start telemetry
-      console.log("🎯 Starting telemetry...");
       emitTelemetry("team.create.start", {
         sport_ui: formData.sport,
         season_display: formData.season,
         has_school_info: !!formData.schoolName,
       });
-      console.log("✅ Telemetry completed");
 
       progress.setLoadingMessage("Testing database connection...");
-      console.log(
-        "🔄 Skipping connectivity test, proceeding with team creation"
-      );
 
       // Check for duplicate teams
-      console.log("🔍 Checking for duplicate teams...");
       progress.setLoadingMessage("Checking for similar teams...");
 
       try {
@@ -544,8 +535,6 @@ export class TeamService {
               duplicateCheck.similarTeams[0]?.similarityScore || 0,
           });
         }
-
-        console.log("✅ Duplicate check passed");
       } catch (duplicateError) {
         console.warn(
           "⚠️ Duplicate check failed, proceeding anyway:",
@@ -554,21 +543,16 @@ export class TeamService {
       }
 
       // Create team name
-      console.log("🏷️ Creating team name...");
       progress.setLoadingMessage("Creating team...");
 
       const teamName = `${formData.schoolName} ${formData.teamName}`;
-      console.log("📝 Team name created:", teamName);
 
       // Compute academic year
-      console.log("📅 Computing academic year...");
       const currentYear = new Date().getFullYear();
       const seasonYear = currentYear;
       const seasonDisplay = `${seasonYear}-${seasonYear + 1}`;
-      console.log("📅 Academic year computed:", { seasonYear, seasonDisplay });
 
       // Create team record
-      console.log("🏗️ Creating team record in database...");
       progress.setLoadingMessage("Creating team record...");
 
       const teamData = {
@@ -577,9 +561,6 @@ export class TeamService {
         mascot: formData.teamName,
         season_year: seasonYear,
       };
-      console.log("📊 Team data to insert:", teamData);
-
-      console.log("🚀 Starting team insert with direct HTTP API...");
 
       const directInsertPromise = createTeamDirectly(teamData);
       const insertTimeoutPromise = new Promise((_, reject) =>
@@ -592,8 +573,6 @@ export class TeamService {
       ])) as { data: any; error: any };
       const teamInsert = insertResult.data;
       const teamErr = insertResult.error;
-
-      console.log(`🗄️ Team insert completed`);
 
       if (teamErr || !teamInsert) {
         console.error("❌ Team insert failed:", teamErr);
@@ -618,10 +597,7 @@ export class TeamService {
         throw new Error("Team created but no ID returned");
       }
 
-      console.log("✅ Team created with ID:", newTeamId);
-
       // Create team membership
-      console.log("👤 Adding team membership...");
       progress.setLoadingMessage("Setting up your account...");
 
       const membershipData = {
@@ -630,8 +606,6 @@ export class TeamService {
         team_role: "head_coach",
         status: "active",
       };
-
-      console.log("📊 Membership data to insert:", membershipData);
 
       const memberInsertPromise = createTeamMembershipDirectly(membershipData);
       const memberTimeoutPromise = new Promise((_, reject) =>
@@ -644,12 +618,8 @@ export class TeamService {
       ])) as { data: any; error: any };
       const memberErr = memberResult.error;
 
-      console.log(`👥 Membership insert completed`);
-
       if (memberErr) {
         console.warn("⚠️ team_members insert warning:", memberErr);
-      } else {
-        console.log("✅ Team membership created successfully");
       }
 
       // Persist active team selection
@@ -666,9 +636,6 @@ export class TeamService {
         season_display: seasonDisplay,
         sport_ui: formData.sport,
       });
-
-      console.log("🎉 Team creation successful!");
-      console.log(`⏱️ Total creation time: ${performance.now() - startTime}ms`);
 
       return {
         success: true,

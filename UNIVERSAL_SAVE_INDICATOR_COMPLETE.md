@@ -98,7 +98,7 @@ export interface SaveOperation {
 export const SaveStateProvider: React.FC;
 export const useSaveState = () => {
   // v1.0 methods
-  isSaving,
+  (isSaving,
     saveStatus,
     startSaving,
     finishSaving,
@@ -106,7 +106,7 @@ export const useSaveState = () => {
     queueLength,
     queueSave,
     retryFailedSaves,
-    clearQueue;
+    clearQueue);
 };
 ```
 
@@ -237,6 +237,7 @@ Attempt 6+: Wait 30 seconds (capped at 30000ms)
 ```
 
 **Why exponential backoff?**
+
 - Prevents API hammering during outages
 - Gives temporary issues time to resolve
 - Reduces server load during incidents
@@ -258,6 +259,7 @@ interface SaveOperation {
 ```
 
 **Queue Behavior**:
+
 - Operations process **sequentially** (prevents race conditions)
 - Failed operations stay in queue and retry automatically
 - Successful operations remove immediately
@@ -276,6 +278,7 @@ When saves fail and queue up, users see:
 ```
 
 **User Interactions**:
+
 - **Click badge**: Manually trigger retry of all queued operations
 - **Right-click badge**: Clear entire queue (emergency escape hatch)
 - **Hover**: Tooltip shows count and instructions
@@ -323,6 +326,7 @@ function PlayGrid() {
 ```
 
 **What happens on failure?**:
+
 1. Logo flashes red (error state)
 2. Operation automatically added to queue
 3. Badge appears showing "1" pending save
@@ -334,10 +338,10 @@ function PlayGrid() {
 
 ```typescript
 const {
-  queueLength,         // Number of pending operations
-  queueSave,          // Manually add operation to queue
-  retryFailedSaves,   // Retry all queued operations now
-  clearQueue          // Clear entire queue
+  queueLength, // Number of pending operations
+  queueSave, // Manually add operation to queue
+  retryFailedSaves, // Retry all queued operations now
+  clearQueue, // Clear entire queue
 } = useSaveState();
 
 // Manual queue usage (advanced)
@@ -351,7 +355,7 @@ queueSave({
   retries: 0,
   maxRetries: 5,
   timestamp: Date.now(),
-  description: "Save play edits"
+  description: "Save play edits",
 });
 ```
 
@@ -533,6 +537,7 @@ npm run dev
 ## 🔮 Future Enhancements
 
 ### Completed ✅
+
 - [x] Add warning state for partial/incomplete saves (v1.0)
 - [x] Queue multiple save operations visually (v3.0) 🆕
 - [x] Track save history in dev tools (v3.0 console logging) 🆕
@@ -541,6 +546,7 @@ npm run dev
 ### In Progress / Planned 🎯
 
 #### **P1 - High Priority** (Next 2-3 weeks)
+
 - [ ] **Offline Support**: IndexedDB persistence for queue
   - Save queue to IndexedDB when offline
   - Auto-sync when connection returns
@@ -558,6 +564,7 @@ npm run dev
   - Consistent UX across all editing surfaces
 
 #### **P2 - Medium Priority** (Next 4-6 weeks)
+
 - [ ] **Conflict Resolution UI**: Handle version conflicts
   - Detect VERSION_CONFLICT errors
   - Show merge dialog with before/after comparison
@@ -574,6 +581,7 @@ npm run dev
   - Filter by entity type
 
 #### **P3 - Nice to Have** (Future)
+
 - [ ] Add tooltip showing what's being saved
 - [ ] Add haptic feedback on mobile devices
 - [ ] Smart batching for rapid edits
@@ -581,6 +589,7 @@ npm run dev
 - [ ] Real-time collaboration conflict detection
 
 ### See Full Roadmap
+
 📄 [AUTOSAVE_FUTURE_ROADMAP.md](./AUTOSAVE_FUTURE_ROADMAP.md) - Comprehensive planning document
 
 ---
@@ -632,7 +641,8 @@ npm run dev
 **v3.0 Upgrade**: October 13, 2025 🆕  
 **Developer**: AI Assistant (GitHub Copilot)  
 **Status**: ✅ Production Ready with Queue System  
-**Next Steps**: 
+**Next Steps**:
+
 1. Test queue system (see [SAVE_QUEUE_TEST_GUIDE.md](./SAVE_QUEUE_TEST_GUIDE.md))
 2. Implement offline support (IndexedDB)
 3. Add diagram editor integration
@@ -643,6 +653,7 @@ npm run dev
 ## 📊 Version Changelog
 
 ### v3.0.0 (October 13, 2025) 🆕
+
 - ✅ Added save queue with exponential backoff retry
 - ✅ Visual queue badge in app header
 - ✅ Manual retry and clear queue controls
@@ -652,11 +663,13 @@ npm run dev
 - ✅ Console logging for debugging
 
 ### v2.0.0 (October 2025)
+
 - ✅ Production optimizations
 - ✅ Performance tuning
 - ✅ Fast refresh warning fixes
 
 ### v1.0.0 (January 2025)
+
 - ✅ Initial global save indicator
 - ✅ Spinning logo animation
 - ✅ Color-coded success/error states
