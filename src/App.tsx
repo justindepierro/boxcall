@@ -17,6 +17,7 @@ import {
 } from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { SaveStateProvider } from "./contexts/SaveStateContext";
+import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 /**
@@ -65,6 +66,7 @@ function App() {
             <SaveStateProvider>
               <div className="App">
                 <DevHealthCheck />
+                <PendingSavesNotification />
                 <AppGrid>
                   <AuthGuard>
                     <DataRouterApp />

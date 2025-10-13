@@ -14,9 +14,9 @@
  * - Save queue with retry logic (v3.0)
  * - Exponential backoff for failures
  * - Online/offline detection (v3.1)
- * - IndexedDB persistence (v3.1)
+ * - IndexedDB persistence (v3.2) 🆕
  *
- * @version 3.1.0 - Offline Support
+ * @version 3.2.0 - Queue Persistence
  */
 
 import React, {
@@ -27,6 +27,13 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import {
+  persistOperation,
+  loadOperations,
+  removeOperation,
+  clearAllOperations,
+  type PersistedSaveOperation,
+} from "../utils/saveQueueDB";
 
 export type SaveStatus = "idle" | "success" | "error" | "warning";
 
@@ -50,6 +57,8 @@ interface SaveStateContextValue {
   queueLength: number;
   /** Whether the app is currently online */
   isOnline: boolean;
+  /** Whether there are pending operations from last session (v3.2) */
+  hasPendingFromLastSession: boolean;
   /** Start a save operation (shows spinner) */
   startSaving: () => void;
   /** Finish save operation with status (shows color flash) */
@@ -59,7 +68,7 @@ interface SaveStateContextValue {
   /** Retry all failed saves */
   retryFailedSaves: () => Promise<void>;
   /** Clear all queued saves */
-  clearQueue: () => void;
+  clearQueue: () => Promise<void>;
 }
 
 const SaveStateContext = createContext<SaveStateContextValue | undefined>(
@@ -73,6 +82,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [saveQueue, setSaveQueue] = useState<SaveOperation[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [hasPendingFromLastSession, setHasPendingFromLastSession] = useState(false);
 
   // Track timeout for cleanup
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -82,6 +92,31 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   
   // Track if queue is currently processing
   const isProcessingQueue = useRef(false);
+  
+  // Track if we've loaded persisted operations
+  const hasLoadedPersistedQueue = useRef(false);
+
+  // Load persisted queue metadata on mount
+  useEffect(() => {
+    if (hasLoadedPersistedQueue.current) return;
+    hasLoadedPersistedQueue.current = true;
+
+    const loadPersistedQueue = async () => {
+      try {
+        const operations = await loadOperations();
+        if (operations.length > 0) {
+          console.log(`[SaveQueue] Found ${operations.length} pending operations from last session`);
+          setHasPendingFromLastSession(true);
+          // Don't auto-retry - let user decide
+          // They can click "Retry Pending Saves" button
+        }
+      } catch (error) {
+        console.error("[SaveQueue] Failed to load persisted queue:", error);
+      }
+    };
+
+    loadPersistedQueue();
+  }, []);
 
   const startSaving = useCallback(() => {
     // Clear any pending status reset
@@ -227,10 +262,52 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [saveQueue, processSaveQueue]);
   
   // Clear queue
-  const clearQueue = useCallback(() => {
+  const clearQueue = useCallback(async () => {
     console.log("[SaveQueue] Clearing queue:", saveQueue.length);
     setSaveQueue([]);
     isProcessingQueue.current = false;
+    setHasPendingFromLastSession(false);
+    
+    // Clear persisted queue
+    try {
+      await clearAllOperations();
+      console.log("[SaveQueue] Cleared persisted queue from IndexedDB");
+    } catch (error) {
+      console.error("[SaveQueue] Failed to clear persisted queue:", error);
+    }
+  }, [saveQueue]);
+  
+  // Persist queue to IndexedDB whenever it changes
+  useEffect(() => {
+    const persistQueue = async () => {
+      try {
+        // Clear existing persisted operations
+        await clearAllOperations();
+        
+        // Persist current queue (metadata only, not the operation function)
+        for (const op of saveQueue) {
+          const persistedOp: PersistedSaveOperation = {
+            id: op.id,
+            entityType: op.entityType,
+            entityId: op.entityId,
+            operationData: {}, // We don't have the data, just metadata
+            retries: op.retries,
+            maxRetries: op.maxRetries,
+            timestamp: op.timestamp,
+            description: op.description,
+          };
+          await persistOperation(persistedOp);
+        }
+        
+        console.log(`[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`);
+      } catch (error) {
+        console.error("[SaveQueue] Failed to persist queue:", error);
+      }
+    };
+
+    if (hasLoadedPersistedQueue.current) {
+      persistQueue();
+    }
   }, [saveQueue]);
   
   // Track online/offline status and auto-retry when back online
@@ -265,6 +342,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         saveStatus, 
         queueLength: saveQueue.length,
         isOnline,
+        hasPendingFromLastSession,
         startSaving, 
         finishSaving,
         queueSave,
