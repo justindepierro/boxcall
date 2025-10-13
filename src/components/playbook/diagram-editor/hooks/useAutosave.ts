@@ -3,9 +3,11 @@
  *
  * Provides debounced autosave functionality for the diagram editor.
  * Saves diagram data to Supabase after user stops making changes for N seconds.
+ * Integrates with global save indicator (v3.1).
  */
 
 import { useEffect, useRef, useCallback, useState } from "react";
+import { useSaveState } from "../../../../contexts/SaveStateContext";
 import type { Player } from "../types/Player";
 import type { DiagramDocument } from "../types/DiagramTypes";
 
@@ -86,6 +88,9 @@ export function useAutosave(
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  
+  // Global save indicator
+  const { startSaving, finishSaving } = useSaveState();
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isSavingRef = useRef(false);
@@ -121,6 +126,9 @@ export function useAutosave(
       isSavingRef.current = true;
       setStatus("saving");
       setHasUnsavedChanges(false);
+      
+      // Start global save indicator
+      startSaving();
 
       const diagramData = createDiagramDocument();
       await onSave(diagramData);
@@ -132,6 +140,9 @@ export function useAutosave(
       lastPlayNameRef.current = playName;
 
       onSaveSuccess?.();
+      
+      // Finish with success status
+      finishSaving("success");
 
       // Reset status back to idle after 2 seconds
       setTimeout(() => {
@@ -141,6 +152,10 @@ export function useAutosave(
       console.error("❌ Autosave failed:", error);
       setStatus("error");
       setHasUnsavedChanges(true);
+      
+      // Finish with error status (auto-queues for retry)
+      finishSaving("error");
+      
       onSaveError?.(
         error instanceof Error ? error : new Error("Unknown error")
       );
@@ -159,6 +174,8 @@ export function useAutosave(
     onSave,
     onSaveSuccess,
     onSaveError,
+    startSaving,
+    finishSaving,
   ]);
 
   // Trigger save now (manual)

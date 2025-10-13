@@ -9,6 +9,7 @@ import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
+import { useSaveState } from "../../contexts/SaveStateContext";
 import {
   isPWAInstallAvailable,
   requestPWAInstallPrompt,
@@ -48,6 +49,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const profile = useAuthProfile();
   const { devMode } = useDevMode();
   const { activeTeamId: _activeTeamId } = useActiveTeamStore();
+  const { queueLength, retryFailedSaves, clearQueue, isOnline } = useSaveState();
 
   // Get role display info
   const roleDisplay =
@@ -207,16 +209,54 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
           {/* Logo and Branding */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 relative">
               <SaveIndicatorLogo size="sm" />
+              {/* Save Queue Indicator */}
+              {queueLength > 0 && (
+                <button
+                  onClick={() => {
+                    triggerHapticFeedback("light");
+                    retryFailedSaves();
+                  }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    triggerHapticFeedback("medium");
+                    clearQueue();
+                  }}
+                  className="absolute -top-1 -right-1 min-w-5 h-5 px-1.5 
+                    bg-warning-500 dark:bg-warning-600 
+                    text-white text-xs font-semibold 
+                    rounded-full flex items-center justify-center 
+                    shadow-md hover:scale-110 transition-transform
+                    cursor-pointer"
+                  title={`${queueLength} pending save${queueLength > 1 ? "s" : ""} - Click to retry, right-click to clear`}
+                  aria-label={`${queueLength} pending saves in queue`}
+                >
+                  {queueLength}
+                </button>
+              )}
             </div>
             <div className="min-w-0 flex-1">
-              <Typography
-                variant="headline-sm"
-                className="text-jade-600 dark:text-jade-400 font-bold tracking-tight leading-tight whitespace-nowrap"
-              >
-                BoxCall
-              </Typography>
+              <div className="flex items-center gap-1.5">
+                <Typography
+                  variant="headline-sm"
+                  className="text-jade-600 dark:text-jade-400 font-bold tracking-tight leading-tight whitespace-nowrap"
+                >
+                  BoxCall
+                </Typography>
+                {/* Offline Indicator */}
+                {!isOnline && (
+                  <span
+                    className="px-1.5 py-0.5 text-xs font-medium 
+                      bg-error-500/10 dark:bg-error-500/20 
+                      text-error-700 dark:text-error-400 
+                      rounded-md border border-error-500/20"
+                    title="You are currently offline. Changes will be saved when connection is restored."
+                  >
+                    Offline
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-1.5 text-xs leading-tight">
                 <span className="text-text-secondary truncate">
                   {roleDisplay}

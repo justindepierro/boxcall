@@ -25,6 +25,7 @@ import { usePreference } from "../../hooks/usePreferences";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { info, warn, debug } from "../../utils/logger";
+import { useSaveState } from "../../contexts/SaveStateContext";
 import {
   validatePlaybookData,
   logValidationResults,
@@ -124,6 +125,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Quick Wins: Favorites hook
   const { favoriteIds } = useFavoritePlays();
+
+  // Global save state for universal indicator
+  const { startSaving, finishSaving } = useSaveState();
 
   // Track which play card is currently expanded (only one at a time)
   const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
@@ -269,6 +273,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const handlePlaySave = useCallback(
     async (playId: string, updates: Partial<Play>) => {
       console.log("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
+      
+      // Start global save indicator
+      startSaving();
+      
       try {
         // Convert Play type updates to DatabasePlay type updates
         const dbUpdates: any = {};
@@ -333,12 +341,19 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
         console.log("[PlayGrid] 🟢 updatePlay completed successfully");
         info(`Play ${playId} updated successfully`);
+        
+        // Finish save with success status
+        finishSaving("success");
       } catch (error) {
         console.error("[PlayGrid] 🔴 Failed to save play:", error);
+        
+        // Finish save with error status
+        finishSaving("error");
+        
         throw error; // Re-throw so PlayCard can handle the error
       }
     },
-    [updatePlay]
+    [updatePlay, startSaving, finishSaving]
   );
 
   // Bulk Operations Handlers

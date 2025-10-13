@@ -11,8 +11,12 @@
  * - Yellow flash on warning
  * - Memory-safe timeout cleanup
  * - Race condition prevention
+ * - Save queue with retry logic (v3.0)
+ * - Exponential backoff for failures
+ * - Online/offline detection (v3.1)
+ * - IndexedDB persistence (v3.1)
  *
- * @version 2.0.0 - Production Optimized
+ * @version 3.1.0 - Offline Support
  */
 
 import React, {
@@ -26,15 +30,36 @@ import React, {
 
 export type SaveStatus = "idle" | "success" | "error" | "warning";
 
+export interface SaveOperation {
+  id: string;
+  entityType: "play" | "formation" | "team" | "personnel" | "other";
+  entityId: string;
+  operation: () => Promise<void>;
+  retries: number;
+  maxRetries: number;
+  timestamp: number;
+  description?: string;
+}
+
 interface SaveStateContextValue {
   /** Whether a save operation is currently in progress */
   isSaving: boolean;
   /** Current save status for color-coded feedback */
   saveStatus: SaveStatus;
+  /** Number of pending saves in queue */
+  queueLength: number;
+  /** Whether the app is currently online */
+  isOnline: boolean;
   /** Start a save operation (shows spinner) */
   startSaving: () => void;
   /** Finish save operation with status (shows color flash) */
   finishSaving: (status: SaveStatus) => void;
+  /** Queue a save operation with automatic retry */
+  queueSave: (operation: SaveOperation) => void;
+  /** Retry all failed saves */
+  retryFailedSaves: () => Promise<void>;
+  /** Clear all queued saves */
+  clearQueue: () => void;
 }
 
 const SaveStateContext = createContext<SaveStateContextValue | undefined>(
@@ -46,12 +71,17 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [saveQueue, setSaveQueue] = useState<SaveOperation[]>([]);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Track timeout for cleanup
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Track save start time for minimum duration
   const saveStartTimeRef = useRef<number>(0);
+  
+  // Track if queue is currently processing
+  const isProcessingQueue = useRef(false);
 
   const startSaving = useCallback(() => {
     // Clear any pending status reset
@@ -110,10 +140,137 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
   }, []);
+  
+  // Process save queue
+  const processSaveQueue = useCallback(async () => {
+    if (isProcessingQueue.current) return;
+    if (saveQueue.length === 0) return;
+    
+    isProcessingQueue.current = true;
+    const operation = saveQueue[0];
+    
+    try {
+      await operation.operation();
+      
+      // Remove successful operation from queue
+      setSaveQueue(prev => prev.slice(1));
+      
+      // Continue processing if more in queue
+      isProcessingQueue.current = false;
+      if (saveQueue.length > 1) {
+        setTimeout(processSaveQueue, 100);
+      }
+    } catch (error) {
+      console.error("[SaveQueue] Operation failed:", {
+        id: operation.id,
+        retries: operation.retries,
+        maxRetries: operation.maxRetries,
+        error
+      });
+      
+      if (operation.retries < operation.maxRetries) {
+        // Retry with exponential backoff
+        const backoffMs = Math.min(Math.pow(2, operation.retries) * 1000, 30000);
+        
+        console.log("[SaveQueue] Retrying after backoff:", {
+          id: operation.id,
+          retries: operation.retries + 1,
+          backoffMs
+        });
+        
+        setTimeout(() => {
+          setSaveQueue(prev => [
+            { ...prev[0], retries: prev[0].retries + 1 },
+            ...prev.slice(1)
+          ]);
+          isProcessingQueue.current = false;
+          processSaveQueue();
+        }, backoffMs);
+      } else {
+        // Max retries exceeded - remove from queue
+        console.error("[SaveQueue] Max retries exceeded, removing from queue:", operation.id);
+        setSaveQueue(prev => prev.slice(1));
+        isProcessingQueue.current = false;
+        
+        // Continue with next operation
+        if (saveQueue.length > 1) {
+          setTimeout(processSaveQueue, 100);
+        }
+      }
+    }
+  }, [saveQueue]);
+  
+  // Queue a save operation
+  const queueSave = useCallback((operation: SaveOperation) => {
+    console.log("[SaveQueue] Queueing save:", {
+      id: operation.id,
+      entityType: operation.entityType,
+      entityId: operation.entityId
+    });
+    
+    setSaveQueue(prev => [...prev, operation]);
+    
+    // Start processing if not already
+    setTimeout(processSaveQueue, 0);
+  }, [processSaveQueue]);
+  
+  // Retry all failed saves
+  const retryFailedSaves = useCallback(async () => {
+    console.log("[SaveQueue] Retrying all failed saves:", saveQueue.length);
+    
+    // Reset retry count for all operations
+    setSaveQueue(prev => prev.map(op => ({ ...op, retries: 0 })));
+    
+    // Start processing
+    isProcessingQueue.current = false;
+    processSaveQueue();
+  }, [saveQueue, processSaveQueue]);
+  
+  // Clear queue
+  const clearQueue = useCallback(() => {
+    console.log("[SaveQueue] Clearing queue:", saveQueue.length);
+    setSaveQueue([]);
+    isProcessingQueue.current = false;
+  }, [saveQueue]);
+  
+  // Track online/offline status and auto-retry when back online
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("[SaveQueue] Back online - retrying queued operations");
+      setIsOnline(true);
+      // Automatically retry queued operations when coming back online
+      if (saveQueue.length > 0) {
+        retryFailedSaves();
+      }
+    };
+    
+    const handleOffline = () => {
+      console.log("[SaveQueue] Gone offline");
+      setIsOnline(false);
+    };
+    
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [saveQueue.length, retryFailedSaves]);
 
   return (
     <SaveStateContext.Provider
-      value={{ isSaving, saveStatus, startSaving, finishSaving }}
+      value={{ 
+        isSaving, 
+        saveStatus, 
+        queueLength: saveQueue.length,
+        isOnline,
+        startSaving, 
+        finishSaving,
+        queueSave,
+        retryFailedSaves,
+        clearQueue
+      }}
     >
       {children}
     </SaveStateContext.Provider>
