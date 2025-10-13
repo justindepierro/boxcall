@@ -93,6 +93,8 @@ export function useTeamsData() {
   const updatePlay = useCallback(
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
+        console.log("[useTeamsData] Updating play:", { playId, updates });
+        
         const { data, error } = await supabase
           .from("plays")
           // @ts-expect-error - Supabase type issue with plays table update
@@ -102,20 +104,26 @@ export function useTeamsData() {
           .single();
 
         if (error) {
-          console.error("Error updating play:", error);
+          console.error("[useTeamsData] Error updating play:", error);
           throw new Error(`Failed to update play: ${error.message}`);
         }
 
+        console.log("[useTeamsData] Database returned:", data);
+
         // Update local state
-        setPlays((prevPlays) =>
-          prevPlays.map((play) =>
+        setPlays((prevPlays) => {
+          const updated = prevPlays.map((play) =>
             play.id === playId ? { ...play, ...updates } : play
-          )
-        );
+          );
+          console.log("[useTeamsData] Updated local state for play:", 
+            updated.find(p => p.id === playId)
+          );
+          return updated;
+        });
 
         return data;
       } catch (err) {
-        console.error("Error in updatePlay:", err);
+        console.error("[useTeamsData] Error in updatePlay:", err);
         throw err;
       }
     },
