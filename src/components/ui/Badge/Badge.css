@@ -163,7 +163,7 @@
 .progress-badge {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 100%);
+  background: linear-gradient(90deg, #f3f4f6 0%, var(--color-gray-200) 100%);
 }
 
 .progress-badge .progress-fill {
@@ -177,7 +177,7 @@
 
 /* Premium badge with subtle gradient and glow */
 .premium-badge {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+  background: linear-gradient(135deg, #f3f4f6 0%, var(--color-gray-200) 50%, #d1d5db 100%);
   border: 1px solid rgba(139, 92, 246, 0.2);
   position: relative;
 }

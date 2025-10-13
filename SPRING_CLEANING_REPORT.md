@@ -1,4 +1,5 @@
 # Comprehensive Codebase Spring Cleaning Report
+
 **Date**: October 13, 2025  
 **Analysis Scope**: Full codebase optimization and cleanup
 
@@ -7,6 +8,7 @@
 ## 📊 Executive Summary
 
 ### Codebase Metrics
+
 - **Total Files**: 763 TypeScript/TSX files
 - **Total Lines**: ~160,000 lines of code
 - **Largest Files**: 20+ files over 650 lines (candidates for splitting)
@@ -21,9 +23,11 @@
 ### Priority 1: Critical Refactoring (High Impact)
 
 #### 1. Large File Splitting
+
 **Issue**: Multiple files exceed 1000 lines, making maintenance difficult
 
 **Files Requiring Split**:
+
 1. `PlaybookPage.tsx` (1,535 lines) → Split into page shell + feature modules
 2. `ProfilePage.tsx` (1,381 lines) → Split into sections
 3. `PlayerControls.tsx` (1,354 lines) → Extract tab components
@@ -33,18 +37,21 @@
 7. `RosterPage.tsx` (1,044 lines) → Extract player management modules
 8. `PracticePlannerOld.tsx` (1,010 lines) → **DELETE** (superseded by new version)
 
-**Estimated Impact**: 
+**Estimated Impact**:
+
 - Reduced cognitive load
 - Improved testability
 - Better code organization
 - Faster build times
 
 #### 2. Dead Code Removal
+
 **Issue**: 13 confirmed orphaned files taking up space
 
 **Files to Remove**:
 
 **Test/Debug Pages** (Safe to delete):
+
 - `src/pages/CSSTestPage.tsx` - CSS testing page
 - `src/pages/DiagnosticsPage.tsx` - Debug diagnostics
 - `src/pages/DiagramV2TestPage.tsx` - Old diagram test
@@ -53,12 +60,14 @@
 - `src/pages/PracticePlannerOld.tsx` - **Superseded by new version**
 
 **Accessibility Components** (Need verification before removal):
+
 - `src/components/accessibility/AccessibleInput.tsx` - May be unused
 - `src/components/accessibility/AccessibleModal.tsx` - May be unused
 - `src/components/accessibility/LoadingAnnouncer.tsx` - May be unused
 - `src/components/accessibility/SkipLinks.tsx` - May be unused
 
 **Story Files** (Safe to keep - used by Storybook):
+
 - `src/components/auth/LoginForm.stories.tsx` - Keep for documentation
 
 **Estimated Savings**: ~4,000 lines of dead code
@@ -70,10 +79,10 @@
 #### Issue: 402 Design Token Violations
 
 **Breakdown by Type**:
+
 - **High Priority** (173 violations):
   - 96 rgba-color usages (hardcoded colors)
   - 77 hex-color usages (hardcoded colors)
-  
 - **Medium Priority** (155 violations):
   - 100 px-spacing violations (should use token spacing)
   - 52 box-shadow violations
@@ -84,6 +93,7 @@
   - 25 border-radius violations
 
 **Top Offenders**:
+
 1. `src/styles/team-dashboard.css` (54 violations)
 2. `src/index.css` (53 violations)
 3. `src/styles/mobile.css` (40 violations)
@@ -91,11 +101,13 @@
 5. `src/components/ui/Badge/Badge.css` (28 violations)
 
 **Recommended Action**:
+
 - Run automated token replacement tool
 - Manual cleanup of CSS files
 - Update component styles to use semantic tokens
 
 **Estimated Impact**:
+
 - Consistent design system
 - Easier theming
 - Better dark mode support
@@ -106,9 +118,11 @@
 ### Priority 3: Code Quality Issues (Medium Impact)
 
 #### 1. TODO/FIXME Cleanup
+
 **Issue**: 50+ TODO comments indicate incomplete work
 
 **Categories**:
+
 1. **Error Handling** (15 items) - Missing proper error handling
 2. **Feature Stubs** (12 items) - Unimplemented features (achievement streaks, activity feeds)
 3. **Debug Code** (8 items) - Debug code still in production
@@ -116,12 +130,14 @@
 5. **Real-time Features** (5 items) - WebSocket integration stubs
 
 **Recommended Actions**:
+
 - Remove debug TODOs (already addressed in previous cleanup)
 - Implement or delete feature stubs
 - Add proper error handling
 - Document intentional limitations
 
 #### 2. Duplicate Code Patterns
+
 **Common Patterns to Extract**:
 
 1. **Form Validation Logic** - Repeated across multiple forms
@@ -131,6 +147,7 @@
 5. **Modal Management** - Common modal open/close logic
 
 **Recommended Actions**:
+
 - Create shared form validation hooks
 - Standardize loading state components
 - Create unified error boundary wrapper
@@ -156,9 +173,10 @@
 3. **Database Queries**
    - N+1 query patterns in some services
    - Missing indexes (would need DB schema analysis)
-   - Overfetching data (selecting * instead of specific fields)
+   - Overfetching data (selecting \* instead of specific fields)
 
 **Recommended Actions**:
+
 - Add useMemo/useCallback where appropriate
 - Implement code-splitting for heavy pages
 - Optimize Supabase queries
@@ -169,6 +187,7 @@
 ## 📋 Detailed Action Plan
 
 ### Phase 1: Quick Wins (1-2 hours)
+
 - ✅ Remove test/debug pages (6 files)
 - ✅ Delete PracticePlannerOld.tsx
 - ✅ Remove unused debug code
@@ -176,12 +195,14 @@
 - ⏱️ Estimated: 30 minutes
 
 ### Phase 2: Design Token Cleanup (2-3 hours)
+
 - 🔧 Run automated token replacement on CSS files
 - 🔧 Fix top 10 violating files manually
 - 🔧 Update component styles to use tokens
 - ⏱️ Estimated: 2 hours
 
 ### Phase 3: File Splitting (3-4 hours)
+
 - 🔨 Split PlaybookPage.tsx into modules
 - 🔨 Extract PlayerControls tabs
 - 🔨 Refactor DiagramEditor components
@@ -189,6 +210,7 @@
 - ⏱️ Estimated: 3 hours
 
 ### Phase 4: Code Quality (2-3 hours)
+
 - 🧹 Extract duplicate patterns
 - 🧹 Create shared hooks
 - 🧹 Standardize error handling
@@ -196,6 +218,7 @@
 - ⏱️ Estimated: 2 hours
 
 ### Phase 5: Performance (2-3 hours)
+
 - ⚡ Add strategic memoization
 - ⚡ Implement code-splitting
 - ⚡ Optimize database queries
@@ -211,6 +234,7 @@
 Let's start with **Phase 1: Quick Wins** right now:
 
 ### Session Goals (Next 30 minutes):
+
 1. ✅ Delete test/debug pages
 2. ✅ Remove PracticePlannerOld.tsx
 3. ✅ Clean up confirmed TODOs
@@ -221,6 +245,7 @@ Let's start with **Phase 1: Quick Wins** right now:
 ## 📈 Expected Outcomes
 
 ### Metrics Improvement Targets:
+
 - **Code Reduction**: -5,000 lines (dead code removal)
 - **File Count**: -10 files (consolidation + deletion)
 - **Largest File**: Reduce from 1,535 to <800 lines
@@ -229,6 +254,7 @@ Let's start with **Phase 1: Quick Wins** right now:
 - **Bundle Size**: Expect 3-5% reduction
 
 ### Quality Improvements:
+
 - ✅ Better code organization
 - ✅ Improved maintainability
 - ✅ Consistent design system
@@ -241,17 +267,20 @@ Let's start with **Phase 1: Quick Wins** right now:
 ## ⚠️ Risk Assessment
 
 ### Low Risk Changes:
+
 - Deleting test pages
 - Removing debug code
 - Design token replacements
 - TODO cleanup
 
 ### Medium Risk Changes:
+
 - File splitting (requires careful import management)
 - Extracting duplicate code (potential for regression)
 - Performance optimizations (needs testing)
 
 ### Mitigation Strategy:
+
 - ✅ Run full test suite after each phase
 - ✅ Type check after refactoring
 - ✅ Git commits after each major change
@@ -265,8 +294,9 @@ Let's start with **Phase 1: Quick Wins** right now:
 Would you like to proceed with Phase 1 (Quick Wins) immediately?
 
 **Phase 1 will**:
+
 1. Delete 6 test/debug pages
-2. Remove PracticePlannerOld.tsx  
+2. Remove PracticePlannerOld.tsx
 3. Clean up accessible component TODOs
 4. Update router to remove deleted pages
 5. Run tests to verify nothing broke
@@ -278,5 +308,5 @@ Would you like to proceed with Phase 1 (Quick Wins) immediately?
 
 ---
 
-*Report generated by comprehensive codebase analysis*  
-*Next update after Phase 1 completion*
+_Report generated by comprehensive codebase analysis_  
+_Next update after Phase 1 completion_

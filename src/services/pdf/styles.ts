@@ -26,7 +26,7 @@ export const PDFColors = {
   error: colorTokens.error[600], // colorTokens.red[600]
   info: semantic.primary, // Use brand color for info
   // Neutral colors
-  white: "#FFFFFF", // Pure white for PDF documents
+  white: "#ffffff", // Pure white for PDF documents
   black: "#000000", // Pure black for PDF documents
   gray: {
     50: colorTokens.navy[50], // "#f8fafc"

@@ -1,7 +1,7 @@
 # Design Token Audit Report
 
-**Generated**: 2025-10-13T20:47:34.942Z  
-**Total Violations**: 402
+**Generated**: 2025-10-13T21:22:33.564Z  
+**Total Violations**: 369
 
 ---
 
@@ -9,96 +9,42 @@
 
 | Type | Count | Severity |
 |------|-------|----------|
-| px-spacing | 100 | 🟡 Medium |
-| rgba-color | 96 | 🔴 High |
-| hex-color | 77 | 🔴 High |
-| box-shadow | 52 | 🟡 Medium |
+| px-spacing | 97 | 🟡 Medium |
+| rgba-color | 87 | 🔴 High |
+| hex-color | 60 | 🔴 High |
+| box-shadow | 51 | 🟡 Medium |
 | rgb-color | 49 | ⚪ Info |
-| border-radius | 25 | 🟢 Low |
+| border-radius | 22 | 🟢 Low |
 | tailwind-spacing | 3 | 🟡 Medium |
 
 ---
 
 ## Top 20 Files by Violation Count
 
-1. **src/styles/team-dashboard.css**: 54 violations
-2. **src/index.css**: 53 violations
-3. **src/styles/mobile.css**: 40 violations
+1. **src/index.css**: 53 violations
+2. **src/styles/mobile.css**: 40 violations
+3. **src/styles/team-dashboard.css**: 35 violations
 4. **src/styles/panels.css**: 34 violations
-5. **src/components/ui/Badge/Badge.css**: 28 violations
-6. **src/styles/component-utilities.css**: 26 violations
+5. **src/styles/component-utilities.css**: 26 violations
+6. **src/components/ui/Badge/Badge.css**: 23 violations
 7. **src/styles/responsive-dashboard.css**: 20 violations
 8. **src/stories/page.css**: 16 violations
 9. **src/styles/animations.css**: 16 violations
-10. **src/components/playbook/diagram-editor/components/PlayerControls.tsx**: 13 violations
-11. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
-12. **src/types/practice.ts**: 9 violations
-13. **src/styles/grid-flex-patterns.css**: 8 violations
+10. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
+11. **src/types/practice.ts**: 9 violations
+12. **src/styles/grid-flex-patterns.css**: 8 violations
+13. **src/components/playbook/diagram-editor/components/PlayerControls.tsx**: 7 violations
 14. **src/styles/overflow-prevention.css**: 7 violations
 15. **src/stories/button.css**: 5 violations
 16. **src/styles/transitions.css**: 5 violations
-17. **src/components/playbook/diagram-editor/components/FormationIcon.tsx**: 4 violations
-18. **src/styles/density.css**: 4 violations
-19. **src/styles/layout-utilities.css**: 4 violations
-20. **src/styles/page-layout.css**: 4 violations
+17. **src/styles/density.css**: 4 violations
+18. **src/styles/layout-utilities.css**: 4 violations
+19. **src/styles/page-layout.css**: 4 violations
+20. **src/components/accessibility/AccessibilityProvider.tsx**: 3 violations
 
 ---
 
 ## Detailed Violations
-
-### src/styles/team-dashboard.css (54 violations)
-
-- **Line 22** (border-radius): `16px`
-  - Context: `border-radius: 16px;`
-
-- **Line 24** (rgba-color): `rgba(0, 0, 0, 0.02)`
-  - Context: `0 1px 3px rgba(0, 0, 0, 0.02),`
-
-- **Line 25** (rgba-color): `rgba(0, 0, 0, 0.04)`
-  - Context: `0 1px 2px rgba(0, 0, 0, 0.04);`
-
-- **Line 31** (px-spacing): `280px`
-  - Context: `min-height: 280px;`
-
-- **Line 41** (rgba-color): `rgba(0, 0, 0, 0.08)`
-  - Context: `0 8px 25px rgba(0, 0, 0, 0.08),`
-
-- **Line 42** (rgba-color): `rgba(0, 0, 0, 0.06)`
-  - Context: `0 3px 10px rgba(0, 0, 0, 0.06);`
-
-- **Line 59** (px-spacing): `4px`
-  - 💡 Suggestion: `spacingTokens[1]`
-  - Context: `height: 4px;`
-
-- **Line 65** (border-radius): `16px`
-  - Context: `border-radius: 16px 16px 0 0;`
-
-- **Line 81** (px-spacing): `4px`
-  - 💡 Suggestion: `spacingTokens[1]`
-  - Context: `height: 4px;`
-
-- **Line 87** (border-radius): `16px`
-  - Context: `border-radius: 16px 16px 0 0;`
-
-- **Line 101** (px-spacing): `4px`
-  - 💡 Suggestion: `spacingTokens[1]`
-  - Context: `height: 4px;`
-
-- **Line 107** (border-radius): `16px`
-  - Context: `border-radius: 16px 16px 0 0;`
-
-- **Line 121** (px-spacing): `4px`
-  - 💡 Suggestion: `spacingTokens[1]`
-  - Context: `height: 4px;`
-
-- **Line 127** (border-radius): `16px`
-  - Context: `border-radius: 16px 16px 0 0;`
-
-- **Line 182** (hex-color): `#f3f4f6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `border-top: 1px solid #f3f4f6;`
-
-... and 39 more violations
 
 ### src/index.css (53 violations)
 
@@ -203,6 +149,56 @@
 
 ... and 25 more violations
 
+### src/styles/team-dashboard.css (35 violations)
+
+- **Line 23** (box-shadow): `box-shadow: var(--component-card-shadow)`
+  - Context: `box-shadow: var(--component-card-shadow);`
+
+- **Line 29** (px-spacing): `280px`
+  - Context: `min-height: 280px;`
+
+- **Line 103** (border-radius): `16px`
+  - Context: `border-radius: 16px 16px 0 0;`
+
+- **Line 117** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `height: 4px;`
+
+- **Line 123** (border-radius): `16px`
+  - Context: `border-radius: 16px 16px 0 0;`
+
+- **Line 193** (border-radius): `12px`
+  - Context: `border-radius: 12px;`
+
+- **Line 212** (box-shadow): `box-shadow: var(--component-card-shadow)`
+  - Context: `box-shadow: var(--component-card-shadow);`
+
+- **Line 231** (border-radius): `12px`
+  - Context: `border-radius: 12px;`
+
+- **Line 263** (px-spacing): `260px`
+  - Context: `min-height: 260px;`
+
+- **Line 370** (rgba-color): `rgba(0, 0, 0, 0.02)`
+  - Context: `0 1px 3px rgba(0, 0, 0, 0.02),`
+
+- **Line 371** (rgba-color): `rgba(0, 0, 0, 0.04)`
+  - Context: `0 1px 2px rgba(0, 0, 0, 0.04);`
+
+- **Line 374** (border-radius): `16px`
+  - Context: `border-radius: 16px;`
+
+- **Line 380** (rgba-color): `rgba(0, 0, 0, 0.08)`
+  - Context: `0 8px 25px rgba(0, 0, 0, 0.08),`
+
+- **Line 381** (rgba-color): `rgba(0, 0, 0, 0.06)`
+  - Context: `0 3px 10px rgba(0, 0, 0, 0.06);`
+
+- **Line 420** (rgba-color): `rgba(59, 130, 246, 0.1)`
+  - Context: `box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);`
+
+... and 20 more violations
+
 ### src/styles/panels.css (34 violations)
 
 - **Line 10** (rgba-color): `rgba(255, 255, 255, 0.8)`
@@ -252,59 +248,6 @@
 
 ... and 19 more violations
 
-### src/components/ui/Badge/Badge.css (28 violations)
-
-- **Line 52** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
-
-- **Line 52** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
-
-- **Line 56** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
-
-- **Line 56** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
-
-- **Line 77** (rgba-color): `rgba(139, 92, 246, 0.3)`
-  - Context: `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);`
-
-- **Line 77** (box-shadow): `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3)`
-  - Context: `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);`
-
-- **Line 80** (rgba-color): `rgba(139, 92, 246, 0.5)`
-  - Context: `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);`
-
-- **Line 80** (box-shadow): `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5)`
-  - Context: `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);`
-
-- **Line 117** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
-
-- **Line 117** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
-
-- **Line 146** (rgba-color): `rgba(255, 255, 255, 0.3)`
-  - Context: `rgba(255, 255, 255, 0.3),`
-
-- **Line 166** (hex-color): `#f3f4f6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 100%);`
-
-- **Line 166** (hex-color): `#e5e7eb`
-  - 💡 Suggestion: `colorTokens.gray[200]`
-  - Context: `background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 100%);`
-
-- **Line 174** (hex-color): `#22c55e`
-  - 💡 Suggestion: `colorTokens.success[500]`
-  - Context: `background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);`
-
-- **Line 174** (hex-color): `#16a34a`
-  - 💡 Suggestion: `colorTokens.success[600]`
-  - Context: `background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);`
-
-... and 13 more violations
-
 ### src/styles/component-utilities.css (26 violations)
 
 - **Line 16** (box-shadow): `box-shadow: var(--component-button-primary-shadow)`
@@ -353,6 +296,57 @@
   - Context: `box-shadow: 0 0 0 var(--component-focus-ring-width)`
 
 ... and 11 more violations
+
+### src/components/ui/Badge/Badge.css (23 violations)
+
+- **Line 52** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 52** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+
+- **Line 56** (rgba-color): `rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
+
+- **Line 56** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
+
+- **Line 77** (rgba-color): `rgba(139, 92, 246, 0.3)`
+  - Context: `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);`
+
+- **Line 77** (box-shadow): `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3)`
+  - Context: `box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);`
+
+- **Line 80** (rgba-color): `rgba(139, 92, 246, 0.5)`
+  - Context: `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);`
+
+- **Line 80** (box-shadow): `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5)`
+  - Context: `box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);`
+
+- **Line 117** (rgba-color): `rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
+
+- **Line 117** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)`
+  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);`
+
+- **Line 146** (rgba-color): `rgba(255, 255, 255, 0.3)`
+  - Context: `rgba(255, 255, 255, 0.3),`
+
+- **Line 174** (hex-color): `#22c55e`
+  - 💡 Suggestion: `colorTokens.success[500]`
+  - Context: `background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);`
+
+- **Line 174** (hex-color): `#16a34a`
+  - 💡 Suggestion: `colorTokens.success[600]`
+  - Context: `background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);`
+
+- **Line 181** (rgba-color): `rgba(139, 92, 246, 0.2)`
+  - Context: `border: 1px solid rgba(139, 92, 246, 0.2);`
+
+- **Line 191** (rgba-color): `rgba(139, 92, 246, 0.1)`
+  - Context: `rgba(139, 92, 246, 0.1) 0%,`
+
+... and 8 more violations
 
 ### src/styles/responsive-dashboard.css (20 violations)
 
@@ -512,55 +506,37 @@
 
 ... and 1 more violations
 
-### src/components/playbook/diagram-editor/components/PlayerControls.tsx (13 violations)
+### src/components/design-system/DesignSystemShowcase.tsx (10 violations)
 
-- **Line 1284** (rgba-color): `rgba(229, 231, 235, 0.8)`
-  - Context: `border: "1px solid rgba(229, 231, 235, 0.8)",`
+- **Line 31** (hex-color): `#002244`
+  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
 
-- **Line 1286** (rgba-color): `rgba(0,0,0,0.6)`
-  - Context: `"0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",`
+- **Line 31** (hex-color): `#C8102E`
+  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
 
-- **Line 1286** (rgba-color): `rgba(255,255,255,0.1)`
-  - Context: `"0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",`
+- **Line 32** (hex-color): `#E31837`
+  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
 
-- **Line 1294** (hex-color): `#FCD34D`
-  - 💡 Suggestion: `colorTokens.amber[300]`
-  - Context: `"linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",`
+- **Line 32** (hex-color): `#FFB612`
+  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
 
-- **Line 1294** (hex-color): `#F59E0B`
-  - 💡 Suggestion: `colorTokens.warning[500]`
-  - Context: `"linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",`
+- **Line 33** (hex-color): `#AA0000`
+  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
 
-- **Line 1295** (rgba-color): `rgba(245, 158, 11, 0.4)`
-  - Context: `boxShadow: "0 8px 24px rgba(245, 158, 11, 0.4)",`
+- **Line 33** (hex-color): `#B3995D`
+  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
 
-- **Line 1303** (hex-color): `#111827`
-  - 💡 Suggestion: `colorTokens.gray[900]`
-  - Context: `style={{ color: "#111827" }}`
+- **Line 34** (hex-color): `#203731`
+  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
 
-- **Line 1309** (hex-color): `#374151`
-  - 💡 Suggestion: `colorTokens.gray[700]`
-  - Context: `style={{ color: "#374151" }}`
+- **Line 34** (hex-color): `#FFB612`
+  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
 
-- **Line 1335** (hex-color): `#F3F4F6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `background: "#F3F4F6",`
+- **Line 35** (hex-color): `#003594`
+  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
 
-- **Line 1336** (hex-color): `#111827`
-  - 💡 Suggestion: `colorTokens.gray[900]`
-  - Context: `color: "#111827",`
-
-- **Line 1337** (hex-color): `#D1D5DB`
-  - 💡 Suggestion: `colorTokens.gray[300]`
-  - Context: `border: "1px solid #D1D5DB",`
-
-- **Line 1340** (hex-color): `#E5E7EB`
-  - 💡 Suggestion: `colorTokens.gray[200]`
-  - Context: `e.currentTarget.style.background = "#E5E7EB";`
-
-- **Line 1343** (hex-color): `#F3F4F6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `e.currentTarget.style.background = "#F3F4F6";`
+- **Line 35** (hex-color): `#869397`
+  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
 
 
 
@@ -570,11 +546,11 @@
 
 ### Immediate Actions (High Priority)
 
-1. **Replace hardcoded hex colors** (77 violations)
+1. **Replace hardcoded hex colors** (60 violations)
    - Map to existing color tokens where possible
    - Add missing semantic tokens for common colors
 
-2. **Standardize spacing** (100 violations)
+2. **Standardize spacing** (97 violations)
    - Use spacing tokens (4px grid)
    - Replace all hardcoded px values
 
@@ -584,11 +560,11 @@
 
 ### Medium Priority
 
-4. **Shadow standardization** (52 violations)
+4. **Shadow standardization** (51 violations)
    - Define elevation tokens
    - Replace all box-shadow with tokens
 
-5. **Border radius consistency** (25 violations)
+5. **Border radius consistency** (22 violations)
    - Use border radius tokens
    - Standardize corner styles
 

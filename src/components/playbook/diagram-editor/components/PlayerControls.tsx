@@ -11,6 +11,7 @@ import {
 } from "@features/defense/schemes";
 import { adjustCoverage } from "@features/defense/engines";
 import { useToast } from "../../../../hooks/useToast";
+import { colorTokens } from "../../../../design-system/tokens";
 
 interface PlayerControlsProps {
   app: DiagramPixiApp | null;
@@ -1300,13 +1301,13 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
               <div className="flex-1 min-w-0 pt-1">
                 <h2
                   className="text-2xl font-bold mb-3 leading-tight"
-                  style={{ color: "#111827" }}
+                  style={{ color: colorTokens.gray[900] }}
                 >
                   {confirmTitle.replace(/⚠️|❌|✅/gu, "").trim()}
                 </h2>
                 <p
                   className="text-base whitespace-pre-line leading-relaxed"
-                  style={{ color: "#374151" }}
+                  style={{ color: colorTokens.gray[700] }}
                 >
                   {confirmMessage}
                 </p>
@@ -1332,15 +1333,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 }}
                 className="flex-1 px-6 py-4 rounded-xl font-semibold text-base transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-150 shadow-md"
                 style={{
-                  background: "#F3F4F6",
-                  color: "#111827",
+                  background: colorTokens.gray[100],
+                  color: colorTokens.gray[900],
                   border: "1px solid #D1D5DB",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#E5E7EB";
+                  e.currentTarget.style.background = colorTokens.gray[200];
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#F3F4F6";
+                  e.currentTarget.style.background = colorTokens.gray[100];
                 }}
               >
                 Cancel
