@@ -1,116 +1,52 @@
 # Design Token Audit Report
 
-**Generated**: 2025-10-05T20:31:25.808Z  
-**Total Violations**: 559
+**Generated**: 2025-10-13T20:47:34.942Z  
+**Total Violations**: 402
 
 ---
 
 ## Summary by Type
 
-| Type             | Count | Severity  |
-| ---------------- | ----- | --------- |
-| hex-color        | 203   | 🔴 High   |
-| rgba-color       | 107   | 🔴 High   |
-| px-spacing       | 89    | 🟡 Medium |
-| tailwind-spacing | 72    | 🟡 Medium |
-| border-radius    | 35    | 🟢 Low    |
-| box-shadow       | 32    | 🟡 Medium |
-| rgb-color        | 20    | ⚪ Info   |
-| tailwind-hex     | 1     | 🔴 High   |
+| Type | Count | Severity |
+|------|-------|----------|
+| px-spacing | 100 | 🟡 Medium |
+| rgba-color | 96 | 🔴 High |
+| hex-color | 77 | 🔴 High |
+| box-shadow | 52 | 🟡 Medium |
+| rgb-color | 49 | ⚪ Info |
+| border-radius | 25 | 🟢 Low |
+| tailwind-spacing | 3 | 🟡 Medium |
 
 ---
 
 ## Top 20 Files by Violation Count
 
-1. **src/index.css**: 124 violations
-2. **src/styles/team-dashboard.css**: 100 violations
-3. **src/styles/mobile.css**: 41 violations
-4. **src/components/ui/Badge/Badge.css**: 28 violations
-5. **src/styles/responsive-dashboard.css**: 25 violations
-6. **src/components/calendar/BoxCallCalendar.css**: 18 violations
-7. **src/stories/page.css**: 16 violations
-8. **src/styles/animations.css**: 16 violations
-9. **src/components/ui/Button/Button.tsx**: 13 violations
-10. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
-11. **src/services/pdf/styles.ts**: 9 violations
+1. **src/styles/team-dashboard.css**: 54 violations
+2. **src/index.css**: 53 violations
+3. **src/styles/mobile.css**: 40 violations
+4. **src/styles/panels.css**: 34 violations
+5. **src/components/ui/Badge/Badge.css**: 28 violations
+6. **src/styles/component-utilities.css**: 26 violations
+7. **src/styles/responsive-dashboard.css**: 20 violations
+8. **src/stories/page.css**: 16 violations
+9. **src/styles/animations.css**: 16 violations
+10. **src/components/playbook/diagram-editor/components/PlayerControls.tsx**: 13 violations
+11. **src/components/design-system/DesignSystemShowcase.tsx**: 10 violations
 12. **src/types/practice.ts**: 9 violations
-13. **src/components/accessibility/AccessibilityProvider.tsx**: 8 violations
+13. **src/styles/grid-flex-patterns.css**: 8 violations
 14. **src/styles/overflow-prevention.css**: 7 violations
-15. **src/components/playbook/diagram/components/PlayerSidebar.tsx**: 6 violations
-16. **src/components/playbook/diagram/PlayDiagramBuilder.tsx**: 5 violations
-17. **src/components/ui/AppIconTile.tsx**: 5 violations
-18. **src/stories/button.css**: 5 violations
-19. **src/components/layout/Footer.tsx**: 4 violations
-20. **src/styles/density.css**: 4 violations
+15. **src/stories/button.css**: 5 violations
+16. **src/styles/transitions.css**: 5 violations
+17. **src/components/playbook/diagram-editor/components/FormationIcon.tsx**: 4 violations
+18. **src/styles/density.css**: 4 violations
+19. **src/styles/layout-utilities.css**: 4 violations
+20. **src/styles/page-layout.css**: 4 violations
 
 ---
 
 ## Detailed Violations
 
-### src/index.css (124 violations)
-
-- **Line 64** (rgba-color): `rgba(255, 255, 255, 0.85)`
-  - Context: `--panel-bg: rgba(255, 255, 255, 0.85);`
-
-- **Line 65** (rgba-color): `rgba(60, 60, 67, 0.18)`
-  - Context: `--panel-border: rgba(60, 60, 67, 0.18);`
-
-- **Line 69** (rgba-color): `rgba(0, 0, 0, 0.06)`
-  - Context: `0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.06);`
-
-- **Line 69** (rgba-color): `rgba(0, 0, 0, 0.06)`
-  - Context: `0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.06);`
-
-- **Line 70** (border-radius): `4px`
-  - Context: `--button-border-radius: 4px;`
-
-- **Line 71** (rgba-color): `rgba(0, 0, 0, 0.06)`
-  - Context: `--button-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);`
-
-- **Line 102** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `background-color: #ffffff !important;`
-
-- **Line 103** (hex-color): `#111827`
-  - 💡 Suggestion: `colorTokens.gray[900]`
-  - Context: `color: #111827 !important; /* gray-900 */`
-
-- **Line 107** (rgb-color): `rgb(31, 41, 55)`
-  - Context: `html:not(.dark) [style*="background-color: rgb(31, 41, 55)"],`
-
-- **Line 108** (rgb-color): `rgb(17, 24, 39)`
-  - Context: `html:not(.dark) [style*="background-color: rgb(17, 24, 39)"] {`
-
-- **Line 110** (rgb-color): `rgb(17, 24, 39)`
-  - Context: `color: rgb(17, 24, 39) !important;`
-
-- **Line 115** (hex-color): `#1f2937`
-  - 💡 Suggestion: `colorTokens.gray[800]`
-  - Context: `background-color: #1f2937 !important; /* gray-800 */`
-
-- **Line 116** (hex-color): `#f3f4f6`
-  - 💡 Suggestion: `colorTokens.gray[100]`
-  - Context: `color: #f3f4f6 !important; /* gray-100 */`
-
-- **Line 120** (hex-color): `#f9fafb`
-  - 💡 Suggestion: `colorTokens.gray[50]`
-  - Context: `background-color: #f9fafb; /* gray-50 */`
-
-- **Line 121** (hex-color): `#111827`
-  - 💡 Suggestion: `colorTokens.gray[900]`
-  - Context: `color: #111827; /* gray-900 */`
-
-... and 109 more violations
-
-### src/styles/team-dashboard.css (100 violations)
-
-- **Line 20** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `background: #ffffff;`
-
-- **Line 21** (hex-color): `#e2e8f0`
-  - 💡 Suggestion: `colorTokens.navy[200]`
-  - Context: `border: 1px solid #e2e8f0;`
+### src/styles/team-dashboard.css (54 violations)
 
 - **Line 22** (border-radius): `16px`
   - Context: `border-radius: 16px;`
@@ -124,10 +60,6 @@
 - **Line 31** (px-spacing): `280px`
   - Context: `min-height: 280px;`
 
-- **Line 39** (hex-color): `#cbd5e1`
-  - 💡 Suggestion: `colorTokens.navy[300]`
-  - Context: `border-color: #cbd5e1;`
-
 - **Line 41** (rgba-color): `rgba(0, 0, 0, 0.08)`
   - Context: `0 8px 25px rgba(0, 0, 0, 0.08),`
 
@@ -138,28 +70,91 @@
   - 💡 Suggestion: `spacingTokens[1]`
   - Context: `height: 4px;`
 
-- **Line 60** (hex-color): `#10b981`
-  - 💡 Suggestion: `colorTokens.emerald[500]`
-  - Context: `background: linear-gradient(135deg, #10b981 0%, #34d399 100%);`
-
-- **Line 60** (hex-color): `#34d399`
-  - 💡 Suggestion: `colorTokens.jade[400]`
-  - Context: `background: linear-gradient(135deg, #10b981 0%, #34d399 100%);`
-
-- **Line 61** (border-radius): `16px`
+- **Line 65** (border-radius): `16px`
   - Context: `border-radius: 16px 16px 0 0;`
 
-- **Line 77** (px-spacing): `4px`
+- **Line 81** (px-spacing): `4px`
   - 💡 Suggestion: `spacingTokens[1]`
   - Context: `height: 4px;`
 
-- **Line 78** (hex-color): `#3b82f6`
-  - 💡 Suggestion: `colorTokens.blue[500]`
-  - Context: `background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);`
+- **Line 87** (border-radius): `16px`
+  - Context: `border-radius: 16px 16px 0 0;`
 
-... and 85 more violations
+- **Line 101** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `height: 4px;`
 
-### src/styles/mobile.css (41 violations)
+- **Line 107** (border-radius): `16px`
+  - Context: `border-radius: 16px 16px 0 0;`
+
+- **Line 121** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `height: 4px;`
+
+- **Line 127** (border-radius): `16px`
+  - Context: `border-radius: 16px 16px 0 0;`
+
+- **Line 182** (hex-color): `#f3f4f6`
+  - 💡 Suggestion: `colorTokens.gray[100]`
+  - Context: `border-top: 1px solid #f3f4f6;`
+
+... and 39 more violations
+
+### src/index.css (53 violations)
+
+- **Line 112** (box-shadow): `box-shadow: var(--elevation-card-resting)`
+  - Context: `box-shadow: var(--elevation-card-resting);`
+
+- **Line 117** (box-shadow): `box-shadow: var(--elevation-lg)`
+  - Context: `box-shadow: var(--elevation-lg);`
+
+- **Line 230** (box-shadow): `box-shadow: none !important`
+  - Context: `box-shadow: none !important;`
+
+- **Line 242** (box-shadow): `box-shadow: none !important`
+  - Context: `box-shadow: none !important;`
+
+- **Line 253** (box-shadow): `box-shadow: var(--tw-shadow) !important`
+  - Context: `box-shadow: var(--tw-shadow) !important;`
+
+- **Line 310** (border-radius): `9999px`
+  - Context: `border-radius: 9999px;`
+
+- **Line 332** (box-shadow): `box-shadow: var(--panel-shadow)`
+  - Context: `box-shadow: var(--panel-shadow);`
+
+- **Line 387** (border-radius): `0.5rem`
+  - Context: `border-radius: 0.5rem;`
+
+- **Line 404** (rgba-color): `rgba(4, 120, 87, 0.15)`
+  - Context: `background: rgba(4, 120, 87, 0.15); /* jade 700 w/ alpha */`
+
+- **Line 413** (px-spacing): `4px`
+  - 💡 Suggestion: `spacingTokens[1]`
+  - Context: `width: 4px;`
+
+- **Line 414** (border-radius): `2px`
+  - Context: `border-radius: 2px;`
+
+- **Line 475** (hex-color): `#e5e7eb`
+  - 💡 Suggestion: `colorTokens.gray[200]`
+  - Context: `background: #e5e7eb;`
+
+- **Line 478** (hex-color): `#374151`
+  - 💡 Suggestion: `colorTokens.gray[700]`
+  - Context: `background: #374151;`
+
+- **Line 482** (hex-color): `#cbd5e1`
+  - 💡 Suggestion: `colorTokens.navy[300]`
+  - Context: `background: #cbd5e1;`
+
+- **Line 485** (hex-color): `#475569`
+  - 💡 Suggestion: `colorTokens.navy[600]`
+  - Context: `background: #475569;`
+
+... and 38 more violations
+
+### src/styles/mobile.css (40 violations)
 
 - **Line 14** (px-spacing): `44px`
   - Context: `min-width: 44px;`
@@ -173,17 +168,17 @@
 - **Line 20** (px-spacing): `60px`
   - Context: `min-height: 60px;`
 
-- **Line 88** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);`
+- **Line 88** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `box-shadow: 0 2px 4px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 88** (box-shadow): `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);`
+- **Line 88** (box-shadow): `box-shadow: 0 2px 4px rgb(var(--color-black-rgb) / 0.1)`
+  - Context: `box-shadow: 0 2px 4px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 116** (rgba-color): `rgba(255, 255, 255, 0.95)`
-  - Context: `background-color: rgba(255, 255, 255, 0.95);`
+- **Line 116** (rgb-color): `rgb(var(--color-white-rgb)`
+  - Context: `background-color: rgb(var(--color-white-rgb) / 0.95);`
 
-- **Line 121** (rgba-color): `rgba(17, 24, 39, 0.95)`
-  - Context: `background-color: rgba(17, 24, 39, 0.95);`
+- **Line 121** (rgb-color): `rgb(var(--color-gray-900-rgb)`
+  - Context: `background-color: rgb(var(--color-gray-900-rgb) / 0.95);`
 
 - **Line 152** (px-spacing): `640px`
   - Context: `@media (min-width: 640px) {`
@@ -191,22 +186,71 @@
 - **Line 165** (px-spacing): `640px`
   - Context: `@media (min-width: 640px) {`
 
-- **Line 197** (rgba-color): `rgba(0, 0, 0, 0.12)`
-  - Context: `0 4px 8px rgba(0, 0, 0, 0.12),`
+- **Line 197** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `0 4px 8px rgb(var(--color-black-rgb) / 0.12),`
 
-- **Line 198** (rgba-color): `rgba(0, 0, 0, 0.08)`
-  - Context: `0 2px 4px rgba(0, 0, 0, 0.08),`
+- **Line 198** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `0 2px 4px rgb(var(--color-black-rgb) / 0.08),`
 
-- **Line 199** (rgba-color): `rgba(0, 0, 0, 0.04)`
-  - Context: `0 1px 2px rgba(0, 0, 0, 0.04);`
+- **Line 199** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `0 1px 2px rgb(var(--color-black-rgb) / 0.04);`
 
-- **Line 204** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `0 8px 16px rgba(0, 0, 0, 0.15),`
+- **Line 204** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `0 8px 16px rgb(var(--color-black-rgb) / 0.15),`
 
-- **Line 205** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `0 4px 8px rgba(0, 0, 0, 0.1),`
+- **Line 205** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `0 4px 8px rgb(var(--color-black-rgb) / 0.1),`
 
-... and 26 more violations
+... and 25 more violations
+
+### src/styles/panels.css (34 violations)
+
+- **Line 10** (rgba-color): `rgba(255, 255, 255, 0.8)`
+  - Context: `background: rgba(255, 255, 255, 0.8);`
+
+- **Line 13** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `border: 1px solid rgba(0, 0, 0, 0.1);`
+
+- **Line 16** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `0 4px 6px -1px rgba(0, 0, 0, 0.1),`
+
+- **Line 17** (rgba-color): `rgba(0, 0, 0, 0.06)`
+  - Context: `0 2px 4px -1px rgba(0, 0, 0, 0.06);`
+
+- **Line 22** (rgba-color): `rgba(30, 41, 59, 0.85)`
+  - Context: `background: rgba(30, 41, 59, 0.85);`
+
+- **Line 23** (rgba-color): `rgba(255, 255, 255, 0.1)`
+  - Context: `border-color: rgba(255, 255, 255, 0.1);`
+
+- **Line 25** (rgba-color): `rgba(0, 0, 0, 0.3)`
+  - Context: `0 4px 6px -1px rgba(0, 0, 0, 0.3),`
+
+- **Line 26** (rgba-color): `rgba(0, 0, 0, 0.2)`
+  - Context: `0 2px 4px -1px rgba(0, 0, 0, 0.2);`
+
+- **Line 31** (rgba-color): `rgba(255, 255, 255, 0.9)`
+  - Context: `background: rgba(255, 255, 255, 0.9);`
+
+- **Line 34** (rgba-color): `rgba(0, 0, 0, 0.12)`
+  - Context: `border: 1px solid rgba(0, 0, 0, 0.12);`
+
+- **Line 37** (rgba-color): `rgba(0, 0, 0, 0.1)`
+  - Context: `0 10px 15px -3px rgba(0, 0, 0, 0.1),`
+
+- **Line 38** (rgba-color): `rgba(0, 0, 0, 0.05)`
+  - Context: `0 4px 6px -2px rgba(0, 0, 0, 0.05);`
+
+- **Line 42** (rgba-color): `rgba(15, 23, 42, 0.9)`
+  - Context: `background: rgba(15, 23, 42, 0.9);`
+
+- **Line 43** (rgba-color): `rgba(255, 255, 255, 0.12)`
+  - Context: `border-color: rgba(255, 255, 255, 0.12);`
+
+- **Line 45** (rgba-color): `rgba(0, 0, 0, 0.4)`
+  - Context: `0 10px 15px -3px rgba(0, 0, 0, 0.4),`
+
+... and 19 more violations
 
 ### src/components/ui/Badge/Badge.css (28 violations)
 
@@ -261,110 +305,103 @@
 
 ... and 13 more violations
 
-### src/styles/responsive-dashboard.css (25 violations)
+### src/styles/component-utilities.css (26 violations)
 
-- **Line 35** (px-spacing): `768px`
+- **Line 16** (box-shadow): `box-shadow: var(--component-button-primary-shadow)`
+  - Context: `box-shadow: var(--component-button-primary-shadow);`
+
+- **Line 38** (box-shadow): `box-shadow: var(--component-button-secondary-shadow)`
+  - Context: `box-shadow: var(--component-button-secondary-shadow);`
+
+- **Line 205** (rgb-color): `rgb(var(--color-jade-500-rgb, 0 168 107)`
+  - Context: `border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.3);`
+
+- **Line 209** (rgb-color): `rgb(var(--color-jade-500-rgb, 0 168 107)`
+  - Context: `border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.4);`
+
+- **Line 213** (rgb-color): `rgb(var(--color-jade-500-rgb, 0 168 107)`
+  - Context: `border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.5);`
+
+- **Line 217** (rgb-color): `rgb(var(--color-jade-500-rgb, 0 168 107)`
+  - Context: `border-color: rgb(var(--color-jade-500-rgb, 0 168 107) / 0.6);`
+
+- **Line 249** (rgb-color): `rgb(var(--color-jade-700-rgb, 5 95 70)`
+  - Context: `color: rgb(var(--color-jade-700-rgb, 5 95 70) / 0.7);`
+
+- **Line 253** (rgb-color): `rgb(var(--color-jade-300-rgb, 110 231 183)`
+  - Context: `color: rgb(var(--color-jade-300-rgb, 110 231 183) / 0.7);`
+
+- **Line 259** (rgb-color): `rgb(var(--color-jade-200-rgb, 167 243 208)`
+  - Context: `border: 2px solid rgb(var(--color-jade-200-rgb, 167 243 208) / 1);`
+
+- **Line 264** (rgb-color): `rgb(var(--color-jade-700-rgb, 5 95 70)`
+  - Context: `border-color: rgb(var(--color-jade-700-rgb, 5 95 70) / 1);`
+
+- **Line 268** (rgb-color): `rgb(var(--color-jade-50-rgb, 236 253 245)`
+  - Context: `background-color: rgb(var(--color-jade-50-rgb, 236 253 245) / 1);`
+
+- **Line 269** (rgb-color): `rgb(var(--color-jade-300-rgb, 110 231 183)`
+  - Context: `border-color: rgb(var(--color-jade-300-rgb, 110 231 183) / 1);`
+
+- **Line 273** (rgb-color): `rgb(var(--color-jade-900-rgb, 5 46 22)`
+  - Context: `background-color: rgb(var(--color-jade-900-rgb, 5 46 22) / 0.2);`
+
+- **Line 274** (rgb-color): `rgb(var(--color-jade-600-rgb, 4 120 87)`
+  - Context: `border-color: rgb(var(--color-jade-600-rgb, 4 120 87) / 1);`
+
+- **Line 286** (box-shadow): `box-shadow: 0 0 0 var(--component-focus-ring-width)`
+  - Context: `box-shadow: 0 0 0 var(--component-focus-ring-width)`
+
+... and 11 more violations
+
+### src/styles/responsive-dashboard.css (20 violations)
+
+- **Line 53** (px-spacing): `44px`
+  - Context: `min-height: 44px;`
+
+- **Line 54** (px-spacing): `44px`
+  - Context: `min-width: 44px;`
+
+- **Line 62** (px-spacing): `768px`
   - Context: `@media (min-width: 768px) {`
 
-- **Line 48** (px-spacing): `1024px`
+- **Line 75** (px-spacing): `1024px`
   - Context: `@media (min-width: 1024px) {`
 
-- **Line 57** (px-spacing): `1280px`
+- **Line 84** (px-spacing): `1280px`
   - Context: `@media (min-width: 1280px) {`
 
-- **Line 93** (px-spacing): `300px`
+- **Line 120** (px-spacing): `300px`
   - Context: `min-height: 300px; /* Ensure minimum height for feed */`
 
-- **Line 110** (px-spacing): `400px`
+- **Line 137** (px-spacing): `400px`
   - Context: `min-height: 400px; /* Ensure calendar has adequate height */`
 
-- **Line 125** (hex-color): `#e5e7eb`
-  - 💡 Suggestion: `colorTokens.gray[200]`
-  - Context: `border-top: 1px solid #e5e7eb;`
-
-- **Line 130** (hex-color): `#1f2937`
-  - 💡 Suggestion: `colorTokens.gray[800]`
-  - Context: `background-color: #1f2937;`
-
-- **Line 131** (hex-color): `#374151`
-  - 💡 Suggestion: `colorTokens.gray[700]`
-  - Context: `border-top-color: #374151;`
-
-- **Line 134** (px-spacing): `1024px`
+- **Line 161** (px-spacing): `1024px`
   - Context: `@media (min-width: 1024px) {`
 
-- **Line 150** (px-spacing): `1024px`
+- **Line 177** (px-spacing): `1024px`
   - Context: `@media (min-width: 1024px) {`
 
-- **Line 178** (px-spacing): `300px`
+- **Line 205** (px-spacing): `300px`
   - Context: `min-height: 300px;`
 
-- **Line 182** (px-spacing): `400px`
+- **Line 209** (px-spacing): `400px`
   - Context: `min-height: 400px;`
 
-- **Line 190** (px-spacing): `768px`
+- **Line 217** (px-spacing): `768px`
   - Context: `@media (min-width: 768px) {`
 
-- **Line 205** (px-spacing): `768px`
+- **Line 232** (px-spacing): `768px`
   - Context: `@media (min-width: 768px) {`
 
-- **Line 218** (px-spacing): `640px`
+- **Line 245** (px-spacing): `640px`
   - Context: `@media (max-width: 640px) {`
 
-... and 10 more violations
+- **Line 272** (border-radius): `0.5rem`
+  - Context: `border-radius: 0.5rem;`
 
-### src/components/calendar/BoxCallCalendar.css (18 violations)
-
-- **Line 11** (hex-color): `#f9fafb`
-  - 💡 Suggestion: `colorTokens.gray[50]`
-  - Context: `--fc-neutral-bg-color: #f9fafb;`
-
-- **Line 12** (hex-color): `#ffffff`
-  - 💡 Suggestion: `semanticTokens.textInverse`
-  - Context: `--fc-page-bg-color: #ffffff;`
-
-- **Line 30** (border-radius): `0.375rem`
-  - Context: `border-radius: 0.375rem;`
-
-- **Line 36** (rgba-color): `rgba(0, 168, 107, 0.2)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2);`
-
-- **Line 36** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2);`
-
-- **Line 41** (border-radius): `0.25rem`
-  - Context: `border-radius: 0.25rem;`
-
-- **Line 46** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
-
-- **Line 46** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
-
-- **Line 52** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
-
-- **Line 52** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
-
-- **Line 113** (px-spacing): `768px`
-  - Context: `@media (max-width: 768px) {`
-
-- **Line 140** (px-spacing): `480px`
-  - Context: `@media (max-width: 480px) {`
-
-- **Line 164** (box-shadow): `box-shadow: 0 0 0 2px var(--color-brand-jade)`
-  - Context: `box-shadow: 0 0 0 2px var(--color-brand-jade);`
-
-- **Line 178** (px-spacing): `32px`
-  - 💡 Suggestion: `spacingTokens[8]`
-  - Context: `width: 32px;`
-
-- **Line 179** (px-spacing): `32px`
-  - 💡 Suggestion: `spacingTokens[8]`
-  - Context: `height: 32px;`
-
-... and 3 more violations
+... and 5 more violations
 
 ### src/stories/page.css (16 violations)
 
@@ -431,122 +468,101 @@
 - **Line 54** (box-shadow): `box-shadow: var(--glass-shadow)`
   - Context: `box-shadow: var(--glass-shadow);`
 
-- **Line 62** (rgba-color): `rgba(255, 255, 255, 0.9)`
-  - Context: `background: rgba(255, 255, 255, 0.9);`
+- **Line 62** (rgb-color): `rgb(var(--color-white-rgb)`
+  - Context: `background: rgb(var(--color-white-rgb) / 0.9);`
 
-- **Line 63** (rgba-color): `rgba(255, 255, 255, 0.3)`
-  - Context: `border-color: rgba(255, 255, 255, 0.3);`
+- **Line 63** (rgb-color): `rgb(var(--color-white-rgb)`
+  - Context: `border-color: rgb(var(--color-white-rgb) / 0.3);`
 
-- **Line 64** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);`
+- **Line 64** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `box-shadow: 0 12px 40px rgb(var(--color-black-rgb) / 0.15);`
 
-- **Line 64** (box-shadow): `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);`
+- **Line 64** (box-shadow): `box-shadow: 0 12px 40px rgb(var(--color-black-rgb) / 0.15)`
+  - Context: `box-shadow: 0 12px 40px rgb(var(--color-black-rgb) / 0.15);`
 
 - **Line 75** (box-shadow): `box-shadow: var(--hover-glow)`
   - Context: `box-shadow: var(--hover-glow);`
 
-- **Line 96** (rgba-color): `rgba(0, 168, 107, 0.1)`
-  - Context: `rgba(0, 168, 107, 0.1),`
+- **Line 96** (rgb-color): `rgb(var(--color-jade-500-rgb)`
+  - Context: `rgb(var(--color-jade-500-rgb) / 0.1),`
 
-- **Line 97** (rgba-color): `rgba(0, 168, 107, 0.05)`
-  - Context: `rgba(0, 168, 107, 0.05)`
+- **Line 97** (rgb-color): `rgb(var(--color-jade-500-rgb)`
+  - Context: `rgb(var(--color-jade-500-rgb) / 0.05)`
 
-- **Line 384** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+- **Line 384** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `box-shadow: 0 1px 3px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 384** (box-shadow): `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);`
+- **Line 384** (box-shadow): `box-shadow: 0 1px 3px rgb(var(--color-black-rgb) / 0.1)`
+  - Context: `box-shadow: 0 1px 3px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 388** (rgba-color): `rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+- **Line 388** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `box-shadow: 0 4px 8px rgb(var(--color-black-rgb) / 0.15);`
 
-- **Line 388** (box-shadow): `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15)`
-  - Context: `box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);`
+- **Line 388** (box-shadow): `box-shadow: 0 4px 8px rgb(var(--color-black-rgb) / 0.15)`
+  - Context: `box-shadow: 0 4px 8px rgb(var(--color-black-rgb) / 0.15);`
 
-- **Line 481** (rgba-color): `rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);`
+- **Line 481** (rgb-color): `rgb(var(--color-black-rgb)`
+  - Context: `box-shadow: 0 4px 12px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 481** (box-shadow): `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)`
-  - Context: `box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);`
+- **Line 481** (box-shadow): `box-shadow: 0 4px 12px rgb(var(--color-black-rgb) / 0.1)`
+  - Context: `box-shadow: 0 4px 12px rgb(var(--color-black-rgb) / 0.1);`
 
-- **Line 498** (rgba-color): `rgba(0, 168, 107, 0.2)`
-  - Context: `box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);`
+- **Line 498** (rgb-color): `rgb(var(--color-jade-500-rgb)`
+  - Context: `box-shadow: 0 0 0 3px rgb(var(--color-jade-500-rgb) / 0.2);`
 
 ... and 1 more violations
 
-### src/components/ui/Button/Button.tsx (13 violations)
+### src/components/playbook/diagram-editor/components/PlayerControls.tsx (13 violations)
 
-- **Line 156** (tailwind-spacing): `h-[1.85rem]`
-  - Context: `height: "h-[1.85rem]",`
+- **Line 1284** (rgba-color): `rgba(229, 231, 235, 0.8)`
+  - Context: `border: "1px solid rgba(229, 231, 235, 0.8)",`
 
-- **Line 161** (tailwind-spacing): `w-[0.9rem]`
-  - Context: `iconSize: "w-[0.9rem] h-[0.9rem]",`
+- **Line 1286** (rgba-color): `rgba(0,0,0,0.6)`
+  - Context: `"0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",`
 
-- **Line 161** (tailwind-spacing): `h-[0.9rem]`
-  - Context: `iconSize: "w-[0.9rem] h-[0.9rem]",`
+- **Line 1286** (rgba-color): `rgba(255,255,255,0.1)`
+  - Context: `"0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1) inset",`
 
-- **Line 162** (tailwind-spacing): `h-[2.35rem]`
-  - Context: `height: "h-[2.35rem]",`
+- **Line 1294** (hex-color): `#FCD34D`
+  - 💡 Suggestion: `colorTokens.amber[300]`
+  - Context: `"linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",`
 
-- **Line 167** (tailwind-spacing): `w-[0.95rem]`
-  - Context: `iconSize: "w-[0.95rem] h-[0.95rem]",`
+- **Line 1294** (hex-color): `#F59E0B`
+  - 💡 Suggestion: `colorTokens.warning[500]`
+  - Context: `"linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",`
 
-- **Line 167** (tailwind-spacing): `h-[0.95rem]`
-  - Context: `iconSize: "w-[0.95rem] h-[0.95rem]",`
+- **Line 1295** (rgba-color): `rgba(245, 158, 11, 0.4)`
+  - Context: `boxShadow: "0 8px 24px rgba(245, 158, 11, 0.4)",`
 
-- **Line 168** (tailwind-spacing): `h-[2.7rem]`
-  - Context: `height: "h-[2.7rem]",`
+- **Line 1303** (hex-color): `#111827`
+  - 💡 Suggestion: `colorTokens.gray[900]`
+  - Context: `style={{ color: "#111827" }}`
 
-- **Line 173** (tailwind-spacing): `w-[1.05rem]`
-  - Context: `iconSize: "w-[1.05rem] h-[1.05rem]",`
+- **Line 1309** (hex-color): `#374151`
+  - 💡 Suggestion: `colorTokens.gray[700]`
+  - Context: `style={{ color: "#374151" }}`
 
-- **Line 173** (tailwind-spacing): `h-[1.05rem]`
-  - Context: `iconSize: "w-[1.05rem] h-[1.05rem]",`
+- **Line 1335** (hex-color): `#F3F4F6`
+  - 💡 Suggestion: `colorTokens.gray[100]`
+  - Context: `background: "#F3F4F6",`
 
-- **Line 174** (tailwind-spacing): `h-[3rem]`
-  - Context: `height: "h-[3rem]",`
+- **Line 1336** (hex-color): `#111827`
+  - 💡 Suggestion: `colorTokens.gray[900]`
+  - Context: `color: "#111827",`
 
-- **Line 179** (tailwind-spacing): `w-[1.2rem]`
-  - Context: `iconSize: "w-[1.2rem] h-[1.2rem]",`
+- **Line 1337** (hex-color): `#D1D5DB`
+  - 💡 Suggestion: `colorTokens.gray[300]`
+  - Context: `border: "1px solid #D1D5DB",`
 
-- **Line 179** (tailwind-spacing): `h-[1.2rem]`
-  - Context: `iconSize: "w-[1.2rem] h-[1.2rem]",`
+- **Line 1340** (hex-color): `#E5E7EB`
+  - 💡 Suggestion: `colorTokens.gray[200]`
+  - Context: `e.currentTarget.style.background = "#E5E7EB";`
 
-- **Line 180** (tailwind-spacing): `h-[3.4rem]`
-  - Context: `height: "h-[3.4rem]",`
+- **Line 1343** (hex-color): `#F3F4F6`
+  - 💡 Suggestion: `colorTokens.gray[100]`
+  - Context: `e.currentTarget.style.background = "#F3F4F6";`
 
-### src/components/design-system/DesignSystemShowcase.tsx (10 violations)
 
-- **Line 31** (hex-color): `#002244`
-  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
-
-- **Line 31** (hex-color): `#C8102E`
-  - Context: `"New England Patriots": { primary: "#002244", secondary: "#C8102E" },`
-
-- **Line 32** (hex-color): `#E31837`
-  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
-
-- **Line 32** (hex-color): `#FFB612`
-  - Context: `"Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },`
-
-- **Line 33** (hex-color): `#AA0000`
-  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
-
-- **Line 33** (hex-color): `#B3995D`
-  - Context: `"San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },`
-
-- **Line 34** (hex-color): `#203731`
-  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
-
-- **Line 34** (hex-color): `#FFB612`
-  - Context: `"Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },`
-
-- **Line 35** (hex-color): `#003594`
-  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
-
-- **Line 35** (hex-color): `#869397`
-  - Context: `"Dallas Cowboys": { primary: "#003594", secondary: "#869397" },`
 
 ---
 
@@ -554,25 +570,25 @@
 
 ### Immediate Actions (High Priority)
 
-1. **Replace hardcoded hex colors** (203 violations)
+1. **Replace hardcoded hex colors** (77 violations)
    - Map to existing color tokens where possible
    - Add missing semantic tokens for common colors
 
-2. **Standardize spacing** (89 violations)
+2. **Standardize spacing** (100 violations)
    - Use spacing tokens (4px grid)
    - Replace all hardcoded px values
 
-3. **Fix Tailwind arbitrary values** (73 violations)
+3. **Fix Tailwind arbitrary values** (3 violations)
    - Use Tailwind utility classes
    - Extend Tailwind config with design tokens
 
 ### Medium Priority
 
-4. **Shadow standardization** (32 violations)
+4. **Shadow standardization** (52 violations)
    - Define elevation tokens
    - Replace all box-shadow with tokens
 
-5. **Border radius consistency** (35 violations)
+5. **Border radius consistency** (25 violations)
    - Use border radius tokens
    - Standardize corner styles
 
@@ -590,7 +606,6 @@
 ### Missing Color Tokens
 
 Based on frequent hardcoded colors, consider adding:
-
 - Blue system (blue-500, blue-600 for links/actions)
 - Cyan system (cyan-400 for highlights)
 - Amber system (amber-400, amber-500 for warnings)
