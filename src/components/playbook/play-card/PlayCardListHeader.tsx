@@ -1,8 +1,9 @@
 import React from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
-import { FormationBadge } from "../FormationBadge";
+import { PersonnelBadge } from "../PersonnelBadge";
 import type { Play as PlayType } from "../../../types/play";
+import type { PersonnelConfiguration } from "../../../types/personnel";
 
 type ToggleHandler = () => void;
 
@@ -29,6 +30,7 @@ interface PlayCardListHeaderProps {
   phaseLabel: string | null;
   isFavorite: boolean;
   onToggleFavorite: () => void;
+  personnelConfigurations?: PersonnelConfiguration[];
 }
 
 export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
@@ -50,7 +52,13 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   phaseLabel,
   isFavorite,
   onToggleFavorite,
+  personnelConfigurations = [],
 }) => {
+  // Find the badge customization for this play's personnel
+  const personnelConfig = personnelConfigurations.find(
+    (config) => config.name === optimisticPlay.personnel
+  );
+
   return (
     <div className="flex items-center justify-between overflow-visible">
       <div className="flex-1 min-w-0">
@@ -84,23 +92,13 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             {optimisticPlay.p_type}
           </span>
 
-          {/* Formation badge with direction and personnel */}
-          {(optimisticPlay.formation_id || optimisticPlay.formation) && (
-            <FormationBadge
-              formationId={optimisticPlay.formation_id}
-              formationName={optimisticPlay.formation}
-              direction={optimisticPlay.formation_direction}
-              showPersonnel={true}
-              showDirection={true}
+          {/* Personnel badge */}
+          {optimisticPlay.personnel && (
+            <PersonnelBadge
+              personnel={optimisticPlay.personnel}
               size="sm"
+              badgeCustomization={personnelConfig?.badgeCustomization}
             />
-          )}
-
-          {/* Formation type badge (if no formation_id, show old behavior) */}
-          {!optimisticPlay.formation_id && optimisticPlay.f_type && (
-            <span className="px-2 py-0.5 bg-surface-muted text-primary border border-border rounded-full text-xs font-medium">
-              {optimisticPlay.f_type}
-            </span>
           )}
 
           {/* Installation phase badge */}

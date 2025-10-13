@@ -430,24 +430,29 @@ playbooks (team_id FK)
 Your BoxCall system has:
 
 ✅ **Strong Entity Relationships**
+
 - Personnel → Formations (FK + array)
 - Formations → Plays (optional FK)
 - Playbooks → Everything (cascade)
 
 ✅ **Comprehensive Service Layer**
+
 - PersonnelService (200+ lines)
 - FormationService (645 lines)
 - PlaysService (400+ lines)
 
 ✅ **Type-Safe TypeScript**
+
 - Interfaces match database schema
 - Validation before persistence
 
 ✅ **Secure Multi-Tenant**
+
 - RLS policies on all tables
 - Team-based access control
 
 ✅ **Future-Proof Architecture**
+
 - UUID primary keys
 - JSONB for flexibility
 - Array types for multi-relationships

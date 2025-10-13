@@ -1,7 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
-import { SidebarLogo } from "../ui/Logo";
+import { SaveIndicatorLogo } from "../ui/Logo";
 import { UserMenu } from "../auth/UserMenu";
 import { Icon } from "../ui/Icon/Icon";
 import { TeamSwitcher } from "./TeamSwitcher";
@@ -208,7 +208,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {/* Logo and Branding */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div className="flex-shrink-0">
-              <SidebarLogo />
+              <SaveIndicatorLogo size="sm" />
             </div>
             <div className="min-w-0 flex-1">
               <Typography

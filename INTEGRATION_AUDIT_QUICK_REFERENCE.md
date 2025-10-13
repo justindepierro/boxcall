@@ -54,16 +54,19 @@ playbooks (N)
 ## ⚠️ Minor Gaps Found
 
 ### **Gap 1: Text-Based Personnel Reference**
+
 - **Issue:** `plays.personnel` is TEXT, not FK
 - **Impact:** 🟡 Medium - Renames don't propagate
 - **Fix:** Add `personnel_id UUID` column (1 hour)
 
 ### **Gap 2: Name Changes Don't Sync**
+
 - **Issue:** Renaming personnel/formations doesn't update plays
 - **Impact:** 🟡 Medium - Manual fixes required
 - **Fix:** Add database triggers (30 minutes)
 
 ### **Gap 3: No Delete Warnings**
+
 - **Issue:** Can delete used personnel without warning
 - **Impact:** 🟢 Low - Data preserved via SET NULL
 - **Fix:** Add UI confirmations (30 minutes)
@@ -117,18 +120,18 @@ playbooks (N)
 
 ## 📊 Integration Quality Breakdown
 
-| Feature | Status | Score |
-|---------|--------|-------|
-| Database Schema | ✅ Excellent | 10/10 |
-| Foreign Keys | ✅ Complete | 10/10 |
-| Service Layer | ✅ Comprehensive | 10/10 |
-| React Hooks | ✅ Well-designed | 9/10 |
-| Personnel Integration | ✅ Good | 8/10 |
-| Formation Integration | ✅ Excellent | 10/10 |
-| Play Integration | 🟡 Hybrid Legacy/Modern | 7/10 |
-| Cascade Updates | ⚠️ Needs Triggers | 6/10 |
-| Delete Safety | 🟡 Needs UI Warnings | 7/10 |
-| Analytics | 🟢 Basic (Future) | 5/10 |
+| Feature               | Status                  | Score |
+| --------------------- | ----------------------- | ----- |
+| Database Schema       | ✅ Excellent            | 10/10 |
+| Foreign Keys          | ✅ Complete             | 10/10 |
+| Service Layer         | ✅ Comprehensive        | 10/10 |
+| React Hooks           | ✅ Well-designed        | 9/10  |
+| Personnel Integration | ✅ Good                 | 8/10  |
+| Formation Integration | ✅ Excellent            | 10/10 |
+| Play Integration      | 🟡 Hybrid Legacy/Modern | 7/10  |
+| Cascade Updates       | ⚠️ Needs Triggers       | 6/10  |
+| Delete Safety         | 🟡 Needs UI Warnings    | 7/10  |
+| Analytics             | 🟢 Basic (Future)       | 5/10  |
 
 **Overall: 9/10** ✅ Production-Ready!
 
@@ -137,6 +140,7 @@ playbooks (N)
 ## 🎓 Key Insights
 
 ### **Architecture Strengths**
+
 1. **Proper normalization** - Personnel and formations are separate entities
 2. **Flexible relationships** - Formations can have multiple personnel
 3. **Variant system** - Left/Right automatically generated
@@ -144,6 +148,7 @@ playbooks (N)
 5. **Usage tracking** - Auto-counted via database triggers
 
 ### **Design Patterns Used**
+
 - ✅ Repository pattern (service layers)
 - ✅ Factory pattern (entity creation)
 - ✅ Observer pattern (React Query cache)
@@ -151,6 +156,7 @@ playbooks (N)
 - ✅ Composite pattern (formation variants)
 
 ### **Future-Proofing**
+
 - ✅ UUID primary keys (distributed systems ready)
 - ✅ JSONB for flexible data (diagram_data, player_positions)
 - ✅ Array types for tags and personnel packages
@@ -162,21 +168,25 @@ playbooks (N)
 ## 📁 Key Files Reference
 
 ### **Database**
+
 - `database/schema.sql` - Full schema with all tables
 - `database/migrations/20251012_create_formations_table.sql` - Formations
 - `supabase/migrations/20251011000000_add_personnel_system.sql` - Personnel
 
 ### **Services**
+
 - `src/services/personnelService.ts` - Personnel CRUD (200+ lines)
 - `src/services/formationService.ts` - Formation CRUD (645 lines!)
 - `src/services/playsService.ts` - Plays CRUD (400+ lines)
 
 ### **Hooks**
+
 - `src/hooks/usePersonnel.ts` - Personnel data hooks
 - `src/hooks/useFormations.ts` - Formation data hooks (assumed)
 - `src/hooks/usePlays.ts` - Plays data hooks (assumed)
 
 ### **Types**
+
 - `src/types/personnel.ts` - Personnel interfaces
 - `src/types/formation.ts` - Formation interfaces
 - `src/types/play.ts` - Play interfaces
@@ -185,15 +195,15 @@ playbooks (N)
 
 ## 🛠️ Implementation Time Estimates
 
-| Task | Priority | Time | Difficulty |
-|------|----------|------|------------|
-| Name sync triggers | 🔴 High | 30 min | Easy |
-| Personnel FK to plays | 🔴 High | 1 hour | Medium |
-| Delete confirmations | 🟡 Medium | 30 min | Easy |
-| Soft deletes | 🟢 Low | 1 hour | Medium |
-| Integration tests | 🟡 Medium | 2 hours | Medium |
-| Game results integration | 🟢 Future | 4 hours | Medium |
-| Import/Export | 🟢 Future | 4 hours | Medium |
+| Task                     | Priority  | Time    | Difficulty |
+| ------------------------ | --------- | ------- | ---------- |
+| Name sync triggers       | 🔴 High   | 30 min  | Easy       |
+| Personnel FK to plays    | 🔴 High   | 1 hour  | Medium     |
+| Delete confirmations     | 🟡 Medium | 30 min  | Easy       |
+| Soft deletes             | 🟢 Low    | 1 hour  | Medium     |
+| Integration tests        | 🟡 Medium | 2 hours | Medium     |
+| Game results integration | 🟢 Future | 4 hours | Medium     |
+| Import/Export            | 🟢 Future | 4 hours | Medium     |
 
 **Total Core Improvements: 3-4 hours** ⏱️
 
@@ -212,12 +222,14 @@ playbooks (N)
 **Your BoxCall system is production-ready with excellent integration!**
 
 The personnel → formations → plays → playbooks chain works seamlessly with:
+
 - ✅ Proper database relationships
-- ✅ Comprehensive service layers  
+- ✅ Comprehensive service layers
 - ✅ Type-safe TypeScript
 - ✅ React hooks for data management
 
 **Minor improvements will make it bulletproof:**
+
 - Add triggers for name synchronization (30 min)
 - Add personnel FK to plays (1 hour)
 - Add delete confirmations (30 min)

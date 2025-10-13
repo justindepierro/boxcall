@@ -7,6 +7,9 @@ import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { useToast } from "../../hooks/useToast";
+import { BadgeCustomizer } from "./BadgeCustomizer";
+import { PersonnelBadge } from "./PersonnelBadge";
+import type { BadgeCustomization } from "../../types/personnel";
 
 type PlayerPosition = "QB" | "RB" | "TE" | "WR";
 
@@ -24,10 +27,11 @@ interface PersonnelLine {
 
 export interface PersonnelConfiguration {
   id: string;
-  name: string; // e.g., "11 Personnel"
+  name: string; // e.g., "Spread", "Pro", "Jumbo"
   players: PersonnelPlayer[];
   line: PersonnelLine[];
   isDefault?: boolean; // Mark as default personnel
+  badgeCustomization?: BadgeCustomization; // Badge styling
 }
 
 interface PersonnelConfigurationModalProps {
@@ -46,6 +50,9 @@ export const PersonnelConfigurationModal: React.FC<
   const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(
     new Set()
   );
+  const [customizerOpenIds, setCustomizerOpenIds] = useState<Set<string>>(
+    new Set()
+  );
   const [justSaved, setJustSaved] = useState(false);
   const toast = useToast();
 
@@ -57,11 +64,11 @@ export const PersonnelConfigurationModal: React.FC<
   }, []);
 
   useEffect(() => {
-    // If no configurations exist, start with default 11 Personnel
+    // If no configurations exist, start with a default personnel group
     if (configurations.length === 0) {
       const defaultConfig: PersonnelConfiguration = {
-        id: "default-11-personnel",
-        name: "11 Personnel",
+        id: "default-personnel",
+        name: "Base Personnel",
         isDefault: true,
         players: [
           { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED QB
@@ -127,7 +134,7 @@ export const PersonnelConfigurationModal: React.FC<
   const addPersonnelConfiguration = () => {
     const newConfig: PersonnelConfiguration = {
       id: Date.now().toString(),
-      name: "11 Personnel",
+      name: "New Personnel",
       isDefault: false,
       players: [
         { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED - QB always first
@@ -236,6 +243,32 @@ export const PersonnelConfigurationModal: React.FC<
         config.id === configId ? { ...config, name } : config
       )
     );
+  };
+
+  const updateBadgeCustomization = (
+    configId: string,
+    customization: BadgeCustomization
+  ) => {
+    setLocalConfigurations((prev) =>
+      prev.map((config) =>
+        config.id === configId
+          ? { ...config, badgeCustomization: customization }
+          : config
+      )
+    );
+  };
+
+  const toggleCustomizer = (configId: string) => {
+    setCustomizerOpenIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(configId)) {
+        newSet.delete(configId);
+      } else {
+        newSet.add(configId);
+      }
+      return newSet;
+    });
+    triggerHapticFeedback("light");
   };
 
   const normalizeLabel = (value: string): string => {
@@ -384,12 +417,19 @@ export const PersonnelConfigurationModal: React.FC<
                   className="flex-1 flex items-center justify-between text-left hover:bg-surface-tertiary/50 rounded-lg p-2 -m-2 transition-colors"
                 >
                   <div className="flex-1">
-                    <div className="font-semibold text-text-primary">
+                    <div className="font-semibold text-text-primary flex items-center gap-2">
                       {config.name || "Unnamed Personnel"}
+                      {config.badgeCustomization && (
+                        <PersonnelBadge
+                          personnel={config.name || "Personnel"}
+                          size="sm"
+                          badgeCustomization={config.badgeCustomization}
+                        />
+                      )}
                       {justSaved && (
                         <Icon
                           name="check-circle"
-                          className="inline-block ml-2 w-4 h-4 text-success-600"
+                          className="inline-block w-4 h-4 text-success-600"
                         />
                       )}
                     </div>
@@ -432,10 +472,52 @@ export const PersonnelConfigurationModal: React.FC<
                       onChange={(e) =>
                         updatePersonnelConfigName(config.id, e.target.value)
                       }
-                      placeholder="11 Personnel"
+                      placeholder="Personnel Name"
                       className="font-medium"
                     />
                   </div>
+
+                  {/* Customize Badge Button */}
+                  <div>
+                    <Button
+                      onClick={() => toggleCustomizer(config.id)}
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                    >
+                      <Icon
+                        name={
+                          customizerOpenIds.has(config.id)
+                            ? "chevron-up"
+                            : "star"
+                        }
+                        className="w-4 h-4 mr-2"
+                      />
+                      {customizerOpenIds.has(config.id)
+                        ? "Hide Badge Customizer"
+                        : "Customize Badge"}
+                    </Button>
+                  </div>
+
+                  {/* Badge Customizer (Collapsible) */}
+                  {customizerOpenIds.has(config.id) && (
+                    <div className="animate-in slide-in-from-top-2">
+                      <BadgeCustomizer
+                        personnelName={config.name || "Personnel"}
+                        customization={
+                          config.badgeCustomization || {
+                            style: "solid",
+                            colorPresetId: "electric-blue",
+                            fontFamily: "default",
+                          }
+                        }
+                        onChange={(customization) =>
+                          updateBadgeCustomization(config.id, customization)
+                        }
+                        onSave={() => toggleCustomizer(config.id)}
+                      />
+                    </div>
+                  )}
 
                   {/* Two Column Layout: Players (Left) and Line (Right) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

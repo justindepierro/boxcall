@@ -1,4 +1,5 @@
 # 🔧 Integration Improvements - Implementation Guide
+
 **Priority:** HIGH  
 **Estimated Time:** 4-6 hours  
 **Difficulty:** Medium
@@ -33,19 +34,19 @@ BEGIN
   -- Only sync if name actually changed
   IF OLD.name IS DISTINCT FROM NEW.name THEN
     -- Update all plays in the same playbook that reference the old name
-    UPDATE plays 
-    SET 
+    UPDATE plays
+    SET
       personnel = NEW.name,
       updated_at = NOW()
-    WHERE personnel = OLD.name 
+    WHERE personnel = OLD.name
       AND playbook_id = NEW.playbook_id;
-    
-    RAISE NOTICE 'Synced % plays from personnel "%" to "%"', 
+
+    RAISE NOTICE 'Synced % plays from personnel "%" to "%"',
       (SELECT COUNT(*) FROM plays WHERE personnel = NEW.name AND playbook_id = NEW.playbook_id),
-      OLD.name, 
+      OLD.name,
       NEW.name;
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -55,7 +56,7 @@ CREATE TRIGGER trigger_sync_play_personnel_name
   FOR EACH ROW
   EXECUTE FUNCTION sync_play_personnel_name();
 
-COMMENT ON FUNCTION sync_play_personnel_name IS 
+COMMENT ON FUNCTION sync_play_personnel_name IS
   'Automatically updates plays.personnel TEXT field when personnel configuration name changes';
 
 -- ========================================
@@ -68,19 +69,19 @@ BEGIN
   -- Only sync if name actually changed
   IF OLD.name IS DISTINCT FROM NEW.name THEN
     -- Update all plays in the same playbook that reference the old name
-    UPDATE plays 
-    SET 
+    UPDATE plays
+    SET
       formation = NEW.name,
       updated_at = NOW()
-    WHERE formation = OLD.name 
+    WHERE formation = OLD.name
       AND playbook_id = NEW.playbook_id;
-    
-    RAISE NOTICE 'Synced % plays from formation "%" to "%"', 
+
+    RAISE NOTICE 'Synced % plays from formation "%" to "%"',
       (SELECT COUNT(*) FROM plays WHERE formation = NEW.name AND playbook_id = NEW.playbook_id),
-      OLD.name, 
+      OLD.name,
       NEW.name;
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -90,7 +91,7 @@ CREATE TRIGGER trigger_sync_play_formation_name
   FOR EACH ROW
   EXECUTE FUNCTION sync_play_formation_name();
 
-COMMENT ON FUNCTION sync_play_formation_name IS 
+COMMENT ON FUNCTION sync_play_formation_name IS
   'Automatically updates plays.formation TEXT field when formation name changes';
 
 -- ========================================
@@ -126,17 +127,17 @@ END $$;
 
 ```sql
 -- Test personnel rename
-UPDATE personnel_configurations 
-SET name = '11P' 
+UPDATE personnel_configurations
+SET name = '11P'
 WHERE name = '11 Personnel' AND playbook_id = 'your-playbook-id';
 
 -- Check that plays updated
 SELECT play_name, personnel FROM plays WHERE playbook_id = 'your-playbook-id';
 -- Should now show "11P" instead of "11 Personnel"
 
--- Test formation rename  
-UPDATE formations 
-SET name = 'Trips R' 
+-- Test formation rename
+UPDATE formations
+SET name = 'Trips R'
 WHERE name = 'Trips Right' AND playbook_id = 'your-playbook-id';
 
 -- Check that plays updated
@@ -166,20 +167,20 @@ Add proper foreign key relationship between plays and personnel configurations.
 -- 1. ADD COLUMN
 -- ========================================
 
-ALTER TABLE plays 
+ALTER TABLE plays
   ADD COLUMN IF NOT EXISTS personnel_id UUID REFERENCES personnel_configurations(id) ON DELETE SET NULL;
 
-COMMENT ON COLUMN plays.personnel_id IS 
+COMMENT ON COLUMN plays.personnel_id IS
   'Foreign key to personnel_configurations.id. SET NULL on delete to preserve play history.';
 
 -- ========================================
 -- 2. ADD INDEX
 -- ========================================
 
-CREATE INDEX IF NOT EXISTS idx_plays_personnel_id 
+CREATE INDEX IF NOT EXISTS idx_plays_personnel_id
   ON plays(personnel_id) WHERE personnel_id IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_plays_playbook_personnel 
+CREATE INDEX IF NOT EXISTS idx_plays_playbook_personnel
   ON plays(playbook_id, personnel_id) WHERE personnel_id IS NOT NULL;
 
 -- ========================================
@@ -207,7 +208,7 @@ BEGIN
   SELECT COUNT(*) INTO total_plays FROM plays;
   SELECT COUNT(*) INTO plays_with_fk FROM plays WHERE personnel_id IS NOT NULL;
   SELECT COUNT(*) INTO plays_without_fk FROM plays WHERE personnel_id IS NULL;
-  
+
   RAISE NOTICE '============================================';
   RAISE NOTICE '✅ Personnel FK migration complete!';
   RAISE NOTICE '============================================';
@@ -216,7 +217,7 @@ BEGIN
   RAISE NOTICE 'Plays with personnel_id: %', plays_with_fk;
   RAISE NOTICE 'Plays without personnel_id: %', plays_without_fk;
   RAISE NOTICE '';
-  
+
   IF plays_without_fk > 0 THEN
     RAISE NOTICE '⚠️  % plays could not be linked automatically', plays_without_fk;
     RAISE NOTICE '   These may have invalid personnel names or were created before personnel system';
@@ -234,7 +235,7 @@ END $$;
 static async createPlay(playData: Partial<Play>): Promise<Play> {
   try {
     // ... existing code ...
-    
+
     // NEW: Look up personnel_id if personnel name provided
     let personnelId: string | undefined;
     if (playData.personnel && playbookId) {
@@ -244,17 +245,17 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
         .eq('playbook_id', playbookId)
         .eq('name', playData.personnel)
         .single();
-      
+
       personnelId = personnelConfig?.id;
     }
-    
+
     const newPlay = {
       // ... existing fields ...
       personnel: playData.personnel || "",
       personnel_id: personnelId || null, // NEW!
       // ... rest of fields ...
     };
-    
+
     // ... rest of method ...
   }
 }
@@ -265,7 +266,7 @@ static async updatePlay(id: string, updates: Partial<Play>): Promise<Play> {
   try {
     // NEW: Update personnel_id if personnel name changes
     let personnelId: string | undefined = updates.personnel_id;
-    
+
     if (updates.personnel && updates.playbook_id) {
       const { data: personnelConfig } = await supabase
         .from('personnel_configurations')
@@ -273,17 +274,17 @@ static async updatePlay(id: string, updates: Partial<Play>): Promise<Play> {
         .eq('playbook_id', updates.playbook_id)
         .eq('name', updates.personnel)
         .single();
-      
+
       personnelId = personnelConfig?.id;
     }
-    
+
     const validUpdates = {
       // ... existing fields ...
       personnel: updates.personnel,
       personnel_id: personnelId, // NEW!
       // ... rest of fields ...
     };
-    
+
     // ... rest of method ...
   }
 }
@@ -308,20 +309,20 @@ export interface Play {
 ```typescript
 // Test creating play with personnel
 const play = await PlaysService.createPlay({
-  playbook_id: 'your-playbook-id',
-  play_name: 'Test Play',
-  formation: 'Trips',
-  p_type: 'Pass',
-  personnel: '11 Personnel' // Should auto-populate personnel_id
+  playbook_id: "your-playbook-id",
+  play_name: "Test Play",
+  formation: "Trips",
+  p_type: "Pass",
+  personnel: "11 Personnel", // Should auto-populate personnel_id
 });
 
 console.log(play.personnel_id); // Should be UUID of 11 Personnel config
 
 // Test querying plays by personnel FK
 const { data } = await supabase
-  .from('plays')
-  .select('*, personnel_configurations(*)')
-  .eq('personnel_id', 'some-uuid');
+  .from("plays")
+  .select("*, personnel_configurations(*)")
+  .eq("personnel_id", "some-uuid");
 
 // Now you can join personnel configs directly!
 ```
@@ -471,10 +472,10 @@ export function DeleteConfirmationDialog({
 
 const handleDelete = async () => {
   if (!selectedConfig) return;
-  
+
   // Check usage before deleting
   const usage = await PersonnelService.checkPersonnelUsage(selectedConfig.id);
-  
+
   // Show confirmation dialog
   setDeleteConfirmation({
     isOpen: true,
@@ -527,39 +528,39 @@ Implement soft deletes for safer operations and audit trails.
 -- ADD deleted_at COLUMNS
 -- ========================================
 
-ALTER TABLE personnel_configurations 
+ALTER TABLE personnel_configurations
   ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
-ALTER TABLE formations 
+ALTER TABLE formations
   ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
-ALTER TABLE plays 
+ALTER TABLE plays
   ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
 -- ========================================
 -- ADD INDEXES
 -- ========================================
 
-CREATE INDEX IF NOT EXISTS idx_personnel_configurations_deleted 
+CREATE INDEX IF NOT EXISTS idx_personnel_configurations_deleted
   ON personnel_configurations(deleted_at) WHERE deleted_at IS NULL;
 
-CREATE INDEX IF NOT EXISTS idx_formations_deleted 
+CREATE INDEX IF NOT EXISTS idx_formations_deleted
   ON formations(deleted_at) WHERE deleted_at IS NULL;
 
-CREATE INDEX IF NOT EXISTS idx_plays_deleted 
+CREATE INDEX IF NOT EXISTS idx_plays_deleted
   ON plays(deleted_at) WHERE deleted_at IS NULL;
 
 -- ========================================
 -- ADD COMMENTS
 -- ========================================
 
-COMMENT ON COLUMN personnel_configurations.deleted_at IS 
+COMMENT ON COLUMN personnel_configurations.deleted_at IS
   'Soft delete timestamp. NULL = active, NOT NULL = deleted';
 
-COMMENT ON COLUMN formations.deleted_at IS 
+COMMENT ON COLUMN formations.deleted_at IS
   'Soft delete timestamp. NULL = active, NOT NULL = deleted';
 
-COMMENT ON COLUMN plays.deleted_at IS 
+COMMENT ON COLUMN plays.deleted_at IS
   'Soft delete timestamp. NULL = active, NOT NULL = deleted';
 
 -- ========================================
@@ -594,7 +595,7 @@ static async getPersonnelConfigurations(
     .eq('playbook_id', playbookId)
     .is('deleted_at', null) // NEW: Filter out soft-deleted
     .order('created_at', { ascending: true });
-  
+
   // ... rest of method
 }
 
@@ -604,7 +605,7 @@ static async deletePersonnelConfiguration(id: string): Promise<void> {
     .from('personnel_configurations')
     .update({ deleted_at: new Date().toISOString() }) // Soft delete
     .eq('id', id);
-  
+
   if (error) {
     throw new Error(`Failed to delete personnel: ${error.message}`);
   }
@@ -616,7 +617,7 @@ static async restorePersonnelConfiguration(id: string): Promise<void> {
     .from('personnel_configurations')
     .update({ deleted_at: null })
     .eq('id', id);
-  
+
   if (error) {
     throw new Error(`Failed to restore personnel: ${error.message}`);
   }
@@ -628,22 +629,26 @@ static async restorePersonnelConfiguration(id: string): Promise<void> {
 ## 📊 Testing Checklist
 
 ### **Trigger Tests**
+
 - [ ] Rename personnel → plays auto-update
 - [ ] Rename formation → plays auto-update
 - [ ] Rename doesn't affect other playbooks
 
 ### **FK Tests**
+
 - [ ] Create play with personnel → personnel_id populated
 - [ ] Update play personnel → personnel_id updates
 - [ ] Delete personnel → plays.personnel_id becomes NULL
 
 ### **Delete Confirmation Tests**
+
 - [ ] Delete unused personnel → no warning
 - [ ] Delete used personnel → shows usage count
 - [ ] Cancel delete → nothing changes
 - [ ] Confirm delete → entity removed
 
 ### **Soft Delete Tests**
+
 - [ ] Soft delete personnel → hidden from list
 - [ ] Soft delete doesn't break FK references
 - [ ] Restore personnel → appears in list again
@@ -671,6 +676,7 @@ static async restorePersonnelConfiguration(id: string): Promise<void> {
 ---
 
 **Implementation Priority:**
+
 1. 🔴 Name Sync Triggers (30 min) - Do this first!
 2. 🟡 Personnel FK (1 hour) - Do this next
 3. 🟡 Delete Confirmations (30 min) - Nice UX improvement

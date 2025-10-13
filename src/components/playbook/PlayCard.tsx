@@ -1,7 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../types/play";
+import type { PersonnelConfiguration } from "../../types/personnel";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
@@ -25,7 +32,6 @@ import {
   getPlayTypeColor,
   normalizePlayText,
 } from "./play-card/helpers";
-
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -43,6 +49,8 @@ interface PlayCardProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
+  personnelSuggestions?: string[];
+  personnelConfigurations?: PersonnelConfiguration[];
   // Controlled expansion state
   isExpanded?: boolean;
   onToggleExpand?: (playId: string) => void;
@@ -54,26 +62,24 @@ type SaveQueue = Set<string>;
 
 const INITIAL_FORMATION_ORDER = [
   "formation",
+  "personnel",
   "f_dir",
-  "f_type",
   "back_align",
+  "back_position",
   "shift",
   "motion",
   "ftags",
-  "r_str",
-  "p_str",
 ];
 
 const INITIAL_FORMATION_VISIBILITY: FieldVisibility = {
   formation: true,
-  f_type: true,
+  personnel: true,
   f_dir: true,
   back_align: true,
+  back_position: true,
   shift: true,
   motion: true,
   ftags: true,
-  r_str: true,
-  p_str: true,
 };
 
 const INITIAL_PLAY_DETAILS_ORDER = [
@@ -111,6 +117,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   formationSuggestions = [],
   playNameSuggestions = [],
   playTypeSuggestions = [],
+  personnelSuggestions = [],
+  personnelConfigurations = [],
   isExpanded: controlledIsExpanded,
   onToggleExpand,
 }) => {
@@ -119,6 +127,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
     INITIAL_FORMATION_ORDER
   );
+  const lastSyncedPlayRef = useRef<PlayType>(play);
+
+  // Debug: Log when play prop changes
+  useEffect(() => {
+    console.log("[PlayCard] Play prop received/changed:", {
+      playId: play.id,
+      "play.f_dir": play.f_dir,
+      "play.p_dir": play.p_dir,
+      "play object": play,
+    });
+  }, [play]);
 
   // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
@@ -145,20 +164,47 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
   useEffect(() => {
+    console.log("[PlayCard] useEffect fired:", {
+      playId: play.id,
+      "savingFields.size": savingFields.size,
+      savingFieldsArray: Array.from(savingFields),
+      "play === lastSyncedPlayRef.current": play === lastSyncedPlayRef.current,
+      "play.f_dir": play.f_dir,
+      "play.p_dir": play.p_dir,
+      "optimisticPlay.f_dir": optimisticPlay.f_dir,
+      "optimisticPlay.p_dir": optimisticPlay.p_dir,
+    });
+
     // Only update optimistic play if we're not currently saving any fields
     // This prevents overwriting optimistic updates while saves are in progress
     if (savingFields.size === 0) {
-      console.log(
-        "[PlayCard] Syncing optimistic play with prop (no saves in progress):",
-        play
-      );
-      setOptimisticPlay(play);
+      // Check if the play prop actually changed from the last time we synced
+      // This prevents syncing with stale data immediately after save completes
+      if (play !== lastSyncedPlayRef.current) {
+        console.log(
+          "[PlayCard] ⚠️ SYNCING - Play prop changed, updating optimistic state:",
+          {
+            oldPlay: lastSyncedPlayRef.current,
+            newPlay: play,
+            "old f_dir": lastSyncedPlayRef.current?.f_dir,
+            "new f_dir": play.f_dir,
+            "old p_dir": lastSyncedPlayRef.current?.p_dir,
+            "new p_dir": play.p_dir,
+          }
+        );
+        lastSyncedPlayRef.current = play;
+        setOptimisticPlay(play);
+      } else {
+        console.log("[PlayCard] ✅ Skipping sync - same play object reference");
+      }
     } else {
       console.log(
-        "[PlayCard] Skipping sync - save in progress for:",
+        "[PlayCard] ⏸️ Skipping sync - save in progress for:",
         Array.from(savingFields)
       );
     }
+    // We intentionally don't include optimisticPlay in deps to avoid sync loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [play, savingFields]);
 
   const actualFormationSuggestions =
@@ -177,9 +223,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       createFormationFields({
         normalizeValue: normalizePlayText,
         formationSuggestions: actualFormationSuggestions,
+        personnelSuggestions,
         directionOptions,
       }),
-    [actualFormationSuggestions, directionOptions]
+    [actualFormationSuggestions, personnelSuggestions, directionOptions]
   );
 
   const playDetailsFields: FieldDefinitionMap = useMemo(
@@ -215,13 +262,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         optimisticPlay,
         showOneWordCalls,
         visibleFormationFields,
-        visiblePlayDetailsFields
+        visiblePlayDetailsFields,
+        directionDisplayFormat
       ),
     [
       optimisticPlay,
       showOneWordCalls,
       visibleFormationFields,
       visiblePlayDetailsFields,
+      directionDisplayFormat,
     ]
   );
 
@@ -246,43 +295,58 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     async (field: keyof PlayType, value: string | number) => {
       const fieldName = field as string;
 
-      console.log("[PlayCard] handleInlineSave called:", {
+      console.log("[PlayCard] 🔵 handleInlineSave START:", {
         field,
         value,
         playId: play.id,
+        currentPlayValue: play[field],
+        currentOptimisticValue: optimisticPlay[field],
       });
 
       setOptimisticPlay((prev) => {
         const updated = { ...prev, [field]: value };
-        console.log("[PlayCard] Set optimistic state:", {
-          [field]: value,
-          fullPlay: updated,
+        console.log("[PlayCard] 🟢 Set optimistic state:", {
+          field,
+          oldValue: prev[field],
+          newValue: value,
         });
         return updated;
       });
 
+      console.log("[PlayCard] 🟡 Adding field to savingFields:", fieldName);
       setSavingFields((prev) => new Set(prev).add(fieldName));
 
       try {
         if (onSave) {
-          console.log("[PlayCard] Calling onSave prop");
+          console.log("[PlayCard] 🟠 Calling onSave prop");
           await onSave(play.id, { [field]: value });
-          console.log("[PlayCard] onSave completed successfully");
+          console.log("[PlayCard] 🟢 onSave completed successfully");
         }
       } catch (error) {
         console.error(
-          `[PlayCard] Failed to save ${fieldName}, reverting:`,
+          `[PlayCard] 🔴 Failed to save ${fieldName}, reverting:`,
           error
         );
         setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
       } finally {
+        console.log(
+          "[PlayCard] 🟣 Removing field from savingFields:",
+          fieldName
+        );
         setSavingFields((prev) => {
           const next = new Set(prev);
           next.delete(fieldName);
+          console.log(
+            "[PlayCard] 🟣 savingFields after removal:",
+            Array.from(next)
+          );
           return next;
         });
+        console.log("[PlayCard] 🔵 handleInlineSave END");
       }
     },
+    // optimisticPlay is only used for logging, not needed in deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onSave, play]
   );
 
@@ -401,6 +465,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               onToggleFavorite={() => toggleFavorite(play.id)}
               isExpanded={isExpanded}
               onToggleExpand={handleToggleExpand}
+              personnelConfigurations={personnelConfigurations}
             />
 
             {/* Animated expansion for tile details */}
@@ -470,6 +535,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             phaseLabel={phaseLabel}
             isFavorite={isFavorite(play.id)}
             onToggleFavorite={() => toggleFavorite(play.id)}
+            personnelConfigurations={personnelConfigurations}
           />
         )}
 

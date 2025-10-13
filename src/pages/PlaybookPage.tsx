@@ -1317,7 +1317,9 @@ export default function PlaybookPage() {
                       // Config exists in database - check if modified
                       const isModified =
                         existing.name !== config.name ||
-                        existing.players?.length !== config.players.length;
+                        existing.players?.length !== config.players.length ||
+                        JSON.stringify(existing.badgeCustomization) !==
+                          JSON.stringify(config.badgeCustomization);
 
                       if (isModified) {
                         console.log(
@@ -1329,6 +1331,7 @@ export default function PlaybookPage() {
                             name: config.name,
                             description: `${config.players.length} skill players`,
                             players,
+                            badgeCustomization: config.badgeCustomization,
                           }
                         );
                       } else {
@@ -1346,6 +1349,7 @@ export default function PlaybookPage() {
                         name: config.name,
                         description: `${config.players.length} skill players`,
                         players,
+                        badgeCustomization: config.badgeCustomization,
                       });
                     }
                   }
@@ -1360,6 +1364,7 @@ export default function PlaybookPage() {
                   const modalConfigs = savedConfigs.map((config) => ({
                     id: config.id, // Real UUID from database
                     name: config.name,
+                    badgeCustomization: config.badgeCustomization,
                     players:
                       config.players?.map((p) => ({
                         id: `p-${p.id}`,

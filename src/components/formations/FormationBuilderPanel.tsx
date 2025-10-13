@@ -10,15 +10,28 @@
  * This is separate from drawing (canvas) and linking (left/right variants)
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from "react";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { FormationBadge } from "../playbook/FormationBadge";
 import { FormationService } from "../../services/formationService";
 import { PersonnelService } from "../../services/personnelService";
-import type { Formation, FormationCategory } from "../../types/formation";
+import type {
+  Formation,
+  FormationCategory,
+  FormationType,
+  StrengthType,
+} from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { Save, ChevronDown } from "lucide-react";
+import { ToastContext } from "../../contexts/ToastContext";
+import { useSaveState } from "../../contexts/SaveStateContext";
 
 interface FormationBuilderPanelProps {
   playbookId: string;
@@ -34,10 +47,33 @@ const FORMATION_CATEGORIES: { value: FormationCategory; label: string }[] = [
   { value: "short_yardage", label: "Short Yardage" },
 ];
 
+const FORMATION_TYPES: { value: FormationType; label: string }[] = [
+  { value: "I Formation", label: "I Formation" },
+  { value: "Singleback", label: "Singleback" },
+  { value: "Pistol", label: "Pistol" },
+  { value: "Shotgun", label: "Shotgun" },
+  { value: "Empty", label: "Empty" },
+  { value: "Trips", label: "Trips" },
+  { value: "Bunch", label: "Bunch" },
+  { value: "Stack", label: "Stack" },
+  { value: "Wing", label: "Wing" },
+  { value: "Other", label: "Other" },
+];
+
+const STRENGTH_OPTIONS: { value: StrengthType; label: string; icon: string }[] =
+  [
+    { value: "left", label: "Left", icon: "←" },
+    { value: "balanced", label: "Balanced", icon: "⚖️" },
+    { value: "right", label: "Right", icon: "→" },
+  ];
+
 export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   playbookId,
   onSuccess,
 }) => {
+  const toast = useContext(ToastContext);
+  const { startSaving, finishSaving, isSaving: globalSaving } = useSaveState();
+
   console.log(
     "🏗️ [FormationBuilderPanel] Component mounted/re-rendered with playbookId:",
     playbookId
@@ -57,10 +93,40 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     []
   );
   const [category, setCategory] = useState<FormationCategory | "">("");
+  const [formationType, setFormationType] = useState<FormationType | null>(
+    null
+  );
+  const [runStrength, setRunStrength] = useState<StrengthType>("balanced");
+  const [passStrength, setPassStrength] = useState<StrengthType>("balanced");
   const [tags, setTags] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [applyToBothSides, setApplyToBothSides] = useState<boolean>(true); // Default to true
 
+  // Use refs for form data to stabilize autoSave dependencies
+  const formDataRef = useRef({
+    selectedPersonnelIds,
+    category,
+    formationType,
+    runStrength,
+    passStrength,
+    tags,
+    description,
+    applyToBothSides,
+  });
+
+  // Update ref on every render (doesn't cause re-renders)
+  useEffect(() => {
+    formDataRef.current = {
+      selectedPersonnelIds,
+      category,
+      formationType,
+      runStrength,
+      passStrength,
+      tags,
+      description,
+      applyToBothSides,
+    };
+  });
   console.log("🏗️ [FormationBuilderPanel] Current state:", {
     loading,
     formationsCount: allFormations.length,
@@ -144,11 +210,17 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     if (selectedFormation) {
       setSelectedPersonnelIds(selectedFormation.personnel_packages || []);
       setCategory(selectedFormation.category || "");
+      setFormationType(selectedFormation.formation_type || null);
+      setRunStrength(selectedFormation.run_strength || "balanced");
+      setPassStrength(selectedFormation.pass_strength || "balanced");
       setTags(selectedFormation.tags?.join(", ") || "");
       setDescription(selectedFormation.description || "");
     } else {
       setSelectedPersonnelIds([]);
       setCategory("");
+      setFormationType(null);
+      setRunStrength("balanced");
+      setPassStrength("balanced");
       setTags("");
       setDescription("");
     }
@@ -160,6 +232,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         ? prev.filter((id) => id !== personnelId)
         : [...prev, personnelId]
     );
+    // Instant save for personnel toggle
+    setTimeout(() => autoSave(), 0);
   };
 
   // Check if selected formation has a linked variant (left/right pair)
@@ -195,9 +269,95 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
   const linkedFormation = getLinkedFormation();
 
+  // Helper function to mirror strength for linked formations
+  const getMirroredStrength = (strength: StrengthType): StrengthType => {
+    if (strength === "balanced") return "balanced";
+    if (strength === "left") return "right";
+    if (strength === "right") return "left";
+    return strength;
+  };
+
+  // Auto-save function (debounced) - Optimized with stable dependencies
+  const autoSave = useCallback(async () => {
+    if (!selectedFormation) return;
+
+    // Guard: Don't start new save if already saving
+    if (globalSaving) {
+      console.log("⏭️ Save already in progress, skipping...");
+      return;
+    }
+
+    startSaving();
+
+    // Read form data from ref (stable, doesn't trigger re-renders)
+    const data = formDataRef.current;
+    const tagsArray = data.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+
+    const updateData = {
+      personnel_packages: data.selectedPersonnelIds,
+      category: data.category || undefined,
+      formation_type: data.formationType || undefined,
+      run_strength: data.runStrength,
+      pass_strength: data.passStrength,
+      tags: tagsArray,
+      description: data.description || undefined,
+    };
+
+    try {
+      // Update the selected formation
+      await FormationService.updateFormation(selectedFormation.id, updateData);
+
+      // If "Apply to both sides" is checked and there's a linked formation, update it too
+      if (data.applyToBothSides && linkedFormation) {
+        const linkedUpdateData = {
+          ...updateData,
+          run_strength: getMirroredStrength(data.runStrength),
+          pass_strength: getMirroredStrength(data.passStrength),
+        };
+
+        await FormationService.updateFormation(
+          linkedFormation.id,
+          linkedUpdateData
+        );
+      }
+
+      // Reload data to get fresh state
+      await loadData();
+
+      // Finish with success (green flash)
+      finishSaving("success");
+    } catch (error) {
+      console.error("Failed to auto-save formation:", error);
+      toast?.error("Failed to save changes", "Auto-save Failed");
+      finishSaving("error");
+    }
+  }, [
+    selectedFormation,
+    linkedFormation,
+    globalSaving,
+    startSaving,
+    finishSaving,
+    loadData,
+    toast,
+  ]);
+
+  // Debounce auto-save (wait 500ms after last change)
+  useEffect(() => {
+    if (!selectedFormation) return;
+
+    const timeoutId = setTimeout(() => {
+      autoSave();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [selectedFormation, autoSave]);
+
   const handleSave = async () => {
     if (!selectedFormation) {
-      alert("Please select a formation");
+      toast?.error("Please select a formation");
       return;
     }
 
@@ -211,6 +371,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       const updateData = {
         personnel_packages: selectedPersonnelIds,
         category: category || undefined,
+        formation_type: formationType || undefined,
+        run_strength: runStrength,
+        pass_strength: passStrength,
         tags: tagsArray,
         description: description || undefined,
       };
@@ -225,12 +388,25 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
           linkedFormation.name,
           linkedFormation.direction
         );
-        await FormationService.updateFormation(linkedFormation.id, updateData);
-        alert(
-          `Formation updated successfully!\n✅ Changes applied to both ${selectedFormation.direction} and ${linkedFormation.direction} variants.`
+
+        // Mirror the strengths for the linked formation
+        const linkedUpdateData = {
+          ...updateData,
+          run_strength: getMirroredStrength(runStrength),
+          pass_strength: getMirroredStrength(passStrength),
+        };
+
+        await FormationService.updateFormation(
+          linkedFormation.id,
+          linkedUpdateData
+        );
+
+        toast?.success(
+          `Formation updated successfully! Changes applied to both ${selectedFormation.direction} and ${linkedFormation.direction} variants.`,
+          "Formations Saved"
         );
       } else {
-        alert("Formation updated successfully!");
+        toast?.success("Formation updated successfully!", "Formation Saved");
       }
 
       await loadData();
@@ -240,7 +416,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       }
     } catch (error) {
       console.error("Failed to save formation:", error);
-      alert("Failed to save formation. Please try again.");
+      toast?.error(
+        "Failed to save formation. Please try again.",
+        "Save Failed"
+      );
     } finally {
       setSaving(false);
     }
@@ -274,10 +453,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   });
 
   return (
-    <div className="flex flex-col gap-spacing-lg p-spacing-md max-w-4xl mx-auto">
+    <div className="flex flex-col gap-spacing-md p-spacing-sm max-w-3xl mx-auto">
       {/* Formation Selector */}
-      <div className="flex flex-col gap-spacing-sm">
-        <Typography variant="headline-md" className="text-text-primary">
+      <div className="flex flex-col gap-spacing-xs">
+        <Typography variant="body-md" className="text-text-primary font-medium">
           Select Formation
         </Typography>
 
@@ -303,7 +482,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                 console.log("📝 Formation selected:", formation);
                 setSelectedFormation(formation || null);
               }}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
             >
               <option value="">
                 Choose a formation to edit... ({visibleFormations.length}{" "}
@@ -322,25 +501,25 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
         )}
 
         {selectedFormation && (
-          <div className="mt-spacing-sm p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="mt-spacing-xs p-spacing-sm bg-surface-secondary rounded border border-border-primary">
             <FormationBadge
               formationId={selectedFormation.id}
               direction={selectedFormation.direction}
             />
             {linkedFormation && (
-              <div className="mt-spacing-sm flex items-center gap-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
+              <div className="mt-spacing-xs flex items-center gap-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded text-xs">
                 <input
                   type="checkbox"
                   id="applyToBothSides"
                   checked={applyToBothSides}
                   onChange={(e) => setApplyToBothSides(e.target.checked)}
-                  className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                  className="w-3.5 h-3.5 text-primary-600 rounded focus:ring-primary-500"
                 />
                 <label
                   htmlFor="applyToBothSides"
-                  className="text-sm text-primary-700 font-medium cursor-pointer"
+                  className="text-primary-700 font-medium cursor-pointer"
                 >
-                  Apply changes to both {selectedFormation.direction} and{" "}
+                  Apply to both {selectedFormation.direction} and{" "}
                   {linkedFormation.direction} variants
                 </label>
               </div>
@@ -352,23 +531,23 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       {selectedFormation && (
         <>
           {/* Personnel Packages */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
             <Typography
-              variant="headline-sm"
-              className="text-text-primary mb-spacing-sm"
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
             >
               Personnel Packages
             </Typography>
             <Typography
               variant="caption"
-              className="text-text-secondary mb-spacing-md"
+              className="text-text-secondary mb-spacing-sm"
             >
               Select which personnel packages can run this formation:
             </Typography>
 
             {availablePersonnel.length === 0 ? (
-              <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary text-center">
-                <Typography variant="body-sm" className="text-text-muted">
+              <div className="p-spacing-sm bg-surface-muted rounded border border-border-secondary text-center">
+                <Typography variant="caption" className="text-text-muted">
                   No personnel configurations found. Create personnel packages
                   first.
                 </Typography>
@@ -387,13 +566,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                     selectedIds: selectedPersonnelIds,
                   }
                 )}
-                <div className="flex flex-wrap gap-spacing-sm">
+                <div className="flex flex-wrap gap-spacing-xs">
                   {availablePersonnel.map((personnel) => (
                     <button
                       key={personnel.id}
                       onClick={() => togglePersonnel(personnel.id)}
                       className={`
-                        px-spacing-md py-spacing-sm rounded-lg border-2 transition-all
+                        px-spacing-sm py-spacing-xs rounded border transition-colors text-sm
                         ${
                           selectedPersonnelIds.includes(personnel.id)
                             ? "border-primary-500 bg-primary-50 text-primary-700"
@@ -401,7 +580,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                         }
                       `}
                     >
-                      <Typography variant="body-sm" className="font-medium">
+                      <Typography variant="caption" className="font-medium">
                         {selectedPersonnelIds.includes(personnel.id)
                           ? "✓ "
                           : ""}
@@ -412,8 +591,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                 </div>
 
                 {selectedPersonnelIds.length > 0 && (
-                  <div className="mt-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
-                    <Typography variant="caption" className="text-primary-700">
+                  <div className="mt-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded">
+                    <Typography
+                      variant="caption"
+                      className="text-primary-700 text-xs"
+                    >
                       ✓ {selectedPersonnelIds.length} personnel package
                       {selectedPersonnelIds.length > 1 ? "s" : ""} selected
                     </Typography>
@@ -424,10 +606,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
           </div>
 
           {/* Category */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
             <Typography
-              variant="headline-sm"
-              className="text-text-primary mb-spacing-sm"
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
             >
               Formation Category
             </Typography>
@@ -438,7 +620,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                 onChange={(e) =>
                   setCategory(e.target.value as FormationCategory | "")
                 }
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
               >
                 <option value="">No category</option>
                 {FORMATION_CATEGORIES.map((cat) => (
@@ -451,20 +633,119 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
             </div>
           </div>
 
-          {/* Tags */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          {/* Formation Type */}
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
             <Typography
-              variant="headline-sm"
-              className="text-text-primary mb-spacing-sm"
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
+            >
+              Formation Type
+            </Typography>
+
+            <div className="relative">
+              <select
+                value={formationType || ""}
+                onChange={(e) =>
+                  setFormationType(
+                    e.target.value ? (e.target.value as FormationType) : null
+                  )
+                }
+                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+              >
+                <option value="">No type specified</option>
+                {FORMATION_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Run Strength */}
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
+            >
+              Run Strength
+            </Typography>
+
+            <div className="flex gap-spacing-xs">
+              {STRENGTH_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    setRunStrength(option.value);
+                    // Instant save for button clicks (no debounce)
+                    setTimeout(() => autoSave(), 0);
+                  }}
+                  className={`
+                    flex-1 px-spacing-sm py-spacing-xs rounded border transition-colors
+                    font-medium text-center text-sm cursor-pointer
+                    ${
+                      runStrength === option.value
+                        ? "border-primary-500 bg-primary-50 text-primary-700"
+                        : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
+                    }
+                  `}
+                >
+                  <div className="text-base">{option.icon}</div>
+                  <Typography variant="caption" className="font-medium">
+                    {option.label}
+                  </Typography>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Pass Strength */}
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
+            >
+              Pass Strength
+            </Typography>
+
+            <div className="flex gap-spacing-xs">
+              {STRENGTH_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    setPassStrength(option.value);
+                    // Instant save for button clicks (no debounce)
+                    setTimeout(() => autoSave(), 0);
+                  }}
+                  className={`
+                    flex-1 px-spacing-sm py-spacing-xs rounded border transition-colors
+                    font-medium text-center text-sm cursor-pointer
+                    ${
+                      passStrength === option.value
+                        ? "border-primary-500 bg-primary-50 text-primary-700"
+                        : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
+                    }
+                  `}
+                >
+                  <div className="text-base">{option.icon}</div>
+                  <Typography variant="caption" className="font-medium">
+                    {option.label}
+                  </Typography>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
             >
               Tags
-            </Typography>
-            <Typography
-              variant="caption"
-              className="text-text-secondary mb-spacing-sm"
-            >
-              Comma-separated tags for filtering (e.g., "twins, compressed,
-              stack")
             </Typography>
 
             <input
@@ -472,15 +753,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="twins, compressed, unbalanced"
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
           </div>
 
           {/* Description */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
             <Typography
-              variant="headline-sm"
-              className="text-text-primary mb-spacing-sm"
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
             >
               Description
             </Typography>
@@ -489,30 +770,30 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes about this formation..."
-              rows={3}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+              rows={2}
+              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
             />
           </div>
 
-          {/* Save Button */}
-          <div className="flex justify-end">
+          {/* Manual Save Button (Optional) */}
+          <div className="flex justify-end items-center pt-spacing-xs border-t border-border-primary">
             <Button
               onClick={handleSave}
               disabled={saving}
-              variant="primary"
-              size="lg"
+              variant="secondary"
+              size="sm"
               className="gap-spacing-xs"
             >
-              <Save className="w-5 h-5" />
-              {saving ? "Saving..." : "Save Formation"}
+              <Save className="w-3.5 h-3.5" />
+              Save Now
             </Button>
           </div>
         </>
       )}
 
       {!selectedFormation && (
-        <div className="p-spacing-xl bg-surface-muted rounded-lg border border-border-secondary text-center">
-          <Typography variant="body-lg" className="text-text-muted">
+        <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
+          <Typography variant="body-sm" className="text-text-muted">
             👆 Select a formation above to edit its details
           </Typography>
         </div>

@@ -64,7 +64,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     useState(false);
 
   // Fetch personnel configuration if play has personnel assigned
-  const personnelName = play?.personnel || "11 Personnel"; // Default to 11 Personnel
+  const personnelName = play?.personnel || ""; // Use play's personnel or empty
   const playbookId = play?.playbook_id;
 
   const { data: personnelConfig } = usePersonnelConfigurationByName(
@@ -80,13 +80,13 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     // Clear existing players before adding personnel
     clearPlayers();
 
-    // If no personnel config found, create a default 11 Personnel formation
+    // If no personnel config found, create a default formation
     if (
       !personnelConfig ||
       !personnelConfig.players ||
       personnelConfig.players.length === 0
     ) {
-      // Create default 11 Personnel formation (QB, RB, TE, WR, WR)
+      // Create default formation (QB, RB, TE, 2 WR)
       const defaultPersonnel = [
         { position: "QB", label: "Q", x: 26.67, y: 12 },
         { position: "RB", label: "R", x: 31, y: 10 },
@@ -108,7 +108,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         addPlayer(diagramPlayer);
       });
 
-      console.log("ℹ️ No personnel config found, loaded default 11 Personnel");
+      console.log("ℹ️ No personnel config found, loaded default formation");
       return;
     }
 
@@ -253,9 +253,8 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     const offensivePlayers = playerList.filter((p) => p.team === "offense");
 
     if (offensivePlayers.length === 0) return "Unknown";
-    if (offensivePlayers.length === 11) return "11 Personnel";
 
-    // Simple detection - can be enhanced
+    // Simple detection - return player count
     return `${offensivePlayers.length} Players`;
   }, []);
 

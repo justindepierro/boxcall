@@ -16,6 +16,7 @@ import {
   AnalyticsDebugger,
 } from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
+import { SaveStateProvider } from "./contexts/SaveStateContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 /**
@@ -61,33 +62,35 @@ function App() {
       >
         <AnalyticsProvider>
           <DevModeProvider>
-            <div className="App">
-              <DevHealthCheck />
-              <AppGrid>
-                <AuthGuard>
-                  <DataRouterApp />
-                </AuthGuard>
-              </AppGrid>
-              <PWAIntegration />
-              {showRQDevtools && (
-                <ReactQueryDevtools initialIsOpen={false} position="bottom" />
-              )}
-              <DevPanel
-                isOpen={showDevPanel}
-                onClose={() => setShowDevPanel(false)}
-              />
-              {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
-              {import.meta.env.DEV && (
-                <ToggleQueryDevtools
-                  onToggle={() => setShowRQDevtools((v) => !v)}
+            <SaveStateProvider>
+              <div className="App">
+                <DevHealthCheck />
+                <AppGrid>
+                  <AuthGuard>
+                    <DataRouterApp />
+                  </AuthGuard>
+                </AppGrid>
+                <PWAIntegration />
+                {showRQDevtools && (
+                  <ReactQueryDevtools initialIsOpen={false} position="bottom" />
+                )}
+                <DevPanel
+                  isOpen={showDevPanel}
+                  onClose={() => setShowDevPanel(false)}
                 />
-              )}
-              {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-              <ToggleDevPanel onToggle={() => setShowDevPanel((v) => !v)} />
+                {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
+                {import.meta.env.DEV && (
+                  <ToggleQueryDevtools
+                    onToggle={() => setShowRQDevtools((v) => !v)}
+                  />
+                )}
+                {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
+                <ToggleDevPanel onToggle={() => setShowDevPanel((v) => !v)} />
 
-              {/* Analytics Debug Panel (dev only) */}
-              <AnalyticsDebugger />
-            </div>
+                {/* Analytics Debug Panel (dev only) */}
+                <AnalyticsDebugger />
+              </div>
+            </SaveStateProvider>
           </DevModeProvider>
         </AnalyticsProvider>
       </AppProvider>

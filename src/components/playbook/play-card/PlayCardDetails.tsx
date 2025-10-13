@@ -4,12 +4,7 @@ import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
 import { InlineEditField } from "../../ui/InlineEditField";
 import { Button } from "../../ui/Button/Button";
-import {
-  DISTANCE_OPTIONS,
-  DOWN_OPTIONS,
-  HASH_OPTIONS,
-  PERSONNEL_OPTIONS,
-} from "./constants";
+import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "./constants";
 import {
   addFlag,
   getPlayFlags,
@@ -18,7 +13,6 @@ import {
   type PlayFlags,
 } from "../../../utils/localPlayFlags";
 import type { Play as PlayType } from "../../../types/play";
-import { Badge } from "../../ui/Badge";
 import type { FieldDefinitionMap } from "./fieldDefinitions";
 import {
   getDiagramButtonIcon,
@@ -70,8 +64,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   playDetailsFields,
   playDetailsFieldVisibility,
   handlePlayDetailsDragEnd,
-  getPlayTypeColor,
-  getConfidenceColor,
+  getPlayTypeColor: _getPlayTypeColor,
+  getConfidenceColor: _getConfidenceColor,
   onAddToPracticeScript,
   onAddToGamePlan,
   onCreateDiagram,
@@ -103,50 +97,32 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   return (
     <div
       id={`play-details-${play.id}`}
-      className="mt-spacing-md pt-spacing-md divider-t space-y-spacing-md"
+      className="mt-spacing-sm pt-spacing-sm divider-t space-y-spacing-sm"
       role="region"
       aria-label={`Details for ${play.play_name}`}
     >
-      <div className="flex flex-wrap items-center gap-spacing-xs">
-        <span
-          className={`px-spacing-xs py-spacing-xs rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
-        >
-          {optimisticPlay.p_type}
-        </span>
-        {optimisticPlay.personnel && (
-          <InlineEditField
-            value={optimisticPlay.personnel}
-            onSave={(value) => handleInlineSave("personnel", value)}
-            placeholder="Personnel (e.g., 11, 12, 21)"
-            suggestions={PERSONNEL_OPTIONS.map((option) => option.label)}
-            enableSuggestions={true}
-            isSaving={savingFields.has("personnel")}
-            className="px-spacing-xs py-spacing-xs bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium hover:bg-surface-secondary transition-colors"
-          />
-        )}
-        {phaseLabel && (
-          <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-primary rounded-full text-2xs font-semibold uppercase border border-warning-600">
-            {phaseLabel}
-          </span>
-        )}
-        {optimisticPlay.one_word_play && !showOneWordCalls && (
-          <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-xs font-medium">
-            Code: {optimisticPlay.one_word_play.toUpperCase()}
-          </span>
-        )}
-        <span
-          className={`ml-auto text-xsssssssss font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
-        >
-          Formation Confidence {optimisticPlay.confidence_base}%
-        </span>
-      </div>
+      {/* Only render badge row if there are badges to show */}
+      {(phaseLabel || (optimisticPlay.one_word_play && !showOneWordCalls)) && (
+        <div className="flex flex-wrap items-center gap-spacing-xs">
+          {phaseLabel && (
+            <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-primary rounded-full text-2xs font-semibold uppercase border border-warning-600">
+              {phaseLabel}
+            </span>
+          )}
+          {optimisticPlay.one_word_play && !showOneWordCalls && (
+            <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-xs font-medium">
+              Code: {optimisticPlay.one_word_play.toUpperCase()}
+            </span>
+          )}
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
-        <div className="surface-subtle rounded-lg p-spacing-md">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-md">
+        <div className="surface-subtle rounded-lg p-spacing-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-md"
+            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="target" className="h-4 w-4 mr-spacing-xs" /> Formation
           </Typography>
@@ -154,7 +130,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             <Droppable droppableId="formation-fields">
               {(provided) => (
                 <dl
-                  className="space-y-spacing-sm text-sm"
+                  className="space-y-spacing-xs text-sm"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -174,13 +150,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-spacing-sm rounded-lg transition-all duration-200 ${
+                            className={`p-spacing-xs rounded transition-all duration-150 ${
                               snapshot.isDragging
-                                ? "bg-surface-hover shadow-lg scale-105"
-                                : "hover:bg-surface-hover hover:shadow-sm"
+                                ? "bg-surface-hover shadow-md scale-[1.02]"
+                                : "hover:bg-surface-hover"
                             }`}
                           >
-                            <div className="flex items-center gap-spacing-sm mb-spacing-xs">
+                            <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                               <div
                                 {...provided.dragHandleProps}
                                 className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
@@ -235,11 +211,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-md">
+        <div className="surface-subtle rounded-lg p-spacing-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-md"
+            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="hash" className="h-4 w-4 mr-spacing-xs" /> Play Details
           </Typography>
@@ -249,7 +225,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="space-y-spacing-sm text-sm"
+                  className="space-y-spacing-xs text-sm"
                 >
                   {playDetailsFieldOrder.map((fieldKey, index) => {
                     const field =
@@ -269,10 +245,10 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-spacing-sm rounded-lg transition-all duration-200 ${
+                            className={`p-spacing-xs rounded transition-all duration-150 ${
                               snapshot.isDragging
-                                ? "bg-surface-hover shadow-lg scale-105"
-                                : "hover:bg-surface-hover hover:shadow-sm"
+                                ? "bg-surface-hover shadow-md scale-[1.02]"
+                                : "hover:bg-surface-hover"
                             }`}
                           >
                             <div className="flex items-center gap-spacing-sm mb-spacing-xs">
@@ -330,18 +306,18 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-md">
+        <div className="surface-subtle rounded-lg p-spacing-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-md"
+            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="settings" className="h-4 w-4 mr-spacing-xs" />{" "}
             Preferences
           </Typography>
-          <dl className="space-y-spacing-md text-sm">
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-24">
+          <dl className="space-y-spacing-sm text-sm">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Down
               </dt>
               <dd className="flex-1">
@@ -355,8 +331,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-24">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Distance
               </dt>
               <dd className="flex-1">
@@ -370,8 +346,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-24">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Hash
               </dt>
               <dd className="flex-1">
@@ -385,8 +361,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-24">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Coverage
               </dt>
               <dd className="flex-1">
@@ -398,8 +374,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-24">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Front
               </dt>
               <dd className="flex-1">
@@ -414,38 +390,38 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </dl>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-md">
+        <div className="surface-subtle rounded-lg p-spacing-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-md"
+            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage &
             Stats
           </Typography>
-          <dl className="space-y-spacing-sm text-sm">
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-32">
+          <dl className="space-y-spacing-xs text-sm">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Called
               </dt>
-              <dd className="text-text-xssssssssrimary font-mono">
+              <dd className="text-text-xssssssssrimary font-mono text-xs">
                 {play.times_called}
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-md">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-32">
+            <div className="flex items-center gap-spacing-sm">
+              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Successful
               </dt>
-              <dd className="text-text-xssssssssrimary font-mono">
+              <dd className="text-text-xssssssssrimary font-mono text-xs">
                 {play.times_successful}
               </dd>
             </div>
             {play.last_used_at && (
-              <div className="flex items-center gap-spacing-md">
-                <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-32">
+              <div className="flex items-center gap-spacing-sm">
+                <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                   Last Used
                 </dt>
-                <dd className="text-text-xssssssssrimary font-mono">
+                <dd className="text-text-xssssssssrimary font-mono text-xs">
                   {new Date(play.last_used_at).toLocaleDateString()}
                 </dd>
               </div>
@@ -637,18 +613,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
       </div>
 
       <div className="flex items-center justify-between">
-        <div>
-          <Typography
-            variant="label-lg"
-            as="h4"
-            className="text-text-xssssssssrimary mb-spacing-xs"
-          >
-            Add to Workflow
-          </Typography>
-          <p className="text-xsssssssss text-text-secondary">
-            Build practice scripts and game plans from this play
-          </p>
-        </div>
+        <Typography
+          variant="label-md"
+          as="h4"
+          className="text-text-xssssssssrimary"
+        >
+          Quick Actions
+        </Typography>
         <div className="flex items-center gap-spacing-xs">
           <Button
             variant={play.diagram_url ? "primary" : "secondary"}
@@ -675,7 +646,6 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             className="surface-subtle hover:bg-surface-info text-text-info border-surface-primary"
           >
             <Icon name="calendar" className="h-3 w-3 mr-spacing-xs" /> Practice
-            Script
           </Button>
           <Button
             variant="secondary"
@@ -687,9 +657,6 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game
             Plan
           </Button>
-          <Badge variant="premium" size="sm">
-            Week 3
-          </Badge>
         </div>
       </div>
     </div>

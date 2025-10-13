@@ -25,6 +25,26 @@ export type FormationCategory =
 export type FormationDirection = 'base' | 'left' | 'right';
 
 /**
+ * Formation type classification
+ */
+export type FormationType = 
+  | 'I Formation'
+  | 'Singleback'
+  | 'Pistol'
+  | 'Shotgun'
+  | 'Empty'
+  | 'Trips'
+  | 'Bunch'
+  | 'Stack'
+  | 'Wing'
+  | 'Other';
+
+/**
+ * Formation strength (run/pass)
+ */
+export type StrengthType = 'left' | 'right' | 'balanced';
+
+/**
  * Player position within a formation
  * 
  * Connects to personnel configuration labels
@@ -64,6 +84,11 @@ export interface Formation {
   strength_player_position: string | null;  // "X", "Y", "Z", "H", "F"
   strength_player_label: string | null;     // "Blue", "Black", "Green"
   
+  // Formation Metadata
+  formation_type: FormationType | null;     // Base formation type: I Formation, Shotgun, etc.
+  run_strength: StrengthType;               // Default run strength: left, right, balanced
+  pass_strength: StrengthType;              // Default pass strength: left, right, balanced
+  
   // Player Positions
   player_positions: FormationPlayerPosition[];
   
@@ -93,6 +118,9 @@ export interface FormationCreate {
   base_formation_id?: string;
   strength_player_position?: string;
   strength_player_label?: string;
+  formation_type?: FormationType;
+  run_strength?: StrengthType;
+  pass_strength?: StrengthType;
   player_positions: FormationPlayerPosition[];
   tags?: string[];
   is_custom?: boolean;
@@ -110,6 +138,9 @@ export interface FormationUpdate {
   personnel_packages?: string[];
   strength_player_position?: string;
   strength_player_label?: string;
+  formation_type?: FormationType;
+  run_strength?: StrengthType;
+  pass_strength?: StrengthType;
   player_positions?: FormationPlayerPosition[];
   tags?: string[];
 }

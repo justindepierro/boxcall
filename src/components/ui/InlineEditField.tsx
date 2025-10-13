@@ -42,6 +42,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setEditValue(value);
@@ -51,8 +52,31 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.select();
+
+      // Show all suggestions on focus if enabled
+      if (enableSuggestions && suggestions.length > 0) {
+        setFilteredSuggestions(suggestions.slice(0, 5));
+        setShowSuggestions(true);
+      }
     }
-  }, [isEditing]);
+  }, [isEditing, enableSuggestions, suggestions]);
+
+  // Click outside handler for suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        showSuggestions &&
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node) &&
+        !inputRef.current?.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSuggestions]);
 
   const handleStartEdit = () => {
     if (disabled) return;
@@ -62,15 +86,22 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleSave = async () => {
+    console.log(
+      "[InlineEditField] 💾 handleSave called, editValue:",
+      editValue
+    );
     const trimmedValue = editValue.trim();
     const normalizedValue = normalizeValue
       ? normalizeValue(trimmedValue)
       : trimmedValue;
 
+    console.log("[InlineEditField] 💾 Normalized value:", normalizedValue);
+
     // Validation
     if (validation) {
       const validationError = validation(normalizedValue);
       if (validationError) {
+        console.log("[InlineEditField] ❌ Validation failed:", validationError);
         setError(validationError);
         setSaveStatus("error");
         // Shake animation
@@ -85,17 +116,21 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       }
     }
 
+    console.log("[InlineEditField] ✅ Validation passed, saving...");
     setError(null);
     setSaveStatus("saving");
     setIsEditing(false);
     setShowSuggestions(false);
 
     try {
+      console.log("[InlineEditField] 📡 Calling onSave with:", normalizedValue);
       await onSave(normalizedValue);
+      console.log("[InlineEditField] ✅ onSave completed successfully");
       setSaveStatus("success");
       // Show success feedback briefly
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (err) {
+      console.error("[InlineEditField] ❌ Save failed:", err);
       setSaveStatus("error");
       setError(err instanceof Error ? err.message : "Failed to save");
       // Shake animation
@@ -171,15 +206,76 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     if (enableSuggestions) {
       const filtered = filterSuggestions(newValue);
       setFilteredSuggestions(filtered);
-      setShowSuggestions(filtered.length > 0 && newValue.trim().length > 0);
+      setShowSuggestions(filtered.length > 0);
+    }
+  };
+
+  const handleInputFocus = () => {
+    // Show suggestions when input gains focus
+    if (enableSuggestions && suggestions.length > 0) {
+      const filtered = filterSuggestions(editValue);
+      setFilteredSuggestions(
+        filtered.length > 0 ? filtered : suggestions.slice(0, 5)
+      );
+      setShowSuggestions(true);
     }
   };
 
   const handleSuggestionSelect = (suggestion: string) => {
+    console.log("[InlineEditField] 🎯 Suggestion selected:", suggestion);
     setEditValue(suggestion);
     setShowSuggestions(false);
-    // Auto-save on suggestion select
-    setTimeout(() => handleSave(), 100);
+    // Auto-save on suggestion select - save immediately with the suggestion value
+    console.log(
+      "[InlineEditField] 🎯 Saving immediately with value:",
+      suggestion
+    );
+
+    // Call handleSave directly but pass the value explicitly
+    // We need to do this inline to avoid closure issues with setTimeout
+    const trimmedValue = suggestion.trim();
+    const normalizedValue = normalizeValue
+      ? normalizeValue(trimmedValue)
+      : trimmedValue;
+
+    console.log("[InlineEditField] 💾 Normalized value:", normalizedValue);
+
+    // Validation
+    if (validation) {
+      const validationError = validation(normalizedValue);
+      if (validationError) {
+        console.log("[InlineEditField] ❌ Validation failed:", validationError);
+        setError(validationError);
+        setSaveStatus("error");
+        return;
+      }
+    }
+
+    console.log("[InlineEditField] ✅ Validation passed, saving...");
+    setError(null);
+    setSaveStatus("saving");
+    setIsEditing(false);
+    setShowSuggestions(false);
+
+    // Save asynchronously
+    (async () => {
+      try {
+        console.log(
+          "[InlineEditField] 📡 Calling onSave with:",
+          normalizedValue
+        );
+        await onSave(normalizedValue);
+        console.log("[InlineEditField] ✅ onSave completed successfully");
+        setSaveStatus("success");
+        setTimeout(() => setSaveStatus("idle"), 2000);
+      } catch (err) {
+        console.error("[InlineEditField] ❌ Save failed:", err);
+        setSaveStatus("error");
+        setError(err instanceof Error ? err.message : "Failed to save");
+        setIsEditing(true);
+        setTimeout(() => setSaveStatus("idle"), 3000);
+      }
+    })();
   };
 
   const handleCancel = () => {
@@ -226,6 +322,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               ref={inputRef as React.RefObject<HTMLTextAreaElement>}
               value={editValue}
               onChange={(e) => handleInputChange(e.target.value)}
+              onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
               placeholder={placeholder}
@@ -245,6 +342,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               type="text"
               value={editValue}
               onChange={(e) => handleInputChange(e.target.value)}
+              onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
               placeholder={placeholder}
@@ -300,11 +398,17 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
         {/* Suggestions dropdown */}
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute left-0 top-full mt-2 w-full bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto">
+          <div
+            ref={suggestionsRef}
+            className="absolute left-0 top-full mt-2 w-full bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto"
+          >
             {filteredSuggestions.map((suggestion, index) => (
               <button
                 key={index}
-                onClick={() => handleSuggestionSelect(suggestion)}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // Prevent blur
+                  handleSuggestionSelect(suggestion);
+                }}
                 className="w-full text-left px-4 py-3 text-sm text-content-primary hover:bg-surface-secondary/50 focus:bg-surface-secondary/50 focus:outline-none border-b border-subtle last:border-b-0 transition-colors"
               >
                 {suggestion}

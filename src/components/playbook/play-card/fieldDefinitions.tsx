@@ -6,11 +6,12 @@ import {
   DIRECTION_RL_OPTIONS,
   FORMATION_OPTIONS,
   PLAY_TYPE_OPTIONS,
+  BACK_ALIGN_OPTIONS,
 } from "./constants";
 
 type SaveHandler = (
   field: keyof PlayType,
-  value: string | number
+  value: string | number | boolean
 ) => Promise<void>;
 
 type FieldRenderer = (
@@ -29,6 +30,7 @@ export type FieldDefinitionMap = Record<string, FieldDefinition>;
 interface FormationFieldFactoryOptions {
   normalizeValue: (value: string) => string;
   formationSuggestions: string[];
+  personnelSuggestions: string[];
   directionOptions: Array<{ value: string; label: string }>;
 }
 
@@ -42,6 +44,7 @@ interface PlayDetailsFieldFactoryOptions {
 export const createFormationFields = ({
   normalizeValue,
   formationSuggestions,
+  personnelSuggestions,
   directionOptions,
 }: FormationFieldFactoryOptions): FieldDefinitionMap => ({
   formation: {
@@ -58,6 +61,20 @@ export const createFormationFields = ({
         enableSuggestions={true}
         normalizeValue={normalizeValue}
         isSaving={savingFields.has("formation")}
+      />
+    ),
+  },
+  personnel: {
+    label: "Personnel",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.personnel || ""}
+        onSave={(value) => handleInlineSave("personnel", value)}
+        placeholder="Personnel grouping"
+        suggestions={personnelSuggestions}
+        enableSuggestions={true}
+        normalizeValue={normalizeValue}
+        isSaving={savingFields.has("personnel")}
       />
     ),
   },
@@ -95,9 +112,46 @@ export const createFormationFields = ({
       <InlineEditField
         value={optimisticPlay.back_align || ""}
         onSave={(value) => handleInlineSave("back_align", value)}
-        placeholder="Backfield alignment"
+        placeholder="e.g., Near, Far, Flip, Same, 1, 2"
+        suggestions={BACK_ALIGN_OPTIONS.map((option) => option.label)}
+        enableSuggestions={true}
         isSaving={savingFields.has("back_align")}
       />
+    ),
+  },
+  back_position: {
+    label: "Back Position",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <div className="flex items-center gap-spacing-sm">
+        <label className="flex items-center gap-spacing-xs cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={optimisticPlay.back_left_of_qb || false}
+            onChange={(e) =>
+              handleInlineSave("back_left_of_qb", e.target.checked)
+            }
+            disabled={savingFields.has("back_left_of_qb")}
+            className="w-4 h-4 text-primary-500 border-border rounded focus:ring-2 focus:ring-primary-500"
+          />
+          <span className="text-sm group-hover:text-primary-600">
+            ← Left of QB
+          </span>
+        </label>
+        <label className="flex items-center gap-spacing-xs cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={optimisticPlay.back_right_of_qb || false}
+            onChange={(e) =>
+              handleInlineSave("back_right_of_qb", e.target.checked)
+            }
+            disabled={savingFields.has("back_right_of_qb")}
+            className="w-4 h-4 text-primary-500 border-border rounded focus:ring-2 focus:ring-primary-500"
+          />
+          <span className="text-sm group-hover:text-primary-600">
+            Right of QB →
+          </span>
+        </label>
+      </div>
     ),
   },
   shift: {

@@ -8,6 +8,156 @@
 export type PlayerPosition = "QB" | "RB" | "TE" | "WR";
 
 /**
+ * Badge style variants for personnel badges
+ */
+export type BadgeStyle = "solid" | "border" | "gradient" | "shiny";
+
+/**
+ * Color preset configurations for badges
+ */
+export interface ColorPreset {
+  id: string;
+  name: string;
+  background: string;
+  text: string;
+  border?: string;
+  gradientFrom?: string;
+  gradientTo?: string;
+}
+
+/**
+ * Badge customization settings
+ */
+export interface BadgeCustomization {
+  style: BadgeStyle;
+  colorPresetId: string;
+  fontFamily?: string;
+}
+
+/**
+ * Predefined color presets for badge customization
+ */
+export const BADGE_COLOR_PRESETS: ColorPreset[] = [
+  {
+    id: "electric-blue",
+    name: "Electric Blue",
+    background: "bg-electric-600",
+    text: "text-white",
+    border: "border-electric-700",
+    gradientFrom: "from-electric-500",
+    gradientTo: "to-electric-700",
+  },
+  {
+    id: "crimson-red",
+    name: "Crimson Red",
+    background: "bg-red-600",
+    text: "text-white",
+    border: "border-red-700",
+    gradientFrom: "from-red-500",
+    gradientTo: "to-red-700",
+  },
+  {
+    id: "emerald-green",
+    name: "Emerald Green",
+    background: "bg-emerald-600",
+    text: "text-white",
+    border: "border-emerald-700",
+    gradientFrom: "from-emerald-500",
+    gradientTo: "to-emerald-700",
+  },
+  {
+    id: "amber-gold",
+    name: "Amber Gold",
+    background: "bg-amber-500",
+    text: "text-amber-950",
+    border: "border-amber-600",
+    gradientFrom: "from-amber-400",
+    gradientTo: "to-amber-600",
+  },
+  {
+    id: "purple-royal",
+    name: "Royal Purple",
+    background: "bg-purple-600",
+    text: "text-white",
+    border: "border-purple-700",
+    gradientFrom: "from-purple-500",
+    gradientTo: "to-purple-700",
+  },
+  {
+    id: "orange-flame",
+    name: "Flame Orange",
+    background: "bg-orange-600",
+    text: "text-white",
+    border: "border-orange-700",
+    gradientFrom: "from-orange-500",
+    gradientTo: "to-orange-700",
+  },
+  {
+    id: "cyan-ocean",
+    name: "Ocean Cyan",
+    background: "bg-cyan-600",
+    text: "text-white",
+    border: "border-cyan-700",
+    gradientFrom: "from-cyan-500",
+    gradientTo: "to-cyan-700",
+  },
+  {
+    id: "pink-rose",
+    name: "Rose Pink",
+    background: "bg-pink-600",
+    text: "text-white",
+    border: "border-pink-700",
+    gradientFrom: "from-pink-500",
+    gradientTo: "to-pink-700",
+  },
+  {
+    id: "slate-dark",
+    name: "Dark Slate",
+    background: "bg-slate-700",
+    text: "text-white",
+    border: "border-slate-800",
+    gradientFrom: "from-slate-600",
+    gradientTo: "to-slate-800",
+  },
+  {
+    id: "teal-mint",
+    name: "Mint Teal",
+    background: "bg-teal-600",
+    text: "text-white",
+    border: "border-teal-700",
+    gradientFrom: "from-teal-500",
+    gradientTo: "to-teal-700",
+  },
+  {
+    id: "indigo-deep",
+    name: "Deep Indigo",
+    background: "bg-indigo-600",
+    text: "text-white",
+    border: "border-indigo-700",
+    gradientFrom: "from-indigo-500",
+    gradientTo: "to-indigo-700",
+  },
+  {
+    id: "lime-bright",
+    name: "Bright Lime",
+    background: "bg-lime-500",
+    text: "text-lime-950",
+    border: "border-lime-600",
+    gradientFrom: "from-lime-400",
+    gradientTo: "to-lime-600",
+  },
+];
+
+/**
+ * Font options for badge customization
+ */
+export const BADGE_FONT_OPTIONS = [
+  { id: "default", name: "Default", className: "font-sans" },
+  { id: "mono", name: "Monospace", className: "font-mono" },
+  { id: "serif", name: "Serif", className: "font-serif" },
+] as const;
+
+/**
  * Individual player position within a personnel configuration
  * Maps to personnel_players table
  */
@@ -36,6 +186,8 @@ export interface PersonnelConfiguration {
   name: string;
   /** Optional description */
   description?: string;
+  /** Badge customization settings (stored as JSONB in database) */
+  badgeCustomization?: BadgeCustomization;
   created_at: string;
   updated_at: string;
   /** Associated players ordered by sort_order */
@@ -49,6 +201,7 @@ export interface CreatePersonnelConfiguration {
   playbook_id: string;
   name: string;
   description?: string;
+  badgeCustomization?: BadgeCustomization;
   players: Omit<PersonnelPlayer, "id" | "config_id" | "created_at">[];
 }
 
@@ -58,6 +211,8 @@ export interface CreatePersonnelConfiguration {
 export interface UpdatePersonnelConfiguration {
   name?: string;
   description?: string;
+  /** Badge customization settings */
+  badgeCustomization?: BadgeCustomization;
   /** If provided, replaces ALL players in the configuration */
   players?: Omit<PersonnelPlayer, "id" | "config_id" | "created_at">[];
 }

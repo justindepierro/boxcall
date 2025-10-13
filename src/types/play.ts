@@ -58,14 +58,18 @@ export interface Play {
 
   // Formation details
   personnel?: string; // text
-  f_type?: string; // text
+  f_type?: string; // text (DEPRECATED - use formation.formation_type)
   f_dir?: string; // text
 
   // Play details
   protection?: string; // text
   p_dir?: string; // text
-  r_str?: string; // text
-  p_str?: string; // text
+  r_str?: string; // text (DEPRECATED - use formation.run_strength with modifiers)
+  p_str?: string; // text (DEPRECATED - use formation.pass_strength)
+  
+  // Back position modifiers (affect inherited formation strength)
+  back_left_of_qb?: boolean;  // TRUE if back aligns left of QB
+  back_right_of_qb?: boolean; // TRUE if back aligns right of QB
 
   // Preferences
   pref_down?: string; // text

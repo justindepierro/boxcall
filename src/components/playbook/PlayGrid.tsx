@@ -23,6 +23,7 @@ import { Button } from "../ui/Button/Button";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import { usePreference } from "../../hooks/usePreferences";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
+import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { info, warn, debug } from "../../utils/logger";
 import {
   validatePlaybookData,
@@ -36,29 +37,16 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 
 // Convert database play data to full Play type
-const mapDatabasePlayToFullPlay = (dbPlay: {
-  id: string;
-  playbook_id: string;
-  formation: string;
-  play_name: string;
-  p_type: string;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-}): Play => ({
-  id: dbPlay.id,
-  playbook_id: dbPlay.playbook_id,
-  formation: dbPlay.formation,
-  play_name: dbPlay.play_name,
+// Pass through all database fields and add any missing defaults
+const mapDatabasePlayToFullPlay = (dbPlay: any): Play => ({
+  ...dbPlay, // Pass through all fields from database
   p_type: dbPlay.p_type as "Pass" | "Run" | "RPO" | "Play Action",
-  notes: dbPlay.notes,
-  confidence_base: 70, // Default value
-  times_called: 0, // Default value
-  times_successful: 0, // Default value
-  created_by: "system", // Default value
+  confidence_base: dbPlay.confidence_base ?? 70,
+  times_called: dbPlay.times_called ?? 0,
+  times_successful: dbPlay.times_successful ?? 0,
+  created_by: dbPlay.created_by ?? "system",
   created_at: new Date(dbPlay.created_at),
   updated_at: new Date(dbPlay.updated_at),
-  install_phase: undefined, // placeholder until DB field exists
 });
 interface PlayGridProps {
   searchQuery: string;
@@ -280,6 +268,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Handle inline play updates
   const handlePlaySave = useCallback(
     async (playId: string, updates: Partial<Play>) => {
+      console.log("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
       try {
         // Convert Play type updates to DatabasePlay type updates
         const dbUpdates: any = {};
@@ -317,6 +306,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         if (updates.p_tag2 !== undefined) dbUpdates.p_tag2 = updates.p_tag2;
         if (updates.back_align !== undefined)
           dbUpdates.back_align = updates.back_align;
+        if (updates.back_left_of_qb !== undefined)
+          dbUpdates.back_left_of_qb = Boolean(updates.back_left_of_qb);
+        if (updates.back_right_of_qb !== undefined)
+          dbUpdates.back_right_of_qb = Boolean(updates.back_right_of_qb);
         if (updates.shift !== undefined) dbUpdates.shift = updates.shift;
         if (updates.motion !== undefined) dbUpdates.motion = updates.motion;
         if (updates.key_player1 !== undefined)
@@ -327,12 +320,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           dbUpdates.check_into = updates.check_into;
         if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
 
-        console.log("Saving play updates:", { playId, updates, dbUpdates });
+        console.log("[PlayGrid] 🔷 Mapped updates:", {
+          playId,
+          updates,
+          dbUpdates,
+          "dbUpdates.f_dir": dbUpdates.f_dir,
+          "dbUpdates.p_dir": dbUpdates.p_dir,
+        });
+        console.log("[PlayGrid] 🔷 Calling updatePlay...");
 
         await updatePlay(playId, dbUpdates);
+
+        console.log("[PlayGrid] 🟢 updatePlay completed successfully");
         info(`Play ${playId} updated successfully`);
       } catch (error) {
-        console.error("Failed to save play:", error);
+        console.error("[PlayGrid] 🔴 Failed to save play:", error);
         throw error; // Re-throw so PlayCard can handle the error
       }
     },
@@ -549,6 +551,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const hasMorePlays =
     isMobile && displayPlays.length > MOBILE_INITIAL_PLAYS && !showAllPlays;
 
+  // Load personnel configurations to provide as suggestions
+  const playbookId = plays.length > 0 ? plays[0].playbook_id : undefined;
+  const { data: personnelConfigurations = [] } =
+    usePersonnelConfigurations(playbookId);
+
   // Collect unique suggestions from all plays for inline editing
   const collectedSuggestions = useMemo(() => {
     const formations = new Set<string>();
@@ -561,12 +568,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       if (play.p_type) playTypes.add(play.p_type);
     });
 
+    // Convert personnel configurations to suggestions
+    const personnelSuggestions = personnelConfigurations.map(
+      (config) => config.name
+    );
+
     return {
       formations: Array.from(formations).sort(),
       playNames: Array.from(playNames).sort(),
       playTypes: Array.from(playTypes).sort(),
+      personnel: personnelSuggestions,
     };
-  }, [plays]);
+  }, [plays, personnelConfigurations]);
 
   const showEmpty = displayPlays.length === 0 && !loading && !error;
   // Virtualization threshold (avoid overhead for small lists)
@@ -614,6 +627,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         formationSuggestions={collectedSuggestions.formations}
         playNameSuggestions={collectedSuggestions.playNames}
         playTypeSuggestions={collectedSuggestions.playTypes}
+        personnelSuggestions={collectedSuggestions.personnel}
+        personnelConfigurations={personnelConfigurations}
         directionDisplayFormat={directionDisplayFormat}
         expandedPlayId={expandedPlayId}
         onToggleExpand={handleToggleExpand}
@@ -628,6 +643,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       selectedPlayIds,
       handlePlaySelect,
       collectedSuggestions,
+      personnelConfigurations,
       directionDisplayFormat,
       expandedPlayId,
       handleToggleExpand,
@@ -862,6 +878,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             }
                             playNameSuggestions={collectedSuggestions.playNames}
                             playTypeSuggestions={collectedSuggestions.playTypes}
+                            personnelSuggestions={
+                              collectedSuggestions.personnel
+                            }
+                            personnelConfigurations={personnelConfigurations}
                             directionDisplayFormat={directionDisplayFormat}
                             expandedPlayId={expandedPlayId}
                             onToggleExpand={handleToggleExpand}
@@ -938,6 +958,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               playTypeSuggestions={
                                 collectedSuggestions.playTypes
                               }
+                              personnelSuggestions={
+                                collectedSuggestions.personnel
+                              }
+                              personnelConfigurations={personnelConfigurations}
                               directionDisplayFormat={directionDisplayFormat}
                               expandedPlayId={expandedPlayId}
                               onToggleExpand={handleToggleExpand}

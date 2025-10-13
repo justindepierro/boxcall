@@ -69,7 +69,13 @@ export class PersonnelService {
 
       // Combine configurations with their players
       return configs.map((config) => ({
-        ...config,
+        id: config.id,
+        playbook_id: config.playbook_id,
+        name: config.name,
+        description: config.description,
+        created_at: config.created_at,
+        updated_at: config.updated_at,
+        badgeCustomization: config.badge_customization, // Convert snake_case to camelCase
         players: playersByConfig[config.id] || [],
       }));
     } catch (error) {
@@ -114,7 +120,13 @@ export class PersonnelService {
       if (playersError) throw playersError;
 
       return {
-        ...config,
+        id: config.id,
+        playbook_id: config.playbook_id,
+        name: config.name,
+        description: config.description,
+        created_at: config.created_at,
+        updated_at: config.updated_at,
+        badgeCustomization: config.badge_customization, // Convert snake_case to camelCase
         players: players || [],
       };
     } catch (error) {
@@ -150,6 +162,7 @@ export class PersonnelService {
           playbook_id: config.playbook_id,
           name: config.name,
           description: config.description,
+          badge_customization: config.badgeCustomization,
         })
         .select()
         .single();
@@ -174,7 +187,13 @@ export class PersonnelService {
       if (playersError) throw playersError;
 
       return {
-        ...newConfig,
+        id: newConfig.id,
+        playbook_id: newConfig.playbook_id,
+        name: newConfig.name,
+        description: newConfig.description,
+        created_at: newConfig.created_at,
+        updated_at: newConfig.updated_at,
+        badgeCustomization: newConfig.badge_customization, // Convert snake_case to camelCase
         players: players || [],
       };
     } catch (error) {
@@ -201,6 +220,7 @@ export class PersonnelService {
         .update({
           name: updates.name,
           description: updates.description,
+          badge_customization: updates.badgeCustomization,
         })
         .eq("id", id)
         .select()
@@ -244,7 +264,13 @@ export class PersonnelService {
         if (playersError) throw playersError;
 
         return {
-          ...updatedConfig,
+          id: updatedConfig.id,
+          playbook_id: updatedConfig.playbook_id,
+          name: updatedConfig.name,
+          description: updatedConfig.description,
+          created_at: updatedConfig.created_at,
+          updated_at: updatedConfig.updated_at,
+          badgeCustomization: updatedConfig.badge_customization, // Convert snake_case to camelCase
           players: players || [],
         };
       }
@@ -259,7 +285,13 @@ export class PersonnelService {
       if (playersError) throw playersError;
 
       return {
-        ...updatedConfig,
+        id: updatedConfig.id,
+        playbook_id: updatedConfig.playbook_id,
+        name: updatedConfig.name,
+        description: updatedConfig.description,
+        created_at: updatedConfig.created_at,
+        updated_at: updatedConfig.updated_at,
+        badgeCustomization: updatedConfig.badge_customization, // Convert snake_case to camelCase
         players: players || [],
       };
     } catch (error) {

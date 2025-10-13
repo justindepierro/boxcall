@@ -1,18 +1,18 @@
 /**
  * DELETE CONFIRMATION DIALOG - USAGE EXAMPLES
- * 
+ *
  * This file shows how to integrate the DeleteConfirmationDialog
  * into your delete workflows for Personnel and Formations.
- * 
+ *
  * Copy these patterns into your actual components.
  */
 
-import { useState } from 'react';
-import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
-import { PersonnelService } from '../../services/personnelService';
-import { FormationService } from '../../services/formationService';
-import { Button } from '../ui/Button/Button';
-import { useToast } from '../../hooks/useToast';
+import { useState } from "react";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { PersonnelService } from "../../services/personnelService";
+import { FormationService } from "../../services/formationService";
+import { Button } from "../ui/Button/Button";
+import { useToast } from "../../hooks/useToast";
 
 // ============================================================================
 // EXAMPLE 1: Delete Personnel Configuration
@@ -24,26 +24,32 @@ export function PersonnelDeleteExample() {
     id: string;
     name: string;
   } | null>(null);
-  const [deleteUsage, setDeleteUsage] = useState<{
-    playsCount: number;
-    formationsCount: number;
-  } | undefined>(undefined);
+  const [deleteUsage, setDeleteUsage] = useState<
+    | {
+        playsCount: number;
+        formationsCount: number;
+      }
+    | undefined
+  >(undefined);
   const [isDeleting, setIsDeleting] = useState(false);
   const toast = useToast();
 
   // Step 1: When user clicks delete, check usage first
-  const handleDeleteClick = async (personnelId: string, personnelName: string) => {
+  const handleDeleteClick = async (
+    personnelId: string,
+    personnelName: string
+  ) => {
     try {
       // Check where this personnel is being used
       const usage = await PersonnelService.checkPersonnelUsage(personnelId);
-      
+
       // Store for dialog display
       setPersonnelToDelete({ id: personnelId, name: personnelName });
       setDeleteUsage(usage);
       setShowDeleteDialog(true);
     } catch (error) {
-      console.error('Failed to check personnel usage:', error);
-      toast.error('Failed to load usage information');
+      console.error("Failed to check personnel usage:", error);
+      toast.error("Failed to load usage information");
     }
   };
 
@@ -54,16 +60,17 @@ export function PersonnelDeleteExample() {
     setIsDeleting(true);
     try {
       await PersonnelService.deletePersonnelConfiguration(personnelToDelete.id);
-      
-      toast.success(`Personnel "${personnelToDelete.name}" deleted successfully`);
+
+      toast.success(
+        `Personnel "${personnelToDelete.name}" deleted successfully`
+      );
       setShowDeleteDialog(false);
-      
+
       // Refresh your data here (e.g., refetch personnel list)
       // queryClient.invalidateQueries(['personnel', playbookId]);
-      
     } catch (error) {
-      console.error('Failed to delete personnel:', error);
-      toast.error('Failed to delete personnel configuration');
+      console.error("Failed to delete personnel:", error);
+      toast.error("Failed to delete personnel configuration");
     } finally {
       setIsDeleting(false);
     }
@@ -75,7 +82,7 @@ export function PersonnelDeleteExample() {
       {/* Your delete button */}
       <Button
         variant="danger"
-        onClick={() => handleDeleteClick('personnel-id-123', '11 Personnel')}
+        onClick={() => handleDeleteClick("personnel-id-123", "11 Personnel")}
       >
         Delete Personnel
       </Button>
@@ -107,25 +114,31 @@ export function FormationDeleteExample() {
     id: string;
     name: string;
   } | null>(null);
-  const [deleteUsage, setDeleteUsage] = useState<{
-    playsCount: number;
-  } | undefined>(undefined);
+  const [deleteUsage, setDeleteUsage] = useState<
+    | {
+        playsCount: number;
+      }
+    | undefined
+  >(undefined);
   const [isDeleting, setIsDeleting] = useState(false);
   const toast = useToast();
 
   // Step 1: When user clicks delete, check usage first
-  const handleDeleteClick = async (formationId: string, formationName: string) => {
+  const handleDeleteClick = async (
+    formationId: string,
+    formationName: string
+  ) => {
     try {
       // Check where this formation is being used
       const usage = await FormationService.checkFormationUsage(formationId);
-      
+
       // Store for dialog display
       setFormationToDelete({ id: formationId, name: formationName });
       setDeleteUsage(usage);
       setShowDeleteDialog(true);
     } catch (error) {
-      console.error('Failed to check formation usage:', error);
-      toast.error('Failed to load usage information');
+      console.error("Failed to check formation usage:", error);
+      toast.error("Failed to load usage information");
     }
   };
 
@@ -136,16 +149,17 @@ export function FormationDeleteExample() {
     setIsDeleting(true);
     try {
       await FormationService.deleteFormation(formationToDelete.id);
-      
-      toast.success(`Formation "${formationToDelete.name}" deleted successfully`);
+
+      toast.success(
+        `Formation "${formationToDelete.name}" deleted successfully`
+      );
       setShowDeleteDialog(false);
-      
+
       // Refresh your data here (e.g., refetch formations list)
       // queryClient.invalidateQueries(['formations', playbookId]);
-      
     } catch (error) {
-      console.error('Failed to delete formation:', error);
-      toast.error('Failed to delete formation');
+      console.error("Failed to delete formation:", error);
+      toast.error("Failed to delete formation");
     } finally {
       setIsDeleting(false);
     }
@@ -157,7 +171,7 @@ export function FormationDeleteExample() {
       {/* Your delete button */}
       <Button
         variant="danger"
-        onClick={() => handleDeleteClick('formation-id-456', 'I Formation')}
+        onClick={() => handleDeleteClick("formation-id-456", "I Formation")}
       >
         Delete Formation
       </Button>
@@ -190,13 +204,16 @@ export function PersonnelDeleteWithHooksExample() {
     name: string;
     playbookId: string;
   } | null>(null);
-  const [deleteUsage, setDeleteUsage] = useState<{
-    playsCount: number;
-    formationsCount: number;
-  } | undefined>(undefined);
-  
+  const [deleteUsage, setDeleteUsage] = useState<
+    | {
+        playsCount: number;
+        formationsCount: number;
+      }
+    | undefined
+  >(undefined);
+
   const toast = useToast();
-  
+
   // If you have a delete mutation hook:
   // const deleteMutation = useDeletePersonnelConfiguration();
 
@@ -207,12 +224,16 @@ export function PersonnelDeleteWithHooksExample() {
   ) => {
     try {
       const usage = await PersonnelService.checkPersonnelUsage(personnelId);
-      setPersonnelToDelete({ id: personnelId, name: personnelName, playbookId });
+      setPersonnelToDelete({
+        id: personnelId,
+        name: personnelName,
+        playbookId,
+      });
       setDeleteUsage(usage);
       setShowDeleteDialog(true);
     } catch (err) {
-      console.error('Failed to check usage:', err);
-      toast.error('Failed to load usage information');
+      console.error("Failed to check usage:", err);
+      toast.error("Failed to load usage information");
     }
   };
 
@@ -228,12 +249,12 @@ export function PersonnelDeleteWithHooksExample() {
 
       // Or directly:
       await PersonnelService.deletePersonnelConfiguration(personnelToDelete.id);
-      
+
       toast.success(`Personnel "${personnelToDelete.name}" deleted`);
       setShowDeleteDialog(false);
     } catch (err) {
-      console.error('Failed to delete:', err);
-      toast.error('Failed to delete personnel');
+      console.error("Failed to delete:", err);
+      toast.error("Failed to delete personnel");
     }
   };
 
@@ -241,7 +262,9 @@ export function PersonnelDeleteWithHooksExample() {
     <div>
       <Button
         variant="danger"
-        onClick={() => handleDeleteClick('id-123', '11 Personnel', 'playbook-id')}
+        onClick={() =>
+          handleDeleteClick("id-123", "11 Personnel", "playbook-id")
+        }
       >
         Delete
       </Button>
@@ -268,32 +291,32 @@ export function PersonnelDeleteWithHooksExample() {
 
 /**
  * TO INTEGRATE INTO YOUR COMPONENT:
- * 
+ *
  * 1. Import the dialog:
  *    import { DeleteConfirmationDialog } from '../common/DeleteConfirmationDialog';
- * 
+ *
  * 2. Import the service:
  *    import { PersonnelService } from '@services';
  *    // or
  *    import { FormationService } from '@services';
- * 
+ *
  * 3. Add state for dialog:
  *    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
  *    const [entityToDelete, setEntityToDelete] = useState<{ id: string; name: string } | null>(null);
  *    const [deleteUsage, setDeleteUsage] = useState<{ playsCount: number; ... } | undefined>();
  *    const [isDeleting, setIsDeleting] = useState(false);
- * 
+ *
  * 4. Replace your current delete handler:
  *    OLD: onClick={() => deletePersonnel(id)}
  *    NEW: onClick={() => handleDeleteClick(id, name)}
- * 
+ *
  * 5. Add the new handlers (copy from examples above):
  *    - handleDeleteClick() - checks usage, shows dialog
  *    - handleConfirmDelete() - actually deletes
- * 
+ *
  * 6. Add the dialog component to your JSX:
  *    <DeleteConfirmationDialog {...props} />
- * 
+ *
  * 7. Test the flow:
  *    - Click delete button
  *    - See usage warnings

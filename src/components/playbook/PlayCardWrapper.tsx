@@ -1,6 +1,7 @@
 import React from "react";
 import { PlayCard } from "./PlayCard";
 import type { Play } from "../../types/play";
+import type { PersonnelConfiguration } from "../../types/personnel";
 
 /**
  * Unified wrapper for PlayCard that consolidates common props
@@ -32,6 +33,8 @@ interface PlayCardWrapperProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
+  personnelSuggestions?: string[];
+  personnelConfigurations?: PersonnelConfiguration[];
 
   // Display format
   directionDisplayFormat?: "full" | "abbrev" | "letter";
@@ -57,6 +60,8 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   formationSuggestions,
   playNameSuggestions,
   playTypeSuggestions,
+  personnelSuggestions,
+  personnelConfigurations,
   directionDisplayFormat,
   expandedPlayId,
   onToggleExpand,
@@ -82,6 +87,8 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     formationSuggestions,
     playNameSuggestions,
     playTypeSuggestions,
+    personnelSuggestions,
+    personnelConfigurations,
     directionDisplayFormat: directionDisplayFormat || "full",
     isExpanded: expandedPlayId === play.id,
     onToggleExpand,

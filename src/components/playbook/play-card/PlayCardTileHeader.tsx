@@ -6,8 +6,9 @@ import { ScrollingText } from "../../ui/ScrollingText";
 import { ConfidenceBadge } from "../../ui/ConfidenceBadge";
 import { FavoriteButton } from "../../ui/FavoriteButton";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
-import { FormationBadge } from "../FormationBadge";
+import { PersonnelBadge } from "../PersonnelBadge";
 import type { Play as PlayType } from "../../../types/play";
+import type { PersonnelConfiguration } from "../../../types/personnel";
 import { getTileGradient, getTileIcon } from "./helpers";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
@@ -26,6 +27,7 @@ interface PlayCardTileHeaderProps {
   onToggleFavorite: () => void;
   isExpanded?: boolean;
   onToggleExpand?: () => void;
+  personnelConfigurations?: PersonnelConfiguration[];
 }
 
 export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
@@ -42,7 +44,13 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   onToggleFavorite,
   isExpanded,
   onToggleExpand,
+  personnelConfigurations = [],
 }) => {
+  // Find the badge customization for this play's personnel
+  const personnelConfig = personnelConfigurations.find(
+    (config) => config.name === optimisticPlay.personnel
+  );
+
   const tileTitle =
     showOneWordCalls && play.one_word_play
       ? play.one_word_play.toUpperCase()
@@ -137,25 +145,15 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         )}
       </div>
 
-      {/* Badges - formation with direction/personnel, and installation phase */}
+      {/* Badges - personnel and installation phase */}
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-        {/* Formation badge with direction and personnel */}
-        {(optimisticPlay.formation_id || optimisticPlay.formation) && (
-          <FormationBadge
-            formationId={optimisticPlay.formation_id}
-            formationName={optimisticPlay.formation}
-            direction={optimisticPlay.formation_direction}
-            showPersonnel={true}
-            showDirection={true}
+        {/* Personnel badge */}
+        {optimisticPlay.personnel && (
+          <PersonnelBadge
+            personnel={optimisticPlay.personnel}
             size="sm"
+            badgeCustomization={personnelConfig?.badgeCustomization}
           />
-        )}
-
-        {/* Formation type badge (if no formation_id, show old behavior) */}
-        {!optimisticPlay.formation_id && optimisticPlay.f_type && (
-          <span className="px-2 py-0.5 bg-surface-muted text-primary border-subtle rounded-full text-xs font-medium">
-            {optimisticPlay.f_type}
-          </span>
         )}
 
         {/* Installation phase badge */}

@@ -8,14 +8,15 @@
 
 ## ✅ Step 1: Name Sync Triggers (COMPLETE!)
 
-You just applied these! Now when you rename personnel or formations, all related plays automatically update. 
+You just applied these! Now when you rename personnel or formations, all related plays automatically update.
 
 **Test it:**
+
 ```sql
 -- Try renaming a personnel configuration
-UPDATE personnel_configurations 
-SET name = '11P' 
-WHERE name = '11 Personnel' 
+UPDATE personnel_configurations
+SET name = '11P'
+WHERE name = '11 Personnel'
 LIMIT 1;
 
 -- Check that plays updated
@@ -46,20 +47,20 @@ This adds proper referential integrity between plays and personnel.
 -- 1. ADD COLUMN
 -- ========================================
 
-ALTER TABLE plays 
+ALTER TABLE plays
   ADD COLUMN IF NOT EXISTS personnel_id UUID REFERENCES personnel_configurations(id) ON DELETE SET NULL;
 
-COMMENT ON COLUMN plays.personnel_id IS 
+COMMENT ON COLUMN plays.personnel_id IS
   'Foreign key to personnel_configurations.id. SET NULL on delete to preserve play history.';
 
 -- ========================================
 -- 2. ADD INDEXES
 -- ========================================
 
-CREATE INDEX IF NOT EXISTS idx_plays_personnel_id 
+CREATE INDEX IF NOT EXISTS idx_plays_personnel_id
   ON plays(personnel_id) WHERE personnel_id IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_plays_playbook_personnel 
+CREATE INDEX IF NOT EXISTS idx_plays_playbook_personnel
   ON plays(playbook_id, personnel_id) WHERE personnel_id IS NOT NULL;
 
 -- ========================================
@@ -76,8 +77,8 @@ BEGIN
       p.id as play_id,
       pc.id as personnel_id
     FROM plays p
-    INNER JOIN personnel_configurations pc 
-      ON p.playbook_id = pc.playbook_id 
+    INNER JOIN personnel_configurations pc
+      ON p.playbook_id = pc.playbook_id
       AND p.personnel = pc.name
     WHERE p.personnel_id IS NULL
       AND p.personnel IS NOT NULL
@@ -87,7 +88,7 @@ BEGIN
   SET personnel_id = pl.personnel_id
   FROM personnel_lookup pl
   WHERE p.id = pl.play_id;
-  
+
   GET DIAGNOSTICS updated_count = ROW_COUNT;
   RAISE NOTICE '✅ Migrated % existing plays to use personnel_id FK', updated_count;
 END $$;
@@ -108,7 +109,7 @@ BEGIN
       AND name = NEW.personnel
     LIMIT 1;
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -118,7 +119,7 @@ CREATE TRIGGER trigger_auto_populate_personnel_id
   FOR EACH ROW
   EXECUTE FUNCTION auto_populate_personnel_id();
 
-COMMENT ON FUNCTION auto_populate_personnel_id IS 
+COMMENT ON FUNCTION auto_populate_personnel_id IS
   'Automatically populates plays.personnel_id when plays.personnel TEXT is set';
 
 -- ========================================
@@ -135,13 +136,13 @@ BEGIN
   SELECT COUNT(*) INTO total_plays FROM plays;
   SELECT COUNT(*) INTO plays_with_fk FROM plays WHERE personnel_id IS NOT NULL;
   SELECT COUNT(*) INTO plays_with_text FROM plays WHERE personnel IS NOT NULL AND personnel != '';
-  
+
   IF plays_with_text > 0 THEN
     coverage_percent := ROUND((plays_with_fk::NUMERIC / plays_with_text::NUMERIC) * 100, 1);
   ELSE
     coverage_percent := 0;
   END IF;
-  
+
   RAISE NOTICE '============================================';
   RAISE NOTICE '✅ Personnel FK migration complete!';
   RAISE NOTICE '============================================';
@@ -151,7 +152,7 @@ BEGIN
   RAISE NOTICE 'Plays with personnel_id FK: %', plays_with_fk;
   RAISE NOTICE 'Coverage: %%', coverage_percent;
   RAISE NOTICE '';
-  
+
   IF plays_with_fk < plays_with_text THEN
     RAISE NOTICE '⚠️  % plays could not be linked automatically', (plays_with_text - plays_with_fk);
     RAISE NOTICE '   These may have invalid personnel names or were created before personnel system';
@@ -162,6 +163,7 @@ END $$;
 ```
 
 **Apply it:**
+
 ```bash
 1. Copy the SQL above
 2. Open Supabase Dashboard → SQL Editor
@@ -180,11 +182,11 @@ Find the Play interface and ensure it has `personnel_id`:
 ```typescript
 export interface Play {
   // ... existing fields ...
-  
+
   // Personnel
   personnel?: string; // Legacy TEXT field
   personnel_id?: string | null; // NEW! FK to personnel_configurations
-  
+
   // ... rest of fields ...
 }
 ```
@@ -203,12 +205,12 @@ Update `createPlay` to auto-populate `personnel_id`:
 const newPlay = {
   id: playId,
   playbook_id: playbookId,
-  
+
   // ... other fields ...
-  
+
   personnel: playData.personnel || "",
   // No need to manually set personnel_id - the trigger will do it!
-  
+
   // ... rest of fields ...
 };
 ```
@@ -237,7 +239,7 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
         .eq('playbook_id', playbookId)
         .eq('name', playData.personnel)
         .single();
-      
+
       if (personnelConfig) {
         personnelId = personnelConfig.id;
       }
@@ -246,15 +248,15 @@ static async createPlay(playData: Partial<Play>): Promise<Play> {
     const newPlay = {
       id: playId,
       playbook_id: playbookId,
-      
+
       // ... other fields ...
-      
+
       personnel: playData.personnel || "",
       personnel_id: personnelId || null, // Explicitly set if found
-      
+
       // ... rest of fields ...
     };
-    
+
     // ... rest of method ...
   }
 }
@@ -420,15 +422,15 @@ export function DeleteConfirmationDialog({
         </div>
 
         <DialogFooter>
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             onClick={onClose}
             disabled={isDeleting}
           >
             Cancel
           </Button>
-          <Button 
-            variant="danger" 
+          <Button
+            variant="danger"
             onClick={onConfirm}
             disabled={isDeleting}
           >
@@ -467,10 +469,10 @@ const [deleteConfirmation, setDeleteConfirmation] = React.useState<{
 // Modify delete handler
 const handleDeleteClick = async () => {
   if (!selectedConfig) return;
-  
+
   // Check usage before showing confirmation
   const usage = await PersonnelService.checkPersonnelUsage(selectedConfig.id);
-  
+
   setDeleteConfirmation({
     isOpen: true,
     entityName: selectedConfig.name,
@@ -480,7 +482,7 @@ const handleDeleteClick = async () => {
 
 const confirmDelete = async () => {
   if (!selectedConfig) return;
-  
+
   try {
     await deletePersonnel.mutateAsync(selectedConfig.id);
     setDeleteConfirmation({ isOpen: false });
@@ -514,12 +516,12 @@ Create tests to verify the complete workflow.
 **File:** Create `src/__tests__/integration/personnel-formation-play.test.ts`
 
 ```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
-import { PersonnelService } from '@/services/personnelService';
-import { FormationService } from '@/services/formationService';
-import { PlaysService } from '@/services/playsService';
+import { describe, it, expect, beforeEach } from "vitest";
+import { PersonnelService } from "@/services/personnelService";
+import { FormationService } from "@/services/formationService";
+import { PlaysService } from "@/services/playsService";
 
-describe('Personnel → Formation → Play Integration', () => {
+describe("Personnel → Formation → Play Integration", () => {
   let playbookId: string;
   let personnelConfigId: string;
   let formationId: string;
@@ -527,37 +529,62 @@ describe('Personnel → Formation → Play Integration', () => {
 
   beforeEach(async () => {
     // Setup: Create test playbook
-    playbookId = 'test-playbook-id';
+    playbookId = "test-playbook-id";
   });
 
-  it('should create personnel configuration', async () => {
+  it("should create personnel configuration", async () => {
     const personnel = await PersonnelService.createPersonnelConfiguration({
       playbook_id: playbookId,
-      name: 'Test 11 Personnel',
-      description: '1 RB, 1 TE, 3 WR',
+      name: "Test 11 Personnel",
+      description: "1 RB, 1 TE, 3 WR",
       players: [
-        { player_position: 'QB', label: 'Q', sort_order: 0, is_wildcat_qb: false },
-        { player_position: 'RB', label: 'R', sort_order: 1, is_wildcat_qb: false },
-        { player_position: 'TE', label: 'T', sort_order: 2, is_wildcat_qb: false },
-        { player_position: 'WR', label: 'X', sort_order: 3, is_wildcat_qb: false },
-        { player_position: 'WR', label: 'Y', sort_order: 4, is_wildcat_qb: false },
+        {
+          player_position: "QB",
+          label: "Q",
+          sort_order: 0,
+          is_wildcat_qb: false,
+        },
+        {
+          player_position: "RB",
+          label: "R",
+          sort_order: 1,
+          is_wildcat_qb: false,
+        },
+        {
+          player_position: "TE",
+          label: "T",
+          sort_order: 2,
+          is_wildcat_qb: false,
+        },
+        {
+          player_position: "WR",
+          label: "X",
+          sort_order: 3,
+          is_wildcat_qb: false,
+        },
+        {
+          player_position: "WR",
+          label: "Y",
+          sort_order: 4,
+          is_wildcat_qb: false,
+        },
       ],
     });
 
     expect(personnel.id).toBeDefined();
-    expect(personnel.name).toBe('Test 11 Personnel');
+    expect(personnel.name).toBe("Test 11 Personnel");
     personnelConfigId = personnel.id;
   });
 
-  it('should create formation linked to personnel', async () => {
+  it("should create formation linked to personnel", async () => {
     const formation = await FormationService.createFormation({
       playbook_id: playbookId,
-      name: 'Test Trips',
+      name: "Test Trips",
       personnel_id: personnelConfigId,
-      personnel_name: 'Test 11 Personnel',
+      personnel_name: "Test 11 Personnel",
       personnel_packages: [personnelConfigId],
       player_positions: [],
-      direction: 'base',
+      direction: "base",
     });
 
     expect(formation.id).toBeDefined();
@@ -565,14 +592,14 @@ describe('Personnel → Formation → Play Integration', () => {
     formationId = formation.id;
   });
 
-  it('should create play referencing formation and personnel', async () => {
+  it("should create play referencing formation and personnel", async () => {
     const play = await PlaysService.createPlay({
       playbook_id: playbookId,
-      play_name: 'Test Play',
-      formation: 'Test Trips',
+      play_name: "Test Play",
+      formation: "Test Trips",
       formation_id: formationId,
-      p_type: 'Pass',
-      personnel: 'Test 11 Personnel',
+      p_type: "Pass",
+      personnel: "Test 11 Personnel",
     });
 
     expect(play.id).toBeDefined();
@@ -581,20 +608,20 @@ describe('Personnel → Formation → Play Integration', () => {
     playId = play.id;
   });
 
-  it('should update play personnel when personnel name changes', async () => {
+  it("should update play personnel when personnel name changes", async () => {
     // Rename personnel
     await PersonnelService.updatePersonnelConfiguration(personnelConfigId, {
-      name: 'Updated 11 Personnel',
+      name: "Updated 11 Personnel",
     });
 
     // Fetch play again
     const play = await PlaysService.getPlay(playId);
-    
+
     // Personnel TEXT should auto-update via trigger!
-    expect(play?.personnel).toBe('Updated 11 Personnel');
+    expect(play?.personnel).toBe("Updated 11 Personnel");
   });
 
-  it('should check usage before deleting personnel', async () => {
+  it("should check usage before deleting personnel", async () => {
     const usage = await PersonnelService.checkPersonnelUsage(personnelConfigId);
 
     expect(usage.playsCount).toBeGreaterThan(0);
@@ -605,6 +632,7 @@ describe('Personnel → Formation → Play Integration', () => {
 ```
 
 Run tests:
+
 ```bash
 npm run test
 ```
@@ -617,9 +645,9 @@ npm run test
 
 ```sql
 -- Test personnel rename
-UPDATE personnel_configurations 
-SET name = '11P Test' 
-WHERE name LIKE '%11%' 
+UPDATE personnel_configurations
+SET name = '11P Test'
+WHERE name LIKE '%11%'
 LIMIT 1;
 
 -- Verify plays updated
@@ -632,20 +660,21 @@ Create a new play in UI and check database:
 
 ```sql
 -- Should have both personnel TEXT and personnel_id
-SELECT 
-  play_name, 
-  personnel, 
+SELECT
+  play_name,
+  personnel,
   personnel_id,
   formation,
   formation_id
-FROM plays 
-ORDER BY created_at DESC 
+FROM plays
+ORDER BY created_at DESC
 LIMIT 5;
 ```
 
 ### **5.3: Test Delete Warning**
 
 Try to delete a personnel configuration that's in use. You should see:
+
 - ✅ Warning dialog
 - ✅ Usage count (X plays, Y formations)
 - ✅ Confirmation required
@@ -657,22 +686,26 @@ Try to delete a personnel configuration that's in use. You should see:
 Once you complete these steps, your system will have:
 
 ✅ **Perfect Database Design**
+
 - Foreign keys everywhere
 - Auto-syncing name changes
 - Referential integrity enforced
 - Proper indexes
 
 ✅ **Safe Operations**
+
 - Delete confirmations with usage warnings
 - No accidental data loss
 - Clear user feedback
 
 ✅ **Comprehensive Integration**
+
 - Personnel → Formations → Plays all linked
 - Everything updates automatically
 - Type-safe throughout
 
 ✅ **Production-Ready**
+
 - Tested workflows
 - Error handling
 - Performance optimized

@@ -1,6 +1,35 @@
 import { normalizePlayName } from "./textNormalization";
 
 import type { Play } from "../types/play";
+
+/**
+ * Format a direction value according to the display format preference
+ */
+function formatDirection(
+  value: string | undefined | null,
+  format: "full" | "abbrev" | "letter" = "full"
+): string {
+  const val = (value || "").trim().toUpperCase();
+  if (!val) return "";
+
+  switch (format) {
+    case "full":
+      if (val === "R") return "Right";
+      if (val === "L") return "Left";
+      return val;
+    case "abbrev":
+      if (val === "R") return "Rt";
+      if (val === "L") return "Lt";
+      return val;
+    case "letter":
+      if (val === "R") return "R";
+      if (val === "L") return "L";
+      return val;
+    default:
+      return val;
+  }
+}
+
 /**
  * Utility functions for play name generation
  */
@@ -95,7 +124,8 @@ export function getDisplayName(
   play: Play,
   showOneWord: boolean,
   formationFieldOrder?: string[],
-  playDetailsFieldOrder?: string[]
+  playDetailsFieldOrder?: string[],
+  directionDisplayFormat: "full" | "abbrev" | "letter" = "full"
 ): string {
   if (showOneWord) {
     const oneWord = safe(play.one_word_play);
@@ -119,7 +149,7 @@ export function getDisplayName(
             value = clean(play.f_type);
             break;
           case "f_dir":
-            value = clean(play.f_dir);
+            value = formatDirection(play.f_dir, directionDisplayFormat);
             break;
           case "back_align":
             value = clean(play.back_align);
@@ -156,7 +186,7 @@ export function getDisplayName(
             value = normalizePlayName(play.play_name || "");
             break;
           case "p_dir":
-            value = clean(play.p_dir);
+            value = formatDirection(play.p_dir, directionDisplayFormat);
             break;
           case "p_type":
             value = clean(play.p_type);

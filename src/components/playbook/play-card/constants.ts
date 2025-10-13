@@ -82,6 +82,19 @@ export const HASH_OPTIONS = [
   { value: "Middle", label: "Middle" },
 ];
 
+export const BACK_ALIGN_OPTIONS = [
+  { value: "Near", label: "Near" },
+  { value: "Far", label: "Far" },
+  { value: "Flip", label: "Flip" },
+  { value: "Same", label: "Same" },
+  { value: "1", label: "1" },
+  { value: "2", label: "2" },
+  { value: "Strong", label: "Strong" },
+  { value: "Weak", label: "Weak" },
+  { value: "Open", label: "Open" },
+  { value: "Closed", label: "Closed" },
+];
+
 export const DIRECTION_RL_OPTIONS = [
   { value: "R", label: "Right" },
   { value: "L", label: "Left" },

@@ -11,11 +11,13 @@
 ## 📦 Files Created/Modified
 
 ### 1. ✅ DeleteConfirmationDialog Component
+
 **File**: `src/components/common/DeleteConfirmationDialog.tsx`
 
 **Status**: ✅ Complete - No TypeScript or lint errors
 
 **Features**:
+
 - Modal-based confirmation dialog using your existing `Modal` component
 - Visual warning indicators with semantic color tokens
 - Usage count display (plays, formations)
@@ -25,6 +27,7 @@
 - Accessibility-compliant
 
 **Example Usage**:
+
 ```tsx
 <DeleteConfirmationDialog
   isOpen={showDialog}
@@ -41,11 +44,13 @@
 ---
 
 ### 2. ✅ PersonnelService.checkPersonnelUsage()
+
 **File**: `src/services/personnelService.ts`
 
 **Status**: ✅ Complete - Method added with no errors
 
 **Method Signature**:
+
 ```typescript
 static async checkPersonnelUsage(
   id: string
@@ -53,12 +58,14 @@ static async checkPersonnelUsage(
 ```
 
 **What It Does**:
+
 - Queries `plays` table for records with `personnel_id = id`
 - Queries `formations` table for records with `personnel_id = id`
 - Returns exact counts using Supabase `count: "exact"`
 - Used before deleting personnel to show usage warnings
 
 **Example Call**:
+
 ```typescript
 const usage = await PersonnelService.checkPersonnelUsage(personnelId);
 // usage = { playsCount: 45, formationsCount: 8 }
@@ -67,11 +74,13 @@ const usage = await PersonnelService.checkPersonnelUsage(personnelId);
 ---
 
 ### 3. ✅ FormationService.checkFormationUsage()
+
 **File**: `src/services/formationService.ts`
 
 **Status**: ✅ Complete - Method added with no errors
 
 **Method Signature**:
+
 ```typescript
 static async checkFormationUsage(
   id: string
@@ -79,11 +88,13 @@ static async checkFormationUsage(
 ```
 
 **What It Does**:
+
 - Queries `plays` table for records with `formation_id = id`
 - Returns exact count using Supabase `count: "exact"`
 - Used before deleting formations to show usage warnings
 
 **Example Call**:
+
 ```typescript
 const usage = await FormationService.checkFormationUsage(formationId);
 // usage = { playsCount: 23 }
@@ -98,17 +109,21 @@ const usage = await FormationService.checkFormationUsage(formationId);
 **File to Edit**: `src/components/playbook/PersonnelConfigurationModal/index.tsx` (or similar)
 
 **Implementation**:
+
 ```tsx
-import { useState } from 'react';
-import { DeleteConfirmationDialog } from '../../common/DeleteConfirmationDialog';
-import { PersonnelService } from '@services';
+import { useState } from "react";
+import { DeleteConfirmationDialog } from "../../common/DeleteConfirmationDialog";
+import { PersonnelService } from "@services";
 
 // Inside component:
 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-const [deleteUsage, setDeleteUsage] = useState<{
-  playsCount: number;
-  formationsCount: number;
-} | undefined>(undefined);
+const [deleteUsage, setDeleteUsage] = useState<
+  | {
+      playsCount: number;
+      formationsCount: number;
+    }
+  | undefined
+>(undefined);
 
 // Replace direct delete with confirmation flow:
 const handleDeleteClick = async () => {
@@ -122,10 +137,10 @@ const handleConfirmDelete = async () => {
   setIsDeleting(true);
   try {
     await PersonnelService.deletePersonnelConfiguration(personnelId);
-    toast.success('Personnel configuration deleted');
+    toast.success("Personnel configuration deleted");
     onClose();
   } catch (error) {
-    toast.error('Failed to delete personnel configuration');
+    toast.error("Failed to delete personnel configuration");
   } finally {
     setIsDeleting(false);
     setShowDeleteDialog(false);
@@ -142,7 +157,7 @@ const handleConfirmDelete = async () => {
   entityType="personnel"
   usage={deleteUsage}
   isDeleting={isDeleting}
-/>
+/>;
 ```
 
 ---
@@ -152,16 +167,20 @@ const handleConfirmDelete = async () => {
 **File to Edit**: `src/components/playbook/FormationBuilderModal/FormationBuilderModal.canvas.tsx`
 
 **Implementation**:
+
 ```tsx
-import { useState } from 'react';
-import { DeleteConfirmationDialog } from '../../common/DeleteConfirmationDialog';
-import { FormationService } from '@services';
+import { useState } from "react";
+import { DeleteConfirmationDialog } from "../../common/DeleteConfirmationDialog";
+import { FormationService } from "@services";
 
 // Inside component:
 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-const [deleteUsage, setDeleteUsage] = useState<{
-  playsCount: number;
-} | undefined>(undefined);
+const [deleteUsage, setDeleteUsage] = useState<
+  | {
+      playsCount: number;
+    }
+  | undefined
+>(undefined);
 
 // Replace direct delete with confirmation flow:
 const handleDeleteClick = async () => {
@@ -175,10 +194,10 @@ const handleConfirmDelete = async () => {
   setIsDeleting(true);
   try {
     await FormationService.deleteFormation(formationId);
-    toast.success('Formation deleted');
+    toast.success("Formation deleted");
     onClose();
   } catch (error) {
-    toast.error('Failed to delete formation');
+    toast.error("Failed to delete formation");
   } finally {
     setIsDeleting(false);
     setShowDeleteDialog(false);
@@ -195,7 +214,7 @@ const handleConfirmDelete = async () => {
   entityType="formation"
   usage={deleteUsage}
   isDeleting={isDeleting}
-/>
+/>;
 ```
 
 ---
@@ -235,6 +254,7 @@ const handleConfirmDelete = async () => {
 ## 🔧 Technical Details
 
 ### Dependencies
+
 - ✅ Uses existing `Modal` component from `src/components/ui/Modal`
 - ✅ Uses existing `Button` component from `src/components/ui/Button/Button`
 - ✅ Uses existing `Icon` component from `src/components/ui/Icon/Icon`
@@ -242,17 +262,21 @@ const handleConfirmDelete = async () => {
 - ✅ All imports verified and working
 
 ### Semantic Design Tokens Used
+
 - `bg-warning-bg` / `text-warning` / `border-warning`
 - `bg-success-bg` / `text-success` / `border-success`
 - `bg-error-bg` / `text-error` / `border-error`
 
 ### Database Queries
+
 Both usage check methods use:
+
 ```typescript
 .select("*", { count: "exact", head: true })
 ```
 
 This approach:
+
 - ✅ Returns only the count (no data transfer)
 - ✅ Exact count (not estimated)
 - ✅ Fast performance
@@ -263,12 +287,14 @@ This approach:
 ## 🧪 Testing Checklist
 
 ### Unit Testing
+
 - [ ] Test `checkPersonnelUsage()` with personnel in use
 - [ ] Test `checkPersonnelUsage()` with personnel not in use
 - [ ] Test `checkFormationUsage()` with formation in use
 - [ ] Test `checkFormationUsage()` with formation not in use
 
 ### Integration Testing
+
 - [ ] Delete personnel with no usage (should show green "safe" message)
 - [ ] Delete personnel with plays only (should show "X plays" warning)
 - [ ] Delete personnel with formations only (should show "X formations" warning)
@@ -279,6 +305,7 @@ This approach:
 - [ ] Delete formation with no plays (should show green "safe" message)
 
 ### UI/UX Testing
+
 - [ ] Dialog is modal (backdrop prevents clicks outside)
 - [ ] Escape key closes dialog
 - [ ] Loading state shows spinner
@@ -292,11 +319,13 @@ This approach:
 ## 📊 System Impact
 
 ### Before This Implementation
+
 ❌ Coaches could accidentally delete personnel/formations without warning  
 ❌ No visibility into where entities are being used  
 ❌ Risk of broken references (plays losing personnel/formation data)
 
 ### After This Implementation
+
 ✅ Clear warnings before deletion  
 ✅ Exact usage counts displayed  
 ✅ Informed decision-making  
@@ -307,19 +336,23 @@ This approach:
 ## 🚀 Related Files
 
 ### Documentation
+
 - `PATH_TO_10_IMPLEMENTATION.md` - Overall roadmap (this is Step 3)
 - `COMPREHENSIVE_PLAYBOOK_SYSTEM_AUDIT.md` - Full system analysis
 - `INTEGRATION_IMPROVEMENTS_IMPLEMENTATION_GUIDE.md` - Implementation details
 
 ### Database
+
 - `database/migrations/20251012_add_name_sync_triggers.sql` - ✅ Applied
 - `database/migrations/20251012_add_personnel_fk_to_plays.sql` - ✅ Applied
 
 ### Services
+
 - `src/services/personnelService.ts` - ✅ Updated with checkPersonnelUsage()
 - `src/services/formationService.ts` - ✅ Updated with checkFormationUsage()
 
 ### Components (To Wire Up)
+
 - `src/components/playbook/PersonnelConfigurationModal/` - 🟡 Needs integration
 - `src/components/playbook/FormationBuilderModal/` - 🟡 Needs integration
 
@@ -328,6 +361,7 @@ This approach:
 ## 💡 Future Enhancements
 
 ### Potential Improvements
+
 1. **Bulk Delete Confirmation**: Show combined usage when deleting multiple items
 2. **Delete Impact Preview**: Show which specific plays/formations will be affected
 3. **Soft Delete**: Add "trash" system for undo functionality
@@ -335,6 +369,7 @@ This approach:
 5. **Cascade Options**: Let user choose to delete dependent entities
 
 ### Performance Optimizations
+
 1. Cache usage counts if checked recently
 2. Batch check multiple entities at once
 3. Real-time usage tracking (WebSocket updates)
@@ -344,6 +379,7 @@ This approach:
 ## ✅ Completion Criteria
 
 Step 3 will be **100% complete** when:
+
 - [x] DeleteConfirmationDialog component created
 - [x] PersonnelService.checkPersonnelUsage() implemented
 - [x] FormationService.checkFormationUsage() implemented
@@ -364,4 +400,3 @@ Step 3 will be **100% complete** when:
 - Design system tokens used correctly
 - No breaking changes to existing functionality
 - Backward compatible (old delete flows still work until replaced)
-
