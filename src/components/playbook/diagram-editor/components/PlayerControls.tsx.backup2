@@ -14,13 +14,11 @@ import { useCoverageAdjustment } from "./PlayerControls/hooks/useCoverageAdjustm
 
 // Handlers
 import {
+  executeOffenseFormation,
   detectOffensiveAlignment,
   executeDefenseFormation,
   handleAlignmentChange as handleAlignmentChangeHandler,
 } from "./PlayerControls/handlers";
-
-// Utilities
-import { getCenterXForAlignment } from "./PlayerControls/utils/formationUtils";
 
 interface PlayerControlsProps {
   app: DiagramPixiApp | null;
@@ -69,21 +67,22 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     onAlignmentChange: (newAlignment) => {
       handleAlignmentChangeHandler(
         newAlignment,
-        app,
         players,
-        setInternalAlignment
+        app,
+        selectedAlignment
       );
     },
   });
 
   // Formation analysis (custom hook)
-  const formationAnalysis = useFormationAnalysis({
+  const { formationAnalysis } = useFormationAnalysis({
     players,
     selectedAlignment,
+    app,
   });
 
   // Coverage adjustment callback (custom hook)
-  const { handleAutoAdjustCoverage } = useCoverageAdjustment({
+  const handleAutoAdjustCoverage = useCoverageAdjustment({
     app,
     formationAnalysis,
     players,
@@ -102,6 +101,11 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   // Count offensive players
   const offensivePlayerCount = players.filter(
     (p) => p.team === "offense"
+  ).length;
+
+  // Count defensive players
+  const defensivePlayerCount = players.filter(
+    (p) => p.team === "defense"
   ).length;
 
   // Helper to show confirm modal
@@ -187,6 +191,453 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         break;
     }
   };
+
+  /**
+   * Calculate center X position based on alignment
+   */
+  const getCenterXForAlignment = (
+    alignment: "left" | "middle" | "right",
+    fieldWidth: number
+  ): number => {
+    const fieldCenter = fieldWidth / 2; // 26.666 yards
+    const hashOffset = 6.17; // NFL hash marks are 6.17 yards from center
+
+    switch (alignment) {
+      case "left":
+        return fieldCenter - hashOffset; // Left hash: ~20.5 yards
+      case "right":
+        return fieldCenter + hashOffset; // Right hash: ~32.8 yards
+      case "middle":
+      default:
+        return fieldCenter; // Center: 26.666 yards
+    }
+  };
+
+  /**
+   * Calculate receiver positions based on alignment and tackle positions
+   */
+  const getReceiverPositions = (
+    alignment: "left" | "middle" | "right",
+    fieldWidth: number,
+    leftTackleX: number,
+    rightTackleX: number
+  ) => {
+    const leftSideline = 0;
+    const rightSideline = fieldWidth;
+    const leftNumbers = fieldWidth * 0.15; // ~8 yards from left
+    const rightNumbers = fieldWidth * 0.85; // ~45.3 yards from left
+
+    if (alignment === "middle") {
+      // Balanced - use current positions
+      return {
+        leftOutside: 6,
+        leftSlot: 12,
+        rightSlot: fieldWidth - 12,
+        rightOutside: fieldWidth - 6,
+      };
+    } else if (alignment === "left") {
+      // On left hash - right side is wide, left side is boundary
+      return {
+        // Boundary side (left) - tighter splits
+        leftOutside: (leftSideline + leftNumbers) / 2, // Split sideline and numbers (~4 yards)
+        leftSlot: (leftTackleX + (leftSideline + leftNumbers) / 2) / 2, // Split between LT and outside WR
+
+        // Wide side (right) - wider splits
+        rightOutside: rightNumbers, // Top of numbers (~45.3 yards)
+        rightSlot: (rightTackleX + rightNumbers) / 2, // Split between RT and top of numbers
+      };
+    } else {
+      // On right hash - left side is wide, right side is boundary
+      return {
+        // Wide side (left) - wider splits
+        leftOutside: leftNumbers, // Top of numbers (~8 yards)
+        leftSlot: (leftTackleX + leftNumbers) / 2, // Split between LT and top of numbers
+
+        // Boundary side (right) - tighter splits
+        rightSlot: (rightTackleX + (rightSideline + rightNumbers) / 2) / 2, // Split between RT and outside WR
+        rightOutside: (rightSideline + rightNumbers) / 2, // Split sideline and numbers (~49 yards)
+      };
+    }
+  };
+
+  /**
+   * Calculate 3x1 receiver positions based on alignment and whether 3 is to field or boundary
+   */
+  const get3x1ReceiverPositions = (
+    alignment: "left" | "middle" | "right",
+    fieldWidth: number,
+    leftTackleX: number,
+    rightTackleX: number,
+    threeToLeft: boolean // true if 3 receivers are on left, false if on right
+  ) => {
+    const leftNumbers = fieldWidth * 0.15; // ~8 yards from left
+    const rightNumbers = fieldWidth * 0.85; // ~45.3 yards from left
+    const leftSidelineHash = 1; // 1 yard from left sideline
+    const rightSidelineHash = fieldWidth - 1; // 1 yard from right sideline
+    const rightHash = fieldWidth / 2 + 6.17; // ~32.8 yards
+
+    if (alignment === "middle") {
+      // Middle - balanced splits
+      if (threeToLeft) {
+        // 3 left, 1 right
+        const spacing = (leftNumbers - leftTackleX) / 3;
+        return {
+          left1: leftNumbers, // Outside
+          left2: leftNumbers - spacing, // Slot
+          left3: leftNumbers - spacing * 2, // Inside slot
+          single: fieldWidth - 6, // Single on right
+        };
+      } else {
+        // 3 right, 1 left
+        const spacing = (rightNumbers - rightTackleX) / 3;
+        return {
+          single: 6, // Single on left
+          right3: rightTackleX + spacing, // Inside slot
+          right2: rightTackleX + spacing * 2, // Slot
+          right1: rightNumbers, // Outside
+        };
+      }
+    } else if (alignment === "left") {
+      // Left hash - right is wide side, left is boundary
+      if (threeToLeft) {
+        // 3 to BOUNDARY (left/short side)
+        const outsideX = leftSidelineHash + 1; // 1 yard outside sideline hash = ~2 yards
+        const spacing = (outsideX - leftTackleX) / 3;
+        return {
+          left1: outsideX, // Widest - 1 yard outside sideline hash
+          left2: leftTackleX + spacing * 2, // Evenly spaced
+          left3: leftTackleX + spacing, // Inside, evenly spaced
+          single: rightNumbers, // Single to field: at the numbers (wider)
+        };
+      } else {
+        // 3 to FIELD (right/wide side) - This is Trips Right
+        const spacing = (rightNumbers - rightTackleX) / 3;
+        return {
+          single: leftNumbers, // Single to boundary (LEFT): at the numbers (~8 yards)
+          right3: rightTackleX + spacing, // Inside slot, evenly spaced
+          right2: rightTackleX + spacing * 2, // Slot, evenly spaced
+          right1: rightNumbers, // Widest - top of numbers
+        };
+      }
+    } else {
+      // Right hash - left is wide side, right is boundary
+      if (threeToLeft) {
+        // 3 to FIELD (left/wide side)
+        const spacing = (leftNumbers - leftTackleX) / 3;
+        return {
+          left1: leftNumbers, // Widest - top of numbers
+          left2: leftTackleX + spacing * 2, // Slot, evenly spaced
+          left3: leftTackleX + spacing, // Inside slot, evenly spaced
+          single: rightHash - 3, // Single to boundary: 3 yards inside from numbers (between numbers and hash)
+        };
+      } else {
+        // 3 to BOUNDARY (right/short side)
+        const outsideX = rightSidelineHash - 1; // 1 yard outside sideline hash = ~52 yards
+        const spacing = (outsideX - rightTackleX) / 3;
+        return {
+          single: leftNumbers, // Single to field: bottom of numbers
+          right3: rightTackleX + spacing, // Inside, evenly spaced
+          right2: rightTackleX + spacing * 2, // Evenly spaced
+          right1: outsideX, // Widest - 1 yard outside sideline hash
+        };
+      }
+    }
+  };
+
+  /**
+   * Add full defensive formation (11 players)
+   * Base Nickel 4-2-5 vs 2x2 Spread
+   */
+  const handleAddDefenseFormation = (
+    formationType: "nickel425" = "nickel425"
+  ) => {
+    // Check if already at 11 defensive players
+    if (defensivePlayerCount >= 11) {
+      showConfirmModal(
+        `⚠️ You already have a full defense (11 defensive players) on the field.\n\nChanging defensive formations will remove all existing defensive players and reset the formation.\n\nAre you sure you want to continue?`,
+        () => {
+          // Clear existing defensive players
+          const defensivePlayers = players.filter((p) => p.team === "defense");
+          defensivePlayers.forEach((p) => removePlayer(p.id));
+          // Execute the formation at the offense's actual alignment
+          const offenseAlignment = detectOffensiveAlignment();
+          executeDefenseFormation(formationType, offenseAlignment);
+        },
+        "⚠️ Replace Defense?"
+      );
+      setIsDefenseDropdownOpen(false);
+      return;
+    }
+
+    // Check if there are existing defensive players (but less than 11)
+    if (defensivePlayerCount > 0 && defensivePlayerCount < 11) {
+      showConfirmModal(
+        `⚠️ Changing defensive formations will remove all ${defensivePlayerCount} existing defensive player${defensivePlayerCount !== 1 ? "s" : ""}.\n\nAre you sure you want to continue?`,
+        () => {
+          // Clear existing defensive players
+          const defensivePlayers = players.filter((p) => p.team === "defense");
+          defensivePlayers.forEach((p) => removePlayer(p.id));
+          // Execute the formation at the offense's actual alignment
+          const offenseAlignment = detectOffensiveAlignment();
+          executeDefenseFormation(formationType, offenseAlignment);
+        },
+        "⚠️ Change Defense?"
+      );
+      setIsDefenseDropdownOpen(false);
+      return;
+    }
+
+    // No defensive players yet, proceed directly
+    // Detect where offense actually is and align defense to it
+    const offenseAlignment = detectOffensiveAlignment();
+    executeDefenseFormation(formationType, offenseAlignment);
+    setIsDefenseDropdownOpen(false);
+  };
+
+  /**
+   * Detect current offensive alignment based on center position
+   * Returns the hash alignment that the offense is actually on
+   */
+  const detectOffensiveAlignment = (): "left" | "middle" | "right" => {
+    const centerPlayer = players.find(
+      (p) => p.team === "offense" && p.position === "center"
+    );
+
+    if (!centerPlayer) {
+      // No center found, use selected alignment as fallback
+      return selectedAlignment;
+    }
+
+    const fieldWidth = app?.coordinates.fieldWidth || 53.333;
+    const fieldCenter = fieldWidth / 2; // 26.666 yards
+    const hashOffset = 6.17;
+    const leftHashX = fieldCenter - hashOffset; // ~20.5 yards
+    const rightHashX = fieldCenter + hashOffset; // ~32.8 yards
+
+    // Determine which hash the center is closest to
+    const distToLeft = Math.abs(centerPlayer.x - leftHashX);
+    const distToMiddle = Math.abs(centerPlayer.x - fieldCenter);
+    const distToRight = Math.abs(centerPlayer.x - rightHashX);
+
+    const minDist = Math.min(distToLeft, distToMiddle, distToRight);
+
+    if (minDist === distToLeft) return "left";
+    if (minDist === distToRight) return "right";
+    return "middle";
+  };
+
+  /**
+   * Execute defensive formation
+   */
+  const executeDefenseFormation = (
+    formationType: "nickel425",
+    alignment: "left" | "middle" | "right"
+  ) => {
+    switch (formationType) {
+      case "nickel425":
+        executeNickel425(alignment);
+        break;
+    }
+  };
+
+  /**
+   * Execute Nickel 4-2-5 Defense (vs 2x2 Spread)
+   * Positions above the LOS to defend against spread formations
+   */
+  const executeNickel425 = (
+    alignment: "left" | "middle" | "right" = "middle"
+  ) => {
+    if (!app) return;
+
+    const losYard = app.fieldLayer?.getLineOfScrimmage() || 25;
+    const fieldWidth = 53.333;
+    const centerX = getDefenseCenterX(alignment, fieldWidth);
+
+    // Create Nickel 4-2-5 defensive formation using extracted module
+    const formationPositions = createNickel425Formation({
+      centerX,
+      losY: losYard,
+      fieldWidth,
+    });
+
+    // Convert to Player objects with unique IDs
+    const formationPlayers = convertToPlayers(formationPositions);
+
+    // Add players to field with staggered timing for visual effect
+    formationPlayers.forEach((player, index) => {
+      setTimeout(() => {
+        addPlayer(player);
+      }, index * 10);
+    });
+
+    console.log(
+      `🛡️ Added Nickel 4-2-5 Defense at LOS: ${losYard}, Alignment: ${alignment}`
+    );
+  };
+
+  /**
+   * Move existing formation when alignment changes
+   */
+  const handleAlignmentChange = React.useCallback(
+    (newAlignment: "left" | "middle" | "right") => {
+      if (!app?.playersLayer || !app?.coordinates) return;
+
+      const fieldWidth = app.coordinates.fieldWidth;
+      const targetCenterX = getCenterXForAlignment(newAlignment, fieldWidth);
+
+      // Find the center player (position === "center")
+      const centerPlayer = players.find(
+        (p) => p.team === "offense" && p.position === "center"
+      );
+
+      if (!centerPlayer) {
+        // No center on field, just update state
+        setInternalAlignment(newAlignment);
+        return;
+      }
+
+      // Calculate offset based on where the center ACTUALLY is
+      const currentCenterX = centerPlayer.x;
+      const offsetX = targetCenterX - currentCenterX;
+
+      // Find tackles for receiver positioning
+      const leftTackle = players.find((p) => p.jerseyNumber === "LT");
+      const rightTackle = players.find((p) => p.jerseyNumber === "RT");
+
+      if (!leftTackle || !rightTackle) {
+        // No tackles found, skip receiver positioning
+        setInternalAlignment(newAlignment);
+        return;
+      }
+
+      const newLTX = leftTackle.x + offsetX;
+      const newRTX = rightTackle.x + offsetX;
+
+      // Calculate receiver positions based on new alignment and tackle positions
+      const receiverPos = getReceiverPositions(
+        newAlignment,
+        fieldWidth,
+        newLTX,
+        newRTX
+      );
+
+      // Get all offensive players
+      const oLinePlayers: Player[] = [];
+      const backfieldPlayers: Player[] = [];
+      const receivers: Player[] = [];
+
+      players.forEach((p) => {
+        if (p.team !== "offense") return;
+
+        // Categorize players
+        if (
+          p.position === "center" ||
+          p.jerseyNumber === "LG" ||
+          p.jerseyNumber === "RG" ||
+          p.jerseyNumber === "LT" ||
+          p.jerseyNumber === "RT"
+        ) {
+          oLinePlayers.push(p);
+        } else if (p.jerseyNumber === "QB" || p.jerseyNumber === "RB") {
+          backfieldPlayers.push(p);
+        } else if (p.jerseyNumber === "WR") {
+          receivers.push(p);
+        }
+      });
+
+      // Move O-Line and backfield by offset
+      [...oLinePlayers, ...backfieldPlayers].forEach((player) => {
+        const newX = player.x + offsetX;
+        app.playersLayer!.updatePlayer(player.id, { x: newX });
+      });
+
+      // Reposition receivers to appropriate splits
+      // Sort receivers by current X position to identify left vs right
+      const sortedReceivers = [...receivers].sort((a, b) => a.x - b.x);
+
+      if (sortedReceivers.length === 4) {
+        // Determine if this is 3x1 or 2x2 based on distribution
+        const leftOfCenter = sortedReceivers.filter((r) => r.x < targetCenterX);
+        const rightOfCenter = sortedReceivers.filter(
+          (r) => r.x >= targetCenterX
+        );
+        const is3x1 = leftOfCenter.length === 3 || rightOfCenter.length === 3;
+
+        if (is3x1) {
+          // 3x1 formation - 3 on one side, 1 on the other
+          const threeToLeft = leftOfCenter.length === 3;
+
+          // Use specialized 3x1 positioning
+          const pos3x1 = get3x1ReceiverPositions(
+            newAlignment,
+            fieldWidth,
+            newLTX,
+            newRTX,
+            threeToLeft
+          );
+
+          if (threeToLeft) {
+            // 3 on left, 1 on right
+            app.playersLayer!.updatePlayer(sortedReceivers[0].id, {
+              x: pos3x1.left1,
+            }); // Leftmost outside
+            app.playersLayer!.updatePlayer(sortedReceivers[1].id, {
+              x: pos3x1.left2,
+            }); // Left middle
+            app.playersLayer!.updatePlayer(sortedReceivers[2].id, {
+              x: pos3x1.left3,
+            }); // Left inside
+            app.playersLayer!.updatePlayer(sortedReceivers[3].id, {
+              x: pos3x1.single,
+            }); // Single right
+          } else {
+            // 1 on left, 3 on right
+            app.playersLayer!.updatePlayer(sortedReceivers[0].id, {
+              x: pos3x1.single,
+            }); // Single left
+            app.playersLayer!.updatePlayer(sortedReceivers[1].id, {
+              x: pos3x1.right3,
+            }); // Right inside
+            app.playersLayer!.updatePlayer(sortedReceivers[2].id, {
+              x: pos3x1.right2,
+            }); // Right middle
+            app.playersLayer!.updatePlayer(sortedReceivers[3].id, {
+              x: pos3x1.right1,
+            }); // Rightmost outside
+          }
+        } else {
+          // 2x2 formation - 2 on each side
+          app.playersLayer!.updatePlayer(sortedReceivers[0].id, {
+            x: receiverPos.leftOutside,
+          }); // Leftmost outside
+          app.playersLayer!.updatePlayer(sortedReceivers[1].id, {
+            x: receiverPos.leftSlot,
+          }); // Left slot
+          app.playersLayer!.updatePlayer(sortedReceivers[2].id, {
+            x: receiverPos.rightSlot,
+          }); // Right slot
+          app.playersLayer!.updatePlayer(sortedReceivers[3].id, {
+            x: receiverPos.rightOutside,
+          }); // Rightmost outside
+        }
+      }
+
+      // Move defensive players by the same offset to follow the offense
+      const defensivePlayers = players.filter((p) => p.team === "defense");
+      defensivePlayers.forEach((player) => {
+        const newX = player.x + offsetX;
+        app.playersLayer!.updatePlayer(player.id, { x: newX });
+      });
+
+      // Update the state
+      setInternalAlignment(newAlignment);
+
+      console.log(
+        `📐 Shifted formation to ${newAlignment} hash (Center: ${currentCenterX.toFixed(2)} → ${targetCenterX.toFixed(2)}, Offense & Defense repositioned)`
+      );
+    },
+    [app, players]
+  );
 
   /**
    * Actually execute the Spread 2x2 formation creation
@@ -530,17 +981,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 <div className="absolute top-full left-0 right-0 mt-1 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 overflow-hidden">
                   <button
                     onClick={() => {
-                      const offenseAlignment = detectOffensiveAlignment(
-                        players,
-                        app,
-                        selectedAlignment
-                      );
-                      executeDefenseFormation(
-                        "nickel425",
-                        offenseAlignment,
-                        app,
-                        addPlayer
-                      );
+                      handleAddDefenseFormation("nickel425");
                       setIsDefenseDropdownOpen(false);
                     }}
                     className="w-full px-4 py-2 text-left text-sm text-content-primary hover:bg-surface-secondary/50 transition-colors"
