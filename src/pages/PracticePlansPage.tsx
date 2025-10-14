@@ -7,6 +7,7 @@ import { PracticeScriptModal } from "../components/practice/PracticeScriptModal"
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
+import { debug } from "../utils/logger";
 
 import type { PracticeScript } from "../components/practice/PracticeScriptModal/types";
 
@@ -19,12 +20,12 @@ export default function PracticePlansPage() {
     setPracticeScripts((prev) => [...prev, script]);
     setShowCreateModal(false);
     // TODO: Save to database
-    console.log("Created practice script:", script);
+    debug("[PracticePlansPage] Created practice script:", script);
   };
 
   const handleEditScript = (script: PracticeScript) => {
     // TODO: Navigate to script editor or open edit modal
-    console.log("Edit script:", script);
+    debug("[PracticePlansPage] Edit script:", script);
   };
 
   const handleDeleteScript = (scriptId: string) => {

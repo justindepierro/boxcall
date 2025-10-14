@@ -21,7 +21,6 @@ import { getPlayFlags } from "@utils/localPlayFlags";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { useIsMobile } from "../../hooks/useBreakpoint";
-import { usePreference } from "../../hooks/usePreferences";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { info, warn, debug } from "../../utils/logger";
@@ -37,18 +36,16 @@ import {
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 
-// Convert database play data to full Play type
-// Pass through all database fields and add any missing defaults
-const mapDatabasePlayToFullPlay = (dbPlay: any): Play => ({
-  ...dbPlay, // Pass through all fields from database
-  p_type: dbPlay.p_type as "Pass" | "Run" | "RPO" | "Play Action",
-  confidence_base: dbPlay.confidence_base ?? 70,
-  times_called: dbPlay.times_called ?? 0,
-  times_successful: dbPlay.times_successful ?? 0,
-  created_by: dbPlay.created_by ?? "system",
-  created_at: new Date(dbPlay.created_at),
-  updated_at: new Date(dbPlay.updated_at),
-});
+// Extracted modules
+import { mapDatabasePlayToFullPlay } from "./PlayGrid/utils/playDataUtils";
+import {
+  usePlayPreferences,
+  useViewMode,
+  usePlayExpansion,
+  usePlaySelection,
+} from "./PlayGrid/hooks";
+import { createPlaySaveHandler } from "./PlayGrid/handlers";
+
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -58,6 +55,8 @@ interface PlayGridProps {
     distance?: string;
     tags?: string[];
   };
+  // 🚀 PERFORMANCE: Optimistic plays shown instantly before database confirmation
+  optimisticPlays?: Play[];
   // Category-based filtering from Smart Glossary
   selectedCategory?: string;
   selectedSubcategory?: string;
@@ -84,6 +83,7 @@ interface PlayGridProps {
 const PlayGridInner: React.FC<PlayGridProps> = ({
   searchQuery,
   filters,
+  optimisticPlays = [],
   selectedCategory,
   selectedSubcategory,
   onEdit,
@@ -104,24 +104,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   formationSuggestions: _formationSuggestions = [], // Not used in V2
   playNameSuggestions: _playNameSuggestions = [], // Not used in V2
 }) => {
-  // Use server-synced preferences
-  const [showOneWordCalls, setShowOneWordCalls] = usePreference(
-    "bc_playgrid_oneword",
-    false
-  );
-
-  const [directionDisplayFormat, setDirectionDisplayFormat] = usePreference(
-    "bc_playgrid_direction_format",
-    "full" as "full" | "abbrev" | "letter"
-  );
-
-  const [hasManualViewModeOverride, setHasManualViewModeOverride] =
-    usePreference("bc_playgrid_view_manual", false);
-
-  const [viewMode, setViewModeState] = usePreference(
-    "bc_playgrid_view",
-    "list" as "list" | "grid"
-  );
+  // Extracted custom hooks
+  const {
+    showOneWordCalls,
+    setShowOneWordCalls,
+    directionDisplayFormat,
+    setDirectionDisplayFormat,
+  } = usePlayPreferences();
+  const { viewMode, setViewMode } = useViewMode();
 
   // Quick Wins: Favorites hook
   const { favoriteIds } = useFavoritePlays();
@@ -129,92 +119,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Global save state for universal indicator
   const { startSaving, finishSaving } = useSaveState();
 
-  // Track which play card is currently expanded (only one at a time)
-  const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
-
-  // Log when expanded play changes
-  useEffect(() => {
-    console.log(`[PlayGrid] expandedPlayId changed:`, {
-      expandedPlayId,
-      viewMode,
-      timestamp: new Date().toISOString(),
-    });
-  }, [expandedPlayId, viewMode]);
+  // Play expansion state (extracted hook)
+  const { expandedPlayId, handleToggleExpand } = usePlayExpansion(
+    viewMode || "grid"
+  );
 
   // Drag and drop state for play reordering
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
-  const setViewMode = useCallback(
-    (mode: "list" | "grid", manual = true) => {
-      console.log(`[PlayGrid] setViewMode called:`, {
-        newMode: mode,
-        previousMode: viewMode,
-        manual,
-        hasManualOverride: hasManualViewModeOverride,
-        stackTrace: new Error().stack?.split("\n").slice(1, 4).join("\n"),
-      });
-
-      // Only update if different to avoid unnecessary re-renders
-      if (mode !== viewMode) {
-        setViewModeState(mode);
-      }
-
-      if (manual) {
-        setHasManualViewModeOverride(true);
-      }
-    },
-    [
-      setViewModeState,
-      setHasManualViewModeOverride,
-      viewMode,
-      hasManualViewModeOverride,
-    ]
-  );
-
-  // Auto-detect mobile viewport for initial view mode (unless user has manual override)
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (hasManualViewModeOverride) {
-      console.log(
-        "[PlayGrid] Skipping auto view mode - user has manual override"
-      );
-      return;
-    }
-    if (typeof window.matchMedia !== "function") return;
-
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-
-    const applyPreferredView = (matches: boolean) => {
-      const newMode = matches ? "grid" : "list";
-      console.log(`[PlayGrid] Auto-switching view mode based on screen size:`, {
-        matches,
-        newMode,
-        screenWidth: window.innerWidth,
-      });
-      setViewMode(newMode, false);
-    };
-
-    applyPreferredView(mediaQuery.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      console.log("[PlayGrid] Media query changed:", event.matches);
-      applyPreferredView(event.matches);
-    };
-
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", handleChange);
-    } else if (typeof mediaQuery.addListener === "function") {
-      mediaQuery.addListener(handleChange);
-    }
-
-    return () => {
-      if (typeof mediaQuery.removeEventListener === "function") {
-        mediaQuery.removeEventListener("change", handleChange);
-      } else if (typeof mediaQuery.removeListener === "function") {
-        mediaQuery.removeListener(handleChange);
-      }
-    };
-  }, [hasManualViewModeOverride, setViewMode]);
 
   // Get real data from database with refresh capability and pagination
   const {
@@ -238,10 +150,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   }, [refreshTrigger, refreshData]);
 
   // Convert database plays to full Play type
-  const plays: Play[] = useMemo(
+  const databasePlays: Play[] = useMemo(
     () => (allPlays || []).map(mapDatabasePlayToFullPlay),
     [allPlays]
   );
+
+  // 🚀 PERFORMANCE: Merge optimistic plays with database plays
+  // Optimistic plays appear first for instant feedback (<50ms)
+  // Deduplication: Remove any optimistic plays that now exist in database
+  const plays: Play[] = useMemo(() => {
+    const dbPlayIds = new Set(databasePlays.map((p) => p.id));
+    const uniqueOptimisticPlays = optimisticPlays.filter(
+      (p) => !dbPlayIds.has(p.id)
+    );
+    return [...uniqueOptimisticPlays, ...databasePlays];
+  }, [optimisticPlays, databasePlays]);
 
   // Notify parent of play count changes for the play counter
   useEffect(() => {
@@ -269,136 +192,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     }
   }, [plays]);
 
-  // Handle inline play updates
-  const handlePlaySave = useCallback(
-    async (playId: string, updates: Partial<Play>) => {
-      console.log("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
-
-      // Start global save indicator
-      startSaving();
-
-      try {
-        // Convert Play type updates to DatabasePlay type updates
-        const dbUpdates: any = {};
-
-        // Map all possible editable fields
-        if (updates.formation !== undefined)
-          dbUpdates.formation = updates.formation;
-        if (updates.play_name !== undefined)
-          dbUpdates.play_name = updates.play_name;
-        if (updates.one_word_play !== undefined)
-          dbUpdates.one_word_play = updates.one_word_play;
-        if (updates.p_type !== undefined) dbUpdates.p_type = updates.p_type;
-        if (updates.personnel !== undefined)
-          dbUpdates.personnel = updates.personnel;
-        if (updates.f_type !== undefined) dbUpdates.f_type = updates.f_type;
-        if (updates.f_dir !== undefined) dbUpdates.f_dir = updates.f_dir;
-        if (updates.protection !== undefined)
-          dbUpdates.protection = updates.protection;
-        if (updates.p_dir !== undefined) dbUpdates.p_dir = updates.p_dir;
-        if (updates.r_str !== undefined) dbUpdates.r_str = updates.r_str;
-        if (updates.p_str !== undefined) dbUpdates.p_str = updates.p_str;
-        if (updates.pref_down !== undefined)
-          dbUpdates.pref_down = updates.pref_down;
-        if (updates.pref_dis !== undefined)
-          dbUpdates.pref_dis = updates.pref_dis;
-        if (updates.pref_hash !== undefined)
-          dbUpdates.pref_hash = updates.pref_hash;
-        if (updates.pref_cov !== undefined)
-          dbUpdates.pref_cov = updates.pref_cov;
-        if (updates.pref_front !== undefined)
-          dbUpdates.pref_front = updates.pref_front;
-        if (updates.ftag1 !== undefined) dbUpdates.ftag1 = updates.ftag1;
-        if (updates.ftag2 !== undefined) dbUpdates.ftag2 = updates.ftag2;
-        if (updates.p_tag1 !== undefined) dbUpdates.p_tag1 = updates.p_tag1;
-        if (updates.p_tag2 !== undefined) dbUpdates.p_tag2 = updates.p_tag2;
-        if (updates.back_align !== undefined)
-          dbUpdates.back_align = updates.back_align;
-        if (updates.back_left_of_qb !== undefined)
-          dbUpdates.back_left_of_qb = Boolean(updates.back_left_of_qb);
-        if (updates.back_right_of_qb !== undefined)
-          dbUpdates.back_right_of_qb = Boolean(updates.back_right_of_qb);
-        if (updates.shift !== undefined) dbUpdates.shift = updates.shift;
-        if (updates.motion !== undefined) dbUpdates.motion = updates.motion;
-        if (updates.key_player1 !== undefined)
-          dbUpdates.key_player1 = updates.key_player1;
-        if (updates.key_player2 !== undefined)
-          dbUpdates.key_player2 = updates.key_player2;
-        if (updates.check_into !== undefined)
-          dbUpdates.check_into = updates.check_into;
-        if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
-
-        console.log("[PlayGrid] 🔷 Mapped updates:", {
-          playId,
-          updates,
-          dbUpdates,
-          "dbUpdates.f_dir": dbUpdates.f_dir,
-          "dbUpdates.p_dir": dbUpdates.p_dir,
-        });
-        console.log("[PlayGrid] 🔷 Calling updatePlay...");
-
-        await updatePlay(playId, dbUpdates);
-
-        console.log("[PlayGrid] 🟢 updatePlay completed successfully");
-        info(`Play ${playId} updated successfully`);
-
-        // Finish save with success status
-        finishSaving("success");
-      } catch (error) {
-        console.error("[PlayGrid] 🔴 Failed to save play:", error);
-
-        // Finish save with error status
-        finishSaving("error");
-
-        throw error; // Re-throw so PlayCard can handle the error
-      }
-    },
+  // Handle inline play updates (using extracted handler)
+  const handlePlaySave = useMemo(
+    () => createPlaySaveHandler({ updatePlay, startSaving, finishSaving }),
     [updatePlay, startSaving, finishSaving]
   );
-
-  // Bulk Operations Handlers
-  const handlePlaySelect = useCallback(
-    (playId: string, selected: boolean) => {
-      if (!onPlaySelectionChange) return;
-      const newSelection = new Set(selectedPlayIds);
-      if (selected) newSelection.add(playId);
-      else newSelection.delete(playId);
-      onPlaySelectionChange(newSelection);
-    },
-    [onPlaySelectionChange, selectedPlayIds]
-  );
-
-  // Handle expanding/collapsing play cards - only one can be expanded at a time
-  const handleToggleExpand = useCallback(
-    (playId: string) => {
-      console.log(`[PlayGrid] handleToggleExpand called:`, {
-        playId,
-        currentExpandedId: expandedPlayId,
-        willExpand: expandedPlayId !== playId,
-        currentViewMode: viewMode,
-      });
-      setExpandedPlayId((current) => (current === playId ? null : playId));
-    },
-    [expandedPlayId, viewMode]
-  );
-
-  const handleSelectAll = () => {
-    if (!onPlaySelectionChange) return;
-    const currentIds = new Set(displayPlays.map((p) => p.id));
-    const allVisibleSelected = displayPlays.every((p) =>
-      selectedPlayIds.has(p.id)
-    );
-
-    const next = new Set(selectedPlayIds);
-    if (allVisibleSelected) {
-      // Deselect only visible plays, keep hidden ones selected
-      for (const id of currentIds) next.delete(id);
-    } else {
-      // Select all visible plays, keep any previously selected hidden plays
-      for (const id of currentIds) next.add(id);
-    }
-    onPlaySelectionChange(next);
-  };
 
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
@@ -546,6 +344,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const displayPlays = useMemo(() => {
     return reorderedPlays.length > 0 ? reorderedPlays : filteredPlays;
   }, [reorderedPlays, filteredPlays]);
+
+  // Play selection handlers (extracted hook)
+  const { handlePlaySelect, handleSelectAll } = usePlaySelection({
+    selectedPlayIds,
+    onPlaySelectionChange,
+    displayPlays,
+  });
 
   // Mobile progressive disclosure - show limited plays initially
   const isMobile = useIsMobile();

@@ -16,6 +16,7 @@ import type {
 } from "../services/rosterService";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { RosterImportModal } from "../components/roster/RosterImportModal";
+import { info, error as logError } from "../utils/logger";
 // import { useToast } from "../hooks/useToast";
 
 /**
@@ -175,12 +176,12 @@ export default function RosterPage() {
       };
 
       await rosterService.createPlayer(playerData);
-      console.log("Player added successfully");
+      info("[RosterPage] Player added successfully");
       setShowAddModal(false);
       resetForm();
       loadRoster();
     } catch (error) {
-      console.error("Failed to add player:", error);
+      logError("[RosterPage] Failed to add player:", error);
       setFormError(
         error instanceof Error
           ? error.message
@@ -225,14 +226,13 @@ export default function RosterPage() {
       };
 
       await rosterService.updatePlayer(editingPlayer.id, updateData);
-      console.log("Player updated successfully");
+      info("[RosterPage] Player updated successfully");
       setShowEditModal(false);
       setEditingPlayer(null);
       resetForm();
       loadRoster();
     } catch (error) {
-      console.error("Failed to update player:", error);
-      console.log("Failed to update player");
+      logError("[RosterPage] Failed to update player:", error);
     } finally {
       setSaving(false);
     }
@@ -243,11 +243,10 @@ export default function RosterPage() {
 
     try {
       await rosterService.deletePlayer(playerId);
-      console.log("Player deleted successfully");
+      info("[RosterPage] Player deleted successfully");
       loadRoster();
     } catch (error) {
-      console.error("Failed to delete player:", error);
-      console.log("Failed to delete player");
+      logError("[RosterPage] Failed to delete player:", error);
     }
   };
 
@@ -276,15 +275,13 @@ export default function RosterPage() {
         await rosterService.createPlayer(playerData);
       }
 
-      console.log(
-        `${csvPlayers.length} players imported successfully`,
-        "success"
+      info(
+        `[RosterPage] ${csvPlayers.length} players imported successfully`
       );
       setShowImportModal(false);
       loadRoster();
     } catch (error) {
-      console.error("Failed to import players:", error);
-      console.log("Failed to import players", "error");
+      logError("[RosterPage] Failed to import players:", error);
     } finally {
       setSaving(false);
     }

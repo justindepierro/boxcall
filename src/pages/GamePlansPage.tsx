@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system/Typography";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
+import { debug } from "../utils/logger";
 
 interface GamePlan {
   id: string;
@@ -23,12 +24,12 @@ export default function GamePlansPage() {
 
   const handleCreatePlan = useCallback(() => {
     // TODO: Open create game plan modal or navigate to editor
-    console.log("Create new game plan");
+    debug("[GamePlansPage] Create new game plan");
   }, []);
 
   const handleEditPlan = (plan: GamePlan) => {
     // TODO: Navigate to plan editor
-    console.log("Edit plan:", plan);
+    debug("[GamePlansPage] Edit plan:", plan);
   };
 
   const handleDeletePlan = (planId: string) => {

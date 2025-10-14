@@ -17,6 +17,7 @@ import { ChevronDown, Grid, Link2 } from "lucide-react";
 import { FormationService } from "../../services/formationService";
 import type { Formation } from "../../types/formation";
 import { FormationMatchingModal } from "../formations/FormationMatchingModal";
+import { FormationSelectorSkeleton } from "./FormationSelectorSkeleton";
 
 interface FormationSelectorProps {
   playbookId: string;
@@ -132,42 +133,47 @@ export function FormationSelector({
 
   return (
     <div className={`relative ${className}`}>
-      {/* Label */}
-      <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
-        Formation *
-      </label>
+      {/* 🚀 PERFORMANCE: Skeleton loader while formations load */}
+      {isLoading ? (
+        <FormationSelectorSkeleton />
+      ) : (
+        <>
+          {/* Label */}
+          <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+            Formation *
+          </label>
 
-      {/* Dropdown Button */}
-      <button
-        type="button"
-        onClick={() => !disabled && !isLoading && setIsOpen(!isOpen)}
-        disabled={disabled || isLoading}
-        className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-border-primary rounded-lg text-text-primary hover:border-border-accent focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        <div className="flex items-center gap-spacing-sm">
-          <Grid className="w-4 h-4 text-text-muted" />
-          {isLoading ? (
-            <span className="text-text-muted">Loading formations...</span>
-          ) : selectedFormation ? (
-            <div className="flex items-center gap-spacing-xs">
-              <span className="font-medium">{selectedFormation.name}</span>
-              <span className="text-xs text-text-muted">
-                {getDirectionLabel(selectedFormation.direction)}
-              </span>
-              {selectedFormation.personnel_name && (
-                <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
-                  {selectedFormation.personnel_name}
-                </span>
+          {/* Dropdown Button */}
+          <button
+            type="button"
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            disabled={disabled}
+            className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-border-primary rounded-lg text-text-primary hover:border-border-accent focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <div className="flex items-center gap-spacing-sm">
+              <Grid className="w-4 h-4 text-text-muted" />
+              {selectedFormation ? (
+                <div className="flex items-center gap-spacing-xs">
+                  <span className="font-medium">{selectedFormation.name}</span>
+                  <span className="text-xs text-text-muted">
+                    {getDirectionLabel(selectedFormation.direction)}
+                  </span>
+                  {selectedFormation.personnel_name && (
+                    <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
+                      {selectedFormation.personnel_name}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <span className="text-text-muted">Select formation...</span>
               )}
             </div>
-          ) : (
-            <span className="text-text-muted">Select formation...</span>
-          )}
-        </div>
-        <ChevronDown
-          className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
-        />
-      </button>
+            <ChevronDown
+              className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+        </>
+      )}
 
       {/* Error Message */}
       {error && <p className="mt-1 text-xs text-error-500">{error}</p>}

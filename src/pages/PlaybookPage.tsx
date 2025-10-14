@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
@@ -120,8 +120,11 @@ export default function PlaybookPage() {
 
   // Get playbooks for this team
   const { playbooks, refreshData } = useTeamsData();
-  const teamPlaybooks = playbooks.filter(
-    (pb) => pb.team_id === activeTeamId && pb.is_active
+  
+  // 🚀 PERFORMANCE: Memoize filtered playbooks to avoid recalculating on every render
+  const teamPlaybooks = useMemo(
+    () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
+    [playbooks, activeTeamId]
   );
 
   // State for selected playbook (with preference persistence)
@@ -158,15 +161,17 @@ export default function PlaybookPage() {
     (playbookId: string) => {
       setSelectedPlaybookId(playbookId);
       localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
-      console.log("📚 [PlaybookPage] Switched to playbook:", playbookId);
+      debug(`[PlaybookPage] Switched to playbook: ${playbookId}`);
     },
     [activeTeamId]
   );
 
   const activePlaybookId = selectedPlaybookId || activeTeamId || ""; // Fallback to team_id
 
-  // Debounce search query to avoid excessive filtering on every keystroke
+  // 🚀 PERFORMANCE: Debounce search query to avoid excessive filtering on every keystroke
+  // Shows instant "Searching..." feedback while debouncing actual search
   const debouncedSearchQuery = useDebouncedValue(state.searchQuery, 300);
+  const isSearchPending = state.searchQuery !== debouncedSearchQuery;
 
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
@@ -303,8 +308,8 @@ export default function PlaybookPage() {
     void loadActivities();
   }, [activeTeamId]);
 
-  // Calculate playbook stats
-  const calculatePlaybookStats = () => {
+  // 🚀 PERFORMANCE: Memoize playbook stats calculation to avoid recomputing on every render
+  const playbookStats = useMemo(() => {
     return {
       totalPlays: state.playsCreated || 0,
       playsWithDiagrams: Math.floor(
@@ -332,9 +337,8 @@ export default function PlaybookPage() {
             : undefined,
         })),
     };
-  };
+  }, [state.playsCreated, state.diagramCoverage, recentActivities]);
 
-  const playbookStats = calculatePlaybookStats();
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
 
@@ -348,18 +352,36 @@ export default function PlaybookPage() {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
-  // Example handlers (replace with real logic as needed)
-  const handleViewChange = (view: CoachingView) =>
-    dispatch({ type: "SET_VIEW", view });
-  const handleTeamTypeChange = (
-    teamType: "offense" | "defense" | "special-teams"
-  ) => dispatch({ type: "SET_TEAM_TYPE", teamType });
-  const handleFiltersChange = (filters: PlaybookState["advancedFilters"]) => {
-    triggerHapticFeedback("selection");
-    dispatch({ type: "SET_ADVANCED_FILTERS", filters });
-  };
-  const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
-  const handleBulkAction = (_action: string) => {};
+  // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
+  // Shows plays immediately while database operations happen in background
+  const [optimisticPlays, setOptimisticPlays] = useState<Play[]>([]);
+
+  // 🚀 PERFORMANCE: Memoize handlers to prevent unnecessary re-renders of child components
+  const handleViewChange = useCallback(
+    (view: CoachingView) => dispatch({ type: "SET_VIEW", view }),
+    [dispatch]
+  );
+  
+  const handleTeamTypeChange = useCallback(
+    (teamType: "offense" | "defense" | "special-teams") =>
+      dispatch({ type: "SET_TEAM_TYPE", teamType }),
+    [dispatch]
+  );
+  
+  const handleFiltersChange = useCallback(
+    (filters: PlaybookState["advancedFilters"]) => {
+      triggerHapticFeedback("selection");
+      dispatch({ type: "SET_ADVANCED_FILTERS", filters });
+    },
+    [dispatch]
+  );
+  
+  const handleClearSelection = useCallback(
+    () => dispatch({ type: "CLEAR_SELECTION" }),
+    [dispatch]
+  );
+  
+  const handleBulkAction = useCallback((_action: string) => {}, []);
 
   // Play count handler - updates state when PlayGrid reports actual play count
   const handlePlayCountChange = useCallback(
@@ -370,38 +392,80 @@ export default function PlaybookPage() {
   );
 
   // Modal handlers
-  const handleOpenBuilder = () => {
+  const handleOpenBuilder = useCallback(() => {
     triggerHapticFeedback("light");
     setShowAddNewPlayModal(true);
-  };
+  }, []);
 
-  const handleOpenSettings = () => {
+  const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
     setShowPlaybookSettingsModal(true);
-  };
+  }, []);
 
-  const handleOpenWhiteboard = () => {
+  const handleOpenWhiteboard = useCallback(() => {
     // Open diagram builder in whiteboard mode
     const whiteboardPlay = createWhiteboardPlay(activeTeamId || "");
     setDiagramPlay(whiteboardPlay);
-  };
+  }, [activeTeamId]);
 
-  const handleEditPlay = (play: Play) => {
+  const handleEditPlay = useCallback((play: Play) => {
     setEditingPlay(play);
     setShowAddNewPlayModal(true);
-  };
+  }, []);
 
-  const handleSavePlay = async (playId: string, updates: Partial<Play>) => {
-    try {
-      await SecurePlaysService.updatePlay(playId, updates);
-      // Trigger a refresh of the playbook data
-      dispatch({ type: "INCREMENT_REFRESH" });
-      return Promise.resolve();
-    } catch (error) {
-      logError("Failed to save play:", error);
-      throw error; // Re-throw so the UI can show the error
-    }
-  };
+  const handleSavePlay = useCallback(
+    async (playId: string, updates: Partial<Play>) => {
+      try {
+        // 🚀 OPTIMISTIC UPDATE: Show changes immediately
+        setOptimisticPlays((prev) => {
+          const existingPlay = prev.find((p) => p.id === playId);
+          if (existingPlay) {
+            return prev.map((p) =>
+              p.id === playId ? { ...p, ...updates } : p
+            );
+          }
+          // If not in optimistic state, create an optimistic entry
+          // (This handles edits from plays that came from database)
+          return [
+            {
+              ...updates,
+              id: playId,
+              playbook_id: activePlaybookId,
+              formation: updates.formation || "",
+              play_name: updates.play_name || "",
+              p_type: updates.p_type || "",
+              confidence_base: updates.confidence_base || 70,
+              times_called: updates.times_called || 0,
+              times_successful: updates.times_successful || 0,
+              created_by: updates.created_by || "",
+              created_at: updates.created_at || new Date(),
+              updated_at: new Date(),
+            } as Play,
+            ...prev,
+          ];
+        });
+
+        // Background: Update in database
+        await SecurePlaysService.updatePlay(playId, updates);
+
+        // Remove from optimistic state after a brief delay (now reflected in database)
+        setTimeout(() => {
+          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        }, 100);
+
+        // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
+        // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
+
+        return Promise.resolve();
+      } catch (error) {
+        // Revert optimistic update on error
+        setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        logError("Failed to save play:", error);
+        throw error; // Re-throw so the UI can show the error
+      }
+    },
+    [activePlaybookId]
+  );
 
   // Handle pull-to-refresh on mobile
   const handlePullRefresh = useCallback(async () => {
@@ -484,130 +548,139 @@ export default function PlaybookPage() {
     [diagramPlay, dispatch, toast, activeTeamId]
   );
 
-  const handleDuplicatePlay = async (play: Play, flip: boolean = false) => {
-    triggerHapticFeedback("selection");
+  const handleDuplicatePlay = useCallback(
+    async (play: Play, flip: boolean = false) => {
+      triggerHapticFeedback("selection");
 
-    let duplicatedPlay: Play = {
-      ...play,
-      id: "", // Will be set by the database
-      play_name: `Copy of ${play.play_name}`,
-      created_at: new Date(),
-      updated_at: new Date(),
-      times_called: 0,
-      times_successful: 0,
-    };
+      let duplicatedPlay: Play = {
+        ...play,
+        id: "", // Will be set by the database
+        play_name: `Copy of ${play.play_name}`,
+        created_at: new Date(),
+        updated_at: new Date(),
+        times_called: 0,
+        times_successful: 0,
+      };
 
-    // If flipping, update formation and diagram
-    if (flip) {
-      try {
-        // Get opposite formation variant
-        if (play.formation_id) {
-          const oppositeFormation = await getOppositeFormationVariant(
-            play.formation_id
+      // If flipping, update formation and diagram
+      if (flip) {
+        try {
+          // Get opposite formation variant
+          if (play.formation_id) {
+            const oppositeFormation = await getOppositeFormationVariant(
+              play.formation_id
+            );
+
+            if (oppositeFormation) {
+              duplicatedPlay.formation_id = oppositeFormation.id;
+              duplicatedPlay.formation = oppositeFormation.name;
+              duplicatedPlay.formation_direction = oppositeFormation.direction;
+            }
+          }
+
+          // Flip play name if it contains Left/Right
+          duplicatedPlay.play_name = flipPlayName(play.play_name);
+
+          // Flip formation direction (f_dir field)
+          duplicatedPlay.f_dir = flipFormationDirection(play.f_dir);
+
+          // Flip play direction (p_dir field)
+          duplicatedPlay.p_dir = flipFormationDirection(play.p_dir);
+
+          // Flip diagram positions
+          if (play.diagram_data) {
+            const flippedDiagram = flipDiagramPositions(play.diagram_data);
+            if (flippedDiagram) {
+              duplicatedPlay.diagram_data = flippedDiagram as DiagramDocument;
+            }
+          }
+
+          toast.success(
+            "Play flipped!",
+            `Created flipped version: "${duplicatedPlay.play_name}"`
           );
-
-          if (oppositeFormation) {
-            duplicatedPlay.formation_id = oppositeFormation.id;
-            duplicatedPlay.formation = oppositeFormation.name;
-            duplicatedPlay.formation_direction = oppositeFormation.direction;
-          }
+        } catch (error) {
+          logError("[PlaybookPage] Failed to flip play:", error);
+          toast.error(
+            "Flip failed",
+            "Could not flip formation, creating regular duplicate"
+          );
         }
-
-        // Flip play name if it contains Left/Right
-        duplicatedPlay.play_name = flipPlayName(play.play_name);
-
-        // Flip formation direction (f_dir field)
-        duplicatedPlay.f_dir = flipFormationDirection(play.f_dir);
-
-        // Flip play direction (p_dir field)
-        duplicatedPlay.p_dir = flipFormationDirection(play.p_dir);
-
-        // Flip diagram positions
-        if (play.diagram_data) {
-          const flippedDiagram = flipDiagramPositions(play.diagram_data);
-          if (flippedDiagram) {
-            duplicatedPlay.diagram_data = flippedDiagram as DiagramDocument;
-          }
-        }
-
-        toast.success(
-          "Play flipped!",
-          `Created flipped version: "${duplicatedPlay.play_name}"`
-        );
-      } catch (error) {
-        console.error("Failed to flip play:", error);
-        toast.error(
-          "Flip failed",
-          "Could not flip formation, creating regular duplicate"
-        );
       }
-    }
 
-    setEditingPlay(duplicatedPlay);
-    setShowAddNewPlayModal(true);
-  };
+      setEditingPlay(duplicatedPlay);
+      setShowAddNewPlayModal(true);
+    },
+    [toast]
+  );
 
   // Workflow handlers
-  const handleAddToPracticeScript = async (play: Play) => {
-    triggerHapticFeedback("success");
-    try {
-      const teamId = "current-team"; // TODO: Get from context/auth
-      const script = await PracticeScriptService.createQuickScript(
-        play,
-        teamId
-      );
-      info(`Added "${play.play_name}" to practice script: "${script.name}"`);
-      // TODO: Replace with toast notification
-      toast.success(
-        `Added "${play.play_name}" to practice script`,
-        script.name
-      );
-    } catch (error) {
-      logError("Failed to add play to practice script:", error);
-      toast.error("Failed to add play to practice script", "Please try again");
-    }
-  };
+  const handleAddToPracticeScript = useCallback(
+    async (play: Play) => {
+      triggerHapticFeedback("success");
+      try {
+        const teamId = "current-team"; // TODO: Get from context/auth
+        const script = await PracticeScriptService.createQuickScript(
+          play,
+          teamId
+        );
+        info(`Added "${play.play_name}" to practice script: "${script.name}"`);
+        // TODO: Replace with toast notification
+        toast.success(
+          `Added "${play.play_name}" to practice script`,
+          script.name
+        );
+      } catch (error) {
+        logError("Failed to add play to practice script:", error);
+        toast.error("Failed to add play to practice script", "Please try again");
+      }
+    },
+    [toast]
+  );
 
-  const handleAddToGamePlan = async (play: Play) => {
-    try {
-      const teamId = "current-team"; // TODO: Get from context/auth
-      const gamePlan = await GamePlanService.createQuickGamePlan(
-        "Quick Game Plan",
-        teamId
-      );
-      // Add the play to the most appropriate situation (base run/pass for now)
-      const situationId = play.p_type === "Pass" ? "base_pass" : "base_run";
-      await GamePlanService.addPlayToGamePlan(
-        {
-          gamePlanId: gamePlan.id,
-          situationId,
-          playId: play.id,
-          priority: 3,
-          notes: "Added from playbook workflow",
-        },
-        play
-      );
-      info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
-      // TODO: Replace with toast notification
-      toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
-    } catch (error) {
-      logError("Failed to add play to game plan:", error);
-      toast.error("Failed to add play to game plan", "Please try again");
-    }
-  };
+  const handleAddToGamePlan = useCallback(
+    async (play: Play) => {
+      try {
+        const teamId = "current-team"; // TODO: Get from context/auth
+        const gamePlan = await GamePlanService.createQuickGamePlan(
+          "Quick Game Plan",
+          teamId
+        );
+        // Add the play to the most appropriate situation (base run/pass for now)
+        const situationId = play.p_type === "Pass" ? "base_pass" : "base_run";
+        await GamePlanService.addPlayToGamePlan(
+          {
+            gamePlanId: gamePlan.id,
+            situationId,
+            playId: play.id,
+            priority: 3,
+            notes: "Added from playbook workflow",
+          },
+          play
+        );
+        info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
+        // TODO: Replace with toast notification
+        toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
+      } catch (error) {
+        logError("Failed to add play to game plan:", error);
+        toast.error("Failed to add play to game plan", "Please try again");
+      }
+    },
+    [toast]
+  );
 
   // Practice Script Builder handlers
-  const handleOpenPracticeScriptBuilder = () => {
+  const handleOpenPracticeScriptBuilder = useCallback(() => {
     setEditingScript(null);
     setShowPracticeScriptBuilder(true);
-  };
+  }, []);
 
-  const handleSavePracticeScript = (script: any) => {
+  const handleSavePracticeScript = useCallback((script: any) => {
     debug("Practice script saved:", script);
     setShowPracticeScriptBuilder(false);
     setEditingScript(null);
     // TODO: Refresh practice scripts list
-  };
+  }, []);
 
   const handleQuickNewPracticeScript = useCallback(() => {
     navigate("/practice-plans");
@@ -789,6 +862,21 @@ export default function PlaybookPage() {
                     }
                     className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-border-subtle rounded-lg text-base text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
                   />
+                  {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
+                  {isSearchPending && state.searchQuery && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="absolute right-12 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-brand-jade/10 text-brand-jade px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      <Icon
+                        name="refresh-cw"
+                        className="h-3 w-3 animate-spin"
+                      />
+                      Searching...
+                    </motion.div>
+                  )}
                   {state.searchQuery && (
                     <motion.button
                       initial={{ scale: 0, opacity: 0 }}
@@ -838,6 +926,7 @@ export default function PlaybookPage() {
                   <PlayGrid
                     searchQuery={debouncedSearchQuery}
                     filters={state.selectedFilters}
+                    optimisticPlays={optimisticPlays}
                     onAddToPracticeScript={handleAddToPracticeScript}
                     onAddToGamePlan={handleAddToGamePlan}
                     onEdit={handleEditPlay}
@@ -995,6 +1084,7 @@ export default function PlaybookPage() {
                       <PlayGrid
                         searchQuery={debouncedSearchQuery}
                         filters={state.selectedFilters}
+                        optimisticPlays={optimisticPlays}
                         onAddToPracticeScript={handleAddToPracticeScript}
                         onAddToGamePlan={handleAddToGamePlan}
                         onEdit={handleEditPlay}
@@ -1150,7 +1240,14 @@ export default function PlaybookPage() {
                     let resultPlay: Play;
 
                     if (editingPlay) {
-                      // Update existing play
+                      // 🚀 OPTIMISTIC UPDATE: Show changes immediately
+                      const optimisticUpdate = { ...editingPlay, ...playData };
+                      setOptimisticPlays((prev) => [
+                        optimisticUpdate,
+                        ...prev.filter((p) => p.id !== editingPlay.id),
+                      ]);
+
+                      // Background: Update in database
                       resultPlay = await SecurePlaysService.updatePlay(
                         editingPlay.id,
                         playData
@@ -1158,17 +1255,56 @@ export default function PlaybookPage() {
                       toast.success(
                         `Play "${resultPlay.play_name}" updated successfully!`
                       );
+
+                      // Remove from optimistic state (now in database)
+                      setTimeout(() => {
+                        setOptimisticPlays((prev) =>
+                          prev.filter((p) => p.id !== editingPlay.id)
+                        );
+                      }, 100);
                     } else {
-                      // Create new play
+                      // 🚀 OPTIMISTIC CREATE: Show new play immediately with temporary ID
+                      const tempId = `temp-${Date.now()}`;
+                      const optimisticPlay: Play = {
+                        playbook_id: activePlaybookId,
+                        formation: "",
+                        play_name: "",
+                        p_type: "",
+                        confidence_base: 70,
+                        times_called: 0,
+                        times_successful: 0,
+                        created_by: "",
+                        ...playData,
+                        id: tempId,
+                        created_at: new Date(),
+                        updated_at: new Date(),
+                      };
+
+                      // Add to UI instantly (perceived <50ms response)
+                      setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
+
+                      // Background: Create in database
                       resultPlay =
                         await SecurePlaysService.createPlay(playData);
                       toast.success(
                         `Play "${resultPlay.play_name}" created successfully!`
                       );
+
+                      // Replace optimistic play with real database play
+                      setOptimisticPlays((prev) =>
+                        prev.map((p) => (p.id === tempId ? resultPlay : p))
+                      );
+
+                      // Remove from optimistic state after showing (now in database)
+                      setTimeout(() => {
+                        setOptimisticPlays((prev) =>
+                          prev.filter((p) => p.id !== tempId)
+                        );
+                      }, 100);
                     }
 
-                    // Refresh the playbook data
-                    dispatch({ type: "INCREMENT_REFRESH" });
+                    // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
+                    // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
 
                     setShowAddNewPlayModal(false);
                     setEditingPlay(null);
@@ -1285,8 +1421,8 @@ export default function PlaybookPage() {
                   const currentIds = new Set(configurations.map((c) => c.id));
                   for (const existing of existingConfigs) {
                     if (!currentIds.has(existing.id)) {
-                      console.log(
-                        `🗑️  [PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`
+                      debug(
+                        `[PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`
                       );
                       await PersonnelService.deletePersonnelConfiguration(
                         existing.id
@@ -1322,8 +1458,8 @@ export default function PlaybookPage() {
                           JSON.stringify(config.badgeCustomization);
 
                       if (isModified) {
-                        console.log(
-                          `📝 [PlaybookPage] Updating modified personnel config: ${config.name}`
+                        debug(
+                          `[PlaybookPage] Updating modified personnel config: ${config.name}`
                         );
                         await PersonnelService.updatePersonnelConfiguration(
                           existing.id,
@@ -1335,14 +1471,14 @@ export default function PlaybookPage() {
                           }
                         );
                       } else {
-                        console.log(
-                          `⏭️  [PlaybookPage] Skipping unchanged personnel config: ${config.name}`
+                        debug(
+                          `[PlaybookPage] Skipping unchanged personnel config: ${config.name}`
                         );
                       }
                     } else if (!isUUID) {
                       // New config with temporary ID - create it
-                      console.log(
-                        `📝 [PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`
+                      debug(
+                        `[PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`
                       );
                       await PersonnelService.createPersonnelConfiguration({
                         playbook_id: activePlaybookId,
