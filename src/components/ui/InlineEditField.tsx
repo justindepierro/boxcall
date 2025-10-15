@@ -43,21 +43,40 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const hasSelectedRef = useRef(false);
 
   useEffect(() => {
+    console.log(
+      "[InlineEditField] 🔄 Value prop changed, updating editValue:",
+      {
+        oldEditValue: editValue,
+        newValue: value,
+        isEditing,
+      }
+    );
     setEditValue(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
-      inputRef.current.select();
+
+      // Only select text when FIRST entering edit mode, not on every render
+      if (!hasSelectedRef.current) {
+        console.log("[InlineEditField] 🎯 Selecting all text (first time)");
+        inputRef.current.select();
+        hasSelectedRef.current = true;
+      }
 
       // Show all suggestions on focus if enabled
       if (enableSuggestions && suggestions.length > 0) {
         setFilteredSuggestions(suggestions.slice(0, 5));
         setShowSuggestions(true);
       }
+    } else if (!isEditing) {
+      // Reset the flag when exiting edit mode
+      hasSelectedRef.current = false;
     }
   }, [isEditing, enableSuggestions, suggestions]);
 
@@ -80,6 +99,10 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
   const handleStartEdit = () => {
     if (disabled) return;
+    console.log("[InlineEditField] 🖱️ Starting edit mode:", {
+      currentValue: value,
+      willSetEditValue: value,
+    });
     setIsEditing(true);
     setEditValue(value);
     setError(null);
@@ -119,6 +142,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     console.log("[InlineEditField] ✅ Validation passed, saving...");
     setError(null);
     setSaveStatus("saving");
+    console.log("[InlineEditField] 🚪 Exiting edit mode (setIsEditing false)");
     setIsEditing(false);
     setShowSuggestions(false);
 
@@ -200,6 +224,11 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleInputChange = (newValue: string) => {
+    console.log("[InlineEditField] ⌨️ Input changed:", {
+      oldValue: editValue,
+      newValue,
+      valueLength: newValue.length,
+    });
     setEditValue(newValue);
     setError(null);
 
@@ -295,6 +324,12 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleBlur = (e: React.FocusEvent) => {
+    console.log("[InlineEditField] 👁️ handleBlur triggered:", {
+      currentValue: editValue,
+      relatedTarget: e.relatedTarget,
+      isEditing,
+    });
+
     // Don't save if focus is moving to save/cancel buttons
     const relatedTarget = e.relatedTarget as HTMLElement;
     if (
@@ -302,12 +337,19 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       (relatedTarget.closest("[data-inline-action]") ||
         relatedTarget.tagName === "BUTTON")
     ) {
+      console.log("[InlineEditField] ⏭️ Blur ignored - moving to button");
       return;
     }
 
+    console.log("[InlineEditField] ⏰ Blur will trigger save in 200ms...");
     // Small delay to allow other interactions to complete
     setTimeout(() => {
+      console.log(
+        "[InlineEditField] ⏰ Blur timeout fired, isEditing:",
+        isEditing
+      );
       if (isEditing) {
+        console.log("[InlineEditField] 💾 Blur timeout calling handleSave");
         handleSave();
       }
     }, 200);

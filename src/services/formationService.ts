@@ -518,11 +518,15 @@ export class FormationService {
    */
   /**
    * Link formations as left/right variants
+   * 
+   * 🔒 USES DATABASE TRANSACTION for atomic operations
+   * 🛡️ Validates directionality_type before auto-creating variants
    *
    * Special handling:
    * - If leftFormationId === rightFormationId: Creates duplicate for right side
    * - Always sets direction to 'left'/'right' (or 'Lt'/'Rt' for same formation)
    * - Base formation gets direction = 'base'
+   * - Auto-creates missing variants ONLY for 'mirror' formations
    *
    * @param baseFormationId - The base formation ID (left side becomes base)
    * @param leftFormationId - Formation for left side (optional, will use baseFormationId if not provided)
@@ -535,7 +539,7 @@ export class FormationService {
     rightFormationId?: string,
     personnelPackages?: string[]
   ): Promise<void> {
-    // Validate base formation exists
+    // Get base formation to check directionality type
     const { data: baseFormation, error: baseError } = await supabase
       .from("formations")
       .select("*")
@@ -547,12 +551,7 @@ export class FormationService {
     }
 
     // @ts-ignore - Supabase type inference issue
-    // Base formation should not have a base_formation_id (must be the base)
-    if (baseFormation.base_formation_id !== null) {
-      throw new Error(
-        "Cannot link to a formation that is already a variant. Choose the base formation."
-      );
-    }
+    const directionality = baseFormation.directionality_type as string | undefined;
 
     // SPECIAL CASE: Same formation selected for both sides
     // Create a duplicate for the right side, and make original the left side
@@ -593,6 +592,7 @@ export class FormationService {
             created_by: sourceFormation.created_by,
             direction: "right" as "base" | "left" | "right",
             base_formation_id: baseFormationId, // Points to original as base
+            directionality_type: directionality || "mirror", // Inherit from base
           },
         ])
         .select()
@@ -615,6 +615,7 @@ export class FormationService {
           direction: "left" as "base" | "left" | "right",
           base_formation_id: null, // This is the base formation
           personnel_packages: personnelPackages || [],
+          directionality_type: directionality || "mirror", // Ensure set
         })
         .eq("id", baseFormationId);
 
@@ -623,60 +624,85 @@ export class FormationService {
           `Failed to update left variant: ${leftUpdateError.message}`
         );
       }
+      
+      console.log(
+        `[FormationService] ✅ Same formation link: created duplicate for RIGHT variant`
+      );
     }
 
-    // Link left variant (update direction) - ONLY for different formation linking
-    if (
-      !isSameFormationLink &&
-      leftFormationId &&
-      leftFormationId !== baseFormationId
-    ) {
-      const { error: leftError } = await supabase
-        .from("formations")
-        // @ts-ignore - Supabase type inference issue
-        .update({
-          base_formation_id: baseFormationId,
-          direction: "left" as "base" | "left" | "right",
-          personnel_packages: personnelPackages || [],
-        })
-        .eq("id", leftFormationId);
-
-      if (leftError) {
-        throw new Error(`Failed to link left variant: ${leftError.message}`);
-      }
-    }
-
-    // Link right variant (update direction) - ONLY for different formation linking
-    if (!isSameFormationLink && actualRightFormationId) {
-      const { error: rightError } = await supabase
-        .from("formations")
-        // @ts-ignore - Supabase type inference issue
-        .update({
-          base_formation_id: baseFormationId,
-          direction: "right" as "base" | "left" | "right",
-          personnel_packages: personnelPackages || [],
-        })
-        .eq("id", actualRightFormationId);
-
-      if (rightError) {
-        throw new Error(`Failed to link right variant: ${rightError.message}`);
-      }
-    }
-
-    // Update base formation direction - ONLY for different formation linking
+    // For different formation linking, use database transaction function
     if (!isSameFormationLink) {
-      const { error: baseUpdateError } = await supabase
-        .from("formations")
-        // @ts-ignore - Supabase type inference issue
-        .update({
-          direction: "base" as "base" | "left" | "right",
-          personnel_packages: personnelPackages || [],
-        })
-        .eq("id", baseFormationId);
+      console.log(
+        `[FormationService] 🔒 Using transaction-safe linking for ${baseFormation.name}`
+      );
+      
+      try {
+        // Use PostgreSQL transaction function for atomic linking
+        const { data, error } = await supabase.rpc(
+          "link_formations_transaction",
+          {
+            p_base_formation_id: baseFormationId,
+            p_left_formation_id: leftFormationId || null,
+            p_right_formation_id: actualRightFormationId || null,
+            p_personnel_packages: personnelPackages || [],
+          }
+        );
 
-      if (baseUpdateError) {
-        throw new Error(
-          `Failed to update base formation: ${baseUpdateError.message}`
+        if (error) {
+          throw new Error(`Failed to link formations: ${error.message}`);
+        }
+
+        console.log(
+          `[FormationService] ✅ Formations linked successfully via transaction`
+        );
+      } catch (error) {
+        console.error("[FormationService] ❌ Transaction failed:", error);
+        throw error;
+      }
+
+      // 🚀 AUTO-CREATE MISSING VARIANTS (only for 'mirror' formations)
+      if (directionality === "mirror" || directionality === "unspecified") {
+        // Auto-create RIGHT variant if only LEFT provided
+        if (leftFormationId && !actualRightFormationId) {
+          console.log(
+            `[FormationService] 🔄 Auto-creating missing RIGHT variant for ${baseFormation.name} (directionality: ${directionality})`
+          );
+          try {
+            await this.createRightVariant(baseFormationId);
+            console.log(
+              "[FormationService] ✅ RIGHT variant auto-created successfully"
+            );
+          } catch (error) {
+            console.error(
+              "[FormationService] ⚠️ Failed to auto-create RIGHT variant:",
+              error
+            );
+            // Don't throw - linking LEFT variant should still succeed
+          }
+        }
+
+        // Auto-create LEFT variant if only RIGHT provided
+        if (actualRightFormationId && !leftFormationId) {
+          console.log(
+            `[FormationService] 🔄 Auto-creating missing LEFT variant for ${baseFormation.name} (directionality: ${directionality})`
+          );
+          try {
+            await this.createLeftVariant(baseFormationId);
+            console.log(
+              "[FormationService] ✅ LEFT variant auto-created successfully"
+            );
+          } catch (error) {
+            console.error(
+              "[FormationService] ⚠️ Failed to auto-create LEFT variant:",
+              error
+            );
+            // Don't throw - linking RIGHT variant should still succeed
+          }
+        }
+      } else {
+        console.log(
+          `[FormationService] ⏭️ Skipping auto-create: ${baseFormation.name} ` +
+            `is ${directionality || "unknown"}, not mirror`
         );
       }
     }

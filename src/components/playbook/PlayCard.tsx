@@ -128,6 +128,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     INITIAL_FORMATION_ORDER
   );
   const lastSyncedPlayRef = useRef<PlayType>(play);
+  const lastSaveTimeRef = useRef<number>(0);
 
   // Debug: Log when play prop changes
   useEffect(() => {
@@ -175,19 +176,28 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       "optimisticPlay.p_dir": optimisticPlay.p_dir,
     });
 
-    // Only update optimistic play if we're not currently saving any fields
-    // This prevents overwriting optimistic updates while saves are in progress
-    if (savingFields.size === 0) {
-      // Check if the play prop actually changed from the last time we synced
-      // This prevents syncing with stale data immediately after save completes
-      if (play !== lastSyncedPlayRef.current) {
-        lastSyncedPlayRef.current = play;
+    // Only sync when play prop actually changes (new data from server)
+    if (play !== lastSyncedPlayRef.current) {
+      const timeSinceLastSave = Date.now() - lastSaveTimeRef.current;
+      console.log("[PlayCard] Time since last save:", timeSinceLastSave);
+
+      lastSyncedPlayRef.current = play;
+
+      // Don't sync if:
+      // 1. We're currently saving any fields, OR
+      // 2. We just finished saving within the last 500ms (optimistic update grace period)
+      if (savingFields.size === 0 && timeSinceLastSave > 500) {
+        console.log("[PlayCard] ✅ Syncing optimisticPlay with new play prop");
         setOptimisticPlay(play);
+      } else {
+        console.log(
+          "[PlayCard] ⏸️ Skipping sync - either saving or recent save"
+        );
       }
     }
     // We intentionally don't include optimisticPlay in deps to avoid sync loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [play, savingFields]);
+  }, [play]);
 
   const actualFormationSuggestions =
     formationSuggestions.length > 0
@@ -324,6 +334,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           );
           return next;
         });
+        // Track when the save completed to prevent immediate sync
+        lastSaveTimeRef.current = Date.now();
         console.log("[PlayCard] 🔵 handleInlineSave END");
       }
     },

@@ -1,16 +1,18 @@
 # Skeleton Loaders Analysis - Priority 2
 
 ## 🎯 Goal
+
 Replace loading spinners with skeleton screens for 80% improvement in perceived load time.
 
 ## ✅ Already Implemented (Phase 1)
 
 ### PlayGrid Components
+
 **Status:** ✅ COMPLETE (from Phase 1 optimization)
 
 1. **PlayGridSkeleton** (`src/components/playbook/PlayGridSkeleton.tsx`) - 62 lines
    - Shimmer animation during data load
-   - Grid/list view mode support  
+   - Grid/list view mode support
    - 8 skeleton cards for realistic preview
    - **Usage:** Already integrated in PlayGrid.tsx line 476
 
@@ -31,6 +33,7 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 ## 🔍 Areas for Improvement
 
 ### 1. FormationSelector (OPPORTUNITY ⚡)
+
 **File:** `src/components/playbook/FormationSelector.tsx`  
 **Current:** Text loading message ("Loading formations...")  
 **Lines:** 155-157
@@ -50,8 +53,10 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 ### 2. Dashboard Components (OPPORTUNITY ⚡)
 
 #### ProfileCard
+
 **File:** `src/components/dashboard/ProfileCard.tsx`  
 **Current:** Spinner (line 330)
+
 ```tsx
 <div className="w-6 h-6 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
 ```
@@ -60,7 +65,8 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 **Impact:** MEDIUM - Shows on dashboard load  
 **Effort:** 45 minutes
 
-#### RoleBasedDashboard  
+#### RoleBasedDashboard
+
 **File:** `src/components/dashboard/RoleBasedDashboard.tsx`  
 **Current:** Spinner (lines 50, 91)
 
@@ -73,6 +79,7 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 ### 3. Calendar Components (OPPORTUNITY)
 
 #### PersonalCalendar
+
 **File:** `src/components/dashboard/PersonalCalendar.tsx`  
 **Current:** Spinner (line 79)
 
@@ -86,8 +93,9 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 ### 4. Analytics Dashboards (LOW PRIORITY)
 
 **Files:**
+
 - `src/components/analytics/AnalyticsDashboard.tsx` (line 77)
-- `src/components/analytics/GamePlanningDashboard.tsx` (line 48)  
+- `src/components/analytics/GamePlanningDashboard.tsx` (line 48)
 - `src/components/analytics/PlayerPerformanceDashboard.tsx` (line 62)
 
 **Current:** Spinners  
@@ -100,6 +108,7 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 ### 5. Modal Loading (MINOR OPPORTUNITY)
 
 **Files:**
+
 - `src/components/practice/LazyPDFExport.tsx` (line 50-52)
 - `src/components/team/TeamMemberInviteModal.tsx` (line 202)
 
@@ -112,14 +121,14 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 
 ## 📊 Priority Ranking
 
-| Component | Impact | Effort | Priority | Expected Improvement |
-|-----------|--------|--------|----------|---------------------|
-| **FormationSelector** | HIGH | 30min | **P0** 🔥 | 90% (loads on every play creation) |
-| **RoleBasedDashboard** | HIGH | 1hr | **P1** 🔥 | 80% (first impression) |
-| **ProfileCard** | MEDIUM | 45min | **P2** | 70% (dashboard component) |
-| **PersonalCalendar** | MEDIUM | 45min | **P3** | 75% (already has skeleton component!) |
-| **Analytics** | LOW | 2hr | P4 | 60% (not frequently used) |
-| **Modals** | LOW | 1hr | P5 | 50% (fast loading anyway) |
+| Component              | Impact | Effort | Priority  | Expected Improvement                  |
+| ---------------------- | ------ | ------ | --------- | ------------------------------------- |
+| **FormationSelector**  | HIGH   | 30min  | **P0** 🔥 | 90% (loads on every play creation)    |
+| **RoleBasedDashboard** | HIGH   | 1hr    | **P1** 🔥 | 80% (first impression)                |
+| **ProfileCard**        | MEDIUM | 45min  | **P2**    | 70% (dashboard component)             |
+| **PersonalCalendar**   | MEDIUM | 45min  | **P3**    | 75% (already has skeleton component!) |
+| **Analytics**          | LOW    | 2hr    | P4        | 60% (not frequently used)             |
+| **Modals**             | LOW    | 1hr    | P5        | 50% (fast loading anyway)             |
 
 ---
 
@@ -127,17 +136,20 @@ Replace loading spinners with skeleton screens for 80% improvement in perceived 
 
 ### Quick Win: FormationSelector (30 minutes)
 
-**Why:** 
+**Why:**
+
 - Used on EVERY play creation (most frequent operation)
 - Currently shows boring text "Loading formations..."
 - Small component, easy to enhance
 
 **Steps:**
+
 1. Create `FormationSelectorSkeleton` component (15 min)
 2. Replace loading text with skeleton (5 min)
 3. Test and validate (10 min)
 
 **Code:**
+
 ```tsx
 // New component: FormationSelectorSkeleton.tsx
 export const FormationSelectorSkeleton = () => (
@@ -160,11 +172,13 @@ export const FormationSelectorSkeleton = () => (
 ### Impact Win: Dashboard Skeleton (1 hour)
 
 **Why:**
+
 - First thing users see when opening app
 - Sets tone for entire experience
 - Existing DashboardPageLoading component needs integration
 
 **Steps:**
+
 1. Review existing `PageLoading.tsx` skeletons (10 min)
 2. Enhance DashboardPageLoading component (20 min)
 3. Integrate into RoleBasedDashboard (20 min)
@@ -175,11 +189,13 @@ export const FormationSelectorSkeleton = () => (
 ### Easy Win: Calendar Skeleton (45 minutes)
 
 **Why:**
+
 - CalendarSkeletons.tsx ALREADY EXISTS!
 - Just needs integration
 - High visual impact
 
 **Steps:**
+
 1. Import CalendarGridSkeleton (5 min)
 2. Replace spinner in PersonalCalendar (10 min)
 3. Adjust styling to match (20 min)
@@ -190,13 +206,15 @@ export const FormationSelectorSkeleton = () => (
 ## 📈 Expected Results
 
 ### Before Priority 2:
+
 - ✅ PlayGrid: Excellent skeletons (Phase 1)
 - ❌ FormationSelector: Text loading message
 - ❌ Dashboard: Generic spinner
-- ❌ Calendar: Generic spinner  
+- ❌ Calendar: Generic spinner
 - **Perceived Load Time:** 3-5 seconds (varies by component)
 
 ### After Priority 2 (Quick Wins Only):
+
 - ✅ PlayGrid: Excellent skeletons
 - ✅ FormationSelector: Shimmer skeleton
 - ✅ Dashboard: Professional skeleton layout
@@ -208,6 +226,7 @@ export const FormationSelectorSkeleton = () => (
 ## 🎨 Design Principles
 
 ### Good Skeleton Loaders:
+
 1. **Match the final UI** - Same layout, just shimmer
 2. **Show content structure** - Cards, lists, grids visible
 3. **Smooth animation** - Gentle pulse/shimmer, not jarring
@@ -215,9 +234,10 @@ export const FormationSelectorSkeleton = () => (
 5. **Quick to render** - Lightweight, instant display
 
 ### Avoid:
+
 - ❌ Generic spinners for structured content
 - ❌ Blank white screens
-- ❌ Overly complex animations  
+- ❌ Overly complex animations
 - ❌ Skeletons that don't match final UI
 - ❌ Too many skeleton cards (6-8 max)
 
@@ -226,6 +246,7 @@ export const FormationSelectorSkeleton = () => (
 ## 🛠️ Existing Skeleton Components (Reusable!)
 
 ### Core Components:
+
 1. **Skeleton** (`src/components/ui/Skeleton.tsx`) - Base component
 2. **SquareSkeleton** (`src/components/ui/Animations/SquareAnimations.tsx`) - Design system version
 3. **PlayGridSkeleton** (`src/components/playbook/PlayGridSkeleton.tsx`) - Play cards
@@ -233,6 +254,7 @@ export const FormationSelectorSkeleton = () => (
 5. **PageLoading** (`src/components/layout/PageLoading.tsx`) - Page templates
 
 ### Usage Example:
+
 ```tsx
 import { Skeleton } from '../ui/Skeleton';
 
@@ -251,7 +273,7 @@ import { Skeleton } from '../ui/Skeleton';
 ## ✅ Success Criteria
 
 - [ ] FormationSelector shows skeleton instead of text (30 min)
-- [ ] Dashboard uses professional skeleton layout (1 hour)  
+- [ ] Dashboard uses professional skeleton layout (1 hour)
 - [ ] Calendar uses CalendarGridSkeleton (45 min)
 - [ ] No regression in actual load time (measure with DevTools)
 - [ ] User testing confirms "feels faster" (qualitative)

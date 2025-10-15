@@ -11,20 +11,22 @@ import { z } from "zod";
 // Base Schemas
 // ========================================
 
+// Match database constraint: p_type CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action'))
+// Using capitalized values to match existing database schema
 const PlayTypeEnum = z.enum([
-  "run",
-  "pass",
-  "rpo",
-  "play-action",
-  "screen",
-  "draw",
-  "bootleg",
-  "rollout",
-  "qb-sneak",
-  "punt",
-  "field-goal",
-  "kickoff",
-  "special",
+  "Run",
+  "Pass",
+  "RPO",
+  "Play Action",
+  "Screen",
+  "Draw",
+  "Bootleg",
+  "Rollout",
+  "QB Sneak",
+  "Punt",
+  "Field Goal",
+  "Kickoff",
+  "Special",
 ]);
 
 const FormationSchema = z
@@ -105,7 +107,10 @@ export const PlayCreateSchema = z.object({
   playbook_id: UUIDSchema,
   play_name: PlayNameSchema,
   formation: FormationSchema,
-  p_type: PlayTypeEnum,
+  p_type: z.preprocess(
+    (val) => val === "" || val === null ? undefined : val,
+    PlayTypeEnum.optional()
+  ), // Made optional - users don't always set this initially
 
   // Optional descriptive fields
   play_call: z.string().max(50).optional(),
@@ -130,12 +135,15 @@ export const PlayCreateSchema = z.object({
     ])
     .optional(),
 
-  // Personnel
-  personnel: z
-    .string()
-    .max(20)
-    .regex(/^\d{2}$/, "Personnel must be 2 digits (e.g., '11', '12', '21')")
-    .optional(),
+  // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
+  // Database field is TEXT with no constraints
+  personnel: z.preprocess(
+    (val) => val === "" || val === null ? undefined : val,
+    z
+      .string()
+      .max(50, "Personnel name too long")
+      .optional()
+  ),
 
   // Key players (legacy - validate as strings for now)
   key_player1: z.string().max(50).optional(),
@@ -192,11 +200,14 @@ export const PlayUpdateSchema = z.object({
       "red-zone",
     ])
     .optional(),
+  
+  // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
+  // Database field is TEXT with no constraints
   personnel: z
     .string()
-    .max(20)
-    .regex(/^\d{2}$/)
+    .max(50, "Personnel name too long")
     .optional(),
+  
   key_player1: z.string().max(50).optional(),
   key_player2: z.string().max(50).optional(),
   diagram_data: DiagramDataSchema,

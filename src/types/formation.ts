@@ -25,6 +25,19 @@ export type FormationCategory =
 export type FormationDirection = "base" | "left" | "right";
 
 /**
+ * How a formation handles directional variations
+ * - "mirror": Has LEFT/RIGHT mirror variants (Trips, Twins, Bunch)
+ * - "built-in": Direction is part of name (East/West, Rip/Liz)
+ * - "symmetric": No direction needed (Empty, Stack)
+ * - "unspecified": Legacy formations without this metadata
+ */
+export type FormationDirectionalityType = 
+  | "mirror"
+  | "built-in"
+  | "symmetric"
+  | "unspecified";
+
+/**
  * Formation type classification
  */
 export type FormationType =
@@ -79,6 +92,7 @@ export interface Formation {
   // Left/Right Variant System
   base_formation_id: string | null; // NULL = this IS the base formation
   direction: FormationDirection;
+  directionality_type: FormationDirectionalityType; // How this formation handles direction
 
   // Strength Player
   strength_player_position: string | null; // "X", "Y", "Z", "H", "F"
@@ -103,7 +117,7 @@ export interface Formation {
   created_by: string | null;
 
   // Optimistic locking (conflict resolution)
-  version?: number; // integer DEFAULT 1 - incremented on each update
+  version: number; // Incremented on each update to detect concurrent modifications
 }
 
 /**
@@ -118,6 +132,7 @@ export interface FormationCreate {
   personnel_name?: string;
   personnel_packages?: string[];
   direction?: FormationDirection;
+  directionality_type?: FormationDirectionalityType;
   base_formation_id?: string;
   strength_player_position?: string;
   strength_player_label?: string;

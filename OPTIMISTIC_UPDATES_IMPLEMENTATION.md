@@ -11,8 +11,9 @@
 ## Problem Statement
 
 **Before:** Every play creation or edit triggered a full database refresh via the `refreshTrigger` pattern:
+
 1. User creates/edits play
-2. `dispatch({ type: "INCREMENT_REFRESH" })` 
+2. `dispatch({ type: "INCREMENT_REFRESH" })`
 3. `refreshTrigger` counter increments
 4. `useEffect` in PlayGrid triggers `refreshData()`
 5. `useTeamsData` clears all plays: `setPlays([])`
@@ -20,6 +21,7 @@
 7. UI updates after **500ms**
 
 **Impact:**
+
 - ⏱️ 500ms lag on every action (feels slow and unresponsive)
 - 💾 Excessive database load (full refetch for single play change)
 - 😕 Poor user experience (no immediate feedback)
@@ -30,6 +32,7 @@
 ## Solution: Optimistic Updates
 
 **After:** Instant UI updates with background validation:
+
 1. User creates/edits play
 2. **Immediately** add/update play in local `optimisticPlays` state
 3. UI updates in **<50ms** (perceived instant)
@@ -38,6 +41,7 @@
 6. Remove from optimistic state after brief delay (100ms)
 
 **On Error:**
+
 - Revert optimistic update immediately
 - Show error toast to user
 - No stale data in UI
@@ -59,12 +63,14 @@ const [optimisticPlays, setOptimisticPlays] = useState<Play[]>([]);
 ### 2. Updated Play Creation (AddNewPlayModal onCreatePlay)
 
 **Before:**
+
 ```typescript
 const resultPlay = await SecurePlaysService.createPlay(playData);
 dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
 ```
 
 **After:**
+
 ```typescript
 // 🚀 OPTIMISTIC CREATE: Show new play immediately
 const tempId = `temp-${Date.now()}`;
@@ -101,6 +107,7 @@ setTimeout(() => {
 ### 3. Updated Play Editing (AddNewPlayModal onCreatePlay + handleSavePlay)
 
 **Edit in Modal:**
+
 ```typescript
 // 🚀 OPTIMISTIC UPDATE: Show changes immediately
 const optimisticUpdate = { ...editingPlay, ...playData };
@@ -114,15 +121,14 @@ resultPlay = await SecurePlaysService.updatePlay(editingPlay.id, playData);
 
 // Clean up after 100ms
 setTimeout(() => {
-  setOptimisticPlays((prev) =>
-    prev.filter((p) => p.id !== editingPlay.id)
-  );
+  setOptimisticPlays((prev) => prev.filter((p) => p.id !== editingPlay.id));
 }, 100);
 ```
 
 **Location:** Lines 1158-1177 in `src/pages/PlaybookPage.tsx`
 
 **Inline Edits (handleSavePlay):**
+
 ```typescript
 const handleSavePlay = async (playId: string, updates: Partial<Play>) => {
   try {
@@ -159,6 +165,7 @@ const handleSavePlay = async (playId: string, updates: Partial<Play>) => {
 ### 4. Updated PlayGrid to Merge Plays (PlayGrid.tsx)
 
 **Added to Props:**
+
 ```typescript
 interface PlayGridProps {
   // ... existing props
@@ -170,6 +177,7 @@ interface PlayGridProps {
 **Location:** Lines 48-53 in `src/components/playbook/PlayGrid.tsx`
 
 **Merge Logic:**
+
 ```typescript
 // Convert database plays to full Play type
 const databasePlays: Play[] = useMemo(
@@ -197,13 +205,13 @@ const plays: Play[] = useMemo(() => {
 
 ### Before vs After
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Play Creation Response** | 500ms | <50ms | **10x faster** |
-| **Play Edit Response** | 500ms | <50ms | **10x faster** |
-| **Database Queries per Action** | Full refetch (100+ plays) | Single operation | **85% reduction** |
-| **Perceived Responsiveness** | Slow, laggy | Instant, native-like | **5x better** |
-| **User Experience** | "Is it working?" | "Wow, that's fast!" | **Exceptional** |
+| Metric                          | Before                    | After                | Improvement       |
+| ------------------------------- | ------------------------- | -------------------- | ----------------- |
+| **Play Creation Response**      | 500ms                     | <50ms                | **10x faster**    |
+| **Play Edit Response**          | 500ms                     | <50ms                | **10x faster**    |
+| **Database Queries per Action** | Full refetch (100+ plays) | Single operation     | **85% reduction** |
+| **Perceived Responsiveness**    | Slow, laggy               | Instant, native-like | **5x better**     |
+| **User Experience**             | "Is it working?"          | "Wow, that's fast!"  | **Exceptional**   |
 
 ### Technical Benefits
 
@@ -211,7 +219,7 @@ const plays: Play[] = useMemo(() => {
 ✅ **Reduced Database Load:** 85% fewer queries (one operation instead of full refetch)  
 ✅ **Better Error Handling:** Optimistic updates revert cleanly on errors  
 ✅ **Scalability:** Performance stays constant even with 1000+ plays  
-✅ **Professional UX:** Feels like a native app, not a web app  
+✅ **Professional UX:** Feels like a native app, not a web app
 
 ---
 
@@ -254,7 +262,7 @@ These operations still use the old `INCREMENT_REFRESH` pattern (less frequent, a
 ✅ **All types verified:** `npm run type-check` passes with 0 errors  
 ✅ **Type-safe optimistic updates:** Play type enforced throughout  
 ✅ **Safe deduplication:** Uses Set-based ID checking  
-✅ **Error handling:** Properly typed catch blocks  
+✅ **Error handling:** Properly typed catch blocks
 
 ---
 
@@ -285,16 +293,19 @@ These operations still use the old `INCREMENT_REFRESH` pattern (less frequent, a
 With Priority 1 complete, the next highest-impact optimizations are:
 
 ### Priority 2: Skeleton Loaders (1-2 hours)
+
 - Replace empty states with skeleton screens
 - Show loading skeletons during initial load
 - Impact: 80% improvement in perceived load time
 
 ### Priority 4: Remove console.logs (1 hour)
+
 - Clean up debug noise
 - Convert to proper logging framework
 - Impact: 5-10% performance improvement
 
 ### Priority 6: Instant Search Feedback (1 hour)
+
 - Show "Searching..." state immediately on keystroke
 - Add search debouncing (300ms)
 - Impact: 90% improvement in search perceived responsiveness
@@ -317,7 +328,7 @@ See **PLAYBOOK_PERFORMANCE_OPTIMIZATION_PLAN.md** for full roadmap.
 
 ✅ **Priority 1: COMPLETE**  
 🎯 **Performance Goal: EXCEEDED** (target was 5x, achieved 10x)  
-💪 **Playbook now feels fast, smooth, and intuitive** (per user request)  
+💪 **Playbook now feels fast, smooth, and intuitive** (per user request)
 
 The playbook now provides instant feedback on the most common operations (create/edit plays), making it feel like a native app rather than a web application. This sets a strong foundation for the remaining optimizations.
 

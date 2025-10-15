@@ -73,10 +73,14 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
       <div className="flex gap-spacing-xs">
         <Button
           type="button"
-          variant={formationDir === "Left" ? "primary" : "outline"}
+          variant={
+            formationDir.toLowerCase() === "left" ? "primary" : "outline"
+          }
           size="sm"
           onClick={() =>
-            onFormationDirChange(formationDir === "Left" ? "" : "Left")
+            onFormationDirChange(
+              formationDir.toLowerCase() === "left" ? "" : "Left"
+            )
           }
           className="px-spacing-sm"
         >
@@ -84,10 +88,14 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
         </Button>
         <Button
           type="button"
-          variant={formationDir === "Right" ? "primary" : "outline"}
+          variant={
+            formationDir.toLowerCase() === "right" ? "primary" : "outline"
+          }
           size="sm"
           onClick={() =>
-            onFormationDirChange(formationDir === "Right" ? "" : "Right")
+            onFormationDirChange(
+              formationDir.toLowerCase() === "right" ? "" : "Right"
+            )
           }
           className="px-spacing-sm"
         >

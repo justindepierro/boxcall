@@ -70,8 +70,56 @@ export function FormationSelector({
     ? formations.find((f) => f.id === value)
     : null;
 
+  // Filter out base formations that have variants (linked formations)
+  // Keep: 1) Formations with variants (base_formation_id NOT NULL)
+  //       2) Base formations with NO variants yet
+  const baseFormationIds = new Set(
+    formations
+      .filter((f) => f.base_formation_id !== null)
+      .map((f) => f.base_formation_id)
+  );
+
+  // Debug logging
+  console.log(
+    "[FormationSelector] All formations:",
+    formations.map((f) => ({
+      name: f.name,
+      direction: f.direction,
+      base_formation_id: f.base_formation_id,
+      id: f.id,
+    }))
+  );
+  console.log(
+    "[FormationSelector] Base formation IDs with variants:",
+    Array.from(baseFormationIds)
+  );
+
+  const visibleFormations = formations.filter((formation) => {
+    // If this is a variant (has base_formation_id), always show it
+    if (formation.base_formation_id !== null) {
+      console.log(
+        `[FormationSelector] ✅ Showing variant: ${formation.name} (${formation.direction})`
+      );
+      return true;
+    }
+
+    // If this is a base formation (base_formation_id is null),
+    // only show it if it has NO variants yet
+    const hasVariants = baseFormationIds.has(formation.id);
+    const shouldShow = !hasVariants;
+    console.log(
+      `[FormationSelector] ${shouldShow ? "✅" : "❌"} Base formation: ${formation.name} - has variants: ${hasVariants}`
+    );
+    return shouldShow;
+  });
+
+  console.log(
+    "[FormationSelector] Visible formations:",
+    visibleFormations.map((f) => `${f.name} (${f.direction})`)
+  );
+
   // Group formations by category
-  const groupedFormations = formations.reduce(
+  const groupedFormations = visibleFormations.reduce(
     (acc, formation) => {
       const category = formation.category || "other";
       if (!acc[category]) {
@@ -103,7 +151,7 @@ export function FormationSelector({
         return "→ Right";
       case "base":
       default:
-        return "Base";
+        return ""; // Don't show "Base" label (base formations without variants show as-is)
     }
   };
 
@@ -179,7 +227,7 @@ export function FormationSelector({
       {error && <p className="mt-1 text-xs text-error-500">{error}</p>}
 
       {/* Dropdown Menu */}
-      {isOpen && !isLoading && formations.length > 0 && (
+      {isOpen && !isLoading && visibleFormations.length > 0 && (
         <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {Object.keys(groupedFormations).map((category) => (
             <div key={category}>
@@ -250,14 +298,18 @@ export function FormationSelector({
       )}
 
       {/* No Formations Message */}
-      {isOpen && !isLoading && formations.length === 0 && (
+      {isOpen && !isLoading && visibleFormations.length === 0 && (
         <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-border-primary rounded-lg shadow-lg p-spacing-lg text-center">
           <Grid className="w-8 h-8 text-text-muted mx-auto mb-spacing-sm" />
           <p className="text-sm text-text-muted mb-spacing-xs">
-            No formations yet
+            {formations.length > 0
+              ? "All base formations have been linked to variants"
+              : "No formations yet"}
           </p>
           <p className="text-xs text-text-muted">
-            Create formations using the Formation Builder
+            {formations.length > 0
+              ? "Use the Link button to manage formation variants"
+              : "Create formations using the Formation Builder"}
           </p>
         </div>
       )}

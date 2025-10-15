@@ -49,12 +49,10 @@ export function createPlaySaveHandler({
       if (updates.p_str !== undefined) dbUpdates.p_str = updates.p_str;
       if (updates.pref_down !== undefined)
         dbUpdates.pref_down = updates.pref_down;
-      if (updates.pref_dis !== undefined)
-        dbUpdates.pref_dis = updates.pref_dis;
+      if (updates.pref_dis !== undefined) dbUpdates.pref_dis = updates.pref_dis;
       if (updates.pref_hash !== undefined)
         dbUpdates.pref_hash = updates.pref_hash;
-      if (updates.pref_cov !== undefined)
-        dbUpdates.pref_cov = updates.pref_cov;
+      if (updates.pref_cov !== undefined) dbUpdates.pref_cov = updates.pref_cov;
       if (updates.pref_front !== undefined)
         dbUpdates.pref_front = updates.pref_front;
       if (updates.ftag1 !== undefined) dbUpdates.ftag1 = updates.ftag1;

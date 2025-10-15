@@ -128,7 +128,17 @@ export class SecurePlaysService {
       // Validate input
       let validated: PlayCreateInput;
       try {
-        validated = validatePlayCreate(playData);
+        // Clean up empty strings/null before validation
+        const cleanedData = Object.fromEntries(
+          Object.entries(playData)
+            .map(([key, value]) => [
+              key,
+              value === "" || value === null ? undefined : value,
+            ])
+            .filter(([_, value]) => value !== undefined)
+        );
+
+        validated = validatePlayCreate(cleanedData);
       } catch (error: any) {
         trackSecurityEvent({
           type: "validation_error",

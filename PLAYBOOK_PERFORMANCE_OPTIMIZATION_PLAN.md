@@ -15,6 +15,7 @@
 Based on codebase analysis, here are the key performance opportunities:
 
 **✅ Already Optimized:**
+
 - React.memo on PlayGrid component
 - useCallback/useMemo in critical paths
 - Lazy-loaded modals (29.4% bundle reduction)
@@ -65,19 +66,22 @@ Based on codebase analysis, here are the key performance opportunities:
 // In PlaybookPage.tsx
 const handlePlayCreated = useCallback(async (newPlay: Play) => {
   // 1. Optimistic update (instant UI feedback)
-  setLocalPlays(prev => [newPlay, ...prev]);
-  
+  setLocalPlays((prev) => [newPlay, ...prev]);
+
   // 2. Background revalidation (no UI blocking)
   setTimeout(async () => {
     const freshPlay = await PlaysService.findOne(newPlay.id);
-    setLocalPlays(prev => prev.map(p => p.id === newPlay.id ? freshPlay : p));
+    setLocalPlays((prev) =>
+      prev.map((p) => (p.id === newPlay.id ? freshPlay : p))
+    );
   }, 100);
 }, []);
 
 // Remove refreshTrigger pattern entirely
 ```
 
-**Expected Impact:** 
+**Expected Impact:**
+
 - ✨ **5x faster** perceived response (500ms → 50ms)
 - 🎯 **85% less database load** (no full refetches)
 - 😊 **Instant feedback** for user actions
@@ -95,13 +99,15 @@ const handlePlayCreated = useCallback(async (newPlay: Play) => {
 
 ```tsx
 // In PlayGrid.tsx
-{loading && !plays.length && (
-  <PlayGridSkeleton count={6} viewMode={viewMode} />
-)}
+{
+  loading && !plays.length && (
+    <PlayGridSkeleton count={6} viewMode={viewMode} />
+  );
+}
 
 // PlayGridSkeleton.tsx
 export const PlayGridSkeleton = ({ count, viewMode }) => (
-  <div className={viewMode === 'grid' ? 'grid gap-4' : 'space-y-4'}>
+  <div className={viewMode === "grid" ? "grid gap-4" : "space-y-4"}>
     {Array.from({ length: count }).map((_, i) => (
       <div key={i} className="animate-pulse">
         <div className="h-32 bg-gray-200 rounded-lg" />
@@ -112,6 +118,7 @@ export const PlayGridSkeleton = ({ count, viewMode }) => (
 ```
 
 **Expected Impact:**
+
 - ✨ **50% better** perceived performance
 - 🎯 **Instant visual feedback** (no blank screen)
 - 😊 **Professional feel** (like modern apps)
@@ -144,13 +151,13 @@ const [modalState, dispatch] = useReducer(modalReducer, {
 });
 
 // One state update = one render
-dispatch({ 
-  type: 'OPEN_DIAGRAM', 
-  payload: { play, closeOthers: true } 
+dispatch({
+  type: "OPEN_DIAGRAM",
+  payload: { play, closeOthers: true },
 });
 
 // Option B: React 18 startTransition
-import { startTransition } from 'react';
+import { startTransition } from "react";
 
 startTransition(() => {
   setDiagramPlay(play);
@@ -160,6 +167,7 @@ startTransition(() => {
 ```
 
 **Expected Impact:**
+
 - ✨ **30-40% fewer** re-renders
 - 🎯 **Smoother animations** (no janky state updates)
 - 😊 **Cleaner state management**
@@ -196,6 +204,7 @@ find src/components/playbook -name "*.tsx" -exec sed -i '' 's/console\.log/debug
 ```
 
 **Expected Impact:**
+
 - ✨ **10-15%** faster in production
 - 🎯 **Cleaner console** for real errors
 - 😊 **Better debugging** (structured logs)
@@ -212,7 +221,7 @@ find src/components/playbook -name "*.tsx" -exec sed -i '' 's/console\.log/debug
 ```tsx
 // Current: filteredPlays computed every render
 const filteredPlays = useMemo(() => {
-  return plays.filter(play => {
+  return plays.filter((play) => {
     // Complex filtering logic...
   });
 }, [plays, searchQuery, filters, selectedCategory]);
@@ -227,16 +236,21 @@ const filteredPlays = useMemo(() => {
   if (!searchQuery && !selectedCategory && Object.keys(filters).length === 0) {
     return plays;
   }
-  
+
   // Build filter predicates once
-  const predicates = buildFilterPredicates(searchQuery, filters, selectedCategory);
-  
+  const predicates = buildFilterPredicates(
+    searchQuery,
+    filters,
+    selectedCategory
+  );
+
   // Filter once
-  return plays.filter(play => predicates.every(fn => fn(play)));
+  return plays.filter((play) => predicates.every((fn) => fn(play)));
 }, [plays, searchQuery, filters, selectedCategory]);
 ```
 
 **Expected Impact:**
+
 - ✨ **2-3x faster** filtering for large lists
 - 🎯 **Sub-16ms** render times (60fps)
 - 😊 **Smooth scrolling** even with 100+ plays
@@ -255,8 +269,8 @@ const filteredPlays = useMemo(() => {
 **Solution:** Debounced search with instant UI feedback
 
 ```tsx
-const [searchQuery, setSearchQuery] = useState('');
-const [debouncedQuery, setDebouncedQuery] = useState('');
+const [searchQuery, setSearchQuery] = useState("");
+const [debouncedQuery, setDebouncedQuery] = useState("");
 
 // Debounce heavy filtering
 useEffect(() => {
@@ -268,18 +282,19 @@ useEffect(() => {
 
 // Use debouncedQuery for filtering
 const filteredPlays = useMemo(() => {
-  return plays.filter(play => matchesSearch(play, debouncedQuery));
+  return plays.filter((play) => matchesSearch(play, debouncedQuery));
 }, [plays, debouncedQuery]);
 
 // Instant UI feedback
-<input 
+<input
   value={searchQuery}
   onChange={(e) => setSearchQuery(e.target.value)}
   placeholder={`Searching ${plays.length} plays...`}
-/>
+/>;
 ```
 
 **Expected Impact:**
+
 - ✨ **Feels instant** (no lag on keypress)
 - 🎯 **Smooth typing** experience
 - 😊 **Professional search** UX
@@ -304,14 +319,17 @@ const visiblePlays = useMemo(() => {
 }, [filteredPlays, displayCount]);
 
 // Show load more if needed
-{displayCount < filteredPlays.length && (
-  <Button onClick={() => setDisplayCount(prev => prev + 20)}>
-    Load More ({filteredPlays.length - displayCount} remaining)
-  </Button>
-)}
+{
+  displayCount < filteredPlays.length && (
+    <Button onClick={() => setDisplayCount((prev) => prev + 20)}>
+      Load More ({filteredPlays.length - displayCount} remaining)
+    </Button>
+  );
+}
 ```
 
 **Expected Impact:**
+
 - ✨ **3x faster** initial render
 - 🎯 **Smooth scrolling** (fewer DOM nodes)
 - 😊 **User control** over loading
@@ -344,6 +362,7 @@ import { Button } from '@mui/material';     // Pulls entire lib
 ```
 
 **Expected Impact:**
+
 - ✨ **20-30%** smaller bundle
 - 🎯 **Faster downloads** on slow networks
 - 😊 **Better caching**
@@ -362,12 +381,12 @@ import { Button } from '@mui/material';     // Pulls entire lib
 ```tsx
 // Memoize suggestion lists (computed once)
 const formationSuggestions = useMemo(() => {
-  return [...new Set(plays.map(p => p.formation))].sort();
+  return [...new Set(plays.map((p) => p.formation))].sort();
 }, [plays]);
 
 // Memoize sorted/grouped data
 const playsByFormation = useMemo(() => {
-  return groupBy(plays, 'formation');
+  return groupBy(plays, "formation");
 }, [plays]);
 ```
 
@@ -420,12 +439,14 @@ After each optimization:
 ## 📈 Success Metrics
 
 **Before (Current):**
+
 - Create play response: 500ms
 - Initial load: 2-3s
 - Search lag: 150-300ms
 - Re-renders: 5-10 per action
 
 **After (Target):**
+
 - Create play response: <50ms ✨
 - Initial load: <1s ✨
 - Search lag: 0ms (instant) ✨

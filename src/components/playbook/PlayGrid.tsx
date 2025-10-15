@@ -127,7 +127,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Drag and drop state for play reordering
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
-
   // Get real data from database with refresh capability and pagination
   const {
     plays: allPlays,

@@ -1,4 +1,11 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  lazy,
+  Suspense,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
@@ -120,7 +127,7 @@ export default function PlaybookPage() {
 
   // Get playbooks for this team
   const { playbooks, refreshData } = useTeamsData();
-  
+
   // 🚀 PERFORMANCE: Memoize filtered playbooks to avoid recalculating on every render
   const teamPlaybooks = useMemo(
     () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
@@ -361,13 +368,13 @@ export default function PlaybookPage() {
     (view: CoachingView) => dispatch({ type: "SET_VIEW", view }),
     [dispatch]
   );
-  
+
   const handleTeamTypeChange = useCallback(
     (teamType: "offense" | "defense" | "special-teams") =>
       dispatch({ type: "SET_TEAM_TYPE", teamType }),
     [dispatch]
   );
-  
+
   const handleFiltersChange = useCallback(
     (filters: PlaybookState["advancedFilters"]) => {
       triggerHapticFeedback("selection");
@@ -375,12 +382,12 @@ export default function PlaybookPage() {
     },
     [dispatch]
   );
-  
+
   const handleClearSelection = useCallback(
     () => dispatch({ type: "CLEAR_SELECTION" }),
     [dispatch]
   );
-  
+
   const handleBulkAction = useCallback((_action: string) => {}, []);
 
   // Play count handler - updates state when PlayGrid reports actual play count
@@ -632,7 +639,10 @@ export default function PlaybookPage() {
         );
       } catch (error) {
         logError("Failed to add play to practice script:", error);
-        toast.error("Failed to add play to practice script", "Please try again");
+        toast.error(
+          "Failed to add play to practice script",
+          "Please try again"
+        );
       }
     },
     [toast]
@@ -1256,12 +1266,15 @@ export default function PlaybookPage() {
                         `Play "${resultPlay.play_name}" updated successfully!`
                       );
 
-                      // Remove from optimistic state (now in database)
-                      setTimeout(() => {
-                        setOptimisticPlays((prev) =>
-                          prev.filter((p) => p.id !== editingPlay.id)
-                        );
-                      }, 100);
+                      // Replace optimistic update with real database result
+                      setOptimisticPlays((prev) =>
+                        prev.map((p) =>
+                          p.id === editingPlay.id ? resultPlay : p
+                        )
+                      );
+
+                      // Trigger a database refresh to ensure consistency
+                      dispatch({ type: "INCREMENT_REFRESH" });
                     } else {
                       // 🚀 OPTIMISTIC CREATE: Show new play immediately with temporary ID
                       const tempId = `temp-${Date.now()}`;
@@ -1284,8 +1297,23 @@ export default function PlaybookPage() {
                       setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
 
                       // Background: Create in database
+                      // ⚠️ CRITICAL: Add playbook_id before validation
+                      // 🔧 CRITICAL: Clean up empty strings and null to undefined for optional fields
+                      const cleanedPlayData = Object.fromEntries(
+                        Object.entries(playData)
+                          .map(([key, value]) => [
+                            key,
+                            value === "" || value === null ? undefined : value,
+                          ])
+                          .filter(([_, value]) => value !== undefined) // Remove undefined fields entirely
+                      );
+                      const completePlayData = {
+                        ...cleanedPlayData,
+                        playbook_id: activePlaybookId,
+                      };
+
                       resultPlay =
-                        await SecurePlaysService.createPlay(playData);
+                        await SecurePlaysService.createPlay(completePlayData);
                       toast.success(
                         `Play "${resultPlay.play_name}" created successfully!`
                       );
@@ -1295,12 +1323,9 @@ export default function PlaybookPage() {
                         prev.map((p) => (p.id === tempId ? resultPlay : p))
                       );
 
-                      // Remove from optimistic state after showing (now in database)
-                      setTimeout(() => {
-                        setOptimisticPlays((prev) =>
-                          prev.filter((p) => p.id !== tempId)
-                        );
-                      }, 100);
+                      // Trigger a database refresh to get the play in the main list
+                      // The optimistic play will be automatically deduplicated
+                      dispatch({ type: "INCREMENT_REFRESH" });
                     }
 
                     // ✅ NO MORE FULL REFRESH - optimistic updates handle UI

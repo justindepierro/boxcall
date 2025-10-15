@@ -309,7 +309,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <FormationSection
             formation={formData.formation}
             formationId={formData.formation_id}
-            formationDir={formData.formationDir}
+            formationDir={formData.formation_direction || ""} // Use formation_direction for database
             formationShowInName={formData.formationShowInName}
             playbookId={playbookId}
             onFormationChange={(value) => updateField("formation", value)}
@@ -334,7 +334,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                 // This will pre-populate the canvas with formation positions
               }
             }}
-            onFormationDirChange={(value) => updateField("formationDir", value)}
+            onFormationDirChange={(value) => {
+              // Update formation_direction (database field), not formationDir (legacy field)
+              const direction =
+                value === "Left" ? "left" : value === "Right" ? "right" : null;
+              updateField("formation_direction", direction);
+            }}
             onFormationShowInNameChange={(value) =>
               updateField("formationShowInName", value)
             }

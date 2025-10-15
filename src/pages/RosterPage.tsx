@@ -275,9 +275,7 @@ export default function RosterPage() {
         await rosterService.createPlayer(playerData);
       }
 
-      info(
-        `[RosterPage] ${csvPlayers.length} players imported successfully`
-      );
+      info(`[RosterPage] ${csvPlayers.length} players imported successfully`);
       setShowImportModal(false);
       loadRoster();
     } catch (error) {
