@@ -8,6 +8,7 @@ import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Aurora } from "../components/ui/Aurora";
+import { DeleteConfirmationDialog } from "../components/common/DeleteConfirmationDialog";
 import { rosterService } from "../services";
 import type {
   RosterPlayerView,
@@ -17,7 +18,7 @@ import type {
 import { getActiveTeamId } from "../utils/activeTeam";
 import { RosterImportModal } from "../components/roster/RosterImportModal";
 import { info, error as logError } from "../utils/logger";
-// import { useToast } from "../hooks/useToast";
+import { useToast } from "../hooks/useToast";
 
 /**
  * RosterPage - Complete roster management interface
@@ -27,11 +28,17 @@ import { info, error as logError } from "../utils/logger";
  * - Add/Edit/Delete players
  * - Bulk CSV import
  * - Player statistics and profiles
- * - Team overview dashboard
- * - Coach role management
+ * - Multiple positions per player
+ * - Bulk selection and operations
+ *
+ * Badge Colors:
+ * - Jersey Number: jade-700 (default, will use team branding colors when available)
+ * - Position: blue-100/800
+ * - Grade Level: purple-100/800
  */
 export default function RosterPage() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   // State
   const [players, setPlayers] = useState<RosterPlayerView[]>([]);
@@ -42,11 +49,19 @@ export default function RosterPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [playerToDelete, setPlayerToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(
+    new Set()
+  );
   const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(
     null
   );
   const [saving, setSaving] = useState(false);
-  const [, setFormError] = useState<string | null>(null); // TODO: Display error to user
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Form state for add/edit
   const [playerForm, setPlayerForm] = useState({
@@ -70,7 +85,10 @@ export default function RosterPage() {
 
   // Load roster data
   const loadRoster = useCallback(async () => {
-    if (!teamId) return;
+    if (!teamId) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -78,11 +96,11 @@ export default function RosterPage() {
       setPlayers(rosterData);
     } catch (error) {
       console.error("Failed to load roster:", error);
-      // console.log("Failed to load roster", "error");
+      toast.error("Failed to load roster. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [teamId]);
+  }, [teamId, toast]);
 
   useEffect(() => {
     loadRoster();
@@ -99,8 +117,15 @@ export default function RosterPage() {
         player.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         player.jersey_number?.toString().includes(searchTerm);
 
+      // Support filtering by multiple positions (comma-separated)
       const matchesPosition =
-        !positionFilter || player.position === positionFilter;
+        !positionFilter ||
+        (player.position &&
+          player.position
+            .split(",")
+            .map((p) => p.trim())
+            .includes(positionFilter));
+
       const matchesStatus =
         !statusFilter || player.is_active === (statusFilter === "active");
 
@@ -140,9 +165,11 @@ export default function RosterPage() {
       if (
         !playerForm.first_name.trim() ||
         !playerForm.last_name.trim() ||
-        !playerForm.position
+        !playerForm.position.trim()
       ) {
-        setFormError("First name, last name, and position are required");
+        setFormError(
+          "First name, last name, and at least one position are required"
+        );
         return;
       }
 
@@ -177,16 +204,20 @@ export default function RosterPage() {
 
       await rosterService.createPlayer(playerData);
       info("[RosterPage] Player added successfully");
+      toast.success(
+        `Player ${playerForm.first_name} ${playerForm.last_name} added successfully`
+      );
       setShowAddModal(false);
       resetForm();
       loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to add player:", error);
-      setFormError(
+      const errorMessage =
         error instanceof Error
           ? error.message
-          : "Failed to add player. Please try again."
-      );
+          : "Failed to add player. Please try again.";
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -227,27 +258,68 @@ export default function RosterPage() {
 
       await rosterService.updatePlayer(editingPlayer.id, updateData);
       info("[RosterPage] Player updated successfully");
+      toast.success(
+        `Player ${playerForm.first_name} ${playerForm.last_name} updated successfully`
+      );
       setShowEditModal(false);
       setEditingPlayer(null);
       resetForm();
       loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to update player:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update player. Please try again.";
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDeletePlayer = async (playerId: string) => {
-    if (!confirm("Are you sure you want to delete this player?")) return;
+  const confirmDeletePlayer = (playerId: string, playerName: string) => {
+    setPlayerToDelete({ id: playerId, name: playerName });
+    setShowDeleteDialog(true);
+  };
+
+  const handleDeletePlayer = async () => {
+    if (!playerToDelete) return;
 
     try {
-      await rosterService.deletePlayer(playerId);
+      await rosterService.deletePlayer(playerToDelete.id);
       info("[RosterPage] Player deleted successfully");
+      toast.success("Player deleted successfully");
+      setShowDeleteDialog(false);
+      setPlayerToDelete(null);
       loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to delete player:", error);
+      toast.error("Failed to delete player. Please try again.");
+      setShowDeleteDialog(false);
+      setPlayerToDelete(null);
     }
+  };
+
+  // Selection handlers
+  const togglePlayerSelection = (playerId: string) => {
+    setSelectedPlayerIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(playerId)) {
+        newSet.delete(playerId);
+      } else {
+        newSet.add(playerId);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedPlayerIds(new Set(filteredPlayers.map((p) => p.id)));
+  };
+
+  const clearSelection = () => {
+    setSelectedPlayerIds(new Set());
   };
 
   const handleImportPlayers = async (csvPlayers: any[]) => {
@@ -276,10 +348,16 @@ export default function RosterPage() {
       }
 
       info(`[RosterPage] ${csvPlayers.length} players imported successfully`);
+      toast.success(
+        `Successfully imported ${csvPlayers.length} player${csvPlayers.length !== 1 ? "s" : ""}`
+      );
       setShowImportModal(false);
       loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to import players:", error);
+      toast.error(
+        "Failed to import players. Please check the file and try again."
+      );
     } finally {
       setSaving(false);
     }
@@ -377,12 +455,33 @@ export default function RosterPage() {
           className="mb-4"
         />
 
-        <div className="space-y-spacing-lg">
+        <div className="space-y-spacing-lg relative z-10">
+          {/* Selection Bar */}
+          {selectedPlayerIds.size > 0 && (
+            <div className="flex items-center justify-between gap-spacing-md bg-primary-50 p-spacing-sm rounded-lg border border-primary-200">
+              <div className="flex items-center gap-spacing-md">
+                <Typography
+                  variant="body-sm"
+                  className="text-primary-700 font-medium"
+                >
+                  {selectedPlayerIds.size} player
+                  {selectedPlayerIds.size !== 1 ? "s" : ""} selected
+                </Typography>
+                <Button size="sm" variant="ghost" onClick={clearSelection}>
+                  Clear Selection
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Header Actions */}
           <div className="flex flex-col sm:flex-row gap-spacing-md justify-between items-start sm:items-center">
             <div className="flex flex-col sm:flex-row gap-spacing-md">
               <Button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => {
+                  console.log("[RosterPage] Add Player button clicked");
+                  setShowAddModal(true);
+                }}
                 className="bg-primary hover:bg-primary/90"
               >
                 <Icon name="plus" className="w-4 h-4 mr-spacing-xs" />
@@ -390,10 +489,27 @@ export default function RosterPage() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => setShowImportModal(true)}
+                onClick={() => {
+                  console.log("[RosterPage] Import CSV button clicked");
+                  setShowImportModal(true);
+                }}
               >
                 <Icon name="upload" className="w-4 h-4 mr-spacing-xs" />
                 Import CSV
+              </Button>
+              <Button
+                variant="outline"
+                onClick={
+                  selectedPlayerIds.size === filteredPlayers.length
+                    ? clearSelection
+                    : selectAll
+                }
+                disabled={filteredPlayers.length === 0}
+              >
+                <Icon name="check" className="w-4 h-4 mr-spacing-xs" />
+                {selectedPlayerIds.size === filteredPlayers.length
+                  ? "Deselect All"
+                  : "Select All"}
               </Button>
             </div>
 
@@ -408,7 +524,7 @@ export default function RosterPage() {
               <select
                 value={positionFilter}
                 onChange={(e) => setPositionFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Positions</option>
                 {positionOptions.map((pos) => (
@@ -420,7 +536,7 @@ export default function RosterPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Status</option>
                 {statusOptions.map((status) => (
@@ -557,28 +673,60 @@ export default function RosterPage() {
               {filteredPlayers.map((player) => (
                 <Card
                   key={player.id}
-                  className="p-spacing-md hover:shadow-lg transition-shadow"
+                  className={`p-spacing-md hover:shadow-lg transition-all ${
+                    selectedPlayerIds.has(player.id)
+                      ? "ring-2 ring-primary bg-primary-50/30"
+                      : ""
+                  }`}
                 >
-                  <div className="flex items-start justify-between mb-spacing-sm">
+                  <div className="flex items-start justify-between mb-spacing-md">
                     <div className="flex items-center gap-spacing-sm">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                        <Typography
-                          variant="headline-sm"
-                          className="text-primary font-bold"
-                        >
-                          {player.jersey_number || "?"}
-                        </Typography>
-                      </div>
+                      {/* Selection Checkbox */}
+                      <input
+                        type="checkbox"
+                        checked={selectedPlayerIds.has(player.id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          togglePlayerSelection(player.id);
+                        }}
+                        className="w-5 h-5 rounded border-2 border-surface-secondary text-primary focus:ring-2 focus:ring-primary cursor-pointer"
+                        aria-label={`Select ${player.first_name} ${player.last_name}`}
+                      />
                       <div>
                         <Typography
                           variant="headline-sm"
-                          className="font-semibold"
+                          className="font-semibold mb-1"
                         >
                           {player.first_name} {player.last_name}
                         </Typography>
-                        <Typography variant="body-sm" color="muted">
-                          {player.position || "No position"}
-                        </Typography>
+                        {/* Badges Row */}
+                        <div className="flex gap-2 flex-wrap">
+                          {/* Jersey Number Badge */}
+                          {player.jersey_number && (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-jade-700 text-white">
+                              #{player.jersey_number}
+                            </span>
+                          )}
+                          {/* Position Badges - Support multiple positions */}
+                          {player.position &&
+                            player.position
+                              .split(",")
+                              .filter(Boolean)
+                              .map((pos) => (
+                                <span
+                                  key={pos}
+                                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
+                                >
+                                  {pos.trim()}
+                                </span>
+                              ))}
+                          {/* Grade Level Badge */}
+                          {player.grade_level && (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                              {player.grade_level}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-spacing-xs">
@@ -592,7 +740,12 @@ export default function RosterPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleDeletePlayer(player.id)}
+                        onClick={() =>
+                          confirmDeletePlayer(
+                            player.id,
+                            `${player.first_name} ${player.last_name}`
+                          )
+                        }
                         className="text-error-500 hover:text-error-700"
                       >
                         <Icon name="delete" className="w-4 h-4" />
@@ -601,12 +754,6 @@ export default function RosterPage() {
                   </div>
 
                   <div className="space-y-spacing-xs text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-text-secondary">Class:</span>
-                      <span className="capitalize">
-                        {player.grade_level || "Not set"}
-                      </span>
-                    </div>
                     <div className="flex justify-between">
                       <span className="text-text-secondary">Height:</span>
                       <span>
@@ -626,10 +773,10 @@ export default function RosterPage() {
                     <div className="flex justify-between">
                       <span className="text-text-secondary">Status:</span>
                       <span
-                        className={`capitalize px-spacing-xs py-spacing-xs rounded-lg text-xs ${
+                        className={`capitalize px-2 py-1 rounded-full text-xs font-medium ${
                           player.is_active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-surface-muted text-gray-800"
+                            ? "bg-green-100 text-green-800 border border-green-200"
+                            : "bg-gray-100 text-gray-600 border border-gray-200"
                         }`}
                       >
                         {player.is_active ? "Active" : "Inactive"}
@@ -651,6 +798,17 @@ export default function RosterPage() {
             title="Add New Player"
           >
             <div className="space-y-spacing-md">
+              {formError && (
+                <div className="p-spacing-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+                  <Typography
+                    variant="body-sm"
+                    className="text-error-700 dark:text-error-300"
+                  >
+                    {formError}
+                  </Typography>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-spacing-md">
                 <Input
                   label="First Name"
@@ -679,26 +837,70 @@ export default function RosterPage() {
               <div className="grid grid-cols-2 gap-spacing-md">
                 <div>
                   <label className="block text-sm font-medium mb-spacing-xs">
-                    Position
+                    Position(s) *
                   </label>
+                  {/* Selected Positions Display */}
+                  {playerForm.position && (
+                    <div className="flex gap-2 flex-wrap mb-2">
+                      {playerForm.position
+                        .split(",")
+                        .filter(Boolean)
+                        .map((pos) => (
+                          <span
+                            key={pos}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
+                          >
+                            {pos}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const positions = playerForm.position
+                                  .split(",")
+                                  .filter((p) => p !== pos);
+                                setPlayerForm((prev) => ({
+                                  ...prev,
+                                  position: positions.join(","),
+                                }));
+                              }}
+                              className="ml-1 hover:text-blue-900"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                  {/* Position Selector */}
                   <select
-                    value={playerForm.position}
-                    onChange={(e) =>
-                      setPlayerForm((prev) => ({
-                        ...prev,
-                        position: e.target.value,
-                      }))
-                    }
-                    className="w-full px-spacing-sm py-spacing-xs border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const currentPositions = playerForm.position
+                          ? playerForm.position.split(",").filter(Boolean)
+                          : [];
+                        if (!currentPositions.includes(e.target.value)) {
+                          setPlayerForm((prev) => ({
+                            ...prev,
+                            position: [
+                              ...currentPositions,
+                              e.target.value,
+                            ].join(","),
+                          }));
+                        }
+                      }
+                    }}
+                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
-                    <option value="">Select Position</option>
+                    <option value="">+ Add Position</option>
                     {positionOptions.map((pos) => (
                       <option key={pos} value={pos}>
                         {pos}
                       </option>
                     ))}
                   </select>
+                  <p className="text-xs text-text-secondary mt-1">
+                    Select multiple positions if player plays more than one
+                  </p>
                 </div>
                 <Input
                   label="Jersey Number"
@@ -726,7 +928,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>
@@ -845,6 +1047,17 @@ export default function RosterPage() {
             title="Edit Player"
           >
             <div className="space-y-4">
+              {formError && (
+                <div className="p-spacing-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+                  <Typography
+                    variant="body-sm"
+                    className="text-error-700 dark:text-error-300"
+                  >
+                    {formError}
+                  </Typography>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="First Name"
@@ -873,26 +1086,70 @@ export default function RosterPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Position
+                    Position(s) *
                   </label>
+                  {/* Selected Positions Display */}
+                  {playerForm.position && (
+                    <div className="flex gap-2 flex-wrap mb-2">
+                      {playerForm.position
+                        .split(",")
+                        .filter(Boolean)
+                        .map((pos) => (
+                          <span
+                            key={pos}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
+                          >
+                            {pos}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const positions = playerForm.position
+                                  .split(",")
+                                  .filter((p) => p !== pos);
+                                setPlayerForm((prev) => ({
+                                  ...prev,
+                                  position: positions.join(","),
+                                }));
+                              }}
+                              className="ml-1 hover:text-blue-900"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                  {/* Position Selector */}
                   <select
-                    value={playerForm.position}
-                    onChange={(e) =>
-                      setPlayerForm((prev) => ({
-                        ...prev,
-                        position: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const currentPositions = playerForm.position
+                          ? playerForm.position.split(",").filter(Boolean)
+                          : [];
+                        if (!currentPositions.includes(e.target.value)) {
+                          setPlayerForm((prev) => ({
+                            ...prev,
+                            position: [
+                              ...currentPositions,
+                              e.target.value,
+                            ].join(","),
+                          }));
+                        }
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
-                    <option value="">Select Position</option>
+                    <option value="">+ Add Position</option>
                     {positionOptions.map((pos) => (
                       <option key={pos} value={pos}>
                         {pos}
                       </option>
                     ))}
                   </select>
+                  <p className="text-xs text-text-secondary mt-1">
+                    Select multiple positions if player plays more than one
+                  </p>
                 </div>
                 <Input
                   label="Jersey Number"
@@ -920,7 +1177,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>
@@ -1031,6 +1288,18 @@ export default function RosterPage() {
             isOpen={showImportModal}
             onClose={() => setShowImportModal(false)}
             onImport={handleImportPlayers}
+          />
+
+          {/* Delete Confirmation Dialog */}
+          <DeleteConfirmationDialog
+            isOpen={showDeleteDialog}
+            onClose={() => {
+              setShowDeleteDialog(false);
+              setPlayerToDelete(null);
+            }}
+            onConfirm={handleDeletePlayer}
+            title="Delete Player"
+            entityName={playerToDelete?.name || ""}
           />
         </div>
       </PageLayout>

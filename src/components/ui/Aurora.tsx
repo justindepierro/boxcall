@@ -82,8 +82,9 @@ export const Aurora: React.FC<AuroraProps> = ({
       // Background gradient
       "bg-gradient-to-br from-jade-50 via-white to-electric-50/30",
       "dark:from-navy-900 dark:via-navy-800 dark:to-electric-900/20",
-      // Optional animated aurora glow
-      animated && "before:absolute before:inset-0 before:opacity-0",
+      // Optional animated aurora glow - with pointer-events-none to not block clicks
+      animated &&
+        "before:absolute before:inset-0 before:opacity-0 before:pointer-events-none",
       animated &&
         "before:bg-gradient-radial before:from-electric-400/10 before:to-transparent",
       animated && "before:animate-pulse before:duration-[8s]"

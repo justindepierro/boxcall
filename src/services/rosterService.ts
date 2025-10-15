@@ -1,7 +1,9 @@
-import { type PostgrestError } from "@supabase/supabase-js";
+import { type PostgrestError, type SupabaseClient } from "@supabase/supabase-js";
 
 import { supabase as sharedClient } from "../lib/supabase";
+import type { Database } from "../types/database";
 
+// RosterPlayerView matches the team_players table structure
 export interface RosterPlayerView {
   id: string;
   team_id: string;
@@ -39,7 +41,7 @@ export interface PlayerRosterUpdate {
 }
 
 // Use centralized supabase client (browser-safe, avoids process reference)
-function getClient() {
+function getClient(): SupabaseClient<Database> {
   return sharedClient;
 }
 
@@ -49,7 +51,7 @@ export class RosterService {
     if (!this._instance) this._instance = new RosterService();
     return this._instance;
   }
-  private client = getClient();
+  private client: SupabaseClient<Database> = getClient();
 
   async listByTeam(teamId: string): Promise<RosterPlayerView[]> {
     interface RawRow {
@@ -126,7 +128,7 @@ export class RosterService {
     playerId: string,
     updateData: PlayerRosterUpdate
   ): Promise<RosterPlayerView> {
-    const { data, error } = await this.client
+    const { data, error} = await this.client
       .from("team_players")
       .update({
         ...updateData,
@@ -153,8 +155,24 @@ export class RosterService {
   }
 
   async getPlayerById(playerId: string): Promise<RosterPlayerView> {
+    interface RawRow {
+      [key: string]: unknown;
+      id: string;
+      team_id: string;
+      first_name?: string | null;
+      last_name?: string | null;
+      jersey_number?: number | null;
+      position?: string | null;
+      grade_level?: string | null;
+      height_inches?: number | null;
+      weight_lbs?: number | null;
+      is_active?: boolean | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+    }
+    
     const { data, error } = await this.client
-      .from("team_players_view")
+      .from("team_players")
       .select("*")
       .eq("id", playerId)
       .single();
@@ -162,19 +180,20 @@ export class RosterService {
     if (error) throw error as PostgrestError;
     if (!data) throw new Error("Player not found");
 
+    const row = data as RawRow;
     return {
-      id: data.id,
-      team_id: data.team_id,
-      first_name: data.first_name ?? null,
-      last_name: data.last_name ?? null,
-      jersey_number: data.jersey_number ?? null,
-      position: data.position ?? null,
-      grade_level: data.grade_level ?? null,
-      height_inches: data.height_inches ?? null,
-      weight_lbs: data.weight_lbs ?? null,
-      is_active: data.is_active ?? null,
-      created_at: data.created_at ?? null,
-      updated_at: data.updated_at ?? null,
+      id: row.id,
+      team_id: row.team_id,
+      first_name: row.first_name ?? null,
+      last_name: row.last_name ?? null,
+      jersey_number: row.jersey_number ?? null,
+      position: row.position ?? null,
+      grade_level: row.grade_level ?? null,
+      height_inches: row.height_inches ?? null,
+      weight_lbs: row.weight_lbs ?? null,
+      is_active: row.is_active ?? null,
+      created_at: row.created_at ?? null,
+      updated_at: row.updated_at ?? null,
     };
   }
 

@@ -106,6 +106,7 @@ export type TeamMember = Tables<"team_members">;
 export type TeamMembership = Tables<"team_memberships">;
 export type TeamPost = Tables<"team_posts">;
 export type Team = Tables<"teams">;
+export type TeamPlayer = Tables<"team_players">;
 export type UserProfile = Tables<"user_profiles">;
 
 // 🔥 PHASE 1 CRITICAL TABLES - NEW EXPORTS
@@ -140,6 +141,7 @@ export type TeamGoalInsert = Inserts<"team_goals">;
 export type TeamInviteInsert = Inserts<"team_invites">;
 export type TeamMemberInsert = Inserts<"team_members">;
 export type TeamMembershipInsert = Inserts<"team_memberships">;
+export type TeamPlayerInsert = Inserts<"team_players">;
 export type TeamPostInsert = Inserts<"team_posts">;
 
 // 🔥 PHASE 1 CRITICAL INSERT TYPES - NEW EXPORTS
@@ -183,6 +185,7 @@ export type TeamGoalUpdate = Updates<"team_goals">;
 export type TeamInviteUpdate = Updates<"team_invites">;
 export type TeamMemberUpdate = Updates<"team_members">;
 export type TeamMembershipUpdate = Updates<"team_memberships">;
+export type TeamPlayerUpdate = Updates<"team_players">;
 export type TeamPostUpdate = Updates<"team_posts">;
 export type TeamUpdate = Updates<"teams">;
 export type UserProfileUpdate = Updates<"user_profiles">;

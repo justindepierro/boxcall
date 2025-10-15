@@ -46,6 +46,50 @@ export interface TeamTables {
       backup_version?: number | null;
     };
   };
+  team_players: {
+    Row: {
+      id: string;
+      team_id: string;
+      first_name: string;
+      last_name: string;
+      jersey_number: number | null;
+      position: string | null;
+      grade_level: string | null;
+      height_inches: number | null;
+      weight_lbs: number | null;
+      is_active: boolean | null;
+      created_at: string | null;
+      updated_at: string | null;
+    };
+    Insert: {
+      id?: string;
+      team_id: string;
+      first_name: string;
+      last_name: string;
+      jersey_number?: number | null;
+      position?: string | null;
+      grade_level?: string | null;
+      height_inches?: number | null;
+      weight_lbs?: number | null;
+      is_active?: boolean | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+    };
+    Update: {
+      id?: string;
+      team_id?: string;
+      first_name?: string;
+      last_name?: string;
+      jersey_number?: number | null;
+      position?: string | null;
+      grade_level?: string | null;
+      height_inches?: number | null;
+      weight_lbs?: number | null;
+      is_active?: boolean | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+    };
+  };
   // Updated team_members table with new role system
   team_members: {
     Row: {
