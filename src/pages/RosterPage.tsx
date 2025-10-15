@@ -57,6 +57,8 @@ export default function RosterPage() {
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(
     new Set()
   );
+  const [showBulkStatusDialog, setShowBulkStatusDialog] = useState(false);
+  const [bulkStatusValue, setBulkStatusValue] = useState<string>("active");
   const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(
     null
   );
@@ -301,6 +303,36 @@ export default function RosterPage() {
     }
   };
 
+  // Bulk status change handler
+  const handleBulkStatusChange = async () => {
+    if (selectedPlayerIds.size === 0) return;
+
+    try {
+      setSaving(true);
+      const playerIds = Array.from(selectedPlayerIds);
+      const updatedCount = await rosterService.updateMultiplePlayerStatuses(
+        playerIds,
+        bulkStatusValue
+      );
+
+      info(`[RosterPage] Updated status for ${updatedCount} players`);
+      
+      const statusLabel = statusOptions.find(s => s.value === bulkStatusValue)?.label || bulkStatusValue;
+      toast.success(
+        `Successfully updated ${updatedCount} player${updatedCount !== 1 ? "s" : ""} to ${statusLabel}`
+      );
+      
+      setShowBulkStatusDialog(false);
+      clearSelection();
+      loadRoster();
+    } catch (error) {
+      logError("[RosterPage] Failed to update player statuses:", error);
+      toast.error("Failed to update player statuses. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Selection handlers
   const togglePlayerSelection = (playerId: string) => {
     setSelectedPlayerIds((prev) => {
@@ -415,7 +447,10 @@ export default function RosterPage() {
     { value: "suspended", label: "Suspended" },
     { value: "academic_probation", label: "Academic Probation" },
     { value: "inactive", label: "Inactive" },
+    { value: "inactive_cut", label: "Inactive (Cut)" },
+    { value: "inactive_quit", label: "Inactive (Quit)" },
     { value: "transferred", label: "Transferred" },
+    { value: "alumni", label: "Alumni" },
   ];
 
   if (loading) {
@@ -467,6 +502,18 @@ export default function RosterPage() {
                   {selectedPlayerIds.size} player
                   {selectedPlayerIds.size !== 1 ? "s" : ""} selected
                 </Typography>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setBulkStatusValue("active");
+                    setShowBulkStatusDialog(true);
+                  }}
+                  className="border-primary-300 text-primary-700 hover:bg-primary-100"
+                >
+                  <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+                  Change Status
+                </Button>
                 <Button size="sm" variant="ghost" onClick={clearSelection}>
                   Clear Selection
                 </Button>
@@ -1301,6 +1348,74 @@ export default function RosterPage() {
             title="Delete Player"
             entityName={playerToDelete?.name || ""}
           />
+
+          {/* Bulk Status Change Dialog */}
+          <Modal
+            isOpen={showBulkStatusDialog}
+            onClose={() => setShowBulkStatusDialog(false)}
+            title="Change Player Status"
+          >
+            <div className="space-y-spacing-md">
+              <Typography variant="body-sm" className="text-text-secondary">
+                You are about to change the status for{" "}
+                <strong>{selectedPlayerIds.size}</strong> player
+                {selectedPlayerIds.size !== 1 ? "s" : ""}. This will affect their
+                access to team features.
+              </Typography>
+
+              <div className="bg-warning-bg border border-warning rounded-lg p-spacing-sm">
+                <div className="flex gap-spacing-xs">
+                  <Icon
+                    name="info"
+                    className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5"
+                  />
+                  <div className="text-sm text-warning-foreground">
+                    <strong>Note:</strong> Players marked as Inactive (Cut),
+                    Inactive (Quit), or Alumni will lose access to the team feed,
+                    calendar, and playbook.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="bulk-status"
+                  className="block text-sm font-medium text-text-primary mb-2"
+                >
+                  New Status
+                </label>
+                <select
+                  id="bulk-status"
+                  value={bulkStatusValue}
+                  onChange={(e) => setBulkStatusValue(e.target.value)}
+                  className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  {statusOptions.map((status) => (
+                    <option key={status.value} value={status.value}>
+                      {status.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex justify-end gap-spacing-sm pt-spacing-md">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowBulkStatusDialog(false)}
+                  disabled={saving}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleBulkStatusChange}
+                  disabled={saving}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  {saving ? "Updating..." : "Update Status"}
+                </Button>
+              </div>
+            </div>
+          </Modal>
         </div>
       </PageLayout>
     </Aurora>

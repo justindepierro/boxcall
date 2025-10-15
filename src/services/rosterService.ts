@@ -111,11 +111,11 @@ export class RosterService {
       is_active: playerData.is_active ?? true,
     };
 
-    const { data, error } = await this.client
+    const { data, error } = await ((this.client as any)
       .from("team_players")
       .insert([insertData])
       .select()
-      .single();
+      .single());
 
     if (error) throw error as PostgrestError;
     if (!data) throw new Error("Failed to create player - no data returned");
@@ -128,7 +128,7 @@ export class RosterService {
     playerId: string,
     updateData: PlayerRosterUpdate
   ): Promise<RosterPlayerView> {
-    const { data, error} = await this.client
+    const { data, error} = await ((this.client as any)
       .from("team_players")
       .update({
         ...updateData,
@@ -136,7 +136,7 @@ export class RosterService {
       })
       .eq("id", playerId)
       .select()
-      .single();
+      .single());
 
     if (error) throw error as PostgrestError;
     if (!data) throw new Error("Failed to update player - player not found");
@@ -152,6 +152,38 @@ export class RosterService {
       .eq("id", playerId);
 
     if (error) throw error as PostgrestError;
+  }
+
+  /**
+   * Update status for multiple players at once
+   * @param playerIds - Array of player IDs to update
+   * @param status - New status value (active, inactive, inactive_cut, inactive_quit, alumni, etc.)
+   * @returns Number of players successfully updated
+   */
+  async updateMultiplePlayerStatuses(
+    playerIds: string[],
+    status: string
+  ): Promise<number> {
+    if (playerIds.length === 0) {
+      return 0;
+    }
+
+    // Update is_active based on status
+    const isActive = status === "active" || status === "injured" || status === "suspended" || status === "academic_probation";
+
+    const { data, error } = await ((this.client as any)
+      .from("team_players")
+      .update({
+        roster_status: status,
+        is_active: isActive,
+        updated_at: new Date().toISOString(),
+      })
+      .in("id", playerIds)
+      .select("id"));
+
+    if (error) throw error as PostgrestError;
+    
+    return data?.length || 0;
   }
 
   async getPlayerById(playerId: string): Promise<RosterPlayerView> {

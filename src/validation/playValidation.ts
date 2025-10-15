@@ -108,7 +108,7 @@ export const PlayCreateSchema = z.object({
   play_name: PlayNameSchema,
   formation: FormationSchema,
   p_type: z.preprocess(
-    (val) => val === "" || val === null ? undefined : val,
+    (val) => (val === "" || val === null ? undefined : val),
     PlayTypeEnum.optional()
   ), // Made optional - users don't always set this initially
 
@@ -138,11 +138,8 @@ export const PlayCreateSchema = z.object({
   // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
   // Database field is TEXT with no constraints
   personnel: z.preprocess(
-    (val) => val === "" || val === null ? undefined : val,
-    z
-      .string()
-      .max(50, "Personnel name too long")
-      .optional()
+    (val) => (val === "" || val === null ? undefined : val),
+    z.string().max(50, "Personnel name too long").optional()
   ),
 
   // Key players (legacy - validate as strings for now)
@@ -200,14 +197,11 @@ export const PlayUpdateSchema = z.object({
       "red-zone",
     ])
     .optional(),
-  
+
   // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
   // Database field is TEXT with no constraints
-  personnel: z
-    .string()
-    .max(50, "Personnel name too long")
-    .optional(),
-  
+  personnel: z.string().max(50, "Personnel name too long").optional(),
+
   key_player1: z.string().max(50).optional(),
   key_player2: z.string().max(50).optional(),
   diagram_data: DiagramDataSchema,

@@ -7,6 +7,7 @@ Based on your console logs, the GlobalSearch dropdown wasn't appearing because:
 **Root Cause**: `useTeamsData()` was returning **0 plays**, so there were no results to display.
 
 ### Console Evidence
+
 ```
 GlobalSearch: Searching plays, have 0 plays
 GlobalSearch: Found 0 total players
@@ -19,12 +20,13 @@ Even though you have plays visible in the UI ("Twins Lt Smaug Half", "Twins Lt S
 ## ✅ Solution Implemented
 
 ### 1. **Added Direct Database Fallback**
+
 When `useTeamsData()` doesn't have plays, GlobalSearch now queries the database directly:
 
 ```typescript
 // Convert DatabasePlay[] to Play[] if we have data from useTeamsData
 if (allPlays && allPlays.length > 0) {
-  playsToSearch = allPlays.map(play => ({
+  playsToSearch = allPlays.map((play) => ({
     ...play,
     created_by: "system",
     created_at: new Date(play.created_at),
@@ -34,19 +36,28 @@ if (allPlays && allPlays.length > 0) {
 
 // If useTeamsData doesn't have plays, query database directly
 if (playsToSearch.length === 0) {
-  console.log("🔍 GlobalSearch: useTeamsData has no plays, querying database directly...");
+  console.log(
+    "🔍 GlobalSearch: useTeamsData has no plays, querying database directly..."
+  );
   playsToSearch = await PlaysQueryService.getAllPlays(supabase, teamId);
-  console.log("🔍 GlobalSearch: Loaded", playsToSearch.length, "plays from database");
+  console.log(
+    "🔍 GlobalSearch: Loaded",
+    playsToSearch.length,
+    "plays from database"
+  );
 }
 ```
 
 ### 2. **Used PlaysQueryService**
+
 Imported and used the existing `PlaysQueryService.getAllPlays()` method which:
+
 - Gets all playbooks for the team
 - Queries plays across all playbooks
 - Returns properly formatted Play[] array
 
 ### 3. **Fixed Type Conversion**
+
 Converted `DatabasePlay[]` from useTeamsData to `Play[]` by adding missing `created_by` field and converting date strings to Date objects.
 
 ## 🧪 Testing Instructions
@@ -57,6 +68,7 @@ Converted `DatabasePlay[]` from useTeamsData to `Play[]` by adding missing `crea
 4. **Type "smaug" in the search bar**
 
 ### Expected Console Output
+
 ```
 🔍 GlobalSearch: Initialized with teamsDataPlays: X
 🔍 GlobalSearch: Starting search for: smaug, team: [teamId]
@@ -68,6 +80,7 @@ Converted `DatabasePlay[]` from useTeamsData to `Play[]` by adding missing `crea
 ```
 
 ### Expected Behavior
+
 ✅ Dropdown should appear with search results
 ✅ Should show "Twins Lt Smaug Half" in results
 ✅ Should show "Twins Lt Same Power Read Rt" if you type "same"
@@ -75,6 +88,7 @@ Converted `DatabasePlay[]` from useTeamsData to `Play[]` by adding missing `crea
 ## 📊 Changes Made
 
 ### Files Modified
+
 1. **`src/components/ui/GlobalSearch.tsx`**:
    - Added `PlaysQueryService` import
    - Added `supabase` import

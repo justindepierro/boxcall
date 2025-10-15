@@ -92,96 +92,26 @@ const clearSelection = () => {
 
 ---
 
-### Task 2: Bulk Delete Operation ⏳ (1-2 hours)
+## Task 2: Bulk Status Management (2-3 hours) ⏳ NOT STARTED
 
-**Status**: NOT STARTED  
-**Dependencies**: Task 1 complete  
-**Files to Modify**:
+**Priority**: HIGH  
+**Complexity**: MEDIUM  
+**Dependencies**: Task 1 (Bulk Selection)
 
-- `src/pages/RosterPage.tsx`
-- `src/services/rosterService.ts`
+### Requirements
+- "Change Status" button appears in selection banner when items selected
+- Status options: Active, Inactive (Cut), Inactive (Quit), Alumni
+- Update multiple players' `is_active` status at once
+- Implement `updateMultiplePlayerStatuses` in `rosterService`
+- Batch update with Supabase `.in()` operator
+- Toast notifications for success/failure
+- Clear selection after successful update
+- Consider future alumni features (read-only access to history)
 
-**Implementation Steps**:
-
-1. Add "Delete Selected" button in header (visible when selections exist)
-2. Update DeleteConfirmationDialog to handle multiple players
-3. Add `deleteMultiplePlayers` method to rosterService
-4. Implement bulk delete handler with error handling
-5. Clear selection after successful delete
-6. Show appropriate toast messages
-
-**Service Layer**:
-
-```typescript
-// src/services/rosterService.ts
-async deleteMultiplePlayers(playerIds: string[]): Promise<void> {
-  const { error } = await supabase
-    .from('player_roster')
-    .delete()
-    .in('id', playerIds);
-
-  if (error) throw error;
-}
-```
-
-**UI Implementation**:
-
-```tsx
-// Header area (with Delete button)
-{
-  selectedPlayerIds.size > 0 && (
-    <div className="flex items-center gap-spacing-md">
-      <Typography>...</Typography>
-      <Button
-        size="sm"
-        variant="destructive"
-        onClick={() => confirmBulkDelete()}
-        leftIcon={<Icon name="delete" />}
-      >
-        Delete Selected
-      </Button>
-    </div>
-  );
-}
-
-// Handler
-const confirmBulkDelete = () => {
-  setShowDeleteDialog(true);
-  // Dialog will use selectedPlayerIds.size for count
-};
-
-const handleBulkDelete = async () => {
-  try {
-    await rosterService.deleteMultiplePlayers(Array.from(selectedPlayerIds));
-    toast.success(`Successfully deleted ${selectedPlayerIds.size} players`);
-    clearSelection();
-    loadRoster();
-  } catch (error) {
-    toast.error("Failed to delete players");
-  }
-};
-```
-
-**Dialog Enhancement**:
-
-```tsx
-<DeleteConfirmationDialog
-  isOpen={showDeleteDialog}
-  onClose={handleCloseDeleteDialog}
-  onConfirm={playerToDelete ? handleDeletePlayer : handleBulkDelete}
-  title={playerToDelete ? "Delete Player" : "Delete Multiple Players"}
-  entityName={playerToDelete?.name || `${selectedPlayerIds.size} players`}
-/>
-```
-
-**Success Criteria**:
-
-- ✅ Delete Selected button appears when items selected
-- ✅ Confirmation dialog shows correct count
-- ✅ Bulk delete succeeds for all selected players
-- ✅ Toast shows success with count
-- ✅ Selection cleared after delete
-- ✅ Roster refreshes automatically
+### Future Considerations (2027+)
+- Alumni portal with read-only access to past seasons
+- Alumni-specific features (reunion events, career tracking)
+- Separate alumni from inactive players in UI
 
 ---
 

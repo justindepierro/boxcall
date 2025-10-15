@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 
 /**
  * Dropdown Configuration Options
@@ -61,60 +61,60 @@ export interface UseDropdownOptions {
 export interface UseDropdownReturn {
   /** Whether the dropdown is currently open */
   isOpen: boolean;
-  
+
   /** Open the dropdown */
   open: () => void;
-  
+
   /** Close the dropdown */
   close: () => void;
-  
+
   /** Toggle the dropdown open/closed */
   toggle: () => void;
-  
+
   /** Ref to attach to the trigger element */
   triggerRef: React.RefObject<HTMLElement | null>;
-  
+
   /** Ref to attach to the dropdown content */
   contentRef: React.RefObject<HTMLElement | null>;
-  
+
   /** Props to spread on trigger element */
   triggerProps: {
     ref: React.RefObject<HTMLElement | null>;
     onClick: () => void;
     onKeyDown: (e: React.KeyboardEvent) => void;
-    'aria-expanded': boolean;
-    'aria-haspopup': true;
+    "aria-expanded": boolean;
+    "aria-haspopup": true;
   };
-  
+
   /** Props to spread on content element */
   contentProps: {
     ref: React.RefObject<HTMLElement | null>;
-    role: 'menu';
-    'aria-hidden': boolean;
+    role: "menu";
+    "aria-hidden": boolean;
   };
 }
 
 /**
  * Universal Dropdown Hook
- * 
+ *
  * Handles all dropdown logic consistently:
  * - Click outside to close
  * - Escape key to close
  * - Keyboard navigation
  * - Focus management
  * - Race condition prevention
- * 
+ *
  * @example
  * ```tsx
  * function MyDropdown() {
  *   const { isOpen, toggle, triggerRef, contentRef, close } = useDropdown();
- * 
+ *
  *   return (
  *     <div className="relative">
  *       <button ref={triggerRef} onClick={toggle}>
  *         Open Menu
  *       </button>
- *       
+ *
  *       {isOpen && (
  *         <div ref={contentRef} className="absolute top-full z-50">
  *           <button onClick={() => { doSomething(); close(); }}>
@@ -127,7 +127,9 @@ export interface UseDropdownReturn {
  * }
  * ```
  */
-export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn {
+export function useDropdown(
+  options: UseDropdownOptions = {}
+): UseDropdownReturn {
   const {
     closeOnOutsideClick = true,
     closeOnEscape = true,
@@ -182,7 +184,7 @@ export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      
+
       // Check if click is inside trigger or content
       if (
         triggerRef.current?.contains(target) ||
@@ -198,12 +200,12 @@ export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn
     // Add listener after a microtask to avoid race conditions
     // This ensures onClick handlers fire before this listener
     const timer = setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }, 0);
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, closeOnOutsideClick, setIsOpen]);
 
@@ -212,15 +214,15 @@ export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn
     if (!isOpen || !closeOnEscape) return;
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setIsOpen(false);
         // Return focus to trigger
         triggerRef.current?.focus();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, closeOnEscape, setIsOpen]);
 
   // Props to spread on elements
@@ -229,29 +231,31 @@ export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn
     onClick: toggle,
     onKeyDown: (e: React.KeyboardEvent) => {
       // Space or Enter to open
-      if (e.key === ' ' || e.key === 'Enter') {
+      if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         toggle();
       }
       // Arrow down to open and focus first item
-      if (e.key === 'ArrowDown') {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
         open();
         // Focus first item after dropdown renders
         setTimeout(() => {
-          const firstItem = contentRef.current?.querySelector('[role="menuitem"]') as HTMLElement;
+          const firstItem = contentRef.current?.querySelector(
+            '[role="menuitem"]'
+          ) as HTMLElement;
           firstItem?.focus();
         }, 0);
       }
     },
-    'aria-expanded': isOpen,
-    'aria-haspopup': true as const,
+    "aria-expanded": isOpen,
+    "aria-haspopup": true as const,
   };
 
   const contentProps = {
     ref: contentRef,
-    role: 'menu' as const,
-    'aria-hidden': !isOpen,
+    role: "menu" as const,
+    "aria-hidden": !isOpen,
   };
 
   return {
@@ -268,10 +272,10 @@ export function useDropdown(options: UseDropdownOptions = {}): UseDropdownReturn
 
 /**
  * Helper: Delayed close for onBlur events
- * 
+ *
  * Use this when you need to close on blur but want to prevent
  * race conditions with onClick handlers.
- * 
+ *
  * @example
  * ```tsx
  * <input

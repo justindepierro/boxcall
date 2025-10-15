@@ -31,7 +31,7 @@ export type FormationDirection = "base" | "left" | "right";
  * - "symmetric": No direction needed (Empty, Stack)
  * - "unspecified": Legacy formations without this metadata
  */
-export type FormationDirectionalityType = 
+export type FormationDirectionalityType =
   | "mirror"
   | "built-in"
   | "symmetric"

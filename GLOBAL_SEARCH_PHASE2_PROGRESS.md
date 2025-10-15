@@ -11,6 +11,7 @@
 ## ✅ Completed Features
 
 ### 1. Search History with localStorage
+
 **Status**: ✅ Complete
 
 - Created `useSearchHistory` hook in `/src/hooks/useSearchHistory.ts`
@@ -20,6 +21,7 @@
 - Integrated into GlobalSearch component
 
 **Technical Implementation**:
+
 ```typescript
 export interface SearchHistoryItem {
   query: string;
@@ -35,6 +37,7 @@ if (query.trim()) {
 ```
 
 ### 2. Recent Searches Dropdown
+
 **Status**: ✅ Complete
 
 - Shows recent searches when input is empty or <2 characters
@@ -44,12 +47,14 @@ if (query.trim()) {
 - Shows last 5 searches
 
 **UI Features**:
+
 - Appears automatically when dropdown opens with empty input
 - Hover effects on each recent search
 - One-click to re-run previous search
 - Clean, minimal design matching search results
 
 ### 3. Filter Chips
+
 **Status**: ✅ Complete
 
 - Filter buttons: All / Plays / Formations / Personnel / Players
@@ -59,8 +64,11 @@ if (query.trim()) {
 - Filters results in real-time
 
 **Implementation**:
+
 ```typescript
-const [activeFilter, setActiveFilter] = useState<SearchResult["type"] | "all">("all");
+const [activeFilter, setActiveFilter] = useState<SearchResult["type"] | "all">(
+  "all"
+);
 
 const filteredResults = useMemo(() => {
   if (activeFilter === "all") return results;
@@ -73,9 +81,11 @@ const filteredResults = useMemo(() => {
 ## 🔨 In Progress
 
 ### 4. Enhanced Keyboard Navigation
+
 **Status**: ⏳ In Progress (0% done)
 
 **Planned Features**:
+
 - Tab key to cycle forward through results
 - Shift+Tab to cycle backward
 - Escape closes dropdown AND blurs input (currently just closes)
@@ -83,12 +93,14 @@ const filteredResults = useMemo(() => {
 - Home/End keys for first/last result
 
 **Current Navigation** (from Phase 1):
+
 - ✅ Arrow Up/Down to navigate
 - ✅ Enter to select
 - ✅ Escape to close dropdown
 - ✅ Cmd/Ctrl+K to focus search
 
 **Remaining Work** (~45 min):
+
 - Add Tab/Shift+Tab support
 - Enhanced Escape handler (blur input)
 - Visual focus ring styling
@@ -99,9 +111,11 @@ const filteredResults = useMemo(() => {
 ## 📋 Not Started
 
 ### 5. Result Grouping by Type
+
 **Status**: ❌ Not Started
 
 **Planned Features**:
+
 - Group results by type (Plays, Formations, etc.)
 - Section headers: "Plays (3)", "Formations (2)"
 - Collapsible groups
@@ -111,6 +125,7 @@ const filteredResults = useMemo(() => {
 **Estimated Time**: 45 minutes
 
 **Implementation Plan**:
+
 1. Create `groupResultsByType` function
 2. Render section headers with counts
 3. Add collapse/expand state
@@ -122,12 +137,14 @@ const filteredResults = useMemo(() => {
 ## 🎯 Key Improvements from Phase 2
 
 ### User Experience
+
 - 🔍 **Faster Discovery**: Recent searches appear instantly
 - 🎯 **Better Focus**: Filter chips narrow results quickly
 - ⚡ **Reduced Typing**: Click recent searches to re-run
 - 🧹 **Clean History**: One-click to clear search history
 
 ### Technical Improvements
+
 - 💾 **Persistent History**: Survives page reloads
 - 🎨 **Better Filtering**: Real-time result filtering by type
 - 🧠 **Smart Caching**: History stored efficiently in localStorage
@@ -138,6 +155,7 @@ const filteredResults = useMemo(() => {
 ## 📈 Performance Metrics
 
 ### Phase 1 + Phase 2 Combined
+
 - Search speed: **~100ms** (4x faster than before)
 - Cached repeats: **<10ms** (instant)
 - Recent search click: **0ms** (no search needed)
@@ -145,6 +163,7 @@ const filteredResults = useMemo(() => {
 - History lookup: **<1ms** (in-memory Map)
 
 ### Storage
+
 - History size: **~1-2KB** (10 searches x 100-200 bytes each)
 - Cache size: **Variable** (60s TTL, max ~50KB)
 - Total localStorage: **<3KB**
@@ -154,6 +173,7 @@ const filteredResults = useMemo(() => {
 ## 🧪 Testing Checklist
 
 ### Search History
+
 - [ ] Search for "smaug" - should add to history
 - [ ] Search for same query again - should move to front (no duplicate)
 - [ ] Focus empty search - should show recent searches
@@ -162,6 +182,7 @@ const filteredResults = useMemo(() => {
 - [ ] Refresh page - history should persist
 
 ### Filter Chips
+
 - [ ] Search returns multiple types - chips appear
 - [ ] Click "Plays" chip - only plays shown
 - [ ] Click "All" chip - all results shown
@@ -170,6 +191,7 @@ const filteredResults = useMemo(() => {
 - [ ] No chips for empty categories
 
 ### Recent Searches
+
 - [ ] Empty input shows recent searches (if any exist)
 - [ ] Clock icon appears on each item
 - [ ] Hover effect on recent searches
@@ -181,6 +203,7 @@ const filteredResults = useMemo(() => {
 ## 🚀 Next Steps
 
 **Immediate** (Task 4 - ~45 min):
+
 1. Add Tab key navigation support
 2. Enhance Escape to also blur input
 3. Add visual focus indicators (ring style)
@@ -188,6 +211,7 @@ const filteredResults = useMemo(() => {
 5. Test all keyboard combinations
 
 **After Task 4** (Task 5 - ~45 min):
+
 1. Implement result grouping by type
 2. Add collapsible section headers
 3. Implement "Show more" for long groups
@@ -195,6 +219,7 @@ const filteredResults = useMemo(() => {
 5. Ensure filter chips work with grouping
 
 **Final Phase 2 Steps**:
+
 1. Complete testing checklist
 2. Create Phase 2 completion document
 3. Get user validation
@@ -205,9 +230,11 @@ const filteredResults = useMemo(() => {
 ## 📝 Files Modified
 
 **New Files**:
+
 - `src/hooks/useSearchHistory.ts` - Search history localStorage hook
 
 **Modified Files**:
+
 - `src/components/ui/GlobalSearch.tsx` - Added history, filters, recent searches UI
 
 **Lines Changed**: ~150+ lines

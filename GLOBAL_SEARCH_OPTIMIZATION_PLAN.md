@@ -1,4 +1,5 @@
 # Global Search Optimization Plan 🚀
+
 ## Making BoxCall's Search Industry-Leading
 
 **Current Status**: ✅ Working (Portal-based, searches plays/formations/personnel/players)
@@ -11,6 +12,7 @@
 ### Current Issues Identified
 
 #### 1. **Performance Problems**
+
 - ❌ Re-fetching data on every render (useTeamsData called repeatedly)
 - ❌ 300ms debounce delay (industry standard is 150-200ms)
 - ❌ Loading all plays into Fuse.js on every search (70KB library)
@@ -19,6 +21,7 @@
 - ❌ Querying 4 different services sequentially (not parallel)
 
 #### 2. **UX Issues**
+
 - ⚠️ No keyboard shortcuts beyond Cmd+K
 - ⚠️ No search history
 - ⚠️ No recent searches
@@ -29,6 +32,7 @@
 - ⚠️ No search filters (type: play, formation, etc.)
 
 #### 3. **Code Quality Issues**
+
 - 🔧 662 lines in one component (too large)
 - 🔧 Mixed concerns (data fetching, rendering, navigation)
 - 🔧 20+ console.log statements (debugging artifacts)
@@ -42,6 +46,7 @@
 ### Phase 1: Performance Optimization (Immediate - 2-3 hours)
 
 #### 1.1 **Parallel Data Fetching**
+
 ```typescript
 // Current: Sequential (slow)
 await searchPlayers();
@@ -57,9 +62,11 @@ const [players, plays, formations, personnel] = await Promise.allSettled([
   searchPersonnel(),
 ]);
 ```
+
 **Impact**: 4x faster search (from ~400ms to ~100ms)
 
 #### 1.2 **Request Cancellation with AbortController**
+
 ```typescript
 const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -67,14 +74,16 @@ useEffect(() => {
   // Cancel previous request
   abortControllerRef.current?.abort();
   abortControllerRef.current = new AbortController();
-  
+
   // New search with cancellation
   searchAll(query, { signal: abortControllerRef.current.signal });
 }, [query]);
 ```
+
 **Impact**: No wasted API calls for outdated searches
 
 #### 1.3 **Result Caching**
+
 ```typescript
 const searchCache = useRef<Map<string, SearchResult[]>>(new Map());
 
@@ -87,9 +96,11 @@ const getCachedResults = (query: string) => {
   return null;
 };
 ```
+
 **Impact**: Instant results for repeated searches
 
 #### 1.4 **Optimize Debounce**
+
 ```typescript
 // Current: 300ms (too slow)
 const debounceTimer = setTimeout(searchAll, 300);
@@ -97,14 +108,17 @@ const debounceTimer = setTimeout(searchAll, 300);
 // Optimized: 150ms (industry standard)
 const debounceTimer = setTimeout(searchAll, 150);
 ```
+
 **Impact**: Search feels more responsive
 
 #### 1.5 **Lazy Load Fuse.js**
+
 ```typescript
 // Already done ✅ (lazy loaded in AppHeader)
 // But ensure it's only initialized once, not per search
 const fuseInstance = useMemo(() => new Fuse(plays, options), [plays]);
 ```
+
 **Impact**: Faster initial page load
 
 ---
@@ -112,6 +126,7 @@ const fuseInstance = useMemo(() => new Fuse(plays, options), [plays]);
 ### Phase 2: Advanced Search Features (High Impact - 4-5 hours)
 
 #### 2.1 **Search Filters/Scopes**
+
 ```typescript
 // Enable filtering by type
 // Usage: "type:play smaug" or just "smaug" (searches all)
@@ -125,23 +140,27 @@ const filters = {
 // Parse query for filters
 const parseQuery = (query: string) => {
   const typeMatch = query.match(/type:(\w+)/);
-  const cleanQuery = query.replace(/type:\w+/g, '').trim();
+  const cleanQuery = query.replace(/type:\w+/g, "").trim();
   return { type: typeMatch?.[1], query: cleanQuery };
 };
 ```
 
 **UI Enhancement**:
+
 ```tsx
 <div className="flex gap-2 px-2 py-1 border-b">
-  <FilterChip active={!filter} onClick={() => setFilter(null)}>All</FilterChip>
-  <FilterChip active={filter === 'play'}>Plays</FilterChip>
-  <FilterChip active={filter === 'formation'}>Formations</FilterChip>
-  <FilterChip active={filter === 'personnel'}>Personnel</FilterChip>
-  <FilterChip active={filter === 'player'}>Players</FilterChip>
+  <FilterChip active={!filter} onClick={() => setFilter(null)}>
+    All
+  </FilterChip>
+  <FilterChip active={filter === "play"}>Plays</FilterChip>
+  <FilterChip active={filter === "formation"}>Formations</FilterChip>
+  <FilterChip active={filter === "personnel"}>Personnel</FilterChip>
+  <FilterChip active={filter === "player"}>Players</FilterChip>
 </div>
 ```
 
 #### 2.2 **Search History & Recent Searches**
+
 ```typescript
 const recentSearches = useLocalStorage<string[]>('bc_recent_searches', []);
 
@@ -166,11 +185,12 @@ const addToHistory = (query: string) => {
 ```
 
 #### 2.3 **Highlighted Matches**
+
 ```typescript
 const highlightMatch = (text: string, query: string) => {
   const parts = text.split(new RegExp(`(${query})`, 'gi'));
-  return parts.map((part, i) => 
-    part.toLowerCase() === query.toLowerCase() 
+  return parts.map((part, i) =>
+    part.toLowerCase() === query.toLowerCase()
       ? <mark key={i} className="bg-yellow-200 dark:bg-yellow-800">{part}</mark>
       : part
   );
@@ -183,6 +203,7 @@ const highlightMatch = (text: string, query: string) => {
 ```
 
 #### 2.4 **Quick Actions/Shortcuts**
+
 ```tsx
 // Show quick actions at bottom of dropdown
 <div className="border-t p-2 flex gap-2">
@@ -203,33 +224,38 @@ useEffect(() => {
 ```
 
 #### 2.5 **Fuzzy Match Scoring & Sorting**
+
 ```typescript
 // Current: Basic Fuse.js scoring
 // Enhanced: Context-aware scoring
 
-const calculateScore = (result: SearchResult, query: string, context: string) => {
+const calculateScore = (
+  result: SearchResult,
+  query: string,
+  context: string
+) => {
   let score = result.fuseScore || 0;
-  
+
   // Boost exact matches
   if (result.displayText.toLowerCase() === query.toLowerCase()) {
     score *= 2;
   }
-  
+
   // Boost starts-with matches
   if (result.displayText.toLowerCase().startsWith(query.toLowerCase())) {
     score *= 1.5;
   }
-  
+
   // Boost based on context (on playbook page? prioritize plays)
-  if (context === '/playbook' && result.type === 'play') {
+  if (context === "/playbook" && result.type === "play") {
     score *= 1.3;
   }
-  
+
   // Boost recently used
   if (isRecentlyUsed(result)) {
     score *= 1.2;
   }
-  
+
   return score;
 };
 ```
@@ -239,22 +265,23 @@ const calculateScore = (result: SearchResult, query: string, context: string) =>
 ### Phase 3: UI/UX Enhancements (Medium Impact - 3-4 hours)
 
 #### 3.1 **Loading States & Skeletons**
+
 ```tsx
-{isLoading && (
-  <div className="p-2 space-y-2">
-    <Skeleton className="h-12 w-full" />
-    <Skeleton className="h-12 w-full" />
-    <Skeleton className="h-12 w-full" />
-  </div>
-)}
+{
+  isLoading && (
+    <div className="p-2 space-y-2">
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-12 w-full" />
+    </div>
+  );
+}
 ```
 
 #### 3.2 **Result Previews (Hover)**
+
 ```tsx
-<ResultItem
-  onMouseEnter={() => setPreview(result)}
-  className="relative"
->
+<ResultItem onMouseEnter={() => setPreview(result)} className="relative">
   {preview === result && (
     <div className="absolute left-full ml-2 w-80 ...">
       <PlayPreviewCard play={result.data} />
@@ -264,68 +291,81 @@ const calculateScore = (result: SearchResult, query: string, context: string) =>
 ```
 
 #### 3.3 **Empty State with Suggestions**
+
 ```tsx
-{results.length === 0 && query.length >= 2 && !isLoading && (
-  <div className="p-6 text-center">
-    <Icon name="search" className="h-16 w-16 mx-auto mb-3 text-text-muted" />
-    <Typography variant="body-md" className="mb-2">
-      No results for "{query}"
-    </Typography>
-    <Typography variant="body-sm" className="text-text-muted mb-4">
-      Try searching for:
-    </Typography>
-    <div className="flex gap-2 justify-center">
-      <SuggestionChip onClick={() => setQuery('twins')}>Twins</SuggestionChip>
-      <SuggestionChip onClick={() => setQuery('11 personnel')}>11 Personnel</SuggestionChip>
-      <SuggestionChip onClick={() => setQuery('pass')}>Pass Plays</SuggestionChip>
+{
+  results.length === 0 && query.length >= 2 && !isLoading && (
+    <div className="p-6 text-center">
+      <Icon name="search" className="h-16 w-16 mx-auto mb-3 text-text-muted" />
+      <Typography variant="body-md" className="mb-2">
+        No results for "{query}"
+      </Typography>
+      <Typography variant="body-sm" className="text-text-muted mb-4">
+        Try searching for:
+      </Typography>
+      <div className="flex gap-2 justify-center">
+        <SuggestionChip onClick={() => setQuery("twins")}>Twins</SuggestionChip>
+        <SuggestionChip onClick={() => setQuery("11 personnel")}>
+          11 Personnel
+        </SuggestionChip>
+        <SuggestionChip onClick={() => setQuery("pass")}>
+          Pass Plays
+        </SuggestionChip>
+      </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 #### 3.4 **Result Grouping**
+
 ```tsx
 // Group results by type
-const groupedResults = groupBy(results, 'type');
+const groupedResults = groupBy(results, "type");
 
-{Object.entries(groupedResults).map(([type, items]) => (
-  <div key={type}>
-    <Typography variant="body-xs" className="px-3 py-2 bg-surface-muted">
-      {type.toUpperCase()} ({items.length})
-    </Typography>
-    {items.map(item => <ResultItem {...item} />)}
-  </div>
-))}
+{
+  Object.entries(groupedResults).map(([type, items]) => (
+    <div key={type}>
+      <Typography variant="body-xs" className="px-3 py-2 bg-surface-muted">
+        {type.toUpperCase()} ({items.length})
+      </Typography>
+      {items.map((item) => (
+        <ResultItem {...item} />
+      ))}
+    </div>
+  ));
+}
 ```
 
 #### 3.5 **Keyboard Navigation Improvements**
+
 ```typescript
 // Current: Arrow keys only
 // Enhanced: Arrow, Tab, Shift+Tab, Home, End
 
 const handleKeyDown = (e: KeyboardEvent) => {
-  switch(e.key) {
-    case 'ArrowDown':
-      setSelectedIndex(prev => Math.min(prev + 1, results.length - 1));
+  switch (e.key) {
+    case "ArrowDown":
+      setSelectedIndex((prev) => Math.min(prev + 1, results.length - 1));
       break;
-    case 'ArrowUp':
-      setSelectedIndex(prev => Math.max(prev - 1, -1));
+    case "ArrowUp":
+      setSelectedIndex((prev) => Math.max(prev - 1, -1));
       break;
-    case 'Tab':
+    case "Tab":
       e.preventDefault();
-      setSelectedIndex(prev => 
-        e.shiftKey 
+      setSelectedIndex((prev) =>
+        e.shiftKey
           ? Math.max(prev - 1, 0)
           : Math.min(prev + 1, results.length - 1)
       );
       break;
-    case 'Home':
+    case "Home":
       setSelectedIndex(0);
       break;
-    case 'End':
+    case "End":
       setSelectedIndex(results.length - 1);
       break;
-    case 'Enter':
+    case "Enter":
       if (selectedIndex >= 0) handleResultSelect(results[selectedIndex]);
       break;
   }
@@ -337,9 +377,10 @@ const handleKeyDown = (e: KeyboardEvent) => {
 ### Phase 4: Advanced Features (Nice-to-Have - 2-3 hours)
 
 #### 4.1 **Search Analytics**
+
 ```typescript
 const trackSearch = (query: string, resultCount: number, timeMs: number) => {
-  telemetry.track('search', {
+  telemetry.track("search", {
     query: query.length > 50 ? query.slice(0, 50) : query,
     resultCount,
     responseTime: timeMs,
@@ -349,11 +390,12 @@ const trackSearch = (query: string, resultCount: number, timeMs: number) => {
 ```
 
 #### 4.2 **Synonyms & Aliases**
+
 ```typescript
 const synonyms = {
-  'qb': ['quarterback', 'passer'],
-  'rb': ['running back', 'runner'],
-  'twins': ['2x2', 'doubles'],
+  qb: ["quarterback", "passer"],
+  rb: ["running back", "runner"],
+  twins: ["2x2", "doubles"],
 };
 
 const expandQuery = (query: string) => {
@@ -368,9 +410,11 @@ const expandQuery = (query: string) => {
 ```
 
 #### 4.3 **Voice Search** (if PWA)
+
 ```typescript
 const startVoiceSearch = () => {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  const recognition = new (window.SpeechRecognition ||
+    window.webkitSpeechRecognition)();
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     setQuery(transcript);
@@ -380,6 +424,7 @@ const startVoiceSearch = () => {
 ```
 
 #### 4.4 **Search Commands**
+
 ```typescript
 // Special commands like:
 // "/play new" -> Create new play
@@ -387,8 +432,8 @@ const startVoiceSearch = () => {
 // "/roster" -> Go to roster page
 
 const parseCommand = (query: string) => {
-  if (query.startsWith('/')) {
-    const [command, ...args] = query.slice(1).split(' ');
+  if (query.startsWith("/")) {
+    const [command, ...args] = query.slice(1).split(" ");
     executeCommand(command, args);
     return true;
   }
@@ -400,19 +445,20 @@ const parseCommand = (query: string) => {
 
 ## 📊 Expected Performance Improvements
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Search response time | 400ms | 100ms | **4x faster** |
-| Repeated search | 400ms | <10ms | **40x faster** |
-| Initial load time | 500ms | 300ms | **1.7x faster** |
-| Keyboard responsiveness | Good | Excellent | **Better UX** |
-| Feature completeness | 40% | 95% | **Industry-leading** |
+| Metric                  | Before | After     | Improvement          |
+| ----------------------- | ------ | --------- | -------------------- |
+| Search response time    | 400ms  | 100ms     | **4x faster**        |
+| Repeated search         | 400ms  | <10ms     | **40x faster**       |
+| Initial load time       | 500ms  | 300ms     | **1.7x faster**      |
+| Keyboard responsiveness | Good   | Excellent | **Better UX**        |
+| Feature completeness    | 40%    | 95%       | **Industry-leading** |
 
 ---
 
 ## 🎨 Design Inspiration
 
 **Reference these industry leaders**:
+
 1. **Notion** - Command palette with filters
 2. **Linear** - Lightning-fast search with keyboard shortcuts
 3. **Vercel** - Clean, minimal, with recent searches
@@ -424,6 +470,7 @@ const parseCommand = (query: string) => {
 ## 🚦 Implementation Priority
 
 ### 🔴 High Priority (Do First - 4 hours)
+
 1. ✅ Fix portal rendering (DONE!)
 2. ⚡ Parallel data fetching
 3. ⚡ Request cancellation
@@ -433,6 +480,7 @@ const parseCommand = (query: string) => {
 7. 🎨 Highlighted matches
 
 ### 🟡 Medium Priority (Do Next - 4 hours)
+
 8. 🎯 Search history
 9. 🎯 Filter chips (All/Plays/Formations/etc)
 10. 🎯 Better keyboard navigation (Tab support)
@@ -440,6 +488,7 @@ const parseCommand = (query: string) => {
 12. 🎯 Empty state with suggestions
 
 ### 🟢 Low Priority (Nice to Have - 3 hours)
+
 13. 🌟 Result previews on hover
 14. 🌟 Search analytics
 15. 🌟 Synonyms/aliases
@@ -470,6 +519,7 @@ const parseCommand = (query: string) => {
 ## 🎯 Success Criteria
 
 **The search will be considered "industry-leading" when**:
+
 - ✅ Search results appear in <100ms
 - ✅ Repeated searches are instant (<10ms)
 - ✅ Users can complete any action without touching the mouse
@@ -502,6 +552,7 @@ const parseCommand = (query: string) => {
 **Goal**: Add search history, filters, keyboard navigation, and result grouping
 
 ### Tasks Completed:
+
 1. ✅ **Search History** (60 min) - localStorage recent searches, clear history
 2. ✅ **Filter Chips** (45 min) - All/Plays/Formations/Personnel/Players toggle with counts
 3. ✅ **Recent Searches UI** (30 min) - Show recent searches with clock icons, one-click clear
@@ -518,6 +569,7 @@ const parseCommand = (query: string) => {
 **Status**: Not Started - Evaluate after testing Phase 1 + Phase 2
 
 **Potential Features**:
+
 - Search analytics & telemetry
 - Voice search (if PWA)
 - Command palette (/play new, /help)

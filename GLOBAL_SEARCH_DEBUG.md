@@ -45,33 +45,41 @@ I've added extensive logging to help debug why the dropdown isn't showing. Here'
 ## Common Issues & Solutions
 
 ### Issue 1: "TeamID is undefined"
+
 **Symptom:** Console shows `Team ID: undefined`
 
 **Solution:**
+
 - Check if you're logged in
 - Check if a team is selected
 - Try refreshing the page
 
 ### Issue 2: "Found 0 plays"
+
 **Symptom:** Console shows `Searching plays, have 0 plays`
 
 **Solution:**
+
 - You don't have any plays yet
 - Go to Playbook and create a play first
 - Then try searching again
 
 ### Issue 3: "isOpen: false" after typing
+
 **Symptom:** Console shows `isOpen: false` even after typing
 
 **Solution:**
+
 - There may be a CSS z-index issue
 - The dropdown is being hidden behind another element
 - Check if the header has a high z-index
 
 ### Issue 4: Results found but dropdown not visible
+
 **Symptom:** Console shows results but you can't see the dropdown
 
 **Solution:**
+
 - This is a CSS visibility issue
 - The dropdown has z-index 9999 and explicit colors now
 - Check if there's a parent element with `overflow: hidden`
@@ -81,6 +89,7 @@ I've added extensive logging to help debug why the dropdown isn't showing. Here'
 ## Verify Z-Index
 
 Open DevTools → Elements tab:
+
 1. Find the search input: `<input type="text" placeholder="Search plays..."`
 2. Look for its parent `<div class="relative">`
 3. Check if the dropdown div appears in the DOM when you type
@@ -132,6 +141,7 @@ I've made these debugging changes:
 ## Quick Fixes to Try
 
 ### Fix 1: Ensure you have data
+
 ```
 1. Go to /playbook
 2. Create a test play named "Test Play 123"
@@ -140,6 +150,7 @@ I've made these debugging changes:
 ```
 
 ### Fix 2: Check team selection
+
 ```
 1. Look at top right of app
 2. Make sure a team is selected (not "No Team")
@@ -147,11 +158,12 @@ I've made these debugging changes:
 ```
 
 ### Fix 3: Force dropdown visibility
+
 If dropdown exists in DOM but not visible, add this temporarily:
 
 ```css
 /* In browser console */
-document.querySelector('[ref="resultsRef"]')?.style.cssText = 
+document.querySelector('[ref="resultsRef"]')?.style.cssText =
   'display: block !important; position: absolute !important; z-index: 99999 !important; background: red !important;'
 ```
 
@@ -162,6 +174,7 @@ This will make it super obvious if it exists.
 ## Report Back
 
 Please share:
+
 1. **Console output** - What logs do you see?
 2. **Element inspection** - Is the dropdown div in the DOM?
 3. **Current page** - What page are you on? (/playbook, /dashboard, etc.)

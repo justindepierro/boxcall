@@ -11,6 +11,7 @@
 ### **Problem #1: Inconsistent Z-Index Strategy**
 
 **Current Z-Index Values Found:**
+
 - `z-10` - FuzzySearchInput, ReactionButton, CommentSection, Breadcrumb, InlineEditField
 - `z-50` - Dropdown.tsx, PlayerControls, Sidebar
 - `z-[60]` - AppHeader, UnifiedSettingsPanel
@@ -64,7 +65,7 @@ setIsOpen(false);
 className="absolute top-full left-0 right-0 mt-1"
 
 // Fixed with calculations
-className="fixed ..." 
+className="fixed ..."
 style={{ top: buttonRect.bottom, left: buttonRect.left }}
 
 // Absolute with no positioning logic
@@ -108,19 +109,19 @@ onMouseLeave={() => setIsOpen(false)}
 
 ### Components With Dropdowns
 
-| Component | Location | Z-Index | Close Method | Issues |
-|-----------|----------|---------|--------------|--------|
-| **GlobalSearch** | `ui/GlobalSearch.tsx` | `z-[9999]` | onBlur + 150ms | Too high z-index |
-| **Dropdown** | `ui/Dropdown.tsx` | `z-50` | Click outside | ✅ Good |
-| **Select** | `ui/Select/Select.tsx` | `z-50` | Click outside | ✅ Good |
-| **UserMenu** | `auth/UserMenu.tsx` | `z-[70]` | Click outside | ✅ Good |
-| **FuzzySearchInput** | `playbook/AddNewPlayModal/...` | `z-10` | onBlur + 200ms | z-index too low |
-| **ReactionButton** | `social/ReactionButton.tsx` | `z-10` | onMouseLeave | z-index too low |
-| **CommentSection** | `social/CommentSection.tsx` | `z-10` | Click outside | z-index too low |
-| **InlineEditField** | `ui/InlineEditField.tsx` | `z-50` | onBlur | ✅ Good |
-| **PlayerControls** | `playbook/diagram-editor/...` | `z-50` | Click outside | ✅ Good |
-| **Breadcrumb** | `ui/Breadcrumb/Breadcrumb.tsx` | `z-10` | Click outside | z-index too low |
-| **PlaybookSelector** | `playbook/PlaybookSelector.tsx` | `z-[110]` | Click outside | Too high z-index |
+| Component            | Location                        | Z-Index    | Close Method   | Issues           |
+| -------------------- | ------------------------------- | ---------- | -------------- | ---------------- |
+| **GlobalSearch**     | `ui/GlobalSearch.tsx`           | `z-[9999]` | onBlur + 150ms | Too high z-index |
+| **Dropdown**         | `ui/Dropdown.tsx`               | `z-50`     | Click outside  | ✅ Good          |
+| **Select**           | `ui/Select/Select.tsx`          | `z-50`     | Click outside  | ✅ Good          |
+| **UserMenu**         | `auth/UserMenu.tsx`             | `z-[70]`   | Click outside  | ✅ Good          |
+| **FuzzySearchInput** | `playbook/AddNewPlayModal/...`  | `z-10`     | onBlur + 200ms | z-index too low  |
+| **ReactionButton**   | `social/ReactionButton.tsx`     | `z-10`     | onMouseLeave   | z-index too low  |
+| **CommentSection**   | `social/CommentSection.tsx`     | `z-10`     | Click outside  | z-index too low  |
+| **InlineEditField**  | `ui/InlineEditField.tsx`        | `z-50`     | onBlur         | ✅ Good          |
+| **PlayerControls**   | `playbook/diagram-editor/...`   | `z-50`     | Click outside  | ✅ Good          |
+| **Breadcrumb**       | `ui/Breadcrumb/Breadcrumb.tsx`  | `z-10`     | Click outside  | z-index too low  |
+| **PlaybookSelector** | `playbook/PlaybookSelector.tsx` | `z-[110]`  | Click outside  | Too high z-index |
 
 ---
 
@@ -143,13 +144,13 @@ onMouseLeave={() => setIsOpen(false)}
 ```typescript
 export const Z_INDEX_SCALE = {
   base: 0,
-  dropdown: 50,        // ✅ All dropdowns should use this
-  header: 60,          // AppHeader
-  overlay: 70,         // Modals backdrop
-  modal: 80,           // Modal content
-  notification: 90,    // Toasts/alerts
-  tooltip: 100,        // Tooltips (always on top)
-  dev: 9999,          // Dev tools only
+  dropdown: 50, // ✅ All dropdowns should use this
+  header: 60, // AppHeader
+  overlay: 70, // Modals backdrop
+  modal: 80, // Modal content
+  notification: 90, // Toasts/alerts
+  tooltip: 100, // Tooltips (always on top)
+  dev: 9999, // Dev tools only
 } as const;
 ```
 
@@ -190,12 +191,12 @@ export function useDropdown(options?: {
 
     // Use timeout to avoid race condition with onClick
     const timer = setTimeout(() => {
-      document.addEventListener('mousedown', handleClick);
+      document.addEventListener("mousedown", handleClick);
     }, 0);
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
   }, [isOpen, options?.closeOnOutsideClick]);
 
@@ -204,11 +205,11 @@ export function useDropdown(options?: {
     if (!isOpen || !options?.closeOnEscape) return;
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === "Escape") setIsOpen(false);
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, options?.closeOnEscape]);
 
   return {
@@ -236,19 +237,15 @@ export function useDropdown(options?: {
 ### Phase 2: Migrate Components (Priority Order)
 
 **High Priority (User-Facing):**
+
 1. GlobalSearch - Fix z-index conflict
 2. FuzzySearchInput - Fix timing issue
 3. PlaybookSelector - Fix z-index too high
 4. UserMenu - Standardize (mostly working)
 
-**Medium Priority:**
-5. ReactionButton - Fix z-index
-6. CommentSection - Fix z-index
-7. Breadcrumb - Fix z-index
+**Medium Priority:** 5. ReactionButton - Fix z-index 6. CommentSection - Fix z-index 7. Breadcrumb - Fix z-index
 
-**Low Priority:**
-8. InlineEditField - Already good, just standardize
-9. PlayerControls - Already good
+**Low Priority:** 8. InlineEditField - Already good, just standardize 9. PlayerControls - Already good
 
 ### Phase 3: Documentation
 
@@ -263,18 +260,21 @@ export function useDropdown(options?: {
 ### Fix #1: GlobalSearch Z-Index
 
 **Current:**
+
 ```tsx
-className="... z-[9999]"
+className = "... z-[9999]";
 ```
 
 **Should Be:**
+
 ```tsx
-className="... z-50"  // Standard dropdown z-index
+className = "... z-50"; // Standard dropdown z-index
 ```
 
 ### Fix #2: Standardize Close Delay
 
 **All dropdowns should use:**
+
 ```tsx
 const DROPDOWN_CLOSE_DELAY = 150; // ms
 
@@ -284,6 +284,7 @@ setTimeout(() => setIsOpen(false), DROPDOWN_CLOSE_DELAY);
 ### Fix #3: Click-Outside Pattern
 
 **Always use this pattern:**
+
 ```tsx
 useEffect(() => {
   if (!isOpen) return;
@@ -301,12 +302,12 @@ useEffect(() => {
 
   // Delay to avoid race with click handler
   const timer = setTimeout(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
   }, 0);
 
   return () => {
     clearTimeout(timer);
-    document.removeEventListener('mousedown', handleClickOutside);
+    document.removeEventListener("mousedown", handleClickOutside);
   };
 }, [isOpen]);
 ```
@@ -323,7 +324,7 @@ useEffect(() => {
 4. **Test keyboard navigation** (Tab, Escape, Arrow keys)
 5. **Test click-outside** closing
 6. **Test on mobile** (touch events)
-7. **Add aria-* attributes** for accessibility
+7. **Add aria-\* attributes** for accessibility
 
 ### ❌ DON'T:
 

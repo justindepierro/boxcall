@@ -2,9 +2,9 @@
  * useSearchHistory Hook
  * Manages recent searches in localStorage for GlobalSearch component
  */
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from "react";
 
-const STORAGE_KEY = 'bc_search_history';
+const STORAGE_KEY = "bc_search_history";
 const MAX_HISTORY_SIZE = 10;
 
 export interface SearchHistoryItem {
@@ -21,7 +21,7 @@ export function useSearchHistory() {
         return Array.isArray(parsed) ? parsed : [];
       }
     } catch (error) {
-      console.error('[useSearchHistory] Error loading history:', error);
+      console.error("[useSearchHistory] Error loading history:", error);
     }
     return [];
   });
@@ -31,7 +31,7 @@ export function useSearchHistory() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     } catch (error) {
-      console.error('[useSearchHistory] Error saving history:', error);
+      console.error("[useSearchHistory] Error saving history:", error);
     }
   }, [history]);
 
@@ -48,7 +48,7 @@ export function useSearchHistory() {
     setHistory((prev) => {
       // Remove existing instance of this query
       const filtered = prev.filter((item) => item.query !== trimmedQuery);
-      
+
       // Add to front with current timestamp
       const updated = [
         { query: trimmedQuery, timestamp: Date.now() },
@@ -68,7 +68,7 @@ export function useSearchHistory() {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-      console.error('[useSearchHistory] Error clearing history:', error);
+      console.error("[useSearchHistory] Error clearing history:", error);
     }
   }, []);
 
@@ -82,11 +82,14 @@ export function useSearchHistory() {
   /**
    * Get recent queries (sorted by timestamp, most recent first)
    */
-  const getRecentSearches = useCallback((limit?: number): string[] => {
-    const sorted = [...history].sort((a, b) => b.timestamp - a.timestamp);
-    const queries = sorted.map((item) => item.query);
-    return limit ? queries.slice(0, limit) : queries;
-  }, [history]);
+  const getRecentSearches = useCallback(
+    (limit?: number): string[] => {
+      const sorted = [...history].sort((a, b) => b.timestamp - a.timestamp);
+      const queries = sorted.map((item) => item.query);
+      return limit ? queries.slice(0, limit) : queries;
+    },
+    [history]
+  );
 
   return {
     history,

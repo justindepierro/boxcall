@@ -150,6 +150,7 @@ interface Formation {
    ```
 
 2. **Filter Formations**:
+
    ```typescript
    const visibleFormations = formations.filter((formation) => {
      // Variant? Always show

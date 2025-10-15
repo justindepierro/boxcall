@@ -58,6 +58,7 @@ export interface TeamTables {
       height_inches: number | null;
       weight_lbs: number | null;
       is_active: boolean | null;
+      roster_status: string | null;
       created_at: string | null;
       updated_at: string | null;
     };
@@ -72,6 +73,7 @@ export interface TeamTables {
       height_inches?: number | null;
       weight_lbs?: number | null;
       is_active?: boolean | null;
+      roster_status?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
     };
@@ -86,6 +88,7 @@ export interface TeamTables {
       height_inches?: number | null;
       weight_lbs?: number | null;
       is_active?: boolean | null;
+      roster_status?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
     };

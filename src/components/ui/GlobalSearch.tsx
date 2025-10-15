@@ -45,15 +45,23 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [activeFilter, setActiveFilter] = useState<SearchResult["type"] | "all">("all");
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [activeFilter, setActiveFilter] = useState<
+    SearchResult["type"] | "all"
+  >("all");
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const searchCacheRef = useRef<Map<string, { results: SearchResult[], timestamp: number }>>(new Map());
+  const searchCacheRef = useRef<
+    Map<string, { results: SearchResult[]; timestamp: number }>
+  >(new Map());
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Search history hook
   const { addToHistory, getRecentSearches, clearHistory } = useSearchHistory();
 
@@ -129,13 +137,25 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     if (context === "playbook") {
       // Prioritize plays, then formations, then personnel, then players
       return results.sort((a, b) => {
-        const priorityOrder = { play: 0, formation: 1, personnel: 2, player: 3, mention: 4 };
+        const priorityOrder = {
+          play: 0,
+          formation: 1,
+          personnel: 2,
+          player: 3,
+          mention: 4,
+        };
         return priorityOrder[a.type] - priorityOrder[b.type];
       });
     } else if (context === "roster" || context === "team-settings") {
       // Prioritize players, then plays, then formations, then personnel
       return results.sort((a, b) => {
-        const priorityOrder = { player: 0, play: 1, formation: 2, personnel: 3, mention: 4 };
+        const priorityOrder = {
+          player: 0,
+          play: 1,
+          formation: 2,
+          personnel: 3,
+          mention: 4,
+        };
         return priorityOrder[a.type] - priorityOrder[b.type];
       });
     }
@@ -143,17 +163,30 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   };
 
   // Highlight matched text in search results
-  const highlightMatch = (text: string, searchQuery: string): React.ReactNode => {
+  const highlightMatch = (
+    text: string,
+    searchQuery: string
+  ): React.ReactNode => {
     if (!searchQuery.trim()) return text;
-    
+
     try {
-      const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      const regex = new RegExp(
+        `(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+        "gi"
+      );
       const parts = text.split(regex);
-      
-      return parts.map((part, index) => 
-        regex.test(part) 
-          ? <mark key={index} className="bg-warning-100 dark:bg-warning-900/60 text-inherit">{part}</mark>
-          : part
+
+      return parts.map((part, index) =>
+        regex.test(part) ? (
+          <mark
+            key={index}
+            className="bg-warning-100 dark:bg-warning-900/60 text-inherit"
+          >
+            {part}
+          </mark>
+        ) : (
+          part
+        )
       );
     } catch {
       return text; // Return original text if regex fails
@@ -177,11 +210,11 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       player: [],
       mention: [],
     };
-    
+
     filteredResults.forEach((result) => {
       groups[result.type].push(result);
     });
-    
+
     // Return only non-empty groups in priority order
     return Object.entries(groups)
       .filter(([_, items]) => items.length > 0)
@@ -220,8 +253,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       const cacheKey = query.toLowerCase().trim();
       const cached = searchCacheRef.current.get(cacheKey);
       const CACHE_TTL = 60000; // 1 minute cache
-      
-      if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
         setResults(cached.results);
         setIsLoading(false);
         return;
@@ -231,7 +264,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-      
+
       // Create new abort controller for this search
       abortControllerRef.current = new AbortController();
       const { signal } = abortControllerRef.current;
@@ -241,129 +274,160 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
       try {
         // 🚀 PARALLEL FETCHING: Execute all searches simultaneously
-        const [playersResult, playsResult, formationsResult, personnelResult] = await Promise.allSettled([
-          // Search 1: Players
-          (async () => {
-            const allPlayers = await rosterService.listByTeam(teamId);
-            return allPlayers
-              .filter(
-                (player) =>
-                  player.jersey_number?.toString().includes(query) ||
-                  player.position?.toLowerCase().includes(query.toLowerCase()) ||
-                  player.first_name?.toLowerCase().includes(query.toLowerCase()) ||
-                  player.last_name?.toLowerCase().includes(query.toLowerCase()) ||
-                  player.id.toLowerCase().includes(query.toLowerCase())
-              )
-              .slice(0, 3)
-              .map((player) => ({
-                type: "player" as const,
-                data: player,
-                displayText:
-                  player.first_name && player.last_name
-                    ? `${player.first_name} ${player.last_name}`
-                    : `Player ${player.jersey_number || "TBD"}`,
-                subText: `${player.position || "Position TBD"} • ${player.is_active ? "Active" : "Inactive"}`,
-              }));
-          })(),
+        const [playersResult, playsResult, formationsResult, personnelResult] =
+          await Promise.allSettled([
+            // Search 1: Players
+            (async () => {
+              const allPlayers = await rosterService.listByTeam(teamId);
+              return allPlayers
+                .filter(
+                  (player) =>
+                    player.jersey_number?.toString().includes(query) ||
+                    player.position
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    player.first_name
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    player.last_name
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    player.id.toLowerCase().includes(query.toLowerCase())
+                )
+                .slice(0, 3)
+                .map((player) => ({
+                  type: "player" as const,
+                  data: player,
+                  displayText:
+                    player.first_name && player.last_name
+                      ? `${player.first_name} ${player.last_name}`
+                      : `Player ${player.jersey_number || "TBD"}`,
+                  subText: `${player.position || "Position TBD"} • ${player.is_active ? "Active" : "Inactive"}`,
+                }));
+            })(),
 
-          // Search 2: Plays
-          (async () => {
-            let playsToSearch: Play[] = [];
-            
-            // Convert DatabasePlay[] to Play[] if available
-            if (allPlays && allPlays.length > 0) {
-              playsToSearch = allPlays.map(play => ({
-                ...play,
-                created_by: "system",
-                created_at: new Date(play.created_at),
-                updated_at: new Date(play.updated_at),
-              })) as unknown as Play[];
-            } else {
-              // Fallback: query database directly
-              playsToSearch = await PlaysQueryService.getAllPlays(supabase, teamId);
-            }
-            
-            if (playsToSearch.length > 0) {
-              searchService.updatePlays(
-                playsToSearch.map((play: Play) => ({
+            // Search 2: Plays
+            (async () => {
+              let playsToSearch: Play[] = [];
+
+              // Convert DatabasePlay[] to Play[] if available
+              if (allPlays && allPlays.length > 0) {
+                playsToSearch = allPlays.map((play) => ({
                   ...play,
-                  confidence_base: 70,
-                  times_called: 0,
-                  times_successful: 0,
-                  created_by: play.created_by || "system",
+                  created_by: "system",
                   created_at: new Date(play.created_at),
                   updated_at: new Date(play.updated_at),
-                }))
-              );
+                })) as unknown as Play[];
+              } else {
+                // Fallback: query database directly
+                playsToSearch = await PlaysQueryService.getAllPlays(
+                  supabase,
+                  teamId
+                );
+              }
 
-              return searchService.search(query).slice(0, 3).map((result) => ({
-                type: "play" as const,
-                data: result.item,
-                displayText: result.item.play_name,
-                subText: `${result.item.formation} • ${result.item.p_type}`,
-              }));
-            }
-            return [];
-          })(),
+              if (playsToSearch.length > 0) {
+                searchService.updatePlays(
+                  playsToSearch.map((play: Play) => ({
+                    ...play,
+                    confidence_base: 70,
+                    times_called: 0,
+                    times_successful: 0,
+                    created_by: play.created_by || "system",
+                    created_at: new Date(play.created_at),
+                    updated_at: new Date(play.updated_at),
+                  }))
+                );
 
-          // Search 3: Formations
-          (async () => {
-            const formations = await FormationService.getFormationsByPlaybook(teamId);
-            return formations
-              .filter(
-                (formation) =>
-                  formation.name.toLowerCase().includes(query.toLowerCase()) ||
-                  formation.category?.toLowerCase().includes(query.toLowerCase()) ||
-                  formation.tags?.some((tag) =>
-                    tag.toLowerCase().includes(query.toLowerCase())
-                  ) ||
-                  formation.description?.toLowerCase().includes(query.toLowerCase())
-              )
-              .slice(0, 3)
-              .map((formation) => ({
-                type: "formation" as const,
-                data: formation,
-                displayText: formation.name,
-                subText: `${formation.direction === "left" ? "← " : formation.direction === "right" ? "→ " : ""}Formation${formation.category ? ` • ${formation.category}` : ""}`,
-                metadata: formation.personnel_name
-                  ? `${formation.personnel_name} personnel`
-                  : undefined,
-              }));
-          })(),
+                return searchService
+                  .search(query)
+                  .slice(0, 3)
+                  .map((result) => ({
+                    type: "play" as const,
+                    data: result.item,
+                    displayText: result.item.play_name,
+                    subText: `${result.item.formation} • ${result.item.p_type}`,
+                  }));
+              }
+              return [];
+            })(),
 
-          // Search 4: Personnel
-          (async () => {
-            const personnelConfigs = await PersonnelService.getPersonnelConfigurations(teamId);
-            return personnelConfigs
-              .filter(
-                (personnel: PersonnelConfiguration) =>
-                  personnel.name.toLowerCase().includes(query.toLowerCase()) ||
-                  personnel.description?.toLowerCase().includes(query.toLowerCase())
-              )
-              .slice(0, 2)
-              .map((personnel: PersonnelConfiguration) => ({
-                type: "personnel" as const,
-                data: personnel,
-                displayText: personnel.name,
-                subText: `Personnel • ${personnel.players?.length || 0} positions`,
-                metadata: personnel.description || undefined,
-              }));
-          })(),
-        ]);
+            // Search 3: Formations
+            (async () => {
+              const formations =
+                await FormationService.getFormationsByPlaybook(teamId);
+              return formations
+                .filter(
+                  (formation) =>
+                    formation.name
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    formation.category
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    formation.tags?.some((tag) =>
+                      tag.toLowerCase().includes(query.toLowerCase())
+                    ) ||
+                    formation.description
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase())
+                )
+                .slice(0, 3)
+                .map((formation) => ({
+                  type: "formation" as const,
+                  data: formation,
+                  displayText: formation.name,
+                  subText: `${formation.direction === "left" ? "← " : formation.direction === "right" ? "→ " : ""}Formation${formation.category ? ` • ${formation.category}` : ""}`,
+                  metadata: formation.personnel_name
+                    ? `${formation.personnel_name} personnel`
+                    : undefined,
+                }));
+            })(),
+
+            // Search 4: Personnel
+            (async () => {
+              const personnelConfigs =
+                await PersonnelService.getPersonnelConfigurations(teamId);
+              return personnelConfigs
+                .filter(
+                  (personnel: PersonnelConfiguration) =>
+                    personnel.name
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    personnel.description
+                      ?.toLowerCase()
+                      .includes(query.toLowerCase())
+                )
+                .slice(0, 2)
+                .map((personnel: PersonnelConfiguration) => ({
+                  type: "personnel" as const,
+                  data: personnel,
+                  displayText: personnel.name,
+                  subText: `Personnel • ${personnel.players?.length || 0} positions`,
+                  metadata: personnel.description || undefined,
+                }));
+            })(),
+          ]);
 
         // Combine all successful results
         const allResults: SearchResult[] = [];
-        
-        if (playersResult.status === 'fulfilled') allResults.push(...playersResult.value);
-        if (playsResult.status === 'fulfilled') allResults.push(...playsResult.value);
-        if (formationsResult.status === 'fulfilled') allResults.push(...formationsResult.value);
-        if (personnelResult.status === 'fulfilled') allResults.push(...personnelResult.value);
+
+        if (playersResult.status === "fulfilled")
+          allResults.push(...playersResult.value);
+        if (playsResult.status === "fulfilled")
+          allResults.push(...playsResult.value);
+        if (formationsResult.status === "fulfilled")
+          allResults.push(...formationsResult.value);
+        if (personnelResult.status === "fulfilled")
+          allResults.push(...personnelResult.value);
 
         // Reorder results based on current route context
         const reorderedResults = reorderResults(allResults, getSearchContext);
 
         const searchTime = performance.now() - startTime;
-        console.log(`⚡ Search completed in ${searchTime.toFixed(0)}ms - ${reorderedResults.length} results`);
+        console.log(
+          `⚡ Search completed in ${searchTime.toFixed(0)}ms - ${reorderedResults.length} results`
+        );
 
         // 💾 Store in cache
         searchCacheRef.current.set(cacheKey, {
@@ -424,8 +488,9 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // Get the list of results to navigate (filtered or all)
-    const navigableResults = filteredResults.length > 0 ? filteredResults : results;
-    
+    const navigableResults =
+      filteredResults.length > 0 ? filteredResults : results;
+
     if (e.key === "Escape") {
       e.preventDefault();
       setIsOpen(false);
@@ -439,14 +504,20 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       e.preventDefault();
       if (e.shiftKey) {
         // Shift+Tab: Go backward
-        setSelectedIndex((prev) => (prev <= 0 ? navigableResults.length - 1 : prev - 1));
+        setSelectedIndex((prev) =>
+          prev <= 0 ? navigableResults.length - 1 : prev - 1
+        );
       } else {
         // Tab: Go forward
-        setSelectedIndex((prev) => (prev >= navigableResults.length - 1 ? 0 : prev + 1));
+        setSelectedIndex((prev) =>
+          prev >= navigableResults.length - 1 ? 0 : prev + 1
+        );
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev < navigableResults.length - 1 ? prev + 1 : prev));
+      setSelectedIndex((prev) =>
+        prev < navigableResults.length - 1 ? prev + 1 : prev
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
@@ -475,7 +546,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     if (query.trim()) {
       addToHistory(query.trim());
     }
-    
+
     if (result.type === "player") {
       // Navigate to player profile or team settings with player highlighted
       navigate(
@@ -507,7 +578,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   const handleFocus = () => {
     setIsOpen(true);
-    
+
     // Calculate dropdown position
     if (inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
@@ -583,309 +654,343 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       </div>
 
       {/* Search Results Dropdown - Rendered as Portal */}
-      {isOpen && (query.length > 0 || isLoading || getRecentSearches().length > 0) && createPortal(
-        <div
-          ref={resultsRef}
-          className="fixed bg-white dark:bg-gray-800 border-2 border-surface-secondary dark:border-gray-600 rounded-lg shadow-2xl z-[9999] max-h-80 overflow-y-auto"
-          style={{ 
-            top: `${dropdownPosition.top}px`,
-            left: `${dropdownPosition.left}px`,
-            width: `${dropdownPosition.width}px`,
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          {/* Recent Searches - Show when input is empty or very short */}
-          {!isLoading && query.length < 2 && getRecentSearches().length > 0 && (
-            <div className="py-2">
-              <div className="px-4 py-2 flex items-center justify-between">
-                <Typography variant="body-xs" className="text-text-muted font-medium">
-                  Recent Searches
-                </Typography>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearHistory();
-                  }}
-                  className="text-text-muted hover:text-text-primary text-xs"
-                >
-                  Clear
-                </button>
-              </div>
-              <div className="space-y-1">
-                {getRecentSearches(5).map((recentQuery, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setQuery(recentQuery);
-                      inputRef.current?.focus();
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-surface-hover focus:bg-surface-hover focus:outline-none flex items-center space-x-3"
-                  >
-                    <Icon name="clock" className="h-4 w-4 text-text-muted flex-shrink-0" />
-                    <Typography variant="body-sm" className="text-text-primary truncate">
-                      {recentQuery}
+      {isOpen &&
+        (query.length > 0 || isLoading || getRecentSearches().length > 0) &&
+        createPortal(
+          <div
+            ref={resultsRef}
+            className="fixed bg-white dark:bg-gray-800 border-2 border-surface-secondary dark:border-gray-600 rounded-lg shadow-2xl z-[9999] max-h-80 overflow-y-auto"
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+              width: `${dropdownPosition.width}px`,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {/* Recent Searches - Show when input is empty or very short */}
+            {!isLoading &&
+              query.length < 2 &&
+              getRecentSearches().length > 0 && (
+                <div className="py-2">
+                  <div className="px-4 py-2 flex items-center justify-between">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-muted font-medium"
+                    >
+                      Recent Searches
                     </Typography>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="py-2 space-y-1">
-              {/* Loading Skeletons - 3 result placeholders */}
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="px-4 py-3 flex items-center space-x-3 animate-pulse">
-                  <div className="w-8 h-8 rounded-full bg-surface-muted flex-shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-surface-muted rounded w-3/4" />
-                    <div className="h-3 bg-surface-muted rounded w-1/2" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        clearHistory();
+                      }}
+                      className="text-text-muted hover:text-text-primary text-xs"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {getRecentSearches(5).map((recentQuery, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setQuery(recentQuery);
+                          inputRef.current?.focus();
+                        }}
+                        className="w-full px-4 py-2 text-left hover:bg-surface-hover focus:bg-surface-hover focus:outline-none flex items-center space-x-3"
+                      >
+                        <Icon
+                          name="clock"
+                          className="h-4 w-4 text-text-muted flex-shrink-0"
+                        />
+                        <Typography
+                          variant="body-sm"
+                          className="text-text-primary truncate"
+                        >
+                          {recentQuery}
+                        </Typography>
+                      </button>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {!isLoading && results.length === 0 && query.length >= 2 && (
-            <div className="px-4 py-3 text-center text-text-muted">
-              <Icon
-                name="search"
-                className="h-8 w-8 mx-auto mb-2 text-text-muted"
-              />
-              No results found for "{query}"
-            </div>
-          )}
+            {isLoading && (
+              <div className="py-2 space-y-1">
+                {/* Loading Skeletons - 3 result placeholders */}
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="px-4 py-3 flex items-center space-x-3 animate-pulse"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-surface-muted flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-surface-muted rounded w-3/4" />
+                      <div className="h-3 bg-surface-muted rounded w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {/* Filter Chips - Show when we have results */}
-          {!isLoading && results.length > 0 && (
-            <div className="border-b border-surface-muted px-3 py-2">
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={() => setActiveFilter("all")}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                    activeFilter === "all"
-                      ? "bg-surface-info text-text-info"
-                      : "bg-surface-secondary text-text-secondary hover:bg-surface-hover"
-                  }`}
-                >
-                  All ({results.length})
-                </button>
-                {["play", "formation", "personnel", "player"].map((filterType) => {
-                  const count = results.filter((r) => r.type === filterType).length;
-                  if (count === 0) return null;
-                  
+            {!isLoading && results.length === 0 && query.length >= 2 && (
+              <div className="px-4 py-3 text-center text-text-muted">
+                <Icon
+                  name="search"
+                  className="h-8 w-8 mx-auto mb-2 text-text-muted"
+                />
+                No results found for "{query}"
+              </div>
+            )}
+
+            {/* Filter Chips - Show when we have results */}
+            {!isLoading && results.length > 0 && (
+              <div className="border-b border-surface-muted px-3 py-2">
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setActiveFilter("all")}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                      activeFilter === "all"
+                        ? "bg-surface-info text-text-info"
+                        : "bg-surface-secondary text-text-secondary hover:bg-surface-hover"
+                    }`}
+                  >
+                    All ({results.length})
+                  </button>
+                  {["play", "formation", "personnel", "player"].map(
+                    (filterType) => {
+                      const count = results.filter(
+                        (r) => r.type === filterType
+                      ).length;
+                      if (count === 0) return null;
+
+                      return (
+                        <button
+                          key={filterType}
+                          onClick={() =>
+                            setActiveFilter(filterType as SearchResult["type"])
+                          }
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            activeFilter === filterType
+                              ? "bg-surface-info text-text-info"
+                              : "bg-surface-secondary text-text-secondary hover:bg-surface-hover"
+                          }`}
+                        >
+                          {filterType === "play" && `Plays (${count})`}
+                          {filterType === "formation" &&
+                            `Formations (${count})`}
+                          {filterType === "personnel" && `Personnel (${count})`}
+                          {filterType === "player" && `Players (${count})`}
+                        </button>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            )}
+
+            {!isLoading && results.length > 0 && (
+              <div className="py-1">
+                {filteredResults.length === 0 && (
+                  <div className="px-4 py-3 text-center text-text-muted">
+                    <Typography variant="body-sm">
+                      No {activeFilter} results
+                    </Typography>
+                  </div>
+                )}
+
+                {/* Grouped Results View */}
+                {groupedResults.map((group) => {
+                  const groupTypeLabel = {
+                    play: "Plays",
+                    formation: "Formations",
+                    personnel: "Personnel",
+                    player: "Players",
+                    mention: "Mentions",
+                  }[group.type];
+
+                  const isExpanded = expandedGroups.has(group.type);
+                  const showExpandButton = group.items.length > 3;
+                  const displayItems = isExpanded
+                    ? group.items
+                    : group.items.slice(0, 3);
+
                   return (
-                    <button
-                      key={filterType}
-                      onClick={() => setActiveFilter(filterType as SearchResult["type"])}
-                      className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                        activeFilter === filterType
-                          ? "bg-surface-info text-text-info"
-                          : "bg-surface-secondary text-text-secondary hover:bg-surface-hover"
-                      }`}
-                    >
-                      {filterType === "play" && `Plays (${count})`}
-                      {filterType === "formation" && `Formations (${count})`}
-                      {filterType === "personnel" && `Personnel (${count})`}
-                      {filterType === "player" && `Players (${count})`}
-                    </button>
+                    <div key={group.type} className="mb-2 last:mb-0">
+                      {/* Group Header */}
+                      <div className="px-4 py-2 bg-surface-muted border-b border-surface-secondary">
+                        <Typography
+                          variant="body-sm"
+                          className="font-semibold text-text-primary"
+                        >
+                          {groupTypeLabel} ({group.items.length})
+                        </Typography>
+                      </div>
+
+                      {/* Group Items */}
+                      {displayItems.map((result) => {
+                        // Calculate global index for keyboard navigation
+                        const globalIndex = filteredResults.indexOf(result);
+
+                        const getKey = () => {
+                          switch (result.type) {
+                            case "player":
+                              return `player-${(result.data as RosterPlayerView).id}`;
+                            case "play":
+                              return `play-${(result.data as Play).id}`;
+                            case "formation":
+                              return `formation-${(result.data as Formation).id}`;
+                            case "personnel":
+                              return `personnel-${(result.data as PersonnelConfiguration).id}`;
+                            case "mention": {
+                              const mentionData = result.data as {
+                                play: Play;
+                                player: RosterPlayerView;
+                              };
+                              return `mention-${mentionData.play.id}-${mentionData.player.id}`;
+                            }
+                            default:
+                              return `unknown-${globalIndex}`;
+                          }
+                        };
+
+                        const getIconText = () => {
+                          switch (result.type) {
+                            case "player":
+                              return (
+                                (result.data as RosterPlayerView)
+                                  .jersey_number || "?"
+                              );
+                            case "play":
+                              return "P";
+                            case "formation":
+                              return "F";
+                            case "personnel":
+                              return (
+                                (
+                                  result.data as PersonnelConfiguration
+                                ).name.split(" ")[0] || "G"
+                              );
+                            case "mention":
+                              return "M";
+                            default:
+                              return "?";
+                          }
+                        };
+
+                        const getIconColor = () => {
+                          switch (result.type) {
+                            case "player":
+                              return "bg-surface-info";
+                            case "play":
+                              return "bg-surface-success";
+                            case "formation":
+                              return "bg-surface-warning";
+                            case "personnel":
+                              return "bg-purple-100 dark:bg-purple-900/30";
+                            case "mention":
+                              return "bg-surface-secondary";
+                            default:
+                              return "bg-surface-secondary";
+                          }
+                        };
+
+                        const getTextColor = () => {
+                          switch (result.type) {
+                            case "player":
+                              return "text-text-info";
+                            case "play":
+                              return "text-text-success";
+                            case "formation":
+                              return "text-text-warning";
+                            case "personnel":
+                              return "text-purple-700 dark:text-purple-300";
+                            case "mention":
+                              return "text-text-secondary";
+                            default:
+                              return "text-text-secondary";
+                          }
+                        };
+
+                        return (
+                          <button
+                            key={getKey()}
+                            onClick={() => handleResultSelect(result)}
+                            className={`w-full px-4 py-3 text-left transition-all ${
+                              globalIndex === selectedIndex
+                                ? "bg-surface-info ring-2 ring-blue-500 ring-inset"
+                                : "hover:bg-surface-hover"
+                            } focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${getIconColor()}`}
+                              >
+                                <Typography
+                                  variant="body-sm"
+                                  className={`font-medium ${getTextColor()}`}
+                                >
+                                  {getIconText()}
+                                </Typography>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <Typography
+                                  variant="body-sm"
+                                  className="text-text-primary font-medium truncate"
+                                >
+                                  {highlightMatch(result.displayText, query)}
+                                </Typography>
+                                <Typography
+                                  variant="body-xs"
+                                  className="text-text-muted truncate"
+                                >
+                                  {highlightMatch(result.subText, query)}
+                                </Typography>
+                                {result.metadata && (
+                                  <Typography
+                                    variant="body-xs"
+                                    className="text-text-muted/70 truncate italic"
+                                  >
+                                    {result.metadata}
+                                  </Typography>
+                                )}
+                              </div>
+                              <Icon
+                                name="arrow-right"
+                                className="h-4 w-4 text-text-muted flex-shrink-0"
+                              />
+                            </div>
+                          </button>
+                        );
+                      })}
+
+                      {/* Show More/Less Button */}
+                      {showExpandButton && (
+                        <button
+                          onClick={() => toggleGroupExpansion(group.type)}
+                          className="w-full px-4 py-2 text-center text-text-info hover:bg-surface-hover text-sm font-medium"
+                        >
+                          {isExpanded
+                            ? "Show less"
+                            : `Show ${group.items.length - 3} more`}
+                        </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>
-            </div>
-          )}
+            )}
 
-          {!isLoading && results.length > 0 && (
-            <div className="py-1">
-              {filteredResults.length === 0 && (
-                <div className="px-4 py-3 text-center text-text-muted">
-                  <Typography variant="body-sm">
-                    No {activeFilter} results
-                  </Typography>
-                </div>
-              )}
-              
-              {/* Grouped Results View */}
-              {groupedResults.map((group) => {
-                const groupTypeLabel = {
-                  play: "Plays",
-                  formation: "Formations",
-                  personnel: "Personnel",
-                  player: "Players",
-                  mention: "Mentions",
-                }[group.type];
-                
-                const isExpanded = expandedGroups.has(group.type);
-                const showExpandButton = group.items.length > 3;
-                const displayItems = isExpanded ? group.items : group.items.slice(0, 3);
-                
-                return (
-                  <div key={group.type} className="mb-2 last:mb-0">
-                    {/* Group Header */}
-                    <div className="px-4 py-2 bg-surface-muted border-b border-surface-secondary">
-                      <Typography variant="body-sm" className="font-semibold text-text-primary">
-                        {groupTypeLabel} ({group.items.length})
-                      </Typography>
-                    </div>
-                    
-                    {/* Group Items */}
-                    {displayItems.map((result) => {
-                      // Calculate global index for keyboard navigation
-                      const globalIndex = filteredResults.indexOf(result);
-                      
-                      const getKey = () => {
-                        switch (result.type) {
-                          case "player":
-                            return `player-${(result.data as RosterPlayerView).id}`;
-                          case "play":
-                            return `play-${(result.data as Play).id}`;
-                          case "formation":
-                            return `formation-${(result.data as Formation).id}`;
-                          case "personnel":
-                            return `personnel-${(result.data as PersonnelConfiguration).id}`;
-                          case "mention": {
-                      const mentionData = result.data as {
-                        play: Play;
-                        player: RosterPlayerView;
-                      };
-                      return `mention-${mentionData.play.id}-${mentionData.player.id}`;
-                    }
-                    default:
-                      return `unknown-${globalIndex}`;
-                  }
-                };
-
-                const getIconText = () => {
-                  switch (result.type) {
-                    case "player":
-                      return (
-                        (result.data as RosterPlayerView).jersey_number || "?"
-                      );
-                    case "play":
-                      return "P";
-                    case "formation":
-                      return "F";
-                    case "personnel":
-                      return (result.data as PersonnelConfiguration).name
-                        .split(" ")[0] || "G";
-                    case "mention":
-                      return "M";
-                    default:
-                      return "?";
-                  }
-                };
-
-                const getIconColor = () => {
-                  switch (result.type) {
-                    case "player":
-                      return "bg-surface-info";
-                    case "play":
-                      return "bg-surface-success";
-                    case "formation":
-                      return "bg-surface-warning";
-                    case "personnel":
-                      return "bg-purple-100 dark:bg-purple-900/30";
-                    case "mention":
-                      return "bg-surface-secondary";
-                    default:
-                      return "bg-surface-secondary";
-                  }
-                };
-
-                const getTextColor = () => {
-                  switch (result.type) {
-                    case "player":
-                      return "text-text-info";
-                    case "play":
-                      return "text-text-success";
-                    case "formation":
-                      return "text-text-warning";
-                    case "personnel":
-                      return "text-purple-700 dark:text-purple-300";
-                    case "mention":
-                      return "text-text-secondary";
-                    default:
-                      return "text-text-secondary";
-                  }
-                };
-
-                return (
-                  <button
-                    key={getKey()}
-                    onClick={() => handleResultSelect(result)}
-                    className={`w-full px-4 py-3 text-left transition-all ${
-                      globalIndex === selectedIndex 
-                        ? "bg-surface-info ring-2 ring-blue-500 ring-inset" 
-                        : "hover:bg-surface-hover"
-                    } focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${getIconColor()}`}
-                      >
-                        <Typography
-                          variant="body-sm"
-                          className={`font-medium ${getTextColor()}`}
-                        >
-                          {getIconText()}
-                        </Typography>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Typography
-                          variant="body-sm"
-                          className="text-text-primary font-medium truncate"
-                        >
-                          {highlightMatch(result.displayText, query)}
-                        </Typography>
-                        <Typography
-                          variant="body-xs"
-                          className="text-text-muted truncate"
-                        >
-                          {highlightMatch(result.subText, query)}
-                        </Typography>
-                        {result.metadata && (
-                          <Typography
-                            variant="body-xs"
-                            className="text-text-muted/70 truncate italic"
-                          >
-                            {result.metadata}
-                          </Typography>
-                        )}
-                      </div>
-                      <Icon
-                        name="arrow-right"
-                        className="h-4 w-4 text-text-muted flex-shrink-0"
-                      />
-                    </div>
-                  </button>
-                );
-              })}
-              
-              {/* Show More/Less Button */}
-              {showExpandButton && (
-                <button
-                  onClick={() => toggleGroupExpansion(group.type)}
-                  className="w-full px-4 py-2 text-center text-text-info hover:bg-surface-hover text-sm font-medium"
-                >
-                  {isExpanded ? "Show less" : `Show ${group.items.length - 3} more`}
-                </button>
-              )}
-            </div>
-          );
-        })}
-            </div>
-          )}
-
-          {!isLoading && query.length < 2 && (
-            <div className="px-4 py-3 text-center text-text-muted">
-              Type at least 2 characters to search
-            </div>
-          )}
-        </div>,
-        document.body
-      )}
+            {!isLoading && query.length < 2 && (
+              <div className="px-4 py-3 text-center text-text-muted">
+                Type at least 2 characters to search
+              </div>
+            )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

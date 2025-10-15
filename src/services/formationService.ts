@@ -518,7 +518,7 @@ export class FormationService {
    */
   /**
    * Link formations as left/right variants
-   * 
+   *
    * 🔒 USES DATABASE TRANSACTION for atomic operations
    * 🛡️ Validates directionality_type before auto-creating variants
    *
@@ -551,7 +551,9 @@ export class FormationService {
     }
 
     // @ts-ignore - Supabase type inference issue
-    const directionality = baseFormation.directionality_type as string | undefined;
+    const directionality = baseFormation.directionality_type as
+      | string
+      | undefined;
 
     // SPECIAL CASE: Same formation selected for both sides
     // Create a duplicate for the right side, and make original the left side
@@ -624,7 +626,7 @@ export class FormationService {
           `Failed to update left variant: ${leftUpdateError.message}`
         );
       }
-      
+
       console.log(
         `[FormationService] ✅ Same formation link: created duplicate for RIGHT variant`
       );
@@ -635,7 +637,7 @@ export class FormationService {
       console.log(
         `[FormationService] 🔒 Using transaction-safe linking for ${baseFormation.name}`
       );
-      
+
       try {
         // Use PostgreSQL transaction function for atomic linking
         const { data, error } = await supabase.rpc(
