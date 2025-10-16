@@ -15,6 +15,7 @@ export interface RosterPlayerView {
   height_inches: number | null;
   weight_lbs: number | null;
   is_active: boolean | null;
+  roster_status: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -38,6 +39,7 @@ export interface PlayerRosterUpdate {
   height_inches?: number;
   weight_lbs?: number;
   is_active?: boolean;
+  roster_status?: string;
 }
 
 // Use centralized supabase client (browser-safe, avoids process reference)
@@ -98,6 +100,7 @@ export class RosterService {
       height_inches: row.height_inches ?? null,
       weight_lbs: (row.weight_lbs as number) ?? null,
       is_active: (row.is_active as boolean) ?? null,
+      roster_status: row.roster_status ?? null,
       created_at: row.created_at ?? null,
       updated_at: row.updated_at ?? null,
     }));
@@ -186,6 +189,54 @@ export class RosterService {
     return data?.length || 0;
   }
 
+  /**
+   * Update multiple players with partial data
+   * @param playerIds - Array of player IDs to update
+   * @param updates - Object containing fields to update (only provided fields will be updated)
+   * @returns Number of players successfully updated
+   */
+  async updateMultiplePlayers(
+    playerIds: string[],
+    updates: {
+      position?: string;
+      grade_level?: string;
+      height_inches?: number;
+      weight_lbs?: number;
+    }
+  ): Promise<number> {
+    if (playerIds.length === 0) {
+      return 0;
+    }
+
+    // Build update object with only provided fields
+    const updateData: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (updates.position !== undefined) {
+      updateData.position = updates.position;
+    }
+    if (updates.grade_level !== undefined) {
+      updateData.grade_level = updates.grade_level;
+    }
+    if (updates.height_inches !== undefined) {
+      updateData.height_inches = updates.height_inches;
+    }
+    if (updates.weight_lbs !== undefined) {
+      updateData.weight_lbs = updates.weight_lbs;
+    }
+
+    const { data, error } = await ((this.client as any)
+      .from("team_players")
+      .update(updateData)
+      .in("id", playerIds)
+      .select("id"));
+
+    if (error) throw error as PostgrestError;
+    
+    return data?.length || 0;
+  }
+
   async getPlayerById(playerId: string): Promise<RosterPlayerView> {
     interface RawRow {
       [key: string]: unknown;
@@ -199,6 +250,7 @@ export class RosterService {
       height_inches?: number | null;
       weight_lbs?: number | null;
       is_active?: boolean | null;
+      roster_status?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
     }
@@ -224,6 +276,7 @@ export class RosterService {
       height_inches: row.height_inches ?? null,
       weight_lbs: row.weight_lbs ?? null,
       is_active: row.is_active ?? null,
+      roster_status: row.roster_status ?? null,
       created_at: row.created_at ?? null,
       updated_at: row.updated_at ?? null,
     };

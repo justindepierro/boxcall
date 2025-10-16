@@ -1,15 +1,17 @@
 /**
  * useRosterData Hook
  * 
- * Manages roster data fetching and state
- * - Loads players from the API
- * - Handles loading states
- * - Manages team ID
- * - Provides refresh functionality
+ * Manages roster data with React Query caching
+ * - Automatic caching and refetching
+ * - Stale-while-revalidate pattern
+ * - Multi-tab synchronization
+ * - Background refetch on focus
+ * 
+ * @version 2.0.0 - React Query integration
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { rosterService } from '../../../services';
+import { useState, useCallback, useEffect } from 'react';
+import { useRosterQuery } from '../../../hooks/useRosterQueries';
 import type { RosterPlayerView } from '../../../services/rosterService';
 import { getActiveTeamId } from '../../../utils/activeTeam';
 import { useToast } from '../../../hooks/useToast';
@@ -25,40 +27,47 @@ export interface UseRosterDataReturn {
 
 export const useRosterData = (): UseRosterDataReturn => {
   const toast = useToast();
-  const [players, setPlayers] = useState<RosterPlayerView[]>([]);
-  const [loading, setLoading] = useState(true);
   const teamId = getActiveTeamId();
 
-  // Load roster data
-  const loadRoster = useCallback(async () => {
-    if (!teamId) {
-      setLoading(false);
-      return;
-    }
+  // Use React Query for data fetching with caching
+  const { data: queryPlayers, isLoading, error, refetch } = useRosterQuery(teamId);
 
-    try {
-      setLoading(true);
-      info('[useRosterData] Loading roster for team:', teamId);
-      const rosterData = await rosterService.listByTeam(teamId);
-      setPlayers(rosterData);
-      info('[useRosterData] Loaded', rosterData.length, 'players');
-    } catch (error) {
+  // Local state for optimistic updates (maintains backward compatibility)
+  const [localPlayers, setLocalPlayers] = useState<RosterPlayerView[]>([]);
+
+  // Sync query data to local state
+  useEffect(() => {
+    if (queryPlayers) {
+      setLocalPlayers(queryPlayers);
+      info('[useRosterData] Synced', queryPlayers.length, 'players from cache');
+    }
+  }, [queryPlayers]);
+
+  // Show error toast if query fails
+  useEffect(() => {
+    if (error) {
       logError('[useRosterData] Failed to load roster:', error);
       toast.error('Failed to load roster. Please try again.');
-    } finally {
-      setLoading(false);
     }
-  }, [teamId, toast]);
+  }, [error, toast]);
 
-  // Load on mount
-  useEffect(() => {
-    loadRoster();
-  }, [loadRoster]);
+  // Refetch function (maintains backward compatibility with loadRoster)
+  const loadRoster = useCallback(async () => {
+    if (!teamId) return;
+    
+    info('[useRosterData] Refetching roster for team:', teamId);
+    try {
+      await refetch();
+    } catch (err) {
+      logError('[useRosterData] Refetch failed:', err);
+      // Error toast already shown by useEffect above
+    }
+  }, [teamId, refetch]);
 
   return {
-    players,
-    setPlayers,
-    loading,
+    players: localPlayers,
+    setPlayers: setLocalPlayers,
+    loading: isLoading,
     teamId,
     loadRoster,
   };

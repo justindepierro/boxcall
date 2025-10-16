@@ -19,6 +19,8 @@ import React, {
   useCallback,
 } from "react";
 import type { ReactNode } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../../app/queryClient";
 
 // Design System imports
 import type { TeamColors } from "../../lib/colorGeneration";
@@ -423,15 +425,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   );
 
   return (
-    <AppContext.Provider value={value}>
-      {/* Screen reader announcements */}
-      <div
-        ref={announcementRef}
-        className="sr-only"
-        aria-live="polite"
-        aria-atomic="true"
-      />
-      {children}
-    </AppContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <AppContext.Provider value={value}>
+        {/* Screen reader announcements */}
+        <div
+          ref={announcementRef}
+          className="sr-only"
+          aria-live="polite"
+          aria-atomic="true"
+        />
+        {children}
+      </AppContext.Provider>
+    </QueryClientProvider>
   );
 };

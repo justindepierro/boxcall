@@ -30,7 +30,14 @@ import {
   useRosterFilters,
   useRosterSelection,
   useRosterStats,
+  useAutosavePlayer,
 } from "./RosterPage/hooks";
+import {
+  useAddPlayerMutation,
+  useUpdatePlayerMutation,
+  useDeletePlayerMutation,
+  useBulkUpdatePlayersMutation,
+} from "../hooks/useRosterQueries";
 import { PlayerCard, RosterStats } from "./RosterPage/components";
 
 /**
@@ -61,6 +68,13 @@ export default function RosterPage() {
     teamId,
     loadRoster,
   } = useRosterData();
+
+  // React Query mutations for optimistic updates
+  const addPlayerMutation = useAddPlayerMutation(teamId);
+  const updatePlayerMutation = useUpdatePlayerMutation(teamId);
+  const deletePlayerMutation = useDeletePlayerMutation(teamId);
+  const bulkUpdateMutation = useBulkUpdatePlayersMutation(teamId);
+
   const {
     filteredPlayers,
     searchTerm,
@@ -151,6 +165,98 @@ export default function RosterPage() {
     setFormError(null);
   };
 
+  // Helper function to convert form to update data
+  const formToUpdateData = (): PlayerRosterUpdate => {
+    // Convert height from ft-in to inches
+    let heightInches: number | undefined;
+    if (playerForm.heightFeet.trim() || playerForm.heightInches.trim()) {
+      const feet = parseInt(playerForm.heightFeet.trim() || "0", 10) || 0;
+      const inches = parseInt(playerForm.heightInches.trim() || "0", 10) || 0;
+      heightInches = feet * 12 + inches;
+    }
+
+    return {
+      jersey_number: playerForm.jersey_number
+        ? parseInt(playerForm.jersey_number)
+        : undefined,
+      position: playerForm.position || undefined,
+      grade_level: playerForm.grade_level || undefined,
+      height_inches: heightInches,
+      weight_lbs: playerForm.weight_lbs
+        ? parseInt(playerForm.weight_lbs)
+        : undefined,
+    };
+  };
+
+  // Autosave hook for edit modal
+  const autosavePlayer = useAutosavePlayer({
+    playerId: editingPlayer?.id || null,
+    enabled: showEditModal && !!editingPlayer,
+    debounceMs: 800,
+    onSave: async (playerId, updates) => {
+      info("[RosterPage] Autosaving player edits");
+      await rosterService.updatePlayer(playerId, updates);
+
+      // Update local state
+      _setPlayers((prev) =>
+        prev.map((p) => (p.id === playerId ? { ...p, ...updates } : p))
+      );
+    },
+    onSaveSuccess: () => {
+      info("[RosterPage] Autosave successful");
+    },
+    onSaveError: (error) => {
+      logError("[RosterPage] Autosave failed:", error);
+      toast.error("Failed to autosave changes. Please try saving manually.");
+    },
+  });
+
+  // Helper to trigger autosave after form field changes
+  const handleFieldChange = <K extends keyof typeof playerForm>(
+    field: K,
+    value: (typeof playerForm)[K]
+  ) => {
+    setPlayerForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // Only trigger autosave for fields that affect the update data
+    if (
+      field === "position" ||
+      field === "jersey_number" ||
+      field === "grade_level" ||
+      field === "heightFeet" ||
+      field === "heightInches" ||
+      field === "weight_lbs"
+    ) {
+      // Trigger autosave with current form + new value
+      const updatedForm = { ...playerForm, [field]: value };
+
+      let heightInches: number | undefined;
+      if (updatedForm.heightFeet.trim() || updatedForm.heightInches.trim()) {
+        const feet = parseInt(updatedForm.heightFeet.trim() || "0", 10) || 0;
+        const inches =
+          parseInt(updatedForm.heightInches.trim() || "0", 10) || 0;
+        heightInches = feet * 12 + inches;
+      }
+
+      const updateData: PlayerRosterUpdate = {
+        jersey_number: updatedForm.jersey_number
+          ? parseInt(updatedForm.jersey_number)
+          : undefined,
+        position: updatedForm.position || undefined,
+        grade_level: updatedForm.grade_level || undefined,
+        height_inches: heightInches,
+        weight_lbs: updatedForm.weight_lbs
+          ? parseInt(updatedForm.weight_lbs)
+          : undefined,
+      };
+
+      autosavePlayer.triggerAutosave(updateData);
+    }
+  };
+
   const handleAddPlayer = async () => {
     if (!teamId) return;
 
@@ -199,14 +305,14 @@ export default function RosterPage() {
           : undefined,
       };
 
-      await rosterService.createPlayer(playerData);
-      info("[RosterPage] Player added successfully");
+      // Use React Query mutation for optimistic update
+      await addPlayerMutation.mutateAsync(playerData);
+
       toast.success(
         `Player ${playerForm.first_name} ${playerForm.last_name} added successfully`
       );
       setShowAddModal(false);
       resetForm();
-      loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to add player:", error);
       const errorMessage =
@@ -227,8 +333,7 @@ export default function RosterPage() {
       setSaving(true);
       setFormError(null);
 
-      // Convert height from ft-in to inches
-      let heightInches: number | undefined;
+      // Validate height format
       if (playerForm.heightFeet.trim() || playerForm.heightInches.trim()) {
         const feet = parseInt(playerForm.heightFeet.trim() || "0", 10) || 0;
         const inches = parseInt(playerForm.heightInches.trim() || "0", 10) || 0;
@@ -237,31 +342,19 @@ export default function RosterPage() {
           setFormError("Invalid height format. Inches must be 0-11.");
           return;
         }
-
-        heightInches = feet * 12 + inches;
       }
 
-      const updateData: PlayerRosterUpdate = {
-        jersey_number: playerForm.jersey_number
-          ? parseInt(playerForm.jersey_number)
-          : undefined,
-        position: playerForm.position || undefined,
-        grade_level: playerForm.grade_level || undefined,
-        height_inches: heightInches,
-        weight_lbs: playerForm.weight_lbs
-          ? parseInt(playerForm.weight_lbs)
-          : undefined,
-      };
+      const updateData = formToUpdateData();
 
-      await rosterService.updatePlayer(editingPlayer.id, updateData);
-      info("[RosterPage] Player updated successfully");
+      // Use autosave's saveNow for immediate save (bypasses debounce)
+      await autosavePlayer.saveNow(updateData);
+
       toast.success(
         `Player ${playerForm.first_name} ${playerForm.last_name} updated successfully`
       );
       setShowEditModal(false);
       setEditingPlayer(null);
       resetForm();
-      loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to update player:", error);
       const errorMessage =
@@ -279,12 +372,12 @@ export default function RosterPage() {
     if (!playerToDelete) return;
 
     try {
-      await rosterService.deletePlayer(playerToDelete.id);
-      info("[RosterPage] Player deleted successfully");
+      // Use React Query mutation for optimistic update
+      await deletePlayerMutation.mutateAsync(playerToDelete.id);
+
       toast.success("Player deleted successfully");
       setShowDeleteDialog(false);
       setPlayerToDelete(null);
-      loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to delete player:", error);
       toast.error("Failed to delete player. Please try again.");
@@ -300,23 +393,22 @@ export default function RosterPage() {
     try {
       setSaving(true);
       const playerIds = Array.from(selectedPlayerIds);
-      const updatedCount = await rosterService.updateMultiplePlayerStatuses(
-        playerIds,
-        bulkStatusValue
-      );
 
-      info(`[RosterPage] Updated status for ${updatedCount} players`);
+      // Use React Query mutation for optimistic update
+      await bulkUpdateMutation.mutateAsync({
+        playerIds,
+        updates: { roster_status: bulkStatusValue },
+      });
 
       const statusLabel =
         statusOptions.find((s) => s.value === bulkStatusValue)?.label ||
         bulkStatusValue;
       toast.success(
-        `Successfully updated ${updatedCount} player${updatedCount !== 1 ? "s" : ""} to ${statusLabel}`
+        `Successfully updated ${playerIds.length} player${playerIds.length !== 1 ? "s" : ""} to ${statusLabel}`
       );
 
       setShowBulkStatusDialog(false);
       clearSelection();
-      loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to update player statuses:", error);
       toast.error("Failed to update player statuses. Please try again.");
@@ -353,8 +445,7 @@ export default function RosterPage() {
         `${player.first_name} ${player.last_name} marked as ${newStatus ? "active" : "inactive"}`
       );
 
-      // Refresh to ensure sync with server
-      loadRoster();
+      // Optimistic update already handled - no need to reload
     } catch (error) {
       // Rollback on error
       _setPlayers(previousPlayers);
@@ -368,12 +459,12 @@ export default function RosterPage() {
 
     try {
       const playerIds = Array.from(selectedPlayerIds);
-      const updatedCount = await rosterService.updateMultiplePlayers(
-        playerIds,
-        updates
-      );
 
-      info(`[RosterPage] Bulk edited ${updatedCount} players`);
+      // Use React Query mutation for optimistic update
+      await bulkUpdateMutation.mutateAsync({
+        playerIds,
+        updates,
+      });
 
       // Build a description of what was updated
       const updatedFields: string[] = [];
@@ -383,12 +474,11 @@ export default function RosterPage() {
       if (updates.weight_lbs) updatedFields.push("weight");
 
       toast.success(
-        `Successfully updated ${updatedFields.join(", ")} for ${updatedCount} player${updatedCount !== 1 ? "s" : ""}`
+        `Successfully updated ${updatedFields.join(", ")} for ${playerIds.length} player${playerIds.length !== 1 ? "s" : ""}`
       );
 
       setShowBulkEditModal(false);
       clearSelection();
-      loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to bulk edit players:", error);
       toast.error("Failed to update players. Please try again.");
@@ -1184,15 +1274,44 @@ export default function RosterPage() {
                 </div>
               )}
 
+              {/* Autosave Status Indicator */}
+              {showEditModal && editingPlayer && (
+                <div className="flex items-center justify-between px-spacing-sm py-spacing-xs rounded-lg bg-surface-secondary/50">
+                  <Typography variant="body-sm" className="text-text-secondary">
+                    {autosavePlayer.status === "saving" &&
+                      "💾 Saving changes..."}
+                    {autosavePlayer.status === "saved" && "✓ All changes saved"}
+                    {autosavePlayer.status === "error" &&
+                      "⚠️ Autosave failed - please save manually"}
+                    {autosavePlayer.status === "idle" &&
+                      autosavePlayer.hasUnsavedChanges &&
+                      "⏳ Saving soon..."}
+                    {autosavePlayer.status === "idle" &&
+                      !autosavePlayer.hasUnsavedChanges &&
+                      autosavePlayer.lastSaved &&
+                      "✓ Up to date"}
+                    {autosavePlayer.status === "idle" &&
+                      !autosavePlayer.hasUnsavedChanges &&
+                      !autosavePlayer.lastSaved &&
+                      "Ready to edit"}
+                  </Typography>
+                  {autosavePlayer.lastSaved && (
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-tertiary"
+                    >
+                      {new Date(autosavePlayer.lastSaved).toLocaleTimeString()}
+                    </Typography>
+                  )}
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="First Name"
                   value={playerForm.first_name}
                   onChange={(e) =>
-                    setPlayerForm((prev) => ({
-                      ...prev,
-                      first_name: e.target.value,
-                    }))
+                    handleFieldChange("first_name", e.target.value)
                   }
                   required
                 />
@@ -1200,10 +1319,7 @@ export default function RosterPage() {
                   label="Last Name"
                   value={playerForm.last_name}
                   onChange={(e) =>
-                    setPlayerForm((prev) => ({
-                      ...prev,
-                      last_name: e.target.value,
-                    }))
+                    handleFieldChange("last_name", e.target.value)
                   }
                   required
                 />
@@ -1232,10 +1348,10 @@ export default function RosterPage() {
                                 const positions = playerForm.position
                                   .split(",")
                                   .filter((p) => p !== pos);
-                                setPlayerForm((prev) => ({
-                                  ...prev,
-                                  position: positions.join(","),
-                                }));
+                                handleFieldChange(
+                                  "position",
+                                  positions.join(",")
+                                );
                               }}
                               className="ml-1 hover:text-blue-900"
                             >
@@ -1254,13 +1370,10 @@ export default function RosterPage() {
                           ? playerForm.position.split(",").filter(Boolean)
                           : [];
                         if (!currentPositions.includes(e.target.value)) {
-                          setPlayerForm((prev) => ({
-                            ...prev,
-                            position: [
-                              ...currentPositions,
-                              e.target.value,
-                            ].join(","),
-                          }));
+                          handleFieldChange(
+                            "position",
+                            [...currentPositions, e.target.value].join(",")
+                          );
                         }
                       }
                     }}
@@ -1402,8 +1515,9 @@ export default function RosterPage() {
                     saving || !playerForm.first_name || !playerForm.last_name
                   }
                   className="bg-primary hover:bg-primary/90"
+                  title="Save changes immediately"
                 >
-                  {saving ? "Updating..." : "Update Player"}
+                  {saving ? "Saving..." : "Save Now"}
                 </Button>
               </div>
             </div>
