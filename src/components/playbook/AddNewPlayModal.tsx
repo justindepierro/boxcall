@@ -314,11 +314,73 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             playbookId={playbookId}
             onFormationChange={(value) => updateField("formation", value)}
             onFormationIdChange={(id, formation) => {
-              updateFields({
+              // When formation is selected, pull in ALL formation metadata
+              const updates: Partial<typeof formData> = {
                 formation_id: id,
                 formation: formation?.name || "",
                 formation_direction: formation?.direction || null,
-              });
+              };
+
+              // Transfer formation metadata to play
+              if (formation) {
+                // Personnel
+                if (formation.personnel_name) {
+                  updates.personnel = formation.personnel_name;
+                }
+
+                // Formation type (e.g., "Shotgun", "I Formation")
+                if (formation.formation_type) {
+                  updates.formationType = formation.formation_type;
+                }
+
+                // Formation category tags (spread, pro, power, etc.)
+                if (formation.category) {
+                  // Append category to formation tags if not already present
+                  const existingTags = formData.formationTags
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean);
+                  if (!existingTags.includes(formation.category)) {
+                    existingTags.push(formation.category);
+                  }
+                  updates.formationTags = existingTags.join(", ");
+                }
+
+                // Formation tags (twins, trips, bunch, etc.)
+                if (formation.tags?.length > 0) {
+                  const existingTags = formData.formationTags
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean);
+                  // Merge formation tags with existing tags
+                  formation.tags.forEach((tag) => {
+                    if (!existingTags.includes(tag)) {
+                      existingTags.push(tag);
+                    }
+                  });
+                  updates.formationTags = existingTags.join(", ");
+                }
+
+                // Run/Pass strength
+                if (formation.run_strength) {
+                  updates.runStrength = formation.run_strength;
+                }
+                if (formation.pass_strength) {
+                  updates.passStrength = formation.pass_strength;
+                }
+
+                console.log("📋 Formation metadata transferred to play:", {
+                  formation: formation.name,
+                  personnel: updates.personnel,
+                  type: updates.formationType,
+                  category: formation.category,
+                  tags: updates.formationTags,
+                  runStrength: updates.runStrength,
+                  passStrength: updates.passStrength,
+                });
+              }
+
+              updateFields(updates);
 
               // Phase 7: Formation → Diagram Template System
               // When a formation is selected, import its player positions into diagram editor
