@@ -3,17 +3,20 @@
  *
  * Unified formation management with two modes:
  * - Tab 1: Link Formations - Connect left/right variants
- * - Tab 2: Draw Formation - Visual canvas builder (Phase 3 - Coming Soon)
+ * - Tab 2: Draw Formation - Visual canvas builder
  *
  * This gives coaches one place to manage all formation workflows.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "../../ui/Modal/Modal";
-import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
 import { Link2, Pencil } from "lucide-react";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
+import { FormationBuilderCanvas } from "./FormationBuilderCanvas";
+import { FormationService } from "../../../services/formationService";
+import { useToast } from "../../../hooks/useToast";
+import type { FormationPlayerPosition, Formation } from "../../../types/formation";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;
@@ -33,6 +36,44 @@ export function FormationBuilderModal({
   onSaved,
 }: FormationBuilderModalProps) {
   const [activeTab, setActiveTab] = useState<TabType>("link");
+  const [formation, setFormation] = useState<Formation | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+
+  // Load formation when editing
+  useEffect(() => {
+    if (!formationId || !isOpen) {
+      setFormation(null);
+      return;
+    }
+
+    let mounted = true;
+
+    const loadFormation = async () => {
+      setIsLoading(true);
+      try {
+        const data = await FormationService.getFormationById(formationId);
+        if (mounted) {
+          setFormation(data);
+        }
+      } catch (error) {
+        console.error("Failed to load formation:", error);
+        if (mounted) {
+          toast.error("Failed to load formation");
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadFormation();
+
+    return () => {
+      mounted = false;
+    };
+  }, [formationId, isOpen, toast]);
 
   // If we're editing a specific formation, default to draw tab
   React.useEffect(() => {
@@ -48,6 +89,35 @@ export function FormationBuilderModal({
       onSaved();
     }
     // Don't auto-close - let user continue working
+  };
+
+  // Handle save from canvas
+  const handleCanvasSave = async (
+    players: FormationPlayerPosition[],
+    personnel: string
+  ) => {
+    try {
+      if (formationId && formation) {
+        // Update existing formation
+        await FormationService.updateFormation(formationId, {
+          player_positions: players,
+          personnel_name: personnel,
+        });
+        toast.success("Formation updated successfully!");
+      } else {
+        // Create new formation (placeholder - need form data)
+        toast.info("Save new formation - integrate with creation form");
+      }
+
+      handleSuccess();
+    } catch (error) {
+      console.error("Failed to save formation:", error);
+      toast.error("Failed to save formation");
+    }
+  };
+
+  const handleCanvasCancel = () => {
+    setActiveTab("link");
   };
 
   return (
@@ -90,9 +160,6 @@ export function FormationBuilderModal({
           >
             <Pencil className="w-5 h-5" />
             <span className="font-medium">Draw Formation</span>
-            <span className="ml-spacing-xs px-spacing-xs py-0.5 bg-warning-100 text-warning-700 text-xs rounded">
-              Soon
-            </span>
           </button>
         </div>
 
@@ -108,37 +175,22 @@ export function FormationBuilderModal({
           )}
 
           {activeTab === "draw" && (
-            <div className="flex flex-col items-center justify-center h-full p-spacing-xl bg-surface-muted min-h-[500px]">
-              <div className="text-center max-w-md space-y-spacing-md">
-                <div className="text-6xl mb-spacing-md">✏️</div>
-                <Typography variant="headline-lg" className="text-text-primary">
-                  Visual Formation Builder
-                </Typography>
-                <Typography variant="body-md" className="text-text-secondary">
-                  Drag-and-drop canvas for positioning players visually is
-                  coming soon!
-                </Typography>
-                <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
-                  <Typography variant="caption" className="text-text-muted">
-                    <strong>Phase 3 Features (Coming Soon):</strong>
+            <div className="h-full">
+              {formationId && isLoading ? (
+                <div className="flex items-center justify-center h-full">
+                  <Typography variant="body-md" className="text-text-muted">
+                    Loading formation...
                   </Typography>
-                  <ul className="mt-spacing-sm text-left text-text-secondary space-y-spacing-xs text-sm">
-                    <li>• Drag players to position on field</li>
-                    <li>• Personnel package integration</li>
-                    <li>• Strength player marking</li>
-                    <li>• Auto-create Left/Right variants</li>
-                    <li>• Export to diagram templates</li>
-                  </ul>
                 </div>
-                <div className="mt-spacing-md">
-                  <Button
-                    onClick={() => setActiveTab("link")}
-                    variant="primary"
-                  >
-                    Try Formation Linking →
-                  </Button>
-                </div>
-              </div>
+              ) : (
+                <FormationBuilderCanvas
+                  playbookId={playbookId}
+                  formationId={formationId}
+                  formation={formation || null}
+                  onSave={handleCanvasSave}
+                  onCancel={handleCanvasCancel}
+                />
+              )}
             </div>
           )}
         </div>
