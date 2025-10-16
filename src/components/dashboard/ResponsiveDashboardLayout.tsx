@@ -63,10 +63,12 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         title: "My Role",
         description: "Snapshot of your identity inside every team.",
         icon: "user" as IconName,
-        accentOverlayClass: "bg-aurora-amber",
-        glowClassName: "glow-aurora-amber",
+        accentOverlayClass: "bg-gradient-to-br from-amber-400 to-amber-600",
+        glowClassName: "bg-amber-400",
         statusBadge: (userRole || "player").replace("_", " ").toUpperCase(),
-        iconClassName: "text-warning-600",
+        iconClassName: "text-amber-600",
+        iconContainerClassName:
+          "bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-amber-500",
         footnote: "View profile",
         body: (
           <div className="space-y-2 text-sm">
@@ -91,10 +93,12 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         title: "Team Pulse",
         description: "Keep up with posts, votes, and announcements.",
         icon: "message" as IconName,
-        accentOverlayClass: "bg-aurora-teal",
-        glowClassName: "glow-aurora-teal",
+        accentOverlayClass: "bg-gradient-to-br from-cyan-400 to-cyan-600",
+        glowClassName: "bg-cyan-400",
         statusBadge: "Updates",
-        iconClassName: "text-teal-600",
+        iconClassName: "text-cyan-600",
+        iconContainerClassName:
+          "bg-gradient-to-br from-cyan-50 to-cyan-100 border-l-4 border-cyan-500",
         footnote: "Open activity",
         body: (
           <div className="space-y-2 text-sm">
@@ -115,10 +119,12 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         title: "Schedule",
         description: "Practices, games, and meetings at a glance.",
         icon: "calendar" as IconName,
-        accentOverlayClass: "bg-aurora-indigo",
-        glowClassName: "glow-aurora-indigo",
+        accentOverlayClass: "bg-gradient-to-br from-purple-400 to-purple-600",
+        glowClassName: "bg-purple-400",
         statusBadge: "Today",
-        iconClassName: "text-indigo-600",
+        iconClassName: "text-purple-600",
+        iconContainerClassName:
+          "bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500",
         footnote: "Jump to calendar",
         body: (
           <div className="space-y-2 text-sm">

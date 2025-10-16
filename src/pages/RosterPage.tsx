@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
@@ -9,16 +9,29 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Aurora } from "../components/ui/Aurora";
 import { DeleteConfirmationDialog } from "../components/common/DeleteConfirmationDialog";
+import { Pagination } from "../components/Pagination";
+import { MultiSelect } from "../components/ui/MultiSelect";
+import type { MultiSelectOption } from "../components/ui/MultiSelect";
 import { rosterService } from "../services";
 import type {
   RosterPlayerView,
   PlayerRosterInsert,
   PlayerRosterUpdate,
 } from "../services/rosterService";
-import { getActiveTeamId } from "../utils/activeTeam";
 import { RosterImportModal } from "../components/roster/RosterImportModal";
+import { BulkEditModal } from "../components/roster/BulkEditModal";
+import type { BulkEditUpdates } from "../components/roster/BulkEditModal";
 import { info, error as logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
+import { usePagination } from "../hooks/usePagination";
+import { exportToCSV, generateExportFilename } from "../utils/exportUtils";
+import {
+  useRosterData,
+  useRosterFilters,
+  useRosterSelection,
+  useRosterStats,
+} from "./RosterPage/hooks";
+import { PlayerCard, RosterStats } from "./RosterPage/components";
 
 /**
  * RosterPage - Complete roster management interface
@@ -40,12 +53,48 @@ export default function RosterPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  // State
-  const [players, setPlayers] = useState<RosterPlayerView[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [positionFilter, setPositionFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  // Custom hooks for state management
+  const {
+    players,
+    setPlayers: _setPlayers,
+    loading,
+    teamId,
+    loadRoster,
+  } = useRosterData();
+  const {
+    filteredPlayers,
+    searchTerm,
+    setSearchTerm,
+    positionFilters,
+    togglePositionFilter,
+    gradeLevelFilters,
+    toggleGradeLevelFilter,
+    statusFilter,
+    setStatusFilter,
+    clearAllFilters,
+    hasActiveFilters,
+  } = useRosterFilters(players);
+  const {
+    selectedPlayerIds,
+    togglePlayerSelection,
+    selectAll,
+    clearSelection,
+    isAllSelected: _isAllSelected,
+  } = useRosterSelection();
+  const { totalPlayers, activePlayerCount } = useRosterStats(players);
+
+  // Pagination (50 players per page for optimal performance)
+  const {
+    paginatedData: paginatedPlayers,
+    currentPage,
+    totalPages,
+    goToPage,
+  } = usePagination(filteredPlayers, 50, {
+    persistInUrl: true,
+    urlParamName: "page",
+  });
+
+  // Modal and form state (not extracted - specific to this page)
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -54,11 +103,9 @@ export default function RosterPage() {
     id: string;
     name: string;
   } | null>(null);
-  const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(
-    new Set()
-  );
   const [showBulkStatusDialog, setShowBulkStatusDialog] = useState(false);
   const [bulkStatusValue, setBulkStatusValue] = useState<string>("active");
+  const [showBulkEditModal, setShowBulkEditModal] = useState(false);
   const [editingPlayer, setEditingPlayer] = useState<RosterPlayerView | null>(
     null
   );
@@ -82,58 +129,6 @@ export default function RosterPage() {
     dominant_hand: "right",
     roster_status: "active",
   });
-
-  const teamId = getActiveTeamId();
-
-  // Load roster data
-  const loadRoster = useCallback(async () => {
-    if (!teamId) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const rosterData = await rosterService.listByTeam(teamId);
-      setPlayers(rosterData);
-    } catch (error) {
-      console.error("Failed to load roster:", error);
-      toast.error("Failed to load roster. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, [teamId, toast]);
-
-  useEffect(() => {
-    loadRoster();
-  }, [loadRoster]);
-
-  // Filtered players
-  const filteredPlayers = useMemo(() => {
-    return players.filter((player) => {
-      const matchesSearch =
-        !searchTerm ||
-        `${player.first_name} ${player.last_name}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        player.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        player.jersey_number?.toString().includes(searchTerm);
-
-      // Support filtering by multiple positions (comma-separated)
-      const matchesPosition =
-        !positionFilter ||
-        (player.position &&
-          player.position
-            .split(",")
-            .map((p) => p.trim())
-            .includes(positionFilter));
-
-      const matchesStatus =
-        !statusFilter || player.is_active === (statusFilter === "active");
-
-      return matchesSearch && matchesPosition && matchesStatus;
-    });
-  }, [players, searchTerm, positionFilter, statusFilter]);
 
   // Form handlers
   const resetForm = () => {
@@ -280,11 +275,6 @@ export default function RosterPage() {
     }
   };
 
-  const confirmDeletePlayer = (playerId: string, playerName: string) => {
-    setPlayerToDelete({ id: playerId, name: playerName });
-    setShowDeleteDialog(true);
-  };
-
   const handleDeletePlayer = async () => {
     if (!playerToDelete) return;
 
@@ -316,12 +306,14 @@ export default function RosterPage() {
       );
 
       info(`[RosterPage] Updated status for ${updatedCount} players`);
-      
-      const statusLabel = statusOptions.find(s => s.value === bulkStatusValue)?.label || bulkStatusValue;
+
+      const statusLabel =
+        statusOptions.find((s) => s.value === bulkStatusValue)?.label ||
+        bulkStatusValue;
       toast.success(
         `Successfully updated ${updatedCount} player${updatedCount !== 1 ? "s" : ""} to ${statusLabel}`
       );
-      
+
       setShowBulkStatusDialog(false);
       clearSelection();
       loadRoster();
@@ -333,27 +325,106 @@ export default function RosterPage() {
     }
   };
 
-  // Selection handlers
-  const togglePlayerSelection = (playerId: string) => {
-    setSelectedPlayerIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(playerId)) {
-        newSet.delete(playerId);
-      } else {
-        newSet.add(playerId);
+  // Toggle individual player active status (with optimistic update)
+  const togglePlayerStatus = async (
+    player: RosterPlayerView,
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation(); // Prevent card click navigation
+
+    const newStatus = !player.is_active;
+    const previousPlayers = [...players]; // Backup for rollback
+
+    // Optimistic update - update UI immediately
+    const optimisticPlayers = players.map((p) =>
+      p.id === player.id ? { ...p, is_active: newStatus } : p
+    );
+    _setPlayers(optimisticPlayers);
+
+    try {
+      await rosterService.updatePlayer(player.id, {
+        is_active: newStatus,
+      });
+
+      info(
+        `[RosterPage] Toggled status for ${player.first_name} ${player.last_name} to ${newStatus ? "active" : "inactive"}`
+      );
+      toast.success(
+        `${player.first_name} ${player.last_name} marked as ${newStatus ? "active" : "inactive"}`
+      );
+
+      // Refresh to ensure sync with server
+      loadRoster();
+    } catch (error) {
+      // Rollback on error
+      _setPlayers(previousPlayers);
+      logError("[RosterPage] Failed to toggle player status:", error);
+      toast.error("Failed to update player status. Please try again.");
+    }
+  };
+
+  const handleBulkEdit = async (updates: BulkEditUpdates) => {
+    if (selectedPlayerIds.size === 0) return;
+
+    try {
+      const playerIds = Array.from(selectedPlayerIds);
+      const updatedCount = await rosterService.updateMultiplePlayers(
+        playerIds,
+        updates
+      );
+
+      info(`[RosterPage] Bulk edited ${updatedCount} players`);
+
+      // Build a description of what was updated
+      const updatedFields: string[] = [];
+      if (updates.position) updatedFields.push("position");
+      if (updates.grade_level) updatedFields.push("grade level");
+      if (updates.height_inches) updatedFields.push("height");
+      if (updates.weight_lbs) updatedFields.push("weight");
+
+      toast.success(
+        `Successfully updated ${updatedFields.join(", ")} for ${updatedCount} player${updatedCount !== 1 ? "s" : ""}`
+      );
+
+      setShowBulkEditModal(false);
+      clearSelection();
+      loadRoster();
+    } catch (error) {
+      logError("[RosterPage] Failed to bulk edit players:", error);
+      toast.error("Failed to update players. Please try again.");
+    }
+  };
+
+  // Export handler
+  const handleExportCSV = () => {
+    try {
+      // Export selected players if any are selected, otherwise export filtered players
+      const playersToExport =
+        selectedPlayerIds.size > 0
+          ? filteredPlayers.filter((p) => selectedPlayerIds.has(p.id))
+          : filteredPlayers;
+
+      if (playersToExport.length === 0) {
+        toast.warning("No players to export");
+        return;
       }
-      return newSet;
-    });
+
+      const filename = generateExportFilename("team");
+      exportToCSV(playersToExport, filename);
+
+      const count = playersToExport.length;
+      toast.success(
+        `Successfully exported ${count} player${count !== 1 ? "s" : ""} to CSV`
+      );
+
+      info(`[RosterPage] Exported ${count} players to CSV: ${filename}.csv`);
+    } catch (error) {
+      logError("[RosterPage] Failed to export CSV:", error);
+      toast.error("Failed to export roster. Please try again.");
+    }
   };
 
-  const selectAll = () => {
-    setSelectedPlayerIds(new Set(filteredPlayers.map((p) => p.id)));
-  };
-
-  const clearSelection = () => {
-    setSelectedPlayerIds(new Set());
-  };
-
+  // CSV import handler
   const handleImportPlayers = async (csvPlayers: any[]) => {
     if (!teamId) return;
 
@@ -440,6 +511,22 @@ export default function RosterPage() {
     "P",
   ];
 
+  // Format position options for MultiSelect
+  const positionSelectOptions: MultiSelectOption[] = positionOptions.map(
+    (pos) => ({
+      value: pos,
+      label: pos,
+    })
+  );
+
+  // Grade level options for MultiSelect
+  const gradeLevelSelectOptions: MultiSelectOption[] = [
+    { value: "9", label: "9th Grade (Freshman)" },
+    { value: "10", label: "10th Grade (Sophomore)" },
+    { value: "11", label: "11th Grade (Junior)" },
+    { value: "12", label: "12th Grade (Senior)" },
+  ];
+
   // Status options
   const statusOptions = [
     { value: "active", label: "Active" },
@@ -458,10 +545,51 @@ export default function RosterPage() {
       <Aurora variant="shell" fullHeight>
         <PageLayout title="Roster" subtitle="Loading team roster...">
           <div className="space-y-spacing-lg">
+            {/* Loading skeleton for stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+              {[...Array(4)].map((_, i) => (
+                <Card key={`stat-${i}`} className="animate-pulse">
+                  <div className="h-24 bg-surface-muted rounded-lg"></div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Loading skeleton for player cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-              {[...Array(6)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <div className="h-32 bg-surface-muted rounded-lg"></div>
+              {[...Array(9)].map((_, i) => (
+                <Card
+                  key={`player-${i}`}
+                  className="animate-pulse p-spacing-md"
+                >
+                  <div className="space-y-spacing-sm">
+                    {/* Header skeleton */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-spacing-sm">
+                        <div className="w-4 h-4 bg-surface-muted rounded"></div>
+                        <div className="h-6 w-32 bg-surface-muted rounded"></div>
+                      </div>
+                      <div className="w-8 h-8 bg-surface-muted rounded"></div>
+                    </div>
+
+                    {/* Badges skeleton */}
+                    <div className="flex flex-wrap gap-spacing-xs">
+                      <div className="h-6 w-12 bg-surface-muted rounded-full"></div>
+                      <div className="h-6 w-16 bg-surface-muted rounded-full"></div>
+                      <div className="h-6 w-20 bg-surface-muted rounded-full"></div>
+                    </div>
+
+                    {/* Stats skeleton */}
+                    <div className="flex gap-spacing-md pt-spacing-sm">
+                      <div className="h-4 w-24 bg-surface-muted rounded"></div>
+                      <div className="h-4 w-24 bg-surface-muted rounded"></div>
+                    </div>
+
+                    {/* Footer skeleton */}
+                    <div className="flex items-center justify-between pt-spacing-sm">
+                      <div className="h-8 w-20 bg-surface-muted rounded"></div>
+                      <div className="h-8 w-16 bg-surface-muted rounded"></div>
+                    </div>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -514,6 +642,15 @@ export default function RosterPage() {
                   <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
                   Change Status
                 </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowBulkEditModal(true)}
+                  className="border-primary-300 text-primary-700 hover:bg-primary-100"
+                >
+                  <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+                  Edit Selected
+                </Button>
                 <Button size="sm" variant="ghost" onClick={clearSelection}>
                   Clear Selection
                 </Button>
@@ -546,10 +683,18 @@ export default function RosterPage() {
               </Button>
               <Button
                 variant="outline"
+                onClick={() => handleExportCSV()}
+                disabled={filteredPlayers.length === 0}
+              >
+                <Icon name="download" className="w-4 h-4 mr-spacing-xs" />
+                Export CSV
+              </Button>
+              <Button
+                variant="outline"
                 onClick={
                   selectedPlayerIds.size === filteredPlayers.length
                     ? clearSelection
-                    : selectAll
+                    : () => selectAll(filteredPlayers)
                 }
                 disabled={filteredPlayers.length === 0}
               >
@@ -561,109 +706,139 @@ export default function RosterPage() {
             </div>
 
             {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row gap-spacing-md w-full sm:w-auto">
+            <div className="flex flex-wrap gap-spacing-sm items-center w-full">
               <Input
                 placeholder="Search players..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full sm:w-64"
               />
-              <select
-                value={positionFilter}
-                onChange={(e) => setPositionFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="">All Positions</option>
-                {positionOptions.map((pos) => (
-                  <option key={pos} value={pos}>
-                    {pos}
-                  </option>
-                ))}
-              </select>
+
+              {/* Position Multi-Select */}
+              <MultiSelect
+                options={positionSelectOptions}
+                selected={positionFilters}
+                onChange={(values) => {
+                  // Update filters by comparing old and new arrays
+                  const added = values.filter(
+                    (v) => !positionFilters.includes(v)
+                  );
+                  const removed = positionFilters.filter(
+                    (v) => !values.includes(v)
+                  );
+
+                  if (added.length > 0) {
+                    added.forEach((pos) => togglePositionFilter(pos));
+                  }
+                  if (removed.length > 0) {
+                    removed.forEach((pos) => togglePositionFilter(pos));
+                  }
+                }}
+                placeholder="All Positions"
+                selectedLabel={(count) =>
+                  `${count} Position${count !== 1 ? "s" : ""}`
+                }
+                ariaLabel="Filter by position"
+              />
+
+              {/* Grade Level Multi-Select */}
+              <MultiSelect
+                options={gradeLevelSelectOptions}
+                selected={gradeLevelFilters}
+                onChange={(values) => {
+                  // Update filters by comparing old and new arrays
+                  const added = values.filter(
+                    (v) => !gradeLevelFilters.includes(v)
+                  );
+                  const removed = gradeLevelFilters.filter(
+                    (v) => !values.includes(v)
+                  );
+
+                  if (added.length > 0) {
+                    added.forEach((grade) => toggleGradeLevelFilter(grade));
+                  }
+                  if (removed.length > 0) {
+                    removed.forEach((grade) => toggleGradeLevelFilter(grade));
+                  }
+                }}
+                placeholder="All Grades"
+                selectedLabel={(count) =>
+                  `${count} Grade${count !== 1 ? "s" : ""}`
+                }
+                ariaLabel="Filter by grade level"
+              />
+
+              {/* Status Filter */}
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors"
+                style={{ height: "42px" }}
               >
-                <option value="">All Status</option>
+                <option value="" className="text-text-secondary">
+                  All Status
+                </option>
                 {statusOptions.map((status) => (
-                  <option key={status.value} value={status.value}>
+                  <option
+                    key={status.value}
+                    value={status.value}
+                    className="py-1"
+                  >
                     {status.label}
                   </option>
                 ))}
               </select>
+
+              {/* Clear All Filters Button */}
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="whitespace-nowrap transition-all hover:scale-105 text-warning-600 hover:text-warning-600 hover:bg-warning-bg"
+                >
+                  <Icon name="close" className="w-4 h-4 mr-spacing-xs" />
+                  Clear Filters
+                </Button>
+              )}
             </div>
+
+            {/* Active Filter Chips */}
+            {(positionFilters.length > 0 || gradeLevelFilters.length > 0) && (
+              <div className="flex flex-wrap gap-spacing-xs animate-fade-in">
+                {/* Position Filter Chips - Blue theme */}
+                {positionFilters.map((pos) => (
+                  <button
+                    key={pos}
+                    onClick={() => togglePositionFilter(pos)}
+                    className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-all shadow-sm border border-blue-300"
+                  >
+                    <span className="font-medium">{pos}</span>
+                    <Icon name="close" className="w-3 h-3" />
+                  </button>
+                ))}
+                {/* Grade Level Filter Chips - Purple theme */}
+                {gradeLevelFilters.map((grade) => (
+                  <button
+                    key={grade}
+                    onClick={() => toggleGradeLevelFilter(grade)}
+                    className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-all shadow-sm border border-purple-300"
+                  >
+                    <span className="font-medium">Grade {grade}</span>
+                    <Icon name="close" className="w-3 h-3" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Roster Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md">
-            <Card className="p-spacing-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Typography variant="body-sm" color="muted">
-                    Total Players
-                  </Typography>
-                  <Typography variant="headline-lg">
-                    {players.length}
-                  </Typography>
-                </div>
-                <Icon name="users" className="w-8 h-8 text-primary" />
-              </div>
-            </Card>
-            <Card className="p-spacing-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Typography variant="body-sm" color="muted">
-                    Active Players
-                  </Typography>
-                  <Typography variant="headline-lg">
-                    {players.filter((p) => p.is_active === true).length}
-                  </Typography>
-                </div>
-                <Icon
-                  name="check-circle"
-                  className="w-8 h-8 text-success-500"
-                />
-              </div>
-            </Card>
-            <Card className="p-spacing-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Typography variant="body-sm" color="muted">
-                    Injured
-                  </Typography>
-                  <Typography variant="headline-lg">{0}</Typography>
-                </div>
-                <Icon
-                  name="alert-triangle"
-                  className="w-8 h-8 text-error-500"
-                />
-              </div>
-            </Card>
-            <Card className="p-spacing-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Typography variant="body-sm" color="muted">
-                    Average Height
-                  </Typography>
-                  <Typography variant="headline-lg">
-                    {players.length > 0
-                      ? Math.round(
-                          players
-                            .filter((p) => p.height_inches)
-                            .reduce(
-                              (sum, p) => sum + (p.height_inches || 0),
-                              0
-                            ) / players.filter((p) => p.height_inches).length
-                        )
-                      : 0}
-                    "
-                  </Typography>
-                </div>
-                <Icon name="trending-up" className="w-8 h-8 text-blue-500" />
-              </div>
-            </Card>
-          </div>
+          <RosterStats
+            totalPlayers={totalPlayers}
+            activePlayerCount={activePlayerCount}
+            filteredCount={filteredPlayers.length}
+            selectedCount={selectedPlayerIds.size}
+          />
 
           {/* Loading State */}
           {loading && (
@@ -705,134 +880,38 @@ export default function RosterPage() {
               description="Try adjusting your search or filters"
               primaryAction={{
                 label: "Clear Filters",
-                onClick: () => {
-                  setSearchTerm("");
-                  setPositionFilter("");
-                  setStatusFilter("");
-                },
+                onClick: clearAllFilters,
               }}
             />
           )}
 
           {/* Player Grid */}
           {!loading && filteredPlayers.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-              {filteredPlayers.map((player) => (
-                <Card
-                  key={player.id}
-                  className={`p-spacing-md hover:shadow-lg transition-all ${
-                    selectedPlayerIds.has(player.id)
-                      ? "ring-2 ring-primary bg-primary-50/30"
-                      : ""
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-spacing-md">
-                    <div className="flex items-center gap-spacing-sm">
-                      {/* Selection Checkbox */}
-                      <input
-                        type="checkbox"
-                        checked={selectedPlayerIds.has(player.id)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          togglePlayerSelection(player.id);
-                        }}
-                        className="w-5 h-5 rounded border-2 border-surface-secondary text-primary focus:ring-2 focus:ring-primary cursor-pointer"
-                        aria-label={`Select ${player.first_name} ${player.last_name}`}
-                      />
-                      <div>
-                        <Typography
-                          variant="headline-sm"
-                          className="font-semibold mb-1"
-                        >
-                          {player.first_name} {player.last_name}
-                        </Typography>
-                        {/* Badges Row */}
-                        <div className="flex gap-2 flex-wrap">
-                          {/* Jersey Number Badge */}
-                          {player.jersey_number && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-jade-700 text-white">
-                              #{player.jersey_number}
-                            </span>
-                          )}
-                          {/* Position Badges - Support multiple positions */}
-                          {player.position &&
-                            player.position
-                              .split(",")
-                              .filter(Boolean)
-                              .map((pos) => (
-                                <span
-                                  key={pos}
-                                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
-                                >
-                                  {pos.trim()}
-                                </span>
-                              ))}
-                          {/* Grade Level Badge */}
-                          {player.grade_level && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
-                              {player.grade_level}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-spacing-xs">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openEditModal(player)}
-                      >
-                        <Icon name="edit" className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          confirmDeletePlayer(
-                            player.id,
-                            `${player.first_name} ${player.last_name}`
-                          )
-                        }
-                        className="text-error-500 hover:text-error-700"
-                      >
-                        <Icon name="delete" className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md animate-fade-in">
+                {paginatedPlayers.map((player) => (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    isSelected={selectedPlayerIds.has(player.id)}
+                    onToggleSelection={togglePlayerSelection}
+                    onEdit={openEditModal}
+                    onToggleStatus={togglePlayerStatus}
+                    onNavigate={(id) => navigate(`/roster/${id}`)}
+                  />
+                ))}
+              </div>
 
-                  <div className="space-y-spacing-xs text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-text-secondary">Height:</span>
-                      <span>
-                        {player.height_inches
-                          ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"`
-                          : "Not set"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-text-secondary">Weight:</span>
-                      <span>
-                        {player.weight_lbs
-                          ? `${player.weight_lbs} lbs`
-                          : "Not set"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-text-secondary">Status:</span>
-                      <span
-                        className={`capitalize px-2 py-1 rounded-full text-xs font-medium ${
-                          player.is_active
-                            ? "bg-green-100 text-green-800 border border-green-200"
-                            : "bg-gray-100 text-gray-600 border border-gray-200"
-                        }`}
-                      >
-                        {player.is_active ? "Active" : "Inactive"}
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+              {/* Pagination Controls */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={goToPage}
+                itemsPerPage={50}
+                totalItems={filteredPlayers.length}
+                className="mt-spacing-lg"
+              />
+            </>
           )}
 
           {/* Add Player Modal */}
@@ -1359,8 +1438,8 @@ export default function RosterPage() {
               <Typography variant="body-sm" className="text-text-secondary">
                 You are about to change the status for{" "}
                 <strong>{selectedPlayerIds.size}</strong> player
-                {selectedPlayerIds.size !== 1 ? "s" : ""}. This will affect their
-                access to team features.
+                {selectedPlayerIds.size !== 1 ? "s" : ""}. This will affect
+                their access to team features.
               </Typography>
 
               <div className="bg-warning-bg border border-warning rounded-lg p-spacing-sm">
@@ -1371,8 +1450,8 @@ export default function RosterPage() {
                   />
                   <div className="text-sm text-warning-foreground">
                     <strong>Note:</strong> Players marked as Inactive (Cut),
-                    Inactive (Quit), or Alumni will lose access to the team feed,
-                    calendar, and playbook.
+                    Inactive (Quit), or Alumni will lose access to the team
+                    feed, calendar, and playbook.
                   </div>
                 </div>
               </div>
@@ -1416,6 +1495,23 @@ export default function RosterPage() {
               </div>
             </div>
           </Modal>
+
+          {/* Bulk Edit Modal */}
+          <BulkEditModal
+            isOpen={showBulkEditModal}
+            onClose={() => setShowBulkEditModal(false)}
+            selectedCount={selectedPlayerIds.size}
+            onSave={handleBulkEdit}
+            hasInactiveOrAlumni={Array.from(selectedPlayerIds).some((id) => {
+              const player = players.find((p) => p.id === id);
+              return (
+                player &&
+                (player.roster_status === "inactive_cut" ||
+                  player.roster_status === "inactive_quit" ||
+                  player.roster_status === "alumni")
+              );
+            })}
+          />
         </div>
       </PageLayout>
     </Aurora>

@@ -54,32 +54,32 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
       label: "New Play",
       icon: "plus",
       to: "/playbook?action=new",
-      color: "text-brand-primary",
-      bgColor: "bg-brand-primary/10",
+      color: "text-jade-700",
+      bgColor: "bg-gradient-to-br from-jade-50 to-jade-100",
     },
     {
       id: "schedule",
       label: "Schedule",
       icon: "calendar",
       to: "/calendar",
-      color: "text-success",
-      bgColor: "bg-success/10",
+      color: "text-purple-700",
+      bgColor: "bg-gradient-to-br from-purple-50 to-purple-100",
     },
     {
       id: "roster",
       label: "Roster",
       icon: "users",
       to: "/roster",
-      color: "text-warning",
-      bgColor: "bg-warning/10",
+      color: "text-blue-700",
+      bgColor: "bg-gradient-to-br from-blue-50 to-blue-100",
     },
     {
       id: "playbook",
       label: "Playbook",
       icon: "book",
       to: "/playbook",
-      color: "text-info",
-      bgColor: "bg-info/10",
+      color: "text-emerald-700",
+      bgColor: "bg-gradient-to-br from-emerald-50 to-emerald-100",
     },
   ];
 
@@ -116,11 +116,16 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
               rounded-xl p-4 
               min-h-20
               flex flex-col items-center justify-center gap-2
-              border border-border
-              hover:scale-105 active:scale-95
-              transition-all duration-200
+              border-l-4 border-transparent
+              hover:border-l-4 hover:shadow-lg active:scale-95
+              transition-all duration-300
               focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2
             `}
+            style={{
+              borderLeftColor: action.color
+                ? action.color.replace("text-", "#")
+                : undefined,
+            }}
             aria-label={action.label}
           >
             {/* Icon */}
@@ -132,7 +137,7 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
             {/* Label */}
             <Typography
               variant="body-sm"
-              className={`${action.color || "text-text-primary"} font-medium text-center`}
+              className={`${action.color || "text-text-primary"} font-semibold text-center`}
             >
               {action.label}
             </Typography>

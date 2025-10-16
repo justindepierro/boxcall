@@ -52,24 +52,27 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
       value: stats.totalPlays,
       label: "Plays",
       icon: "book" as IconName,
-      color: "text-brand-primary",
-      bgColor: "bg-brand-primary/10",
+      color: "text-jade-700",
+      bgColor: "bg-gradient-to-br from-jade-50 to-jade-100",
+      borderColor: "border-jade-500",
     },
     {
       key: "week",
       value: stats.thisWeekActivity,
       label: "This Week",
       icon: "calendar" as IconName,
-      color: "text-success",
-      bgColor: "bg-success/10",
+      color: "text-emerald-700",
+      bgColor: "bg-gradient-to-br from-emerald-50 to-emerald-100",
+      borderColor: "border-emerald-500",
     },
     {
       key: "achievements",
       value: stats.achievements,
       label: "Badges",
       icon: "trophy" as IconName,
-      color: "text-warning",
-      bgColor: "bg-warning/10",
+      color: "text-amber-700",
+      bgColor: "bg-gradient-to-br from-amber-50 to-amber-100",
+      borderColor: "border-amber-500",
     },
   ];
 
@@ -96,7 +99,7 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
           {statsConfig.map((stat) => (
             <div
               key={stat.key}
-              className={`${stat.bgColor} rounded-lg p-3 text-center border border-${stat.color.replace("text-", "")}/20`}
+              className={`${stat.bgColor} rounded-lg p-3 text-center border-l-4 ${stat.borderColor} shadow-sm hover:shadow-md transition-all duration-300`}
             >
               <div className="flex justify-center mb-1">
                 <Icon name={stat.icon} className={`w-4 h-4 ${stat.color}`} />
@@ -109,7 +112,7 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
               </Typography>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary mt-0.5"
+                className="text-text-secondary mt-0.5 font-medium"
               >
                 {stat.label}
               </Typography>

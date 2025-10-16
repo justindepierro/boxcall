@@ -282,6 +282,153 @@ export const semanticTokens = {
 } as const;
 
 // ============================================================================
+// FEATURE HIGHLIGHT TOKENS - Strategic color accents for feature visibility
+// ============================================================================
+
+/**
+ * Feature highlight tokens for drawing attention to key features and information.
+ * These tokens implement the color enhancement strategy to maintain clean green/white
+ * branding while adding tasteful color accents that highlight the app's rich features.
+ */
+export const featureTokens = {
+  // Stats Card Backgrounds - Gradient backgrounds for visual differentiation
+  stats: {
+    totalBg: "bg-gradient-to-br from-navy-50 to-navy-100", // Total count (navy theme)
+    totalBorder: colorTokens.navy[200],
+    totalAccent: colorTokens.navy[600],
+    
+    activeBg: "bg-gradient-to-br from-emerald-50 to-emerald-100", // Active items (success)
+    activeBorder: colorTokens.emerald[200],
+    activeAccent: colorTokens.emerald[600],
+    
+    filteredBg: "bg-gradient-to-br from-blue-50 to-blue-100", // Filtered view (info)
+    filteredBorder: colorTokens.blue[200],
+    filteredAccent: colorTokens.blue[600],
+    
+    selectedBg: "bg-gradient-to-br from-amber-50 to-amber-100", // Selected items (attention)
+    selectedBorder: colorTokens.amber[200],
+    selectedAccent: colorTokens.amber[600],
+  },
+
+  // Badge Gradients - Enhanced badges with gradient backgrounds
+  badges: {
+    jerseyFrom: colorTokens.jade[600],    // Jersey badge gradient start
+    jerseyTo: colorTokens.jade[700],      // Jersey badge gradient end
+    
+    positionFrom: colorTokens.blue[500],  // Position badge gradient start
+    positionTo: colorTokens.blue[600],    // Position badge gradient end
+    
+    gradeFrom: colorTokens.purple[500],   // Grade badge gradient start
+    gradeTo: colorTokens.purple[600],     // Grade badge gradient end
+    
+    activeFrom: colorTokens.emerald[500], // Active status gradient start
+    activeTo: colorTokens.emerald[600],   // Active status gradient end
+    
+    inactiveFrom: colorTokens.red[500],   // Inactive status gradient start
+    inactiveTo: colorTokens.red[600],     // Inactive status gradient end
+  },
+
+  // Filter Indicators - Color-coded active filters
+  filters: {
+    positionActive: colorTokens.blue[100],    // Position filter active background
+    positionBorder: colorTokens.blue[400],    // Position filter border
+    positionText: colorTokens.blue[700],      // Position filter text
+    
+    gradeActive: colorTokens.purple[100],     // Grade filter active background
+    gradeBorder: colorTokens.purple[400],     // Grade filter border
+    gradeText: colorTokens.purple[700],       // Grade filter text
+    
+    anyActive: colorTokens.amber[100],        // Any active filter highlight
+    clearHover: colorTokens.amber[600],       // Clear filters button hover
+  },
+
+  // Interactive States - Hover, focus, and active states
+  interactive: {
+    hoverBg: colorTokens.cyan[50],            // Subtle hover background
+    hoverBorder: colorTokens.cyan[300],       // Hover border color
+    hoverGlow: colorTokens.jade[500],         // Glow effect color (use with opacity)
+    
+    focusRing: colorTokens.jade[500],         // Focus ring color
+    focusRingOffset: "#FFFFFF",               // Focus ring offset color
+    
+    activeBg: colorTokens.cyan[100],          // Active/pressed background
+    activeBorder: colorTokens.cyan[500],      // Active border color
+    
+    selectedBorder: colorTokens.cyan[400],    // Selected item border
+    selectedGlow: colorTokens.cyan[300],      // Selected item glow
+  },
+
+  // Action Buttons - Color hierarchy for button types
+  actions: {
+    primaryBg: colorTokens.jade[600],         // Primary action (brand)
+    primaryHover: colorTokens.jade[700],      // Primary hover
+    primaryText: "#FFFFFF",                    // Primary text
+    
+    secondaryBg: colorTokens.blue[600],       // Secondary action (info)
+    secondaryHover: colorTokens.blue[700],    // Secondary hover
+    secondaryText: "#FFFFFF",                  // Secondary text
+    
+    attentionBg: colorTokens.amber[500],      // Attention action (highlight)
+    attentionHover: colorTokens.amber[600],   // Attention hover
+    attentionText: colorTokens.gray[900],     // Attention text (dark for contrast)
+    
+    destructiveBg: colorTokens.red[600],      // Destructive action (danger)
+    destructiveHover: colorTokens.red[700],   // Destructive hover
+    destructiveText: "#FFFFFF",                // Destructive text
+  },
+
+  // Playbook Feature Colors - Color-coded playbook elements
+  playbook: {
+    // Formation type backgrounds
+    offensiveBg: "bg-gradient-to-br from-blue-50 to-blue-100",
+    offensiveBorder: colorTokens.blue[300],
+    offensiveAccent: colorTokens.blue[600],
+    
+    defensiveBg: "bg-gradient-to-br from-red-50 to-red-100",
+    defensiveBorder: colorTokens.red[300],
+    defensiveAccent: colorTokens.red[600],
+    
+    specialBg: "bg-gradient-to-br from-amber-50 to-amber-100",
+    specialBorder: colorTokens.amber[300],
+    specialAccent: colorTokens.amber[600],
+    
+    // Play category badges
+    runPlayBg: colorTokens.emerald[100],
+    runPlayText: colorTokens.emerald[700],
+    
+    passPlayBg: colorTokens.blue[100],
+    passPlayText: colorTokens.blue[700],
+    
+    trickPlayBg: colorTokens.purple[100],
+    trickPlayText: colorTokens.purple[700],
+    
+    // Canvas tool colors
+    routeTool: colorTokens.emerald[500],
+    playerTool: colorTokens.blue[500],
+    annotationTool: colorTokens.amber[500],
+    formationTool: colorTokens.purple[500],
+  },
+
+  // Premium Feature Indicators - Special/premium feature highlights
+  premium: {
+    bg: colorTokens.purple[50],
+    border: colorTokens.purple[300],
+    accent: colorTokens.purple[600],
+    text: colorTokens.purple[700],
+    glow: colorTokens.purple[400],
+  },
+
+  // Achievement/Success Indicators - Positive feedback colors
+  achievement: {
+    bg: colorTokens.emerald[50],
+    border: colorTokens.emerald[300],
+    accent: colorTokens.emerald[600],
+    text: colorTokens.emerald[700],
+    glow: colorTokens.emerald[400],
+  },
+} as const;
+
+// ============================================================================
 // TYPOGRAPHY TOKENS
 // ============================================================================
 

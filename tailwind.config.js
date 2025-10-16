@@ -196,6 +196,31 @@ export default {
     extend: {
       colors,
       spacing: spacingTokens,
+      animation: {
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        glow: "glow 2s ease-in-out infinite alternate",
+        "fade-in": "fadeIn 0.3s ease-in",
+        "slide-up": "slideUp 0.3s ease-out",
+        "scale-in": "scaleIn 0.2s ease-out",
+      },
+      keyframes: {
+        glow: {
+          from: { boxShadow: "0 0 5px -5px currentColor" },
+          to: { boxShadow: "0 0 20px 0px currentColor" },
+        },
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        slideUp: {
+          from: { transform: "translateY(10px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
+        scaleIn: {
+          from: { transform: "scale(0.95)", opacity: "0" },
+          to: { transform: "scale(1)", opacity: "1" },
+        },
+      },
       maxWidth: {
         // Layout container tokens
         "container-xs": "var(--layout-container-xs)",
