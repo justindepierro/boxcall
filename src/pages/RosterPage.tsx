@@ -400,6 +400,11 @@ export default function RosterPage() {
       return;
     }
 
+    if (!teamId) {
+      toast.error("Team ID not found");
+      return;
+    }
+
     try {
       info("[RosterPage] Sending invitation to player");
       
@@ -410,6 +415,7 @@ export default function RosterPage() {
         playerName,
         teamName: "Your Team", // TODO: Get actual team name
         invitedBy: "Coach", // TODO: Get actual coach name from auth
+        teamId, // Required for rate limiting and audit
       });
 
       if (result.success) {

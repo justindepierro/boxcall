@@ -87,9 +87,11 @@ CREATE TABLE team_players (
   is_active BOOLEAN DEFAULT true,
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   invitation_token UUID DEFAULT uuid_generate_v4(),
-  invitation_status TEXT DEFAULT 'not_invited' CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined')),
+  invitation_status TEXT DEFAULT 'not_invited' CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined', 'expired', 'failed')),
   invitation_sent_at TIMESTAMPTZ,
   invitation_accepted_at TIMESTAMPTZ,
+  invitation_expires_at TIMESTAMPTZ,
+  invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
