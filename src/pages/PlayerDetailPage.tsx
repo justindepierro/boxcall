@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/layout/PageLayout";
-import { Button, Card, Modal } from "../components/ui";
+import { Button, Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Aurora } from "../components/ui/Aurora";
@@ -11,6 +11,7 @@ import { rosterService } from "../services";
 import type { RosterPlayerView } from "../services/rosterService";
 import { useToast } from "../hooks/useToast";
 import { info, error as logError } from "../utils/logger";
+import EditPlayerModal from "../components/roster/EditPlayerModal";
 
 /**
  * PlayerDetailPage - Detailed view of a single player
@@ -250,39 +251,17 @@ export default function PlayerDetailPage() {
           </Card>
         </div>
 
-        {/* Edit Modal - Placeholder for now */}
-        {showEditModal && (
-          <Modal
+        {/* Edit Player Modal */}
+        {showEditModal && player && (
+          <EditPlayerModal
+            player={player}
             isOpen={showEditModal}
             onClose={() => setShowEditModal(false)}
-            title="Edit Player"
-          >
-            <div className="p-spacing-md">
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary mb-spacing-md"
-              >
-                Edit functionality will be integrated with the existing roster
-                edit modal.
-              </Typography>
-              <div className="flex justify-end gap-spacing-sm">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowEditModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowEditModal(false);
-                    toast.info("Edit functionality coming soon");
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          </Modal>
+            onSave={async () => {
+              await loadPlayer(); // Reload to show changes
+              setShowEditModal(false);
+            }}
+          />
         )}
       </PageLayout>
     </Aurora>

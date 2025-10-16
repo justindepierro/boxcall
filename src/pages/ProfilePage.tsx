@@ -9,8 +9,10 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
 import { Aurora } from "../components/ui/Aurora";
+import { AvatarEditor } from "../components/profile/AvatarEditor";
 import {
   Camera,
+  Pencil,
   User,
   Trophy,
   Link2,
@@ -42,6 +44,8 @@ export const ProfilePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const [showAvatarEditor, setShowAvatarEditor] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -123,6 +127,7 @@ export const ProfilePage: React.FC = () => {
       });
     }
   }, [profile]);
+
   // Validation function
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
@@ -348,17 +353,108 @@ export const ProfilePage: React.FC = () => {
       setSaving(false);
     }
   };
+  // Handle cropped avatar from editor
+  const handleCroppedAvatar = async (croppedBlob: Blob) => {
+    console.log("📸 Cropped avatar received, uploading...");
+    // Convert blob to file
+    const croppedFile = new File(
+      [croppedBlob],
+      `avatar-${Date.now()}.jpg`,
+      { type: "image/jpeg" }
+    );
+    
+    // Set the file (this will show in the preview)
+    setAvatarFile(croppedFile);
+    
+    // Immediately upload it
+    if (!profile?.id) {
+      console.error("No profile ID");
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      // Generate unique filename to avoid caching issues
+      const fileExt = "jpg";
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${profile.id}/${fileName}`;
+
+      console.log("📤 Uploading to:", filePath);
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, croppedFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        throw uploadError;
+      }
+
+      console.log("✅ Upload successful:", uploadData);
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      const avatarUrl = urlData.publicUrl;
+      console.log("🔗 Public URL:", avatarUrl);
+
+      // Update profile with new avatar URL
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: avatarUrl })
+        .eq("id", profile.id);
+
+      if (updateError) {
+        console.error("Profile update error:", updateError);
+        throw updateError;
+      }
+
+      console.log("✅ Profile updated with new avatar");
+
+      // Refresh profile data
+      await fetchUserProfile();
+      
+      setMessage({
+        type: "success",
+        text: "Avatar updated successfully!",
+      });
+      
+      // Clear the file after successful upload
+      setAvatarFile(null);
+    } catch (error) {
+      console.error("❌ Avatar upload failed:", error);
+      setMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "Failed to upload avatar",
+      });
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   // Handle avatar upload
   const handleAvatarUpload = async (): Promise<string | null> => {
     if (!avatarFile || !profile?.id) return null;
 
     setAvatarUploading(true);
     try {
+      // Generate unique filename to avoid caching issues
+      const fileExt = avatarFile.name.split('.').pop() || 'jpg';
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${profile.id}/${fileName}`;
+
       // Upload to Supabase Storage
       const { error } = await supabase.storage
         .from("avatars")
-        .upload(`${profile.id}/${avatarFile.name}`, avatarFile, {
+        .upload(filePath, avatarFile, {
           upsert: true,
+          contentType: avatarFile.type
         });
 
       if (error) throw error;
@@ -366,7 +462,7 @@ export const ProfilePage: React.FC = () => {
       // Get public URL
       const { data: urlData } = supabase.storage
         .from("avatars")
-        .getPublicUrl(`${profile.id}/${avatarFile.name}`);
+        .getPublicUrl(filePath);
 
       return urlData?.publicUrl || null;
     } catch (error) {
@@ -466,7 +562,8 @@ export const ProfilePage: React.FC = () => {
               </Typography>
               <div className="flex items-center space-x-spacing-lg">
                 <div className="relative">
-                  <div className="w-24 h-24 rounded-2xl bg-aurora-emerald p-spacing-xs shadow-lg">
+                  {/* Avatar Container - Larger Size */}
+                  <div className="w-32 h-32 rounded-2xl bg-aurora-emerald p-spacing-xs shadow-lg">
                     <div className="w-full h-full rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden">
                       {profile.avatar_url ? (
                         <img
@@ -476,7 +573,7 @@ export const ProfilePage: React.FC = () => {
                         />
                       ) : (
                         <Typography
-                          variant="headline-lg"
+                          variant="headline-xl"
                           className="text-text-muted font-bold"
                         >
                           {profile.full_name?.charAt(0) ||
@@ -486,21 +583,83 @@ export const ProfilePage: React.FC = () => {
                       )}
                     </div>
                   </div>
+
+                  {/* Success Badge */}
                   {avatarFile && (
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-success rounded-full flex items-center justify-center shadow-md">
-                      <span className="text-white text-xs">✓</span>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-success rounded-full flex items-center justify-center shadow-md border-2 border-white dark:border-surface-primary">
+                      <span className="text-white text-sm font-bold">✓</span>
                     </div>
                   )}
                 </div>
                 <div className="flex-1">
+                  {/* Upload Info */}
+                  <Typography variant="body-md" className="font-medium mb-spacing-xs">
+                    Your Profile Picture
+                  </Typography>
+                  <Typography variant="body-sm" className="text-text-muted mb-spacing-md">
+                    Upload a new picture or edit your existing one
+                  </Typography>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex gap-spacing-sm mb-spacing-sm">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => {
+                        console.log("Upload Picture clicked");
+                        fileInputRef.current?.click();
+                      }}
+                    >
+                      <Camera className="w-4 h-4 mr-2" />
+                      Upload Picture
+                    </Button>
+                    
+                    {profile.avatar_url && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={async () => {
+                          console.log("Edit Current Picture clicked");
+                          // Fetch current avatar as blob
+                          try {
+                            const response = await fetch(profile.avatar_url!);
+                            const blob = await response.blob();
+                            const file = new File([blob], "current-avatar.jpg", { type: blob.type });
+                            console.log("Loaded current avatar:", file);
+                            setAvatarFile(file);
+                            setShowAvatarEditor(true);
+                          } catch (error) {
+                            console.error("Failed to load current avatar:", error);
+                          }
+                        }}
+                      >
+                        <Pencil className="w-4 h-4 mr-2" />
+                        Edit Current
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Hidden File Input */}
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-                    className="mb-spacing-sm file:mr-spacing-md file:py-spacing-sm file:px-spacing-lg file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-white hover:file:bg-brand-primary/90 file:cursor-pointer file:transition-colors file:shadow-md"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      console.log("📸 File input onChange - file:", file?.name);
+                      if (file) {
+                        console.log("📸 Opening editor with file:", file.name);
+                        setAvatarFile(file);
+                        setShowAvatarEditor(true);
+                      }
+                      // Reset input
+                      if (e.target) e.target.value = "";
+                    }}
+                    className="hidden"
                   />
-                  <Typography variant="body-sm" className="text-text-muted">
-                    Upload a new profile picture • JPG, PNG, or GIF • Max 5MB
+                  
+                  <Typography variant="body-xs" className="text-text-tertiary">
+                    JPG, PNG, or GIF • Max 5MB • Square images work best
                   </Typography>
                   {avatarFile && (
                     <div className="mt-spacing-xs p-spacing-xs bg-success/10 border border-success/20 rounded-lg">
@@ -1375,6 +1534,23 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Avatar Editor Modal */}
+        {avatarFile && showAvatarEditor && (
+          <>
+            {console.log("Rendering AvatarEditor - isOpen:", showAvatarEditor, "file:", avatarFile.name)}
+            <AvatarEditor
+              isOpen={showAvatarEditor}
+              onClose={() => {
+                console.log("AvatarEditor onClose called");
+                setShowAvatarEditor(false);
+                setAvatarFile(null);
+              }}
+              imageFile={avatarFile}
+              onSave={handleCroppedAvatar}
+            />
+          </>
+        )}
       </PageLayout>
     </Aurora>
   );
