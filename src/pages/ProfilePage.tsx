@@ -357,15 +357,13 @@ export const ProfilePage: React.FC = () => {
   const handleCroppedAvatar = async (croppedBlob: Blob) => {
     console.log("📸 Cropped avatar received, uploading...");
     // Convert blob to file
-    const croppedFile = new File(
-      [croppedBlob],
-      `avatar-${Date.now()}.jpg`,
-      { type: "image/jpeg" }
-    );
-    
+    const croppedFile = new File([croppedBlob], `avatar-${Date.now()}.jpg`, {
+      type: "image/jpeg",
+    });
+
     // Set the file (this will show in the preview)
     setAvatarFile(croppedFile);
-    
+
     // Immediately upload it
     if (!profile?.id) {
       console.error("No profile ID");
@@ -419,19 +417,20 @@ export const ProfilePage: React.FC = () => {
 
       // Refresh profile data
       await fetchUserProfile();
-      
+
       setMessage({
         type: "success",
         text: "Avatar updated successfully!",
       });
-      
+
       // Clear the file after successful upload
       setAvatarFile(null);
     } catch (error) {
       console.error("❌ Avatar upload failed:", error);
       setMessage({
         type: "error",
-        text: error instanceof Error ? error.message : "Failed to upload avatar",
+        text:
+          error instanceof Error ? error.message : "Failed to upload avatar",
       });
     } finally {
       setAvatarUploading(false);
@@ -445,7 +444,7 @@ export const ProfilePage: React.FC = () => {
     setAvatarUploading(true);
     try {
       // Generate unique filename to avoid caching issues
-      const fileExt = avatarFile.name.split('.').pop() || 'jpg';
+      const fileExt = avatarFile.name.split(".").pop() || "jpg";
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${profile.id}/${fileName}`;
 
@@ -454,7 +453,7 @@ export const ProfilePage: React.FC = () => {
         .from("avatars")
         .upload(filePath, avatarFile, {
           upsert: true,
-          contentType: avatarFile.type
+          contentType: avatarFile.type,
         });
 
       if (error) throw error;
@@ -593,13 +592,19 @@ export const ProfilePage: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   {/* Upload Info */}
-                  <Typography variant="body-md" className="font-medium mb-spacing-xs">
+                  <Typography
+                    variant="body-md"
+                    className="font-medium mb-spacing-xs"
+                  >
                     Your Profile Picture
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-muted mb-spacing-md">
+                  <Typography
+                    variant="body-sm"
+                    className="text-text-muted mb-spacing-md"
+                  >
                     Upload a new picture or edit your existing one
                   </Typography>
-                  
+
                   {/* Action Buttons */}
                   <div className="flex gap-spacing-sm mb-spacing-sm">
                     <Button
@@ -613,7 +618,7 @@ export const ProfilePage: React.FC = () => {
                       <Camera className="w-4 h-4 mr-2" />
                       Upload Picture
                     </Button>
-                    
+
                     {profile.avatar_url && (
                       <Button
                         variant="outline"
@@ -624,12 +629,19 @@ export const ProfilePage: React.FC = () => {
                           try {
                             const response = await fetch(profile.avatar_url!);
                             const blob = await response.blob();
-                            const file = new File([blob], "current-avatar.jpg", { type: blob.type });
+                            const file = new File(
+                              [blob],
+                              "current-avatar.jpg",
+                              { type: blob.type }
+                            );
                             console.log("Loaded current avatar:", file);
                             setAvatarFile(file);
                             setShowAvatarEditor(true);
                           } catch (error) {
-                            console.error("Failed to load current avatar:", error);
+                            console.error(
+                              "Failed to load current avatar:",
+                              error
+                            );
                           }
                         }}
                       >
@@ -657,7 +669,7 @@ export const ProfilePage: React.FC = () => {
                     }}
                     className="hidden"
                   />
-                  
+
                   <Typography variant="body-xs" className="text-text-tertiary">
                     JPG, PNG, or GIF • Max 5MB • Square images work best
                   </Typography>
@@ -1538,7 +1550,12 @@ export const ProfilePage: React.FC = () => {
         {/* Avatar Editor Modal */}
         {avatarFile && showAvatarEditor && (
           <>
-            {console.log("Rendering AvatarEditor - isOpen:", showAvatarEditor, "file:", avatarFile.name)}
+            {console.log(
+              "Rendering AvatarEditor - isOpen:",
+              showAvatarEditor,
+              "file:",
+              avatarFile.name
+            )}
             <AvatarEditor
               isOpen={showAvatarEditor}
               onClose={() => {

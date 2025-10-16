@@ -9,7 +9,9 @@
 ## 🚨 Critical Issues Identified
 
 ### 1. **Database Schema Mismatch** 🔴
+
 **Issue**: ProfilePage.tsx references columns that don't exist in the database:
+
 - `coaching_system`
 - `coaching_experience`
 - `education`
@@ -28,6 +30,7 @@
 - `personal_website`
 
 **Current Schema** (database/schema.sql):
+
 ```sql
 CREATE TABLE profiles (
   id UUID PRIMARY KEY,
@@ -61,9 +64,11 @@ CREATE TABLE profiles (
 ---
 
 ### 2. **Avatar Storage Bucket Missing** 🔴
+
 **Issue**: ProfilePage.tsx uploads to `supabase.storage.from("avatars")` but bucket doesn't exist
 
 **Code Reference** (ProfilePage.tsx:362-376):
+
 ```typescript
 const { error } = await supabase.storage
   .from("avatars")
@@ -78,9 +83,11 @@ const { error } = await supabase.storage
 ---
 
 ### 3. **Multiple Profile Pages Needed** 🟡
+
 **Current State**: Single ProfilePage.tsx serves all roles (coach, player, admin)
 
 **Problems**:
+
 - Mixed concerns (coaching fields + player fields in same form)
 - UI shows irrelevant fields based on role (player sees coaching fields if role check fails)
 - No role-specific workflows
@@ -95,6 +102,7 @@ const { error } = await supabase.storage
 ### Phase 1: Emergency Fixes (Do Now) 🔴
 
 #### 1.1 Create Missing Database Columns Migration
+
 **File**: `supabase/migrations/20251016000004_add_profile_fields.sql`
 
 ```sql
@@ -141,6 +149,7 @@ CREATE TRIGGER update_profiles_updated_at_trigger
 ```
 
 **Action Items**:
+
 - [ ] Create migration file
 - [ ] Test migration locally
 - [ ] Apply to production database
@@ -151,6 +160,7 @@ CREATE TRIGGER update_profiles_updated_at_trigger
 ---
 
 #### 1.2 Create Avatars Storage Bucket
+
 **Manual Setup** (Supabase Dashboard):
 
 1. **Navigate to**: Supabase Dashboard → Storage
@@ -201,6 +211,7 @@ USING (
 ```
 
 **Action Items**:
+
 - [ ] Create avatars bucket in Supabase Dashboard
 - [ ] Set bucket to public
 - [ ] Apply storage policies
@@ -214,9 +225,11 @@ USING (
 ### Phase 2: Improve Current ProfilePage (Quick Wins) 🟢
 
 #### 2.1 Add Better Error Handling
+
 **File**: `src/pages/ProfilePage.tsx`
 
 **Changes**:
+
 ```typescript
 // Replace current error handling with detailed error messages
 const handleAvatarUpload = async (): Promise<string | null> => {
@@ -228,7 +241,7 @@ const handleAvatarUpload = async (): Promise<string | null> => {
     if (avatarFile.size > 5 * 1024 * 1024) {
       setMessage({
         type: "error",
-        text: "Avatar file size must be less than 5MB"
+        text: "Avatar file size must be less than 5MB",
       });
       return null;
     }
@@ -237,13 +250,13 @@ const handleAvatarUpload = async (): Promise<string | null> => {
     if (!avatarFile.type.startsWith("image/")) {
       setMessage({
         type: "error",
-        text: "Avatar must be an image file (JPG, PNG, GIF, WebP)"
+        text: "Avatar must be an image file (JPG, PNG, GIF, WebP)",
       });
       return null;
     }
 
     // Generate unique filename to avoid caching issues
-    const fileExt = avatarFile.name.split('.').pop();
+    const fileExt = avatarFile.name.split(".").pop();
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `${profile.id}/${fileName}`;
 
@@ -252,14 +265,14 @@ const handleAvatarUpload = async (): Promise<string | null> => {
       .from("avatars")
       .upload(filePath, avatarFile, {
         upsert: true,
-        contentType: avatarFile.type
+        contentType: avatarFile.type,
       });
 
     if (error) {
       console.error("Avatar upload error:", error);
       setMessage({
         type: "error",
-        text: `Avatar upload failed: ${error.message}`
+        text: `Avatar upload failed: ${error.message}`,
       });
       return null;
     }
@@ -272,7 +285,7 @@ const handleAvatarUpload = async (): Promise<string | null> => {
     if (!urlData?.publicUrl) {
       setMessage({
         type: "error",
-        text: "Failed to get avatar URL after upload"
+        text: "Failed to get avatar URL after upload",
       });
       return null;
     }
@@ -283,7 +296,7 @@ const handleAvatarUpload = async (): Promise<string | null> => {
     console.error("Avatar upload exception:", error);
     setMessage({
       type: "error",
-      text: "Unexpected error during avatar upload"
+      text: "Unexpected error during avatar upload",
     });
     return null;
   } finally {
@@ -293,6 +306,7 @@ const handleAvatarUpload = async (): Promise<string | null> => {
 ```
 
 **Action Items**:
+
 - [ ] Add file size validation
 - [ ] Add file type validation
 - [ ] Add unique filename generation (prevent caching)
@@ -304,6 +318,7 @@ const handleAvatarUpload = async (): Promise<string | null> => {
 ---
 
 #### 2.2 Add Avatar Preview Before Upload
+
 **Enhancement**: Show preview of selected image before saving
 
 ```typescript
@@ -312,7 +327,7 @@ const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 // Add to file input handler
 const handleAvatarFileChange = (file: File | null) => {
   setAvatarFile(file);
-  
+
   if (file) {
     // Create preview URL
     const reader = new FileReader();
@@ -338,6 +353,7 @@ const handleAvatarFileChange = (file: File | null) => {
 ```
 
 **Action Items**:
+
 - [ ] Add avatar preview state
 - [ ] Add FileReader for image preview
 - [ ] Update UI to show preview
@@ -347,12 +363,18 @@ const handleAvatarFileChange = (file: File | null) => {
 ---
 
 #### 2.3 Fix Fallback Logic
+
 **Issue**: Current fallback logic is incomplete
 
 **Current Code** (Line 267-295):
+
 ```typescript
 // If the update failed due to missing columns, try again with just the existing fields
-if (error && error.message?.includes("column") && error.message?.includes("does not exist")) {
+if (
+  error &&
+  error.message?.includes("column") &&
+  error.message?.includes("does not exist")
+) {
   // Fallback update with only existing fields
 }
 ```
@@ -362,6 +384,7 @@ if (error && error.message?.includes("column") && error.message?.includes("does 
 **Solution**: Remove fallback after migration is confirmed successful
 
 **Action Items**:
+
 - [ ] After migration applied, remove fallback code
 - [ ] Simplify update logic
 - [ ] Add error logging for unexpected errors
@@ -372,10 +395,12 @@ if (error && error.message?.includes("column") && error.message?.includes("does 
 ### Phase 3: Role-Specific Profile Pages (Refactor) 🟡
 
 #### 3.1 Architecture Decision
+
 **Current**: Single ProfilePage.tsx with conditional rendering  
 **Proposed**: Separate pages for each role
 
 **Option A: Separate Page Components** (Recommended)
+
 ```
 src/pages/
   ├── CoachProfilePage.tsx    # Coach-specific fields
@@ -392,6 +417,7 @@ src/components/profile/
 ```
 
 **Option B: Single Page with Role Modules** (Current approach, improved)
+
 ```
 src/pages/ProfilePage.tsx       # Main wrapper
 src/components/profile/
@@ -401,6 +427,7 @@ src/components/profile/
 ```
 
 **Recommendation**: Option A - Separate pages for:
+
 - Cleaner code organization
 - Easier maintenance
 - Better type safety
@@ -412,7 +439,9 @@ src/components/profile/
 #### 3.2 Proposed Profile Pages Structure
 
 ##### A. **CoachProfilePage** (`/profile/coach`)
+
 **Fields**:
+
 - Basic Info (name, email, phone, bio, address)
 - Avatar Upload
 - Coaching Information:
@@ -429,6 +458,7 @@ src/components/profile/
 - Account Settings (password reset, notifications)
 
 **UI Enhancements**:
+
 - Coaching highlights/stats card
 - Certification badges display
 - Link to team management
@@ -437,7 +467,9 @@ src/components/profile/
 ---
 
 ##### B. **PlayerProfilePage** (`/profile/player`)
+
 **Fields**:
+
 - Basic Info (name, email, phone, address)
 - Avatar Upload
 - Athletic Information:
@@ -451,6 +483,7 @@ src/components/profile/
 - Account Settings
 
 **UI Enhancements**:
+
 - Athletic stats card
 - Position badges
 - Team affiliation display
@@ -462,7 +495,9 @@ src/components/profile/
 ---
 
 ##### C. **AdminProfilePage** (`/profile/admin`)
+
 **Fields**:
+
 - Basic Info
 - Avatar Upload
 - Administrative Information:
@@ -473,6 +508,7 @@ src/components/profile/
 - Account Settings
 
 **UI Enhancements**:
+
 - System admin tools quick links
 - User management shortcuts
 - System health overview
@@ -482,6 +518,7 @@ src/components/profile/
 #### 3.3 Shared Components to Extract
 
 ##### AvatarUpload Component
+
 **File**: `src/components/profile/AvatarUpload.tsx`
 
 ```typescript
@@ -498,7 +535,7 @@ export const AvatarUpload: React.FC<AvatarUploadProps> = ({
   userId,
   displayName,
   onUploadSuccess,
-  onUploadError
+  onUploadError,
 }) => {
   // Extracted avatar upload logic
   // File validation
@@ -509,6 +546,7 @@ export const AvatarUpload: React.FC<AvatarUploadProps> = ({
 ```
 
 **Benefits**:
+
 - Reusable across all profile pages
 - Single source of truth for avatar logic
 - Easier to test
@@ -517,6 +555,7 @@ export const AvatarUpload: React.FC<AvatarUploadProps> = ({
 ---
 
 ##### BasicInfoSection Component
+
 **File**: `src/components/profile/BasicInfoSection.tsx`
 
 ```typescript
@@ -538,7 +577,7 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   formData,
   onFieldChange,
   validationErrors,
-  isEmailEditable = false
+  isEmailEditable = false,
 }) => {
   // Shared basic info form fields
 };
@@ -547,6 +586,7 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
 ---
 
 ##### SocialLinksSection Component
+
 **File**: `src/components/profile/SocialLinksSection.tsx`
 
 ```typescript
@@ -566,7 +606,7 @@ interface SocialLinksSectionProps {
 export const SocialLinksSection: React.FC<SocialLinksSectionProps> = ({
   formData,
   onFieldChange,
-  validationErrors
+  validationErrors,
 }) => {
   // Social links form with icons
   // URL validation
@@ -577,6 +617,7 @@ export const SocialLinksSection: React.FC<SocialLinksSectionProps> = ({
 ---
 
 #### 3.4 Routing Changes
+
 **File**: `src/app/AppRouter.tsx`
 
 ```typescript
@@ -586,7 +627,7 @@ export const SocialLinksSection: React.FC<SocialLinksSectionProps> = ({
 // ProfileRouter component
 const ProfileRouter: React.FC = () => {
   const profile = useAuthProfile();
-  
+
   // Redirect to role-specific profile page
   if (profile?.app_role === 'coach') {
     return <Navigate to="/profile/coach" replace />;
@@ -595,7 +636,7 @@ const ProfileRouter: React.FC = () => {
   } else if (profile?.is_admin) {
     return <Navigate to="/profile/admin" replace />;
   }
-  
+
   return <Navigate to="/profile/coach" replace />; // Default fallback
 };
 
@@ -610,6 +651,7 @@ const ProfileRouter: React.FC = () => {
 #### 3.5 Migration Plan for Refactor
 
 **Step 1**: Extract shared components (Week 1)
+
 - [ ] Create `AvatarUpload.tsx`
 - [ ] Create `BasicInfoSection.tsx`
 - [ ] Create `SocialLinksSection.tsx`
@@ -617,6 +659,7 @@ const ProfileRouter: React.FC = () => {
 - [ ] Test components in isolation
 
 **Step 2**: Create CoachProfilePage (Week 1-2)
+
 - [ ] Create `CoachProfilePage.tsx`
 - [ ] Use shared components
 - [ ] Add coaching-specific sections
@@ -625,6 +668,7 @@ const ProfileRouter: React.FC = () => {
 - [ ] Test thoroughly
 
 **Step 3**: Create PlayerProfilePage (Week 2)
+
 - [ ] Create `PlayerProfilePage.tsx`
 - [ ] Use shared components
 - [ ] Add athletic sections
@@ -633,6 +677,7 @@ const ProfileRouter: React.FC = () => {
 - [ ] Test thoroughly
 
 **Step 4**: Create AdminProfilePage (Week 2)
+
 - [ ] Create `AdminProfilePage.tsx`
 - [ ] Use shared components
 - [ ] Add admin-specific sections
@@ -640,12 +685,14 @@ const ProfileRouter: React.FC = () => {
 - [ ] Test thoroughly
 
 **Step 5**: Update routing and navigation (Week 3)
+
 - [ ] Add ProfileRouter
 - [ ] Update navigation links
 - [ ] Add role-based redirects
 - [ ] Update breadcrumbs
 
 **Step 6**: Deprecate old ProfilePage (Week 3)
+
 - [ ] Mark old ProfilePage as deprecated
 - [ ] Add console warnings
 - [ ] Update all internal links
@@ -656,9 +703,11 @@ const ProfileRouter: React.FC = () => {
 ### Phase 4: Future Enhancements 🔵
 
 #### 4.1 Player Profile Customization
+
 **Related to**: User's second request about player profile options
 
 **Features**:
+
 - Profile themes/colors
 - Custom badges
 - Bio formatting (markdown support)
@@ -671,7 +720,9 @@ const ProfileRouter: React.FC = () => {
 ---
 
 #### 4.2 Profile Privacy Controls
+
 **Features**:
+
 - Public/Private profile toggle
 - Field-level privacy (show/hide specific fields)
 - Social media link visibility
@@ -679,6 +730,7 @@ const ProfileRouter: React.FC = () => {
 - Team roster visibility
 
 **Schema Addition**:
+
 ```sql
 ALTER TABLE profiles
 ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
@@ -692,7 +744,9 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ---
 
 #### 4.3 Profile Verification
+
 **Features**:
+
 - Email verification badge
 - Coach certification verification
 - School affiliation verification
@@ -701,7 +755,9 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ---
 
 #### 4.4 Profile Analytics
+
 **Features**:
+
 - Profile views counter
 - Link clicks tracking
 - Most viewed sections
@@ -712,6 +768,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ## 🎯 Action Plan Summary
 
 ### Immediate Actions (This Week)
+
 1. ✅ **Create migration** for missing profile columns
 2. ✅ **Create avatars bucket** in Supabase Storage
 3. ✅ **Apply migration** to database
@@ -719,6 +776,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 5. ✅ **Test avatar upload** with coach account
 
 ### Short-Term (Next 2 Weeks)
+
 6. ✅ Improve error handling in ProfilePage
 7. ✅ Add avatar preview before upload
 8. ✅ Extract shared components (AvatarUpload, BasicInfoSection, SocialLinksSection)
@@ -726,12 +784,14 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 10. ✅ Create PlayerProfilePage
 
 ### Medium-Term (Next Month)
+
 11. ✅ Create AdminProfilePage
 12. ✅ Update routing for role-specific profiles
 13. ✅ Migrate all users to new profile pages
 14. ✅ Deprecate old ProfilePage
 
 ### Long-Term (Future Sprints)
+
 15. ⏳ Add profile customization features
 16. ⏳ Add privacy controls
 17. ⏳ Add profile verification
@@ -742,6 +802,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ## 📊 Current vs Desired State
 
 ### Current State 🔴
+
 - ❌ Profile saves fail (missing columns)
 - ❌ Avatar uploads fail (missing bucket)
 - ❌ Single profile page serves all roles
@@ -751,6 +812,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 - ❌ No preview before upload
 
 ### Desired State (After Phase 1-2) 🟢
+
 - ✅ Profile saves successfully
 - ✅ Avatar uploads work
 - ✅ Better error messages
@@ -758,6 +820,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 - ⏳ Single profile page (improved)
 
 ### Desired State (After Phase 3) 🟢
+
 - ✅ Role-specific profile pages
 - ✅ Clean code architecture
 - ✅ Reusable components
@@ -770,6 +833,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ## 🧪 Testing Checklist
 
 ### Phase 1 Testing
+
 - [ ] **Database Migration**
   - [ ] Migration applies without errors
   - [ ] All new columns exist in profiles table
@@ -802,6 +866,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
   - [ ] Old avatar replaced when uploading new one
 
 ### Phase 2 Testing
+
 - [ ] **Error Handling**
   - [ ] File size validation works
   - [ ] File type validation works
@@ -816,6 +881,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
   - [ ] Original avatar still visible if preview cleared
 
 ### Phase 3 Testing
+
 - [ ] **Shared Components**
   - [ ] AvatarUpload component works in all contexts
   - [ ] BasicInfoSection component works in all profiles
@@ -852,6 +918,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 ### Important Distinctions
 
 **Roster Management (Coach-controlled)**:
+
 - Location: `/roster` page
 - Managed by: Coaches only
 - Data source: `team_players` table
@@ -859,6 +926,7 @@ ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{
 - Purpose: Team roster management
 
 **Player Profile (Player-controlled)**:
+
 - Location: `/profile/player` page
 - Managed by: Player themselves
 - Data source: `profiles` table

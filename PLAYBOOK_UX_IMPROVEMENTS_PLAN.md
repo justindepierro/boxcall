@@ -3,9 +3,11 @@
 ## Issues Identified
 
 ### 1. Hero Tile "New Play" - No Diagram Editor Opens ❌
+
 **Problem**: Clicking "New Play" hero tile opens AddNewPlayModal (form), but after creating play, no diagram editor opens automatically.
 
 **Current Flow**:
+
 ```
 Click "New Play" → AddNewPlayModal opens → Fill form → Save → Play created → Modal closes
                                                                               ↓
@@ -13,6 +15,7 @@ Click "New Play" → AddNewPlayModal opens → Fill form → Save → Play creat
 ```
 
 **Expected Flow**:
+
 ```
 Click "New Play" → AddNewPlayModal opens → Fill form → Save → Play created → DiagramEditor opens automatically
 ```
@@ -20,11 +23,13 @@ Click "New Play" → AddNewPlayModal opens → Fill form → Save → Play creat
 **Solution Options**:
 
 **Option A**: Auto-open diagram editor after play creation
+
 - When play is created via AddNewPlayModal
 - Automatically open DiagramEditor with new play
 - Better UX: seamless transition from form → diagram
 
 **Option B**: Add "Create & Draw" button
+
 - Two buttons in AddNewPlayModal: "Save" and "Save & Draw Diagram"
 - "Save & Draw Diagram" creates play then opens DiagramEditor
 - Gives user choice
@@ -34,9 +39,11 @@ Click "New Play" → AddNewPlayModal opens → Fill form → Save → Play creat
 ---
 
 ### 2. Formations Without Diagrams ❌
+
 **Problem**: Formations can be created without `player_positions` (diagram data). No way to add diagram later.
 
 **Current State**:
+
 ```sql
 formations
 ├── id
@@ -47,6 +54,7 @@ formations
 ```
 
 **Missing**:
+
 - Visual indicator when formation has no diagram
 - Button to create diagram for formation
 - Seamless flow from formation list → canvas
@@ -54,12 +62,14 @@ formations
 **Solution**:
 
 **Add "Create Diagram" Action**:
+
 1. Show badge on formations without diagrams ("No Diagram")
 2. Add "Draw Formation" button to formation cards/list
 3. Open FormationBuilderCanvas in creation mode
 4. Save diagram to `player_positions`
 
 **UI Changes Needed**:
+
 ```tsx
 // In formation list/grid
 <FormationCard formation={formation}>
@@ -77,9 +87,11 @@ formations
 ---
 
 ### 3. Multi-Personnel Formation Support ❌
+
 **Problem**: Formations should support multiple personnel packages, but currently one formation = one personnel.
 
 **Example Scenario**:
+
 ```
 Formation: "Trips Right"
 ├── Can run from 11 personnel (1 RB, 1 TE, 3 WR)
@@ -88,6 +100,7 @@ Formation: "Trips Right"
 ```
 
 **Current Limitation**:
+
 ```sql
 formations
 ├── personnel_name TEXT  -- Only ONE personnel ("11", "12", etc.)
@@ -95,6 +108,7 @@ formations
 ```
 
 **Needed**:
+
 - Support for multiple personnel variants
 - Each personnel gets its own diagram (labels change, positions may change)
 - Link all variants together
@@ -102,6 +116,7 @@ formations
 **Solution Design**:
 
 **Database Schema Change** (Option 1 - Recommended):
+
 ```sql
 -- Keep formations table as-is
 formations
@@ -122,6 +137,7 @@ formation_personnel_variants
 ```
 
 **OR** (Option 2 - Simpler, use existing structure):
+
 ```sql
 -- Use existing base_formation_id + direction fields
 formations
@@ -138,6 +154,7 @@ formations
 **UI Flow**:
 
 1. **Formation Builder - New Checkbox**:
+
 ```tsx
 <FormationBuilderCanvas>
   <div className="sidebar">
@@ -153,7 +170,7 @@ formations
         <input type="checkbox" checked={createMultiPersonnel} />
         Create variants for additional personnel
       </label>
-      
+
       {createMultiPersonnel && (
         <MultiSelect
           label="Additional Personnel"
@@ -168,6 +185,7 @@ formations
 ```
 
 2. **Save Logic**:
+
 ```typescript
 // When saving formation
 if (createMultiPersonnel && additionalPersonnel.length > 0) {
@@ -193,6 +211,7 @@ if (createMultiPersonnel && additionalPersonnel.length > 0) {
 ```
 
 3. **Auto-Adjust Player Labels**:
+
 ```typescript
 // Automatically adjust player positions for different personnel
 function getPersonnelDiagram(
@@ -202,7 +221,7 @@ function getPersonnelDiagram(
 ): FormationPlayerPosition[] {
   // Example: 11 → 12 (add TE, remove WR)
   // Keep positions, change labels
-  return baseDiagram.map(pos => {
+  return baseDiagram.map((pos) => {
     // If WR in 11 becomes TE in 12, change label
     if (pos.position === "WR" && shouldBecomeTE(pos, toPersonnel)) {
       return { ...pos, position: "TE", label: "Y" };
@@ -233,15 +252,16 @@ function getPersonnelDiagram(
 ## Implementation Plan
 
 ### Phase 1: Fix Hero Tile (Immediate) ⚡
+
 **Priority**: HIGH  
 **Effort**: 2 hours  
 **Impact**: Critical UX issue
 
 **Files to Modify**:
+
 1. `src/components/playbook/AddNewPlayModal.tsx`
    - Add `onPlayCreated` callback prop
    - Call callback with created play after successful save
-   
 2. `src/pages/PlaybookPage.tsx`
    - Update `handleOpenBuilder` to accept callback
    - Open DiagramEditor when play created
@@ -276,21 +296,22 @@ const handlePlayCreated = useCallback((play: Play) => {
   onClose={() => setShowAddNewPlayModal(false)}
   onPlayCreated={handlePlayCreated} // NEW
   playbookId={activePlaybookId}
-/>
+/>;
 ```
 
 ---
 
 ### Phase 2: Formation Diagram Creation (Short-term) 🎨
+
 **Priority**: HIGH  
 **Effort**: 4 hours  
 **Impact**: Enables coaches to add diagrams to existing formations
 
 **Files to Modify**:
+
 1. `src/components/formations/FormationCard.tsx` (or create if doesn't exist)
    - Add "No Diagram" badge
    - Add "Draw Formation" button
-   
 2. `src/pages/PlaybookPage.tsx`
    - Add state for `formationToEdit`
    - Add handler to open FormationBuilderModal
@@ -299,9 +320,12 @@ const handlePlayCreated = useCallback((play: Play) => {
 
 ```tsx
 // FormationCard.tsx (new component)
-export const FormationCard: React.FC<{ formation: Formation }> = ({ formation }) => {
-  const hasDiagram = formation.player_positions && formation.player_positions.length > 0;
-  
+export const FormationCard: React.FC<{ formation: Formation }> = ({
+  formation,
+}) => {
+  const hasDiagram =
+    formation.player_positions && formation.player_positions.length > 0;
+
   return (
     <div className="formation-card">
       <h3>{formation.name}</h3>
@@ -318,7 +342,7 @@ export const FormationCard: React.FC<{ formation: Formation }> = ({ formation })
           </Badge>
         )}
       </div>
-      
+
       {!hasDiagram && (
         <Button onClick={() => onDrawFormation(formation.id)} variant="primary">
           <Icon name="pen-tool" />
@@ -333,11 +357,13 @@ export const FormationCard: React.FC<{ formation: Formation }> = ({ formation })
 ---
 
 ### Phase 3: Multi-Personnel Support (Medium-term) 🔄
+
 **Priority**: MEDIUM  
 **Effort**: 8 hours  
 **Impact**: Advanced feature for coaches with multiple personnel packages
 
 **Database Changes**:
+
 ```sql
 -- Extend direction field to support personnel variants
 -- Current: "base", "left", "right"
@@ -347,6 +373,7 @@ export const FormationCard: React.FC<{ formation: Formation }> = ({ formation })
 ```
 
 **Files to Modify**:
+
 1. `src/components/playbook/FormationBuilderModal/FormationBuilderCanvas.tsx`
    - Add checkbox: "Create variants for additional personnel"
    - Add MultiSelect for additional personnel
@@ -382,7 +409,9 @@ const handleSave = async () => {
     );
   }
 
-  toast.success(`Formation created with ${additionalPersonnel.length + 1} personnel variants!`);
+  toast.success(
+    `Formation created with ${additionalPersonnel.length + 1} personnel variants!`
+  );
   onClose();
 };
 ```
@@ -392,44 +421,53 @@ const handleSave = async () => {
 ## Technical Decisions
 
 ### Decision 1: Auto-open Diagram vs. Manual Button?
+
 **Chosen**: Auto-open diagram editor after play creation
 
 **Reasoning**:
+
 - Most users want to draw diagram immediately after creating play
 - Reduces clicks (1 action instead of 2)
 - Matches mental model: "Create play" = "Create play with diagram"
 - Can always close diagram editor if not needed
 
 **Alternative Considered**: "Save & Draw Diagram" button
+
 - More explicit, but adds complexity
 - Most users would always click it anyway
 
 ---
 
 ### Decision 2: Formation Diagram Creation - Where to put the button?
+
 **Chosen**: Add "Draw Formation" button to formation cards in formation library
 
 **Reasoning**:
+
 - Clear call-to-action where formations are displayed
 - Badge shows visual indicator (No Diagram vs. X players)
 - Seamless flow: See formation → Click "Draw" → Canvas opens
 
 **Alternative Considered**: Only in FormationBuilder Edit Details tab
+
 - Less discoverable
 - Requires opening modal first
 
 ---
 
 ### Decision 3: Multi-Personnel - New table vs. Extend existing?
+
 **Chosen**: Extend existing `direction` field
 
 **Reasoning**:
+
 - ✅ No schema changes needed
 - ✅ Reuse variant infrastructure (already working)
 - ✅ Same query patterns
 - ✅ Simpler implementation
 
 **Alternative Considered**: New `formation_personnel_variants` table
+
 - More normalized
 - But adds complexity with joins
 - Overkill for this use case
@@ -437,15 +475,18 @@ const handleSave = async () => {
 ---
 
 ### Decision 4: Auto-adjust player labels or manual?
+
 **Chosen**: Auto-adjust with ability to edit
 
 **Reasoning**:
+
 - Save coaches time (don't redraw entire formation)
 - Smart defaults (11 → 12: WR becomes TE)
 - Can still edit if positions need to change
 - Best of both worlds
 
 **Logic**:
+
 ```
 11 personnel (1 RB, 1 TE, 3 WR)
 → 12 personnel (1 RB, 2 TE, 2 WR)
@@ -462,16 +503,19 @@ Auto-adjustments:
 ## Success Metrics
 
 ### Phase 1: Hero Tile Fix
+
 - ✅ 100% of "New Play" clicks result in diagram editor opening
 - ✅ Zero user confusion about "where to draw"
 - ✅ Reduced time from play creation → diagram completion
 
 ### Phase 2: Formation Diagrams
+
 - ✅ All formations have diagrams within 1 week
 - ✅ "No Diagram" badge encourages completion
 - ✅ Formation library completion rate increases
 
 ### Phase 3: Multi-Personnel
+
 - ✅ 50% of formations created with multiple personnel variants
 - ✅ Coaches can run same formation from different personnel
 - ✅ Time savings: 3x faster than manually creating each variant
@@ -481,6 +525,7 @@ Auto-adjustments:
 ## Testing Checklist
 
 ### Phase 1: Hero Tile
+
 - [ ] Click "New Play" hero tile
 - [ ] Fill out AddNewPlayModal form
 - [ ] Click Save
@@ -489,6 +534,7 @@ Auto-adjustments:
 - [ ] ✅ Closing diagram returns to playbook
 
 ### Phase 2: Formation Diagrams
+
 - [ ] Create formation without diagram
 - [ ] ✅ "No Diagram" badge appears
 - [ ] Click "Draw Formation" button
@@ -499,6 +545,7 @@ Auto-adjustments:
 - [ ] ✅ Diagram saved to database
 
 ### Phase 3: Multi-Personnel
+
 - [ ] Open FormationBuilderCanvas
 - [ ] Select primary personnel (11)
 - [ ] Draw formation
@@ -520,6 +567,7 @@ Auto-adjustments:
 ### How to Create a Play with Diagram
 
 **Before Fix** (Confusing):
+
 1. Click "New Play"
 2. Fill form
 3. Save
@@ -529,6 +577,7 @@ Auto-adjustments:
 7. Draw diagram
 
 **After Fix** (Seamless):
+
 1. Click "New Play"
 2. Fill form
 3. Save → Diagram editor opens automatically ✨

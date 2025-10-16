@@ -77,11 +77,11 @@ From **`src/services/capabilities/capabilityMap.ts`**:
 
 ```typescript
 player: [
-  CAPABILITIES.VIEW_STATS,      // Can view their own stats
-  CAPABILITIES.STUDY_PLAYS,     // Can view playbook (read-only)
-  CAPABILITIES.RSVP_EVENT,      // Can RSVP to calendar events
-  CAPABILITIES.TEAM_CHAT,       // Can participate in team chat
-]
+  CAPABILITIES.VIEW_STATS, // Can view their own stats
+  CAPABILITIES.STUDY_PLAYS, // Can view playbook (read-only)
+  CAPABILITIES.RSVP_EVENT, // Can RSVP to calendar events
+  CAPABILITIES.TEAM_CHAT, // Can participate in team chat
+];
 ```
 
 ### What Players CAN Do:
@@ -112,6 +112,7 @@ player: [
 ### How RLS Works for Players
 
 **Security Chain:**
+
 ```
 User (auth.users)
   ↓
@@ -156,6 +157,7 @@ CREATE POLICY "Team coaches can manage plays" ON plays
 ```
 
 **Result:**
+
 - ✅ Players: Can SELECT (view) plays
 - ❌ Players: Cannot INSERT/UPDATE/DELETE plays
 
@@ -191,10 +193,12 @@ CREATE POLICY "Team coaches can manage players" ON team_players
 ```
 
 **Result:**
+
 - ✅ Players: Can SELECT (view) roster
 - ❌ Players: Cannot INSERT/UPDATE/DELETE roster entries
 
 **Frontend Gate:**
+
 - Roster page (`/roster`) is hidden from players in navigation
 - Route guard blocks direct URL access
 
@@ -224,6 +228,7 @@ CREATE POLICY "Team members can update event attendance" ON event_attendance
 ```
 
 **Result:**
+
 - ✅ Players: Can view all team events
 - ✅ Players: Can RSVP (update their own attendance)
 - ❌ Players: Cannot create/edit/delete events
@@ -258,6 +263,7 @@ CREATE POLICY "Team members can comment on posts" ON post_comments
 ```
 
 **Result:**
+
 - ✅ Players: Can view all team posts
 - ✅ Players: Can comment on posts (team chat)
 - ✅ Players: Can like posts
@@ -295,6 +301,7 @@ CREATE POLICY "Users can update their own profiles" ON profiles
 ```
 
 **Result:**
+
 - ✅ Players: Can view all teammate profiles
 - ✅ Players: Can edit ONLY their own profile
 - ❌ Players: Cannot edit other profiles
@@ -324,16 +331,20 @@ CREATE POLICY "Users can update their own profiles" ON profiles
 ### Badge Display on Roster:
 
 ```tsx
-{player.invitation_status === "pending" && (
-  <span className="... bg-gradient-to-r from-amber-500 to-orange-500">
-    Invited
-  </span>
-)}
-{player.invitation_status === "accepted" && (
-  <span className="... bg-gradient-to-r from-green-500 to-emerald-500">
-    ✓ Accepted
-  </span>
-)}
+{
+  player.invitation_status === "pending" && (
+    <span className="... bg-gradient-to-r from-amber-500 to-orange-500">
+      Invited
+    </span>
+  );
+}
+{
+  player.invitation_status === "accepted" && (
+    <span className="... bg-gradient-to-r from-green-500 to-emerald-500">
+      ✓ Accepted
+    </span>
+  );
+}
 ```
 
 ---
@@ -344,11 +355,11 @@ From **`src/services/roleService.ts`**:
 
 ```typescript
 const TEAM_ROLE_HIERARCHY = {
-  head_coach: 5,      // Highest authority
+  head_coach: 5, // Highest authority
   assistant_coach: 4,
   coordinator: 3,
   manager: 2,
-  player: 1,          // Player role
+  player: 1, // Player role
   family: 0,
   alumni: 0,
   viewer: 0,
@@ -356,6 +367,7 @@ const TEAM_ROLE_HIERARCHY = {
 ```
 
 **Implications:**
+
 - Players have minimal permissions (level 1)
 - Cannot access coach-level features
 - RLS enforces this at database level

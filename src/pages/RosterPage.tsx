@@ -407,7 +407,7 @@ export default function RosterPage() {
 
     try {
       info("[RosterPage] Sending invitation to player");
-      
+
       const playerName = `${playerForm.first_name} ${playerForm.last_name}`;
       const result = await sendPlayerInvitation({
         playerId: playerId || editingPlayer?.id || "",
@@ -1398,9 +1398,7 @@ export default function RosterPage() {
               <Input
                 label="Nickname"
                 value={playerForm.nickname}
-                onChange={(e) =>
-                  handleFieldChange("nickname", e.target.value)
-                }
+                onChange={(e) => handleFieldChange("nickname", e.target.value)}
                 placeholder="e.g., Johnny"
               />
 

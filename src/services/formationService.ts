@@ -16,8 +16,8 @@ import type {
   FormationCreate,
   FormationUpdate,
   FormationPlayerPosition,
-  FormationWithVariants,
   FormationListItem,
+  StrengthType,
   FormationValidation,
 } from "../types/formation";
 
@@ -54,8 +54,8 @@ export class FormationService {
           category: data.category || null,
           personnel_id: data.personnel_id || null,
           personnel_name: data.personnel_name || null,
-          direction: data.direction || "base",
-          base_formation_id: data.base_formation_id || null,
+          direction: data.direction || null,
+          opposite_formation_id: data.opposite_formation_id || null,
           strength_player_position: data.strength_player_position || null,
           strength_player_label: data.strength_player_label || null,
           formation_type: data.formation_type || null,
@@ -64,6 +64,9 @@ export class FormationService {
           player_positions: data.player_positions as unknown,
           tags: data.tags || [],
           is_custom: data.is_custom !== undefined ? data.is_custom : true,
+          // NEW: Creation tracking (defaults handled by DB trigger if not provided)
+          creation_source: data.creation_source || "unknown",
+          creation_context: data.creation_context || {},
         } as never,
       ])
       .select()
@@ -78,82 +81,20 @@ export class FormationService {
   }
 
   /**
-   * Create Left variant of a base formation
-   * Flips all player positions horizontally
+   * Flip formation strength (left ↔ right, balanced stays balanced)
+   * Used when creating opposite formations
    */
-  static async createLeftVariant(baseFormationId: string): Promise<Formation> {
-    // Get base formation
-    const baseFormation = await this.getFormationById(baseFormationId);
-
-    if (baseFormation.direction !== "base") {
-      throw new Error("Can only create variants from base formation");
+  static flipStrength(strength: StrengthType): StrengthType {
+    switch (strength) {
+      case "left":
+        return "right";
+      case "right":
+        return "left";
+      case "balanced":
+        return "balanced";
+      default:
+        return "balanced";
     }
-
-    // Flip positions
-    const flippedPositions = this.flipPositions(baseFormation.player_positions);
-
-    // Create left variant
-    return this.createFormation({
-      playbook_id: baseFormation.playbook_id,
-      name: `${baseFormation.name} - Left`,
-      description: `Left-side variant of ${baseFormation.name}`,
-      category: baseFormation.category || undefined,
-      personnel_id: baseFormation.personnel_id || undefined,
-      personnel_name: baseFormation.personnel_name || undefined,
-      direction: "left",
-      base_formation_id: baseFormation.id,
-      strength_player_position:
-        baseFormation.strength_player_position || undefined,
-      strength_player_label: baseFormation.strength_player_label || undefined,
-      player_positions: flippedPositions,
-      tags: baseFormation.tags,
-      is_custom: baseFormation.is_custom,
-    });
-  }
-
-  /**
-   * Create Right variant of a base formation
-   * Flips all player positions horizontally
-   */
-  static async createRightVariant(baseFormationId: string): Promise<Formation> {
-    // Get base formation
-    const baseFormation = await this.getFormationById(baseFormationId);
-
-    if (baseFormation.direction !== "base") {
-      throw new Error("Can only create variants from base formation");
-    }
-
-    // Flip positions
-    const flippedPositions = this.flipPositions(baseFormation.player_positions);
-
-    // Create right variant
-    return this.createFormation({
-      playbook_id: baseFormation.playbook_id,
-      name: `${baseFormation.name} - Right`,
-      description: `Right-side variant of ${baseFormation.name}`,
-      category: baseFormation.category || undefined,
-      personnel_id: baseFormation.personnel_id || undefined,
-      personnel_name: baseFormation.personnel_name || undefined,
-      direction: "right",
-      base_formation_id: baseFormation.id,
-      strength_player_position:
-        baseFormation.strength_player_position || undefined,
-      strength_player_label: baseFormation.strength_player_label || undefined,
-      player_positions: flippedPositions,
-      tags: baseFormation.tags,
-      is_custom: baseFormation.is_custom,
-    });
-  }
-
-  /**
-   * Create both Left and Right variants
-   */
-  static async createBothVariants(
-    baseFormationId: string
-  ): Promise<{ left: Formation; right: Formation }> {
-    const left = await this.createLeftVariant(baseFormationId);
-    const right = await this.createRightVariant(baseFormationId);
-    return { left, right };
   }
 
   // ===================================================================
@@ -203,33 +144,6 @@ export class FormationService {
   }
 
   /**
-   * Get formation variants (base + left + right)
-   */
-  static async getFormationVariants(
-    formationId: string
-  ): Promise<FormationWithVariants> {
-    const { data, error } = await supabase.rpc("get_formation_variants", {
-      formation_id: formationId,
-    } as never);
-
-    if (error) {
-      console.error("Error fetching formation variants:", error);
-      throw new Error(`Failed to fetch variants: ${error.message}`);
-    }
-
-    const variants = data as Formation[];
-    const base = variants.find((v) => v.direction === "base");
-    const left = variants.find((v) => v.direction === "left");
-    const right = variants.find((v) => v.direction === "right");
-
-    if (!base) {
-      throw new Error("Base formation not found");
-    }
-
-    return { base, left, right };
-  }
-
-  /**
    * Get formations list (optimized for UI display)
    */
   static async getFormationsListByPlaybook(
@@ -244,7 +158,7 @@ export class FormationService {
       personnel_name: f.personnel_name,
       direction: f.direction,
       usage_count: f.usage_count,
-      has_variants: f.direction === "base", // Base formations can have variants
+      has_variants: f.opposite_formation_id !== null, // Has opposite formation
     }));
   }
 
@@ -268,6 +182,179 @@ export class FormationService {
     }
 
     return (data as Formation[]) || [];
+  }
+
+  // ===================================================================
+  // OPPOSITE FORMATION OPERATIONS (Simplified System)
+  // ===================================================================
+
+  /**
+   * Check if formation has an opposite-side variant
+   * @returns true if formation has opposite linked
+   */
+  static async hasOppositeFormation(formationId: string): Promise<boolean> {
+    const formation = await this.getFormationById(formationId);
+    return formation.opposite_formation_id !== null;
+  }
+
+  /**
+   * Get opposite-side formation (if exists)
+   * @returns opposite formation or null
+   */
+  static async getOppositeFormation(
+    formationId: string
+  ): Promise<Formation | null> {
+    const formation = await this.getFormationById(formationId);
+
+    if (!formation.opposite_formation_id) {
+      return null;
+    }
+
+    return this.getFormationById(formation.opposite_formation_id);
+  }
+
+  /**
+   * Create opposite-side formation
+   * Automatically flips positions and strengths
+   * @returns newly created opposite formation
+   */
+  static async createOppositeFormation(
+    formationId: string
+  ): Promise<Formation> {
+    const original = await this.getFormationById(formationId);
+
+    // Check if opposite already exists
+    if (original.opposite_formation_id) {
+      throw new Error("Formation already has an opposite");
+    }
+
+    // Determine directions
+    const originalDirection = original.direction || "left";
+    const oppositeDirection = originalDirection === "left" ? "right" : "left";
+
+    // Flip positions
+    const flippedPositions = this.flipPositions(original.player_positions);
+
+    // Create opposite formation
+    const opposite = await this.createFormation({
+      playbook_id: original.playbook_id,
+      name: original.name,
+      description: original.description || undefined,
+      category: original.category || undefined,
+      personnel_id: original.personnel_id || undefined,
+      personnel_name: original.personnel_name || undefined,
+      personnel_packages: original.personnel_packages,
+      direction: oppositeDirection,
+      formation_type: original.formation_type || undefined,
+      run_strength: this.flipStrength(original.run_strength),
+      pass_strength: this.flipStrength(original.pass_strength),
+      player_positions: flippedPositions,
+      tags: original.tags,
+      is_custom: original.is_custom,
+      creation_source: "formation_builder", // Created via automatic prompt
+      creation_context: {
+        source_formation_id: original.id,
+        auto_created: true,
+      },
+    });
+
+    // Link both formations using database RPC function (bidirectional)
+    const { error } = await supabase.rpc("link_formations_bidirectional", {
+      formation1_id: original.id,
+      formation2_id: opposite.id,
+      formation1_direction: originalDirection,
+      formation2_direction: oppositeDirection,
+    } as never);
+
+    if (error) {
+      // Clean up created formation if linking fails
+      await this.deleteFormation(opposite.id);
+      throw new Error(`Failed to link formations: ${error.message}`);
+    }
+
+    return opposite;
+  }
+
+  /**
+   * Mark formation as standalone (no opposite needed)
+   * Sets direction to NULL
+   */
+  static async markAsStandalone(formationId: string): Promise<void> {
+    const { error } = await supabase
+      .from("formations")
+      .update({
+        direction: null,
+        opposite_formation_id: null,
+        updated_at: new Date().toISOString(),
+      } as never)
+      .eq("id", formationId);
+
+    if (error) {
+      throw new Error(`Failed to mark as standalone: ${error.message}`);
+    }
+  }
+
+  /**
+   * Link two existing formations as opposites
+   * Uses database RPC function for atomic bidirectional linking
+   */
+  static async linkExistingFormations(
+    formation1Id: string,
+    formation2Id: string
+  ): Promise<void> {
+    const f1 = await this.getFormationById(formation1Id);
+    const f2 = await this.getFormationById(formation2Id);
+
+    // Validation
+    if (f1.playbook_id !== f2.playbook_id) {
+      throw new Error("Formations must be in same playbook");
+    }
+
+    if (f1.opposite_formation_id || f2.opposite_formation_id) {
+      throw new Error("One or both formations already linked");
+    }
+
+    // Determine directions (infer or use existing)
+    const f1Direction = f1.direction || "left";
+    const f2Direction = f2.direction || "right";
+
+    // Ensure opposite directions
+    if (f1Direction === f2Direction) {
+      throw new Error("Formations must have opposite directions to link");
+    }
+
+    // Use database RPC for atomic linking
+    const { error } = await supabase.rpc("link_formations_bidirectional", {
+      formation1_id: formation1Id,
+      formation2_id: formation2Id,
+      formation1_direction: f1Direction,
+      formation2_direction: f2Direction,
+    } as never);
+
+    if (error) {
+      throw new Error(`Failed to link formations: ${error.message}`);
+    }
+  }
+
+  /**
+   * Unlink formation from its opposite
+   * Uses database RPC function for atomic bidirectional unlinking
+   */
+  static async unlinkFormation(formationId: string): Promise<void> {
+    const formation = await this.getFormationById(formationId);
+
+    if (!formation.opposite_formation_id) {
+      throw new Error("Formation is not linked");
+    }
+
+    // Use database RPC for atomic unlinking
+    const { error } = await supabase.rpc("unlink_formations_bidirectional", {
+      formation_id: formationId,
+    } as never);
+
+    if (error) {
+      throw new Error(`Failed to unlink formation: ${error.message}`);
+    }
   }
 
   // ===================================================================
@@ -387,18 +474,21 @@ export class FormationService {
   }
 
   /**
-   * Delete formation and all its variants
+   * Delete formation and its opposite (if linked)
    */
-  static async deleteFormationWithVariants(
-    baseFormationId: string
+  static async deleteFormationWithOpposite(
+    formationId: string
   ): Promise<void> {
-    // Get all variants
-    const variants = await this.getFormationVariants(baseFormationId);
+    // Get the formation
+    const formation = await this.getFormationById(formationId);
 
-    // Delete in order: variants first, then base
-    if (variants.left) await this.deleteFormation(variants.left.id);
-    if (variants.right) await this.deleteFormation(variants.right.id);
-    await this.deleteFormation(variants.base.id);
+    // If it has an opposite, delete opposite first
+    if (formation.opposite_formation_id) {
+      await this.deleteFormation(formation.opposite_formation_id);
+    }
+
+    // Delete the formation itself
+    await this.deleteFormation(formationId);
   }
 
   // ===================================================================
@@ -421,7 +511,7 @@ export class FormationService {
       category: original.category || undefined,
       personnel_id: original.personnel_id || undefined,
       personnel_name: original.personnel_name || undefined,
-      direction: "base", // Always create as new base
+      direction: null, // New duplicate is standalone (no opposite)
       strength_player_position: original.strength_player_position || undefined,
       strength_player_label: original.strength_player_label || undefined,
       player_positions: JSON.parse(JSON.stringify(original.player_positions)), // Deep clone
@@ -505,339 +595,8 @@ export class FormationService {
   }
 
   // ===================================================================
-  // FORMATION MATCHING OPERATIONS
+  // BULK OPERATIONS
   // ===================================================================
-
-  /**
-   * Link formations as variants
-   * Sets base_formation_id and direction on variant formations
-   *
-   * @param baseFormationId - The base formation ID
-   * @param leftFormationId - Optional left variant formation ID
-   * @param rightFormationId - Optional right variant formation ID
-   */
-  /**
-   * Link formations as left/right variants
-   *
-   * 🔒 USES DATABASE TRANSACTION for atomic operations
-   * 🛡️ Validates directionality_type before auto-creating variants
-   *
-   * Special handling:
-   * - If leftFormationId === rightFormationId: Creates duplicate for right side
-   * - Always sets direction to 'left'/'right' (or 'Lt'/'Rt' for same formation)
-   * - Base formation gets direction = 'base'
-   * - Auto-creates missing variants ONLY for 'mirror' formations
-   *
-   * @param baseFormationId - The base formation ID (left side becomes base)
-   * @param leftFormationId - Formation for left side (optional, will use baseFormationId if not provided)
-   * @param rightFormationId - Formation for right side (will duplicate if same as left)
-   * @param personnelPackages - Optional array of personnel configuration IDs that can run this formation
-   */
-  static async linkFormations(
-    baseFormationId: string,
-    leftFormationId?: string,
-    rightFormationId?: string,
-    personnelPackages?: string[]
-  ): Promise<void> {
-    // Get base formation to check directionality type
-    const { data: baseFormation, error: baseError } = await supabase
-      .from("formations")
-      .select("*")
-      .eq("id", baseFormationId)
-      .single();
-
-    if (baseError || !baseFormation) {
-      throw new Error("Base formation not found");
-    }
-
-    // @ts-ignore - Supabase type inference issue
-    const directionality = baseFormation.directionality_type as
-      | string
-      | undefined;
-
-    // SPECIAL CASE: Same formation selected for both sides
-    // Create a duplicate for the right side, and make original the left side
-    let actualRightFormationId = rightFormationId;
-    let isSameFormationLink = false;
-
-    if (
-      leftFormationId &&
-      rightFormationId &&
-      leftFormationId === rightFormationId
-    ) {
-      isSameFormationLink = true;
-      const sourceFormation = baseFormation as {
-        name: string;
-        playbook_id: string;
-        personnel_id: string | null;
-        category: string;
-        description: string;
-        positions: any;
-        created_by: string;
-      };
-
-      // Create duplicate with same properties for RIGHT side
-      const { data: duplicate, error: duplicateError } = await supabase
-        .from("formations")
-        // @ts-ignore - Supabase type inference issue with insert
-        .insert([
-          {
-            name: sourceFormation.name,
-            playbook_id: sourceFormation.playbook_id,
-            personnel_id: sourceFormation.personnel_id,
-            personnel_packages: personnelPackages || [],
-            category: sourceFormation.category,
-            description: sourceFormation.description
-              ? `${sourceFormation.description} (Right variant)`
-              : "Right variant",
-            positions: sourceFormation.positions,
-            created_by: sourceFormation.created_by,
-            direction: "right" as "base" | "left" | "right",
-            base_formation_id: baseFormationId, // Points to original as base
-            directionality_type: directionality || "mirror", // Inherit from base
-          },
-        ])
-        .select()
-        .single();
-
-      if (duplicateError || !duplicate) {
-        throw new Error(
-          `Failed to create right variant: ${duplicateError?.message || "Unknown error"}`
-        );
-      }
-
-      // @ts-ignore - Supabase type inference issue
-      actualRightFormationId = duplicate.id;
-
-      // Update original formation to be LEFT side (it's the base, but shows as 'left')
-      const { error: leftUpdateError } = await supabase
-        .from("formations")
-        // @ts-ignore - Supabase type inference issue
-        .update({
-          direction: "left" as "base" | "left" | "right",
-          base_formation_id: null, // This is the base formation
-          personnel_packages: personnelPackages || [],
-          directionality_type: directionality || "mirror", // Ensure set
-        })
-        .eq("id", baseFormationId);
-
-      if (leftUpdateError) {
-        throw new Error(
-          `Failed to update left variant: ${leftUpdateError.message}`
-        );
-      }
-
-      console.log(
-        `[FormationService] ✅ Same formation link: created duplicate for RIGHT variant`
-      );
-    }
-
-    // For different formation linking, use database transaction function
-    if (!isSameFormationLink) {
-      console.log(
-        `[FormationService] 🔒 Using transaction-safe linking for ${baseFormation.name}`
-      );
-
-      try {
-        // Use PostgreSQL transaction function for atomic linking
-        const { data, error } = await supabase.rpc(
-          "link_formations_transaction",
-          {
-            p_base_formation_id: baseFormationId,
-            p_left_formation_id: leftFormationId || null,
-            p_right_formation_id: actualRightFormationId || null,
-            p_personnel_packages: personnelPackages || [],
-          }
-        );
-
-        if (error) {
-          throw new Error(`Failed to link formations: ${error.message}`);
-        }
-
-        console.log(
-          `[FormationService] ✅ Formations linked successfully via transaction`
-        );
-      } catch (error) {
-        console.error("[FormationService] ❌ Transaction failed:", error);
-        throw error;
-      }
-
-      // 🚀 AUTO-CREATE MISSING VARIANTS (only for 'mirror' formations)
-      if (directionality === "mirror" || directionality === "unspecified") {
-        // Auto-create RIGHT variant if only LEFT provided
-        if (leftFormationId && !actualRightFormationId) {
-          console.log(
-            `[FormationService] 🔄 Auto-creating missing RIGHT variant for ${baseFormation.name} (directionality: ${directionality})`
-          );
-          try {
-            await this.createRightVariant(baseFormationId);
-            console.log(
-              "[FormationService] ✅ RIGHT variant auto-created successfully"
-            );
-          } catch (error) {
-            console.error(
-              "[FormationService] ⚠️ Failed to auto-create RIGHT variant:",
-              error
-            );
-            // Don't throw - linking LEFT variant should still succeed
-          }
-        }
-
-        // Auto-create LEFT variant if only RIGHT provided
-        if (actualRightFormationId && !leftFormationId) {
-          console.log(
-            `[FormationService] 🔄 Auto-creating missing LEFT variant for ${baseFormation.name} (directionality: ${directionality})`
-          );
-          try {
-            await this.createLeftVariant(baseFormationId);
-            console.log(
-              "[FormationService] ✅ LEFT variant auto-created successfully"
-            );
-          } catch (error) {
-            console.error(
-              "[FormationService] ⚠️ Failed to auto-create LEFT variant:",
-              error
-            );
-            // Don't throw - linking RIGHT variant should still succeed
-          }
-        }
-      } else {
-        console.log(
-          `[FormationService] ⏭️ Skipping auto-create: ${baseFormation.name} ` +
-            `is ${directionality || "unknown"}, not mirror`
-        );
-      }
-    }
-  }
-
-  /**
-   * Unlink a variant formation (make it independent)
-   * Sets base_formation_id to NULL and direction to 'base'
-   *
-   * @param formationId - The formation ID to unlink
-   */
-  static async unlinkVariant(formationId: string): Promise<void> {
-    const { error } = await supabase
-      .from("formations")
-      // @ts-ignore - Supabase type inference issue
-      .update({
-        base_formation_id: null,
-        direction: "base" as "base" | "left" | "right",
-      })
-      .eq("id", formationId);
-
-    if (error) {
-      throw new Error(`Failed to unlink variant: ${error.message}`);
-    }
-  }
-
-  /**
-   * Get suggested formation matches
-   * Returns formations in the same playbook with same personnel
-   * that could be potential left/right variants
-   *
-   * @param formationId - The formation to find matches for
-   * @returns Array of potential matching formations
-   */
-  static async getSuggestedMatches(formationId: string): Promise<Formation[]> {
-    // Get the source formation
-    const { data: sourceFormation, error: sourceError } = await supabase
-      .from("formations")
-      .select("*")
-      .eq("id", formationId)
-      .single();
-
-    if (sourceError || !sourceFormation) {
-      throw new Error("Formation not found");
-    }
-
-    // Type assertion for sourceFormation
-    const typedSource = sourceFormation as {
-      playbook_id: string;
-      personnel_id: string | null;
-    };
-
-    // Query formations in same playbook with same personnel
-    const { data: matches, error: matchError } = await supabase
-      .from("formations")
-      .select("*")
-      .eq("playbook_id", typedSource.playbook_id)
-      .eq("personnel_id", typedSource.personnel_id ?? "")
-      .neq("id", formationId) // Exclude self
-      .order("name");
-
-    if (matchError) {
-      throw new Error(`Failed to get suggested matches: ${matchError.message}`);
-    }
-
-    // Filter out formations that are already linked to a different base
-    // (unless they're linked to THIS formation as base)
-    const typedSourceWithId = sourceFormation as {
-      base_formation_id: string | null;
-      id: string;
-    };
-    const baseFormationId =
-      typedSourceWithId.base_formation_id || typedSourceWithId.id;
-
-    const filtered = (matches || []).filter((f: Formation) => {
-      // Include if no base (independent formation)
-      if (!f.base_formation_id) return true;
-
-      // Include if already linked to this formation's base
-      if (f.base_formation_id === baseFormationId) return true;
-
-      // Exclude if linked to different base
-      return false;
-    });
-
-    return filtered;
-  }
-
-  /**
-   * Get all variants for a formation (base + left + right)
-   * Returns the complete variant family
-   *
-   * @param formationId - Formation ID (can be base or variant)
-   * @returns Object with base, left, and right formations
-   */
-  static async getFormationVariantFamily(formationId: string): Promise<{
-    base: Formation | null;
-    left: Formation | null;
-    right: Formation | null;
-  }> {
-    // Get the formation to determine base_formation_id
-    const { data: formation, error: formationError } = await supabase
-      .from("formations")
-      .select("*")
-      .eq("id", formationId)
-      .single();
-
-    if (formationError || !formation) {
-      throw new Error("Formation not found");
-    }
-
-    // Determine the base formation ID
-    // @ts-ignore - Supabase type inference issue
-    const baseFormationId = formation.base_formation_id || formation.id;
-
-    // Query all formations in the variant family
-    const { data: allVariants, error: variantError } = await supabase
-      .from("formations")
-      .select("*")
-      .or(`id.eq.${baseFormationId},base_formation_id.eq.${baseFormationId}`);
-
-    if (variantError) {
-      throw new Error(`Failed to get variant family: ${variantError.message}`);
-    }
-
-    const variants = (allVariants || []) as Formation[];
-
-    return {
-      base: variants.find((f: Formation) => f.direction === "base") || null,
-      left: variants.find((f: Formation) => f.direction === "left") || null,
-      right: variants.find((f: Formation) => f.direction === "right") || null,
-    };
-  }
 
   /**
    * Import formations from existing plays

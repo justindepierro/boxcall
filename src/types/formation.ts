@@ -21,21 +21,11 @@ export type FormationCategory =
 
 /**
  * Formation direction (variant type)
+ * - "left": Left-side formation (has right partner)
+ * - "right": Right-side formation (has left partner)
+ * - null: Standalone formation (no directional variant needed)
  */
-export type FormationDirection = "base" | "left" | "right";
-
-/**
- * How a formation handles directional variations
- * - "mirror": Has LEFT/RIGHT mirror variants (Trips, Twins, Bunch)
- * - "built-in": Direction is part of name (East/West, Rip/Liz)
- * - "symmetric": No direction needed (Empty, Stack)
- * - "unspecified": Legacy formations without this metadata
- */
-export type FormationDirectionalityType =
-  | "mirror"
-  | "built-in"
-  | "symmetric"
-  | "unspecified";
+export type FormationDirection = "left" | "right" | null;
 
 /**
  * Formation type classification
@@ -73,6 +63,39 @@ export interface FormationPlayerPosition {
 }
 
 /**
+ * Formation creation source (for telemetry and AI training)
+ */
+export type FormationCreationSource =
+  | "play_builder" // Created while building a play (AddNewPlayModal)
+  | "diagram_editor" // Created from diagram editor
+  | "formation_library" // Created directly in formation library
+  | "formation_builder" // Created via FormationBuilderModal
+  | "bulk_import" // Imported from CSV/file
+  | "api" // Created via API
+  | "migration" // Created during data migration
+  | "unknown"; // Legacy formations without source tracking
+
+/**
+ * Formation metadata quality classification
+ */
+export type FormationMetadataQuality =
+  | "complete" // 100% complete
+  | "good" // 75-99% complete
+  | "needs_work" // 50-74% complete
+  | "incomplete"; // <50% complete
+
+/**
+ * Formation creation context (additional telemetry)
+ */
+export interface FormationCreationContext {
+  play_id?: string; // If created from play builder
+  user_action?: string; // What action triggered creation
+  incomplete_fields?: string[]; // List of fields that need completion
+  source_version?: string; // App version when created
+  [key: string]: unknown; // Allow additional context
+}
+
+/**
  * Complete Formation entity (database row)
  */
 export interface Formation {
@@ -89,10 +112,9 @@ export interface Formation {
   personnel_name: string | null; // Denormalized: "11", "12", "21"
   personnel_packages: string[]; // Array of personnel_configuration IDs that can run this formation
 
-  // Left/Right Variant System
-  base_formation_id: string | null; // NULL = this IS the base formation
-  direction: FormationDirection;
-  directionality_type: FormationDirectionalityType; // How this formation handles direction
+  // Left/Right Variant System (Simplified)
+  opposite_formation_id: string | null; // Direct link to opposite-side formation (left ↔ right)
+  direction: FormationDirection; // "left", "right", or null (standalone)
 
   // Strength Player
   strength_player_position: string | null; // "X", "Y", "Z", "H", "F"
@@ -110,6 +132,12 @@ export interface Formation {
   tags: string[];
   is_custom: boolean;
   usage_count: number;
+
+  // Creation Tracking (for AI/predictive features)
+  creation_source: FormationCreationSource; // Where was this created from
+  creation_context: FormationCreationContext; // Additional creation details
+  metadata_completeness: number; // 0-100 score of metadata quality
+  metadata_quality: FormationMetadataQuality; // Quality classification
 
   // Timestamps
   created_at: string;
@@ -132,8 +160,7 @@ export interface FormationCreate {
   personnel_name?: string;
   personnel_packages?: string[];
   direction?: FormationDirection;
-  directionality_type?: FormationDirectionalityType;
-  base_formation_id?: string;
+  opposite_formation_id?: string;
   strength_player_position?: string;
   strength_player_label?: string;
   formation_type?: FormationType;
@@ -142,6 +169,9 @@ export interface FormationCreate {
   player_positions: FormationPlayerPosition[];
   tags?: string[];
   is_custom?: boolean;
+  // Creation tracking (optional, defaults in DB trigger)
+  creation_source?: FormationCreationSource;
+  creation_context?: FormationCreationContext;
 }
 
 /**
@@ -154,6 +184,8 @@ export interface FormationUpdate {
   personnel_id?: string;
   personnel_name?: string;
   personnel_packages?: string[];
+  direction?: FormationDirection;
+  opposite_formation_id?: string;
   strength_player_position?: string;
   strength_player_label?: string;
   formation_type?: FormationType;
@@ -161,6 +193,10 @@ export interface FormationUpdate {
   pass_strength?: StrengthType;
   player_positions?: FormationPlayerPosition[];
   tags?: string[];
+  
+  // NEW: Creation tracking (optional for updates)
+  creation_source?: FormationCreationSource;
+  creation_context?: FormationCreationContext;
 }
 
 /**

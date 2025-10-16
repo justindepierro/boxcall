@@ -15,7 +15,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { DiagramCanvas } from "../diagram-editor/components/DiagramCanvas";
 import { useDiagramStore } from "../diagram-editor/stores/diagramStore";
 import type { Player } from "../diagram-editor/types/Player";
-import type { Formation, FormationPlayerPosition } from "../../../types/formation";
+import type {
+  Formation,
+  FormationPlayerPosition,
+  FormationCreationSource,
+} from "../../../types/formation";
 import { usePersonnelConfigurations } from "../../../hooks/usePersonnel";
 import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon/Icon";
@@ -26,7 +30,12 @@ interface FormationBuilderCanvasProps {
   playbookId: string;
   formationId?: string; // For editing existing formation
   formation?: Formation | null; // Existing formation data
-  onSave: (players: FormationPlayerPosition[], personnel: string) => void;
+  creationSource?: FormationCreationSource; // Where is this being created from
+  onSave: (
+    players: FormationPlayerPosition[],
+    personnel: string,
+    creationSource?: FormationCreationSource
+  ) => void;
   onCancel: () => void;
 }
 
@@ -34,6 +43,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
   playbookId,
   formationId,
   formation,
+  creationSource = "formation_builder", // Default to formation_builder
   onSave,
   onCancel,
 }) => {
@@ -41,6 +51,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
   const [selectedPersonnel, setSelectedPersonnel] = useState<string>(
     formation?.personnel_name || "11"
   );
+  const [hasLoadedDefaults, setHasLoadedDefaults] = useState(false);
 
   // Zustand store
   const { players, addPlayer, clearPlayers } = useDiagramStore();
@@ -48,27 +59,79 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
   // Personnel configurations
   const { data: personnelConfigs } = usePersonnelConfigurations(playbookId);
 
-  // Load existing formation on mount
+  // Handle Pixi app ready - set LOS position
+  const handleAppReady = (app: any) => {
+    if (app?.fieldLayer) {
+      // Move LOS up 5 yards for symmetry (from 25 to 20)
+      // 25 = 50-yard line, 20 = 40-yard line (5 yards up field)
+      app.fieldLayer.setLineOfScrimmage(20, true);
+      console.log("✅ Formation Builder: LOS set to 40-yard line");
+    }
+  };
+
+  // Load existing formation or add default O-line
   useEffect(() => {
-    if (!formation || !formation.player_positions) return;
+    // If we have an existing formation, load it
+    if (
+      formation &&
+      formation.player_positions &&
+      formation.player_positions.length > 0
+    ) {
+      clearPlayers();
 
-    // Clear existing players
-    clearPlayers();
+      // Convert formation positions to diagram players
+      formation.player_positions.forEach((pos: FormationPlayerPosition) => {
+        const player: Player = {
+          id: uuidv4(),
+          x: pos.x,
+          y: pos.y,
+          jerseyNumber: pos.label || pos.position || "?",
+          team: "offense" as const,
+          role: pos.role,
+          position: pos.position?.toUpperCase() === "C" ? "center" : "regular",
+        };
+        addPlayer(player);
+      });
+      setHasLoadedDefaults(true);
+      return;
+    }
 
-    // Convert formation positions to diagram players
-    formation.player_positions.forEach((pos: FormationPlayerPosition) => {
-      const player: Player = {
-        id: uuidv4(),
-        x: pos.x,
-        y: pos.y,
-        jerseyNumber: pos.label || pos.position || "?",
-        team: "offense" as const,
-        role: pos.role,
-        position: pos.position?.toUpperCase() === "C" ? "center" : "regular",
-      };
-      addPlayer(player);
-    });
-  }, [formation, clearPlayers, addPlayer]);
+    // If no existing formation and we haven't loaded defaults yet, add default O-line
+    if (!hasLoadedDefaults && players.length === 0) {
+      console.log("📋 Adding default offensive line");
+
+      // Default offensive line: LT, LG, C, RG, RT
+      // Y position: 17.5 = middle of 35-yard field (bottom half for offense)
+      // X positions: evenly spaced across center of field
+      const centerX = 26.67; // Middle of 53.33-yard field width
+      const spacing = 1.5; // Yards between linemen
+      const oLineY = 21; // Bottom half, above the 20-yard line (offense territory)
+
+      const oLine = [
+        { label: "LT", x: centerX - spacing * 2, position: "regular" },
+        { label: "LG", x: centerX - spacing, position: "regular" },
+        { label: "C", x: centerX, position: "center" }, // Center gets special styling
+        { label: "RG", x: centerX + spacing, position: "regular" },
+        { label: "RT", x: centerX + spacing * 2, position: "regular" },
+      ];
+
+      oLine.forEach((lineman) => {
+        const player: Player = {
+          id: uuidv4(),
+          x: lineman.x,
+          y: oLineY,
+          jerseyNumber: lineman.label,
+          team: "offense" as const,
+          role: lineman.label,
+          position: lineman.position as "center" | "regular",
+        };
+        addPlayer(player);
+      });
+
+      setHasLoadedDefaults(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formation, hasLoadedDefaults]);
 
   // Load personnel package
   const handleLoadPersonnel = (personnelName: string) => {
@@ -156,13 +219,13 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
       })
     );
 
-    onSave(formationPositions, selectedPersonnel);
+    onSave(formationPositions, selectedPersonnel, creationSource);
   };
 
   // Add single player
   const handleAddPlayer = () => {
-    const centerX = 26.67;
-    const centerY = 17.5;
+    const centerX = 26.67; // Middle of field (53.33 / 2)
+    const offensiveY = 21; // Bottom half (offensive territory, matches O-line)
 
     // Find last added player position
     const lastPlayer = players[players.length - 1];
@@ -171,7 +234,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
     const player: Player = {
       id: uuidv4(),
       x: centerX + offsetX,
-      y: centerY,
+      y: offensiveY,
       jerseyNumber: String(players.length + 1),
       team: "offense" as const,
       role: "WR",
@@ -189,6 +252,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
           fieldWidth={53.333}
           fieldHeight={35}
           backgroundColor={0xf5f7ed}
+          onReady={handleAppReady}
         />
       </div>
 
@@ -222,14 +286,20 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
                 </option>
               ))}
             </select>
-            <Typography variant="caption" className="text-text-muted mt-spacing-xs">
+            <Typography
+              variant="caption"
+              className="text-text-muted mt-spacing-xs"
+            >
               Load pre-configured player positions
             </Typography>
           </div>
 
           {/* Player Controls */}
           <div>
-            <Typography variant="headline-sm" className="text-text-primary mb-spacing-sm">
+            <Typography
+              variant="headline-sm"
+              className="text-text-primary mb-spacing-sm"
+            >
               Players
             </Typography>
             <div className="space-y-spacing-sm">
@@ -250,7 +320,10 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
                 Clear All
               </Button>
             </div>
-            <Typography variant="caption" className="text-text-muted mt-spacing-sm">
+            <Typography
+              variant="caption"
+              className="text-text-muted mt-spacing-sm"
+            >
               {players.length} player{players.length !== 1 ? "s" : ""} on field
             </Typography>
           </div>

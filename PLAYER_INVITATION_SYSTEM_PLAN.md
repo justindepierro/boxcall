@@ -1,7 +1,9 @@
 # Player Invitation System - Implementation Plan
 
 ## Overview
+
 Allow coaches to invite players to join the team by email. When a player's email is entered in the roster modal, show an "Invite to Team" button that:
+
 1. Creates a pending team_member record
 2. Sends an invitation email
 3. Creates player account on acceptance
@@ -10,6 +12,7 @@ Allow coaches to invite players to join the team by email. When a player's email
 ## Current State Analysis
 
 ### Existing Infrastructure ✅
+
 - ✅ `team_members` table with `status` field ('active', 'inactive', 'pending')
 - ✅ `team_players` table for roster management
 - ✅ `profiles` table for user profiles
@@ -18,6 +21,7 @@ Allow coaches to invite players to join the team by email. When a player's email
 - ✅ RLS policies for team access control
 
 ### Missing Infrastructure ❌
+
 - ❌ Invitation token system
 - ❌ Email service integration
 - ❌ Invitation acceptance flow
@@ -27,8 +31,9 @@ Allow coaches to invite players to join the team by email. When a player's email
 ## Database Schema Changes
 
 ### Option 1: Add invitation fields to team_players (Simpler)
+
 ```sql
-ALTER TABLE team_players 
+ALTER TABLE team_players
 ADD COLUMN user_id UUID REFERENCES auth.users(id),
 ADD COLUMN invitation_token UUID DEFAULT uuid_generate_v4(),
 ADD COLUMN invitation_status TEXT CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined')),
@@ -40,6 +45,7 @@ CREATE INDEX idx_team_players_user_id ON team_players(user_id);
 ```
 
 ### Option 2: Create separate invitations table (More flexible)
+
 ```sql
 CREATE TABLE player_invitations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -63,13 +69,16 @@ CREATE INDEX idx_player_invitations_email ON player_invitations(email);
 ## Implementation Phases
 
 ### Phase 1: Database & Backend (Core Infrastructure)
+
 **Files to modify:**
+
 - `supabase/migrations/20251016000001_add_player_invitation_system.sql`
 - `database/schema.sql`
 - `src/services/rosterService.ts`
 - `src/services/invitationService.ts` (new)
 
 **Tasks:**
+
 1. Create migration to add invitation fields to team_players
 2. Add user_id link field
 3. Create invitation service methods:
@@ -79,11 +88,14 @@ CREATE INDEX idx_player_invitations_email ON player_invitations(email);
    - `resendInvitation(playerId)`
 
 ### Phase 2: Email Integration
+
 **Files to create/modify:**
+
 - `src/services/emailService.ts` (new or use existing)
 - Email templates
 
 **Options:**
+
 - **Supabase Edge Functions**: Recommended for security
 - **Resend API**: Modern email service
 - **SendGrid**: Enterprise option
@@ -92,24 +104,30 @@ CREATE INDEX idx_player_invitations_email ON player_invitations(email);
 **Decision needed**: Which email service to use?
 
 ### Phase 3: UI Components
+
 **Files to modify:**
+
 - `src/pages/RosterPage.tsx`
 - `src/components/roster/InvitePlayerButton.tsx` (new)
 - `src/pages/AcceptInvitationPage.tsx` (new)
 
 **UI Changes:**
+
 1. Add "Invite to Team" button in Add/Edit modal when email is present
 2. Show invitation status badge on player cards
 3. Add invitation management section
 4. Create invitation acceptance page
 
 ### Phase 4: Auth Flow
+
 **Files to modify:**
+
 - `src/routes/index.tsx`
 - `src/pages/auth/AcceptInvitationPage.tsx` (new)
 - Supabase auth configuration
 
 **Flow:**
+
 1. User clicks invitation link with token
 2. If not logged in: Show signup form with email pre-filled
 3. If logged in: Confirm acceptance
@@ -120,26 +138,35 @@ CREATE INDEX idx_player_invitations_email ON player_invitations(email);
 ## Simplified MVP Implementation
 
 ### Quick Win: Email-Only Invitations (No Account Creation Yet)
+
 **Scope**: Just send invitation emails, manual account setup
 
 **Phase 1A: Add invite button to modal**
+
 ```tsx
-{playerForm.email_address && (
-  <Button
-    variant="outline"
-    onClick={() => handleSendInvite()}
-    className="w-full mt-4"
-  >
-    <Icon name="mail" className="w-4 h-4 mr-2" />
-    Invite {playerForm.first_name} to Team
-  </Button>
-)}
+{
+  playerForm.email_address && (
+    <Button
+      variant="outline"
+      onClick={() => handleSendInvite()}
+      className="w-full mt-4"
+    >
+      <Icon name="mail" className="w-4 h-4 mr-2" />
+      Invite {playerForm.first_name} to Team
+    </Button>
+  );
+}
 ```
 
 **Phase 1B: Email sending (basic)**
 Use Supabase Edge Function or simple service:
+
 ```typescript
-async function sendPlayerInvite(email: string, teamName: string, playerName: string) {
+async function sendPlayerInvite(
+  email: string,
+  teamName: string,
+  playerName: string
+) {
   // For now: Just log or use mailto: link
   // Later: Integrate with email service
   const inviteUrl = `${window.location.origin}/invite/accept?token=${token}`;
@@ -160,16 +187,19 @@ async function sendPlayerInvite(email: string, teamName: string, playerName: str
 ## Security Considerations
 
 ✅ **Token Security**:
+
 - Use UUID tokens (cryptographically secure)
 - Store hashed tokens in database
 - Expire after 7 days
 - One-time use only
 
 ✅ **Email Verification**:
+
 - Verify email ownership before account creation
 - Use Supabase's built-in email verification
 
 ✅ **RLS Policies**:
+
 - Only coaches can send invitations
 - Only invitation recipient can accept (verify email match)
 - Prevent invitation spam
@@ -177,6 +207,7 @@ async function sendPlayerInvite(email: string, teamName: string, playerName: str
 ## UI/UX Flow
 
 ### Coach Perspective
+
 1. Add player to roster with email
 2. See "Invite to Team" button
 3. Click → Sends invitation email
@@ -185,6 +216,7 @@ async function sendPlayerInvite(email: string, teamName: string, playerName: str
 6. See when invitation is accepted
 
 ### Player Perspective
+
 1. Receive email with invitation link
 2. Click link → Goes to boxcall.com/invite/accept?token=xxx
 3. If no account: Sign up with email pre-filled
@@ -193,6 +225,7 @@ async function sendPlayerInvite(email: string, teamName: string, playerName: str
 6. Can view plays, check practice schedule, etc.
 
 ## Success Metrics
+
 - ✅ Invitation sent successfully
 - ✅ Email delivered
 - ✅ Player accepts invitation
@@ -203,24 +236,28 @@ async function sendPlayerInvite(email: string, teamName: string, playerName: str
 ## Rollout Strategy
 
 ### Stage 1: Foundation (This PR)
+
 - Database schema for invitations
 - Basic UI button
 - Service methods structure
 - Type definitions
 
 ### Stage 2: Email Integration (Next PR)
+
 - Choose email provider
 - Implement sending logic
 - Email templates
 - Error handling
 
 ### Stage 3: Acceptance Flow (Next PR)
+
 - Acceptance page
 - Auth integration
 - Account creation
 - Success states
 
 ### Stage 4: Polish (Future PR)
+
 - Invitation management dashboard
 - Resend logic
 - Analytics
@@ -252,17 +289,20 @@ For this session, let's implement **Stage 1 MVP**:
 ## Decision Required: Implementation Approach
 
 **Option A: Full Implementation Now** (2-4 hours)
+
 - Complete database, email, auth flow
 - Requires email service setup
 - Full feature ready
 
 **Option B: MVP + Placeholder** (30-60 minutes) ⭐ **RECOMMENDED**
+
 - Database fields + UI button
 - Placeholder email (console.log/mailto)
 - Can test UI/UX flow
 - Complete email later
 
 **Option C: Delay Feature**
+
 - Add to backlog
 - Implement when email infrastructure ready
 

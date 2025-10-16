@@ -127,12 +127,16 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
     ctx.restore();
 
     // Convert to blob
-    canvas.toBlob((blob) => {
-      if (blob) {
-        onSave(blob);
-        onClose();
-      }
-    }, "image/jpeg", 0.9);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          onSave(blob);
+          onClose();
+        }
+      },
+      "image/jpeg",
+      0.9
+    );
   };
 
   return (

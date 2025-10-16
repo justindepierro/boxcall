@@ -370,17 +370,10 @@ export default function EditPlayerModal({
 
         {/* Action Buttons */}
         <div className="flex justify-end gap-spacing-sm pt-4 border-t border-surface-secondary">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={saving}
-          >
+          <Button variant="outline" onClick={onClose} disabled={saving}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-          >
+          <Button onClick={handleSave} disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
           </Button>
         </div>

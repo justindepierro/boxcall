@@ -27,6 +27,7 @@ Avatar uploads are failing because the `avatars` storage bucket doesn't exist in
    - Click "Create a new bucket"
 
 3. **Bucket Configuration**:
+
    ```
    Name: avatars
    Public: ✅ Yes (checked)
@@ -132,25 +133,25 @@ USING (
 
 ```javascript
 // Test avatar upload
-const testFile = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
-const userId = 'YOUR_USER_ID'; // Replace with actual user ID
+const testFile = new File(["test"], "test.jpg", { type: "image/jpeg" });
+const userId = "YOUR_USER_ID"; // Replace with actual user ID
 
 const { data, error } = await supabase.storage
-  .from('avatars')
+  .from("avatars")
   .upload(`${userId}/test.jpg`, testFile);
 
 if (error) {
-  console.error('Upload failed:', error);
+  console.error("Upload failed:", error);
 } else {
-  console.log('Upload successful:', data);
+  console.log("Upload successful:", data);
 }
 
 // Get public URL
 const { data: urlData } = supabase.storage
-  .from('avatars')
+  .from("avatars")
   .getPublicUrl(`${userId}/test.jpg`);
 
-console.log('Public URL:', urlData?.publicUrl);
+console.log("Public URL:", urlData?.publicUrl);
 ```
 
 **Expected Result**: Upload succeeds and returns public URL
@@ -191,11 +192,13 @@ You should see 4 policies (INSERT, UPDATE, SELECT, DELETE).
 ### Issue: Avatar uploads but doesn't display
 
 **Possible causes**:
+
 1. Public read policy not applied
 2. Incorrect public URL generation
 3. CORS issues
 
 **Solution**:
+
 1. Verify public read policy exists
 2. Check that `getPublicUrl()` returns a valid URL
 3. Check browser console for CORS errors
@@ -204,7 +207,8 @@ You should see 4 policies (INSERT, UPDATE, SELECT, DELETE).
 
 ### Issue: Upload fails with large files
 
-**Solution**: 
+**Solution**:
+
 - Verify file size limit is set to 5MB (5242880 bytes)
 - Check that file is actually under 5MB
 - Add file size validation in code (already in roadmap Phase 2.1)
@@ -218,7 +222,7 @@ You should see 4 policies (INSERT, UPDATE, SELECT, DELETE).
 **Solution**: Use unique filenames with timestamps (already in roadmap Phase 2.1):
 
 ```typescript
-const fileExt = avatarFile.name.split('.').pop();
+const fileExt = avatarFile.name.split(".").pop();
 const fileName = `${Date.now()}.${fileExt}`;
 const filePath = `${profile.id}/${fileName}`;
 ```

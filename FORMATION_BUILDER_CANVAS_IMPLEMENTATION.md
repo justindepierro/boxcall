@@ -15,6 +15,7 @@ Successfully implemented **Option A: Reuse DiagramEditor** for the formation bui
 **Purpose**: Specialized canvas wrapper for formation editing that leverages DiagramCanvas
 
 **Key Features**:
+
 - ✅ Drag-drop player positioning using PixiJS
 - ✅ Personnel package integration (load default positions)
 - ✅ Add/remove players manually
@@ -24,6 +25,7 @@ Successfully implemented **Option A: Reuse DiagramEditor** for the formation bui
 - ✅ No routes, no defense - pure formation positioning
 
 **Architecture**:
+
 ```
 FormationBuilderCanvas
   ├── DiagramCanvas (PixiJS rendering)
@@ -44,6 +46,7 @@ FormationBuilderCanvas
 **Location**: `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tabbed.tsx`
 
 **Changes**:
+
 - ✅ Removed "Soon" badge from Draw Formation tab
 - ✅ Integrated FormationBuilderCanvas component
 - ✅ Added formation loading logic (FormationService)
@@ -52,6 +55,7 @@ FormationBuilderCanvas
 - ✅ Properly handles edit vs. create modes
 
 **Tab Flow**:
+
 ```
 Tab 1: Link Formations → Connect left/right variants
 Tab 2: Draw Formation → Visual canvas builder (NEW!)
@@ -115,11 +119,11 @@ handleLoadPersonnel("11") // 11 personnel
 
 ```typescript
 // Convert diagram players to formation positions
-const formationPositions: FormationPlayerPosition[] = players.map(player => ({
+const formationPositions: FormationPlayerPosition[] = players.map((player) => ({
   id: uuidv4(),
-  x: player.x,            // Yard coordinates (0-53.3)
-  y: player.y,            // Yard coordinates (0-35)
-  position: player.role,  // QB, WR, RB, TE, etc.
+  x: player.x, // Yard coordinates (0-53.3)
+  y: player.y, // Yard coordinates (0-35)
+  position: player.role, // QB, WR, RB, TE, etc.
   label: player.jerseyNumber, // Q, R, T, X, Y
   role: player.role,
   jerseyNumber: player.jerseyNumber,
@@ -139,11 +143,12 @@ await FormationService.updateFormation(formationId, {
 ### FormationBuilderCanvas.tsx (Full Component)
 
 **Props**:
+
 ```typescript
 interface FormationBuilderCanvasProps {
   playbookId: string;
-  formationId?: string;              // For editing existing
-  formation?: Formation | null;       // Existing formation data
+  formationId?: string; // For editing existing
+  formation?: Formation | null; // Existing formation data
   onSave: (players: FormationPlayerPosition[], personnel: string) => void;
   onCancel: () => void;
 }
@@ -216,6 +221,7 @@ const handleSave = () => {
 ### Reused DiagramEditor Components
 
 **What We Reused** (No changes needed):
+
 - ✅ DiagramCanvas - Main PixiJS canvas wrapper
 - ✅ PlayersLayer - Drag-drop player sprites
 - ✅ PlayerSprite - Interactive player graphics
@@ -225,6 +231,7 @@ const handleSave = () => {
 - ✅ usePixiApp - React integration hook
 
 **Why This Was Smart**:
+
 - No need to rebuild drag-drop logic
 - Consistent UX across diagram editor and formation builder
 - Hardware-accelerated WebGL rendering
@@ -235,6 +242,7 @@ const handleSave = () => {
 ### New Components
 
 **What We Built New**:
+
 - ✅ FormationBuilderCanvas - Formation-specific wrapper
 - ✅ Sidebar controls for personnel/players
 - ✅ Save logic (diagram → formation.player_positions)
@@ -355,16 +363,16 @@ Center: (26.67, 17.5)
 
 ```typescript
 const POSITION_COORDS = {
-  QB: { x: 26.67, y: 12 },    // 5.5 yards behind LOS
-  RB: { x: 31, y: 10 },        // In backfield, offset right
-  FB: { x: 26.67, y: 8 },      // Deeper in backfield
-  TE: { x: 21, y: 17.5 },      // Tight to LT
-  WR: { x: 10, y: 17.5 },      // Base position (spread by index)
-  C:  { x: 26.67, y: 17.5 },   // Center on LOS
-  LG: { x: 24, y: 17.5 },      // Left guard
-  RG: { x: 29.33, y: 17.5 },   // Right guard
-  LT: { x: 21.33, y: 17.5 },   // Left tackle
-  RT: { x: 32, y: 17.5 },      // Right tackle
+  QB: { x: 26.67, y: 12 }, // 5.5 yards behind LOS
+  RB: { x: 31, y: 10 }, // In backfield, offset right
+  FB: { x: 26.67, y: 8 }, // Deeper in backfield
+  TE: { x: 21, y: 17.5 }, // Tight to LT
+  WR: { x: 10, y: 17.5 }, // Base position (spread by index)
+  C: { x: 26.67, y: 17.5 }, // Center on LOS
+  LG: { x: 24, y: 17.5 }, // Left guard
+  RG: { x: 29.33, y: 17.5 }, // Right guard
+  LT: { x: 21.33, y: 17.5 }, // Left tackle
+  RT: { x: 32, y: 17.5 }, // Right tackle
 };
 ```
 
@@ -372,10 +380,10 @@ const POSITION_COORDS = {
 
 ```typescript
 const wrPositions = [
-  { x: 10, y: 17.5 },   // X - far left
-  { x: 18, y: 17.5 },   // Y - slot left
-  { x: 35, y: 17.5 },   // Z - slot right
-  { x: 43, y: 17.5 },   // Additional WR - far right
+  { x: 10, y: 17.5 }, // X - far left
+  { x: 18, y: 17.5 }, // Y - slot left
+  { x: 35, y: 17.5 }, // Z - slot right
+  { x: 43, y: 17.5 }, // Additional WR - far right
 ];
 ```
 
@@ -386,6 +394,7 @@ const wrPositions = [
 ### Drag-Drop Interaction
 
 **From DiagramEditor** (no additional code needed):
+
 - ✅ Click player to select (amber ring)
 - ✅ Drag selected player to move
 - ✅ Smooth animations during drag
@@ -397,6 +406,7 @@ const wrPositions = [
 ### Personnel Integration
 
 **Smart Position Loading**:
+
 - ✅ Load personnel → instant default formation
 - ✅ Positions spread intelligently (WRs, RBs)
 - ✅ Clear existing players before loading new
@@ -406,6 +416,7 @@ const wrPositions = [
 ### Player Management
 
 **Manual Controls**:
+
 - ✅ Add Player - adds at center with auto-offset
 - ✅ Clear All - removes all players
 - ✅ Player count display - "{count} players on field"
@@ -418,17 +429,20 @@ const wrPositions = [
 ### Optimizations Inherited from DiagramEditor
 
 **PixiJS WebGL Rendering**:
+
 - Hardware-accelerated graphics (GPU)
 - 60 FPS animations
 - Efficient sprite batching
 - Minimal CPU usage
 
 **React Integration**:
+
 - Zustand store prevents unnecessary re-renders
 - Canvas renders independently of React
 - Only UI controls re-render on state changes
 
 **Coordinate System**:
+
 - Yard-based coordinates (not pixels)
 - Responsive scaling (works on any screen size)
 - Automatic DPI handling (retina displays)
@@ -495,13 +509,16 @@ const wrPositions = [
 
 ```tsx
 // Need: Form for name, type, category before opening canvas
-<FormationCreationForm onSubmit={(metadata) => {
-  // Create formation with metadata
-  // Open canvas for drawing positions
-}} />
+<FormationCreationForm
+  onSubmit={(metadata) => {
+    // Create formation with metadata
+    // Open canvas for drawing positions
+  }}
+/>
 ```
 
 **Workflow**:
+
 1. User clicks "Create Formation"
 2. Form prompts: Name, Type, Category, Personnel
 3. Creates formation in database
@@ -515,11 +532,13 @@ const wrPositions = [
 
 ```tsx
 // Add "Create Left Variant" button
-<Button onClick={() => {
-  // Mirror all player x positions: x' = 53.333 - x
-  // Create new formation with mirrored positions
-  // Link as left variant
-}}>
+<Button
+  onClick={() => {
+    // Mirror all player x positions: x' = 53.333 - x
+    // Create new formation with mirrored positions
+    // Link as left variant
+  }}
+>
   Create Left Variant
 </Button>
 ```
@@ -530,11 +549,13 @@ const wrPositions = [
 
 ```tsx
 // Add strength marker to specific player
-<Button onClick={() => {
-  // Allow user to click player to mark as strength
-  // Save strength_player_position to formation
-  // Visual indicator: star icon, different color
-}}>
+<Button
+  onClick={() => {
+    // Allow user to click player to mark as strength
+    // Save strength_player_position to formation
+    // Visual indicator: star icon, different color
+  }}
+>
   Mark Strength Player
 </Button>
 ```
@@ -545,10 +566,12 @@ const wrPositions = [
 
 ```tsx
 // Load common formations (I, Shotgun, Spread, etc.)
-<FormationTemplates onSelect={(template) => {
-  // Load pre-defined positions
-  // User customizes from there
-}} />
+<FormationTemplates
+  onSelect={(template) => {
+    // Load pre-defined positions
+    // User customizes from there
+  }}
+/>
 ```
 
 ### Phase 5: Formation Analytics (Priority: Low)
@@ -567,6 +590,7 @@ const wrPositions = [
 ### Why Reuse DiagramEditor?
 
 **Pros**:
+
 - ✅ Already built, battle-tested drag-drop system
 - ✅ Elite PixiJS rendering (WebGL, 60 FPS)
 - ✅ Touch-optimized for mobile
@@ -576,6 +600,7 @@ const wrPositions = [
 - ✅ Saved months of development time
 
 **Cons**:
+
 - ⚠️ Some features we don't need (routes, defense)
 - ⚠️ Slightly heavier bundle (PixiJS)
 
@@ -586,12 +611,14 @@ const wrPositions = [
 **FormationBuilderCanvas vs. DiagramEditor**:
 
 **Why Not Use DiagramEditor Directly?**
+
 - Formation mode needs different controls
 - No routes, no defense, no annotations
 - Focus on player positioning only
 - Different save logic (formation.player_positions vs. diagram_data)
 
 **Why Wrap in FormationBuilderCanvas?**
+
 - ✅ Formation-specific sidebar
 - ✅ Personnel integration
 - ✅ Clean separation of concerns
@@ -638,6 +665,7 @@ const wrPositions = [
 ### Ready to Test ✅
 
 **Manual Testing Required**:
+
 1. Open formation builder modal
 2. Select "Draw Formation" tab
 3. Load personnel package
@@ -650,6 +678,7 @@ const wrPositions = [
 ### Ready to Commit ✅
 
 **Commit Message**:
+
 ```
 feat: Add formation builder canvas with drag-drop player positioning
 
@@ -707,6 +736,7 @@ NEXT STEPS:
 ### Development Time Saved
 
 **If we built custom canvas**:
+
 - Drag-drop system: 2-3 weeks
 - Field rendering: 1 week
 - Coordinate system: 1 week
@@ -715,6 +745,7 @@ NEXT STEPS:
 - **Total: 7-8 weeks**
 
 **By reusing DiagramEditor**:
+
 - Canvas wrapper: 4 hours
 - Sidebar controls: 2 hours
 - Integration: 2 hours
@@ -772,15 +803,18 @@ We successfully implemented **Option A: Reuse DiagramEditor** for the formation 
 ## Documentation
 
 **Related Files**:
+
 - FORMATION_METADATA_TRANSFER_FIX.md (previous session)
 - FORMATION_BUILDER_CANVAS_IMPLEMENTATION.md (this document)
 
 **API Reference**:
+
 - FormationService.updateFormation()
 - FormationService.getFormationById()
 - PersonnelService.getPersonnelConfigurations()
 
 **Type Definitions**:
+
 - Formation (types/formation.ts)
 - FormationPlayerPosition (types/formation.ts)
 - Player (diagram-editor/types/Player.ts)

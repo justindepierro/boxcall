@@ -1,1 +1,1 @@
-export { FormationBuilderModal } from "./FormationBuilderModal";
+export { FormationBuilderModal } from "./FormationBuilderModal.tabbed";

@@ -26,6 +26,7 @@ import type {
   Formation,
   FormationCategory,
   FormationType,
+  FormationDirectionalityType,
   StrengthType,
 } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
@@ -67,6 +68,38 @@ const STRENGTH_OPTIONS: { value: StrengthType; label: string; icon: string }[] =
     { value: "right", label: "Right", icon: "→" },
   ];
 
+const DIRECTIONALITY_OPTIONS: {
+  value: FormationDirectionalityType;
+  label: string;
+  description: string;
+  icon: string;
+}[] = [
+  {
+    value: "mirror",
+    label: "Mirror Variants",
+    description: "Has left/right variants (Trips, Twins, Bunch)",
+    icon: "🔄",
+  },
+  {
+    value: "built-in",
+    label: "Direction Built-In",
+    description: "Direction is in the name (East/West, Rip/Liz)",
+    icon: "🧭",
+  },
+  {
+    value: "symmetric",
+    label: "Symmetric",
+    description: "No direction needed (Empty, Stack)",
+    icon: "⚖️",
+  },
+  {
+    value: "unspecified",
+    label: "Unspecified",
+    description: "Legacy formations without directionality",
+    icon: "❓",
+  },
+];
+
 export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   playbookId,
   onSuccess,
@@ -91,6 +124,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const [formationType, setFormationType] = useState<FormationType | null>(
     null
   );
+  const [directionalityType, setDirectionalityType] =
+    useState<FormationDirectionalityType>("unspecified");
   const [runStrength, setRunStrength] = useState<StrengthType>("balanced");
   const [passStrength, setPassStrength] = useState<StrengthType>("balanced");
   const [tags, setTags] = useState<string>("");
@@ -102,6 +137,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     selectedPersonnelIds,
     category,
     formationType,
+    directionalityType,
     runStrength,
     passStrength,
     tags,
@@ -118,6 +154,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       selectedPersonnelIds,
       category,
       formationType,
+      directionalityType,
       runStrength,
       passStrength,
       tags,
@@ -158,6 +195,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setSelectedPersonnelIds(selectedFormation.personnel_packages || []);
       setCategory(selectedFormation.category || "");
       setFormationType(selectedFormation.formation_type || null);
+      setDirectionalityType(
+        selectedFormation.directionality_type || "unspecified"
+      );
       setRunStrength(selectedFormation.run_strength || "balanced");
       setPassStrength(selectedFormation.pass_strength || "balanced");
       setTags(selectedFormation.tags?.join(", ") || "");
@@ -166,6 +206,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setSelectedPersonnelIds([]);
       setCategory("");
       setFormationType(null);
+      setDirectionalityType("unspecified");
       setRunStrength("balanced");
       setPassStrength("balanced");
       setTags("");
@@ -248,6 +289,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       personnel_packages: data.selectedPersonnelIds,
       category: data.category || undefined,
       formation_type: data.formationType || undefined,
+      directionality_type: data.directionalityType,
       run_strength: data.runStrength,
       pass_strength: data.passStrength,
       tags: tagsArray,
@@ -486,6 +528,31 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
   return (
     <div className="flex flex-col gap-spacing-md p-spacing-sm max-w-3xl mx-auto">
+      {/* Header with New Formation Button */}
+      <div className="flex items-center justify-between">
+        <Typography variant="headline-md" className="text-text-primary">
+          Formation Details
+        </Typography>
+        <Button
+          onClick={() => {
+            // Clear selection and form to create new formation
+            setSelectedFormation(null);
+            setSelectedPersonnelIds([]);
+            setCategory("");
+            setFormationType(null);
+            setRunStrength("balanced");
+            setPassStrength("balanced");
+            setTags("");
+            setDescription("");
+            setApplyToBothSides(true);
+          }}
+          variant="primary"
+          size="sm"
+        >
+          + New Formation
+        </Button>
+      </div>
+
       {/* Formation Selector */}
       <div className="flex flex-col gap-spacing-xs">
         <Typography variant="body-md" className="text-text-primary font-medium">
@@ -558,6 +625,125 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
           </div>
         )}
       </div>
+
+      {/* New Formation Form - Shows when no formation selected */}
+      {!selectedFormation && (
+        <div className="p-spacing-lg bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="space-y-spacing-md">
+            <div>
+              <Typography
+                variant="headline-sm"
+                className="text-text-primary mb-spacing-xs"
+              >
+                Create New Formation
+              </Typography>
+              <Typography variant="body-sm" className="text-text-muted">
+                Enter formation details to create a new formation. You can add
+                player positions on the "Draw Formation" tab.
+              </Typography>
+            </div>
+
+            {/* Formation Name */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                Formation Name *
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., Trips Right, I Formation, Shotgun Spread"
+                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+
+            {/* Personnel Package */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                Personnel Package *
+              </label>
+              <select className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary">
+                <option value="">Select personnel...</option>
+                {availablePersonnel.map((personnel) => (
+                  <option key={personnel.id} value={personnel.id}>
+                    {personnel.name} - {personnel.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) =>
+                  setCategory(e.target.value as FormationCategory)
+                }
+                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+              >
+                <option value="">Select category...</option>
+                {FORMATION_CATEGORIES.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Directionality Type */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                Directionality Type *
+              </label>
+              <select
+                value={directionalityType}
+                onChange={(e) =>
+                  setDirectionalityType(
+                    e.target.value as FormationDirectionalityType
+                  )
+                }
+                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+              >
+                {DIRECTIONALITY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.icon} {option.label}
+                  </option>
+                ))}
+              </select>
+              <Typography
+                variant="caption"
+                className="text-text-muted mt-spacing-xs block"
+              >
+                {DIRECTIONALITY_OPTIONS.find(
+                  (opt) => opt.value === directionalityType
+                )?.description || ""}
+              </Typography>
+            </div>
+
+            {/* Save Button */}
+            <Button
+              onClick={() => {
+                // TODO: Implement create formation logic
+                toast?.success?.("Formation creation coming soon!");
+              }}
+              variant="primary"
+              className="w-full"
+            >
+              <Save className="w-4 h-4 mr-spacing-xs" />
+              Create Formation
+            </Button>
+
+            <Typography
+              variant="caption"
+              className="text-text-muted text-center block"
+            >
+              💡 Tip: After creating, switch to "Draw Formation" to add player
+              positions
+            </Typography>
+          </div>
+        </div>
+      )}
 
       {selectedFormation && (
         <>
@@ -680,6 +866,51 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
               </select>
               <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
             </div>
+          </div>
+
+          {/* Directionality Type */}
+          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-medium mb-spacing-xs"
+            >
+              Directionality
+            </Typography>
+            <Typography
+              variant="caption"
+              className="text-text-muted mb-spacing-sm block"
+            >
+              How this formation handles left/right direction
+            </Typography>
+
+            <div className="relative">
+              <select
+                value={directionalityType}
+                onChange={(e) =>
+                  setDirectionalityType(
+                    e.target.value as FormationDirectionalityType
+                  )
+                }
+                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+              >
+                {DIRECTIONALITY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.icon} {option.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+            </div>
+
+            {/* Helper text based on selection */}
+            <Typography
+              variant="caption"
+              className="text-text-muted mt-spacing-xs block"
+            >
+              {DIRECTIONALITY_OPTIONS.find(
+                (opt) => opt.value === directionalityType
+              )?.description || ""}
+            </Typography>
           </div>
 
           {/* Run Strength */}

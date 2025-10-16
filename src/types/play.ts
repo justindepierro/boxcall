@@ -1,6 +1,25 @@
 // Import diagram types
 import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
 
+// Play creation source tracking
+export type PlayCreationSource =
+  | "add_play_modal"      // From AddNewPlayModal (hero tile)
+  | "diagram_editor"      // Created directly in diagram editor
+  | "play_card"          // Duplicated from existing play
+  | "bulk_import"        // CSV/bulk import
+  | "api"                // API creation
+  | "migration"          // Data migration
+  | "unknown";           // Legacy or undefined
+
+// Play creation context (JSONB structure)
+export interface PlayCreationContext {
+  active_tab?: string;           // Which tab was active (if applicable)
+  user_action?: string;          // Specific action taken
+  duplicated_from?: string;      // Play ID if duplicated
+  source_version?: string;       // App version
+  [key: string]: unknown;        // Allow additional context
+}
+
 // Custom field types
 export type CustomFieldType =
   | "text"
@@ -123,6 +142,10 @@ export interface Play {
   // Formation relationship (NEW - October 12, 2025)
   formation_id?: string | null; // uuid - references formations.id
   formation_direction?: "base" | "left" | "right" | null; // text - which variant to use
+
+  // Creation tracking (NEW - October 16, 2025)
+  creation_source?: PlayCreationSource; // Where was play created from
+  creation_context?: PlayCreationContext; // Additional creation context
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database

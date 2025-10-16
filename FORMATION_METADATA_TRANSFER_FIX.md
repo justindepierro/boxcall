@@ -9,19 +9,22 @@
 ## Problem
 
 When creating or editing a play in `AddNewPlayModal`, selecting a formation from the `FormationSelector` would only transfer:
+
 - ✅ Formation name
 - ✅ Formation ID
 - ✅ Formation direction (base/left/right)
 
 But it would **NOT** transfer formation metadata:
+
 - ❌ Personnel (e.g., "11", "12", "21")
-- ❌ Formation type (e.g., "Shotgun", "I Formation")  
+- ❌ Formation type (e.g., "Shotgun", "I Formation")
 - ❌ Formation category (e.g., "spread", "pro", "power")
 - ❌ Formation tags (e.g., "twins", "trips", "bunch")
 - ❌ Run strength (left/right/balanced)
 - ❌ Pass strength (left/right/balanced)
 
 This created an **inconsistent experience** where:
+
 1. Coaches create formations with full metadata in FormationBuilder
 2. Select that formation when creating a play
 3. Have to manually re-enter all the metadata
@@ -32,6 +35,7 @@ This created an **inconsistent experience** where:
 ## Solution
 
 ### File Changed
+
 `src/components/playbook/AddNewPlayModal.tsx`
 
 ### What Was Fixed
@@ -117,7 +121,9 @@ onFormationIdChange={(id, formation) => {
 ## Data Flow (After Fix)
 
 ### 1. Formation Creation
+
 **FormationBuilderModal** → **FormationService** → **Database**
+
 ```
 Formation Created:
   name: "Trips Right"
@@ -130,7 +136,9 @@ Formation Created:
 ```
 
 ### 2. Play Creation (Formation Selected)
+
 **AddNewPlayModal** → **FormationSelector** → **onFormationIdChange**
+
 ```
 Formation Metadata Transferred:
   ✅ personnel: "11"           (from formation.personnel_name)
@@ -141,7 +149,9 @@ Formation Metadata Transferred:
 ```
 
 ### 3. Play Saved to Database
+
 **AddNewPlayModal** → **handleSubmit** → **PlayService**
+
 ```
 Play Saved with:
   formation: "Trips Right"
@@ -156,7 +166,9 @@ Play Saved with:
 ```
 
 ### 4. PlayCard Display
+
 **PlayCard** → **fieldDefinitions** → Display
+
 ```
 PlayCard Shows:
   Formation: Trips Right
@@ -173,21 +185,25 @@ PlayCard Shows:
 ## Benefits
 
 ### ✅ **Consistent Experience**
+
 - Formation metadata flows seamlessly from creation → play → display
 - No more manual re-entry of formation details
 - Single source of truth for formation data
 
 ### ✅ **Better UX**
+
 - Coaches select formation once, get all metadata automatically
 - Less form friction when creating plays
 - Faster play creation workflow
 
 ### ✅ **Data Integrity**
+
 - Formation metadata stays in sync with formation definition
 - Changes to formation propagate to plays
 - Accurate reporting and filtering by formation attributes
 
 ### ✅ **Backwards Compatible**
+
 - Existing plays without formation_id still work
 - Manual entry still possible for legacy formations
 - No breaking changes to existing code
@@ -197,6 +213,7 @@ PlayCard Shows:
 ## Testing
 
 ### Test Case 1: New Play with Formation
+
 1. Open AddNewPlayModal
 2. Click "Select from Library" in Formation field
 3. Select "Trips Right" formation
@@ -206,6 +223,7 @@ PlayCard Shows:
 7. ✅ Verify run/pass strength auto-fills with "right"
 
 ### Test Case 2: Edit Existing Play
+
 1. Open PlayCard for existing play
 2. Edit formation field
 3. Change to different formation
@@ -213,6 +231,7 @@ PlayCard Shows:
 5. ✅ Verify PlayCard displays new formation metadata
 
 ### Test Case 3: Manual Entry (No Formation ID)
+
 1. Open AddNewPlayModal
 2. Type formation name manually (don't select from library)
 3. ✅ Verify manual entry still works
@@ -242,9 +261,11 @@ Added helpful console log when formation metadata is transferred:
 ## Related Files
 
 **Modified:**
+
 - ✅ `src/components/playbook/AddNewPlayModal.tsx` - Added metadata transfer logic
 
 **Already Working (No Changes Needed):**
+
 - ✅ `src/components/playbook/play-card/fieldDefinitions.tsx` - Displays fields
 - ✅ `src/components/playbook/PlayCard.tsx` - Uses field definitions
 - ✅ `src/types/formation.ts` - Formation type includes all metadata
@@ -257,14 +278,17 @@ Added helpful console log when formation metadata is transferred:
 ## Future Enhancements
 
 ### Phase 1 (Immediate - DONE ✅)
+
 - ✅ Transfer formation metadata to play on selection
 
 ### Phase 2 (Soon)
+
 - [ ] Live sync: When formation is updated, update all linked plays
 - [ ] Bulk update: Update all plays using a formation when metadata changes
 - [ ] Formation change history: Track when formation metadata changes
 
 ### Phase 3 (Later)
+
 - [ ] Formation templates: Save common formation configurations
 - [ ] Formation families: Link related formations (Trips Left/Right)
 - [ ] Formation analytics: Most used formations, success rates by formation
@@ -274,12 +298,14 @@ Added helpful console log when formation metadata is transferred:
 ## Success Metrics
 
 **Before Fix:**
+
 - ❌ 0% of formation metadata transferred automatically
 - ❌ Coaches manually entering data 5+ times per play
 - ❌ Inconsistent formation data across plays
 - ❌ PlayCard showing incomplete information
 
 **After Fix:**
+
 - ✅ 100% of formation metadata transferred automatically
 - ✅ 1 click to select formation = all data populated
 - ✅ Consistent formation data across all plays
@@ -296,6 +322,7 @@ This fix creates a **consistent, seamless experience** for coaches creating and 
 ---
 
 **Related Documentation:**
+
 - [FORMATION_METADATA_COMPLETE_IMPLEMENTATION.md](./FORMATION_METADATA_COMPLETE_IMPLEMENTATION.md)
 - [PERSONNEL_FORMATIONS_SUCCESS.md](./PERSONNEL_FORMATIONS_SUCCESS.md)
 - [FORMATION_BUILDER_IMPLEMENTATION_PLAN.md](./FORMATION_BUILDER_IMPLEMENTATION_PLAN.md)

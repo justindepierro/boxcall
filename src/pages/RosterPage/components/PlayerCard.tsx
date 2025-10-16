@@ -70,7 +70,8 @@ export const PlayerCard = React.memo<PlayerCardProps>(
                 {player.first_name}
                 {player.nickname && (
                   <span className="italic text-pink-600 dark:text-pink-400">
-                    {" "}"{player.nickname}"
+                    {" "}
+                    "{player.nickname}"
                   </span>
                 )}{" "}
                 {player.last_name}

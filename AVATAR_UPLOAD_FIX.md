@@ -10,8 +10,9 @@
 Based on your screenshot, you have **2 active errors**:
 
 ### Error 1: Avatar Upload Failed (RLS Policy) 🔴
+
 ```
-Avatar upload failed: 
+Avatar upload failed:
 ErrorTrackingService.tsx:140
 new row violates row-level security policy
 ```
@@ -23,8 +24,9 @@ new row violates row-level security policy
 ---
 
 ### Error 2: Malformed Array Literal 🔴
+
 ```
-Failed to update profile: malformed array literal: 
+Failed to update profile: malformed array literal:
 "NFHS Level 3, First Aid, CPR, DASA, USATF Level 1"
 ```
 
@@ -94,13 +96,13 @@ USING (
 ### Step 2: Verify Policies Created
 
 ```sql
-SELECT 
+SELECT
   policyname,
   permissive,
   roles,
   cmd
-FROM pg_policies 
-WHERE tablename = 'objects' 
+FROM pg_policies
+WHERE tablename = 'objects'
 AND schemaname = 'storage'
 AND policyname LIKE '%avatar%';
 ```
@@ -117,11 +119,11 @@ Run this in Supabase SQL Editor:
 
 ```sql
 -- Check column type
-SELECT 
+SELECT
   column_name,
   data_type
 FROM information_schema.columns
-WHERE table_name = 'profiles' 
+WHERE table_name = 'profiles'
 AND column_name = 'certifications';
 ```
 
@@ -135,8 +137,8 @@ If the query above shows `ARRAY` or `text[]`, run this fix:
 
 ```sql
 -- Convert array column to text
-ALTER TABLE profiles 
-ALTER COLUMN certifications TYPE TEXT 
+ALTER TABLE profiles
+ALTER COLUMN certifications TYPE TEXT
 USING array_to_string(certifications::text[], ', ');
 ```
 
@@ -148,8 +150,8 @@ If the fix above doesn't work, temporarily clear your certifications data:
 
 ```sql
 -- Clear certifications for your user only
-UPDATE profiles 
-SET certifications = NULL 
+UPDATE profiles
+SET certifications = NULL
 WHERE email = 'justindepierro@gmail.com';
 ```
 
@@ -167,9 +169,11 @@ Then try saving your profile again without certifications data.
    - Should show "Public" badge
 
 2. **Verify policies exist**:
+
    ```sql
    SELECT COUNT(*) FROM storage.policies WHERE bucket_id = 'avatars';
    ```
+
    - Should return `4`
 
 3. **Test upload**:
@@ -210,9 +214,10 @@ Then try saving your profile again without certifications data.
 ### Check Current User ID
 
 In browser console:
+
 ```javascript
 const { data } = await supabase.auth.getUser();
-console.log('User ID:', data.user.id);
+console.log("User ID:", data.user.id);
 ```
 
 This should match your folder name in storage.
@@ -222,6 +227,7 @@ This should match your folder name in storage.
 ### Check Storage Bucket Configuration
 
 In Supabase Dashboard:
+
 1. Storage → avatars → Settings
 2. Verify:
    - ✅ Public bucket
@@ -237,6 +243,7 @@ The upload path should be: `{user_id}/{filename}`
 Example: `7afcafe0-0154-4787-9752-957fa2372d0/{timestamp}.jpg`
 
 Verify in browser DevTools Network tab:
+
 1. Select avatar file
 2. Click Save
 3. Look for `POST` request to storage API
@@ -249,6 +256,7 @@ Verify in browser DevTools Network tab:
 ### Issue: "Policy with name already exists"
 
 **Solution**: Drop policies first before creating:
+
 ```sql
 DROP POLICY IF EXISTS "Users can upload own avatar" ON storage.objects;
 ```
@@ -258,6 +266,7 @@ DROP POLICY IF EXISTS "Users can upload own avatar" ON storage.objects;
 ### Issue: "auth.uid() returns null"
 
 **Solution**: Make sure you're logged in:
+
 ```sql
 SELECT auth.uid(), auth.role();
 ```
@@ -271,6 +280,7 @@ Should return your user ID and 'authenticated' role.
 **Problem**: `(storage.foldername(name))[1]` returns wrong value
 
 **Debug**:
+
 ```sql
 -- Test with sample path
 SELECT (storage.foldername('7afcafe0-0154-4787-9752-957fa2372d0/avatar.jpg'))[1];
@@ -283,6 +293,7 @@ Should return: `7afcafe0-0154-4787-9752-957fa2372d0`
 ### Issue: Avatar uploads but doesn't display
 
 **Solutions**:
+
 1. Check browser console for image load errors
 2. Verify public URL is correct
 3. Check CORS settings in Supabase
@@ -296,22 +307,26 @@ Should return: `7afcafe0-0154-4787-9752-957fa2372d0`
 Run these in order:
 
 - [ ] **1. Fix RLS Policies**
+
   ```sql
   -- Run: supabase/migrations/20251016000005_fix_avatar_rls.sql
   ```
 
 - [ ] **2. Verify 4 policies exist**
+
   ```sql
   SELECT COUNT(*) FROM storage.policies WHERE bucket_id = 'avatars';
   ```
 
 - [ ] **3. Check certifications data type**
+
   ```sql
-  SELECT data_type FROM information_schema.columns 
+  SELECT data_type FROM information_schema.columns
   WHERE table_name = 'profiles' AND column_name = 'certifications';
   ```
 
 - [ ] **4. If array type, convert to text**
+
   ```sql
   ALTER TABLE profiles ALTER COLUMN certifications TYPE TEXT;
   ```
@@ -360,14 +375,15 @@ Profile updated successfully!
 If errors persist after applying fixes:
 
 1. **Share the output of**:
+
    ```sql
    -- Check policies
    SELECT * FROM storage.policies WHERE bucket_id = 'avatars';
-   
+
    -- Check certifications type
-   SELECT data_type FROM information_schema.columns 
+   SELECT data_type FROM information_schema.columns
    WHERE table_name = 'profiles' AND column_name = 'certifications';
-   
+
    -- Check your user ID
    SELECT auth.uid();
    ```

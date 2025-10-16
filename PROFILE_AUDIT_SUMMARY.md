@@ -9,12 +9,14 @@
 ## 🚨 Critical Issues Found
 
 ### 1. Database Schema Mismatch
+
 **Problem**: ProfilePage tries to save 16 fields that don't exist in database  
 **Impact**: Profile saves fail with "column does not exist" error  
 **Fix**: Apply migration `20251016000004_add_profile_fields.sql`  
 **Time**: 5 minutes
 
 ### 2. Missing Storage Bucket
+
 **Problem**: Avatar uploads fail because `avatars` bucket doesn't exist  
 **Impact**: Profile pictures never update  
 **Fix**: Create bucket in Supabase Dashboard (see `AVATAR_STORAGE_SETUP.md`)  
@@ -25,12 +27,14 @@
 ## 🎯 Immediate Action Items
 
 ### Step 1: Apply Database Migration
+
 ```bash
 # In Supabase SQL Editor, run:
 supabase/migrations/20251016000004_add_profile_fields.sql
 ```
 
 **What it adds**:
+
 - Coaching fields: `coaching_experience`, `education`, `certifications`, `coaching_philosophy`, etc.
 - Social media fields: `social_twitter`, `social_instagram`, `social_linkedin`, etc.
 - Indexes for performance
@@ -41,9 +45,11 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 ---
 
 ### Step 2: Create Avatars Storage Bucket
+
 **Location**: Supabase Dashboard → Storage → Create bucket
 
 **Settings**:
+
 - Name: `avatars`
 - Public: ✅ Yes
 - File size limit: 5MB
@@ -56,6 +62,7 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 ---
 
 ### Step 3: Test Everything
+
 1. Save profile with coaching info → Should succeed
 2. Save profile with social links → Should succeed
 3. Upload avatar → Should display new image
@@ -66,6 +73,7 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 ## 📋 Roadmap Overview
 
 ### Phase 1: Emergency Fixes (This Week) 🔴
+
 - ✅ Create migration for missing columns
 - ✅ Create avatars storage bucket
 - ⏳ Apply migration
@@ -73,18 +81,21 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 - ⏳ Test avatar uploads
 
 ### Phase 2: Quick Improvements (Next 2 Weeks) 🟡
+
 - Better error handling for uploads
 - Avatar preview before upload
 - File size/type validation
 - Detailed error messages
 
 ### Phase 3: Role-Specific Pages (Next Month) 🟢
+
 - Separate pages for Coach, Player, Admin
 - Extract reusable components
 - Cleaner architecture
 - Better UX per role
 
 ### Phase 4: Future Enhancements (Later) 🔵
+
 - Profile customization options
 - Privacy controls
 - Profile verification
@@ -120,6 +131,7 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 ### Roster Management vs Player Profile
 
 **Roster Page** (`/roster`) - Coach controls:
+
 - Jersey number
 - Position
 - Grade level
@@ -128,6 +140,7 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 - Data source: `team_players` table
 
 **Player Profile** (`/profile/player`) - Player controls:
+
 - Bio
 - Avatar
 - Emergency contact
@@ -142,6 +155,7 @@ supabase/migrations/20251016000004_add_profile_fields.sql
 ## ✅ Success Criteria
 
 After Phase 1 completion:
+
 - [ ] Profile saves without errors
 - [ ] All coaching fields save correctly
 - [ ] All social media fields save correctly
@@ -167,12 +181,12 @@ After Phase 1 completion:
 
 ## 📊 Time Estimates
 
-| Phase | Tasks | Time Estimate |
-|-------|-------|---------------|
-| **Phase 1** (Emergency) | Migration + Storage | 30 minutes |
-| **Phase 2** (Quick Wins) | Error handling + Preview | 1-2 days |
-| **Phase 3** (Refactor) | Role-specific pages | 2-3 weeks |
-| **Phase 4** (Future) | Advanced features | TBD |
+| Phase                    | Tasks                    | Time Estimate |
+| ------------------------ | ------------------------ | ------------- |
+| **Phase 1** (Emergency)  | Migration + Storage      | 30 minutes    |
+| **Phase 2** (Quick Wins) | Error handling + Preview | 1-2 days      |
+| **Phase 3** (Refactor)   | Role-specific pages      | 2-3 weeks     |
+| **Phase 4** (Future)     | Advanced features        | TBD           |
 
 ---
 

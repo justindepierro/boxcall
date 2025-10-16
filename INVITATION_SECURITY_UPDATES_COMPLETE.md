@@ -8,29 +8,34 @@
 
 ## ✅ Implemented Fixes
 
-### 1. **Email Validation** 
+### 1. **Email Validation**
+
 - Added `isValidEmail()` regex check
 - Returns error if email format invalid
 - Prevents wasted sends and user confusion
 
 ### 2. **Rate Limiting**
+
 - Max 3 invitation attempts per email per team per 24 hours
 - New `invitation_attempts` table for tracking
 - Audit trail of all invitation sends
 - Prevents spam and abuse
 
 ### 3. **Token Expiration**
+
 - Invitations expire after 7 days
 - Added `invitation_expires_at` field
 - Validation in `getInvitationByToken()`
 - Auto-marks expired invitations
 
 ### 4. **Token Regeneration on Resend**
+
 - `resendPlayerInvitation()` generates new UUID token
 - Invalidates old links if leaked
 - Enhanced security for re-sends
 
 ### 5. **Atomic Invitation Acceptance** ⭐ CRITICAL
+
 - Created `accept_player_invitation()` RPC function
 - **Atomically:**
   - Updates `team_players.user_id`
@@ -42,16 +47,19 @@
 - Returns detailed result with error codes
 
 ### 6. **Invited By Tracking**
+
 - Added `invited_by` field to `team_players`
 - Tracks which coach sent invitation
 - Useful for audit and analytics
 
 ### 7. **Improved Error Handling**
+
 - Typed `AcceptInvitationResult` interface
 - Specific error codes: `invitation_expired`, `invalid_token`, `database_error`
 - Better user feedback
 
 ### 8. **Audit Logging**
+
 - `logInvitationAttempt()` tracks every send
 - Records: team_id, player_id, email, success, timestamp
 - Analytics-ready data
@@ -61,6 +69,7 @@
 ## 📁 Files Changed
 
 ### New Files (1):
+
 1. **`supabase/migrations/20251016000003_improve_invitation_system.sql`**
    - Adds `invitation_expires_at` and `invited_by` fields
    - Creates `invitation_attempts` table
@@ -69,6 +78,7 @@
    - Adds RLS policies
 
 ### Modified Files (3):
+
 1. **`src/services/invitationService.ts`**
    - Added email validation
    - Added rate limiting
@@ -95,6 +105,7 @@
 ### To Apply:
 
 **Option A: SQL Editor (Supabase Dashboard)**
+
 ```bash
 # Copy contents of:
 supabase/migrations/20251016000003_improve_invitation_system.sql
@@ -103,6 +114,7 @@ supabase/migrations/20251016000003_improve_invitation_system.sql
 ```
 
 **Option B: Supabase CLI**
+
 ```bash
 npx supabase db push
 ```
@@ -115,6 +127,7 @@ npx supabase db push
    - Updated `invitation_status` enum
 
 2. **New Table:**
+
    ```sql
    CREATE TABLE invitation_attempts (
      id UUID PRIMARY KEY,
@@ -145,6 +158,7 @@ npx supabase db push
 ## 🔒 Security Improvements
 
 ### Before (MVP):
+
 - ❌ No email validation
 - ❌ No rate limiting
 - ❌ Tokens never expire
@@ -154,6 +168,7 @@ npx supabase db push
 - ❌ **team_members record NOT created** (BLOCKER!)
 
 ### After (Current):
+
 - ✅ Email validation (regex)
 - ✅ Rate limiting (3/24h per email)
 - ✅ Token expiration (7 days)
@@ -167,12 +182,14 @@ npx supabase db push
 ## 🧪 Testing Checklist
 
 ### Before Running Migration:
+
 - [x] Code changes reviewed
 - [x] Type-check passes (0 errors)
 - [x] Migration script syntax validated
 - [x] Schema.sql updated
 
 ### After Running Migration:
+
 - [ ] Run migration in database
 - [ ] Verify new fields exist in `team_players`
 - [ ] Verify `invitation_attempts` table created
@@ -184,6 +201,7 @@ npx supabase db push
 - [ ] Check RLS policies work
 
 ### Full Flow Test:
+
 1. [ ] Coach adds player with email
 2. [ ] Click "Invite to Team"
 3. [ ] Check console for email log
@@ -198,16 +216,19 @@ npx supabase db push
 ## 🎯 What This Fixes
 
 ### Critical Issues (BLOCKING):
+
 1. ✅ **Missing team_members creation** - Players can now actually access team
 2. ✅ **No transaction safety** - All-or-nothing updates
 3. ✅ **Token never expires** - 7-day expiration enforced
 
 ### Important Issues:
+
 4. ✅ **No rate limiting** - Prevents spam
 5. ✅ **Token not regenerated** - Enhanced security
 6. ✅ **No email validation** - Better UX
 
 ### Nice to Have:
+
 7. ✅ **No invited_by tracking** - Audit trail
 8. ✅ **No attempt logging** - Analytics ready
 
@@ -216,6 +237,7 @@ npx supabase db push
 ## 📊 New Workflow
 
 ### Coach Sends Invitation:
+
 ```
 1. Coach enters player email
 2. System validates email format
@@ -232,6 +254,7 @@ npx supabase db push
 ```
 
 ### Player Accepts Invitation:
+
 ```
 1. Player clicks invitation link
 2. System validates token
@@ -249,6 +272,7 @@ npx supabase db push
 ## 🚀 Next Steps
 
 ### Immediate (This Session):
+
 1. ✅ Create migration script
 2. ✅ Update invitationService.ts
 3. ✅ Update RosterPage.tsx
@@ -257,12 +281,14 @@ npx supabase db push
 6. ⏳ **Test invitation flow**
 
 ### Phase 2 (Next):
+
 7. ⏳ Real email service (Resend)
 8. ⏳ Build `/invite/accept` page
 9. ⏳ Profile creation on acceptance
 10. ⏳ Invitation management dashboard
 
 ### Phase 3 (Future):
+
 11. ⏳ Email bounce handling
 12. ⏳ HTML email templates
 13. ⏳ Parent/guardian invitations
@@ -274,11 +300,13 @@ npx supabase db push
 ## 💡 Key Improvements
 
 ### Data Integrity:
+
 - Atomic operations prevent partial updates
 - Transaction rollback on failure
 - Duplicate prevention
 
 ### Security:
+
 - Email validation
 - Rate limiting
 - Token expiration
@@ -286,11 +314,13 @@ npx supabase db push
 - Audit logging
 
 ### User Experience:
+
 - Better error messages
 - Clearer status tracking
 - Automatic cleanup of expired invitations
 
 ### Developer Experience:
+
 - Type-safe interfaces
 - Comprehensive error codes
 - Well-documented functions
@@ -310,6 +340,7 @@ The following type errors are expected until Supabase types are regenerated:
 ```
 
 These will resolve after:
+
 1. Running the migration
 2. Regenerating Supabase types: `npx supabase gen types typescript --local > src/types/supabase.ts`
 
@@ -318,4 +349,3 @@ These will resolve after:
 **Status:** ✅ Ready for database migration  
 **Blocker Resolved:** team_members now created automatically  
 **Next Action:** Apply migration, then test full invitation flow
-

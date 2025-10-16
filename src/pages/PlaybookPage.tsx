@@ -403,7 +403,7 @@ export default function PlaybookPage() {
     triggerHapticFeedback("light");
     setShowAddNewPlayModal(true);
   }, []);
-  
+
   // NEW: Handler to open diagram editor after play creation
   const handlePlayCreated = useCallback((play: Play) => {
     // Auto-open diagram editor with the newly created play
@@ -1340,7 +1340,7 @@ export default function PlaybookPage() {
 
                     setShowAddNewPlayModal(false);
                     setEditingPlay(null);
-                    
+
                     // NEW: Return the created/updated play so modal can call onPlayCreated
                     return resultPlay;
                   } catch (error) {

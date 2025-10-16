@@ -18,6 +18,7 @@ The `acceptInvitation()` function only updates `team_players.user_id` but **does
 - ❌ Navigation won't work (no team association)
 
 **Current Code** (`invitationService.ts` line 148):
+
 ```typescript
 export async function acceptInvitation(
   token: string,
@@ -27,11 +28,10 @@ export async function acceptInvitation(
     const updateData: Record<string, any> = {
       invitation_status: "accepted",
       invitation_accepted_at: new Date().toISOString(),
-      user_id: userId,  // ← Only links user to roster entry
+      user_id: userId, // ← Only links user to roster entry
     };
 
-    const { error } = await (supabase
-      .from("team_players") as any)
+    const { error } = await (supabase.from("team_players") as any)
       .update(updateData)
       .eq("invitation_token", token)
       .eq("invitation_status", "pending");
@@ -41,7 +41,7 @@ export async function acceptInvitation(
       return false;
     }
 
-    return true;  // ← Missing team_members creation!
+    return true; // ← Missing team_members creation!
   } catch (err) {
     logError("[invitationService] Error accepting invitation:", err);
     return false;
@@ -50,6 +50,7 @@ export async function acceptInvitation(
 ```
 
 **Fix Required:**
+
 ```typescript
 export async function acceptInvitation(
   token: string,
@@ -76,46 +77,51 @@ export async function acceptInvitation(
       user_id: userId,
     };
 
-    const { error: updateError } = await (supabase
-      .from("team_players") as any)
+    const { error: updateError } = await (supabase.from("team_players") as any)
       .update(updateData)
       .eq("invitation_token", token)
       .eq("invitation_status", "pending");
 
     if (updateError) {
-      logError("[invitationService] Failed to update invitation status:", updateError);
+      logError(
+        "[invitationService] Failed to update invitation status:",
+        updateError
+      );
       return false;
     }
 
     // Step 3: Create team_members record (CRITICAL!)
-    const { error: memberError } = await supabase
-      .from("team_members")
-      .insert({
-        team_id: playerData.team_id,
-        user_id: userId,
-        team_role: "player",  // Default to player role
-        status: "active",
-        capabilities: {
-          can_manage_team: false,
-          can_manage_games: false,
-          can_manage_social: false,
-          can_manage_players: false,
-          can_view_analytics: false,
-          can_manage_playbook: false,
-          can_manage_practice: false,
-          can_manage_equipment: false,
-        },
-        invited_by: null,  // TODO: Track who invited them
-        joined_at: new Date().toISOString(),
-      });
+    const { error: memberError } = await supabase.from("team_members").insert({
+      team_id: playerData.team_id,
+      user_id: userId,
+      team_role: "player", // Default to player role
+      status: "active",
+      capabilities: {
+        can_manage_team: false,
+        can_manage_games: false,
+        can_manage_social: false,
+        can_manage_players: false,
+        can_view_analytics: false,
+        can_manage_playbook: false,
+        can_manage_practice: false,
+        can_manage_equipment: false,
+      },
+      invited_by: null, // TODO: Track who invited them
+      joined_at: new Date().toISOString(),
+    });
 
     if (memberError) {
-      logError("[invitationService] Failed to create team_members record:", memberError);
+      logError(
+        "[invitationService] Failed to create team_members record:",
+        memberError
+      );
       // IMPORTANT: Consider rolling back the team_players update here
       return false;
     }
 
-    info(`[invitationService] Player ${userId} successfully joined team ${playerData.team_id}`);
+    info(
+      `[invitationService] Player ${userId} successfully joined team ${playerData.team_id}`
+    );
     return true;
   } catch (err) {
     logError("[invitationService] Error accepting invitation:", err);
@@ -132,6 +138,7 @@ export async function acceptInvitation(
 Invitation tokens never expire. A leaked invitation link could be used months/years later.
 
 **Current State:**
+
 - `invitation_sent_at` is stored but never checked
 - No `expires_at` field
 - No cleanup of old invitations
@@ -139,30 +146,35 @@ Invitation tokens never expire. A leaked invitation link could be used months/ye
 **Fix Required:**
 
 **Migration:**
+
 ```sql
 -- Add expiration field
-ALTER TABLE team_players 
+ALTER TABLE team_players
 ADD COLUMN invitation_expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days');
 
 -- Add comment
 COMMENT ON COLUMN team_players.invitation_expires_at IS 'Invitation link expires after 7 days';
 
 -- Create index for cleanup queries
-CREATE INDEX idx_team_players_invitation_expired 
-ON team_players(invitation_expires_at) 
+CREATE INDEX idx_team_players_invitation_expired
+ON team_players(invitation_expires_at)
 WHERE invitation_status = 'pending';
 ```
 
 **Update `sendPlayerInvitation()`:**
+
 ```typescript
 const updateData: Record<string, any> = {
   invitation_status: "pending",
   invitation_sent_at: new Date().toISOString(),
-  invitation_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+  invitation_expires_at: new Date(
+    Date.now() + 7 * 24 * 60 * 60 * 1000
+  ).toISOString(), // 7 days
 };
 ```
 
 **Update `getInvitationByToken()`:**
+
 ```typescript
 export async function getInvitationByToken(token: string) {
   const { data, error } = await supabase
@@ -170,7 +182,7 @@ export async function getInvitationByToken(token: string) {
     .select("*")
     .eq("invitation_token", token)
     .eq("invitation_status", "pending")
-    .gt("invitation_expires_at", new Date().toISOString())  // ← Check expiration
+    .gt("invitation_expires_at", new Date().toISOString()) // ← Check expiration
     .single();
 
   if (error || !data) {
@@ -182,6 +194,7 @@ export async function getInvitationByToken(token: string) {
 ```
 
 **Cleanup Job (Supabase Edge Function):**
+
 ```typescript
 // Clean up expired invitations daily
 export async function cleanupExpiredInvitations() {
@@ -205,6 +218,7 @@ export async function cleanupExpiredInvitations() {
 `resendPlayerInvitation()` doesn't regenerate the token. If the original link was leaked, resending doesn't help.
 
 **Current Code:**
+
 ```typescript
 export async function resendPlayerInvitation(...) {
   // Just calls sendPlayerInvitation again
@@ -213,6 +227,7 @@ export async function resendPlayerInvitation(...) {
 ```
 
 **Fix Required:**
+
 ```typescript
 export async function resendPlayerInvitation(
   playerId: string,
@@ -231,12 +246,14 @@ export async function resendPlayerInvitation(
   try {
     // Regenerate token on resend for security
     const newToken = crypto.randomUUID();
-    
+
     const updateData: Record<string, any> = {
-      invitation_token: newToken,  // ← New token
+      invitation_token: newToken, // ← New token
       invitation_status: "pending",
       invitation_sent_at: new Date().toISOString(),
-      invitation_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      invitation_expires_at: new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+      ).toISOString(),
     };
 
     const { error } = await (supabase.from("team_players") as any)
@@ -273,6 +290,7 @@ export async function resendPlayerInvitation(
 No validation that email is actually valid before sending invitation.
 
 **Fix Required:**
+
 ```typescript
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -322,6 +340,7 @@ Coach could spam invitations, causing abuse or email service costs.
 **Fix Required:**
 
 **Add to migration:**
+
 ```sql
 -- Track invitation attempts
 CREATE TABLE invitation_attempts (
@@ -332,11 +351,12 @@ CREATE TABLE invitation_attempts (
   attempted_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_invitation_attempts_email_time 
+CREATE INDEX idx_invitation_attempts_email_time
 ON invitation_attempts(email, attempted_at);
 ```
 
 **Rate limiting logic:**
+
 ```typescript
 async function checkRateLimit(
   teamId: string,
@@ -395,6 +415,7 @@ A player could already be a user with an account, causing duplicate records.
 **Fix Required:**
 
 **Check before sending:**
+
 ```typescript
 export async function sendPlayerInvitation(
   params: SendInvitationParams
@@ -412,9 +433,10 @@ export async function sendPlayerInvitation(
     // User already has account - auto-link instead of inviting?
     return {
       success: false,
-      message: "A user with this email already exists. Please link them directly.",
+      message:
+        "A user with this email already exists. Please link them directly.",
     };
-    
+
     // OR: Auto-link them
     // return await linkExistingUser(playerId, existingUser.id, teamId);
   }
@@ -433,6 +455,7 @@ When player accepts invitation, we need to ensure their profile is created/updat
 **Fix Required:**
 
 **In `acceptInvitation()`:**
+
 ```typescript
 export async function acceptInvitation(
   token: string,
@@ -450,15 +473,13 @@ export async function acceptInvitation(
 
     if (!existingProfile) {
       // Create profile from player data
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: userId,
-          full_name: `${playerData.first_name} ${playerData.last_name}`,
-          email: playerData.email_address,
-          role: "player",
-          created_at: new Date().toISOString(),
-        });
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: userId,
+        full_name: `${playerData.first_name} ${playerData.last_name}`,
+        email: playerData.email_address,
+        role: "player",
+        created_at: new Date().toISOString(),
+      });
 
       if (profileError) {
         logError("[invitationService] Failed to create profile:", profileError);
@@ -486,6 +507,7 @@ export async function acceptInvitation(
 **Use Supabase RPC for atomic operations:**
 
 **Migration:**
+
 ```sql
 -- Create function for atomic invitation acceptance
 CREATE OR REPLACE FUNCTION accept_player_invitation(
@@ -553,6 +575,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ```
 
 **TypeScript:**
+
 ```typescript
 export async function acceptInvitation(
   token: string,
@@ -591,14 +614,16 @@ We don't track who sent the invitation. Useful for auditing and analytics.
 **Fix Required:**
 
 **Migration:**
+
 ```sql
-ALTER TABLE team_players 
+ALTER TABLE team_players
 ADD COLUMN invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 
 COMMENT ON COLUMN team_players.invited_by IS 'User who sent the invitation';
 ```
 
 **Update `sendPlayerInvitation()`:**
+
 ```typescript
 export async function sendPlayerInvitation(
   params: SendInvitationParams
@@ -608,14 +633,14 @@ export async function sendPlayerInvitation(
   try {
     // Get current user ID
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     const updateData: Record<string, any> = {
       invitation_status: "pending",
       invitation_sent_at: new Date().toISOString(),
       invitation_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       invited_by: user?.id,  // ← Track inviter
     };
-    
+
     // ... rest
   }
 }
@@ -658,23 +683,27 @@ export async function handleEmailWebhook(event: any) {
 ## 📋 Implementation Priority
 
 ### Phase 1: Critical Security & Data Integrity (Do Now)
+
 1. ✅ **Fix `acceptInvitation()` to create team_members record**
 2. ✅ **Add token expiration enforcement**
 3. ✅ **Add transaction safety (RPC function)**
 4. ✅ **Add email validation**
 
 ### Phase 2: Enhanced Security (Before Production)
+
 5. ⏳ **Token regeneration on resend**
 6. ⏳ **Rate limiting**
 7. ⏳ **Duplicate prevention**
 8. ⏳ **Profile creation handling**
 
 ### Phase 3: Tracking & Analytics (Nice to Have)
+
 9. ⏳ **Track `invited_by`**
 10. ⏳ **Invitation attempts logging**
 11. ⏳ **Analytics dashboard**
 
 ### Phase 4: Email Integration (Next Major Release)
+
 12. ⏳ **Real email service (Resend/SendGrid)**
 13. ⏳ **Email bounce handling**
 14. ⏳ **Delivery status tracking**
@@ -700,6 +729,7 @@ export async function handleEmailWebhook(event: any) {
 ## 🧪 Testing Checklist
 
 ### Unit Tests
+
 - [ ] `sendPlayerInvitation()` validates email
 - [ ] `sendPlayerInvitation()` checks rate limits
 - [ ] `acceptInvitation()` creates team_members record
@@ -709,6 +739,7 @@ export async function handleEmailWebhook(event: any) {
 - [ ] `resendPlayerInvitation()` regenerates token
 
 ### Integration Tests
+
 - [ ] Full flow: Send → Accept → User can access team
 - [ ] Expired invitation rejected
 - [ ] Duplicate email rejected
@@ -717,6 +748,7 @@ export async function handleEmailWebhook(event: any) {
 - [ ] RLS allows player to view playbook after acceptance
 
 ### E2E Tests
+
 - [ ] Coach sends invitation
 - [ ] Player receives email (when integrated)
 - [ ] Player clicks link → Signup page
@@ -732,7 +764,7 @@ export async function handleEmailWebhook(event: any) {
 -- File: supabase/migrations/20251016000003_invitation_system_improvements.sql
 
 -- Add expiration and tracking
-ALTER TABLE team_players 
+ALTER TABLE team_players
 ADD COLUMN invitation_expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days'),
 ADD COLUMN invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 ADD COLUMN email_bounce_reason TEXT;
@@ -743,11 +775,11 @@ SET invitation_expires_at = invitation_sent_at + INTERVAL '7 days'
 WHERE invitation_status = 'pending' AND invitation_sent_at IS NOT NULL;
 
 -- Add new status
-ALTER TABLE team_players 
+ALTER TABLE team_players
 DROP CONSTRAINT IF EXISTS team_players_invitation_status_check;
 
 ALTER TABLE team_players
-ADD CONSTRAINT team_players_invitation_status_check 
+ADD CONSTRAINT team_players_invitation_status_check
 CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined', 'expired', 'failed'));
 
 -- Create invitation attempts table for rate limiting
@@ -760,10 +792,10 @@ CREATE TABLE invitation_attempts (
   attempted_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_invitation_attempts_email_time 
+CREATE INDEX idx_invitation_attempts_email_time
 ON invitation_attempts(email, attempted_at);
 
-CREATE INDEX idx_invitation_attempts_team 
+CREATE INDEX idx_invitation_attempts_team
 ON invitation_attempts(team_id, attempted_at);
 
 -- Atomic acceptance function

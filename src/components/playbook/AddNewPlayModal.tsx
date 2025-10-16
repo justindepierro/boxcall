@@ -132,13 +132,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       };
 
       const createdPlay = await onCreatePlay?.(playData);
-      
+
       // NEW: If this was a new play creation (not edit) and we have the created play,
       // call onPlayCreated to allow parent to open diagram editor automatically
       if (!existingPlay && createdPlay && onPlayCreated) {
         onPlayCreated(createdPlay);
       }
-      
+
       resetForm();
       setIsAdvancedOpen(false);
       onClose();
