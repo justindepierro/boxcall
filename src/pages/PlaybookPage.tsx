@@ -403,6 +403,12 @@ export default function PlaybookPage() {
     triggerHapticFeedback("light");
     setShowAddNewPlayModal(true);
   }, []);
+  
+  // NEW: Handler to open diagram editor after play creation
+  const handlePlayCreated = useCallback((play: Play) => {
+    // Auto-open diagram editor with the newly created play
+    setDiagramPlay(play);
+  }, []);
 
   const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
@@ -1243,6 +1249,7 @@ export default function PlaybookPage() {
                 }}
                 existingPlay={editingPlay}
                 playbookId={activePlaybookId}
+                onPlayCreated={handlePlayCreated}
                 onCreatePlay={async (playData) => {
                   try {
                     debug("Processing play:", playData);
@@ -1333,6 +1340,9 @@ export default function PlaybookPage() {
 
                     setShowAddNewPlayModal(false);
                     setEditingPlay(null);
+                    
+                    // NEW: Return the created/updated play so modal can call onPlayCreated
+                    return resultPlay;
                   } catch (error) {
                     logError("Failed to process play:", error);
 

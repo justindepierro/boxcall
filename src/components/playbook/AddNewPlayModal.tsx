@@ -30,7 +30,8 @@ import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 interface AddNewPlayModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreatePlay?: (playData: Partial<Play>) => void;
+  onCreatePlay?: (playData: Partial<Play>) => Promise<Play | void>; // Can now return the created play
+  onPlayCreated?: (play: Play) => void; // NEW: Callback after play creation to open diagram
   existingPlay?: Play | null;
   playbookId?: string; // NEW: Required for FormationSelector
 }
@@ -39,6 +40,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   isOpen,
   onClose,
   onCreatePlay,
+  onPlayCreated,
   existingPlay,
   playbookId,
 }) => {
@@ -129,7 +131,14 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         flags: formData.flags,
       };
 
-      await onCreatePlay?.(playData);
+      const createdPlay = await onCreatePlay?.(playData);
+      
+      // NEW: If this was a new play creation (not edit) and we have the created play,
+      // call onPlayCreated to allow parent to open diagram editor automatically
+      if (!existingPlay && createdPlay && onPlayCreated) {
+        onPlayCreated(createdPlay);
+      }
+      
       resetForm();
       setIsAdvancedOpen(false);
       onClose();

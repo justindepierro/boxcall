@@ -14,7 +14,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DiagramCanvas } from "../diagram-editor/components/DiagramCanvas";
 import { useDiagramStore } from "../diagram-editor/stores/diagramStore";
-import type { DiagramPixiApp } from "../diagram-editor/core/PixiApp";
 import type { Player } from "../diagram-editor/types/Player";
 import type { Formation, FormationPlayerPosition } from "../../../types/formation";
 import { usePersonnelConfigurations } from "../../../hooks/usePersonnel";
@@ -38,7 +37,6 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
   onSave,
   onCancel,
 }) => {
-  const [app, setApp] = useState<DiagramPixiApp | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPersonnel, setSelectedPersonnel] = useState<string>(
     formation?.personnel_name || "11"
@@ -136,7 +134,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
         jerseyNumber: personnelPlayer.label || position,
         team: "offense" as const,
         role: position,
-        position: position === "C" ? "center" : "regular",
+        position: position.toUpperCase() === "C" ? "center" : "regular",
       };
 
       addPlayer(player);
@@ -151,9 +149,9 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
         id: uuidv4(),
         x: player.x,
         y: player.y,
-        position: player.role,
+        position: player.role || "WR", // Default to WR if no role
         label: player.jerseyNumber,
-        role: player.role,
+        role: player.role || "WR",
         jerseyNumber: player.jerseyNumber,
       })
     );
@@ -188,8 +186,6 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
       {/* Canvas Area */}
       <div className="flex-1 relative bg-surface-secondary">
         <DiagramCanvas
-          app={app}
-          onAppReady={setApp}
           fieldWidth={53.333}
           fieldHeight={35}
           backgroundColor={0xf5f7ed}
@@ -233,7 +229,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
 
           {/* Player Controls */}
           <div>
-            <Typography variant="body-md-bold" className="text-text-primary mb-spacing-sm">
+            <Typography variant="headline-sm" className="text-text-primary mb-spacing-sm">
               Players
             </Typography>
             <div className="space-y-spacing-sm">
@@ -250,7 +246,7 @@ export const FormationBuilderCanvas: React.FC<FormationBuilderCanvasProps> = ({
                 variant="ghost"
                 className="w-full"
               >
-                <Icon name="trash-2" size="sm" />
+                <Icon name="delete" size="sm" />
                 Clear All
               </Button>
             </div>
