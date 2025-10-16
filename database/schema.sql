@@ -78,12 +78,18 @@ CREATE TABLE team_players (
   team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
+  nickname TEXT,
   jersey_number INTEGER,
   position TEXT,
   grade_level TEXT,
   height_inches INTEGER,
   weight_lbs INTEGER,
   is_active BOOLEAN DEFAULT true,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  invitation_token UUID DEFAULT uuid_generate_v4(),
+  invitation_status TEXT DEFAULT 'not_invited' CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined')),
+  invitation_sent_at TIMESTAMPTZ,
+  invitation_accepted_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

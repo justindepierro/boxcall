@@ -67,7 +67,13 @@ export const PlayerCard = React.memo<PlayerCardProps>(
             />
             <div>
               <Typography variant="headline-sm" className="font-semibold mb-1">
-                {player.first_name} {player.last_name}
+                {player.first_name}
+                {player.nickname && (
+                  <span className="italic text-pink-600 dark:text-pink-400">
+                    {" "}"{player.nickname}"
+                  </span>
+                )}{" "}
+                {player.last_name}
               </Typography>
               {/* Badges Row */}
               <div className="flex gap-2 flex-wrap">
@@ -94,6 +100,17 @@ export const PlayerCard = React.memo<PlayerCardProps>(
                 {player.grade_level && (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white border border-purple-400/30 shadow-sm">
                     {player.grade_level}
+                  </span>
+                )}
+                {/* Invitation Status Badge */}
+                {player.invitation_status === "pending" && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white border border-warning/30 shadow-sm">
+                    Invited
+                  </span>
+                )}
+                {player.invitation_status === "accepted" && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500 to-emerald-500 text-white border border-success/30 shadow-sm">
+                    ✓ Accepted
                   </span>
                 )}
               </div>

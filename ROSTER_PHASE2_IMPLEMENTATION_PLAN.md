@@ -99,6 +99,7 @@ const clearSelection = () => {
 **Dependencies**: Task 1 (Bulk Selection)
 
 ### Requirements
+
 - "Change Status" button appears in selection banner when items selected
 - Status options: Active, Inactive (Cut), Inactive (Quit), Alumni
 - Update multiple players' `is_active` status at once
@@ -109,6 +110,7 @@ const clearSelection = () => {
 - Consider future alumni features (read-only access to history)
 
 ### Future Considerations (2027+)
+
 - Alumni portal with read-only access to past seasons
 - Alumni-specific features (reunion events, career tracking)
 - Separate alumni from inactive players in UI

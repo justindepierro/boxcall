@@ -9,6 +9,7 @@ export interface RosterPlayerView {
   team_id: string;
   first_name: string | null;
   last_name: string | null;
+  nickname: string | null;
   jersey_number: number | null;
   position: string | null; // primary position
   grade_level: string | null;
@@ -16,6 +17,11 @@ export interface RosterPlayerView {
   weight_lbs: number | null;
   is_active: boolean | null;
   roster_status: string | null;
+  user_id: string | null;
+  invitation_token: string | null;
+  invitation_status: string | null;
+  invitation_sent_at: string | null;
+  invitation_accepted_at: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -24,6 +30,7 @@ export interface PlayerRosterInsert {
   team_id: string;
   first_name: string;
   last_name: string;
+  nickname?: string;
   jersey_number?: number;
   position?: string;
   grade_level?: string;
@@ -33,6 +40,7 @@ export interface PlayerRosterInsert {
 }
 
 export interface PlayerRosterUpdate {
+  nickname?: string;
   jersey_number?: number;
   position?: string;
   grade_level?: string;
@@ -94,6 +102,7 @@ export class RosterService {
       team_id: row.team_id,
       first_name: row.first_name ?? null,
       last_name: row.last_name ?? null,
+      nickname: (row.nickname as string) ?? null,
       jersey_number: row.jersey_number ?? null,
       position: row.position ?? null,
       grade_level: (row.grade_level as string) ?? null,
@@ -101,6 +110,11 @@ export class RosterService {
       weight_lbs: (row.weight_lbs as number) ?? null,
       is_active: (row.is_active as boolean) ?? null,
       roster_status: row.roster_status ?? null,
+      user_id: (row.user_id as string) ?? null,
+      invitation_token: (row.invitation_token as string) ?? null,
+      invitation_status: (row.invitation_status as string) ?? null,
+      invitation_sent_at: (row.invitation_sent_at as string) ?? null,
+      invitation_accepted_at: (row.invitation_accepted_at as string) ?? null,
       created_at: row.created_at ?? null,
       updated_at: row.updated_at ?? null,
     }));
@@ -270,6 +284,7 @@ export class RosterService {
       team_id: row.team_id,
       first_name: row.first_name ?? null,
       last_name: row.last_name ?? null,
+      nickname: (row.nickname as string) ?? null,
       jersey_number: row.jersey_number ?? null,
       position: row.position ?? null,
       grade_level: row.grade_level ?? null,
@@ -277,6 +292,11 @@ export class RosterService {
       weight_lbs: row.weight_lbs ?? null,
       is_active: row.is_active ?? null,
       roster_status: row.roster_status ?? null,
+      user_id: (row.user_id as string) ?? null,
+      invitation_token: (row.invitation_token as string) ?? null,
+      invitation_status: (row.invitation_status as string) ?? null,
+      invitation_sent_at: (row.invitation_sent_at as string) ?? null,
+      invitation_accepted_at: (row.invitation_accepted_at as string) ?? null,
       created_at: row.created_at ?? null,
       updated_at: row.updated_at ?? null,
     };

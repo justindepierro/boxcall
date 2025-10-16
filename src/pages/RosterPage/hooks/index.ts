@@ -14,3 +14,6 @@ export type { UseRosterSelectionReturn } from './useRosterSelection';
 
 export { useRosterStats } from './useRosterStats';
 export type { UseRosterStatsReturn } from './useRosterStats';
+
+export { useAutosavePlayer } from './useAutosavePlayer';
+export type { UseAutosavePlayerOptions, UseAutosavePlayerReturn } from './useAutosavePlayer';

@@ -1,0 +1,290 @@
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { PageLayout } from "../components/layout/PageLayout";
+import { Button, Card, Modal } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
+import { Typography } from "../components/design-system";
+import { Aurora } from "../components/ui/Aurora";
+import { Breadcrumb } from "../components/ui/Breadcrumb";
+import { EmptyState } from "../components/ui/EmptyState";
+import { rosterService } from "../services";
+import type { RosterPlayerView } from "../services/rosterService";
+import { useToast } from "../hooks/useToast";
+import { info, error as logError } from "../utils/logger";
+
+/**
+ * PlayerDetailPage - Detailed view of a single player
+ *
+ * Features:
+ * - Full player profile with all information
+ * - Edit mode with inline editing
+ * - Breadcrumb navigation back to roster
+ * - Stats placeholder for Phase 4
+ */
+export default function PlayerDetailPage() {
+  const { playerId } = useParams<{ playerId: string }>();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const [player, setPlayer] = useState<RosterPlayerView | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  useEffect(() => {
+    loadPlayer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerId]);
+
+  const loadPlayer = async () => {
+    if (!playerId) {
+      toast.error("Invalid player ID");
+      navigate("/roster");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const playerData = await rosterService.getPlayerById(playerId);
+
+      if (!playerData) {
+        toast.error("Player not found");
+        navigate("/roster");
+        return;
+      }
+
+      setPlayer(playerData);
+      info(
+        `[PlayerDetailPage] Loaded player: ${playerData.first_name} ${playerData.last_name}`
+      );
+    } catch (error) {
+      logError("[PlayerDetailPage] Failed to load player:", error);
+      toast.error("Failed to load player information");
+      navigate("/roster");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Aurora variant="shell" fullHeight>
+        <PageLayout title="Loading Player..." subtitle="Please wait...">
+          <div className="space-y-spacing-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
+              {[...Array(3)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <div className="h-48 bg-surface-muted rounded-lg"></div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </PageLayout>
+      </Aurora>
+    );
+  }
+
+  if (!player) {
+    return (
+      <Aurora variant="shell" fullHeight>
+        <PageLayout
+          title="Player Not Found"
+          subtitle="The requested player could not be found"
+        >
+          <Button onClick={() => navigate("/roster")}>
+            <Icon name="chevron-left" className="w-4 h-4 mr-spacing-xs" />
+            Back to Roster
+          </Button>
+        </PageLayout>
+      </Aurora>
+    );
+  }
+
+  const height = player.height_inches
+    ? `${Math.floor(player.height_inches / 12)}'${player.height_inches % 12}"`
+    : "N/A";
+
+  const weight = player.weight_lbs ? `${player.weight_lbs} lbs` : "N/A";
+
+  return (
+    <Aurora variant="shell" fullHeight>
+      <PageLayout
+        title={`${player.first_name} ${player.last_name}`}
+        subtitle={`#${player.jersey_number || "N/A"} • ${player.position || "No Position"}`}
+      >
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            {
+              id: "dashboard",
+              label: "Dashboard",
+              onClick: () => navigate("/dashboard"),
+            },
+            {
+              id: "roster",
+              label: "Roster",
+              onClick: () => navigate("/roster"),
+            },
+            {
+              id: "player",
+              label: `${player.first_name} ${player.last_name}`,
+              current: true,
+            },
+          ]}
+          className="mb-4"
+        />
+
+        <div className="space-y-spacing-lg relative z-10">
+          {/* Header Actions */}
+          <div className="flex items-center justify-between">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/roster")}
+              className="text-text-secondary"
+            >
+              <Icon name="chevron-left" className="w-4 h-4 mr-spacing-xs" />
+              Back to Roster
+            </Button>
+            <Button onClick={() => setShowEditModal(true)}>
+              <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+              Edit Player
+            </Button>
+          </div>
+
+          {/* Player Profile Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
+            {/* Basic Information Card */}
+            <Card>
+              <div className="p-spacing-md">
+                <Typography variant="headline-md" className="mb-spacing-md">
+                  Basic Information
+                </Typography>
+                <dl className="space-y-spacing-sm">
+                  <div>
+                    <dt className="text-text-secondary text-sm">Full Name</dt>
+                    <dd className="font-medium">
+                      {player.first_name} {player.last_name}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-secondary text-sm">Position</dt>
+                    <dd className="font-medium">{player.position || "N/A"}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-secondary text-sm">
+                      Jersey Number
+                    </dt>
+                    <dd className="font-medium">
+                      {player.jersey_number || "N/A"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-secondary text-sm">Grade Level</dt>
+                    <dd className="font-medium">
+                      {player.grade_level || "N/A"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-secondary text-sm">Status</dt>
+                    <dd>
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          player.is_active
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {player.roster_status ||
+                          (player.is_active ? "Active" : "Inactive")}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </Card>
+
+            {/* Physical Information Card */}
+            <Card>
+              <div className="p-spacing-md">
+                <Typography variant="headline-md" className="mb-spacing-md">
+                  Physical Information
+                </Typography>
+                <dl className="space-y-spacing-sm">
+                  <div>
+                    <dt className="text-text-secondary text-sm">Height</dt>
+                    <dd className="font-medium">{height}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-secondary text-sm">Weight</dt>
+                    <dd className="font-medium">{weight}</dd>
+                  </div>
+                </dl>
+              </div>
+            </Card>
+
+            {/* Additional Info Card */}
+            <Card>
+              <div className="p-spacing-md">
+                <Typography variant="headline-md" className="mb-spacing-md">
+                  Additional Information
+                </Typography>
+                <Typography variant="body-sm" className="text-text-secondary">
+                  Additional player information and notes will be available
+                  soon.
+                </Typography>
+              </div>
+            </Card>
+          </div>
+
+          {/* Statistics Placeholder (Phase 4) */}
+          <Card>
+            <div className="p-spacing-md">
+              <Typography variant="headline-md" className="mb-spacing-md">
+                Player Statistics
+              </Typography>
+              <EmptyState
+                icon="info"
+                title="Statistics Coming Soon"
+                description="Player statistics and performance tracking will be available in Phase 4"
+              />
+            </div>
+          </Card>
+        </div>
+
+        {/* Edit Modal - Placeholder for now */}
+        {showEditModal && (
+          <Modal
+            isOpen={showEditModal}
+            onClose={() => setShowEditModal(false)}
+            title="Edit Player"
+          >
+            <div className="p-spacing-md">
+              <Typography
+                variant="body-sm"
+                className="text-text-secondary mb-spacing-md"
+              >
+                Edit functionality will be integrated with the existing roster
+                edit modal.
+              </Typography>
+              <div className="flex justify-end gap-spacing-sm">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowEditModal(false);
+                    toast.info("Edit functionality coming soon");
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </Modal>
+        )}
+      </PageLayout>
+    </Aurora>
+  );
+}

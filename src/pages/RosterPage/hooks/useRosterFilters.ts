@@ -116,12 +116,13 @@ export const useRosterFilters = (
     }
 
     const result = players.filter((player) => {
-      // Search matches name, position, or jersey number (uses debounced value for performance)
+      // Search matches name, nickname, position, or jersey number (uses debounced value for performance)
       const matchesSearch =
         !debouncedSearch ||
         `${player.first_name} ${player.last_name}`
           .toLowerCase()
           .includes(debouncedSearch.toLowerCase()) ||
+        player.nickname?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
         player.position?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
         player.jersey_number?.toString().includes(debouncedSearch);
 

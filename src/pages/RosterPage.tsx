@@ -13,6 +13,7 @@ import { Pagination } from "../components/Pagination";
 import { MultiSelect } from "../components/ui/MultiSelect";
 import type { MultiSelectOption } from "../components/ui/MultiSelect";
 import { rosterService } from "../services";
+import { sendPlayerInvitation } from "../services/invitationService";
 import type {
   RosterPlayerView,
   PlayerRosterInsert,
@@ -130,6 +131,7 @@ export default function RosterPage() {
   const [playerForm, setPlayerForm] = useState({
     first_name: "",
     last_name: "",
+    nickname: "",
     position: "",
     jersey_number: "",
     grade_level: "",
@@ -149,6 +151,7 @@ export default function RosterPage() {
     setPlayerForm({
       first_name: "",
       last_name: "",
+      nickname: "",
       position: "",
       jersey_number: "",
       grade_level: "",
@@ -176,6 +179,7 @@ export default function RosterPage() {
     }
 
     return {
+      nickname: playerForm.nickname.trim() || undefined,
       jersey_number: playerForm.jersey_number
         ? parseInt(playerForm.jersey_number)
         : undefined,
@@ -223,6 +227,7 @@ export default function RosterPage() {
 
     // Only trigger autosave for fields that affect the update data
     if (
+      field === "nickname" ||
       field === "position" ||
       field === "jersey_number" ||
       field === "grade_level" ||
@@ -242,6 +247,7 @@ export default function RosterPage() {
       }
 
       const updateData: PlayerRosterUpdate = {
+        nickname: updatedForm.nickname.trim() || undefined,
         jersey_number: updatedForm.jersey_number
           ? parseInt(updatedForm.jersey_number)
           : undefined,
@@ -294,6 +300,7 @@ export default function RosterPage() {
         team_id: teamId,
         first_name: playerForm.first_name,
         last_name: playerForm.last_name,
+        nickname: playerForm.nickname.trim() || undefined,
         position: playerForm.position,
         jersey_number: playerForm.jersey_number
           ? parseInt(playerForm.jersey_number)
@@ -383,6 +390,38 @@ export default function RosterPage() {
       toast.error("Failed to delete player. Please try again.");
       setShowDeleteDialog(false);
       setPlayerToDelete(null);
+    }
+  };
+
+  // Send invitation to player
+  const handleSendInvitation = async (playerId?: string) => {
+    if (!playerForm.email_address?.trim()) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
+    try {
+      info("[RosterPage] Sending invitation to player");
+      
+      const playerName = `${playerForm.first_name} ${playerForm.last_name}`;
+      const result = await sendPlayerInvitation({
+        playerId: playerId || editingPlayer?.id || "",
+        email: playerForm.email_address,
+        playerName,
+        teamName: "Your Team", // TODO: Get actual team name
+        invitedBy: "Coach", // TODO: Get actual coach name from auth
+      });
+
+      if (result.success) {
+        toast.success(result.message);
+        // Reload roster to show updated invitation status
+        await loadRoster();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      logError("[RosterPage] Failed to send invitation:", error);
+      toast.error("Failed to send invitation. Please try again.");
     }
   };
 
@@ -561,6 +600,7 @@ export default function RosterPage() {
     setPlayerForm({
       first_name: player.first_name || "",
       last_name: player.last_name || "",
+      nickname: player.nickname || "",
       position: player.position || "",
       jersey_number: player.jersey_number?.toString() || "",
       grade_level: player.grade_level || "",
@@ -798,7 +838,7 @@ export default function RosterPage() {
             {/* Search and Filters */}
             <div className="flex flex-wrap gap-spacing-sm items-center w-full">
               <Input
-                placeholder="Search players..."
+                placeholder="Search players by name, nickname, position..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full sm:w-64"
@@ -1050,6 +1090,18 @@ export default function RosterPage() {
                 />
               </div>
 
+              <Input
+                label="Nickname"
+                value={playerForm.nickname}
+                onChange={(e) =>
+                  setPlayerForm((prev) => ({
+                    ...prev,
+                    nickname: e.target.value,
+                  }))
+                }
+                placeholder="e.g., Johnny"
+              />
+
               <div className="grid grid-cols-2 gap-spacing-md">
                 <div>
                   <label className="block text-sm font-medium mb-spacing-xs">
@@ -1226,6 +1278,18 @@ export default function RosterPage() {
                 }
               />
 
+              {/* Invite to Team Button - Show when email is entered */}
+              {playerForm.email_address?.trim() && (
+                <Button
+                  variant="outline"
+                  onClick={() => handleSendInvitation()}
+                  className="w-full border-jade-600 text-jade-700 hover:bg-jade-50 dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
+                >
+                  <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
+                  Invite {playerForm.first_name || "Player"} to Team
+                </Button>
+              )}
+
               <div className="flex justify-end gap-3 pt-4">
                 <Button
                   variant="outline"
@@ -1324,6 +1388,15 @@ export default function RosterPage() {
                   required
                 />
               </div>
+
+              <Input
+                label="Nickname"
+                value={playerForm.nickname}
+                onChange={(e) =>
+                  handleFieldChange("nickname", e.target.value)
+                }
+                placeholder="e.g., Johnny"
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -1497,6 +1570,20 @@ export default function RosterPage() {
                   }))
                 }
               />
+
+              {/* Invite to Team Button - Show when email is entered and not already invited */}
+              {playerForm.email_address?.trim() && (
+                <Button
+                  variant="outline"
+                  onClick={() => handleSendInvitation()}
+                  className="w-full border-jade-600 text-jade-700 hover:bg-jade-50 dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
+                >
+                  <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
+                  {editingPlayer?.invitation_status === "pending"
+                    ? "Resend Invitation"
+                    : `Invite ${playerForm.first_name || "Player"} to Team`}
+                </Button>
+              )}
 
               <div className="flex justify-end gap-3 pt-4">
                 <Button

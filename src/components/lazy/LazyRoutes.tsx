@@ -98,6 +98,11 @@ export const LazyRosterPage = lazyRoute(
   "Roster"
 );
 
+export const LazyPlayerDetailPage = lazyRoute(
+  () => import("../../pages/PlayerDetailPage"),
+  "Player Detail"
+);
+
 export const LazyPracticePlansPage = lazyRoute(
   () => import("../../pages/PracticePlansPage"),
   "Practice Plans"
