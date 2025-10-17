@@ -119,7 +119,8 @@ export function FormationBuilderModal({
           {activeTab === "edit" && (
             <FormationBuilderPanel
               playbookId={playbookId}
-              onSuccess={handleSuccess}
+              onFormationUpdated={handleSuccess}
+              showHeader={false}
             />
           )}
 

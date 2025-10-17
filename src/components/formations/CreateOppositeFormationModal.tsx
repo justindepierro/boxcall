@@ -9,11 +9,13 @@
  * - Three action options: Create, Skip, or Mark as Standalone
  * - Auto-flips positions and strengths
  * - Bidirectional linking via database RPC
+ * - Smart name detection for opposite formations (Twins Left → Twins Right, Rip → Liz, etc.)
  *
  * Design Goals:
  * - Simple 3-step workflow (create → save → prompt)
  * - Clear visual comparison
  * - Quick decision-making
+ * - Intelligent name suggestions
  */
 
 import React, { useState, useEffect } from "react";
@@ -21,7 +23,60 @@ import { Modal } from "../ui/Modal/Modal";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { FormationService } from "../../services/formationService";
+import { error as logError } from "../../utils/logger";
 import type { Formation, FormationPlayerPosition } from "../../types/formation";
+
+/**
+ * Smart naming patterns for opposite formations
+ * Detects common football formation naming conventions
+ */
+const NAMING_PATTERNS = [
+  // Left/Right patterns
+  { pattern: /\bLeft\b/gi, opposite: "Right", label: "Left → Right" },
+  { pattern: /\bRight\b/gi, opposite: "Left", label: "Right → Left" },
+  { pattern: /\bLT\b/g, opposite: "RT", label: "LT → RT" },
+  { pattern: /\bRT\b/g, opposite: "LT", label: "RT → LT" },
+  { pattern: /\bL\b/g, opposite: "R", label: "L → R" },
+  { pattern: /\bR\b/g, opposite: "L", label: "R → L" },
+
+  // Common football formation opposites
+  { pattern: /\bRip\b/gi, opposite: "Liz", label: "Rip → Liz" },
+  { pattern: /\bLiz\b/gi, opposite: "Rip", label: "Liz → Rip" },
+  { pattern: /\bRed\b/gi, opposite: "Blue", label: "Red → Blue" },
+  { pattern: /\bBlue\b/gi, opposite: "Red", label: "Blue → Red" },
+  { pattern: /\bOpen\b/gi, opposite: "Closed", label: "Open → Closed" },
+  { pattern: /\bClosed\b/gi, opposite: "Open", label: "Closed → Open" },
+  { pattern: /\bStrong\b/gi, opposite: "Weak", label: "Strong → Weak" },
+  { pattern: /\bWeak\b/gi, opposite: "Strong", label: "Weak → Strong" },
+  { pattern: /\bOver\b/gi, opposite: "Under", label: "Over → Under" },
+  { pattern: /\bUnder\b/gi, opposite: "Over", label: "Under → Over" },
+];
+
+/**
+ * Suggest opposite formation name based on patterns
+ * Returns suggested name and detected pattern (or null if no pattern found)
+ */
+function suggestOppositeName(originalName: string): {
+  suggestedName: string | null;
+  detectedPattern: string | null;
+} {
+  for (const { pattern, opposite, label } of NAMING_PATTERNS) {
+    if (pattern.test(originalName)) {
+      // Reset regex lastIndex (important for global regex)
+      pattern.lastIndex = 0;
+
+      const suggestedName = originalName.replace(pattern, opposite);
+
+      // Only suggest if the name actually changed
+      if (suggestedName !== originalName) {
+        return { suggestedName, detectedPattern: label };
+      }
+    }
+  }
+
+  // No pattern detected - return null
+  return { suggestedName: null, detectedPattern: null };
+}
 
 export interface CreateOppositeFormationModalProps {
   /** Whether modal is open */
@@ -127,15 +182,31 @@ export const CreateOppositeFormationModal: React.FC<
     FormationPlayerPosition[]
   >([]);
 
-  // Calculate flipped positions for preview
+  // Smart naming state
+  const [customName, setCustomName] = useState<string>("");
+  const [suggestedName, setSuggestedName] = useState<string | null>(null);
+  const [detectedPattern, setDetectedPattern] = useState<string | null>(null);
+
+  // Calculate flipped positions and suggested name
   useEffect(() => {
     if (originalFormation) {
+      // Flip positions for preview
       const FIELD_WIDTH = 53.3;
       const flipped = originalFormation.player_positions.map((pos) => ({
         ...pos,
         x: FIELD_WIDTH - pos.x, // Flip horizontally
       }));
       setFlippedPositions(flipped);
+
+      // Detect naming pattern and suggest opposite name
+      const { suggestedName: suggested, detectedPattern: pattern } =
+        suggestOppositeName(originalFormation.name);
+
+      setSuggestedName(suggested);
+      setDetectedPattern(pattern);
+
+      // If we have a suggestion, use it as default; otherwise use original name
+      setCustomName(suggested || originalFormation.name);
     }
   }, [originalFormation]);
 
@@ -144,15 +215,21 @@ export const CreateOppositeFormationModal: React.FC<
     setError(null);
 
     try {
+      // Pass custom name to service (uses original name if custom name matches or is empty)
+      const nameToUse = customName.trim() || originalFormation.name;
       const opposite = await FormationService.createOppositeFormation(
-        originalFormation.id
+        originalFormation.id,
+        nameToUse
       );
 
       // Success!
       onOppositeCreated?.(opposite);
       onClose();
     } catch (err) {
-      console.error("Failed to create opposite formation:", err);
+      logError(
+        "[CreateOppositeFormationModal] Failed to create opposite formation:",
+        err
+      );
       setError(
         err instanceof Error
           ? err.message
@@ -174,7 +251,10 @@ export const CreateOppositeFormationModal: React.FC<
       onMarkedAsStandalone?.();
       onClose();
     } catch (err) {
-      console.error("Failed to mark as standalone:", err);
+      logError(
+        "[CreateOppositeFormationModal] Failed to mark as standalone:",
+        err
+      );
       setError(
         err instanceof Error ? err.message : "Failed to mark as standalone"
       );
@@ -231,6 +311,56 @@ export const CreateOppositeFormationModal: React.FC<
           />
         </div>
 
+        {/* Smart naming section */}
+        <div className="surface-subtle border border-border-subtle rounded-md p-spacing-md">
+          <Typography
+            variant="label-md"
+            className="text-text-secondary mb-spacing-sm"
+          >
+            Formation Name
+          </Typography>
+
+          {/* Show detected pattern hint */}
+          {suggestedName && detectedPattern && (
+            <div className="flex items-start gap-spacing-xs mb-spacing-sm p-spacing-sm bg-info-50 border border-info-200 rounded">
+              <span className="text-info-600">💡</span>
+              <div className="flex-1">
+                <Typography variant="body-sm" className="text-info-700">
+                  <strong>Smart suggestion:</strong> Detected "{detectedPattern}
+                  " pattern
+                </Typography>
+                <Typography variant="body-xs" className="text-info-600">
+                  "{originalFormation.name}" → "{suggestedName}"
+                </Typography>
+              </div>
+            </div>
+          )}
+
+          {/* Name input */}
+          <div className="flex flex-col gap-spacing-xs">
+            <input
+              type="text"
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              placeholder="Opposite formation name..."
+              className="px-spacing-md py-spacing-sm border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              disabled={loading}
+            />
+            <Typography variant="body-xs" className="text-text-muted">
+              {!suggestedName ? (
+                <>
+                  No naming pattern detected. Using original name "
+                  {originalFormation.name}".
+                </>
+              ) : customName === suggestedName ? (
+                <>Using suggested name. You can edit it if needed.</>
+              ) : (
+                <>Custom name will be used for the opposite formation.</>
+              )}
+            </Typography>
+          </div>
+        </div>
+
         {/* Formation details */}
         <div className="surface-subtle border border-border-subtle rounded-md p-spacing-md">
           <div className="grid grid-cols-2 gap-spacing-md text-sm">
@@ -268,13 +398,18 @@ export const CreateOppositeFormationModal: React.FC<
             variant="primary"
             size="lg"
             onClick={handleCreateOpposite}
-            disabled={loading}
+            disabled={loading || !customName.trim()}
             fullWidth
           >
             {loading ? (
               "Creating..."
             ) : (
-              <>✅ Yes, create {oppositeDirection}-side version</>
+              <>
+                ✅ Create "{customName || originalFormation.name}"
+                {suggestedName &&
+                  customName === suggestedName &&
+                  " (Suggested)"}
+              </>
             )}
           </Button>
 

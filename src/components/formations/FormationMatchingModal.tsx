@@ -24,6 +24,7 @@ import { FormationService } from "../../services/formationService";
 import { FormationLinkConfirmationModal } from "./FormationLinkConfirmationModal";
 import type { Formation } from "../../types/formation";
 import { Link2, ChevronDown } from "lucide-react";
+import { error as logError } from "../../utils/logger";
 
 interface FormationLinkingModalProps {
   isOpen: boolean;
@@ -63,7 +64,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
         await FormationService.getFormationsByPlaybook(playbookId);
       setAllFormations(formations);
     } catch (error) {
-      console.error("Failed to load formations:", error);
+      logError("[FormationMatchingModal] Failed to load formations:", error);
     } finally {
       setLoading(false);
     }
@@ -75,11 +76,11 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
     }
   }, [isOpen, playbookId, loadFormations]);
 
-  // Check if formation is linked
+  // Check if formation is linked (has an opposite variant)
   const isLinked = (formation: Formation): boolean => {
     return (
-      formation.base_formation_id !== null ||
-      allFormations.some((f) => f.base_formation_id === formation.id)
+      formation.opposite_formation_id !== null ||
+      allFormations.some((f) => f.opposite_formation_id === formation.id)
     );
   };
 
@@ -100,11 +101,10 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
     setShowConfirmModal(false);
     setSaving(true);
     try {
-      // Create bi-directional link (handles same-formation duplication automatically)
-      await FormationService.linkFormations(
+      // Create bi-directional link between formations
+      await FormationService.linkExistingFormations(
         leftFormation.id,
-        leftFormation.id, // base
-        rightFormation.id // right variant (will be duplicated if same as left)
+        rightFormation.id
       );
 
       alert("Formations linked successfully!");
@@ -119,7 +119,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
 
       onClose();
     } catch (error) {
-      console.error("Failed to link formations:", error);
+      logError("[FormationMatchingModal] Failed to link formations:", error);
       alert("Failed to link formations. Please try again.");
     } finally {
       setSaving(false);

@@ -11,13 +11,14 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { debug, info, error as logError } from "../utils/logger";
 import type {
   Formation,
+  StrengthType,
   FormationCreate,
   FormationUpdate,
-  FormationPlayerPosition,
   FormationListItem,
-  StrengthType,
+  FormationPlayerPosition,
   FormationValidation,
 } from "../types/formation";
 
@@ -73,7 +74,7 @@ export class FormationService {
       .single();
 
     if (error) {
-      console.error("Error creating formation:", error);
+      logError("[FormationService] Error creating formation:", error);
       throw new Error(`Failed to create formation: ${error.message}`);
     }
 
@@ -131,12 +132,12 @@ export class FormationService {
       .order("name", { ascending: true });
 
     if (error) {
-      console.error("❌ [FormationService] Error fetching formations:", error);
+      logError("[FormationService] Error fetching formations:", error);
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
-    console.log(
-      "✅ [FormationService] Returning",
+    info(
+      "[FormationService] Returning",
       (data as Formation[])?.length || 0,
       "formations"
     );
@@ -145,11 +146,35 @@ export class FormationService {
 
   /**
    * Get formations list (optimized for UI display)
+   * PERFORMANCE: Only fetches essential fields (no heavy player_positions JSON)
    */
   static async getFormationsListByPlaybook(
     playbookId: string
   ): Promise<FormationListItem[]> {
-    const formations = await this.getFormationsByPlaybook(playbookId);
+    const { data, error } = await supabase
+      .from("formations")
+      .select(`
+        id,
+        name,
+        direction,
+        category,
+        personnel_name,
+        formation_type,
+        usage_count,
+        opposite_formation_id,
+        metadata_quality,
+        tags,
+        created_at
+      `)
+      .eq("playbook_id", playbookId)
+      .order("name", { ascending: true });
+
+    if (error) {
+      logError("[FormationService] Error fetching formation list:", error);
+      throw new Error(`Failed to fetch formation list: ${error.message}`);
+    }
+
+    const formations = (data || []) as unknown as Formation[];
 
     return formations.map((f) => ({
       id: f.id,
@@ -177,7 +202,7 @@ export class FormationService {
       .order("name", { ascending: true });
 
     if (error) {
-      console.error("Error fetching formations by personnel:", error);
+      logError("[FormationService] Error fetching formations by personnel:", error);
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
@@ -219,7 +244,8 @@ export class FormationService {
    * @returns newly created opposite formation
    */
   static async createOppositeFormation(
-    formationId: string
+    formationId: string,
+    customName?: string // Optional custom name for the opposite formation
   ): Promise<Formation> {
     const original = await this.getFormationById(formationId);
 
@@ -235,10 +261,13 @@ export class FormationService {
     // Flip positions
     const flippedPositions = this.flipPositions(original.player_positions);
 
+    // Use custom name if provided, otherwise use original name
+    const oppositeName = customName || original.name;
+
     // Create opposite formation
     const opposite = await this.createFormation({
       playbook_id: original.playbook_id,
-      name: original.name,
+      name: oppositeName, // Use custom name or original
       description: original.description || undefined,
       category: original.category || undefined,
       personnel_id: original.personnel_id || undefined,
@@ -255,6 +284,7 @@ export class FormationService {
       creation_context: {
         source_formation_id: original.id,
         auto_created: true,
+        custom_name_used: !!customName, // Track if custom name was used
       },
     });
 
@@ -357,6 +387,143 @@ export class FormationService {
     }
   }
 
+  /**
+   * Get suggested matches for manual linking
+   * Uses 240-point scoring system:
+   * - Name match: 100 points (exact) or 50-60 (similar)
+   * - Direction match: 80 points (perfect opposite)
+   * - Personnel match: 40 points (same personnel)
+   * - Category match: 20 points (same category)
+   *
+   * @param formationId - Formation to find matches for
+   * @param limit - Maximum number of suggestions (default: 5)
+   * @returns Top matching formations with scores
+   */
+  static async getSuggestedMatches(
+    formationId: string,
+    limit: number = 5
+  ): Promise<
+    Array<{
+      formation: Formation;
+      score: number;
+      nameMatch: "exact" | "similar" | "different";
+      directionMatch: "perfect" | "compatible" | "none";
+      personnelMatch: boolean;
+      categoryMatch: boolean;
+    }>
+  > {
+    const formation = await this.getFormationById(formationId);
+    const allFormations = await this.getFormationsByPlaybook(
+      formation.playbook_id
+    );
+
+    // Score each formation
+    const matches = allFormations
+      .filter((f) => f.id !== formationId) // Exclude self
+      .filter((f) => !f.opposite_formation_id) // Only show unlinked formations
+      .map((candidate) => {
+        let score = 0;
+        let nameMatch: "exact" | "similar" | "different" = "different";
+        let directionMatch: "perfect" | "compatible" | "none" = "none";
+        const personnelMatch = formation.personnel_id === candidate.personnel_id;
+        const categoryMatch = formation.category === candidate.category;
+
+        // Name match (100 points max)
+        if (formation.name === candidate.name) {
+          score += 100;
+          nameMatch = "exact";
+        } else if (
+          formation.name.toLowerCase().includes(candidate.name.toLowerCase()) ||
+          candidate.name.toLowerCase().includes(formation.name.toLowerCase())
+        ) {
+          score += 60;
+          nameMatch = "similar";
+        } else {
+          // Check for similar words (e.g., "Trips" vs "Trio")
+          const formationWords = formation.name.toLowerCase().split(/\s+/);
+          const candidateWords = candidate.name.toLowerCase().split(/\s+/);
+          const commonWords = formationWords.filter((word) =>
+            candidateWords.includes(word)
+          );
+          if (commonWords.length > 0) {
+            score += 50;
+            nameMatch = "similar";
+          }
+        }
+
+        // Direction match (80 points max)
+        if (formation.direction && candidate.direction) {
+          // Perfect opposite (left ↔ right)
+          if (
+            (formation.direction === "left" &&
+              candidate.direction === "right") ||
+            (formation.direction === "right" && candidate.direction === "left")
+          ) {
+            score += 80;
+            directionMatch = "perfect";
+          }
+        } else if (!formation.direction && !candidate.direction) {
+          // Both standalone - not ideal for linking but compatible
+          score += 40;
+          directionMatch = "compatible";
+        } else if (!formation.direction || !candidate.direction) {
+          // One standalone, one directional - can be linked
+          score += 60;
+          directionMatch = "compatible";
+        }
+
+        // Personnel match (40 points)
+        if (personnelMatch) {
+          score += 40;
+        }
+
+        // Category match (20 points)
+        if (categoryMatch) {
+          score += 20;
+        }
+
+        return {
+          formation: candidate,
+          score,
+          nameMatch,
+          directionMatch,
+          personnelMatch,
+          categoryMatch,
+        };
+      })
+      .filter((match) => match.score >= 50) // Only show decent matches
+      .sort((a, b) => b.score - a.score) // Sort by score (highest first)
+      .slice(0, limit); // Limit results
+
+    return matches;
+  }
+
+  /**
+   * Get unpaired formations (have direction but no opposite)
+   * Useful for Formation Health dashboard
+   */
+  static async getUnpairedFormations(
+    playbookId: string
+  ): Promise<Formation[]> {
+    const formations = await this.getFormationsByPlaybook(playbookId);
+
+    return formations.filter(
+      (f) => f.direction !== null && f.opposite_formation_id === null
+    );
+  }
+
+  /**
+   * Get standalone formations (direction = null, no opposite needed)
+   * Useful for Formation Health dashboard
+   */
+  static async getStandaloneFormations(
+    playbookId: string
+  ): Promise<Formation[]> {
+    const formations = await this.getFormationsByPlaybook(playbookId);
+
+    return formations.filter((f) => f.direction === null);
+  }
+
   // ===================================================================
   // UPDATE OPERATIONS
   // ===================================================================
@@ -376,7 +543,7 @@ export class FormationService {
       .single();
 
     if (error) {
-      console.error("Error updating formation:", error);
+      logError("[FormationService] Error updating formation:", error);
       throw new Error(`Failed to update formation: ${error.message}`);
     }
 
@@ -455,7 +622,7 @@ export class FormationService {
         playsCount: playsCount || 0,
       };
     } catch (error) {
-      console.error("Failed to check formation usage:", error);
+      logError("[FormationService] Failed to check formation usage:", error);
       throw error;
     }
   }
@@ -468,7 +635,7 @@ export class FormationService {
     const { error } = await supabase.from("formations").delete().eq("id", id);
 
     if (error) {
-      console.error("Error deleting formation:", error);
+      logError("[FormationService] Error deleting formation:", error);
       throw new Error(`Failed to delete formation: ${error.message}`);
     }
   }
@@ -612,7 +779,7 @@ export class FormationService {
     teamIdOrPlaybookId: string,
     createdBy: string
   ): Promise<{ created: number; existing: number; formations: Formation[] }> {
-    console.log("📦 importFormationsFromPlays called with:", {
+    debug("[FormationService] importFormationsFromPlays called with:", {
       teamIdOrPlaybookId,
       createdBy,
     });
@@ -628,20 +795,20 @@ export class FormationService {
       .eq("is_active", true)
       .limit(1);
 
-    console.log("🔍 Playbook lookup result:", playbooks);
+    debug("[FormationService] Playbook lookup result:", playbooks);
 
     if (playbooks && playbooks.length > 0) {
       // @ts-ignore - Supabase type inference
       playbookId = playbooks[0].id;
-      console.log("✅ Found playbook ID:", playbookId);
+      info(`[FormationService] Found playbook ID: ${playbookId}`);
     } else {
-      console.log("ℹ️ No playbook found for team, using ID as-is:", playbookId);
+      debug(`[FormationService] No playbook found for team, using ID as-is: ${playbookId}`);
     }
 
-    // Get all plays for this playbook to extract formation names
+    // Get all plays for this playbook to extract formation names AND directions
     const { data: plays, error: playsError } = await supabase
       .from("plays")
-      .select("formation, personnel")
+      .select("formation, personnel, f_dir")
       .eq("playbook_id", playbookId);
 
     if (playsError) {
@@ -657,22 +824,80 @@ export class FormationService {
       };
     }
 
-    // @ts-ignore - Supabase type inference
-    const uniqueFormations = [
-      ...new Set(plays?.map((p: any) => p.formation).filter(Boolean)),
-    ] as string[];
+    // Extract unique (formation, direction) combinations
+    interface FormationVariant {
+      name: string;
+      direction: "left" | "right" | null;
+    }
 
-    // Check which formations already exist
+    const formationVariants = new Map<string, FormationVariant>();
+
+    plays.forEach((play: any) => {
+      if (!play.formation) return;
+
+      let formationName = play.formation.trim();
+      let direction: "left" | "right" | null = null;
+      
+      // Method 1: Check f_dir field first
+      if (play.f_dir) {
+        const dirLower = play.f_dir.toLowerCase().trim();
+        if (dirLower === "left" || dirLower === "lt" || dirLower === "l") {
+          direction = "left";
+        } else if (dirLower === "right" || dirLower === "rt" || dirLower === "r") {
+          direction = "right";
+        }
+      }
+      
+      // Method 2: Parse direction from formation name itself
+      // Examples: "Trips Rt", "Twins Lt", "I Form Right"
+      if (!direction) {
+        const nameLower = formationName.toLowerCase();
+        
+        // Check for "Rt" / "Right" at the end
+        if (nameLower.match(/\b(rt|right)\b$/)) {
+          direction = "right";
+          // Remove direction from name
+          formationName = formationName.replace(/\s+(Rt|Right|rt|right)$/i, '').trim();
+        }
+        // Check for "Lt" / "Left" at the end  
+        else if (nameLower.match(/\b(lt|left)\b$/)) {
+          direction = "left";
+          // Remove direction from name
+          formationName = formationName.replace(/\s+(Lt|Left|lt|left)$/i, '').trim();
+        }
+      }
+
+      // Create a unique key for this combination
+      const key = `${formationName}:${direction || "none"}`;
+      
+      if (!formationVariants.has(key)) {
+        formationVariants.set(key, {
+          name: formationName,
+          direction,
+        });
+      }
+    });
+
+    info(`[FormationService] Found ${formationVariants.size} unique formation variants`);
+
+    // Check which formations already exist (by name AND direction)
+    const uniqueNames = [...new Set([...formationVariants.values()].map(v => v.name))];
     const { data: existingFormations } = await supabase
       .from("formations")
-      .select("name")
+      .select("name, direction")
       .eq("playbook_id", playbookId)
-      .in("name", uniqueFormations);
+      .in("name", uniqueNames);
 
-    // @ts-ignore - Supabase type inference
-    const existingNames = new Set(existingFormations?.map((f) => f.name) || []);
-    const formationsToCreate = uniqueFormations.filter(
-      (name) => !existingNames.has(name)
+    // Create a set of existing (name, direction) combinations
+    const existingKeys = new Set(
+      existingFormations?.map((f: any) => 
+        `${f.name}:${f.direction || "none"}`
+      ) || []
+    );
+
+    // Filter to only formations that don't exist yet
+    const formationsToCreate = [...formationVariants.values()].filter(
+      variant => !existingKeys.has(`${variant.name}:${variant.direction || "none"}`)
     );
 
     if (formationsToCreate.length === 0) {
@@ -681,24 +906,30 @@ export class FormationService {
         .from("formations")
         .select("*")
         .eq("playbook_id", playbookId)
-        .in("name", uniqueFormations);
+        .in("name", uniqueNames);
+
+      info(`[FormationService] All formations already exist`);
 
       return {
         created: 0,
-        existing: uniqueFormations.length,
+        existing: formationVariants.size,
         formations: (allFormations || []) as Formation[],
       };
     }
 
-    // Create new formations
-    const newFormations = formationsToCreate.map((name) => ({
-      name,
+    info(`[FormationService] Creating ${formationsToCreate.length} new formation variants`);
+
+    // Create new formations with proper direction
+    const newFormations = formationsToCreate.map((variant) => ({
+      name: variant.name,
       playbook_id: playbookId,
       created_by: createdBy,
-      direction: "base" as const,
+      direction: variant.direction,
       category: "spread", // Default category (valid options: spread, pro, power, special, goal_line, short_yardage)
-      description: `Imported from plays (${name})`,
-      positions: [], // No positions initially
+      description: variant.direction 
+        ? `Imported from plays (${variant.name} ${variant.direction})`
+        : `Imported from plays (${variant.name})`,
+      player_positions: [], // No positions initially
     }));
 
     const { data: _created, error: createError } = await supabase
@@ -716,12 +947,213 @@ export class FormationService {
       .from("formations")
       .select("*")
       .eq("playbook_id", playbookId)
-      .in("name", uniqueFormations);
+      .in("name", uniqueNames);
+
+    info(`[FormationService] Import complete: ${formationsToCreate.length} created, ${existingKeys.size} existed`);
 
     return {
       created: formationsToCreate.length,
-      existing: existingNames.size,
+      existing: existingKeys.size,
       formations: (allFormations || []) as Formation[],
     };
+  }
+
+  // ===================================================================
+  // BULK OPERATIONS
+  // ===================================================================
+
+  /**
+   * Bulk update metadata for multiple formations
+   * Supports replace and merge modes for tags
+   */
+  static async bulkUpdateMetadata(
+    formationIds: string[],
+    updates: Partial<Pick<Formation, "category" | "personnel_name" | "tags" | "formation_type">>,
+    mode: "replace" | "merge"
+  ): Promise<{ updated: number }> {
+    if (formationIds.length === 0) {
+      return { updated: 0 };
+    }
+
+    // For merge mode with tags, we need to fetch existing data and merge
+    if (mode === "merge" && updates.tags) {
+      const { data: existing, error: fetchError } = await supabase
+        .from("formations")
+        .select("id, tags")
+        .in("id", formationIds);
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch formations: ${fetchError.message}`);
+      }
+
+      // Merge tags for each formation individually
+      for (const formation of existing || []) {
+        const existingTags = (formation as Formation).tags || [];
+        const mergedTags = [...new Set([...existingTags, ...(updates.tags || [])])];
+        const { error: updateError } = await supabase
+          .from("formations")
+          .update({ tags: mergedTags } as never)
+          .eq("id", (formation as Formation).id);
+
+        if (updateError) {
+          throw new Error(`Failed to update formation ${(formation as any).id}: ${updateError.message}`);
+        }
+      }
+
+      return { updated: formationIds.length };
+    } else {
+      // Replace mode - simple batch update
+      const { error } = await supabase
+        .from("formations")
+        .update(updates as never)
+        .in("id", formationIds);
+
+      if (error) {
+        throw new Error(`Bulk update failed: ${error.message}`);
+      }
+
+      return { updated: formationIds.length };
+    }
+  }
+
+  /**
+   * Bulk set direction with optional opposite formation creation
+   */
+  static async bulkSetDirection(
+    _playbookId: string,
+    formationIds: string[],
+    direction: "left" | "right" | "both",
+    autoCreateOpposites: boolean
+  ): Promise<{ updated: number; created: number }> {
+    if (formationIds.length === 0) {
+      return { updated: 0, created: 0 };
+    }
+
+    let created = 0;
+
+    if (direction === "both" && autoCreateOpposites) {
+      // Fetch formations to check for opposites and create if needed
+      const { data: formations, error: fetchError } = await supabase
+        .from("formations")
+        .select("*")
+        .in("id", formationIds);
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch formations: ${fetchError.message}`);
+      }
+
+      // Create opposites for formations that don't have them
+      for (const formation of formations || []) {
+        const f = formation as any;
+        if (!f.opposite_formation_id) {
+          try {
+            await this.createOppositeFormation(f.id);
+            created++;
+          } catch (error) {
+            logError(`[FormationService] Failed to create opposite for ${f.name}:`, error);
+            // Continue with other formations even if one fails
+          }
+        } else {
+          // Formation already has an opposite, just ensure direction is set to 'both'
+          const { error: updateError } = await supabase
+            .from("formations")
+            .update({ direction: "both" } as never)
+            .eq("id", f.id);
+
+          if (updateError) {
+            logError(`[FormationService] Failed to update direction for ${f.name}:`, updateError);
+          }
+        }
+      }
+
+      return { updated: formationIds.length, created };
+    } else {
+      // Simple direction update without opposite creation
+      const { error } = await supabase
+        .from("formations")
+        .update({ direction } as never)
+        .in("id", formationIds);
+
+      if (error) {
+        throw new Error(`Bulk direction update failed: ${error.message}`);
+      }
+
+      return { updated: formationIds.length, created: 0 };
+    }
+  }
+
+  /**
+   * Bulk delete formations with option to delete linked opposites
+   */
+  static async bulkDelete(
+    formationIds: string[],
+    deleteOpposites: boolean
+  ): Promise<{ count: number }> {
+    if (formationIds.length === 0) {
+      return { count: 0 };
+    }
+
+    if (deleteOpposites) {
+      // Fetch opposite IDs
+      const { data: formations, error: fetchError } = await supabase
+        .from("formations")
+        .select("opposite_formation_id")
+        .in("id", formationIds);
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch formations: ${fetchError.message}`);
+      }
+
+      // Collect all IDs to delete (selected + their opposites)
+      const oppositeIds = formations
+        ?.map((f) => (f as any).opposite_formation_id)
+        .filter((id): id is string => id !== null) || [];
+
+      const allIds = [...new Set([...formationIds, ...oppositeIds])];
+
+      const { error } = await supabase.from("formations").delete().in("id", allIds);
+
+      if (error) {
+        throw new Error(`Bulk delete failed: ${error.message}`);
+      }
+
+      return { count: allIds.length };
+    } else {
+      // Delete only selected formations, unlink opposites
+      // First, unlink the opposites
+      const { error: unlinkError } = await supabase
+        .from("formations")
+        .update({ opposite_formation_id: null } as never)
+        .in("opposite_formation_id", formationIds);
+
+      if (unlinkError) {
+        logError("[FormationService] Failed to unlink opposites:", unlinkError);
+      }
+
+      // Then delete the selected formations
+      const { error } = await supabase.from("formations").delete().in("id", formationIds);
+
+      if (error) {
+        throw new Error(`Bulk delete failed: ${error.message}`);
+      }
+
+      return { count: formationIds.length };
+    }
+  }
+
+  /**
+   * Get formations by IDs (for undo functionality)
+   */
+  static async getFormationsByIds(formationIds: string[]): Promise<Formation[]> {
+    const { data, error } = await supabase
+      .from("formations")
+      .select("*")
+      .in("id", formationIds);
+
+    if (error) {
+      throw new Error(`Failed to fetch formations: ${error.message}`);
+    }
+
+    return (data || []) as Formation[];
   }
 }

@@ -148,7 +148,7 @@ export const DrawFormationTab: React.FC<DrawFormationTabProps> = ({
               <option value="">Select formation to draw...</option>
               {formationsWithoutDiagrams.map((f) => (
                 <option key={f.id} value={f.id}>
-                  {f.name} {f.direction !== "base" && `(${f.direction})`} -{" "}
+                  {f.name} {f.direction && `(${f.direction})`} -{" "}
                   {f.personnel_name || "No personnel"}
                 </option>
               ))}
@@ -195,7 +195,7 @@ export const DrawFormationTab: React.FC<DrawFormationTabProps> = ({
                 <optgroup label="Formations with diagrams">
                   {formationsWithDiagrams.map((f) => (
                     <option key={f.id} value={f.id}>
-                      {f.name} {f.direction !== "base" && `(${f.direction})`}
+                      {f.name} {f.direction && `(${f.direction})`}
                     </option>
                   ))}
                 </optgroup>

@@ -10,11 +10,25 @@
 
 import { useState, useEffect } from "react";
 import { Modal } from "../../ui/Modal/Modal";
-import { Link2, Pencil, Settings } from "lucide-react";
+import {
+  Link2,
+  Pencil,
+  Settings,
+  HeartPulse,
+  AlertCircle,
+  CheckCircle,
+  Save,
+} from "lucide-react";
 import { Typography } from "../../design-system/Typography";
 import { FormationBadge } from "../FormationBadge";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 import { FormationBuilderPanel } from "../../formations/FormationBuilderPanel";
+import { FormationHealthDashboard } from "../../formations/FormationHealthDashboard";
+import { FormationDirectionReviewPanel } from "../../formations/FormationDirectionReviewPanel";
+import { FormationDataDiagnostic } from "../../formations/FormationDataDiagnostic";
+import { IncompleteFormationsPanel } from "../../formations/IncompleteFormationsPanel";
+import { BulkSelectionProvider } from "../../formations/BulkSelectionContext";
+import { BulkActionToolbar } from "../../formations/BulkActionToolbar";
 import { DrawFormationTab } from "./DrawFormationTab";
 import { FormationService } from "../../../services/formationService";
 import { useToast } from "../../../hooks/useToast";
@@ -32,7 +46,14 @@ interface FormationBuilderModalProps {
   onSaved?: () => void;
 }
 
-type TabType = "edit" | "draw" | "link";
+type TabType =
+  | "edit"
+  | "draw"
+  | "link"
+  | "health"
+  | "review"
+  | "diagnostic"
+  | "incomplete";
 
 export function FormationBuilderModal({
   isOpen,
@@ -148,95 +169,99 @@ export function FormationBuilderModal({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Formation Manager"
-      size="xl"
-    >
-      <div className="flex flex-col h-full">
-        {/* Formation Header - Shows which formation is being edited */}
-        {formation && (
-          <div className="px-spacing-lg py-spacing-md bg-surface-secondary border-b border-border-primary">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-spacing-md">
-                <FormationBadge
-                  formationId={formation.id}
-                  direction={formation.direction}
-                />
-                <div>
-                  <Typography
-                    variant="headline-sm"
-                    className="text-text-primary"
-                  >
-                    {formation.name}
-                  </Typography>
-                  <div className="flex items-center gap-spacing-sm mt-spacing-xxs">
-                    {formation.personnel_name && (
-                      <Typography variant="caption" className="text-text-muted">
-                        {formation.personnel_name} Personnel
-                      </Typography>
-                    )}
-                    {formation.category && (
-                      <>
-                        <span className="text-text-muted">•</span>
+    <BulkSelectionProvider>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Formation Manager"
+        size="xl"
+      >
+        <div className="flex flex-col h-full">
+          {/* Formation Header - Shows which formation is being edited */}
+          {formation && (
+            <div className="px-spacing-lg py-spacing-md bg-surface-secondary border-b border-border-primary">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-spacing-md">
+                  <FormationBadge
+                    formationId={formation.id}
+                    direction={formation.direction}
+                  />
+                  <div>
+                    <Typography
+                      variant="headline-sm"
+                      className="text-text-primary"
+                    >
+                      {formation.name}
+                    </Typography>
+                    <div className="flex items-center gap-spacing-sm mt-spacing-xxs">
+                      {formation.personnel_name && (
                         <Typography
                           variant="caption"
                           className="text-text-muted"
                         >
-                          {formation.category.charAt(0).toUpperCase() +
-                            formation.category.slice(1)}
+                          {formation.personnel_name} Personnel
                         </Typography>
-                      </>
-                    )}
-                    {formation.formation_type && (
-                      <>
-                        <span className="text-text-muted">•</span>
-                        <Typography
-                          variant="caption"
-                          className="text-text-muted"
-                        >
-                          {formation.formation_type}
-                        </Typography>
-                      </>
-                    )}
+                      )}
+                      {formation.category && (
+                        <>
+                          <span className="text-text-muted">•</span>
+                          <Typography
+                            variant="caption"
+                            className="text-text-muted"
+                          >
+                            {formation.category.charAt(0).toUpperCase() +
+                              formation.category.slice(1)}
+                          </Typography>
+                        </>
+                      )}
+                      {formation.formation_type && (
+                        <>
+                          <span className="text-text-muted">•</span>
+                          <Typography
+                            variant="caption"
+                            className="text-text-muted"
+                          >
+                            {formation.formation_type}
+                          </Typography>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
+                {formation.usage_count > 0 && (
+                  <Typography variant="caption" className="text-text-muted">
+                    Used in {formation.usage_count}{" "}
+                    {formation.usage_count === 1 ? "play" : "plays"}
+                  </Typography>
+                )}
               </div>
-              {formation.usage_count > 0 && (
-                <Typography variant="caption" className="text-text-muted">
-                  Used in {formation.usage_count}{" "}
-                  {formation.usage_count === 1 ? "play" : "plays"}
-                </Typography>
-              )}
             </div>
-          </div>
-        )}
+          )}
 
-        {!formation && selectedFormationId && isLoading && (
-          <div className="px-spacing-lg py-spacing-md bg-surface-secondary border-b border-border-primary">
-            <Typography variant="body" className="text-text-muted">
-              Loading formation...
-            </Typography>
-          </div>
-        )}
+          {!formation && selectedFormationId && isLoading && (
+            <div className="px-spacing-lg py-spacing-md bg-surface-secondary border-b border-border-primary">
+              <Typography variant="body" className="text-text-muted">
+                Loading formation...
+              </Typography>
+            </div>
+          )}
 
-        {!formation && !selectedFormationId && (
-          <div className="px-spacing-lg py-spacing-md bg-info-50 border-b border-info-200">
-            <Typography variant="body-sm" className="text-info-700">
-              💡 Creating new formation - Start by entering details or drawing
-              on canvas
-            </Typography>
-          </div>
-        )}
+          {!formation && !selectedFormationId && (
+            <div className="px-spacing-lg py-spacing-md bg-info-50 border-b border-info-200">
+              <Typography variant="body-sm" className="text-info-700">
+                💡 Creating new formation - Start by entering details or drawing
+                on canvas
+              </Typography>
+            </div>
+          )}
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-border-primary bg-surface-secondary">
-          {/* Tab 1: Edit Details (PRIMARY - Create formation) */}
-          <button
-            onClick={() => setActiveTab("edit")}
-            className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+          {/* Tab Navigation - Single unified tab bar */}
+          <div className="flex border-b border-border-primary bg-surface-secondary overflow-x-auto">
+            {/* Tab 1: Edit Details (Create/Edit Formation) */}
+            <button
+              onClick={() => setActiveTab("edit")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
               font-medium transition-colors
               ${
                 activeTab === "edit"
@@ -244,16 +269,16 @@ export function FormationBuilderModal({
                   : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
               }
             `}
-          >
-            <Settings className="w-5 h-5" />
-            <span className="font-medium">Edit Details</span>
-          </button>
+            >
+              <Save className="w-5 h-5" />
+              <span className="font-medium">Formation Details</span>
+            </button>
 
-          {/* Tab 2: Draw Formation */}
-          <button
-            onClick={() => setActiveTab("draw")}
-            className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+            {/* Tab 2: Draw Formation */}
+            <button
+              onClick={() => setActiveTab("draw")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
               font-medium transition-colors relative
               ${
                 activeTab === "draw"
@@ -261,16 +286,33 @@ export function FormationBuilderModal({
                   : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
               }
             `}
-          >
-            <Pencil className="w-5 h-5" />
-            <span className="font-medium">Draw Formation</span>
-          </button>
+            >
+              <Pencil className="w-5 h-5" />
+              <span className="font-medium">Draw Formation</span>
+            </button>
 
-          {/* Tab 3: Link Formations */}
-          <button
-            onClick={() => setActiveTab("link")}
-            className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+            {/* Tab 3: Direction Review */}
+            <button
+              onClick={() => setActiveTab("review")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              font-medium transition-colors
+              ${
+                activeTab === "review"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
+              }
+            `}
+            >
+              <AlertCircle className="w-5 h-5" />
+              <span className="font-medium">Direction Review</span>
+            </button>
+
+            {/* Tab 4: Link Formations */}
+            <button
+              onClick={() => setActiveTab("link")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
               font-medium transition-colors
               ${
                 activeTab === "link"
@@ -278,49 +320,140 @@ export function FormationBuilderModal({
                   : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
               }
             `}
-          >
-            <Link2 className="w-5 h-5" />
-            <span className="font-medium">Link Formations</span>
-          </button>
+            >
+              <Link2 className="w-5 h-5" />
+              <span className="font-medium">Link Formations</span>
+            </button>
+
+            {/* Tab 5: Data Diagnostic */}
+            <button
+              onClick={() => setActiveTab("diagnostic")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              font-medium transition-colors
+              ${
+                activeTab === "diagnostic"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
+              }
+            `}
+            >
+              <Settings className="w-5 h-5" />
+              <span className="font-medium">Data Diagnostic</span>
+            </button>
+
+            {/* Tab 6: Formation Health */}
+            <button
+              onClick={() => setActiveTab("health")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              font-medium transition-colors
+              ${
+                activeTab === "health"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
+              }
+            `}
+            >
+              <HeartPulse className="w-5 h-5" />
+              <span className="font-medium">Health</span>
+            </button>
+
+            {/* Tab 7: Incomplete Formations */}
+            <button
+              onClick={() => setActiveTab("incomplete")}
+              className={`
+              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              font-medium transition-colors
+              ${
+                activeTab === "incomplete"
+                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
+                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
+              }
+            `}
+            >
+              <CheckCircle className="w-5 h-5" />
+              <span className="font-medium">Incomplete</span>
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="flex-1 overflow-auto">
+            {/* Tab 1: Formation Details (Edit/Create) */}
+            {activeTab === "edit" && (
+              <FormationBuilderPanel
+                playbookId={playbookId}
+                onFormationUpdated={handleSuccess}
+                showHeader={false}
+                hideSubTabs={true}
+              />
+            )}
+
+            {/* Tab 2: Draw Formation */}
+            {activeTab === "draw" && (
+              <DrawFormationTab
+                playbookId={playbookId}
+                formationId={selectedFormationId}
+                formation={formation}
+                isLoading={isLoading}
+                onSave={handleCanvasSave}
+                onCancel={handleCanvasCancel}
+                onFormationSelected={(id) => {
+                  setSelectedFormationId(id);
+                  // Formation will auto-load via useEffect
+                }}
+              />
+            )}
+
+            {/* Tab 3: Direction Review */}
+            {activeTab === "review" && (
+              <FormationDirectionReviewPanel
+                playbookId={playbookId}
+                onFixComplete={handleSuccess}
+              />
+            )}
+
+            {/* Tab 4: Link Formations */}
+            {activeTab === "link" && (
+              <FormationLinkingPanel
+                playbookId={playbookId}
+                onSuccess={handleSuccess}
+                initialLeftFormation={null}
+                initialRightFormation={null}
+              />
+            )}
+
+            {/* Tab 5: Data Diagnostic */}
+            {activeTab === "diagnostic" && (
+              <FormationDataDiagnostic playbookId={playbookId} />
+            )}
+
+            {/* Tab 6: Formation Health */}
+            {activeTab === "health" && (
+              <FormationHealthDashboard
+                playbookId={playbookId}
+                onFormationUpdated={handleSuccess}
+              />
+            )}
+
+            {/* Tab 7: Incomplete Formations */}
+            {activeTab === "incomplete" && (
+              <IncompleteFormationsPanel
+                playbookId={playbookId}
+                onFormationEdit={(formation) => {
+                  // Switch to edit tab and load the formation
+                  setSelectedFormationId(formation.id);
+                  setActiveTab("edit");
+                }}
+                onBack={() => setActiveTab("edit")}
+              />
+            )}
+          </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="flex-1 overflow-auto">
-          {/* Tab 1: Edit Details */}
-          {activeTab === "edit" && (
-            <FormationBuilderPanel
-              playbookId={playbookId}
-              onSuccess={handleSuccess}
-            />
-          )}
-
-          {/* Tab 2: Draw Formation */}
-          {activeTab === "draw" && (
-            <DrawFormationTab
-              playbookId={playbookId}
-              formationId={selectedFormationId}
-              formation={formation}
-              isLoading={isLoading}
-              onSave={handleCanvasSave}
-              onCancel={handleCanvasCancel}
-              onFormationSelected={(id) => {
-                setSelectedFormationId(id);
-                // Formation will auto-load via useEffect
-              }}
-            />
-          )}
-
-          {/* Tab 3: Link Formations */}
-          {activeTab === "link" && (
-            <FormationLinkingPanel
-              playbookId={playbookId}
-              onSuccess={handleSuccess}
-              initialLeftFormation={null}
-              initialRightFormation={null}
-            />
-          )}
-        </div>
-      </div>
-    </Modal>
+        {/* Bulk Action Toolbar - Shows when formations are selected */}
+        <BulkActionToolbar playbookId={playbookId} />
+      </Modal>
+    </BulkSelectionProvider>
   );
 }

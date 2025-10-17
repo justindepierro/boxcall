@@ -20,6 +20,7 @@ import { supabase } from "../../lib/supabase";
 import type { Formation } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { Link2, ChevronDown } from "lucide-react";
+import { debug, info, error as logError } from "../../utils/logger";
 
 interface FormationLinkingPanelProps {
   playbookId: string;
@@ -56,23 +57,25 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   const loadFormations = useCallback(async () => {
     setLoading(true);
     setImportStatus(null);
-    console.log(
-      "🔍 FormationLinkingPanel: Loading formations for playbookId:",
+    debug(
+      "[FormationLinkingPanel] Loading formations for playbookId:",
       playbookId
     );
     try {
       // First, try to import any formations from plays
       const currentUser = await supabase.auth.getUser();
-      console.log("👤 Current user:", currentUser.data.user?.id);
+      debug("[FormationLinkingPanel] Current user:", currentUser.data.user?.id);
       if (currentUser.data.user) {
         try {
-          console.log("📥 Attempting to import formations from plays...");
+          debug(
+            "[FormationLinkingPanel] Attempting to import formations from plays..."
+          );
           const result = await FormationService.importFormationsFromPlays(
             playbookId,
             currentUser.data.user.id
           );
 
-          console.log("📊 Import result:", result);
+          debug("[FormationLinkingPanel] Import result:", result);
 
           if (result.created > 0) {
             setImportStatus(
@@ -81,36 +84,49 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
           }
 
           // Use the imported formations
-          console.log(
-            "✅ Setting formations:",
+          info(
+            "[FormationLinkingPanel] Setting formations:",
             result.formations.length,
             "formations"
           );
           setAllFormations(result.formations);
         } catch (importError) {
-          console.error("❌ Failed to import formations:", importError);
+          logError(
+            "[FormationLinkingPanel] Failed to import formations:",
+            importError
+          );
           // Continue with normal load even if import fails
           const formations =
             await FormationService.getFormationsByPlaybook(playbookId);
-          console.log("📋 Loaded existing formations:", formations.length);
+          info(
+            "[FormationLinkingPanel] Loaded existing formations:",
+            formations.length
+          );
           setAllFormations(formations);
         }
       } else {
         // No user, just load existing formations
-        console.log("⚠️ No user, loading existing formations");
+        debug("[FormationLinkingPanel] No user, loading existing formations");
         const formations =
           await FormationService.getFormationsByPlaybook(playbookId);
-        console.log("📋 Loaded existing formations:", formations.length);
+        info(
+          "[FormationLinkingPanel] Loaded existing formations:",
+          formations.length
+        );
         setAllFormations(formations);
       }
 
       // Load available personnel configurations
       const personnel =
         await PersonnelService.getPersonnelConfigurations(playbookId);
-      console.log("👥 Loaded personnel:", personnel.length, "configurations");
+      info(
+        "[FormationLinkingPanel] Loaded personnel:",
+        personnel.length,
+        "configurations"
+      );
       setAvailablePersonnel(personnel);
     } catch (error) {
-      console.error("❌ Failed to load formations:", error);
+      logError("[FormationLinkingPanel] Failed to load formations:", error);
     } finally {
       setLoading(false);
     }
@@ -124,27 +140,13 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
   const isLinked = (formation: Formation): boolean => {
     return (
-      formation.base_formation_id !== null ||
-      allFormations.some((f) => f.base_formation_id === formation.id)
+      formation.opposite_formation_id !== null ||
+      allFormations.some((f) => f.opposite_formation_id === formation.id)
     );
   };
 
-  // Filter out base formations if they have left/right variants
-  const visibleFormations = allFormations.filter((formation) => {
-    // If direction is 'base', check if variants exist
-    if (formation.direction === "base") {
-      const hasVariants = allFormations.some(
-        (f) =>
-          f.name === formation.name &&
-          f.direction !== "base" &&
-          (f.direction === "left" || f.direction === "right")
-      );
-      // Only show base formation if no variants exist
-      return !hasVariants;
-    }
-    // Show all non-base formations
-    return true;
-  });
+  // All formations are visible (no filtering needed with new system)
+  const visibleFormations = allFormations;
 
   // Check if left and right formations have the same name (case-insensitive)
   const isSameFormationName = (): boolean => {
@@ -179,11 +181,9 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
     setShowConfirmModal(false);
     setSaving(true);
     try {
-      await FormationService.linkFormations(
+      await FormationService.linkExistingFormations(
         leftFormation.id,
-        leftFormation.id,
-        rightFormation.id,
-        selectedPersonnelIds // Pass selected personnel packages
+        rightFormation.id
       );
 
       alert("Formations linked successfully!");
@@ -196,7 +196,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         onSuccess();
       }
     } catch (error) {
-      console.error("Failed to link formations:", error);
+      logError("[FormationLinkingPanel] Failed to link formations:", error);
       alert("Failed to link formations. Please try again.");
     } finally {
       setSaving(false);

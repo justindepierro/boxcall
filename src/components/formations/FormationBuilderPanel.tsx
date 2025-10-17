@@ -22,21 +22,29 @@ import { Typography } from "../design-system/Typography";
 import { FormationBadge } from "../playbook/FormationBadge";
 import { FormationService } from "../../services/formationService";
 import { PersonnelService } from "../../services/personnelService";
+import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
+import { FormationDirectionReviewPanel } from "./FormationDirectionReviewPanel";
+import { FormationDataDiagnostic } from "./FormationDataDiagnostic";
+import { useBulkSelection } from "./BulkSelectionContext";
+import { supabase } from "../../lib/supabase";
+import { error as logError } from "../../utils/logger";
 import type {
   Formation,
   FormationCategory,
   FormationType,
-  FormationDirectionalityType,
   StrengthType,
 } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
-import { Save, ChevronDown } from "lucide-react";
+import { Save, ChevronDown, AlertCircle, CheckCircle } from "lucide-react";
 import { ToastContext } from "../../contexts/ToastContext";
 import { useSaveState } from "../../contexts/SaveStateContext";
 
 interface FormationBuilderPanelProps {
   playbookId: string;
-  onSuccess?: () => void;
+  onFormationCreated?: (formation: Formation) => void;
+  onFormationUpdated?: (formation: Formation) => void;
+  showHeader?: boolean; // Control header display (hide when in modal)
+  hideSubTabs?: boolean; // Hide internal tabs when parent modal has unified tabs
 }
 
 const FORMATION_CATEGORIES: { value: FormationCategory; label: string }[] = [
@@ -68,45 +76,27 @@ const STRENGTH_OPTIONS: { value: StrengthType; label: string; icon: string }[] =
     { value: "right", label: "Right", icon: "→" },
   ];
 
-const DIRECTIONALITY_OPTIONS: {
-  value: FormationDirectionalityType;
-  label: string;
-  description: string;
-  icon: string;
-}[] = [
-  {
-    value: "mirror",
-    label: "Mirror Variants",
-    description: "Has left/right variants (Trips, Twins, Bunch)",
-    icon: "🔄",
-  },
-  {
-    value: "built-in",
-    label: "Direction Built-In",
-    description: "Direction is in the name (East/West, Rip/Liz)",
-    icon: "🧭",
-  },
-  {
-    value: "symmetric",
-    label: "Symmetric",
-    description: "No direction needed (Empty, Stack)",
-    icon: "⚖️",
-  },
-  {
-    value: "unspecified",
-    label: "Unspecified",
-    description: "Legacy formations without directionality",
-    icon: "❓",
-  },
-];
-
 export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   playbookId,
-  onSuccess,
+  onFormationCreated: _onFormationCreated, // Reserved for future CREATE operation
+  onFormationUpdated,
+  showHeader = true, // Default to true for backwards compat
+  hideSubTabs = false, // Default to false - show tabs by default
 }) => {
   const toast = useContext(ToastContext);
   const { startSaving, finishSaving, isSaving: globalSaving } = useSaveState();
+  const {
+    isSelected,
+    toggleSelection,
+    selectAll,
+    clearSelection,
+    selectionCount,
+    hasSelection,
+  } = useBulkSelection();
 
+  const [activeTab, setActiveTab] = useState<
+    "details" | "diagnostic" | "review" | "incomplete"
+  >("details");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [allFormations, setAllFormations] = useState<Formation[]>([]);
@@ -117,6 +107,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const [selectedFormation, setSelectedFormation] = useState<Formation | null>(
     null
   );
+  const [showOppositeModal, setShowOppositeModal] = useState(false);
+  const [formationForOpposite, setFormationForOpposite] =
+    useState<Formation | null>(null);
   const [selectedPersonnelIds, setSelectedPersonnelIds] = useState<string[]>(
     []
   );
@@ -124,8 +117,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const [formationType, setFormationType] = useState<FormationType | null>(
     null
   );
-  const [directionalityType, setDirectionalityType] =
-    useState<FormationDirectionalityType>("unspecified");
   const [runStrength, setRunStrength] = useState<StrengthType>("balanced");
   const [passStrength, setPassStrength] = useState<StrengthType>("balanced");
   const [tags, setTags] = useState<string>("");
@@ -137,7 +128,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     selectedPersonnelIds,
     category,
     formationType,
-    directionalityType,
     runStrength,
     passStrength,
     tags,
@@ -154,7 +144,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       selectedPersonnelIds,
       category,
       formationType,
-      directionalityType,
       runStrength,
       passStrength,
       tags,
@@ -166,19 +155,33 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [formations, personnel] = await Promise.all([
-        FormationService.getFormationsByPlaybook(playbookId),
-        PersonnelService.getPersonnelConfigurations(playbookId),
-      ]);
+      // Optimize query - only select columns we need for the dropdown
+      const { data: formations, error: formationsError } = await supabase
+        .from("formations")
+        .select(
+          "id, name, category, personnel_name, direction, usage_count, opposite_formation_id, personnel_packages, formation_type, run_strength, pass_strength, tags, description, player_positions"
+        )
+        .eq("playbook_id", playbookId)
+        .order("name", { ascending: true });
 
-      setAllFormations(formations);
+      if (formationsError) {
+        throw formationsError;
+      }
+
+      const personnel =
+        await PersonnelService.getPersonnelConfigurations(playbookId);
+
+      setAllFormations((formations as Formation[]) || []);
       setAvailablePersonnel(personnel);
     } catch (error) {
-      console.error("❌ [FormationBuilderPanel] Failed to load data:", error);
+      logError("[FormationBuilderPanel] Failed to load data:", error);
+      if (toast) {
+        toast.error("Failed to load formations");
+      }
     } finally {
       setLoading(false);
     }
-  }, [playbookId]);
+  }, [playbookId, toast]);
 
   useEffect(() => {
     if (playbookId) {
@@ -195,9 +198,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setSelectedPersonnelIds(selectedFormation.personnel_packages || []);
       setCategory(selectedFormation.category || "");
       setFormationType(selectedFormation.formation_type || null);
-      setDirectionalityType(
-        selectedFormation.directionality_type || "unspecified"
-      );
       setRunStrength(selectedFormation.run_strength || "balanced");
       setPassStrength(selectedFormation.pass_strength || "balanced");
       setTags(selectedFormation.tags?.join(", ") || "");
@@ -206,7 +206,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setSelectedPersonnelIds([]);
       setCategory("");
       setFormationType(null);
-      setDirectionalityType("unspecified");
       setRunStrength("balanced");
       setPassStrength("balanced");
       setTags("");
@@ -230,33 +229,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   // Check if selected formation has a linked variant (left/right pair)
   // Memoize to prevent unnecessary re-renders
   const linkedFormation = React.useMemo((): Formation | null => {
-    if (!selectedFormation) return null;
+    if (!selectedFormation || !selectedFormation.opposite_formation_id)
+      return null;
 
-    // If this is a left formation, find the right one
-    if (selectedFormation.direction === "left") {
-      return (
-        allFormations.find(
-          (f) =>
-            f.name === selectedFormation.name &&
-            f.direction === "right" &&
-            f.base_formation_id === selectedFormation.base_formation_id
-        ) || null
-      );
-    }
-
-    // If this is a right formation, find the left one
-    if (selectedFormation.direction === "right") {
-      return (
-        allFormations.find(
-          (f) =>
-            f.name === selectedFormation.name &&
-            f.direction === "left" &&
-            f.base_formation_id === selectedFormation.base_formation_id
-        ) || null
-      );
-    }
-
-    return null;
+    // Find the opposite formation using opposite_formation_id
+    return (
+      allFormations.find(
+        (f) => f.id === selectedFormation.opposite_formation_id
+      ) || null
+    );
   }, [selectedFormation, allFormations]);
 
   // Helper function to mirror strength for linked formations
@@ -289,7 +270,6 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       personnel_packages: data.selectedPersonnelIds,
       category: data.category || undefined,
       formation_type: data.formationType || undefined,
-      directionality_type: data.directionalityType,
       run_strength: data.runStrength,
       pass_strength: data.passStrength,
       tags: tagsArray,
@@ -325,7 +305,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       // Finish with success (green flash)
       finishSaving("success");
     } catch (error) {
-      console.error("Failed to auto-save formation:", error);
+      logError("[FormationBuilderPanel] Failed to auto-save formation:", error);
       toast?.error("Failed to save changes", "Auto-save Failed");
       finishSaving("error");
     }
@@ -401,7 +381,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
           finishSaving("success");
         } catch (error) {
-          console.error("Failed to auto-save formation:", error);
+          logError(
+            "[FormationBuilderPanel] Failed to auto-save formation:",
+            error
+          );
           toast?.error("Failed to save changes", "Auto-save Failed");
           finishSaving("error");
         }
@@ -485,11 +468,31 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
       setAllFormations(formations);
       setAvailablePersonnel(personnel);
 
-      if (onSuccess) {
-        onSuccess();
+      // ✨ NEW: Check if opposite formation exists
+      // Only prompt if formation has positions (is drawn) and doesn't have opposite
+      if (
+        selectedFormation.player_positions.length > 0 &&
+        selectedFormation.direction !== null
+      ) {
+        const hasOpposite = await FormationService.hasOppositeFormation(
+          selectedFormation.id
+        );
+
+        if (!hasOpposite) {
+          // Get updated formation data and show modal
+          const updatedFormation = await FormationService.getFormationById(
+            selectedFormation.id
+          );
+          setFormationForOpposite(updatedFormation);
+          setShowOppositeModal(true);
+        }
+      }
+
+      if (onFormationUpdated) {
+        onFormationUpdated(selectedFormation);
       }
     } catch (error) {
-      console.error("Failed to save formation:", error);
+      logError("[FormationBuilderPanel] Failed to save formation:", error);
       toast?.error(
         "Failed to save formation. Please try again.",
         "Save Failed"
@@ -509,274 +512,405 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
     );
   }
 
-  // Filter out base formations if they have left/right variants
-  const visibleFormations = allFormations.filter((formation) => {
-    // If direction is 'base', check if variants exist
-    if (formation.direction === "base") {
-      const hasVariants = allFormations.some(
-        (f) =>
-          f.name === formation.name &&
-          f.direction !== "base" &&
-          (f.direction === "left" || f.direction === "right")
-      );
-      // Only show base formation if no variants exist
-      return !hasVariants;
-    }
-    // Show all non-base formations
-    return true;
-  });
+  // Show all formations (no filtering needed in new simplified system)
+  const visibleFormations = allFormations;
+
+  const tabs = [
+    { id: "details" as const, label: "Formation Details", icon: Save },
+    { id: "diagnostic" as const, label: "Data Diagnostic", icon: AlertCircle },
+    { id: "review" as const, label: "Direction Review", icon: AlertCircle },
+    {
+      id: "incomplete" as const,
+      label: "Incomplete Formations",
+      icon: CheckCircle,
+    },
+  ];
 
   return (
-    <div className="flex flex-col gap-spacing-md p-spacing-sm max-w-3xl mx-auto">
-      {/* Header with New Formation Button */}
-      <div className="flex items-center justify-between">
-        <Typography variant="headline-md" className="text-text-primary">
-          Formation Details
-        </Typography>
-        <Button
-          onClick={() => {
-            // Clear selection and form to create new formation
-            setSelectedFormation(null);
-            setSelectedPersonnelIds([]);
-            setCategory("");
-            setFormationType(null);
-            setRunStrength("balanced");
-            setPassStrength("balanced");
-            setTags("");
-            setDescription("");
-            setApplyToBothSides(true);
-          }}
-          variant="primary"
-          size="sm"
-        >
-          + New Formation
-        </Button>
-      </div>
+    <div className="flex flex-col gap-spacing-md p-spacing-sm max-w-3xl mx-auto relative">
+      {/* Loading Skeleton - Show only on initial load (no formations yet) */}
+      {loading && allFormations.length === 0 ? (
+        <div className="space-y-spacing-lg animate-pulse">
+          {/* Skeleton Header */}
+          {showHeader && (
+            <div className="flex items-center justify-between">
+              <div className="h-8 bg-surface-subtle rounded w-48"></div>
+              <div className="h-10 w-32 bg-surface-subtle rounded"></div>
+            </div>
+          )}
 
-      {/* Formation Selector */}
-      <div className="flex flex-col gap-spacing-xs">
-        <Typography variant="body-md" className="text-text-primary font-medium">
-          Select Formation
-        </Typography>
-
-        {loading ? (
-          <div className="p-spacing-md text-center text-text-muted">
-            Loading formations...
-          </div>
-        ) : visibleFormations.length === 0 ? (
-          <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary text-center">
-            <Typography variant="body-sm" className="text-text-muted">
-              No formations found. Create formations by adding plays with
-              formation names first.
-            </Typography>
-          </div>
-        ) : (
-          <div className="relative">
-            <select
-              value={selectedFormation?.id || ""}
-              onChange={(e) => {
-                const formation = allFormations.find(
-                  (f) => f.id === e.target.value
-                );
-                setSelectedFormation(formation || null);
-              }}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
-            >
-              <option value="">
-                Choose a formation to edit... ({visibleFormations.length}{" "}
-                available)
-              </option>
-              {visibleFormations.map((formation) => (
-                <option key={formation.id} value={formation.id}>
-                  {formation.name}{" "}
-                  {formation.direction !== "base" &&
-                    `(${formation.direction === "left" ? "Left" : formation.direction === "right" ? "Right" : "Base"})`}
-                </option>
+          {/* Skeleton Tabs */}
+          {!hideSubTabs && (
+            <div className="flex gap-spacing-xs border-b border-border-primary">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="h-10 w-32 bg-surface-subtle rounded-t"
+                ></div>
               ))}
-            </select>
-            <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-          </div>
-        )}
+            </div>
+          )}
 
-        {selectedFormation && (
-          <div className="mt-spacing-xs p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <FormationBadge
-              formationId={selectedFormation.id}
-              direction={selectedFormation.direction}
-            />
-            {linkedFormation && (
-              <div className="mt-spacing-xs flex items-center gap-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded text-xs">
-                <input
-                  type="checkbox"
-                  id="applyToBothSides"
-                  checked={applyToBothSides}
-                  onChange={(e) => setApplyToBothSides(e.target.checked)}
-                  className="w-3.5 h-3.5 text-primary-600 rounded focus:ring-primary-500"
-                />
-                <label
-                  htmlFor="applyToBothSides"
-                  className="text-primary-700 font-medium cursor-pointer"
-                >
-                  Apply to both {selectedFormation.direction} and{" "}
-                  {linkedFormation.direction} variants
-                </label>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* New Formation Form - Shows when no formation selected */}
-      {!selectedFormation && (
-        <div className="p-spacing-lg bg-surface-secondary rounded-lg border border-border-primary">
+          {/* Skeleton Content */}
           <div className="space-y-spacing-md">
-            <div>
-              <Typography
-                variant="headline-sm"
-                className="text-text-primary mb-spacing-xs"
-              >
-                Create New Formation
-              </Typography>
-              <Typography variant="body-sm" className="text-text-muted">
-                Enter formation details to create a new formation. You can add
-                player positions on the "Draw Formation" tab.
-              </Typography>
-            </div>
-
-            {/* Formation Name */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
-                Formation Name *
-              </label>
-              <input
-                type="text"
-                placeholder="e.g., Trips Right, I Formation, Shotgun Spread"
-                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            {/* Personnel Package */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
-                Personnel Package *
-              </label>
-              <select className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary">
-                <option value="">Select personnel...</option>
-                {availablePersonnel.map((personnel) => (
-                  <option key={personnel.id} value={personnel.id}>
-                    {personnel.name} - {personnel.description}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Category */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
-                Category
-              </label>
-              <select
-                value={category}
-                onChange={(e) =>
-                  setCategory(e.target.value as FormationCategory)
-                }
-                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
-              >
-                <option value="">Select category...</option>
-                {FORMATION_CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Directionality Type */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
-                Directionality Type *
-              </label>
-              <select
-                value={directionalityType}
-                onChange={(e) =>
-                  setDirectionalityType(
-                    e.target.value as FormationDirectionalityType
-                  )
-                }
-                className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
-              >
-                {DIRECTIONALITY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.icon} {option.label}
-                  </option>
-                ))}
-              </select>
-              <Typography
-                variant="caption"
-                className="text-text-muted mt-spacing-xs block"
-              >
-                {DIRECTIONALITY_OPTIONS.find(
-                  (opt) => opt.value === directionalityType
-                )?.description || ""}
-              </Typography>
-            </div>
-
-            {/* Save Button */}
-            <Button
-              onClick={() => {
-                // TODO: Implement create formation logic
-                toast?.success?.("Formation creation coming soon!");
-              }}
-              variant="primary"
-              className="w-full"
-            >
-              <Save className="w-4 h-4 mr-spacing-xs" />
-              Create Formation
-            </Button>
-
-            <Typography
-              variant="caption"
-              className="text-text-muted text-center block"
-            >
-              💡 Tip: After creating, switch to "Draw Formation" to add player
-              positions
-            </Typography>
+            <div className="h-12 bg-surface-subtle rounded"></div>
+            <div className="h-64 bg-surface-subtle rounded"></div>
+            <div className="h-32 bg-surface-subtle rounded"></div>
           </div>
         </div>
-      )}
-
-      {selectedFormation && (
+      ) : (
         <>
-          {/* Personnel Packages */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Personnel Packages
-            </Typography>
-            <Typography
-              variant="caption"
-              className="text-text-secondary mb-spacing-sm"
-            >
-              Select which personnel packages can run this formation:
-            </Typography>
-
-            {availablePersonnel.length === 0 ? (
-              <div className="p-spacing-sm bg-surface-muted rounded border border-border-secondary text-center">
-                <Typography variant="caption" className="text-text-muted">
-                  No personnel configurations found. Create personnel packages
-                  first.
+          {/* Loading Overlay - Show when refetching data */}
+          {loading && allFormations.length > 0 && (
+            <div className="absolute inset-0 bg-surface-primary/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+              <div className="bg-surface-primary border border-border-primary rounded-lg p-spacing-lg shadow-lg flex flex-col items-center gap-spacing-md">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+                <Typography variant="body-sm" className="text-text-secondary">
+                  Loading formations...
                 </Typography>
               </div>
-            ) : (
-              <>
-                <div className="flex flex-wrap gap-spacing-xs">
-                  {availablePersonnel.map((personnel) => (
-                    <button
-                      key={personnel.id}
-                      onClick={() => togglePersonnel(personnel.id)}
-                      className={`
+            </div>
+          )}
+
+          {/* Header - Conditional based on showHeader prop */}
+          {showHeader && (
+            <div className="flex items-center justify-between">
+              <Typography variant="headline-md" className="text-text-primary">
+                Formation Manager
+              </Typography>
+              {activeTab === "details" && (
+                <Button
+                  onClick={() => {
+                    // Clear selection and form to create new formation
+                    setSelectedFormation(null);
+                    setSelectedPersonnelIds([]);
+                    setCategory("");
+                    setFormationType(null);
+                    setRunStrength("balanced");
+                    setPassStrength("balanced");
+                    setTags("");
+                    setDescription("");
+                    setApplyToBothSides(true);
+                  }}
+                  variant="primary"
+                  size="sm"
+                >
+                  + New Formation
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* Tab Navigation - Hide if parent modal has unified tabs */}
+          {!hideSubTabs && (
+            <div className="flex gap-spacing-xs border-b border-border-primary">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                  flex items-center gap-spacing-xs px-spacing-md py-spacing-sm
+                  text-sm font-medium transition-colors border-b-2
+                  ${
+                    isActive
+                      ? "border-primary-500 text-primary-700 bg-primary-50"
+                      : "border-transparent text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                  }
+                `}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Tab Content */}
+          {activeTab === "details" && (
+            <div className="flex flex-col gap-spacing-md">
+              {/* Formation Details Content (original content) */}
+
+              {/* Formation Selector with Bulk Selection */}
+              <div className="flex flex-col gap-spacing-xs">
+                <div className="flex items-center justify-between">
+                  <Typography
+                    variant="body-md"
+                    className="text-text-primary font-medium"
+                  >
+                    Select Formation
+                  </Typography>
+                  {visibleFormations.length > 0 && (
+                    <div className="flex items-center gap-spacing-xs">
+                      {hasSelection && (
+                        <Typography
+                          variant="caption"
+                          className="text-primary-600 font-medium"
+                        >
+                          {selectionCount} selected
+                        </Typography>
+                      )}
+                      <button
+                        onClick={() =>
+                          selectAll(visibleFormations.map((f) => f.id))
+                        }
+                        className="text-xs text-primary-600 hover:underline px-spacing-xs"
+                        type="button"
+                      >
+                        Select All
+                      </button>
+                      <span className="text-text-muted">•</span>
+                      <button
+                        onClick={clearSelection}
+                        className="text-xs text-text-muted hover:underline px-spacing-xs"
+                        type="button"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {loading ? (
+                  <div className="p-spacing-md text-center text-text-muted">
+                    Loading formations...
+                  </div>
+                ) : visibleFormations.length === 0 ? (
+                  <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary text-center">
+                    <Typography variant="body-sm" className="text-text-muted">
+                      No formations found. Create formations by adding plays
+                      with formation names first.
+                    </Typography>
+                  </div>
+                ) : (
+                  <div className="space-y-spacing-xs max-h-96 overflow-y-auto">
+                    {visibleFormations.map((formation) => {
+                      const selected = isSelected(formation.id);
+                      const isCurrentlyEditing =
+                        selectedFormation?.id === formation.id;
+
+                      return (
+                        <div
+                          key={formation.id}
+                          className={`flex items-center gap-spacing-sm p-spacing-sm rounded border transition-all ${
+                            isCurrentlyEditing
+                              ? "bg-success-50 border-success-300 shadow-sm"
+                              : selected
+                                ? "bg-primary-50 border-primary-300"
+                                : "bg-surface-primary border-border-subtle hover:border-border-primary hover:shadow-sm"
+                          }`}
+                        >
+                          {/* Checkbox */}
+                          <input
+                            type="checkbox"
+                            checked={selected}
+                            onChange={() => toggleSelection(formation.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 flex-shrink-0"
+                          />
+
+                          {/* Formation Details - Clickable to edit */}
+                          <button
+                            onClick={() => setSelectedFormation(formation)}
+                            type="button"
+                            className="flex-1 text-left min-w-0"
+                          >
+                            <div className="flex items-center justify-between gap-spacing-sm">
+                              <span className="text-sm font-medium text-text-primary truncate">
+                                {formation.name}
+                              </span>
+                              <div className="flex items-center gap-spacing-xs flex-shrink-0">
+                                {isCurrentlyEditing && (
+                                  <span className="text-xs bg-success-100 text-success-700 px-spacing-xs py-0.5 rounded font-medium">
+                                    Editing
+                                  </span>
+                                )}
+                                {formation.direction && (
+                                  <span className="text-xs bg-surface-muted text-text-muted px-spacing-xs py-0.5 rounded">
+                                    {formation.direction === "left"
+                                      ? "← Left"
+                                      : "→ Right"}
+                                  </span>
+                                )}
+                                {formation.opposite_formation_id && (
+                                  <span
+                                    className="text-xs text-primary-600"
+                                    title="Has opposite formation"
+                                  >
+                                    ↔️
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {formation.personnel_name && (
+                              <span className="text-xs text-text-muted">
+                                {formation.personnel_name}
+                              </span>
+                            )}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {selectedFormation && (
+                  <div className="mt-spacing-xs p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <FormationBadge
+                      formationId={selectedFormation.id}
+                      direction={selectedFormation.direction}
+                    />
+                    {linkedFormation && (
+                      <div className="mt-spacing-xs flex items-center gap-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded text-xs">
+                        <input
+                          type="checkbox"
+                          id="applyToBothSides"
+                          checked={applyToBothSides}
+                          onChange={(e) =>
+                            setApplyToBothSides(e.target.checked)
+                          }
+                          className="w-3.5 h-3.5 text-primary-600 rounded focus:ring-primary-500"
+                        />
+                        <label
+                          htmlFor="applyToBothSides"
+                          className="text-primary-700 font-medium cursor-pointer"
+                        >
+                          Apply to both {selectedFormation.direction} and{" "}
+                          {linkedFormation.direction} variants
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* New Formation Form - Shows when no formation selected */}
+              {!selectedFormation && (
+                <div className="p-spacing-lg bg-surface-secondary rounded-lg border border-border-primary">
+                  <div className="space-y-spacing-md">
+                    <div>
+                      <Typography
+                        variant="headline-sm"
+                        className="text-text-primary mb-spacing-xs"
+                      >
+                        Create New Formation
+                      </Typography>
+                      <Typography variant="body-sm" className="text-text-muted">
+                        Enter formation details to create a new formation. You
+                        can add player positions on the "Draw Formation" tab.
+                      </Typography>
+                    </div>
+
+                    {/* Formation Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                        Formation Name *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Trips Right, I Formation, Shotgun Spread"
+                        className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+
+                    {/* Personnel Package */}
+                    <div>
+                      <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                        Personnel Package *
+                      </label>
+                      <select className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary">
+                        <option value="">Select personnel...</option>
+                        {availablePersonnel.map((personnel) => (
+                          <option key={personnel.id} value={personnel.id}>
+                            {personnel.name} - {personnel.description}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Category */}
+                    <div>
+                      <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                        Category
+                      </label>
+                      <select
+                        value={category}
+                        onChange={(e) =>
+                          setCategory(e.target.value as FormationCategory)
+                        }
+                        className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+                      >
+                        <option value="">Select category...</option>
+                        {FORMATION_CATEGORIES.map((cat) => (
+                          <option key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Save Button */}
+                    <Button
+                      onClick={() => {
+                        // TODO: Implement create formation logic
+                        toast?.success?.("Formation creation coming soon!");
+                      }}
+                      variant="primary"
+                      className="w-full"
+                    >
+                      <Save className="w-4 h-4 mr-spacing-xs" />
+                      Create Formation
+                    </Button>
+
+                    <Typography
+                      variant="caption"
+                      className="text-text-muted text-center block"
+                    >
+                      💡 Tip: After creating, switch to "Draw Formation" to add
+                      player positions
+                    </Typography>
+                  </div>
+                </div>
+              )}
+
+              {selectedFormation && (
+                <>
+                  {/* Personnel Packages */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Personnel Packages
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className="text-text-secondary mb-spacing-sm"
+                    >
+                      Select which personnel packages can run this formation:
+                    </Typography>
+
+                    {availablePersonnel.length === 0 ? (
+                      <div className="p-spacing-sm bg-surface-muted rounded border border-border-secondary text-center">
+                        <Typography
+                          variant="caption"
+                          className="text-text-muted"
+                        >
+                          No personnel configurations found. Create personnel
+                          packages first.
+                        </Typography>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-wrap gap-spacing-xs">
+                          {availablePersonnel.map((personnel) => (
+                            <button
+                              key={personnel.id}
+                              onClick={() => togglePersonnel(personnel.id)}
+                              className={`
                         px-spacing-sm py-spacing-xs rounded border transition-colors text-sm
                         ${
                           selectedPersonnelIds.includes(personnel.id)
@@ -784,155 +918,116 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                             : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300"
                         }
                       `}
-                    >
-                      <Typography variant="caption" className="font-medium">
-                        {selectedPersonnelIds.includes(personnel.id)
-                          ? "✓ "
-                          : ""}
-                        {personnel.name}
-                      </Typography>
-                    </button>
-                  ))}
-                </div>
+                            >
+                              <Typography
+                                variant="caption"
+                                className="font-medium"
+                              >
+                                {selectedPersonnelIds.includes(personnel.id)
+                                  ? "✓ "
+                                  : ""}
+                                {personnel.name}
+                              </Typography>
+                            </button>
+                          ))}
+                        </div>
 
-                {selectedPersonnelIds.length > 0 && (
-                  <div className="mt-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded">
-                    <Typography
-                      variant="caption"
-                      className="text-primary-700 text-xs"
-                    >
-                      ✓ {selectedPersonnelIds.length} personnel package
-                      {selectedPersonnelIds.length > 1 ? "s" : ""} selected
-                    </Typography>
+                        {selectedPersonnelIds.length > 0 && (
+                          <div className="mt-spacing-xs p-spacing-xs bg-primary-50 border border-primary-200 rounded">
+                            <Typography
+                              variant="caption"
+                              className="text-primary-700 text-xs"
+                            >
+                              ✓ {selectedPersonnelIds.length} personnel package
+                              {selectedPersonnelIds.length > 1 ? "s" : ""}{" "}
+                              selected
+                            </Typography>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
-                )}
-              </>
-            )}
-          </div>
 
-          {/* Category */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Formation Category
-            </Typography>
+                  {/* Category */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Formation Category
+                    </Typography>
 
-            <div className="relative">
-              <select
-                value={category}
-                onChange={(e) =>
-                  setCategory(e.target.value as FormationCategory | "")
-                }
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
-              >
-                <option value="">No category</option>
-                {FORMATION_CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-            </div>
-          </div>
+                    <div className="relative">
+                      <select
+                        value={category}
+                        onChange={(e) =>
+                          setCategory(e.target.value as FormationCategory | "")
+                        }
+                        className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      >
+                        <option value="">No category</option>
+                        {FORMATION_CATEGORIES.map((cat) => (
+                          <option key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                    </div>
+                  </div>
 
-          {/* Formation Type */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Formation Type
-            </Typography>
+                  {/* Formation Type */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Formation Type
+                    </Typography>
 
-            <div className="relative">
-              <select
-                value={formationType || ""}
-                onChange={(e) =>
-                  setFormationType(
-                    e.target.value ? (e.target.value as FormationType) : null
-                  )
-                }
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
-              >
-                <option value="">No type specified</option>
-                {FORMATION_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-            </div>
-          </div>
+                    <div className="relative">
+                      <select
+                        value={formationType || ""}
+                        onChange={(e) =>
+                          setFormationType(
+                            e.target.value
+                              ? (e.target.value as FormationType)
+                              : null
+                          )
+                        }
+                        className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      >
+                        <option value="">No type specified</option>
+                        {FORMATION_TYPES.map((type) => (
+                          <option key={type.value} value={type.value}>
+                            {type.label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                    </div>
+                  </div>
 
-          {/* Directionality Type */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Directionality
-            </Typography>
-            <Typography
-              variant="caption"
-              className="text-text-muted mb-spacing-sm block"
-            >
-              How this formation handles left/right direction
-            </Typography>
+                  {/* Run Strength */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Run Strength
+                    </Typography>
 
-            <div className="relative">
-              <select
-                value={directionalityType}
-                onChange={(e) =>
-                  setDirectionalityType(
-                    e.target.value as FormationDirectionalityType
-                  )
-                }
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
-              >
-                {DIRECTIONALITY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.icon} {option.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-            </div>
-
-            {/* Helper text based on selection */}
-            <Typography
-              variant="caption"
-              className="text-text-muted mt-spacing-xs block"
-            >
-              {DIRECTIONALITY_OPTIONS.find(
-                (opt) => opt.value === directionalityType
-              )?.description || ""}
-            </Typography>
-          </div>
-
-          {/* Run Strength */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Run Strength
-            </Typography>
-
-            <div className="flex gap-spacing-xs">
-              {STRENGTH_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    setRunStrength(option.value);
-                    // Instant save for button clicks (no debounce)
-                    setTimeout(() => autoSave(), 0);
-                  }}
-                  className={`
+                    <div className="flex gap-spacing-xs">
+                      {STRENGTH_OPTIONS.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setRunStrength(option.value);
+                            // Instant save for button clicks (no debounce)
+                            setTimeout(() => autoSave(), 0);
+                          }}
+                          className={`
                     flex-1 px-spacing-sm py-spacing-xs rounded border transition-colors
                     font-medium text-center text-sm cursor-pointer
                     ${
@@ -941,36 +1036,36 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                         : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
                     }
                   `}
-                >
-                  <div className="text-base">{option.icon}</div>
-                  <Typography variant="caption" className="font-medium">
-                    {option.label}
-                  </Typography>
-                </button>
-              ))}
-            </div>
-          </div>
+                        >
+                          <div className="text-base">{option.icon}</div>
+                          <Typography variant="caption" className="font-medium">
+                            {option.label}
+                          </Typography>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Pass Strength */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Pass Strength
-            </Typography>
+                  {/* Pass Strength */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Pass Strength
+                    </Typography>
 
-            <div className="flex gap-spacing-xs">
-              {STRENGTH_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    setPassStrength(option.value);
-                    // Instant save for button clicks (no debounce)
-                    setTimeout(() => autoSave(), 0);
-                  }}
-                  className={`
+                    <div className="flex gap-spacing-xs">
+                      {STRENGTH_OPTIONS.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setPassStrength(option.value);
+                            // Instant save for button clicks (no debounce)
+                            setTimeout(() => autoSave(), 0);
+                          }}
+                          className={`
                     flex-1 px-spacing-sm py-spacing-xs rounded border transition-colors
                     font-medium text-center text-sm cursor-pointer
                     ${
@@ -979,74 +1074,136 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                         : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
                     }
                   `}
-                >
-                  <div className="text-base">{option.icon}</div>
-                  <Typography variant="caption" className="font-medium">
-                    {option.label}
+                        >
+                          <div className="text-base">{option.icon}</div>
+                          <Typography variant="caption" className="font-medium">
+                            {option.label}
+                          </Typography>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Tags
+                    </Typography>
+
+                    <input
+                      type="text"
+                      value={tags}
+                      onChange={(e) => setTags(e.target.value)}
+                      placeholder="twins, compressed, unbalanced"
+                      className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary font-medium mb-spacing-xs"
+                    >
+                      Description
+                    </Typography>
+
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Optional notes about this formation..."
+                      rows={2}
+                      className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
+                    />
+                  </div>
+
+                  {/* Manual Save Button (Optional) */}
+                  <div className="flex justify-end items-center pt-spacing-xs border-t border-border-primary">
+                    <Button
+                      onClick={handleSave}
+                      disabled={saving}
+                      variant="secondary"
+                      size="sm"
+                      className="gap-spacing-xs"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      Save Now
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {!selectedFormation && (
+                <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
+                  <Typography variant="body-sm" className="text-text-muted">
+                    👆 Select a formation above to edit its details
                   </Typography>
-                </button>
-              ))}
+                </div>
+              )}
+
+              {/* ✨ Automatic Opposite Formation Prompt */}
+              {formationForOpposite && (
+                <CreateOppositeFormationModal
+                  isOpen={showOppositeModal}
+                  onClose={() => {
+                    setShowOppositeModal(false);
+                    setFormationForOpposite(null);
+                  }}
+                  originalFormation={formationForOpposite}
+                  onOppositeCreated={async (oppositeFormation) => {
+                    toast?.success(
+                      `Created ${oppositeFormation.direction}-side formation!`,
+                      "Opposite Formation Created"
+                    );
+                    // Reload formations to show the new opposite
+                    await loadData();
+                    setShowOppositeModal(false);
+                    setFormationForOpposite(null);
+                  }}
+                  onMarkedAsStandalone={async () => {
+                    toast?.success(
+                      "Formation marked as standalone (no opposite needed)",
+                      "Formation Updated"
+                    );
+                    // Reload formations to refresh
+                    await loadData();
+                    setShowOppositeModal(false);
+                    setFormationForOpposite(null);
+                  }}
+                />
+              )}
             </div>
-          </div>
+          )}
 
-          {/* Tags */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Tags
-            </Typography>
+          {/* Data Diagnostic Tab - Hide if parent modal has unified tabs */}
+          {!hideSubTabs && activeTab === "diagnostic" && (
+            <FormationDataDiagnostic playbookId={playbookId} />
+          )}
 
-            <input
-              type="text"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              placeholder="twins, compressed, unbalanced"
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+          {/* Direction Review Tab - Hide if parent modal has unified tabs */}
+          {!hideSubTabs && activeTab === "review" && (
+            <FormationDirectionReviewPanel
+              playbookId={playbookId}
+              onFixComplete={async () => {
+                // Reload formations to reflect changes
+                await loadData();
+              }}
+              onBack={() => setActiveTab("details")}
             />
-          </div>
+          )}
 
-          {/* Description */}
-          <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
-            <Typography
-              variant="body-sm"
-              className="text-text-primary font-medium mb-spacing-xs"
-            >
-              Description
-            </Typography>
-
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional notes about this formation..."
-              rows={2}
-              className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
-            />
-          </div>
-
-          {/* Manual Save Button (Optional) */}
-          <div className="flex justify-end items-center pt-spacing-xs border-t border-border-primary">
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              variant="secondary"
-              size="sm"
-              className="gap-spacing-xs"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Save Now
-            </Button>
-          </div>
+          {/* Incomplete Formations Tab (Placeholder for Phase 2) - Hide if parent modal has unified tabs */}
+          {!hideSubTabs && activeTab === "incomplete" && (
+            <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
+              <Typography variant="body-sm" className="text-text-muted">
+                Incomplete Formations panel coming in Phase 2...
+              </Typography>
+            </div>
+          )}
         </>
-      )}
-
-      {!selectedFormation && (
-        <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
-          <Typography variant="body-sm" className="text-text-muted">
-            👆 Select a formation above to edit its details
-          </Typography>
-        </div>
       )}
     </div>
   );
