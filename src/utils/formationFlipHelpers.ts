@@ -148,3 +148,38 @@ export function flipFormationDirection(
   if (direction.toLowerCase() === "right") return "Left";
   return direction;
 }
+
+/**
+ * Normalize formation direction to standard database format
+ *
+ * Standardizes all variations to "R" or "L" for consistent database storage.
+ * The UI can then display it in any format the user prefers (R, Rt, Right, etc.)
+ *
+ * Supported inputs:
+ * - "Right", "right", "R", "r", "Rt", "rt" → "R"
+ * - "Left", "left", "L", "l", "Lt", "lt" → "L"
+ * - null, undefined, empty → null
+ *
+ * @param direction - Raw direction string from user input or play data
+ * @returns Normalized direction ("R", "L", or null)
+ */
+export function normalizeFormationDirection(
+  direction: string | null | undefined
+): "R" | "L" | null {
+  if (!direction || direction.trim() === "") return null;
+
+  const normalized = direction.trim().toLowerCase();
+
+  // Right variants
+  if (normalized === "right" || normalized === "r" || normalized === "rt") {
+    return "R";
+  }
+
+  // Left variants
+  if (normalized === "left" || normalized === "l" || normalized === "lt") {
+    return "L";
+  }
+
+  // Unknown format - return null
+  return null;
+}

@@ -145,8 +145,23 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
     );
   };
 
-  // All formations are visible (no filtering needed with new system)
-  const visibleFormations = allFormations;
+  // Filter formations for left side: "left" direction or null (unlinked standalone)
+  const leftSideFormations = allFormations.filter((f) => {
+    // Exclude if already selected on right
+    if (rightFormation?.id === f.id) return false;
+
+    // Show "left" formations, or null (standalone) formations that aren't linked yet
+    return f.direction === "left" || (f.direction === null && !isLinked(f));
+  });
+
+  // Filter formations for right side: "right" direction or null (unlinked standalone)
+  const rightSideFormations = allFormations.filter((f) => {
+    // Exclude if already selected on left
+    if (leftFormation?.id === f.id) return false;
+
+    // Show "right" formations, or null (standalone) formations that aren't linked yet
+    return f.direction === "right" || (f.direction === null && !isLinked(f));
+  });
 
   // Check if left and right formations have the same name (case-insensitive)
   const isSameFormationName = (): boolean => {
@@ -168,6 +183,14 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   const handleLink = async () => {
     if (!leftFormation || !rightFormation) {
       alert("Please select both left and right formations");
+      return;
+    }
+
+    // Prevent linking a formation to itself
+    if (leftFormation.id === rightFormation.id) {
+      alert(
+        "Cannot link a formation to itself. Please select different formations."
+      );
       return;
     }
 
@@ -274,7 +297,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                 className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
               >
                 <option value="">Select left formation...</option>
-                {visibleFormations.map(renderFormationOption)}
+                {leftSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
               <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
@@ -369,7 +392,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                 className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
               >
                 <option value="">Select right formation...</option>
-                {visibleFormations.map(renderFormationOption)}
+                {rightSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
               <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
@@ -460,9 +483,11 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         {/* Help Text */}
         <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-border-secondary">
           <Typography variant="caption" className="text-text-muted">
-            <strong>💡 Tip:</strong> Select formations from both sides and click
-            the link button to create a bi-directional relationship. Linked
-            formations can be used in duplicate + flip workflows.
+            <strong>💡 How it works:</strong> Left dropdown shows formations
+            with "Left" direction or unlinked standalone formations. Right
+            dropdown shows formations with "Right" direction or unlinked
+            standalone formations. Link them to create bi-directional
+            relationships for duplicate + flip workflows.
           </Typography>
         </div>
 

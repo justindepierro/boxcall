@@ -26,6 +26,12 @@ import {
   AdvancedOptionsSection,
 } from "./AddNewPlayModal/sections";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
+import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
+import { FormationService } from "../../services/formationService";
+import {
+  detectDirectionInFormationName,
+  type DirectionDetectionResult,
+} from "../../utils/formationDirectionDetection";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -47,6 +53,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showDirectionWarning, setShowDirectionWarning] = useState(false);
+  const [directionDetection, setDirectionDetection] =
+    useState<DirectionDetectionResult | null>(null);
 
   // Use extracted hooks
   const { formData, updateField, updateFields, resetForm, isValid } =
@@ -76,6 +85,34 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     setErrorMessage(null);
 
     try {
+      // ===================================================================
+      // PHASE 1: AUTO-CREATE FORMATION IF NEEDED
+      // ===================================================================
+      let finalFormationId = formData.formation_id;
+
+      // If no formation_id but we have a formation name, auto-create it
+      if (!finalFormationId && formData.formation.trim() && playbookId) {
+        try {
+          const formation = await FormationService.getOrCreateFormation(
+            formData.formation.trim(),
+            playbookId,
+            undefined, // personnel_id (optional)
+            undefined // opposite formation (optional for now)
+          );
+          finalFormationId = formation.id;
+
+          console.log(
+            `[AddNewPlayModal] Auto-created/found formation: ${formation.name} (${formation.id})`
+          );
+        } catch (formationError) {
+          console.warn(
+            "[AddNewPlayModal] Failed to auto-create formation:",
+            formationError
+          );
+          // Continue with play creation even if formation auto-create fails
+        }
+      }
+
       // Parse formation tags
       const fTags = formData.formationTags
         .split(",")
@@ -90,7 +127,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
       const playData = {
         formation: formData.formation.trim(),
-        formation_id: formData.formation_id || undefined, // NEW: Formation database ID
+        formation_id: finalFormationId || undefined, // Use auto-created formation_id if available
         formation_direction: formData.formation_direction || undefined, // NEW: Formation variant direction
         play_name: formData.playName.trim(),
         p_type: formData.playType || undefined,
@@ -197,6 +234,38 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         flags: [...formData.flags, flag],
         newFlag: "",
       });
+    }
+  };
+
+  // Handle formation name change with direction detection
+  const handleFormationChange = (value: string) => {
+    const detection = detectDirectionInFormationName(value);
+
+    if (detection.hasDirection) {
+      // Direction detected - show warning modal
+      setDirectionDetection(detection);
+      setShowDirectionWarning(true);
+    } else {
+      // No direction - just update normally
+      updateField("formation", value);
+    }
+  };
+
+  // User accepts suggestion from warning modal
+  const handleAcceptDirectionSuggestion = (
+    cleanName: string,
+    direction: "R" | "L"
+  ) => {
+    updateFields({
+      formation: cleanName,
+      formationDir: direction,
+    });
+  };
+
+  // User wants to keep original (with warning shown)
+  const handleKeepOriginalFormation = () => {
+    if (directionDetection) {
+      updateField("formation", directionDetection.originalInput);
     }
   };
 
@@ -321,7 +390,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formationDir={formData.formation_direction || ""} // Use formation_direction for database
             formationShowInName={formData.formationShowInName}
             playbookId={playbookId}
-            onFormationChange={(value) => updateField("formation", value)}
+            onFormationChange={handleFormationChange}
             onFormationIdChange={(id, formation) => {
               // When formation is selected, pull in ALL formation metadata
               const updates: Partial<typeof formData> = {
@@ -531,6 +600,17 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           />
         </form>
       </div>
+
+      {/* Direction Warning Modal */}
+      {directionDetection && (
+        <FormationDirectionWarningModal
+          isOpen={showDirectionWarning}
+          onClose={() => setShowDirectionWarning(false)}
+          detection={directionDetection}
+          onAcceptSuggestion={handleAcceptDirectionSuggestion}
+          onKeepOriginal={handleKeepOriginalFormation}
+        />
+      )}
     </Modal>
   );
 };

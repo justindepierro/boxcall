@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
+import { Typography } from "../../../design-system/Typography";
 import Select from "../../../ui/Select/Select";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
 import { supabase } from "../../../../lib/supabase";
@@ -66,11 +67,6 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
     alert("Personnel configuration modal will open here (Phase 6)");
   };
 
-  const handleFormationBuilder = () => {
-    // TODO: Open FormationBuilderModal
-    alert("Formation Builder modal will open here - visual formation creator");
-  };
-
   return (
     <div>
       <Select
@@ -111,18 +107,14 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
             <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
             Add New
           </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={handleFormationBuilder}
-            className="ml-auto"
-          >
-            <Icon name="wrench" className="h-4 w-4 mr-spacing-xs" />
-            Formation Builder
-          </Button>
         </div>
       )}
+
+      {/* Helper text directing coaches to Formation Builder */}
+      <Typography variant="caption" className="text-text-muted mt-spacing-sm">
+        💡 Tip: Use the Formation Builder tile on the main page to create
+        formations with visual positioning
+      </Typography>
     </div>
   );
 };

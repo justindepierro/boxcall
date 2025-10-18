@@ -326,7 +326,8 @@ export class FormationService {
 
   /**
    * Link two existing formations as opposites
-   * Uses database RPC function for atomic bidirectional linking
+   * Uses database RPC function for atomic bidirectional linking.
+   * Also normalizes f_dir values in associated plays to "R" or "L".
    */
   static async linkExistingFormations(
     formation1Id: string,
@@ -364,6 +365,11 @@ export class FormationService {
     if (error) {
       throw new Error(`Failed to link formations: ${error.message}`);
     }
+
+    // After linking, normalize f_dir values in plays table for consistency
+    // This ensures all plays use "R" or "L" format regardless of how they were originally entered
+    await this.normalizePlaysFormationDirection(f1.playbook_id, f1.name);
+    await this.normalizePlaysFormationDirection(f2.playbook_id, f2.name);
   }
 
   /**
@@ -1155,5 +1161,247 @@ export class FormationService {
     }
 
     return (data || []) as Formation[];
+  }
+
+  /**
+   * Normalize f_dir values in plays table for a given formation
+   * 
+   * Converts all variations of direction (Left, Lt, L, Right, Rt, R) to the
+   * standard format ("L" or "R") for consistent database storage.
+   * 
+   * This is called after linking formations to ensure data consistency.
+   * 
+   * @param playbookId - Playbook containing the plays
+   * @param formationName - Name of the formation to normalize
+   */
+  static async normalizePlaysFormationDirection(
+    playbookId: string,
+    formationName: string
+  ): Promise<void> {
+    try {
+      // Get all plays with this formation
+      const { data: plays, error: fetchError } = await supabase
+        .from("plays")
+        .select("id, f_dir")
+        .eq("playbook_id", playbookId)
+        .eq("formation", formationName);
+
+      if (fetchError) {
+        logError("[FormationService] Failed to fetch plays for normalization:", fetchError);
+        return;
+      }
+
+      if (!plays || plays.length === 0) {
+        return; // No plays to normalize
+      }
+
+      // Normalize each play's f_dir value
+      const updates = plays
+        .map((play: any) => {
+          if (!play.f_dir) return null;
+
+          const normalized = this.normalizeDirection(play.f_dir);
+          
+          // Only update if the value changed
+          if (normalized && normalized !== play.f_dir) {
+            return {
+              id: play.id as string,
+              f_dir: normalized as "R" | "L",
+            };
+          }
+
+          return null;
+        })
+        .filter((update): update is { id: string; f_dir: "R" | "L" } => update !== null);
+
+      // Bulk update the plays
+      if (updates.length > 0) {
+        for (const update of updates) {
+          const { error: updateError } = await supabase
+            .from("plays")
+            .update({ f_dir: update.f_dir } as never)
+            .eq("id", update.id);
+
+          if (updateError) {
+            logError(
+              `[FormationService] Failed to normalize f_dir for play ${update.id}:`,
+              updateError
+            );
+          }
+        }
+
+        info(
+          `[FormationService] Normalized f_dir for ${updates.length} plays with formation "${formationName}"`
+        );
+      }
+    } catch (error) {
+      logError("[FormationService] Error during f_dir normalization:", error);
+    }
+  }
+
+  /**
+   * Normalize a direction string to standard format
+   * 
+   * @param direction - Raw direction string (Left, Lt, L, Right, Rt, R, etc.)
+   * @returns Normalized direction ("R" or "L") or null if invalid
+   */
+  private static normalizeDirection(direction: string | null | undefined): "R" | "L" | null {
+    if (!direction || direction.trim() === "") return null;
+
+    const normalized = direction.trim().toLowerCase();
+
+    // Right variants
+    if (normalized === "right" || normalized === "r" || normalized === "rt") {
+      return "R";
+    }
+
+    // Left variants
+    if (normalized === "left" || normalized === "l" || normalized === "lt") {
+      return "L";
+    }
+
+    // Unknown format - return null
+    return null;
+  }
+
+  // ===================================================================
+  // AUTO-CREATION & LINKING (Phase 1)
+  // ===================================================================
+
+  /**
+   * Get existing formation by name or create new one
+   * Handles bidirectional opposite linking automatically
+   * 
+   * @param formationName - Name of the formation to get or create
+   * @param personnelId - Optional personnel configuration ID
+   * @param oppositeFormationName - Optional opposite formation name for bidirectional linking
+   * @param playbookId - Optional playbook ID (if creating formation within playbook context)
+   * @returns The existing or newly created formation
+   */
+  static async getOrCreateFormation(
+    formationName: string,
+    playbookId: string,
+    personnelId?: string,
+    oppositeFormationName?: string
+  ): Promise<Formation> {
+    try {
+      // 1. Check if formation exists (case-insensitive)
+      const existing = await this.getFormationByName(formationName);
+      if (existing) {
+        info(`[FormationService] Found existing formation: ${formationName}`);
+        return existing;
+      }
+      
+      info(`[FormationService] Creating new formation: ${formationName}`);
+      
+      // 2. Create new formation
+      const newFormation = await this.createFormation({
+        name: formationName,
+        playbook_id: playbookId,
+        personnel_id: personnelId,
+        player_positions: [], // Required field, can be empty for auto-created
+        creation_source: 'play_builder',
+        creation_context: { 
+          triggeredBy: 'play-creation',
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+      // 3. Handle opposite formation if provided
+      if (oppositeFormationName) {
+        // Recursively create opposite (without creating opposite's opposite to prevent infinite recursion)
+        const opposite = await this.getOrCreateFormation(
+          oppositeFormationName,
+          playbookId,
+          personnelId,
+          undefined // Don't create opposite's opposite
+        );
+        
+        // Link bidirectionally
+        await this.linkOppositeFormations(newFormation.id, opposite.id);
+        
+        info(`[FormationService] Linked "${formationName}" ↔ "${oppositeFormationName}"`);
+        
+        // Refresh to get updated opposite_formation_id
+        const refreshed = await this.getFormationById(newFormation.id);
+        return refreshed;
+      }
+      
+      return newFormation;
+      
+    } catch (err) {
+      logError('[FormationService] Error in getOrCreateFormation:', err);
+      throw new Error(`Failed to get or create formation: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  /**
+   * Find formation by name (case-insensitive, handles spacing variations)
+   * 
+   * @param name - Formation name to search for
+   * @returns The found formation or null
+   */
+  static async getFormationByName(name: string): Promise<Formation | null> {
+    try {
+      // Normalize for comparison (lowercase, remove extra spaces)
+      const normalized = name.toLowerCase().trim().replace(/\s+/g, '');
+      
+      // Get all formations
+      const { data: formations, error } = await supabase
+        .from('formations')
+        .select('*');
+      
+      if (error) throw error;
+      if (!formations || formations.length === 0) return null;
+      
+      // Find exact match (case-insensitive, spacing-insensitive)
+      const exactMatch = (formations as Formation[]).find(
+        f => f.name.toLowerCase().trim().replace(/\s+/g, '') === normalized
+      );
+      
+      if (exactMatch) {
+        debug(`[FormationService] Found formation by name: ${name} → ${exactMatch.name}`);
+      }
+      
+      return exactMatch || null;
+      
+    } catch (err) {
+      logError('[FormationService] Error finding formation by name:', err);
+      return null;
+    }
+  }
+
+  /**
+   * Link two formations as opposites (bidirectional)
+   * 
+   * @param formationId - First formation ID
+   * @param oppositeId - Second formation ID (opposite of first)
+   */
+  static async linkOppositeFormations(
+    formationId: string,
+    oppositeId: string
+  ): Promise<void> {
+    try {
+      // Update both formations to point to each other
+      const { error: error1 } = await supabase
+        .from('formations')
+        .update({ opposite_formation_id: oppositeId } as never)
+        .eq('id', formationId);
+      
+      const { error: error2 } = await supabase
+        .from('formations')
+        .update({ opposite_formation_id: formationId } as never)
+        .eq('id', oppositeId);
+      
+      if (error1 || error2) {
+        throw new Error(`Failed to link opposite formations: ${error1?.message || error2?.message}`);
+      }
+      
+      info(`[FormationService] Linked formations as opposites: ${formationId} ↔ ${oppositeId}`);
+      
+    } catch (err) {
+      logError('[FormationService] Error linking opposite formations:', err);
+      throw err;
+    }
   }
 }

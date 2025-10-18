@@ -1,32 +1,21 @@
 /**
- * FormationBuilderModal - Tabbed Interface (Redesigned)
+ * FormationBuilderModal - Simplified 3-Tab Interface
  *
- * Unified formation management with two modes:
- * - Tab 1: Draw Formation - Visual canvas builder (PRIMARY)
- * - Tab 2: Link Formations - Connect left/right variants (SECONDARY)
+ * Focused formation workflow with three essential tabs:
+ * - Tab 1: Create/Edit - Formation details (name, personnel, type)
+ * - Tab 2: Draw - Visual canvas for positioning players on field
+ * - Tab 3: Link Variants - Connect left/right formation pairs
  *
- * This gives coaches one place to manage all formation workflows.
+ * Clean, purpose-driven interface for coaches to manage formations.
  */
 
 import { useState, useEffect } from "react";
 import { Modal } from "../../ui/Modal/Modal";
-import {
-  Link2,
-  Pencil,
-  Settings,
-  HeartPulse,
-  AlertCircle,
-  CheckCircle,
-  Save,
-} from "lucide-react";
+import { Link2, Pencil, Save } from "lucide-react";
 import { Typography } from "../../design-system/Typography";
 import { FormationBadge } from "../FormationBadge";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 import { FormationBuilderPanel } from "../../formations/FormationBuilderPanel";
-import { FormationHealthDashboard } from "../../formations/FormationHealthDashboard";
-import { FormationDirectionReviewPanel } from "../../formations/FormationDirectionReviewPanel";
-import { FormationDataDiagnostic } from "../../formations/FormationDataDiagnostic";
-import { IncompleteFormationsPanel } from "../../formations/IncompleteFormationsPanel";
 import { BulkSelectionProvider } from "../../formations/BulkSelectionContext";
 import { BulkActionToolbar } from "../../formations/BulkActionToolbar";
 import { DrawFormationTab } from "./DrawFormationTab";
@@ -46,14 +35,7 @@ interface FormationBuilderModalProps {
   onSaved?: () => void;
 }
 
-type TabType =
-  | "edit"
-  | "draw"
-  | "link"
-  | "health"
-  | "review"
-  | "diagnostic"
-  | "incomplete";
+type TabType = "edit" | "draw" | "link";
 
 export function FormationBuilderModal({
   isOpen,
@@ -255,13 +237,13 @@ export function FormationBuilderModal({
             </div>
           )}
 
-          {/* Tab Navigation - Single unified tab bar */}
-          <div className="flex border-b border-border-primary bg-surface-secondary overflow-x-auto">
-            {/* Tab 1: Edit Details (Create/Edit Formation) */}
+          {/* Tab Navigation - Focused 3-tab workflow */}
+          <div className="flex border-b border-border-primary bg-surface-secondary">
+            {/* Tab 1: Create/Edit Formation Details */}
             <button
               onClick={() => setActiveTab("edit")}
               className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
               font-medium transition-colors
               ${
                 activeTab === "edit"
@@ -271,15 +253,15 @@ export function FormationBuilderModal({
             `}
             >
               <Save className="w-5 h-5" />
-              <span className="font-medium">Formation Details</span>
+              <span className="font-medium">Create/Edit</span>
             </button>
 
-            {/* Tab 2: Draw Formation */}
+            {/* Tab 2: Draw Formation (Visual Canvas) */}
             <button
               onClick={() => setActiveTab("draw")}
               className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
-              font-medium transition-colors relative
+              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+              font-medium transition-colors
               ${
                 activeTab === "draw"
                   ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
@@ -288,31 +270,14 @@ export function FormationBuilderModal({
             `}
             >
               <Pencil className="w-5 h-5" />
-              <span className="font-medium">Draw Formation</span>
+              <span className="font-medium">Draw</span>
             </button>
 
-            {/* Tab 3: Direction Review */}
-            <button
-              onClick={() => setActiveTab("review")}
-              className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
-              font-medium transition-colors
-              ${
-                activeTab === "review"
-                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
-                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
-              }
-            `}
-            >
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-medium">Direction Review</span>
-            </button>
-
-            {/* Tab 4: Link Formations */}
+            {/* Tab 3: Link Left/Right Variants */}
             <button
               onClick={() => setActiveTab("link")}
               className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
+              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
               font-medium transition-colors
               ${
                 activeTab === "link"
@@ -322,64 +287,13 @@ export function FormationBuilderModal({
             `}
             >
               <Link2 className="w-5 h-5" />
-              <span className="font-medium">Link Formations</span>
-            </button>
-
-            {/* Tab 5: Data Diagnostic */}
-            <button
-              onClick={() => setActiveTab("diagnostic")}
-              className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
-              font-medium transition-colors
-              ${
-                activeTab === "diagnostic"
-                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
-                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
-              }
-            `}
-            >
-              <Settings className="w-5 h-5" />
-              <span className="font-medium">Data Diagnostic</span>
-            </button>
-
-            {/* Tab 6: Formation Health */}
-            <button
-              onClick={() => setActiveTab("health")}
-              className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
-              font-medium transition-colors
-              ${
-                activeTab === "health"
-                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
-                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
-              }
-            `}
-            >
-              <HeartPulse className="w-5 h-5" />
-              <span className="font-medium">Health</span>
-            </button>
-
-            {/* Tab 7: Incomplete Formations */}
-            <button
-              onClick={() => setActiveTab("incomplete")}
-              className={`
-              px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs whitespace-nowrap
-              font-medium transition-colors
-              ${
-                activeTab === "incomplete"
-                  ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
-                  : "text-text-muted hover:text-text-secondary hover:bg-surface-muted"
-              }
-            `}
-            >
-              <CheckCircle className="w-5 h-5" />
-              <span className="font-medium">Incomplete</span>
+              <span className="font-medium">Link Variants</span>
             </button>
           </div>
 
           {/* Tab Content */}
           <div className="flex-1 overflow-auto">
-            {/* Tab 1: Formation Details (Edit/Create) */}
+            {/* Tab 1: Create/Edit Formation Details */}
             {activeTab === "edit" && (
               <FormationBuilderPanel
                 playbookId={playbookId}
@@ -389,7 +303,7 @@ export function FormationBuilderModal({
               />
             )}
 
-            {/* Tab 2: Draw Formation */}
+            {/* Tab 2: Draw Formation (Visual Canvas) */}
             {activeTab === "draw" && (
               <DrawFormationTab
                 playbookId={playbookId}
@@ -405,47 +319,13 @@ export function FormationBuilderModal({
               />
             )}
 
-            {/* Tab 3: Direction Review */}
-            {activeTab === "review" && (
-              <FormationDirectionReviewPanel
-                playbookId={playbookId}
-                onFixComplete={handleSuccess}
-              />
-            )}
-
-            {/* Tab 4: Link Formations */}
+            {/* Tab 3: Link Left/Right Variants */}
             {activeTab === "link" && (
               <FormationLinkingPanel
                 playbookId={playbookId}
                 onSuccess={handleSuccess}
                 initialLeftFormation={null}
                 initialRightFormation={null}
-              />
-            )}
-
-            {/* Tab 5: Data Diagnostic */}
-            {activeTab === "diagnostic" && (
-              <FormationDataDiagnostic playbookId={playbookId} />
-            )}
-
-            {/* Tab 6: Formation Health */}
-            {activeTab === "health" && (
-              <FormationHealthDashboard
-                playbookId={playbookId}
-                onFormationUpdated={handleSuccess}
-              />
-            )}
-
-            {/* Tab 7: Incomplete Formations */}
-            {activeTab === "incomplete" && (
-              <IncompleteFormationsPanel
-                playbookId={playbookId}
-                onFormationEdit={(formation) => {
-                  // Switch to edit tab and load the formation
-                  setSelectedFormationId(formation.id);
-                  setActiveTab("edit");
-                }}
-                onBack={() => setActiveTab("edit")}
               />
             )}
           </div>
