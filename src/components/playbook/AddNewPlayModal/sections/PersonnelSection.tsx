@@ -12,11 +12,13 @@ interface PersonnelSectionProps {
   suggestions: string[];
   showSuggestions: boolean;
   onShowSuggestionsChange: (show: boolean) => void;
+  onAddNew?: () => void; // NEW: Callback to open personnel creation panel
 }
 
 export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   personnel,
   onPersonnelChange,
+  onAddNew,
 }) => {
   // Get playbook ID from current user
   const [playbookId, setPlaybookId] = React.useState<string | undefined>();
@@ -63,8 +65,12 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   }, [configurations]);
 
   const handleAddNewPersonnel = () => {
-    // TODO: Open PersonnelConfigurationModal
-    alert("Personnel configuration modal will open here (Phase 6)");
+    if (onAddNew) {
+      onAddNew();
+    } else {
+      // Fallback for backwards compatibility
+      alert("Personnel configuration modal will open here (Phase 6)");
+    }
   };
 
   return (

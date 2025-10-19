@@ -5,6 +5,7 @@
  */
 
 import type { PracticeScript } from "@services";
+import type { PDFFormat } from "../components/pdf/PracticeScriptPDF";
 
 export class PDFExportService {
   /**
@@ -21,16 +22,22 @@ export class PDFExportService {
   /**
    * Generate and download a PDF for a practice script
    */
-  static async exportPracticeScript(script: PracticeScript): Promise<void> {
+  static async exportPracticeScript(
+    script: PracticeScript,
+    format: PDFFormat = "detailed"
+  ): Promise<void> {
     try {
       const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();
-      const blob = await pdf(<PracticeScriptPDF script={script} />).toBlob();
+      const blob = await pdf(
+        <PracticeScriptPDF script={script} format={format} />
+      ).toBlob();
 
       // Create download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${(script.name ?? "practice_script").replace(/[^a-z0-9]/gi, "_").toLowerCase()}_practice_script.pdf`;
+      const formatSuffix = format === "compact" ? "_compact" : "";
+      link.download = `${(script.name ?? "practice_script").replace(/[^a-z0-9]/gi, "_").toLowerCase()}${formatSuffix}_practice_script.pdf`;
 
       // Trigger download
       document.body.appendChild(link);
@@ -49,11 +56,14 @@ export class PDFExportService {
    * Generate PDF blob for a practice script (for preview or other uses)
    */
   static async generatePracticeScriptPDF(
-    script: PracticeScript
+    script: PracticeScript,
+    format: PDFFormat = "detailed"
   ): Promise<Blob> {
     try {
       const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();
-      return await pdf(<PracticeScriptPDF script={script} />).toBlob();
+      return await pdf(
+        <PracticeScriptPDF script={script} format={format} />
+      ).toBlob();
     } catch (error) {
       console.error("Error generating PDF:", error);
       throw new Error("Failed to generate PDF");

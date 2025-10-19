@@ -12,6 +12,7 @@ import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
+import { SelectionModeToggle } from "../components/playbook/SelectionModeToggle";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
@@ -26,6 +27,7 @@ import {
   GamePlanService,
 } from "@services";
 import { PersonnelService } from "../services/personnelService";
+import { exportPlays } from "../services/exportService";
 import type { PlayActivityItem } from "@services";
 import { SecurePlaysService } from "../services/securePlaysService";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
@@ -184,6 +186,9 @@ export default function PlaybookPage() {
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
   const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
+  const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
+    string[]
+  >([]);
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [suggestions, setSuggestions] = useState({
     formations: [] as string[],
@@ -388,7 +393,97 @@ export default function PlaybookPage() {
     [dispatch]
   );
 
-  const handleBulkAction = useCallback((_action: string) => {}, []);
+  const handleBulkAction = useCallback(
+    (action: string) => {
+      const selectedCount = state.selectedPlayIds?.size || 0;
+
+      if (selectedCount === 0) {
+        toast.warning("No plays selected");
+        return;
+      }
+
+      switch (action) {
+        case "add-tags":
+          // TODO: Open bulk tagging modal
+          toast.info(`Bulk tagging ${selectedCount} plays (coming soon)`);
+          break;
+
+        case "duplicate":
+          // TODO: Implement bulk duplicate
+          toast.info(`Duplicating ${selectedCount} plays (coming soon)`);
+          break;
+
+        case "add-to-practice":
+          // Open practice script builder with selected plays
+          {
+            const selectedPlayIds = Array.from(state.selectedPlayIds || []);
+            if (selectedPlayIds.length > 0) {
+              console.log(
+                "[PlaybookPage] Opening Practice Script Builder with plays:",
+                selectedPlayIds
+              );
+              setSelectedPlaysForPractice(selectedPlayIds);
+              setShowPracticeScriptBuilder(true);
+            }
+          }
+          break;
+
+        case "batch-edit":
+          // TODO: Open batch edit modal
+          toast.info(`Batch editing ${selectedCount} plays (coming soon)`);
+          break;
+
+        case "export":
+          // Export selected plays to JSON
+          {
+            const selectedPlayIds = Array.from(state.selectedPlayIds || []);
+
+            if (selectedPlayIds.length > 0) {
+              (async () => {
+                try {
+                  // Fetch plays by IDs
+                  const playsData = await Promise.all(
+                    selectedPlayIds.map((id) =>
+                      supabase.from("plays").select("*").eq("id", id).single()
+                    )
+                  );
+
+                  const selectedPlays = playsData
+                    .filter((result) => result.data)
+                    .map((result) => result.data!);
+
+                  if (selectedPlays.length > 0) {
+                    exportPlays(selectedPlays, {
+                      format: "json",
+                      prettyPrint: true,
+                      includeMetadata: true,
+                    });
+                    toast.success(
+                      `Exported ${selectedPlays.length} ${selectedPlays.length === 1 ? "play" : "plays"} to JSON`
+                    );
+                  } else {
+                    toast.error("Failed to fetch selected plays");
+                  }
+                } catch (err) {
+                  logError("Export failed:", err);
+                  toast.error("Failed to export plays");
+                }
+              })();
+            }
+          }
+          break;
+
+        case "delete":
+          // TODO: Confirm and delete
+          toast.warning(`Deleting ${selectedCount} plays (coming soon)`);
+          break;
+
+        default:
+          break;
+      }
+    },
+    [state.selectedPlayIds, toast]
+  );
 
   // Play count handler - updates state when PlayGrid reports actual play count
   const handlePlayCountChange = useCallback(
@@ -691,12 +786,21 @@ export default function PlaybookPage() {
     setShowPracticeScriptBuilder(true);
   }, []);
 
-  const handleSavePracticeScript = useCallback((script: any) => {
-    debug("Practice script saved:", script);
-    setShowPracticeScriptBuilder(false);
-    setEditingScript(null);
-    // TODO: Refresh practice scripts list
-  }, []);
+  const handleSavePracticeScript = useCallback(
+    (script: any) => {
+      debug("Practice script saved:", script);
+      setShowPracticeScriptBuilder(false);
+      setEditingScript(null);
+      setSelectedPlaysForPractice([]);
+
+      // Clear selection mode and selected plays
+      dispatch({ type: "TOGGLE_BULK" }); // Turn off selection mode
+      dispatch({ type: "CLEAR_SELECTION" }); // Clear selected plays
+
+      // TODO: Refresh practice scripts list
+    },
+    [dispatch]
+  );
 
   const handleQuickNewPracticeScript = useCallback(() => {
     navigate("/practice-plans");
@@ -839,6 +943,20 @@ export default function PlaybookPage() {
               />
             </MobileSection>
 
+            {/* Selection Mode Toggle - Mobile */}
+            <MobileSection spacing="tight">
+              <SelectionModeToggle
+                isActive={state.enableBulkOperations}
+                onToggle={() => {
+                  triggerHapticFeedback("light");
+                  dispatch({ type: "TOGGLE_BULK" });
+                }}
+                selectedCount={state.selectedPlayIds?.size || 0}
+                variant="compact"
+                className="w-full"
+              />
+            </MobileSection>
+
             {/* Filters - Collapsed by Default */}
             {state.playsCreated > 0 && (
               <MobileSection spacing="tight">
@@ -954,6 +1072,11 @@ export default function PlaybookPage() {
                     onPlayCountChange={handlePlayCountChange}
                     formationSuggestions={suggestions.formations}
                     playNameSuggestions={suggestions.playNames}
+                    enableBulkOperations={state.enableBulkOperations}
+                    selectedPlayIds={state.selectedPlayIds}
+                    onPlaySelectionChange={(selection) =>
+                      dispatch({ type: "SET_SELECTION", selection })
+                    }
                   />
                 </ErrorBoundary>
               </PullToRefresh>
@@ -1025,12 +1148,17 @@ export default function PlaybookPage() {
 
                 <AppIconTile
                   title="Bulk Actions"
-                  subtitle="Mass edit"
-                  icon="list"
-                  gradient="from-teal-500 to-cyan-600"
+                  subtitle={
+                    state.enableBulkOperations ? "Selection ON" : "Mass edit"
+                  }
+                  icon={state.enableBulkOperations ? "check-circle" : "list"}
+                  gradient={
+                    state.enableBulkOperations
+                      ? "from-green-500 to-emerald-600"
+                      : "from-teal-500 to-cyan-600"
+                  }
                   onOpen={() => {
-                    // Open settings modal to Advanced tab
-                    setShowPlaybookSettingsModal(true);
+                    dispatch({ type: "TOGGLE_BULK" });
                   }}
                 />
 
@@ -1049,6 +1177,14 @@ export default function PlaybookPage() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
               {/* Left Sidebar - Controls */}
               <div className="lg:col-span-1 space-y-6 overflow-visible">
+                {/* Selection Mode Toggle - NEW! */}
+                <SelectionModeToggle
+                  isActive={state.enableBulkOperations}
+                  onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
+                  selectedCount={state.selectedPlayIds?.size || 0}
+                  label="Select Plays"
+                />
+
                 {/* Filters - Moved to top */}
                 <Card variant="glass">
                   <AdvancedFilters
@@ -1112,6 +1248,11 @@ export default function PlaybookPage() {
                         onPlayCountChange={handlePlayCountChange}
                         formationSuggestions={suggestions.formations}
                         playNameSuggestions={suggestions.playNames}
+                        enableBulkOperations={state.enableBulkOperations}
+                        selectedPlayIds={state.selectedPlayIds}
+                        onPlaySelectionChange={(selection) =>
+                          dispatch({ type: "SET_SELECTION", selection })
+                        }
                       />
                     </ErrorBoundary>
                   )}
@@ -1621,10 +1762,12 @@ export default function PlaybookPage() {
           <PracticeScriptBuilder
             script={editingScript}
             teamId={activeTeamId || ""}
+            selectedPlayIds={selectedPlaysForPractice}
             onSave={handleSavePracticeScript}
             onCancel={() => {
               setShowPracticeScriptBuilder(false);
               setEditingScript(null);
+              setSelectedPlaysForPractice([]);
             }}
             isOpen={showPracticeScriptBuilder}
           />

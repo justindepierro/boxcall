@@ -442,7 +442,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         onDuplicate={onDuplicate}
         onCreateDiagram={onCreateDiagram}
         isSelected={selectedPlayIds.has(play.id)}
-        onSelectionChange={handlePlaySelect}
+        onSelectionChange={enableBulkOperations ? handlePlaySelect : undefined}
         formationSuggestions={collectedSuggestions.formations}
         playNameSuggestions={collectedSuggestions.playNames}
         playTypeSuggestions={collectedSuggestions.playTypes}
@@ -461,6 +461,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       onCreateDiagram,
       selectedPlayIds,
       handlePlaySelect,
+      enableBulkOperations,
       collectedSuggestions,
       personnelConfigurations,
       directionDisplayFormat,
@@ -691,7 +692,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                             onDuplicate={onDuplicate}
                             onCreateDiagram={onCreateDiagram}
                             isSelected={selectedPlayIds.has(play.id)}
-                            onSelectionChange={handlePlaySelect}
+                            onSelectionChange={
+                              enableBulkOperations
+                                ? handlePlaySelect
+                                : undefined
+                            }
                             formationSuggestions={
                               collectedSuggestions.formations
                             }

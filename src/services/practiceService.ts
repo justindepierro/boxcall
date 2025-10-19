@@ -38,7 +38,40 @@ export interface PracticeScriptPlay {
   order: number;
   notes?: string;
   repetitions: number;
-  estimatedTime: number; // in minutes
+  // Game scenario configuration
+  hash?: "left" | "middle" | "right";
+  downDistance?: string; // e.g., "1st & 10", "3rd & 3"
+  fieldPosition?:
+    | "plus_territory"
+    | "red_zone"
+    | "backed_up"
+    | "midfield";
+  defensiveFront?:
+    | "base"
+    | "4-3"
+    | "3-4"
+    | "nickel"
+    | "dime"
+    | "bear"
+    | "tite";
+  coverage?:
+    | "cover_0"
+    | "cover_1"
+    | "cover_2"
+    | "cover_3"
+    | "cover_4"
+    | "cover_6"
+    | "quarters"
+    | "man";
+  blitz?:
+    | "none"
+    | "edge"
+    | "a_gap"
+    | "b_gap"
+    | "sim_pressure"
+    | "zone_blitz"
+    | "all_out";
+  scenarioNotes?: string; // Additional context
   addedAt: Date;
 }
 
@@ -56,7 +89,40 @@ export interface AddPlayToPracticeScriptData {
   orderIndex?: number;
   notes?: string;
   repetitions?: number;
-  estimatedTime?: number;
+  // Game scenario configuration
+  hash?: "left" | "middle" | "right";
+  downDistance?: string;
+  fieldPosition?:
+    | "plus_territory"
+    | "red_zone"
+    | "backed_up"
+    | "midfield";
+  defensiveFront?:
+    | "base"
+    | "4-3"
+    | "3-4"
+    | "nickel"
+    | "dime"
+    | "bear"
+    | "tite";
+  coverage?:
+    | "cover_0"
+    | "cover_1"
+    | "cover_2"
+    | "cover_3"
+    | "cover_4"
+    | "cover_6"
+    | "quarters"
+    | "man";
+  blitz?:
+    | "none"
+    | "edge"
+    | "a_gap"
+    | "b_gap"
+    | "sim_pressure"
+    | "zone_blitz"
+    | "all_out";
+  scenarioNotes?: string;
 }
 
 export class PracticeService {
@@ -664,6 +730,42 @@ export class PracticeService {
   }
 
   /**
+   * Update an existing practice script
+   */
+  static async updatePracticeScript(
+    scriptId: string,
+    data: Partial<CreatePracticeScriptData>
+  ): Promise<PracticeScript> {
+    const updateData: any = {};
+    
+    if (data.name !== undefined) updateData.title = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.tags !== undefined) updateData.focus_areas = data.tags;
+    
+    updateData.updated_at = new Date().toISOString();
+
+    const { error } = await supabase
+      .from("practice_scripts")
+      .update(updateData)
+      .eq("id", scriptId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error updating practice script:", error);
+      throw new Error("Failed to update practice script");
+    }
+
+    // Return the full script with plays
+    const fullScript = await this.getPracticeScript(scriptId);
+    if (!fullScript) {
+      throw new Error("Failed to retrieve updated practice script");
+    }
+    
+    return fullScript;
+  }
+
+  /**
    * Add a play to an existing practice script
    */
   static async addPlayToScript(
@@ -678,7 +780,14 @@ export class PracticeService {
         sequence_order: data.orderIndex || 1,
         coaching_points: data.notes ? [data.notes] : [],
         repetitions: data.repetitions || 5,
-        duration_minutes: data.estimatedTime || 10,
+        // Game scenario configuration
+        hash: data.hash || "middle",
+        down_distance: data.downDistance || "1st & 10",
+        field_position: data.fieldPosition || "plus_territory",
+        defensive_front: data.defensiveFront || "base",
+        coverage: data.coverage || "cover_2",
+        blitz: data.blitz || "none",
+        scenario_notes: data.scenarioNotes || null,
         segment_name: "Drill",
         segment_type: "drill",
       });
@@ -693,6 +802,48 @@ export class PracticeService {
       throw new Error("Failed to retrieve updated practice script");
     }
     return script;
+  }
+
+  /**
+   * Update a play within a practice script
+   */
+  static async updateScriptPlay(
+    scriptPlayId: string,
+    data: {
+      repetitions?: number;
+      notes?: string;
+      hash?: "left" | "middle" | "right";
+      downDistance?: string;
+      fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
+      defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
+      coverage?: "cover_0" | "cover_1" | "cover_2" | "cover_3" | "cover_4" | "cover_6" | "quarters" | "man";
+      blitz?: "none" | "edge" | "a_gap" | "b_gap" | "sim_pressure" | "zone_blitz" | "all_out";
+    }
+  ): Promise<void> {
+    console.log("[PracticeService] updateScriptPlay called with:", { scriptPlayId, data });
+    
+    const updateData: any = {};
+    
+    if (data.repetitions !== undefined) updateData.repetitions = data.repetitions;
+    if (data.notes !== undefined) updateData.coaching_points = data.notes ? [data.notes] : [];
+    if (data.hash !== undefined) updateData.hash = data.hash;
+    if (data.downDistance !== undefined) updateData.down_distance = data.downDistance;
+    if (data.fieldPosition !== undefined) updateData.field_position = data.fieldPosition;
+    if (data.defensiveFront !== undefined) updateData.defensive_front = data.defensiveFront;
+    if (data.coverage !== undefined) updateData.coverage = data.coverage;
+    if (data.blitz !== undefined) updateData.blitz = data.blitz;
+
+    console.log("[PracticeService] Updating with data:", updateData);
+
+    const { error } = await supabase
+      .from("practice_script_plays")
+      .update(updateData)
+      .eq("id", scriptPlayId);
+
+    if (error) {
+      console.error("Error updating script play:", error);
+      throw new Error("Failed to update script play");
+    }
   }
 
   /**
@@ -894,6 +1045,13 @@ export class PracticeService {
       repetitions: playData.repetitions || 1,
       estimatedTime: playData.duration_minutes || 10,
       addedAt: new Date(playData.created_at),
+      // Game scenario fields (defensive & situation)
+      defensiveFront: playData.defensive_front,
+      coverage: playData.coverage,
+      blitz: playData.blitz,
+      hash: playData.hash,
+      downDistance: playData.down_distance,
+      fieldPosition: playData.field_position,
     }));
 
     return {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
@@ -8,15 +8,67 @@ interface PlayTypeSectionProps {
   onPlayTypeChange: (playType: string) => void;
 }
 
-const PLAY_TYPE_OPTIONS = ["Run", "Pass", "RPO", "Screen", "Boot"];
+const DEFAULT_PLAY_TYPES = [
+  "Run",
+  "Pass",
+  "RPO",
+  "Screen",
+  "Boot",
+  "Play Action",
+  "Draw",
+];
 
 export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
   playType,
   onPlayTypeChange,
 }) => {
+  const [customTypes, setCustomTypes] = useState<string[]>([]);
+  const [isAddingType, setIsAddingType] = useState(false);
+  const [newTypeName, setNewTypeName] = useState("");
+
+  const allTypes = [...DEFAULT_PLAY_TYPES, ...customTypes];
+
   const handleAddNewType = () => {
-    // TODO: Add new play type
-    alert("Add new play type functionality");
+    setIsAddingType(true);
+  };
+
+  const handleSaveNewType = () => {
+    const trimmed = newTypeName.trim();
+
+    // Validate
+    if (!trimmed) {
+      alert("Play type cannot be empty");
+      return;
+    }
+
+    if (trimmed.length > 50) {
+      alert("Play type must be 50 characters or less");
+      return;
+    }
+
+    if (!/^[A-Za-z0-9\s-]+$/.test(trimmed)) {
+      alert("Play type can only contain letters, numbers, spaces, and hyphens");
+      return;
+    }
+
+    // Check if already exists
+    if (allTypes.includes(trimmed)) {
+      alert("This play type already exists");
+      return;
+    }
+
+    // Add to custom types
+    setCustomTypes([...customTypes, trimmed]);
+    onPlayTypeChange(trimmed);
+
+    // Reset
+    setNewTypeName("");
+    setIsAddingType(false);
+  };
+
+  const handleCancelNewType = () => {
+    setNewTypeName("");
+    setIsAddingType(false);
   };
 
   return (
@@ -25,7 +77,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
         Play Type
       </Typography>
       <div className="flex flex-wrap gap-spacing-xs">
-        {PLAY_TYPE_OPTIONS.map((type) => (
+        {allTypes.map((type) => (
           <Button
             key={type}
             type="button"
@@ -36,16 +88,51 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
             {type}
           </Button>
         ))}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleAddNewType}
-          className="border-dashed"
-        >
-          <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
-          Add New
-        </Button>
+
+        {isAddingType ? (
+          <div className="flex items-center gap-spacing-xs">
+            <input
+              type="text"
+              value={newTypeName}
+              onChange={(e) => setNewTypeName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSaveNewType();
+                if (e.key === "Escape") handleCancelNewType();
+              }}
+              placeholder="Type name..."
+              autoFocus
+              className="px-spacing-sm py-1 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+              maxLength={50}
+            />
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleSaveNewType}
+            >
+              <Icon name="check" className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCancelNewType}
+            >
+              <Icon name="close" className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddNewType}
+            className="border-dashed"
+          >
+            <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
+            Add New
+          </Button>
+        )}
       </div>
     </div>
   );

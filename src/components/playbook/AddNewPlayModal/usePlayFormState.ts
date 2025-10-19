@@ -39,13 +39,18 @@ export interface PlayFormData {
   oneWordPlay: string;
   description: string;
 
-  // Tags & Roles
+  // Tags & Roles (LEGACY - for backwards compatibility)
   positions: string[];
   players: string[];
   flags: string[];
   newPosition: string;
   newPlayer: string;
   newFlag: string;
+
+  // NEW: Play Metadata Arrays (October 17, 2025)
+  tags: string[]; // Unlimited play variations (replaces playTags)
+  key_positions: string[]; // Personnel position mappings
+  key_players: string[]; // Roster player UUIDs
 }
 
 interface UsePlayFormStateOptions {
@@ -102,13 +107,18 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     oneWordPlay: existingPlay?.one_word_play || "",
     description: existingPlay?.notes || "",
 
-    // Tags & Roles
+    // Tags & Roles (LEGACY)
     positions: [],
     players: [],
     flags: [],
     newPosition: "",
     newPlayer: "",
     newFlag: "",
+
+    // NEW: Play Metadata Arrays (October 17, 2025)
+    tags: existingPlay?.tags || [],
+    key_positions: existingPlay?.key_positions || [],
+    key_players: existingPlay?.key_players || [],
   }));
 
   // Update specific form field
@@ -160,6 +170,9 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
       newPosition: "",
       newPlayer: "",
       newFlag: "",
+      tags: [],
+      key_positions: [],
+      key_players: [],
     });
   }, []);
 

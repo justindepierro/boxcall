@@ -88,6 +88,9 @@ const INITIAL_PLAY_DETAILS_ORDER = [
   "p_type",
   "protection",
   "ptags",
+  "tags",
+  "key_positions",
+  "key_players",
   "one_word_play",
 ];
 
@@ -97,6 +100,9 @@ const INITIAL_PLAY_DETAILS_VISIBILITY: FieldVisibility = {
   p_type: true,
   protection: true,
   ptags: true,
+  tags: true,
+  key_positions: true,
+  key_players: true,
   one_word_play: true,
 };
 

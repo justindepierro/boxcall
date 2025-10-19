@@ -2,6 +2,13 @@ import React from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
+import {
+  TagInput,
+  KeyPositionSelector,
+  KeyPlayerSelector,
+} from "../components";
+import { useRosterData } from "../../../../pages/RosterPage/hooks/useRosterData";
+import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
 
 interface AdvancedOptionsSectionProps {
   isOpen: boolean;
@@ -33,19 +40,15 @@ interface AdvancedOptionsSectionProps {
   // Confidence
   confidence: number;
   onConfidenceChange: (value: number) => void;
-  // Tags & Roles
-  positions: string[];
-  players: string[];
-  flags: string[];
-  newPosition: string;
-  newPlayer: string;
-  newFlag: string;
-  onNewPositionChange: (value: string) => void;
-  onNewPlayerChange: (value: string) => void;
-  onNewFlagChange: (value: string) => void;
-  onAddPosition: () => void;
-  onAddPlayer: () => void;
-  onAddFlag: () => void;
+  // NEW: Play Metadata Arrays (October 17, 2025)
+  tags: string[];
+  key_positions: string[];
+  key_players: string[];
+  personnel?: string;
+  playbookId?: string;
+  onTagsChange: (tags: string[]) => void;
+  onKeyPositionsChange: (positions: string[]) => void;
+  onKeyPlayersChange: (players: string[]) => void;
   // Additional info
   oneWordPlay: string;
   description: string;
@@ -53,7 +56,6 @@ interface AdvancedOptionsSectionProps {
   onDescriptionChange: (value: string) => void;
   // Constants
   directionOptions: Array<{ value: string; label: string }>;
-  positionOptions: string[];
 }
 
 export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
@@ -83,50 +85,49 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onPlayTagsChange,
   confidence,
   onConfidenceChange,
-  positions,
-  players,
-  flags,
-  newPosition,
-  newPlayer,
-  newFlag,
-  onNewPositionChange,
-  onNewPlayerChange,
-  onNewFlagChange,
-  onAddPosition,
-  onAddPlayer,
-  onAddFlag,
+  // NEW: Play Metadata Arrays (October 17, 2025)
+  tags,
+  key_positions,
+  key_players,
+  personnel,
+  playbookId,
+  onTagsChange,
+  onKeyPositionsChange,
+  onKeyPlayersChange,
   oneWordPlay,
   description,
   onOneWordPlayChange,
   onDescriptionChange,
   directionOptions,
-  positionOptions,
 }) => {
-  const handlePositionKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onAddPosition();
-    } else if (e.key === "Escape") {
-      onNewPositionChange("");
+  // Fetch personnel configurations and roster data
+  const { data: configurations } = usePersonnelConfigurations(playbookId);
+  const { players: rosterPlayers } = useRosterData();
+
+  // Find current personnel configuration
+  const personnelConfig = React.useMemo(() => {
+    if (!configurations || !personnel) return null;
+    return configurations.find((config) => config.name === personnel);
+  }, [configurations, personnel]);
+
+  // Extract available positions from personnel config
+  const availablePositions = React.useMemo(() => {
+    if (!personnelConfig?.players) return [];
+    return personnelConfig.players.map((p) => p.label); // ["Q", "R", "X", "Y", "Z"]
+  }, [personnelConfig]);
+
+  // Local state for TagInput (play variations)
+  const [newTag, setNewTag] = React.useState("");
+
+  const handleAddTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      onTagsChange([...tags, newTag.trim()]);
+      setNewTag("");
     }
   };
 
-  const handlePlayerKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onAddPlayer();
-    } else if (e.key === "Escape") {
-      onNewPlayerChange("");
-    }
-  };
-
-  const handleFlagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onAddFlag();
-    } else if (e.key === "Escape") {
-      onNewFlagChange("");
-    }
+  const handleRemoveTag = (tag: string) => {
+    onTagsChange(tags.filter((t) => t !== tag));
   };
 
   return (
@@ -360,132 +361,61 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
             </div>
           </div>
 
-          {/* Tags & Roles */}
+          {/* Tags & Metadata */}
           <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
             <Typography
               variant="label-lg"
               className="flex items-center mb-spacing-sm text-text-primary"
             >
               <Icon name="tag" className="h-4 w-4 mr-spacing-xs" />
-              Tags & Roles
+              Tags & Metadata
             </Typography>
             <div className="space-y-spacing-md">
-              {/* Positions */}
-              <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-spacing-xs text-text-secondary"
-                >
-                  Key Positions
-                </Typography>
-                <div className="flex flex-wrap gap-spacing-xs mb-spacing-xs">
-                  {positions.map((pos: string) => (
-                    <span
-                      key={pos}
-                      className="inline-flex items-center gap-spacing-xs px-spacing-xs py-spacing-xs text-xs bg-text-info/10 text-text-info rounded-full"
-                    >
-                      {pos}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-spacing-xs">
-                  <select
-                    value={newPosition}
-                    onChange={(e) => onNewPositionChange(e.target.value)}
-                    onKeyDown={handlePositionKeyDown}
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
-                  >
-                    <option value="">Add position...</option>
-                    {positionOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={onAddPosition}
-                    disabled={!newPosition}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
+              {/* Play Variation Tags */}
+              <TagInput
+                label="Play Variations"
+                tags={tags}
+                newTagValue={newTag}
+                onNewTagChange={setNewTag}
+                onAddTag={handleAddTag}
+                onRemoveTag={handleRemoveTag}
+                placeholder="Add variation (e.g., IZ Bubble, IZ Read)"
+                maxTags={10}
+              />
 
-              {/* Players */}
-              <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-spacing-xs text-text-secondary"
-                >
-                  Key Players
-                </Typography>
-                <div className="flex flex-wrap gap-spacing-xs mb-spacing-xs">
-                  {players.map((pl: string) => (
-                    <span
-                      key={pl}
-                      className="inline-flex items-center gap-spacing-xs px-spacing-xs py-spacing-xs text-xs bg-text-success/10 text-text-success rounded-full"
-                    >
-                      {pl}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-spacing-xs">
-                  <input
-                    value={newPlayer}
-                    onChange={(e) => onNewPlayerChange(e.target.value)}
-                    onKeyDown={handlePlayerKeyDown}
-                    placeholder="Add player (e.g., Z, WR1)"
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
-                  />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={onAddPlayer}
-                    disabled={!newPlayer.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
+              {/* Key Positions */}
+              <KeyPositionSelector
+                positions={key_positions}
+                personnelId={personnel}
+                availablePositions={availablePositions}
+                onAdd={(position: string) =>
+                  onKeyPositionsChange([...key_positions, position])
+                }
+                onRemove={(index: number) =>
+                  onKeyPositionsChange(
+                    key_positions.filter((_, i) => i !== index)
+                  )
+                }
+              />
 
-              {/* Flags */}
-              <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-spacing-xs text-text-secondary"
-                >
-                  Special Tags
-                </Typography>
-                <div className="flex flex-wrap gap-spacing-xs mb-spacing-xs">
-                  {flags.map((fl: string) => (
-                    <span
-                      key={fl}
-                      className="inline-flex items-center gap-spacing-xs px-spacing-xs py-spacing-xs text-xs bg-text-warning/10 text-text-warning rounded-full"
-                    >
-                      {fl}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-spacing-xs">
-                  <input
-                    value={newFlag}
-                    onChange={(e) => onNewFlagChange(e.target.value)}
-                    onKeyDown={handleFlagKeyDown}
-                    placeholder="Add tag (e.g., Red Zone)"
-                    className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
-                  />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={onAddFlag}
-                    disabled={!newFlag.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
+              {/* Key Players */}
+              <KeyPlayerSelector
+                selectedPlayerIds={key_players}
+                teamPlayers={rosterPlayers.map((p) => ({
+                  id: p.id,
+                  first_name: p.first_name || "",
+                  last_name: p.last_name || "",
+                  jersey_number: p.jersey_number || 0,
+                  position: p.position || "",
+                  is_active: p.is_active ?? true,
+                }))}
+                onAdd={(playerId: string) =>
+                  onKeyPlayersChange([...key_players, playerId])
+                }
+                onRemove={(playerId: string) =>
+                  onKeyPlayersChange(key_players.filter((p) => p !== playerId))
+                }
+              />
             </div>
           </div>
 

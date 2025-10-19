@@ -19,10 +19,25 @@ export function usePlaySelection({
 }: UsePlaySelectionProps) {
   const handlePlaySelect = useCallback(
     (playId: string, selected: boolean) => {
-      if (!onPlaySelectionChange) return;
+      console.log("[usePlaySelection] handlePlaySelect called:", {
+        playId,
+        selected,
+        hasCallback: !!onPlaySelectionChange,
+        currentSelectionSize: selectedPlayIds.size,
+      });
+      if (!onPlaySelectionChange) {
+        console.warn("[usePlaySelection] No onPlaySelectionChange callback!");
+        return;
+      }
       const newSelection = new Set(selectedPlayIds);
       if (selected) newSelection.add(playId);
       else newSelection.delete(playId);
+      console.log("[usePlaySelection] Calling onPlaySelectionChange with:", {
+        oldSize: selectedPlayIds.size,
+        newSize: newSelection.size,
+        playId,
+        action: selected ? "add" : "remove",
+      });
       onPlaySelectionChange(newSelection);
     },
     [onPlaySelectionChange, selectedPlayIds]

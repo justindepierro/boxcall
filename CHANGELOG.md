@@ -23,6 +23,10 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 - **Component-level visual regression testing with Storybook Test Runner (118+ components tested)**.
 - **Automated visual testing for all Storybook stories with Playwright integration**.
 - **Static Storybook build (316 entries, 11.6 MB) for visual regression testing**.
+- **Play metadata arrays display in PlayCard** - tags, key_positions, key_players with chip-based UI.
+- **Custom play type creation** - inline input in PlayTypeSection with validation (1-50 chars, alphanumeric).
+- **Personnel creation panel** - 384px slide-in panel with 5 common quick-creates (11, 12, 21, 10, 22) and custom form.
+- **Database migration for custom play types** - removes CHECK constraint, adds validation trigger (20251017_expand_play_types.sql).
 
 ### Changed
 

@@ -20,6 +20,15 @@ export interface PlayCreationContext {
   [key: string]: unknown;        // Allow additional context
 }
 
+// Key player selection helper (for UI components)
+export interface KeyPlayerSelection {
+  position: string;              // Position name from key_positions (e.g., "X", "Y", "Z")
+  player_id: string;             // UUID from team_players table
+  player_name: string;           // Display name (first + last)
+  jersey_number?: number;        // For UI display
+  player_position?: string;      // Player's actual position (QB, WR, RB, etc.)
+}
+
 // Custom field types
 export type CustomFieldType =
   | "text"
@@ -100,8 +109,15 @@ export interface Play {
   // Tags and categorization
   ftag1?: string; // text
   ftag2?: string; // text
-  p_tag1?: string; // text
-  p_tag2?: string; // text
+  p_tag1?: string; // text (DEPRECATED - use tags array)
+  p_tag2?: string; // text (DEPRECATED - use tags array)
+
+  // Play metadata arrays (NEW - October 17, 2025)
+  tags?: string[] | null; // text[] - unlimited play variations (e.g., ["Bubble", "Read", "Screen"])
+  key_positions?: string[] | null; // text[] - key positions from personnel config (e.g., ["X", "Y"])
+  key_players?: string[] | null; // uuid[] - key player UUIDs from team_players table
+  flags?: string[] | null; // text[] - situational flags (e.g., ["Red Zone", "2-Minute"])
+  metadata_migrated_at?: Date | null; // timestamptz - when p_tag1/p_tag2 were migrated to tags array
 
   // Additional data
   back_align?: string; // text

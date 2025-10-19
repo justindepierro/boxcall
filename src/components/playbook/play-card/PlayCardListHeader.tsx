@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { PersonnelBadge } from "../PersonnelBadge";
+import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 
@@ -39,8 +40,8 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   displayName,
   subtitleText,
   showOneWordCalls,
-  isSelected: _isSelected,
-  onSelectionChange: _onSelectionChange,
+  isSelected,
+  onSelectionChange,
   isCompact,
   isExpanded,
   onToggleExpand,
@@ -60,7 +61,24 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   );
 
   return (
-    <div className="flex items-center justify-between overflow-visible">
+    <div className="flex items-center gap-3 overflow-visible">
+      {/* Selection checkbox on the left (when selection mode is on) */}
+      {onSelectionChange && (
+        <div className="shrink-0">
+          <SelectionCheckbox
+            isSelected={Boolean(isSelected)}
+            onChange={(selected) => {
+              console.log("[PlayCardListHeader] SelectionCheckbox onChange:", {
+                playId: play.id,
+                selected,
+              });
+              onSelectionChange(play.id, selected);
+            }}
+            label={`Select ${displayName}`}
+          />
+        </div>
+      )}
+
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 min-w-0">
           <h3
@@ -144,26 +162,30 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-1 ml-4">
-        {/* Star button for favorites */}
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite();
-          }}
-          variant="ghost"
-          size="sm"
-          icon={
-            <Icon
-              name={isFavorite ? "star" : "star"}
-              className={
-                isFavorite ? "text-warning-500 fill-current" : "text-muted"
-              }
-            />
-          }
-          iconPosition="only"
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        />
+        {/* Star button for favorites (hidden when selection mode is on) */}
+        {!onSelectionChange && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
+            variant="ghost"
+            size="sm"
+            icon={
+              <Icon
+                name={isFavorite ? "star" : "star"}
+                className={
+                  isFavorite ? "text-warning-500 fill-current" : "text-muted"
+                }
+              />
+            }
+            iconPosition="only"
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
+            title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          />
+        )}
 
         {/* Expand/collapse button */}
         <Button

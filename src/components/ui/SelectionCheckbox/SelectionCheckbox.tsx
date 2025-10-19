@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "../../../lib/utils/cn";
 
 export interface SelectionCheckboxProps {
   isSelected: boolean;
@@ -40,6 +41,11 @@ export const SelectionCheckbox: React.FC<SelectionCheckboxProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("[SelectionCheckbox] handleChange:", {
+      checked: e.target.checked,
+      disabled,
+      hasOnChange: !!onChange,
+    });
     if (!disabled) {
       onChange(e.target.checked);
     }
@@ -47,9 +53,19 @@ export const SelectionCheckbox: React.FC<SelectionCheckboxProps> = ({
 
   return (
     <label
-      className={`w-11 h-11 rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform ${
-        disabled ? "opacity-50 cursor-not-allowed" : ""
-      } ${className}`}
+      className={cn(
+        "relative w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer transition-all duration-200",
+        isSelected
+          ? "bg-primary-default border-primary-default text-white shadow-[0_4px_12px_rgba(34,197,94,0.4)]"
+          : "bg-white dark:bg-surface-secondary border-border-medium hover:border-border-strong shadow-[0_2px_8px_rgba(0,0,0,0.15)]",
+        disabled && "opacity-50 cursor-not-allowed",
+        // Hover effects
+        !disabled && !isSelected && "hover:scale-110 hover:shadow-[0_4px_16px_rgba(0,0,0,0.2)]",
+        !disabled &&
+          isSelected &&
+          "hover:scale-110 text-success-text ring-success-border",
+        className
+      )}
       onClick={handleClick}
       aria-label={label}
     >
@@ -58,7 +74,7 @@ export const SelectionCheckbox: React.FC<SelectionCheckboxProps> = ({
         checked={isSelected}
         onChange={handleChange}
         disabled={disabled}
-        className="w-5 h-5 rounded-lg border-0 text-brand-primary focus:ring-2 focus:ring-brand-primary/30 cursor-pointer disabled:cursor-not-allowed"
+        className="w-5 h-5 rounded-lg border-0 text-success-text focus:ring-2 focus:ring-success-border/30 cursor-pointer disabled:cursor-not-allowed"
         aria-label={label}
       />
     </label>

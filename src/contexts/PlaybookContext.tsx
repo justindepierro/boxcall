@@ -111,6 +111,8 @@ export type PlaybookAction =
     }
   | { type: "TOGGLE_BULK" }
   | { type: "SET_SELECTION"; selection: Set<string> }
+  | { type: "TOGGLE_PLAY_SELECTION"; playId: string }
+  | { type: "SELECT_ALL_PLAYS"; playIds: string[] }
   | { type: "CLEAR_SELECTION" }
   | { type: "SET_PRESETS"; presets: PlaybookPresetState["filterPresets"] }
   | { type: "SET_SERVER_PRESETS"; presets: ServerPlaybookViewPreset[] }
@@ -151,13 +153,32 @@ function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
     case "SET_ADVANCED_FILTERS":
       return { ...state, advancedFilters: action.filters };
     case "TOGGLE_BULK":
+      console.log("[PlaybookContext] TOGGLE_BULK:", {
+        currentState: state.enableBulkOperations,
+        newState: !state.enableBulkOperations,
+      });
       return {
         ...state,
         enableBulkOperations: !state.enableBulkOperations,
         selectedPlayIds: new Set(),
       };
     case "SET_SELECTION":
+      console.log("[PlaybookContext] SET_SELECTION:", {
+        oldSize: state.selectedPlayIds?.size,
+        newSize: action.selection.size,
+      });
       return { ...state, selectedPlayIds: action.selection };
+    case "TOGGLE_PLAY_SELECTION": {
+      const newSelection = new Set(state.selectedPlayIds);
+      if (newSelection.has(action.playId)) {
+        newSelection.delete(action.playId);
+      } else {
+        newSelection.add(action.playId);
+      }
+      return { ...state, selectedPlayIds: newSelection };
+    }
+    case "SELECT_ALL_PLAYS":
+      return { ...state, selectedPlayIds: new Set(action.playIds) };
     case "CLEAR_SELECTION":
       return { ...state, selectedPlayIds: new Set() };
     case "SET_PRESETS":

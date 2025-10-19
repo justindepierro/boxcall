@@ -71,11 +71,21 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <div className="relative w-full max-w-80 mx-auto overflow-visible">
+        {/* Selection checkbox - top-left (when selection mode is on) */}
         {onSelectionChange && (
-          <div className="absolute -top-3 -left-3 z-10">
+          <div className="absolute -top-3 -left-3 z-20">
             <SelectionCheckbox
               isSelected={Boolean(isSelected)}
-              onChange={(selected) => onSelectionChange(play.id, selected)}
+              onChange={(selected) => {
+                console.log(
+                  "[PlayCardTileHeader] SelectionCheckbox onChange:",
+                  {
+                    playId: play.id,
+                    selected,
+                  }
+                );
+                onSelectionChange(play.id, selected);
+              }}
               label={`Select ${tileTitle}`}
             />
           </div>
@@ -93,14 +103,16 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           />
         </motion.div>
 
-        {/* Favorite button - top-left */}
-        <div className="absolute -top-3 -left-3 z-10">
-          <FavoriteButton
-            isFavorite={isFavorite}
-            onToggle={onToggleFavorite}
-            size="md"
-          />
-        </div>
+        {/* Favorite button - top-left (hidden when selection mode is on) */}
+        {!onSelectionChange && (
+          <div className="absolute -top-3 -left-3 z-10">
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onToggle={onToggleFavorite}
+              size="md"
+            />
+          </div>
+        )}
 
         {/* Confidence badge - top-right */}
         <div className="absolute -top-3 -right-3">

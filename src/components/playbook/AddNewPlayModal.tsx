@@ -10,7 +10,6 @@ import {
   DISTANCE_OPTIONS,
   HASH_OPTIONS,
 } from "./play-card/constants";
-import { POSITION_OPTIONS } from "../../utils/localPlayFlags";
 import { usePlayFormState } from "./AddNewPlayModal/usePlayFormState";
 import { usePlaySuggestions } from "./AddNewPlayModal/usePlaySuggestions";
 import {
@@ -25,6 +24,7 @@ import {
   PreferencesSection,
   AdvancedOptionsSection,
 } from "./AddNewPlayModal/sections";
+import { PersonnelCreationPanel } from "./AddNewPlayModal/components";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
 import { FormationService } from "../../services/formationService";
@@ -54,6 +54,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showDirectionWarning, setShowDirectionWarning] = useState(false);
+  const [personnelPanelOpen, setPersonnelPanelOpen] = useState(false);
   const [directionDetection, setDirectionDetection] =
     useState<DirectionDetectionResult | null>(null);
 
@@ -162,10 +163,19 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         one_word_play: formData.oneWordPlay.trim() || undefined,
         notes: formData.description.trim() || undefined,
 
-        // Tags & Roles
+        // NEW: Play Metadata Arrays (October 17, 2025)
+        tags: formData.tags.length > 0 ? formData.tags : undefined,
+        key_positions:
+          formData.key_positions.length > 0
+            ? formData.key_positions
+            : undefined,
+        key_players:
+          formData.key_players.length > 0 ? formData.key_players : undefined,
+        flags: formData.flags.length > 0 ? formData.flags : undefined,
+
+        // DEPRECATED: Legacy tags & roles (kept for backwards compatibility)
         positions: formData.positions,
         players: formData.players,
-        flags: formData.flags,
       };
 
       const createdPlay = await onCreatePlay?.(playData);
@@ -201,39 +211,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       }
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Helper functions for advanced section
-  const handleAddPosition = () => {
-    if (!formData.newPosition) return;
-    if (!formData.positions.includes(formData.newPosition)) {
-      updateFields({
-        positions: [...formData.positions, formData.newPosition],
-        newPosition: "",
-      });
-    }
-  };
-
-  const handleAddPlayer = () => {
-    if (!formData.newPlayer.trim()) return;
-    const player = formData.newPlayer.trim();
-    if (!formData.players.includes(player)) {
-      updateFields({
-        players: [...formData.players, player],
-        newPlayer: "",
-      });
-    }
-  };
-
-  const handleAddFlag = () => {
-    if (!formData.newFlag.trim()) return;
-    const flag = formData.newFlag.trim();
-    if (!formData.flags.includes(flag)) {
-      updateFields({
-        flags: [...formData.flags, flag],
-        newFlag: "",
-      });
     }
   };
 
@@ -516,6 +493,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onShowSuggestionsChange={(show) =>
               show ? showSuggestions("personnel") : hideSuggestions("personnel")
             }
+            onAddNew={() => setPersonnelPanelOpen(true)}
           />
 
           {/* Play Type Section */}
@@ -576,19 +554,19 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             // Confidence
             confidence={formData.confidence}
             onConfidenceChange={(value) => updateField("confidence", value)}
-            // Tags & Roles
-            positions={formData.positions}
-            players={formData.players}
-            flags={formData.flags}
-            newPosition={formData.newPosition}
-            newPlayer={formData.newPlayer}
-            newFlag={formData.newFlag}
-            onNewPositionChange={(value) => updateField("newPosition", value)}
-            onNewPlayerChange={(value) => updateField("newPlayer", value)}
-            onNewFlagChange={(value) => updateField("newFlag", value)}
-            onAddPosition={handleAddPosition}
-            onAddPlayer={handleAddPlayer}
-            onAddFlag={handleAddFlag}
+            // NEW: Play Metadata Arrays (October 17, 2025)
+            tags={formData.tags}
+            key_positions={formData.key_positions}
+            key_players={formData.key_players}
+            personnel={formData.personnel}
+            playbookId={playbookId}
+            onTagsChange={(tags) => updateField("tags", tags)}
+            onKeyPositionsChange={(positions) =>
+              updateField("key_positions", positions)
+            }
+            onKeyPlayersChange={(players) =>
+              updateField("key_players", players)
+            }
             // Additional info
             oneWordPlay={formData.oneWordPlay}
             description={formData.description}
@@ -596,7 +574,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onDescriptionChange={(value) => updateField("description", value)}
             // Constants
             directionOptions={DIRECTION_OPTIONS}
-            positionOptions={POSITION_OPTIONS}
           />
         </form>
       </div>
@@ -609,6 +586,20 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           detection={directionDetection}
           onAcceptSuggestion={handleAcceptDirectionSuggestion}
           onKeepOriginal={handleKeepOriginalFormation}
+        />
+      )}
+
+      {/* Personnel Creation Panel */}
+      {playbookId && (
+        <PersonnelCreationPanel
+          isOpen={personnelPanelOpen}
+          onClose={() => setPersonnelPanelOpen(false)}
+          playbookId={playbookId}
+          onCreated={(newPersonnel) => {
+            // Update the personnel field with the newly created configuration
+            updateField("personnel", newPersonnel.name);
+            setPersonnelPanelOpen(false);
+          }}
         />
       )}
     </Modal>

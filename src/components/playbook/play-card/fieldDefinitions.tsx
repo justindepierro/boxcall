@@ -312,6 +312,70 @@ export const createPlayDetailsFields = ({
       />
     ),
   },
+  tags: {
+    label: "Variations",
+    render: (optimisticPlay, _handleInlineSave, _savingFields) => (
+      <div className="flex flex-wrap gap-1">
+        {optimisticPlay.tags && optimisticPlay.tags.length > 0 ? (
+          optimisticPlay.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 border border-blue-200"
+            >
+              {tag}
+            </span>
+          ))
+        ) : (
+          <span className="text-sm text-text-secondary italic">
+            No variations
+          </span>
+        )}
+      </div>
+    ),
+  },
+  key_positions: {
+    label: "Key Positions",
+    render: (optimisticPlay, _handleInlineSave, _savingFields) => (
+      <div className="flex flex-wrap gap-1">
+        {optimisticPlay.key_positions &&
+        optimisticPlay.key_positions.length > 0 ? (
+          optimisticPlay.key_positions.map((position, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200"
+            >
+              {position}
+            </span>
+          ))
+        ) : (
+          <span className="text-sm text-text-secondary italic">
+            No key positions
+          </span>
+        )}
+      </div>
+    ),
+  },
+  key_players: {
+    label: "Key Players",
+    render: (optimisticPlay, _handleInlineSave, _savingFields) => (
+      <div className="flex flex-wrap gap-1">
+        {optimisticPlay.key_players && optimisticPlay.key_players.length > 0 ? (
+          optimisticPlay.key_players.map((_playerId, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-surface-success/10 text-text-success border border-border-success"
+            >
+              Player {index + 1}
+            </span>
+          ))
+        ) : (
+          <span className="text-sm text-text-secondary italic">
+            No key players
+          </span>
+        )}
+      </div>
+    ),
+  },
   one_word_play: {
     label: "Code",
     render: (optimisticPlay, handleInlineSave, savingFields) => (

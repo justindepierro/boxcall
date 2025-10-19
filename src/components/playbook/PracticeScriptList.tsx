@@ -43,7 +43,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     loadScripts();
   }, [loadScripts]);
 
-  const handleDeleteScript = async (scriptId: string, scriptName: string) => {
+  const handleDeleteScript = async (_scriptId: string, scriptName: string) => {
     if (
       !confirm(
         `Are you sure you want to delete "${scriptName}"? This action cannot be undone.`
@@ -54,7 +54,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
 
     try {
       // TODO: Implement delete method in PracticeScriptService
-      // await PracticeScriptService.deletePracticeScript(scriptId);
+      // await PracticeScriptService.deletePracticeScript(_scriptId);
       success(`Deleted "${scriptName}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
@@ -77,9 +77,14 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
 
   const handleExportPDF = useCallback(
     async (script: PracticeScript) => {
+      // Show format selection dialog
+      const format = window.confirm(
+        'Choose PDF format:\n\nOK = Compact (play names with defense/situation as subtitles)\nCancel = Detailed (full info boxes)\n\nCompact is better for quick reference cards.\nDetailed shows all information in organized sections.'
+      ) ? 'compact' : 'detailed';
+      
       try {
-        await PDFExportService.exportPracticeScript(script);
-        success(`PDF exported for "${script.name}"`);
+        await PDFExportService.exportPracticeScript(script, format);
+        success(`PDF exported for "${script.name}" (${format} format)`);
       } catch (err) {
         console.error("Failed to export PDF:", err);
         toastError("Failed to export PDF", "Please try again");
@@ -160,30 +165,20 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Typography variant="headline-sm" className="text-text-primary">
-          Practice Scripts ({scripts.length})
-        </Typography>
-        <Button onClick={onCreateNew} variant="primary" size="sm">
-          <Icon name="plus" className="h-4 w-4 mr-2" />
-          New Script
-        </Button>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
         {scripts.map((script) => (
           <div
             key={script.id}
-            className="surface-card rounded-lg border border-subtle p-6 hover:border-border-light transition-colors"
+            className="surface-card rounded-lg border border-subtle p-6 hover:border-border-light transition-all hover:shadow-md flex flex-col min-h-72"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
                 <Typography
                   variant="headline-sm"
                   className="text-text-primary truncate mb-1"
-                  title={script.name}
+                  title={script.title || script.name}
                 >
-                  {script.name}
+                  {script.title || script.name}
                 </Typography>
                 {script.description && (
                   <Typography
@@ -209,11 +204,11 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
               </div>
               <div className="flex items-center gap-1">
                 <Icon name="list" className="h-4 w-4" />
-                <span>{script.plays.length} plays</span>
+                <span>{script.plays?.length || 0} plays</span>
               </div>
             </div>
 
-            {script.tags.length > 0 && (
+            {script.tags && script.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-4">
                 {script.tags.slice(0, 3).map((tag) => (
                   <Badge key={tag} variant="neutral" size="sm">
@@ -228,45 +223,57 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
               </div>
             )}
 
-            <div className="flex items-center justify-between">
-              <Typography variant="caption" className="text-text-muted">
-                Updated {formatDate(script.updatedAt)}
-              </Typography>
+            <div className="mt-auto pt-4 border-t border-border-subtle">
+              <div className="flex items-center justify-between mb-3">
+                <Typography variant="caption" className="text-text-muted">
+                  Updated {formatDate(script.updatedAt)}
+                </Typography>
+              </div>
 
-              <div className="flex items-center gap-1">
+              <div className="grid grid-cols-4 gap-2">
                 <Button
                   onClick={() => handleExportPDF(script)}
-                  variant="ghost"
+                  variant="primary"
                   size="sm"
-                  icon={<Icon name="download" className="h-4 w-4" />}
-                  iconPosition="only"
-                  title="Export PDF"
-                />
+                  className="w-full"
+                  title="Export to PDF"
+                >
+                  <Icon name="download" className="h-4 w-4 mr-1" />
+                  PDF
+                </Button>
                 <Button
                   onClick={() => onEditScript?.(script)}
-                  variant="ghost"
+                  variant="secondary"
                   size="sm"
-                  icon={<Icon name="edit" className="h-4 w-4" />}
-                  iconPosition="only"
+                  className="w-full"
                   title="Edit script"
-                />
+                >
+                  <Icon name="edit" className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
                 <Button
                   onClick={() => handleDuplicateScript(script)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  icon={<Icon name="copy" className="h-4 w-4" />}
-                  iconPosition="only"
+                  className="w-full"
                   title="Duplicate script"
-                />
+                >
+                  <Icon name="copy" className="h-4 w-4" />
+                </Button>
                 <Button
-                  onClick={() => handleDeleteScript(script.id, script.name)}
-                  variant="ghost"
+                  onClick={() =>
+                    handleDeleteScript(
+                      script.id,
+                      script.title || script.name || "Untitled"
+                    )
+                  }
+                  variant="outline"
                   size="sm"
-                  icon={<Icon name="delete" className="h-4 w-4" />}
-                  iconPosition="only"
-                  title="Delete script"
-                  className="text-error hover:text-error"
-                />
+                  className="text-error-600 hover:text-error-700"
+                  aria-label="Delete script"
+                >
+                  <Icon name="delete" size="sm" />
+                </Button>
               </div>
             </div>
           </div>
