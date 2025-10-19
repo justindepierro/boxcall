@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon";
@@ -6,112 +6,32 @@ import { Typography } from "../design-system/Typography";
 import Input from "../ui/Input/Input";
 import { Badge } from "../ui/Badge";
 import type { Play } from "../../types/play";
+import { useTeamsData } from "../../hooks/useTeamsData";
+
+// DatabasePlay type from useTeamsData (matches what the hook returns)
+type DatabasePlay = Exclude<ReturnType<typeof useTeamsData>["plays"], undefined>[number];
 
 interface PlaySelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPlay: (play: Play) => void;
-  teamId?: string; // For excluding already selected plays
   selectedPlayIds?: string[]; // For excluding already selected plays
+  title?: string; // Custom title for the modal
 }
 
 export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
   isOpen,
   onClose,
   onSelectPlay,
-  teamId: _teamId,
   selectedPlayIds = [],
+  title = "Select Play",
 }) => {
-  const [plays, setPlays] = useState<Play[]>([]);
-  const [loading, setLoading] = useState(false);
+  // Get real plays from database
+  const { plays, loading } = useTeamsData();
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormation, setSelectedFormation] = useState<string>("");
   const [selectedPlayType, setSelectedPlayType] = useState<string>("");
-
-  // Load plays when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      loadPlays();
-    }
-  }, [isOpen]);
-
-  const loadPlays = async () => {
-    setLoading(true);
-    try {
-      // For now, we'll use a mock implementation since the real PlaysService might not have a getPlays method
-      // In a real implementation, you'd call: const plays = await PlaysService.getPlays(teamId);
-      const mockPlays: Play[] = [
-        {
-          id: "play-1",
-          playbook_id: "pb-1",
-          formation: "Shotgun",
-          play_name: "Slant",
-          p_type: "Pass",
-          f_dir: "Right",
-          p_dir: "Left",
-          notes: "Quick slant to the outside receiver",
-          confidence_base: 75,
-          times_called: 12,
-          times_successful: 8,
-          created_by: "coach1",
-          created_at: new Date("2024-01-15"),
-          updated_at: new Date("2024-01-15"),
-        },
-        {
-          id: "play-2",
-          playbook_id: "pb-1",
-          formation: "Pistol",
-          play_name: "Zone Read",
-          p_type: "Run",
-          f_dir: "Left",
-          notes: "Zone read with QB keeper option",
-          confidence_base: 80,
-          times_called: 8,
-          times_successful: 6,
-          created_by: "coach1",
-          created_at: new Date("2024-01-16"),
-          updated_at: new Date("2024-01-16"),
-        },
-        {
-          id: "play-3",
-          playbook_id: "pb-1",
-          formation: "Shotgun",
-          play_name: "Post Corner",
-          p_type: "Pass",
-          f_dir: "Trips Right",
-          p_dir: "Right",
-          notes: "Deep post-corner combination route",
-          confidence_base: 70,
-          times_called: 5,
-          times_successful: 3,
-          created_by: "coach1",
-          created_at: new Date("2024-01-17"),
-          updated_at: new Date("2024-01-17"),
-        },
-        {
-          id: "play-4",
-          playbook_id: "pb-1",
-          formation: "Empty",
-          play_name: "Screen",
-          p_type: "Pass",
-          f_dir: "Bunch Left",
-          notes: "Quick screen to the running back",
-          confidence_base: 85,
-          times_called: 15,
-          times_successful: 12,
-          created_by: "coach1",
-          created_at: new Date("2024-01-18"),
-          updated_at: new Date("2024-01-18"),
-        },
-      ];
-
-      setPlays(mockPlays);
-    } catch (error) {
-      console.error("Failed to load plays:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Filter plays based on search and filters
   const filteredPlays = useMemo(() => {
@@ -158,18 +78,19 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
     return unique.sort();
   }, [plays]);
 
-  const handlePlaySelect = (play: Play) => {
-    onSelectPlay(play);
+  const handlePlaySelect = (play: DatabasePlay) => {
+    // Convert DatabasePlay to Play for the callback (both types are compatible for the consumer)
+    onSelectPlay(play as unknown as Play);
     onClose();
   };
 
-  const getDisplayName = (play: Play) => {
+  const getDisplayName = (play: DatabasePlay) => {
     return `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`;
   };
 
-  const getSuccessRate = (play: Play) => {
-    if (play.times_called === 0) return 0;
-    return Math.round((play.times_successful / play.times_called) * 100);
+  const getSuccessRate = (play: DatabasePlay) => {
+    if (!play.times_called || play.times_called === 0) return 0;
+    return Math.round(((play.times_successful || 0) / play.times_called) * 100);
   };
 
   return (
@@ -179,7 +100,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
       size="xl"
       headerContent={
         <Typography variant="headline-sm" as="h3" className="text-text-primary">
-          Select Play for Practice Script
+          {title}
         </Typography>
       }
     >
@@ -276,7 +197,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                         <Badge variant="info" size="sm">
                           {play.formation}
                         </Badge>
-                        {play.times_called > 0 && (
+                        {play.times_called !== undefined && play.times_called > 0 && (
                           <Badge
                             variant={
                               getSuccessRate(play) >= 70 ? "success" : "warning"

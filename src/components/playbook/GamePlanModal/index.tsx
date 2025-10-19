@@ -479,6 +479,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
         onClose={() => setShowPlaySelector(false)}
         onSelectPlay={handleAddPlayToSituation}
         selectedPlayIds={selectedPlayIds}
+        title="Select Play for Game Plan"
       />
     </div>
   );
