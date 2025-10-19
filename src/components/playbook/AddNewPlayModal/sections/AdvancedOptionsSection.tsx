@@ -51,8 +51,10 @@ interface AdvancedOptionsSectionProps {
   onKeyPlayersChange: (players: string[]) => void;
   // Additional info
   oneWordPlay: string;
+  wristbandNumber: string;
   description: string;
   onOneWordPlayChange: (value: string) => void;
+  onWristbandNumberChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   // Constants
   directionOptions: Array<{ value: string; label: string }>;
@@ -95,8 +97,10 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onKeyPositionsChange,
   onKeyPlayersChange,
   oneWordPlay,
+  wristbandNumber,
   description,
   onOneWordPlayChange,
+  onWristbandNumberChange,
   onDescriptionChange,
   directionOptions,
 }) => {
@@ -440,6 +444,21 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={oneWordPlay}
                   onChange={(e) => onOneWordPlayChange(e.target.value)}
                   placeholder="e.g., POWER, SLANT"
+                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                />
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  className="block mb-spacing-xs text-text-secondary"
+                >
+                  Wristband Number
+                </Typography>
+                <input
+                  type="text"
+                  value={wristbandNumber}
+                  onChange={(e) => onWristbandNumberChange(e.target.value)}
+                  placeholder="e.g., 23, 8A, Q12"
                   className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
                 />
               </div>

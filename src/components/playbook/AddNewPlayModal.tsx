@@ -161,6 +161,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         // Other
         confidence_base: formData.confidence,
         one_word_play: formData.oneWordPlay.trim() || undefined,
+        wristband_number: formData.wristbandNumber.trim() || undefined,
         notes: formData.description.trim() || undefined,
 
         // NEW: Play Metadata Arrays (October 17, 2025)
@@ -569,8 +570,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             }
             // Additional info
             oneWordPlay={formData.oneWordPlay}
+            wristbandNumber={formData.wristbandNumber}
             description={formData.description}
             onOneWordPlayChange={(value) => updateField("oneWordPlay", value)}
+            onWristbandNumberChange={(value) =>
+              updateField("wristbandNumber", value)
+            }
             onDescriptionChange={(value) => updateField("description", value)}
             // Constants
             directionOptions={DIRECTION_OPTIONS}

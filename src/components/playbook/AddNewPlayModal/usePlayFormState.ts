@@ -37,6 +37,7 @@ export interface PlayFormData {
   // Other
   confidence: number;
   oneWordPlay: string;
+  wristbandNumber: string;
   description: string;
 
   // Tags & Roles (LEGACY - for backwards compatibility)
@@ -105,6 +106,7 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     // Other
     confidence: existingPlay?.confidence_base || 75,
     oneWordPlay: existingPlay?.one_word_play || "",
+    wristbandNumber: existingPlay?.wristband_number || "",
     description: existingPlay?.notes || "",
 
     // Tags & Roles (LEGACY)
@@ -163,6 +165,7 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
       prefFront: "",
       confidence: 75,
       oneWordPlay: "",
+      wristbandNumber: "",
       description: "",
       positions: [],
       players: [],
