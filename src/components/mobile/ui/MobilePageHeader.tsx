@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "../design-system/Typography";
+import { Typography } from "../../design-system/Typography";
 
 export interface MobilePageHeaderProps {
   /** Main page title */

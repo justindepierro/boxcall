@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
+import { Typography } from "../../design-system";
+import { Icon } from "../../ui/Icon/Icon";
 import { format, isToday, isTomorrow } from "date-fns";
 
 export interface CalendarEvent {

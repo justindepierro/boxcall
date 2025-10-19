@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "../ui/Card";
-import { Button } from "../ui/Button";
-import { Icon } from "../ui/Icon";
-import type { IconName } from "../ui/Icon/Icon";
+import { Card } from "../../ui/Card";
+import { Button } from "../../ui/Button";
+import { Icon } from "../../ui/Icon";
+import type { IconName } from "../../ui/Icon/Icon";
 
 export interface MobileCTACardProps {
   /** Icon name to display */

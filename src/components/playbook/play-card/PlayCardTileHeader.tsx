@@ -11,6 +11,7 @@ import { WristbandBadge } from "../WristbandBadge";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { getTileGradient, getTileIcon } from "./helpers";
+import { useIsMobile } from "../../../hooks/useBreakpoint";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -47,6 +48,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   onToggleExpand,
   personnelConfigurations = [],
 }) => {
+  // Mobile detection for responsive font sizes
+  const isMobile = useIsMobile();
+  
   // Find the badge customization for this play's personnel
   const personnelConfig = personnelConfigurations.find(
     (config) => config.name === optimisticPlay.personnel
@@ -143,16 +147,16 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
       <div className="mt-3 w-full px-2">
         <ScrollingText
           as="h3"
-          className={`font-mono font-bold text-sm leading-tight text-text-primary text-center ${
-            showOneWordCalls && play.one_word_play ? "text-text-info" : ""
-          }`}
+          className={`font-mono font-bold leading-tight text-text-primary text-center ${
+            isMobile ? "text-base" : "text-sm"
+          } ${showOneWordCalls && play.one_word_play ? "text-text-info" : ""}`}
           title={tileTitle}
           speed={50}
         >
           {tileTitle}
         </ScrollingText>
         {tileSubtitle && (
-          <p className="text-xs text-text-secondary text-center mt-1">
+          <p className={`text-text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}>
             {tileSubtitle}
           </p>
         )}

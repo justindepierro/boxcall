@@ -10,6 +10,7 @@ import { useToast } from "../../hooks/useToast";
 import { BadgeCustomizer } from "./BadgeCustomizer";
 import { PersonnelBadge } from "./PersonnelBadge";
 import type { BadgeCustomization } from "../../types/personnel";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 
 type PlayerPosition = "QB" | "RB" | "TE" | "WR";
 
@@ -46,7 +47,6 @@ export const PersonnelConfigurationModal: React.FC<
 > = ({ isOpen, onClose, configurations, onSave }) => {
   const [localConfigurations, setLocalConfigurations] =
     useState<PersonnelConfiguration[]>(configurations);
-  const [isMobile, setIsMobile] = useState(false);
   const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(
     new Set()
   );
@@ -55,13 +55,9 @@ export const PersonnelConfigurationModal: React.FC<
   );
   const [justSaved, setJustSaved] = useState(false);
   const toast = useToast();
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  
+  // Mobile detection using centralized hook
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // If no configurations exist, start with a default personnel group

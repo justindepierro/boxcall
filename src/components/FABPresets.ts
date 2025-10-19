@@ -16,6 +16,7 @@ export const FABPresets = {
     onNewPlay: () => void;
     onWhiteboard: () => void;
     onPractice: () => void;
+    onGamePlan: () => void;
   }): FABAction[] => [
     {
       id: "new-play",
@@ -37,6 +38,13 @@ export const FABPresets = {
       icon: "clipboard-list" as IconName,
       color: "bg-blue-600 text-white",
       onClick: handlers.onPractice,
+    },
+    {
+      id: "game-plan",
+      label: "Game Plan",
+      icon: "target" as IconName,
+      color: "bg-orange-600 text-white",
+      onClick: handlers.onGamePlan,
     },
   ],
 

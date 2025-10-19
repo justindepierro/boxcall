@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Icon } from "../ui/Icon";
-import type { IconName } from "../ui/Icon/Icon";
-import { Badge } from "../ui/Badge";
-import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { Icon } from "../../ui/Icon";
+import type { IconName } from "../../ui/Icon/Icon";
+import { Badge } from "../../ui/Badge";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
 export interface QuickAction {
   /** Unique identifier */

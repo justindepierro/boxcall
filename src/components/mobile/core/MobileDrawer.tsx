@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { ModularIcon as Icon } from "../ui/Icon";
-import { Button } from "../ui/Button/Button";
-import { Typography } from "../design-system/Typography";
-import { Tooltip } from "../ui/Tooltip/Tooltip";
+import { ModularIcon as Icon } from "../../ui/Icon";
+import { Button } from "../../ui/Button/Button";
+import { Typography } from "../../design-system/Typography";
+import { Tooltip } from "../../ui/Tooltip/Tooltip";
 
 interface MobileDrawerProps {
   title: string;

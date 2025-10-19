@@ -17,6 +17,7 @@ import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import { usePreference } from "../../hooks/usePreferences";
 import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
@@ -146,9 +147,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     });
   }, [play]);
 
-  // Quick Wins: Recent plays tracking and favorites
+    // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
-  const { toggleFavorite, isFavorite } = useFavoritePlays();
+  const { isFavorite, toggleFavorite } = useFavoritePlays();
+  
+  // Mobile detection for responsive styling
+  const isMobile = useIsMobile();
 
   // Use server-synced preferences for field visibility
   const [formationFieldVisibility, setFormationFieldVisibility] = usePreference(
@@ -432,10 +436,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         isSelected
           ? "ring-2 ring-brand-primary border-brand-primary shadow-lg"
           : "shadow-card hover:shadow-xl hover:border-brand-primary/40 hover:scale-[1.02] hover:-translate-y-1"
-      } ${isCompact ? "text-[13px]" : ""} md:min-h-0`}
+      } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
     >
       <div
-        className={`${isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"} overflow-visible`}
+        className={`${
+          isCompact 
+            ? isMobile ? "p-5" : "p-3 sm:p-4" 
+            : isMobile ? "p-6" : "p-4 sm:p-6"
+        } overflow-visible`}
       >
         {!isTile && play.diagram_url && (
           <div className="mb-3 -mt-1">

@@ -10,10 +10,10 @@ import {
   MobileCardHeader,
   MobileCardFooter,
 } from "./index";
-import { Badge } from "../ui/Badge";
-import { Icon } from "../ui/Icon";
-import { UserAvatar as Avatar } from "../ui/UserAvatar";
-import { Button } from "../ui/Button";
+import { Badge } from "../../ui/Badge";
+import { Icon } from "../../ui/Icon";
+import { UserAvatar as Avatar } from "../../ui/UserAvatar";
+import { Button } from "../../ui/Button";
 
 const meta: Meta = {
   title: "Mobile Library/Overview",

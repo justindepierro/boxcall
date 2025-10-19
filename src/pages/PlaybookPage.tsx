@@ -61,11 +61,12 @@ import {
 import { saveDiagram } from "../services/diagramService";
 import { useIsMobile } from "../hooks/useBreakpoint";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 import {
   MobileCTACard,
   MobileSection,
   MobileQuickActions,
-} from "../components/mobile-library";
+} from "../components/mobile";
 import { BottomSheet } from "../components/BottomSheet";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
@@ -126,6 +127,10 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
+  
+  // Mobile-optimized button sizes (44px+ touch targets)
+  const mobileButtonSize = useMobileButtonProps("md", true).size;
+  const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
 
   // Get playbooks for this team
   const { playbooks, refreshData } = useTeamsData();
@@ -979,9 +984,9 @@ export default function PlaybookPage() {
               </MobileSection>
             )}
 
-            {/* Search Bar - Sticky on Mobile */}
+            {/* Search Bar - Sticky on Mobile with Backdrop Blur */}
             {state.playsCreated > 0 && (
-              <MobileSection spacing="tight">
+              <div className="sticky top-0 z-30 bg-surface-primary/80 backdrop-blur-md border-b border-border-subtle/50 -mx-4 px-4 py-3 shadow-sm">
                 <div className="relative">
                   <Icon
                     name="search"
@@ -1035,7 +1040,7 @@ export default function PlaybookPage() {
                     </motion.button>
                   )}
                 </div>
-              </MobileSection>
+              </div>
             )}
 
             {/* Main Content - Plays Grid */}
@@ -1088,6 +1093,7 @@ export default function PlaybookPage() {
                 onNewPlay: handleOpenBuilder,
                 onWhiteboard: handleOpenWhiteboard,
                 onPractice: handleQuickNewPracticeScript,
+                onGamePlan: handleQuickNewGamePlan,
               })}
               icon="plus"
             />
@@ -1269,6 +1275,7 @@ export default function PlaybookPage() {
                         <Button
                           onClick={handleOpenPracticeScriptBuilder}
                           variant="primary"
+                          size={mobileButtonSize}
                         >
                           <Icon name="plus" className="h-4 w-4 mr-2" />
                           New Script
@@ -1310,6 +1317,7 @@ export default function PlaybookPage() {
                         <Button
                           onClick={handleQuickNewGamePlan}
                           variant="primary"
+                          size={mobileButtonSize}
                         >
                           <Icon name="plus" className="h-4 w-4 mr-2" />
                           New Plan
@@ -1338,6 +1346,7 @@ export default function PlaybookPage() {
                         <Button
                           onClick={handleQuickNewGamePlan}
                           variant="primary"
+                          size={mobileButtonSize}
                         >
                           <Icon name="plus" className="h-4 w-4 mr-2" />
                           Create New Plan
@@ -1817,6 +1826,7 @@ export default function PlaybookPage() {
                       setShowFiltersSheet(false);
                     }}
                     variant="secondary"
+                    size={mobileSecondaryButtonSize}
                     className="flex-1"
                   >
                     Clear All
@@ -1824,6 +1834,7 @@ export default function PlaybookPage() {
                   <Button
                     onClick={() => setShowFiltersSheet(false)}
                     variant="primary"
+                    size={mobileButtonSize}
                     className="flex-1"
                   >
                     <Icon name="check" className="h-4 w-4 mr-2" />

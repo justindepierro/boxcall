@@ -193,6 +193,17 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
+    // Mobile-first breakpoints aligned with useBreakpoint() hook
+    // Mobile: < 768px (default, no prefix)
+    // Tablet: 768px - 1023px (sm:)
+    // Desktop: ≥ 1024px (md:)
+    screens: {
+      sm: "768px", // Tablet and up (matches useBreakpoint hook)
+      md: "1024px", // Desktop and up (matches useBreakpoint hook)
+      lg: "1280px", // Large desktop
+      xl: "1440px", // Extra large desktop
+      "2xl": "1920px", // 4K displays
+    },
     extend: {
       colors,
       spacing: spacingTokens,

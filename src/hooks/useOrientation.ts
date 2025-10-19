@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useIsMobile } from "./useBreakpoint";
 
 export type Orientation = "portrait" | "landscape";
 
@@ -64,6 +65,7 @@ export function useIsLandscape(): boolean {
 /**
  * Combined hook to check if device is mobile AND in portrait mode
  * This is when we want to show the landscape prompt
+ * Uses centralized useIsMobile() hook for consistency
  */
 export function useIsMobilePortrait(): {
   isMobilePortrait: boolean;
@@ -71,19 +73,7 @@ export function useIsMobilePortrait(): {
   isMobile: boolean;
 } {
   const orientation = useOrientation();
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 768;
-  });
-
-  useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", updateMobile);
-    return () => window.removeEventListener("resize", updateMobile);
-  }, []);
+  const isMobile = useIsMobile(); // Use centralized mobile detection
 
   return {
     isMobilePortrait: isMobile && orientation === "portrait",

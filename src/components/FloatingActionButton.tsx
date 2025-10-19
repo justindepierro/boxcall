@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "./ui/Icon/Icon";
 import type { IconName } from "./ui/Icon/Icon";
 import type { FABAction } from "./FABPresets";
+import { triggerHapticFeedback } from "../lib/hapticFeedback";
 
 interface FloatingActionButtonProps {
   /** Quick actions to show in radial menu */
@@ -39,10 +40,12 @@ export function FloatingActionButton({
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
+    triggerHapticFeedback("light");
     setIsOpen(!isOpen);
   };
 
   const handleActionClick = (action: FABAction) => {
+    triggerHapticFeedback("medium");
     action.onClick();
     setIsOpen(false);
   };

@@ -1,4 +1,4 @@
-import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
+import type { MobileNavItem } from "../components/mobile/core/MobileBottomNavigation";
 import { getRouteImporter } from "../routes/importers";
 
 /**

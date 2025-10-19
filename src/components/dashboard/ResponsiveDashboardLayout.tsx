@@ -11,10 +11,10 @@ import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
-import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
+import { MobileBottomNavigation } from "../mobile/core/MobileBottomNavigation";
 import { AuroraTile } from "../ui/AuroraTile";
 import type { IconName } from "../ui/Icon/Icon";
-import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile-library";
+import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile";
 // Onboarding components removed during cleanup
 
 /**

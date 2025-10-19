@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Button } from "../Button";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Icon } from "../Icon/Icon";
+import { useIsMobile } from "../../../hooks/useBreakpoint";
 export interface SidebarItem {
   /** Unique identifier for the sidebar item */
   id: string;
@@ -197,6 +198,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [searchQuery, setSearchQuery] = React.useState("");
   const [previouslyFocusedElement, setPreviouslyFocusedElement] =
     React.useState<Element | null>(null);
+  
+  // Mobile detection using centralized hook
+  const isMobile = useIsMobile();
 
   // Filter items based on search query
   const filteredItems = React.useMemo(() => {
@@ -331,7 +335,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleItemClick = () => {
     // Close sidebar when item is clicked (for mobile)
-    if (window.innerWidth < 768) {
+    if (isMobile) {
       onClose?.();
     }
   };

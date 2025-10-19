@@ -1,7 +1,7 @@
 import React from "react";
-import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
-import type { IconName } from "../ui/Icon/Icon";
+import { Typography } from "../../design-system";
+import { Icon } from "../../ui/Icon/Icon";
+import type { IconName } from "../../ui/Icon/Icon";
 
 export interface HeroStatsCardProps {
   userName: string;

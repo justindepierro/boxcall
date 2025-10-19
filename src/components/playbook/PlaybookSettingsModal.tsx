@@ -7,6 +7,7 @@ import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 
 interface PersonnelSettings {
   personnelGrouping: string;
@@ -61,14 +62,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   const [activeSection, setActiveSection] = useState<"quick" | "advanced">(
     "quick"
   );
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  
+  // Mobile detection using centralized hook
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setLocalSettings(settings);

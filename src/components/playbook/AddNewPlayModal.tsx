@@ -4,6 +4,8 @@ import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { Modal } from "../ui/Modal/Modal";
 import type { Play } from "../../types/play";
+import { useIsMobile } from "../../hooks/useBreakpoint";
+import { useMobileButtonProps } from "../../hooks/useMobileButtonProps";
 import {
   DIRECTION_OPTIONS,
   DOWN_OPTIONS,
@@ -71,6 +73,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
   // Rate limit feedback
   const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
+  
+  // Mobile-optimized button sizes
+  const isMobile = useIsMobile();
+  const mobileButtonSize = useMobileButtonProps("md", true).size;
+  const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
 
   if (!isOpen) return null;
 
@@ -254,20 +261,24 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       title={existingPlay ? "Edit Play" : "Create New Play"}
       size="lg"
       footer={
-        <div className="flex justify-end gap-spacing-sm">
+        <div className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}>
           <Button
             type="button"
             variant="secondary"
+            size={mobileSecondaryButtonSize}
             onClick={onClose}
             disabled={isSubmitting}
+            className={isMobile ? "w-full" : ""}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
+            size={mobileButtonSize}
             disabled={isSubmitting || !isValid()}
             onClick={handleSubmit}
+            className={isMobile ? "w-full" : ""}
           >
             {isSubmitting ? (
               <>{existingPlay ? "Updating..." : "Creating..."}</>

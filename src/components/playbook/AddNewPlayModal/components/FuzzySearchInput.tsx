@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "../../../design-system/Typography";
+import { useIsMobile } from "../../../../hooks/useBreakpoint";
 
 interface FuzzySearchInputProps {
   label: string;
@@ -38,6 +39,9 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
   maxSuggestions = 5,
   className = "",
 }) => {
+  // Mobile detection for responsive input sizing
+  const isMobile = useIsMobile();
+  
   // Filter suggestions based on input value
   const filteredSuggestions = React.useMemo(() => {
     if (!value.trim()) return suggestions.slice(0, maxSuggestions);
@@ -66,7 +70,11 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           onFocus={() => onShowSuggestionsChange(true)}
           onBlur={() => setTimeout(() => onShowSuggestionsChange(false), 200)}
           placeholder={placeholder}
-          className="w-full px-spacing-sm py-spacing-xs border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+          className={`w-full border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 ${
+            isMobile 
+              ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font (prevents iOS zoom)
+              : "px-spacing-sm py-spacing-xs" // Desktop: normal spacing
+          }`}
           required={required}
         />
         {showSuggestions && filteredSuggestions.length > 0 && (
