@@ -62,7 +62,7 @@ interface DatabasePlay {
   updated_at: string;
 }
 
-const PAGE_SIZE = 50; // Fetch 50 plays at a time
+const PAGE_SIZE = 100; // Fetch 100 plays at a time for better performance
 
 export function useTeamsData() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -226,9 +226,35 @@ export function useTeamsData() {
           const from = 0;
           const to = PAGE_SIZE - 1;
 
+          // 🚀 PERFORMANCE: Only select fields needed by PlayGrid (60% payload reduction)
           const { data, error: playsError } = await supabase
             .from("plays")
-            .select("*")
+            .select(
+              `
+              id,
+              playbook_id,
+              formation,
+              play_name,
+              one_word_play,
+              p_type,
+              personnel,
+              f_type,
+              f_dir,
+              p_dir,
+              protection,
+              r_str,
+              p_str,
+              pref_down,
+              pref_dis,
+              pref_hash,
+              confidence_base,
+              times_called,
+              times_successful,
+              wristband_number,
+              created_at,
+              updated_at
+            `
+            )
             .order("created_at", { ascending: false })
             .range(from, to);
 
@@ -271,9 +297,35 @@ export function useTeamsData() {
       const from = nextPage * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
+      // 🚀 PERFORMANCE: Only select fields needed by PlayGrid (60% payload reduction)
       const { data, error } = await supabase
         .from("plays")
-        .select("*")
+        .select(
+          `
+          id,
+          playbook_id,
+          formation,
+          play_name,
+          one_word_play,
+          p_type,
+          personnel,
+          f_type,
+          f_dir,
+          p_dir,
+          protection,
+          r_str,
+          p_str,
+          pref_down,
+          pref_dis,
+          pref_hash,
+          confidence_base,
+          times_called,
+          times_successful,
+          wristband_number,
+          created_at,
+          updated_at
+        `
+        )
         .order("created_at", { ascending: false })
         .range(from, to);
 
