@@ -7,6 +7,7 @@ import { ConfidenceBadge } from "../../ui/ConfidenceBadge";
 import { FavoriteButton } from "../../ui/FavoriteButton";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import { PersonnelBadge } from "../PersonnelBadge";
+import { WristbandBadge } from "../WristbandBadge";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { getTileGradient, getTileIcon } from "./helpers";
@@ -157,8 +158,16 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         )}
       </div>
 
-      {/* Badges - personnel and installation phase */}
+      {/* Badges - wristband, personnel and installation phase */}
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        {/* Wristband badge */}
+        {optimisticPlay.wristband_number && (
+          <WristbandBadge
+            wristbandNumber={optimisticPlay.wristband_number}
+            size="sm"
+          />
+        )}
+
         {/* Personnel badge */}
         {optimisticPlay.personnel && (
           <PersonnelBadge

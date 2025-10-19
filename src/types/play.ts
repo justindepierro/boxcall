@@ -83,6 +83,7 @@ export interface Play {
 
   // Optional core fields
   one_word_play?: string; // text
+  wristband_number?: string; // text - wristband communication number
 
   // Formation details
   personnel?: string; // text

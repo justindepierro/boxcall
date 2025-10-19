@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { PersonnelBadge } from "../PersonnelBadge";
+import { WristbandBadge } from "../WristbandBadge";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
@@ -109,6 +110,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           >
             {optimisticPlay.p_type}
           </span>
+
+          {/* Wristband badge */}
+          {optimisticPlay.wristband_number && (
+            <WristbandBadge
+              wristbandNumber={optimisticPlay.wristband_number}
+              size="sm"
+            />
+          )}
 
           {/* Personnel badge */}
           {optimisticPlay.personnel && (

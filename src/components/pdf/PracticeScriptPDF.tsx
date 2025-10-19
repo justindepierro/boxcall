@@ -277,6 +277,26 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                         </Text>
                       </View>
 
+                      {/* Wristband Badge - FIRST */}
+                      {scriptPlay.play?.wristband_number && (
+                        <View
+                          style={{
+                            backgroundColor: colorTokens.purple[100],
+                            paddingHorizontal: 4,
+                            paddingVertical: 2,
+                            borderRadius: 2,
+                            marginRight: 4,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            borderColor: colorTokens.purple[300],
+                          }}
+                        >
+                          <Text style={{ fontSize: 7, fontWeight: "bold", color: colorTokens.purple[800] }}>
+                            {scriptPlay.play.wristband_number}
+                          </Text>
+                        </View>
+                      )}
+
                       {/* Personnel Badge - BEFORE play name */}
                       {scriptPlay.play?.personnel && (
                         <View

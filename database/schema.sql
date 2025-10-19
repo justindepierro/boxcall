@@ -150,6 +150,7 @@ CREATE TABLE plays (
   formation TEXT NOT NULL,
   play_name TEXT NOT NULL,
   one_word_play TEXT,
+  wristband_number TEXT,
   p_type TEXT NOT NULL CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action')),
   personnel TEXT,
   f_type TEXT,
