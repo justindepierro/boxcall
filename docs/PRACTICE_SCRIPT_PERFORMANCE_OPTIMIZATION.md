@@ -1,8 +1,10 @@
 # Practice Script Performance Optimization
+
 **Date:** October 18, 2025  
 **Status:** ✅ Complete
 
 ## Overview
+
 Massively improved practice script system performance from slow (~2-5s) to lightning fast (<100ms) through caching, query optimization, and batch updates.
 
 ---
@@ -10,20 +12,24 @@ Massively improved practice script system performance from slow (~2-5s) to light
 ## Performance Issues Identified
 
 ### 1. **N+1 Query Problem** ❌
+
 ```typescript
 // BEFORE: 2 separate queries
 const scripts = await supabase.from("practice_scripts").select("*");
-const plays = await supabase.from("practice_script_plays")
+const plays = await supabase
+  .from("practice_script_plays")
   .select("*, plays (*)")
-  .in("practice_script_id", scriptIds);  // N+1 problem
+  .in("practice_script_id", scriptIds); // N+1 problem
 ```
 
 ### 2. **No Caching** ❌
+
 - Every page load hit the database
 - Same data fetched multiple times
 - No offline support
 
 ### 3. **Serial Updates** ❌
+
 ```typescript
 // BEFORE: Sequential updates (slow)
 for (const play of plays) {
@@ -32,6 +38,7 @@ for (const play of plays) {
 ```
 
 ### 4. **Redundant Reloads** ❌
+
 - Reloading entire script after every save
 - Waiting for server before closing modal
 - No optimistic UI updates
@@ -56,6 +63,7 @@ const indexedDB = openDatabase("PracticeScriptCache");
 ```
 
 **Benefits:**
+
 - 🚀 **99% faster** - Sub-100ms response time
 - 💾 **Offline support** - Works without network
 - 🔄 **Auto-refresh** - Stale data detection
@@ -66,24 +74,28 @@ const indexedDB = openDatabase("PracticeScriptCache");
 **File:** `src/services/practiceService.ts`
 
 #### Before (N+1 problem):
+
 ```typescript
 // 2+ queries, slow
 const scripts = await fetchScripts();
-const plays = await fetchPlays(scripts.map(s => s.id));
+const plays = await fetchPlays(scripts.map((s) => s.id));
 ```
 
 #### After (single join):
+
 ```typescript
 // 1 query, fast!
 const { data } = await supabase
   .from("practice_scripts")
-  .select(`
+  .select(
+    `
     *,
     practice_script_plays (
       *,
       plays (*)
     )
-  `)
+  `
+  )
   .eq("team_id", teamId);
 ```
 
@@ -104,7 +116,7 @@ static async batchUpdateScriptPlays(updates: Array<{
 }>): Promise<void> {
   // Execute all updates in parallel
   await Promise.all(
-    updates.map(({ scriptPlayId, data }) => 
+    updates.map(({ scriptPlayId, data }) =>
       supabase
         .from("practice_script_plays")
         .update(data)
@@ -115,6 +127,7 @@ static async batchUpdateScriptPlays(updates: Array<{
 ```
 
 **Performance Gain:**
+
 - **10 updates:** 500ms → 80ms (6x faster)
 - **20 updates:** 1000ms → 120ms (8x faster)
 - **50 updates:** 2500ms → 200ms (12x faster)
@@ -154,27 +167,30 @@ await practiceScriptCache.invalidatePattern(/^script/);
 ## Performance Metrics
 
 ### Before Optimization ❌
-| Operation | Time | User Experience |
-|-----------|------|-----------------|
-| Load scripts list | 2-3s | ⏳ Slow spinner |
-| Open script | 1-2s | ⏳ Waiting |
-| Save script (10 plays) | 3-5s | ⏳ Blocking |
-| Update plays | 500ms each | ⏳ Sequential |
+
+| Operation              | Time       | User Experience |
+| ---------------------- | ---------- | --------------- |
+| Load scripts list      | 2-3s       | ⏳ Slow spinner |
+| Open script            | 1-2s       | ⏳ Waiting      |
+| Save script (10 plays) | 3-5s       | ⏳ Blocking     |
+| Update plays           | 500ms each | ⏳ Sequential   |
 
 **Total workflow time:** ~10-15 seconds
 
 ### After Optimization ✅
-| Operation | Time | User Experience |
-|-----------|------|-----------------|
-| Load scripts list (cached) | <50ms | ⚡ Instant |
-| Load scripts list (first) | 300ms | ⚡ Fast |
-| Open script (cached) | <20ms | ⚡ Instant |
-| Save script (10 plays) | 400ms | ⚡ Feels instant |
-| Update plays (batch) | 80ms | ⚡ Parallel |
+
+| Operation                  | Time  | User Experience  |
+| -------------------------- | ----- | ---------------- |
+| Load scripts list (cached) | <50ms | ⚡ Instant       |
+| Load scripts list (first)  | 300ms | ⚡ Fast          |
+| Open script (cached)       | <20ms | ⚡ Instant       |
+| Save script (10 plays)     | 400ms | ⚡ Feels instant |
+| Update plays (batch)       | 80ms  | ⚡ Parallel      |
 
 **Total workflow time:** <2 seconds (7x faster!)
 
 ### Cache Performance
+
 ```
 Cache Hit Rate: 85%
 Average Response Time (cached): 12ms
@@ -187,6 +203,7 @@ Memory Usage: <2MB
 ## Code Changes Summary
 
 ### New Files Created
+
 1. **`src/services/practiceScriptCache.ts`** (195 lines)
    - In-memory + IndexedDB caching
    - Automatic TTL management
@@ -194,6 +211,7 @@ Memory Usage: <2MB
    - Performance metrics
 
 ### Modified Files
+
 1. **`src/services/practiceService.ts`**
    - Added cache integration
    - Optimized queries (single join)
@@ -210,6 +228,7 @@ Memory Usage: <2MB
 ## Technical Implementation Details
 
 ### Caching Strategy
+
 ```
 ┌─────────────────────────────────────┐
 │  Request for Practice Scripts      │
@@ -232,13 +251,14 @@ Memory Usage: <2MB
 ```
 
 ### Database Query Optimization
+
 ```sql
 -- BEFORE: N+1 problem (2+ queries)
 SELECT * FROM practice_scripts WHERE team_id = ?;
 SELECT * FROM practice_script_plays WHERE practice_script_id IN (...);
 
 -- AFTER: Single join query
-SELECT 
+SELECT
   ps.*,
   psp.*,
   p.*
@@ -249,15 +269,16 @@ WHERE ps.team_id = ?;
 ```
 
 ### Batch Update Pattern
+
 ```typescript
 // SEQUENTIAL (slow)
 for (const play of plays) {
-  await update(play);  // 500ms × N
+  await update(play); // 500ms × N
 }
 
 // PARALLEL (fast)
 await Promise.all(
-  plays.map(play => update(play))  // 500ms total
+  plays.map((play) => update(play)) // 500ms total
 );
 ```
 
@@ -266,6 +287,7 @@ await Promise.all(
 ## Testing Recommendations
 
 ### 1. **Performance Testing**
+
 ```bash
 # Test cache hit rate
 1. Load scripts list (should be fast after first load)
@@ -279,15 +301,16 @@ await Promise.all(
 ```
 
 ### 2. **Cache Testing**
+
 ```typescript
 // Check cache metrics
 const metrics = practiceScriptCache.getMetrics();
-console.log("Cache hit rate:", 
-  metrics.hits / (metrics.hits + metrics.misses));
+console.log("Cache hit rate:", metrics.hits / (metrics.hits + metrics.misses));
 console.log("Avg response:", metrics.avgResponseTime, "ms");
 ```
 
 ### 3. **Offline Testing**
+
 1. Load practice scripts
 2. Turn off network
 3. Navigate app (should work from cache)
@@ -302,15 +325,15 @@ Add these indexes for maximum performance:
 
 ```sql
 -- Index for team scripts query
-CREATE INDEX idx_practice_scripts_team_updated 
+CREATE INDEX idx_practice_scripts_team_updated
 ON practice_scripts(team_id, updated_at DESC);
 
 -- Index for script plays join
-CREATE INDEX idx_practice_script_plays_script 
+CREATE INDEX idx_practice_script_plays_script
 ON practice_script_plays(practice_script_id);
 
 -- Index for plays lookup
-CREATE INDEX idx_practice_script_plays_play 
+CREATE INDEX idx_practice_script_plays_play
 ON practice_script_plays(play_id);
 ```
 
@@ -319,6 +342,7 @@ ON practice_script_plays(play_id);
 ## Future Optimizations
 
 ### 1. **Prefetching** (Optional)
+
 ```typescript
 // Preload next likely script in background
 const prefetchNextScript = async (currentScriptId: string) => {
@@ -328,6 +352,7 @@ const prefetchNextScript = async (currentScriptId: string) => {
 ```
 
 ### 2. **Background Sync** (Optional)
+
 ```typescript
 // Sync changes in background when online
 if (navigator.onLine) {
@@ -336,9 +361,11 @@ if (navigator.onLine) {
 ```
 
 ### 3. **Virtual Scrolling** (If needed)
+
 For scripts with 100+ plays, implement virtual scrolling:
+
 ```typescript
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList } from "react-window";
 ```
 
 ---
@@ -348,11 +375,13 @@ import { FixedSizeList } from 'react-window';
 If issues arise, remove caching by:
 
 1. Comment out cache imports:
+
 ```typescript
 // import { practiceScriptCache } from "./practiceScriptCache";
 ```
 
 2. Remove cache calls:
+
 ```typescript
 // const cached = await practiceScriptCache.get(cacheKey);
 // if (cached) return cached;
@@ -380,6 +409,7 @@ If issues arise, remove caching by:
 ## Conclusion
 
 The practice script system is now **7x faster** with:
+
 - ⚡ Sub-100ms cached responses
 - 🔄 Offline support
 - 📦 Batch updates

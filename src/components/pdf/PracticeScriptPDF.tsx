@@ -203,7 +203,9 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
   const subtitleStyle = isCompact ? styles.subtitleCompact : styles.subtitle;
   const metaStyle = isCompact ? styles.metaCompact : styles.meta;
   const sectionStyle = isCompact ? styles.sectionCompact : styles.section;
-  const sectionTitleStyle = isCompact ? styles.sectionTitleCompact : styles.sectionTitle;
+  const sectionTitleStyle = isCompact
+    ? styles.sectionTitleCompact
+    : styles.sectionTitle;
   const playItemStyle = isCompact ? styles.playItemCompact : styles.playItem;
 
   return (
@@ -253,7 +255,13 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                 {format === "ultra-compact" ? (
                   <>
                     {/* Row 1: Number badge + Personnel + Play name + One-word code + Play Type + Reps */}
-                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 2 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginBottom: 2,
+                      }}
+                    >
                       {/* Number Badge */}
                       <View
                         style={{
@@ -291,7 +299,13 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                             borderColor: colorTokens.purple[300],
                           }}
                         >
-                          <Text style={{ fontSize: 7, fontWeight: "bold", color: colorTokens.purple[800] }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              fontWeight: "bold",
+                              color: colorTokens.purple[800],
+                            }}
+                          >
                             {scriptPlay.play.wristband_number}
                           </Text>
                         </View>
@@ -308,7 +322,12 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                             marginRight: 4,
                           }}
                         >
-                          <Text style={{ fontSize: 7, color: colorTokens.blue[800] }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.blue[800],
+                            }}
+                          >
                             {scriptPlay.play.personnel}
                           </Text>
                         </View>
@@ -331,16 +350,26 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                             const playParts: string[] = [];
 
                             // Formation parts
-                            if (play.formation) formationParts.push(play.formation);
-                            if (play.backfield) formationParts.push(play.backfield);
+                            if (play.formation)
+                              formationParts.push(play.formation);
+                            if (play.backfield)
+                              formationParts.push(play.backfield);
                             if (play.motion) formationParts.push(play.motion);
                             if (play.shift) formationParts.push(play.shift);
 
                             // Play parts
                             if (play.play_name) playParts.push(play.play_name);
-                            if (play.p_dir) playParts.push(play.p_dir === "R" ? "Right" : play.p_dir === "L" ? "Left" : play.p_dir);
+                            if (play.p_dir)
+                              playParts.push(
+                                play.p_dir === "R"
+                                  ? "Right"
+                                  : play.p_dir === "L"
+                                    ? "Left"
+                                    : play.p_dir
+                              );
                             if (play.p_type) playParts.push(play.p_type);
-                            if (play.protection) playParts.push(play.protection);
+                            if (play.protection)
+                              playParts.push(play.protection);
 
                             return [...formationParts, ...playParts].join(" ");
                           })()}
@@ -372,7 +401,12 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                             marginRight: 4,
                           }}
                         >
-                          <Text style={{ fontSize: 7, color: colorTokens.purple[800] }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.purple[800],
+                            }}
+                          >
                             {scriptPlay.play.play_type}
                           </Text>
                         </View>
@@ -404,62 +438,147 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                     </View>
 
                     {/* Row 2: Game Situation Info - Horizontal with more spacing */}
-                    <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap", marginLeft: 24 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        marginLeft: 24,
+                      }}
+                    >
                       {/* Hash */}
                       {scriptPlay.hash && (
                         <>
-                          <Text style={{ fontSize: 7, color: colorTokens.amber[700], marginRight: 4 }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.amber[700],
+                              marginRight: 4,
+                            }}
+                          >
                             {scriptPlay.hash.toUpperCase()}
                           </Text>
-                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.gray[400],
+                              marginHorizontal: 4,
+                            }}
+                          >
+                            |
+                          </Text>
                         </>
                       )}
 
                       {/* Down & Distance */}
                       {scriptPlay.downDistance && (
                         <>
-                          <Text style={{ fontSize: 7, color: colorTokens.amber[800], fontWeight: "bold", marginRight: 4 }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.amber[800],
+                              fontWeight: "bold",
+                              marginRight: 4,
+                            }}
+                          >
                             {scriptPlay.downDistance}
                           </Text>
-                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.gray[400],
+                              marginHorizontal: 4,
+                            }}
+                          >
+                            |
+                          </Text>
                         </>
                       )}
 
                       {/* Field Position */}
                       {scriptPlay.fieldPosition && (
                         <>
-                          <Text style={{ fontSize: 7, color: colorTokens.amber[600], marginRight: 4 }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.amber[600],
+                              marginRight: 4,
+                            }}
+                          >
                             {scriptPlay.fieldPosition.replace(/_/g, " ")}
                           </Text>
-                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.gray[400],
+                              marginHorizontal: 4,
+                            }}
+                          >
+                            |
+                          </Text>
                         </>
                       )}
 
                       {/* Defensive Front */}
                       {scriptPlay.defensiveFront && (
                         <>
-                          <Text style={{ fontSize: 7, color: colorTokens.red[700], fontWeight: "bold", marginRight: 4 }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.red[700],
+                              fontWeight: "bold",
+                              marginRight: 4,
+                            }}
+                          >
                             {scriptPlay.defensiveFront.toUpperCase()}
                           </Text>
-                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.gray[400],
+                              marginHorizontal: 4,
+                            }}
+                          >
+                            |
+                          </Text>
                         </>
                       )}
 
                       {/* Coverage */}
                       {scriptPlay.coverage && (
                         <>
-                          <Text style={{ fontSize: 7, color: colorTokens.red[600], marginRight: 4 }}>
+                          <Text
+                            style={{
+                              fontSize: 7,
+                              color: colorTokens.red[600],
+                              marginRight: 4,
+                            }}
+                          >
                             {scriptPlay.coverage.replace(/_/g, " ")}
                           </Text>
                           {scriptPlay.blitz && scriptPlay.blitz !== "none" && (
-                            <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                            <Text
+                              style={{
+                                fontSize: 7,
+                                color: colorTokens.gray[400],
+                                marginHorizontal: 4,
+                              }}
+                            >
+                              |
+                            </Text>
                           )}
                         </>
                       )}
 
                       {/* Blitz */}
                       {scriptPlay.blitz && scriptPlay.blitz !== "none" && (
-                        <Text style={{ fontSize: 7, color: colorTokens.red[800], marginRight: 4 }}>
+                        <Text
+                          style={{
+                            fontSize: 7,
+                            color: colorTokens.red[800],
+                            marginRight: 4,
+                          }}
+                        >
                           {scriptPlay.blitz.replace(/_/g, " ")}
                         </Text>
                       )}
@@ -483,401 +602,419 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                 ) : (
                   // REGULAR COMPACT/DETAILED FORMAT
                   <>
-                {/* Play Header - Exactly Like Playbook Card */}
-                <View style={styles.playHeader}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "flex-start",
-                      flex: 1,
-                    }}
-                  >
-                    {/* Number Badge */}
-                    <View
-                      style={{
-                        width: 28,
-                        height: 28,
-                        backgroundColor: colorTokens.jade[600],
-                        borderRadius: 14,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginRight: 10,
-                        marginTop: 2,
-                      }}
-                    >
-                      <Text
+                    {/* Play Header - Exactly Like Playbook Card */}
+                    <View style={styles.playHeader}>
+                      <View
                         style={{
-                          fontSize: 14,
-                          fontWeight: "bold",
-                          color: "#ffffff",
+                          flexDirection: "row",
+                          alignItems: "flex-start",
+                          flex: 1,
                         }}
                       >
-                        {index + 1}
-                      </Text>
+                        {/* Number Badge */}
+                        <View
+                          style={{
+                            width: 28,
+                            height: 28,
+                            backgroundColor: colorTokens.jade[600],
+                            borderRadius: 14,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginRight: 10,
+                            marginTop: 2,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              fontWeight: "bold",
+                              color: "#ffffff",
+                            }}
+                          >
+                            {index + 1}
+                          </Text>
+                        </View>
+
+                        {/* Play Name and Formation Together - Using exact playbook formatting */}
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.playName}>
+                            {scriptPlay.play
+                              ? getDisplayName(scriptPlay.play, false)
+                              : "Unknown Play"}
+                          </Text>
+
+                          {/* Defensive & Situation Info - Compact subtitle (only in compact format) */}
+                          {format === "compact" && (
+                            <View style={{ marginTop: 4 }}>
+                              {/* Defensive Look */}
+                              {(scriptPlay.defensiveFront ||
+                                scriptPlay.coverage ||
+                                (scriptPlay.blitz &&
+                                  scriptPlay.blitz !== "none")) && (
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.red[700],
+                                    marginBottom: 2,
+                                  }}
+                                >
+                                  {scriptPlay.defensiveFront &&
+                                    `${scriptPlay.defensiveFront}`}
+                                  {scriptPlay.coverage &&
+                                    ` • ${scriptPlay.coverage.replace(/_/g, " ")}`}
+                                  {scriptPlay.blitz &&
+                                    scriptPlay.blitz !== "none" &&
+                                    ` • ${scriptPlay.blitz.replace(/_/g, " ")}`}
+                                </Text>
+                              )}
+
+                              {/* Game Situation */}
+                              {(scriptPlay.hash ||
+                                scriptPlay.downDistance ||
+                                scriptPlay.fieldPosition) && (
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.amber[800],
+                                  }}
+                                >
+                                  📍 {scriptPlay.hash && `${scriptPlay.hash}`}
+                                  {scriptPlay.downDistance &&
+                                    ` • ${scriptPlay.downDistance}`}
+                                  {scriptPlay.fieldPosition &&
+                                    ` • ${scriptPlay.fieldPosition.replace(/_/g, " ")}`}
+                                </Text>
+                              )}
+                            </View>
+                          )}
+                        </View>
+                      </View>
+
+                      {/* Reps Badge */}
+                      <View
+                        style={{
+                          backgroundColor: colorTokens.jade[100],
+                          paddingHorizontal: 10,
+                          paddingVertical: 5,
+                          borderRadius: 4,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          borderColor: colorTokens.jade[600],
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontWeight: "bold",
+                            color: colorTokens.jade[900],
+                          }}
+                        >
+                          {scriptPlay.repetitions} reps
+                        </Text>
+                      </View>
                     </View>
-                    
-                    {/* Play Name and Formation Together - Using exact playbook formatting */}
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.playName}>
-                        {scriptPlay.play ? getDisplayName(scriptPlay.play, false) : "Unknown Play"}
-                      </Text>
-                      
-                      {/* Defensive & Situation Info - Compact subtitle (only in compact format) */}
-                      {format === "compact" && (
-                        <View style={{ marginTop: 4 }}>
-                          {/* Defensive Look */}
-                          {(scriptPlay.defensiveFront || scriptPlay.coverage || (scriptPlay.blitz && scriptPlay.blitz !== "none")) && (
+
+                    {/* Detailed Format - Show full boxes */}
+                    {format === "detailed" && (
+                      <>
+                        {/* Offensive Details - Type, Personnel, Direction */}
+                        <View
+                          style={{
+                            marginBottom: 10,
+                            padding: 8,
+                            backgroundColor: colorTokens.blue[50],
+                            borderRadius: 4,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 9,
+                              color: colorTokens.blue[700],
+                              marginBottom: 6,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            OFFENSIVE DETAILS
+                          </Text>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              flexWrap: "wrap",
+                              gap: 6,
+                            }}
+                          >
+                            <View
+                              style={{
+                                backgroundColor: colorTokens.blue[100],
+                                paddingHorizontal: 8,
+                                paddingVertical: 4,
+                                borderRadius: 4,
+                                borderWidth: 1,
+                                borderStyle: "solid",
+                                borderColor: colorTokens.blue[300],
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 9,
+                                  color: colorTokens.blue[900],
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {scriptPlay.play?.p_type || "Unknown Type"}
+                              </Text>
+                            </View>
+                            {scriptPlay.play?.personnel && (
+                              <View
+                                style={{
+                                  backgroundColor: colorTokens.blue[100],
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 4,
+                                  borderRadius: 4,
+                                  borderWidth: 1,
+                                  borderStyle: "solid",
+                                  borderColor: colorTokens.blue[300],
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.blue[900],
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Personnel: {scriptPlay.play.personnel}
+                                </Text>
+                              </View>
+                            )}
+                            {scriptPlay.play?.p_dir && (
+                              <View
+                                style={{
+                                  backgroundColor: colorTokens.blue[100],
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 4,
+                                  borderRadius: 4,
+                                  borderWidth: 1,
+                                  borderStyle: "solid",
+                                  borderColor: colorTokens.blue[300],
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.blue[900],
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Direction: {scriptPlay.play.p_dir}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        </View>
+
+                        {/* Defensive Details - Separate Box */}
+                        {(scriptPlay.defensiveFront ||
+                          scriptPlay.coverage ||
+                          (scriptPlay.blitz &&
+                            scriptPlay.blitz !== "none")) && (
+                          <View
+                            style={{
+                              marginBottom: 10,
+                              padding: 8,
+                              backgroundColor: colorTokens.red[50],
+                              borderRadius: 4,
+                              borderWidth: 1,
+                              borderStyle: "solid",
+                              borderColor: colorTokens.red[200],
+                            }}
+                          >
                             <Text
                               style={{
                                 fontSize: 9,
                                 color: colorTokens.red[700],
-                                marginBottom: 2,
+                                marginBottom: 6,
+                                fontWeight: "bold",
                               }}
                             >
-                              {scriptPlay.defensiveFront && `${scriptPlay.defensiveFront}`}
-                              {scriptPlay.coverage && ` • ${scriptPlay.coverage.replace(/_/g, " ")}`}
-                              {scriptPlay.blitz && scriptPlay.blitz !== "none" && ` • ${scriptPlay.blitz.replace(/_/g, " ")}`}
+                              DEFENSIVE LOOK
                             </Text>
-                          )}
-                          
-                          {/* Game Situation */}
-                          {(scriptPlay.hash || scriptPlay.downDistance || scriptPlay.fieldPosition) && (
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                flexWrap: "wrap",
+                                gap: 6,
+                              }}
+                            >
+                              {scriptPlay.defensiveFront && (
+                                <View
+                                  style={{
+                                    backgroundColor: colorTokens.red[100],
+                                    paddingHorizontal: 8,
+                                    paddingVertical: 4,
+                                    borderRadius: 4,
+                                    borderWidth: 1,
+                                    borderStyle: "solid",
+                                    borderColor: colorTokens.red[300],
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 9,
+                                      color: colorTokens.red[900],
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    Front: {scriptPlay.defensiveFront}
+                                  </Text>
+                                </View>
+                              )}
+                              {scriptPlay.coverage && (
+                                <View
+                                  style={{
+                                    backgroundColor: colorTokens.red[100],
+                                    paddingHorizontal: 8,
+                                    paddingVertical: 4,
+                                    borderRadius: 4,
+                                    borderWidth: 1,
+                                    borderStyle: "solid",
+                                    borderColor: colorTokens.red[300],
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 9,
+                                      color: colorTokens.red[900],
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    Coverage:{" "}
+                                    {scriptPlay.coverage.replace(/_/g, " ")}
+                                  </Text>
+                                </View>
+                              )}
+                              {scriptPlay.blitz &&
+                                scriptPlay.blitz !== "none" && (
+                                  <View
+                                    style={{
+                                      backgroundColor: colorTokens.red[100],
+                                      paddingHorizontal: 8,
+                                      paddingVertical: 4,
+                                      borderRadius: 4,
+                                      borderWidth: 1,
+                                      borderStyle: "solid",
+                                      borderColor: colorTokens.red[300],
+                                    }}
+                                  >
+                                    <Text
+                                      style={{
+                                        fontSize: 9,
+                                        color: colorTokens.red[900],
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Blitz:{" "}
+                                      {scriptPlay.blitz.replace(/_/g, " ")}
+                                    </Text>
+                                  </View>
+                                )}
+                            </View>
+                          </View>
+                        )}
+
+                        {/* Game Situation */}
+                        {(scriptPlay.hash ||
+                          scriptPlay.downDistance ||
+                          scriptPlay.fieldPosition) && (
+                          <View
+                            style={{
+                              marginBottom: 8,
+                              padding: 8,
+                              backgroundColor: colorTokens.amber[50],
+                              borderRadius: 4,
+                              borderLeftWidth: 3,
+                              borderLeftStyle: "solid",
+                              borderLeftColor: colorTokens.amber[500],
+                            }}
+                          >
                             <Text
                               style={{
                                 fontSize: 9,
-                                color: colorTokens.amber[800],
+                                fontWeight: "bold",
+                                color: colorTokens.amber[900],
+                                marginBottom: 4,
                               }}
                             >
-                              📍 {scriptPlay.hash && `${scriptPlay.hash}`}
-                              {scriptPlay.downDistance && ` • ${scriptPlay.downDistance}`}
-                              {scriptPlay.fieldPosition && ` • ${scriptPlay.fieldPosition.replace(/_/g, " ")}`}
+                              GAME SITUATION
                             </Text>
-                          )}
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                  
-                  {/* Reps Badge */}
-                  <View
-                    style={{
-                      backgroundColor: colorTokens.jade[100],
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      borderRadius: 4,
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: colorTokens.jade[600],
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 11,
-                        fontWeight: "bold",
-                        color: colorTokens.jade[900],
-                      }}
-                    >
-                      {scriptPlay.repetitions} reps
-                    </Text>
-                  </View>
-                </View>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                flexWrap: "wrap",
+                                gap: 4,
+                              }}
+                            >
+                              {scriptPlay.hash && (
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.amber[800],
+                                  }}
+                                >
+                                  Hash: {scriptPlay.hash}
+                                </Text>
+                              )}
+                              {scriptPlay.downDistance && (
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.amber[800],
+                                  }}
+                                >
+                                  • {scriptPlay.downDistance}
+                                </Text>
+                              )}
+                              {scriptPlay.fieldPosition && (
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: colorTokens.amber[800],
+                                  }}
+                                >
+                                  •{" "}
+                                  {scriptPlay.fieldPosition.replace(/_/g, " ")}
+                                </Text>
+                              )}
+                            </View>
+                          </View>
+                        )}
+                      </>
+                    )}
 
-                {/* Detailed Format - Show full boxes */}
-                {format === "detailed" && (
-                  <>
-                    {/* Offensive Details - Type, Personnel, Direction */}
-                    <View
-                      style={{
-                        marginBottom: 10,
-                        padding: 8,
-                        backgroundColor: colorTokens.blue[50],
-                        borderRadius: 4,
-                      }}
-                    >
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      color: colorTokens.blue[700],
-                      marginBottom: 6,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    OFFENSIVE DETAILS
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      gap: 6,
-                    }}
-                  >
-                    <View
-                      style={{
-                        backgroundColor: colorTokens.blue[100],
-                        paddingHorizontal: 8,
-                        paddingVertical: 4,
-                        borderRadius: 4,
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: colorTokens.blue[300],
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 9,
-                          color: colorTokens.blue[900],
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {scriptPlay.play?.p_type || "Unknown Type"}
-                      </Text>
-                    </View>
-                    {scriptPlay.play?.personnel && (
+                    {/* Coaching Points - Only show for non-ultra-compact OR if ultra-compact has no notes inline */}
+                    {scriptPlay.notes && format !== "ultra-compact" && (
                       <View
                         style={{
-                          backgroundColor: colorTokens.blue[100],
-                          paddingHorizontal: 8,
-                          paddingVertical: 4,
-                          borderRadius: 4,
-                          borderWidth: 1,
-                          borderStyle: "solid",
-                          borderColor: colorTokens.blue[300],
+                          marginTop: 4,
+                          padding: 6,
+                          borderLeftWidth: 3,
+                          borderLeftStyle: "solid",
+                          borderLeftColor: colorTokens.jade[500],
+                          backgroundColor: colorTokens.jade[50],
                         }}
                       >
                         <Text
                           style={{
                             fontSize: 9,
-                            color: colorTokens.blue[900],
-                            fontWeight: "bold",
+                            fontStyle: "italic",
+                            color: colorTokens.gray[700],
                           }}
                         >
-                          Personnel: {scriptPlay.play.personnel}
+                          Coaching Points: {scriptPlay.notes}
                         </Text>
                       </View>
                     )}
-                    {scriptPlay.play?.p_dir && (
-                      <View
-                        style={{
-                          backgroundColor: colorTokens.blue[100],
-                          paddingHorizontal: 8,
-                          paddingVertical: 4,
-                          borderRadius: 4,
-                          borderWidth: 1,
-                          borderStyle: "solid",
-                          borderColor: colorTokens.blue[300],
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 9,
-                            color: colorTokens.blue[900],
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Direction: {scriptPlay.play.p_dir}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                </View>
-
-                {/* Defensive Details - Separate Box */}
-                {(scriptPlay.defensiveFront ||
-                  scriptPlay.coverage ||
-                  (scriptPlay.blitz && scriptPlay.blitz !== "none")) && (
-                  <View
-                    style={{
-                      marginBottom: 10,
-                      padding: 8,
-                      backgroundColor: colorTokens.red[50],
-                      borderRadius: 4,
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: colorTokens.red[200],
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        color: colorTokens.red[700],
-                        marginBottom: 6,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      DEFENSIVE LOOK
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        gap: 6,
-                      }}
-                    >
-                      {scriptPlay.defensiveFront && (
-                        <View
-                          style={{
-                            backgroundColor: colorTokens.red[100],
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            borderRadius: 4,
-                            borderWidth: 1,
-                            borderStyle: "solid",
-                            borderColor: colorTokens.red[300],
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 9,
-                              color: colorTokens.red[900],
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Front: {scriptPlay.defensiveFront}
-                          </Text>
-                        </View>
-                      )}
-                      {scriptPlay.coverage && (
-                        <View
-                          style={{
-                            backgroundColor: colorTokens.red[100],
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            borderRadius: 4,
-                            borderWidth: 1,
-                            borderStyle: "solid",
-                            borderColor: colorTokens.red[300],
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 9,
-                              color: colorTokens.red[900],
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Coverage: {scriptPlay.coverage.replace(/_/g, " ")}
-                          </Text>
-                        </View>
-                      )}
-                      {scriptPlay.blitz && scriptPlay.blitz !== "none" && (
-                        <View
-                          style={{
-                            backgroundColor: colorTokens.red[100],
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            borderRadius: 4,
-                            borderWidth: 1,
-                            borderStyle: "solid",
-                            borderColor: colorTokens.red[300],
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 9,
-                              color: colorTokens.red[900],
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Blitz: {scriptPlay.blitz.replace(/_/g, " ")}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                )}
-
-                {/* Game Situation */}
-                {(scriptPlay.hash ||
-                  scriptPlay.downDistance ||
-                  scriptPlay.fieldPosition) && (
-                  <View
-                    style={{
-                      marginBottom: 8,
-                      padding: 8,
-                      backgroundColor: colorTokens.amber[50],
-                      borderRadius: 4,
-                      borderLeftWidth: 3,
-                      borderLeftStyle: "solid",
-                      borderLeftColor: colorTokens.amber[500],
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        fontWeight: "bold",
-                        color: colorTokens.amber[900],
-                        marginBottom: 4,
-                      }}
-                    >
-                      GAME SITUATION
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        gap: 4,
-                      }}
-                    >
-                      {scriptPlay.hash && (
-                        <Text
-                          style={{
-                            fontSize: 9,
-                            color: colorTokens.amber[800],
-                          }}
-                        >
-                          Hash: {scriptPlay.hash}
-                        </Text>
-                      )}
-                      {scriptPlay.downDistance && (
-                        <Text
-                          style={{
-                            fontSize: 9,
-                            color: colorTokens.amber[800],
-                          }}
-                        >
-                          • {scriptPlay.downDistance}
-                        </Text>
-                      )}
-                      {scriptPlay.fieldPosition && (
-                        <Text
-                          style={{
-                            fontSize: 9,
-                            color: colorTokens.amber[800],
-                          }}
-                        >
-                          • {scriptPlay.fieldPosition.replace(/_/g, " ")}
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                )}
                   </>
-                )}
-
-                {/* Coaching Points - Only show for non-ultra-compact OR if ultra-compact has no notes inline */}
-                {scriptPlay.notes && format !== "ultra-compact" && (
-                  <View
-                    style={{
-                      marginTop: 4,
-                      padding: 6,
-                      borderLeftWidth: 3,
-                      borderLeftStyle: "solid",
-                      borderLeftColor: colorTokens.jade[500],
-                      backgroundColor: colorTokens.jade[50],
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        fontStyle: "italic",
-                        color: colorTokens.gray[700],
-                      }}
-                    >
-                      Coaching Points: {scriptPlay.notes}
-                    </Text>
-                  </View>
-                )}
-              </>
                 )}
               </View>
             ))}

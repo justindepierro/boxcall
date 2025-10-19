@@ -1,11 +1,13 @@
 # Practice Script PDF Format Selector - October 18, 2025
 
 ## Feature Overview
+
 Added the ability to choose between two PDF export formats when exporting practice scripts.
 
 ## PDF Format Options
 
 ### **Compact Format** 📋
+
 - **Best for**: Quick reference cards, field use, minimal paper
 - **Layout**:
   ```
@@ -22,13 +24,15 @@ Added the ability to choose between two PDF export formats when exporting practi
   - **No** detailed info boxes
 
 ### **Detailed Format** 📚
+
 - **Best for**: Complete playbooks, study material, full information
 - **Layout**:
+
   ```
   1  Twins L Cross R                    5 reps
      🛡️ base • cover 2
      📍 middle • 1st & 10
-  
+
   ┌─────────────────────────────────────┐
   │ OFFENSIVE DETAILS                   │
   │ [Pass] [Personnel: Blue] [Dir: R]  │
@@ -41,6 +45,7 @@ Added the ability to choose between two PDF export formats when exporting practi
   └─────────────────────────────────────┘
      💡 Coaching Points: Watch for...
   ```
+
 - **Features**:
   - Everything from compact format PLUS:
   - Offensive Details box (type, personnel, direction)
@@ -50,6 +55,7 @@ Added the ability to choose between two PDF export formats when exporting practi
 ## User Experience
 
 ### Format Selection Dialog
+
 When clicking the PDF button, users see a simple browser confirm dialog:
 
 ```
@@ -66,16 +72,22 @@ Detailed shows all information in organized sections.
 - **Cancel** = Detailed format
 
 ### File Naming
+
 Files are automatically named with format indicator:
+
 - Compact: `test_practice_script_compact_practice_script.pdf`
 - Detailed: `test_practice_script_practice_script.pdf`
 
 ### Toast Notification
+
 After export, shows format confirmation:
+
 ```
 PDF exported for "test practice script" (compact format)
 ```
+
 or
+
 ```
 PDF exported for "test practice script" (detailed format)
 ```
@@ -85,6 +97,7 @@ PDF exported for "test practice script" (detailed format)
 ### 1. PDF Component Type (`PracticeScriptPDF.tsx`)
 
 Added format prop:
+
 ```tsx
 export type PDFFormat = "compact" | "detailed";
 
@@ -97,33 +110,35 @@ interface PracticeScriptPDFProps {
 ### 2. Conditional Rendering
 
 Wrapped detailed boxes in format check:
-```tsx
-{format === "detailed" && (
-  <>
-    {/* Offensive Details Box */}
-    <View>...</View>
-    
-    {/* Defensive Look Box */}
-    {(defensiveFront || coverage || blitz) && (
-      <View>...</View>
-    )}
-    
-    {/* Game Situation Box */}
-    {(hash || downDistance || fieldPosition) && (
-      <View>...</View>
-    )}
-  </>
-)}
 
-{/* Coaching Points - Always show */}
-{scriptPlay.notes && (
-  <View>...</View>
-)}
+```tsx
+{
+  format === "detailed" && (
+    <>
+      {/* Offensive Details Box */}
+      <View>...</View>
+
+      {/* Defensive Look Box */}
+      {(defensiveFront || coverage || blitz) && <View>...</View>}
+
+      {/* Game Situation Box */}
+      {(hash || downDistance || fieldPosition) && <View>...</View>}
+    </>
+  );
+}
+
+{
+  /* Coaching Points - Always show */
+}
+{
+  scriptPlay.notes && <View>...</View>;
+}
 ```
 
 ### 3. Export Service (`pdfExportService.tsx`)
 
 Updated methods to accept format parameter:
+
 ```tsx
 static async exportPracticeScript(
   script: PracticeScript,
@@ -133,7 +148,7 @@ static async exportPracticeScript(
   const blob = await pdf(
     <PracticeScriptPDF script={script} format={format} />
   ).toBlob();
-  
+
   // Add format suffix to filename
   const formatSuffix = format === "compact" ? "_compact" : "";
   link.download = `${scriptName}${formatSuffix}_practice_script.pdf`;
@@ -143,15 +158,18 @@ static async exportPracticeScript(
 ### 4. UI Handler (`PracticeScriptList.tsx`)
 
 Show format selection dialog:
+
 ```tsx
 const handleExportPDF = useCallback(
   async (script: PracticeScript) => {
     const format = window.confirm(
-      'Choose PDF format:\n\n' +
-      'OK = Compact (subtitles)\n' +
-      'Cancel = Detailed (info boxes)'
-    ) ? 'compact' : 'detailed';
-    
+      "Choose PDF format:\n\n" +
+        "OK = Compact (subtitles)\n" +
+        "Cancel = Detailed (info boxes)"
+    )
+      ? "compact"
+      : "detailed";
+
     await PDFExportService.exportPracticeScript(script, format);
     success(`PDF exported (${format} format)`);
   },
@@ -161,16 +179,16 @@ const handleExportPDF = useCallback(
 
 ## What Shows in Each Format
 
-| Element | Compact | Detailed |
-|---------|---------|----------|
-| Play number badge | ✅ | ✅ |
-| Play name (full) | ✅ | ✅ |
-| Defense subtitle | ✅ | ✅ |
-| Situation subtitle | ✅ | ✅ |
-| Offensive Details box | ❌ | ✅ |
-| Defensive Look box | ❌ | ✅ (if data exists) |
-| Game Situation box | ❌ | ✅ (if data exists) |
-| Coaching Points | ✅ | ✅ |
+| Element               | Compact | Detailed            |
+| --------------------- | ------- | ------------------- |
+| Play number badge     | ✅      | ✅                  |
+| Play name (full)      | ✅      | ✅                  |
+| Defense subtitle      | ✅      | ✅                  |
+| Situation subtitle    | ✅      | ✅                  |
+| Offensive Details box | ❌      | ✅                  |
+| Defensive Look box    | ❌      | ✅ (if data exists) |
+| Game Situation box    | ❌      | ✅ (if data exists) |
+| Coaching Points       | ✅      | ✅                  |
 
 ## Testing Checklist
 
@@ -187,12 +205,13 @@ const handleExportPDF = useCallback(
   - Play names with subtitles
   - All detail boxes
   - Coaching points
-- [ ] File names include "_compact" suffix when appropriate
+- [ ] File names include "\_compact" suffix when appropriate
 - [ ] Toast shows correct format in message
 
 ## Future Enhancements
 
 1. **Dropdown Menu**: Replace confirm dialog with proper dropdown
+
    ```tsx
    <DropdownMenu>
      <DropdownMenuItem onClick={() => export('compact')}>
@@ -215,19 +234,22 @@ const handleExportPDF = useCallback(
 ## Files Modified
 
 ### `/src/components/pdf/PracticeScriptPDF.tsx` (601 lines)
+
 - Added `PDFFormat` type export
 - Added `format` prop to component
 - Wrapped detailed boxes in `{format === "detailed" && <> ... </>}`
 - Coaching points always show regardless of format
 
 ### `/src/services/pdfExportService.tsx` (71 lines)
+
 - Imported `PDFFormat` type
 - Added `format` parameter to `exportPracticeScript()`
 - Added `format` parameter to `generatePracticeScriptPDF()`
 - Pass format to PDF component
-- Add "_compact" suffix to filename when appropriate
+- Add "\_compact" suffix to filename when appropriate
 
 ### `/src/components/playbook/PracticeScriptList.tsx` (280 lines)
+
 - Updated `handleExportPDF` to show format selection dialog
 - Pass selected format to export service
 - Include format in success toast message

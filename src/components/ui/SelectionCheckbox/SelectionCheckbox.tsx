@@ -60,7 +60,9 @@ export const SelectionCheckbox: React.FC<SelectionCheckboxProps> = ({
           : "bg-white dark:bg-surface-secondary border-border-medium hover:border-border-strong shadow-[0_2px_8px_rgba(0,0,0,0.15)]",
         disabled && "opacity-50 cursor-not-allowed",
         // Hover effects
-        !disabled && !isSelected && "hover:scale-110 hover:shadow-[0_4px_16px_rgba(0,0,0,0.2)]",
+        !disabled &&
+          !isSelected &&
+          "hover:scale-110 hover:shadow-[0_4px_16px_rgba(0,0,0,0.2)]",
         !disabled &&
           isSelected &&
           "hover:scale-110 text-success-text ring-success-border",

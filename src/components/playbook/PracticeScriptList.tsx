@@ -79,22 +79,22 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     async (script: PracticeScript) => {
       // Show format selection dialog with 3 options
       const formatChoice = window.prompt(
-        'Choose PDF format (enter 1, 2, or 3):\n\n' +
-        '1 = Ultra-Compact (8-10 plays/page - best for multi-script days)\n' +
-        '2 = Compact (4-6 plays/page - play names with defense/situation)\n' +
-        '3 = Detailed (2-3 plays/page - full info boxes with color coding)\n\n' +
-        'For 4 scripts in one day, use Ultra-Compact!',
-        '1'
+        "Choose PDF format (enter 1, 2, or 3):\n\n" +
+          "1 = Ultra-Compact (8-10 plays/page - best for multi-script days)\n" +
+          "2 = Compact (4-6 plays/page - play names with defense/situation)\n" +
+          "3 = Detailed (2-3 plays/page - full info boxes with color coding)\n\n" +
+          "For 4 scripts in one day, use Ultra-Compact!",
+        "1"
       );
-      
-      let format: 'ultra-compact' | 'compact' | 'detailed' = 'ultra-compact';
-      if (formatChoice === '2') {
-        format = 'compact';
-      } else if (formatChoice === '3') {
-        format = 'detailed';
+
+      let format: "ultra-compact" | "compact" | "detailed" = "ultra-compact";
+      if (formatChoice === "2") {
+        format = "compact";
+      } else if (formatChoice === "3") {
+        format = "detailed";
       }
       // Default to ultra-compact for 1 or any other value
-      
+
       try {
         await PDFExportService.exportPracticeScript(script, format);
         success(`PDF exported for "${script.name}" (${format} format)`);

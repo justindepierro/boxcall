@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import { Icon, type IconName } from "../components/ui/Icon";
@@ -6,35 +6,170 @@ import { Typography } from "../components/design-system/Typography";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
-import { debug } from "../utils/logger";
-
-interface GamePlan {
-  id: string;
-  name: string;
-  opponent: string;
-  date: string;
-  plays: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { GamePlanModal } from "../components/playbook/GamePlanModal";
+import { GamePlanPDFService } from "../services/gamePlanPdfService";
+import { GamePlanService } from "../services/gamePlanService_new";
+import type { GamePlan } from "../components/playbook/GamePlanModal/types";
+import { useAuth } from "../app/auth-store";
+import { useToast } from "../hooks/useToast";
 
 export default function GamePlansPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const toast = useToast();
+
   const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<GamePlan | undefined>(
+    undefined
+  );
+  const [_loading, setLoading] = useState(true);
+  const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+
+  // Get active team ID from localStorage or user
+  useEffect(() => {
+    const teamId = localStorage.getItem("activeTeamId");
+    setActiveTeamId(teamId);
+  }, []);
+
+  const loadGamePlans = useCallback(async () => {
+    if (!user || !activeTeamId) return;
+
+    setLoading(true);
+    try {
+      const plans = await GamePlanService.getGamePlans(activeTeamId, false);
+
+      // Map to our component's GamePlan type
+      const mappedPlans: GamePlan[] = plans.map((plan) => ({
+        id: plan.id,
+        name: plan.name,
+        opponent: plan.opponent || "",
+        gameDate: plan.gameDate,
+        gameLocation: plan.gameLocation as
+          | "Home"
+          | "Away"
+          | "Neutral"
+          | undefined,
+        situations: (plan.situations || []).map((sit) => ({
+          id: sit.id,
+          situationType: sit.situationType,
+          plays: (sit.plays || []).map((p) => ({
+            id: p.id,
+            playId: p.playId,
+            playName: p.play?.play_name || "Unknown Play",
+            formation: p.play?.formation,
+            personnel: p.play?.personnel,
+            wristbandNumber: p.play?.wristband_number,
+            priority: p.priority,
+          })),
+        })),
+        createdAt: plan.createdAt,
+        updatedAt: plan.updatedAt,
+        isArchived: plan.isArchived,
+      }));
+
+      setGamePlans(mappedPlans);
+    } catch (error) {
+      console.error("Failed to load game plans:", error);
+      toast.error("Failed to load game plans");
+    } finally {
+      setLoading(false);
+    }
+  }, [user, activeTeamId, toast]);
+
+  // Load game plans from database
+  useEffect(() => {
+    loadGamePlans();
+  }, [loadGamePlans]);
 
   const handleCreatePlan = useCallback(() => {
-    // TODO: Open create game plan modal or navigate to editor
-    debug("[GamePlansPage] Create new game plan");
+    setEditingPlan(undefined);
+    setShowModal(true);
   }, []);
 
   const handleEditPlan = (plan: GamePlan) => {
-    // TODO: Navigate to plan editor
-    debug("[GamePlansPage] Edit plan:", plan);
+    setEditingPlan(plan);
+    setShowModal(true);
   };
 
-  const handleDeletePlan = (planId: string) => {
-    setGamePlans((prev) => prev.filter((p) => p.id !== planId));
-    // TODO: Delete from database
+  const handleSavePlan = async (plan: GamePlan) => {
+    if (!activeTeamId) {
+      toast.error("No active team found");
+      return;
+    }
+
+    try {
+      if (editingPlan) {
+        // Update existing game plan
+        await GamePlanService.updateGamePlan(plan.id, {
+          name: plan.name,
+          opponent: plan.opponent,
+          gameDate: plan.gameDate,
+          gameLocation: plan.gameLocation,
+        });
+        toast.success("Game plan updated successfully");
+      } else {
+        // Create new game plan
+        await GamePlanService.createGamePlan({
+          teamId: activeTeamId,
+          name: plan.name,
+          opponent: plan.opponent,
+          gameDate: plan.gameDate,
+          gameLocation: plan.gameLocation,
+        });
+        toast.success("Game plan created successfully");
+      }
+
+      // Reload game plans
+      await loadGamePlans();
+      setShowModal(false);
+      setEditingPlan(undefined);
+    } catch (error) {
+      console.error("Failed to save game plan:", error);
+      toast.error("Failed to save game plan");
+    }
+  };
+
+  const handleDuplicatePlan = async (plan: GamePlan) => {
+    try {
+      const newName = `${plan.name} (Copy)`;
+      await GamePlanService.duplicateGamePlan(plan.id, newName);
+      await loadGamePlans();
+      toast.success("Game plan duplicated successfully");
+    } catch (error) {
+      console.error("Failed to duplicate game plan:", error);
+      toast.error("Failed to duplicate game plan");
+    }
+  };
+
+  const handleExportPDF = async (plan: GamePlan) => {
+    try {
+      await GamePlanPDFService.exportGamePlan(plan, "call-sheet");
+      toast.success("PDF exported successfully");
+    } catch (error) {
+      console.error("Failed to export PDF:", error);
+      toast.error("Failed to export PDF");
+    }
+  };
+
+  const handleDeletePlan = async (planId: string) => {
+    if (!confirm("Are you sure you want to delete this game plan?")) return;
+
+    try {
+      await GamePlanService.deleteGamePlan(planId);
+      await loadGamePlans();
+      toast.success("Game plan deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete game plan:", error);
+      toast.error("Failed to delete game plan");
+    }
+  };
+
+  const getTotalPlays = (plan: GamePlan) => {
+    return plan.situations.reduce(
+      (sum, situation) => sum + situation.plays.length,
+      0
+    );
   };
 
   const scrollToList = () => {
@@ -256,10 +391,32 @@ export default function GamePlansPage() {
                         vs {plan.opponent}
                       </Typography>
                       <Typography variant="body-sm" className="text-text-muted">
-                        {new Date(plan.date).toLocaleDateString()}
+                        {plan.gameDate
+                          ? new Date(plan.gameDate).toLocaleDateString()
+                          : "Date TBD"}
                       </Typography>
                     </div>
                     <div className="flex space-x-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExportPDF(plan);
+                        }}
+                        className="p-1 text-text-muted hover:text-text-info transition-colors"
+                        title="Export PDF"
+                      >
+                        <Icon name="download" className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDuplicatePlan(plan);
+                        }}
+                        className="p-1 text-text-muted hover:text-text-secondary transition-colors"
+                        title="Duplicate plan"
+                      >
+                        <Icon name="copy" className="h-4 w-4" />
+                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -284,13 +441,25 @@ export default function GamePlansPage() {
                   </div>
 
                   <div className="flex items-center justify-between text-sm text-text-secondary">
-                    <span>{plan.plays.length} plays</span>
+                    <span>{getTotalPlays(plan)} plays</span>
                     <span>{plan.updatedAt.toLocaleDateString()}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+        )}
+
+        {/* Game Plan Modal */}
+        {showModal && (
+          <GamePlanModal
+            onClose={() => {
+              setShowModal(false);
+              setEditingPlan(undefined);
+            }}
+            onSave={handleSavePlan}
+            initialGamePlan={editingPlan}
+          />
         )}
       </PageLayout>
     </Aurora>

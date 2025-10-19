@@ -36,10 +36,12 @@ STAGE 1: DATA FOUNDATION (Oct 17-18) ✅ COMPLETE
 ├─ Phase 3: Multi-Select & Collections     [✅ COMPLETE - Oct 18]
 └─ Phase 3.5: Export Functionality         [✅ COMPLETE - Oct 18] 🎉 QUICK WIN
 
-STAGE 2: PLAYBOOK PLANNING FEATURES (Oct 18 - Nov 7) ⏭️ NEXT
-├─ Phase 4: Practice Script Builder        [⏭️ STARTING - 2-3 days]
-│   └─ Multi-select plays → Create script
-├─ Phase 5: Game Plan Builder (Billick)    [2 weeks]
+STAGE 2: PLAYBOOK PLANNING FEATURES (Oct 18 - Nov 7) 🚧 IN PROGRESS
+├─ Phase 4: Practice Script Builder        [✅ COMPLETE - Oct 18]
+│   └─ Multi-select plays → Create script → PDF export ✅
+├─ Phase 4.5: Wristband Number Field       [✅ COMPLETE - Oct 19] 🎉 QUICK WIN
+│   └─ Wristband badges in UI and PDF export
+├─ Phase 5: Game Plan Builder (Billick)    [⏭️ NEXT - 2 weeks]
 │   └─ Situational play organization
 └─ Phase 6: Script/Plan Management         [1 week]
 │   └─ Edit, duplicate, archive, export
@@ -74,11 +76,14 @@ LAUNCH: February 15, 2026 🚀
 
 ---
 
-## 🏗️ STAGE 1: DATA FOUNDATION (Oct 17 - Nov 7, 2025) 🚧 **IN PROGRESS**
+## 🏗️ STAGE 1: DATA FOUNDATION (Oct 17-18, 2025) ✅ **COMPLETE**
 
 **Goal:** Clean, validated, properly linked playbook data. Multi-select plays for building scripts/plans.
 
-**Progress:** 2/3 phases complete (Phase 1 ✅ | Phase 2 ✅ | Phase 3 ⏭️)
+**Progress:** 4/4 phases complete ✅
+
+**Duration:** 1.5 days  
+**Status:** ✅ **COMPLETE** - Oct 18, 2025
 
 **Why This Stage:** Before coaches can build practice scripts or game plans, they need:
 
@@ -404,41 +409,165 @@ handleBulkAction("export") →
 
 ---
 
-## 🏗️ STAGE 2: PLAYBOOK PLANNING FEATURES (Nov 7 - Dec 5, 2025)
+## 🏗️ STAGE 2: PLAYBOOK PLANNING FEATURES (Oct 18-19, 2025) 🚧 **IN PROGRESS**
 
 **Goal:** Build Practice Scripts and Game Plans from playbook plays. These are the containers that will be loaded into BoxCall live sessions.
 
-**Progress:** 0/3 phases complete (Phase 4 ⏭️ | Phase 5 ⏭️ | Phase 6 ⏭️)
+**Progress:** 2/3 phases complete ✅ (Phase 4 ✅ | Phase 4.5 ✅ | Phase 5 ⏭️)
+
+**Duration:** ~2 days (1.5 days completed)  
+**Status:** 🚧 **IN PROGRESS** - Phase 5 next
 
 **Why This Stage:** Coaches need to organize plays into practice scripts and game plans BEFORE they can track execution. This is how they prepare for practice and games.
 
 ---
 
-### **Phase 4: Practice Script Builder**
+### **Phase 4: Practice Script Builder** ✅ **COMPLETE**
 
-**Duration:** 2 weeks (Nov 7 - Nov 21)
-
-#### **Week 1: Script Creation & Management** (Nov 7-14)
+**Duration:** 1 day (Oct 18, 2025)  
+**Status:** ✅ **COMPLETE**  
+**Time Taken:** ~3 hours
 
 **Deliverables:**
 
-- ✅ Practice Scripts page enhancement (already exists)
-- ✅ Add plays from playbook to script
-- ✅ Reorder plays (drag & drop)
-- ✅ Set reps & time estimates per play
-- ✅ Script templates (Install, Team Period, Red Zone, etc.)
+- ✅ **DONE** Practice Scripts page enhancement
+- ✅ **DONE** Add plays from playbook to script (multi-select)
+- ✅ **DONE** Reorder plays (drag & drop)
+- ✅ **DONE** Set reps & time estimates per play
+- ✅ **DONE** Script templates (Scenario-based organization)
+- ✅ **DONE** PDF export with ultra-compact format
+- ✅ **DONE** Scenario builder (1st/2nd Down, 3rd Down, Red Zone, Goal Line)
+- ✅ **DONE** Game situation filters (down, distance, hash, field zone)
 
-**Files to Change:**
+**Files Created/Modified:**
 
 ```
-src/pages/PracticePlansPage.tsx (enhance existing)
-src/components/playbook/PracticeScriptBuilder.tsx (enhance existing)
+src/components/pdf/PracticeScriptPDF.tsx (COMPLETE)
+src/components/playbook/PracticeScriptBuilder.tsx (ENHANCED)
+src/pages/PracticePlansPage.tsx (ENHANCED)
+database/migrations/practice_script_plays_table.sql (NEW)
+```
+
+**Success Criteria:**
+
+- [x] ✅ Can create practice script from selected plays
+- [x] ✅ Can configure reps and time per play
+- [x] ✅ Can reorder plays via drag-and-drop
+- [x] ✅ Can organize by scenarios (down/distance/field zone)
+- [x] ✅ Can export script to PDF for coaches
+- [x] ✅ PDF includes game situation info (down, distance, hash, etc.)
+- [x] ✅ Ultra-compact format maximizes info per page
+
+**Implementation Summary:**
+
+```typescript
+// Practice script with scenario organization
+const script = {
+  name: "Team Offense Install - Week 5",
+  scenarios: [
+    { name: "1st & 10", plays: [/* configured plays */] },
+    { name: "3rd & Short", plays: [/* configured plays */] },
+    { name: "Red Zone", plays: [/* configured plays */] }
+  ]
+};
+
+// PDF export with ultra-compact layout
+<PracticeScriptPDF script={script} format="ultra-compact" />
+// → Row 1: Number | Personnel | Play Name | Code | Type | Reps
+// → Row 2: Down | Distance | Hash | Field Zone (horizontal)
+```
+
+**Documentation:** `docs/PRACTICE_SCRIPT_PHASE4_COMPLETE.md`
+
+---
+
+### **Phase 4.5: Wristband Number Field** ✅ **COMPLETE**
+
+**Duration:** 30 minutes (Oct 19, 2025)  
+**Status:** ✅ **COMPLETE** - QUICK WIN 🎉  
+**Time Taken:** ~30 minutes
+
+**Goal:** Add wristband number field for coaches using wristband communication systems.
+
+**Deliverables:**
+
+- ✅ **DONE** Database migration (wristband_number TEXT column)
+- ✅ **DONE** TypeScript type definition
+- ✅ **DONE** WristbandBadge component (purple styling)
+- ✅ **DONE** Integrated in PlayCardTileHeader (FIRST position)
+- ✅ **DONE** Integrated in PlayCardListHeader
+- ✅ **DONE** Integrated in PracticeScriptPDF (FIRST in badge row)
+- ✅ **DONE** Form input field in Advanced Options
+- ✅ **DONE** Database schema updated
+- ✅ **DONE** Migration applied successfully
+
+**Files Created/Modified:**
+
+```
+database/migrations/20251019_add_wristband_number.sql (NEW)
+src/components/playbook/WristbandBadge.tsx (NEW)
+src/types/play.ts (ENHANCED)
+src/components/playbook/play-card/PlayCardTileHeader.tsx (ENHANCED)
+src/components/playbook/play-card/PlayCardListHeader.tsx (ENHANCED)
+src/components/pdf/PracticeScriptPDF.tsx (ENHANCED)
+src/components/playbook/AddNewPlayModal.tsx (ENHANCED)
+src/components/playbook/AddNewPlayModal/sections/AdvancedOptionsSection.tsx (ENHANCED)
+src/components/playbook/AddNewPlayModal/usePlayFormState.ts (ENHANCED)
+```
+
+**Success Criteria:**
+
+- [x] ✅ Database column added to plays table
+- [x] ✅ TypeScript types updated
+- [x] ✅ Wristband badges display in all play card views
+- [x] ✅ Wristband badge appears FIRST in PDF export
+- [x] ✅ Form field available in Advanced Options > Additional Information
+- [x] ✅ Purple badge styling consistent across all views
+
+**Implementation Summary:**
+
+```typescript
+// Database
+ALTER TABLE plays ADD COLUMN wristband_number TEXT;
+
+// UI Badge (purple theme, monospace font)
+<WristbandBadge wristbandNumber="23" size="sm" />
+
+// PDF Export (FIRST position before personnel)
+Badge Row: [Wristband] → [Personnel] → [Play Name] → [Type] → [Reps]
+```
+
+**Git Commits:**
+
+- `d265ac18` - feat: add wristband number field to playbook
+- `2df7a0ee` - feat: add wristband number input field to play form
+
+**Documentation:** Inline in this roadmap
+
+---
+
+### **Phase 5: Game Plan Builder (Billick Method)** ⏭️ **NEXT**
+
+**Duration:** 2 weeks (Oct 19 - Nov 2)  
+**Status:** ⏭️ **READY TO START**
+
+### **Phase 5: Game Plan Builder (Billick Method)** ⏭️ **NEXT**
+
+**Duration:** 2 weeks (Oct 19 - Nov 2)  
+**Status:** ⏭️ **READY TO START**
+
+**Goal:** Build situational game plans organized by down/distance/field zone using the Billick method.
+
+#### **Week 1: Game Plan Structure & Situational Organization** (Oct 19-25)
+
 src/services/practiceService.ts (add play linking methods)
+
 ```
 
 **User Flow:**
 
 ```
+
 1. Playbook Page → Select 10 plays → Click "Add to Practice Script"
 2. Modal: "Add to existing script or create new?"
 3. Choose: "Create New → Team Offense Install #3"
@@ -449,28 +578,31 @@ src/services/practiceService.ts (add play linking methods)
 8. Script appears in Practice Plans page
 
 Result: Script with 10 plays, ~50-100 reps total, ready for BoxCall
+
 ```
 
 **Script Builder UI:**
 
 ```
+
 ┌──────────────────────────────────────────────────────────────┐
-│  Practice Script: Team Offense Install #3                    │
-│  Total: 10 plays  |  85 reps  |  ~45 min                     │
+│ Practice Script: Team Offense Install #3 │
+│ Total: 10 plays | 85 reps | ~45 min │
 ├──────────────────────────────────────────────────────────────┤
-│  1. [≡] Y-Sail (Trips)           8 reps  [Edit] [Remove]    │
-│      └─ Note: Focus on timing                                │
-│                                                              │
-│  2. [≡] Mesh Cross (Spread)      6 reps  [Edit] [Remove]    │
-│      └─ Note: Work vs zone                                   │
-│                                                              │
-│  3. [≡] Power Right (I-Form)     10 reps [Edit] [Remove]    │
-│      └─ Note: Inside zone footwork                           │
-│  ...                                                         │
-│                                                              │
-│  [+ Add Plays from Playbook] [Save] [Cancel]                │
+│ 1. [≡] Y-Sail (Trips) 8 reps [Edit] [Remove] │
+│ └─ Note: Focus on timing │
+│ │
+│ 2. [≡] Mesh Cross (Spread) 6 reps [Edit] [Remove] │
+│ └─ Note: Work vs zone │
+│ │
+│ 3. [≡] Power Right (I-Form) 10 reps [Edit] [Remove] │
+│ └─ Note: Inside zone footwork │
+│ ... │
+│ │
+│ [+ Add Plays from Playbook] [Save] [Cancel] │
 └──────────────────────────────────────────────────────────────┘
-```
+
+````
 
 **Database Schema (already exists, enhance):**
 
@@ -497,7 +629,7 @@ CREATE TABLE practice_script_plays (
   coaching_points TEXT[],
   created_at TIMESTAMPTZ
 );
-```
+````
 
 **Success Criteria:**
 

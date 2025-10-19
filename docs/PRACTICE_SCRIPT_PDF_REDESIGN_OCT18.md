@@ -1,12 +1,15 @@
 # Practice Script PDF Redesign - October 18, 2025
 
 ## Overview
+
 Enhanced the PDF export to match the visual richness of the playbook card view, making it easier to read and more professional. Now uses the exact same play name formatting logic as the web interface.
 
 ## Problem
+
 The previous PDF export showed a basic list with all information condensed into a single "Game Scenario" line. It didn't visually match the rich playbook card layout and made it hard to quickly scan defensive settings and play details.
 
 **Before:**
+
 ```
 1. Cross
 Formation: Twins L
@@ -16,35 +19,39 @@ Pass • Blue • R
 ```
 
 ## Solution
+
 Redesigned the PDF layout to match playbook cards with:
 
 ### 1. **Prominent Formation Display**
+
 - Large, bold formation name in its own section
 - Navy blue background with border
 - Formation direction included
 - Easy to spot at a glance
 
 ```tsx
-<View style={{
-  padding: 10,
-  backgroundColor: colorTokens.navy[50],
-  borderWidth: 1,
-  borderColor: colorTokens.navy[200],
-}}>
+<View
+  style={{
+    padding: 10,
+    backgroundColor: colorTokens.navy[50],
+    borderWidth: 1,
+    borderColor: colorTokens.navy[200],
+  }}
+>
   <Text style={{ fontSize: 10, fontWeight: "bold" }}>FORMATION</Text>
-  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-    Twins L
-  </Text>
+  <Text style={{ fontSize: 16, fontWeight: "bold" }}>Twins L</Text>
 </View>
 ```
 
 ### 2. **Offensive Details Section**
+
 - Dedicated blue box for offensive information
 - Play type, personnel, direction as separate badges
 - Clear "OFFENSIVE DETAILS" header
 - Consistent blue color scheme
 
 ### 3. **Defensive Look Section**
+
 - Separate red box for defensive settings
 - Front, Coverage, and Blitz displayed as individual badges
 - Clear "DEFENSIVE LOOK" header
@@ -52,12 +59,14 @@ Redesigned the PDF layout to match playbook cards with:
 - Only shows if defensive settings exist
 
 ### 4. **Game Situation Section**
+
 - Amber/yellow box for situational context
 - Hash, down/distance, field position
 - Separated from defensive look for clarity
 - Only shows if situation details exist
 
 ### 5. **Enhanced Visual Hierarchy**
+
 ```
 ┌─────────────────────────────────────────┐
 │ 1  Play Name              5 reps        │ ← Header (green badge + reps)
@@ -79,6 +88,7 @@ Redesigned the PDF layout to match playbook cards with:
 ```
 
 ## Color Coding
+
 - **Green** (Jade): Play number badge, reps, coaching points
 - **Navy Blue**: Formation section
 - **Blue**: Offensive details
@@ -91,19 +101,27 @@ Redesigned the PDF layout to match playbook cards with:
 **Critical Enhancement**: Now uses the **exact same** `getDisplayName()` function from `playNameUtils.ts` that the playbook uses!
 
 ### Before (Manual formatting):
+
 ```tsx
-{scriptPlay.play?.play_name || "Unknown Play"}
+{
+  scriptPlay.play?.play_name || "Unknown Play";
+}
 ```
+
 This only showed the raw `play_name` field, missing all the formation details and concatenation logic.
 
 ### After (Using playbook utils):
+
 ```tsx
 import { getDisplayName } from "../../utils/playNameUtils";
 
-{scriptPlay.play ? getDisplayName(scriptPlay.play, false) : "Unknown Play"}
+{
+  scriptPlay.play ? getDisplayName(scriptPlay.play, false) : "Unknown Play";
+}
 ```
 
 This generates the **complete play name** using the same logic as the web interface:
+
 - Formation + direction (e.g., "Twins L")
 - Formation tags (ftag1, ftag2)
 - Play name + direction
@@ -115,7 +133,9 @@ This generates the **complete play name** using the same logic as the web interf
 ## Key Improvements
 
 ### Visual Separation
+
 Each type of information has its own section:
+
 1. Header (play number + name + reps)
 2. Formation (large and prominent)
 3. Offensive details (type, personnel, direction)
@@ -124,17 +144,20 @@ Each type of information has its own section:
 6. Coaching points
 
 ### Better Scannability
+
 - Coaches can quickly find formation at a glance
 - Defensive settings clearly separated from offensive
 - Color coding helps distinguish sections
 - Larger text for formation (16pt vs 9-12pt for other text)
 
 ### Conditional Display
+
 - Defensive section only shows if defensive settings exist
 - Game situation only shows if situation details exist
 - No empty boxes cluttering the layout
 
 ### Professional Appearance
+
 - Consistent padding and spacing
 - Rounded corners on all boxes
 - Border accents (navy border on formation, red on defense)
@@ -144,23 +167,24 @@ Each type of information has its own section:
 ## Technical Details
 
 ### New Layout Structure
+
 ```tsx
 <View style={styles.playItem} wrap={false}>
   {/* Header */}
   <View style={styles.playHeader}>...</View>
-  
+
   {/* Formation - NEW */}
   <View style={{ backgroundColor: navy[50], border: navy[200] }}>
     <Text>FORMATION</Text>
     <Text style={{ fontSize: 16 }}>Twins L</Text>
   </View>
-  
+
   {/* Offensive Details - NEW */}
   <View style={{ backgroundColor: blue[50] }}>
     <Text>OFFENSIVE DETAILS</Text>
     <View>{/* Badge components */}</View>
   </View>
-  
+
   {/* Defensive Look - NEW */}
   {(defensiveFront || coverage || blitz) && (
     <View style={{ backgroundColor: red[50], border: red[200] }}>
@@ -168,7 +192,7 @@ Each type of information has its own section:
       <View>{/* Badge components */}</View>
     </View>
   )}
-  
+
   {/* Game Situation - ENHANCED */}
   {(hash || downDistance || fieldPosition) && (
     <View style={{ backgroundColor: amber[50], leftBorder: amber[500] }}>
@@ -176,14 +200,16 @@ Each type of information has its own section:
       <Text>Hash: middle • 1st & 10 • Own 25</Text>
     </View>
   )}
-  
+
   {/* Coaching Points */}
   {notes && <View>...</View>}
 </View>
 ```
 
 ### Badge Styling
+
 All badges now have:
+
 - Background color (lighter shade)
 - Border (darker shade)
 - Padding (8px horizontal, 4px vertical)
@@ -191,6 +217,7 @@ All badges now have:
 - Bold text
 
 ### Size Changes
+
 - Play number badge: 24px → 28px
 - Formation text: 9pt → 16pt
 - Section headers: 9pt bold uppercase
@@ -213,6 +240,7 @@ All badges now have:
 ## Files Modified
 
 ### `/src/components/pdf/PracticeScriptPDF.tsx` (403 lines)
+
 - Enlarged play number badge (24px → 28px)
 - Created dedicated Formation section with navy background
 - Separated Offensive Details into blue section
