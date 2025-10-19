@@ -46,6 +46,10 @@ import {
 } from "./PlayGrid/hooks";
 import { createPlaySaveHandler } from "./PlayGrid/handlers";
 
+// Mobile components
+import { MobilePlayCard } from "./page/MobilePlayCard";
+import { SwipeActions } from "./page/SwipeActions";
+
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -126,6 +130,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Drag and drop state for play reordering
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
+
+  // Mobile progressive loading state
+  const [mobileVisibleCount, setMobileVisibleCount] = useState(20);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // Get real data from database with refresh capability and pagination
   const {
@@ -660,14 +668,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   {...provided.droppableProps}
                   className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
                     isMobile 
-                      ? "grid-cols-1" // Single column on mobile (<640px)
+                      ? "grid-cols-1 gap-4" // Single column on mobile with tighter spacing
                       : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8"
                   }`}
                   style={{
                     transition: "grid-template-rows 0.3s ease",
                   }}
                 >
-                  {visiblePlays.map((play, index) => (
+                  {(isMobile 
+                    ? visiblePlays.slice(0, mobileVisibleCount) 
+                    : visiblePlays
+                  ).map((play, index) => (
                     <Draggable
                       key={play.id}
                       draggableId={play.id}
@@ -685,35 +696,60 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
                               : ""
                           }`}
+                          data-card-index={index}
                         >
-                          <PlayCardWrapper
-                            play={play}
-                            variant="tile"
-                            index={index}
-                            showOneWordCalls={showOneWordCalls}
-                            onEdit={onEdit}
-                            onSave={handlePlaySave}
-                            onDuplicate={onDuplicate}
-                            onCreateDiagram={onCreateDiagram}
-                            isSelected={selectedPlayIds.has(play.id)}
-                            onSelectionChange={
-                              enableBulkOperations
-                                ? handlePlaySelect
-                                : undefined
-                            }
-                            formationSuggestions={
-                              collectedSuggestions.formations
-                            }
-                            playNameSuggestions={collectedSuggestions.playNames}
-                            playTypeSuggestions={collectedSuggestions.playTypes}
-                            personnelSuggestions={
-                              collectedSuggestions.personnel
-                            }
-                            personnelConfigurations={personnelConfigurations}
-                            directionDisplayFormat={directionDisplayFormat}
-                            expandedPlayId={expandedPlayId}
-                            onToggleExpand={handleToggleExpand}
-                          />
+                          {isMobile ? (
+                            <SwipeActions
+                              playId={play.id}
+                              onEdit={() => onEdit?.(play)}
+                              onDuplicate={() => onDuplicate?.(play)}
+                              onDelete={() => {
+                                // TODO: Implement delete handler
+                                console.log("Delete play:", play.id);
+                              }}
+                            >
+                              <MobilePlayCard
+                                play={play}
+                                onEdit={() => onEdit?.(play)}
+                                onMore={() => {
+                                  // TODO: Open more actions menu
+                                  console.log("More actions:", play.id);
+                                }}
+                                onClick={() => onCreateDiagram?.(play)}
+                                isSelected={selectedPlayIds.has(play.id)}
+                                showOneWordCalls={showOneWordCalls}
+                              />
+                            </SwipeActions>
+                          ) : (
+                            <PlayCardWrapper
+                              play={play}
+                              variant="tile"
+                              index={index}
+                              showOneWordCalls={showOneWordCalls}
+                              onEdit={onEdit}
+                              onSave={handlePlaySave}
+                              onDuplicate={onDuplicate}
+                              onCreateDiagram={onCreateDiagram}
+                              isSelected={selectedPlayIds.has(play.id)}
+                              onSelectionChange={
+                                enableBulkOperations
+                                  ? handlePlaySelect
+                                  : undefined
+                              }
+                              formationSuggestions={
+                                collectedSuggestions.formations
+                              }
+                              playNameSuggestions={collectedSuggestions.playNames}
+                              playTypeSuggestions={collectedSuggestions.playTypes}
+                              personnelSuggestions={
+                                collectedSuggestions.personnel
+                              }
+                              personnelConfigurations={personnelConfigurations}
+                              directionDisplayFormat={directionDisplayFormat}
+                              expandedPlayId={expandedPlayId}
+                              onToggleExpand={handleToggleExpand}
+                            />
+                          )}
                         </div>
                       )}
                     </Draggable>
@@ -723,7 +759,52 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               )}
             </Droppable>
           </DragDropContext>
-          {hasMorePlays && (
+          
+          {/* Mobile Progressive Loading */}
+          {isMobile && mobileVisibleCount < visiblePlays.length && (
+            <div className="flex justify-center py-8">
+              <Button
+                onClick={() => {
+                  setIsLoadingMore(true);
+                  // Simulate loading delay for smooth UX
+                  setTimeout(() => {
+                    setMobileVisibleCount(prev => Math.min(prev + 20, visiblePlays.length));
+                    setIsLoadingMore(false);
+                    
+                    // Scroll to first new card
+                    setTimeout(() => {
+                      const firstNewCard = document.querySelector(`[data-card-index="${mobileVisibleCount}"]`);
+                      firstNewCard?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                    }, 100);
+                  }, 300);
+                }}
+                variant="secondary"
+                className="w-full sm:w-auto"
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? (
+                  <>
+                    <Icon name="clock" className="h-4 w-4 mr-2" />
+                    Loading...
+                  </>
+                ) : (
+                  `Show More (${visiblePlays.length - mobileVisibleCount} remaining)`
+                )}
+              </Button>
+            </div>
+          )}
+          
+          {/* Mobile: All plays loaded message */}
+          {isMobile && mobileVisibleCount >= visiblePlays.length && visiblePlays.length > 20 && (
+            <div className="text-center py-8">
+              <Typography variant="body-sm" className="text-secondary">
+                All {visiblePlays.length} plays loaded
+              </Typography>
+            </div>
+          )}
+          
+          {/* Desktop: See All button */}
+          {!isMobile && hasMorePlays && (
             <div className="flex justify-center pt-4">
               <Button
                 onClick={() => setShowAllPlays(true)}
