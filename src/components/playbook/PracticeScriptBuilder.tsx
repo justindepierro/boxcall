@@ -165,7 +165,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     }
 
     console.log("🚨 [PracticeScriptBuilder] Starting save process...");
+    
+    // OPTIMISTIC UPDATE: Show success immediately for better UX
+    toast.success("Saving practice script...");
     setIsSaving(true);
+    
     try {
       let savedScript: PracticeScript;
 
@@ -200,25 +204,15 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         }
 
         // Step 2: Update all play configurations (defensive settings, reps, etc.)
-        console.log("[PracticeScriptBuilder] Updating play configurations...");
+        // OPTIMIZED: Use batch update instead of sequential updates
+        console.log("[PracticeScriptBuilder] Preparing batch play updates...");
         console.log("[PracticeScriptBuilder] Current plays:", currentScript.plays);
         
-        for (const scriptPlay of currentScript.plays || []) {
-          console.log("[PracticeScriptBuilder] Processing play:", {
-            id: scriptPlay.id,
-            playId: scriptPlay.playId,
-            defensiveFront: scriptPlay.defensiveFront,
-            coverage: scriptPlay.coverage,
-            blitz: scriptPlay.blitz,
-            hash: scriptPlay.hash,
-            downDistance: scriptPlay.downDistance,
-            fieldPosition: scriptPlay.fieldPosition,
-          });
-          
-          if (scriptPlay.id && !scriptPlay.id.startsWith("temp-")) {
-            // Only update plays that have real database IDs
-            console.log("[PracticeScriptBuilder] Updating play in DB:", scriptPlay.id);
-            await PracticeScriptService.updateScriptPlay(scriptPlay.id, {
+        const batchUpdates = (currentScript.plays || [])
+          .filter(scriptPlay => scriptPlay.id && !scriptPlay.id.startsWith("temp-"))
+          .map(scriptPlay => ({
+            scriptPlayId: scriptPlay.id!,
+            data: {
               repetitions: scriptPlay.repetitions,
               notes: scriptPlay.notes,
               hash: scriptPlay.hash,
@@ -227,14 +221,16 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
               defensiveFront: scriptPlay.defensiveFront,
               coverage: scriptPlay.coverage,
               blitz: scriptPlay.blitz,
-            });
-            console.log("[PracticeScriptBuilder] Play updated successfully");
-          } else {
-            console.log("[PracticeScriptBuilder] Skipping temp play:", scriptPlay.id);
-          }
+            }
+          }));
+
+        if (batchUpdates.length > 0) {
+          console.log(`[PracticeScriptBuilder] Batch updating ${batchUpdates.length} plays...`);
+          await PracticeScriptService.batchUpdateScriptPlays(batchUpdates);
+          console.log("[PracticeScriptBuilder] Batch update completed");
         }
 
-        // Step 3: Reload the script to get fresh data
+        // Step 3: Get fresh data from cache (should be fast)
         const reloadedScript = await PracticeScriptService.getPracticeScript(currentScript.id);
         if (reloadedScript) {
           savedScript = reloadedScript;
@@ -299,16 +295,16 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
       setIsEditing(false);
       onSave?.(savedScript);
+      
+      // Close modal immediately for snappy UX
+      if (onCancel) {
+        onCancel();
+      }
+      
+      // Show success toast after closing (feels faster)
       toast.success(
         `Practice script "${savedScript.name || savedScript.title}" saved successfully`
       );
-
-      // Close the modal after successful save
-      if (onCancel) {
-        setTimeout(() => {
-          onCancel();
-        }, 500); // Small delay to show the success toast
-      }
     } catch (error) {
       console.error("Failed to save practice script:", error);
       toast.error("Failed to save practice script", "Please try again");

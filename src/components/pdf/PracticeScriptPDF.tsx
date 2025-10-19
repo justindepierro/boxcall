@@ -15,10 +15,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Helvetica",
   },
+  pageCompact: {
+    padding: 15,
+    fontSize: 10,
+    fontFamily: "Helvetica",
+  },
   header: {
     marginBottom: 20,
     paddingBottom: 10,
     borderBottomWidth: 2,
+    borderBottomStyle: "solid",
+    borderBottomColor: colorTokens.blue[600],
+  },
+  headerCompact: {
+    marginBottom: 10,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
     borderBottomStyle: "solid",
     borderBottomColor: colorTokens.blue[600],
   },
@@ -28,18 +40,37 @@ const styles = StyleSheet.create({
     color: colorTokens.blue[900],
     marginBottom: 4,
   },
+  titleCompact: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colorTokens.blue[900],
+    marginBottom: 3,
+  },
   subtitle: {
     fontSize: 14,
     color: colorTokens.gray[500],
     marginBottom: 8,
+  },
+  subtitleCompact: {
+    fontSize: 9,
+    color: colorTokens.gray[500],
+    marginBottom: 4,
   },
   meta: {
     fontSize: 10,
     color: colorTokens.gray[500],
     marginBottom: 2,
   },
+  metaCompact: {
+    fontSize: 7,
+    color: colorTokens.gray[500],
+    marginBottom: 1,
+  },
   section: {
     marginBottom: 20,
+  },
+  sectionCompact: {
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 16,
@@ -51,11 +82,30 @@ const styles = StyleSheet.create({
     borderBottomColor: colorTokens.gray[200],
     paddingBottom: 4,
   },
+  sectionTitleCompact: {
+    fontSize: 11,
+    fontWeight: "bold",
+    color: colorTokens.blue[900],
+    marginBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomStyle: "solid",
+    borderBottomColor: colorTokens.gray[200],
+    paddingBottom: 2,
+  },
   playItem: {
     marginBottom: 12,
     padding: 10,
     backgroundColor: colorTokens.gray[50],
     borderRadius: 4,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: colorTokens.gray[200],
+  },
+  playItemCompact: {
+    marginBottom: 6,
+    padding: 6,
+    backgroundColor: colorTokens.gray[50],
+    borderRadius: 3,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: colorTokens.gray[200],
@@ -122,7 +172,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type PDFFormat = "compact" | "detailed";
+export type PDFFormat = "compact" | "detailed" | "ultra-compact";
 
 interface PracticeScriptPDFProps {
   script: PracticeScript;
@@ -145,32 +195,43 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
     }).format(date);
   };
 
+  // Use compact styles for ultra-compact format
+  const isCompact = format === "ultra-compact";
+  const pageStyle = isCompact ? styles.pageCompact : styles.page;
+  const headerStyle = isCompact ? styles.headerCompact : styles.header;
+  const titleStyle = isCompact ? styles.titleCompact : styles.title;
+  const subtitleStyle = isCompact ? styles.subtitleCompact : styles.subtitle;
+  const metaStyle = isCompact ? styles.metaCompact : styles.meta;
+  const sectionStyle = isCompact ? styles.sectionCompact : styles.section;
+  const sectionTitleStyle = isCompact ? styles.sectionTitleCompact : styles.sectionTitle;
+  const playItemStyle = isCompact ? styles.playItemCompact : styles.playItem;
+
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={pageStyle}>
         {/* Header with Script Name Prominent */}
-        <View style={styles.header}>
-          <Text style={styles.title}>
+        <View style={headerStyle}>
+          <Text style={titleStyle}>
             {script.title || script.name || "Untitled Practice Script"}
           </Text>
           {script.description && (
-            <Text style={styles.subtitle}>{script.description}</Text>
+            <Text style={subtitleStyle}>{script.description}</Text>
           )}
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginTop: 6,
+              marginTop: isCompact ? 3 : 6,
             }}
           >
-            <Text style={styles.meta}>
+            <Text style={metaStyle}>
               Created: {formatDate(script.createdAt)}
             </Text>
-            <Text style={styles.meta}>
+            <Text style={metaStyle}>
               {totalPlays} plays • {totalRepetitions} reps
             </Text>
           </View>
-          {script.tags && script.tags.length > 0 && (
+          {script.tags && script.tags.length > 0 && !isCompact && (
             <View style={styles.tags}>
               {script.tags.map((tag, index) => (
                 <Text key={index} style={styles.tag}>
@@ -182,12 +243,226 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
         </View>
 
         {/* Practice Script */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Practice Script</Text>
+        <View style={sectionStyle}>
+          <Text style={sectionTitleStyle}>Practice Script</Text>
 
           {script.plays &&
             script.plays.map((scriptPlay, index) => (
-              <View key={scriptPlay.id} style={styles.playItem} wrap={false}>
+              <View key={scriptPlay.id} style={playItemStyle} wrap={false}>
+                {/* ULTRA-COMPACT: Play name on top, game situation below */}
+                {format === "ultra-compact" ? (
+                  <>
+                    {/* Row 1: Number badge + Personnel + Play name + One-word code + Play Type + Reps */}
+                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 2 }}>
+                      {/* Number Badge */}
+                      <View
+                        style={{
+                          width: 18,
+                          height: 18,
+                          backgroundColor: colorTokens.jade[600],
+                          borderRadius: 9,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginRight: 6,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 9,
+                            fontWeight: "bold",
+                            color: "#ffffff",
+                          }}
+                        >
+                          {index + 1}
+                        </Text>
+                      </View>
+
+                      {/* Personnel Badge - BEFORE play name */}
+                      {scriptPlay.play?.personnel && (
+                        <View
+                          style={{
+                            backgroundColor: colorTokens.blue[100],
+                            paddingHorizontal: 4,
+                            paddingVertical: 2,
+                            borderRadius: 2,
+                            marginRight: 4,
+                          }}
+                        >
+                          <Text style={{ fontSize: 7, color: colorTokens.blue[800] }}>
+                            {scriptPlay.play.personnel}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Full Play Name */}
+                      {scriptPlay.play && (
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            fontWeight: "bold",
+                            color: colorTokens.gray[900],
+                            marginRight: 4,
+                          }}
+                        >
+                          {(() => {
+                            const play = scriptPlay.play;
+                            // Generate full concatenated name
+                            const formationParts: string[] = [];
+                            const playParts: string[] = [];
+
+                            // Formation parts
+                            if (play.formation) formationParts.push(play.formation);
+                            if (play.backfield) formationParts.push(play.backfield);
+                            if (play.motion) formationParts.push(play.motion);
+                            if (play.shift) formationParts.push(play.shift);
+
+                            // Play parts
+                            if (play.play_name) playParts.push(play.play_name);
+                            if (play.p_dir) playParts.push(play.p_dir === "R" ? "Right" : play.p_dir === "L" ? "Left" : play.p_dir);
+                            if (play.p_type) playParts.push(play.p_type);
+                            if (play.protection) playParts.push(play.protection);
+
+                            return [...formationParts, ...playParts].join(" ");
+                          })()}
+                        </Text>
+                      )}
+
+                      {/* One-word code in royal blue parentheses */}
+                      {scriptPlay.play?.one_word_play && (
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            fontWeight: "bold",
+                            color: "#4169E1", // Royal blue
+                            marginRight: 4,
+                          }}
+                        >
+                          ({scriptPlay.play.one_word_play})
+                        </Text>
+                      )}
+
+                      {/* Play Type Badge */}
+                      {scriptPlay.play?.play_type && (
+                        <View
+                          style={{
+                            backgroundColor: colorTokens.purple[100],
+                            paddingHorizontal: 4,
+                            paddingVertical: 2,
+                            borderRadius: 2,
+                            marginRight: 4,
+                          }}
+                        >
+                          <Text style={{ fontSize: 7, color: colorTokens.purple[800] }}>
+                            {scriptPlay.play.play_type}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Reps Badge - Far right */}
+                      <View
+                        style={{
+                          backgroundColor: colorTokens.jade[100],
+                          paddingHorizontal: 5,
+                          paddingVertical: 2,
+                          borderRadius: 3,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          borderColor: colorTokens.jade[600],
+                          marginLeft: "auto",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            fontWeight: "bold",
+                            color: colorTokens.jade[900],
+                          }}
+                        >
+                          {scriptPlay.repetitions}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Row 2: Game Situation Info - Horizontal with more spacing */}
+                    <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap", marginLeft: 24 }}>
+                      {/* Hash */}
+                      {scriptPlay.hash && (
+                        <>
+                          <Text style={{ fontSize: 7, color: colorTokens.amber[700], marginRight: 4 }}>
+                            {scriptPlay.hash.toUpperCase()}
+                          </Text>
+                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                        </>
+                      )}
+
+                      {/* Down & Distance */}
+                      {scriptPlay.downDistance && (
+                        <>
+                          <Text style={{ fontSize: 7, color: colorTokens.amber[800], fontWeight: "bold", marginRight: 4 }}>
+                            {scriptPlay.downDistance}
+                          </Text>
+                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                        </>
+                      )}
+
+                      {/* Field Position */}
+                      {scriptPlay.fieldPosition && (
+                        <>
+                          <Text style={{ fontSize: 7, color: colorTokens.amber[600], marginRight: 4 }}>
+                            {scriptPlay.fieldPosition.replace(/_/g, " ")}
+                          </Text>
+                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                        </>
+                      )}
+
+                      {/* Defensive Front */}
+                      {scriptPlay.defensiveFront && (
+                        <>
+                          <Text style={{ fontSize: 7, color: colorTokens.red[700], fontWeight: "bold", marginRight: 4 }}>
+                            {scriptPlay.defensiveFront.toUpperCase()}
+                          </Text>
+                          <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                        </>
+                      )}
+
+                      {/* Coverage */}
+                      {scriptPlay.coverage && (
+                        <>
+                          <Text style={{ fontSize: 7, color: colorTokens.red[600], marginRight: 4 }}>
+                            {scriptPlay.coverage.replace(/_/g, " ")}
+                          </Text>
+                          {scriptPlay.blitz && scriptPlay.blitz !== "none" && (
+                            <Text style={{ fontSize: 7, color: colorTokens.gray[400], marginHorizontal: 4 }}>|</Text>
+                          )}
+                        </>
+                      )}
+
+                      {/* Blitz */}
+                      {scriptPlay.blitz && scriptPlay.blitz !== "none" && (
+                        <Text style={{ fontSize: 7, color: colorTokens.red[800], marginRight: 4 }}>
+                          {scriptPlay.blitz.replace(/_/g, " ")}
+                        </Text>
+                      )}
+                    </View>
+
+                    {/* Coaching Notes - Below if present */}
+                    {scriptPlay.notes && (
+                      <Text
+                        style={{
+                          fontSize: 6,
+                          fontStyle: "italic",
+                          color: colorTokens.gray[600],
+                          marginTop: 2,
+                          marginLeft: 24,
+                        }}
+                      >
+                        Note: {scriptPlay.notes}
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  // REGULAR COMPACT/DETAILED FORMAT
+                  <>
                 {/* Play Header - Exactly Like Playbook Card */}
                 <View style={styles.playHeader}>
                   <View
@@ -239,7 +514,7 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                                 marginBottom: 2,
                               }}
                             >
-                              🛡️ {scriptPlay.defensiveFront && `${scriptPlay.defensiveFront}`}
+                              {scriptPlay.defensiveFront && `${scriptPlay.defensiveFront}`}
                               {scriptPlay.coverage && ` • ${scriptPlay.coverage.replace(/_/g, " ")}`}
                               {scriptPlay.blitz && scriptPlay.blitz !== "none" && ` • ${scriptPlay.blitz.replace(/_/g, " ")}`}
                             </Text>
@@ -514,7 +789,7 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                         marginBottom: 4,
                       }}
                     >
-                      🎯 GAME SITUATION
+                      GAME SITUATION
                     </Text>
                     <View
                       style={{
@@ -559,8 +834,8 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                   </>
                 )}
 
-                {/* Coaching Points - Always show */}
-                {scriptPlay.notes && (
+                {/* Coaching Points - Only show for non-ultra-compact OR if ultra-compact has no notes inline */}
+                {scriptPlay.notes && format !== "ultra-compact" && (
                   <View
                     style={{
                       marginTop: 4,
@@ -578,9 +853,11 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                         color: colorTokens.gray[700],
                       }}
                     >
-                      💡 Coaching Points: {scriptPlay.notes}
+                      Coaching Points: {scriptPlay.notes}
                     </Text>
                   </View>
+                )}
+              </>
                 )}
               </View>
             ))}

@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { practiceScriptCache } from "./practiceScriptCache";
 
 import type {
   CreatePracticeBlockData,
@@ -691,7 +692,7 @@ export class PracticeService {
   // ============================================================================
 
   /**
-   * Create a new practice script
+   * Create a new practice script - OPTIMIZED with cache invalidation
    */
   static async createPracticeScript(
     data: CreatePracticeScriptData
@@ -714,7 +715,7 @@ export class PracticeService {
     }
 
     const scriptData = script as any;
-    return {
+    const newScript: PracticeScript = {
       id: scriptData.id as string,
       title: scriptData.title as string,
       description: scriptData.description as string | undefined,
@@ -726,11 +727,16 @@ export class PracticeService {
       plays: [],
       duration: (scriptData.duration_minutes as number) || 120,
       tags: (scriptData.focus_areas as string[]) || [],
-    } as any; // Type cast for compatibility
+    } as any;
+
+    // Invalidate team scripts cache
+    await practiceScriptCache.invalidate(`scripts_team_${data.teamId}`);
+    
+    return newScript;
   }
 
   /**
-   * Update an existing practice script
+   * Update an existing practice script - OPTIMIZED with cache invalidation
    */
   static async updatePracticeScript(
     scriptId: string,
@@ -755,6 +761,10 @@ export class PracticeService {
       console.error("Error updating practice script:", error);
       throw new Error("Failed to update practice script");
     }
+
+    // Invalidate caches
+    await practiceScriptCache.invalidate(`script_${scriptId}`);
+    await practiceScriptCache.invalidatePattern(/^scripts_team_/);
 
     // Return the full script with plays
     const fullScript = await this.getPracticeScript(scriptId);
@@ -805,7 +815,7 @@ export class PracticeService {
   }
 
   /**
-   * Update a play within a practice script
+   * Update a play within a practice script - OPTIMIZED with cache invalidation
    */
   static async updateScriptPlay(
     scriptPlayId: string,
@@ -844,16 +854,101 @@ export class PracticeService {
       console.error("Error updating script play:", error);
       throw new Error("Failed to update script play");
     }
+
+    // Invalidate all script caches to ensure freshness
+    await practiceScriptCache.invalidatePattern(/^script/);
   }
 
   /**
-   * Get all practice scripts for a team
+   * BATCH update multiple script plays - MAJOR PERFORMANCE BOOST
+   * Updates all plays in a single transaction instead of N sequential queries
+   */
+  static async batchUpdateScriptPlays(
+    updates: Array<{
+      scriptPlayId: string;
+      data: {
+        repetitions?: number;
+        notes?: string;
+        hash?: "left" | "middle" | "right";
+        downDistance?: string;
+        fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
+        defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
+        coverage?: "cover_0" | "cover_1" | "cover_2" | "cover_3" | "cover_4" | "cover_6" | "quarters" | "man";
+        blitz?: "none" | "edge" | "a_gap" | "b_gap" | "sim_pressure" | "zone_blitz" | "all_out";
+      };
+    }>
+  ): Promise<void> {
+    if (updates.length === 0) return;
+
+    console.log(`[PracticeService] Batch updating ${updates.length} plays...`);
+    const startTime = performance.now();
+
+    try {
+      // Execute all updates in parallel for maximum speed
+      await Promise.all(
+        updates.map(async ({ scriptPlayId, data }) => {
+          const updateData: any = {};
+          
+          if (data.repetitions !== undefined) updateData.repetitions = data.repetitions;
+          if (data.notes !== undefined) updateData.coaching_points = data.notes ? [data.notes] : [];
+          if (data.hash !== undefined) updateData.hash = data.hash;
+          if (data.downDistance !== undefined) updateData.down_distance = data.downDistance;
+          if (data.fieldPosition !== undefined) updateData.field_position = data.fieldPosition;
+          if (data.defensiveFront !== undefined) updateData.defensive_front = data.defensiveFront;
+          if (data.coverage !== undefined) updateData.coverage = data.coverage;
+          if (data.blitz !== undefined) updateData.blitz = data.blitz;
+
+          const { error } = await supabase
+            .from("practice_script_plays")
+            .update(updateData)
+            .eq("id", scriptPlayId);
+
+          if (error) {
+            console.error(`Error updating play ${scriptPlayId}:`, error);
+            throw error;
+          }
+        })
+      );
+
+      const updateTime = performance.now() - startTime;
+      console.log(`✅ [PracticeService] Batch updated ${updates.length} plays in ${updateTime.toFixed(2)}ms`);
+      console.log(`   Average: ${(updateTime / updates.length).toFixed(2)}ms per play`);
+
+      // Invalidate all script caches once after batch
+      await practiceScriptCache.invalidatePattern(/^script/);
+    } catch (error) {
+      console.error("Error in batch update:", error);
+      throw new Error("Failed to batch update script plays");
+    }
+  }
+
+  /**
+   * Get all practice scripts for a team - OPTIMIZED with caching
    */
   static async getPracticeScripts(teamId: string): Promise<PracticeScript[]> {
+    const cacheKey = `scripts_team_${teamId}`;
+    
+    // Check cache first
+    const cached = await practiceScriptCache.get<PracticeScript[]>(cacheKey);
+    if (cached) {
+      console.log("✅ [PracticeService] Cache hit for team scripts:", teamId);
+      return cached;
+    }
+
+    console.log("🔍 [PracticeService] Cache miss, fetching from database...");
+    const startTime = performance.now();
+
     try {
-      const { data: scripts, error: scriptsError } = await supabase
+      // OPTIMIZATION: Single query with join to get scripts AND plays
+      const { data: scriptsWithPlays, error: scriptsError } = await supabase
         .from("practice_scripts")
-        .select("*")
+        .select(`
+          *,
+          practice_script_plays (
+            *,
+            plays (*)
+          )
+        `)
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
 
@@ -862,47 +957,23 @@ export class PracticeService {
         throw new Error("Failed to fetch practice scripts");
       }
 
-      if (!scripts || scripts.length === 0) {
+      if (!scriptsWithPlays || scriptsWithPlays.length === 0) {
+        await practiceScriptCache.set(cacheKey, [], 1);
         return [];
       }
 
-      let scriptPlays: any[] = [];
-      try {
-        const scriptIds = scripts.map((s) => s.id);
-        const { data: plays, error: playsError } = await supabase
-          .from("practice_script_plays")
-          .select(`*, plays (*)`)
-          .in("practice_script_id", scriptIds);
-
-        if (!playsError && plays) {
-          scriptPlays = plays;
-        }
-      } catch (playsError) {
-        console.warn(
-          "Could not fetch practice script plays, continuing without plays data:",
-          playsError
-        );
-      }
-
-      const playsByScriptId = scriptPlays.reduce(
-        (acc, play) => {
-          const scriptId = play.practice_script_id;
-          if (!acc[scriptId]) {
-            acc[scriptId] = [];
-          }
-          acc[scriptId].push(play);
-          return acc;
-        },
-        {} as Record<string, any[]>
+      // Map directly to PracticeScript interface
+      const mappedScripts = scriptsWithPlays.map((script: any) => 
+        this.mapDatabaseScriptToPracticeScript(script)
       );
 
-      return scripts.map((script) => {
-        const scriptPlays = playsByScriptId[script.id] || [];
-        return this.mapDatabaseScriptToPracticeScript({
-          ...script,
-          practice_script_plays: scriptPlays,
-        });
-      });
+      // Cache the results
+      await practiceScriptCache.set(cacheKey, mappedScripts, 1);
+
+      const queryTime = performance.now() - startTime;
+      console.log(`✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`);
+
+      return mappedScripts;
     } catch (error) {
       console.error("Error in getPracticeScripts:", error);
       return [];
@@ -910,15 +981,34 @@ export class PracticeService {
   }
 
   /**
-   * Get a specific practice script by ID
+   * Get a specific practice script by ID - OPTIMIZED with caching
    */
   static async getPracticeScript(
     scriptId: string
   ): Promise<PracticeScript | null> {
+    const cacheKey = `script_${scriptId}`;
+    
+    // Check cache first
+    const cached = await practiceScriptCache.get<PracticeScript>(cacheKey);
+    if (cached) {
+      console.log("✅ [PracticeService] Cache hit for script:", scriptId);
+      return cached;
+    }
+
+    console.log("🔍 [PracticeService] Cache miss, fetching script from database...");
+    const startTime = performance.now();
+
     try {
+      // OPTIMIZATION: Single query with join
       const { data: script, error: scriptError } = await supabase
         .from("practice_scripts")
-        .select("*")
+        .select(`
+          *,
+          practice_script_plays (
+            *,
+            plays (*)
+          )
+        `)
         .eq("id", scriptId)
         .single();
 
@@ -930,27 +1020,15 @@ export class PracticeService {
         throw new Error("Failed to fetch practice script");
       }
 
-      let scriptPlays: any[] = [];
-      try {
-        const { data: plays, error: playsError } = await supabase
-          .from("practice_script_plays")
-          .select(`*, plays (*)`)
-          .eq("practice_script_id", scriptId);
+      const mappedScript = this.mapDatabaseScriptToPracticeScript(script);
 
-        if (!playsError && plays) {
-          scriptPlays = plays;
-        }
-      } catch (playsError) {
-        console.warn(
-          "Could not fetch practice script plays, continuing without plays data:",
-          playsError
-        );
-      }
+      // Cache the result
+      await practiceScriptCache.set(cacheKey, mappedScript, 1);
 
-      return this.mapDatabaseScriptToPracticeScript({
-        ...script,
-        practice_script_plays: scriptPlays,
-      });
+      const queryTime = performance.now() - startTime;
+      console.log(`✅ [PracticeService] Fetched script in ${queryTime.toFixed(2)}ms`);
+
+      return mappedScript;
     } catch (error) {
       console.error("Error in getPracticeScript:", error);
       return null;

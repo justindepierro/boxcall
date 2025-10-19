@@ -36,7 +36,10 @@ export class PDFExportService {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      const formatSuffix = format === "compact" ? "_compact" : "";
+      const formatSuffix = 
+        format === "ultra-compact" ? "_ultra" :
+        format === "compact" ? "_compact" : 
+        "";
       link.download = `${(script.name ?? "practice_script").replace(/[^a-z0-9]/gi, "_").toLowerCase()}${formatSuffix}_practice_script.pdf`;
 
       // Trigger download
