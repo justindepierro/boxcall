@@ -72,6 +72,9 @@ import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
 import { PullToRefresh } from "../components/PullToRefresh";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
+import { PlaybookBottomNav } from "../components/playbook/page/PlaybookBottomNav";
+import { MobilePlaybookHeader } from "../components/playbook/page/MobilePlaybookHeader";
+import { MobileStatsBottomSheet } from "../components/playbook/page/MobileStatsBottomSheet";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -367,6 +370,7 @@ export default function PlaybookPage() {
   const [showFormationBuilderModal, setShowFormationBuilderModal] =
     useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [showStatsSheet, setShowStatsSheet] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
@@ -907,7 +911,31 @@ export default function PlaybookPage() {
         {/* Mobile-First Layout */}
         {isMobile ? (
           // Mobile View - Progressive Disclosure
-          <div className="px-4 py-6 space-y-6">
+          <>
+            {/* Mobile Header */}
+            <MobilePlaybookHeader
+              title="Playbook"
+              playCount={state.playsCreated}
+              filterCount={Object.keys(state.advancedFilters).length}
+              onSearchClick={() => {
+                // Focus search input
+                const searchInput = document.querySelector(
+                  'input[type="search"]'
+                ) as HTMLInputElement;
+                searchInput?.focus();
+                searchInput?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
+              onFilterClick={() => {
+                triggerHapticFeedback("light");
+                setShowFiltersSheet(true);
+              }}
+              onStatsClick={() => {
+                triggerHapticFeedback("light");
+                setShowStatsSheet(true);
+              }}
+            />
+
+            <div className="px-4 py-6 space-y-6 pb-24">
             {/* Empty State - Hero CTA */}
             {state.playsCreated === 0 && (
               <MobileSection spacing="comfortable">
@@ -1097,7 +1125,31 @@ export default function PlaybookPage() {
               })}
               icon="plus"
             />
-          </div>
+            </div>
+
+            {/* Mobile Bottom Navigation */}
+            <PlaybookBottomNav />
+
+            {/* Stats Bottom Sheet */}
+            <MobileStatsBottomSheet
+              isOpen={showStatsSheet}
+              onClose={() => setShowStatsSheet(false)}
+              stats={{
+                totalPlays: state.playsCreated || 0,
+                playsWithDiagrams: Math.floor(
+                  (state.playsCreated || 0) * (state.diagramCoverage / 100)
+                ),
+                formationsCount: Math.max(
+                  1,
+                  Math.floor((state.playsCreated || 0) / 3)
+                ),
+                passPlays: Math.floor((state.playsCreated || 0) * 0.4),
+                runPlays: Math.floor((state.playsCreated || 0) * 0.4),
+                rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
+                playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
+              }}
+            />
+          </>
         ) : (
           // Desktop View - Keep Existing Layout
           <>
