@@ -8,6 +8,10 @@ import {
   PLAY_TYPE_OPTIONS,
   BACK_ALIGN_OPTIONS,
 } from "./constants";
+import {
+  validateFormationName,
+  validatePersonnelValue,
+} from "../../../utils/playFieldValidation";
 
 type SaveHandler = (
   field: keyof PlayType,
@@ -60,6 +64,10 @@ export const createFormationFields = ({
         ]}
         enableSuggestions={true}
         normalizeValue={normalizeValue}
+        validation={(value) => {
+          const result = validateFormationName(value);
+          return result.isValid ? null : result.error || "Invalid formation";
+        }}
         isSaving={savingFields.has("formation")}
       />
     ),
@@ -74,6 +82,10 @@ export const createFormationFields = ({
         suggestions={personnelSuggestions}
         enableSuggestions={true}
         normalizeValue={normalizeValue}
+        validation={(value) => {
+          const result = validatePersonnelValue(value);
+          return result.isValid ? null : result.error || "Invalid personnel";
+        }}
         isSaving={savingFields.has("personnel")}
       />
     ),

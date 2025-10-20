@@ -34,7 +34,7 @@ export function BulkActionToolbar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border-primary shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-border-primary shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Selection count */}

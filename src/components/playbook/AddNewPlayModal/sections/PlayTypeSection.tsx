@@ -6,11 +6,13 @@ import { Typography } from "../../../design-system/Typography";
 interface PlayTypeSectionProps {
   playType: string;
   onPlayTypeChange: (playType: string) => void;
+  suggestions?: string[]; // Dynamic suggestions from database
 }
 
 const DEFAULT_PLAY_TYPES = [
   "Run",
   "Pass",
+  "Option",
   "RPO",
   "Screen",
   "Boot",
@@ -21,12 +23,17 @@ const DEFAULT_PLAY_TYPES = [
 export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
   playType,
   onPlayTypeChange,
+  suggestions = [],
 }) => {
   const [customTypes, setCustomTypes] = useState<string[]>([]);
   const [isAddingType, setIsAddingType] = useState(false);
   const [newTypeName, setNewTypeName] = useState("");
 
-  const allTypes = [...DEFAULT_PLAY_TYPES, ...customTypes];
+  // Combine default types, database suggestions, and custom types
+  // Remove duplicates and sort
+  const allTypes = [
+    ...new Set([...DEFAULT_PLAY_TYPES, ...suggestions, ...customTypes]),
+  ].sort();
 
   const handleAddNewType = () => {
     setIsAddingType(true);

@@ -1890,7 +1890,9 @@ export default function PlaybookPage() {
               onClose={() => setAssignmentsPlay(null)}
               play={assignmentsPlay}
               userRole="coach"
-              personnelConfigurations={playbookSettings.personnelConfigurations || []}
+              personnelConfigurations={
+                playbookSettings.personnelConfigurations || []
+              }
             />
           </Suspense>
         )}

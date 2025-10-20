@@ -10,7 +10,7 @@
 CREATE TABLE IF NOT EXISTS play_assignments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   play_id UUID NOT NULL REFERENCES plays(id) ON DELETE CASCADE,
-  playbook_id UUID NOT NULL REFERENCES playbooks(id) ON DELETE CASCADE,
+  playbook_id UUID NOT NULL REFERENCES playbooks(idx) ON DELETE CASCADE,
   
   -- Position and assignment details
   position TEXT NOT NULL, -- e.g., "QB", "RB", "WR1", "LT", etc. - dynamic based on personnel
@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS play_assignments (
 );
 
 -- Add index for faster lookups
-CREATE INDEX idx_play_assignments_play_id ON play_assignments(play_id);
-CREATE INDEX idx_play_assignments_playbook_id ON play_assignments(playbook_id);
-CREATE INDEX idx_play_assignments_position ON play_assignments(position);
+CREATE INDEX IF NOT EXISTS idx_play_assignments_play_id ON play_assignments(play_id);
+CREATE INDEX IF NOT EXISTS idx_play_assignments_playbook_id ON play_assignments(playbook_id);
+CREATE INDEX IF NOT EXISTS idx_play_assignments_position ON play_assignments(position);
 
 -- Add trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_play_assignments_updated_at()
@@ -46,6 +46,9 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Drop trigger if it exists before creating
+DROP TRIGGER IF EXISTS trigger_update_play_assignments_updated_at ON play_assignments;
 
 CREATE TRIGGER trigger_update_play_assignments_updated_at
   BEFORE UPDATE ON play_assignments
@@ -58,6 +61,14 @@ CREATE TRIGGER trigger_update_play_assignments_updated_at
 
 -- Enable RLS
 ALTER TABLE play_assignments ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist (for safe re-runs)
+DROP POLICY IF EXISTS "Coaches can view play assignments" ON play_assignments;
+DROP POLICY IF EXISTS "Players can view play assignments" ON play_assignments;
+DROP POLICY IF EXISTS "Coaches can create play assignments" ON play_assignments;
+DROP POLICY IF EXISTS "Coaches can update play assignments" ON play_assignments;
+DROP POLICY IF EXISTS "Coaches can delete play assignments" ON play_assignments;
+DROP POLICY IF EXISTS "Players can add their own assignment notes" ON play_assignments;
 
 -- Policy 1: Coaches can view assignments for their team's playbooks
 CREATE POLICY "Coaches can view play assignments"

@@ -577,6 +577,32 @@ export class PlaysService {
       return [];
     }
   }
+
+  /**
+   * Get unique play types from all plays
+   */
+  static async getUniquePlayTypes(): Promise<string[]> {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .select("p_type")
+        .not("p_type", "is", null)
+        .neq("p_type", "")
+        .order("p_type");
+
+      if (error) {
+        console.error("❌ Error getting unique play types:", error);
+        return [];
+      }
+
+      // Get unique values
+      const uniqueTypes = [...new Set(data.map((item) => item.p_type))];
+      return uniqueTypes.filter(Boolean);
+    } catch (error) {
+      console.error("❌ PlaysService.getUniquePlayTypes failed:", error);
+      return [];
+    }
+  }
 }
 
 // ============================================

@@ -36,6 +36,10 @@ import {
   detectDirectionInFormationName,
   type DirectionDetectionResult,
 } from "../../utils/formationDirectionDetection";
+import {
+  validateFormationName,
+  validatePersonnelValue,
+} from "../../utils/playFieldValidation";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -90,6 +94,34 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     if (!isValid()) {
       setErrorMessage("Please enter formation and play name");
       return;
+    }
+
+    // Validate formation field doesn't contain personnel package names
+    if (formData.formation.trim()) {
+      const formationValidation = validateFormationName(
+        formData.formation.trim()
+      );
+      if (!formationValidation.isValid) {
+        setErrorMessage(
+          formationValidation.error ||
+            "Invalid formation name. Please use formation names like 'Shotgun', 'Trips Right', etc."
+        );
+        return;
+      }
+    }
+
+    // Validate personnel field doesn't contain formation names
+    if (formData.personnel.trim()) {
+      const personnelValidation = validatePersonnelValue(
+        formData.personnel.trim()
+      );
+      if (!personnelValidation.isValid) {
+        setErrorMessage(
+          personnelValidation.error ||
+            "Invalid personnel value. Please use personnel packages like '11', '12', 'Blue', etc."
+        );
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -586,6 +618,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <PlayTypeSection
             playType={formData.playType}
             onPlayTypeChange={(value) => updateField("playType", value)}
+            suggestions={suggestions.playTypes}
           />
 
           {/* Preferences Section */}

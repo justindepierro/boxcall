@@ -5,12 +5,14 @@ interface SuggestionState {
   formations: string[];
   playNames: string[];
   personnel: string[];
+  playTypes: string[];
 }
 
 interface VisibilityState {
   formation: boolean;
   playName: boolean;
   personnel: boolean;
+  playType: boolean;
 }
 
 /**
@@ -23,6 +25,7 @@ export const usePlaySuggestions = () => {
     formations: [],
     playNames: [],
     personnel: [],
+    playTypes: [],
   });
 
   // Visibility toggles for suggestion dropdowns
@@ -30,6 +33,7 @@ export const usePlaySuggestions = () => {
     formation: false,
     playName: false,
     personnel: false,
+    playType: false,
   });
 
   // Loading state
@@ -40,16 +44,18 @@ export const usePlaySuggestions = () => {
     const loadSuggestions = async () => {
       try {
         setIsLoading(true);
-        const [formations, playNames, personnel] = await Promise.all([
+        const [formations, playNames, personnel, playTypes] = await Promise.all([
           PlaysService.getUniqueFormations(),
           PlaysService.getUniquePlayNames(),
           PlaysService.getUniquePersonnel(),
+          PlaysService.getUniquePlayTypes(),
         ]);
 
         setSuggestions({
           formations,
           playNames,
           personnel,
+          playTypes,
         });
       } catch (error) {
         console.error("Failed to load suggestions:", error);

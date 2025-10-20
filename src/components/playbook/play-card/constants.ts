@@ -52,6 +52,7 @@ export const PERSONNEL_OPTIONS = [
 export const PLAY_TYPE_OPTIONS = [
   { value: "Pass", label: "Pass" },
   { value: "Run", label: "Run" },
+  { value: "Option", label: "Option" },
   { value: "RPO", label: "RPO" },
   { value: "Play Action", label: "Play Action" },
 ];

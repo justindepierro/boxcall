@@ -121,20 +121,23 @@ export function FormationBuilderModal({
   ) => {
     try {
       let savedFormation: Formation;
-      
+
       if (selectedFormationId && formation) {
         // Update existing formation
-        savedFormation = await FormationService.updateFormation(selectedFormationId, {
-          player_positions: players,
-          personnel_name: personnel,
-          creation_source: source,
-          creation_context: {
-            user_action: "formation_builder_save",
-            source_version: "1.0.0",
-            active_tab: "draw", // Track which tab was used
-            feature: "canvas_builder",
-          },
-        });
+        savedFormation = await FormationService.updateFormation(
+          selectedFormationId,
+          {
+            player_positions: players,
+            personnel_name: personnel,
+            creation_source: source,
+            creation_context: {
+              user_action: "formation_builder_save",
+              source_version: "1.0.0",
+              active_tab: "draw", // Track which tab was used
+              feature: "canvas_builder",
+            },
+          }
+        );
         toast.success("Formation updated successfully!");
       } else {
         // Create new formation (placeholder - need form data)

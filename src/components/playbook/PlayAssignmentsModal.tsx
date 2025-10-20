@@ -1,9 +1,9 @@
 /**
  * Play Assignments Modal
- * 
+ *
  * Allows coaches to create and edit position-specific assignments for plays.
  * Players can view assignments with their position highlighted.
- * 
+ *
  * Features:
  * - 11 dynamic position slots (based on personnel grouping)
  * - Text editing for each assignment
@@ -12,7 +12,12 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DropResult,
+} from "@hello-pangea/dnd";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
@@ -62,16 +67,20 @@ export function PlayAssignmentsModal({
   personnelConfigurations = [],
 }: PlayAssignmentsModalProps) {
   const { user } = useAuth();
-  const [assignments, setAssignments] = useState<Map<string, AssignmentData>>(new Map());
+  const [assignments, setAssignments] = useState<Map<string, AssignmentData>>(
+    new Map()
+  );
   const [playNotes, setPlayNotes] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
-  
+
   // Personnel selection state
-  const [selectedPersonnelId, setSelectedPersonnelId] = useState<string | null>(null);
-  
+  const [selectedPersonnelId, setSelectedPersonnelId] = useState<string | null>(
+    null
+  );
+
   // Position customization state
   const [customPositions, setCustomPositions] = useState<string[]>([]);
   const [isEditingPositions, setIsEditingPositions] = useState(false);
@@ -87,11 +96,13 @@ export function PlayAssignmentsModal({
   // Find the selected personnel configuration or default to play's personnel
   const selectedPersonnel = useMemo(() => {
     if (selectedPersonnelId) {
-      return personnelConfigurations.find(pc => pc.id === selectedPersonnelId);
+      return personnelConfigurations.find(
+        (pc) => pc.id === selectedPersonnelId
+      );
     }
     // Try to match by name from play.personnel
     if (play.personnel && personnelConfigurations.length > 0) {
-      return personnelConfigurations.find(pc => 
+      return personnelConfigurations.find((pc) =>
         pc.name.toLowerCase().includes(play.personnel?.toLowerCase() || "")
       );
     }
@@ -103,18 +114,18 @@ export function PlayAssignmentsModal({
     // If we have a personnel configuration selected, use its skill position labels
     if (selectedPersonnel && selectedPersonnel.players) {
       const skillLabels = selectedPersonnel.players
-        .filter(p => p.player_position !== "QB" || p.sort_order === 0) // Include QB and non-QB positions
+        .filter((p) => p.player_position !== "QB" || p.sort_order === 0) // Include QB and non-QB positions
         .sort((a, b) => a.sort_order - b.sort_order)
-        .map(p => p.label);
-      
+        .map((p) => p.label);
+
       // Add offensive line positions (these are fixed)
       const linePositions = ["TE", "LT", "LG", "C", "RG", "RT"];
-      
+
       // Interleave skill and line positions for 2-column grid display
       // Grid shows: [0,1] [2,3] [4,5]... so we want [skill, line, skill, line...]
       const interleaved: string[] = [];
       const maxLength = Math.max(skillLabels.length, linePositions.length);
-      
+
       for (let i = 0; i < maxLength; i++) {
         if (i < skillLabels.length) {
           interleaved.push(skillLabels[i]);
@@ -123,28 +134,32 @@ export function PlayAssignmentsModal({
           interleaved.push(linePositions[i]);
         }
       }
-      
+
       return interleaved;
     }
-    
+
     // Fallback to default personnel groupings
     if (!play.personnel) {
       return DEFAULT_PERSONNEL_POSITIONS["11"];
     }
-    
+
     const personnelCode = play.personnel.match(/\d+/)?.[0] || "11";
-    return DEFAULT_PERSONNEL_POSITIONS[personnelCode] || DEFAULT_PERSONNEL_POSITIONS["11"];
+    return (
+      DEFAULT_PERSONNEL_POSITIONS[personnelCode] ||
+      DEFAULT_PERSONNEL_POSITIONS["11"]
+    );
   }, [play.personnel, selectedPersonnel]);
 
   // Use custom positions if available, otherwise use defaults
-  const positions = customPositions.length > 0 ? customPositions : defaultPositions;
+  const positions =
+    customPositions.length > 0 ? customPositions : defaultPositions;
 
   // Load assignments
   const loadAssignments = useCallback(async () => {
     if (!play.id) return;
-    
+
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase
         .from("play_assignments")
@@ -181,46 +196,54 @@ export function PlayAssignmentsModal({
   }, [isOpen, loadAssignments]);
 
   // Handle drag end for reordering positions
-  const handlePositionDragEnd = useCallback((result: DropResult) => {
-    if (!result.destination) return;
-    
-    const items = Array.from(positions);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    
-    setCustomPositions(items);
-    setHasChanges(true);
-  }, [positions]);
+  const handlePositionDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return;
+
+      const items = Array.from(positions);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+
+      setCustomPositions(items);
+      setHasChanges(true);
+    },
+    [positions]
+  );
 
   // Handle position label rename
-  const handleRenamePosition = useCallback((oldLabel: string, newLabel: string) => {
-    if (!newLabel.trim() || oldLabel === newLabel) {
-      setEditingLabel(null);
-      return;
-    }
-
-    setCustomPositions((prev) => {
-      const positions = prev.length > 0 ? prev : defaultPositions;
-      return positions.map((pos) => (pos === oldLabel ? newLabel.trim() : pos));
-    });
-
-    // Update assignment map with new position key
-    setAssignments((prev) => {
-      const newMap = new Map(prev);
-      const oldData = newMap.get(oldLabel);
-      if (oldData) {
-        newMap.delete(oldLabel);
-        newMap.set(newLabel.trim(), {
-          ...oldData,
-          position: newLabel.trim(),
-        });
+  const handleRenamePosition = useCallback(
+    (oldLabel: string, newLabel: string) => {
+      if (!newLabel.trim() || oldLabel === newLabel) {
+        setEditingLabel(null);
+        return;
       }
-      return newMap;
-    });
 
-    setEditingLabel(null);
-    setHasChanges(true);
-  }, [defaultPositions]);
+      setCustomPositions((prev) => {
+        const positions = prev.length > 0 ? prev : defaultPositions;
+        return positions.map((pos) =>
+          pos === oldLabel ? newLabel.trim() : pos
+        );
+      });
+
+      // Update assignment map with new position key
+      setAssignments((prev) => {
+        const newMap = new Map(prev);
+        const oldData = newMap.get(oldLabel);
+        if (oldData) {
+          newMap.delete(oldLabel);
+          newMap.set(newLabel.trim(), {
+            ...oldData,
+            position: newLabel.trim(),
+          });
+        }
+        return newMap;
+      });
+
+      setEditingLabel(null);
+      setHasChanges(true);
+    },
+    [defaultPositions]
+  );
 
   // Reset to default positions
   const resetToDefaults = useCallback(() => {
@@ -246,9 +269,9 @@ export function PlayAssignmentsModal({
   // Save assignments
   async function handleSave() {
     if (!canEdit || !user) return;
-    
+
     setSaving(true);
-    
+
     try {
       const assignmentsToSave = Array.from(assignments.values())
         .filter((a) => a.assignment_text.trim())
@@ -278,7 +301,7 @@ export function PlayAssignmentsModal({
 
       setHasChanges(false);
       setJustSaved(true);
-      
+
       // Remove the saved animation after 2 seconds
       setTimeout(() => {
         setJustSaved(false);
@@ -315,29 +338,27 @@ export function PlayAssignmentsModal({
           <div className="flex items-center gap-2">
             {isCoach ? (
               <button
-                onClick={() => setViewMode(viewMode === "coach" ? "player" : "coach")}
+                onClick={() =>
+                  setViewMode(viewMode === "coach" ? "player" : "coach")
+                }
                 className="group"
                 title={`Switch to ${viewMode === "coach" ? "Player" : "Coach"} View`}
               >
-                <Badge 
+                <Badge
                   variant={viewMode === "coach" ? "accent" : "neutral"}
                   className="cursor-pointer transition-all hover:ring-2 hover:ring-accent-400"
                 >
-                  <Icon 
-                    name={viewMode === "coach" ? "eye" : "eye-off"} 
+                  <Icon
+                    name={viewMode === "coach" ? "eye" : "eye-off"}
                     className="h-3 w-3 mr-1 inline-block"
                   />
                   {viewMode === "coach" ? "Coach View" : "Player Preview"}
                 </Badge>
               </button>
             ) : (
-              <Badge variant="neutral">
-                Player View
-              </Badge>
+              <Badge variant="neutral">Player View</Badge>
             )}
-            {hasChanges && canEdit && (
-              <Badge variant="warning">Unsaved</Badge>
-            )}
+            {hasChanges && canEdit && <Badge variant="warning">Unsaved</Badge>}
           </div>
         </div>
 
@@ -346,7 +367,10 @@ export function PlayAssignmentsModal({
           <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-300 dark:border-blue-700">
             <Icon name="user" className="text-blue-600 dark:text-blue-400" />
             <div className="flex-1">
-              <Typography variant="label-md" className="mb-1 text-blue-900 dark:text-blue-100">
+              <Typography
+                variant="label-md"
+                className="mb-1 text-blue-900 dark:text-blue-100"
+              >
                 Preview as Position
               </Typography>
               <select
@@ -362,7 +386,10 @@ export function PlayAssignmentsModal({
                 ))}
               </select>
             </div>
-            <Typography variant="caption" className="text-blue-700 dark:text-blue-300">
+            <Typography
+              variant="caption"
+              className="text-blue-700 dark:text-blue-300"
+            >
               The selected position will be highlighted as "Your Position"
             </Typography>
           </div>
@@ -386,7 +413,9 @@ export function PlayAssignmentsModal({
                 className="w-full px-3 py-2 text-sm rounded-lg border border-border-primary bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50"
               >
                 <option value="">
-                  {play.personnel ? `Default (${play.personnel})` : "Default (11 Personnel)"}
+                  {play.personnel
+                    ? `Default (${play.personnel})`
+                    : "Default (11 Personnel)"}
                 </option>
                 {personnelConfigurations.map((config) => (
                   <option key={config.id} value={config.id}>
@@ -433,18 +462,23 @@ export function PlayAssignmentsModal({
             {/* Position Assignments Grid */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <Typography variant="label-md">
-                  Position Assignments
-                </Typography>
+                <Typography variant="label-md">Position Assignments</Typography>
                 {canEdit && (
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
                       size="xs"
                       onClick={() => setIsEditingPositions(!isEditingPositions)}
-                      title={isEditingPositions ? "Done editing" : "Reorder & relabel positions"}
+                      title={
+                        isEditingPositions
+                          ? "Done editing"
+                          : "Reorder & relabel positions"
+                      }
                     >
-                      <Icon name={isEditingPositions ? "check" : "edit"} className="h-3 w-3 mr-1" />
+                      <Icon
+                        name={isEditingPositions ? "check" : "edit"}
+                        className="h-3 w-3 mr-1"
+                      />
                       {isEditingPositions ? "Done" : "Edit"}
                     </Button>
                     {customPositions.length > 0 && (
@@ -461,9 +495,12 @@ export function PlayAssignmentsModal({
                   </div>
                 )}
               </div>
-              
+
               <DragDropContext onDragEnd={handlePositionDragEnd}>
-                <Droppable droppableId="positions" isDropDisabled={!isEditingPositions || !canEdit}>
+                <Droppable
+                  droppableId="positions"
+                  isDropDisabled={!isEditingPositions || !canEdit}
+                >
                   {(provided) => (
                     <div
                       {...provided.droppableProps}
@@ -472,9 +509,10 @@ export function PlayAssignmentsModal({
                     >
                       {positions.map((position, index) => {
                         const assignment = assignments.get(position);
-                        const isCurrentPlayer = isCurrentPlayerPosition(position);
+                        const isCurrentPlayer =
+                          isCurrentPlayerPosition(position);
                         const isEditing = editingLabel === position;
-                        
+
                         return (
                           <Draggable
                             key={position}
@@ -515,10 +553,18 @@ export function PlayAssignmentsModal({
                                           newPositions[index] = e.target.value;
                                           setCustomPositions(newPositions);
                                         }}
-                                        onBlur={(e) => handleRenamePosition(position, e.target.value)}
+                                        onBlur={(e) =>
+                                          handleRenamePosition(
+                                            position,
+                                            e.target.value
+                                          )
+                                        }
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter") {
-                                            handleRenamePosition(position, e.currentTarget.value);
+                                            handleRenamePosition(
+                                              position,
+                                              e.currentTarget.value
+                                            );
                                           } else if (e.key === "Escape") {
                                             setEditingLabel(null);
                                           }
@@ -528,14 +574,20 @@ export function PlayAssignmentsModal({
                                       />
                                     ) : (
                                       <Badge
-                                        variant={isCurrentPlayer ? "accent" : "neutral"}
+                                        variant={
+                                          isCurrentPlayer ? "accent" : "neutral"
+                                        }
                                         size="sm"
                                         onClick={() => {
                                           if (isEditingPositions && canEdit) {
                                             setEditingLabel(position);
                                           }
                                         }}
-                                        className={isEditingPositions && canEdit ? "cursor-pointer hover:bg-accent-100" : ""}
+                                        className={
+                                          isEditingPositions && canEdit
+                                            ? "cursor-pointer hover:bg-accent-100"
+                                            : ""
+                                        }
                                       >
                                         {position}
                                       </Badge>
@@ -549,7 +601,9 @@ export function PlayAssignmentsModal({
                                 </div>
                                 <TextArea
                                   value={assignment?.assignment_text || ""}
-                                  onChange={(e) => updateAssignment(position, e.target.value)}
+                                  onChange={(e) =>
+                                    updateAssignment(position, e.target.value)
+                                  }
                                   placeholder={
                                     canEdit
                                       ? `Assignment for ${position}...`

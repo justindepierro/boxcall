@@ -73,7 +73,9 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
     }
   }, [isOpen, playbookId, loadHealthScore]);
 
-  const getSeverityColor = (severity: HealthIssue["severity"]): "danger" | "warning" | "info" | "default" => {
+  const getSeverityColor = (
+    severity: HealthIssue["severity"]
+  ): "danger" | "warning" | "info" | "default" => {
     switch (severity) {
       case "critical":
         return "danger";
@@ -99,7 +101,9 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
     }
   };
 
-  const getCategoryScore = (category: keyof PlaybookHealthScore["breakdown"]) => {
+  const getCategoryScore = (
+    category: keyof PlaybookHealthScore["breakdown"]
+  ) => {
     if (!healthScore) return 0;
     return healthScore.breakdown[category];
   };
@@ -115,7 +119,9 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
     return maxPoints[category];
   };
 
-  const getCategoryIcon = (category: keyof PlaybookHealthScore["breakdown"]): IconName => {
+  const getCategoryIcon = (
+    category: keyof PlaybookHealthScore["breakdown"]
+  ): IconName => {
     const icons: Record<keyof PlaybookHealthScore["breakdown"], IconName> = {
       formationLinking: "link",
       formationCompleteness: "check-circle",
@@ -126,7 +132,9 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
     return icons[category];
   };
 
-  const getCategoryLabel = (category: keyof PlaybookHealthScore["breakdown"]) => {
+  const getCategoryLabel = (
+    category: keyof PlaybookHealthScore["breakdown"]
+  ) => {
     const labels = {
       formationLinking: "Formation Linking",
       formationCompleteness: "Formation Completeness",
@@ -138,12 +146,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Playbook Health"
-      size="lg"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title="Playbook Health" size="lg">
       <div className="space-y-6">
         {loading && (
           <div className="flex items-center justify-center py-12">
@@ -178,31 +181,44 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
             <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl p-6 border border-primary-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <Typography variant="label-md" className="text-text-secondary mb-2">
+                  <Typography
+                    variant="label-md"
+                    className="text-text-secondary mb-2"
+                  >
                     Overall Health Score
                   </Typography>
                   <div className="flex items-baseline space-x-3">
-                    <Typography variant="headline-xl" className="text-primary-700">
+                    <Typography
+                      variant="headline-xl"
+                      className="text-primary-700"
+                    >
                       {healthScore.overall}
                       <span className="text-2xl text-text-tertiary">/100</span>
                     </Typography>
-                    <Badge variant={getHealthColor(healthScore.overall) as any} size="lg">
+                    <Badge
+                      variant={getHealthColor(healthScore.overall) as any}
+                      size="lg"
+                    >
                       Grade {getHealthGrade(healthScore.overall)}
                     </Badge>
-                    <span className="text-4xl">{getHealthEmoji(healthScore.overall)}</span>
+                    <span className="text-4xl">
+                      {getHealthEmoji(healthScore.overall)}
+                    </span>
                   </div>
                 </div>
 
                 {/* Quick Stats */}
                 <div className="text-right space-y-1">
                   <Typography variant="label-md" className="text-text-tertiary">
-                    {healthScore.stats.totalPlays} plays ({healthScore.stats.uniquePlayNames} unique)
+                    {healthScore.stats.totalPlays} plays (
+                    {healthScore.stats.uniquePlayNames} unique)
                   </Typography>
                   <Typography variant="label-md" className="text-text-tertiary">
                     {healthScore.stats.totalFormations} formations
                   </Typography>
                   <Typography variant="label-md" className="text-accent-600">
-                    {healthScore.stats.playsWithFormationLink}/{healthScore.stats.totalPlays} linked
+                    {healthScore.stats.playsWithFormationLink}/
+                    {healthScore.stats.totalPlays} linked
                   </Typography>
                 </div>
               </div>
@@ -255,7 +271,10 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                             {getCategoryLabel(category)}
                           </Typography>
                         </div>
-                        <Typography variant="body-sm" className="text-text-secondary">
+                        <Typography
+                          variant="body-sm"
+                          className="text-text-secondary"
+                        >
                           {score}/{max}
                         </Typography>
                       </div>
@@ -264,7 +283,9 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                           className={cn(
                             "h-full transition-all duration-300 rounded-full",
                             percentage >= 80 && "bg-success-500",
-                            percentage >= 60 && percentage < 80 && "bg-warning-500",
+                            percentage >= 60 &&
+                              percentage < 80 &&
+                              "bg-warning-500",
                             percentage < 60 && "bg-danger-500"
                           )}
                           style={{ width: `${percentage}%` }}
@@ -292,7 +313,10 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                         name="lightbulb"
                         className="h-5 w-5 text-accent-500 mt-0.5 flex-shrink-0"
                       />
-                      <Typography variant="body-sm" className="text-text-primary">
+                      <Typography
+                        variant="body-sm"
+                        className="text-text-primary"
+                      >
                         {rec}
                       </Typography>
                     </div>
@@ -317,7 +341,8 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                           "bg-danger-50 border-danger-200",
                         issue.severity === "warning" &&
                           "bg-warning-50 border-warning-200",
-                        issue.severity === "info" && "bg-info-50 border-info-200"
+                        issue.severity === "info" &&
+                          "bg-info-50 border-info-200"
                       )}
                     >
                       <div className="flex items-start justify-between mb-2">
@@ -326,20 +351,27 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                             name={getSeverityIcon(issue.severity)}
                             className={cn(
                               "h-5 w-5 mt-0.5 flex-shrink-0",
-                              issue.severity === "critical" && "text-danger-500",
-                              issue.severity === "warning" && "text-warning-500",
+                              issue.severity === "critical" &&
+                                "text-danger-500",
+                              issue.severity === "warning" &&
+                                "text-warning-500",
                               issue.severity === "info" && "text-info-500"
                             )}
                           />
                           <div className="flex-1">
                             <div className="flex items-center space-x-2 mb-1">
                               <Badge
-                                variant={getSeverityColor(issue.severity) as any}
+                                variant={
+                                  getSeverityColor(issue.severity) as any
+                                }
                                 size="sm"
                               >
                                 {issue.severity.toUpperCase()}
                               </Badge>
-                              <Typography variant="label-md" className="text-text-tertiary">
+                              <Typography
+                                variant="label-md"
+                                className="text-text-tertiary"
+                              >
                                 {issue.category}
                               </Typography>
                             </div>
@@ -387,7 +419,10 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                   name="check-circle"
                   className="h-12 w-12 text-success-500 mx-auto mb-3"
                 />
-                <Typography variant="headline-sm" className="text-success-700 mb-2">
+                <Typography
+                  variant="headline-sm"
+                  className="text-success-700 mb-2"
+                >
                   Perfect Health! 🎉
                 </Typography>
                 <Typography variant="body-sm" className="text-success-600">

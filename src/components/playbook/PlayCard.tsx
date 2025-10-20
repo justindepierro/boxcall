@@ -65,7 +65,8 @@ type SaveQueue = Set<string>;
 
 const INITIAL_FORMATION_ORDER = [
   "formation",
-  "personnel",
+  // NOTE: "personnel" removed - should NOT appear in play display name
+  // Personnel is shown in the badge, not the title
   "f_dir",
   "back_align",
   "back_position",
@@ -76,7 +77,7 @@ const INITIAL_FORMATION_ORDER = [
 
 const INITIAL_FORMATION_VISIBILITY: FieldVisibility = {
   formation: true,
-  personnel: true,
+  personnel: false, // Personnel should NOT be in the display name
   f_dir: true,
   back_align: true,
   back_position: true,

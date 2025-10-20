@@ -35,6 +35,7 @@ export function FormationBuilderModal({
   onSaved,
 }: FormationBuilderModalProps) {
   const [activeTab, setActiveTab] = useState<TabType>("edit");
+  const [linkTabKey, setLinkTabKey] = useState(0);
 
   // If we're editing a specific formation, default to edit tab
   React.useEffect(() => {
@@ -46,6 +47,8 @@ export function FormationBuilderModal({
   }, [formationId, isOpen]);
 
   const handleSuccess = () => {
+    // Refresh Link tab data when formations change
+    setLinkTabKey((prev) => prev + 1);
     if (onSaved) {
       onSaved();
     }
@@ -79,7 +82,10 @@ export function FormationBuilderModal({
           </button>
 
           <button
-            onClick={() => setActiveTab("link")}
+            onClick={() => {
+              setActiveTab("link");
+              setLinkTabKey((prev) => prev + 1); // Refresh link tab data
+            }}
             className={`
               flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
               font-medium transition-colors
@@ -126,6 +132,7 @@ export function FormationBuilderModal({
 
           {activeTab === "link" && (
             <FormationLinkingPanel
+              key={linkTabKey} // Force re-mount to reload formations
               playbookId={playbookId}
               onSuccess={handleSuccess}
               initialLeftFormation={null}
