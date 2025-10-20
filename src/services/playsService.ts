@@ -10,6 +10,7 @@ import { supabase } from "../lib/supabase";
 import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
+import { ActivityService } from "./activityService";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
@@ -286,6 +287,15 @@ export class PlaysService {
       }
 
       console.info("✅ Play created successfully:", data);
+
+      // Record activity for the created play
+      await ActivityService.recordActivity({
+        type: "created",
+        playId: data.id,
+        playName: data.play_name,
+        teamId: data.team_id,
+      });
+
       return data as Play;
     } catch (error) {
       console.error("❌ PlaysService.createPlay failed:", error);
@@ -431,6 +441,14 @@ export class PlaysService {
         throw new Error("No data returned from play update");
       }
 
+      // Record activity for the updated play
+      await ActivityService.recordActivity({
+        type: "updated",
+        playId: data.id,
+        playName: data.play_name,
+        teamId: data.team_id,
+      });
+
       return data as Play;
     } catch (error) {
       console.error("❌ PlaysService.updatePlay failed:", error);
@@ -443,6 +461,13 @@ export class PlaysService {
    */
   static async deletePlay(id: string): Promise<void> {
     try {
+      // First, get the play data for activity recording
+      const { data: play } = await supabase
+        .from("plays")
+        .select("id, play_name, team_id")
+        .eq("id", id)
+        .single();
+
       const { error } = await supabase
         .from("plays")
         .update({
@@ -454,6 +479,16 @@ export class PlaysService {
       if (error) {
         console.error("❌ Error archiving play:", error);
         throw new Error(`Failed to archive play: ${error.message}`);
+      }
+
+      // Record activity for the deleted play
+      if (play) {
+        await ActivityService.recordActivity({
+          type: "deleted",
+          playId: play.id,
+          playName: play.play_name,
+          teamId: play.team_id,
+        });
       }
     } catch (error) {
       console.error("❌ PlaysService.deletePlay failed:", error);
