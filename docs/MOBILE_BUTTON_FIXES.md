@@ -9,13 +9,16 @@
 ## 🔍 Issues Found
 
 ### Issue 1: Lazy-Loaded Modals Show No Loading State ❌
+
 **Problem:**
+
 - AddNewPlayModal and PlayDiagramBuilder use `lazy()` imports
 - `Suspense fallback={null}` shows nothing during chunk loading (200-500ms)
 - Users tap button → nothing happens → assume button is broken
 - **User Experience:** "Some buttons are broken"
 
 **Code Before:**
+
 ```tsx
 <Suspense fallback={null}>
   <AddNewPlayModal ... />
@@ -23,17 +26,21 @@
 ```
 
 **Impact:**
+
 - First tap loads 120KB chunk (AddNewPlayModal) → 300-500ms delay
 - No visual feedback → users think button failed
 - Users tap multiple times → confusion
 
 ### Issue 2: Navigation Buttons Lack Haptic Feedback ❌
+
 **Problem:**
+
 - `handleQuickNewPracticeScript()` and `handleQuickNewGamePlan()` have no haptic feedback
 - Navigation takes 100-300ms → feels unresponsive
 - Other buttons have haptic → inconsistent UX
 
 **Code Before:**
+
 ```tsx
 const handleQuickNewPracticeScript = useCallback(() => {
   navigate("/practice-plans");
@@ -47,9 +54,11 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ### Fix 1: Added Loading Spinners to Suspense Fallbacks
 
 #### AddNewPlayModal Loading State
+
 **File:** `src/pages/PlaybookPage.tsx` (Line ~1444)
 
 **Before:**
+
 ```tsx
 <Suspense fallback={null}>
   <AddNewPlayModal ... />
@@ -57,6 +66,7 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ```
 
 **After:**
+
 ```tsx
 <Suspense
   fallback={
@@ -75,6 +85,7 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ```
 
 **Improvement:**
+
 - ✅ User sees loading spinner immediately
 - ✅ Clear text: "Loading play editor..."
 - ✅ Branded spinner (jade color)
@@ -84,9 +95,11 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ---
 
 #### PlayDiagramBuilder Loading State
+
 **File:** `src/pages/PlaybookPage.tsx` (Line ~1825)
 
 **Before:**
+
 ```tsx
 <Suspense fallback={null}>
   <PlayDiagramBuilder ... />
@@ -94,6 +107,7 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ```
 
 **After:**
+
 ```tsx
 <Suspense
   fallback={
@@ -112,6 +126,7 @@ const handleQuickNewPracticeScript = useCallback(() => {
 ```
 
 **Improvement:**
+
 - ✅ Centered spinner in modal
 - ✅ Clear text: "Loading diagram editor..."
 - ✅ min-h-96 ensures proper height
@@ -124,6 +139,7 @@ const handleQuickNewPracticeScript = useCallback(() => {
 **File:** `src/pages/PlaybookPage.tsx` (Line ~814-820)
 
 **Before:**
+
 ```tsx
 const handleQuickNewPracticeScript = useCallback(() => {
   navigate("/practice-plans");
@@ -135,6 +151,7 @@ const handleQuickNewGamePlan = useCallback(() => {
 ```
 
 **After:**
+
 ```tsx
 const handleQuickNewPracticeScript = useCallback(() => {
   triggerHapticFeedback("light");
@@ -148,6 +165,7 @@ const handleQuickNewGamePlan = useCallback(() => {
 ```
 
 **Improvement:**
+
 - ✅ Consistent haptic feedback with other buttons
 - ✅ Immediate tactile response on tap
 - ✅ Better perceived responsiveness
@@ -157,24 +175,27 @@ const handleQuickNewGamePlan = useCallback(() => {
 ## 📊 Impact Summary
 
 ### Before Fixes:
-| Issue | User Experience | Buttons Affected |
-|-------|-----------------|------------------|
-| No loading state | "Button is broken" | 4 buttons (New Play, Whiteboard via FAB) |
-| No haptic feedback | "Button feels sluggish" | 2 buttons (Practice, Game Plan) |
-| **Total Affected** | **6/18 buttons (33%)** | **Poor UX** |
+
+| Issue              | User Experience         | Buttons Affected                         |
+| ------------------ | ----------------------- | ---------------------------------------- |
+| No loading state   | "Button is broken"      | 4 buttons (New Play, Whiteboard via FAB) |
+| No haptic feedback | "Button feels sluggish" | 2 buttons (Practice, Game Plan)          |
+| **Total Affected** | **6/18 buttons (33%)**  | **Poor UX**                              |
 
 ### After Fixes:
-| Fix | User Experience | Buttons Fixed |
-|-----|-----------------|---------------|
-| Loading spinners | "Button is working!" | 4 buttons ✅ |
-| Haptic feedback | "Button feels responsive" | 2 buttons ✅ |
-| **Total Fixed** | **6/6 buttons (100%)** | **Excellent UX** |
+
+| Fix              | User Experience           | Buttons Fixed    |
+| ---------------- | ------------------------- | ---------------- |
+| Loading spinners | "Button is working!"      | 4 buttons ✅     |
+| Haptic feedback  | "Button feels responsive" | 2 buttons ✅     |
+| **Total Fixed**  | **6/6 buttons (100%)**    | **Excellent UX** |
 
 ---
 
 ## 🧪 Testing Checklist
 
 ### Test Loading States:
+
 - [ ] Tap "New Play" (first time) → See "Loading play editor..." spinner
 - [ ] Tap "+ New Play" CTA (empty state) → See loading spinner
 - [ ] Tap FAB → "New Play" → See loading spinner
@@ -184,6 +205,7 @@ const handleQuickNewGamePlan = useCallback(() => {
 - [ ] Text is readable on mobile
 
 ### Test Haptic Feedback:
+
 - [ ] Tap "Practice" quick action → Feel haptic buzz
 - [ ] Tap "Game Plan" quick action → Feel haptic buzz
 - [ ] Tap FAB → "Practice" → Feel haptic buzz
@@ -192,6 +214,7 @@ const handleQuickNewGamePlan = useCallback(() => {
 - [ ] Navigation completes successfully
 
 ### Test All Buttons (Regression):
+
 - [ ] Header: Stats button works
 - [ ] Header: Search button works
 - [ ] Header: Filter button works
@@ -206,17 +229,20 @@ const handleQuickNewGamePlan = useCallback(() => {
 ## 📈 Metrics
 
 **Code Changes:**
+
 - Files modified: 1 (`PlaybookPage.tsx`)
 - Lines added: +32
 - Lines removed: -2
 - Net change: +30 lines
 
 **Quality:**
+
 - Type errors: 0 ✅
 - Lint errors: 0 ✅
 - Build status: ✅ Success
 
 **Performance:**
+
 - Loading state: +5KB (minimal impact)
 - Haptic feedback: +0.1KB (negligible)
 - Total bundle size impact: +5.1KB
@@ -232,6 +258,7 @@ const handleQuickNewGamePlan = useCallback(() => {
 **Fix:** Added visible loading spinners to Suspense fallbacks
 
 **Result:**
+
 - ✅ Users see immediate feedback on button tap
 - ✅ No more "broken button" perception
 - ✅ Clear loading text explains what's happening
@@ -242,12 +269,14 @@ const handleQuickNewGamePlan = useCallback(() => {
 ## 🚀 Next Steps
 
 ### Immediate:
+
 1. ✅ Test on device (192.168.1.38:5173)
 2. ✅ Verify all 18 buttons work correctly
 3. ✅ Check loading states appear within 50ms
 4. ✅ Confirm haptic feedback on all taps
 
 ### Optional Future Enhancements:
+
 - [ ] Preload AddNewPlayModal on page load (eliminate first-tap delay)
 - [ ] Add progress indicator for navigation (show % of route loading)
 - [ ] Add error boundaries for navigation failures

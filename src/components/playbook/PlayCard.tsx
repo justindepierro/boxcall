@@ -147,10 +147,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     });
   }, [play]);
 
-    // Quick Wins: Recent plays tracking and favorites
+  // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
   const { isFavorite, toggleFavorite } = useFavoritePlays();
-  
+
   // Mobile detection for responsive styling
   const isMobile = useIsMobile();
 
@@ -440,9 +440,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     >
       <div
         className={`${
-          isCompact 
-            ? isMobile ? "p-5" : "p-3 sm:p-4" 
-            : isMobile ? "p-6" : "p-4 sm:p-6"
+          isCompact
+            ? isMobile
+              ? "p-5"
+              : "p-3 sm:p-4"
+            : isMobile
+              ? "p-6"
+              : "p-4 sm:p-6"
         } overflow-visible`}
       >
         {!isTile && play.diagram_url && (

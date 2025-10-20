@@ -9,7 +9,10 @@ import type { Play } from "../../types/play";
 import { useTeamsData } from "../../hooks/useTeamsData";
 
 // DatabasePlay type from useTeamsData (matches what the hook returns)
-type DatabasePlay = Exclude<ReturnType<typeof useTeamsData>["plays"], undefined>[number];
+type DatabasePlay = Exclude<
+  ReturnType<typeof useTeamsData>["plays"],
+  undefined
+>[number];
 
 interface PlaySelectorModalProps {
   isOpen: boolean;
@@ -28,7 +31,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
 }) => {
   // Get real plays from database
   const { plays, loading } = useTeamsData();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormation, setSelectedFormation] = useState<string>("");
   const [selectedPlayType, setSelectedPlayType] = useState<string>("");
@@ -197,16 +200,19 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                         <Badge variant="info" size="sm">
                           {play.formation}
                         </Badge>
-                        {play.times_called !== undefined && play.times_called > 0 && (
-                          <Badge
-                            variant={
-                              getSuccessRate(play) >= 70 ? "success" : "warning"
-                            }
-                            size="sm"
-                          >
-                            {getSuccessRate(play)}% success
-                          </Badge>
-                        )}
+                        {play.times_called !== undefined &&
+                          play.times_called > 0 && (
+                            <Badge
+                              variant={
+                                getSuccessRate(play) >= 70
+                                  ? "success"
+                                  : "warning"
+                              }
+                              size="sm"
+                            >
+                              {getSuccessRate(play)}% success
+                            </Badge>
+                          )}
                       </div>
 
                       {play.notes && (

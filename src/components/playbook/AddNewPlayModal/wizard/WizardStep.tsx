@@ -77,7 +77,10 @@ export const WizardStep: React.FC<WizardStepProps> = ({
 
         {/* Step Title with Optional Badge */}
         <div className="flex items-center gap-2">
-          <Typography variant="headline-lg" className="text-primary font-semibold">
+          <Typography
+            variant="headline-lg"
+            className="text-primary font-semibold"
+          >
             {title}
           </Typography>
 

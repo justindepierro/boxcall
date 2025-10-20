@@ -55,7 +55,7 @@ export const PersonnelConfigurationModal: React.FC<
   );
   const [justSaved, setJustSaved] = useState(false);
   const toast = useToast();
-  
+
   // Mobile detection using centralized hook
   const isMobile = useIsMobile();
 

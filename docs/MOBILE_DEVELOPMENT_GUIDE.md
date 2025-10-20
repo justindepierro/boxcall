@@ -12,12 +12,12 @@ This guide provides the **single source of truth** for mobile development in Box
 
 ### Quick Reference
 
-| Need | Solution | Example |
-|------|----------|---------|
-| **Styling** | Use Tailwind breakpoints | `className="p-4 sm:p-6 md:p-8"` |
-| **Logic** | Use `useIsMobile()` hook | `const isMobile = useIsMobile();` |
-| **Components** | Import from `mobile/` | `import { MobileSection } from 'components/mobile';` |
-| **Breakpoint** | Mobile: < 768px, Tablet: 768px+, Desktop: 1024px+ | Aligned with Tailwind |
+| Need           | Solution                                          | Example                                              |
+| -------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| **Styling**    | Use Tailwind breakpoints                          | `className="p-4 sm:p-6 md:p-8"`                      |
+| **Logic**      | Use `useIsMobile()` hook                          | `const isMobile = useIsMobile();`                    |
+| **Components** | Import from `mobile/`                             | `import { MobileSection } from 'components/mobile';` |
+| **Breakpoint** | Mobile: < 768px, Tablet: 768px+, Desktop: 1024px+ | Aligned with Tailwind                                |
 
 ---
 
@@ -42,6 +42,7 @@ XL:      1440px - 1919px   (xl:)
 ✅ **Aligned:** Tailwind `sm:` matches `useIsMobile()` hook
 
 **Devices:**
+
 - Mobile: iPhone, Android phones, small tablets in portrait
 - Tablet: iPad, Android tablets, large phones in landscape
 - Desktop: Laptops, desktops, monitors
@@ -65,6 +66,7 @@ XL:      1440px - 1919px   (xl:)
 ```
 
 **Benefits:**
+
 - ✅ No JavaScript overhead
 - ✅ SSR-friendly (no hydration issues)
 - ✅ Easier to read
@@ -80,16 +82,16 @@ import { useIsMobile } from 'hooks/useBreakpoint';
 
 const MyComponent = () => {
   const isMobile = useIsMobile();
-  
+
   // Complex logic based on mobile
   const itemsToShow = isMobile ? 4 : 10;
   const enableVirtualScrolling = isMobile && items.length > 100;
-  
+
   // Conditional feature rendering
   if (isMobile && isLowPowerMode) {
     return <SimplifiedView />;
   }
-  
+
   return (
     <div className="p-4 sm:p-6"> {/* Still use Tailwind for styling */}
       {items.slice(0, itemsToShow).map(...)}
@@ -99,6 +101,7 @@ const MyComponent = () => {
 ```
 
 **Good use cases:**
+
 - Progressive loading (show 4 items on mobile, 10 on desktop)
 - Feature flags (disable animations on mobile)
 - API decisions (fetch less data on mobile)
@@ -106,6 +109,7 @@ const MyComponent = () => {
 - Complex conditional rendering
 
 **Bad use cases (use Tailwind instead):**
+
 ```tsx
 // ❌ BAD: Hook for simple styling
 const isMobile = useIsMobile();
@@ -143,24 +147,26 @@ src/components/mobile/
 
 ```tsx
 // ✅ GOOD: Import from main index
-import { 
-  MobileSection, 
+import {
+  MobileSection,
   MobileCTACard,
-  MobileQuickActions 
-} from 'components/mobile';
+  MobileQuickActions,
+} from "components/mobile";
 
 // ❌ BAD: Don't import from subdirectories
-import { MobileSection } from 'components/mobile/ui/MobileSection';
+import { MobileSection } from "components/mobile/ui/MobileSection";
 ```
 
 ### When to Use Mobile Components
 
 **Use mobile/core for:**
+
 - Bottom navigation bars
 - Side drawers
 - Mobile-specific navigation
 
 **Use mobile/ui for:**
+
 - Cards with mobile-optimized spacing
 - Sections with mobile-friendly layouts
 - Lists with swipe actions
@@ -168,6 +174,7 @@ import { MobileSection } from 'components/mobile/ui/MobileSection';
 - Hero cards with stats
 
 **Don't use mobile components for:**
+
 - Simple padding changes (use Tailwind: `p-4 sm:p-6`)
 - Font size changes (use Tailwind: `text-base sm:text-sm`)
 - Layout changes (use Tailwind: `flex-col sm:flex-row`)
@@ -186,12 +193,12 @@ import { MobileSection } from 'components/mobile/ui/MobileSection';
 
 ```tsx
 // ✅ GOOD: Use useMobileButtonProps hook
-import { useMobileButtonProps } from 'hooks/useMobileButtonProps';
+import { useMobileButtonProps } from "hooks/useMobileButtonProps";
 
 const MyComponent = () => {
   const primaryButtonSize = useMobileButtonProps("md", true).size; // 48px on mobile
   const secondaryButtonSize = useMobileButtonProps("md", false).size; // 44px on mobile
-  
+
   return (
     <>
       <Button size={primaryButtonSize}>Primary Action</Button>
@@ -202,6 +209,7 @@ const MyComponent = () => {
 ```
 
 **Button Sizes:**
+
 - `sm`: 36px (too small for mobile ❌)
 - `md`: 40px (desktop default)
 - `lg`: 44px (mobile secondary ✅)
@@ -221,7 +229,7 @@ const MyComponent = () => {
 // ✅ GOOD: 16px font on mobile
 <input className={`
   w-full border rounded-lg
-  ${isMobile 
+  ${isMobile
     ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font
     : "px-3 py-2 text-sm"   // Desktop: normal
   }
@@ -236,6 +244,7 @@ const MyComponent = () => {
 ```
 
 **Key Points:**
+
 - ✅ **16px font** prevents iOS zoom
 - ✅ **48px height** easy to tap
 - ✅ **Generous padding** (20px horizontal)
@@ -258,9 +267,7 @@ const MyComponent = () => {
 
 ```tsx
 // Mobile: Full width, Tablet+: Auto width
-<Button className="w-full sm:w-auto">
-  Action
-</Button>
+<Button className="w-full sm:w-auto">Action</Button>
 ```
 
 ### Pattern 3: Progressive Disclosure
@@ -298,11 +305,13 @@ return isMobile ? <MobileView /> : <DesktopView />;
 
 ```tsx
 // Sticky search bar on mobile
-<div className="
+<div
+  className="
   sticky top-0 z-10
   bg-white/95 backdrop-blur-md
   px-4 py-3
-">
+"
+>
   <SearchInput />
 </div>
 ```
@@ -336,7 +345,7 @@ return isMobile ? <MobileView /> : <DesktopView />;
 ```tsx
 // Progressive grid density
 <div className="
-  grid 
+  grid
   grid-cols-1           // Mobile: 1 column
   sm:grid-cols-2        // Tablet: 2 columns
   md:grid-cols-3        // Desktop: 3 columns
@@ -358,8 +367,8 @@ const [isMobile, setIsMobile] = useState(false);
 useEffect(() => {
   const check = () => setIsMobile(window.innerWidth < 768);
   check();
-  window.addEventListener('resize', check);
-  return () => window.removeEventListener('resize', check);
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
 }, []);
 
 // ✅ GOOD: Use hook
@@ -372,9 +381,8 @@ const isMobile = useIsMobile();
 // ❌ BAD: Hook and Tailwind use different breakpoints
 const isMobile = useIsMobile(); // < 768px
 <div className={isMobile ? "grid-cols-1" : ""}>
-  <div className="sm:grid-cols-2"> {/* sm: was 640px, now 768px ✅ */}
-  </div>
-</div>
+  <div className="sm:grid-cols-2"> {/* sm: was 640px, now 768px ✅ */}</div>
+</div>;
 
 // ✅ GOOD: Now aligned! (since we updated Tailwind config)
 // isMobile and sm: both use 768px ✅
@@ -422,16 +430,19 @@ const Card = () => <div className="p-4 sm:p-6">...</div>;
 ### Real Device Testing
 
 **Mobile (< 768px):**
+
 - iPhone SE (375px) - Smallest modern iPhone
 - iPhone 12/13/14 (390px) - Standard
 - iPhone 14 Pro Max (430px) - Largest
 
 **Tablet (768px - 1023px):**
+
 - iPad (768px portrait, 1024px landscape)
 - iPad Pro (834px portrait)
 - Android tablets
 
 **Checklist:**
+
 - [ ] Touch targets ≥ 44px
 - [ ] Inputs ≥ 16px font (no iOS zoom)
 - [ ] No horizontal scroll
@@ -447,36 +458,38 @@ const Card = () => <div className="p-4 sm:p-6">...</div>;
 ### Example 1: Mobile-First Card
 
 ```tsx
-import { useIsMobile } from 'hooks/useBreakpoint';
+import { useIsMobile } from "hooks/useBreakpoint";
 
 const PlayCard = ({ play }) => {
   const isMobile = useIsMobile();
-  
+
   // Use hook for logic
   const shouldShowExpandedContent = isMobile && play.description.length > 100;
-  
+
   return (
-    <div className="
+    <div
+      className="
       p-5 sm:p-4 md:p-6       // Tailwind for styling
       text-base sm:text-sm    // Larger text on mobile
       border rounded-lg
-    ">
-      <h3 className="text-base sm:text-sm font-semibold">
-        {play.name}
-      </h3>
-      
+    "
+    >
+      <h3 className="text-base sm:text-sm font-semibold">{play.name}</h3>
+
       {/* Hook for conditional rendering */}
       {shouldShowExpandedContent ? (
         <ExpandedDescription text={play.description} />
       ) : (
         <p className="text-sm">{play.description}</p>
       )}
-      
-      <div className="
+
+      <div
+        className="
         flex flex-col sm:flex-row  // Stack on mobile
         gap-2 sm:gap-3             // Smaller gap on mobile
         mt-4
-      ">
+      "
+      >
         <Button className="w-full sm:w-auto">View</Button>
         <Button className="w-full sm:w-auto">Edit</Button>
       </div>
@@ -488,16 +501,16 @@ const PlayCard = ({ play }) => {
 ### Example 2: Mobile PlaybookPage
 
 ```tsx
-import { useIsMobile } from 'hooks/useBreakpoint';
-import { 
-  MobileSection, 
-  MobileCTACard, 
-  MobileQuickActions 
-} from 'components/mobile';
+import { useIsMobile } from "hooks/useBreakpoint";
+import {
+  MobileSection,
+  MobileCTACard,
+  MobileQuickActions,
+} from "components/mobile";
 
 const PlaybookPage = () => {
   const isMobile = useIsMobile();
-  
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       {isMobile ? (
@@ -510,7 +523,7 @@ const PlaybookPage = () => {
               onClick={handleAddPlay}
             />
           </MobileSection>
-          
+
           <MobileQuickActions
             actions={[
               { icon: "plus", label: "New", onClick: handleNew },
@@ -529,15 +542,19 @@ const PlaybookPage = () => {
           </main>
         </div>
       )}
-      
+
       {/* Grid works on all sizes with Tailwind */}
-      <div className="
+      <div
+        className="
         grid 
         grid-cols-1 sm:grid-cols-2 md:grid-cols-3
         gap-4 sm:gap-6
         mt-6
-      ">
-        {plays.map(play => <PlayCard key={play.id} play={play} />)}
+      "
+      >
+        {plays.map((play) => (
+          <PlayCard key={play.id} play={play} />
+        ))}
       </div>
     </div>
   );
@@ -551,37 +568,39 @@ const AddPlayModal = () => {
   const isMobile = useIsMobile();
   const primaryButtonSize = useMobileButtonProps("md", true).size;
   const secondaryButtonSize = useMobileButtonProps("md", false).size;
-  
+
   return (
-    <Modal fullScreen={isMobile}> {/* Full screen on mobile */}
+    <Modal fullScreen={isMobile}>
+      {" "}
+      {/* Full screen on mobile */}
       <form>
         {/* Inputs with 16px font on mobile (prevents iOS zoom) */}
         <Input
           label="Play Name"
           className={`
             w-full border rounded-lg
-            ${isMobile 
-              ? "px-5 py-4 text-base" // 48px, 16px
-              : "px-3 py-2 text-sm"   // Normal
+            ${
+              isMobile
+                ? "px-5 py-4 text-base" // 48px, 16px
+                : "px-3 py-2 text-sm" // Normal
             }
           `}
         />
-        
+
         {/* Full-width buttons on mobile */}
-        <div className={`
+        <div
+          className={`
           flex justify-end gap-3
           ${isMobile ? "flex-col" : "flex-row"}
-        `}>
-          <Button 
+        `}
+        >
+          <Button
             size={secondaryButtonSize}
             className={isMobile ? "w-full" : ""}
           >
             Cancel
           </Button>
-          <Button 
-            size={primaryButtonSize}
-            className={isMobile ? "w-full" : ""}
-          >
+          <Button size={primaryButtonSize} className={isMobile ? "w-full" : ""}>
             Create Play
           </Button>
         </div>
@@ -622,12 +641,14 @@ Need to make something responsive?
 ## 📖 Further Reading
 
 ### Internal Docs
+
 - `MOBILE_ARCHITECTURE_AUDIT.md` - Complete architecture audit
 - `MOBILE_ARCHITECTURE_MIGRATION_PHASE1.md` - Migration details
 - `MOBILE_PLAYBOOK_REDESIGN_PLAN.md` - Long-term mobile plan
 - `tailwind.config.js` - Breakpoint configuration
 
 ### External Resources
+
 - [Tailwind Responsive Design](https://tailwindcss.com/docs/responsive-design)
 - [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
 - [Material Design Mobile](https://material.io/design/layout/responsive-layout-grid.html)
@@ -650,16 +671,16 @@ Need to make something responsive?
 
 ```tsx
 // Hooks
-import { useIsMobile, useIsTablet, useIsDesktop } from 'hooks/useBreakpoint';
-import { useMobileButtonProps } from 'hooks/useMobileButtonProps';
+import { useIsMobile, useIsTablet, useIsDesktop } from "hooks/useBreakpoint";
+import { useMobileButtonProps } from "hooks/useMobileButtonProps";
 
 // Components
-import { 
+import {
   MobileSection,
   MobileCTACard,
   MobileQuickActions,
   MobileBottomNavigation,
-} from 'components/mobile';
+} from "components/mobile";
 ```
 
 ---

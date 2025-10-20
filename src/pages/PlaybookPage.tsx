@@ -130,7 +130,7 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
-  
+
   // Mobile-optimized button sizes (44px+ touch targets)
   const mobileButtonSize = useMobileButtonProps("md", true).size;
   const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
@@ -920,12 +920,12 @@ export default function PlaybookPage() {
               playCount={state.playsCreated}
               filterCount={Object.keys(state.advancedFilters).length}
               onSearchClick={() => {
-                // Focus search input
+                // Focus the always-visible search input at top
                 const searchInput = document.querySelector(
                   'input[type="search"]'
                 ) as HTMLInputElement;
                 searchInput?.focus();
-                searchInput?.scrollIntoView({ behavior: "smooth", block: "center" });
+                // No need to scroll - search is always at top now!
               }}
               onFilterClick={() => {
                 triggerHapticFeedback("light");
@@ -937,86 +937,9 @@ export default function PlaybookPage() {
               }}
             />
 
-            <div className="px-4 py-6 space-y-6 pb-24">
-            {/* Empty State - Hero CTA */}
-            {state.playsCreated === 0 && (
-              <MobileSection spacing="comfortable">
-                <MobileCTACard
-                  icon="plus"
-                  title="Create Your First Play"
-                  description="Build offensive and defensive plays with our diagram editor"
-                  action="Get Started"
-                  variant="primary"
-                  onTap={handleOpenBuilder}
-                />
-              </MobileSection>
-            )}
-
-            {/* Quick Actions - 3 Max for Mobile */}
-            <MobileSection title="Quick Actions" spacing="tight">
-              <MobileQuickActions
-                actions={[
-                  {
-                    id: "new-play",
-                    icon: "plus",
-                    label: "New Play",
-                    onTap: handleOpenBuilder,
-                  },
-                  {
-                    id: "practice",
-                    icon: "clock",
-                    label: "Practice",
-                    onTap: handleQuickNewPracticeScript,
-                  },
-                  {
-                    id: "game-plan",
-                    icon: "target",
-                    label: "Game Plan",
-                    onTap: handleQuickNewGamePlan,
-                  },
-                ]}
-              />
-            </MobileSection>
-
-            {/* Selection Mode Toggle - Mobile */}
-            <MobileSection spacing="tight">
-              <SelectionModeToggle
-                isActive={state.enableBulkOperations}
-                onToggle={() => {
-                  triggerHapticFeedback("light");
-                  dispatch({ type: "TOGGLE_BULK" });
-                }}
-                selectedCount={state.selectedPlayIds?.size || 0}
-                variant="compact"
-                className="w-full"
-              />
-            </MobileSection>
-
-            {/* Filters - Collapsed by Default */}
+            {/* Search Bar - Always visible at top (before any content) */}
             {state.playsCreated > 0 && (
-              <MobileSection spacing="tight">
-                <Button
-                  onClick={() => {
-                    triggerHapticFeedback("light");
-                    setShowFiltersSheet(true);
-                  }}
-                  variant="secondary"
-                  className="w-full h-12"
-                >
-                  <Icon name="filter" className="h-4 w-4 mr-2" />
-                  Filters & Search
-                  {Object.keys(state.advancedFilters).length > 0 && (
-                    <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
-                      {Object.keys(state.advancedFilters).length}
-                    </span>
-                  )}
-                </Button>
-              </MobileSection>
-            )}
-
-            {/* Search Bar - Sticky on Mobile with Backdrop Blur */}
-            {state.playsCreated > 0 && (
-              <div className="sticky top-0 z-30 bg-surface-primary/80 backdrop-blur-md border-b border-border-subtle/50 -mx-4 px-4 py-3 shadow-sm">
+              <div className="sticky top-0 z-30 bg-surface-primary/95 backdrop-blur-md border-b border-border-subtle/50 px-4 py-3 shadow-sm">
                 <div className="relative">
                   <Icon
                     name="search"
@@ -1055,6 +978,7 @@ export default function PlaybookPage() {
                         type: "spring",
                         stiffness: 400,
                         damping: 20,
+                        duration: 0.1, // Faster animation (was 200ms default)
                       }}
                       onClick={() => {
                         triggerHapticFeedback("light");
@@ -1073,60 +997,139 @@ export default function PlaybookPage() {
               </div>
             )}
 
-            {/* Main Content - Plays Grid */}
-            <MobileSection
-              title="Your Plays"
-              action={state.playsCreated > 3 ? "See All" : undefined}
-              spacing="comfortable"
-            >
-              <PullToRefresh onRefresh={handlePullRefresh}>
-                <ErrorBoundary
-                  fallback={
-                    <div className="p-spacing-lg text-center">
-                      <Typography
-                        variant="body-md"
-                        className="text-text-secondary"
-                      >
-                        Failed to load plays. Please refresh the page.
-                      </Typography>
-                    </div>
-                  }
-                >
-                  <PlayGrid
-                    searchQuery={debouncedSearchQuery}
-                    filters={state.selectedFilters}
-                    optimisticPlays={optimisticPlays}
-                    onAddToPracticeScript={handleAddToPracticeScript}
-                    onAddToGamePlan={handleAddToGamePlan}
-                    onEdit={handleEditPlay}
-                    onSave={handleSavePlay}
-                    onDuplicate={handleDuplicatePlay}
-                    onOpenBuilder={handleOpenBuilder}
-                    onCreateDiagram={handleCreateDiagram}
-                    refreshTrigger={state.refreshTrigger}
-                    onPlayCountChange={handlePlayCountChange}
-                    formationSuggestions={suggestions.formations}
-                    playNameSuggestions={suggestions.playNames}
-                    enableBulkOperations={state.enableBulkOperations}
-                    selectedPlayIds={state.selectedPlayIds}
-                    onPlaySelectionChange={(selection) =>
-                      dispatch({ type: "SET_SELECTION", selection })
-                    }
-                  />
-                </ErrorBoundary>
-              </PullToRefresh>
-            </MobileSection>
+            <div className="px-4 py-6 space-y-6 pb-32">
+              {/* pb-32 instead of pb-24 to prevent FAB overlap */}
 
-            {/* Floating Action Button for Quick Actions */}
-            <FloatingActionButton
-              actions={FABPresets.playbook({
-                onNewPlay: handleOpenBuilder,
-                onWhiteboard: handleOpenWhiteboard,
-                onPractice: handleQuickNewPracticeScript,
-                onGamePlan: handleQuickNewGamePlan,
-              })}
-              icon="plus"
-            />
+              {/* Empty State - Hero CTA */}
+              {state.playsCreated === 0 && (
+                <MobileSection spacing="comfortable">
+                  <MobileCTACard
+                    icon="plus"
+                    title="Create Your First Play"
+                    description="Build offensive and defensive plays with our diagram editor"
+                    action="Get Started"
+                    variant="primary"
+                    onTap={handleOpenBuilder}
+                  />
+                </MobileSection>
+              )}
+
+              {/* Quick Actions - 3 Max for Mobile */}
+              <MobileSection title="Quick Actions" spacing="tight">
+                <MobileQuickActions
+                  actions={[
+                    {
+                      id: "new-play",
+                      icon: "plus",
+                      label: "New Play",
+                      onTap: handleOpenBuilder,
+                    },
+                    {
+                      id: "practice",
+                      icon: "clock",
+                      label: "Practice",
+                      onTap: handleQuickNewPracticeScript,
+                    },
+                    {
+                      id: "game-plan",
+                      icon: "target",
+                      label: "Game Plan",
+                      onTap: handleQuickNewGamePlan,
+                    },
+                  ]}
+                />
+              </MobileSection>
+
+              {/* Selection Mode Toggle - Mobile */}
+              <MobileSection spacing="tight">
+                <SelectionModeToggle
+                  isActive={state.enableBulkOperations}
+                  onToggle={() => {
+                    triggerHapticFeedback("light");
+                    dispatch({ type: "TOGGLE_BULK" });
+                  }}
+                  selectedCount={state.selectedPlayIds?.size || 0}
+                  variant="compact"
+                  className="w-full"
+                />
+              </MobileSection>
+
+              {/* Advanced Filters Button - Renamed for clarity */}
+              {state.playsCreated > 0 && (
+                <MobileSection spacing="tight">
+                  <Button
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      setShowFiltersSheet(true);
+                    }}
+                    variant="secondary"
+                    className="w-full h-12"
+                  >
+                    <Icon name="filter" className="h-4 w-4 mr-2" />
+                    Advanced Filters
+                    {Object.keys(state.advancedFilters).length > 0 && (
+                      <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
+                        {Object.keys(state.advancedFilters).length}
+                      </span>
+                    )}
+                  </Button>
+                </MobileSection>
+              )}
+
+              {/* Main Content - Plays Grid */}
+              <MobileSection
+                title="Your Plays"
+                action={state.playsCreated > 3 ? "See All" : undefined}
+                spacing="comfortable"
+              >
+                <PullToRefresh onRefresh={handlePullRefresh}>
+                  <ErrorBoundary
+                    fallback={
+                      <div className="p-spacing-lg text-center">
+                        <Typography
+                          variant="body-md"
+                          className="text-text-secondary"
+                        >
+                          Failed to load plays. Please refresh the page.
+                        </Typography>
+                      </div>
+                    }
+                  >
+                    <PlayGrid
+                      searchQuery={debouncedSearchQuery}
+                      filters={state.selectedFilters}
+                      optimisticPlays={optimisticPlays}
+                      onAddToPracticeScript={handleAddToPracticeScript}
+                      onAddToGamePlan={handleAddToGamePlan}
+                      onEdit={handleEditPlay}
+                      onSave={handleSavePlay}
+                      onDuplicate={handleDuplicatePlay}
+                      onOpenBuilder={handleOpenBuilder}
+                      onCreateDiagram={handleCreateDiagram}
+                      refreshTrigger={state.refreshTrigger}
+                      onPlayCountChange={handlePlayCountChange}
+                      formationSuggestions={suggestions.formations}
+                      playNameSuggestions={suggestions.playNames}
+                      enableBulkOperations={state.enableBulkOperations}
+                      selectedPlayIds={state.selectedPlayIds}
+                      onPlaySelectionChange={(selection) =>
+                        dispatch({ type: "SET_SELECTION", selection })
+                      }
+                    />
+                  </ErrorBoundary>
+                </PullToRefresh>
+              </MobileSection>
+
+              {/* Floating Action Button for Quick Actions */}
+              <FloatingActionButton
+                actions={FABPresets.playbook({
+                  onNewPlay: handleOpenBuilder,
+                  onWhiteboard: handleOpenWhiteboard,
+                  onPractice: handleQuickNewPracticeScript,
+                  onGamePlan: handleQuickNewGamePlan,
+                })}
+                icon="plus"
+              />
             </div>
 
             {/* Mobile Bottom Navigation */}
@@ -1449,7 +1452,10 @@ export default function PlaybookPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                   <div className="bg-surface-primary rounded-lg p-8 flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
-                    <Typography variant="body-md" className="text-text-secondary">
+                    <Typography
+                      variant="body-md"
+                      className="text-text-secondary"
+                    >
                       Loading play editor...
                     </Typography>
                   </div>
@@ -1827,7 +1833,10 @@ export default function PlaybookPage() {
                 <div className="flex items-center justify-center h-full min-h-96">
                   <div className="flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
-                    <Typography variant="body-md" className="text-text-secondary">
+                    <Typography
+                      variant="body-md"
+                      className="text-text-secondary"
+                    >
                       Loading diagram editor...
                     </Typography>
                   </div>

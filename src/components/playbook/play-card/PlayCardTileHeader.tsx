@@ -50,7 +50,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 }) => {
   // Mobile detection for responsive font sizes
   const isMobile = useIsMobile();
-  
+
   // Find the badge customization for this play's personnel
   const personnelConfig = personnelConfigurations.find(
     (config) => config.name === optimisticPlay.personnel
@@ -156,7 +156,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           {tileTitle}
         </ScrollingText>
         {tileSubtitle && (
-          <p className={`text-text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}>
+          <p
+            className={`text-text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}
+          >
             {tileSubtitle}
           </p>
         )}

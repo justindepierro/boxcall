@@ -227,6 +227,7 @@ The Game Plan Builder is the **preparation phase** of the BoxCall system. Coache
 ### API Integration Points
 
 #### 1. Game Plan Activation
+
 ```typescript
 // When coach clicks "Activate for Game" in GamePlansPage
 BoxCallService.activateGamePlan(gamePlanId: string) {
@@ -238,6 +239,7 @@ BoxCallService.activateGamePlan(gamePlanId: string) {
 ```
 
 #### 2. Situational Play Access
+
 ```typescript
 // During game, coach selects "3rd & Short"
 BoxCallService.getSituationalPlays(situation: BillickSituationType) {
@@ -249,6 +251,7 @@ BoxCallService.getSituationalPlays(situation: BillickSituationType) {
 ```
 
 #### 3. Call Tracking
+
 ```typescript
 // After play is called via BoxCall
 BoxCallService.logPlayCall({
@@ -266,6 +269,7 @@ BoxCallService.logPlayCall({
 ### UI/UX Design Patterns
 
 #### GamePlansPage Enhancement
+
 ```tsx
 // Add activation state to game plan tiles
 <GamePlanCard>
@@ -280,13 +284,14 @@ BoxCallService.logPlayCall({
 ```
 
 #### BoxCall Sidebar Integration
+
 ```tsx
 // New BoxCall sidebar shows active game plan
 <BoxCallSidebar>
   <ActiveGamePlan name="vs Central High" date="Oct 25, 2025" />
-  
+
   <SituationButtons>
-    {situations.map(situation => (
+    {situations.map((situation) => (
       <SituationButton
         key={situation.type}
         label={situation.label}
@@ -296,7 +301,7 @@ BoxCallService.logPlayCall({
       />
     ))}
   </SituationButtons>
-  
+
   <QuickCallPanel>
     {/* Shows plays for selected situation */}
     {/* One-click voice calling per play */}
@@ -307,12 +312,14 @@ BoxCallService.logPlayCall({
 ### Mobile/Tablet Optimization
 
 **Sideline Use Cases**:
+
 - Coaches need **quick access** on tablets during games
 - Large touch targets for gloved hands
 - Minimal scrolling
 - Voice output even in loud environments
 
 **Responsive Design**:
+
 ```tsx
 // Mobile-first approach for BoxCall
 <BoxCallInterface className="min-w-[320px] max-w-[768px]">
@@ -325,6 +332,7 @@ BoxCallService.logPlayCall({
 ### Future Phase: Live Game Features
 
 #### Phase 6: BoxCall Live (Next Sprint)
+
 - [ ] Active game plan selection
 - [ ] Sidebar situation buttons
 - [ ] Quick-call interface
@@ -332,12 +340,14 @@ BoxCallService.logPlayCall({
 - [ ] Real-time call tracking
 
 #### Phase 7: Game Analytics (Future)
+
 - [ ] Plan vs reality comparison
 - [ ] Success rate by situation
 - [ ] Tendency analysis
 - [ ] Opponent scouting integration
 
 #### Phase 8: Multi-Device Sync (Future)
+
 - [ ] Booth-to-sideline communication
 - [ ] Coach-to-coach play sharing
 - [ ] Live plan adjustments
@@ -346,18 +356,21 @@ BoxCallService.logPlayCall({
 ### Technical Considerations
 
 **Performance**:
+
 - Pre-cache active game plan in localStorage
 - Lazy load BoxCall sidebar only when activated
 - Optimize voice synthesis for low latency
 - Offline mode for poor stadium connectivity
 
 **Security**:
+
 - Game plans are team-scoped (RLS policies)
 - Only coaches can activate BoxCall
 - Call history is private per team
 - No cross-team data leakage
 
 **Testing**:
+
 - Unit tests for BoxCall service methods
 - E2E tests for activation workflow
 - Performance tests for voice synthesis

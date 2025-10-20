@@ -198,7 +198,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [searchQuery, setSearchQuery] = React.useState("");
   const [previouslyFocusedElement, setPreviouslyFocusedElement] =
     React.useState<Element | null>(null);
-  
+
   // Mobile detection using centralized hook
   const isMobile = useIsMobile();
 

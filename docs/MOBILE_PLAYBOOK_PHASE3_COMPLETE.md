@@ -34,30 +34,38 @@
 ## 📊 Wizard Flow
 
 ### Step 1: Basic Info (Required) ✅
+
 **Fields:**
+
 - Formation (required) - Fuzzy search with suggestions
 - Play Name (required) - Fuzzy search with suggestions
 - Formation Direction (optional) - L/R/C
 
 **Validation:**
+
 - Cannot proceed without Formation AND Play Name
 - Next button disabled until both filled
 
 ---
 
 ### Step 2: Personnel & Type (Required) ✅
+
 **Fields:**
+
 - Personnel (required) - Dropdown or create new
 - Play Type (required) - Run/Pass/Special
 
 **Validation:**
+
 - Cannot proceed without Personnel AND Play Type
 - Next button disabled until both selected
 
 ---
 
 ### Step 3: Game Situation (Optional) ✅
+
 **Fields:**
+
 - Down (optional) - 1st/2nd/3rd/4th/Goal Line
 - Distance (optional) - Short/Medium/Long
 - Hash (optional) - Left/Middle/Right
@@ -65,13 +73,16 @@
 - Front (optional)
 
 **Validation:**
+
 - Always valid (all optional)
 - **Skip button** appears - jump to Step 4
 
 ---
 
 ### Step 4: Advanced Details (Optional) ✅
+
 **Fields:**
+
 - Formation Tags, Play Tags (optional)
 - Formation Type, Back Align, Shift, Motion (optional)
 - Run/Pass Strength (optional)
@@ -82,6 +93,7 @@
 - Key Positions, Key Players (optional)
 
 **Validation:**
+
 - Always valid (all optional)
 - **Skip button** appears - submit immediately
 
@@ -90,6 +102,7 @@
 ## 🎨 Mobile Features Delivered
 
 ### 1. Full-Screen Experience
+
 ```tsx
 <Modal size="fullscreen" className="h-screen rounded-none">
   {/* Takes over entire screen on mobile */}
@@ -101,13 +114,18 @@
 - Native app feel
 
 ### 2. Step-by-Step Validation
+
 ```tsx
 const isStepValid = (step: number): boolean => {
   switch (step) {
-    case 1: return formData.formation && formData.playName;
-    case 2: return formData.personnel && formData.playType;
-    case 3: return true; // Optional
-    case 4: return true; // Optional
+    case 1:
+      return formData.formation && formData.playName;
+    case 2:
+      return formData.personnel && formData.playType;
+    case 3:
+      return true; // Optional
+    case 4:
+      return true; // Optional
   }
 };
 ```
@@ -117,11 +135,13 @@ const isStepValid = (step: number): boolean => {
 - No confusion about what's missing
 
 ### 3. Progress Indicator
+
 ```tsx
 <WizardProgress currentStep={2} totalSteps={4} />
 ```
 
 Visual:
+
 ```
 ●────●────○────○
 ```
@@ -131,6 +151,7 @@ Visual:
 - Animated: Current step (pulse effect)
 
 ### 4. Navigation Controls
+
 ```tsx
 <WizardNavigation
   currentStep={2}
@@ -144,11 +165,13 @@ Visual:
 ```
 
 **Buttons:**
+
 - Back: Secondary, left side, 48px height
 - Next: Primary, right side, 48px height
 - Skip: Ghost, centered above (optional steps only)
 
 ### 5. Conditional Desktop Preservation
+
 ```tsx
 if (isMobile) {
   return <MobileWizardView />;
@@ -167,6 +190,7 @@ return <DesktopFormView />;
 ## 🔧 Technical Details
 
 ### Shared State
+
 Both mobile and desktop use same form state:
 
 ```tsx
@@ -176,12 +200,16 @@ const { suggestions, showSuggestions, hideSuggestions } = usePlaySuggestions();
 ```
 
 ### Type Safety
+
 All components fully typed:
 
 ```tsx
 interface MobileWizardViewProps {
   formData: PlayFormData; // Not 'any'
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
   suggestions: {
     formations: string[];
     playNames: string[];
@@ -192,40 +220,46 @@ interface MobileWizardViewProps {
 ```
 
 ### Error Handling
+
 Same error logic as desktop:
 
 ```tsx
-{errorMessage && (
-  <div className="bg-danger-subtle border border-danger-default">
-    <Icon name="alert-triangle" />
-    <Typography>{errorMessage}</Typography>
-  </div>
-)}
+{
+  errorMessage && (
+    <div className="bg-danger-subtle border border-danger-default">
+      <Icon name="alert-triangle" />
+      <Typography>{errorMessage}</Typography>
+    </div>
+  );
+}
 ```
 
 ### Rate Limiting
+
 Shared rate limit feedback:
 
 ```tsx
-{rateLimitFeedback?.isNearLimit && (
-  <div className="bg-warning-subtle">
-    {rateLimitFeedback.remaining} play creation(s) remaining
-  </div>
-)}
+{
+  rateLimitFeedback?.isNearLimit && (
+    <div className="bg-warning-subtle">
+      {rateLimitFeedback.remaining} play creation(s) remaining
+    </div>
+  );
+}
 ```
 
 ---
 
 ## 📊 Completed Tasks
 
-| Task | Status | Lines | Time | Description |
-|------|--------|-------|------|-------------|
-| 1. WizardStep | ✅ | 108 | 30min | Step wrapper component |
-| 2. WizardNavigation | ✅ | 175 | 30min | Navigation controls |
-| 3. WizardProgress | ✅ | 107 | 20min | Progress dots |
-| 4. useWizardState | ✅ | 93 | 20min | State management hook |
-| 5. MobileWizardView | ✅ | 357 | 1hr | Full wizard implementation |
-| 6. Integration | ✅ | 75 | 30min | AddNewPlayModal integration |
+| Task                | Status | Lines | Time  | Description                 |
+| ------------------- | ------ | ----- | ----- | --------------------------- |
+| 1. WizardStep       | ✅     | 108   | 30min | Step wrapper component      |
+| 2. WizardNavigation | ✅     | 175   | 30min | Navigation controls         |
+| 3. WizardProgress   | ✅     | 107   | 20min | Progress dots               |
+| 4. useWizardState   | ✅     | 93    | 20min | State management hook       |
+| 5. MobileWizardView | ✅     | 357   | 1hr   | Full wizard implementation  |
+| 6. Integration      | ✅     | 75    | 30min | AddNewPlayModal integration |
 
 **Total Time:** ~3 hours  
 **Total Code:** ~1,400 lines  
@@ -238,6 +272,7 @@ Shared rate limit feedback:
 ## 🎯 Success Metrics
 
 ### Must Have (Complete) ✅
+
 - [x] Wizard navigates smoothly between steps
 - [x] Step 1 & 2 validation works (can't proceed without required fields)
 - [x] All form functionality preserved (fuzzy search, suggestions, etc.)
@@ -246,6 +281,7 @@ Shared rate limit feedback:
 - [x] Full-screen on mobile, modal on desktop
 
 ### Should Have (Complete) ✅
+
 - [x] Progress dots show current step
 - [x] Back button works on all steps
 - [x] Skip button on optional steps (3 & 4)
@@ -254,6 +290,7 @@ Shared rate limit feedback:
 - [x] Rate limit warnings shown
 
 ### Nice to Have (Future)
+
 - [ ] Swipe between steps (Phase 4?)
 - [ ] Step animations (slide left/right)
 - [ ] Auto-save draft on each step
@@ -264,6 +301,7 @@ Shared rate limit feedback:
 ## 🚀 Next Steps
 
 ### Immediate: Device Testing ⏳
+
 Use `MOBILE_TESTING_GUIDE.md`:
 
 1. **Start dev server** (already running)
@@ -278,6 +316,7 @@ Use `MOBILE_TESTING_GUIDE.md`:
    - Test form submission
 
 ### Phase 3 Testing Checklist:
+
 ```markdown
 - [ ] Wizard renders full-screen on mobile
 - [ ] Step 1: Formation + Play Name validation works
@@ -297,18 +336,21 @@ Use `MOBILE_TESTING_GUIDE.md`:
 ## 📈 Overall Mobile Progress
 
 ### Phase 1: Mobile Navigation ✅
+
 - Bottom tab bar
 - Mobile header
 - Stats bottom sheet
 - Touch-optimized navigation
 
-### Phase 2: PlayGrid Mobile ✅  
+### Phase 2: PlayGrid Mobile ✅
+
 - MobilePlayCard (88px height)
 - SwipeActions (swipe left for actions)
 - Single-column layout
 - Progressive loading (Show More button)
 
 ### Phase 3: AddNewPlayModal Wizard ✅ (JUST COMPLETED!)
+
 - 4-step wizard flow
 - Step-by-step validation
 - Progress indicator
@@ -316,7 +358,9 @@ Use `MOBILE_TESTING_GUIDE.md`:
 - Full-screen experience
 
 ### Phase 4: Next Up 🎯
+
 From `MOBILE_PLAYBOOK_REDESIGN_PLAN.md`:
+
 - Filters bottom sheet redesign
 - Search improvements
 - Bulk operations mobile UX
@@ -329,6 +373,7 @@ From `MOBILE_PLAYBOOK_REDESIGN_PLAN.md`:
 **Phase 3 is COMPLETE!**
 
 We've built a production-ready mobile wizard for play creation that:
+
 - ✅ Works perfectly on mobile (full-screen, touch-optimized)
 - ✅ Preserves desktop experience (zero breaking changes)
 - ✅ Validates step-by-step (clear UX)
@@ -337,6 +382,7 @@ We've built a production-ready mobile wizard for play creation that:
 - ✅ Ready for testing
 
 **Total Mobile Work So Far:**
+
 - Phase 1: ~800 lines
 - Phase 2: ~600 lines
 - Phase 3: ~1,400 lines

@@ -667,7 +667,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
-                    isMobile 
+                    isMobile
                       ? "grid-cols-1 gap-4" // Single column on mobile with tighter spacing
                       : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8"
                   }`}
@@ -675,8 +675,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     transition: "grid-template-rows 0.3s ease",
                   }}
                 >
-                  {(isMobile 
-                    ? visiblePlays.slice(0, mobileVisibleCount) 
+                  {(isMobile
+                    ? visiblePlays.slice(0, mobileVisibleCount)
                     : visiblePlays
                   ).map((play, index) => (
                     <Draggable
@@ -739,8 +739,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               formationSuggestions={
                                 collectedSuggestions.formations
                               }
-                              playNameSuggestions={collectedSuggestions.playNames}
-                              playTypeSuggestions={collectedSuggestions.playTypes}
+                              playNameSuggestions={
+                                collectedSuggestions.playNames
+                              }
+                              playTypeSuggestions={
+                                collectedSuggestions.playTypes
+                              }
                               personnelSuggestions={
                                 collectedSuggestions.personnel
                               }
@@ -759,7 +763,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               )}
             </Droppable>
           </DragDropContext>
-          
+
           {/* Mobile Progressive Loading */}
           {isMobile && mobileVisibleCount < visiblePlays.length && (
             <div className="flex justify-center py-8">
@@ -768,13 +772,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   setIsLoadingMore(true);
                   // Simulate loading delay for smooth UX
                   setTimeout(() => {
-                    setMobileVisibleCount(prev => Math.min(prev + 20, visiblePlays.length));
+                    setMobileVisibleCount((prev) =>
+                      Math.min(prev + 20, visiblePlays.length)
+                    );
                     setIsLoadingMore(false);
-                    
+
                     // Scroll to first new card
                     setTimeout(() => {
-                      const firstNewCard = document.querySelector(`[data-card-index="${mobileVisibleCount}"]`);
-                      firstNewCard?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                      const firstNewCard = document.querySelector(
+                        `[data-card-index="${mobileVisibleCount}"]`
+                      );
+                      firstNewCard?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                        inline: "nearest",
+                      });
                     }, 100);
                   }, 300);
                 }}
@@ -793,16 +805,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               </Button>
             </div>
           )}
-          
+
           {/* Mobile: All plays loaded message */}
-          {isMobile && mobileVisibleCount >= visiblePlays.length && visiblePlays.length > 20 && (
-            <div className="text-center py-8">
-              <Typography variant="body-sm" className="text-secondary">
-                All {visiblePlays.length} plays loaded
-              </Typography>
-            </div>
-          )}
-          
+          {isMobile &&
+            mobileVisibleCount >= visiblePlays.length &&
+            visiblePlays.length > 20 && (
+              <div className="text-center py-8">
+                <Typography variant="body-sm" className="text-secondary">
+                  All {visiblePlays.length} plays loaded
+                </Typography>
+              </div>
+            )}
+
           {/* Desktop: See All button */}
           {!isMobile && hasMorePlays && (
             <div className="flex justify-center pt-4">

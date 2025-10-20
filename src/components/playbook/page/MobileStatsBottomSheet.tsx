@@ -51,11 +51,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
       : 0;
 
   return (
-    <BottomSheet
-      snapPoints={[0.4, 0.9]}
-      initialSnapPoint={0}
-      zIndex={50}
-    >
+    <BottomSheet snapPoints={[0.4, 0.9]} initialSnapPoint={0} zIndex={50}>
       <div className="p-4 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -95,7 +91,10 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               >
                 {stats.totalPlays}
               </Typography>
-              <Typography variant="body-xs" className="text-text-secondary mt-1">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mt-1"
+              >
                 {stats.playsWithDiagrams} with diagrams
               </Typography>
             </div>

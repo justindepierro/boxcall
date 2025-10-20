@@ -62,7 +62,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   const [activeSection, setActiveSection] = useState<"quick" | "advanced">(
     "quick"
   );
-  
+
   // Mobile detection using centralized hook
   const isMobile = useIsMobile();
 

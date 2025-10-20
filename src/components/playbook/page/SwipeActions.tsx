@@ -12,19 +12,19 @@ interface SwipeActionsProps {
 
 /**
  * Swipeable action drawer for play cards
- * 
+ *
  * Design specs:
  * - Swipe threshold: 60px (easy to trigger)
  * - Max swipe: 240px (reveals 3 actions)
  * - Action width: 80px each
  * - Animation: 200ms cubic-bezier
  * - Haptic feedback at threshold
- * 
+ *
  * Gestures:
  * - Swipe left: Reveal actions (Delete, Duplicate, Archive)
  * - Swipe right: Quick edit (or reset if actions showing)
  * - Tap outside: Reset to closed
- * 
+ *
  * Usage:
  * Wrap MobilePlayCard in this component to enable swipe actions
  */
@@ -96,44 +96,47 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
   }, [SWIPE_THRESHOLD, MAX_SWIPE, reset]);
 
   // Handle mouse down (for desktop testing)
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    startX.current = e.clientX;
-    currentX.current = e.clientX;
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      startX.current = e.clientX;
+      currentX.current = e.clientX;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      currentX.current = moveEvent.clientX;
-      const diff = startX.current - currentX.current;
+      const handleMouseMove = (moveEvent: MouseEvent) => {
+        currentX.current = moveEvent.clientX;
+        const diff = startX.current - currentX.current;
 
-      if (diff > 0) {
-        const newSwipeX = Math.min(diff, MAX_SWIPE);
-        setSwipeX(-newSwipeX);
+        if (diff > 0) {
+          const newSwipeX = Math.min(diff, MAX_SWIPE);
+          setSwipeX(-newSwipeX);
 
-        if (!isOpen && newSwipeX >= SWIPE_THRESHOLD) {
-          setIsOpen(true);
+          if (!isOpen && newSwipeX >= SWIPE_THRESHOLD) {
+            setIsOpen(true);
+          }
+        } else if (isOpen) {
+          const newSwipeX = Math.max(diff, 0);
+          setSwipeX(-newSwipeX);
         }
-      } else if (isOpen) {
-        const newSwipeX = Math.max(diff, 0);
-        setSwipeX(-newSwipeX);
-      }
-    };
+      };
 
-    const handleMouseUp = () => {
-      const diff = startX.current - currentX.current;
+      const handleMouseUp = () => {
+        const diff = startX.current - currentX.current;
 
-      if (diff >= SWIPE_THRESHOLD) {
-        setSwipeX(-MAX_SWIPE);
-        setIsOpen(true);
-      } else {
-        reset();
-      }
+        if (diff >= SWIPE_THRESHOLD) {
+          setSwipeX(-MAX_SWIPE);
+          setIsOpen(true);
+        } else {
+          reset();
+        }
 
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  }, [isOpen, MAX_SWIPE, SWIPE_THRESHOLD, reset]);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    },
+    [isOpen, MAX_SWIPE, SWIPE_THRESHOLD, reset]
+  );
 
   // Close on click outside
   useEffect(() => {

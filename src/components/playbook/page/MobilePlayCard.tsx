@@ -15,14 +15,14 @@ interface MobilePlayCardProps {
 
 /**
  * Mobile-optimized play card component
- * 
+ *
  * Design specs:
  * - Height: 88px (2.35x desktop cards)
  * - Touch target: Full width × 88px
  * - Thumbnail: 64x64px
  * - Typography: body-lg (18px) for play name
  * - Actions: Always visible, 44px touch targets
- * 
+ *
  * Usage:
  * - Wrap in SwipeActions for swipe gestures
  * - Use in single-column grid on mobile
@@ -59,12 +59,13 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
   const subtitle = `${formation} • ${personnel}`;
 
   // Play type badge color
-  const playTypeColor = {
-    Pass: "text-primary-500 bg-primary-50",
-    Run: "text-success-500 bg-success-50",
-    RPO: "text-warning-500 bg-warning-50",
-    "Play Action": "text-info-500 bg-info-50",
-  }[play.p_type] || "text-secondary bg-surface-secondary";
+  const playTypeColor =
+    {
+      Pass: "text-primary-500 bg-primary-50",
+      Run: "text-success-500 bg-success-50",
+      RPO: "text-warning-500 bg-warning-50",
+      "Play Action": "text-info-500 bg-info-50",
+    }[play.p_type] || "text-secondary bg-surface-secondary";
 
   return (
     <div

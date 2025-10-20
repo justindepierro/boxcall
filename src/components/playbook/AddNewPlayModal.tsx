@@ -74,7 +74,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
   // Rate limit feedback
   const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
-  
+
   // Mobile-optimized button sizes
   const isMobile = useIsMobile();
   const mobileButtonSize = useMobileButtonProps("md", true).size;
@@ -330,7 +330,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       title={existingPlay ? "Edit Play" : "Create New Play"}
       size="lg"
       footer={
-        <div className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}>
+        <div
+          className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}
+        >
           <Button
             type="button"
             variant="secondary"

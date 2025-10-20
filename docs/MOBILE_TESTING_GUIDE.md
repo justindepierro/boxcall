@@ -9,12 +9,15 @@
 ## 🚀 Quick Start (5 Minutes)
 
 ### 1. Start Dev Server
+
 The dev server should already be running. If not:
+
 ```bash
 npm run dev
 ```
 
 ### 2. Connect Your Phone
+
 1. **Ensure phone is on same WiFi as your Mac**
 2. **Open browser on phone:**
    - iPhone: Safari or Chrome
@@ -22,6 +25,7 @@ npm run dev
 3. **Navigate to:** `http://192.168.1.38:5173`
 
 ### 3. Quick Verification Checklist
+
 Once the app loads:
 
 - [ ] **Layout Check:**
@@ -49,11 +53,11 @@ Once the app loads:
 ### A. Visual Layout Testing
 
 #### 1. Playbook Page - With Plays
+
 - [ ] **Grid Layout:**
   - ✅ Single column on phone (< 768px width)
   - ✅ Cards fill full width minus padding
   - ✅ Cards are visually distinct (not cramped)
-  
 - [ ] **Card Components:**
   - ✅ Thumbnail visible (64x64px) on left
   - ✅ Play name in large, readable font
@@ -68,6 +72,7 @@ Once the app loads:
   - ✅ No accidental taps
 
 #### 2. Playbook Page - Empty State
+
 - [ ] **Empty State Display:**
   - ✅ "Create Your First Play" message centered
   - ✅ Get Started button prominent
@@ -75,6 +80,7 @@ Once the app loads:
   - ✅ All buttons large enough to tap
 
 #### 3. Bottom Navigation
+
 - [ ] **Navigation Bar:**
   - ✅ Always visible at bottom
   - ✅ Icons + labels clear
@@ -82,6 +88,7 @@ Once the app loads:
   - ✅ Tappable without strain
 
 #### 4. Header
+
 - [ ] **Mobile Header:**
   - ✅ Logo/title visible
   - ✅ Search icon accessible
@@ -91,13 +98,13 @@ Once the app loads:
 ### B. Interaction Testing
 
 #### 1. Swipe Gestures
+
 - [ ] **Left Swipe (Reveal Actions):**
   - ✅ Swipe feels natural (not too sensitive)
   - ✅ 60px threshold feels right
   - ✅ Drawer reveals Edit, Duplicate, Delete, Archive buttons
   - ✅ Buttons clearly labeled with icons
   - ✅ Colors distinct (blue, purple, red, gray)
-  
 - [ ] **Close Drawer:**
   - ✅ Tap outside card closes drawer
   - ✅ Tap on card content closes drawer
@@ -111,23 +118,23 @@ Once the app loads:
   - ✅ Archive button works (archives play)
 
 #### 2. Progressive Loading
+
 - [ ] **Initial Load (if > 20 plays):**
   - ✅ Only shows first 20 plays
   - ✅ "Show More (X remaining)" button appears
   - ✅ Button clearly tappable
-  
 - [ ] **Load More:**
   - ✅ Tap "Show More" button
   - ✅ Shows loading spinner briefly
   - ✅ Loads next 20 plays
   - ✅ Auto-scrolls to first new play
   - ✅ Smooth, no jank
-  
 - [ ] **All Loaded:**
   - ✅ When all plays shown, button disappears
   - ✅ "All X plays loaded" message appears
 
 #### 3. Card Interactions
+
 - [ ] **Tap Card:**
   - ✅ Opens play diagram view
   - ✅ Responsive (< 100ms delay)
@@ -146,12 +153,14 @@ Once the app loads:
 ### C. Performance Testing
 
 #### 1. Load Time
+
 - [ ] **Initial Page Load:**
   - ✅ Page appears within 2 seconds
   - ✅ Plays load quickly
   - ✅ No blank screens
 
 #### 2. Scroll Performance
+
 - [ ] **Scrolling:**
   - ✅ Smooth 60fps scroll
   - ✅ No jank or stutter
@@ -159,6 +168,7 @@ Once the app loads:
   - ✅ No layout shifts
 
 #### 3. Interaction Response
+
 - [ ] **Gestures:**
   - ✅ Swipe response immediate
   - ✅ Button taps immediate
@@ -167,11 +177,11 @@ Once the app loads:
 ### D. Different Devices
 
 #### iPhone Testing
+
 - [ ] **iPhone 14/15 Pro (6.1"):**
   - ✅ Layout looks good
   - ✅ Touch targets comfortable
   - ✅ Gestures work smoothly
-  
 - [ ] **iPhone SE (4.7" small):**
   - ✅ Everything still accessible
   - ✅ No horizontal scroll
@@ -184,12 +194,14 @@ Once the app loads:
   - ✅ Comfortable to use
 
 #### Android Testing
+
 - [ ] **Samsung/Pixel (6.1-6.3"):**
   - ✅ Layout consistent with iPhone
   - ✅ Gestures work
   - ✅ No browser-specific issues
 
 #### Tablet Testing
+
 - [ ] **iPad (10.2" - 768px):**
   - ⚠️ This is the **breakpoint edge**
   - Check if it shows mobile or desktop layout
@@ -201,9 +213,11 @@ Once the app loads:
 ## 🐛 Common Issues to Watch For
 
 ### Issue 1: Still Showing 2-Column Grid
+
 **Symptom:** Cards appear in 2 columns on phone  
 **Cause:** Breakpoint not detected correctly  
 **Check:**
+
 1. Open browser DevTools on phone (if available)
 2. Or use desktop browser in device mode
 3. Console should show: `window.innerWidth < 768`
@@ -211,22 +225,27 @@ Once the app loads:
 **Fix:** Hard refresh (hold reload button, select "Hard Refresh")
 
 ### Issue 2: Swipe Not Working
+
 **Symptom:** Can't swipe cards  
 **Cause:** Touch events not registering  
 **Check:**
+
 1. Try swiping from middle of card (not edges)
 2. Try both slow and fast swipes
 3. Check if scroll is interfering
 
 ### Issue 3: Cards Look Too Small
+
 **Symptom:** Cards shorter than 88px  
 **Cause:** Tailwind class not applied  
 **Check:** Inspect element, verify `h-22` class present
 
 ### Issue 4: Performance Lag
+
 **Symptom:** Janky scrolling or slow interactions  
 **Cause:** Too many plays rendering  
 **Check:**
+
 - Progressive loading should limit to 20 plays initially
 - If all plays load at once, progressive loading not working
 
@@ -241,15 +260,18 @@ Copy this to document your findings:
 
 **Device:** [e.g., iPhone 14 Pro, Samsung Galaxy S22]  
 **Browser:** [e.g., Safari, Chrome]  
-**Screen Size:** [e.g., 390x844]  
+**Screen Size:** [e.g., 390x844]
 
 #### ✅ Working Well:
+
 - [List things that work great]
 
 #### ⚠️ Issues Found:
+
 - [List any problems or concerns]
 
 #### 💡 Suggestions:
+
 - [List improvement ideas]
 
 **Overall Rating:** [1-5 stars]
@@ -260,6 +282,7 @@ Copy this to document your findings:
 ## 🎯 Success Criteria
 
 ### Must Pass (Blockers):
+
 - [ ] Single-column grid on phones (< 768px)
 - [ ] Swipe gestures work smoothly
 - [ ] Progressive loading prevents lag
@@ -267,12 +290,14 @@ Copy this to document your findings:
 - [ ] No console errors
 
 ### Should Pass (Important):
+
 - [ ] Looks good on iPhone SE (smallest)
 - [ ] Works on both iOS and Android
 - [ ] Performance feels fast
 - [ ] Gestures feel natural
 
 ### Nice to Have:
+
 - [ ] Works in landscape mode
 - [ ] iPad experience optimized
 - [ ] Animations buttery smooth
@@ -282,6 +307,7 @@ Copy this to document your findings:
 ## 🔧 Troubleshooting
 
 ### Can't Access Dev Server on Phone?
+
 1. **Check WiFi:** Phone must be on same network as Mac
 2. **Check Firewall:** Mac firewall might block connection
    ```bash
@@ -293,11 +319,13 @@ Copy this to document your findings:
 3. **Check Dev Server:** Ensure it's running on `0.0.0.0:5173` (not `localhost`)
 
 ### Layout Not Changing?
+
 1. **Hard Refresh:** Clear browser cache
 2. **Check Width:** Use `alert(window.innerWidth)` in console
 3. **Verify Breakpoint:** Should be < 768 for mobile
 
 ### Swipe Not Responding?
+
 1. **Try Different Area:** Swipe from center of card
 2. **Check Speed:** Try both slow and fast swipes
 3. **Disable Scroll:** Swipe purely horizontal (not diagonal)

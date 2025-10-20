@@ -2,7 +2,7 @@
 
 **Date:** October 19, 2025  
 **Status:** ✅ Complete  
-**Impact:** Dramatically improved mobile readability and touch targets  
+**Impact:** Dramatically improved mobile readability and touch targets
 
 ---
 
@@ -15,55 +15,68 @@ Transformed PlayGrid from cramped 2-column layout to spacious single-column layo
 ## ✅ Changes Made
 
 ### 1. **Single-Column Grid Layout**
+
 **File:** `src/components/playbook/PlayGrid.tsx`
 
 **Before:**
+
 ```tsx
-className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 ..."
+className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 ...";
 ```
+
 - 2 columns on mobile (cramped, hard to tap)
 - 2 columns on small tablets (still cramped)
 
 **After:**
+
 ```tsx
 className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
-  isMobile 
+  isMobile
     ? "grid-cols-1" // Single column on mobile (<640px)
     : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8"
 }`}
 ```
+
 - **1 column on mobile** (<640px) - full-width cards ✅
 - Progressive columns on larger screens (2→3→4→5)
 
 ### 2. **Enhanced Card Padding**
+
 **File:** `src/components/playbook/PlayCard.tsx`
 
 **Before:**
+
 ```tsx
 className={`${isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"} overflow-visible`}
 ```
+
 - Compact: 12px/16px padding
 - Normal: 16px/24px padding
 
 **After:**
+
 ```tsx
 className={`${
-  isCompact 
-    ? isMobile ? "p-5" : "p-3 sm:p-4" 
+  isCompact
+    ? isMobile ? "p-5" : "p-3 sm:p-4"
     : isMobile ? "p-6" : "p-4 sm:p-6"
 } overflow-visible`}
 ```
+
 - **Mobile compact:** 20px padding (up from 12-16px) ✅
 - **Mobile normal:** 24px padding (consistent) ✅
 
 ### 3. **Larger Font Sizes**
+
 **File:** `src/components/playbook/play-card/PlayCardTileHeader.tsx`
 
 **Before:**
+
 - **Title:** `text-sm` (14px)
 - **Subtitle:** `text-xs` (12px)
 
 **After:**
+
 - **Title:** `text-base` (16px) on mobile, `text-sm` on desktop ✅
 - **Subtitle:** `text-sm` (14px) on mobile, `text-xs` on desktop ✅
 
@@ -77,6 +90,7 @@ className={`text-text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-
 ```
 
 ### 4. **Fixed Expanded Card Span**
+
 **File:** `src/components/playbook/PlayGrid.tsx`
 
 **Before:** Expanded cards would try to span multiple columns even in single-column layout  
@@ -95,31 +109,35 @@ className={`... ${
 ## 📊 Before vs After
 
 ### Layout
-| Aspect | Before (Mobile) | After (Mobile) | Improvement |
-|--------|----------------|----------------|-------------|
-| **Columns** | 2 columns | 1 column | 100% wider cards |
-| **Card width** | ~45% screen | ~95% screen | 2x wider |
-| **Gap** | 40px (2.5rem) | 24px (1.5rem) | More space efficient |
-| **Padding** | 12-16px | 20-24px | 25-50% more breathing room |
+
+| Aspect         | Before (Mobile) | After (Mobile) | Improvement                |
+| -------------- | --------------- | -------------- | -------------------------- |
+| **Columns**    | 2 columns       | 1 column       | 100% wider cards           |
+| **Card width** | ~45% screen     | ~95% screen    | 2x wider                   |
+| **Gap**        | 40px (2.5rem)   | 24px (1.5rem)  | More space efficient       |
+| **Padding**    | 12-16px         | 20-24px        | 25-50% more breathing room |
 
 ### Typography
-| Element | Before | After | Improvement |
-|---------|--------|-------|-------------|
-| **Title** | 14px (text-sm) | 16px (text-base) | +14% larger |
-| **Subtitle** | 12px (text-xs) | 14px (text-sm) | +17% larger |
+
+| Element       | Before         | After            | Improvement |
+| ------------- | -------------- | ---------------- | ----------- |
+| **Title**     | 14px (text-sm) | 16px (text-base) | +14% larger |
+| **Subtitle**  | 12px (text-xs) | 14px (text-sm)   | +17% larger |
 | **Body text** | 13px (compact) | 16px (text-base) | +23% larger |
 
 ### Touch Targets
-| Element | Before | After | Improvement |
-|---------|--------|-------|-------------|
-| **Card tap area** | ~150px × 200px | ~320px × 220px | 2.3x larger |
-| **Effective tap zone** | 30,000px² | 70,400px² | 2.35x larger |
+
+| Element                | Before         | After          | Improvement  |
+| ---------------------- | -------------- | -------------- | ------------ |
+| **Card tap area**      | ~150px × 200px | ~320px × 220px | 2.3x larger  |
+| **Effective tap zone** | 30,000px²      | 70,400px²      | 2.35x larger |
 
 ---
 
 ## 🎨 Visual Comparison
 
 ### Before (2-Column)
+
 ```
 ┌──────────────┬──────────────┐
 │ Play Card #1 │ Play Card #2 │ ← Cramped
@@ -131,6 +149,7 @@ className={`... ${
 ```
 
 ### After (Single-Column)
+
 ```
 ┌──────────────────────────────┐
 │      Play Card #1            │ ← Full width
@@ -178,14 +197,14 @@ className={`... ${
 
 ## 📱 Responsive Breakpoints
 
-| Screen Width | Grid Columns | Card Width | Use Case |
-|--------------|-------------|------------|----------|
-| **<640px** | 1 column | ~95% screen | Mobile phones |
-| **640-768px** | 2 columns | ~45% screen | Small tablets portrait |
-| **768-1024px** | 3 columns | ~30% screen | Large tablets |
-| **1024-1280px** | 3 columns | ~30% screen | Small laptops |
-| **1280-1536px** | 4 columns | ~23% screen | Desktop |
-| **>1536px** | 5 columns | ~18% screen | Large desktop |
+| Screen Width    | Grid Columns | Card Width  | Use Case               |
+| --------------- | ------------ | ----------- | ---------------------- |
+| **<640px**      | 1 column     | ~95% screen | Mobile phones          |
+| **640-768px**   | 2 columns    | ~45% screen | Small tablets portrait |
+| **768-1024px**  | 3 columns    | ~30% screen | Large tablets          |
+| **1024-1280px** | 3 columns    | ~30% screen | Small laptops          |
+| **1280-1536px** | 4 columns    | ~23% screen | Desktop                |
+| **>1536px**     | 5 columns    | ~18% screen | Large desktop          |
 
 ---
 
@@ -207,12 +226,14 @@ className={`... ${
 ## 🚀 Performance Impact
 
 **Bundle Size:** +0KB (conditional CSS only)  
-**Runtime Performance:** Improved  
+**Runtime Performance:** Improved
+
 - Fewer cards rendered simultaneously (1 vs 2)
 - Simpler layout calculations
 - Less GPU overhead (no multi-column spans)
 
 **Rendering:**
+
 - Mobile: ~4-6 cards visible at once (was 8-10)
 - Less DOM complexity
 - Faster paint times
@@ -242,10 +263,12 @@ className={`... ${
 ## 🎯 Alignment with Mobile Plan
 
 This quick win aligns with:
+
 - **Phase 2:** "PlayGrid mobile redesign" ✅ (partial - layout done)
 - **Quick Win #4:** "Single-column PlayGrid on mobile" ✅ (complete)
 
 **Still needed for full Phase 2:**
+
 - Swipe actions (delete, duplicate)
 - Progressive loading ("Show More" button)
 - Skeleton loading optimization

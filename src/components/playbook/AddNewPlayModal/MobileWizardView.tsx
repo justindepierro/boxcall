@@ -29,48 +29,53 @@ interface MobileWizardViewProps {
   // Modal control
   isOpen: boolean;
   onClose: () => void;
-  
+
   // Form data (properly typed)
   formData: PlayFormData;
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
   updateFields: (updates: Partial<PlayFormData>) => void;
-  
+
   // Validation
   isValid: () => boolean;
-  
+
   // Submit
   onSubmit: (e: React.FormEvent) => Promise<void>;
   isSubmitting: boolean;
-  
+
   // Suggestions (properly typed)
   suggestions: {
     formations: string[];
     playNames: string[];
     personnel: string[];
   };
-  isSuggestionsVisible: (type: "formation" | "playName" | "personnel") => boolean;
+  isSuggestionsVisible: (
+    type: "formation" | "playName" | "personnel"
+  ) => boolean;
   showSuggestions: (type: "formation" | "playName" | "personnel") => void;
   hideSuggestions: (type: "formation" | "playName" | "personnel") => void;
-  
+
   // Formation handling
   onFormationChange: (value: string) => void;
   onFormationIdChange: (id: string | null, formation: any) => void;
-  
+
   // Personnel
   personnelPanelOpen: boolean;
   setPersonnelPanelOpen: (open: boolean) => void;
-  
+
   // Advanced
   isAdvancedOpen: boolean;
   setIsAdvancedOpen: (open: boolean) => void;
-  
+
   // IDs
   playbookId?: string;
   existingPlay?: Play | null;
-  
+
   // Error handling
   errorMessage: string | null;
-  
+
   // Rate limiting
   rateLimitFeedback: any;
 }
@@ -115,16 +120,16 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
     switch (step) {
       case 1: // Basic Info - Formation and Play Name required
         return !!(formData.formation?.trim() && formData.playName?.trim());
-      
+
       case 2: // Personnel & Type - Both required
         return !!(formData.personnel?.trim() && formData.playType);
-      
+
       case 3: // Game Situation - Optional, always valid
         return true;
-      
+
       case 4: // Advanced - Optional, always valid
         return true;
-      
+
       default:
         return false;
     }
@@ -175,11 +180,11 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
           >
             <Icon name="close" size="lg" />
           </button>
-          
+
           <Typography variant="headline-md" className="font-semibold">
             {existingPlay ? "Edit Play" : "New Play"}
           </Typography>
-          
+
           {/* Empty div for flex spacing */}
           <div className="w-6" />
         </div>
@@ -191,7 +196,11 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
       {/* Error Messages */}
       {errorMessage && (
         <div className="mx-6 mt-4 bg-danger-subtle border border-danger-default rounded-lg p-4 flex items-start gap-3">
-          <Icon name="alert-triangle" size="md" className="text-danger-default flex-shrink-0 mt-0.5" />
+          <Icon
+            name="alert-triangle"
+            size="md"
+            className="text-danger-default flex-shrink-0 mt-0.5"
+          />
           <Typography variant="body-sm" className="text-danger-default flex-1">
             {errorMessage}
           </Typography>
@@ -203,7 +212,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
         <div className="mx-6 mt-4 bg-warning-subtle border border-warning-default rounded-lg p-4 flex items-center gap-3">
           <Icon name="clock" size="md" className="text-warning-default" />
           <Typography variant="body-sm" className="text-warning-default">
-            {rateLimitFeedback.remaining} play creation{rateLimitFeedback.remaining === 1 ? "" : "s"} remaining this minute
+            {rateLimitFeedback.remaining} play creation
+            {rateLimitFeedback.remaining === 1 ? "" : "s"} remaining this minute
           </Typography>
         </div>
       )}
@@ -226,12 +236,21 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               playbookId={playbookId}
               onFormationChange={onFormationChange}
               onFormationIdChange={onFormationIdChange}
-              onFormationDirChange={(value) => updateField("formation_direction", value as "base" | "left" | "right" | null)}
-              onFormationShowInNameChange={(value) => updateField("formationShowInName", value)}
+              onFormationDirChange={(value) =>
+                updateField(
+                  "formation_direction",
+                  value as "base" | "left" | "right" | null
+                )
+              }
+              onFormationShowInNameChange={(value) =>
+                updateField("formationShowInName", value)
+              }
               suggestions={suggestions.formations}
               showSuggestions={isSuggestionsVisible("formation")}
               onShowSuggestionsChange={(show) =>
-                show ? showSuggestions("formation") : hideSuggestions("formation")
+                show
+                  ? showSuggestions("formation")
+                  : hideSuggestions("formation")
               }
             />
 
@@ -241,7 +260,9 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               playShowInName={formData.playShowInName}
               onPlayNameChange={(value) => updateField("playName", value)}
               onPlayDirChange={(value) => updateField("playDir", value)}
-              onPlayShowInNameChange={(value) => updateField("playShowInName", value)}
+              onPlayShowInNameChange={(value) =>
+                updateField("playShowInName", value)
+              }
               suggestions={suggestions.playNames}
               showSuggestions={isSuggestionsVisible("playName")}
               onShowSuggestionsChange={(show) =>
@@ -265,7 +286,9 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               suggestions={suggestions.personnel}
               showSuggestions={isSuggestionsVisible("personnel")}
               onShowSuggestionsChange={(show) =>
-                show ? showSuggestions("personnel") : hideSuggestions("personnel")
+                show
+                  ? showSuggestions("personnel")
+                  : hideSuggestions("personnel")
               }
               onAddNew={() => setPersonnelPanelOpen(true)}
             />
@@ -293,9 +316,13 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               prefCoverage={formData.prefCoverage}
               prefFront={formData.prefFront}
               onPrefDownChange={(value) => updateField("prefDown", value)}
-              onPrefDistanceChange={(value) => updateField("prefDistance", value)}
+              onPrefDistanceChange={(value) =>
+                updateField("prefDistance", value)
+              }
               onPrefHashChange={(value) => updateField("prefHash", value)}
-              onPrefCoverageChange={(value) => updateField("prefCoverage", value)}
+              onPrefCoverageChange={(value) =>
+                updateField("prefCoverage", value)
+              }
               onPrefFrontChange={(value) => updateField("prefFront", value)}
               downOptions={DOWN_OPTIONS}
               distanceOptions={DISTANCE_OPTIONS}
@@ -325,14 +352,22 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               formationTags={formData.formationTags}
               runStrength={formData.runStrength}
               passStrength={formData.passStrength}
-              onFormationTypeChange={(value) => updateField("formationType", value)}
-              onFormationDirChange={(value) => updateField("formationDir", value)}
+              onFormationTypeChange={(value) =>
+                updateField("formationType", value)
+              }
+              onFormationDirChange={(value) =>
+                updateField("formationDir", value)
+              }
               onBackAlignChange={(value) => updateField("backAlign", value)}
               onShiftChange={(value) => updateField("shift", value)}
               onMotionChange={(value) => updateField("motion", value)}
-              onFormationTagsChange={(value) => updateField("formationTags", value)}
+              onFormationTagsChange={(value) =>
+                updateField("formationTags", value)
+              }
               onRunStrengthChange={(value) => updateField("runStrength", value)}
-              onPassStrengthChange={(value) => updateField("passStrength", value)}
+              onPassStrengthChange={(value) =>
+                updateField("passStrength", value)
+              }
               // Play details
               playDir={formData.playDir}
               protection={formData.protection}
@@ -350,14 +385,20 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               personnel={formData.personnel}
               playbookId={playbookId}
               onTagsChange={(tags) => updateField("tags", tags)}
-              onKeyPositionsChange={(positions) => updateField("key_positions", positions)}
-              onKeyPlayersChange={(players) => updateField("key_players", players)}
+              onKeyPositionsChange={(positions) =>
+                updateField("key_positions", positions)
+              }
+              onKeyPlayersChange={(players) =>
+                updateField("key_players", players)
+              }
               // Additional info
               oneWordPlay={formData.oneWordPlay}
               wristbandNumber={formData.wristbandNumber}
               description={formData.description}
               onOneWordPlayChange={(value) => updateField("oneWordPlay", value)}
-              onWristbandNumberChange={(value) => updateField("wristbandNumber", value)}
+              onWristbandNumberChange={(value) =>
+                updateField("wristbandNumber", value)
+              }
               onDescriptionChange={(value) => updateField("description", value)}
               // Constants
               directionOptions={DIRECTION_OPTIONS}

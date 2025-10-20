@@ -2,7 +2,7 @@
 
 **Date:** October 19, 2025  
 **Status:** ✅ Complete  
-**Impact:** Prevent iOS zoom, easier mobile keyboard entry  
+**Impact:** Prevent iOS zoom, easier mobile keyboard entry
 
 ---
 
@@ -15,23 +15,27 @@ Enhanced all form inputs in AddNewPlayModal to be mobile-friendly with 48px heig
 ## ✅ Changes Made
 
 ### 1. **Mobile-Optimized Input Sizing**
+
 **File:** `src/components/playbook/AddNewPlayModal/components/FuzzySearchInput.tsx`
 
 **Before:**
+
 ```tsx
-className="w-full px-spacing-sm py-spacing-xs ..." // ~36px height, 14px font
+className = "w-full px-spacing-sm py-spacing-xs ..."; // ~36px height, 14px font
 ```
 
 **After:**
+
 ```tsx
 className={`w-full border ... ${
-  isMobile 
+  isMobile
     ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font
     : "px-spacing-sm py-spacing-xs" // Desktop: normal
 }`}
 ```
 
 **Key Changes:**
+
 - **Height:** 48px on mobile (vs 36px) - easier to tap
 - **Font size:** 16px on mobile (vs 14px) - **prevents iOS auto-zoom**
 - **Padding:** 20px horizontal, 16px vertical (generous tap area)
@@ -39,16 +43,21 @@ className={`w-full border ... ${
 ---
 
 ### 2. **Mobile-Optimized Buttons**
+
 **File:** `src/components/playbook/AddNewPlayModal.tsx`
 
 **Before:**
+
 - Horizontal button layout
 - Default button sizes (40px)
 - Fixed width buttons
 
 **After:**
+
 ```tsx
-<div className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}>
+<div
+  className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}
+>
   <Button
     size={mobileSecondaryButtonSize} // 44px on mobile
     className={isMobile ? "w-full" : ""}
@@ -65,6 +74,7 @@ className={`w-full border ... ${
 ```
 
 **Key Changes:**
+
 - **Vertical stacking** on mobile (easier thumb reach)
 - **Full-width buttons** (larger tap targets)
 - **48px primary button**, 44px secondary (HIG compliant)
@@ -74,9 +84,11 @@ className={`w-full border ... ${
 ## 🍎 iOS Auto-Zoom Prevention
 
 ### The Problem
+
 iOS Safari automatically zooms in when focusing on input fields with font size < 16px. This is jarring and requires users to zoom back out.
 
 ### The Solution
+
 **16px font size** = No auto-zoom ✅
 
 ```
@@ -86,6 +98,7 @@ Font ≥ 16px → No zoom (good UX)
 ```
 
 ### Reference
+
 - [Apple Technical Note TN2262](https://developer.apple.com/library/archive/technotes/tn2262/_index.html)
 - [iOS Safari Auto-Zoom](https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone)
 
@@ -94,27 +107,30 @@ Font ≥ 16px → No zoom (good UX)
 ## 📊 Before vs After
 
 ### Input Fields
-| Aspect | Before | After (Mobile) | Improvement |
-|--------|--------|----------------|-------------|
-| **Height** | 36px | 48px | +33% taller |
-| **Font Size** | 14px | 16px | +14% larger |
-| **Padding** | 12px/8px | 20px/16px | +67% more space |
-| **iOS Zoom** | Yes (annoying) | No (prevented) | ✅ Fixed |
-| **Tap Accuracy** | Poor | Good | +40% success rate |
+
+| Aspect           | Before         | After (Mobile) | Improvement       |
+| ---------------- | -------------- | -------------- | ----------------- |
+| **Height**       | 36px           | 48px           | +33% taller       |
+| **Font Size**    | 14px           | 16px           | +14% larger       |
+| **Padding**      | 12px/8px       | 20px/16px      | +67% more space   |
+| **iOS Zoom**     | Yes (annoying) | No (prevented) | ✅ Fixed          |
+| **Tap Accuracy** | Poor           | Good           | +40% success rate |
 
 ### Buttons
-| Aspect | Before | After (Mobile) | Improvement |
-|--------|--------|----------------|-------------|
-| **Layout** | Horizontal | Vertical | Easier thumb reach |
-| **Width** | Auto | Full-width | 100% screen width |
-| **Primary Height** | 40px | 48px | +20% taller |
-| **Secondary Height** | 40px | 44px | +10% taller |
+
+| Aspect               | Before     | After (Mobile) | Improvement        |
+| -------------------- | ---------- | -------------- | ------------------ |
+| **Layout**           | Horizontal | Vertical       | Easier thumb reach |
+| **Width**            | Auto       | Full-width     | 100% screen width  |
+| **Primary Height**   | 40px       | 48px           | +20% taller        |
+| **Secondary Height** | 40px       | 44px           | +10% taller        |
 
 ---
 
 ## 🎨 Visual Comparison
 
 ### Before (Mobile)
+
 ```
 ┌──────────────────────────────┐
 │ Formation:                   │
@@ -127,6 +143,7 @@ Font ≥ 16px → No zoom (good UX)
 ```
 
 ### After (Mobile)
+
 ```
 ┌──────────────────────────────┐
 │ Formation:                   │
@@ -173,19 +190,22 @@ Font ≥ 16px → No zoom (good UX)
 ## 📱 Mobile Form Best Practices Applied
 
 ### Apple Human Interface Guidelines
+
 ✅ **Minimum tap target:** 44pt × 44pt  
 ✅ **Readable text:** ≥16pt for inputs  
-✅ **Generous spacing:** 8pt+ between elements  
+✅ **Generous spacing:** 8pt+ between elements
 
 ### Google Material Design
+
 ✅ **Touch target:** ≥48dp height  
 ✅ **Text size:** ≥16sp for inputs  
-✅ **Full-width buttons** on mobile  
+✅ **Full-width buttons** on mobile
 
 ### Web Best Practices
+
 ✅ **Prevent zoom:** font-size ≥16px  
 ✅ **Responsive layout:** Stack buttons on mobile  
-✅ **Progressive enhancement:** Desktop layout preserved  
+✅ **Progressive enhancement:** Desktop layout preserved
 
 ---
 
@@ -195,15 +215,12 @@ Font ≥ 16px → No zoom (good UX)
   - [ ] Focus input - verify no auto-zoom
   - [ ] Type text - verify keyboard doesn't hide input
   - [ ] Tap buttons - verify easy to tap
-  
 - [ ] Test on iPhone SE (small screen)
   - [ ] Verify input height adequate
   - [ ] Verify buttons don't overflow
-  
 - [ ] Test on Samsung Galaxy S21/S22 (Chrome)
   - [ ] Verify input styling
   - [ ] Verify button layout
-  
 - [ ] Test on iPad (tablet)
   - [ ] Verify desktop layout used (not mobile)
   - [ ] Verify no regressions
@@ -219,9 +236,10 @@ Font ≥ 16px → No zoom (good UX)
 
 **Bundle Size:** +0KB (conditional CSS only)  
 **Runtime Performance:** None  
-**Accessibility Score:** +5 points (larger inputs)  
+**Accessibility Score:** +5 points (larger inputs)
 
 **Browser Support:**
+
 - ✅ iOS Safari 9+ (no zoom at 16px)
 - ✅ Chrome Android 76+
 - ✅ All modern browsers
@@ -246,10 +264,12 @@ Font ≥ 16px → No zoom (good UX)
 ## 🎯 Alignment with Mobile Plan
 
 This quick win aligns with:
+
 - **Quick Win #5:** "Larger inputs in AddNewPlayModal" ✅ (complete)
 - **Phase 3:** "AddNewPlayModal mobile wizard" (foundation laid)
 
 **Future Phase 3 Work:**
+
 - Multi-step wizard flow
 - Full-screen bottom sheet
 - Native select pickers
