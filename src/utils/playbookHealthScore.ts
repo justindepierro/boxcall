@@ -13,11 +13,8 @@
  */
 
 import { supabase } from "../lib/supabase";
-import { calculatePlayQuality, analyzePlaybookQuality } from "./dataQualityScoring";
-import { calculateCompleteness, calculateQuality } from "./formationQuality";
-import type { Play } from "../types/play";
-import type { Formation } from "../types/formation";
-import { info, error as logError, warn } from "./logger";
+import { calculatePlayQuality } from "./dataQualityScoring";
+import { info, error as logError } from "./logger";
 
 // ========================================
 // Helper Functions

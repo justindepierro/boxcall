@@ -123,6 +123,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
   const [description, setDescription] = useState<string>("");
   const [applyToBothSides, setApplyToBothSides] = useState<boolean>(true); // Default to true
 
+  // New formation creation states
+  const [newFormationName, setNewFormationName] = useState<string>("");
+  const [newFormationPersonnelId, setNewFormationPersonnelId] =
+    useState<string>("");
+
   // Use refs for form data to stabilize autoSave dependencies
   const formDataRef = useRef({
     selectedPersonnelIds,
@@ -470,10 +475,9 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
       // ✨ NEW: Check if opposite formation exists
       // Only prompt if formation has positions (is drawn) and doesn't have opposite
-      if (
-        selectedFormation.player_positions.length > 0 &&
-        selectedFormation.direction !== null
-      ) {
+      // Note: direction can be null for new formations - we'll still prompt
+      if (selectedFormation.player_positions.length > 1) {
+        // Require at least 2 positions (more than just the default center)
         const hasOpposite = await FormationService.hasOppositeFormation(
           selectedFormation.id
         );
@@ -811,6 +815,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                       </label>
                       <input
                         type="text"
+                        value={newFormationName}
+                        onChange={(e) => setNewFormationName(e.target.value)}
                         placeholder="e.g., Trips Right, I Formation, Shotgun Spread"
                         className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
@@ -821,7 +827,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                       <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
                         Personnel Package *
                       </label>
-                      <select className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary">
+                      <select
+                        value={newFormationPersonnelId}
+                        onChange={(e) =>
+                          setNewFormationPersonnelId(e.target.value)
+                        }
+                        className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+                      >
                         <option value="">Select personnel...</option>
                         {availablePersonnel.map((personnel) => (
                           <option key={personnel.id} value={personnel.id}>
@@ -854,15 +866,85 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 
                     {/* Save Button */}
                     <Button
-                      onClick={() => {
-                        // TODO: Implement create formation logic
-                        toast?.success?.("Formation creation coming soon!");
+                      onClick={async () => {
+                        if (!newFormationName.trim()) {
+                          toast?.error?.("Please enter a formation name");
+                          return;
+                        }
+                        if (!newFormationPersonnelId) {
+                          toast?.error?.("Please select a personnel package");
+                          return;
+                        }
+
+                        setSaving(true);
+                        try {
+                          // Find the selected personnel to get the name
+                          const selectedPersonnel = availablePersonnel.find(
+                            (p) => p.id === newFormationPersonnelId
+                          );
+
+                          // Create the formation with a minimal default position
+                          // User will add more positions in "Draw Formation" tab
+                          const newFormation =
+                            await FormationService.createFormation({
+                              playbook_id: playbookId,
+                              name: newFormationName.trim(),
+                              personnel_id: newFormationPersonnelId,
+                              personnel_name: selectedPersonnel?.name || undefined,
+                              category: category || undefined,
+                              description: undefined,
+                              direction: null,
+                              creation_source: "formation_builder",
+                              creation_context: {
+                                created_via: "formation_manager_panel",
+                              },
+                              // Provide minimal default position (Center at snap point)
+                              // This satisfies validation while allowing user to customize
+                              player_positions: [
+                                {
+                                  position: "C",
+                                  x: 26.65, // Center of field
+                                  y: 0, // Line of scrimmage
+                                  label: undefined,
+                                },
+                              ],
+                            });
+
+                          toast?.success?.(
+                            `Formation "${newFormationName}" created!`
+                          );
+
+                          // Reload all formations
+                          await loadData();
+
+                          // Select the newly created formation for editing
+                          setSelectedFormation(newFormation);
+
+                          // Clear the form
+                          setNewFormationName("");
+                          setNewFormationPersonnelId("");
+                          setCategory("");
+                        } catch (error) {
+                          logError("Failed to create formation:", error);
+                          toast?.error?.(
+                            error instanceof Error
+                              ? error.message
+                              : "Failed to create formation"
+                          );
+                        } finally {
+                          setSaving(false);
+                        }
                       }}
                       variant="primary"
                       className="w-full"
+                      disabled={
+                        saving ||
+                        !newFormationName.trim() ||
+                        !newFormationPersonnelId
+                      }
                     >
                       <Save className="w-4 h-4 mr-spacing-xs" />
-                      Create Formation
+                      {saving ? "Creating..." : "Create Formation"}
                     </Button>
 
                     <Typography
@@ -1120,14 +1202,35 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                     />
                   </div>
 
-                  {/* Manual Save Button (Optional) */}
-                  <div className="flex justify-end items-center pt-spacing-xs border-t border-border-primary">
+                  {/* Manual Save Button and Opposite Formation Creation */}
+                  <div className="flex justify-between items-center pt-spacing-xs border-t border-border-primary">
+                    {/* Create Opposite Button - Only show if formation doesn't have one */}
+                    {selectedFormation &&
+                      !selectedFormation.opposite_formation_id && (
+                        <Button
+                          onClick={async () => {
+                            // Get fresh formation data and show modal
+                            const fresh =
+                              await FormationService.getFormationById(
+                                selectedFormation.id
+                              );
+                            setFormationForOpposite(fresh);
+                            setShowOppositeModal(true);
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="gap-spacing-xs"
+                        >
+                          ↔️ Create Opposite Formation
+                        </Button>
+                      )}
+
                     <Button
                       onClick={handleSave}
                       disabled={saving}
                       variant="secondary"
                       size="sm"
-                      className="gap-spacing-xs"
+                      className="gap-spacing-xs ml-auto"
                     >
                       <Save className="w-3.5 h-3.5" />
                       Save Now

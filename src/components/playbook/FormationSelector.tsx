@@ -72,53 +72,8 @@ export function FormationSelector({
     ? formations.find((f) => f.id === value)
     : null;
 
-  // Filter out base formations that have variants (linked formations)
-  // Keep: 1) Formations with variants (base_formation_id NOT NULL)
-  //       2) Base formations with NO variants yet
-  const baseFormationIds = new Set(
-    formations
-      .filter((f) => f.base_formation_id !== null)
-      .map((f) => f.base_formation_id)
-  );
-
-  // Debug logging
-  console.log(
-    "[FormationSelector] All formations:",
-    formations.map((f) => ({
-      name: f.name,
-      direction: f.direction,
-      base_formation_id: f.base_formation_id,
-      id: f.id,
-    }))
-  );
-  console.log(
-    "[FormationSelector] Base formation IDs with variants:",
-    Array.from(baseFormationIds)
-  );
-
-  const visibleFormations = formations.filter((formation) => {
-    // If this is a variant (has base_formation_id), always show it
-    if (formation.base_formation_id !== null) {
-      console.log(
-        `[FormationSelector] ✅ Showing variant: ${formation.name} (${formation.direction})`
-      );
-      return true;
-    }
-
-    // If this is a base formation (base_formation_id is null),
-    // only show it if it has NO variants yet
-    const hasVariants = baseFormationIds.has(formation.id);
-    const shouldShow = !hasVariants;
-    console.log(
-      `[FormationSelector] ${shouldShow ? "✅" : "❌"} Base formation: ${formation.name} - has variants: ${hasVariants}`
-    );
-    return shouldShow;
-  });
-
-  console.log(
-    "[FormationSelector] Visible formations:",
-    visibleFormations.map((f) => `${f.name} (${f.direction})`)
-  );
+  // Show all formations - let user see everything
+  const visibleFormations = formations; // Show all formations
 
   // Group formations by category
   const groupedFormations = visibleFormations.reduce(
@@ -145,7 +100,8 @@ export function FormationSelector({
   };
 
   // Direction labels
-  const getDirectionLabel = (direction: string) => {
+  const getDirectionLabel = (direction: string | null) => {
+    if (!direction) return "";
     switch (direction) {
       case "left":
         return "← Left";
@@ -254,71 +210,72 @@ export function FormationSelector({
           )}
 
           {/* Existing Formations */}
-          {visibleFormations.length > 0 && Object.keys(groupedFormations).map((category) => (
-            <div key={category}>
-              {/* Category Header */}
-              <div className="px-spacing-md py-spacing-xs bg-surface-tertiary border-b border-border-primary">
-                <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
-                  {categoryLabels[category] || category}
-                </span>
-              </div>
-
-              {/* Formations in Category */}
-              {groupedFormations[category].map((formation: Formation) => (
-                <div
-                  key={formation.id}
-                  className={`w-full flex items-center justify-between hover:bg-surface-tertiary transition-colors ${
-                    value === formation.id ? "bg-accent-500/10" : ""
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleSelect(formation)}
-                    className="flex-1 px-spacing-md py-spacing-sm flex items-center justify-between text-left"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-spacing-sm">
-                        <span className="font-medium text-text-primary">
-                          {formation.name}
-                        </span>
-                        <span className="text-xs text-text-muted">
-                          {getDirectionLabel(formation.direction)}
-                        </span>
-                      </div>
-                      {formation.description && (
-                        <span className="text-xs text-text-muted line-clamp-1">
-                          {formation.description}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-spacing-xs">
-                      {formation.personnel_name && (
-                        <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
-                          {formation.personnel_name}
-                        </span>
-                      )}
-                      {formation.usage_count > 0 && (
-                        <span className="text-xs text-text-muted">
-                          {formation.usage_count}x
-                        </span>
-                      )}
-                    </div>
-                  </button>
-
-                  {/* Manage Variants Button */}
-                  <button
-                    type="button"
-                    onClick={(e) => handleManageVariants(formation, e)}
-                    className="px-spacing-sm py-spacing-sm hover:bg-surface-primary transition-colors group"
-                    title="Manage formation variants"
-                  >
-                    <Link2 className="w-4 h-4 text-text-muted group-hover:text-accent-500" />
-                  </button>
+          {visibleFormations.length > 0 &&
+            Object.keys(groupedFormations).map((category) => (
+              <div key={category}>
+                {/* Category Header */}
+                <div className="px-spacing-md py-spacing-xs bg-surface-tertiary border-b border-border-primary">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+                    {categoryLabels[category] || category}
+                  </span>
                 </div>
-              ))}
-            </div>
-          ))}
+
+                {/* Formations in Category */}
+                {groupedFormations[category].map((formation: Formation) => (
+                  <div
+                    key={formation.id}
+                    className={`w-full flex items-center justify-between hover:bg-surface-tertiary transition-colors ${
+                      value === formation.id ? "bg-accent-500/10" : ""
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(formation)}
+                      className="flex-1 px-spacing-md py-spacing-sm flex items-center justify-between text-left"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-spacing-sm">
+                          <span className="font-medium text-text-primary">
+                            {formation.name}
+                          </span>
+                          <span className="text-xs text-text-muted">
+                            {getDirectionLabel(formation.direction)}
+                          </span>
+                        </div>
+                        {formation.description && (
+                          <span className="text-xs text-text-muted line-clamp-1">
+                            {formation.description}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-spacing-xs">
+                        {formation.personnel_name && (
+                          <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
+                            {formation.personnel_name}
+                          </span>
+                        )}
+                        {formation.usage_count > 0 && (
+                          <span className="text-xs text-text-muted">
+                            {formation.usage_count}x
+                          </span>
+                        )}
+                      </div>
+                    </button>
+
+                    {/* Manage Variants Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleManageVariants(formation, e)}
+                      className="px-spacing-sm py-spacing-sm hover:bg-surface-primary transition-colors group"
+                      title="Manage formation variants"
+                    >
+                      <Link2 className="w-4 h-4 text-text-muted group-hover:text-accent-500" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ))}
         </div>
       )}
 
