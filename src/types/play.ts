@@ -379,3 +379,65 @@ export const INSTALL_PHASES = [
   "gameplan",
 ] as const;
 export type InstallPhase = (typeof INSTALL_PHASES)[number];
+
+// =============================================
+// PLAY ASSIGNMENTS
+// =============================================
+
+/**
+ * Player tag in an assignment (for mentions/notifications)
+ */
+export interface PlayerTag {
+  player_id: string; // UUID from team_players table
+  player_name: string; // Display name
+  position?: string; // Player's position (QB, WR, etc.)
+}
+
+/**
+ * Individual position assignment for a play
+ * Coaches write these, players read them
+ */
+export interface PlayAssignment {
+  id: string; // UUID
+  play_id: string; // UUID - references plays(id)
+  playbook_id: string; // UUID - references playbooks(id)
+  
+  // Position and instruction
+  position: string; // e.g., "QB", "RB", "X", "Y", "Z", "LT", etc.
+  assignment_text: string | null; // The actual assignment/instruction
+  
+  // Tagging and categorization
+  player_tags: PlayerTag[]; // Players mentioned in this assignment
+  hashtags: string[]; // Hashtags for search/categorization
+  
+  // Shared play notes
+  play_notes: string | null; // General notes for the entire play
+  
+  // Metadata
+  created_by: string | null; // UUID - user who created
+  updated_by: string | null; // UUID - user who last updated
+  created_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
+}
+
+/**
+ * Position slot for the assignments editor
+ * Includes both the position name and its assignment (if exists)
+ */
+export interface AssignmentPosition {
+  position: string; // Position name from personnel (e.g., "QB", "X", "Y")
+  assignment: PlayAssignment | null; // The assignment record, if exists
+  order: number; // Display order in UI (0-10)
+}
+
+/**
+ * Complete assignments state for a play
+ * Used for loading/editing all positions at once
+ */
+export interface PlayAssignmentsState {
+  play_id: string;
+  playbook_id: string;
+  positions: AssignmentPosition[]; // All 11 positions (from personnel)
+  play_notes: string | null; // Shared across all positions
+  has_changes: boolean; // Whether local changes exist (unsaved)
+}
