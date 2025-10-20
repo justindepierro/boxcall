@@ -812,10 +812,12 @@ export default function PlaybookPage() {
   );
 
   const handleQuickNewPracticeScript = useCallback(() => {
+    triggerHapticFeedback("light");
     navigate("/practice-plans");
   }, [navigate]);
 
   const handleQuickNewGamePlan = useCallback(() => {
+    triggerHapticFeedback("light");
     navigate("/game-plans");
   }, [navigate]);
 
@@ -1442,7 +1444,18 @@ export default function PlaybookPage() {
               </div>
             }
           >
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                  <div className="bg-surface-primary rounded-lg p-8 flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
+                    <Typography variant="body-md" className="text-text-secondary">
+                      Loading play editor...
+                    </Typography>
+                  </div>
+                </div>
+              }
+            >
               <AddNewPlayModal
                 isOpen={showAddNewPlayModal}
                 onClose={() => {
@@ -1809,7 +1822,18 @@ export default function PlaybookPage() {
             closeOnBackdropClick={false}
             closeOnEscape={true}
           >
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-full min-h-96">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
+                    <Typography variant="body-md" className="text-text-secondary">
+                      Loading diagram editor...
+                    </Typography>
+                  </div>
+                </div>
+              }
+            >
               <PlayDiagramBuilder
                 onClose={() => setDiagramPlay(null)}
                 play={diagramPlay}
