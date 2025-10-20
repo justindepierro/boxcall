@@ -1,10 +1,13 @@
 /**
  * useViewMode Hook
- * Manages view mode (list/grid) with media query auto-detection
+ * Manages view mode (list/grid) with mobile detection
+ * 
+ * Uses centralized useIsMobile() hook for consistent breakpoint detection (< 768px)
  */
 
 import { useCallback, useEffect } from "react";
 import { usePreference } from "../../../../hooks/usePreferences";
+import { useIsMobile } from "../../../../hooks/useBreakpoint";
 
 export function useViewMode() {
   const [hasManualViewModeOverride, setHasManualViewModeOverride] =
@@ -14,6 +17,9 @@ export function useViewMode() {
     "bc_playgrid_view",
     "list" as "list" | "grid"
   );
+
+  // Use centralized mobile detection hook
+  const isMobile = useIsMobile();
 
   const setViewMode = useCallback(
     (mode: "list" | "grid", manual = true) => {
@@ -43,49 +49,27 @@ export function useViewMode() {
   );
 
   // Auto-detect mobile viewport for initial view mode (unless user has manual override)
+  // Uses centralized useIsMobile() hook instead of manual media queries
   useEffect(() => {
-    if (typeof window === "undefined") return;
     if (hasManualViewModeOverride) {
       console.log(
         "[PlayGrid] Skipping auto view mode - user has manual override"
       );
       return;
     }
-    if (typeof window.matchMedia !== "function") return;
 
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-
-    const applyPreferredView = (matches: boolean) => {
-      const newMode = matches ? "grid" : "list";
-      console.log(`[PlayGrid] Auto-switching view mode based on screen size:`, {
-        matches,
-        newMode,
-        screenWidth: window.innerWidth,
-      });
+    const newMode = isMobile ? "grid" : "list";
+    console.log(`[PlayGrid] Auto-switching view mode based on screen size:`, {
+      isMobile,
+      newMode,
+      previousMode: viewMode,
+    });
+    
+    // Only update if different to avoid unnecessary re-renders
+    if (newMode !== viewMode) {
       setViewMode(newMode, false);
-    };
-
-    applyPreferredView(mediaQuery.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      console.log("[PlayGrid] Media query changed:", event.matches);
-      applyPreferredView(event.matches);
-    };
-
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", handleChange);
-    } else if (typeof mediaQuery.addListener === "function") {
-      mediaQuery.addListener(handleChange);
     }
-
-    return () => {
-      if (typeof mediaQuery.removeEventListener === "function") {
-        mediaQuery.removeEventListener("change", handleChange);
-      } else if (typeof mediaQuery.removeListener === "function") {
-        mediaQuery.removeListener(handleChange);
-      }
-    };
-  }, [hasManualViewModeOverride, setViewMode]);
+  }, [isMobile, hasManualViewModeOverride, viewMode, setViewMode]);
 
   return {
     viewMode,
