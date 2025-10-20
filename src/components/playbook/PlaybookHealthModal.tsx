@@ -196,7 +196,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                 {/* Quick Stats */}
                 <div className="text-right space-y-1">
                   <Typography variant="label-md" className="text-text-tertiary">
-                    {healthScore.stats.totalPlays} plays
+                    {healthScore.stats.totalPlays} plays ({healthScore.stats.uniquePlayNames} unique)
                   </Typography>
                   <Typography variant="label-md" className="text-text-tertiary">
                     {healthScore.stats.totalFormations} formations

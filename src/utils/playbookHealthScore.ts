@@ -53,6 +53,7 @@ export interface PlaybookHealthScore {
     playsWithFormationLink: number;
     completeFormations: number;
     averagePlayQuality: number;
+    uniquePlayNames: number;
   };
 }
 
@@ -498,7 +499,7 @@ export async function calculatePlaybookHealth(
   // Fetch stats
   const { data: plays } = await supabase
     .from("plays")
-    .select("id, formation_id")
+    .select("id, formation_id, play_name")
     .eq("playbook_id", playbookId);
 
   const { data: formations } = await supabase
@@ -513,6 +514,7 @@ export async function calculatePlaybookHealth(
     completeFormations:
       formations?.filter((f) => f.metadata_quality === "complete").length || 0,
     averagePlayQuality: playCompleteness.score * 4, // Convert 25-point scale to 100-point
+    uniquePlayNames: new Set(plays?.map((p) => p.play_name.trim().toLowerCase())).size,
   };
 
   info("[PlaybookHealth] Calculation complete. Overall score:", overall);
