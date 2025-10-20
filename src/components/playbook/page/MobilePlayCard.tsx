@@ -58,14 +58,14 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
   const personnel = play.personnel || "11 Personnel";
   const subtitle = `${formation} • ${personnel}`;
 
-  // Play type badge color
+  // Play type badge color with improved contrast
   const playTypeColor =
     {
-      Pass: "text-primary-500 bg-primary-50",
-      Run: "text-success-500 bg-success-50",
-      RPO: "text-warning-500 bg-warning-50",
-      "Play Action": "text-info-500 bg-info-50",
-    }[play.p_type] || "text-secondary bg-surface-secondary";
+      Pass: "text-primary-700 bg-primary-100 border border-primary-200",
+      Run: "text-success-700 bg-success-100 border border-success-200",
+      RPO: "text-warning-700 bg-warning-100 border border-warning-200",
+      "Play Action": "text-info-700 bg-info-100 border border-info-200",
+    }[play.p_type] || "text-secondary bg-surface-muted border border-border";
 
   return (
     <div
@@ -80,9 +80,10 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         cursor-pointer
         transition-all duration-200
         hover:border-primary-200
-        hover:bg-surface-secondary
+        hover:bg-surface-secondary/50
+        hover:shadow-sm
         active:scale-[0.98]
-        ${isSelected ? "border-primary-500 bg-primary-50" : ""}
+        ${isSelected ? "border-primary-500 bg-primary-50/30 shadow-md" : ""}
       `}
       onClick={handleClick}
       role="button"
@@ -109,29 +110,29 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         )}
       </div>
 
-      {/* Play Info */}
-      <div className="flex-1 min-w-0 space-y-1">
-        {/* Play Name */}
+      {/* Play Info - Improved visual hierarchy */}
+      <div className="flex-1 min-w-0 space-y-1.5">
+        {/* Play Name - Primary (18px bold) */}
         <Typography
           variant="body-lg"
-          className="text-primary truncate font-semibold"
+          className="text-primary truncate font-bold leading-tight"
         >
           {displayName}
         </Typography>
 
-        {/* Formation & Personnel */}
-        <Typography variant="body-sm" className="text-secondary truncate">
+        {/* Formation & Personnel - Secondary (14px regular) */}
+        <Typography variant="body-sm" className="text-secondary truncate font-normal">
           {subtitle}
         </Typography>
 
-        {/* Play Type Badge (Optional) */}
+        {/* Play Type Badge - Tertiary (12px) */}
         {play.p_type && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-1">
             <span
               className={`
                 inline-flex items-center
-                px-2 py-0.5
-                text-xs font-medium
+                px-2.5 py-1
+                text-xs font-semibold
                 rounded-md
                 ${playTypeColor}
               `}

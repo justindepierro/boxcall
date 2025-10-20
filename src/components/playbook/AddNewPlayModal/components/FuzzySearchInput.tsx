@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Typography } from "../../../design-system/Typography";
 import { useIsMobile } from "../../../../hooks/useBreakpoint";
+import { useKeyboardAwareScroll } from "../../../../hooks/useKeyboardAwareScroll";
 
 interface FuzzySearchInputProps {
   label: string;
@@ -41,6 +42,12 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
 }) => {
   // Mobile detection for responsive input sizing
   const isMobile = useIsMobile();
+  
+  // Input ref for keyboard-aware scrolling
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Auto-scroll input into view when keyboard appears on mobile
+  useKeyboardAwareScroll(inputRef);
 
   // Filter suggestions based on input value
   const filteredSuggestions = React.useMemo(() => {
@@ -64,6 +71,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
       </Typography>
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}

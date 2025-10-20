@@ -74,7 +74,7 @@ export const WizardProgress: React.FC<WizardProgressProps> = ({
                 <div
                   className={cn(
                     "absolute inset-0",
-                    "w-6 h-6 rounded-full",
+                    "w-8 h-8 rounded-full",
                     "border-2 border-primary",
                     "animate-pulse"
                   )}
@@ -85,8 +85,8 @@ export const WizardProgress: React.FC<WizardProgressProps> = ({
               <div
                 className={cn(
                   "rounded-full transition-all duration-300",
-                  // Size
-                  isCurrent ? "w-4 h-4" : "w-3 h-3",
+                  // Size - Larger for better mobile visibility
+                  isCurrent ? "w-5 h-5" : "w-3.5 h-3.5",
                   // Color
                   isCompleted && "bg-primary",
                   isCurrent && "bg-primary",
@@ -100,7 +100,7 @@ export const WizardProgress: React.FC<WizardProgressProps> = ({
             {stepNumber < totalSteps && (
               <div
                 className={cn(
-                  "h-0.5 w-8",
+                  "h-1 w-8",
                   "transition-colors duration-300",
                   stepNumber < currentStep ? "bg-primary" : "bg-surface-muted"
                 )}
