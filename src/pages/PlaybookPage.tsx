@@ -345,18 +345,45 @@ export default function PlaybookPage() {
     void loadActivities();
   }, [activeTeamId]);
 
-  // 🚀 PERFORMANCE: Memoize playbook stats calculation to avoid recomputing on every render
+  // Get real play data for stats calculation
+  const { plays: allPlaysForStats = [], formations: allFormations = [] } = useTeamsData();
+  
+  // 🚀 PERFORMANCE: Memoize playbook stats calculation from REAL data
   const playbookStats = useMemo(() => {
+    // Calculate real stats from actual data
+    const totalPlays = allPlaysForStats.length;
+    const playsWithDiagrams = allPlaysForStats.filter(
+      (play) => play.diagram_url || play.diagram_data
+    ).length;
+    
+    // Count unique formations
+    const uniqueFormations = new Set(
+      allPlaysForStats.map((play) => play.formation).filter(Boolean)
+    );
+    const formationsCount = Math.max(allFormations.length, uniqueFormations.size);
+    
+    // Count play types from actual data
+    const passPlays = allPlaysForStats.filter((play) => 
+      play.p_type?.toLowerCase() === "pass"
+    ).length;
+    const runPlays = allPlaysForStats.filter((play) => 
+      play.p_type?.toLowerCase() === "run"
+    ).length;
+    const rpoPlays = allPlaysForStats.filter((play) => 
+      play.p_type?.toLowerCase() === "rpo"
+    ).length;
+    const playActionPlays = allPlaysForStats.filter((play) => 
+      play.p_type?.toLowerCase()?.includes("play action")
+    ).length;
+    
     return {
-      totalPlays: state.playsCreated || 0,
-      playsWithDiagrams: Math.floor(
-        (state.playsCreated || 0) * (state.diagramCoverage / 100)
-      ),
-      formationsCount: Math.max(1, Math.floor((state.playsCreated || 0) / 3)), // Rough estimate
-      passPlays: Math.floor((state.playsCreated || 0) * 0.4),
-      runPlays: Math.floor((state.playsCreated || 0) * 0.4),
-      rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
-      playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
+      totalPlays,
+      playsWithDiagrams,
+      formationsCount,
+      passPlays,
+      runPlays,
+      rpoPlays,
+      playActionPlays,
       recentActivity: recentActivities
         .filter(
           (activity) => activity.activityType !== "deleted" // Filter out deleted activities for dashboard
@@ -374,7 +401,7 @@ export default function PlaybookPage() {
             : undefined,
         })),
     };
-  }, [state.playsCreated, state.diagramCoverage, recentActivities]);
+  }, [allPlaysForStats, allFormations, recentActivities]); // Use real data dependencies
 
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);

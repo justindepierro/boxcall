@@ -890,7 +890,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
                               playbook_id: playbookId,
                               name: newFormationName.trim(),
                               personnel_id: newFormationPersonnelId,
-                              personnel_name: selectedPersonnel?.name || undefined,
+                              personnel_name:
+                                selectedPersonnel?.name || undefined,
                               category: category || undefined,
                               description: undefined,
                               direction: null,
