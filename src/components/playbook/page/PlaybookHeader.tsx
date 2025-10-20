@@ -24,6 +24,7 @@ export type PlaybookHeaderProps = {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenSettings?: () => void;
+  onOpenHealth?: () => void;
 };
 
 export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
@@ -34,6 +35,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
   searchQuery,
   onSearchChange,
   onOpenSettings,
+  onOpenHealth,
 }) => {
   const [showChallenges, setShowChallenges] = useState(false);
 
@@ -86,6 +88,20 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
             </div>
 
             <div className="flex items-center space-x-4">
+              {/* Playbook Health Button */}
+              {onOpenHealth && (
+                <button
+                  onClick={onOpenHealth}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-50 hover:bg-accent-100 transition-colors group"
+                  title="Playbook Health & Data Quality"
+                >
+                  <Icon
+                    name="activity"
+                    className="h-5 w-5 text-accent-600 group-hover:text-accent-700"
+                  />
+                </button>
+              )}
+
               {/* Settings Button */}
               {onOpenSettings && (
                 <button

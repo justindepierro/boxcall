@@ -99,6 +99,11 @@ const FormationBuilderModal = lazy(() =>
     default: module.FormationBuilderModal,
   }))
 );
+const PlaybookHealthModal = lazy(() =>
+  import("../components/playbook/PlaybookHealthModal").then((module) => ({
+    default: module.PlaybookHealthModal,
+  }))
+);
 const KeyboardShortcutsGuide = lazy(() =>
   import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
     default: module.KeyboardShortcutsGuide,
@@ -369,6 +374,7 @@ export default function PlaybookPage() {
   const [showPersonnelModal, setShowPersonnelModal] = useState(false);
   const [showFormationBuilderModal, setShowFormationBuilderModal] =
     useState(false);
+  const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
@@ -899,6 +905,7 @@ export default function PlaybookPage() {
           onTeamTypeChange={handleTeamTypeChange}
           onOpenSettings={handleOpenSettings}
           onOpenBuilder={handleOpenBuilder}
+          onOpenHealth={() => setShowPlaybookHealthModal(true)}
           title="Playbook"
           playsCreated={state.playsCreated}
           diagramCoverage={state.diagramCoverage}
@@ -1612,6 +1619,16 @@ export default function PlaybookPage() {
               />
             </Suspense>
           </ErrorBoundary>
+        )}
+
+        {showPlaybookHealthModal && activePlaybookId && (
+          <Suspense fallback={null}>
+            <PlaybookHealthModal
+              isOpen={showPlaybookHealthModal}
+              onClose={() => setShowPlaybookHealthModal(false)}
+              playbookId={activePlaybookId}
+            />
+          </Suspense>
         )}
 
         {showPlaybookSettingsModal && (

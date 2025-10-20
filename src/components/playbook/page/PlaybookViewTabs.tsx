@@ -27,6 +27,7 @@ export type PlaybookViewTabsProps = {
   onTeamTypeChange?: (type: TeamType) => void;
   onOpenSettings?: () => void;
   onOpenBuilder?: () => void;
+  onOpenHealth?: () => void;
   // Header content props
   title?: string;
   playsCreated: number;
@@ -47,6 +48,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onTeamTypeChange,
   onOpenSettings,
   onOpenBuilder,
+  onOpenHealth,
   title = "Playbook",
   playsCreated,
   diagramCoverage,
@@ -208,6 +210,22 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                   teamId={teamId}
                 />
               )}
+
+            {/* Playbook Health */}
+            {onOpenHealth && (
+              <Button
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  onOpenHealth();
+                }}
+                variant="ghost"
+                size="sm"
+                className="w-11 h-11 !p-0 flex items-center justify-center bg-accent-50 hover:bg-accent-100 dark:bg-accent-900/20 dark:hover:bg-accent-900/30 text-accent-600 dark:text-accent-500 rounded-xl transition-all duration-200 overflow-visible"
+                title="Playbook Health & Data Quality"
+              >
+                <Icon name="activity" className="h-5 w-5" />
+              </Button>
+            )}
 
             {/* Weekly Challenges - moved here */}
             <Button
