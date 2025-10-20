@@ -13,7 +13,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { ChevronDown, Grid, Link2 } from "lucide-react";
+import { ChevronDown, Grid, Link2, Plus } from "lucide-react";
 import { FormationService } from "../../services/formationService";
 import type { Formation } from "../../types/formation";
 import { FormationMatchingModal } from "../formations/FormationMatchingModal";
@@ -23,6 +23,7 @@ interface FormationSelectorProps {
   playbookId: string;
   value: string | null; // formation_id
   onChange: (formationId: string | null, formation: Formation | null) => void;
+  onCreateNew?: () => void; // NEW: Callback to open Formation Builder
   className?: string;
   disabled?: boolean;
 }
@@ -31,6 +32,7 @@ export function FormationSelector({
   playbookId,
   value,
   onChange,
+  onCreateNew,
   className = "",
   disabled = false,
 }: FormationSelectorProps) {
@@ -227,9 +229,32 @@ export function FormationSelector({
       {error && <p className="mt-1 text-xs text-error-500">{error}</p>}
 
       {/* Dropdown Menu */}
-      {isOpen && !isLoading && visibleFormations.length > 0 && (
+      {isOpen && !isLoading && (
         <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
-          {Object.keys(groupedFormations).map((category) => (
+          {/* Create New Formation Button */}
+          {onCreateNew && (
+            <button
+              type="button"
+              onClick={() => {
+                onCreateNew();
+                setIsOpen(false);
+              }}
+              className="w-full px-spacing-md py-spacing-md flex items-center gap-spacing-sm bg-accent-500/10 hover:bg-accent-500/20 transition-colors border-b border-border-primary"
+            >
+              <Plus className="w-5 h-5 text-accent-500" />
+              <div className="flex flex-col items-start">
+                <span className="font-semibold text-accent-500">
+                  Create New Formation
+                </span>
+                <span className="text-xs text-text-muted">
+                  Open Formation Builder to design a new formation
+                </span>
+              </div>
+            </button>
+          )}
+
+          {/* Existing Formations */}
+          {visibleFormations.length > 0 && Object.keys(groupedFormations).map((category) => (
             <div key={category}>
               {/* Category Header */}
               <div className="px-spacing-md py-spacing-xs bg-surface-tertiary border-b border-border-primary">

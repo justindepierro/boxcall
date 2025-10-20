@@ -121,7 +121,10 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         </Typography>
 
         {/* Formation & Personnel - Secondary (14px regular) */}
-        <Typography variant="body-sm" className="text-secondary truncate font-normal">
+        <Typography
+          variant="body-sm"
+          className="text-secondary truncate font-normal"
+        >
           {subtitle}
         </Typography>
 

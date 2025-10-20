@@ -32,7 +32,7 @@ interface FormationBuilderModalProps {
   onClose: () => void;
   playbookId: string;
   formationId?: string; // For editing existing formation
-  onSaved?: () => void;
+  onSaved?: (formation?: Formation) => void;
 }
 
 type TabType = "edit" | "draw" | "link";
@@ -106,9 +106,9 @@ export function FormationBuilderModal({
     }
   }, [selectedFormationId, isOpen]);
 
-  const handleSuccess = () => {
+  const handleSuccess = (savedFormation?: Formation) => {
     if (onSaved) {
-      onSaved();
+      onSaved(savedFormation);
     }
     // Don't auto-close - let user continue working
   };
@@ -120,9 +120,11 @@ export function FormationBuilderModal({
     source?: FormationCreationSource
   ) => {
     try {
+      let savedFormation: Formation;
+      
       if (selectedFormationId && formation) {
         // Update existing formation
-        await FormationService.updateFormation(selectedFormationId, {
+        savedFormation = await FormationService.updateFormation(selectedFormationId, {
           player_positions: players,
           personnel_name: personnel,
           creation_source: source,
@@ -137,9 +139,10 @@ export function FormationBuilderModal({
       } else {
         // Create new formation (placeholder - need form data)
         toast.info("Save new formation - integrate with creation form");
+        return;
       }
 
-      handleSuccess();
+      handleSuccess(savedFormation);
     } catch (error) {
       console.error("Failed to save formation:", error);
       toast.error("Failed to save formation");
@@ -297,7 +300,7 @@ export function FormationBuilderModal({
             {activeTab === "edit" && (
               <FormationBuilderPanel
                 playbookId={playbookId}
-                onFormationUpdated={handleSuccess}
+                onFormationUpdated={(formation) => handleSuccess(formation)}
                 showHeader={false}
                 hideSubTabs={true}
               />

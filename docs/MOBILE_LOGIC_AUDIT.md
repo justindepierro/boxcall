@@ -17,6 +17,7 @@ The codebase has **consistent mobile detection** using a single source of truth 
 3. ℹ️ **Unused Hook**: `useMobileErrorHandler.ts` is dead code (0 references)
 
 **Good News:**
+
 - ✅ No conflicting size definitions
 - ✅ Single source of truth for mobile detection (`useBreakpoint.ts`)
 - ✅ Consistent 768px breakpoint used everywhere
@@ -49,11 +50,13 @@ export function useIsDesktop(): boolean {
 ```
 
 **Breakpoint Values:**
+
 - Mobile: `< 768px`
 - Tablet: `768px - 1023px`
 - Desktop: `≥ 1024px`
 
 **Usage:** **9 files** use this hook correctly:
+
 1. `src/pages/PlaybookPage.tsx` (line 132) ✅
 2. `src/components/playbook/PlayGrid.tsx` (line 363) ✅
 3. `src/components/playbook/PlayCard.tsx` (line 155) ✅
@@ -78,26 +81,29 @@ const mediaQuery = window.matchMedia("(max-width: 768px)");
 ```
 
 **Problem:**
+
 - This hook manually checks `max-width: 768px` instead of using `useIsMobile()`
 - If we ever change the mobile breakpoint, this will be out of sync
 - Creates maintenance burden (two places to update)
 
 **Impact:** 🟡 **MODERATE**
+
 - Currently matches `useIsMobile()` breakpoint (768px)
 - **Will break** if breakpoints are ever adjusted
 - Violates DRY principle
 
 **Recommendation:**
+
 ```typescript
 // ✅ BETTER: Use existing hook
 import { useIsMobile } from "../../../hooks/useBreakpoint";
 
 export function useViewMode() {
   const isMobile = useIsMobile();
-  
+
   useEffect(() => {
     if (hasManualViewModeOverride) return;
-    
+
     const newMode = isMobile ? "grid" : "list";
     setViewMode(newMode, false);
   }, [isMobile, hasManualViewModeOverride]);
@@ -121,6 +127,7 @@ screens: {
 ```
 
 **Analysis:**
+
 - ✅ **GOOD**: Tailwind `sm:` is **correctly configured** to 768px (not default 640px)
 - ✅ **GOOD**: Tailwind `md:` matches desktop breakpoint (1024px)
 - ✅ **GOOD**: Comments in config explicitly document alignment with hooks
@@ -128,10 +135,12 @@ screens: {
 **Confusion Risk:** 🟡 **LOW BUT PRESENT**
 
 Developers familiar with default Tailwind might expect:
+
 - `sm:` = 640px (default Tailwind)
 - But we use `sm:` = 768px (custom)
 
 **Mitigation:**
+
 - Comments in `tailwind.config.js` are clear ✅
 - `src/components/mobile/index.ts` documents breakpoints ✅
 - All components use hooks, not magic numbers ✅
@@ -151,19 +160,24 @@ export function useMobileButtonProps(
   isPrimary = false
 ): { size: ButtonSize } {
   const isMobile = useIsMobile();
-  
+
   if (!isMobile) return { size: desktopSize };
-  
+
   // ✅ Consistent: Forces 44px+ touch targets on mobile
   return {
     size: isPrimary
-      ? desktopSize === "sm" ? "lg" : "xl"  // Primary: 44-48px
-      : desktopSize === "sm" ? "md" : "lg", // Secondary: 40-44px
+      ? desktopSize === "sm"
+        ? "lg"
+        : "xl" // Primary: 44-48px
+      : desktopSize === "sm"
+        ? "md"
+        : "lg", // Secondary: 40-44px
   };
 }
 ```
 
 **Usage:** 3 files use this hook:
+
 1. `src/pages/PlaybookPage.tsx` (lines 135-136) ✅
 2. `src/components/playbook/AddNewPlayModal.tsx` (lines 80-81) ✅
 3. `src/hooks/useMobileButtonProps.ts` (itself) ✅
@@ -175,6 +189,7 @@ export function useMobileButtonProps(
 ### ✅ Padding/Spacing Logic (Consistent)
 
 **PlayCard.tsx** (line 443-450):
+
 ```typescript
 className={`${
   isCompact
@@ -184,11 +199,13 @@ className={`${
 ```
 
 **Analysis:**
+
 - Uses `isMobile` hook for runtime detection ✅
 - Uses `sm:` Tailwind classes for responsive scaling ✅
 - No conflicts (both use 768px breakpoint) ✅
 
 **Logic Flow:**
+
 ```
 Desktop (≥768px):
   Compact: p-3 → sm:p-4
@@ -206,6 +223,7 @@ Mobile (<768px):
 ### ✅ Grid Layout Logic (Consistent)
 
 **PlayGrid.tsx** (line 670-673):
+
 ```typescript
 className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
   isMobile
@@ -215,6 +233,7 @@ className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
 ```
 
 **Analysis:**
+
 - Uses `isMobile` hook for layout switching ✅
 - Tailwind responsive classes for desktop scaling ✅
 - Clear separation: Mobile = 1 col, Desktop = responsive grid ✅
@@ -250,27 +269,27 @@ export const useMobileErrorHandler = () => {
 
 ### Runtime Detection (JavaScript)
 
-| Hook/Function | Location | Breakpoint | Usage Count |
-|--------------|----------|------------|-------------|
-| `useIsMobile()` | `hooks/useBreakpoint.ts` | < 768px | **9 files** ✅ |
-| `useIsTablet()` | `hooks/useBreakpoint.ts` | 768-1023px | 0 files |
-| `useIsDesktop()` | `hooks/useBreakpoint.ts` | ≥ 1024px | 0 files |
-| `useIsMobileOrTablet()` | `hooks/useBreakpoint.ts` | < 1024px | 0 files |
-| `useMobileButtonProps()` | `hooks/useMobileButtonProps.ts` | < 768px | 3 files ✅ |
-| `useMobileTouchTarget()` | `hooks/useMobileButtonProps.ts` | < 768px | 0 files |
-| `useMobileInputProps()` | `hooks/useMobileButtonProps.ts` | < 768px | 0 files |
-| `useMobileNavigation()` | `hooks/useMobileNavigation.ts` | n/a | 1 file ✅ |
-| ⚠️ `window.matchMedia("(max-width: 768px)")` | `PlayGrid/hooks/useViewMode.ts` | ≤ 768px | **DUPLICATE** ⚠️ |
+| Hook/Function                                | Location                        | Breakpoint | Usage Count      |
+| -------------------------------------------- | ------------------------------- | ---------- | ---------------- |
+| `useIsMobile()`                              | `hooks/useBreakpoint.ts`        | < 768px    | **9 files** ✅   |
+| `useIsTablet()`                              | `hooks/useBreakpoint.ts`        | 768-1023px | 0 files          |
+| `useIsDesktop()`                             | `hooks/useBreakpoint.ts`        | ≥ 1024px   | 0 files          |
+| `useIsMobileOrTablet()`                      | `hooks/useBreakpoint.ts`        | < 1024px   | 0 files          |
+| `useMobileButtonProps()`                     | `hooks/useMobileButtonProps.ts` | < 768px    | 3 files ✅       |
+| `useMobileTouchTarget()`                     | `hooks/useMobileButtonProps.ts` | < 768px    | 0 files          |
+| `useMobileInputProps()`                      | `hooks/useMobileButtonProps.ts` | < 768px    | 0 files          |
+| `useMobileNavigation()`                      | `hooks/useMobileNavigation.ts`  | n/a        | 1 file ✅        |
+| ⚠️ `window.matchMedia("(max-width: 768px)")` | `PlayGrid/hooks/useViewMode.ts` | ≤ 768px    | **DUPLICATE** ⚠️ |
 
 ### CSS/Tailwind Detection
 
-| Breakpoint | Value | Meaning | Alignment |
-|------------|-------|---------|-----------|
-| `sm:` | 768px | Tablet and up | ✅ Matches `useIsMobile()` |
-| `md:` | 1024px | Desktop and up | ✅ Matches `useIsDesktop()` |
-| `lg:` | 1280px | Large desktop | ✅ No conflicts |
-| `xl:` | 1440px | XL desktop | ✅ No conflicts |
-| `2xl:` | 1920px | 4K displays | ✅ No conflicts |
+| Breakpoint | Value  | Meaning        | Alignment                   |
+| ---------- | ------ | -------------- | --------------------------- |
+| `sm:`      | 768px  | Tablet and up  | ✅ Matches `useIsMobile()`  |
+| `md:`      | 1024px | Desktop and up | ✅ Matches `useIsDesktop()` |
+| `lg:`      | 1280px | Large desktop  | ✅ No conflicts             |
+| `xl:`      | 1440px | XL desktop     | ✅ No conflicts             |
+| `2xl:`     | 1920px | 4K displays    | ✅ No conflicts             |
 
 ---
 
@@ -343,11 +362,13 @@ const isMobile = useIsMobile(); // Returns: false ✅
 ### 🔴 Priority 1: Fix Duplicate Detection in `useViewMode.ts`
 
 **Current (line 56):**
+
 ```typescript
 const mediaQuery = window.matchMedia("(max-width: 768px)");
 ```
 
 **Recommended Fix:**
+
 ```typescript
 import { useIsMobile } from "../../../hooks/useBreakpoint";
 
@@ -358,6 +379,7 @@ export function useViewMode() {
 ```
 
 **Benefits:**
+
 - Single source of truth ✅
 - Easier to maintain ✅
 - Type-safe ✅
@@ -368,6 +390,7 @@ export function useViewMode() {
 ### 🟡 Priority 2: Delete Dead Code
 
 **File to Delete:**
+
 ```
 src/hooks/useMobileErrorHandler.ts
 ```
@@ -385,12 +408,12 @@ src/hooks/useMobileErrorHandler.ts
 ```typescript
 /**
  * PlayCard Component
- * 
+ *
  * Breakpoints:
  * - Mobile (<768px): Uses isMobile hook + single-column layout
  * - Tablet (768-1023px): Uses sm: classes
  * - Desktop (≥1024px): Uses md: classes
- * 
+ *
  * Note: Our sm: = 768px (not default 640px)
  */
 ```
@@ -412,14 +435,14 @@ When modifying mobile breakpoints in the future:
 
 ## 9. Summary Table
 
-| Category | Status | Issue Count | Critical? |
-|----------|--------|-------------|-----------|
-| Mobile Detection | ✅ Consistent | 1 duplicate | 🟡 Moderate |
-| Touch Targets | ✅ Consistent | 0 | ✅ None |
-| Sizing/Padding | ✅ Consistent | 0 | ✅ None |
-| Grid Layout | ✅ Consistent | 0 | ✅ None |
-| Tailwind Alignment | ✅ Correct | 0 | ✅ None |
-| Dead Code | 🗑️ 1 unused hook | 1 | 🟢 Low |
+| Category           | Status           | Issue Count | Critical?   |
+| ------------------ | ---------------- | ----------- | ----------- |
+| Mobile Detection   | ✅ Consistent    | 1 duplicate | 🟡 Moderate |
+| Touch Targets      | ✅ Consistent    | 0           | ✅ None     |
+| Sizing/Padding     | ✅ Consistent    | 0           | ✅ None     |
+| Grid Layout        | ✅ Consistent    | 0           | ✅ None     |
+| Tailwind Alignment | ✅ Correct       | 0           | ✅ None     |
+| Dead Code          | 🗑️ 1 unused hook | 1           | 🟢 Low      |
 
 **Overall Grade:** 🟢 **A- (Excellent with minor improvements needed)**
 

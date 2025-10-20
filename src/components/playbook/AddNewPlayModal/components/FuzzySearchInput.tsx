@@ -42,10 +42,10 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
 }) => {
   // Mobile detection for responsive input sizing
   const isMobile = useIsMobile();
-  
+
   // Input ref for keyboard-aware scrolling
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Auto-scroll input into view when keyboard appears on mobile
   useKeyboardAwareScroll(inputRef);
 

@@ -11,6 +11,7 @@ interface FormationSectionProps {
   formationDir: string;
   formationShowInName: boolean;
   playbookId?: string; // NEW: Required for FormationSelector
+  onCreateFormation?: () => void; // NEW: Callback to open Formation Builder
   onFormationChange: (formation: string) => void;
   onFormationIdChange: (
     formationId: string | null,
@@ -29,6 +30,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
   formationDir,
   formationShowInName,
   playbookId,
+  onCreateFormation,
   onFormationChange,
   onFormationIdChange,
   onFormationDirChange,
@@ -54,6 +56,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
               onFormationChange(formationObj.name);
             }
           }}
+          onCreateNew={onCreateFormation}
           className="flex-1"
         />
       ) : (

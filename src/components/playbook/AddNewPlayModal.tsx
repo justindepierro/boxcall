@@ -30,6 +30,7 @@ import { PersonnelCreationPanel } from "./AddNewPlayModal/components";
 import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
+import { FormationBuilderModal } from "./FormationBuilderModal";
 import { FormationService } from "../../services/formationService";
 import {
   detectDirectionInFormationName,
@@ -58,6 +59,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showDirectionWarning, setShowDirectionWarning] = useState(false);
   const [personnelPanelOpen, setPersonnelPanelOpen] = useState(false);
+  const [showFormationBuilder, setShowFormationBuilder] = useState(false);
   const [directionDetection, setDirectionDetection] =
     useState<DirectionDetectionResult | null>(null);
 
@@ -450,6 +452,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formationDir={formData.formation_direction || ""} // Use formation_direction for database
             formationShowInName={formData.formationShowInName}
             playbookId={playbookId}
+            onCreateFormation={() => setShowFormationBuilder(true)}
             onFormationChange={handleFormationChange}
             onFormationIdChange={(id, formation) => {
               // When formation is selected, pull in ALL formation metadata
@@ -686,6 +689,27 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             // Update the personnel field with the newly created configuration
             updateField("personnel", newPersonnel.name);
             setPersonnelPanelOpen(false);
+          }}
+        />
+      )}
+
+      {/* Formation Builder Modal */}
+      {playbookId && showFormationBuilder && (
+        <FormationBuilderModal
+          isOpen={showFormationBuilder}
+          onClose={() => setShowFormationBuilder(false)}
+          playbookId={playbookId}
+          onSaved={(formation) => {
+            // Auto-select the newly created formation
+            if (formation) {
+              updateFields({
+                formation_id: formation.id,
+                formation: formation.name,
+                formation_direction: formation.direction || null,
+                personnel: formation.personnel_name || formData.personnel,
+              });
+            }
+            setShowFormationBuilder(false);
           }}
         />
       )}
