@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { practiceScriptCache } from "./practiceScriptCache";
+import { ActivityService } from "./activityService";
 
 import type {
   CreatePracticeBlockData,
@@ -806,6 +807,18 @@ export class PracticeService {
       console.error("Error adding play to script:", playError);
       throw new Error("Failed to add play to practice script");
     }
+
+    // Record activity for adding play to practice script
+    await ActivityService.recordActivity({
+      type: "added_to_script",
+      playId: data.playId,
+      playName: _play.play_name,
+      teamId: _play.team_id,
+      details: {
+        scriptId: data.scriptId,
+        repetitions: data.repetitions || 5,
+      },
+    });
 
     const script = await this.getPracticeScript(data.scriptId);
     if (!script) {

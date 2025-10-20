@@ -318,6 +318,25 @@ export default function PlaybookPage() {
     []
   );
 
+  // Helper to refresh recent activities
+  const refreshActivities = useCallback(async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const activities = await ActivityService.getRecentActivities(
+        activeTeamId || undefined,
+        10
+      );
+      setRecentActivities(activities);
+      debug(`Refreshed ${activities.length} recent activities`);
+    } catch (err) {
+      logError("Failed to refresh recent activities:", err);
+    }
+  }, [activeTeamId]);
+
   // Load recent activities on mount
   useEffect(() => {
     const loadActivities = async () => {
@@ -528,15 +547,33 @@ export default function PlaybookPage() {
           break;
 
         case "delete":
-          // TODO: Confirm and delete
-          toast.warning(`Deleting ${selectedCount} plays (coming soon)`);
+          // Confirm and delete plays
+          if (window.confirm(`Are you sure you want to delete ${selectedCount} ${selectedCount === 1 ? 'play' : 'plays'}?`)) {
+            (async () => {
+              try {
+                const selectedPlayIds = Array.from(state.selectedPlayIds || []);
+                await PlaysService.deletePlays(selectedPlayIds);
+                
+                // Refresh the plays list
+                dispatch({ type: "CLEAR_SELECTION" });
+                
+                // Refresh activities to show deleted plays
+                await refreshActivities();
+                
+                toast.success(`Deleted ${selectedCount} ${selectedCount === 1 ? 'play' : 'plays'}`);
+              } catch (err) {
+                logError("Bulk delete failed:", err);
+                toast.error("Failed to delete plays");
+              }
+            })();
+          }
           break;
 
         default:
           break;
       }
     },
-    [state.selectedPlayIds, toast]
+    [state.selectedPlayIds, toast, dispatch, refreshActivities]
   );
 
   // Play count handler - updates state when PlayGrid reports actual play count
@@ -787,7 +824,10 @@ export default function PlaybookPage() {
           teamId
         );
         info(`Added "${play.play_name}" to practice script: "${script.name}"`);
-        // TODO: Replace with toast notification
+        
+        // Refresh activities to show the new "added_to_script" activity
+        await refreshActivities();
+        
         toast.success(
           `Added "${play.play_name}" to practice script`,
           script.name
@@ -800,7 +840,7 @@ export default function PlaybookPage() {
         );
       }
     },
-    [toast]
+    [toast, refreshActivities]
   );
 
   const handleAddToGamePlan = useCallback(
@@ -824,14 +864,17 @@ export default function PlaybookPage() {
           play
         );
         info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
-        // TODO: Replace with toast notification
+        
+        // Refresh activities to show the new "added_to_gameplan" activity
+        await refreshActivities();
+        
         toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
       } catch (error) {
         logError("Failed to add play to game plan:", error);
         toast.error("Failed to add play to game plan", "Please try again");
       }
     },
-    [toast]
+    [toast, refreshActivities]
   );
 
   // Practice Script Builder handlers
@@ -841,7 +884,7 @@ export default function PlaybookPage() {
   }, []);
 
   const handleSavePracticeScript = useCallback(
-    (script: any) => {
+    async (script: any) => {
       debug("Practice script saved:", script);
       setShowPracticeScriptBuilder(false);
       setEditingScript(null);
@@ -851,9 +894,10 @@ export default function PlaybookPage() {
       dispatch({ type: "TOGGLE_BULK" }); // Turn off selection mode
       dispatch({ type: "CLEAR_SELECTION" }); // Clear selected plays
 
-      // TODO: Refresh practice scripts list
+      // Refresh activities to show all "added_to_script" activities
+      await refreshActivities();
     },
-    [dispatch]
+    [dispatch, refreshActivities]
   );
 
   const handleQuickNewPracticeScript = useCallback(() => {

@@ -12,6 +12,7 @@
 import { supabase } from "../lib/supabase";
 import type { PostgrestError } from "@supabase/supabase-js";
 import type { Play } from "../types/play";
+import { ActivityService } from "./activityService";
 
 export interface GamePlanSituation {
   id: string;
@@ -271,6 +272,22 @@ export class GamePlanService {
     gamePlan.updatedAt = new Date();
 
     this.gamePlans[gamePlanIndex] = gamePlan;
+
+    // Record activity for adding play to game plan
+    await ActivityService.recordActivity({
+      type: "added_to_gameplan",
+      playId: data.playId,
+      playName: play.play_name,
+      teamId: gamePlan.teamId,
+      details: {
+        gamePlanId: data.gamePlanId,
+        gamePlanName: gamePlan.name,
+        situationId: data.situationId,
+        situationName: situation.name,
+        priority: data.priority || 3,
+      },
+    });
+
     return gamePlan;
   }
 
