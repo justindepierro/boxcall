@@ -20,6 +20,54 @@ import type { Formation } from "../types/formation";
 import { info, error as logError, warn } from "./logger";
 
 // ========================================
+// Helper Functions
+// ========================================
+
+/**
+ * Normalizes a play name to identify unique base plays
+ * Strips directional indicators, formation prefixes, and common variations
+ * 
+ * Examples:
+ * - "Power Left" → "power"
+ * - "I Form Counter Right" → "counter"
+ * - "Shotgun Draw" → "draw"
+ */
+function normalizePlayName(playName: string): string {
+  let normalized = playName.trim().toLowerCase();
+  
+  // Remove common directional suffixes
+  const directionalSuffixes = [
+    ' left', ' right', ' lt', ' rt',
+    ' strong', ' weak', ' str', ' wk',
+    ' open', ' closed',
+  ];
+  
+  for (const suffix of directionalSuffixes) {
+    if (normalized.endsWith(suffix)) {
+      normalized = normalized.slice(0, -suffix.length).trim();
+    }
+  }
+  
+  // Remove common formation prefixes (e.g., "I Form Power" → "power")
+  const formationPrefixes = [
+    'i form ', 'i-form ', 'ace ', 'singleback ', 'single back ',
+    'shotgun ', 'pistol ', 'wildcat ', 'empty ', 'trips ',
+    'doubles ', 'stack ', 'bunch ',
+  ];
+  
+  for (const prefix of formationPrefixes) {
+    if (normalized.startsWith(prefix)) {
+      normalized = normalized.slice(prefix.length).trim();
+    }
+  }
+  
+  // Remove extra whitespace
+  normalized = normalized.replace(/\s+/g, ' ').trim();
+  
+  return normalized;
+}
+
+// ========================================
 // Types
 // ========================================
 
@@ -514,7 +562,9 @@ export async function calculatePlaybookHealth(
     completeFormations:
       formations?.filter((f) => f.metadata_quality === "complete").length || 0,
     averagePlayQuality: playCompleteness.score * 4, // Convert 25-point scale to 100-point
-    uniquePlayNames: new Set(plays?.map((p) => p.play_name.trim().toLowerCase())).size,
+    uniquePlayNames: new Set(
+      plays?.map((p) => normalizePlayName(p.play_name))
+    ).size,
   };
 
   info("[PlaybookHealth] Calculation complete. Overall score:", overall);
