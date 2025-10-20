@@ -68,6 +68,7 @@ interface PlayGridProps {
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
   onCreateDiagram?: (play: Play) => void;
+  onOpenAssignments?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
   onPlayCreated?: () => void; // Add callback for when data should refresh
@@ -94,6 +95,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   onSave: _onSave, // Not used in V2 (no inline editing)
   onDuplicate,
   onCreateDiagram,
+  onOpenAssignments,
   onAddToPracticeScript: _onAddToPracticeScript, // Not used in V2
   onAddToGamePlan: _onAddToGamePlan, // Not used in V2
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
@@ -449,6 +451,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         onSave={handlePlaySave}
         onDuplicate={onDuplicate}
         onCreateDiagram={onCreateDiagram}
+        onOpenAssignments={onOpenAssignments}
         isSelected={selectedPlayIds.has(play.id)}
         onSelectionChange={enableBulkOperations ? handlePlaySelect : undefined}
         formationSuggestions={collectedSuggestions.formations}
@@ -467,6 +470,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       handlePlaySave,
       onDuplicate,
       onCreateDiagram,
+      onOpenAssignments,
       selectedPlayIds,
       handlePlaySelect,
       enableBulkOperations,
@@ -730,6 +734,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onSave={handlePlaySave}
                               onDuplicate={onDuplicate}
                               onCreateDiagram={onCreateDiagram}
+                              onOpenAssignments={onOpenAssignments}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={
                                 enableBulkOperations
@@ -870,6 +875,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onSave={handlePlaySave}
                               onDuplicate={onDuplicate}
                               onCreateDiagram={onCreateDiagram}
+                              onOpenAssignments={onOpenAssignments}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={handlePlaySelect}
                               formationSuggestions={

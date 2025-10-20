@@ -24,6 +24,7 @@ interface PlayCardTileHeaderProps {
   isSelected: boolean;
   onSelectionChange?: SelectionHandler;
   onCreateDiagram: () => void;
+  onOpenAssignments: () => void;
   phaseLabel: string | null;
   isFavorite: boolean;
   onToggleFavorite: () => void;
@@ -41,6 +42,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   isSelected,
   onSelectionChange,
   onCreateDiagram,
+  onOpenAssignments,
   phaseLabel,
   isFavorite,
   onToggleFavorite,
@@ -142,6 +144,20 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             <Icon name="image" className="w-5 h-5 text-white" />
           </button>
         )}
+
+        {/* Assignments Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenAssignments();
+          }}
+          className="absolute -bottom-3 -left-3 w-11 h-11 rounded-full bg-blue-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-blue-600 transition-colors cursor-pointer z-10"
+          title="Player Assignments"
+          aria-label="Player Assignments"
+        >
+          <Icon name="users" className="w-5 h-5 text-white" />
+        </button>
       </div>
 
       <div className="mt-3 w-full px-2">

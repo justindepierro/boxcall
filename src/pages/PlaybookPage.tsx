@@ -104,6 +104,11 @@ const PlaybookHealthModal = lazy(() =>
     default: module.PlaybookHealthModal,
   }))
 );
+const PlayAssignmentsModal = lazy(() =>
+  import("../components/playbook/PlayAssignmentsModal").then((module) => ({
+    default: module.PlayAssignmentsModal,
+  }))
+);
 const KeyboardShortcutsGuide = lazy(() =>
   import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
     default: module.KeyboardShortcutsGuide,
@@ -196,6 +201,7 @@ export default function PlaybookPage() {
   const isSearchPending = state.searchQuery !== debouncedSearchQuery;
 
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
+  const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
   const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
@@ -214,6 +220,12 @@ export default function PlaybookPage() {
     setDiagramPlay(play);
     // TODO: Open diagram builder modal or navigate to diagram route
     debug("Creating diagram for play:", play);
+  }, []);
+
+  // Handle opening assignments for a play
+  const handleOpenAssignments = useCallback((play: Play) => {
+    setAssignmentsPlay(play);
+    debug("Opening assignments for play:", play);
   }, []);
 
   // Load settings from localStorage or use defaults
@@ -1113,6 +1125,7 @@ export default function PlaybookPage() {
                       onDuplicate={handleDuplicatePlay}
                       onOpenBuilder={handleOpenBuilder}
                       onCreateDiagram={handleCreateDiagram}
+                      onOpenAssignments={handleOpenAssignments}
                       refreshTrigger={state.refreshTrigger}
                       onPlayCountChange={handlePlayCountChange}
                       formationSuggestions={suggestions.formations}
@@ -1314,6 +1327,7 @@ export default function PlaybookPage() {
                         onDuplicate={handleDuplicatePlay}
                         onOpenBuilder={handleOpenBuilder}
                         onCreateDiagram={handleCreateDiagram}
+                        onOpenAssignments={handleOpenAssignments}
                         refreshTrigger={state.refreshTrigger}
                         onPlayCountChange={handlePlayCountChange}
                         formationSuggestions={suggestions.formations}
@@ -1866,6 +1880,19 @@ export default function PlaybookPage() {
               />
             </Suspense>
           </Modal>
+        )}
+
+        {/* Assignments Modal */}
+        {assignmentsPlay && (
+          <Suspense fallback={null}>
+            <PlayAssignmentsModal
+              isOpen={!!assignmentsPlay}
+              onClose={() => setAssignmentsPlay(null)}
+              play={assignmentsPlay}
+              userRole="coach"
+              personnelConfigurations={playbookSettings.personnelConfigurations || []}
+            />
+          </Suspense>
         )}
 
         {/* Practice Script Builder Modal */}

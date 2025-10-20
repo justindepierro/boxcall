@@ -22,6 +22,7 @@ interface PlayCardWrapperProps {
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
   onCreateDiagram?: (play: Play) => void;
+  onOpenAssignments?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
 
@@ -53,6 +54,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   onSave,
   onDuplicate,
   onCreateDiagram,
+  onOpenAssignments,
   onAddToPracticeScript,
   onAddToGamePlan,
   isSelected,
@@ -80,6 +82,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     onSave,
     onDuplicate,
     onCreateDiagram,
+    onOpenAssignments,
     onAddToPracticeScript,
     onAddToGamePlan,
     isSelected,

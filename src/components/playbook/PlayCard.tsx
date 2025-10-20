@@ -14,6 +14,7 @@ import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
 import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
+import { PlayCardQuickActions } from "./play-card/PlayCardQuickActions";
 import { usePreference } from "../../hooks/usePreferences";
 import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
@@ -42,6 +43,7 @@ interface PlayCardProps {
   onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
+  onOpenAssignments?: (play: PlayType) => void;
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
@@ -116,6 +118,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
+  onOpenAssignments,
   isSelected = false,
   onSelectionChange,
   density = "compact",
@@ -403,6 +406,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     }
   }, [onCreateDiagram, play]);
 
+  const handleOpenAssignments = useCallback(() => {
+    if (onOpenAssignments) {
+      onOpenAssignments(play);
+    }
+  }, [onOpenAssignments, play]);
+
   const isTile = variant === "tile";
   const isCompact = !isTile && density === "compact";
 
@@ -472,12 +481,22 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               isSelected={isSelected}
               onSelectionChange={onSelectionChange}
               onCreateDiagram={handleCreateDiagram}
+              onOpenAssignments={handleOpenAssignments}
               phaseLabel={phaseLabel}
               isFavorite={isFavorite(play.id)}
               onToggleFavorite={() => toggleFavorite(play.id)}
               isExpanded={isExpanded}
               onToggleExpand={handleToggleExpand}
               personnelConfigurations={personnelConfigurations}
+            />
+
+            {/* Quick Actions - always visible */}
+            <PlayCardQuickActions
+              play={play}
+              onCreateDiagram={handleCreateDiagram}
+              onAddToPracticeScript={onAddToPracticeScript}
+              onAddToGamePlan={onAddToGamePlan}
+              onOpenAssignments={handleOpenAssignments}
             />
 
             {/* Animated expansion for tile details */}
@@ -518,9 +537,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
                       getPlayTypeColor={getPlayTypeColor}
                       getConfidenceColor={getConfidenceColor}
-                      onAddToPracticeScript={onAddToPracticeScript}
-                      onAddToGamePlan={onAddToGamePlan}
-                      onCreateDiagram={handleCreateDiagram}
                     />
                   </div>
                 </motion.div>
@@ -542,12 +558,24 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             onEdit={onEdit}
             onDuplicate={onDuplicate}
             onCreateDiagram={handleCreateDiagram}
+            onOpenAssignments={handleOpenAssignments}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
             phaseLabel={phaseLabel}
             isFavorite={isFavorite(play.id)}
             onToggleFavorite={() => toggleFavorite(play.id)}
             personnelConfigurations={personnelConfigurations}
+          />
+        )}
+
+        {/* Quick Actions - always visible in list view too */}
+        {!isTile && (
+          <PlayCardQuickActions
+            play={play}
+            onCreateDiagram={handleCreateDiagram}
+            onAddToPracticeScript={onAddToPracticeScript}
+            onAddToGamePlan={onAddToGamePlan}
+            onOpenAssignments={handleOpenAssignments}
           />
         )}
 
@@ -574,9 +602,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
-            onAddToPracticeScript={onAddToPracticeScript}
-            onAddToGamePlan={onAddToGamePlan}
-            onCreateDiagram={handleCreateDiagram}
           />
         )}
       </div>

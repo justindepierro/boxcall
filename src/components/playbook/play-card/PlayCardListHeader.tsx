@@ -27,6 +27,7 @@ interface PlayCardListHeaderProps {
   onEdit?: PlayActionHandler;
   onDuplicate?: PlayActionHandler;
   onCreateDiagram?: () => void;
+  onOpenAssignments?: () => void;
   getPlayTypeColor: StyleResolver;
   getConfidenceColor: (confidence: number) => string;
   phaseLabel: string | null;
@@ -49,6 +50,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   onEdit: _onEdit,
   onDuplicate: _onDuplicate,
   onCreateDiagram: _onCreateDiagram,
+  onOpenAssignments,
   getPlayTypeColor,
   getConfidenceColor,
   phaseLabel,
@@ -193,6 +195,22 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               isFavorite ? "Remove from favorites" : "Add to favorites"
             }
             title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          />
+        )}
+
+        {/* Assignments button */}
+        {onOpenAssignments && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenAssignments();
+            }}
+            variant="ghost"
+            size="sm"
+            icon={<Icon name="users" className="text-primary-500" />}
+            iconPosition="only"
+            aria-label="Player Assignments"
+            title="Player Assignments"
           />
         )}
 
