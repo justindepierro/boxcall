@@ -3,6 +3,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui";
 import { NotificationBadge } from "../../ui/Badge";
 import { prefetchOnHover } from "../../../navigation/prefetch-utils";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
 export interface MobileNavItem {
   id: string;
@@ -49,6 +50,9 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
   }, [items]);
 
   const handleItemClick = (item: MobileNavItem) => {
+    // Trigger haptic feedback for mobile devices
+    triggerHapticFeedback("light");
+
     // Provide haptic-style feedback
     const button = document.activeElement as HTMLElement;
     if (button) {
@@ -95,7 +99,15 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 onClick={() => handleItemClick(item)}
                 variant={item.isActive ? "primary" : "ghost"}
                 size="sm"
-                className={`relative flex flex-col items-center justify-center min-w-16 px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-text-muted hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
+                className={`
+                  relative flex flex-col items-center justify-center 
+                  min-w-16 px-2 py-2 h-auto 
+                  active:scale-95 
+                  focus-visible:ring-2 focus-visible:ring-jade-500 
+                  transition-all duration-200
+                  ${item.isActive ? "text-brand-jade dark:text-brand-jade-light bg-primary-50/10 dark:bg-primary-50/5" : "text-text-muted hover:text-text-primary dark:hover:text-text-secondary"} 
+                  text-text-secondary
+                `}
                 style={{ minHeight: "60px" }}
                 aria-label={`Navigate to ${item.label}`}
               >
@@ -112,8 +124,8 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                     }
                     size="sm"
                     className={`
-                    transition-colors duration-200
-                    ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : ""}
+                    transition-all duration-200
+                    ${item.isActive ? "text-brand-jade dark:text-brand-jade-light scale-110" : ""}
                   `}
                   />
 
@@ -124,10 +136,10 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                     </div>
                   )}
 
-                  {/* Active Indicator */}
+                  {/* Active Indicator - Thicker horizontal line */}
                   {item.isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                      <div className="w-1 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                      <div className="w-8 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
                     </div>
                   )}
                 </div>
