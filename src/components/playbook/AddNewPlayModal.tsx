@@ -27,6 +27,7 @@ import {
   AdvancedOptionsSection,
 } from "./AddNewPlayModal/sections";
 import { PersonnelCreationPanel } from "./AddNewPlayModal/components";
+import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
 import { FormationService } from "../../services/formationService";
@@ -254,6 +255,74 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     }
   };
 
+  // ========================================================================
+  // MOBILE WIZARD VIEW
+  // ========================================================================
+  if (isMobile) {
+    return (
+      <>
+        <MobileWizardView
+          isOpen={isOpen}
+          onClose={onClose}
+          formData={formData}
+          updateField={updateField}
+          updateFields={updateFields}
+          isValid={isValid}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          suggestions={suggestions}
+          isSuggestionsVisible={isSuggestionsVisible}
+          showSuggestions={showSuggestions}
+          hideSuggestions={hideSuggestions}
+          onFormationChange={handleFormationChange}
+          onFormationIdChange={(id, formation) => {
+            // Same logic as desktop - pull in ALL formation metadata
+            const updates: Partial<typeof formData> = {
+              formation_id: id,
+              formation: formation?.name || "",
+              formation_direction: formation?.direction || null,
+            };
+
+            if (formation) {
+              if (formation.personnel_name) {
+                updates.personnel = formation.personnel_name;
+              }
+              if (formation.formation_type) {
+                updates.formationType = formation.formation_type;
+              }
+            }
+
+            updateFields(updates);
+          }}
+          personnelPanelOpen={personnelPanelOpen}
+          setPersonnelPanelOpen={setPersonnelPanelOpen}
+          isAdvancedOpen={isAdvancedOpen}
+          setIsAdvancedOpen={setIsAdvancedOpen}
+          playbookId={playbookId}
+          existingPlay={existingPlay}
+          errorMessage={errorMessage}
+          rateLimitFeedback={rateLimitFeedback}
+        />
+
+        {/* Personnel Creation Panel (shared with desktop) */}
+        {playbookId && (
+          <PersonnelCreationPanel
+            isOpen={personnelPanelOpen}
+            onClose={() => setPersonnelPanelOpen(false)}
+            playbookId={playbookId}
+            onCreated={(newPersonnel) => {
+              updateField("personnel", newPersonnel.name);
+              setPersonnelPanelOpen(false);
+            }}
+          />
+        )}
+      </>
+    );
+  }
+
+  // ========================================================================
+  // DESKTOP FORM VIEW
+  // ========================================================================
   return (
     <Modal
       isOpen={isOpen}
