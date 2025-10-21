@@ -143,6 +143,8 @@ export type IconName =
   | "cloud-off"
   | "x-circle"
   | "minus-circle"
+  | "message-circle"
+  | "loader"
   | "skip-forward";
 
 type AccessibleSvgProps = Pick<

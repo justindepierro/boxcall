@@ -57,7 +57,7 @@ const GameSession: React.FC = () => {
     situation,
     updateSituation,
     filteredPlays,
-    recommendedPlays,
+    // recommendedPlays, // Unused - commented out
     currentPlay,
     selectPlay,
     startSession,

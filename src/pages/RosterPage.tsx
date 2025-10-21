@@ -20,9 +20,9 @@ import type {
   PlayerRosterUpdate,
 } from "../services/rosterService";
 const RosterImportModal = lazy(
-  () => import("../components/roster/RosterImportModal")
+  () => import("../components/roster/RosterImportModal").then((m) => ({ default: m.RosterImportModal }))
 );
-const BulkEditModal = lazy(() => import("../components/roster/BulkEditModal"));
+const BulkEditModal = lazy(() => import("../components/roster/BulkEditModal").then((m) => ({ default: m.BulkEditModal })));
 import type { BulkEditUpdates } from "../components/roster/BulkEditModal";
 import { info, error as logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
@@ -37,7 +37,7 @@ import {
 } from "./RosterPage/hooks";
 import {
   useAddPlayerMutation,
-  useUpdatePlayerMutation,
+  // useUpdatePlayerMutation, // Unused - removed
   useDeletePlayerMutation,
   useBulkUpdatePlayersMutation,
 } from "../hooks/useRosterQueries";
@@ -74,7 +74,7 @@ export default function RosterPage() {
 
   // React Query mutations for optimistic updates
   const addPlayerMutation = useAddPlayerMutation(teamId);
-  const updatePlayerMutation = useUpdatePlayerMutation(teamId);
+  // const updatePlayerMutation = useUpdatePlayerMutation(teamId); // Unused - commented out
   const deletePlayerMutation = useDeletePlayerMutation(teamId);
   const bulkUpdateMutation = useBulkUpdatePlayersMutation(teamId);
 

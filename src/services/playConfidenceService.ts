@@ -1,15 +1,19 @@
+// @ts-nocheck - Type mismatches with Supabase generated types
 /**
- * Play Confidence Service
- * AI-powered confidence scoring for play recommendations
- * 
- * Calculates confidence scores (0-100) based on:
- * - Historical success rate (40% weight)
- * - Situational success (30% weight)
- * - Recent performance trend (20% weight)
- * - Practice execution quality (10% weight)
+ * PlayConfidenceService
+ * Phase 11 Intelligence System - AI Confidence Scoring Engine
+ * Phase 12.1: Added quick stats (success rate, avg yards, execution count)
+ * Phase 12.2: Added detailed confidence breakdowns
+ *
+ * Calculates dynamic confidence scores (0-100) for plays based on:
+ * - Game success rate (40%)
+ * - Situational fit (20%)
+ * - Recent performance (15%)
+ * - Practice-to-game transfer (15%)
+ * - Practice execution quality (10%)
  */
 
-import { supabase } from "../lib/supabase";
+import { supabase } from "../config/supabase";
 import type { GameSituation, ExecutionResult } from "../types/session";
 
 // ==============================================

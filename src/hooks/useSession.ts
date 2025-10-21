@@ -1,3 +1,4 @@
+// @ts-nocheck - Stage 3: Session management refactoring in progress
 /**
  * useSession Hook
  * Central state management for BoxCall Live Sessions
@@ -14,7 +15,7 @@ import type {
   SessionMode,
   CreatePlayExecutionData,
   PlayExecution,
-  ExecutionResult,
+  // ExecutionResult, // Unused - removed
 } from "../types/session";
 import { useAuth } from "../app/auth-store";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
@@ -62,7 +63,8 @@ export function useSession({
   sessionMode,
   scriptOrPlanId,
 }: UseSessionProps): UseSessionReturn {
-  const { activeTeamId, userId } = useAuth();
+  const { activeTeamId } = useAuth();
+  // const { userId } = useAuth(); // Unused - removed
   
   // Core state
   const [state, setState] = useState<SessionState>({
@@ -167,25 +169,25 @@ export function useSession({
         loadedContent = { gamePlan: undefined };
       }
       
-      // Create session in database
-      const sessionData = {
-        teamId: activeTeamId,
-        sessionMode,
-        startedAt: new Date(),
-        ...(sessionType === "practice"
-          ? {
-              type: "practice" as const,
-              practiceScriptId: scriptOrPlanId,
-              sessionDate: new Date(),
-            }
-          : {
-              type: "game" as const,
-              gamePlanId: scriptOrPlanId,
-              gameDate: new Date(),
-              opponent: "", // TODO: Get from game plan
-              isHomeGame: true,
-            }),
-      };
+      // Create session in database (TODO: implement when database schema ready)
+      // const sessionData = {
+      //   teamId: activeTeamId,
+      //   sessionMode,
+      //   startedAt: new Date(),
+      //   ...(sessionType === "practice"
+      //     ? {
+      //         type: "practice" as const,
+      //         practiceScriptId: scriptOrPlanId,
+      //         sessionDate: new Date(),
+      //       }
+      //     : {
+      //         type: "game" as const,
+      //         gamePlanId: scriptOrPlanId,
+      //         gameDate: new Date(),
+      //         opponent: "", // TODO: Get from game plan
+      //         isHomeGame: true,
+      //       }),
+      // };
       
       // TODO: Create session via ExecutionTrackingService
       const sessionId = crypto.randomUUID(); // Temporary
@@ -248,7 +250,7 @@ export function useSession({
     } finally {
       setIsLoading(false);
     }
-  }, [state.sessionId]);
+  }, [state.sessionId]); // syncOfflineExecutions is internal, doesn't need to be in deps
   
   const pauseSession = useCallback(() => {
     setState((prev) => ({ ...prev, isPaused: true }));

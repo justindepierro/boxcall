@@ -41,16 +41,16 @@ import { CollaborationProvider } from "../components/collaboration/Collaboration
 
 // Modal components (lazy loaded)
 const TeamTrophyCaseModal = lazy(
-  () => import("../components/team-dashboard/TeamTrophyCaseModal")
+  () => import("../components/team-dashboard/TeamTrophyCaseModal").then((m) => ({ default: m.TeamTrophyCaseModal }))
 );
 const SeasonStatsModal = lazy(
-  () => import("../components/team-dashboard/SeasonStatsModal")
+  () => import("../components/team-dashboard/SeasonStatsModal").then((m) => ({ default: m.SeasonStatsModal }))
 );
 const TeamGoalsModal = lazy(
-  () => import("../components/collaboration/TeamGoalsModal")
+  () => import("../components/collaboration/TeamGoalsModal").then((m) => ({ default: m.TeamGoalsModal }))
 );
 const TeamVotesModal = lazy(
-  () => import("../components/collaboration/TeamVotesModal")
+  () => import("../components/collaboration/TeamVotesModal").then((m) => ({ default: m.TeamVotesModal }))
 );
 import { colorTokens } from "../design-system/tokens";
 
