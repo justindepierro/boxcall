@@ -145,6 +145,14 @@ export function usePracticeSession({
     await baseStartSession("practice", sessionData);
   }, [practiceScript, mode, sessionDate, baseStartSession]);
 
+  // Computed values (must be before callbacks that use them)
+  const currentPlay = scriptPlays[currentPlayIndex] || null;
+  const totalRepsForCurrentPlay = currentPlay?.reps || 10; // Default to 10 if not specified
+  
+  const playProgress = totalRepsForCurrentPlay > 0
+    ? (currentRepNumber / totalRepsForCurrentPlay) * 100
+    : 0;
+
   // End practice session
   const endSession = useCallback(async () => {
     await baseEndSession();
@@ -174,7 +182,7 @@ export function usePracticeSession({
         nextPlay();
       }
     },
-    [sessionState, currentPlay, currentRepNumber, logExecution]
+    [sessionState, currentPlay, currentRepNumber, logExecution, totalRepsForCurrentPlay, nextPlay]
   );
 
   // Skip a rep (mark as skipped but still count it)
@@ -220,14 +228,7 @@ export function usePracticeSession({
     [scriptPlays.length, baseGoToPlay]
   );
 
-  // Computed values
-  const currentPlay = scriptPlays[currentPlayIndex] || null;
-  const totalRepsForCurrentPlay = currentPlay?.reps || 10; // Default to 10 if not specified
-  
-  const playProgress = totalRepsForCurrentPlay > 0
-    ? (currentRepNumber / totalRepsForCurrentPlay) * 100
-    : 0;
-
+  // Additional computed values
   const totalReps = scriptPlays.reduce((sum, play) => sum + (play.reps || 10), 0);
   const completedReps = scriptPlays
     .slice(0, currentPlayIndex)
