@@ -27,6 +27,7 @@ import {
   LazyCoachManagementPage,
   LazyPlayerDashboardPage,
   LazyAchievementAdminPage,
+  LazySuperAdminAnalyticsTestPage,
   LazyCreateTeam,
   LazyJoinTeam,
   LazyCreateCoachAccount,
@@ -378,6 +379,19 @@ export const DataRouterApp: React.FC = () => {
               <AuthenticatedLayout>
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <LazyAchievementAdminPage />
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/superadmin/analytics-test"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazySuperAdminAnalyticsTestPage />
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>

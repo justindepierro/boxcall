@@ -186,6 +186,14 @@ export const LazyAchievementAdminPage = lazyRoute(
   "Achievement Admin"
 );
 
+export const LazySuperAdminAnalyticsTestPage = lazyRoute(
+  () =>
+    import("../../pages/SuperAdminAnalyticsTestPage").then((module) => ({
+      default: module.SuperAdminAnalyticsTestPage,
+    })),
+  "SuperAdmin Analytics Test"
+);
+
 // Route loading spinner component
 
 export const LazyPracticePlanner = lazyRoute(
