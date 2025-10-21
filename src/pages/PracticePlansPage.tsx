@@ -1,37 +1,148 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
-import { Icon } from "../components/ui/Icon";
+import { Icon, type IconName } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
-import { PracticeScriptModal } from "../components/practice/PracticeScriptModal";
+const PracticeScriptModal = lazy(() =>
+  import("../components/practice/PracticeScriptModal").then((module) => ({
+    default: module.PracticeScriptModal,
+  }))
+);
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
-import { debug } from "../utils/logger";
+import { PracticeService } from "../services/practiceService";
+import { useAuth } from "../app/auth-store";
+import { useToast } from "../hooks/useToast";
 
-import type { PracticeScript } from "../components/practice/PracticeScriptModal/types";
+import type { PracticeScript } from "../services/practiceService";
 
 export default function PracticePlansPage() {
   const navigate = useNavigate();
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { user } = useAuth();
+  const toast = useToast();
+
+  const [showModal, setShowModal] = useState(false);
+  const [editingScript, setEditingScript] = useState<PracticeScript | undefined>(undefined);
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
+  const [_loading, setLoading] = useState(true);
+  const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
-  const handleCreateScript = (script: PracticeScript) => {
-    setPracticeScripts((prev) => [...prev, script]);
-    setShowCreateModal(false);
-    // TODO: Save to database
-    debug("[PracticePlansPage] Created practice script:", script);
+  // Get active team ID from localStorage
+  useEffect(() => {
+    const teamId = localStorage.getItem("activeTeamId");
+    setActiveTeamId(teamId);
+  }, []);
+
+  // Load practice scripts from database
+  const loadPracticeScripts = useCallback(async () => {
+    if (!user || !activeTeamId) return;
+
+    setLoading(true);
+    try {
+      const scripts = await PracticeService.getPracticeScripts(activeTeamId);
+      setPracticeScripts(scripts);
+    } catch (error) {
+      console.error("Failed to load practice scripts:", error);
+      toast.error("Failed to load practice scripts");
+    } finally {
+      setLoading(false);
+    }
+  }, [user, activeTeamId, toast]);
+
+  useEffect(() => {
+    loadPracticeScripts();
+  }, [loadPracticeScripts]);
+
+  const handleCreateScript = useCallback(() => {
+    setEditingScript(undefined);
+    setShowModal(true);
+  }, []);
+
+  const handleEditScript = useCallback((script: PracticeScript) => {
+    setEditingScript(script);
+    setShowModal(true);
+  }, []);
+
+  const handleSaveScript = async (script: PracticeScript) => {
+    if (!activeTeamId) {
+      toast.error("No active team found");
+      return;
+    }
+
+    try {
+      if (editingScript) {
+        // Update existing script
+        await PracticeService.updatePracticeScript(script.id, {
+          name: script.title || script.name || "Untitled Script",
+          description: script.description,
+          tags: script.tags,
+        });
+        toast.success("Practice script updated successfully");
+      } else {
+        // Create new script
+        await PracticeService.createPracticeScript({
+          name: script.title || script.name || "Untitled Script",
+          description: script.description,
+          teamId: activeTeamId,
+          tags: script.tags,
+        });
+        toast.success("Practice script created successfully");
+      }
+
+      // Reload scripts
+      await loadPracticeScripts();
+      setShowModal(false);
+      setEditingScript(undefined);
+    } catch (error) {
+      console.error("Failed to save practice script:", error);
+      toast.error("Failed to save practice script");
+    }
   };
 
-  const handleEditScript = (script: PracticeScript) => {
-    // TODO: Navigate to script editor or open edit modal
-    debug("[PracticePlansPage] Edit script:", script);
+  const handleDuplicateScript = async (script: PracticeScript) => {
+    try {
+      const newName = `${script.title || script.name} (Copy)`;
+      await PracticeService.duplicatePracticeScript(script.id, newName);
+      await loadPracticeScripts();
+      toast.success("Practice script duplicated successfully");
+    } catch (error) {
+      console.error("Failed to duplicate script:", error);
+      toast.error("Failed to duplicate script");
+    }
   };
 
-  const handleDeleteScript = (scriptId: string) => {
-    setPracticeScripts((prev) => prev.filter((s) => s.id !== scriptId));
-    // TODO: Delete from database
+  const handleArchiveScript = async (script: PracticeScript) => {
+    try {
+      if (script.isArchived) {
+        await PracticeService.unarchivePracticeScript(script.id);
+        toast.success("Practice script restored");
+      } else {
+        await PracticeService.archivePracticeScript(script.id);
+        toast.success("Practice script archived");
+      }
+      await loadPracticeScripts();
+    } catch (error) {
+      console.error("Failed to archive/unarchive script:", error);
+      toast.error("Failed to update script");
+    }
   };
+
+  const handleDeleteScript = async (scriptId: string) => {
+    if (!confirm("Are you sure you want to delete this practice script? This cannot be undone.")) {
+      return;
+    }
+
+    try {
+      await PracticeService.deletePracticeScript(scriptId);
+      await loadPracticeScripts();
+      toast.success("Practice script deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete script:", error);
+      toast.error("Failed to delete script");
+    }
+  };
+
 
   const scrollToList = () => {
     if (typeof window === "undefined") return;
@@ -39,32 +150,36 @@ export default function PracticePlansPage() {
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Filter active (non-archived) scripts
+  const activeScripts = practiceScripts.filter((s) => !s.isArchived);
+  const archivedScripts = practiceScripts.filter((s) => s.isArchived);
+
   const tileConfigs = useMemo(
     () => [
       {
         key: "plan",
         title: "Build Script",
         description: "Craft install-ready periods with reps and notes.",
-        icon: "target",
+        icon: "target" as IconName,
         accentOverlayClass: "bg-aurora-emerald",
         glowClassName: "glow-aurora-emerald",
         statusBadge: "Creator",
         iconClassName: "text-emerald-600",
         footnote: "Start new",
-        onOpen: () => setShowCreateModal(true),
+        onOpen: handleCreateScript,
         body: (
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Total scripts</span>
               <span className="font-semibold text-text-primary">
-                {practiceScripts.length}
+                {activeScripts.length}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Latest build</span>
               <span className="font-semibold text-text-primary">
-                {practiceScripts[0]?.updatedAt
-                  ? practiceScripts[0].updatedAt.toLocaleDateString()
+                {activeScripts[0]?.updatedAt
+                  ? new Date(activeScripts[0].updatedAt).toLocaleDateString()
                   : "—"}
               </span>
             </div>
@@ -75,57 +190,58 @@ export default function PracticePlansPage() {
         key: "templates",
         title: "Template Library",
         description: "Reuse favorite period groups for faster installs.",
-        icon: "grid",
+        icon: "grid" as IconName,
         accentOverlayClass: "bg-aurora-indigo",
         glowClassName: "glow-aurora-indigo",
         statusBadge: "Library",
         iconClassName: "text-sky-600",
-        footnote: "Browse",
-        onOpen: () => navigate("/practice/templates"),
+        footnote: "Coming soon",
+        onOpen: () => toast.info("Template library coming soon!"),
         body: (
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Quick add</span>
-              <span className="font-semibold text-text-primary">Ready</span>
+              <span className="font-semibold text-text-primary">Soon</span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Most used</span>
-              <span className="font-semibold text-text-primary">Goal line</span>
+              <span className="font-semibold text-text-primary">—</span>
             </div>
           </div>
         ),
       },
       {
         key: "share",
-        title: "Share Agenda",
-        description: "Send a polished script to staff and captains.",
-        icon: "mail",
+        title: "View Scripts",
+        description: "See all your practice scripts and templates.",
+        icon: "mail" as IconName,
         accentOverlayClass: "bg-aurora-violet",
         glowClassName: "glow-aurora-violet",
-        statusBadge: "Collab",
+        statusBadge: "Browse",
         iconClassName: "text-purple-600",
-        footnote: "View scripts",
+        footnote: "View list",
         onOpen: scrollToList,
         body: (
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
-              <span>Distribution</span>
+              <span>Active scripts</span>
               <span className="font-semibold text-text-primary">
-                Coming soon
+                {activeScripts.length}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
-              <span>PDF export</span>
+              <span>Archived</span>
               <span className="font-semibold text-text-primary">
-                In progress
+                {archivedScripts.length}
               </span>
             </div>
           </div>
         ),
       },
     ],
-    [navigate, practiceScripts]
+    [activeScripts, archivedScripts, handleCreateScript, toast]
   );
+
 
   return (
     <Aurora variant="field" fullHeight>
@@ -144,7 +260,7 @@ export default function PracticePlansPage() {
               Back to Playbook
             </Button>
             <Button
-              onClick={() => setShowCreateModal(true)}
+              onClick={handleCreateScript}
               variant="primary"
               size="sm"
             >
@@ -154,6 +270,7 @@ export default function PracticePlansPage() {
           </div>
         }
       >
+        {/* Aurora Dashboard Tiles */}
         <div className="mb-8">
           <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
             <div className="mb-6">
@@ -188,7 +305,7 @@ export default function PracticePlansPage() {
           </div>
         </div>
 
-        {practiceScripts.length === 0 ? (
+        {activeScripts.length === 0 ? (
           // Empty State
           <div className="text-center py-16">
             <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
@@ -209,7 +326,7 @@ export default function PracticePlansPage() {
             </Typography>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                onClick={() => setShowCreateModal(true)}
+                onClick={handleCreateScript}
                 variant="primary"
                 size="lg"
               >
@@ -232,10 +349,10 @@ export default function PracticePlansPage() {
             {/* Header with Create Button */}
             <div className="flex justify-between items-center">
               <Typography variant="headline-md" className="text-text-primary">
-                Your Practice Scripts ({practiceScripts.length})
+                Your Practice Scripts ({activeScripts.length})
               </Typography>
               <Button
-                onClick={() => setShowCreateModal(true)}
+                onClick={handleCreateScript}
                 variant="primary"
               >
                 <Icon name="plus" className="h-4 w-4 mr-2" />
@@ -244,78 +361,155 @@ export default function PracticePlansPage() {
             </div>
 
             {/* Scripts Grid */}
-            <div className="grid-dashboard gap-4 md:gap-5">
-              {practiceScripts.map((script) => (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {activeScripts.map((script) => (
                 <div
                   key={script.id}
-                  className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => handleEditScript(script)}
+                  className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-lg transition-all hover:border-border-hover"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <Typography
                         variant="headline-sm"
-                        className="text-text-primary mb-1"
+                        className="text-text-primary mb-1 truncate"
                       >
-                        {script.name}
+                        {script.title || script.name || "Untitled Script"}
                       </Typography>
-                      {script.opponent && (
+                      {script.description && (
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-text-secondary line-clamp-2"
                         >
-                          vs {script.opponent}
-                        </Typography>
-                      )}
-                      {script.date && (
-                        <Typography
-                          variant="body-sm"
-                          className="text-text-muted"
-                        >
-                          {new Date(script.date).toLocaleDateString()}
+                          {script.description}
                         </Typography>
                       )}
                     </div>
-                    <div className="flex space-x-2">
+                  </div>
+
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 mb-4 text-sm text-text-secondary">
+                    <div className="flex items-center gap-1">
+                      <Icon name="play" className="h-4 w-4" />
+                      <span>{script.plays?.length || 0} plays</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Icon name="clock" className="h-4 w-4" />
+                      <span>{script.duration || 120} min</span>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  {script.tags && script.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {script.tags.slice(0, 3).map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-1 text-xs rounded bg-surface-secondary text-text-secondary"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {script.tags.length > 3 && (
+                        <span className="px-2 py-1 text-xs rounded bg-surface-secondary text-text-muted">
+                          +{script.tags.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <Typography variant="body-sm" className="text-text-muted">
+                      {new Date(script.updatedAt).toLocaleDateString()}
+                    </Typography>
+                    <div className="flex items-center gap-1">
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditScript(script);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-secondary transition-colors"
+                        onClick={() => handleEditScript(script)}
+                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
                         title="Edit script"
                       >
                         <Icon name="edit" className="h-4 w-4" />
                       </button>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteScript(script.id);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-error transition-colors"
+                        onClick={() => handleDuplicateScript(script)}
+                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
+                        title="Duplicate script"
+                      >
+                        <Icon name="copy" className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleArchiveScript(script)}
+                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
+                        title="Archive script"
+                      >
+                        <Icon name="archive" className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteScript(script.id)}
+                        className="p-2 text-text-muted hover:text-error-600 hover:bg-error-50 rounded transition-colors"
                         title="Delete script"
                       >
                         <Icon name="delete" className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between text-sm text-text-secondary">
-                    <span>{script.plays.length} plays</span>
-                    <span>{script.updatedAt.toLocaleDateString()}</span>
-                  </div>
                 </div>
               ))}
             </div>
+
+            {/* Archived Scripts Section */}
+            {archivedScripts.length > 0 && (
+              <div className="mt-12">
+                <Typography
+                  variant="headline-sm"
+                  className="text-text-secondary mb-4"
+                >
+                  Archived Scripts ({archivedScripts.length})
+                </Typography>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {archivedScripts.map((script) => (
+                    <div
+                      key={script.id}
+                      className="bg-surface-muted/50 rounded-lg border border-border p-4 opacity-60"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <Typography
+                          variant="body-md"
+                          className="text-text-secondary truncate flex-1"
+                        >
+                          {script.title || script.name || "Untitled Script"}
+                        </Typography>
+                        <button
+                          onClick={() => handleArchiveScript(script)}
+                          className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
+                          title="Restore script"
+                        >
+                          <Icon name="unarchive" className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <Typography variant="body-sm" className="text-text-muted">
+                        {script.plays?.length || 0} plays • Archived
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Create Script Modal */}
-        {showCreateModal && (
-          <PracticeScriptModal
-            onClose={() => setShowCreateModal(false)}
-            onSave={handleCreateScript}
-          />
+        {/* Practice Script Modal */}
+        {showModal && (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PracticeScriptModal
+              editingScript={editingScript}
+              onClose={() => {
+                setShowModal(false);
+                setEditingScript(undefined);
+              }}
+              onSave={handleSaveScript}
+            />
+          </Suspense>
         )}
       </PageLayout>
     </Aurora>
