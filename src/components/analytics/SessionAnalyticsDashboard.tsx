@@ -10,6 +10,7 @@ import {
 } from "../../services/sessionAnalyticsService";
 import { SuccessRateBarChart } from "./charts/SuccessRateBarChart";
 import { PlayTypeDistributionChart } from "./charts/PlayTypeDistributionChart";
+import { PlaySuccessHeatmap } from "./charts/PlaySuccessHeatmap";
 
 /**
  * Session Analytics Dashboard - Phase 14.1
@@ -214,7 +215,7 @@ export const SessionAnalyticsDashboard: React.FC<
                         ? "success"
                         : formation.successRate >= 60
                           ? "warning"
-                          : "error"
+                          : "danger"
                     }
                   >
                     {formation.successRate}%
@@ -341,43 +342,12 @@ export const SessionAnalyticsDashboard: React.FC<
         </Card>
       )}
 
-      {/* Field Position Zones */}
+      {/* Field Position Zones - Heatmap (Phase 14.2) */}
       {analytics.byFieldZone.length > 0 && (
-        <Card>
-          <div className="p-spacing-lg">
-            <Typography variant="headline-sm" className="mb-spacing-md">
-              Success by Field Position
-            </Typography>
-            <div className="space-y-spacing-sm">
-              {analytics.byFieldZone.map((zone) => (
-                <div
-                  key={zone.zone}
-                  className="flex items-center justify-between p-spacing-sm bg-surface-secondary rounded-sm"
-                >
-                  <div className="flex-1">
-                    <Typography variant="body-sm" className="font-semibold">
-                      {zone.zone}
-                    </Typography>
-                    <Typography variant="body-xs" className="text-text-secondary">
-                      {zone.attempts} plays • {zone.avgYards} avg yards
-                    </Typography>
-                  </div>
-                  <Badge
-                    variant={
-                      zone.successRate >= 75
-                        ? "success"
-                        : zone.successRate >= 60
-                          ? "warning"
-                          : "error"
-                    }
-                  >
-                    {zone.successRate}%
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
+        <PlaySuccessHeatmap
+          data={analytics.byFieldZone}
+          title="Field Position Success Rate"
+        />
       )}
     </div>
   );

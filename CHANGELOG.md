@@ -8,6 +8,35 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 
 ### Added
 
+- **Phase 14 Complete: Visualization & Dashboards** (October 21, 2025)
+  - **Session Analytics Dashboard (14.1)**: Comprehensive post-session analytics with Phase 13 integration
+    - SessionAnalyticsService with full data aggregation (by down, play type, formation, coverage, hash, field zone)
+    - Key metrics cards: success rate, avg yards/play, total plays, total yards
+    - SuccessRateBarChart: Down-by-down success visualization with color-coded bars
+    - PlayTypeDistributionChart: Pie/donut chart showing play type distribution
+    - Formation effectiveness list with success rate badges
+    - Coverage performance section with progress bars (Phase 13)
+    - Hash success comparison with star indicator for best hash (Phase 13)
+  - **Play Success Heatmap (14.2)**: Interactive football field visualization
+    - SVG football field with 8 field zones (Own End Zone → Red Zone)
+    - Color-coded heat mapping (green/yellow/orange/red based on success rate)
+    - Interactive zones (click/hover for detailed stats)
+    - Opacity based on attempt volume (more attempts = more solid)
+    - Selected zone detail panel with success rate, avg yards, attempts
+    - Zone breakdown list with color indicators
+  - **Confidence Trend Charts (14.3)**: Time-series analysis for plays and formations
+    - ConfidenceTrendChart: LineChart with dual Y-axis (confidence % + success rate %)
+    - FormationTrendChart: Formation performance over time with success/yards tracking
+    - TrendAnalyticsDashboard: Comprehensive trend analysis with insights
+    - Weekly data aggregation from play executions
+    - Best week, most practiced week, and current status indicators
+    - Practice recommendations based on confidence levels (<60% = urgent, 60-79% = needs practice, 80%+ = game ready)
+    - Target reference lines (80% confidence for plays, 70% success for formations)
+  - **Recharts Integration**: Professional charting library with responsive design
+    - Bar charts, pie charts, line charts with custom tooltips
+    - Responsive containers for mobile/tablet/desktop
+    - Custom legends and axis labels
+    - CartesianGrid for better data visualization
 - **Phase 13 Complete: Advanced Analytics** (October 21, 2025)
   - **Coverage-Based Intelligence (13.2)**: Track opponent defensive coverage (Cover 0-6, Man, Zone, Blitz) with success rate analysis
   - **Hash Preference Analysis (13.3)**: Left/Middle/Right hash tracking with best-hash recommendations
