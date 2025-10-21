@@ -6,6 +6,18 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 
 ## [Unreleased]
 
+### Fixed
+
+- **Session Hook Initialization Errors** (October 21, 2025)
+  - Fixed "Cannot access 'currentPlay' before initialization" in usePracticeSession (line 88)
+  - Fixed "Cannot access 'nextPlay' before initialization" in usePracticeSession (line 91)
+  - Moved computed values (currentPlay, totalRepsForCurrentPlay, playProgress) before callbacks
+  - Moved navigation functions (nextPlay, previousPlay, goToPlay) before execution callbacks
+  - Proper declaration order: state → computed values → navigation → execution → helpers
+  - Prevents session crashes during live practices and retroactive session logging
+  - Fixed Typography import paths in analytics charts (Phase 14)
+  - Fixed invalid icon name "percent" → "trending-up" in TrendAnalyticsDashboard
+
 ### Added
 
 - **SuperAdmin Analytics Test Page** (October 21, 2025)
