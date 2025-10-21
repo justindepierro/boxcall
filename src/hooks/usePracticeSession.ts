@@ -116,9 +116,8 @@ export function usePracticeSession({
 
       setPracticeScript(script);
 
-      // Load script plays with full play details
-      const plays = await PracticeService.getScriptPlays(practiceScriptId);
-      setScriptPlays(plays);
+      // getPracticeScript already includes plays via join
+      setScriptPlays(script.plays || []);
     } catch (err) {
       console.error("Error loading practice script:", err);
       setError(err instanceof Error ? err : new Error("Failed to load practice script"));
