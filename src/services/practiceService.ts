@@ -1126,6 +1126,190 @@ export class PracticeService {
   }
 
   /**
+   * Duplicate a practice script (Phase 6)
+   * Creates a copy of the script with all plays
+   */
+  static async duplicatePracticeScript(
+    scriptId: string,
+    newName: string
+  ): Promise<PracticeScript> {
+    console.log(`[PracticeService] Duplicating script ${scriptId} as "${newName}"`);
+    
+    // 1. Get original script with plays
+    const original = await this.getPracticeScript(scriptId);
+    if (!original) {
+      throw new Error(`Script ${scriptId} not found`);
+    }
+    
+    // 2. Create new script
+    const newScript = await this.createPracticeScript({
+      name: newName,
+      description: original.description,
+      teamId: original.teamId,
+      tags: original.tags,
+      isTemplate: original.isTemplate,
+    });
+    
+    // 3. Copy all plays with their configuration
+    if (original.plays && original.plays.length > 0) {
+      for (const play of original.plays) {
+        await this.addPlayToScript(
+          {
+            scriptId: newScript.id,
+            playId: play.playId,
+            orderIndex: play.order,
+            notes: play.notes,
+            repetitions: play.repetitions,
+            hash: play.hash,
+            downDistance: play.downDistance,
+            fieldPosition: play.fieldPosition,
+            defensiveFront: play.defensiveFront,
+            coverage: play.coverage,
+            blitz: play.blitz,
+            scenarioNotes: (play as any).scenarioNotes,
+          },
+          play.play
+        );
+      }
+    }
+    
+    console.log(`✅ [PracticeService] Duplicated script with ${original.plays?.length || 0} plays`);
+    
+    // 4. Return the full duplicated script
+    return this.getPracticeScript(newScript.id) as Promise<PracticeScript>;
+  }
+
+  /**
+   * Archive a practice script (Phase 6 - soft delete)
+   */
+  static async archivePracticeScript(scriptId: string): Promise<void> {
+    console.log(`[PracticeService] Archiving script ${scriptId}`);
+    
+    const { error } = await supabase
+      .from("practice_scripts")
+      .update({ 
+        is_archived: true,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", scriptId);
+      
+    if (error) {
+      console.error("Error archiving script:", error);
+      throw new Error("Failed to archive practice script");
+    }
+    
+    // Invalidate cache
+    await practiceScriptCache.invalidate(`script_${scriptId}`);
+    await practiceScriptCache.invalidatePattern(/^scripts_team_/);
+    
+    console.log(`✅ [PracticeService] Archived script ${scriptId}`);
+  }
+
+  /**
+   * Unarchive a practice script (Phase 6)
+   */
+  static async unarchivePracticeScript(scriptId: string): Promise<void> {
+    console.log(`[PracticeService] Unarchiving script ${scriptId}`);
+    
+    const { error } = await supabase
+      .from("practice_scripts")
+      .update({ 
+        is_archived: false,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", scriptId);
+      
+    if (error) {
+      console.error("Error unarchiving script:", error);
+      throw new Error("Failed to unarchive practice script");
+    }
+    
+    // Invalidate cache
+    await practiceScriptCache.invalidate(`script_${scriptId}`);
+    await practiceScriptCache.invalidatePattern(/^scripts_team_/);
+    
+    console.log(`✅ [PracticeService] Unarchived script ${scriptId}`);
+  }
+
+  /**
+   * Delete a practice script (Phase 6 - hard delete)
+   * Warning: This permanently deletes the script and all associated plays
+   */
+  static async deletePracticeScript(scriptId: string): Promise<void> {
+    console.log(`[PracticeService] Deleting script ${scriptId}`);
+    
+    const { error } = await supabase
+      .from("practice_scripts")
+      .delete()
+      .eq("id", scriptId);
+      
+    if (error) {
+      console.error("Error deleting script:", error);
+      throw new Error("Failed to delete practice script");
+    }
+    
+    // Invalidate cache
+    await practiceScriptCache.invalidate(`script_${scriptId}`);
+    await practiceScriptCache.invalidatePattern(/^scripts_team_/);
+    
+    console.log(`✅ [PracticeService] Deleted script ${scriptId}`);
+  }
+
+  /**
+   * Remove a play from a practice script (Phase 6)
+   */
+  static async removePlayFromScript(scriptPlayId: string): Promise<void> {
+    console.log(`[PracticeService] Removing play ${scriptPlayId} from script`);
+    
+    const { error } = await supabase
+      .from("practice_script_plays")
+      .delete()
+      .eq("id", scriptPlayId);
+      
+    if (error) {
+      console.error("Error removing play from script:", error);
+      throw new Error("Failed to remove play from script");
+    }
+    
+    // Invalidate all script caches
+    await practiceScriptCache.invalidatePattern(/^script/);
+    
+    console.log(`✅ [PracticeService] Removed play from script`);
+  }
+
+  /**
+   * Reorder plays in a practice script (Phase 6)
+   * Updates the sequence_order for each play based on the new order
+   */
+  static async reorderScriptPlays(
+    scriptId: string,
+    playIds: string[]
+  ): Promise<void> {
+    console.log(`[PracticeService] Reordering ${playIds.length} plays in script ${scriptId}`);
+    
+    // Update order for each play (1-indexed)
+    await Promise.all(
+      playIds.map(async (playId, index) => {
+        const { error } = await supabase
+          .from("practice_script_plays")
+          .update({ sequence_order: index + 1 })
+          .eq("id", playId)
+          .eq("practice_script_id", scriptId);
+          
+        if (error) {
+          console.error(`Error reordering play ${playId}:`, error);
+          throw error;
+        }
+      })
+    );
+    
+    // Invalidate cache
+    await practiceScriptCache.invalidate(`script_${scriptId}`);
+    
+    console.log(`✅ [PracticeService] Reordered plays in script`);
+  }
+
+  /**
    * Map database script with plays to PracticeScript interface
    */
   private static mapDatabaseScriptToPracticeScript(
