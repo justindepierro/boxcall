@@ -1,35 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
 import { PracticeScriptForm } from "./components/PracticeScriptForm";
 import { PracticeScriptPlayList } from "./components/PracticeScriptPlayList";
 
-import type {
-  PracticeScript,
-  PracticeScriptFormData,
-  PracticeScriptPlay,
-} from "./types";
+import type { PracticeScript, PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../services/practiceService";
+import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 
 interface PracticeScriptModalProps {
   onClose: () => void;
-  onSave: (script: PracticeScript) => void;
-  initialScript?: Partial<PracticeScript>;
+  onSave: (script: Partial<PracticeScript>) => void;
+  editingScript?: PracticeScript; // From PracticeService
 }
 
 export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
   onClose,
   onSave,
-  initialScript,
+  editingScript,
 }) => {
+  const isEditMode = !!editingScript;
+
   const [scriptData, setScriptData] = useState<PracticeScriptFormData>({
-    name: initialScript?.name || "",
-    date: initialScript?.date,
-    opponent: initialScript?.opponent,
+    name: "",
+    date: undefined,
+    opponent: "",
   });
 
-  const [plays, setPlays] = useState<PracticeScriptPlay[]>(
-    initialScript?.plays || []
-  );
+  const [plays, setPlays] = useState<PracticeScriptPlay[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+
+  // Pre-populate form when editing
+  useEffect(() => {
+    if (editingScript) {
+      setScriptData({
+        name: editingScript.title || editingScript.name || "",
+        date: editingScript.createdAt ? new Date(editingScript.createdAt).toISOString().split('T')[0] : undefined,
+        opponent: editingScript.description || "",
+      });
+      
+      // Convert service plays to modal plays
+      const modalPlays: PracticeScriptPlay[] = (editingScript.plays || []).map((play) => ({
+        id: play.id,
+        playId: play.playId,
+        playName: play.play?.name || "Unknown Play",
+        personnel: play.play?.personnel,
+        notes: play.notes || "",
+        defenseFront: play.defensiveFront || "",
+        defensiveCoverage: play.coverage || "",
+        blitz: play.blitz || "",
+        stunt: "", // Not in service type
+        hash: play.hash || "",
+        situation: play.downDistance || "",
+      }));
+      
+      setPlays(modalPlays);
+      setTags(editingScript.tags || []);
+    }
+  }, [editingScript]);
 
   const handleSave = () => {
     if (!scriptData.name.trim()) {
@@ -37,14 +64,14 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
       return;
     }
 
-    const script: PracticeScript = {
-      id: initialScript?.id || crypto.randomUUID(),
+    const script: Partial<PracticeScript> = {
+      id: editingScript?.id,
+      title: scriptData.name,
       name: scriptData.name,
-      date: scriptData.date,
-      opponent: scriptData.opponent,
-      plays,
-      createdAt: initialScript?.createdAt || new Date(),
-      updatedAt: new Date(),
+      description: scriptData.opponent || undefined,
+      tags: tags.length > 0 ? tags : undefined,
+      // Note: plays will be handled separately via PracticeService.addPlayToScript
+      // for now we're just saving the script metadata
     };
 
     onSave(script);
@@ -78,14 +105,21 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
         <div className="bc-card-padding">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Create Practice Script</h2>
+            <h2 className="text-xl font-semibold">
+              {isEditMode ? "Edit Practice Script" : "Create Practice Script"}
+            </h2>
             <Button variant="ghost" size="sm" onClick={onClose}>
               ✕
             </Button>
           </div>
 
           {/* Script Form */}
-          <PracticeScriptForm data={scriptData} onChange={setScriptData} />
+          <PracticeScriptForm 
+            data={scriptData} 
+            onChange={setScriptData}
+            tags={tags}
+            onTagsChange={setTags}
+          />
 
           {/* Play List */}
           <div className="mt-6">
@@ -106,7 +140,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
               Cancel
             </Button>
             <Button variant="primary" onClick={handleSave}>
-              Save Script
+              {isEditMode ? "Update Script" : "Create Script"}
             </Button>
           </div>
         </div>
