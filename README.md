@@ -46,8 +46,11 @@ npm run type-check   # TypeScript check
 npm run test         # Run tests
 
 # Database
-npm run db:setup     # Initial database setup
-npm run db:demo      # Load demo data
+npm run db:status           # Check database connection
+npm run db:migrate:easy     # Run migration (copy + browser)
+npm run db:sql              # Open Supabase SQL Editor
+npm run db:setup            # Initial database setup
+npm run db:demo             # Load demo data
 
 # Documentation
 npm run storybook    # Component documentation

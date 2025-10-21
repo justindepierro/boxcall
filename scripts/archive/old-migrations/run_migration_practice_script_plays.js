@@ -4,20 +4,25 @@
  * Date: 2025-10-18
  */
 
-const { createClient } = require("@supabase/supabase-js");
-const fs = require("fs");
-const path = require("path");
+import { createClient } from "@supabase/supabase-js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { config } from "dotenv";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
-require("dotenv").config();
+config();
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
   console.error("❌ Missing Supabase credentials");
   console.error("   VITE_SUPABASE_URL:", supabaseUrl ? "✓" : "✗");
-  console.error("   VITE_SUPABASE_ANON_KEY:", supabaseKey ? "✓" : "✗");
+  console.error("   SUPABASE_SERVICE_ROLE_KEY or VITE_SUPABASE_ANON_KEY:", supabaseKey ? "✓" : "✗");
   process.exit(1);
 }
 
