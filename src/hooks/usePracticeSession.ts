@@ -153,6 +153,34 @@ export function usePracticeSession({
     ? (currentRepNumber / totalRepsForCurrentPlay) * 100
     : 0;
 
+  // Play navigation (must be defined before logRep which uses nextPlay)
+  const nextPlay = useCallback(() => {
+    if (currentPlayIndex < scriptPlays.length - 1) {
+      setCurrentPlayIndex(currentPlayIndex + 1);
+      setCurrentRepNumber(1);
+      baseNextPlay();
+    }
+  }, [currentPlayIndex, scriptPlays.length, baseNextPlay]);
+
+  const previousPlay = useCallback(() => {
+    if (currentPlayIndex > 0) {
+      setCurrentPlayIndex(currentPlayIndex - 1);
+      setCurrentRepNumber(1);
+      basePreviousPlay();
+    }
+  }, [currentPlayIndex, basePreviousPlay]);
+
+  const goToPlay = useCallback(
+    (index: number) => {
+      if (index >= 0 && index < scriptPlays.length) {
+        setCurrentPlayIndex(index);
+        setCurrentRepNumber(1);
+        baseGoToPlay(index);
+      }
+    },
+    [scriptPlays.length, baseGoToPlay]
+  );
+
   // End practice session
   const endSession = useCallback(async () => {
     await baseEndSession();
@@ -199,34 +227,6 @@ export function usePracticeSession({
       setCurrentRepNumber(currentRepNumber + 1);
     }
   }, [currentRepNumber, totalRepsForCurrentPlay]);
-
-  // Play navigation
-  const nextPlay = useCallback(() => {
-    if (currentPlayIndex < scriptPlays.length - 1) {
-      setCurrentPlayIndex(currentPlayIndex + 1);
-      setCurrentRepNumber(1);
-      baseNextPlay();
-    }
-  }, [currentPlayIndex, scriptPlays.length, baseNextPlay]);
-
-  const previousPlay = useCallback(() => {
-    if (currentPlayIndex > 0) {
-      setCurrentPlayIndex(currentPlayIndex - 1);
-      setCurrentRepNumber(1);
-      basePreviousPlay();
-    }
-  }, [currentPlayIndex, basePreviousPlay]);
-
-  const goToPlay = useCallback(
-    (index: number) => {
-      if (index >= 0 && index < scriptPlays.length) {
-        setCurrentPlayIndex(index);
-        setCurrentRepNumber(1);
-        baseGoToPlay(index);
-      }
-    },
-    [scriptPlays.length, baseGoToPlay]
-  );
 
   // Additional computed values
   const totalReps = scriptPlays.reduce((sum, play) => sum + (play.reps || 10), 0);
