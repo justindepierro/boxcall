@@ -153,6 +153,22 @@ export default function GamePlansPage() {
     }
   };
 
+  const handleArchivePlan = async (plan: GamePlan) => {
+    try {
+      if (plan.isArchived) {
+        await GamePlanService.unarchiveGamePlan(plan.id);
+        toast.success("Game plan restored");
+      } else {
+        await GamePlanService.archiveGamePlan(plan.id);
+        toast.success("Game plan archived");
+      }
+      await loadGamePlans();
+    } catch (error) {
+      console.error("Failed to archive/unarchive game plan:", error);
+      toast.error("Failed to update game plan");
+    }
+  };
+
   const handleExportPDF = async (plan: GamePlan) => {
     try {
       await GamePlanPDFService.exportGamePlan(plan, "call-sheet");
@@ -183,6 +199,10 @@ export default function GamePlansPage() {
     );
   };
 
+  // Filter active and archived plans
+  const activePlans = gamePlans.filter((plan) => !plan.isArchived);
+  const archivedPlans = gamePlans.filter((plan) => plan.isArchived);
+
   const scrollToList = () => {
     if (typeof window === "undefined") return;
     const section = document.getElementById("game-plans-section");
@@ -198,24 +218,22 @@ export default function GamePlansPage() {
         icon: "target" as IconName,
         accentOverlayClass: "bg-aurora-emerald",
         glowClassName: "glow-aurora-emerald",
-        statusBadge: "Creator",
-        iconClassName: "text-emerald-600",
-        footnote: "Start drafting",
+        statusBadge: "Ready",
+        iconClassName: "text-green-600",
+        footnote: "Start planning",
         onOpen: handleCreatePlan,
         body: (
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
-              <span>Total plans</span>
+              <span>Active plans</span>
               <span className="font-semibold text-text-primary">
-                {gamePlans.length}
+                {activePlans.length}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
-              <span>Last update</span>
+              <span>Total plays</span>
               <span className="font-semibold text-text-primary">
-                {gamePlans[0]?.updatedAt
-                  ? gamePlans[0].updatedAt.toLocaleDateString()
-                  : "—"}
+                {activePlans.reduce((sum, p) => sum + getTotalPlays(p), 0)}
               </span>
             </div>
           </div>
@@ -259,18 +277,18 @@ export default function GamePlansPage() {
         body: (
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
-              <span>Staff ready</span>
-              <span className="font-semibold text-text-primary">Awaiting</span>
+              <span>Active plans</span>
+              <span className="font-semibold text-text-primary">{activePlans.length}</span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
-              <span>Export status</span>
-              <span className="font-semibold text-text-primary">PDF soon</span>
+              <span>Archived</span>
+              <span className="font-semibold text-text-primary">{archivedPlans.length}</span>
             </div>
           </div>
         ),
       },
     ],
-    [gamePlans, handleCreatePlan, navigate]
+    [activePlans, archivedPlans, handleCreatePlan, navigate]
   );
 
   return (
@@ -331,7 +349,7 @@ export default function GamePlansPage() {
           </div>
         </div>
 
-        {gamePlans.length === 0 ? (
+        {activePlans.length === 0 && archivedPlans.length === 0 ? (
           // Empty State
           <div className="text-center py-16">
             <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
@@ -368,20 +386,23 @@ export default function GamePlansPage() {
         ) : (
           // Plans List
           <div className="space-y-6" id="game-plans-section">
-            {/* Header with Create Button */}
-            <div className="flex justify-between items-center">
-              <Typography variant="headline-md" className="text-text-primary">
-                Your Game Plans ({gamePlans.length})
-              </Typography>
-              <Button onClick={handleCreatePlan} variant="primary">
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Plan
-              </Button>
-            </div>
+            {/* Active Plans Section */}
+            {activePlans.length > 0 && (
+              <>
+                {/* Header with Create Button */}
+                <div className="flex justify-between items-center">
+                  <Typography variant="headline-md" className="text-text-primary">
+                    Active Game Plans ({activePlans.length})
+                  </Typography>
+                  <Button onClick={handleCreatePlan} variant="primary">
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    New Plan
+                  </Button>
+                </div>
 
-            {/* Plans Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {gamePlans.map((plan) => (
+                {/* Plans Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                  {activePlans.map((plan) => (
                 <div
                   key={plan.id}
                   className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
@@ -441,6 +462,16 @@ export default function GamePlansPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          handleArchivePlan(plan);
+                        }}
+                        className="p-1 text-text-muted hover:text-text-warning transition-colors"
+                        title="Archive plan"
+                      >
+                        <Icon name="archive" className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
                           handleDeletePlan(plan.id);
                         }}
                         className="p-1 text-text-muted hover:text-text-error transition-colors"
@@ -458,8 +489,48 @@ export default function GamePlansPage() {
                 </div>
               ))}
             </div>
+          </>
+        )}
+
+        {/* Archived Plans Section */}
+        {archivedPlans.length > 0 && (
+          <div className="mt-12">
+            <Typography variant="headline-md" className="text-text-primary mb-4">
+              Archived Game Plans ({archivedPlans.length})
+            </Typography>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+              {archivedPlans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className="bg-surface-secondary rounded-lg border border-border p-6 opacity-75"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <Typography
+                        variant="headline-sm"
+                        className="text-text-primary mb-1"
+                      >
+                        {plan.name}
+                      </Typography>
+                      <button
+                        onClick={() => handleArchivePlan(plan)}
+                        className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
+                        title="Restore plan"
+                      >
+                        <Icon name="unarchive" className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                  <Typography variant="body-sm" className="text-text-muted">
+                    {getTotalPlays(plan)} plays • Archived
+                  </Typography>
+                </div>
+              ))}
+            </div>
           </div>
         )}
+      </div>
+    )}
 
         {/* Game Plan Modal (lazy loaded) */}
         {showModal && (
