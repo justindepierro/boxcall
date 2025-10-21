@@ -133,14 +133,18 @@ export function useGameSession({
   });
 
   const {
-    sessionState,
+    state: sessionState,
     startSession: baseStartSession,
     endSession: baseEndSession,
     pauseSession,
     resumeSession,
     logExecution,
     hasPendingSync,
-  } = useSession();
+  } = useSession({
+    sessionType: "game",
+    sessionMode: mode,
+    scriptOrPlanId: gamePlanId,
+  });
 
   // Load game plan
   useEffect(() => {

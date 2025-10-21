@@ -83,7 +83,7 @@ export function usePracticeSession({
   const [error, setError] = useState<Error | null>(null);
 
   const {
-    sessionState,
+    state: sessionState,
     startSession: baseStartSession,
     endSession: baseEndSession,
     pauseSession,
@@ -93,7 +93,11 @@ export function usePracticeSession({
     previousPlay: basePreviousPlay,
     goToPlay: baseGoToPlay,
     hasPendingSync,
-  } = useSession();
+  } = useSession({
+    sessionType: "practice",
+    sessionMode: mode,
+    scriptOrPlanId: practiceScriptId,
+  });
 
   // Load practice script
   useEffect(() => {
