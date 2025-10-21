@@ -1,4 +1,5 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { lazy, Suspense } from "react";
 import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography } from "../components/design-system/Typography";
@@ -25,7 +26,16 @@ import {
   usePracticePDFData,
 } from "./PracticePlanner/hooks";
 import { PracticeHero } from "./PracticePlanner/sections";
-import { CreateBlockModal, TemplatesModal } from "./PracticePlanner/components";
+const CreateBlockModal = lazy(() =>
+  import("./PracticePlanner/components").then((module) => ({
+    default: module.CreateBlockModal,
+  }))
+);
+const TemplatesModal = lazy(() =>
+  import("./PracticePlanner/components").then((module) => ({
+    default: module.TemplatesModal,
+  }))
+);
 
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
@@ -534,22 +544,26 @@ export function PracticePlanner() {
           </div>
         </div>
 
-        {/* Modals */}
-        <CreateBlockModal
-          isOpen={isCreateBlockModalOpen}
-          onClose={() => setIsCreateBlockModalOpen(false)}
-          onSave={async (data) => {
-            await addBlock(data);
-            setIsCreateBlockModalOpen(false);
-          }}
-        />
+        {/* Modals (lazy loaded) */}
+        <Suspense fallback={null}>
+          <CreateBlockModal
+            isOpen={isCreateBlockModalOpen}
+            onClose={() => setIsCreateBlockModalOpen(false)}
+            onSave={async (data) => {
+              await addBlock(data);
+              setIsCreateBlockModalOpen(false);
+            }}
+          />
+        </Suspense>
 
-        <TemplatesModal
-          isOpen={isTemplateModalOpen}
-          onClose={() => setIsTemplateModalOpen(false)}
-          templates={templates}
-          onSelectTemplate={handleSelectTemplate}
-        />
+        <Suspense fallback={null}>
+          <TemplatesModal
+            isOpen={isTemplateModalOpen}
+            onClose={() => setIsTemplateModalOpen(false)}
+            templates={templates}
+            onSelectTemplate={handleSelectTemplate}
+          />
+        </Suspense>
 
         {/* PDF Export */}
         {isPDFExportOpen && preparePracticeDataForPDF() && (

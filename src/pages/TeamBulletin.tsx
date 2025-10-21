@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import { PageLayout } from "../components/layout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -32,12 +39,20 @@ import { TeamVoteWidget } from "../components/collaboration/TeamVoteWidget";
 import { ProgressSharing } from "../components/collaboration/ProgressSharing";
 import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
 
-// Modal components
-import { TeamTrophyCaseModal } from "../components/team-dashboard/TeamTrophyCaseModal";
-import { SeasonStatsModal } from "../components/team-dashboard/SeasonStatsModal";
-import { TeamGoalsModal } from "../components/collaboration/TeamGoalsModal";
+// Modal components (lazy loaded)
+const TeamTrophyCaseModal = lazy(
+  () => import("../components/team-dashboard/TeamTrophyCaseModal")
+);
+const SeasonStatsModal = lazy(
+  () => import("../components/team-dashboard/SeasonStatsModal")
+);
+const TeamGoalsModal = lazy(
+  () => import("../components/collaboration/TeamGoalsModal")
+);
+const TeamVotesModal = lazy(
+  () => import("../components/collaboration/TeamVotesModal")
+);
 import { colorTokens } from "../design-system/tokens";
-import { TeamVotesModal } from "../components/collaboration/TeamVotesModal";
 
 // Loading skeleton for collaboration widgets
 import { DashboardCardSkeleton } from "../components/ui/Skeleton";
@@ -702,43 +717,51 @@ const TeamBulletin: React.FC = React.memo(() => {
           </main>
         </CollaborationProvider>
 
-        {/* Modal Components */}
-        <TeamTrophyCaseModal
-          isOpen={isTrophyCaseModalOpen}
-          onClose={() => setIsTrophyCaseModalOpen(false)}
-          teamId={teamId || ""}
-        />
-        <SeasonStatsModal
-          isOpen={isSeasonStatsModalOpen}
-          onClose={() => setIsSeasonStatsModalOpen(false)}
-          teamId={teamId || ""}
-        />
-        <TeamGoalsModal
-          isOpen={isTeamGoalsModalOpen}
-          onClose={() => setIsTeamGoalsModalOpen(false)}
-          widgetId="team-bulletin-team-goals-modal"
-          userRole={
-            profile?.role === "admin"
-              ? "coach"
-              : (userRole as "coach" | "player" | "family") || "player"
-          }
-          userId={user?.id || "anonymous"}
-          teamId={teamId || ""}
-        />
-        <TeamVotesModal
-          isOpen={isTeamVotesModalOpen}
-          onClose={() => setIsTeamVotesModalOpen(false)}
-          widgetId="team-bulletin-team-votes-modal"
-          userRole={
-            profile?.role === "admin"
-              ? "coach"
-              : (userRole as "coach" | "player" | "family") || "player"
-          }
-          userId={user?.id || "anonymous"}
-          userName={
-            profile?.display_name || profile?.full_name || "Team Member"
-          }
-        />
+        {/* Modal Components (lazy loaded with Suspense) */}
+        <Suspense fallback={null}>
+          <TeamTrophyCaseModal
+            isOpen={isTrophyCaseModalOpen}
+            onClose={() => setIsTrophyCaseModalOpen(false)}
+            teamId={teamId || ""}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SeasonStatsModal
+            isOpen={isSeasonStatsModalOpen}
+            onClose={() => setIsSeasonStatsModalOpen(false)}
+            teamId={teamId || ""}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <TeamGoalsModal
+            isOpen={isTeamGoalsModalOpen}
+            onClose={() => setIsTeamGoalsModalOpen(false)}
+            widgetId="team-bulletin-team-goals-modal"
+            userRole={
+              profile?.role === "admin"
+                ? "coach"
+                : (userRole as "coach" | "player" | "family") || "player"
+            }
+            userId={user?.id || "anonymous"}
+            teamId={teamId || ""}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <TeamVotesModal
+            isOpen={isTeamVotesModalOpen}
+            onClose={() => setIsTeamVotesModalOpen(false)}
+            widgetId="team-bulletin-team-votes-modal"
+            userRole={
+              profile?.role === "admin"
+                ? "coach"
+                : (userRole as "coach" | "player" | "family") || "player"
+            }
+            userId={user?.id || "anonymous"}
+            userName={
+              profile?.display_name || profile?.full_name || "Team Member"
+            }
+          />
+        </Suspense>
       </PageLayout>
     </Aurora>
   );

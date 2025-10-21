@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
@@ -19,8 +19,10 @@ import type {
   PlayerRosterInsert,
   PlayerRosterUpdate,
 } from "../services/rosterService";
-import { RosterImportModal } from "../components/roster/RosterImportModal";
-import { BulkEditModal } from "../components/roster/BulkEditModal";
+const RosterImportModal = lazy(
+  () => import("../components/roster/RosterImportModal")
+);
+const BulkEditModal = lazy(() => import("../components/roster/BulkEditModal"));
 import type { BulkEditUpdates } from "../components/roster/BulkEditModal";
 import { info, error as logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
@@ -1614,12 +1616,14 @@ export default function RosterPage() {
             </div>
           </Modal>
 
-          {/* Import Modal */}
-          <RosterImportModal
-            isOpen={showImportModal}
-            onClose={() => setShowImportModal(false)}
-            onImport={handleImportPlayers}
-          />
+          {/* Import Modal (lazy loaded) */}
+          <Suspense fallback={null}>
+            <RosterImportModal
+              isOpen={showImportModal}
+              onClose={() => setShowImportModal(false)}
+              onImport={handleImportPlayers}
+            />
+          </Suspense>
 
           {/* Delete Confirmation Dialog */}
           <DeleteConfirmationDialog
@@ -1701,22 +1705,24 @@ export default function RosterPage() {
             </div>
           </Modal>
 
-          {/* Bulk Edit Modal */}
-          <BulkEditModal
-            isOpen={showBulkEditModal}
-            onClose={() => setShowBulkEditModal(false)}
-            selectedCount={selectedPlayerIds.size}
-            onSave={handleBulkEdit}
-            hasInactiveOrAlumni={Array.from(selectedPlayerIds).some((id) => {
-              const player = players.find((p) => p.id === id);
-              return (
-                player &&
-                (player.roster_status === "inactive_cut" ||
-                  player.roster_status === "inactive_quit" ||
-                  player.roster_status === "alumni")
-              );
-            })}
-          />
+          {/* Bulk Edit Modal (lazy loaded) */}
+          <Suspense fallback={null}>
+            <BulkEditModal
+              isOpen={showBulkEditModal}
+              onClose={() => setShowBulkEditModal(false)}
+              selectedCount={selectedPlayerIds.size}
+              onSave={handleBulkEdit}
+              hasInactiveOrAlumni={Array.from(selectedPlayerIds).some((id) => {
+                const player = players.find((p) => p.id === id);
+                return (
+                  player &&
+                  (player.roster_status === "inactive_cut" ||
+                    player.roster_status === "inactive_quit" ||
+                    player.roster_status === "alumni")
+                );
+              })}
+            />
+          </Suspense>
         </div>
       </PageLayout>
     </Aurora>

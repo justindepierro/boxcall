@@ -15,7 +15,7 @@ interface Playbook {
   name: string;
   description?: string;
   is_active: boolean;
-  play_count?: number;
+  play_count: number;
   created_at: string;
   updated_at: string;
 }

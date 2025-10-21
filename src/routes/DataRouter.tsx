@@ -16,6 +16,8 @@ import {
   LazyTeamBulletin,
   LazyAnalyticsPage,
   LazyBoxCall,
+  LazyPracticeSession,
+  LazyGameSession,
   LazyPlaybookPage,
   LazyRosterPage,
   LazyPlayerDetailPage,
@@ -441,6 +443,32 @@ export const DataRouterApp: React.FC = () => {
               <AuthenticatedLayout>
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <LazyBoxCall />
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/boxcall/practice/:scriptId"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyPracticeSession />
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/boxcall/game/:planId"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyGameSession />
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>

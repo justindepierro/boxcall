@@ -22,7 +22,7 @@ interface PlayCardDetailsProps {
   phaseLabel: string | null;
   handleInlineSave: (
     field: keyof PlayType,
-    value: string | number
+    value: string | number | boolean
   ) => Promise<void>;
   savingFields: Set<string>;
   formationFieldOrder: string[];

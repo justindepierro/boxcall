@@ -26,8 +26,12 @@ import {
   PreferencesSection,
   AdvancedOptionsSection,
 } from "./AddNewPlayModal/sections";
-import { PersonnelCreationPanel } from "./AddNewPlayModal/components";
+import {
+  PersonnelCreationPanel,
+  DuplicatePlayWarning,
+} from "./AddNewPlayModal/components";
 import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
+import { useDuplicatePlayDetection } from "./AddNewPlayModal/useDuplicatePlayDetection";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
 import { FormationBuilderModal } from "./FormationBuilderModal";
@@ -48,6 +52,7 @@ interface AddNewPlayModalProps {
   onPlayCreated?: (play: Play) => void; // NEW: Callback after play creation to open diagram
   existingPlay?: Play | null;
   playbookId?: string; // NEW: Required for FormationSelector
+  existingPlays?: Play[]; // NEW: For duplicate detection
 }
 
 export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
@@ -57,6 +62,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   onPlayCreated,
   existingPlay,
   playbookId,
+  existingPlays = [],
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -80,6 +86,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
   // Rate limit feedback
   const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
+
+  // Duplicate play detection
+  const duplicateDetection = useDuplicatePlayDetection(existingPlays, {
+    play_name: formData.playName,
+    formation: formData.formation,
+  });
 
   // Mobile-optimized button sizes
   const isMobile = useIsMobile();
@@ -601,6 +613,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               show ? showSuggestions("playName") : hideSuggestions("playName")
             }
           />
+
+          {/* Duplicate Play Warning */}
+          {duplicateDetection.isDuplicate && !existingPlay && (
+            <DuplicatePlayWarning
+              matchingPlays={duplicateDetection.matchingPlays}
+            />
+          )}
 
           {/* Personnel Section */}
           <PersonnelSection

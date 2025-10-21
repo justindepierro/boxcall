@@ -88,6 +88,16 @@ export const LazyBoxCall = lazyRoute(
   "BoxCall"
 );
 
+export const LazyPracticeSession = lazyRoute(
+  () => import("../../components/boxcall/PracticeSession"),
+  "Practice Session"
+);
+
+export const LazyGameSession = lazyRoute(
+  () => import("../../components/boxcall/GameSession"),
+  "Game Session"
+);
+
 export const LazyPlaybookPage = lazyRoute(
   () => import("../../pages/PlaybookPage"),
   "Playbook"

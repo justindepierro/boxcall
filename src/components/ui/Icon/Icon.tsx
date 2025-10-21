@@ -138,7 +138,12 @@ export type IconName =
   | "sun"
   | "moon"
   | "monitor"
-  | "grip-vertical";
+  | "grip-vertical"
+  | "alert-circle"
+  | "cloud-off"
+  | "x-circle"
+  | "minus-circle"
+  | "skip-forward";
 
 type AccessibleSvgProps = Pick<
   React.SVGProps<SVGSVGElement>,

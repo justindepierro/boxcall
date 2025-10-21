@@ -365,8 +365,9 @@ export default function PlaybookPage() {
   }, [activeTeamId]);
 
   // Get real play data for stats calculation
-  const { plays: allPlaysForStats = [], formations: allFormations = [] } = useTeamsData();
-  
+  const { plays: allPlaysForStats = [], formations: allFormations = [] } =
+    useTeamsData();
+
   // 🚀 PERFORMANCE: Memoize playbook stats calculation from REAL data
   const playbookStats = useMemo(() => {
     // Calculate real stats from actual data
@@ -374,27 +375,30 @@ export default function PlaybookPage() {
     const playsWithDiagrams = allPlaysForStats.filter(
       (play) => play.diagram_url || play.diagram_data
     ).length;
-    
+
     // Count unique formations
     const uniqueFormations = new Set(
       allPlaysForStats.map((play) => play.formation).filter(Boolean)
     );
-    const formationsCount = Math.max(allFormations.length, uniqueFormations.size);
-    
+    const formationsCount = Math.max(
+      allFormations.length,
+      uniqueFormations.size
+    );
+
     // Count play types from actual data
-    const passPlays = allPlaysForStats.filter((play) => 
-      play.p_type?.toLowerCase() === "pass"
+    const passPlays = allPlaysForStats.filter(
+      (play) => play.p_type?.toLowerCase() === "pass"
     ).length;
-    const runPlays = allPlaysForStats.filter((play) => 
-      play.p_type?.toLowerCase() === "run"
+    const runPlays = allPlaysForStats.filter(
+      (play) => play.p_type?.toLowerCase() === "run"
     ).length;
-    const rpoPlays = allPlaysForStats.filter((play) => 
-      play.p_type?.toLowerCase() === "rpo"
+    const rpoPlays = allPlaysForStats.filter(
+      (play) => play.p_type?.toLowerCase() === "rpo"
     ).length;
-    const playActionPlays = allPlaysForStats.filter((play) => 
+    const playActionPlays = allPlaysForStats.filter((play) =>
       play.p_type?.toLowerCase()?.includes("play action")
     ).length;
-    
+
     return {
       totalPlays,
       playsWithDiagrams,
@@ -548,19 +552,25 @@ export default function PlaybookPage() {
 
         case "delete":
           // Confirm and delete plays
-          if (window.confirm(`Are you sure you want to delete ${selectedCount} ${selectedCount === 1 ? 'play' : 'plays'}?`)) {
+          if (
+            window.confirm(
+              `Are you sure you want to delete ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}?`
+            )
+          ) {
             (async () => {
               try {
                 const selectedPlayIds = Array.from(state.selectedPlayIds || []);
                 await PlaysService.deletePlays(selectedPlayIds);
-                
+
                 // Refresh the plays list
                 dispatch({ type: "CLEAR_SELECTION" });
-                
+
                 // Refresh activities to show deleted plays
                 await refreshActivities();
-                
-                toast.success(`Deleted ${selectedCount} ${selectedCount === 1 ? 'play' : 'plays'}`);
+
+                toast.success(
+                  `Deleted ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}`
+                );
               } catch (err) {
                 logError("Bulk delete failed:", err);
                 toast.error("Failed to delete plays");
@@ -824,10 +834,10 @@ export default function PlaybookPage() {
           teamId
         );
         info(`Added "${play.play_name}" to practice script: "${script.name}"`);
-        
+
         // Refresh activities to show the new "added_to_script" activity
         await refreshActivities();
-        
+
         toast.success(
           `Added "${play.play_name}" to practice script`,
           script.name
@@ -864,10 +874,10 @@ export default function PlaybookPage() {
           play
         );
         info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
-        
+
         // Refresh activities to show the new "added_to_gameplan" activity
         await refreshActivities();
-        
+
         toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
       } catch (error) {
         logError("Failed to add play to game plan:", error);

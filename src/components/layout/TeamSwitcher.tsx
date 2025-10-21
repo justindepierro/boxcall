@@ -13,6 +13,7 @@ import { teamRoutes, ROUTES } from "../../routes/paths";
 import { useActiveTeamStore } from "../../state/activeTeamStore";
 import { useAuth } from "../../app/auth-store";
 import { emitTelemetry } from "../../lib/telemetry";
+import { usePrefetchQueries } from "../../hooks/usePrefetchQueries";
 
 interface TeamSwitcherProps {
   teams: Array<{ id: string; name: string }>; // simplified signature
@@ -22,6 +23,7 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
   const navigate = useNavigate();
   const { activeTeamId, setActiveTeamId } = useActiveTeamStore();
   const { user } = useAuth();
+  const { prefetchTeamDashboard, cancelPrefetch } = usePrefetchQueries();
 
   const handleSelect = (teamId: string) => {
     setActiveTeamId(teamId);
@@ -66,6 +68,8 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
             key={team.id}
             onSelect={() => handleSelect(team.id)}
             isActive={team.id === activeTeam?.id}
+            onMouseEnter={() => prefetchTeamDashboard(team.id)}
+            onMouseLeave={cancelPrefetch}
           >
             {team.name}
           </DropdownMenuItem>

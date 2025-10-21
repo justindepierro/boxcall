@@ -298,7 +298,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   }, [play.install_phase]);
 
   const handleInlineSave = useCallback(
-    async (field: keyof PlayType, value: string | number) => {
+    async (field: keyof PlayType, value: string | number | boolean) => {
       const fieldName = field as string;
 
       console.log("[PlayCard] 🔵 handleInlineSave START:", {
@@ -609,3 +609,31 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     </div>
   );
 };
+
+// 🚀 PERFORMANCE: Memoize PlayCard to prevent unnecessary re-renders
+// Only re-render when props actually change (not on parent re-renders)
+export default React.memo(PlayCard, (prevProps, nextProps) => {
+  // Quick bailout for identity checks
+  if (prevProps.play.id !== nextProps.play.id) return false;
+  if (prevProps.isSelected !== nextProps.isSelected) return false;
+  if (prevProps.isExpanded !== nextProps.isExpanded) return false;
+  if (prevProps.showOneWordCalls !== nextProps.showOneWordCalls) return false;
+  if (prevProps.variant !== nextProps.variant) return false;
+  if (prevProps.density !== nextProps.density) return false;
+  if (prevProps.directionDisplayFormat !== nextProps.directionDisplayFormat)
+    return false;
+
+  // Deep check on play object (only critical fields that affect rendering)
+  const p = prevProps.play;
+  const n = nextProps.play;
+  if (p.play_name !== n.play_name) return false;
+  if (p.formation !== n.formation) return false;
+  if (p.p_type !== n.p_type) return false;
+  if (p.times_called !== n.times_called) return false;
+  if (p.install_phase !== n.install_phase) return false;
+
+  // Functions are stable via useCallback, so we can skip deep comparison
+  // If they change, parent wants a re-render anyway
+
+  return true; // Props are equal, skip re-render
+});

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import { useAuth } from "../app/auth-store";
 import { supabase } from "../lib/supabase";
+import type { Formation } from "../types/formation";
 
 interface Team {
   id: string;
@@ -19,7 +20,7 @@ interface Playbook {
   name: string;
   description?: string;
   is_active: boolean;
-  play_count?: number;
+  play_count: number;
   created_at: string;
   updated_at: string;
 }
@@ -58,6 +59,8 @@ interface DatabasePlay {
   confidence_base?: number;
   times_called?: number;
   times_successful?: number;
+  diagram_url?: string | null;
+  diagram_data?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -68,6 +71,7 @@ export function useTeamsData() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
   const [plays, setPlays] = useState<DatabasePlay[]>([]);
+  const [formations, setFormations] = useState<Formation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -204,6 +208,30 @@ export function useTeamsData() {
         }
 
         setPlaybooks(playbooksData);
+
+        // Fetch formations
+        let formationsData: Formation[] = [];
+        try {
+          const { data, error: formationsError } = await supabase
+            .from("formations")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (formationsError) {
+            console.warn(
+              "Formations table not available:",
+              formationsError.message
+            );
+            // Continue without formations data
+          } else {
+            formationsData = (data || []) as Formation[];
+          }
+        } catch (err) {
+          console.warn("Error fetching formations:", err);
+          // Continue without formations data
+        }
+
+        setFormations(formationsData);
 
         // Fetch total play count first
         try {
@@ -355,6 +383,7 @@ export function useTeamsData() {
     teams,
     playbooks,
     plays,
+    formations,
     loading,
     error,
     refreshData,

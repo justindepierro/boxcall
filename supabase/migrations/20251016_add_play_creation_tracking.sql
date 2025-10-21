@@ -2,27 +2,31 @@
 -- Purpose: Track where plays are created from for usage analytics
 -- Created: 2025-10-16
 
--- Create enum for play creation sources
-CREATE TYPE play_creation_source AS ENUM (
-  'add_play_modal',      -- From AddNewPlayModal (hero tile)
-  'diagram_editor',      -- Created directly in diagram editor
-  'play_card',          -- Duplicated from existing play
-  'bulk_import',        -- CSV/bulk import
-  'api',                -- API creation
-  'migration',          -- Data migration
-  'unknown'             -- Legacy or undefined
-);
+-- Create enum for play creation sources (IF NOT EXISTS)
+DO $$ BEGIN
+  CREATE TYPE play_creation_source AS ENUM (
+    'add_play_modal',      -- From AddNewPlayModal (hero tile)
+    'diagram_editor',      -- Created directly in diagram editor
+    'play_card',          -- Duplicated from existing play
+    'bulk_import',        -- CSV/bulk import
+    'api',                -- API creation
+    'migration',          -- Data migration
+    'unknown'             -- Legacy or undefined
+  );
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
 -- Add creation tracking columns to plays table
 ALTER TABLE plays
-  ADD COLUMN creation_source play_creation_source DEFAULT 'unknown',
-  ADD COLUMN creation_context JSONB DEFAULT '{}'::jsonb;
+  ADD COLUMN IF NOT EXISTS creation_source play_creation_source DEFAULT 'unknown',
+  ADD COLUMN IF NOT EXISTS creation_context JSONB DEFAULT '{}'::jsonb;
 
 -- Add index for analytics queries
-CREATE INDEX idx_plays_creation_source ON plays(creation_source);
+CREATE INDEX IF NOT EXISTS idx_plays_creation_source ON plays(creation_source);
 
 -- Create analytics view for play creation tracking
-CREATE VIEW play_creation_analytics AS
+CREATE OR REPLACE VIEW play_creation_analytics AS
 SELECT 
   creation_source,
   COUNT(*) as play_count,
@@ -36,7 +40,7 @@ GROUP BY creation_source
 ORDER BY play_count DESC;
 
 -- Create separate view for tab usage analytics
-CREATE VIEW play_tab_usage_analytics AS
+CREATE OR REPLACE VIEW play_tab_usage_analytics AS
 SELECT 
   creation_source,
   creation_context->>'active_tab' as active_tab,

@@ -411,8 +411,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   }, [plays, personnelConfigurations]);
 
   const showEmpty = displayPlays.length === 0 && !loading && !error;
-  // Virtualization threshold (avoid overhead for small lists)
-  const VIRTUALIZE_THRESHOLD = 30; // use simple map below this
+  // Virtualization threshold (activate earlier for better performance)
+  const VIRTUALIZE_THRESHOLD = 15; // use virtualization above this count
   const disableVirtual =
     (import.meta as unknown as { env: Record<string, string> }).env
       ?.VITE_DISABLE_VIRTUAL_PLAYGRID === "true";
@@ -925,7 +925,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         >
           <Virtuoso
             data={displayPlays}
-            overscan={200}
+            overscan={5}
             computeItemKey={(_: number, playItem: Play) => playItem.id}
             itemContent={renderPlayItem}
             endReached={() => {

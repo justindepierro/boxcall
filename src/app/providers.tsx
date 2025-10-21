@@ -1,4 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { ReactNode } from "react";
 import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { ToastProvider } from "../components/ui/Toast";
@@ -30,7 +31,7 @@ export function AppProviders({ children }: AppProvidersProps) {
               </UndoQueueProvider>
             </ConfirmProvider>
           </ToastProvider>
-          {/* React Query Devtools will be added when we install the devtools package */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </TelemetryProvider>
     </ErrorBoundary>

@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import { Icon, type IconName } from "../components/ui/Icon";
@@ -6,7 +13,11 @@ import { Typography } from "../components/design-system/Typography";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
-import { GamePlanModal } from "../components/playbook/GamePlanModal";
+const GamePlanModal = lazy(() =>
+  import("../components/playbook/GamePlanModal").then((module) => ({
+    default: module.GamePlanModal,
+  }))
+);
 import { GamePlanPDFService } from "../services/gamePlanPdfService";
 import { GamePlanService } from "../services/gamePlanService_new";
 import type { GamePlan } from "../components/playbook/GamePlanModal/types";
@@ -450,16 +461,18 @@ export default function GamePlansPage() {
           </div>
         )}
 
-        {/* Game Plan Modal */}
+        {/* Game Plan Modal (lazy loaded) */}
         {showModal && (
-          <GamePlanModal
-            onClose={() => {
-              setShowModal(false);
-              setEditingPlan(undefined);
-            }}
-            onSave={handleSavePlan}
-            initialGamePlan={editingPlan}
-          />
+          <Suspense fallback={null}>
+            <GamePlanModal
+              onClose={() => {
+                setShowModal(false);
+                setEditingPlan(undefined);
+              }}
+              onSave={handleSavePlan}
+              initialGamePlan={editingPlan}
+            />
+          </Suspense>
         )}
       </PageLayout>
     </Aurora>
