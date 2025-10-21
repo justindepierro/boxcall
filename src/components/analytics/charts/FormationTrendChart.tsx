@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { Typography } from "../../ui/Typography";
+import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
 
 interface FormationTrendDataPoint {

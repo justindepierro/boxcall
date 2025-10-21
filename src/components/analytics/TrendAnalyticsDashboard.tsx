@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "../ui/Typography";
+import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
 import { ConfidenceTrendChart } from "./charts/ConfidenceTrendChart";
@@ -334,7 +334,7 @@ export const TrendAnalyticsDashboard: React.FC<
                 <div className="p-4 bg-surface-secondary rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Icon
-                      name="percent"
+                      name="trending-up"
                       className="text-warning-600"
                       size={20}
                     />

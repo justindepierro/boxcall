@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography } from "../../ui/Typography";
+import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
 import { Badge } from "../../ui/Badge";
 
