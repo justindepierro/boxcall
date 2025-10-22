@@ -666,7 +666,7 @@ export default function GamePlansPage() {
                             className="p-1 text-text-muted hover:text-text-warning transition-colors"
                             title="Archive plan"
                           >
-                            <Icon name="archive" className="h-4 w-4" />
+                            <Icon name="folder" className="h-4 w-4" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -719,7 +719,7 @@ export default function GamePlansPage() {
                             className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
                             title="Restore plan"
                           >
-                            <Icon name="unarchive" className="h-4 w-4" />
+                            <Icon name="inbox" className="h-4 w-4" />
                           </button>
                         </div>
                       </div>

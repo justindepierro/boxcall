@@ -3,7 +3,7 @@
  * Handles JSON export and import for game plans with validation
  */
 
-import type { ServiceGamePlan } from "../services/gamePlanService_new";
+import type { GamePlan } from "../services/gamePlanService_new";
 
 export interface ExportedGamePlan {
   version: "1.0";
@@ -26,7 +26,7 @@ export interface ExportedGamePlan {
  * Export game plans to JSON format
  */
 export function exportGamePlans(
-  plans: ServiceGamePlan[]
+  plans: GamePlan[]
 ): ExportedGamePlan {
   return {
     version: "1.0",
@@ -38,7 +38,7 @@ export function exportGamePlans(
       notes: plan.notes || null,
       situations: (plan.situations || []).flatMap((situation) =>
         (situation.plays || []).map((play, index) => ({
-          situationName: situation.situationName,
+          situationName: situation.situationType,
           playId: play.playId,
           orderIndex: index,
           notes: play.notes || null,
@@ -138,7 +138,7 @@ export function validateGamePlanImport(
     }
 
     return { valid: true, data: imported };
-  } catch (err) {
+  } catch (err: unknown) {
     return {
       valid: false,
       error: err instanceof Error ? err.message : "Unknown error",
@@ -155,7 +155,7 @@ export function parseJSONFile(
   try {
     const parsed = JSON.parse(content);
     return validateGamePlanImport(parsed);
-  } catch (err) {
+  } catch (_err: unknown) {
     return {
       valid: false,
       error: "Invalid JSON file format",

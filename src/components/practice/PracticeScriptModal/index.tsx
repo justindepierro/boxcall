@@ -6,7 +6,6 @@ import { PracticeScriptPlayList } from "./components/PracticeScriptPlayList";
 
 import type {
   PracticeScript,
-  PracticeScriptPlay as ServicePracticeScriptPlay,
 } from "../../../services/practiceService";
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 
@@ -48,7 +47,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
         (play) => ({
           id: play.id,
           playId: play.playId,
-          playName: play.play?.name || "Unknown Play",
+          playName: play.play?.play_name || "Unknown Play",
           personnel: play.play?.personnel,
           notes: play.notes || "",
           defenseFront: play.defensiveFront || "",

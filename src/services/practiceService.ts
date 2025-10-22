@@ -31,6 +31,7 @@ export interface PracticeScript extends Partial<BasePracticeScript> {
   createdAt: Date;
   updatedAt: Date;
   isTemplate: boolean;
+  isArchived?: boolean; // Archive status
   plays?: PracticeScriptPlay[]; // Workflow-specific plays
   duration: number;
   tags?: string[];

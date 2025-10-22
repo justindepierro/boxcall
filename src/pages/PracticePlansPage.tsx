@@ -652,7 +652,7 @@ export default function PracticePlansPage() {
                         className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
                         title="Archive script"
                       >
-                        <Icon name="archive" className="h-4 w-4" />
+                        <Icon name="folder" className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteScript(script.id)}
@@ -694,7 +694,7 @@ export default function PracticePlansPage() {
                           className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
                           title="Restore script"
                         >
-                          <Icon name="unarchive" className="h-4 w-4" />
+                          <Icon name="inbox" className="h-4 w-4" />
                         </button>
                       </div>
                       <Typography variant="body-sm" className="text-text-muted">

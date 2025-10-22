@@ -17,7 +17,7 @@ import { Link2, Pencil, Settings } from "lucide-react";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 import { FormationBuilderPanel } from "../../formations/FormationBuilderPanel";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;

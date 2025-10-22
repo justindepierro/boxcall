@@ -3,7 +3,7 @@
  * Handles JSON export and import for practice scripts with validation
  */
 
-import type { ServicePracticeScript } from "../services/practiceService";
+import type { PracticeScript } from "../services/practiceService";
 
 export interface ExportedPracticeScript {
   version: "1.0";
@@ -25,7 +25,7 @@ export interface ExportedPracticeScript {
  * Export practice scripts to JSON format
  */
 export function exportPracticeScripts(
-  scripts: ServicePracticeScript[]
+  scripts: PracticeScript[]
 ): ExportedPracticeScript {
   return {
     version: "1.0",
@@ -138,7 +138,7 @@ export function validatePracticeScriptImport(
     }
 
     return { valid: true, data: imported };
-  } catch (err) {
+  } catch (err: unknown) {
     return {
       valid: false,
       error: err instanceof Error ? err.message : "Unknown error",
@@ -155,7 +155,7 @@ export function parseJSONFile(
   try {
     const parsed = JSON.parse(content);
     return validatePracticeScriptImport(parsed);
-  } catch (err) {
+  } catch (_err: unknown) {
     return {
       valid: false,
       error: "Invalid JSON file format",

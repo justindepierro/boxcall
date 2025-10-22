@@ -100,7 +100,7 @@ export function ImportPracticeScriptsModal({
             disabled={importing}
             className="text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
           >
-            <Icon name="x" className="h-5 w-5" />
+            <Icon name="close" className="h-5 w-5" />
           </button>
         </div>
 

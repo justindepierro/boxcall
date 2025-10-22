@@ -20,7 +20,7 @@ import { PracticeScriptPlayItem } from "./PracticeScriptPlayItem";
 import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 interface PracticeScriptBuilderProps {
   script?: PracticeScript;
@@ -802,7 +802,6 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         isOpen={showPlaySelector}
         onClose={() => setShowPlaySelector(false)}
         onSelectPlay={handleAddPlay}
-        teamId={teamId}
       />
     </Modal>
   );

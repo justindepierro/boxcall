@@ -30,7 +30,7 @@ import { useAuth } from "../../app/auth-store";
 import type { Play } from "../../types/play";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 interface PlayAssignmentsModalProps {
   play: Play;
