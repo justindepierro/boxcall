@@ -105,7 +105,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
   const renderContent = () => (
     <div className="space-y-6">
-      {/* Mobile Section Pills */}
+      {/* Section Pills - Larger on Mobile */}
       <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0">
         {sections.map((section) => (
           <button
@@ -114,14 +114,25 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               triggerHapticFeedback("light");
               setActiveSection(section.id);
             }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
+            className={`flex items-center gap-2 ${
+              isMobile ? "px-5 py-3 min-h-[44px]" : "px-4 py-2"
+            } rounded-full whitespace-nowrap transition-all ${
               activeSection === section.id
                 ? "bg-brand-jade text-white shadow-md"
                 : "bg-surface-secondary text-text-secondary hover:bg-surface-tertiary"
             }`}
           >
-            <Icon name={section.icon as any} className="w-4 h-4" />
-            <span className="text-sm font-medium">{section.label}</span>
+            <Icon
+              name={section.icon as any}
+              className={isMobile ? "w-5 h-5" : "w-4 h-4"}
+            />
+            <span
+              className={
+                isMobile ? "text-base font-medium" : "text-sm font-medium"
+              }
+            >
+              {section.label}
+            </span>
           </button>
         ))}
       </div>
@@ -145,7 +156,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       triggerHapticFeedback("light");
                       updateSetting("theme", theme as any);
                     }}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`${
+                      isMobile ? "p-4 min-h-[56px]" : "p-3"
+                    } rounded-xl border-2 transition-all ${
                       localSettings.theme === theme
                         ? "border-brand-jade bg-brand-jade/10"
                         : "border-border-default hover:border-border-medium"
@@ -159,7 +172,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                             ? "moon"
                             : "monitor"
                       }
-                      className="w-5 h-5 mx-auto mb-1"
+                      className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} mx-auto mb-1`}
                     />
                     <Typography
                       variant="caption"
@@ -183,7 +196,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       triggerHapticFeedback("light");
                       updateSetting("gridDensity", density as any);
                     }}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`${
+                      isMobile ? "p-4 min-h-[56px]" : "p-3"
+                    } rounded-xl border-2 transition-all ${
                       localSettings.gridDensity === density
                         ? "border-brand-jade bg-brand-jade/10"
                         : "border-border-default hover:border-border-medium"
@@ -202,9 +217,16 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
             {/* Toggles */}
             <div className="space-y-3 pt-2">
-              <label className="flex items-center justify-between p-3 rounded-xl bg-surface-secondary">
+              <label
+                className={`flex items-center justify-between ${
+                  isMobile ? "p-4 min-h-[64px]" : "p-3"
+                } rounded-xl bg-surface-secondary`}
+              >
                 <div className="flex items-center gap-3">
-                  <Icon name="tag" className="w-5 h-5 text-brand-jade" />
+                  <Icon
+                    name="tag"
+                    className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} text-brand-jade`}
+                  />
                   <div>
                     <Typography variant="body-sm" className="font-medium">
                       Auto-Tagging
@@ -221,13 +243,22 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     triggerHapticFeedback("light");
                     updateSetting("enableAutoTagging", e.target.checked);
                   }}
-                  className="w-12 h-6 rounded-full"
+                  className={
+                    isMobile ? "w-14 h-8 rounded-full" : "w-12 h-6 rounded-full"
+                  }
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3 rounded-xl bg-surface-secondary">
+              <label
+                className={`flex items-center justify-between ${
+                  isMobile ? "p-4 min-h-[64px]" : "p-3"
+                } rounded-xl bg-surface-secondary`}
+              >
                 <div className="flex items-center gap-3">
-                  <Icon name="bar-chart" className="w-5 h-5 text-brand-jade" />
+                  <Icon
+                    name="bar-chart"
+                    className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} text-brand-jade`}
+                  />
                   <div>
                     <Typography variant="body-sm" className="font-medium">
                       Show Complexity
@@ -244,7 +275,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     triggerHapticFeedback("light");
                     updateSetting("showComplexity", e.target.checked);
                   }}
-                  className="w-12 h-6 rounded-full"
+                  className={
+                    isMobile ? "w-14 h-8 rounded-full" : "w-12 h-6 rounded-full"
+                  }
                 />
               </label>
             </div>
@@ -258,17 +291,24 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
             </Typography>
 
             {/* Bulk Operations */}
-            <div className="space-y-4 p-4 rounded-xl bg-surface-secondary">
+            <div
+              className={`space-y-4 ${isMobile ? "p-5" : "p-4"} rounded-xl bg-surface-secondary`}
+            >
               <Typography
                 variant="label-md"
                 className="flex items-center gap-2"
               >
-                <Icon name="plus-circle" className="w-4 h-4" />
+                <Icon
+                  name="plus-circle"
+                  className={isMobile ? "w-5 h-5" : "w-4 h-4"}
+                />
                 Bulk Operations
               </Typography>
 
               <div className="space-y-3">
-                <label className="flex items-center justify-between">
+                <label
+                  className={`flex items-center justify-between ${isMobile ? "min-h-[48px]" : ""}`}
+                >
                   <Typography variant="body-sm">
                     Enable Bulk Formation Add
                   </Typography>
@@ -284,11 +324,17 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                         e.target.checked
                       );
                     }}
-                    className="w-12 h-6 rounded-full"
+                    className={
+                      isMobile
+                        ? "w-14 h-8 rounded-full"
+                        : "w-12 h-6 rounded-full"
+                    }
                   />
                 </label>
 
-                <label className="flex items-center justify-between">
+                <label
+                  className={`flex items-center justify-between ${isMobile ? "min-h-[48px]" : ""}`}
+                >
                   <Typography variant="body-sm">
                     Enable Bulk Play Add
                   </Typography>
@@ -299,7 +345,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       triggerHapticFeedback("light");
                       updateBulkSetting("enableBulkPlayAdd", e.target.checked);
                     }}
-                    className="w-12 h-6 rounded-full"
+                    className={
+                      isMobile
+                        ? "w-14 h-8 rounded-full"
+                        : "w-12 h-6 rounded-full"
+                    }
                   />
                 </label>
 
@@ -320,7 +370,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }
                     min={1}
                     max={20}
-                    className="w-full"
+                    className={`w-full ${isMobile ? "h-12" : ""}`}
                   />
                 </div>
 
@@ -337,7 +387,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }
                     min={1}
                     max={50}
-                    className="w-full"
+                    className={`w-full ${isMobile ? "h-12" : ""}`}
                   />
                 </div>
               </div>
@@ -358,7 +408,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     { value: "21", label: "21 Personnel (2 RB, 1 TE, 2 WR)" },
                     { value: "22", label: "22 Personnel (2 RB, 2 TE, 1 WR)" },
                   ]}
-                  className="w-full"
+                  className={`w-full ${isMobile ? "h-12" : ""}`}
                 />
               </div>
 
@@ -370,7 +420,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     updateSetting("defaultFormation", e.target.value)
                   }
                   placeholder="I-Form, Spread, etc."
-                  className="w-full"
+                  className={`w-full ${isMobile ? "h-12" : ""}`}
                 />
               </div>
             </div>
@@ -378,19 +428,29 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 pt-4 border-t border-border-default">
+      {/* Action Buttons - Sticky on Mobile */}
+      <div
+        className={`flex gap-3 pt-4 border-t border-border-default ${
+          isMobile
+            ? "sticky bottom-0 bg-surface-primary pb-safe -mx-4 px-4"
+            : ""
+        }`}
+      >
         <Button
           onClick={() => {
             triggerHapticFeedback("light");
             onClose();
           }}
           variant="outline"
-          className="flex-1"
+          className={`flex-1 ${isMobile ? "h-12 text-base" : ""}`}
         >
           Cancel
         </Button>
-        <Button onClick={handleSave} variant="primary" className="flex-1">
+        <Button
+          onClick={handleSave}
+          variant="primary"
+          className={`flex-1 ${isMobile ? "h-12 text-base" : ""}`}
+        >
           Save Settings
         </Button>
       </div>

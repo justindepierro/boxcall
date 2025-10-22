@@ -84,7 +84,9 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </button>
 
             {/* Play Title - More compact, smaller on mobile */}
-            <div className={`absolute ${isMobile ? "bottom-2 left-4 right-4" : "bottom-4 left-6 right-6"}`}>
+            <div
+              className={`absolute ${isMobile ? "bottom-2 left-4 right-4" : "bottom-4 left-6 right-6"}`}
+            >
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={`inline-flex items-center px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
@@ -115,9 +117,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           </div>
 
           {/* Action Bar - Sticky on mobile, more compact */}
-          <div className={`flex items-center justify-between border-b border dark:border-slate-700/50 bg-surface-secondary/50 dark:bg-slate-800/30 flex-shrink-0 ${
-            isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
-          }`}>
+          <div
+            className={`flex items-center justify-between border-b border dark:border-slate-700/50 bg-surface-secondary/50 dark:bg-slate-800/30 flex-shrink-0 ${
+              isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
+            }`}
+          >
             {/* Tabs - Smaller on mobile */}
             <div className="flex gap-2">
               {(["overview", "details", "analytics"] as const).map((tab) => (
@@ -182,9 +186,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
           </div>
 
           {/* Content Area - Full screen scrolling on mobile, rounded on desktop */}
-          <div className={`overflow-y-auto flex-1 ${
-            isMobile ? "pb-safe" : "rounded-b-[30px]"
-          }`}>
+          <div
+            className={`overflow-y-auto flex-1 ${
+              isMobile ? "pb-safe" : "rounded-b-[30px]"
+            }`}
+          >
             <div className={isMobile ? "p-4" : "p-6"}>
               {activeTab === "overview" && (
                 <div className="space-y-6">
@@ -200,9 +206,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   )}
 
                   {/* Quick Stats Grid - Single column on mobile for larger touch targets */}
-                  <div className={`grid gap-4 ${
-                    isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
-                  }`}>
+                  <div
+                    className={`grid gap-4 ${
+                      isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
+                    }`}
+                  >
                     <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
                       <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
                         Type

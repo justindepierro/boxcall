@@ -19,9 +19,11 @@ const PracticeScriptModal = lazy(() =>
   }))
 );
 const ImportPracticeScriptsModal = lazy(() =>
-  import("../components/practice/ImportPracticeScriptsModal").then((module) => ({
-    default: module.ImportPracticeScriptsModal,
-  }))
+  import("../components/practice/ImportPracticeScriptsModal").then(
+    (module) => ({
+      default: module.ImportPracticeScriptsModal,
+    })
+  )
 );
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";

@@ -1,7 +1,7 @@
 /**
  * Responsive Game Session Wrapper
  * Detects device type and loads appropriate component
- * 
+ *
  * Mobile: < 768px (md breakpoint) - Sideline-optimized interface
  * Desktop: >= 768px - Full featured interface with analytics
  */

@@ -1,7 +1,7 @@
 /**
  * Mobile Practice Session Component
  * Optimized for one-handed operation while holding scripts
- * 
+ *
  * Features:
  * - Large thumb-friendly buttons at bottom
  * - Swipe gestures for quick actions
@@ -58,10 +58,10 @@ export const MobilePracticeSession: React.FC = () => {
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!touchStartX) return;
-    
+
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX - touchEndX;
-    
+
     // Swipe left = next play (if diff > 50px)
     if (diff > 50 && !isLastPlay) {
       nextPlay();
@@ -70,17 +70,17 @@ export const MobilePracticeSession: React.FC = () => {
     else if (diff < -50 && currentPlayIndex > 0) {
       previousPlay();
     }
-    
+
     setTouchStartX(0);
   };
 
   // Quick rep logging with haptic feedback
   const handleQuickLog = async (result: ExecutionResult) => {
     // Haptic feedback on iOS
-    if ('vibrate' in navigator) {
+    if ("vibrate" in navigator) {
       navigator.vibrate(10);
     }
-    
+
     try {
       await logRep(result, notes || undefined, []);
       setNotes(""); // Clear notes
@@ -107,7 +107,10 @@ export const MobilePracticeSession: React.FC = () => {
         <Typography variant="headline-md" className="mb-2 text-center">
           Error Loading Practice Script
         </Typography>
-        <Typography variant="body-md" className="text-text-secondary mb-6 text-center">
+        <Typography
+          variant="body-md"
+          className="text-text-secondary mb-6 text-center"
+        >
           {error?.message || "Practice script not found"}
         </Typography>
         <Button
@@ -149,24 +152,36 @@ export const MobilePracticeSession: React.FC = () => {
         {/* Content */}
         <div className="flex-1 overflow-auto p-4 space-y-4">
           <div className="bg-surface-secondary rounded-lg p-4">
-            <Typography variant="headline-sm" className="mb-3 text-text-primary">
+            <Typography
+              variant="headline-sm"
+              className="mb-3 text-text-primary"
+            >
               Quick Tips
             </Typography>
             <ul className="space-y-2">
               <li className="flex items-start gap-2">
-                <Icon name="check" className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0" />
+                <Icon
+                  name="check"
+                  className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
+                />
                 <Typography variant="body-sm" className="text-text-secondary">
                   Buttons at bottom for one-handed use
                 </Typography>
               </li>
               <li className="flex items-start gap-2">
-                <Icon name="check" className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0" />
+                <Icon
+                  name="check"
+                  className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
+                />
                 <Typography variant="body-sm" className="text-text-secondary">
                   Swipe left/right to change plays
                 </Typography>
               </li>
               <li className="flex items-start gap-2">
-                <Icon name="check" className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0" />
+                <Icon
+                  name="check"
+                  className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
+                />
                 <Typography variant="body-sm" className="text-text-secondary">
                   Works offline - syncs automatically
                 </Typography>
@@ -193,7 +208,7 @@ export const MobilePracticeSession: React.FC = () => {
 
   // Active session screen
   return (
-    <div 
+    <div
       className="flex flex-col h-screen bg-surface-primary"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -202,11 +217,15 @@ export const MobilePracticeSession: React.FC = () => {
       <div className="bg-surface-secondary p-3 shadow-sm flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
-            <Typography variant="body-md" className="text-text-primary font-medium truncate">
+            <Typography
+              variant="body-md"
+              className="text-text-primary font-medium truncate"
+            >
               {currentPlay?.play?.name || "Unknown Play"}
             </Typography>
             <Typography variant="body-xs" className="text-text-secondary">
-              Play {currentPlayIndex + 1}/{scriptPlays.length || 0} • Rep {currentRepNumber}/{totalRepsForCurrentPlay}
+              Play {currentPlayIndex + 1}/{scriptPlays.length || 0} • Rep{" "}
+              {currentRepNumber}/{totalRepsForCurrentPlay}
             </Typography>
           </div>
           <button
@@ -238,8 +257,8 @@ export const MobilePracticeSession: React.FC = () => {
                   idx < currentRepNumber - 1
                     ? "bg-success-600"
                     : idx === currentRepNumber - 1
-                    ? "bg-primary ring-4 ring-primary/20 scale-125"
-                    : "bg-surface-secondary"
+                      ? "bg-primary ring-4 ring-primary/20 scale-125"
+                      : "bg-surface-secondary"
                 }`}
               />
             ))}
@@ -266,7 +285,10 @@ export const MobilePracticeSession: React.FC = () => {
               )}
               {currentPlay.notes && (
                 <div className="pt-2 border-t border-border">
-                  <Typography variant="body-sm" className="text-text-secondary italic">
+                  <Typography
+                    variant="body-sm"
+                    className="text-text-secondary italic"
+                  >
                     {currentPlay.notes}
                   </Typography>
                 </div>
@@ -338,7 +360,10 @@ export const MobilePracticeSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon name="minus-circle" className="h-6 w-6 text-text-secondary mb-1" />
+            <Icon
+              name="minus-circle"
+              className="h-6 w-6 text-text-secondary mb-1"
+            />
             <Typography variant="body-xs" className="text-text-secondary">
               Neutral
             </Typography>
@@ -349,7 +374,10 @@ export const MobilePracticeSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon name="skip-forward" className="h-6 w-6 text-text-secondary mb-1" />
+            <Icon
+              name="skip-forward"
+              className="h-6 w-6 text-text-secondary mb-1"
+            />
             <Typography variant="body-xs" className="text-text-secondary">
               Skip
             </Typography>

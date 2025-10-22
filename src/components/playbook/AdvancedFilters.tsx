@@ -434,8 +434,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                   className="w-full h-12 bg-accent text-text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"
                 >
                   Apply Filters
-                  {activeFilters.length > 0 &&
-                    ` (${activeFilters.length})`}
+                  {activeFilters.length > 0 && ` (${activeFilters.length})`}
                 </button>
               </div>
             </div>

@@ -1,7 +1,7 @@
 /**
  * Responsive Practice Session Wrapper
  * Detects device type and loads appropriate component
- * 
+ *
  * Mobile: < 768px (md breakpoint) - One-handed thumb interface
  * Desktop: >= 768px - Full featured interface with columns
  */
