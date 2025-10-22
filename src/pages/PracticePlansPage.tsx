@@ -18,6 +18,11 @@ const PracticeScriptModal = lazy(() =>
     default: module.PracticeScriptModal,
   }))
 );
+const ImportPracticeScriptsModal = lazy(() =>
+  import("../components/practice/ImportPracticeScriptsModal").then((module) => ({
+    default: module.ImportPracticeScriptsModal,
+  }))
+);
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
@@ -27,6 +32,7 @@ import { useToast } from "../hooks/useToast";
 import {
   exportPracticeScripts,
   downloadJSON,
+  type ExportedPracticeScript,
 } from "../utils/practiceScriptExport";
 
 import type { PracticeScript } from "../services/practiceService";
@@ -37,6 +43,7 @@ export default function PracticePlansPage() {
   const toast = useToast();
 
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [editingScript, setEditingScript] = useState<
     PracticeScript | undefined
   >(undefined);
@@ -184,6 +191,48 @@ export default function PracticePlansPage() {
     } catch (error) {
       console.error("Failed to export practice scripts:", error);
       toast.error("Failed to export practice scripts");
+    }
+  };
+
+  const handleImportScripts = async (data: ExportedPracticeScript) => {
+    if (!activeTeamId) {
+      toast.error("No active team found");
+      throw new Error("No active team");
+    }
+
+    try {
+      let imported = 0;
+      let failed = 0;
+
+      for (const script of data.scripts) {
+        try {
+          await PracticeService.createPracticeScript({
+            name: script.name,
+            description: script.description || undefined,
+            teamId: activeTeamId,
+            tags: script.tags || undefined,
+          });
+          imported++;
+        } catch (error) {
+          console.error(`Failed to import script "${script.name}":`, error);
+          failed++;
+        }
+      }
+
+      await loadPracticeScripts();
+
+      if (failed === 0) {
+        toast.success(
+          `Successfully imported ${imported} practice script${imported !== 1 ? "s" : ""}`
+        );
+      } else {
+        toast.warning(
+          `Imported ${imported} script${imported !== 1 ? "s" : ""}, ${failed} failed`
+        );
+      }
+    } catch (error) {
+      console.error("Failed to import practice scripts:", error);
+      throw error;
     }
   };
 
@@ -435,14 +484,24 @@ export default function PracticePlansPage() {
                 placeholder="Search scripts by name, description, or tags..."
                 className="flex-1 max-w-2xl"
               />
-              <Button
-                onClick={handleExportScripts}
-                variant="secondary"
-                size="sm"
-              >
-                <Icon name="download" className="h-4 w-4 mr-2" />
-                Export JSON
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => setShowImportModal(true)}
+                  variant="secondary"
+                  size="sm"
+                >
+                  <Icon name="upload" className="h-4 w-4 mr-2" />
+                  Import
+                </Button>
+                <Button
+                  onClick={handleExportScripts}
+                  variant="secondary"
+                  size="sm"
+                >
+                  <Icon name="download" className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <FilterChips
@@ -657,6 +716,17 @@ export default function PracticePlansPage() {
                 setEditingScript(undefined);
               }}
               onSave={handleSaveScript}
+            />
+          </Suspense>
+        )}
+
+        {/* Import Modal */}
+        {showImportModal && (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ImportPracticeScriptsModal
+              isOpen={showImportModal}
+              onClose={() => setShowImportModal(false)}
+              onImport={handleImportScripts}
             />
           </Suspense>
         )}

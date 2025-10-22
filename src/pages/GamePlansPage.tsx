@@ -20,12 +20,21 @@ const GamePlanModal = lazy(() =>
     default: module.GamePlanModal,
   }))
 );
+const ImportGamePlansModal = lazy(() =>
+  import("../components/playbook/ImportGamePlansModal").then((module) => ({
+    default: module.ImportGamePlansModal,
+  }))
+);
 import { GamePlanPDFService } from "../services/gamePlanPdfService";
 import { GamePlanService } from "../services/gamePlanService_new";
 import type { GamePlan } from "../components/playbook/GamePlanModal/types";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
-import { exportGamePlans, downloadJSON } from "../utils/gamePlanExport";
+import {
+  exportGamePlans,
+  downloadJSON,
+  type ExportedGamePlan,
+} from "../utils/gamePlanExport";
 
 export default function GamePlansPage() {
   const navigate = useNavigate();
@@ -34,6 +43,7 @@ export default function GamePlansPage() {
 
   const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [editingPlan, setEditingPlan] = useState<GamePlan | undefined>(
     undefined
   );
@@ -215,6 +225,80 @@ export default function GamePlansPage() {
     } catch (error) {
       console.error("Failed to export game plans:", error);
       toast.error("Failed to export game plans");
+    }
+  };
+
+  const handleImportPlans = async (data: ExportedGamePlan) => {
+    if (!activeTeamId) {
+      toast.error("No active team found");
+      throw new Error("No active team");
+    }
+
+    try {
+      let imported = 0;
+      let failed = 0;
+
+      for (const plan of data.plans) {
+        try {
+          // Create the game plan
+          const newPlan = await GamePlanService.createGamePlan({
+            name: plan.name,
+            opponent: plan.opponent || undefined,
+            gameDate: plan.gameDate || undefined,
+            notes: plan.notes || undefined,
+            teamId: activeTeamId,
+          });
+
+          // Group situations by situationName
+          const situationsMap = new Map<
+            string,
+            Array<{ playId: string; orderIndex: number; notes: string | null }>
+          >();
+
+          for (const sit of plan.situations) {
+            if (!situationsMap.has(sit.situationName)) {
+              situationsMap.set(sit.situationName, []);
+            }
+            situationsMap.get(sit.situationName)!.push({
+              playId: sit.playId,
+              orderIndex: sit.orderIndex,
+              notes: sit.notes,
+            });
+          }
+
+          // Add plays to each situation
+          for (const [situationName, plays] of situationsMap) {
+            for (const play of plays) {
+              await GamePlanService.addPlayToSituation(
+                newPlan.id,
+                situationName,
+                play.playId,
+                play.notes || undefined
+              );
+            }
+          }
+
+          imported++;
+        } catch (error) {
+          console.error(`Failed to import game plan "${plan.name}":`, error);
+          failed++;
+        }
+      }
+
+      await loadGamePlans();
+
+      if (failed === 0) {
+        toast.success(
+          `Successfully imported ${imported} game plan${imported !== 1 ? "s" : ""}`
+        );
+      } else {
+        toast.warning(
+          `Imported ${imported} plan${imported !== 1 ? "s" : ""}, ${failed} failed`
+        );
+      }
+    } catch (error) {
+      console.error("Failed to import game plans:", error);
+      throw error;
     }
   };
 
@@ -440,9 +524,17 @@ export default function GamePlansPage() {
                 value={sortBy}
                 onChange={setSortBy}
               />
+              <Button
+                onClick={() => setShowImportModal(true)}
+                variant="secondary"
+                size="sm"
+              >
+                <Icon name="upload" className="h-4 w-4 mr-2" />
+                Import
+              </Button>
               <Button onClick={handleExportJSON} variant="secondary" size="sm">
                 <Icon name="download" className="h-4 w-4 mr-2" />
-                Export JSON
+                Export
               </Button>
             </div>
           </div>
@@ -652,6 +744,17 @@ export default function GamePlansPage() {
               }}
               onSave={handleSavePlan}
               initialGamePlan={editingPlan}
+            />
+          </Suspense>
+        )}
+
+        {/* Import Modal */}
+        {showImportModal && (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ImportGamePlansModal
+              isOpen={showImportModal}
+              onClose={() => setShowImportModal(false)}
+              onImport={handleImportPlans}
             />
           </Suspense>
         )}
