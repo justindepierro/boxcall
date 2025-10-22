@@ -271,9 +271,7 @@ export const TrendAnalyticsDashboard: React.FC<
               successRate: f.successRate,
               avgYards: 0, // Not available in FormationTrendData
             }))}
-            formationName={
-              formationTrend[0]?.formationName || "Formation"
-            }
+            formationName={formationTrend[0]?.formationName || "Formation"}
             targetSuccessRate={70}
             showAvgYards={false}
           />

@@ -80,19 +80,31 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
             Success Rate:
           </Typography>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: "#10b981" }} />
+            <div
+              className="w-4 h-4 rounded"
+              style={{ backgroundColor: "#10b981" }}
+            />
             <Typography variant="body-xs">75%+</Typography>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: "#fbbf24" }} />
+            <div
+              className="w-4 h-4 rounded"
+              style={{ backgroundColor: "#fbbf24" }}
+            />
             <Typography variant="body-xs">60-74%</Typography>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f97316" }} />
+            <div
+              className="w-4 h-4 rounded"
+              style={{ backgroundColor: "#f97316" }}
+            />
             <Typography variant="body-xs">45-59%</Typography>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ef4444" }} />
+            <div
+              className="w-4 h-4 rounded"
+              style={{ backgroundColor: "#ef4444" }}
+            />
             <Typography variant="body-xs">&lt;45%</Typography>
           </div>
         </div>
@@ -148,8 +160,22 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
             })}
 
             {/* End zones */}
-            <rect x="0" y="0" width="300" height="80" fill="#1e40af" opacity="0.3" />
-            <rect x="0" y="720" width="300" height="80" fill="#dc2626" opacity="0.3" />
+            <rect
+              x="0"
+              y="0"
+              width="300"
+              height="80"
+              fill="#1e40af"
+              opacity="0.3"
+            />
+            <rect
+              x="0"
+              y="720"
+              width="300"
+              height="80"
+              fill="#dc2626"
+              opacity="0.3"
+            />
 
             {/* Heat map zones */}
             {data.map((zone) => {
@@ -289,7 +315,8 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
                     {zone.zone}
                   </Typography>
                   <Typography variant="body-xs" className="text-secondary">
-                    {zone.attempts} attempts • {zone.avgYards.toFixed(1)} avg yards
+                    {zone.attempts} attempts • {zone.avgYards.toFixed(1)} avg
+                    yards
                   </Typography>
                 </div>
               </div>

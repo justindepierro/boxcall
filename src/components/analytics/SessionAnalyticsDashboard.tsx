@@ -35,10 +35,13 @@ export const SessionAnalyticsDashboard: React.FC<
       try {
         setLoading(true);
         setError(null);
-        const data = await SessionAnalyticsService.getSessionAnalytics(sessionId);
+        const data =
+          await SessionAnalyticsService.getSessionAnalytics(sessionId);
         setAnalytics(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load analytics");
+        setError(
+          err instanceof Error ? err.message : "Failed to load analytics"
+        );
       } finally {
         setLoading(false);
       }
@@ -61,7 +64,9 @@ export const SessionAnalyticsDashboard: React.FC<
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center p-spacing-2xl ${className}`}>
+      <div
+        className={`flex items-center justify-center p-spacing-2xl ${className}`}
+      >
         <div className="text-center">
           <Icon
             name="refresh-cw"
@@ -80,7 +85,10 @@ export const SessionAnalyticsDashboard: React.FC<
           name="alert-triangle"
           className="h-12 w-12 text-text-error mx-auto mb-spacing-md"
         />
-        <Typography variant="headline-sm" className="text-text-error mb-spacing-xs">
+        <Typography
+          variant="headline-sm"
+          className="text-text-error mb-spacing-xs"
+        >
           Analytics Error
         </Typography>
         <Typography variant="body-sm" className="text-text-error mb-spacing-md">
@@ -126,7 +134,10 @@ export const SessionAnalyticsDashboard: React.FC<
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md">
             <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mb-spacing-xs"
+              >
                 Success Rate
               </Typography>
               <Typography
@@ -146,16 +157,25 @@ export const SessionAnalyticsDashboard: React.FC<
             </div>
 
             <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mb-spacing-xs"
+              >
                 Avg Yards/Play
               </Typography>
-              <Typography variant="headline-lg" className="font-bold text-jade-600">
+              <Typography
+                variant="headline-lg"
+                className="font-bold text-jade-600"
+              >
                 {analytics.avgYardsPerPlay}
               </Typography>
             </div>
 
             <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mb-spacing-xs"
+              >
                 Total Plays
               </Typography>
               <Typography variant="headline-lg" className="font-bold">
@@ -164,10 +184,16 @@ export const SessionAnalyticsDashboard: React.FC<
             </div>
 
             <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography variant="body-xs" className="text-text-secondary mb-spacing-xs">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mb-spacing-xs"
+              >
                 Total Yards
               </Typography>
-              <Typography variant="headline-lg" className="font-bold text-jade-600">
+              <Typography
+                variant="headline-lg"
+                className="font-bold text-jade-600"
+              >
                 {analytics.totalYards}
               </Typography>
             </div>
@@ -205,8 +231,12 @@ export const SessionAnalyticsDashboard: React.FC<
                     <Typography variant="body-sm" className="font-semibold">
                       {formation.formationName}
                     </Typography>
-                    <Typography variant="body-xs" className="text-text-secondary">
-                      {formation.attempts} plays • {formation.avgYards} avg yards
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
+                      {formation.attempts} plays • {formation.avgYards} avg
+                      yards
                     </Typography>
                   </div>
                   <Badge
@@ -234,7 +264,10 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-sm" className="mb-spacing-sm">
               Coverage Performance
             </Typography>
-            <Typography variant="body-xs" className="text-text-secondary mb-spacing-md">
+            <Typography
+              variant="body-xs"
+              className="text-text-secondary mb-spacing-md"
+            >
               How well plays performed against different defensive coverages
             </Typography>
             <div className="space-y-spacing-sm">
@@ -247,7 +280,10 @@ export const SessionAnalyticsDashboard: React.FC<
                     <Typography variant="body-sm" className="font-semibold">
                       {coverage.coverage}
                     </Typography>
-                    <Typography variant="body-xs" className="text-text-secondary">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
                       {coverage.attempts} plays • {coverage.avgYards} avg yards
                     </Typography>
                   </div>
@@ -293,7 +329,10 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-sm" className="mb-spacing-sm">
               Hash Success Comparison
             </Typography>
-            <Typography variant="body-xs" className="text-text-secondary mb-spacing-md">
+            <Typography
+              variant="body-xs"
+              className="text-text-secondary mb-spacing-md"
+            >
               Success rate by field hash position (left, middle, right)
             </Typography>
             <div className="grid grid-cols-3 gap-spacing-md">

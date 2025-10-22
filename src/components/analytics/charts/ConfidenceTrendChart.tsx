@@ -72,7 +72,10 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
               <Typography variant="body-xs" className="text-secondary">
                 Confidence:
               </Typography>
-              <Typography variant="body-xs" className="font-semibold text-brand-600">
+              <Typography
+                variant="body-xs"
+                className="font-semibold text-brand-600"
+              >
                 {point.confidence}%
               </Typography>
             </div>

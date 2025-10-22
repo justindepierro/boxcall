@@ -186,7 +186,9 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                       variant="body-md"
                       className={`font-medium ${isSelected ? "text-primary" : ""}`}
                     >
-                      {(play as any).play_name || play.formation || "Unknown Play"}
+                      {(play as any).play_name ||
+                        play.formation ||
+                        "Unknown Play"}
                     </Typography>
 
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -235,7 +237,10 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                       e.stopPropagation(); // Don't select the play
                       setSelectedConfidence({
                         confidence,
-                        playName: (play as any).play_name || play.formation || "Unknown Play",
+                        playName:
+                          (play as any).play_name ||
+                          play.formation ||
+                          "Unknown Play",
                       });
                     }}
                     className="mt-3 pt-3 border-t border-border w-full text-left hover:bg-surface-primary/50 rounded-lg -mx-2 px-2 py-2 transition-colors group"

@@ -100,7 +100,7 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
           <Typography variant="label-md" className="block mb-1">
             Tags (Optional)
           </Typography>
-          
+
           {/* Tag Input */}
           <div className="flex gap-2 mb-2">
             <Input

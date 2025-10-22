@@ -5,10 +5,12 @@ This directory contains legacy migration scripts that have been replaced by the 
 ## Current Tools (Use These!)
 
 Located in project root:
+
 - **`db-cli.js`** - Main database CLI tool
 - **`migrate-cli.js`** - Migration runner
 
 ### Commands:
+
 ```bash
 npm run db:migrate:easy <file>  # Copy SQL + open editor (recommended)
 npm run db:status               # Check connection
@@ -21,6 +23,7 @@ npm run db:sql                  # Open SQL editor
 These were experimental attempts at direct CLI migration execution:
 
 ### Migration Runners (Old)
+
 - `apply_migration.js` - Early migration attempt
 - `migrate.js` - Postgres client approach
 - `migrate-exec.js` - Node postgres attempt
@@ -29,11 +32,13 @@ These were experimental attempts at direct CLI migration execution:
 - `run_migration.js` - Another variant
 
 ### Specific Migration Scripts
+
 - `apply_play_type_migration.cjs` - Play type migration
 - `run_array_migration.js` - Array field migration
 - `run_migration_practice_script_plays.js` - Practice script migration
 
 ### Testing/Utilities
+
 - `check-protection-db.js` - DB protection check
 - `check_migration_status.js` - Status checker
 - `get-db-url.js` - Connection string helper
@@ -44,6 +49,7 @@ These were experimental attempts at direct CLI migration execution:
 ## Why Archived?
 
 After extensive testing, we learned:
+
 1. **DDL migrations cannot execute via Supabase JS client** (security limitation)
 2. **Direct database connections are complex** (connection string formats, auth issues)
 3. **SQL Editor is Supabase's recommended approach** for schema changes

@@ -9,10 +9,10 @@ import { FormationTrendChart } from "../components/analytics/charts/FormationTre
 
 /**
  * SuperAdmin Analytics Test Page
- * 
+ *
  * This page is for testing all Phase 14 visualization components with mock data.
  * Route: /superadmin/analytics-test
- * 
+ *
  * Components tested:
  * - SessionAnalyticsDashboard (requires real session ID)
  * - TrendAnalyticsDashboard (requires real play/formation ID)
@@ -275,8 +275,8 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                   Confidence Trend Chart (14.3)
                 </Typography>
                 <Typography variant="body-sm" className="text-secondary">
-                  LineChart showing play confidence evolution over 6 weeks.
-                  Dual Y-axis with confidence % and success rate %.
+                  LineChart showing play confidence evolution over 6 weeks. Dual
+                  Y-axis with confidence % and success rate %.
                 </Typography>
               </Card>
               <ConfidenceTrendChart
@@ -338,8 +338,10 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                       <Typography variant="body-sm" className="text-secondary">
                         This component needs a valid session ID from your
                         database. Create a practice or game session first, then
-                        use: <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
-                          &lt;SessionAnalyticsDashboard sessionId="your-session-id" /&gt;
+                        use:{" "}
+                        <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
+                          &lt;SessionAnalyticsDashboard
+                          sessionId="your-session-id" /&gt;
                         </code>
                       </Typography>
                     </div>
@@ -392,8 +394,10 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                       </Typography>
                       <Typography variant="body-sm" className="text-secondary">
                         This component needs a valid play ID or formation ID.
-                        Use: <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
-                          &lt;TrendAnalyticsDashboard playId="uuid" teamId="uuid" /&gt;
+                        Use:{" "}
+                        <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
+                          &lt;TrendAnalyticsDashboard playId="uuid"
+                          teamId="uuid" /&gt;
                         </code>
                       </Typography>
                     </div>
@@ -429,7 +433,9 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                 Phase 14 Complete - All Components Built
               </Typography>
               <ul className="space-y-1 text-sm text-secondary">
-                <li>✅ SessionAnalyticsDashboard - Comprehensive session analytics</li>
+                <li>
+                  ✅ SessionAnalyticsDashboard - Comprehensive session analytics
+                </li>
                 <li>✅ PlaySuccessHeatmap - Interactive field visualization</li>
                 <li>✅ ConfidenceTrendChart - Play confidence over time</li>
                 <li>✅ FormationTrendChart - Formation performance trends</li>

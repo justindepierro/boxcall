@@ -4,7 +4,10 @@ import { Typography } from "../../design-system/Typography";
 import { PracticeScriptForm } from "./components/PracticeScriptForm";
 import { PracticeScriptPlayList } from "./components/PracticeScriptPlayList";
 
-import type { PracticeScript, PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../services/practiceService";
+import type {
+  PracticeScript,
+  PracticeScriptPlay as ServicePracticeScriptPlay,
+} from "../../../services/practiceService";
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 
 interface PracticeScriptModalProps {
@@ -34,25 +37,29 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
     if (editingScript) {
       setScriptData({
         name: editingScript.title || editingScript.name || "",
-        date: editingScript.createdAt ? new Date(editingScript.createdAt).toISOString().split('T')[0] : undefined,
+        date: editingScript.createdAt
+          ? new Date(editingScript.createdAt).toISOString().split("T")[0]
+          : undefined,
         opponent: editingScript.description || "",
       });
-      
+
       // Convert service plays to modal plays
-      const modalPlays: PracticeScriptPlay[] = (editingScript.plays || []).map((play) => ({
-        id: play.id,
-        playId: play.playId,
-        playName: play.play?.name || "Unknown Play",
-        personnel: play.play?.personnel,
-        notes: play.notes || "",
-        defenseFront: play.defensiveFront || "",
-        defensiveCoverage: play.coverage || "",
-        blitz: play.blitz || "",
-        stunt: "", // Not in service type
-        hash: play.hash || "",
-        situation: play.downDistance || "",
-      }));
-      
+      const modalPlays: PracticeScriptPlay[] = (editingScript.plays || []).map(
+        (play) => ({
+          id: play.id,
+          playId: play.playId,
+          playName: play.play?.name || "Unknown Play",
+          personnel: play.play?.personnel,
+          notes: play.notes || "",
+          defenseFront: play.defensiveFront || "",
+          defensiveCoverage: play.coverage || "",
+          blitz: play.blitz || "",
+          stunt: "", // Not in service type
+          hash: play.hash || "",
+          situation: play.downDistance || "",
+        })
+      );
+
       setPlays(modalPlays);
       setTags(editingScript.tags || []);
     }
@@ -114,8 +121,8 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
           </div>
 
           {/* Script Form */}
-          <PracticeScriptForm 
-            data={scriptData} 
+          <PracticeScriptForm
+            data={scriptData}
             onChange={setScriptData}
             tags={tags}
             onTagsChange={setTags}

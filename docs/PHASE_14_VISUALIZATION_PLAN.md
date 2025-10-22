@@ -38,6 +38,7 @@ A comprehensive post-session summary page that shows:
 ### Technical Stack:
 
 **Option 1: Recharts** (Recommended)
+
 - ✅ React-native, composable
 - ✅ Responsive out of the box
 - ✅ Great TypeScript support
@@ -45,6 +46,7 @@ A comprehensive post-session summary page that shows:
 - ✅ Active maintenance
 
 **Option 2: Victory**
+
 - More animation options
 - Heavier bundle size
 - Steeper learning curve
@@ -81,14 +83,14 @@ src/components/analytics/
 // src/services/sessionAnalyticsService.ts (NEW)
 interface SessionAnalytics {
   sessionId: string;
-  sessionType: 'game' | 'practice';
+  sessionType: "game" | "practice";
   date: string;
-  
+
   // Overall stats
   totalPlays: number;
   successRate: number;
   avgYardsPerPlay: number;
-  
+
   // Breakdown by down/distance
   byDown: {
     down: number;
@@ -97,7 +99,7 @@ interface SessionAnalytics {
     successRate: number;
     avgYards: number;
   }[];
-  
+
   // Play type distribution
   byPlayType: {
     type: string;
@@ -105,7 +107,7 @@ interface SessionAnalytics {
     percentage: number;
     successRate: number;
   }[];
-  
+
   // Formation effectiveness
   byFormation: {
     formationName: string;
@@ -113,7 +115,7 @@ interface SessionAnalytics {
     successRate: number;
     avgYards: number;
   }[];
-  
+
   // Coverage performance (Phase 13)
   byCoverage: {
     coverage: string;
@@ -121,15 +123,15 @@ interface SessionAnalytics {
     successRate: number;
     avgYards: number;
   }[];
-  
+
   // Hash success (Phase 13)
   byHash: {
-    hash: 'left' | 'middle' | 'right';
+    hash: "left" | "middle" | "right";
     attempts: number;
     successRate: number;
     avgYards: number;
   }[];
-  
+
   // Timeline data
   timeline: {
     playNumber: number;
@@ -160,7 +162,7 @@ BEGIN
     'byDown', (
       SELECT json_agg(down_stats)
       FROM (
-        SELECT 
+        SELECT
           pe.down,
           COUNT(*) as attempts,
           SUM(CASE WHEN pe.result = 'success' THEN 1 ELSE 0 END) as successes,
@@ -175,7 +177,7 @@ BEGIN
     'byCoverage', (
       SELECT json_agg(coverage_stats)
       FROM (
-        SELECT 
+        SELECT
           pe.opponent_coverage as coverage,
           COUNT(*) as attempts,
           ROUND(AVG(CASE WHEN pe.result = 'success' THEN 1 ELSE 0 END) * 100, 1) as success_rate,
@@ -189,7 +191,7 @@ BEGIN
     'byHash', (
       SELECT json_agg(hash_stats)
       FROM (
-        SELECT 
+        SELECT
           pe.hash_mark as hash,
           COUNT(*) as attempts,
           ROUND(AVG(CASE WHEN pe.result = 'success' THEN 1 ELSE 0 END) * 100, 1) as success_rate,
@@ -205,7 +207,7 @@ BEGIN
   LEFT JOIN play_executions pe ON pe.session_id = ls.id
   WHERE ls.id = p_session_id
   GROUP BY ls.id, ls.session_type, ls.created_at;
-  
+
   RETURN result;
 END;
 $$ LANGUAGE plpgsql;
@@ -214,6 +216,7 @@ $$ LANGUAGE plpgsql;
 ### UI/UX Design:
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  📊 Game Session Analytics - vs Eagles (Oct 21)     │
@@ -263,14 +266,14 @@ $$ LANGUAGE plpgsql;
 
 ```typescript
 const CHART_COLORS = {
-  success: 'var(--color-success-500)',      // Green
-  warning: 'var(--color-warning-500)',      // Yellow
-  error: 'var(--color-error-500)',          // Red
-  primary: 'var(--color-jade-600)',         // Jade
-  secondary: 'var(--color-surface-tertiary)', // Gray
-  run: '#3b82f6',    // Blue
-  pass: '#8b5cf6',   // Purple
-  special: '#f59e0b', // Orange
+  success: "var(--color-success-500)", // Green
+  warning: "var(--color-warning-500)", // Yellow
+  error: "var(--color-error-500)", // Red
+  primary: "var(--color-jade-600)", // Jade
+  secondary: "var(--color-surface-tertiary)", // Gray
+  run: "#3b82f6", // Blue
+  pass: "#8b5cf6", // Purple
+  special: "#f59e0b", // Orange
 };
 ```
 
@@ -374,9 +377,9 @@ npm install jspdf html2canvas
 ```typescript
 // src/services/exportService.ts (extend existing)
 class SessionAnalyticsExportService {
-  static async exportToPDF(sessionId: string): Promise<void>
-  static async exportToImage(element: HTMLElement): Promise<Blob>
-  static async generateShareLink(sessionId: string): Promise<string>
+  static async exportToPDF(sessionId: string): Promise<void>;
+  static async exportToImage(element: HTMLElement): Promise<Blob>;
+  static async generateShareLink(sessionId: string): Promise<string>;
 }
 ```
 
@@ -385,28 +388,33 @@ class SessionAnalyticsExportService {
 ## 🗓️ Implementation Timeline
 
 ### Week 1 (Days 1-3):
+
 - ✅ Install Recharts
 - ✅ Create SessionAnalyticsService
 - ✅ Build database functions
 - ✅ Create basic chart components
 
 ### Week 1 (Days 4-5):
+
 - Build SessionAnalyticsDashboard layout
 - Integrate chart components
 - Add responsive design
 - Test with real data
 
 ### Week 2 (Days 1-2):
+
 - Build PlaySuccessHeatmap (SVG field)
 - Add click interactions
 - Color coding logic
 
 ### Week 2 (Days 3-4):
+
 - Build ConfidenceTrendChart
 - Add annotations
 - Practice impact visualization
 
 ### Week 2 (Day 5):
+
 - Export functionality (PDF, PNG, CSV)
 - Share link generation
 - Polish and testing
@@ -436,12 +444,14 @@ class SessionAnalyticsExportService {
 ## 🔗 Integration Points
 
 ### Existing Systems:
+
 - ExecutionTrackingService (Phase 13)
 - PlayConfidenceService (Phase 11)
 - SituationalRecommender (Phase 13)
 - AnalyticsDashboard (existing)
 
 ### New Systems:
+
 - SessionAnalyticsService (NEW)
 - ChartConfigService (NEW)
 - ExportService (extend existing)

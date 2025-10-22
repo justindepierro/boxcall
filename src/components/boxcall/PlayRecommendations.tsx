@@ -97,7 +97,9 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               {/* Play Name */}
               <div>
                 <Typography variant="body-md" className="font-medium">
-                  {(rec.play as any).play_name || rec.play.formation || "Unknown Play"}
+                  {(rec.play as any).play_name ||
+                    rec.play.formation ||
+                    "Unknown Play"}
                 </Typography>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {rec.play.formation && (

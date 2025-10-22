@@ -133,16 +133,18 @@ export class ErrorTrackingService {
       // Check if this looks like a React error
       if (args[0] && typeof args[0] === "string" && args[0].includes("React")) {
         // Safely stringify args to avoid "Cannot convert object to primitive value" errors
-        const errorMessage = args.map(arg => {
-          if (typeof arg === 'string') return arg;
-          if (arg instanceof Error) return arg.message;
-          try {
-            return JSON.stringify(arg);
-          } catch {
-            return String(arg);
-          }
-        }).join(" ");
-        
+        const errorMessage = args
+          .map((arg) => {
+            if (typeof arg === "string") return arg;
+            if (arg instanceof Error) return arg.message;
+            try {
+              return JSON.stringify(arg);
+            } catch {
+              return String(arg);
+            }
+          })
+          .join(" ");
+
         this.captureError(new Error(errorMessage), {
           tags: { type: "react_error" },
           level: "error",

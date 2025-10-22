@@ -3,6 +3,7 @@
 ## 🎯 The Reality
 
 After testing all approaches, here's the truth:
+
 - ✅ **SQL Editor is the official way** for DDL migrations (ALTER, CREATE, etc.)
 - ❌ **Direct CLI execution doesn't work** for security reasons
 - ⚡ **But we made it super easy!**
@@ -14,12 +15,14 @@ npm run db:migrate:easy database/migrations/008_add_coverage_tracking.sql
 ```
 
 **What it does:**
+
 1. ✅ Copies SQL to clipboard automatically
 2. ✅ Opens Supabase SQL Editor in browser
 3. ✅ You paste (Cmd+V) and click "Run"
 4. ✅ Takes 5 seconds total
 
 **Why this is the recommended way:**
+
 - It's what Supabase recommends for DDL
 - Always works (no connection/auth issues)
 - Instant visual feedback
@@ -29,41 +32,50 @@ npm run db:migrate:easy database/migrations/008_add_coverage_tracking.sql
 ## 📋 Other Available Commands
 
 ### Check Connection Status
+
 ```bash
 npm run db:status
 ```
 
 ### Preview Migration SQL
+
 ```bash
 npm run db:migrate database/migrations/008_add_coverage_tracking.sql
 ```
 
 ### Open SQL Editor
+
 ```bash
 npm run db:sql
 ```
 
 ### Open SQL Editor
+
 ```bash
 npm run db:sql
 ```
+
 Opens Supabase SQL Editor in your browser.
 
 ### View All Commands
+
 ```bash
 npm run db
 ```
+
 Shows help and all available commands.
 
 ## 🚀 Common Workflows
 
 ### Method 1: Execute Migration Directly (Recommended)
+
 ```bash
 # Run the migration with Supabase CLI
 npm run db:migrate:run database/migrations/008_add_coverage_tracking.sql
 ```
 
 **One-time setup:**
+
 ```bash
 # 1. Install Supabase CLI (if not installed)
 brew install supabase/tap/supabase
@@ -77,6 +89,7 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/
 ```
 
 ### Method 2: Manual via SQL Editor (Alternative)
+
 ```bash
 # Step 1: Preview the migration
 npm run db:migrate database/migrations/008_add_coverage_tracking.sql
@@ -89,22 +102,26 @@ npm run db:sql
 ```
 
 ### Check Available Migrations
+
 ```bash
 ls database/migrations/
 ```
 
 Files:
+
 - `007_add_practice_metadata.sql` - Practice session enhancements
 - `008_add_coverage_tracking.sql` - Coverage & hash mark tracking (Phase 13.2/13.3)
 
 ## 💡 Tips
 
 1. **Always check status first:**
+
    ```bash
    npm run db:status
    ```
 
 2. **Preview migrations before running:**
+
    ```bash
    npm run db:migrate <file>
    ```
@@ -122,24 +139,30 @@ Files:
 ## 🔧 Troubleshooting
 
 ### "Missing Supabase credentials"
+
 Add to your `.env` file:
+
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 ### "Cannot execute DDL statements"
+
 This is expected! Use the SQL Editor for migrations:
+
 ```bash
 npm run db:sql
 ```
 
 ### SQL Editor won't open
+
 Copy the URL from the output and paste it in your browser.
 
 ## 📚 Advanced Usage
 
 ### Direct CLI access
+
 ```bash
 # Show help
 node db-cli.js

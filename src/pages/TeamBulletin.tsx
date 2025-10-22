@@ -40,17 +40,25 @@ import { ProgressSharing } from "../components/collaboration/ProgressSharing";
 import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
 
 // Modal components (lazy loaded)
-const TeamTrophyCaseModal = lazy(
-  () => import("../components/team-dashboard/TeamTrophyCaseModal").then((m) => ({ default: m.TeamTrophyCaseModal }))
+const TeamTrophyCaseModal = lazy(() =>
+  import("../components/team-dashboard/TeamTrophyCaseModal").then((m) => ({
+    default: m.TeamTrophyCaseModal,
+  }))
 );
-const SeasonStatsModal = lazy(
-  () => import("../components/team-dashboard/SeasonStatsModal").then((m) => ({ default: m.SeasonStatsModal }))
+const SeasonStatsModal = lazy(() =>
+  import("../components/team-dashboard/SeasonStatsModal").then((m) => ({
+    default: m.SeasonStatsModal,
+  }))
 );
-const TeamGoalsModal = lazy(
-  () => import("../components/collaboration/TeamGoalsModal").then((m) => ({ default: m.TeamGoalsModal }))
+const TeamGoalsModal = lazy(() =>
+  import("../components/collaboration/TeamGoalsModal").then((m) => ({
+    default: m.TeamGoalsModal,
+  }))
 );
-const TeamVotesModal = lazy(
-  () => import("../components/collaboration/TeamVotesModal").then((m) => ({ default: m.TeamVotesModal }))
+const TeamVotesModal = lazy(() =>
+  import("../components/collaboration/TeamVotesModal").then((m) => ({
+    default: m.TeamVotesModal,
+  }))
 );
 import { colorTokens } from "../design-system/tokens";
 

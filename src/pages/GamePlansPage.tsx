@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import { Icon, type IconName } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
+import { SearchBar } from "../components/ui/SearchBar";
+import { SortDropdown, type SortOption } from "../components/ui/SortDropdown";
 import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
 import { Aurora } from "../components/ui/Aurora";
@@ -36,6 +38,10 @@ export default function GamePlansPage() {
   );
   const [_loading, setLoading] = useState(true);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+
+  // Search & Sort state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("date-desc");
 
   // Get active team ID from localStorage or user
   useEffect(() => {
@@ -199,9 +205,55 @@ export default function GamePlansPage() {
     );
   };
 
+  const sortOptions: SortOption[] = [
+    { id: "date-desc", label: "Newest First" },
+    { id: "date-asc", label: "Oldest First" },
+    { id: "name-asc", label: "Name (A-Z)" },
+    { id: "name-desc", label: "Name (Z-A)" },
+  ];
+
+  // Apply search and sorting
+  const filteredAndSortedPlans = useMemo(() => {
+    let filtered = [...gamePlans];
+
+    // Apply search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (plan) =>
+          plan.name.toLowerCase().includes(query) ||
+          (plan.opponent || "").toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date-desc":
+          return (
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          );
+        case "date-asc":
+          return (
+            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+          );
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [gamePlans, searchQuery, sortBy]);
+
   // Filter active and archived plans
-  const activePlans = gamePlans.filter((plan) => !plan.isArchived);
-  const archivedPlans = gamePlans.filter((plan) => plan.isArchived);
+  const activePlans = filteredAndSortedPlans.filter((plan) => !plan.isArchived);
+  const archivedPlans = filteredAndSortedPlans.filter(
+    (plan) => plan.isArchived
+  );
 
   const scrollToList = () => {
     if (typeof window === "undefined") return;
@@ -278,11 +330,15 @@ export default function GamePlansPage() {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-text-secondary">
               <span>Active plans</span>
-              <span className="font-semibold text-text-primary">{activePlans.length}</span>
+              <span className="font-semibold text-text-primary">
+                {activePlans.length}
+              </span>
             </div>
             <div className="flex items-center justify-between text-xs text-text-secondary">
               <span>Archived</span>
-              <span className="font-semibold text-text-primary">{archivedPlans.length}</span>
+              <span className="font-semibold text-text-primary">
+                {archivedPlans.length}
+              </span>
             </div>
           </div>
         ),
@@ -349,7 +405,26 @@ export default function GamePlansPage() {
           </div>
         </div>
 
-        {activePlans.length === 0 && archivedPlans.length === 0 ? (
+        {/* Search & Sort Section */}
+        {gamePlans.length > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-4">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search game plans by name or opponent..."
+              className="flex-1 max-w-2xl"
+            />
+            <SortDropdown
+              options={sortOptions}
+              value={sortBy}
+              onChange={setSortBy}
+            />
+          </div>
+        )}
+
+        {activePlans.length === 0 &&
+        archivedPlans.length === 0 &&
+        !searchQuery ? (
           // Empty State
           <div className="text-center py-16">
             <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
@@ -391,7 +466,10 @@ export default function GamePlansPage() {
               <>
                 {/* Header with Create Button */}
                 <div className="flex justify-between items-center">
-                  <Typography variant="headline-md" className="text-text-primary">
+                  <Typography
+                    variant="headline-md"
+                    className="text-text-primary"
+                  >
                     Active Game Plans ({activePlans.length})
                   </Typography>
                   <Button onClick={handleCreatePlan} variant="primary">
@@ -403,134 +481,140 @@ export default function GamePlansPage() {
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                   {activePlans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => handleEditPlan(plan)}
+                    <div
+                      key={plan.id}
+                      className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleEditPlan(plan)}
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <Typography
+                            variant="headline-sm"
+                            className="text-text-primary mb-1"
+                          >
+                            {plan.name}
+                          </Typography>
+                          <Typography
+                            variant="body-sm"
+                            className="text-text-secondary"
+                          >
+                            vs {plan.opponent}
+                          </Typography>
+                          <Typography
+                            variant="body-sm"
+                            className="text-text-muted"
+                          >
+                            {plan.gameDate
+                              ? new Date(plan.gameDate).toLocaleDateString()
+                              : "Date TBD"}
+                          </Typography>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExportPDF(plan);
+                            }}
+                            className="p-1 text-text-muted hover:text-text-info transition-colors"
+                            title="Export PDF"
+                          >
+                            <Icon name="download" className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDuplicatePlan(plan);
+                            }}
+                            className="p-1 text-text-muted hover:text-text-secondary transition-colors"
+                            title="Duplicate plan"
+                          >
+                            <Icon name="copy" className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditPlan(plan);
+                            }}
+                            className="p-1 text-text-muted hover:text-text-secondary transition-colors"
+                            title="Edit plan"
+                          >
+                            <Icon name="edit" className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleArchivePlan(plan);
+                            }}
+                            className="p-1 text-text-muted hover:text-text-warning transition-colors"
+                            title="Archive plan"
+                          >
+                            <Icon name="archive" className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePlan(plan.id);
+                            }}
+                            className="p-1 text-text-muted hover:text-text-error transition-colors"
+                            title="Delete plan"
+                          >
+                            <Icon name="delete" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm text-text-secondary">
+                        <span>{getTotalPlays(plan)} plays</span>
+                        <span>{plan.updatedAt.toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Archived Plans Section */}
+            {archivedPlans.length > 0 && (
+              <div className="mt-12">
+                <Typography
+                  variant="headline-md"
+                  className="text-text-primary mb-4"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <Typography
-                        variant="headline-sm"
-                        className="text-text-primary mb-1"
-                      >
-                        {plan.name}
-                      </Typography>
-                      <Typography
-                        variant="body-sm"
-                        className="text-text-secondary"
-                      >
-                        vs {plan.opponent}
-                      </Typography>
+                  Archived Game Plans ({archivedPlans.length})
+                </Typography>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                  {archivedPlans.map((plan) => (
+                    <div
+                      key={plan.id}
+                      className="bg-surface-secondary rounded-lg border border-border p-6 opacity-75"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <Typography
+                            variant="headline-sm"
+                            className="text-text-primary mb-1"
+                          >
+                            {plan.name}
+                          </Typography>
+                          <button
+                            onClick={() => handleArchivePlan(plan)}
+                            className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
+                            title="Restore plan"
+                          >
+                            <Icon name="unarchive" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
                       <Typography variant="body-sm" className="text-text-muted">
-                        {plan.gameDate
-                          ? new Date(plan.gameDate).toLocaleDateString()
-                          : "Date TBD"}
+                        {getTotalPlays(plan)} plays • Archived
                       </Typography>
                     </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleExportPDF(plan);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-info transition-colors"
-                        title="Export PDF"
-                      >
-                        <Icon name="download" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDuplicatePlan(plan);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-secondary transition-colors"
-                        title="Duplicate plan"
-                      >
-                        <Icon name="copy" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditPlan(plan);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-secondary transition-colors"
-                        title="Edit plan"
-                      >
-                        <Icon name="edit" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleArchivePlan(plan);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-warning transition-colors"
-                        title="Archive plan"
-                      >
-                        <Icon name="archive" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeletePlan(plan.id);
-                        }}
-                        className="p-1 text-text-muted hover:text-text-error transition-colors"
-                        title="Delete plan"
-                      >
-                        <Icon name="delete" className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-text-secondary">
-                    <span>{getTotalPlays(plan)} plays</span>
-                    <span>{plan.updatedAt.toLocaleDateString()}</span>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Archived Plans Section */}
-        {archivedPlans.length > 0 && (
-          <div className="mt-12">
-            <Typography variant="headline-md" className="text-text-primary mb-4">
-              Archived Game Plans ({archivedPlans.length})
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {archivedPlans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="bg-surface-secondary rounded-lg border border-border p-6 opacity-75"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <Typography
-                        variant="headline-sm"
-                        className="text-text-primary mb-1"
-                      >
-                        {plan.name}
-                      </Typography>
-                      <button
-                        onClick={() => handleArchivePlan(plan)}
-                        className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
-                        title="Restore plan"
-                      >
-                        <Icon name="unarchive" className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <Typography variant="body-sm" className="text-text-muted">
-                    {getTotalPlays(plan)} plays • Archived
-                  </Typography>
-                </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
-      </div>
-    )}
 
         {/* Game Plan Modal (lazy loaded) */}
         {showModal && (

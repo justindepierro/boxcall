@@ -1,8 +1,18 @@
-import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import { Icon, type IconName } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
+import { SearchBar } from "../components/ui/SearchBar";
+import { FilterChips } from "../components/ui/FilterChips";
+import { SortDropdown, type SortOption } from "../components/ui/SortDropdown";
 const PracticeScriptModal = lazy(() =>
   import("../components/practice/PracticeScriptModal").then((module) => ({
     default: module.PracticeScriptModal,
@@ -23,10 +33,17 @@ export default function PracticePlansPage() {
   const toast = useToast();
 
   const [showModal, setShowModal] = useState(false);
-  const [editingScript, setEditingScript] = useState<PracticeScript | undefined>(undefined);
+  const [editingScript, setEditingScript] = useState<
+    PracticeScript | undefined
+  >(undefined);
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
   const [_loading, setLoading] = useState(true);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+
+  // Search & Filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("date-desc");
 
   // Get active team ID from localStorage
   useEffect(() => {
@@ -129,7 +146,11 @@ export default function PracticePlansPage() {
   };
 
   const handleDeleteScript = async (scriptId: string) => {
-    if (!confirm("Are you sure you want to delete this practice script? This cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this practice script? This cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -143,16 +164,97 @@ export default function PracticePlansPage() {
     }
   };
 
+  // Filter options
+  const filterOptions = [
+    {
+      id: "has-tags",
+      label: "Has Tags",
+      active: activeFilters.includes("has-tags"),
+    },
+    {
+      id: "no-tags",
+      label: "No Tags",
+      active: activeFilters.includes("no-tags"),
+    },
+  ];
+
+  const sortOptions: SortOption[] = [
+    { id: "date-desc", label: "Newest First" },
+    { id: "date-asc", label: "Oldest First" },
+    { id: "name-asc", label: "Name (A-Z)" },
+    { id: "name-desc", label: "Name (Z-A)" },
+  ];
+
+  const handleToggleFilter = (filterId: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(filterId)
+        ? prev.filter((id) => id !== filterId)
+        : [...prev, filterId]
+    );
+  };
+
+  // Apply search, filters, and sorting
+  const filteredAndSortedScripts = useMemo(() => {
+    let filtered = [...practiceScripts];
+
+    // Apply search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (script) =>
+          (script.title || script.name || "").toLowerCase().includes(query) ||
+          (script.description || "").toLowerCase().includes(query) ||
+          (script.tags || []).some((tag) => tag.toLowerCase().includes(query))
+      );
+    }
+
+    // Apply filters
+    if (activeFilters.includes("has-tags")) {
+      filtered = filtered.filter(
+        (script) => script.tags && script.tags.length > 0
+      );
+    }
+    if (activeFilters.includes("no-tags")) {
+      filtered = filtered.filter(
+        (script) => !script.tags || script.tags.length === 0
+      );
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date-desc":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case "date-asc":
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        case "name-asc":
+          return (a.title || a.name || "").localeCompare(
+            b.title || b.name || ""
+          );
+        case "name-desc":
+          return (b.title || b.name || "").localeCompare(
+            a.title || a.name || ""
+          );
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [practiceScripts, searchQuery, activeFilters, sortBy]);
+
+  const activeScripts = filteredAndSortedScripts.filter((s) => !s.isArchived);
+  const archivedScripts = filteredAndSortedScripts.filter((s) => s.isArchived);
 
   const scrollToList = () => {
     if (typeof window === "undefined") return;
     const section = document.getElementById("practice-scripts-section");
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
-  // Filter active (non-archived) scripts
-  const activeScripts = practiceScripts.filter((s) => !s.isArchived);
-  const archivedScripts = practiceScripts.filter((s) => s.isArchived);
 
   const tileConfigs = useMemo(
     () => [
@@ -242,7 +344,6 @@ export default function PracticePlansPage() {
     [activeScripts, archivedScripts, handleCreateScript, toast]
   );
 
-
   return (
     <Aurora variant="field" fullHeight>
       <PageLayout
@@ -259,11 +360,7 @@ export default function PracticePlansPage() {
               <Icon name="arrow-left" className="h-4 w-4 mr-2" />
               Back to Playbook
             </Button>
-            <Button
-              onClick={handleCreateScript}
-              variant="primary"
-              size="sm"
-            >
+            <Button onClick={handleCreateScript} variant="primary" size="sm">
               <Icon name="plus" className="h-4 w-4 mr-2" />
               New Script
             </Button>
@@ -305,7 +402,33 @@ export default function PracticePlansPage() {
           </div>
         </div>
 
-        {activeScripts.length === 0 ? (
+        {/* Search & Filter Section */}
+        {practiceScripts.length > 0 && (
+          <div className="mb-6 space-y-4">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search scripts by name, description, or tags..."
+              className="max-w-2xl"
+            />
+            <div className="flex flex-wrap items-center gap-4">
+              <FilterChips
+                chips={filterOptions}
+                onToggle={handleToggleFilter}
+              />
+              <SortDropdown
+                options={sortOptions}
+                value={sortBy}
+                onChange={setSortBy}
+              />
+            </div>
+          </div>
+        )}
+
+        {activeScripts.length === 0 &&
+        archivedScripts.length === 0 &&
+        !searchQuery &&
+        activeFilters.length === 0 ? (
           // Empty State
           <div className="text-center py-16">
             <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
@@ -325,11 +448,7 @@ export default function PracticePlansPage() {
               team's training sessions.
             </Typography>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                onClick={handleCreateScript}
-                variant="primary"
-                size="lg"
-              >
+              <Button onClick={handleCreateScript} variant="primary" size="lg">
                 <Icon name="plus" className="h-5 w-5 mr-2" />
                 Create New Script
               </Button>
@@ -351,10 +470,7 @@ export default function PracticePlansPage() {
               <Typography variant="headline-md" className="text-text-primary">
                 Your Practice Scripts ({activeScripts.length})
               </Typography>
-              <Button
-                onClick={handleCreateScript}
-                variant="primary"
-              >
+              <Button onClick={handleCreateScript} variant="primary">
                 <Icon name="plus" className="h-4 w-4 mr-2" />
                 New Script
               </Button>
