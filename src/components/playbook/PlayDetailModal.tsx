@@ -1,5 +1,6 @@
 import { memo, useState, useCallback } from "react";
 import { Icon } from "../ui/Icon/Icon";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 import type { Play } from "../../types/play";
 
 interface PlayDetailModalProps {
@@ -23,6 +24,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
     const [activeTab, setActiveTab] = useState<
       "overview" | "details" | "analytics"
     >("overview");
+    const isMobile = useIsMobile();
 
     // Close on escape key
     const handleKeyDown = useCallback(
@@ -43,20 +45,26 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
-        onClick={onClose}
+        onClick={isMobile ? undefined : onClose}
         onKeyDown={handleKeyDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby="play-detail-title"
       >
-        {/* Modal Container - No padding gap */}
+        {/* Modal Container - Full screen on mobile, centered on desktop */}
         <div
-          className="relative w-full max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open flex flex-col"
+          className={`relative w-full flex flex-col ${
+            isMobile
+              ? "h-full bg-surface-primary dark:bg-slate-900"
+              : "max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open"
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Gradient Header with pattern and shine */}
+          {/* Gradient Header with pattern and shine - Shorter on mobile */}
           <div
-            className={`relative h-32 bg-gradient-to-br ${playTypeGradient} rounded-t-[30px] overflow-hidden flex-shrink-0`}
+            className={`relative bg-gradient-to-br ${playTypeGradient} ${
+              isMobile ? "h-24" : "h-32 rounded-t-[30px]"
+            } overflow-hidden flex-shrink-0`}
             style={{
               backgroundImage:
                 "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
@@ -75,15 +83,15 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               <Icon name="close" className="w-5 h-5 text-white" />
             </button>
 
-            {/* Play Title - More compact */}
-            <div className="absolute bottom-4 left-6 right-6">
-              <div className="flex items-center gap-2 mb-1.5">
+            {/* Play Title - More compact, smaller on mobile */}
+            <div className={`absolute ${isMobile ? "bottom-2 left-4 right-4" : "bottom-4 left-6 right-6"}`}>
+              <div className="flex items-center gap-2 mb-1">
                 <span
                   className={`inline-flex items-center px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
                 >
                   {play.p_type}
                 </span>
-                {play.f_type && (
+                {play.f_type && !isMobile && (
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-semibold">
                     {play.f_type}
                   </span>
@@ -91,11 +99,13 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               </div>
               <h2
                 id="play-detail-title"
-                className="text-3xl font-bold text-white mb-1.5 drop-shadow-lg"
+                className={`font-bold text-white drop-shadow-lg ${
+                  isMobile ? "text-xl mb-1" : "text-3xl mb-1.5"
+                }`}
               >
                 {play.formation} {play.play_name}
               </h2>
-              {play.one_word_play && (
+              {play.one_word_play && !isMobile && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/25 backdrop-blur-md text-white text-sm font-bold border border-white/30">
                   <Icon name="zap" className="w-3.5 h-3.5 mr-1.5" />
                   {play.one_word_play.toUpperCase()}
@@ -104,15 +114,19 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
           </div>
 
-          {/* Action Bar - More compact */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border dark:border-slate-700/50 bg-surface-secondary/50 dark:bg-slate-800/30 flex-shrink-0">
-            {/* Tabs */}
+          {/* Action Bar - Sticky on mobile, more compact */}
+          <div className={`flex items-center justify-between border-b border dark:border-slate-700/50 bg-surface-secondary/50 dark:bg-slate-800/30 flex-shrink-0 ${
+            isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
+          }`}>
+            {/* Tabs - Smaller on mobile */}
             <div className="flex gap-2">
               {(["overview", "details", "analytics"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  className={`rounded-lg font-semibold transition-all ${
+                    isMobile ? "px-3 py-2 text-xs" : "px-4 py-2 text-sm"
+                  } ${
                     activeTab === tab
                       ? "bg-electric-100 dark:bg-electric-900/30 text-electric-700 dark:text-electric-400"
                       : "text-secondary dark:text-muted hover:bg-surface-muted dark:hover:bg-slate-800"
@@ -123,21 +137,25 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               ))}
             </div>
 
-            {/* Action Buttons - More compact */}
+            {/* Action Buttons - Larger touch targets on mobile */}
             <div className="flex items-center gap-2">
               {onEdit && (
                 <button
                   onClick={onEdit}
-                  className="px-4 py-2 rounded-lg bg-electric-500 hover:bg-electric-600 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                  className={`rounded-lg bg-electric-500 hover:bg-electric-600 text-white font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2 ${
+                    isMobile ? "px-3 py-2 text-sm h-11" : "px-4 py-2 text-sm"
+                  }`}
                 >
                   <Icon name="edit" className="w-4 h-4" />
-                  Edit
+                  {!isMobile && "Edit"}
                 </button>
               )}
               {onDuplicate && (
                 <button
                   onClick={onDuplicate}
-                  className="w-9 h-9 rounded-lg bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-105"
+                  className={`rounded-lg bg-jade-100 dark:bg-jade-900/30 hover:bg-jade-200 dark:hover:bg-jade-800/40 flex items-center justify-center transition-all hover:scale-105 ${
+                    isMobile ? "w-11 h-11" : "w-9 h-9"
+                  }`}
                   aria-label="Duplicate play"
                 >
                   <Icon
@@ -149,7 +167,9 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
               {onDelete && (
                 <button
                   onClick={onDelete}
-                  className="w-9 h-9 rounded-lg bg-error-bg dark:bg-error-900/30 hover:bg-error-200 dark:hover:bg-error-800/40 flex items-center justify-center transition-all hover:scale-105"
+                  className={`rounded-lg bg-error-bg dark:bg-error-900/30 hover:bg-error-200 dark:hover:bg-error-800/40 flex items-center justify-center transition-all hover:scale-105 ${
+                    isMobile ? "w-11 h-11" : "w-9 h-9"
+                  }`}
                   aria-label="Delete play"
                 >
                   <Icon
@@ -161,9 +181,11 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             </div>
           </div>
 
-          {/* Content Area - More compact with more space and bottom rounding */}
-          <div className="overflow-y-auto flex-1 rounded-b-[30px]">
-            <div className="p-6">
+          {/* Content Area - Full screen scrolling on mobile, rounded on desktop */}
+          <div className={`overflow-y-auto flex-1 ${
+            isMobile ? "pb-safe" : "rounded-b-[30px]"
+          }`}>
+            <div className={isMobile ? "p-4" : "p-6"}>
               {activeTab === "overview" && (
                 <div className="space-y-6">
                   {/* Diagram Preview */}
@@ -177,8 +199,10 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                     </div>
                   )}
 
-                  {/* Quick Stats Grid - More compact */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {/* Quick Stats Grid - Single column on mobile for larger touch targets */}
+                  <div className={`grid gap-4 ${
+                    isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
+                  }`}>
                     <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
                       <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
                         Type
