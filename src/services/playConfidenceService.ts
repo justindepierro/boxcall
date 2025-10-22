@@ -13,7 +13,7 @@
  * - Practice execution quality (10%)
  */
 
-import { supabase } from "../config/supabase";
+import { supabase } from "../lib/supabase";
 import type { GameSituation, ExecutionResult } from "../types/session";
 
 // ==============================================
