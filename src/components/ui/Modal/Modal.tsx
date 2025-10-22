@@ -60,7 +60,7 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   }
 };
 const getBackdropStyles = () => {
-  return "bg-brand-navy/95 dark:bg-brand-navy-dark/98"; // More opaque navy-tinted backdrop
+  return "bg-black/80 dark:bg-black/85"; // Much more opaque backdrop for better contrast
 };
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -164,7 +164,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           ref={modalRef}
           className={`
-            ${size === "fullscreen" ? "w-full h-full rounded-glass border-2 border-border shadow-glass overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
+            ${size === "fullscreen" ? "w-full h-full bg-surface-primary rounded-lg border-2 border-border shadow-xl overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
             ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
             transform transition-all duration-300 scale-100 opacity-100
             ${className}
