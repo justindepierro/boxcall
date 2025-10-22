@@ -3,6 +3,8 @@ import { Icon } from "../ui/Icon/Icon";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 import { QuickFilterPresets } from "./QuickFilterPresets";
 import type { FilterPreset } from "./filterPresets";
+import { BottomSheet } from "../BottomSheet";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 
 interface ActiveFilter {
   id: string;
@@ -117,6 +119,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   onFiltersChange,
   activeFilters,
 }) => {
+  const isMobile = useIsMobile();
   const [showAddFilter, setShowAddFilter] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activePresetId, setActivePresetId] = useState<string>("all");
@@ -185,6 +188,264 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
 
+  // Mobile: Bottom Sheet with full-screen experience
+  if (isMobile) {
+    return (
+      <div>
+        {/* Filter Trigger Button */}
+        <button
+          onClick={() => setShowAdvanced(true)}
+          className="w-full px-4 py-3 bg-surface-primary rounded-lg shadow-sm border border-border-subtle flex items-center justify-between active:scale-98 transition-transform"
+        >
+          <div className="flex items-center gap-2">
+            <Icon name="filter" className="h-5 w-5 text-accent" />
+            <span className="text-sm font-medium text-text-primary">
+              Filters
+            </span>
+            {activeFilters.length > 0 && (
+              <span className="px-2 py-0.5 text-xs bg-accent text-text-inverse rounded-full">
+                {activeFilters.length}
+              </span>
+            )}
+          </div>
+          <Icon name="chevron-right" className="h-5 w-5 text-text-muted" />
+        </button>
+
+        {/* Active Filters Chips */}
+        {activeFilters.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {activeFilters.map((filter) => (
+              <div
+                key={filter.id}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-text-secondary text-xs rounded-full border border-border-subtle"
+              >
+                <span className="truncate max-w-36">{filter.label}</span>
+                <button
+                  onClick={() => removeFilter(filter.id)}
+                  className="text-text-muted hover:text-text-secondary rounded-full p-0.5 active:scale-90 transition-transform"
+                >
+                  <Icon name="close" className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom Sheet */}
+        {showAdvanced && (
+          <BottomSheet
+            snapPoints={[0.9]}
+            initialSnapPoint={0}
+            showHandle={true}
+            backdropOpacity={0.5}
+            zIndex={50}
+          >
+            <div className="flex flex-col h-full bg-surface-primary">
+              {/* Header */}
+              <div className="sticky top-0 z-10 px-4 py-4 bg-surface-primary border-b border-border-subtle">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Icon name="filter" className="h-5 w-5 text-accent" />
+                    <h3 className="text-lg font-semibold text-text-primary">
+                      Advanced Filters
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowAdvanced(false)}
+                    className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-secondary active:scale-95 transition-all"
+                  >
+                    <Icon name="close" className="h-5 w-5 text-text-muted" />
+                  </button>
+                </div>
+
+                {/* Quick Filter Presets */}
+                <QuickFilterPresets
+                  activePresetId={activePresetId}
+                  onPresetSelect={handlePresetSelect}
+                />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+                {/* Active Filters */}
+                {activeFilters.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-medium text-text-secondary">
+                        Active Filters ({activeFilters.length})
+                      </h4>
+                      <button
+                        onClick={clearAllFilters}
+                        className="px-3 py-1.5 text-xs text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded-lg active:scale-95 transition-all"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {activeFilters.map((filter) => (
+                        <div
+                          key={filter.id}
+                          className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg border border-border-subtle"
+                        >
+                          <span className="text-sm text-text-primary flex-1 truncate">
+                            {filter.label}
+                          </span>
+                          <button
+                            onClick={() => removeFilter(filter.id)}
+                            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-error-hover active:scale-95 transition-all ml-2"
+                          >
+                            <Icon
+                              name="close"
+                              className="h-4 w-4 text-text-error"
+                            />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Add Custom Filter */}
+                <div>
+                  <h4 className="text-sm font-medium text-text-secondary mb-3">
+                    Add Custom Filter
+                  </h4>
+
+                  {!showAddFilter ? (
+                    <button
+                      onClick={() => setShowAddFilter(true)}
+                      className="w-full px-4 py-3 text-sm text-text-secondary border border-dashed border-border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
+                    >
+                      <Icon name="plus" className="h-5 w-5 inline mr-2" />
+                      Add Custom Filter
+                    </button>
+                  ) : (
+                    <div className="p-4 bg-surface-secondary rounded-lg border border-border-subtle space-y-3">
+                      {/* Field Select */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-primary mb-2">
+                          Field
+                        </label>
+                        <select
+                          value={newFilter.field}
+                          onChange={(e) =>
+                            setNewFilter((prev) => ({
+                              ...prev,
+                              field: e.target.value,
+                              operator: "equals",
+                              value: "",
+                            }))
+                          }
+                          className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                        >
+                          <option value="">Select field...</option>
+                          {FILTER_FIELDS.map((field) => (
+                            <option key={field.value} value={field.value}>
+                              {field.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Value Input */}
+                      {newFilter.field && (
+                        <div>
+                          <label className="block text-sm font-medium text-text-primary mb-2">
+                            Value
+                          </label>
+                          {selectedField?.type === "select" ? (
+                            <select
+                              value={newFilter.value}
+                              onChange={(e) =>
+                                setNewFilter((prev) => ({
+                                  ...prev,
+                                  value: e.target.value,
+                                }))
+                              }
+                              className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                            >
+                              <option value="">Select value...</option>
+                              {selectedField.options?.map(
+                                (option: FilterOption, index: number) => (
+                                  <option
+                                    key={`${option.value}-${index}`}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                )
+                              )}
+                            </select>
+                          ) : (
+                            <input
+                              type={
+                                selectedField?.type === "number"
+                                  ? "number"
+                                  : "text"
+                              }
+                              value={newFilter.value}
+                              onChange={(e) =>
+                                setNewFilter((prev) => ({
+                                  ...prev,
+                                  value: e.target.value,
+                                }))
+                              }
+                              placeholder="Enter value..."
+                              className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                            />
+                          )}
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      {newFilter.field && (
+                        <div className="flex gap-2 pt-2">
+                          <button
+                            onClick={addFilter}
+                            disabled={!newFilter.field || !newFilter.value}
+                            className="flex-1 h-12 bg-accent text-text-inverse text-sm font-medium rounded-lg hover:bg-accent-hover disabled:bg-surface-disabled disabled:cursor-not-allowed disabled:text-text-disabled active:scale-98 transition-all"
+                          >
+                            Add Filter
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowAddFilter(false);
+                              setNewFilter({
+                                field: "",
+                                operator: "equals",
+                                value: "",
+                              });
+                            }}
+                            className="px-4 h-12 text-text-muted hover:text-text-secondary text-sm border border-border-subtle rounded-lg hover:bg-surface-muted active:scale-98 transition-all"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer with Apply Button */}
+              <div className="sticky bottom-0 z-10 p-4 bg-surface-primary border-t border-border-subtle pb-safe">
+                <button
+                  onClick={() => setShowAdvanced(false)}
+                  className="w-full h-12 bg-accent text-text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"
+                >
+                  Apply Filters
+                  {activeFilters.length > 0 &&
+                    ` (${activeFilters.length})`}
+                </button>
+              </div>
+            </div>
+          </BottomSheet>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop: Sidebar panel
   return (
     <div className="bg-surface-primary rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.1)] overflow-visible">
       {/* Quick Filter Presets */}
