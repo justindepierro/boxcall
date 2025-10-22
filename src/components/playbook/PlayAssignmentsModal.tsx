@@ -29,6 +29,8 @@ import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../app/auth-store";
 import type { Play } from "../../types/play";
 import type { PersonnelConfiguration } from "../../types/personnel";
+import { useIsMobile } from "@hooks/useBreakpoint";
+import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
 
 interface PlayAssignmentsModalProps {
   play: Play;
@@ -67,6 +69,8 @@ export function PlayAssignmentsModal({
   personnelConfigurations = [],
 }: PlayAssignmentsModalProps) {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
+  
   const [assignments, setAssignments] = useState<Map<string, AssignmentData>>(
     new Map()
   );
@@ -200,6 +204,9 @@ export function PlayAssignmentsModal({
     (result: DropResult) => {
       if (!result.destination) return;
 
+      // Haptic feedback on successful reorder
+      triggerHapticFeedback("medium");
+
       const items = Array.from(positions);
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
@@ -270,6 +277,9 @@ export function PlayAssignmentsModal({
   async function handleSave() {
     if (!canEdit || !user) return;
 
+    // Haptic feedback on save
+    triggerHapticFeedback("medium");
+
     setSaving(true);
 
     try {
@@ -324,7 +334,7 @@ export function PlayAssignmentsModal({
       isOpen={isOpen}
       onClose={onClose}
       title={`${play.play_name} - Assignments`}
-      size="xl"
+      size={isMobile ? "fullscreen" : "xl"}
       className={justSaved ? "save-success-flash" : ""}
     >
       <div className="flex flex-col gap-4">
@@ -338,19 +348,20 @@ export function PlayAssignmentsModal({
           <div className="flex items-center gap-2">
             {isCoach ? (
               <button
-                onClick={() =>
-                  setViewMode(viewMode === "coach" ? "player" : "coach")
-                }
-                className="group"
+                onClick={() => {
+                  if (isMobile) triggerHapticFeedback("light");
+                  setViewMode(viewMode === "coach" ? "player" : "coach");
+                }}
+                className={`group ${isMobile ? "min-h-[44px]" : ""}`}
                 title={`Switch to ${viewMode === "coach" ? "Player" : "Coach"} View`}
               >
                 <Badge
                   variant={viewMode === "coach" ? "accent" : "neutral"}
-                  className="cursor-pointer transition-all hover:ring-2 hover:ring-accent-400"
+                  className={`cursor-pointer transition-all hover:ring-2 hover:ring-accent-400 ${isMobile ? "px-3 py-2" : ""}`}
                 >
                   <Icon
                     name={viewMode === "coach" ? "eye" : "eye-off"}
-                    className="h-3 w-3 mr-1 inline-block"
+                    className={`${isMobile ? "h-4 w-4" : "h-3 w-3"} mr-1 inline-block`}
                   />
                   {viewMode === "coach" ? "Coach View" : "Player Preview"}
                 </Badge>
@@ -467,8 +478,11 @@ export function PlayAssignmentsModal({
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
-                      size="xs"
-                      onClick={() => setIsEditingPositions(!isEditingPositions)}
+                      size={isMobile ? "sm" : "xs"}
+                      onClick={() => {
+                        if (isMobile) triggerHapticFeedback("light");
+                        setIsEditingPositions(!isEditingPositions);
+                      }}
                       title={
                         isEditingPositions
                           ? "Done editing"
@@ -477,15 +491,18 @@ export function PlayAssignmentsModal({
                     >
                       <Icon
                         name={isEditingPositions ? "check" : "edit"}
-                        className="h-3 w-3 mr-1"
+                        className={`${isMobile ? "h-4 w-4" : "h-3 w-3"} mr-1`}
                       />
                       {isEditingPositions ? "Done" : "Edit"}
                     </Button>
                     {customPositions.length > 0 && (
                       <Button
                         variant="ghost"
-                        size="xs"
-                        onClick={resetToDefaults}
+                        size={isMobile ? "sm" : "xs"}
+                        onClick={() => {
+                          if (isMobile) triggerHapticFeedback("light");
+                          resetToDefaults();
+                        }}
                         title="Reset to default positions"
                       >
                         <Icon name="refresh-cw" className="h-3 w-3 mr-1" />
@@ -664,12 +681,20 @@ export function PlayAssignmentsModal({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onClose}>
+            <Button 
+              variant="outline" 
+              size={isMobile ? "md" : "sm"}
+              onClick={() => {
+                if (isMobile) triggerHapticFeedback("light");
+                onClose();
+              }}
+            >
               {hasChanges ? "Cancel" : "Close"}
             </Button>
             {canEdit && (
               <Button
                 variant="primary"
+                size={isMobile ? "md" : "sm"}
                 onClick={handleSave}
                 disabled={!hasChanges || saving}
               >
