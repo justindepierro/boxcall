@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { useIsMobile } from "../../hooks/useBreakpoint";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 /**
  * PlayGridEmptyState Component
@@ -45,6 +47,29 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
     searchQuery,
     onSuggestedSearch,
   }) => {
+    const isMobile = useIsMobile();
+
+    // Add haptic feedback for mobile interactions
+    const handleCreatePlay = () => {
+      if (isMobile) triggerHapticFeedback("medium");
+      onCreatePlay?.();
+    };
+
+    const handleImportPlays = () => {
+      if (isMobile) triggerHapticFeedback("medium");
+      onImportPlays?.();
+    };
+
+    const handleClearFilters = () => {
+      if (isMobile) triggerHapticFeedback("light");
+      onClearFilters?.();
+    };
+
+    const handleSuggestedSearch = (query: string) => {
+      if (isMobile) triggerHapticFeedback("light");
+      onSuggestedSearch?.(query);
+    };
+
     // Suggested searches for quick hints
     const searchSuggestions = [
       { label: 'Try "screen"', query: "screen" },
@@ -84,7 +109,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               </div>
               {onClearFilters && (
                 <Button
-                  onClick={onClearFilters}
+                  onClick={handleClearFilters}
                   variant="primary"
                   size="lg"
                   className="w-full mt-3"
@@ -151,7 +176,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                   {searchSuggestions.map(({ label, query }) => (
                     <button
                       key={query}
-                      onClick={() => onSuggestedSearch(query)}
+                      onClick={() => handleSuggestedSearch(query)}
                       className="px-3 py-1 text-sm bg-surface-secondary hover:bg-surface-muted rounded-lg border border-subtle transition-colors"
                     >
                       {label}
@@ -163,13 +188,13 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
 
             <div className="flex flex-col sm:flex-row gap-3">
               {onClearFilters && (
-                <Button onClick={onClearFilters} variant="primary" size="lg">
+                <Button onClick={handleClearFilters} variant="primary" size="lg">
                   <Icon name="close" className="w-5 h-5 mr-2" />
                   Clear All Filters
                 </Button>
               )}
               {onCreatePlay && (
-                <Button onClick={onCreatePlay} variant="secondary" size="lg">
+                <Button onClick={handleCreatePlay} variant="secondary" size="lg">
                   <Icon name="plus" className="w-5 h-5 mr-2" />
                   Create New Play
                 </Button>
@@ -248,13 +273,13 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 mb-8">
           {onCreatePlay && (
-            <Button onClick={onCreatePlay} variant="primary" size="lg">
+            <Button onClick={handleCreatePlay} variant="primary" size="lg">
               <Icon name="plus" className="w-5 h-5 mr-2" />
               Create First Play
             </Button>
           )}
           {onImportPlays && (
-            <Button onClick={onImportPlays} variant="secondary" size="lg">
+            <Button onClick={handleImportPlays} variant="secondary" size="lg">
               <Icon name="upload" className="w-5 h-5 mr-2" />
               Import Plays
             </Button>
@@ -273,7 +298,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onCreatePlay}
+              onClick={handleCreatePlay}
               className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
@@ -297,7 +322,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onCreatePlay}
+              onClick={handleCreatePlay}
               className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
@@ -321,7 +346,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onCreatePlay}
+              onClick={handleCreatePlay}
               className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
@@ -347,13 +372,13 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 max-w-md w-full mt-6">
           {onCreatePlay && (
-            <Button onClick={onCreatePlay} variant="primary" size="lg">
+            <Button onClick={handleCreatePlay} variant="primary" size="lg">
               <Icon name="plus" className="w-5 h-5 mr-2" />
               Create First Play
             </Button>
           )}
           {onImportPlays && (
-            <Button onClick={onImportPlays} variant="secondary" size="lg">
+            <Button onClick={handleImportPlays} variant="secondary" size="lg">
               <Icon name="upload" className="w-5 h-5 mr-2" />
               Import Plays
             </Button>
