@@ -24,6 +24,10 @@ import { Aurora } from "../components/ui/Aurora";
 import { PracticeService } from "../services/practiceService";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
+import {
+  exportPracticeScripts,
+  downloadJSON,
+} from "../utils/practiceScriptExport";
 
 import type { PracticeScript } from "../services/practiceService";
 
@@ -161,6 +165,25 @@ export default function PracticePlansPage() {
     } catch (error) {
       console.error("Failed to delete script:", error);
       toast.error("Failed to delete script");
+    }
+  };
+
+  const handleExportScripts = () => {
+    if (practiceScripts.length === 0) {
+      toast.error("No practice scripts to export");
+      return;
+    }
+
+    try {
+      const exportData = exportPracticeScripts(practiceScripts);
+      const filename = `practice-scripts-${new Date().toISOString().split("T")[0]}.json`;
+      downloadJSON(exportData, filename);
+      toast.success(
+        `Exported ${practiceScripts.length} practice script${practiceScripts.length !== 1 ? "s" : ""}`
+      );
+    } catch (error) {
+      console.error("Failed to export practice scripts:", error);
+      toast.error("Failed to export practice scripts");
     }
   };
 
@@ -405,12 +428,22 @@ export default function PracticePlansPage() {
         {/* Search & Filter Section */}
         {practiceScripts.length > 0 && (
           <div className="mb-6 space-y-4">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search scripts by name, description, or tags..."
-              className="max-w-2xl"
-            />
+            <div className="flex items-center justify-between gap-4">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search scripts by name, description, or tags..."
+                className="flex-1 max-w-2xl"
+              />
+              <Button
+                onClick={handleExportScripts}
+                variant="secondary"
+                size="sm"
+              >
+                <Icon name="download" className="h-4 w-4 mr-2" />
+                Export JSON
+              </Button>
+            </div>
             <div className="flex flex-wrap items-center gap-4">
               <FilterChips
                 chips={filterOptions}

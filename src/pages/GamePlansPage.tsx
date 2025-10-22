@@ -25,6 +25,7 @@ import { GamePlanService } from "../services/gamePlanService_new";
 import type { GamePlan } from "../components/playbook/GamePlanModal/types";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
+import { exportGamePlans, downloadJSON } from "../utils/gamePlanExport";
 
 export default function GamePlansPage() {
   const navigate = useNavigate();
@@ -195,6 +196,25 @@ export default function GamePlansPage() {
     } catch (error) {
       console.error("Failed to delete game plan:", error);
       toast.error("Failed to delete game plan");
+    }
+  };
+
+  const handleExportJSON = () => {
+    if (gamePlans.length === 0) {
+      toast.error("No game plans to export");
+      return;
+    }
+
+    try {
+      const exportData = exportGamePlans(gamePlans);
+      const filename = `game-plans-${new Date().toISOString().split("T")[0]}.json`;
+      downloadJSON(exportData, filename);
+      toast.success(
+        `Exported ${gamePlans.length} game plan${gamePlans.length !== 1 ? "s" : ""}`
+      );
+    } catch (error) {
+      console.error("Failed to export game plans:", error);
+      toast.error("Failed to export game plans");
     }
   };
 
@@ -414,11 +434,17 @@ export default function GamePlansPage() {
               placeholder="Search game plans by name or opponent..."
               className="flex-1 max-w-2xl"
             />
-            <SortDropdown
-              options={sortOptions}
-              value={sortBy}
-              onChange={setSortBy}
-            />
+            <div className="flex items-center gap-3">
+              <SortDropdown
+                options={sortOptions}
+                value={sortBy}
+                onChange={setSortBy}
+              />
+              <Button onClick={handleExportJSON} variant="secondary" size="sm">
+                <Icon name="download" className="h-4 w-4 mr-2" />
+                Export JSON
+              </Button>
+            </div>
           </div>
         )}
 
