@@ -16,6 +16,8 @@ import { Typography } from "../../design-system/Typography";
 import { Link2, Pencil, Settings } from "lucide-react";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 import { FormationBuilderPanel } from "../../formations/FormationBuilderPanel";
+import { useIsMobile } from "@hooks/useBreakpoint";
+import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;
@@ -36,6 +38,7 @@ export function FormationBuilderModal({
 }: FormationBuilderModalProps) {
   const [activeTab, setActiveTab] = useState<TabType>("edit");
   const [linkTabKey, setLinkTabKey] = useState(0);
+  const isMobile = useIsMobile();
 
   // If we're editing a specific formation, default to edit tab
   React.useEffect(() => {
@@ -60,16 +63,22 @@ export function FormationBuilderModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Formation Manager"
-      size="xl"
+      size={isMobile ? "fullscreen" : "xl"}
     >
       <div className="flex flex-col h-full">
-        {/* Tab Navigation */}
+        {/* Tab Navigation - Mobile optimized */}
         <div className="flex border-b border-border-primary bg-surface-secondary">
           <button
-            onClick={() => setActiveTab("edit")}
+            onClick={() => {
+              triggerHapticFeedback("light");
+              setActiveTab("edit");
+            }}
             className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+              flex-1 ${isMobile ? "py-spacing-lg" : "py-spacing-md"} px-spacing-md
+              flex flex-col ${isMobile ? "gap-spacing-xs" : "flex-row gap-spacing-xs"}
+              items-center justify-center
               font-medium transition-colors
+              ${isMobile ? "min-h-[60px]" : ""}
               ${
                 activeTab === "edit"
                   ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
@@ -77,18 +86,24 @@ export function FormationBuilderModal({
               }
             `}
           >
-            <Settings className="w-5 h-5" />
-            <span className="font-medium">Edit Details</span>
+            <Settings className={isMobile ? "w-6 h-6" : "w-5 h-5"} />
+            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>
+              {isMobile ? "Edit" : "Edit Details"}
+            </span>
           </button>
 
           <button
             onClick={() => {
+              triggerHapticFeedback("light");
               setActiveTab("link");
               setLinkTabKey((prev) => prev + 1); // Refresh link tab data
             }}
             className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+              flex-1 ${isMobile ? "py-spacing-lg" : "py-spacing-md"} px-spacing-md
+              flex flex-col ${isMobile ? "gap-spacing-xs" : "flex-row gap-spacing-xs"}
+              items-center justify-center
               font-medium transition-colors
+              ${isMobile ? "min-h-[60px]" : ""}
               ${
                 activeTab === "link"
                   ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
@@ -96,15 +111,21 @@ export function FormationBuilderModal({
               }
             `}
           >
-            <Link2 className="w-5 h-5" />
-            <span className="font-medium">Link Formations</span>
+            <Link2 className={isMobile ? "w-6 h-6" : "w-5 h-5"} />
+            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>Link</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("draw")}
+            onClick={() => {
+              triggerHapticFeedback("light");
+              setActiveTab("draw");
+            }}
             className={`
-              flex-1 px-spacing-lg py-spacing-md flex items-center justify-center gap-spacing-xs
+              flex-1 ${isMobile ? "py-spacing-lg" : "py-spacing-md"} px-spacing-md
+              flex flex-col ${isMobile ? "gap-spacing-xs" : "flex-row gap-spacing-xs"}
+              items-center justify-center
               font-medium transition-colors relative
+              ${isMobile ? "min-h-[60px]" : ""}
               ${
                 activeTab === "draw"
                   ? "bg-surface-primary text-text-primary border-b-2 border-primary-500"
@@ -112,9 +133,9 @@ export function FormationBuilderModal({
               }
             `}
           >
-            <Pencil className="w-5 h-5" />
-            <span className="font-medium">Draw Formation</span>
-            <span className="ml-spacing-xs px-spacing-xs py-0.5 bg-warning-100 text-warning-700 text-xs rounded">
+            <Pencil className={isMobile ? "w-6 h-6" : "w-5 h-5"} />
+            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>Draw</span>
+            <span className="absolute top-1 right-1 px-spacing-xs py-0.5 bg-warning-100 text-warning-700 text-xs rounded">
               Soon
             </span>
           </button>

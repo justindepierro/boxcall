@@ -19,6 +19,8 @@ import { PlaySelectorModal } from "./PlaySelectorModal";
 import { PracticeScriptPlayItem } from "./PracticeScriptPlayItem";
 import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
+import { useIsMobile } from "@hooks/useBreakpoint";
+import { triggerHapticFeedback } from "@utils/accessibility/hapticFeedback";
 
 interface PracticeScriptBuilderProps {
   script?: PracticeScript;
@@ -49,6 +51,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
   const [showPlaySelector, setShowPlaySelector] = useState(false);
   const [isLoadingPlays, setIsLoadingPlays] = useState(false);
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   // Initialize script if creating new or load selected plays
   useEffect(() => {
@@ -407,6 +410,9 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
       if (source.index === destination.index) return;
 
+      // Haptic feedback on successful reorder
+      triggerHapticFeedback("medium");
+
       const reorderedPlays = Array.from(currentScript.plays || []);
       const [removed] = reorderedPlays.splice(source.index, 1);
       reorderedPlays.splice(destination.index, 0, removed);
@@ -545,7 +551,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onCancel || (() => {})}
-      size="xl"
+      size={isMobile ? "fullscreen" : "xl"}
       type="default"
       headerContent={
         <div className="flex items-center justify-between w-full">
@@ -564,8 +570,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             )}
             <Button
               variant="ghost"
-              size="sm"
-              onClick={onCancel}
+              size={isMobile ? "md" : "sm"}
+              onClick={() => {
+                if (isMobile) triggerHapticFeedback("light");
+                onCancel?.();
+              }}
               disabled={isSaving}
             >
               Cancel
@@ -574,8 +583,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             {(isEditing || currentScript) && (
               <Button
                 variant="primary"
-                size="sm"
-                onClick={handleSave}
+                size={isMobile ? "md" : "sm"}
+                onClick={() => {
+                  if (isMobile) triggerHapticFeedback("medium");
+                  handleSave();
+                }}
                 disabled={isSaving || !scriptName.trim()}
               >
                 {isSaving ? "Saving..." : "Save Script"}
@@ -653,8 +665,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             </Typography>
             <Button
               variant="primary"
-              size="sm"
-              onClick={() => setShowPlaySelector(true)}
+              size={isMobile ? "md" : "sm"}
+              onClick={() => {
+                if (isMobile) triggerHapticFeedback("light");
+                setShowPlaySelector(true);
+              }}
             >
               <Icon name="plus" className="h-4 w-4 mr-2" />
               Add Play
@@ -686,7 +701,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
               </Typography>
               <Button
                 variant="primary"
-                onClick={() => setShowPlaySelector(true)}
+                size={isMobile ? "lg" : "md"}
+                onClick={() => {
+                  if (isMobile) triggerHapticFeedback("light");
+                  setShowPlaySelector(true);
+                }}
               >
                 <Icon name="plus" className="h-4 w-4 mr-2" />
                 Add Your First Play
