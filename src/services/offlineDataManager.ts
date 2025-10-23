@@ -4,7 +4,8 @@
  *
  * Provides intelligent caching, offline storage, and sync capabilities
  */
-import { Workbox } from "workbox-window";
+// DISABLED: Service worker temporarily disabled
+// import { Workbox } from "workbox-window";
 
 interface OfflineData {
   id: string;
@@ -301,45 +302,50 @@ class OfflineDataManager {
 
 // Service Worker Registration and Management
 class ServiceWorkerManager {
-  private wb: Workbox | null = null;
-  private updateAvailable = false;
+  // DISABLED: Service worker temporarily disabled
+  // private wb: Workbox | null = null;
+  // private updateAvailable = false;
 
   constructor() {
-    if ("serviceWorker" in navigator) {
-      this.initializeServiceWorker();
-    }
+    // DISABLED: Service worker temporarily disabled
+    // if ("serviceWorker" in navigator) {
+    //   this.initializeServiceWorker();
+    // }
   }
 
-  private initializeServiceWorker(): void {
-    this.wb = new Workbox("/sw.js");
+  // DISABLED: Service worker temporarily disabled
+  // private initializeServiceWorker(): void {
+  //   // DISABLED: Service worker temporarily disabled
+  //   // VitePWA plugin will handle service worker registration automatically
+  //   // this.wb = new Workbox("/sw.js");
+  //   // this.wb.addEventListener("waiting", () => {
+  //   //   this.updateAvailable = true;
+  //   //   this.showUpdateAvailable();
+  //   // });
+  //   // this.wb.addEventListener("controlling", () => {
+  //   //   window.location.reload();
+  //   // });
+  //   // this.wb.register();
+  // }
 
-    this.wb.addEventListener("waiting", () => {
-      this.updateAvailable = true;
-      this.showUpdateAvailable();
-    });
-
-    this.wb.addEventListener("controlling", () => {
-      window.location.reload();
-    });
-
-    this.wb.register();
-  }
-
-  private showUpdateAvailable(): void {
-    // Integration with your notification system
-    // TODO: Remove update log (was: console.log)
-    // You could show a notification toast here
-    // notificationService.show('Update available', 'Reload to get the latest features', 'info');
-  }
+  // DISABLED: Service worker methods
+  // private showUpdateAvailable(): void {
+  //   // Integration with your notification system
+  //   // TODO: Remove update log (was: console.log)
+  //   // You could show a notification toast here
+  //   // notificationService.show('Update available', 'Reload to get the latest features', 'info');
+  // }
 
   async skipWaiting(): Promise<void> {
-    if (this.wb && this.updateAvailable) {
-      this.wb.messageSkipWaiting();
-    }
+    // DISABLED: Service worker temporarily disabled
+    // if (this.wb && this.updateAvailable) {
+    //   this.wb.messageSkipWaiting();
+    // }
   }
 
   isUpdateAvailable(): boolean {
-    return this.updateAvailable;
+    return false; // Always return false when service worker is disabled
+    // return this.updateAvailable;
   }
 }
 
