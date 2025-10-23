@@ -76,14 +76,14 @@ export class CommentsService {
       // Fetch all profiles in one query
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, first_name, last_name")
+        .select("id, full_name, display_name")
         .in("id", userIds);
 
       // Create a map of user_id -> name
       const profileMap = new Map(
         (profiles || []).map((p: any) => [
           p.id,
-          `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown User",
+          p.display_name || p.full_name || "Unknown User",
         ])
       );
 
@@ -183,14 +183,14 @@ export class CommentsService {
       // Get author name
       const { data: profile } = await supabase
         .from("profiles")
-        .select("first_name, last_name")
+        .select("full_name, display_name")
         .eq("id", user.id)
         .single();
 
       const commentWithAuthor: CommentWithAuthor = {
         ...(data as any),
         author_name: profile
-          ? `${(profile as any).first_name} ${(profile as any).last_name}`.trim()
+          ? ((profile as any).display_name || (profile as any).full_name || "Unknown User")
           : "Unknown User",
       };
 
@@ -239,14 +239,14 @@ export class CommentsService {
       const comment = data as any;
       const { data: profile } = await supabase
         .from("profiles")
-        .select("first_name, last_name")
+        .select("full_name, display_name")
         .eq("id", comment.user_id)
         .single();
 
       const commentWithAuthor: CommentWithAuthor = {
         ...comment,
         author_name: profile
-          ? `${(profile as any).first_name} ${(profile as any).last_name}`.trim()
+          ? ((profile as any).display_name || (profile as any).full_name || "Unknown User")
           : "Unknown User",
       };
 
