@@ -48,6 +48,7 @@ import {
   LazyReadinessCheckPage,
   LazyLivenessCheckPage,
 } from "../components/lazy/LazyRoutes";
+import { InvitationAcceptPage } from "../pages/InvitationAcceptPage";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { teamRoutes } from "./paths";
@@ -174,6 +175,16 @@ export const DataRouterApp: React.FC = () => {
           element={
             <Suspense fallback={<RouteLoadingSpinner />}>
               <LazyCreateCoachAccount />
+            </Suspense>
+          }
+        />
+
+        {/* Invitation acceptance page - public route */}
+        <Route
+          path="/invite/accept"
+          element={
+            <Suspense fallback={<RouteLoadingSpinner />}>
+              <InvitationAcceptPage />
             </Suspense>
           }
         />
