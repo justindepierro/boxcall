@@ -53,12 +53,10 @@ export class CommentsService {
    */
   static async getComments(announcementId: string): Promise<CommentWithAuthor[]> {
     try {
-      const { data, error } = await supabase
+      // First get all comments
+      const { data: comments, error } = await supabase
         .from("announcement_comments" as any)
-        .select(`
-          *,
-          profiles!announcement_comments_user_id_fkey(first_name, last_name)
-        `)
+        .select("*")
         .eq("announcement_id", announcementId)
         .is("deleted_at", null)
         .order("created_at", { ascending: true });
@@ -68,12 +66,31 @@ export class CommentsService {
         return [];
       }
 
+      if (!comments || comments.length === 0) {
+        return [];
+      }
+
+      // Get unique user IDs
+      const userIds = [...new Set(comments.map((c: any) => c.user_id))];
+
+      // Fetch all profiles in one query
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, first_name, last_name")
+        .in("id", userIds);
+
+      // Create a map of user_id -> name
+      const profileMap = new Map(
+        (profiles || []).map((p: any) => [
+          p.id,
+          `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown User",
+        ])
+      );
+
       // Transform to include author name
-      return ((data || []) as any[]).map((comment) => ({
+      return comments.map((comment: any) => ({
         ...comment,
-        author_name: comment.profiles
-          ? `${comment.profiles.first_name} ${comment.profiles.last_name}`.trim()
-          : "Unknown User",
+        author_name: profileMap.get(comment.user_id) || "Unknown User",
       })) as CommentWithAuthor[];
     } catch (error) {
       console.error("Error in getComments:", error);
