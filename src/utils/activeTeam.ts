@@ -1,7 +1,7 @@
 import {
   getActiveTeamIdFromStore,
   useActiveTeamStore,
-} from "../state/activeTeamStore";
+} from "../stores/activeTeamStore";
 
 /**
  * Active Team helpers

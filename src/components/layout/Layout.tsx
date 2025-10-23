@@ -4,7 +4,7 @@ import { useAuthProfile, useAuthProfileLoading } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useActiveTeamStore } from "../../state/activeTeamStore";
+import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { supabase } from "../../lib/supabase";
 import type { Database } from "../../types/database";
 import { getNavigationItems, toSidebarItems } from "../../utils/navigation";

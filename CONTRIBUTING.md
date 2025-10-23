@@ -43,6 +43,50 @@ chore(docs): archive legacy component system doc
 
 Open PRs early; keep them < ~400 lines diff when possible.
 
+## Project Structure
+
+BoxCall maintains an industry-leading project structure optimized for team scaling:
+
+### Root Directory
+
+```
+boxcall/
+├── docs/                    # Documentation (organized by topic)
+├── src/                     # Source code
+├── scripts/                 # Build and automation scripts
+│   ├── cli/                 # CLI tools (db-cli, migrate-cli)
+│   ├── migrations/          # Database migration scripts
+│   └── setup/               # Setup and installation scripts
+├── tests/                   # E2E and integration tests
+├── public/                  # Static assets
+└── [config files]           # Root-level configs only
+```
+
+### Source Code Organization
+
+```
+src/
+├── components/              # React components (atomic design)
+├── features/                # Feature modules
+├── services/                # Business logic & API clients
+├── hooks/                   # Custom React hooks
+├── utils/                   # Utility functions
+├── types/                   # TypeScript types
+├── design-system/           # Design tokens & components
+└── lib/                     # Third-party integrations
+```
+
+### Documentation Structure
+
+See [docs/README.md](docs/README.md) for complete documentation organization.
+
+Key principles:
+
+- **Topic-based** (not date/status-based)
+- **Comprehensive indexes** in every directory
+- **Active docs** in main folders
+- **Historical docs** in archive/
+
 ## PR Checklist
 
 Before requesting review run:

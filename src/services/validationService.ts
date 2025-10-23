@@ -11,9 +11,9 @@
  */
 
 // Re-export validation services for backward compatibility
-export { FormationValidationService } from "../validations/formationValidation";
-export { PlayValidationService } from "../validations/playValidation";
-export { PersonnelValidationService } from "../validations/personnelValidation";
+export { FormationValidationService } from "../validation-services/formationValidation";
+export { PlayValidationService } from "../validation-services/playValidation";
+export { PersonnelValidationService } from "../validation-services/personnelValidation";
 
 // Re-export interfaces for backward compatibility
-export type { ValidationResult, ValidationError, ValidationWarning } from "../validations/formationValidation";
+export type { ValidationResult, ValidationError, ValidationWarning } from "../validation-services/formationValidation";

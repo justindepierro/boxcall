@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEvents } from "../../state/calendar/hooks";
+import { useEvents } from "../../stores/calendar/hooks";
 import type { CalendarEvent } from "../../domain/calendar/types";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";

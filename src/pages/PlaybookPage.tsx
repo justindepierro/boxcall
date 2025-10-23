@@ -41,7 +41,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
 import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
 import type { DiagramDocument } from "../components/playbook/diagram-editor/types/types";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { Card } from "../components/ui/Card";

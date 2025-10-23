@@ -12,7 +12,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { DownDistanceTracker } from "./DownDistanceTracker";
 import { SituationFilter } from "./SituationFilter";
 import { useGameSession } from "../../hooks/useGameSession";
-import { useActiveTeamStore } from "../../state/activeTeamStore";
+import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { ExecutionResult, OpponentCoverage } from "../../types/session";
 
 /**

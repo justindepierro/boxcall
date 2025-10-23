@@ -11,7 +11,7 @@ import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
-import { PlayValidationService } from "../validations/playValidation";
+import { PlayValidationService } from "../validation-services/playValidation";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";

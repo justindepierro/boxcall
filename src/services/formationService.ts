@@ -12,7 +12,7 @@
 
 import { supabase } from "../lib/supabase";
 import { debug, info, error as logError } from "../utils/logger";
-import { FormationValidationService } from "../validations/formationValidation";
+import { FormationValidationService } from "../validation-services/formationValidation";
 import { offlineDataManager } from "./offlineDataManager";
 import type {
   Formation,

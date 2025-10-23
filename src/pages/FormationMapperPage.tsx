@@ -9,7 +9,7 @@ import { Card } from "../components/ui/Card";
 import { Modal } from "../components/ui/Modal/Modal";
 import { SelectionCheckbox } from "../components/ui/SelectionCheckbox/SelectionCheckbox";
 import { useFormationAudit } from "../hooks/useFormationAudit";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import type { Play } from "../types/play";
 import { FormationSelector } from "../components/playbook/FormationSelector";
 import { FormationBuilderModal } from "../components/playbook/FormationBuilderModal/FormationBuilderModal";

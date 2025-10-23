@@ -52,7 +52,7 @@ import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { teamRoutes } from "./paths";
 import { Layout } from "../components/layout/Layout";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 
 // Component for legacy team bulletin redirects

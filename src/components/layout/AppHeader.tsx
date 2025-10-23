@@ -5,7 +5,7 @@ import { SaveIndicatorLogo } from "../ui/Logo";
 import { UserMenu } from "../auth/UserMenu";
 import { Icon } from "../ui/Icon/Icon";
 import { TeamSwitcher } from "./TeamSwitcher";
-import { useActiveTeamStore } from "../../state/activeTeamStore";
+import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
