@@ -14,6 +14,7 @@ import { MultiSelect } from "../components/ui/MultiSelect";
 import type { MultiSelectOption } from "../components/ui/MultiSelect";
 import { rosterService } from "../services";
 import { sendPlayerInvitation } from "../services/invitationService";
+import { SendInvitationModal } from "../components/roster/SendInvitationModal";
 import type {
   RosterPlayerView,
   PlayerRosterInsert,
@@ -134,6 +135,8 @@ export default function RosterPage() {
   );
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [playerToInvite, setPlayerToInvite] = useState<RosterPlayerView | null>(null);
 
   // Form state for add/edit
   const [playerForm, setPlayerForm] = useState({
@@ -504,6 +507,69 @@ export default function RosterPage() {
       _setPlayers(previousPlayers);
       logError("[RosterPage] Failed to toggle player status:", error);
       toast.error("Failed to update player status. Please try again.");
+    }
+  };
+
+  // Send or resend player invitation - Opens modal
+  const handleSendInvite = async (
+    player: RosterPlayerView,
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation(); // Prevent card click navigation
+
+    // Check if player has required info
+    if (!player.first_name || !player.last_name) {
+      toast.error("Player must have a first and last name to send an invitation");
+      return;
+    }
+
+    // Open modal with player info
+    setPlayerToInvite(player);
+    setShowInvitationModal(true);
+  };
+
+  // Actually send the invitation with the provided email
+  const sendInvitation = async (email: string) => {
+    if (!playerToInvite || !teamId) {
+      toast.error("Missing required information");
+      return;
+    }
+
+    try {
+      const isResend = playerToInvite.invitation_status === "pending";
+      const playerName = `${playerToInvite.first_name} ${playerToInvite.last_name}`;
+      
+      console.log("[RosterPage] Sending invitation with params:", {
+        teamId,
+        playerId: playerToInvite.id,
+        email,
+        playerName,
+      });
+
+      await sendPlayerInvitation({
+        teamId,
+        playerId: playerToInvite.id,
+        email,
+        playerName,
+        teamName: "Your Team", // TODO: Get actual team name from context
+        invitedBy: "Coach", // TODO: Get actual user name from auth
+      });
+
+      info(
+        `[RosterPage] ${isResend ? "Resent" : "Sent"} invitation to ${playerToInvite.first_name} ${playerToInvite.last_name} at ${email}`
+      );
+      
+      toast.success(
+        `Invitation ${isResend ? "resent" : "sent"} to ${playerToInvite.first_name} ${playerToInvite.last_name}`
+      );
+
+      // Reload roster to get updated invitation status
+      await loadRoster();
+    } catch (error) {
+      logError("[RosterPage] Failed to send invitation:", error);
+      console.error("[RosterPage] Invitation error details:", error);
+      toast.error(`Failed to send invitation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error; // Re-throw so modal can show error
     }
   };
 
@@ -1042,6 +1108,7 @@ export default function RosterPage() {
                     onEdit={openEditModal}
                     onToggleStatus={togglePlayerStatus}
                     onNavigate={(id) => navigate(`/roster/${id}`)}
+                    onSendInvite={handleSendInvite}
                   />
                 ))}
               </div>
@@ -1729,6 +1796,17 @@ export default function RosterPage() {
               })}
             />
           </Suspense>
+
+          {/* Send Invitation Modal */}
+          <SendInvitationModal
+            isOpen={showInvitationModal}
+            onClose={() => {
+              setShowInvitationModal(false);
+              setPlayerToInvite(null);
+            }}
+            player={playerToInvite}
+            onSend={sendInvitation}
+          />
         </div>
       </PageLayout>
     </Aurora>

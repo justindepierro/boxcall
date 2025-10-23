@@ -25,6 +25,7 @@ export interface PlayerCardProps {
   onEdit: (player: RosterPlayerView) => void;
   onToggleStatus: (player: RosterPlayerView, e: React.MouseEvent) => void;
   onNavigate: (playerId: string) => void;
+  onSendInvite?: (player: RosterPlayerView, e: React.MouseEvent) => void;
 }
 
 export const PlayerCard = React.memo<PlayerCardProps>(
@@ -35,6 +36,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
     onEdit,
     onToggleStatus,
     onNavigate,
+    onSendInvite,
   }) => {
     // Performance monitoring in development
     if (import.meta.env.DEV) {
@@ -169,6 +171,21 @@ export const PlayerCard = React.memo<PlayerCardProps>(
             </button>
           </div>
         </div>
+
+        {/* Invitation Actions */}
+        {onSendInvite && !player.user_id && (
+          <div className="mt-spacing-md pt-spacing-md border-t border-surface-border">
+            <Button
+              size="sm"
+              variant={player.invitation_status === "pending" ? "outline" : "primary"}
+              onClick={(e) => onSendInvite(player, e)}
+              className="w-full"
+            >
+              <Icon name="mail" className="w-4 h-4 mr-2" />
+              {player.invitation_status === "pending" ? "Resend Invite" : "Send Invite"}
+            </Button>
+          </div>
+        )}
       </Card>
     );
   },
