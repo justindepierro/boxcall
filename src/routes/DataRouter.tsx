@@ -37,6 +37,7 @@ import {
   LazyTermsOfServicePage,
   LazyContactPage,
   LazyTeamSettings,
+  LazyTeamAnnouncements,
   LazySocialFeaturesDemo,
   LazyCalendarShellPage,
   LazyPlannerPage,
@@ -563,6 +564,19 @@ export const DataRouterApp: React.FC = () => {
               <AuthenticatedLayout>
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <LazyTeamSettings />
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/team/:teamId/announcements"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyTeamAnnouncements />
                 </Suspense>
               </AuthenticatedLayout>
             </ProtectedRoute>

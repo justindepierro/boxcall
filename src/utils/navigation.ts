@@ -160,6 +160,13 @@ export const getNavigationItems = (
   // TEMP: Expose Team Settings to all authenticated roles for rapid iteration (will re-gate later)
   if (resolvedTeamId) {
     items.push({
+      id: "team-announcements",
+      label: "Announcements",
+      icon: "bell",
+      href: teamRoutes.announcements(resolvedTeamId),
+      description: "Team announcements and updates",
+    });
+    items.push({
       id: "team-settings",
       label: "Team Settings",
       icon: "settings",

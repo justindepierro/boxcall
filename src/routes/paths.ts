@@ -36,6 +36,7 @@ export const ROUTES = {
 export const teamRoutes = {
   bulletin: (teamId: string) => `/team/${teamId}/bulletin`,
   settings: (teamId: string) => `/team/${teamId}/settings`,
+  announcements: (teamId: string) => `/team/${teamId}/announcements`,
   analytics: (teamId: string) => `/team/${teamId}/analytics`,
   calendar: (teamId: string) => `/team/${teamId}/calendar`,
   playbook: (teamId: string) => `/team/${teamId}/playbook`,

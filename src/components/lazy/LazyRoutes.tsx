@@ -49,6 +49,14 @@ export const LazyDesignSystemShowcase = lazyRoute(
   "Design System"
 );
 
+export const LazyTeamAnnouncements = lazyRoute(
+  () =>
+    import("../team/TeamAnnouncements").then((module) => ({
+      default: module.TeamAnnouncements,
+    })),
+  "Team Announcements"
+);
+
 export const LazySocialFeaturesDemo = lazyRoute(
   () => import("../../pages/SocialFeaturesDemo"),
   "Social Features Demo"
