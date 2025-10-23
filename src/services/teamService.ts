@@ -655,6 +655,107 @@ export class TeamService {
       };
     }
   }
+
+  // ============================================
+  // FAMILY PERMISSIONS METHODS
+  // ============================================
+
+  /**
+   * Get family permissions for a team
+   */
+  static async getFamilyPermissions(teamId: string): Promise<{
+    canViewRoster: boolean;
+    canViewSchedule: boolean;
+    canViewStats: boolean;
+    canRSVP: boolean;
+    canFundraise: boolean;
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from("teams")
+        .select("family_permissions")
+        .eq("id", teamId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching family permissions:", error);
+        // Return default permissions if error
+        return {
+          canViewRoster: false,
+          canViewSchedule: true,
+          canViewStats: false,
+          canRSVP: true,
+          canFundraise: false,
+        };
+      }
+
+      // Return stored permissions or defaults
+      return (
+        data?.family_permissions || {
+          canViewRoster: false,
+          canViewSchedule: true,
+          canViewStats: false,
+          canRSVP: true,
+          canFundraise: false,
+        }
+      );
+    } catch (error) {
+      console.error("Error in getFamilyPermissions:", error);
+      // Return safe defaults
+      return {
+        canViewRoster: false,
+        canViewSchedule: true,
+        canViewStats: false,
+        canRSVP: true,
+        canFundraise: false,
+      };
+    }
+  }
+
+  /**
+   * Update family permissions for a team
+   */
+  static async updateFamilyPermissions(
+    teamId: string,
+    permissions: {
+      canViewRoster: boolean;
+      canViewSchedule: boolean;
+      canViewStats: boolean;
+      canRSVP: boolean;
+      canFundraise: boolean;
+    }
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase
+        .from("teams")
+        .update({
+          family_permissions: permissions,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", teamId);
+
+      if (error) {
+        console.error("Error updating family permissions:", error);
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      emitTelemetry("team.family_permissions.updated", {
+        teamId,
+        permissions,
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error in updateFamilyPermissions:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
 }
 
 // ============================================

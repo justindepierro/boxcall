@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "../ui";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import { useToast } from "../../hooks/useToast";
+import { TeamService } from "../../services/teamService";
 
 export interface FamilyPermissions {
   canViewRoster: boolean;
@@ -65,55 +66,98 @@ const PERMISSION_TOGGLES: PermissionToggle[] = [
  * Controls visibility and functionality for non-staff team members
  */
 export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps> = ({
+  teamId,
   initialPermissions,
   onSave,
 }) => {
   const toast = useToast();
   const [permissions, setPermissions] = useState<FamilyPermissions>(
     initialPermissions || {
-      canViewRoster: true,
+      canViewRoster: false,
       canViewSchedule: true,
       canViewStats: false,
       canRSVP: true,
       canFundraise: false,
     }
   );
-  const [saving, setSaving] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
+  const [originalPermissions, setOriginalPermissions] = useState<FamilyPermissions>(permissions);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch initial permissions from database
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      if (initialPermissions) {
+        setPermissions(initialPermissions);
+        setOriginalPermissions(initialPermissions);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const fetchedPermissions = await TeamService.getFamilyPermissions(teamId);
+        setPermissions(fetchedPermissions);
+        setOriginalPermissions(fetchedPermissions);
+      } catch (error) {
+        console.error("Error fetching family permissions:", error);
+        toast.error("Failed to load permissions");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPermissions();
+  }, [teamId, initialPermissions, toast]);
+
+  // Check if permissions have changed from original
+  const hasChanges = JSON.stringify(permissions) !== JSON.stringify(originalPermissions);
 
   const handleToggle = (key: keyof FamilyPermissions) => {
     setPermissions((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
-    setHasChanges(true);
   };
 
   const handleSave = async () => {
-    if (!onSave) {
-      toast.info("Save functionality not yet implemented");
-      return;
-    }
-
-    setSaving(true);
+    setIsSaving(true);
     try {
-      await onSave(permissions);
+      if (onSave) {
+        await onSave(permissions);
+      } else {
+        // Use default teamService save method
+        const result = await TeamService.updateFamilyPermissions(teamId, permissions);
+        if (!result.success) {
+          throw new Error(result.error || "Failed to save permissions");
+        }
+      }
+
+      // Update original permissions to reflect successful save
+      setOriginalPermissions(permissions);
       toast.success("Family permissions updated successfully");
-      setHasChanges(false);
     } catch (error) {
       console.error("Failed to save family permissions:", error);
-      toast.error("Failed to save permissions. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to save permissions. Please try again.");
     } finally {
-      setSaving(false);
+      setIsSaving(false);
     }
   };
 
   const handleReset = () => {
-    if (initialPermissions) {
-      setPermissions(initialPermissions);
-      setHasChanges(false);
-    }
+    setPermissions(originalPermissions);
   };
+
+  if (isLoading) {
+    return (
+      <Card className="p-spacing-lg">
+        <div className="flex items-center justify-center py-spacing-xl">
+          <Typography variant="body-md" color="muted">
+            Loading permissions...
+          </Typography>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="p-spacing-lg">
@@ -207,21 +251,21 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
             <button
               onClick={handleReset}
               className="px-spacing-md py-spacing-sm text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-              disabled={saving}
+              disabled={isSaving}
             >
               Reset
             </button>
           )}
           <button
             onClick={handleSave}
-            disabled={!hasChanges || saving}
+            disabled={!hasChanges || isSaving}
             className={`px-spacing-lg py-spacing-sm rounded-lg text-sm font-semibold transition-all ${
-              hasChanges && !saving
+              hasChanges && !isSaving
                 ? "bg-jade-600 hover:bg-jade-700 text-white shadow-sm hover:shadow-md"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
             }`}
           >
-            {saving ? (
+            {isSaving ? (
               <>
                 <Icon name="loader" className="h-4 w-4 inline mr-2 animate-spin" />
                 Saving...
