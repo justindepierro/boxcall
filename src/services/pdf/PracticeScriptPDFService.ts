@@ -21,6 +21,7 @@ import type {
   PDFExportOptions,
   PDFBranding,
 } from "./types";
+import type { PDFDocumentElement } from "./types/pdf-types";
 
 export class PracticeScriptPDFService extends BasePDFService {
   /**
@@ -91,7 +92,7 @@ export class PracticeScriptPDFService extends BasePDFService {
   private createPracticeDocument(
     data: PracticeScriptPDFData,
     options: PDFExportOptions
-  ): React.ReactElement {
+  ): PDFDocumentElement {
     const branding = this.getBranding();
     const template = options.template || this.template;
     return React.createElement(

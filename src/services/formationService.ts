@@ -12,6 +12,8 @@
 
 import { supabase } from "../lib/supabase";
 import { debug, info, error as logError } from "../utils/logger";
+import { FormationValidationService } from "../validation-services/formationValidation";
+import { offlineDataManager } from "./offlineDataManager";
 import type {
   Formation,
   StrengthType,
@@ -39,10 +41,39 @@ export class FormationService {
    * Create a new formation
    */
   static async createFormation(data: FormationCreate): Promise<Formation> {
-    // Validate before creating
-    const validation = this.validateFormationData(data);
+    // Validate before creating (both client and server-side)
+    const validation = await FormationValidationService.validateFormationServer(data);
     if (!validation.valid) {
-      throw new Error(`Validation failed: ${validation.errors.join(", ")}`);
+      throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+    }
+
+    // If offline, queue the operation
+    if (!navigator.onLine) {
+      await offlineDataManager.queueSyncAction("create", `formations`, data);
+      // Return a temporary formation object for UI purposes
+      return {
+        id: `temp-${Date.now()}`,
+        playbook_id: data.playbook_id,
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        personnel_id: data.personnel_id,
+        personnel_name: data.personnel_name,
+        direction: data.direction,
+        opposite_formation_id: data.opposite_formation_id,
+        strength_player_position: data.strength_player_position,
+        strength_player_label: data.strength_player_label,
+        formation_type: data.formation_type,
+        run_strength: data.run_strength,
+        pass_strength: data.pass_strength,
+        player_positions: data.player_positions,
+        tags: data.tags,
+        is_custom: data.is_custom,
+        usage_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        created_by: null,
+      } as Formation;
     }
 
     const { data: formation, error } = await supabase
@@ -123,25 +154,50 @@ export class FormationService {
    * Get all formations for a playbook
    */
   static async getFormationsByPlaybook(
-    playbookId: string
+    playbookId: string,
+    options?: { limit?: number; offset?: number }
   ): Promise<Formation[]> {
-    const { data, error } = await supabase
-      .from("formations")
-      .select("*")
-      .eq("playbook_id", playbookId)
-      .order("name", { ascending: true });
+    try {
+      let query = supabase
+        .from("formations")
+        .select("*")
+        .eq("playbook_id", playbookId)
+        .order("name", { ascending: true });
 
-    if (error) {
+      if (options?.limit) {
+        query = query.limit(options.limit);
+      }
+      if (options?.offset) {
+        query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        // Try to get from offline storage if online request fails
+        const offlineData = await offlineDataManager.getOfflineData("formation", `playbook-${playbookId}`);
+        if (offlineData.length > 0) {
+          info("[FormationService] Using offline data for formations");
+          return offlineData.map(item => item.data) as Formation[];
+        }
+        throw error;
+      }
+
+      // Store successful response offline for future use
+      if (data && data.length > 0) {
+        await offlineDataManager.storeOfflineData("formation", `playbook-${playbookId}`, data);
+      }
+
+      info(
+        "[FormationService] Returning",
+        (data as Formation[])?.length || 0,
+        "formations"
+      );
+      return (data as Formation[]) || [];
+    } catch (error) {
       logError("[FormationService] Error fetching formations:", error);
-      throw new Error(`Failed to fetch formations: ${error.message}`);
+      throw error;
     }
-
-    info(
-      "[FormationService] Returning",
-      (data as Formation[])?.length || 0,
-      "formations"
-    );
-    return (data as Formation[]) || [];
   }
 
   /**
@@ -149,9 +205,10 @@ export class FormationService {
    * PERFORMANCE: Only fetches essential fields (no heavy player_positions JSON)
    */
   static async getFormationsListByPlaybook(
-    playbookId: string
+    playbookId: string,
+    options?: { limit?: number; offset?: number }
   ): Promise<FormationListItem[]> {
-    const { data, error } = await supabase
+    let query = supabase
       .from("formations")
       .select(`
         id,
@@ -168,6 +225,15 @@ export class FormationService {
       `)
       .eq("playbook_id", playbookId)
       .order("name", { ascending: true });
+
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+    if (options?.offset) {
+      query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       logError("[FormationService] Error fetching formation list:", error);

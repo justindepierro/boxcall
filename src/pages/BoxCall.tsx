@@ -5,7 +5,7 @@ import { Typography } from "../components/design-system";
 import { Button } from "../components/ui";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { PracticeService } from "../services/practiceService";
 import { GamePlanService } from "../services/gamePlanService";
 import type { PracticeScript } from "../services/practiceService";

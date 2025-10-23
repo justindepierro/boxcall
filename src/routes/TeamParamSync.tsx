@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 
 /**
  * Syncs :teamId URL param into the active team store whenever it appears.

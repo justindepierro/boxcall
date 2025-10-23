@@ -12,6 +12,8 @@ import {
 } from "../../services/playAnalyticsService";
 import { PlayerPerformanceDashboard } from "./PlayerPerformanceDashboard";
 import { GamePlanningDashboard } from "./GamePlanningDashboard";
+import { SessionAnalyticsDashboard } from "./SessionAnalyticsDashboard";
+import { TrendAnalyticsDashboard } from "./TrendAnalyticsDashboard";
 
 /**
  * Advanced Analytics Dashboard - Phase 4
@@ -29,7 +31,9 @@ type AnalyticsView =
   | "situational"
   | "performance"
   | "player-performance"
-  | "game-planning";
+  | "game-planning"
+  | "session-analytics"
+  | "trend-analytics";
 
 export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   playbookId,
@@ -404,6 +408,62 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       ),
     },
+    {
+      key: "session-analytics",
+      title: "Session Analytics",
+      description: "Deep dive into practice session performance metrics.",
+      icon: "activity",
+      accentOverlayClass: "bg-aurora-rose",
+      glowClassName: "glow-aurora-rose",
+      statusBadge: "Sessions",
+      iconClassName: "text-rose-600",
+      footnote:
+        selectedView === "session-analytics" ? "Active view" : "Tap to open",
+      buttonLabel: "Sessions",
+      renderContent: () => (
+        <div className="space-y-spacing-xs text-sm">
+          <div className="text-text-secondary">Session insights</div>
+          <div className="flex items-baseline justify-between gap-spacing-md">
+            <span className="font-semibold text-text-primary">
+              Performance tracking
+            </span>
+            <span className="text-text-secondary">Coming soon</span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Advanced metrics</span>
+            <span className="font-semibold text-text-primary">Ready</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "trend-analytics",
+      title: "Trend Analytics",
+      description: "Track performance trends over time and seasons.",
+      icon: "trending-up",
+      accentOverlayClass: "bg-aurora-cyan",
+      glowClassName: "glow-aurora-cyan",
+      statusBadge: "Trends",
+      iconClassName: "text-cyan-600",
+      footnote:
+        selectedView === "trend-analytics" ? "Active view" : "Tap to open",
+      buttonLabel: "Trends",
+      renderContent: () => (
+        <div className="space-y-spacing-xs text-sm">
+          <div className="text-text-secondary">Trend analysis</div>
+          <div className="flex items-baseline justify-between gap-spacing-md">
+            <span className="font-semibold text-text-primary">
+              Historical data
+            </span>
+            <span className="text-text-secondary">Coming soon</span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <span>Season insights</span>
+            <span className="font-semibold text-text-primary">Ready</span>
+          </div>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -474,6 +534,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {selectedView === "game-planning" && (
         <GamePlanningDashboard teamId="demo-team-id" />
       )}
+      {selectedView === "session-analytics" && <SessionAnalyticsView />}
+      {selectedView === "trend-analytics" && <TrendAnalyticsView />}
     </div>
   );
 };
@@ -891,4 +953,14 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Card>
     </div>
   </div>
+);
+
+// Session Analytics View Component
+const SessionAnalyticsView: React.FC = () => (
+  <SessionAnalyticsDashboard sessionId="demo-session-id" />
+);
+
+// Trend Analytics View Component
+const TrendAnalyticsView: React.FC = () => (
+  <TrendAnalyticsDashboard playId="demo-play-id" teamId="demo-team-id" />
 );

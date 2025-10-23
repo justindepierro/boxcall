@@ -56,8 +56,6 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
   // Format formation and personnel
   const formation = play.formation || "No Formation";
   const personnel = play.personnel || "11 Personnel";
-  const subtitle = `${formation} • ${personnel}`;
-
   // Play type badge color with improved contrast
   const playTypeColor =
     {
@@ -71,19 +69,20 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
     <div
       className={`
         relative
-        flex items-center gap-4
-        h-22 w-full
-        px-4 py-3
+        flex items-start gap-4
+        w-full
+        px-4 py-4
         bg-surface-primary
         border border-transparent
-        rounded-lg
+        rounded-xl
         cursor-pointer
         transition-all duration-200
         hover:border-primary-200
-        hover:bg-surface-secondary/50
-        hover:shadow-sm
+        hover:bg-surface-secondary/60
+        hover:shadow-md
         active:scale-[0.98]
-        ${isSelected ? "border-primary-500 bg-primary-50/30 shadow-md" : ""}
+        min-h-28
+        ${isSelected ? "border-primary-500 bg-primary-50/40 shadow-lg" : ""}
       `}
       onClick={handleClick}
       role="button"
@@ -95,8 +94,8 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         }
       }}
     >
-      {/* Play Thumbnail - 64x64px */}
-      <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-surface-muted">
+      {/* Play Thumbnail */}
+      <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-surface-muted shadow-inner">
         {play.diagram_url ? (
           <img
             src={play.diagram_url}
@@ -110,33 +109,44 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         )}
       </div>
 
-      {/* Play Info - Improved visual hierarchy */}
-      <div className="flex-1 min-w-0 space-y-1.5">
-        {/* Play Name - Primary (18px bold) */}
+      {/* Play Info */}
+      <div className="flex-1 min-w-0 space-y-2">
+        {/* Play Name */}
         <Typography
           variant="body-lg"
-          className="text-primary truncate font-bold leading-tight"
+          className="text-primary font-semibold leading-tight line-clamp-2"
         >
           {displayName}
         </Typography>
 
-        {/* Formation & Personnel - Secondary (14px regular) */}
-        <Typography
-          variant="body-sm"
-          className="text-secondary truncate font-normal"
-        >
-          {subtitle}
-        </Typography>
+        {/* Formation & Personnel badges */}
+        <div className="flex flex-wrap gap-2">
+          {formation && (
+            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+              {formation}
+            </span>
+          )}
+          {personnel && (
+            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+              {personnel}
+            </span>
+          )}
+          {showOneWordCalls && play.one_word_play && (
+            <span className="inline-flex items-center rounded-full bg-brand-jade/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-brand-jade">
+              {play.one_word_play}
+            </span>
+          )}
+        </div>
 
-        {/* Play Type Badge - Tertiary (12px) */}
+        {/* Play Type Badge */}
         {play.p_type && (
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2">
             <span
               className={`
                 inline-flex items-center
-                px-2.5 py-1
-                text-xs font-semibold
-                rounded-md
+                px-2.5 py-1.5
+                text-xs font-semibold uppercase tracking-wide
+                rounded-full
                 ${playTypeColor}
               `}
             >
@@ -147,34 +157,34 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
       </div>
 
       {/* Quick Actions - Always visible */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {/* Edit Button - 44px touch target */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        {/* Edit Button */}
         <button
           type="button"
           onClick={handleEdit}
           className="
             flex items-center justify-center
-            w-11 h-11
-            rounded-lg
-            bg-surface-secondary
+            w-12 h-12
+            rounded-xl
+            bg-surface-secondary/90
             hover:bg-surface-muted
             active:scale-95
             transition-all duration-150
-          "
+            "
           aria-label="Edit play"
         >
           <Icon name="edit" className="text-primary" size="md" />
         </button>
 
-        {/* More Actions Button - 44px touch target */}
+        {/* More Actions Button */}
         <button
           type="button"
           onClick={handleMore}
           className="
             flex items-center justify-center
-            w-11 h-11
-            rounded-lg
-            bg-surface-secondary
+            w-12 h-12
+            rounded-xl
+            bg-surface-secondary/90
             hover:bg-surface-muted
             active:scale-95
             transition-all duration-150
@@ -187,7 +197,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
 
       {/* Selection indicator */}
       {isSelected && (
-        <div className="absolute inset-0 border-2 border-primary-500 rounded-lg pointer-events-none" />
+        <div className="absolute inset-0 border-2 border-primary-500 rounded-xl pointer-events-none" />
       )}
     </div>
   );

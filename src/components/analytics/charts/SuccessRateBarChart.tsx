@@ -7,163 +7,122 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
 
-/**
- * Success Rate Bar Chart - Phase 14.1
- * Shows success rate breakdown by down
- */
-
 interface SuccessRateData {
-  down: number;
-  attempts: number;
-  successes: number;
+  name: string;
   successRate: number;
-  avgYards: number;
+  totalPlays: number;
+  successfulPlays: number;
 }
 
 interface SuccessRateBarChartProps {
-  data: SuccessRateData[];
+  data?: SuccessRateData[];
   title?: string;
   className?: string;
 }
 
+/**
+ * SuccessRateBarChart - Bar chart showing success rates
+ *
+ * Visual representation of success rates across different categories
+ * like formations, play types, or time periods.
+ */
 export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
   data,
-  title = "Success Rate by Down",
+  title = "Success Rate Analysis",
   className = "",
 }) => {
-  // Format data for Recharts
-  const chartData = data.map((item) => ({
-    name: `${getDownLabel(item.down)} Down`,
-    successRate: item.successRate,
-    attempts: item.attempts,
-    avgYards: item.avgYards,
-  }));
+  // Default data if none provided
+  const defaultData: SuccessRateData[] = [
+    { name: "Spread", successRate: 78, totalPlays: 45, successfulPlays: 35 },
+    {
+      name: "I-Formation",
+      successRate: 65,
+      totalPlays: 32,
+      successfulPlays: 21,
+    },
+    { name: "Shotgun", successRate: 82, totalPlays: 28, successfulPlays: 23 },
+    { name: "Pistol", successRate: 71, totalPlays: 24, successfulPlays: 17 },
+    { name: "Wildcat", successRate: 58, totalPlays: 12, successfulPlays: 7 },
+  ];
 
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload }: any) => {
+  const chartData = data || defaultData;
+
+  const getBarColor = (successRate: number) => {
+    if (successRate >= 75) return "#10b981"; // green
+    if (successRate >= 60) return "#f59e0b"; // yellow
+    return "#ef4444"; // red
+  };
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-surface-primary border border-border rounded-sm shadow-elevation-lg p-spacing-sm">
-          <Typography variant="body-sm" className="font-semibold mb-spacing-xs">
-            {data.name}
+        <div className="bg-surface-secondary border border-border rounded-lg p-3 shadow-lg">
+          <Typography variant="body-sm" className="font-medium mb-1">
+            {label}
           </Typography>
-          <div className="space-y-spacing-xs">
-            <div className="flex items-center gap-spacing-xs">
-              <div className="w-3 h-3 rounded-sm bg-success-500" />
-              <Typography variant="body-xs">
-                Success Rate: {data.successRate}%
-              </Typography>
-            </div>
-            <Typography variant="body-xs" className="text-text-secondary">
-              {data.attempts} attempts • {data.avgYards} avg yards
-            </Typography>
-          </div>
+          <Typography variant="body-xs" className="text-text-secondary">
+            Success Rate: {data.successRate}%
+          </Typography>
+          <Typography variant="body-xs" className="text-text-secondary">
+            {data.successfulPlays}/{data.totalPlays} plays successful
+          </Typography>
         </div>
       );
     }
     return null;
   };
 
-  // Get bar color based on success rate
-  const getBarColor = (value: number) => {
-    if (value >= 75) return "var(--color-success-500)"; // Green
-    if (value >= 60) return "var(--color-warning-500)"; // Yellow
-    return "var(--color-error-500)"; // Red
-  };
-
-  if (data.length === 0) {
-    return (
-      <Card className={className}>
-        <div className="p-spacing-lg text-center">
-          <Typography variant="body-sm" className="text-text-muted">
-            No down data available
-          </Typography>
-        </div>
-      </Card>
-    );
-  }
+  const formatYAxisTick = (value: number) => `${value}%`;
 
   return (
-    <Card className={className}>
-      <div className="p-spacing-lg">
-        <Typography variant="headline-sm" className="mb-spacing-md">
-          {title}
-        </Typography>
-
-        <ResponsiveContainer width="100%" height={300}>
+    <Card className={`p-6 ${className}`}>
+      <Typography variant="headline-sm" className="mb-4">
+        {title}
+      </Typography>
+      <div className="h-80">
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            margin={{
+              top: 20,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
             <XAxis
               dataKey="name"
-              tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+              tick={{ fontSize: 12 }}
+              className="text-text-secondary"
             />
             <YAxis
-              label={{
-                value: "Success Rate (%)",
-                angle: -90,
-                position: "insideLeft",
-                style: {
-                  fill: "var(--color-text-secondary)",
-                  fontSize: 12,
-                },
-              }}
-              tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+              tickFormatter={formatYAxisTick}
+              tick={{ fontSize: 12 }}
+              className="text-text-secondary"
               domain={[0, 100]}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar
-              dataKey="successRate"
-              fill="var(--color-jade-600)"
-              radius={[4, 4, 0, 0]}
-            />
+            <Bar dataKey="successRate" radius={[4, 4, 0, 0]}>
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getBarColor(entry.successRate)}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
-
-        {/* Summary stats */}
-        <div className="mt-spacing-md grid grid-cols-2 md:grid-cols-4 gap-spacing-sm">
-          {data.map((item) => (
-            <div
-              key={item.down}
-              className="text-center p-spacing-sm bg-surface-secondary rounded-sm"
-            >
-              <Typography variant="body-xs" className="text-text-secondary">
-                {getDownLabel(item.down)} Down
-              </Typography>
-              <Typography
-                variant="body-lg"
-                className="font-semibold"
-                style={{
-                  color: getBarColor(item.successRate),
-                }}
-              >
-                {item.successRate}%
-              </Typography>
-              <Typography variant="body-xs" className="text-text-muted">
-                {item.attempts} plays
-              </Typography>
-            </div>
-          ))}
-        </div>
       </div>
+      <Typography variant="body-xs" className="text-text-secondary mt-2">
+        Success rates by formation (higher is better)
+      </Typography>
     </Card>
   );
 };
-
-// Helper function
-function getDownLabel(down: number): string {
-  const labels: Record<number, string> = {
-    1: "1st",
-    2: "2nd",
-    3: "3rd",
-    4: "4th",
-  };
-  return labels[down] || `${down}th`;
-}

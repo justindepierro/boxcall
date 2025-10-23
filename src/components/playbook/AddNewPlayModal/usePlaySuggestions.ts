@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { PlaysService } from "../../../services/playsService";
+import {
+  validateFormationName,
+  validatePersonnelValue,
+} from "../../../utils/playFieldValidation";
 
 interface SuggestionState {
   formations: string[];
@@ -52,9 +56,13 @@ export const usePlaySuggestions = () => {
         ]);
 
         setSuggestions({
-          formations,
+          formations: formations.filter(
+            (formation) => validateFormationName(formation).isValid
+          ),
           playNames,
-          personnel,
+          personnel: personnel.filter((value) =>
+            validatePersonnelValue(value).isValid
+          ),
           playTypes,
         });
       } catch (error) {

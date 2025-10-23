@@ -35,7 +35,7 @@ export default defineConfig({
       "@pages": path.resolve(__dirname, "src/pages"),
       "@assets": path.resolve(__dirname, "src/assets"),
       "@lib": path.resolve(__dirname, "src/lib"),
-      "@state": path.resolve(__dirname, "src/state"),
+      "@stores": path.resolve(__dirname, "src/stores"),
       "@styles": path.resolve(__dirname, "src/styles"),
       "@routes": path.resolve(__dirname, "src/routes"),
       "@utils": path.resolve(__dirname, "src/utils"),
@@ -178,14 +178,29 @@ export default defineConfig({
     manifest: true,
     cssMinify: useLightningCss ? "lightningcss" : "esbuild",
     target: "es2022",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove all console.* calls in production
+        drop_debugger: true, // Remove debugger statements
+        pure_funcs: ["console.log", "console.info", "console.debug"], // Additional console removal
+      },
+      format: {
+        comments: false, // Remove all comments
+      },
+    },
     // Asset optimization
     assetsInlineLimit: 4096, // Inline small assets as base64
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          supabase: ["@supabase/supabase-js"],
-          query: ["@tanstack/react-query"],
+          // Core React
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          
+          // Data & State Management
+          "data-vendor": ["@supabase/supabase-js", "@tanstack/react-query", "zustand"],
+          
+          // Heavy UI Libraries (lazy load these)
           calendar: [
             "@fullcalendar/core",
             "@fullcalendar/daygrid",
@@ -193,9 +208,27 @@ export default defineConfig({
             "@fullcalendar/interaction",
             "@fullcalendar/react",
           ],
-          ui: ["@headlessui/react", "@heroicons/react", "framer-motion"],
+          pixi: ["pixi.js"],
+          pdf: ["@react-pdf/renderer", "jszip"],
+          charts: ["recharts"],
+          
+          // UI Components
+          "ui-vendor": [
+            "@headlessui/react",
+            "@heroicons/react",
+            "@radix-ui/react-popover",
+            "@hello-pangea/dnd",
+            "lucide-react",
+          ],
+          
+          // Animations & Interactions
+          animations: ["framer-motion", "@use-gesture/react"],
+          
+          // Forms & Validation
           forms: ["react-hook-form", "@hookform/resolvers", "zod"],
-          dnd: ["@hello-pangea/dnd"],
+          
+          // Utilities
+          utils: ["date-fns", "fuse.js", "clsx"],
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
@@ -217,6 +250,9 @@ export default defineConfig({
         },
       },
     },
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 500, // Warn if any chunk exceeds 500KB
+    // 🚀 PERFORMANCE: Optimized for production builds
+    sourcemap: false, // Disable sourcemaps in production for smaller bundles
+    reportCompressedSize: true, // Report gzip sizes to track bundle improvements
   },
 });

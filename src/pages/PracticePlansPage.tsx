@@ -50,7 +50,7 @@ export default function PracticePlansPage() {
     PracticeScript | undefined
   >(undefined);
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
-  const [_loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
   // Search & Filter state
@@ -94,40 +94,42 @@ export default function PracticePlansPage() {
     setShowModal(true);
   }, []);
 
-  const handleSaveScript = async (script: PracticeScript) => {
+  const handleSaveScript = (script: Partial<PracticeScript>) => {
     if (!activeTeamId) {
       toast.error("No active team found");
       return;
     }
 
-    try {
-      if (editingScript) {
-        // Update existing script
-        await PracticeService.updatePracticeScript(script.id, {
-          name: script.title || script.name || "Untitled Script",
-          description: script.description,
-          tags: script.tags,
-        });
-        toast.success("Practice script updated successfully");
-      } else {
-        // Create new script
-        await PracticeService.createPracticeScript({
-          name: script.title || script.name || "Untitled Script",
-          description: script.description,
-          teamId: activeTeamId,
-          tags: script.tags,
-        });
-        toast.success("Practice script created successfully");
-      }
+    void (async () => {
+      try {
+        if (editingScript) {
+          if (!script.id) {
+            throw new Error("Missing script ID for update");
+          }
+          await PracticeService.updatePracticeScript(script.id, {
+            name: script.title || script.name || "Untitled Script",
+            description: script.description,
+            tags: script.tags,
+          });
+          toast.success("Practice script updated successfully");
+        } else {
+          await PracticeService.createPracticeScript({
+            name: script.title || script.name || "Untitled Script",
+            description: script.description,
+            teamId: activeTeamId,
+            tags: script.tags,
+          });
+          toast.success("Practice script created successfully");
+        }
 
-      // Reload scripts
-      await loadPracticeScripts();
-      setShowModal(false);
-      setEditingScript(undefined);
-    } catch (error) {
-      console.error("Failed to save practice script:", error);
-      toast.error("Failed to save practice script");
-    }
+        await loadPracticeScripts();
+        setShowModal(false);
+        setEditingScript(undefined);
+      } catch (error) {
+        console.error("Failed to save practice script:", error);
+        toast.error("Failed to save practice script");
+      }
+    })();
   };
 
   const handleDuplicateScript = async (script: PracticeScript) => {
@@ -477,20 +479,21 @@ export default function PracticePlansPage() {
         </div>
 
         {/* Search & Filter Section */}
-        {practiceScripts.length > 0 && (
+        {practiceScripts.length > 0 && !isLoading && (
           <div className="mb-6 space-y-4">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="Search scripts by name, description, or tags..."
-                className="flex-1 max-w-2xl"
+                placeholder="Search scripts..."
+                className="w-full sm:flex-1 sm:max-w-2xl"
               />
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
                   onClick={() => setShowImportModal(true)}
                   variant="secondary"
                   size="sm"
+                  className="w-full sm:w-auto"
                 >
                   <Icon name="upload" className="h-4 w-4 mr-2" />
                   Import
@@ -499,6 +502,7 @@ export default function PracticePlansPage() {
                   onClick={handleExportScripts}
                   variant="secondary"
                   size="sm"
+                  className="w-full sm:w-auto"
                 >
                   <Icon name="download" className="h-4 w-4 mr-2" />
                   Export
@@ -514,36 +518,43 @@ export default function PracticePlansPage() {
                 options={sortOptions}
                 value={sortBy}
                 onChange={setSortBy}
+                className="w-full sm:w-auto"
               />
             </div>
           </div>
         )}
 
-        {activeScripts.length === 0 &&
-        archivedScripts.length === 0 &&
-        !searchQuery &&
-        activeFilters.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-4 py-10" aria-busy="true">
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+          </div>
+        ) : activeScripts.length === 0 &&
+          archivedScripts.length === 0 &&
+          !searchQuery &&
+          activeFilters.length === 0 ? (
           // Empty State
-          <div className="text-center py-16">
-            <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
+          <div className="py-16 text-center">
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-muted">
               <Icon name="file" className="h-12 w-12 text-text-muted" />
             </div>
             <Typography
               variant="headline-md"
-              className="text-text-primary mb-2"
+              className="mb-2 text-text-primary"
             >
               No Practice Scripts Yet
             </Typography>
             <Typography
               variant="body-lg"
-              className="text-text-secondary mb-8 max-w-md mx-auto"
+              className="mx-auto mb-8 max-w-md text-text-secondary"
             >
               Create your first practice script to organize plays for your
               team's training sessions.
             </Typography>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col gap-4 justify-center sm:flex-row">
               <Button onClick={handleCreateScript} variant="primary" size="lg">
-                <Icon name="plus" className="h-5 w-5 mr-2" />
+                <Icon name="plus" className="mr-2 h-5 w-5" />
                 Create New Script
               </Button>
               <Button
@@ -551,7 +562,7 @@ export default function PracticePlansPage() {
                 variant="secondary"
                 size="lg"
               >
-                <Icon name="book" className="h-5 w-5 mr-2" />
+                <Icon name="book" className="mr-2 h-5 w-5" />
                 Browse Playbook
               </Button>
             </div>
@@ -560,28 +571,47 @@ export default function PracticePlansPage() {
           // Scripts List
           <div className="space-y-6" id="practice-scripts-section">
             {/* Header with Create Button */}
-            <div className="flex justify-between items-center">
-              <Typography variant="headline-md" className="text-text-primary">
-                Your Practice Scripts ({activeScripts.length})
-              </Typography>
-              <Button onClick={handleCreateScript} variant="primary">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <Typography
+                  variant="headline-md"
+                  className="text-text-primary font-semibold"
+                >
+                  Your Practice Scripts
+                </Typography>
+                <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                  <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                    {activeScripts.length} Active
+                  </span>
+                  {archivedScripts.length > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                      {archivedScripts.length} Archived
+                    </span>
+                  )}
+                </div>
+              </div>
+              <Button
+                onClick={handleCreateScript}
+                variant="primary"
+                className="w-full sm:w-auto"
+              >
                 <Icon name="plus" className="h-4 w-4 mr-2" />
                 New Script
               </Button>
             </div>
 
             {/* Scripts Grid */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {activeScripts.map((script) => (
                 <div
                   key={script.id}
-                  className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-lg transition-all hover:border-border-hover"
+                  className="bg-surface-primary rounded-2xl border border-border p-5 hover:shadow-lg transition-all hover:border-border-hover"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0 space-y-1.5">
                       <Typography
                         variant="headline-sm"
-                        className="text-text-primary mb-1 truncate"
+                        className="text-text-primary font-semibold leading-tight line-clamp-2"
                       >
                         {script.title || script.name || "Untitled Script"}
                       </Typography>
@@ -597,20 +627,20 @@ export default function PracticePlansPage() {
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-4 mb-4 text-sm text-text-secondary">
-                    <div className="flex items-center gap-1">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+                    <span className="inline-flex items-center gap-2">
                       <Icon name="play" className="h-4 w-4" />
-                      <span>{script.plays?.length || 0} plays</span>
-                    </div>
-                    <div className="flex items-center gap-1">
+                      {script.plays?.length || 0} plays
+                    </span>
+                    <span className="inline-flex items-center gap-2">
                       <Icon name="clock" className="h-4 w-4" />
-                      <span>{script.duration || 120} min</span>
-                    </div>
+                      {script.duration || 120} min
+                    </span>
                   </div>
 
                   {/* Tags */}
                   {script.tags && script.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       {script.tags.slice(0, 3).map((tag, idx) => (
                         <span
                           key={idx}

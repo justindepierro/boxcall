@@ -21,7 +21,7 @@ import {
   createDiagramUpdates,
   isWhiteboardMode,
 } from "../utils/diagramHelpers";
-import { validateDiagram } from "../validation/diagramValidation";
+import { validateDiagram } from "../schemas-validation/diagramValidation";
 
 export interface SaveDiagramResult {
   success: boolean;

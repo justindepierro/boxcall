@@ -3,6 +3,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   lazy,
   Suspense,
 } from "react";
@@ -33,13 +34,14 @@ import { SecurePlaysService } from "../services/securePlaysService";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
 import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
+// import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
 import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
 import type { DiagramDocument } from "../components/playbook/diagram-editor/types/types";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { AppIconTile } from "../components/ui/AppIconTile";
 import { Card } from "../components/ui/Card";
@@ -50,6 +52,10 @@ import {
   flipPlayName,
   flipFormationDirection,
 } from "../utils/formationFlipHelpers";
+import {
+  validateFormationName,
+  validatePersonnelValue,
+} from "../utils/playFieldValidation";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
 import {
@@ -67,6 +73,7 @@ import {
   MobileSection,
   MobileQuickActions,
 } from "../components/mobile";
+import { QuickPlaySheet } from "../components/playbook/QuickPlaySheet";
 import { BottomSheet } from "../components/BottomSheet";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
@@ -75,6 +82,9 @@ import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { PlaybookBottomNav } from "../components/playbook/page/PlaybookBottomNav";
 import { MobilePlaybookHeader } from "../components/playbook/page/MobilePlaybookHeader";
 import { MobileStatsBottomSheet } from "../components/playbook/page/MobileStatsBottomSheet";
+import { FormationSyncPanel } from "../components/formations/FormationSyncPanel";
+import { useFormationAudit } from "../hooks/useFormationAudit";
+import { useRecentPlayCombos } from "../hooks/useRecentPlayCombos";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -140,13 +150,22 @@ export default function PlaybookPage() {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
   const isMobile = useIsMobile();
+  const [mobileListExpanded, setMobileListExpanded] = useState(false);
 
   // Mobile-optimized button sizes (44px+ touch targets)
   const mobileButtonSize = useMobileButtonProps("md", true).size;
   const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
 
   // Get playbooks for this team
-  const { playbooks, refreshData } = useTeamsData();
+  const {
+    playbooks,
+    refreshData,
+    plays: allPlaysForStats = [],
+    formations: allFormations = [],
+    loading: teamsDataLoading,
+  } = useTeamsData();
+
+  const sanitizedFormationIdsRef = useRef(new Set<string>());
 
   // 🚀 PERFORMANCE: Memoize filtered playbooks to avoid recalculating on every render
   const teamPlaybooks = useMemo(
@@ -199,6 +218,15 @@ export default function PlaybookPage() {
   // Shows instant "Searching..." feedback while debouncing actual search
   const debouncedSearchQuery = useDebouncedValue(state.searchQuery, 300);
   const isSearchPending = state.searchQuery !== debouncedSearchQuery;
+  const selectedFiltersKey = useMemo(
+    () => JSON.stringify(state.selectedFilters ?? {}),
+    [state.selectedFilters]
+  );
+
+  useEffect(() => {
+    if (!isMobile) return;
+    setMobileListExpanded(false);
+  }, [isMobile, debouncedSearchQuery, selectedFiltersKey]);
 
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
@@ -365,9 +393,6 @@ export default function PlaybookPage() {
   }, [activeTeamId]);
 
   // Get real play data for stats calculation
-  const { plays: allPlaysForStats = [], formations: allFormations = [] } =
-    useTeamsData();
-
   // 🚀 PERFORMANCE: Memoize playbook stats calculation from REAL data
   const playbookStats = useMemo(() => {
     // Calculate real stats from actual data
@@ -426,6 +451,21 @@ export default function PlaybookPage() {
     };
   }, [allPlaysForStats, allFormations, recentActivities]); // Use real data dependencies
 
+  const formationAudit = useFormationAudit(activePlaybookId || null);
+
+  const formationAuditSummary = useMemo(() => {
+    if (!formationAudit.plays || formationAudit.plays.length === 0) {
+      return { needsMapping: 0, resolved: 0, total: 0 };
+    }
+    const needsMapping = formationAudit.plays.length;
+
+    return {
+      needsMapping,
+      resolved: 0,
+      total: needsMapping,
+    };
+  }, [formationAudit.plays]);
+
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
 
@@ -439,7 +479,11 @@ export default function PlaybookPage() {
   const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
+  const [showQuickPlaySheet, setShowQuickPlaySheet] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
+
+  const { combos: recentPlayCombos, addCombo: addRecentPlayCombo } =
+    useRecentPlayCombos();
 
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
   // Shows plays immediately while database operations happen in background
@@ -600,6 +644,11 @@ export default function PlaybookPage() {
     setShowAddNewPlayModal(true);
   }, []);
 
+  const handleOpenQuickCreate = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowQuickPlaySheet(true);
+  }, []);
+
   // NEW: Handler to open diagram editor after play creation
   const handlePlayCreated = useCallback((play: Play) => {
     // Auto-open diagram editor with the newly created play
@@ -675,6 +724,158 @@ export default function PlaybookPage() {
     },
     [activePlaybookId]
   );
+
+  const createNewPlay = useCallback(
+    async (playData: Partial<Play>) => {
+      if (!activePlaybookId) {
+        throw new Error("No active playbook selected");
+      }
+
+      const formationValidation = validateFormationName(playData.formation);
+      if (!formationValidation.isValid) {
+        throw new Error(
+          formationValidation.error ||
+            "Formation looks like personnel. Please use a true formation name."
+        );
+      }
+
+      if (playData.personnel) {
+        const personnelValidation = validatePersonnelValue(playData.personnel);
+        if (!personnelValidation.isValid) {
+          throw new Error(
+            personnelValidation.error ||
+              "Personnel looks like a formation. Please adjust."
+          );
+        }
+      }
+
+      const tempId = `temp-${Date.now()}`;
+      const optimisticPlay: Play = {
+        id: tempId,
+        playbook_id: activePlaybookId,
+        formation: playData.formation || "",
+        formation_id: playData.formation_id || null,
+        play_name: playData.play_name || "",
+        p_type: playData.p_type || "",
+        personnel: (playData as Play).personnel || "",
+        confidence_base: playData.confidence_base ?? 70,
+        times_called: playData.times_called ?? 0,
+        times_successful: playData.times_successful ?? 0,
+        created_by: playData.created_by || "",
+        created_at: new Date(),
+        updated_at: new Date(),
+        notes: playData.notes,
+      } as Play;
+
+      setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
+
+      try {
+        const cleanedPlayData = Object.fromEntries(
+          Object.entries(playData).map(([key, value]) => [
+            key,
+            value === "" || value === null ? undefined : value,
+          ])
+        );
+
+        const createdPlay = await SecurePlaysService.createPlay({
+          playbook_id: activePlaybookId,
+          ...cleanedPlayData,
+        });
+
+        toast.success(
+          `Play "${createdPlay.play_name || "Untitled"}" created successfully!`
+        );
+
+        // Remove optimistic play and trigger refresh
+        setOptimisticPlays((prev) =>
+          prev.filter((play) => play.id !== optimisticPlay.id)
+        );
+        dispatch({ type: "INCREMENT_REFRESH" });
+
+        return createdPlay;
+      } catch (error) {
+        setOptimisticPlays((prev) =>
+          prev.filter((play) => play.id !== optimisticPlay.id)
+        );
+        toast.error("Failed to create play. Please try again.");
+        throw error;
+      }
+    },
+    [activePlaybookId, dispatch, toast]
+  );
+
+  const handleQuickCreatePlay = useCallback(
+    async (data: {
+      formation_id: string;
+      formation: string;
+      play_name: string;
+      personnel?: string;
+      playType?: string;
+    }) => {
+      const createdPlay = await createNewPlay({
+        formation: data.formation,
+        formation_id: data.formation_id,
+        play_name: data.play_name,
+        personnel: data.personnel,
+        p_type: data.playType,
+      });
+
+      addRecentPlayCombo({
+        formation: createdPlay.formation,
+        formationId: createdPlay.formation_id || undefined,
+        personnel: createdPlay.personnel || undefined,
+        playType: createdPlay.p_type || undefined,
+      });
+
+      handlePlayCreated(createdPlay);
+    },
+    [createNewPlay, addRecentPlayCombo, handlePlayCreated]
+  );
+
+  const handleOpenFormationBuilderModal = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowFormationBuilderModal(true);
+  }, []);
+
+  useEffect(() => {
+    if (!allPlaysForStats || allPlaysForStats.length === 0) return;
+
+    const invalidPlays = allPlaysForStats.filter((play) => {
+      if (!play || !play.id) return false;
+      const formationValue =
+        typeof play.formation === "string" ? play.formation : "";
+      if (!formationValue.trim()) return false;
+      const { isValid } = validateFormationName(formationValue);
+      return !isValid && !sanitizedFormationIdsRef.current.has(play.id);
+    });
+
+    if (invalidPlays.length === 0) return;
+
+    void (async () => {
+      let didUpdate = false;
+
+      for (const play of invalidPlays) {
+        sanitizedFormationIdsRef.current.add(play.id);
+        try {
+          await SecurePlaysService.updatePlay(play.id, {
+            formation: null,
+            formation_id: null,
+          });
+          didUpdate = true;
+          toast.warning(
+            `Cleared invalid formation "${play.formation}" from ${play.play_name || "a play"}.`
+          );
+        } catch (error) {
+          sanitizedFormationIdsRef.current.delete(play.id);
+          logError("Failed to sanitize formation", error);
+        }
+      }
+
+      if (didUpdate) {
+        dispatch({ type: "INCREMENT_REFRESH" });
+      }
+    })();
+  }, [allPlaysForStats, dispatch, toast]);
 
   // Handle pull-to-refresh on mobile
   const handlePullRefresh = useCallback(async () => {
@@ -1101,7 +1302,7 @@ export default function PlaybookPage() {
               {/* pb-32 instead of pb-24 to prevent FAB overlap */}
 
               {/* Empty State - Hero CTA */}
-              {state.playsCreated === 0 && (
+              {state.playsCreated === 0 && !teamsDataLoading && (
                 <MobileSection spacing="comfortable">
                   <MobileCTACard
                     icon="plus"
@@ -1109,7 +1310,7 @@ export default function PlaybookPage() {
                     description="Build offensive and defensive plays with our diagram editor"
                     action="Get Started"
                     variant="primary"
-                    onTap={handleOpenBuilder}
+                    onTap={handleOpenQuickCreate}
                   />
                 </MobileSection>
               )}
@@ -1122,7 +1323,7 @@ export default function PlaybookPage() {
                       id: "new-play",
                       icon: "plus",
                       label: "New Play",
-                      onTap: handleOpenBuilder,
+                      onTap: handleOpenQuickCreate,
                     },
                     {
                       id: "practice",
@@ -1139,6 +1340,20 @@ export default function PlaybookPage() {
                   ]}
                 />
               </MobileSection>
+
+              {formationAudit.plays.length > 0 && (
+                <MobileSection title="Formation Cleanup" spacing="comfortable">
+                  <FormationSyncPanel
+                    plays={formationAudit.plays}
+                    loading={formationAudit.loading}
+                    error={formationAudit.error}
+                    onRefresh={formationAudit.refresh}
+                    onResolve={handleEditPlay}
+                    onOpenMapper={() => navigate("/playbook/formation-mapper")}
+                    isMobile
+                  />
+                </MobileSection>
+              )}
 
               {/* Selection Mode Toggle - Mobile */}
               <MobileSection spacing="tight">
@@ -1179,7 +1394,15 @@ export default function PlaybookPage() {
               {/* Main Content - Plays Grid */}
               <MobileSection
                 title="Your Plays"
-                action={state.playsCreated > 3 ? "See All" : undefined}
+                action={
+                  !mobileListExpanded && state.playsCreated > 3
+                    ? "See All"
+                    : undefined
+                }
+                onAction={() => {
+                  triggerHapticFeedback("light");
+                  setMobileListExpanded(true);
+                }}
                 spacing="comfortable"
               >
                 <PullToRefresh onRefresh={handlePullRefresh}>
@@ -1216,6 +1439,8 @@ export default function PlaybookPage() {
                       onPlaySelectionChange={(selection) =>
                         dispatch({ type: "SET_SELECTION", selection })
                       }
+                      mobileListExpanded={mobileListExpanded}
+                      onMobileListExpand={() => setMobileListExpanded(true)}
                     />
                   </ErrorBoundary>
                 </PullToRefresh>
@@ -1224,12 +1449,28 @@ export default function PlaybookPage() {
               {/* Floating Action Button for Quick Actions */}
               <FloatingActionButton
                 actions={FABPresets.playbook({
-                  onNewPlay: handleOpenBuilder,
+                  onNewPlay: handleOpenQuickCreate,
                   onWhiteboard: handleOpenWhiteboard,
                   onPractice: handleQuickNewPracticeScript,
                   onGamePlan: handleQuickNewGamePlan,
                 })}
                 icon="plus"
+              />
+
+              <QuickPlaySheet
+                isOpen={showQuickPlaySheet}
+                onClose={() => setShowQuickPlaySheet(false)}
+                onCreate={async (data) => {
+                  await handleQuickCreatePlay(data);
+                }}
+                onOpenFullEditor={() => {
+                  setShowQuickPlaySheet(false);
+                  handleOpenBuilder();
+                }}
+                onOpenFormationBuilder={handleOpenFormationBuilderModal}
+                playbookId={activePlaybookId || undefined}
+                suggestions={suggestions}
+                recentCombos={recentPlayCombos}
               />
             </div>
 
@@ -1253,6 +1494,7 @@ export default function PlaybookPage() {
                 runPlays: Math.floor((state.playsCreated || 0) * 0.4),
                 rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
                 playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
+                formationsNeedingMapping: formationAuditSummary.needsMapping,
               }}
             />
           </>
@@ -1334,8 +1576,34 @@ export default function PlaybookPage() {
                   badge={state.diagramCoverage}
                   onOpen={() => {}}
                 />
+
+                <AppIconTile
+                  title="Formation Mapper"
+                  subtitle={
+                    formationAuditSummary.needsMapping > 0
+                      ? `${formationAuditSummary.needsMapping} need mapping`
+                      : "All formations linked"
+                  }
+                  icon="link"
+                  gradient="from-amber-500 to-orange-500"
+                  badge={formationAuditSummary.needsMapping || undefined}
+                  onOpen={() => navigate("/playbook/formation-mapper")}
+                />
               </div>
             </div>
+
+            {formationAudit.plays.length > 0 && (
+              <div className="px-4 sm:px-6 lg:px-8 mb-6">
+                <FormationSyncPanel
+                  plays={formationAudit.plays}
+                  loading={formationAudit.loading}
+                  error={formationAudit.error}
+                  onRefresh={formationAudit.refresh}
+                  onResolve={handleEditPlay}
+                  onOpenMapper={() => navigate("/playbook/formation-mapper")}
+                />
+              </div>
+            )}
 
             {/* Main Content - 2 Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
@@ -1513,6 +1781,23 @@ export default function PlaybookPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* {state.currentView === "analytics" && (
+                    <ErrorBoundary
+                      fallback={
+                        <div className="p-spacing-lg text-center">
+                          <Typography
+                            variant="body-md"
+                            className="text-text-secondary"
+                          >
+                            Failed to load analytics dashboard. Please refresh the page.
+                          </Typography>
+                        </div>
+                      }
+                    >
+                      <AnalyticsDashboard playbookId={activeTeamId || undefined} />
+                    </ErrorBoundary>
+                  )} */}
                 </Card>
               </div>
             </div>
@@ -1573,6 +1858,7 @@ export default function PlaybookPage() {
                 existingPlay={editingPlay}
                 playbookId={activePlaybookId}
                 onPlayCreated={handlePlayCreated}
+                recentCombos={recentPlayCombos}
                 onCreatePlay={async (playData) => {
                   try {
                     debug("Processing play:", playData);
@@ -1606,56 +1892,13 @@ export default function PlaybookPage() {
                       // Trigger a database refresh to ensure consistency
                       dispatch({ type: "INCREMENT_REFRESH" });
                     } else {
-                      // 🚀 OPTIMISTIC CREATE: Show new play immediately with temporary ID
-                      const tempId = `temp-${Date.now()}`;
-                      const optimisticPlay: Play = {
-                        playbook_id: activePlaybookId,
-                        formation: "",
-                        play_name: "",
-                        p_type: "",
-                        confidence_base: 70,
-                        times_called: 0,
-                        times_successful: 0,
-                        created_by: "",
-                        ...playData,
-                        id: tempId,
-                        created_at: new Date(),
-                        updated_at: new Date(),
-                      };
-
-                      // Add to UI instantly (perceived <50ms response)
-                      setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
-
-                      // Background: Create in database
-                      // ⚠️ CRITICAL: Add playbook_id before validation
-                      // 🔧 CRITICAL: Clean up empty strings and null to undefined for optional fields
-                      const cleanedPlayData = Object.fromEntries(
-                        Object.entries(playData)
-                          .map(([key, value]) => [
-                            key,
-                            value === "" || value === null ? undefined : value,
-                          ])
-                          .filter(([_, value]) => value !== undefined) // Remove undefined fields entirely
-                      );
-                      const completePlayData = {
-                        ...cleanedPlayData,
-                        playbook_id: activePlaybookId,
-                      };
-
-                      resultPlay =
-                        await SecurePlaysService.createPlay(completePlayData);
-                      toast.success(
-                        `Play "${resultPlay.play_name}" created successfully!`
-                      );
-
-                      // Replace optimistic play with real database play
-                      setOptimisticPlays((prev) =>
-                        prev.map((p) => (p.id === tempId ? resultPlay : p))
-                      );
-
-                      // Trigger a database refresh to get the play in the main list
-                      // The optimistic play will be automatically deduplicated
-                      dispatch({ type: "INCREMENT_REFRESH" });
+                      resultPlay = await createNewPlay(playData);
+                      addRecentPlayCombo({
+                        formation: resultPlay.formation,
+                        formationId: resultPlay.formation_id || undefined,
+                        personnel: resultPlay.personnel || undefined,
+                        playType: resultPlay.p_type || undefined,
+                      });
                     }
 
                     // ✅ NO MORE FULL REFRESH - optimistic updates handle UI

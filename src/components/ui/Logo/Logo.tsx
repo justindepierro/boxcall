@@ -8,6 +8,7 @@
  */
 
 import React from "react";
+import { OptimizedImage } from "../OptimizedImage";
 
 export type LogoVariant = "icon" | "full"; // icon-only or logo+text
 export type LogoSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -76,10 +77,13 @@ export const Logo: React.FC<LogoProps> = ({
   const colorClass = colorClasses[color];
 
   return (
-    <img
+    <OptimizedImage
       src={logoSrc}
       alt={alt}
       className={`${sizeClass} ${colorClass} ${className}`.trim()}
+      loading="eager"
+      priority={true}
+      quality={100}
     />
   );
 };

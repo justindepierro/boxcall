@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 import { CalendarAPI } from "../../../infra/calendar/api";
-import { calendarKeys } from "../../../state/calendar/queryKeys";
+import { calendarKeys } from "../../../stores/calendar/queryKeys";
 
 import type { CalendarFilters } from "../../../domain/calendar/types";
 import type { BoxCallCalendarRef } from "../BoxCallCalendar";

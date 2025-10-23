@@ -50,6 +50,8 @@ import { createPlaySaveHandler } from "./PlayGrid/handlers";
 import { MobilePlayCard } from "./page/MobilePlayCard";
 import { SwipeActions } from "./page/SwipeActions";
 
+const MOBILE_INITIAL_PLAYS = 4;
+
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -83,6 +85,9 @@ interface PlayGridProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
+  // Mobile list controls
+  mobileListExpanded?: boolean;
+  onMobileListExpand?: () => void;
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -109,6 +114,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Suggestions
   formationSuggestions: _formationSuggestions = [], // Not used in V2
   playNameSuggestions: _playNameSuggestions = [], // Not used in V2
+  mobileListExpanded = false,
+  onMobileListExpand,
 }) => {
   // Extracted custom hooks
   const {
@@ -134,7 +141,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
   // Mobile progressive loading state
-  const [mobileVisibleCount, setMobileVisibleCount] = useState(20);
+  const [mobileVisibleCount, setMobileVisibleCount] = useState(
+    MOBILE_INITIAL_PLAYS
+  );
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // Get real data from database with refresh capability and pagination
@@ -177,10 +186,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Notify parent of play count changes for the play counter
   useEffect(() => {
-    if (onPlayCountChange) {
-      onPlayCountChange(plays.length);
+    if (!onPlayCountChange || loading) {
+      return;
     }
-  }, [plays.length, onPlayCountChange]);
+    onPlayCountChange(plays.length);
+  }, [loading, plays.length, onPlayCountChange]);
 
   // Validate database integration (development mode only)
   useEffect(() => {
@@ -363,22 +373,35 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Mobile progressive disclosure - show limited plays initially
   const isMobile = useIsMobile();
-  const MOBILE_INITIAL_PLAYS = 4;
-  const [showAllPlays, setShowAllPlays] = useState(false);
+
+  // Keep mobile list count in sync with filters/search changes and expansion state
+  useEffect(() => {
+    if (!isMobile) return;
+
+    setMobileVisibleCount((prev) => {
+      const maxVisible = displayPlays.length;
+      if (mobileListExpanded) {
+        return maxVisible;
+      }
+
+      const baseCount = Math.min(MOBILE_INITIAL_PLAYS, maxVisible);
+      if (prev < baseCount) {
+        return baseCount;
+      }
+      return Math.min(prev, maxVisible);
+    });
+  }, [isMobile, displayPlays.length, mobileListExpanded]);
 
   const visiblePlays = useMemo(() => {
-    if (
-      !isMobile ||
-      showAllPlays ||
-      displayPlays.length <= MOBILE_INITIAL_PLAYS
-    ) {
+    if (!isMobile) {
       return displayPlays;
     }
-    return displayPlays.slice(0, MOBILE_INITIAL_PLAYS);
-  }, [isMobile, showAllPlays, displayPlays]);
+    const limit = Math.min(mobileVisibleCount, displayPlays.length);
+    return displayPlays.slice(0, limit);
+  }, [isMobile, mobileVisibleCount, displayPlays]);
 
   const hasMorePlays =
-    isMobile && displayPlays.length > MOBILE_INITIAL_PLAYS && !showAllPlays;
+    isMobile && mobileVisibleCount < displayPlays.length && !mobileListExpanded;
 
   // Load personnel configurations to provide as suggestions
   const playbookId = plays.length > 0 ? plays[0].playbook_id : undefined;
@@ -664,67 +687,59 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       {/* Play Grid - Conditional Rendering based on view mode */}
       {!showEmpty && !loading && !error && viewMode === "grid" ? (
         <>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="play-grid" direction="horizontal">
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`grid gap-6 py-6 px-4 overflow-visible auto-rows-max ${
-                    isMobile
-                      ? "grid-cols-1 gap-4" // Single column on mobile with tighter spacing
-                      : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 py-8"
-                  }`}
-                  style={{
-                    transition: "grid-template-rows 0.3s ease",
-                  }}
-                >
-                  {(isMobile
-                    ? visiblePlays.slice(0, mobileVisibleCount)
-                    : visiblePlays
-                  ).map((play, index) => (
-                    <Draggable
-                      key={play.id}
-                      draggableId={play.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`w-full overflow-visible transition-all duration-300 ${
-                            snapshot.isDragging ? "opacity-50" : ""
-                          } ${
-                            expandedPlayId === play.id && !isMobile
-                              ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
-                              : ""
-                          }`}
-                          data-card-index={index}
-                        >
-                          {isMobile ? (
-                            <SwipeActions
-                              playId={play.id}
-                              onEdit={() => onEdit?.(play)}
-                              onDuplicate={() => onDuplicate?.(play)}
-                              onDelete={() => {
-                                // TODO: Implement delete handler
-                                console.log("Delete play:", play.id);
-                              }}
-                            >
-                              <MobilePlayCard
-                                play={play}
-                                onEdit={() => onEdit?.(play)}
-                                onMore={() => {
-                                  // TODO: Open more actions menu
-                                  console.log("More actions:", play.id);
-                                }}
-                                onClick={() => onCreateDiagram?.(play)}
-                                isSelected={selectedPlayIds.has(play.id)}
-                                showOneWordCalls={showOneWordCalls}
-                              />
-                            </SwipeActions>
-                          ) : (
+          {isMobile ? (
+            <div className="grid grid-cols-1 gap-4 px-4 py-6">
+              {visiblePlays.slice(0, mobileVisibleCount).map((play, index) => (
+                <div key={play.id} data-card-index={index}>
+                  <SwipeActions
+                    playId={play.id}
+                    onEdit={() => onEdit?.(play)}
+                    onDuplicate={() => onDuplicate?.(play)}
+                    onDelete={() => console.log("Delete play:", play.id)}
+                  >
+                    <MobilePlayCard
+                      play={play}
+                      onEdit={() => onEdit?.(play)}
+                      onMore={() => console.log("More actions:", play.id)}
+                      onClick={() => onCreateDiagram?.(play)}
+                      isSelected={selectedPlayIds.has(play.id)}
+                      showOneWordCalls={showOneWordCalls}
+                    />
+                  </SwipeActions>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="play-grid" direction="horizontal">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className="grid gap-10 py-8 px-4 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+                    style={{
+                      transition: "grid-template-rows 0.3s ease",
+                    }}
+                  >
+                    {visiblePlays.map((play, index) => (
+                      <Draggable
+                        key={play.id}
+                        draggableId={play.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`w-full overflow-visible transition-all duration-300 ${
+                              snapshot.isDragging ? "opacity-50" : ""
+                            } ${
+                              expandedPlayId === play.id
+                                ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
+                                : ""
+                            }`}
+                          >
                             <PlayCardWrapper
                               play={play}
                               variant="tile"
@@ -758,28 +773,34 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               expandedPlayId={expandedPlayId}
                               onToggleExpand={handleToggleExpand}
                             />
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
           {/* Mobile Progressive Loading */}
-          {isMobile && mobileVisibleCount < visiblePlays.length && (
+          {hasMorePlays && (
             <div className="flex justify-center py-8">
               <Button
                 onClick={() => {
                   setIsLoadingMore(true);
                   // Simulate loading delay for smooth UX
                   setTimeout(() => {
-                    setMobileVisibleCount((prev) =>
-                      Math.min(prev + 20, visiblePlays.length)
-                    );
+                    setMobileVisibleCount((prev) => {
+                      const next = Math.min(
+                        prev + 20,
+                        displayPlays.length
+                      );
+                      if (next === displayPlays.length) {
+                        onMobileListExpand?.();
+                      }
+                      return next;
+                    });
                     setIsLoadingMore(false);
 
                     // Scroll to first new card
@@ -805,7 +826,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     Loading...
                   </>
                 ) : (
-                  `Show More (${visiblePlays.length - mobileVisibleCount} remaining)`
+                  `Show More (${Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)`
                 )}
               </Button>
             </div>
@@ -813,102 +834,114 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
           {/* Mobile: All plays loaded message */}
           {isMobile &&
-            mobileVisibleCount >= visiblePlays.length &&
-            visiblePlays.length > 20 && (
+            (mobileListExpanded ||
+              mobileVisibleCount >= displayPlays.length) &&
+            displayPlays.length > MOBILE_INITIAL_PLAYS && (
               <div className="text-center py-8">
                 <Typography variant="body-sm" className="text-secondary">
-                  All {visiblePlays.length} plays loaded
+                  All {displayPlays.length} plays loaded
                 </Typography>
               </div>
             )}
-
-          {/* Desktop: See All button */}
-          {!isMobile && hasMorePlays && (
-            <div className="flex justify-center pt-4">
-              <Button
-                onClick={() => setShowAllPlays(true)}
-                variant="secondary"
-                className="w-full sm:w-auto"
-              >
-                See All {displayPlays.length} Plays
-              </Button>
-            </div>
-          )}
         </>
-      ) : !showEmpty &&
-        !loading &&
-        !error &&
-        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
+      ) : !showEmpty && !loading && !error && (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
         <>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="play-list">
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className="space-y-6 overflow-visible"
-                  role="list"
-                >
-                  {visiblePlays.map((play, index) => (
-                    <Draggable
-                      key={play.id}
-                      draggableId={play.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
-                          role="listitem"
-                        >
-                          <div
-                            {...provided.dragHandleProps}
-                            className="cursor-grab active:cursor-grabbing"
-                          >
-                            <PlayCardWrapper
-                              play={play}
-                              variant="list"
-                              index={index}
-                              showOneWordCalls={showOneWordCalls}
-                              onEdit={onEdit}
-                              onSave={handlePlaySave}
-                              onDuplicate={onDuplicate}
-                              onCreateDiagram={onCreateDiagram}
-                              onOpenAssignments={onOpenAssignments}
-                              isSelected={selectedPlayIds.has(play.id)}
-                              onSelectionChange={handlePlaySelect}
-                              formationSuggestions={
-                                collectedSuggestions.formations
-                              }
-                              playNameSuggestions={
-                                collectedSuggestions.playNames
-                              }
-                              playTypeSuggestions={
-                                collectedSuggestions.playTypes
-                              }
-                              personnelSuggestions={
-                                collectedSuggestions.personnel
-                              }
-                              personnelConfigurations={personnelConfigurations}
-                              directionDisplayFormat={directionDisplayFormat}
-                              expandedPlayId={expandedPlayId}
-                              onToggleExpand={handleToggleExpand}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+          {isMobile ? (
+            <div className="space-y-4 overflow-visible px-4" role="list">
+              {visiblePlays.map((play, index) => (
+                <div key={play.id} role="listitem" data-card-index={index}>
+                  <SwipeActions
+                    playId={play.id}
+                    onEdit={() => onEdit?.(play)}
+                    onDuplicate={() => onDuplicate?.(play)}
+                    onDelete={() => console.log("Delete play:", play.id)}
+                  >
+                    <MobilePlayCard
+                      play={play}
+                      onEdit={() => onEdit?.(play)}
+                      onMore={() => console.log("More actions:", play.id)}
+                      onClick={() => onCreateDiagram?.(play)}
+                      isSelected={selectedPlayIds.has(play.id)}
+                      showOneWordCalls={showOneWordCalls}
+                    />
+                  </SwipeActions>
                 </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+              ))}
+            </div>
+          ) : (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="play-list">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className="space-y-6 overflow-visible"
+                    role="list"
+                  >
+                    {visiblePlays.map((play, index) => (
+                      <Draggable
+                        key={play.id}
+                        draggableId={play.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
+                            role="listitem"
+                          >
+                            <div
+                              {...provided.dragHandleProps}
+                              className="cursor-grab active:cursor-grabbing"
+                            >
+                              <PlayCardWrapper
+                                play={play}
+                                variant="list"
+                                index={index}
+                                showOneWordCalls={showOneWordCalls}
+                                onEdit={onEdit}
+                                onSave={handlePlaySave}
+                                onDuplicate={onDuplicate}
+                                onCreateDiagram={onCreateDiagram}
+                                onOpenAssignments={onOpenAssignments}
+                                isSelected={selectedPlayIds.has(play.id)}
+                                onSelectionChange={handlePlaySelect}
+                                formationSuggestions={
+                                  collectedSuggestions.formations
+                                }
+                                playNameSuggestions={
+                                  collectedSuggestions.playNames
+                                }
+                                playTypeSuggestions={
+                                  collectedSuggestions.playTypes
+                                }
+                                personnelSuggestions={
+                                  collectedSuggestions.personnel
+                                }
+                                personnelConfigurations={personnelConfigurations}
+                                directionDisplayFormat={directionDisplayFormat}
+                                expandedPlayId={expandedPlayId}
+                                onToggleExpand={handleToggleExpand}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
           {hasMorePlays && (
             <div className="flex justify-center pt-4">
               <Button
-                onClick={() => setShowAllPlays(true)}
+                onClick={() => {
+                  setMobileVisibleCount(displayPlays.length);
+                  onMobileListExpand?.();
+                }}
                 variant="secondary"
                 className="w-full sm:w-auto"
               >

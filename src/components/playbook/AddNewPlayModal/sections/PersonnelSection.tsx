@@ -4,7 +4,6 @@ import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
 import Select from "../../../ui/Select/Select";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
-import { supabase } from "../../../../lib/supabase";
 
 interface PersonnelSectionProps {
   personnel: string;
@@ -13,42 +12,15 @@ interface PersonnelSectionProps {
   showSuggestions: boolean;
   onShowSuggestionsChange: (show: boolean) => void;
   onAddNew?: () => void; // NEW: Callback to open personnel creation panel
+  playbookId?: string; // NEW: Playbook ID to load personnel configurations
 }
 
 export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   personnel,
   onPersonnelChange,
   onAddNew,
+  playbookId,
 }) => {
-  // Get playbook ID from current user
-  const [playbookId, setPlaybookId] = React.useState<string | undefined>();
-
-  React.useEffect(() => {
-    async function fetchPlaybookId() {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Get user's first playbook
-        const { data: playbooks } = await supabase
-          .from("playbooks")
-          .select("id")
-          .eq("created_by", user.id)
-          .limit(1);
-
-        if (playbooks && playbooks.length > 0) {
-          setPlaybookId((playbooks[0] as any).id as string);
-        }
-      } catch (error) {
-        console.error("Failed to fetch playbook ID:", error);
-      }
-    }
-
-    fetchPlaybookId();
-  }, []);
-
   // Fetch personnel configurations from database
   const { data: configurations, isLoading } =
     usePersonnelConfigurations(playbookId);

@@ -3,7 +3,7 @@ import {
   useCreateEvent,
   useUpdateEvent,
   useDeleteEvent,
-} from "../../../state/calendar/hooks";
+} from "../../../stores/calendar/hooks";
 
 import type { CalendarFilters } from "../../../domain/calendar/types";
 

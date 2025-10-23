@@ -41,7 +41,9 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
   };
 
   return (
-    <div className={`fixed ${isMobile ? "bottom-20 right-4" : "bottom-6 right-6"} z-40 ${className}`}>
+    <div
+      className={`fixed ${isMobile ? "bottom-20 right-4" : "bottom-6 right-6"} z-40 ${className}`}
+    >
       {/* Backdrop - Only on mobile when expanded */}
       {isMobile && isExpanded && (
         <div
@@ -54,14 +56,17 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
       {isExpanded && (
         <div className={`mb-4 space-y-${isMobile ? "3" : "2"}`}>
           {actions.map((action) => (
-            <div key={action.id} className="flex items-center justify-end gap-3">
+            <div
+              key={action.id}
+              className="flex items-center justify-end gap-3"
+            >
               {/* Mobile: Show label outside button */}
               {isMobile && (
                 <span className="text-sm font-medium text-text-primary px-3 py-2 bg-surface-card rounded-lg shadow-md">
                   {action.label}
                 </span>
               )}
-              
+
               <Button
                 onClick={() => handleActionClick(action)}
                 variant={action.variant || "secondary"}

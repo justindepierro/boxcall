@@ -78,12 +78,26 @@ Playbook View → Practice Script View → Game Plan View
 
 ## Documentation
 
-- **[📋 Roadmap & Status](docs/product/ROADMAP.md)** - Current status and development roadmap
-- **[🛠️ Setup Guide](docs/SETUP.md)** - Development environment setup
+**[� Complete Documentation Hub](docs/README.md)** - Professionally organized documentation with clear navigation
+
+### Quick Links
+
+- **[� Project Overview](docs/PROJECT_OVERVIEW.md)** - Vision, goals, and product roadmap
 - **[🏗️ Architecture](docs/ARCHITECTURE.md)** - System architecture and design decisions
 - **[🔌 API Reference](docs/API.md)** - API documentation and integration guides
-- **[🗄️ Database](docs/database/)** - Schema, rebuild guides, and audit reports
-- **[🎨 Design System](docs/roadmaps/DESIGN_SYSTEM_ROADMAP.md)** - Component library and theming
+- **[�️ Development Setup](docs/guides/development/)** - Get started developing
+- **[✨ Features](docs/features/)** - Feature-specific documentation
+- **[🎨 Design System](docs/design-system/)** - Components, tokens, and patterns
+- **[📖 Guides](docs/guides/)** - Testing, deployment, and workflows
+
+### Documentation Organization
+
+BoxCall maintains industry-leading documentation standards:
+
+- **60 active documents** organized by topic
+- **298 archived documents** preserving project history
+- **Clear navigation** with comprehensive indexes
+- **Last major reorganization**: October 23, 2025 (83% reduction in clutter)
 
 ## Code Quality & Standards
 

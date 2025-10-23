@@ -194,6 +194,14 @@ export const PersonnelConfigurationModal: React.FC<
     return parts.join(", ");
   };
 
+  const updatePersonnelConfigName = (configId: string, name: string) => {
+    setLocalConfigurations((prev) =>
+      prev.map((config) =>
+        config.id === configId ? { ...config, name } : config
+      )
+    );
+  };
+
   const removePersonnelConfiguration = (configId: string) => {
     setLocalConfigurations((prev) => prev.filter((c) => c.id !== configId));
   };
@@ -231,14 +239,6 @@ export const PersonnelConfigurationModal: React.FC<
       )
     );
     triggerHapticFeedback("light");
-  };
-
-  const updatePersonnelConfigName = (configId: string, name: string) => {
-    setLocalConfigurations((prev) =>
-      prev.map((config) =>
-        config.id === configId ? { ...config, name } : config
-      )
-    );
   };
 
   const updateBadgeCustomization = (

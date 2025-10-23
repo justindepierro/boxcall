@@ -8,7 +8,7 @@ import { Workbox } from "workbox-window";
 
 interface OfflineData {
   id: string;
-  type: "play" | "team" | "player" | "schedule";
+  type: "play" | "team" | "player" | "schedule" | "formation";
   data: unknown;
   timestamp: number;
   version: number;

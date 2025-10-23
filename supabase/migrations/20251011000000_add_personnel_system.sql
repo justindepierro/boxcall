@@ -29,19 +29,15 @@ CREATE TABLE personnel_configurations (
   -- Ensure unique personnel names per playbook
   UNIQUE(playbook_id, name)
 );
-
 -- Add index for fast lookups by playbook
 CREATE INDEX idx_personnel_configurations_playbook_id 
 ON personnel_configurations(playbook_id);
-
 -- Add index for lookup by name (used in diagram loading)
 CREATE INDEX idx_personnel_configurations_playbook_name 
 ON personnel_configurations(playbook_id, name);
-
 -- Add comment
 COMMENT ON TABLE personnel_configurations IS 
   'Personnel groupings (11 Personnel, 12 Personnel, etc.) defined at playbook level. Each configuration describes a set of skill position players.';
-
 -- ===========================================
 -- 2. CREATE PERSONNEL_PLAYERS TABLE
 -- ===========================================
@@ -61,19 +57,15 @@ CREATE TABLE personnel_players (
   -- Validate label format (3 chars max, uppercase alphanumeric)
   CHECK (label ~ '^[A-Z0-9]{1,3}$')
 );
-
 -- Add index for fast lookups by configuration
 CREATE INDEX idx_personnel_players_config_id 
 ON personnel_players(config_id);
-
 -- Add index for ordered retrieval (QB always first)
 CREATE INDEX idx_personnel_players_config_sort 
 ON personnel_players(config_id, sort_order);
-
 -- Add comment
 COMMENT ON TABLE personnel_players IS 
   'Individual player positions within a personnel configuration. QB is always sort_order=0 (locked). Other positions are skill positions: RB, TE, WR.';
-
 -- ===========================================
 -- 3. ROW LEVEL SECURITY POLICIES
 -- ===========================================
@@ -81,7 +73,6 @@ COMMENT ON TABLE personnel_players IS
 -- Enable RLS on both tables
 ALTER TABLE personnel_configurations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE personnel_players ENABLE ROW LEVEL SECURITY;
-
 -- ========================================
 -- RLS: personnel_configurations
 -- ========================================
@@ -99,7 +90,6 @@ USING (
       AND tm.status = 'active'
   )
 );
-
 -- Policy: Coaches can insert personnel configurations
 CREATE POLICY "Coaches can create personnel configurations"
 ON personnel_configurations FOR INSERT
@@ -114,7 +104,6 @@ WITH CHECK (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- Policy: Coaches can update personnel configurations
 CREATE POLICY "Coaches can update personnel configurations"
 ON personnel_configurations FOR UPDATE
@@ -129,7 +118,6 @@ USING (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- Policy: Coaches can delete personnel configurations
 CREATE POLICY "Coaches can delete personnel configurations"
 ON personnel_configurations FOR DELETE
@@ -144,7 +132,6 @@ USING (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- ========================================
 -- RLS: personnel_players
 -- ========================================
@@ -163,7 +150,6 @@ USING (
       AND tm.status = 'active'
   )
 );
-
 -- Policy: Coaches can insert personnel players
 CREATE POLICY "Coaches can create personnel players"
 ON personnel_players FOR INSERT
@@ -179,7 +165,6 @@ WITH CHECK (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- Policy: Coaches can update personnel players
 CREATE POLICY "Coaches can update personnel players"
 ON personnel_players FOR UPDATE
@@ -195,7 +180,6 @@ USING (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- Policy: Coaches can delete personnel players
 CREATE POLICY "Coaches can delete personnel players"
 ON personnel_players FOR DELETE
@@ -211,7 +195,6 @@ USING (
       AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
   )
 );
-
 -- ===========================================
 -- 4. HELPER FUNCTIONS
 -- ===========================================
@@ -248,7 +231,6 @@ BEGIN
   LIMIT 1;
 END;
 $$;
-
 -- Function: Get personnel players for a configuration (ordered by sort_order)
 CREATE OR REPLACE FUNCTION get_personnel_players(
   p_config_id UUID
@@ -278,7 +260,6 @@ BEGIN
   ORDER BY pp.sort_order ASC;
 END;
 $$;
-
 -- ===========================================
 -- 5. SEED DEFAULT 11 PERSONNEL
 -- ===========================================
@@ -331,7 +312,6 @@ BEGIN
     RAISE NOTICE 'Created default 11 Personnel for playbook: % (%)', playbook_record.name, playbook_record.id;
   END LOOP;
 END $$;
-
 -- ===========================================
 -- 6. UPDATE EXISTING PLAYS
 -- ===========================================
@@ -342,10 +322,8 @@ END $$;
 UPDATE plays
 SET personnel = '11 Personnel'
 WHERE personnel IS NULL OR personnel = '' OR personnel = 'N/A';
-
 COMMENT ON COLUMN plays.personnel IS 
   'Personnel configuration name (e.g., "11 Personnel"). References personnel_configurations.name for the playbook.';
-
 -- ===========================================
 -- 7. UPDATED_AT TRIGGER
 -- ===========================================
@@ -358,12 +336,10 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 CREATE TRIGGER personnel_configurations_updated_at
   BEFORE UPDATE ON personnel_configurations
   FOR EACH ROW
   EXECUTE FUNCTION update_personnel_configurations_updated_at();
-
 -- ===========================================
 -- 8. GRANTS
 -- ===========================================
@@ -373,7 +349,6 @@ GRANT SELECT ON personnel_configurations TO authenticated;
 GRANT SELECT ON personnel_players TO authenticated;
 GRANT INSERT, UPDATE, DELETE ON personnel_configurations TO authenticated;
 GRANT INSERT, UPDATE, DELETE ON personnel_players TO authenticated;
-
 -- Note: No sequences to grant because we use uuid_generate_v4() for primary keys
 -- UUIDs don't require sequences like SERIAL/BIGSERIAL would
 
@@ -392,4 +367,4 @@ GRANT INSERT, UPDATE, DELETE ON personnel_players TO authenticated;
 -- ✅ Added updated_at trigger
 -- ✅ Granted necessary permissions
 --
--- Next: Phase 3 - Service Layer (personnelService.ts)
+-- Next: Phase 3 - Service Layer (personnelService.ts);

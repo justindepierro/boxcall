@@ -13,7 +13,7 @@ import {
   HASH_OPTIONS,
 } from "./play-card/constants";
 import { usePlayFormState } from "./AddNewPlayModal/usePlayFormState";
-import { usePlaySuggestions } from "./AddNewPlayModal/usePlaySuggestions";
+import { useAISuggestions } from "./AddNewPlayModal/useAISuggestions";
 import {
   useRateLimitFeedback,
   formatCountdown,
@@ -44,6 +44,7 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../../utils/playFieldValidation";
+import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -53,6 +54,7 @@ interface AddNewPlayModalProps {
   existingPlay?: Play | null;
   playbookId?: string; // NEW: Required for FormationSelector
   existingPlays?: Play[]; // NEW: For duplicate detection
+  recentCombos?: PlayCombo[];
 }
 
 export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
@@ -63,6 +65,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   existingPlay,
   playbookId,
   existingPlays = [],
+  recentCombos,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -79,10 +82,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
   const {
     suggestions,
+    aiSuggestions,
     showSuggestions,
     hideSuggestions,
     isSuggestionsVisible,
-  } = usePlaySuggestions();
+    updateContext,
+    getCombinedSuggestions,
+  } = useAISuggestions(playbookId);
 
   // Rate limit feedback
   const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
@@ -280,6 +286,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     } else {
       // No direction - just update normally
       updateField("formation", value);
+      // Update AI suggestions context
+      updateContext("formation", value);
     }
   };
 
@@ -317,6 +325,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
           suggestions={suggestions}
+          aiSuggestions={aiSuggestions}
           isSuggestionsVisible={isSuggestionsVisible}
           showSuggestions={showSuggestions}
           hideSuggestions={hideSuggestions}
@@ -348,6 +357,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           existingPlay={existingPlay}
           errorMessage={errorMessage}
           rateLimitFeedback={rateLimitFeedback}
+          recentCombos={recentCombos}
         />
 
         {/* Personnel Creation Panel (shared with desktop) */}
@@ -591,6 +601,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               updateField("formationShowInName", value)
             }
             suggestions={suggestions.formations}
+            aiSuggestions={aiSuggestions.aiFormations}
             showSuggestions={isSuggestionsVisible("formation")}
             onShowSuggestionsChange={(show) =>
               show ? showSuggestions("formation") : hideSuggestions("formation")
@@ -608,6 +619,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               updateField("playShowInName", value)
             }
             suggestions={suggestions.playNames}
+            aiSuggestions={aiSuggestions.aiPlayNames}
+            generatedSuggestions={aiSuggestions.generatedPlayNames}
             showSuggestions={isSuggestionsVisible("playName")}
             onShowSuggestionsChange={(show) =>
               show ? showSuggestions("playName") : hideSuggestions("playName")
@@ -631,12 +644,16 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               show ? showSuggestions("personnel") : hideSuggestions("personnel")
             }
             onAddNew={() => setPersonnelPanelOpen(true)}
+            playbookId={playbookId}
           />
 
           {/* Play Type Section */}
           <PlayTypeSection
             playType={formData.playType}
-            onPlayTypeChange={(value) => updateField("playType", value)}
+            onPlayTypeChange={(value) => {
+              updateField("playType", value);
+              updateContext("playType", value);
+            }}
             suggestions={suggestions.playTypes}
           />
 

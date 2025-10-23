@@ -4,6 +4,7 @@ import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
 import type { AppRole } from "../types/roles";
 import type { AuthorizeInput } from "./authorize";
+import { isSuperAdminEmail } from "../config/superAdmin";
 
 /**
  * Generic loader factory for creating authorization-based route loaders
@@ -11,8 +12,6 @@ import type { AuthorizeInput } from "./authorize";
  * @param authorizeOptions - Options to pass to the authorize function
  * @returns A loader function that performs authorization and redirects on failure
  */
-const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
-
 export function createAuthLoader(
   authorizeOptions: Omit<AuthorizeInput, "profile">
 ) {
@@ -22,7 +21,7 @@ export function createAuthLoader(
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
-      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
+  isSuperAdmin: isSuperAdminEmail(current.email),
       ...authorizeOptions,
       // Merge teamId from params if not explicitly provided
       teamId: authorizeOptions.teamId || params.teamId,
@@ -111,7 +110,7 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
-      isSuperAdmin: current.email === SUPER_ADMIN_EMAIL,
+  isSuperAdmin: isSuperAdminEmail(current.email),
       requiredRoles: allowedRoles,
     });
 

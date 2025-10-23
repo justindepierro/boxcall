@@ -5,7 +5,7 @@ import {
   useUpdateRSVP,
   useComments,
   useAddComment,
-} from "../../state/calendar/hooks";
+} from "../../stores/calendar/hooks";
 import { Typography } from "../design-system/Typography";
 import { PracticeScriptModal } from "../practice/PracticeScriptModal";
 import { Button } from "../ui";

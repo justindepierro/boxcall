@@ -10,7 +10,7 @@ import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import { teamRoutes, ROUTES } from "../../routes/paths";
-import { useActiveTeamStore } from "../../state/activeTeamStore";
+import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { useAuth } from "../../app/auth-store";
 import { emitTelemetry } from "../../lib/telemetry";
 import { usePrefetchQueries } from "../../hooks/usePrefetchQueries";

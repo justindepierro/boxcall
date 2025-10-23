@@ -159,6 +159,8 @@ export interface Play {
   // Formation relationship (NEW - October 12, 2025)
   formation_id?: string | null; // uuid - references formations.id
   formation_direction?: "base" | "left" | "right" | null; // text - which variant to use
+  formation_status?: string | null;
+  sanitized_at?: Date | string | null;
 
   // Creation tracking (NEW - October 16, 2025)
   creation_source?: PlayCreationSource; // Where was play created from

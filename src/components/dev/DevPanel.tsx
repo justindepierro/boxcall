@@ -2,7 +2,7 @@
  * Unified Developer Tools Panel
  *
  * A comprehensive dev tools panel with tabs for different debugging and development features.
- * Only accessible to authorized developers (justindepierro@gmail.com).
+ * Only accessible to authorized developers (configured via env).
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -10,6 +10,7 @@ import { useAuth } from "../../app/auth-store";
 import { useApp } from "../core/useApp";
 import { AuthMonitoring } from "../../utils/authMonitoring";
 import { PerformanceDashboard } from "./PerformanceDashboard";
+import { isSuperAdminEmail } from "../../config/superAdmin";
 
 interface AuthMonitorTabProps {}
 
@@ -381,7 +382,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   // Only show for authorized user
-  const isAuthorized = user?.email === "justindepierro@gmail.com";
+  const isAuthorized = isSuperAdminEmail(user?.email ?? null);
 
   // Mouse event handlers for dragging
   const handleMouseDown = useCallback(

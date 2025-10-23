@@ -11,7 +11,7 @@ import {
   validatePlayUpdate,
   type PlayCreateInput,
   type PlayUpdateInput,
-} from "../validation/playValidation";
+} from "../schemas-validation/playValidation";
 import {
   rateLimiter,
   RateLimitPresets,
@@ -20,6 +20,7 @@ import {
 } from "../utils/rateLimiter";
 import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
+import { ensureValidFormation } from "../utils/formationGuard";
 
 // ========================================
 // Security Events Tracking
@@ -153,6 +154,25 @@ export class SecurePlaysService {
         throw new Error(`Invalid play data: ${error.message}`);
       }
 
+      // Validate formation & personnel
+      const formationResult = await ensureValidFormation({
+        playbookId: validated.playbook_id,
+        // @ts-expect-error formation_id added at runtime
+        formationId: validated.formation_id,
+        formationName: validated.formation,
+        personnel: validated.personnel,
+        allowCustom: true,
+      });
+
+      if (formationResult.formationId) {
+        // @ts-expect-error formation_id added at runtime
+        validated.formation_id = formationResult.formationId;
+      }
+
+      if (formationResult.formationName) {
+        validated.formation = formationResult.formationName;
+      }
+
       // Call underlying service
       return await PlaysService.createPlay(validated);
     } catch (error) {
@@ -249,6 +269,30 @@ export class SecurePlaysService {
           },
         });
         throw new Error(`Invalid update data: ${error.message}`);
+      }
+
+      const existingPlay = await PlaysService.getPlay(id);
+      if (!existingPlay) {
+        throw new Error("Play not found");
+      }
+
+      const formationResult = await ensureValidFormation({
+        playbookId: existingPlay.playbook_id,
+        formationId:
+          // @ts-expect-error formation_id attached at runtime
+          validated.formation_id ?? existingPlay.formation_id ?? undefined,
+        formationName: validated.formation ?? existingPlay.formation ?? undefined,
+        personnel: validated.personnel ?? undefined,
+        allowCustom: true,
+      });
+
+      if (formationResult.formationId) {
+        // @ts-expect-error formation_id attached at runtime
+        validated.formation_id = formationResult.formationId;
+      }
+
+      if (formationResult.formationName && !validated.formation) {
+        validated.formation = formationResult.formationName;
       }
 
       // Call underlying service
@@ -430,5 +474,5 @@ export default SecurePlaysService;
 export type {
   PlayCreateInput,
   PlayUpdateInput,
-} from "../validation/playValidation";
+} from "../schemas-validation/playValidation";
 export { isRateLimitError, RateLimitError } from "../utils/rateLimiter";

@@ -14,20 +14,42 @@ function formatDirection(
 
   switch (format) {
     case "full":
-      if (val === "R") return "Right";
-      if (val === "L") return "Left";
+      if (val === "R" || val === "RIGHT") return "Right";
+      if (val === "L" || val === "LEFT") return "Left";
       return val;
     case "abbrev":
-      if (val === "R") return "Rt";
-      if (val === "L") return "Lt";
+      if (val === "R" || val === "RIGHT") return "Rt";
+      if (val === "L" || val === "LEFT") return "Lt";
       return val;
     case "letter":
-      if (val === "R") return "R";
-      if (val === "L") return "L";
+      if (val === "R" || val === "RIGHT") return "R";
+      if (val === "L" || val === "LEFT") return "L";
       return val;
     default:
       return val;
   }
+}
+
+/**
+ * Format directions within a text string according to the display format preference
+ */
+function formatDirectionsInText(
+  text: string | undefined | null,
+  format: "full" | "abbrev" | "letter" = "full"
+): string {
+  if (!text) return "";
+
+  // Split text into words and format any direction words
+  return text.split(/\s+/).map(word => {
+    const upperWord = word.toUpperCase();
+    if (upperWord === "LEFT" || upperWord === "L" || upperWord === "LT") {
+      return formatDirection("L", format);
+    }
+    if (upperWord === "RIGHT" || upperWord === "R" || upperWord === "RT") {
+      return formatDirection("R", format);
+    }
+    return word;
+  }).join(" ");
 }
 
 /**
@@ -143,7 +165,7 @@ export function getDisplayName(
         let value = "";
         switch (fieldKey) {
           case "formation":
-            value = clean(play.formation);
+            value = formatDirectionsInText(clean(play.formation), directionDisplayFormat);
             break;
           case "f_type":
             value = clean(play.f_type);

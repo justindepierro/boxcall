@@ -26,6 +26,8 @@ interface FormationSelectorProps {
   onCreateNew?: () => void; // NEW: Callback to open Formation Builder
   className?: string;
   disabled?: boolean;
+  onFormationsLoaded?: (formations: Formation[]) => void;
+  directionDisplayFormat?: "full" | "abbrev" | "letter"; // NEW: Direction display format
 }
 
 export function FormationSelector({
@@ -35,6 +37,8 @@ export function FormationSelector({
   onCreateNew,
   className = "",
   disabled = false,
+  onFormationsLoaded,
+  directionDisplayFormat = "full", // NEW: Default to full format
 }: FormationSelectorProps) {
   const [formations, setFormations] = useState<Formation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +59,7 @@ export function FormationSelector({
       try {
         const data = await FormationService.getFormationsByPlaybook(playbookId);
         setFormations(data);
+        onFormationsLoaded?.(data);
       } catch (err) {
         console.error("Error loading formations:", err);
         setError("Failed to load formations");
@@ -65,7 +70,7 @@ export function FormationSelector({
     }
 
     loadFormations();
-  }, [playbookId]);
+  }, [playbookId, onFormationsLoaded]);
 
   // Get selected formation
   const selectedFormation = value
@@ -102,14 +107,39 @@ export function FormationSelector({
   // Direction labels
   const getDirectionLabel = (direction: string | null) => {
     if (!direction) return "";
-    switch (direction) {
-      case "left":
-        return "← Left";
-      case "right":
-        return "→ Right";
-      case "base":
+    switch (directionDisplayFormat) {
+      case "full":
+        switch (direction) {
+          case "left":
+            return "← Left";
+          case "right":
+            return "→ Right";
+          case "base":
+          default:
+            return ""; // Don't show "Base" label (base formations without variants show as-is)
+        }
+      case "abbrev":
+        switch (direction) {
+          case "left":
+            return "← Lt";
+          case "right":
+            return "→ Rt";
+          case "base":
+          default:
+            return ""; // Don't show "Base" label
+        }
+      case "letter":
+        switch (direction) {
+          case "left":
+            return "← L";
+          case "right":
+            return "→ R";
+          case "base":
+          default:
+            return ""; // Don't show "Base" label
+        }
       default:
-        return ""; // Don't show "Base" label (base formations without variants show as-is)
+        return "";
     }
   };
 

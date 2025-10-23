@@ -2,7 +2,11 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 
-export type CoachingView = "playbook" | "practice-script" | "game-plan";
+export type CoachingView =
+  | "playbook"
+  | "practice-script"
+  | "game-plan"
+  | "analytics";
 
 export interface PlaybookFiltersState {
   searchQuery: string;

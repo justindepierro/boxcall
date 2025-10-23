@@ -117,7 +117,10 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                   Export
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                  <Icon name="download" className="w-5 h-5 text-text-secondary" />
+                  <Icon
+                    name="download"
+                    className="w-5 h-5 text-text-secondary"
+                  />
                 </div>
               </button>
 
@@ -151,9 +154,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           <button
             onClick={toggleExpanded}
             className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center active:scale-95 transition-all ${
-              isExpanded
-                ? "bg-error-500 rotate-45"
-                : "bg-accent"
+              isExpanded ? "bg-error-500 rotate-45" : "bg-accent"
             }`}
           >
             {isExpanded ? (

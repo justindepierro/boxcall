@@ -19,6 +19,7 @@ import {
   LazyPracticeSession,
   LazyGameSession,
   LazyPlaybookPage,
+  LazyFormationMapperPage,
   LazyRosterPage,
   LazyPlayerDetailPage,
   LazyPracticePlansPage,
@@ -51,7 +52,7 @@ import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { teamRoutes } from "./paths";
 import { Layout } from "../components/layout/Layout";
-import { useActiveTeamStore } from "../state/activeTeamStore";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 
 // Component for legacy team bulletin redirects
@@ -287,6 +288,21 @@ export const DataRouterApp: React.FC = () => {
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <PlaybookProvider>
                     <LazyPlaybookPage />
+                  </PlaybookProvider>
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/playbook/formation-mapper"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <PlaybookProvider>
+                    <LazyFormationMapperPage />
                   </PlaybookProvider>
                 </Suspense>
               </AuthenticatedLayout>

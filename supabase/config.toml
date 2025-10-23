@@ -159,7 +159,7 @@ web3 = 10
 
 # Configure CAPTCHA for additional protection against automated attacks
 [auth.captcha]
-enabled = true
+enabled = false
 provider = "hcaptcha"
 secret = "env(HCAPTCHA_SECRET)"
 

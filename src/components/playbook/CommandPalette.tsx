@@ -105,7 +105,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       size={isMobile ? "fullscreen" : "md"}
       title="Command Palette"
     >
-      <div className={`${isMobile ? "p-4 pb-safe" : "p-4"}`} onKeyDown={handleKeyDown}>
+      <div
+        className={`${isMobile ? "p-4 pb-safe" : "p-4"}`}
+        onKeyDown={handleKeyDown}
+      >
         {/* Search Input - Larger on mobile (48px) */}
         <Input
           placeholder="Type a command or search..."
@@ -118,11 +121,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         {/* Command List - More spacing on mobile */}
         <div
           className={`mt-4 overflow-y-auto ${
-            isMobile ? "max-h-[calc(100vh-16rem)] space-y-2" : "max-h-96 space-y-1"
+            isMobile
+              ? "max-h-[calc(100vh-16rem)] space-y-2"
+              : "max-h-96 space-y-1"
           }`}
         >
           {filteredCommands.length === 0 ? (
-            <div className={`text-center text-muted ${isMobile ? "py-12" : "py-8"}`}>
+            <div
+              className={`text-center text-muted ${isMobile ? "py-12" : "py-8"}`}
+            >
               <Icon
                 name="search"
                 size={isMobile ? 40 : 32}
@@ -139,9 +146,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 onClick={() => executeCommand(cmd)}
                 onMouseEnter={() => !isMobile && setSelectedIndex(idx)}
                 className={`w-full flex items-center gap-3 rounded-lg transition-all ${
-                  isMobile
-                    ? "p-4 min-h-[48px] active:scale-98"
-                    : "p-3"
+                  isMobile ? "p-4 min-h-[48px] active:scale-98" : "p-3"
                 } ${
                   idx === selectedIndex
                     ? "bg-brand-primary/10 border-brand-primary border-2"
