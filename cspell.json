@@ -13,7 +13,8 @@
     "tite",
     "Supabase",
     "playbook",
-    "playbookid"
+    "playbookid",
+    "Fundraise"
   ],
   "ignoreWords": [],
   "ignorePaths": [

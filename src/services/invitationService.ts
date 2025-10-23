@@ -261,7 +261,7 @@ export async function resendPlayerInvitation(
   email: string,
   playerName: string,
   teamName: string,
-  invitedBy: string,
+  _invitedBy: string,
   teamId: string
 ): Promise<InvitationResult> {
   if (!email) {
