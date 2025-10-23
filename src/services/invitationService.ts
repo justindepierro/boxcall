@@ -13,6 +13,10 @@
 
 import { supabase } from "../lib/supabase";
 import { info, error as logError } from "../utils/logger";
+import {
+  sendPlayerInvitationEmail,
+  sendInvitationReminderEmail,
+} from "./email/emailService";
 
 export interface SendInvitationParams {
   playerId: string;
@@ -194,29 +198,41 @@ export async function sendPlayerInvitation(
     // Generate invitation URL
     const invitationUrl = `${window.location.origin}/invite/accept?token=${invitationToken}`;
 
-    // === MVP: Placeholder Email Logic ===
-    // TODO: Replace with real email service integration
-    console.log("📧 ============ INVITATION EMAIL ============");
-    console.log(`To: ${email}`);
-    console.log(`Subject: You're invited to join ${teamName}!`);
-    console.log("");
-    console.log(`Hi ${playerName},`);
-    console.log("");
-    console.log(`You've been invited to join ${teamName} on BoxCall!`);
-    console.log("");
-    console.log(`Click the link below to accept:`);
-    console.log(invitationUrl);
-    console.log("");
-    console.log(`If you don't have an account, you'll be able to create one.`);
-    console.log("");
-    console.log(`Invited by: ${invitedBy}`);
-    console.log("============================================");
-    
-    // Optional: Open mailto link as fallback
-    // const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(`Join ${teamName} on BoxCall`)}&body=${encodeURIComponent(invitationUrl)}`;
-    // window.open(mailtoLink, '_blank');
+    // Send email via Resend
+    // Note: Team logo support can be added later when logo_url column exists
+    const emailResult = await sendPlayerInvitationEmail({
+      to: email,
+      playerName,
+      teamName,
+      teamLogoUrl: undefined, // TODO: Add when teams.logo_url column is added
+      invitationLink: invitationUrl,
+      expiresAt: expirationDate,
+      invitedBy,
+      teamId,
+    });
 
-    info(`[invitationService] Invitation sent successfully to ${email}`);
+    if (!emailResult.success) {
+      logError(
+        "[invitationService] Email delivery failed:",
+        emailResult.error
+      );
+      
+      // Update status to failed but don't throw - player is still in system
+      await (supabase.from("team_players") as any)
+        .update({ invitation_status: "failed" })
+        .eq("id", playerId);
+
+      await logInvitationAttempt(teamId, playerId, email, false);
+
+      return {
+        success: false,
+        message: `Failed to send email: ${emailResult.error}`,
+      };
+    }
+
+    info(
+      `[invitationService] Invitation email sent successfully to ${email} (Message ID: ${emailResult.messageId})`
+    );
     
     // Log successful attempt
     await logInvitationAttempt(teamId, playerId, email, true);
@@ -280,15 +296,38 @@ export async function resendPlayerInvitation(
       throw error;
     }
 
-    // Send with new token
-    return sendPlayerInvitation({
-      playerId,
-      email,
+    // Generate invitation URL with new token
+    const invitationUrl = `${window.location.origin}/invite/accept?token=${newToken}`;
+
+    // Send reminder email (different template)
+    const emailResult = await sendInvitationReminderEmail({
+      to: email,
       playerName,
       teamName,
-      invitedBy,
-      teamId,
+      teamLogoUrl: undefined, // TODO: Add when teams.logo_url column is added
+      invitationLink: invitationUrl,
+      expiresAt: expirationDate,
     });
+
+    if (!emailResult.success) {
+      logError("[invitationService] Reminder email failed:", emailResult.error);
+      return {
+        success: false,
+        message: `Failed to send reminder: ${emailResult.error}`,
+      };
+    }
+
+    info(
+      `[invitationService] Reminder email sent to ${email} (Message ID: ${emailResult.messageId})`
+    );
+
+    await logInvitationAttempt(teamId, playerId, email, true);
+
+    return {
+      success: true,
+      message: `Reminder sent to ${email}`,
+      invitationToken: newToken,
+    };
   } catch (err) {
     logError("[invitationService] Failed to resend invitation:", err);
     return {
