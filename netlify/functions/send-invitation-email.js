@@ -5,11 +5,11 @@
  * to avoid CORS issues and keep API keys secure.
  */
 
-import { Resend } from 'resend';
+const { Resend } = require('resend');
 
 const resend = new Resend(process.env.VITE_RESEND_API_KEY);
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
