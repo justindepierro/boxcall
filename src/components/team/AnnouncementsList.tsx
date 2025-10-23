@@ -67,12 +67,18 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
     if (!confirm("Are you sure you want to delete this announcement?")) return;
     
     try {
-      await AnnouncementsService.deleteAnnouncement(id);
+      const result = await AnnouncementsService.deleteAnnouncement(id);
+      
+      if (!result.success) {
+        alert(result.error || "Failed to delete announcement. You may not have permission.");
+        return;
+      }
+      
       if (onDelete) onDelete(id);
       await loadAnnouncements();
     } catch (err) {
       console.error("Error deleting announcement:", err);
-      alert("Failed to delete announcement");
+      alert("Failed to delete announcement. Please try again.");
     }
   };
 

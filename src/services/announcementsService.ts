@@ -282,6 +282,22 @@ export class AnnouncementsService {
    */
   static async deleteAnnouncement(announcementId: string): Promise<{ success: boolean; error?: string }> {
     try {
+      // First check if the announcement exists and get the team_id
+      const { data: announcement, error: fetchError } = await supabase
+        .from("team_announcements" as any)
+        .select("id, team_id, created_by")
+        .eq("id", announcementId)
+        .single();
+
+      if (fetchError || !announcement) {
+        console.error("Error fetching announcement:", fetchError);
+        return {
+          success: false,
+          error: "Announcement not found or you don't have permission to delete it",
+        };
+      }
+
+      // Perform soft delete by setting deleted_at timestamp
       const { error } = await supabase
         .from("team_announcements" as any)
         .update({ deleted_at: new Date().toISOString() } as any)
@@ -291,17 +307,15 @@ export class AnnouncementsService {
         console.error("Error deleting announcement:", error);
         return {
           success: false,
-          error: error.message,
+          error: "You don't have permission to delete this announcement. Only the creator or team head coaches can delete announcements.",
         };
       }
 
-      emitTelemetry("announcement.deleted", {
-        announcement_id: announcementId,
-      });
+      emitTelemetry("announcements", { action: "deleted", announcement_id: announcementId });
 
       return { success: true };
     } catch (error) {
-      console.error("Error in deleteAnnouncement:", error);
+      console.error("Error deleting announcement:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
