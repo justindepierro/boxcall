@@ -13,8 +13,9 @@ import type {
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
 import { AnnouncementReactions } from "./AnnouncementReactions";
+import { AnnouncementComments } from "./AnnouncementComments";
 import { format } from "date-fns";
-import { Pin, Edit2, Trash2 } from "lucide-react";
+import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -33,6 +34,19 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<AnnouncementFilters>({});
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+
+  const toggleComments = (announcementId: string) => {
+    setExpandedComments((prev) => {
+      const next = new Set(prev);
+      if (next.has(announcementId)) {
+        next.delete(announcementId);
+      } else {
+        next.add(announcementId);
+      }
+      return next;
+    });
+  };
 
   // Fetch announcements
   const loadAnnouncements = useCallback(async () => {
@@ -251,6 +265,29 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                 announcementId={announcement.id}
                 onReactionChange={loadAnnouncements}
               />
+            </div>
+
+            {/* Comments Toggle */}
+            <div className="mt-4 pt-4 border-t border">
+              <button
+                onClick={() => toggleComments(announcement.id)}
+                className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Comments</span>
+                {expandedComments.has(announcement.id) ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </button>
+
+              {/* Comments Section */}
+              {expandedComments.has(announcement.id) && (
+                <div className="mt-4">
+                  <AnnouncementComments announcementId={announcement.id} />
+                </div>
+              )}
             </div>
           </div>
         ))}
