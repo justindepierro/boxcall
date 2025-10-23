@@ -12,6 +12,7 @@ import type {
   AnnouncementVisibility 
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
+import { AnnouncementReactions } from "./AnnouncementReactions";
 import { format } from "date-fns";
 import { Pin, Edit2, Trash2 } from "lucide-react";
 
@@ -243,6 +244,14 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                 </div>
               </div>
             )}
+
+            {/* Reactions */}
+            <div className="mt-4 pt-4 border-t border">
+              <AnnouncementReactions
+                announcementId={announcement.id}
+                onReactionChange={loadAnnouncements}
+              />
+            </div>
           </div>
         ))}
       </div>
