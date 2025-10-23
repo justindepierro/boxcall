@@ -111,3 +111,19 @@ playwright-report/
 playwright-results.json
 .playwright-artifacts-*/
 error-context.md
+
+# Build performance logs
+build-*.txt
+
+# Temporary SQL files
+formation_play_sync.sql
+
+# Test scripts
+test-personnel.js
+
+# Supabase credentials
+.env.supabase
+
+# Generated Supabase types (regenerate with: npx supabase gen types)
+src/lib/database.types.ts
+src/types/database/generated.ts
