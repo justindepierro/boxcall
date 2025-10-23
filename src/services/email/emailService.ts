@@ -1,17 +1,14 @@
 /**
- * Email Service - Handles all email sending via Resend
+ * Email Service - Handles all email sending via serverless function
  * 
  * Features:
  * - Player invitation emails
  * - Invitation reminder emails
  * - Error handling and retry logic
  * - Delivery logging
+ * 
+ * Note: Calls serverless function to avoid CORS issues with Resend API
  */
-
-import { Resend } from 'resend';
-
-// Initialize Resend client
-const resend = new Resend(import.meta.env.VITE_RESEND_API_KEY);
 
 export interface SendEmailParams {
   to: string;
@@ -28,43 +25,46 @@ export interface SendEmailResult {
 }
 
 /**
- * Send a generic email via Resend
+ * Send a generic email via serverless function
  */
 export async function sendEmail(params: SendEmailParams): Promise<SendEmailResult> {
   try {
-    const { to, subject, html, text, replyTo } = params;
+    const { to, subject, html, text } = params;
     
-    const fromEmail = import.meta.env.VITE_RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-    const fromName = import.meta.env.VITE_RESEND_FROM_NAME || 'BoxCall';
-    
-    console.log('[EmailService] Sending email:', {
+    console.log('[EmailService] Sending email via serverless function:', {
       to,
       subject,
-      from: `${fromName} <${fromEmail}>`,
     });
 
-    const response = await resend.emails.send({
-      from: `${fromName} <${fromEmail}>`,
-      to,
-      subject,
-      html,
-      text: text || stripHtml(html), // Generate plain text fallback if not provided
-      replyTo,
+    // Call Netlify serverless function
+    const response = await fetch('/.netlify/functions/send-invitation-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to,
+        subject,
+        html,
+        text: text || stripHtml(html),
+      }),
     });
 
-    if (response.error) {
-      console.error('[EmailService] Error sending email:', response.error);
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      console.error('[EmailService] Error sending email:', result.error);
       return {
         success: false,
-        error: response.error.message || 'Failed to send email',
+        error: result.error || 'Failed to send email',
       };
     }
 
-    console.log('[EmailService] Email sent successfully:', response.data?.id);
+    console.log('[EmailService] Email sent successfully:', result.messageId);
     
     return {
       success: true,
-      messageId: response.data?.id,
+      messageId: result.messageId,
     };
   } catch (error) {
     console.error('[EmailService] Exception sending email:', error);
