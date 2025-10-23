@@ -6,6 +6,8 @@ import { Card } from "../components/ui";
 import { Button } from "../components/ui/Button/Button";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { StaffManagement } from "../components/team/StaffManagement";
+import { FamilyPermissionsSettings } from "../components/team/FamilyPermissionsSettings";
+import type { FamilyPermissions } from "../components/team/FamilyPermissionsSettings";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Aurora } from "../components/ui/Aurora";
@@ -174,6 +176,17 @@ export const TeamSettings: React.FC = () => {
 
           {activeTab === "settings" && (
             <div className="space-y-spacing-lg">
+              {/* Family Permissions Section */}
+              <FamilyPermissionsSettings
+                teamId={teamId}
+                onSave={async (permissions: FamilyPermissions) => {
+                  console.log("Saving family permissions:", permissions);
+                  // TODO: Implement API call to save permissions
+                  // await teamService.updateFamilyPermissions(teamId, permissions);
+                }}
+              />
+
+              {/* Team Preferences Section */}
               <Card className="p-spacing-lg">
                 <Typography variant="headline-lg" className="mb-spacing-md">
                   Team Preferences
