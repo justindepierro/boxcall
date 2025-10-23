@@ -318,3 +318,12 @@ vi.mock("../components/ui/Icon/ModularIcon.tsx", () => ({
   ModularTeamIcon: vi.fn(() => null),
   ModularSettingsIcon: vi.fn(() => null),
 }));
+
+// Mock @services imports for tests
+vi.mock("@services", () => ({
+  PlaysService: {},
+  ActivityService: {},
+  PracticeScriptService: {},
+  GamePlanService: {},
+  PlayActivityItem: {},
+}));

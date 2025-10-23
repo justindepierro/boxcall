@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { Icon } from "./Icon";
 
 export type SortOption = {
@@ -11,6 +11,7 @@ interface SortDropdownProps {
   value: string;
   onChange: (optionId: string) => void;
   className?: string;
+  label?: string;
 }
 
 export const SortDropdown: React.FC<SortDropdownProps> = ({
@@ -18,14 +19,24 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
   value,
   onChange,
   className = "",
+  label = "Sort by",
 }) => {
+  const selectId = useId();
+
   return (
     <div className={`relative inline-block ${className}`}>
-      <label className="text-sm text-text-secondary mr-2">Sort by:</label>
+      <label
+        htmlFor={selectId}
+        className="mb-2 block text-sm text-text-secondary sm:mb-0 sm:inline sm:mr-2"
+      >
+        <span className="sr-only sm:not-sr-only">{label}:</span>
+      </label>
       <select
+        id={selectId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="
+          w-full
           appearance-none
           bg-surface-primary
           border border-border

@@ -58,6 +58,10 @@ const NotesSchema = z
   });
 
 const UUIDSchema = z.string().uuid("Invalid UUID format").min(1, "ID required");
+const OptionalUUIDSchema = z
+  .string()
+  .uuid("Invalid UUID format")
+  .optional();
 
 // ========================================
 // Diagram Data Schema
@@ -107,6 +111,7 @@ export const PlayCreateSchema = z.object({
   playbook_id: UUIDSchema,
   play_name: PlayNameSchema,
   formation: FormationSchema,
+  formation_id: OptionalUUIDSchema,
   p_type: z.preprocess(
     (val) => (val === "" || val === null ? undefined : val),
     PlayTypeEnum.optional()
@@ -165,6 +170,8 @@ export const PlayCreateSchema = z.object({
   ai_generated: z.boolean().optional().default(false),
   ai_confidence: z.number().min(0).max(1).optional(),
   ai_model_version: z.string().max(50).optional(),
+  formation_status: z.string().max(32).optional(),
+  sanitized_at: z.union([z.string(), z.date()]).optional(),
 });
 
 /**
@@ -177,6 +184,7 @@ export const PlayUpdateSchema = z.object({
   // All other fields optional for partial updates
   play_name: PlayNameSchema.optional(),
   formation: FormationSchema.optional(),
+  formation_id: OptionalUUIDSchema,
   p_type: PlayTypeEnum.optional(),
   play_call: z.string().max(50).optional(),
   strength: z.enum(["left", "right", "middle"]).optional(),
@@ -211,6 +219,8 @@ export const PlayUpdateSchema = z.object({
   times_called: z.number().min(0).optional(),
   times_successful: z.number().min(0).optional(),
   expected_duration: z.number().min(0).max(60).optional(),
+  formation_status: z.string().max(32).optional(),
+  sanitized_at: z.union([z.string(), z.date()]).optional(),
 });
 
 /**

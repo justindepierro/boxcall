@@ -34,13 +34,7 @@ You should see several tabs:
 Click the **URI** tab and you'll see something like:
 
 ```
-postgresql://postgres.lvmuiqwihlpnwppdqqfl:[YOUR-PASSWORD]@aws-0-us-west-1.pooler.supabase.com:6543/postgres
-```
-
-OR
-
-```
-postgresql://postgres:[YOUR-PASSWORD]@db.lvmuiqwihlpnwppdqqfl.supabase.co:5432/postgres
+postgresql://postgres.lvmuiqwihlpnwppdqqfl:[YOUR-PASSWORD]@aws-0-us-east-2.pooler.supabase.com:5432/postgres
 ```
 
 ### 7. Get Your Password

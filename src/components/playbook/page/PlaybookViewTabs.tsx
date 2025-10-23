@@ -7,7 +7,11 @@ import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { PlaybookSelector } from "../PlaybookSelector";
 
-export type CoachingView = "playbook" | "practice-script" | "game-plan";
+export type CoachingView =
+  | "playbook"
+  | "practice-script"
+  | "game-plan"
+  | "analytics";
 
 interface Playbook {
   id: string;
@@ -191,6 +195,34 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               iconPosition="left"
             >
               <span className="hidden md:inline">Game Plans</span>
+            </Button>
+            <Button
+              id="tab-analytics"
+              role="tab"
+              aria-controls="panel-analytics"
+              aria-selected={currentView === "analytics"}
+              tabIndex={currentView === "analytics" ? 0 : -1}
+              onClick={() => onViewChange("analytics")}
+              variant="ghost"
+              size="sm"
+              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
+                currentView === "analytics"
+                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
+                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400"
+              }`}
+              icon={
+                <Icon
+                  name="bar-chart"
+                  className={
+                    currentView === "analytics"
+                      ? "text-white"
+                      : "text-emerald-600 dark:text-emerald-400"
+                  }
+                />
+              }
+              iconPosition="left"
+            >
+              <span className="hidden md:inline">Analytics</span>
             </Button>
           </div>
 

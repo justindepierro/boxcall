@@ -58,7 +58,7 @@ Apply the personnel system database schema to enable:
 2. **Run Migration:**
 
    ```bash
-   psql "postgresql://postgres:[YOUR-PASSWORD]@db.lvmuiqwihlpnwppdqqfl.supabase.co:5432/postgres" \
+   psql "postgresql://postgres.lvmuiqwihlpnwppdqqfl:[YOUR-PASSWORD]@aws-0-us-east-2.pooler.supabase.com:5432/postgres" \
      -f supabase/migrations/20251011000000_add_personnel_system.sql
    ```
 

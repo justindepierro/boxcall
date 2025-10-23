@@ -70,7 +70,7 @@ export function PlayAssignmentsModal({
 }: PlayAssignmentsModalProps) {
   const { user } = useAuth();
   const isMobile = useIsMobile();
-  
+
   const [assignments, setAssignments] = useState<Map<string, AssignmentData>>(
     new Map()
   );
@@ -681,8 +681,8 @@ export function PlayAssignmentsModal({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size={isMobile ? "md" : "sm"}
               onClick={() => {
                 if (isMobile) triggerHapticFeedback("light");

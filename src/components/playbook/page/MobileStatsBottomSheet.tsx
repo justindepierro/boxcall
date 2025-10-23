@@ -11,6 +11,7 @@ export interface PlaybookStats {
   runPlays: number;
   rpoPlays: number;
   playActionPlays: number;
+  formationsNeedingMapping?: number;
 }
 
 export interface MobileStatsBottomSheetProps {
@@ -127,6 +128,42 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
             />
           </div>
         </div>
+
+        {typeof stats.formationsNeedingMapping === "number" && (
+          <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Typography
+                  variant="body-sm"
+                  className="text-text-secondary font-medium"
+                >
+                  Formation Mapper
+                </Typography>
+                <Typography
+                  variant="headline-md"
+                  className="text-text-primary font-bold"
+                >
+                  {stats.formationsNeedingMapping}
+                </Typography>
+                <Typography
+                  variant="body-xs"
+                  className="text-text-secondary mt-1"
+                >
+                  {stats.formationsNeedingMapping === 0
+                    ? "All plays mapped"
+                    : "need mapping"}
+                </Typography>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-warning-500/20 flex items-center justify-center">
+                <Icon
+                  name="link"
+                  size="md"
+                  className="h-6 w-6 text-warning-500"
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Play Type Distribution */}
         <div className="space-y-3">

@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Typography } from "../../../design-system/Typography";
 import { useIsMobile } from "../../../../hooks/useBreakpoint";
 import { useKeyboardAwareScroll } from "../../../../hooks/useKeyboardAwareScroll";
+import { Icon } from "../../../ui/Icon/Icon";
 
 interface FuzzySearchInputProps {
   label: string;
@@ -9,6 +10,8 @@ interface FuzzySearchInputProps {
   onChange: (value: string) => void;
   placeholder: string;
   suggestions: string[];
+  aiSuggestions?: string[];
+  generatedSuggestions?: string[];
   showSuggestions: boolean;
   onShowSuggestionsChange: (show: boolean) => void;
   required?: boolean;
@@ -17,11 +20,12 @@ interface FuzzySearchInputProps {
 }
 
 /**
- * FuzzySearchInput - Reusable autocomplete/fuzzy search input component
+ * Enhanced FuzzySearchInput - Reusable autocomplete/fuzzy search input component
  *
  * Features:
  * - Text input with fuzzy search filtering
  * - Dropdown suggestions based on input
+ * - AI-powered suggestions with visual indicators
  * - Keyboard navigation (Tab, Escape)
  * - Click outside to close
  * - Customizable max suggestions
@@ -34,6 +38,8 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
   onChange,
   placeholder,
   suggestions,
+  aiSuggestions = [],
+  generatedSuggestions = [],
   showSuggestions,
   onShowSuggestionsChange,
   required = false,
@@ -49,18 +55,69 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
   // Auto-scroll input into view when keyboard appears on mobile
   useKeyboardAwareScroll(inputRef);
 
-  // Filter suggestions based on input value
-  const filteredSuggestions = React.useMemo(() => {
-    if (!value.trim()) return suggestions.slice(0, maxSuggestions);
-    const lower = value.toLowerCase();
-    return suggestions
-      .filter((s) => s.toLowerCase().includes(lower))
+  // Combine all suggestions with metadata
+  const allSuggestions = React.useMemo(() => {
+    const combined: Array<{
+      text: string;
+      type: "ai" | "generated" | "basic";
+      priority: number;
+    }> = [];
+
+    // Add AI suggestions (highest priority)
+    aiSuggestions.forEach((suggestion) => {
+      combined.push({ text: suggestion, type: "ai", priority: 3 });
+    });
+
+    // Add generated suggestions (medium priority)
+    generatedSuggestions.forEach((suggestion) => {
+      combined.push({ text: suggestion, type: "generated", priority: 2 });
+    });
+
+    // Add basic fuzzy matches (lowest priority)
+    const basicFiltered = suggestions.filter((suggestion) =>
+      suggestion.toLowerCase().includes(value.toLowerCase())
+    );
+    basicFiltered.forEach((suggestion) => {
+      // Avoid duplicates
+      if (!combined.some((item) => item.text === suggestion)) {
+        combined.push({ text: suggestion, type: "basic", priority: 1 });
+      }
+    });
+
+    // Sort by priority (AI first), then alphabetically
+    return combined
+      .sort((a, b) => {
+        if (a.priority !== b.priority) return b.priority - a.priority;
+        return a.text.localeCompare(b.text);
+      })
       .slice(0, maxSuggestions);
-  }, [value, suggestions, maxSuggestions]);
+  }, [value, suggestions, aiSuggestions, generatedSuggestions, maxSuggestions]);
 
   const handleSelectSuggestion = (suggestion: string) => {
     onChange(suggestion);
     onShowSuggestionsChange(false);
+  };
+
+  const getSuggestionIcon = (type: "ai" | "generated" | "basic") => {
+    switch (type) {
+      case "ai":
+        return <Icon name="sparkles" className="h-3 w-3 text-blue-500" />;
+      case "generated":
+        return <Icon name="lightbulb" className="h-3 w-3 text-warning-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getSuggestionLabel = (type: "ai" | "generated" | "basic") => {
+    switch (type) {
+      case "ai":
+        return "AI Suggested";
+      case "generated":
+        return "Smart Suggestion";
+      default:
+        return null;
+    }
   };
 
   return (
@@ -85,16 +142,29 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           }`}
           required={required}
         />
-        {showSuggestions && filteredSuggestions.length > 0 && (
+        {showSuggestions && allSuggestions.length > 0 && (
           <div className="absolute top-full left-0 right-0 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-40 overflow-y-auto mt-spacing-xs">
-            {filteredSuggestions.map((suggestion, index) => (
+            {allSuggestions.map((suggestion, index) => (
               <button
                 key={index}
                 type="button"
-                onClick={() => handleSelectSuggestion(suggestion)}
-                className="w-full text-left px-spacing-sm py-spacing-xs text-content-primary hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                onClick={() => handleSelectSuggestion(suggestion.text)}
+                className="w-full text-left px-spacing-sm py-spacing-xs hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors group"
               >
-                <Typography variant="body-sm">{suggestion}</Typography>
+                <div className="flex items-center gap-spacing-xs">
+                  {getSuggestionIcon(suggestion.type)}
+                  <Typography variant="body-sm" className="flex-1">
+                    {suggestion.text}
+                  </Typography>
+                  {getSuggestionLabel(suggestion.type) && (
+                    <Typography
+                      variant="caption"
+                      className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      {getSuggestionLabel(suggestion.type)}
+                    </Typography>
+                  )}
+                </div>
               </button>
             ))}
           </div>

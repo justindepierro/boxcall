@@ -19,6 +19,7 @@ import {
   LazyPracticeSession,
   LazyGameSession,
   LazyPlaybookPage,
+  LazyFormationMapperPage,
   LazyRosterPage,
   LazyPlayerDetailPage,
   LazyPracticePlansPage,
@@ -287,6 +288,21 @@ export const DataRouterApp: React.FC = () => {
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <PlaybookProvider>
                     <LazyPlaybookPage />
+                  </PlaybookProvider>
+                </Suspense>
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/playbook/formation-mapper"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <PlaybookProvider>
+                    <LazyFormationMapperPage />
                   </PlaybookProvider>
                 </Suspense>
               </AuthenticatedLayout>

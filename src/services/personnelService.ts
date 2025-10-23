@@ -12,12 +12,14 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { PersonnelValidationService } from "./validationService";
 import type {
   PersonnelConfiguration,
   PersonnelPlayer,
   CreatePersonnelConfiguration,
   UpdatePersonnelConfiguration,
   BadgeCustomization,
+  PlayerPosition,
 } from "../types/personnel";
 
 export class PersonnelService {
@@ -170,6 +172,12 @@ export class PersonnelService {
     config: CreatePersonnelConfiguration
   ): Promise<PersonnelConfiguration> {
     try {
+      // Validate configuration data
+      const validation = await PersonnelValidationService.validatePersonnelConfigurationServer(config);
+      if (!validation.valid) {
+        throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+      }
+
       // Validate QB is at index 0
       if (
         config.players.length > 0 &&
@@ -181,12 +189,11 @@ export class PersonnelService {
       // Insert configuration
       const { data: newConfig, error: configError } = await supabase
         .from("personnel_configurations")
-        // @ts-ignore - Supabase personnel_configurations types not properly generated
         .insert({
           playbook_id: config.playbook_id,
           name: config.name,
-          description: config.description,
-          badge_customization: config.badgeCustomization,
+          description: config.description || null,
+          badge_customization: config.badgeCustomization as any, // Cast to Json for database
         })
         .select()
         .single();
@@ -217,7 +224,6 @@ export class PersonnelService {
 
       const { data: players, error: playersError } = await supabase
         .from("personnel_players")
-        // @ts-ignore - Supabase personnel_players types not properly generated
         .insert(playersToInsert)
         .select();
 
@@ -257,11 +263,10 @@ export class PersonnelService {
       // Update configuration metadata
       const { data: updatedConfig, error: configError } = await supabase
         .from("personnel_configurations")
-        // @ts-ignore - Supabase personnel_configurations types not properly generated
         .update({
           name: updates.name,
           description: updates.description,
-          badge_customization: updates.badgeCustomization,
+          badge_customization: updates.badgeCustomization as any, // Cast to Json for database
         })
         .eq("id", id)
         .select()
@@ -311,7 +316,6 @@ export class PersonnelService {
 
         const { data: players, error: playersError } = await supabase
           .from("personnel_players")
-          // @ts-ignore - Supabase personnel_players types not properly generated
           .insert(playersToInsert)
           .select();
 
@@ -432,7 +436,12 @@ export class PersonnelService {
         .order("sort_order");
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(player => ({
+        ...player,
+        player_position: player.player_position as PlayerPosition, // Cast string to enum
+        is_wildcat_qb: player.is_wildcat_qb || false, // Convert null to false
+        created_at: player.created_at || new Date().toISOString(), // Handle null created_at
+      }));
     } catch (error) {
       console.error("Failed to fetch personnel players:", error);
       throw error;

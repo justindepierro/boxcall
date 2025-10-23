@@ -6,6 +6,7 @@
  */
 
 import type { TeamRole, CapabilityFlags } from "../../roles";
+import type { Json } from "../generated";
 
 export interface TeamTables {
   teams: {
@@ -370,6 +371,67 @@ export interface TeamTables {
       expires_at?: string | null;
       created_at?: string | null;
       updated_at?: string | null;
+    };
+  };
+  personnel_configurations: {
+    Row: {
+      badge_customization: Json | null;
+      created_at: string | null;
+      deleted_at: string | null;
+      description: string | null;
+      id: string;
+      name: string;
+      playbook_id: string;
+      updated_at: string | null;
+    };
+    Insert: {
+      badge_customization?: Json | null;
+      created_at?: string | null;
+      deleted_at?: string | null;
+      description?: string | null;
+      id?: string;
+      name: string;
+      playbook_id: string;
+      updated_at?: string | null;
+    };
+    Update: {
+      badge_customization?: Json | null;
+      created_at?: string | null;
+      deleted_at?: string | null;
+      description?: string | null;
+      id?: string;
+      name?: string;
+      playbook_id?: string;
+      updated_at?: string | null;
+    };
+  };
+  personnel_players: {
+    Row: {
+      config_id: string;
+      created_at: string | null;
+      id: string;
+      is_wildcat_qb: boolean | null;
+      label: string;
+      player_position: string;
+      sort_order: number;
+    };
+    Insert: {
+      config_id: string;
+      created_at?: string | null;
+      id?: string;
+      is_wildcat_qb?: boolean | null;
+      label: string;
+      player_position: string;
+      sort_order: number;
+    };
+    Update: {
+      config_id?: string;
+      created_at?: string | null;
+      id?: string;
+      is_wildcat_qb?: boolean | null;
+      label?: string;
+      player_position?: string;
+      sort_order?: number;
     };
   };
 }

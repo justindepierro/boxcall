@@ -118,7 +118,7 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
               onClick={handleAddTag}
               disabled={!newTag.trim()}
             >
-              <Icon name="Plus" size={16} />
+              <Icon name="plus" size={16} />
               Add
             </Button>
           </div>
@@ -137,7 +137,7 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
                     className="hover:text-primary transition-colors"
                     type="button"
                   >
-                    <Icon name="X" size={14} />
+                    <Icon name="close" size={14} />
                   </button>
                 </span>
               ))}

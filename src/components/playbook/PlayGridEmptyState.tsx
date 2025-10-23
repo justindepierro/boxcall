@@ -188,13 +188,21 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
 
             <div className="flex flex-col sm:flex-row gap-3">
               {onClearFilters && (
-                <Button onClick={handleClearFilters} variant="primary" size="lg">
+                <Button
+                  onClick={handleClearFilters}
+                  variant="primary"
+                  size="lg"
+                >
                   <Icon name="close" className="w-5 h-5 mr-2" />
                   Clear All Filters
                 </Button>
               )}
               {onCreatePlay && (
-                <Button onClick={handleCreatePlay} variant="secondary" size="lg">
+                <Button
+                  onClick={handleCreatePlay}
+                  variant="secondary"
+                  size="lg"
+                >
                   <Icon name="plus" className="w-5 h-5 mr-2" />
                   Create New Play
                 </Button>

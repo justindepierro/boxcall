@@ -196,6 +196,8 @@ export default defineConfig({
           ui: ["@headlessui/react", "@heroicons/react", "framer-motion"],
           forms: ["react-hook-form", "@hookform/resolvers", "zod"],
           dnd: ["@hello-pangea/dnd"],
+          pdf: ["@react-pdf/renderer"],
+          pixi: ["pixi.js"],
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
@@ -218,5 +220,9 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 500,
+    // 🚀 PERFORMANCE: Enable parallel processing and sourcemaps for debugging
+    sourcemap: false, // Disable sourcemaps for faster builds
+    minify: "esbuild", // Use esbuild for faster minification
+    reportCompressedSize: false, // Skip compression size reporting for faster builds
   },
 });

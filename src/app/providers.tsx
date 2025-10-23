@@ -8,6 +8,7 @@ import { ConfirmProvider } from "../contexts/ConfirmContext";
 import { UndoQueueProvider } from "../contexts/UndoQueueContext";
 import { TelemetryProvider } from "../telemetry/context";
 import { RoleProvider } from "../hooks/useRoles";
+import { OfflineProvider } from "../contexts/OfflineContext";
 interface AppProvidersProps {
   children: ReactNode;
 }
@@ -23,16 +24,18 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ErrorBoundary>
       <TelemetryProvider>
-        <QueryClientProvider client={queryClient}>
-          <ToastProvider>
-            <ConfirmProvider>
-              <UndoQueueProvider>
-                <RoleProvider>{children}</RoleProvider>
-              </UndoQueueProvider>
-            </ConfirmProvider>
-          </ToastProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+        <OfflineProvider>
+          <QueryClientProvider client={queryClient}>
+            <ToastProvider>
+              <ConfirmProvider>
+                <UndoQueueProvider>
+                  <RoleProvider>{children}</RoleProvider>
+                </UndoQueueProvider>
+              </ConfirmProvider>
+            </ToastProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </OfflineProvider>
       </TelemetryProvider>
     </ErrorBoundary>
   );

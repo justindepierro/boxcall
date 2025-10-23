@@ -11,6 +11,7 @@ import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
+import { PlayValidationService } from "../validations/playValidation";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
@@ -162,6 +163,12 @@ export class PlaysService {
    */
   static async createPlay(playData: Partial<Play>): Promise<Play> {
     try {
+      // Validate play data
+      const validation = await PlayValidationService.validatePlayServer(playData);
+      if (!validation.valid) {
+        throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+      }
+
       // Get current user for created_by field
       const {
         data: { user },
@@ -184,6 +191,7 @@ export class PlaysService {
         play_name: normalizePlayName(playData.play_name || "Untitled Play"),
         p_type: playData.p_type || "Pass",
         formation: normalizeText(playData.formation || ""),
+        formation_id: playData.formation_id || null,
 
         // Optional text fields (all exist in database)
         one_word_play: playData.one_word_play
@@ -321,14 +329,26 @@ export class PlaysService {
   /**
    * Get plays by playbook ID
    */
-  static async getPlaysByPlaybook(playbookId: string): Promise<Play[]> {
+  static async getPlaysByPlaybook(
+    playbookId: string,
+    options?: { limit?: number; offset?: number }
+  ): Promise<Play[]> {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("plays")
         .select("*")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false)
         .order("created_at", { ascending: false });
+
+      if (options?.limit) {
+        query = query.limit(options.limit);
+      }
+      if (options?.offset) {
+        query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error("❌ Error fetching plays:", error);
@@ -384,6 +404,9 @@ export class PlaysService {
         formation: updates.formation
           ? normalizeText(updates.formation)
           : undefined,
+        formation_id: updates.formation_id,
+        formation_status: updates.formation_status,
+        sanitized_at: updates.sanitized_at,
 
         // Optional fields
         one_word_play: updates.one_word_play
@@ -577,7 +600,7 @@ export class PlaysService {
         return [];
       }
 
-      // Get unique values
+      // Get unique values using DISTINCT-like behavior
       // @ts-expect-error - Supabase type issue with data return type
       const uniqueFormations = [...new Set(data.map((item) => item.formation))];
       return uniqueFormations.filter(Boolean);
@@ -666,6 +689,278 @@ export class PlaysService {
       console.error("❌ PlaysService.getUniquePlayTypes failed:", error);
       return [];
     }
+  }
+
+  /**
+   * AI-POWERED SUGGESTIONS
+   * Get smart formation suggestions based on play patterns
+   */
+  static async getAISuggestedFormations(
+    currentFormation?: string,
+    playbookId?: string,
+    limit = 5
+  ): Promise<string[]> {
+    try {
+      let query = supabase
+        .from("plays")
+        .select("formation, play_name, p_type")
+        .not("formation", "is", null)
+        .neq("formation", "");
+
+      // Filter by playbook if specified
+      if (playbookId) {
+        query = query.eq("playbook_id", playbookId);
+      }
+
+      const { data, error } = await query.limit(1000);
+
+      if (error || !data) {
+        console.error("❌ Error getting formation data:", error);
+        return [];
+      }
+
+      // Analyze formation patterns
+      const formationStats = new Map<string, { count: number; playTypes: Set<string> }>();
+
+      (data as any[]).forEach((play: any) => {
+        const formation = play.formation;
+        if (!formationStats.has(formation)) {
+          formationStats.set(formation, { count: 0, playTypes: new Set() });
+        }
+        const stats = formationStats.get(formation)!;
+        stats.count++;
+        if (play.p_type) stats.playTypes.add(play.p_type);
+      });
+
+      // Sort formations by usage frequency and versatility
+      const sortedFormations = Array.from(formationStats.entries())
+        .sort((a, b) => {
+          const scoreA = a[1].count + (a[1].playTypes.size * 2); // Bonus for versatility
+          const scoreB = b[1].count + (b[1].playTypes.size * 2);
+          return scoreB - scoreA;
+        })
+        .map(([formation]) => formation);
+
+      // If current formation provided, prioritize similar formations
+      if (currentFormation) {
+        const baseCurrent = this.extractBaseFormation(currentFormation);
+        const similarFormations = sortedFormations.filter(f =>
+          this.extractBaseFormation(f) === baseCurrent && f !== currentFormation
+        );
+        const otherFormations = sortedFormations.filter(f =>
+          this.extractBaseFormation(f) !== baseCurrent
+        );
+        return [...similarFormations, ...otherFormations].slice(0, limit);
+      }
+
+      return sortedFormations.slice(0, limit);
+    } catch (error) {
+      console.error("❌ PlaysService.getAISuggestedFormations failed:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get AI-suggested play names based on formation and context
+   */
+  static async getAISuggestedPlayNames(
+    formation?: string,
+    playType?: string,
+    playbookId?: string,
+    limit = 5
+  ): Promise<string[]> {
+    try {
+      let query = supabase
+        .from("plays")
+        .select("play_name, formation, p_type")
+        .not("play_name", "is", null)
+        .neq("play_name", "");
+
+      // Filter by playbook if specified
+      if (playbookId) {
+        query = query.eq("playbook_id", playbookId);
+      }
+
+      // Filter by formation if specified
+      if (formation) {
+        const baseFormation = this.extractBaseFormation(formation);
+        query = query.ilike("formation", `%${baseFormation}%`);
+      }
+
+      // Filter by play type if specified
+      if (playType) {
+        query = query.eq("p_type", playType);
+      }
+
+      const { data, error } = await query.limit(500);
+
+      if (error || !data) {
+        console.error("❌ Error getting play name data:", error);
+        return [];
+      }
+
+      // Count frequency of each play name
+      const nameCounts = new Map<string, number>();
+      (data as any[]).forEach((play: any) => {
+        const count = nameCounts.get(play.play_name) || 0;
+        nameCounts.set(play.play_name, count + 1);
+      });
+
+      // Sort by frequency
+      return Array.from(nameCounts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([name]) => name)
+        .slice(0, limit);
+    } catch (error) {
+      console.error("❌ PlaysService.getAISuggestedPlayNames failed:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get smart personnel suggestions based on formation patterns
+   */
+  static async getAISuggestedPersonnel(
+    formation?: string,
+    playbookId?: string,
+    limit = 5
+  ): Promise<string[]> {
+    try {
+      let query = supabase
+        .from("plays")
+        .select("personnel, formation")
+        .not("personnel", "is", null)
+        .neq("personnel", "");
+
+      // Filter by playbook if specified
+      if (playbookId) {
+        query = query.eq("playbook_id", playbookId);
+      }
+
+      // Filter by formation if specified
+      if (formation) {
+        const baseFormation = this.extractBaseFormation(formation);
+        query = query.ilike("formation", `%${baseFormation}%`);
+      }
+
+      const { data, error } = await query.limit(500);
+
+      if (error || !data) {
+        console.error("❌ Error getting personnel data:", error);
+        return [];
+      }
+
+      // Count frequency of each personnel grouping
+      const personnelCounts = new Map<string, number>();
+      (data as any[]).forEach((play: any) => {
+        const count = personnelCounts.get(play.personnel) || 0;
+        personnelCounts.set(play.personnel, count + 1);
+      });
+
+      // Sort by frequency
+      return Array.from(personnelCounts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([personnel]) => personnel)
+        .slice(0, limit);
+    } catch (error) {
+      console.error("❌ PlaysService.getAISuggestedPersonnel failed:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Generate contextual play name suggestions based on formation and play type
+   */
+  static generatePlayNameSuggestions(
+    formation?: string,
+    playType?: string,
+    existingNames: string[] = []
+  ): string[] {
+    const suggestions: string[] = [];
+
+    if (!formation) return suggestions;
+
+    const baseFormation = this.extractBaseFormation(formation);
+    const direction = this.extractDirectionFromFormation(formation);
+
+    // Common play patterns by formation type
+    const playPatterns: Record<string, string[]> = {
+      'shotgun': ['Shotgun', 'Shotgun Spread', 'Shotgun Trips', 'Shotgun Empty'],
+      'pistol': ['Pistol', 'Pistol Power', 'Pistol Read', 'Pistol Counter'],
+      'under center': ['Power', 'Counter', 'Trap', 'Draw', 'Keeper'],
+      'trips': ['Trips', 'Trips Wheel', 'Trips Corner', 'Trips Smash', 'Trips Out'],
+      'bunch': ['Bunch', 'Bunch Slants', 'Bunch Crossers', 'Bunch Outs'],
+      'empty': ['Empty', 'Empty Slants', 'Empty Wheels', 'Empty Corners'],
+      'ace': ['Ace', 'Ace Slants', 'Ace Outs', 'Ace Crossers'],
+      'doubles': ['Doubles', 'Doubles Slants', 'Doubles Outs', 'Doubles Crossers'],
+      'trio': ['Trio', 'Trio Slants', 'Trio Outs', 'Trio Crossers']
+    };
+
+    // Find matching formation patterns
+    const matchingPatterns = Object.entries(playPatterns)
+      .filter(([key]) => baseFormation.toLowerCase().includes(key))
+      .flatMap(([, patterns]) => patterns);
+
+    // Add direction-specific suggestions
+    if (direction) {
+      matchingPatterns.forEach(pattern => {
+        if (!pattern.includes(direction)) {
+          suggestions.push(`${pattern} ${direction}`);
+        }
+      });
+    }
+
+    // Add base patterns
+    suggestions.push(...matchingPatterns);
+
+    // Add play type specific suggestions
+    if (playType) {
+      const typePrefixes: Record<string, string[]> = {
+        'run': ['Power', 'Counter', 'Trap', 'Draw', 'Keeper', 'Read'],
+        'pass': ['Slants', 'Outs', 'Crossers', 'Corners', 'Wheels', 'Posts'],
+        'screen': ['Screen', 'Bubble Screen', 'Slip Screen'],
+        'play action': ['Play Action', 'PA Boot', 'PA Rollout']
+      };
+
+      const prefixes = typePrefixes[playType.toLowerCase()] || [];
+      prefixes.forEach(prefix => {
+        suggestions.push(`${baseFormation} ${prefix}`);
+        if (direction) {
+          suggestions.push(`${baseFormation} ${prefix} ${direction}`);
+        }
+      });
+    }
+
+    // Filter out existing names and limit results
+    return suggestions
+      .filter(name => !existingNames.includes(name))
+      .slice(0, 8);
+  }
+
+  /**
+   * Helper: Extract base formation name (remove direction keywords)
+   */
+  private static extractBaseFormation(formation: string): string {
+    const directionKeywords = ['left', 'right', 'l', 'r', 'lt', 'rt', 'lft', 'rgt', 'middle', 'mid', 'center', 'c'];
+    const words = formation.toLowerCase().split(/\s+/);
+    return words
+      .filter(word => !directionKeywords.includes(word))
+      .join(' ');
+  }
+
+  /**
+   * Helper: Extract direction from formation name
+   */
+  private static extractDirectionFromFormation(formation: string): string | null {
+    const words = formation.toLowerCase().split(/\s+/);
+    const directionKeywords = ['left', 'right', 'l', 'r', 'lt', 'rt', 'lft', 'rgt'];
+
+    for (const word of words) {
+      if (directionKeywords.includes(word)) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+    }
+    return null;
   }
 }
 

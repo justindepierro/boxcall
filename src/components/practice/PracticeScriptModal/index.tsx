@@ -4,9 +4,7 @@ import { Typography } from "../../design-system/Typography";
 import { PracticeScriptForm } from "./components/PracticeScriptForm";
 import { PracticeScriptPlayList } from "./components/PracticeScriptPlayList";
 
-import type {
-  PracticeScript,
-} from "../../../services/practiceService";
+import type { PracticeScript } from "../../../services/practiceService";
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 
 interface PracticeScriptModalProps {

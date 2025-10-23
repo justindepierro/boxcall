@@ -18,3 +18,13 @@ declare module "virtual:pwa-register/react" {
     updateSW: (reloadPage?: boolean) => Promise<void>;
   };
 }
+
+interface ImportMetaEnv {
+  readonly VITE_SUPER_ADMIN_EMAIL?: string;
+  readonly VITE_DEFAULT_DEV_MODE?: string;
+  readonly VITE_FORCE_DEV_MODE?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

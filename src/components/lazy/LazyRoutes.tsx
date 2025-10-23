@@ -122,6 +122,11 @@ export const LazyGamePlansPage = lazyRoute(
   "Game Plans"
 );
 
+export const LazyFormationMapperPage = lazyRoute(
+  () => import("../../pages/FormationMapperPage"),
+  "Formation Mapper"
+);
+
 export const LazyAwardsPage = lazyRoute(
   () => import("../../pages/AwardsPage"),
   "Awards"
@@ -224,6 +229,14 @@ export const LazyPracticeScriptModal = lazyRoute(
       default: module.PracticeScriptModal,
     })),
   "Practice Script Modal"
+);
+
+export const LazyPracticePDFExportDialog = lazyRoute(
+  () =>
+    import("../practice/PracticePDFExportDialog").then((module) => ({
+      default: module.PracticePDFExportDialog,
+    })),
+  "PDF Export Dialog"
 );
 
 // Loading component for lazy routes

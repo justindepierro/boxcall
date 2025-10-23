@@ -7,7 +7,6 @@ DROP EXTENSION IF EXISTS "uuid-ossp";
 DROP EXTENSION IF EXISTS "pgcrypto";
 CREATE EXTENSION "uuid-ossp";
 CREATE EXTENSION "pgcrypto";
-
 -- ===========================================
 -- CORE TEAM MANAGEMENT TABLES
 -- ===========================================
@@ -25,7 +24,6 @@ CREATE TABLE teams (
   last_backup_at TIMESTAMPTZ,
   backup_version INTEGER DEFAULT 1
 );
-
 -- Team members table
 CREATE TABLE team_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -47,7 +45,6 @@ CREATE TABLE team_members (
   role_notes TEXT,
   UNIQUE(team_id, user_id)
 );
-
 -- Team players table
 CREATE TABLE team_players (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -63,7 +60,6 @@ CREATE TABLE team_players (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Profiles table (consolidated)
 CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -89,7 +85,6 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- PLAYBOOK & PLAYS SYSTEM
 -- ===========================================
@@ -106,7 +101,6 @@ CREATE TABLE playbooks (
   play_count INTEGER DEFAULT 0,
   last_modified_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Plays table
 CREATE TABLE plays (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -144,7 +138,6 @@ CREATE TABLE plays (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Play calls table
 CREATE TABLE play_calls (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -158,7 +151,6 @@ CREATE TABLE play_calls (
   result TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- SOCIAL FEATURES
 -- ===========================================
@@ -176,7 +168,6 @@ CREATE TABLE team_posts (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Post likes table
 CREATE TABLE post_likes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -185,7 +176,6 @@ CREATE TABLE post_likes (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(post_id, user_id)
 );
-
 -- Post comments table
 CREATE TABLE post_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -196,7 +186,6 @@ CREATE TABLE post_comments (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Post shares table
 CREATE TABLE post_shares (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -205,7 +194,6 @@ CREATE TABLE post_shares (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(post_id, user_id)
 );
-
 -- ===========================================
 -- GAME MANAGEMENT
 -- ===========================================
@@ -221,7 +209,6 @@ CREATE TABLE game_plans (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Game plan situations table
 CREATE TABLE game_plan_situations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -232,7 +219,6 @@ CREATE TABLE game_plan_situations (
   distance INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Game plan plays table
 CREATE TABLE game_plan_plays (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -242,7 +228,6 @@ CREATE TABLE game_plan_plays (
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Game results table
 CREATE TABLE game_results (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -258,7 +243,6 @@ CREATE TABLE game_results (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- PRACTICE MANAGEMENT
 -- ===========================================
@@ -273,7 +257,6 @@ CREATE TABLE practice_scripts (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Practice schedules table
 CREATE TABLE practice_schedules (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -286,7 +269,6 @@ CREATE TABLE practice_schedules (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Practice attendance table
 CREATE TABLE practice_attendance (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -296,7 +278,6 @@ CREATE TABLE practice_attendance (
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Practice templates table
 CREATE TABLE practice_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -309,7 +290,6 @@ CREATE TABLE practice_templates (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- ANALYTICS & PERFORMANCE
 -- ===========================================
@@ -323,7 +303,6 @@ CREATE TABLE achievements (
   earned_date DATE NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Helmet stickers table
 CREATE TABLE helmet_stickers (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -332,7 +311,6 @@ CREATE TABLE helmet_stickers (
   earned_date DATE NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- CALENDAR & EVENTS
 -- ===========================================
@@ -352,7 +330,6 @@ CREATE TABLE calendar_events (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- Team events table
 CREATE TABLE team_events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -365,7 +342,6 @@ CREATE TABLE team_events (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- EQUIPMENT MANAGEMENT
 -- ===========================================
@@ -383,7 +359,6 @@ CREATE TABLE equipment (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 -- ===========================================
 -- INDEXES FOR PERFORMANCE
 -- ===========================================
@@ -394,34 +369,27 @@ CREATE INDEX idx_team_members_team_user ON team_members(team_id, user_id);
 CREATE INDEX idx_team_members_user_status ON team_members(user_id, status);
 CREATE INDEX idx_team_players_team_active ON team_players(team_id, is_active);
 CREATE INDEX idx_profiles_is_active ON profiles(is_active);
-
 -- Playbook indexes
 CREATE INDEX idx_playbooks_team_active ON playbooks(team_id, is_active);
 CREATE INDEX idx_plays_playbook ON plays(playbook_id);
 CREATE INDEX idx_plays_type ON plays(p_type);
-
 -- Social features indexes
 CREATE INDEX idx_team_posts_team_created ON team_posts(team_id, created_at DESC);
 CREATE INDEX idx_team_posts_author ON team_posts(author_id);
 CREATE INDEX idx_post_likes_post ON post_likes(post_id);
 CREATE INDEX idx_post_comments_post ON post_comments(post_id);
 CREATE INDEX idx_post_shares_post ON post_shares(post_id);
-
 -- Game management indexes
 CREATE INDEX idx_game_plans_team_date ON game_plans(team_id, game_date);
 CREATE INDEX idx_game_results_team_date ON game_results(team_id, game_date);
-
 -- Practice indexes
 CREATE INDEX idx_practice_schedules_team_date ON practice_schedules(team_id, practice_date);
 CREATE INDEX idx_practice_attendance_practice ON practice_attendance(practice_id);
-
 -- Calendar indexes
 CREATE INDEX idx_calendar_events_team_date ON calendar_events(team_id, event_date);
 CREATE INDEX idx_team_events_team_date ON team_events(team_id, event_date);
-
 -- Equipment indexes
 CREATE INDEX idx_equipment_team_category ON equipment(team_id, category);
-
 -- ===========================================
 -- ROW LEVEL SECURITY POLICIES
 -- ===========================================
@@ -451,7 +419,6 @@ ALTER TABLE helmet_stickers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE team_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE equipment ENABLE ROW LEVEL SECURITY;
-
 -- ===========================================
 -- RLS POLICIES - TEAM-BASED ACCESS CONTROL
 -- ===========================================
@@ -466,7 +433,6 @@ CREATE POLICY "Users can view teams they belong to" ON teams
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can update their teams" ON teams
   FOR UPDATE USING (
     EXISTS (
@@ -477,7 +443,6 @@ CREATE POLICY "Team coaches can update their teams" ON teams
       AND tm.status = 'active'
     )
   );
-
 -- Team members: Users can view/manage team membership for their teams
 CREATE POLICY "Users can view team members for their teams" ON team_members
   FOR SELECT USING (
@@ -488,7 +453,6 @@ CREATE POLICY "Users can view team members for their teams" ON team_members
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage team members" ON team_members
   FOR ALL USING (
     EXISTS (
@@ -499,7 +463,6 @@ CREATE POLICY "Team coaches can manage team members" ON team_members
       AND tm.status = 'active'
     )
   );
-
 -- Profiles: Users can view profiles of team members
 CREATE POLICY "Users can view profiles of team members" ON profiles
   FOR SELECT USING (
@@ -514,10 +477,8 @@ CREATE POLICY "Users can view profiles of team members" ON profiles
       )
     ) OR profiles.id = auth.uid()
   );
-
 CREATE POLICY "Users can update their own profiles" ON profiles
   FOR UPDATE USING (id = auth.uid());
-
 -- Playbooks: Team members can access their team's playbooks
 CREATE POLICY "Team members can view playbooks" ON playbooks
   FOR SELECT USING (
@@ -528,7 +489,6 @@ CREATE POLICY "Team members can view playbooks" ON playbooks
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage playbooks" ON playbooks
   FOR ALL USING (
     EXISTS (
@@ -539,7 +499,6 @@ CREATE POLICY "Team coaches can manage playbooks" ON playbooks
       AND tm.status = 'active'
     )
   );
-
 -- Plays: Team members can access their team's plays
 CREATE POLICY "Team members can view plays" ON plays
   FOR SELECT USING (
@@ -551,7 +510,6 @@ CREATE POLICY "Team members can view plays" ON plays
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage plays" ON plays
   FOR ALL USING (
     EXISTS (
@@ -563,7 +521,6 @@ CREATE POLICY "Team coaches can manage plays" ON plays
       AND tm.status = 'active'
     )
   );
-
 -- Team posts: Team members can view and interact with team posts
 CREATE POLICY "Team members can view team posts" ON team_posts
   FOR SELECT USING (
@@ -574,7 +531,6 @@ CREATE POLICY "Team members can view team posts" ON team_posts
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can create team posts" ON team_posts
   FOR INSERT WITH CHECK (
     EXISTS (
@@ -584,10 +540,8 @@ CREATE POLICY "Team members can create team posts" ON team_posts
       AND tm.status = 'active'
     ) AND author_id = auth.uid()
   );
-
 CREATE POLICY "Users can update their own posts" ON team_posts
   FOR UPDATE USING (author_id = auth.uid());
-
 CREATE POLICY "Team coaches can manage all posts" ON team_posts
   FOR ALL USING (
     EXISTS (
@@ -598,7 +552,6 @@ CREATE POLICY "Team coaches can manage all posts" ON team_posts
       AND tm.status = 'active'
     )
   );
-
 -- Post interactions: Team members can interact with posts
 CREATE POLICY "Team members can like posts" ON post_likes
   FOR ALL USING (
@@ -610,7 +563,6 @@ CREATE POLICY "Team members can like posts" ON post_likes
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can comment on posts" ON post_comments
   FOR ALL USING (
     EXISTS (
@@ -621,7 +573,6 @@ CREATE POLICY "Team members can comment on posts" ON post_comments
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can share posts" ON post_shares
   FOR ALL USING (
     EXISTS (
@@ -632,7 +583,6 @@ CREATE POLICY "Team members can share posts" ON post_shares
       AND tm.status = 'active'
     )
   );
-
 -- Game management: Team members can access game data
 CREATE POLICY "Team members can view game plans" ON game_plans
   FOR SELECT USING (
@@ -643,7 +593,6 @@ CREATE POLICY "Team members can view game plans" ON game_plans
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage game plans" ON game_plans
   FOR ALL USING (
     EXISTS (
@@ -654,7 +603,6 @@ CREATE POLICY "Team coaches can manage game plans" ON game_plans
       AND tm.status = 'active'
     )
   );
-
 -- Similar policies for game_plan_situations, game_plan_plays, game_results
 CREATE POLICY "Team members can view game situations" ON game_plan_situations
   FOR SELECT USING (
@@ -666,7 +614,6 @@ CREATE POLICY "Team members can view game situations" ON game_plan_situations
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage game situations" ON game_plan_situations
   FOR ALL USING (
     EXISTS (
@@ -678,7 +625,6 @@ CREATE POLICY "Team coaches can manage game situations" ON game_plan_situations
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view game plan plays" ON game_plan_plays
   FOR SELECT USING (
     EXISTS (
@@ -689,7 +635,6 @@ CREATE POLICY "Team members can view game plan plays" ON game_plan_plays
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage game plan plays" ON game_plan_plays
   FOR ALL USING (
     EXISTS (
@@ -701,7 +646,6 @@ CREATE POLICY "Team coaches can manage game plan plays" ON game_plan_plays
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view game results" ON game_results
   FOR SELECT USING (
     EXISTS (
@@ -711,7 +655,6 @@ CREATE POLICY "Team members can view game results" ON game_results
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage game results" ON game_results
   FOR ALL USING (
     EXISTS (
@@ -722,7 +665,6 @@ CREATE POLICY "Team coaches can manage game results" ON game_results
       AND tm.status = 'active'
     )
   );
-
 -- Practice management: Team members can access practice data
 CREATE POLICY "Team members can view practice scripts" ON practice_scripts
   FOR SELECT USING (
@@ -733,7 +675,6 @@ CREATE POLICY "Team members can view practice scripts" ON practice_scripts
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage practice scripts" ON practice_scripts
   FOR ALL USING (
     EXISTS (
@@ -744,7 +685,6 @@ CREATE POLICY "Team coaches can manage practice scripts" ON practice_scripts
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view practice schedules" ON practice_schedules
   FOR SELECT USING (
     EXISTS (
@@ -754,7 +694,6 @@ CREATE POLICY "Team members can view practice schedules" ON practice_schedules
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage practice schedules" ON practice_schedules
   FOR ALL USING (
     EXISTS (
@@ -765,7 +704,6 @@ CREATE POLICY "Team coaches can manage practice schedules" ON practice_schedules
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view practice attendance" ON practice_attendance
   FOR SELECT USING (
     EXISTS (
@@ -776,7 +714,6 @@ CREATE POLICY "Team members can view practice attendance" ON practice_attendance
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage practice attendance" ON practice_attendance
   FOR ALL USING (
     EXISTS (
@@ -788,7 +725,6 @@ CREATE POLICY "Team coaches can manage practice attendance" ON practice_attendan
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view practice templates" ON practice_templates
   FOR SELECT USING (
     team_id IN (
@@ -796,7 +732,6 @@ CREATE POLICY "Team members can view practice templates" ON practice_templates
       WHERE user_id = auth.uid() AND status = 'active'
     ) OR is_public = true
   );
-
 CREATE POLICY "Team coaches can manage practice templates" ON practice_templates
   FOR ALL USING (
     EXISTS (
@@ -807,7 +742,6 @@ CREATE POLICY "Team coaches can manage practice templates" ON practice_templates
       AND tm.status = 'active'
     )
   );
-
 -- Analytics: Team members can view achievements and stickers
 CREATE POLICY "Team members can view achievements" ON achievements
   FOR SELECT USING (
@@ -818,7 +752,6 @@ CREATE POLICY "Team members can view achievements" ON achievements
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage achievements" ON achievements
   FOR ALL USING (
     EXISTS (
@@ -829,7 +762,6 @@ CREATE POLICY "Team coaches can manage achievements" ON achievements
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view helmet stickers" ON helmet_stickers
   FOR SELECT USING (
     EXISTS (
@@ -839,7 +771,6 @@ CREATE POLICY "Team members can view helmet stickers" ON helmet_stickers
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage helmet stickers" ON helmet_stickers
   FOR ALL USING (
     EXISTS (
@@ -850,7 +781,6 @@ CREATE POLICY "Team coaches can manage helmet stickers" ON helmet_stickers
       AND tm.status = 'active'
     )
   );
-
 -- Calendar: Team members can view calendar events
 CREATE POLICY "Team members can view calendar events" ON calendar_events
   FOR SELECT USING (
@@ -861,7 +791,6 @@ CREATE POLICY "Team members can view calendar events" ON calendar_events
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage calendar events" ON calendar_events
   FOR ALL USING (
     EXISTS (
@@ -872,7 +801,6 @@ CREATE POLICY "Team coaches can manage calendar events" ON calendar_events
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team members can view team events" ON team_events
   FOR SELECT USING (
     EXISTS (
@@ -882,7 +810,6 @@ CREATE POLICY "Team members can view team events" ON team_events
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage team events" ON team_events
   FOR ALL USING (
     EXISTS (
@@ -893,7 +820,6 @@ CREATE POLICY "Team coaches can manage team events" ON team_events
       AND tm.status = 'active'
     )
   );
-
 -- Equipment: Team members can view equipment
 CREATE POLICY "Team members can view equipment" ON equipment
   FOR SELECT USING (
@@ -904,7 +830,6 @@ CREATE POLICY "Team members can view equipment" ON equipment
       AND tm.status = 'active'
     )
   );
-
 CREATE POLICY "Team coaches can manage equipment" ON equipment
   FOR ALL USING (
     EXISTS (
@@ -915,7 +840,6 @@ CREATE POLICY "Team coaches can manage equipment" ON equipment
       AND tm.status = 'active'
     )
   );
-
 -- ===========================================
 -- SEASON STATS VIEW
 -- ===========================================
@@ -948,7 +872,6 @@ LEFT JOIN achievements a ON a.player_id = tp.id
 LEFT JOIN helmet_stickers hs ON hs.player_id = tp.id
 WHERE tp.is_active = true
 GROUP BY tp.id, tp.first_name, tp.last_name, tp.jersey_number, tp.position, t.name, t.season_year;
-
 -- ===========================================
 -- INITIALIZATION COMPLETE
 -- ===========================================

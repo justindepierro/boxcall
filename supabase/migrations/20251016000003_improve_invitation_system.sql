@@ -5,22 +5,18 @@
 ALTER TABLE team_players 
 ADD COLUMN invitation_expires_at TIMESTAMPTZ,
 ADD COLUMN invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
-
 -- Set expiration for existing pending invitations (7 days from sent date)
 UPDATE team_players
 SET invitation_expires_at = invitation_sent_at + INTERVAL '7 days'
 WHERE invitation_status = 'pending' 
   AND invitation_sent_at IS NOT NULL
   AND invitation_expires_at IS NULL;
-
 -- Update status constraint to include 'expired' and 'failed'
 ALTER TABLE team_players 
 DROP CONSTRAINT IF EXISTS team_players_invitation_status_check;
-
 ALTER TABLE team_players
 ADD CONSTRAINT team_players_invitation_status_check 
 CHECK (invitation_status IN ('not_invited', 'pending', 'accepted', 'declined', 'expired', 'failed'));
-
 -- Create invitation attempts table for rate limiting
 CREATE TABLE IF NOT EXISTS invitation_attempts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -31,16 +27,13 @@ CREATE TABLE IF NOT EXISTS invitation_attempts (
   attempted_at TIMESTAMPTZ DEFAULT NOW(),
   success BOOLEAN DEFAULT false
 );
-
 -- Add indexes for performance
 CREATE INDEX idx_invitation_attempts_email_time ON invitation_attempts(email, attempted_at);
 CREATE INDEX idx_invitation_attempts_team_time ON invitation_attempts(team_id, attempted_at);
 CREATE INDEX idx_team_players_invitation_expires ON team_players(invitation_expires_at) 
   WHERE invitation_status = 'pending';
-
 -- Enable RLS on invitation_attempts
 ALTER TABLE invitation_attempts ENABLE ROW LEVEL SECURITY;
-
 -- RLS: Team coaches can view invitation attempts for their team
 CREATE POLICY "Team coaches can view invitation attempts" ON invitation_attempts
   FOR SELECT USING (
@@ -52,11 +45,9 @@ CREATE POLICY "Team coaches can view invitation attempts" ON invitation_attempts
       AND tm.status = 'active'
     )
   );
-
 -- RLS: System can insert invitation attempts (service role)
 CREATE POLICY "System can insert invitation attempts" ON invitation_attempts
   FOR INSERT WITH CHECK (true);
-
 -- ========================================
 -- ATOMIC INVITATION ACCEPTANCE FUNCTION
 -- ========================================
@@ -181,10 +172,8 @@ EXCEPTION
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- Grant execute permission to authenticated users
 GRANT EXECUTE ON FUNCTION accept_player_invitation TO authenticated;
-
 -- ========================================
 -- UTILITY FUNCTION: Cleanup Expired Invitations
 -- ========================================
@@ -205,10 +194,8 @@ BEGIN
   RETURN v_updated_count;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- Grant execute permission to service role only
 GRANT EXECUTE ON FUNCTION cleanup_expired_invitations TO service_role;
-
 -- ========================================
 -- COMMENTS FOR DOCUMENTATION
 -- ========================================

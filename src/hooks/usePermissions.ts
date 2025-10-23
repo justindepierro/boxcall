@@ -2,8 +2,7 @@ import { useMemo } from "react";
 
 import { useAuth } from "../app/auth-store";
 import { useRoles, useTeamPermissions } from "./useRoles";
-
-const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
+import { isSuperAdminEmail } from "../config/superAdmin";
 
 /**
  * Hook for permission checking in React components
@@ -14,9 +13,7 @@ export const usePermissions = (teamId?: string) => {
   const { roleContext } = useRoles();
   const { permissions, loading, error } = useTeamPermissions(teamId);
 
-  const isSuperAdmin = Boolean(
-    user?.email && user.email.toLowerCase() === SUPER_ADMIN_EMAIL
-  );
+  const isSuperAdmin = isSuperAdminEmail(user?.email ?? null);
   const appRole = roleContext?.appRole ?? null;
 
   return useMemo(

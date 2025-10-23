@@ -15,8 +15,7 @@ import { AppHeader } from "./AppHeader";
 import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
-
-const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
+import { isSuperAdminEmail } from "../../config/superAdmin";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
@@ -87,8 +86,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const baseRole: ExtendedUserRole | null = profile?.role ?? null;
   const simulatedRole =
     devMode !== "production" ? getTestRole(devMode) : baseRole;
-  const currentRole: ExtendedUserRole | null =
-    profile?.email === SUPER_ADMIN_EMAIL ? "super_admin" : simulatedRole;
+  const currentRole: ExtendedUserRole | null = isSuperAdminEmail(
+    profile?.email ?? null
+  )
+    ? "super_admin"
+    : simulatedRole;
 
   const isDevMode = devMode !== "production";
 
@@ -154,7 +156,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Typography>
                 <div className="flex items-center gap-1.5 text-xs leading-tight">
                   <span className="text-text-secondary truncate">
-                    {profile?.role === "admin"
+                    {isSuperAdminEmail(profile?.email ?? null)
                       ? "Super Admin"
                       : profile?.role === "coach"
                         ? "Coach"

@@ -125,7 +125,7 @@ export function MobileSection({
       )}
 
       {/* Section Content */}
-      {!isCollapsed && <div>{children}</div>}
+      {!isCollapsed && <div className="px-4">{children}</div>}
     </section>
   );
 }

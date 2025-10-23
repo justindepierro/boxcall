@@ -16,15 +16,16 @@ import { Typography } from "../../design-system/Typography";
 import { Link2, Pencil, Settings } from "lucide-react";
 import { FormationLinkingPanel } from "../../formations/FormationLinkingPanel";
 import { FormationBuilderPanel } from "../../formations/FormationBuilderPanel";
+import type { Formation } from "../../../types/formation";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
 interface FormationBuilderModalProps {
   isOpen: boolean;
   onClose: () => void;
   playbookId: string;
   formationId?: string; // For editing existing formation
-  onSaved?: () => void;
+  onSaved?: (formation?: Formation) => void;
 }
 
 type TabType = "edit" | "link" | "draw";
@@ -49,11 +50,11 @@ export function FormationBuilderModal({
     }
   }, [formationId, isOpen]);
 
-  const handleSuccess = () => {
+  const handleSuccess = (formation?: Formation) => {
     // Refresh Link tab data when formations change
     setLinkTabKey((prev) => prev + 1);
     if (onSaved) {
-      onSaved();
+      onSaved(formation);
     }
     // Don't auto-close - let user continue working
   };
@@ -112,7 +113,9 @@ export function FormationBuilderModal({
             `}
           >
             <Link2 className={isMobile ? "w-6 h-6" : "w-5 h-5"} />
-            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>Link</span>
+            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>
+              Link
+            </span>
           </button>
 
           <button
@@ -134,7 +137,9 @@ export function FormationBuilderModal({
             `}
           >
             <Pencil className={isMobile ? "w-6 h-6" : "w-5 h-5"} />
-            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>Draw</span>
+            <span className={`font-medium ${isMobile ? "text-xs" : ""}`}>
+              Draw
+            </span>
             <span className="absolute top-1 right-1 px-spacing-xs py-0.5 bg-warning-100 text-warning-700 text-xs rounded">
               Soon
             </span>

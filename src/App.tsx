@@ -24,6 +24,7 @@ import { ConflictDialog } from "./components/conflicts/ConflictDialog";
 import { SaveHistoryPanel } from "./components/dev/SaveHistoryPanel";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
+import { OfflineIndicator } from "./components/ui/OfflineIndicator";
 
 /**
  * ConflictOverlay - Shows conflict dialog when there's an active conflict
@@ -93,6 +94,7 @@ function App() {
                     </AuthGuard>
                   </AppGrid>
                   <PWAIntegration />
+                  <OfflineIndicator />
                   {showRQDevtools && (
                     <ReactQueryDevtools
                       initialIsOpen={false}

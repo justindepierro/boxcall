@@ -21,6 +21,8 @@ import type { Formation } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { Link2, ChevronDown } from "lucide-react";
 import { debug, info, error as logError } from "../../utils/logger";
+import { useToast } from "../../hooks/useToast";
+import { useIsMobile } from "../../hooks/useBreakpoint";
 
 interface FormationLinkingPanelProps {
   playbookId: string;
@@ -35,6 +37,8 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   initialLeftFormation,
   initialRightFormation,
 }) => {
+  const toast = useToast();
+  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [allFormations, setAllFormations] = useState<Formation[]>([]);
@@ -182,13 +186,13 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
   const handleLink = async () => {
     if (!leftFormation || !rightFormation) {
-      alert("Please select both left and right formations");
+      toast?.error?.("Please select both left and right formations");
       return;
     }
 
     // Prevent linking a formation to itself
     if (leftFormation.id === rightFormation.id) {
-      alert(
+      toast?.error?.(
         "Cannot link a formation to itself. Please select different formations."
       );
       return;
@@ -209,7 +213,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         rightFormation.id
       );
 
-      alert("Formations linked successfully!");
+      toast?.success?.("Formations linked successfully!");
       await loadFormations();
 
       // Clear personnel selection after successful link
@@ -220,14 +224,16 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
       }
     } catch (error) {
       logError("[FormationLinkingPanel] Failed to link formations:", error);
-      alert("Failed to link formations. Please try again.");
+      toast?.error?.("Failed to link formations. Please try again.");
     } finally {
       setSaving(false);
     }
   };
 
   const handleCreateNew = (side: "left" | "right") => {
-    alert(`Create new ${side} formation - Switch to "Draw Formation" tab!`);
+    toast?.info?.(
+      `Create new ${side} formation - Switch to "Edit Details" tab!`
+    );
   };
 
   const renderFormationOption = (formation: Formation) => {
@@ -274,7 +280,9 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         )}
 
         {/* Mirrored Dropdown Layout */}
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start">
+        <div
+          className={`${isMobile ? "flex flex-col gap-spacing-lg" : "grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start"}`}
+        >
           {/* Left Formation Column */}
           <div className="flex flex-col gap-spacing-sm">
             <Typography variant="headline-md" className="text-text-primary">

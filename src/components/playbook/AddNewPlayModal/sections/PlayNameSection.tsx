@@ -11,6 +11,8 @@ interface PlayNameSectionProps {
   onPlayDirChange: (dir: string) => void;
   onPlayShowInNameChange: (show: boolean) => void;
   suggestions: string[];
+  aiSuggestions?: string[];
+  generatedSuggestions?: string[];
   showSuggestions: boolean;
   onShowSuggestionsChange: (show: boolean) => void;
 }
@@ -23,6 +25,8 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
   onPlayDirChange,
   onPlayShowInNameChange,
   suggestions,
+  aiSuggestions = [],
+  generatedSuggestions = [],
   showSuggestions,
   onShowSuggestionsChange,
 }) => {
@@ -34,6 +38,8 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
         onChange={onPlayNameChange}
         placeholder="e.g., Power Read, Slant Route, Zone Blitz"
         suggestions={suggestions}
+        aiSuggestions={aiSuggestions}
+        generatedSuggestions={generatedSuggestions}
         showSuggestions={showSuggestions}
         onShowSuggestionsChange={onShowSuggestionsChange}
         required

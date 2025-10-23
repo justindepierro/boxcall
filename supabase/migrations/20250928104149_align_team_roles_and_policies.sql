@@ -3,7 +3,6 @@
 -- Update team_members role constraint to include player & family tiers
 ALTER TABLE public.team_members
   DROP CONSTRAINT IF EXISTS team_members_team_role_check;
-
 ALTER TABLE public.team_members
   ADD CONSTRAINT team_members_team_role_check
   CHECK (team_role IN (
@@ -16,7 +15,6 @@ ALTER TABLE public.team_members
     'family',
     'alumni'
   ));
-
 -- Ensure capabilities default remains a JSON object for boolean flags
 ALTER TABLE public.team_members
   ALTER COLUMN capabilities SET DEFAULT '{
@@ -29,13 +27,11 @@ ALTER TABLE public.team_members
     "can_manage_practice": false,
     "can_manage_equipment": false
   }'::jsonb;
-
 -- Allow authenticated users to create teams (bootstrap flow)
 DROP POLICY IF EXISTS "Users can create teams" ON public.teams;
 CREATE POLICY "Users can create teams" ON public.teams
   FOR INSERT
   WITH CHECK (auth.uid() IS NOT NULL);
-
 -- Allow users to join teams themselves or coaches to add members
 DROP POLICY IF EXISTS "Users can join teams" ON public.team_members;
 CREATE POLICY "Users can join teams" ON public.team_members

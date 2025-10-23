@@ -4,6 +4,7 @@ import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
 import { AuthLogo } from "../ui/Logo";
+import { SUPER_ADMIN_EMAIL_RAW } from "../../config/superAdmin";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -21,7 +22,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { signIn, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
-    email: import.meta.env.DEV ? "justindepierro@gmail.com" : "",
+    email: import.meta.env.DEV ? SUPER_ADMIN_EMAIL_RAW : "",
     password: import.meta.env.DEV
       ? import.meta.env.VITE_DEV_PASSWORD || ""
       : "",

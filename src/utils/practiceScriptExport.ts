@@ -37,7 +37,7 @@ export function exportPracticeScripts(
       plays: (script.plays || []).map((play, index) => ({
         playId: play.playId,
         orderIndex: index,
-        reps: play.reps || 1,
+        reps: play.repetitions || 1,
         notes: play.notes || null,
       })),
     })),
@@ -155,10 +155,10 @@ export function parseJSONFile(
   try {
     const parsed = JSON.parse(content);
     return validatePracticeScriptImport(parsed);
-  } catch (_err: unknown) {
+  } catch (err: unknown) {
     return {
       valid: false,
-      error: "Invalid JSON file format",
+      error: err instanceof Error ? err.message : "Invalid JSON file format",
     };
   }
 }

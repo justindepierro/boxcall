@@ -24,6 +24,8 @@ import {
   DISTANCE_OPTIONS,
   HASH_OPTIONS,
 } from "../play-card/constants";
+import { Button } from "../../ui/Button/Button";
+import type { PlayCombo } from "../../../hooks/useRecentPlayCombos";
 
 interface MobileWizardViewProps {
   // Modal control
@@ -50,6 +52,11 @@ interface MobileWizardViewProps {
     formations: string[];
     playNames: string[];
     personnel: string[];
+  };
+  aiSuggestions?: {
+    aiFormations: string[];
+    aiPlayNames: string[];
+    generatedPlayNames: string[];
   };
   isSuggestionsVisible: (
     type: "formation" | "playName" | "personnel"
@@ -78,6 +85,7 @@ interface MobileWizardViewProps {
 
   // Rate limiting
   rateLimitFeedback: any;
+  recentCombos?: PlayCombo[];
 }
 
 /**
@@ -94,11 +102,12 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
   onClose,
   formData,
   updateField,
-  updateFields: _updateFields, // Reserved for future use
+  updateFields,
   isValid: _isValid, // Reserved for potential future use
   onSubmit,
   isSubmitting,
   suggestions,
+  aiSuggestions,
   isSuggestionsVisible,
   showSuggestions,
   hideSuggestions,
@@ -112,8 +121,10 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
   existingPlay,
   errorMessage,
   rateLimitFeedback,
+  recentCombos = [],
 }) => {
   const wizard = useWizardState(4); // 4 steps total
+  const quickCombos = recentCombos.slice(0, 6);
 
   // Validation per step
   const isStepValid = (step: number): boolean => {
@@ -122,7 +133,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
         return !!(formData.formation?.trim() && formData.playName?.trim());
 
       case 2: // Personnel & Type - Both required
-        return !!(formData.personnel?.trim() && formData.playType);
+        return true;
 
       case 3: // Game Situation - Optional, always valid
         return true;
@@ -228,6 +239,44 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
             totalSteps={4}
             className="flex-1"
           >
+            {quickCombos.length > 0 && (
+              <div className="mb-4">
+                <Typography
+                  variant="label-md"
+                  className="mb-2 text-text-secondary uppercase tracking-wide"
+                >
+                  Recent combos
+                </Typography>
+                <div className="flex flex-wrap gap-2">
+                  {quickCombos.map((combo) => (
+                    <Button
+                      key={`${combo.formation}-${combo.personnel || "none"}-${combo.playType || "any"}`}
+                      variant="secondary"
+                      size="sm"
+                      className="rounded-full bg-surface-secondary text-text-secondary hover:bg-surface-muted"
+                      onClick={() => {
+                        updateFields({
+                          formation: combo.formation,
+                          formation_id: null,
+                          personnel: combo.personnel || "",
+                          playType: combo.playType || formData.playType,
+                        });
+                      }}
+                    >
+                      <Icon
+                        name="zap"
+                        className="mr-2 h-4 w-4 text-text-primary"
+                      />
+                      <span className="truncate max-w-36">
+                        {combo.formation}
+                        {combo.personnel ? ` • ${combo.personnel}` : ""}
+                      </span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <FormationSection
               formation={formData.formation}
               formationId={formData.formation_id}
@@ -246,6 +295,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                 updateField("formationShowInName", value)
               }
               suggestions={suggestions.formations}
+              aiSuggestions={aiSuggestions?.aiFormations}
               showSuggestions={isSuggestionsVisible("formation")}
               onShowSuggestionsChange={(show) =>
                 show
@@ -264,6 +314,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                 updateField("playShowInName", value)
               }
               suggestions={suggestions.playNames}
+              aiSuggestions={aiSuggestions?.aiPlayNames}
+              generatedSuggestions={aiSuggestions?.generatedPlayNames}
               showSuggestions={isSuggestionsVisible("playName")}
               onShowSuggestionsChange={(show) =>
                 show ? showSuggestions("playName") : hideSuggestions("playName")
@@ -278,6 +330,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
             title="Personnel & Type"
             step={2}
             totalSteps={4}
+            optional
             className="flex-1"
           >
             <PersonnelSection
@@ -412,7 +465,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
           totalSteps={4}
           onBack={wizard.goBack}
           onNext={handleNext}
-          onSkip={wizard.currentStep >= 3 ? handleSkip : undefined} // Only on steps 3 & 4
+          onSkip={wizard.currentStep >= 2 ? handleSkip : undefined}
           nextDisabled={!isStepValid(wizard.currentStep)}
           nextLabel={wizard.isLastStep ? "Create Play" : "Next"}
           loading={isSubmitting}

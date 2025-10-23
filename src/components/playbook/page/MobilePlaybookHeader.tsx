@@ -77,7 +77,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
             variant="ghost"
             size="md"
             onClick={onStatsClick}
-            className="h-10 w-10 p-0 flex items-center justify-center"
+            className="h-11 w-11 p-0 flex items-center justify-center"
             aria-label="View stats"
           >
             <Icon name="bar-chart" size="sm" className="h-5 w-5" />
@@ -89,7 +89,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
           variant="ghost"
           size="md"
           onClick={onSearchClick}
-          className="h-10 w-10 p-0 flex items-center justify-center"
+          className="h-11 w-11 p-0 flex items-center justify-center"
           aria-label="Search plays"
         >
           <Icon name="search" size="sm" className="h-5 w-5" />
@@ -100,7 +100,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
           variant="ghost"
           size="md"
           onClick={onFilterClick}
-          className="h-10 w-10 p-0 flex items-center justify-center relative"
+          className="h-11 w-11 p-0 flex items-center justify-center relative"
           aria-label="Filter plays"
         >
           <Icon name="filter" size="sm" className="h-5 w-5" />

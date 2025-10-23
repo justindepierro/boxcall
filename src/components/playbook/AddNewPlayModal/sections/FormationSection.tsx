@@ -20,6 +20,7 @@ interface FormationSectionProps {
   onFormationDirChange: (dir: string) => void;
   onFormationShowInNameChange: (show: boolean) => void;
   suggestions: string[];
+  aiSuggestions?: string[];
   showSuggestions: boolean;
   onShowSuggestionsChange: (show: boolean) => void;
 }
@@ -36,6 +37,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
   onFormationDirChange,
   onFormationShowInNameChange,
   suggestions,
+  aiSuggestions = [],
   showSuggestions,
   onShowSuggestionsChange,
 }) => {
@@ -66,6 +68,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
           onChange={onFormationChange}
           placeholder="e.g., Shotgun, Empty, Pistol"
           suggestions={suggestions}
+          aiSuggestions={aiSuggestions}
           showSuggestions={showSuggestions}
           onShowSuggestionsChange={onShowSuggestionsChange}
           required
@@ -76,33 +79,24 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
       <div className="flex gap-spacing-xs">
         <Button
           type="button"
-          variant={
-            formationDir.toLowerCase() === "left" ? "primary" : "outline"
-          }
+          variant={formationDir ? "primary" : "outline"}
           size="sm"
-          onClick={() =>
-            onFormationDirChange(
-              formationDir.toLowerCase() === "left" ? "" : "Left"
-            )
-          }
-          className="px-spacing-sm"
+          onClick={() => {
+            const nextValue =
+              formationDir.toLowerCase() === "left"
+                ? "Right"
+                : formationDir.toLowerCase() === "right"
+                  ? ""
+                  : "Left";
+            onFormationDirChange(nextValue);
+          }}
+          className="px-spacing-sm min-w-24"
         >
-          Left
-        </Button>
-        <Button
-          type="button"
-          variant={
-            formationDir.toLowerCase() === "right" ? "primary" : "outline"
-          }
-          size="sm"
-          onClick={() =>
-            onFormationDirChange(
-              formationDir.toLowerCase() === "right" ? "" : "Right"
-            )
-          }
-          className="px-spacing-sm"
-        >
-          Right
+          {formationDir
+            ? formationDir.toLowerCase() === "left"
+              ? "Left"
+              : "Right"
+            : "Neutral"}
         </Button>
         <Button
           type="button"

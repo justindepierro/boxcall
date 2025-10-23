@@ -306,7 +306,7 @@ export const PDFBaseStyles = StyleSheet.create({
   categoryWeightRoom: { backgroundColor: PDFColors.categories["weight-room"] },
   categoryTransition: { backgroundColor: PDFColors.categories.transition },
   categoryBreak: { backgroundColor: PDFColors.categories.break },
-});
+}) as any;
 // Helper function to get category color
 export const getCategoryColor = (category: string) => {
   const colorMap: Record<string, string> = PDFColors.categories;

@@ -17,6 +17,45 @@ export function useSessionMonitor() {
   const toast = useToast();
 
   useEffect(() => {
+    const AUTH_ROUTES = [
+      "/login",
+      "/create-account",
+      "/reset-password",
+      "/admin/create-account",
+    ];
+
+    const isOnAuthRoute = () => {
+      const path = window.location.pathname;
+      return AUTH_ROUTES.some((route) => path.startsWith(route));
+    };
+
+    const redirectToLogin = (reason: string) => {
+      const currentUrl = new URL(window.location.href);
+
+      if (isOnAuthRoute()) {
+        // Already on an auth route – update query parameters without forcing a reload.
+        if (reason && currentUrl.searchParams.get("reason") !== reason) {
+          currentUrl.searchParams.set("reason", reason);
+          window.history.replaceState(null, "", currentUrl.toString());
+        }
+        return;
+      }
+
+      const loginUrl = new URL(window.location.origin + "/login");
+      if (reason) {
+        loginUrl.searchParams.set("reason", reason);
+      }
+
+      if (
+        currentUrl.pathname === loginUrl.pathname &&
+        currentUrl.search === loginUrl.search
+      ) {
+        return; // Avoid triggering an identical navigation loop
+      }
+
+      window.location.href = loginUrl.toString();
+    };
+
     const checkSession = async () => {
       try {
         const {
@@ -32,7 +71,7 @@ export function useSessionMonitor() {
         if (!session) {
           // No session - redirect to login
           console.warn("Session expired or not found");
-          window.location.href = "/login?reason=session_expired";
+          redirectToLogin("session_expired");
           return;
         }
 
@@ -61,7 +100,7 @@ export function useSessionMonitor() {
         } else if (minutesUntilExpiry <= 0) {
           // Session expired
           console.warn("Session expired");
-          window.location.href = "/login?reason=session_expired";
+          redirectToLogin("session_expired");
         }
       } catch (error) {
         console.error("Session monitoring error:", error);

@@ -27,7 +27,6 @@ BEGIN
   WHERE id = p_play_id;
 END;
 $$;
-
 -- Function to get play with diagram
 CREATE OR REPLACE FUNCTION get_play_with_diagram(p_play_id UUID)
 RETURNS TABLE (
@@ -56,7 +55,6 @@ BEGIN
   WHERE p.id = p_play_id;
 END;
 $$;
-
 -- Function to count players in a diagram
 CREATE OR REPLACE FUNCTION count_diagram_players(p_diagram_data JSONB)
 RETURNS INTEGER
@@ -70,7 +68,6 @@ EXCEPTION
     RETURN 0;
 END;
 $$;
-
 -- Add a computed column helper (can be used in queries)
 COMMENT ON FUNCTION count_diagram_players IS 'Returns the number of players in a diagram';
 COMMENT ON FUNCTION update_play_diagram IS 'Updates play diagram data and tracks modification timestamp';

@@ -1,37 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
 import { Card } from "../ui/Card";
-import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
-import { Badge } from "../ui/Badge";
+import { PlayTypeDistributionChart } from "./charts/PlayTypeDistributionChart";
+import { SuccessRateBarChart } from "./charts/SuccessRateBarChart";
 import {
   SessionAnalyticsService,
   type SessionAnalytics,
 } from "../../services/sessionAnalyticsService";
-import { SuccessRateBarChart } from "./charts/SuccessRateBarChart";
-import { PlayTypeDistributionChart } from "./charts/PlayTypeDistributionChart";
-import { PlaySuccessHeatmap } from "./charts/PlaySuccessHeatmap";
-
-/**
- * Session Analytics Dashboard - Phase 14.1
- * Comprehensive post-session analytics with charts
- */
 
 interface SessionAnalyticsDashboardProps {
   sessionId: string;
-  className?: string;
-  onExport?: () => void;
 }
 
+/**
+ * SessionAnalyticsDashboard - Comprehensive session analytics
+ *
+ * Displays detailed analytics for a specific practice/game session including:
+ * - Play success rates by formation
+ * - Player performance metrics
+ * - Time distribution analysis
+ * - Confidence trends over session
+ *
+ * @param sessionId - The session ID to analyze
+ */
 export const SessionAnalyticsDashboard: React.FC<
   SessionAnalyticsDashboardProps
-> = ({ sessionId, className = "", onExport }) => {
+> = ({ sessionId }) => {
   const [analytics, setAnalytics] = useState<SessionAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadAnalytics = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -46,348 +47,199 @@ export const SessionAnalyticsDashboard: React.FC<
         setLoading(false);
       }
     };
-    loadData();
-  }, [sessionId]);
 
-  const loadAnalytics = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await SessionAnalyticsService.getSessionAnalytics(sessionId);
-      setAnalytics(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load analytics");
-    } finally {
-      setLoading(false);
-    }
-  };
+    loadAnalytics();
+  }, [sessionId]);
 
   if (loading) {
     return (
-      <div
-        className={`flex items-center justify-center p-spacing-2xl ${className}`}
-      >
+      <div className="flex items-center justify-center p-12">
         <div className="text-center">
           <Icon
             name="refresh-cw"
-            className="h-8 w-8 animate-spin text-jade-600 mx-auto mb-spacing-md"
+            className="h-8 w-8 animate-spin text-primary mx-auto mb-4"
           />
-          <Typography variant="body-lg">Loading analytics...</Typography>
+          <Typography variant="body-lg">
+            Loading session analytics...
+          </Typography>
         </div>
       </div>
     );
   }
 
-  if (error || !analytics) {
+  if (error) {
     return (
-      <div className={`p-spacing-2xl text-center ${className}`}>
+      <div className="p-6 text-center">
         <Icon
           name="alert-triangle"
-          className="h-12 w-12 text-text-error mx-auto mb-spacing-md"
+          className="h-12 w-12 text-error mx-auto mb-4"
         />
-        <Typography
-          variant="headline-sm"
-          className="text-text-error mb-spacing-xs"
-        >
+        <Typography variant="headline-sm" className="text-error mb-2">
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-text-error mb-spacing-md">
-          {error || "No analytics data available"}
+        <Typography variant="body-sm" className="text-text-secondary">
+          {error}
         </Typography>
-        <Button onClick={loadAnalytics} variant="secondary">
-          <Icon name="refresh-cw" className="mr-spacing-xs" />
-          Retry
-        </Button>
       </div>
     );
   }
 
+  if (!analytics) {
+    return (
+      <div className="p-6 text-center">
+        <Icon name="bar-chart" className="h-12 w-12 text-muted mx-auto mb-4" />
+        <Typography variant="headline-sm" className="text-text-secondary mb-2">
+          No Analytics Data
+        </Typography>
+        <Typography variant="body-sm" className="text-text-secondary">
+          No data available for this session.
+        </Typography>
+      </div>
+    );
+  }
+
+  // Transform data for charts
+  const playTypeData = analytics.byPlayType.map((item) => ({
+    name: item.type,
+    value: item.count,
+    color: getPlayTypeColor(item.type),
+  }));
+
+  const formationData = analytics.byFormation.map((item) => ({
+    name: item.formationName,
+    successRate: item.successRate,
+    totalPlays: item.attempts,
+    successfulPlays: Math.round((item.attempts * item.successRate) / 100),
+  }));
+
   return (
-    <div className={`space-y-spacing-lg ${className}`}>
-      {/* Header */}
-      <Card>
-        <div className="p-spacing-lg">
-          <div className="flex items-start justify-between mb-spacing-md">
-            <div>
-              <Typography variant="headline-lg" className="mb-spacing-xs">
-                {analytics.sessionType === "game" ? "🏈 Game" : "📋 Practice"}{" "}
-                Session Analytics
-              </Typography>
-              <Typography variant="body-sm" className="text-text-secondary">
-                {new Date(analytics.date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-                {analytics.opponent && ` • vs ${analytics.opponent}`}
-              </Typography>
-            </div>
-            {onExport && (
-              <Button onClick={onExport} variant="secondary" size="sm">
-                <Icon name="download" className="mr-spacing-xs" />
-                Export PDF
-              </Button>
-            )}
-          </div>
-
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md">
-            <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary mb-spacing-xs"
-              >
-                Success Rate
-              </Typography>
-              <Typography
-                variant="headline-lg"
-                className="font-bold"
-                style={{
-                  color:
-                    analytics.successRate >= 75
-                      ? "var(--color-success-500)"
-                      : analytics.successRate >= 60
-                        ? "var(--color-warning-500)"
-                        : "var(--color-error-500)",
-                }}
-              >
-                {analytics.successRate}%
-              </Typography>
-            </div>
-
-            <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary mb-spacing-xs"
-              >
-                Avg Yards/Play
-              </Typography>
-              <Typography
-                variant="headline-lg"
-                className="font-bold text-jade-600"
-              >
-                {analytics.avgYardsPerPlay}
-              </Typography>
-            </div>
-
-            <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary mb-spacing-xs"
-              >
-                Total Plays
-              </Typography>
-              <Typography variant="headline-lg" className="font-bold">
-                {analytics.totalPlays}
-              </Typography>
-            </div>
-
-            <div className="text-center p-spacing-md bg-surface-secondary rounded-sm">
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary mb-spacing-xs"
-              >
-                Total Yards
-              </Typography>
-              <Typography
-                variant="headline-lg"
-                className="font-bold text-jade-600"
-              >
-                {analytics.totalYards}
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Charts Section */}
-      <div className="grid md:grid-cols-2 gap-spacing-lg">
-        {/* Success Rate by Down */}
-        {analytics.byDown.length > 0 && (
-          <SuccessRateBarChart data={analytics.byDown} />
-        )}
-
-        {/* Play Type Distribution */}
-        {analytics.byPlayType.length > 0 && (
-          <PlayTypeDistributionChart data={analytics.byPlayType} />
-        )}
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Icon name="chart-bar" className="h-6 w-6 text-primary" />
+        <Typography variant="headline-lg">Session Analytics</Typography>
       </div>
 
-      {/* Formation Effectiveness */}
-      {analytics.byFormation.length > 0 && (
-        <Card>
-          <div className="p-spacing-lg">
-            <Typography variant="headline-sm" className="mb-spacing-md">
-              Formation Effectiveness
+      {/* Session Overview */}
+      <Card className="p-6">
+        <Typography variant="headline-md" className="mb-4">
+          Session Overview -{" "}
+          {analytics.sessionType === "game" ? "Game" : "Practice"}
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-success-600">
+              {analytics.successRate}%
             </Typography>
-            <div className="space-y-spacing-sm">
-              {analytics.byFormation.map((formation) => (
-                <div
-                  key={formation.formationName}
-                  className="flex items-center justify-between p-spacing-sm bg-surface-secondary rounded-sm"
-                >
-                  <div className="flex-1">
-                    <Typography variant="body-sm" className="font-semibold">
-                      {formation.formationName}
-                    </Typography>
-                    <Typography
-                      variant="body-xs"
-                      className="text-text-secondary"
-                    >
-                      {formation.attempts} plays • {formation.avgYards} avg
-                      yards
-                    </Typography>
-                  </div>
-                  <Badge
-                    variant={
-                      formation.successRate >= 75
-                        ? "success"
-                        : formation.successRate >= 60
-                          ? "warning"
-                          : "danger"
-                    }
-                  >
-                    {formation.successRate}%
-                  </Badge>
-                </div>
-              ))}
-            </div>
+            <Typography variant="body-sm" className="text-text-secondary">
+              Overall Success
+            </Typography>
           </div>
-        </Card>
-      )}
-
-      {/* Coverage Performance (Phase 13) */}
-      {analytics.byCoverage.length > 0 && (
-        <Card>
-          <div className="p-spacing-lg">
-            <Typography variant="headline-sm" className="mb-spacing-sm">
-              Coverage Performance
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-primary">
+              {analytics.totalPlays}
             </Typography>
-            <Typography
-              variant="body-xs"
-              className="text-text-secondary mb-spacing-md"
-            >
-              How well plays performed against different defensive coverages
+            <Typography variant="body-sm" className="text-text-secondary">
+              Total Plays
             </Typography>
-            <div className="space-y-spacing-sm">
-              {analytics.byCoverage.map((coverage) => (
-                <div
-                  key={coverage.coverage}
-                  className="flex items-center gap-spacing-md p-spacing-sm bg-surface-secondary rounded-sm"
-                >
-                  <div className="flex-1">
-                    <Typography variant="body-sm" className="font-semibold">
-                      {coverage.coverage}
-                    </Typography>
-                    <Typography
-                      variant="body-xs"
-                      className="text-text-secondary"
-                    >
-                      {coverage.attempts} plays • {coverage.avgYards} avg yards
-                    </Typography>
-                  </div>
-                  <div className="w-32">
-                    <div className="h-2 bg-surface-tertiary rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{
-                          width: `${coverage.successRate}%`,
-                          backgroundColor:
-                            coverage.successRate >= 75
-                              ? "var(--color-success-500)"
-                              : coverage.successRate >= 60
-                                ? "var(--color-warning-500)"
-                                : "var(--color-error-500)",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <Badge
-                    variant={
-                      coverage.successRate >= 75
-                        ? "success"
-                        : coverage.successRate >= 60
-                          ? "warning"
-                          : "danger"
-                    }
-                    className="w-15 text-center"
-                  >
-                    {coverage.successRate}%
-                  </Badge>
-                </div>
-              ))}
-            </div>
           </div>
-        </Card>
-      )}
-
-      {/* Hash Success Comparison (Phase 13) */}
-      {analytics.byHash.length > 0 && (
-        <Card>
-          <div className="p-spacing-lg">
-            <Typography variant="headline-sm" className="mb-spacing-sm">
-              Hash Success Comparison
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-warning-600">
+              {analytics.avgYardsPerPlay.toFixed(1)}
             </Typography>
-            <Typography
-              variant="body-xs"
-              className="text-text-secondary mb-spacing-md"
-            >
-              Success rate by field hash position (left, middle, right)
+            <Typography variant="body-sm" className="text-text-secondary">
+              Avg Yards/Play
             </Typography>
-            <div className="grid grid-cols-3 gap-spacing-md">
-              {analytics.byHash.map((hash) => {
-                const isHighest =
-                  hash.successRate ===
-                  Math.max(...analytics.byHash.map((h) => h.successRate));
-                return (
-                  <div
-                    key={hash.hash}
-                    className={`text-center p-spacing-md rounded-sm ${
-                      isHighest
-                        ? "bg-success-bg border-2 border-success-500"
-                        : "bg-surface-secondary"
-                    }`}
-                  >
-                    {isHighest && (
-                      <Icon
-                        name="star"
-                        className="h-4 w-4 text-success-600 mx-auto mb-spacing-xs"
-                      />
-                    )}
-                    <Typography
-                      variant="body-xs"
-                      className={`mb-spacing-xs ${isHighest ? "text-success-700 font-semibold" : "text-text-secondary"}`}
-                    >
-                      {hash.hash.charAt(0).toUpperCase() + hash.hash.slice(1)}
-                    </Typography>
-                    <Typography
-                      variant="headline-md"
-                      className={`font-bold ${isHighest ? "text-success-600" : ""}`}
-                    >
-                      {hash.successRate}%
-                    </Typography>
-                    <Typography variant="body-xs" className="text-text-muted">
-                      {hash.attempts} plays
-                    </Typography>
-                    <Typography variant="body-xs" className="text-text-muted">
-                      {hash.avgYards} avg
-                    </Typography>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        </Card>
-      )}
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-info-600">
+              {analytics.totalYards}
+            </Typography>
+            <Typography variant="body-sm" className="text-text-secondary">
+              Total Yards
+            </Typography>
+          </div>
+        </div>
+        {analytics.opponent && (
+          <Typography variant="body-sm" className="text-text-secondary mt-4">
+            Opponent: {analytics.opponent}
+          </Typography>
+        )}
+      </Card>
 
-      {/* Field Position Zones - Heatmap (Phase 14.2) */}
-      {analytics.byFieldZone.length > 0 && (
-        <PlaySuccessHeatmap
-          data={analytics.byFieldZone}
-          title="Field Position Success Rate"
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PlayTypeDistributionChart data={playTypeData} />
+        <SuccessRateBarChart
+          data={formationData}
+          title="Success Rate by Formation"
         />
-      )}
+      </div>
+
+      {/* Additional Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-3">
+            By Down Performance
+          </Typography>
+          <div className="space-y-2">
+            {analytics.byDown.slice(0, 4).map((down) => (
+              <div key={down.down} className="flex justify-between">
+                <Typography variant="body-sm">{down.down}st Down</Typography>
+                <Typography variant="body-sm" className="font-medium">
+                  {down.successRate.toFixed(1)}% ({down.successes}/
+                  {down.attempts})
+                </Typography>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-3">
+            Field Position Zones
+          </Typography>
+          <div className="space-y-2">
+            {analytics.byFieldZone.slice(0, 3).map((zone) => (
+              <div key={zone.zone} className="flex justify-between">
+                <Typography variant="body-sm">{zone.zone}</Typography>
+                <Typography variant="body-sm" className="font-medium">
+                  {zone.successRate.toFixed(1)}%
+                </Typography>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-3">
+            Hash Distribution
+          </Typography>
+          <div className="space-y-2">
+            {analytics.byHash.map((hash) => (
+              <div key={hash.hash} className="flex justify-between">
+                <Typography variant="body-sm" className="capitalize">
+                  {hash.hash} Hash
+                </Typography>
+                <Typography variant="body-sm" className="font-medium">
+                  {hash.successRate.toFixed(1)}%
+                </Typography>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
+
+// Helper function to get colors for play types
+function getPlayTypeColor(playType: string): string {
+  const colors: Record<string, string> = {
+    run: "#3b82f6",
+    pass: "#ef4444",
+    screen: "#10b981",
+    rpo: "#f59e0b",
+    special: "#8b5cf6",
+  };
+  return colors[playType.toLowerCase()] || "#6b7280";
+}

@@ -1,26 +1,28 @@
 # Phase 4 Performance Optimization - Baseline Metrics
 
-**Date:** October 3, 2025  
-**Branch:** `feature/phase-4-performance`  
-**Commit:** Starting baseline before optimization work
+**Date:** October 22, 2025
+**Branch:** `feature/phase-4-optimization`
+**Commit:** [current commit hash]
 
 ---
 
-## 📊 Current Build Metrics
+## 📊 Current Build Metrics (Updated)
 
 ### Bundle Sizes (Production Build)
 
-| Asset                        | Size        | Gzipped   | Status                       |
-| ---------------------------- | ----------- | --------- | ---------------------------- |
-| **index-BF1YtWSS.js** (main) | 611.61 KB   | 183.56 KB | 🔴 **TARGET: <500KB**        |
-| **react-pdf.browser**        | 1,498.85 KB | 499.91 KB | 🔴 **CRITICAL: Lazy load**   |
-| **calendar-CVNkezXa.js**     | 259.79 KB   | 76.95 KB  | 🟡 **Consider splitting**    |
-| **PlaybookPage**             | 164.36 KB   | 46.87 KB  | 🟡 **Code split candidates** |
-| **dnd** (drag-and-drop)      | 96.20 KB    | 29.91 KB  | ✅ Acceptable                |
-| **TeamBulletin**             | 61.89 KB    | 16.31 KB  | ✅ Good                      |
-| **CSS (index)**              | 194.95 KB   | 32.20 KB  | 🟡 **Optimize**              |
+| Asset                         | Size        | Gzipped   | Status                      |
+| ----------------------------- | ----------- | --------- | --------------------------- |
+| **DiagramCanvas-DD9pmqbp.js** | 517.18 KB   | 156.15 KB | 🔴 **CRITICAL: >500KB**     |
+| **react-pdf.browser**         | 1,489.53 KB | 498.82 KB | 🔴 **CRITICAL: Lazy load**  |
+| **index-DWy6US1c.js** (main)  | 442.38 KB   | 133.36 KB | 🟡 **Main bundle**          |
+| **PlaybookPage-7F4yK7Sw.js**  | 304.33 KB   | 83.08 KB  | 🟡 **Code split candidate** |
+| **calendar-D3izHlEt.js**      | 259.79 KB   | 76.95 KB  | 🟡 **Consider splitting**   |
+| **supabase-9V1RGTaI.js**      | 146.82 KB   | 49.76 KB  | 🟡 **Large vendor**         |
+| **ui-DT2F8WmS.js**            | 146.28 KB   | 37.13 KB  | 🟡 **UI components**        |
+| **CSS (index)**               | 260.42 KB   | 40.68 KB  | 🟡 **Optimize**             |
 
-**Total Main Bundle:** ~2.5 MB uncompressed, ~825 KB gzipped
+**Total Build Time:** 21.70s (target: <10s = -53% improvement needed)
+**Total Assets:** 218+ chunks
 
 ---
 

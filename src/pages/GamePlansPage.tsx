@@ -26,10 +26,14 @@ const ImportGamePlansModal = lazy(() =>
   }))
 );
 import { GamePlanPDFService } from "../services/gamePlanPdfService";
-import { GamePlanService } from "../services/gamePlanService_new";
-import type { GamePlan } from "../components/playbook/GamePlanModal/types";
+import {
+  GamePlanService,
+  type GamePlan as ServiceGamePlan,
+} from "../services/gamePlanService_new";
+import type { GamePlan as ModalGamePlan } from "../components/playbook/GamePlanModal/types";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
+import { useIsMobile } from "../hooks/useBreakpoint";
 import {
   exportGamePlans,
   downloadJSON,
@@ -41,14 +45,16 @@ export default function GamePlansPage() {
   const { user } = useAuth();
   const toast = useToast();
 
-  const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);
+  const [gamePlans, setGamePlans] = useState<ModalGamePlan[]>([]);
+  const [rawGamePlans, setRawGamePlans] = useState<ServiceGamePlan[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [editingPlan, setEditingPlan] = useState<GamePlan | undefined>(
+  const [editingPlan, setEditingPlan] = useState<ModalGamePlan | undefined>(
     undefined
   );
-  const [_loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   // Search & Sort state
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,9 +72,10 @@ export default function GamePlansPage() {
     setLoading(true);
     try {
       const plans = await GamePlanService.getGamePlans(activeTeamId, false);
+      setRawGamePlans(plans);
 
-      // Map to our component's GamePlan type
-      const mappedPlans: GamePlan[] = plans.map((plan) => ({
+      // Map to UI GamePlan type expected by modal/list components
+      const mappedPlans: ModalGamePlan[] = plans.map((plan) => ({
         id: plan.id,
         name: plan.name,
         opponent: plan.opponent || "",
@@ -115,12 +122,12 @@ export default function GamePlansPage() {
     setShowModal(true);
   }, []);
 
-  const handleEditPlan = (plan: GamePlan) => {
+  const handleEditPlan = (plan: ModalGamePlan) => {
     setEditingPlan(plan);
     setShowModal(true);
   };
 
-  const handleSavePlan = async (plan: GamePlan) => {
+  const handleSavePlan = async (plan: ModalGamePlan) => {
     if (!activeTeamId) {
       toast.error("No active team found");
       return;
@@ -158,7 +165,7 @@ export default function GamePlansPage() {
     }
   };
 
-  const handleDuplicatePlan = async (plan: GamePlan) => {
+  const handleDuplicatePlan = async (plan: ModalGamePlan) => {
     try {
       const newName = `${plan.name} (Copy)`;
       await GamePlanService.duplicateGamePlan(plan.id, newName);
@@ -170,7 +177,7 @@ export default function GamePlansPage() {
     }
   };
 
-  const handleArchivePlan = async (plan: GamePlan) => {
+  const handleArchivePlan = async (plan: ModalGamePlan) => {
     try {
       if (plan.isArchived) {
         await GamePlanService.unarchiveGamePlan(plan.id);
@@ -186,7 +193,7 @@ export default function GamePlansPage() {
     }
   };
 
-  const handleExportPDF = async (plan: GamePlan) => {
+  const handleExportPDF = async (plan: ModalGamePlan) => {
     try {
       await GamePlanPDFService.exportGamePlan(plan, "call-sheet");
       toast.success("PDF exported successfully");
@@ -210,17 +217,17 @@ export default function GamePlansPage() {
   };
 
   const handleExportJSON = () => {
-    if (gamePlans.length === 0) {
+    if (rawGamePlans.length === 0) {
       toast.error("No game plans to export");
       return;
     }
 
     try {
-      const exportData = exportGamePlans(gamePlans);
+      const exportData = exportGamePlans(rawGamePlans);
       const filename = `game-plans-${new Date().toISOString().split("T")[0]}.json`;
       downloadJSON(exportData, filename);
       toast.success(
-        `Exported ${gamePlans.length} game plan${gamePlans.length !== 1 ? "s" : ""}`
+        `Exported ${rawGamePlans.length} game plan${rawGamePlans.length !== 1 ? "s" : ""}`
       );
     } catch (error) {
       console.error("Failed to export game plans:", error);
@@ -268,13 +275,26 @@ export default function GamePlansPage() {
 
           // Add plays to each situation
           for (const [situationName, plays] of situationsMap) {
-            for (const play of plays) {
-              await GamePlanService.addPlayToSituation(
-                newPlan.id,
-                situationName,
-                play.playId,
-                play.notes || undefined
+            const targetSituation = newPlan.situations?.find(
+              (situation) =>
+                situation.situationType.toLowerCase() ===
+                situationName.toLowerCase()
+            );
+
+            if (!targetSituation) {
+              console.warn(
+                `Skipping plays for unknown situation "${situationName}"`
               );
+              continue;
+            }
+
+            for (const play of plays) {
+              await GamePlanService.addPlayToSituation({
+                situationId: targetSituation.id,
+                playId: play.playId,
+                priority: play.orderIndex + 1,
+                notes: play.notes || undefined,
+              });
             }
           }
 
@@ -302,7 +322,7 @@ export default function GamePlansPage() {
     }
   };
 
-  const getTotalPlays = (plan: GamePlan) => {
+  const getTotalPlays = (plan: ModalGamePlan) => {
     return plan.situations.reduce(
       (sum, situation) => sum + situation.plays.length,
       0
@@ -426,7 +446,7 @@ export default function GamePlansPage() {
         icon: "mail" as IconName,
         accentOverlayClass: "bg-aurora-violet",
         glowClassName: "glow-aurora-violet",
-        statusBadge: "Collab",
+        statusBadge: "Collaborate",
         iconClassName: "text-purple-600",
         footnote: "Jump to list",
         onOpen: scrollToList,
@@ -458,16 +478,22 @@ export default function GamePlansPage() {
         subtitle="Create and manage strategic game plans for upcoming matches"
         variant="list"
         actions={
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
             <Button
               onClick={() => navigate("/playbook")}
               variant="secondary"
               size="sm"
+              className="w-full sm:w-auto"
             >
               <Icon name="arrow-left" className="h-4 w-4 mr-2" />
               Back to Playbook
             </Button>
-            <Button onClick={handleCreatePlan} variant="primary" size="sm">
+            <Button
+              onClick={handleCreatePlan}
+              variant="primary"
+              size="sm"
+              className="w-full sm:w-auto"
+            >
               <Icon name="plus" className="h-4 w-4 mr-2" />
               New Plan
             </Button>
@@ -511,28 +537,35 @@ export default function GamePlansPage() {
 
         {/* Search & Sort Section */}
         {gamePlans.length > 0 && (
-          <div className="mb-6 flex flex-wrap items-center gap-4">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Search game plans by name or opponent..."
-              className="flex-1 max-w-2xl"
+              className="w-full md:flex-1 md:max-w-2xl"
             />
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 sm:w-full sm:flex-row sm:items-center md:w-auto">
               <SortDropdown
                 options={sortOptions}
                 value={sortBy}
                 onChange={setSortBy}
+                className="w-full sm:w-auto"
               />
               <Button
                 onClick={() => setShowImportModal(true)}
                 variant="secondary"
                 size="sm"
+                className="w-full sm:w-auto"
               >
                 <Icon name="upload" className="h-4 w-4 mr-2" />
                 Import
               </Button>
-              <Button onClick={handleExportJSON} variant="secondary" size="sm">
+              <Button
+                onClick={handleExportJSON}
+                variant="secondary"
+                size="sm"
+                className="w-full sm:w-auto"
+              >
                 <Icon name="download" className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -540,30 +573,36 @@ export default function GamePlansPage() {
           </div>
         )}
 
-        {activePlans.length === 0 &&
-        archivedPlans.length === 0 &&
-        !searchQuery ? (
+        {isLoading ? (
+          <div className="space-y-4 py-10" aria-busy="true">
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+          </div>
+        ) : activePlans.length === 0 &&
+          archivedPlans.length === 0 &&
+          !searchQuery ? (
           // Empty State
-          <div className="text-center py-16">
-            <div className="mx-auto w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-6">
+          <div className="py-16 text-center">
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-muted">
               <Icon name="target" className="h-12 w-12 text-text-muted" />
             </div>
             <Typography
               variant="headline-md"
-              className="text-text-primary mb-2"
+              className="mb-2 text-text-primary"
             >
               No Game Plans Yet
             </Typography>
             <Typography
               variant="body-lg"
-              className="text-text-secondary mb-8 max-w-md mx-auto"
+              className="mx-auto mb-8 max-w-md text-text-secondary"
             >
               Create your first game plan to strategize plays and formations for
               upcoming matches.
             </Typography>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col gap-4 justify-center sm:flex-row">
               <Button onClick={handleCreatePlan} variant="primary" size="lg">
-                <Icon name="plus" className="h-5 w-5 mr-2" />
+                <Icon name="plus" className="mr-2 h-5 w-5" />
                 Create New Plan
               </Button>
               <Button
@@ -571,7 +610,7 @@ export default function GamePlansPage() {
                 variant="secondary"
                 size="lg"
               >
-                <Icon name="book" className="h-5 w-5 mr-2" />
+                <Icon name="book" className="mr-2 h-5 w-5" />
                 Browse Playbook
               </Button>
             </div>
@@ -583,107 +622,129 @@ export default function GamePlansPage() {
             {activePlans.length > 0 && (
               <>
                 {/* Header with Create Button */}
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <Typography
                     variant="headline-md"
                     className="text-text-primary"
                   >
                     Active Game Plans ({activePlans.length})
                   </Typography>
-                  <Button onClick={handleCreatePlan} variant="primary">
+                  <Button
+                    onClick={handleCreatePlan}
+                    variant="primary"
+                    className="w-full sm:w-auto"
+                  >
                     <Icon name="plus" className="h-4 w-4 mr-2" />
                     New Plan
                   </Button>
                 </div>
 
                 {/* Plans Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
                   {activePlans.map((plan) => (
                     <div
                       key={plan.id}
-                      className="bg-surface-primary rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
+                      className="bg-surface-primary rounded-2xl border border-border p-5 hover:shadow-lg transition-all cursor-pointer"
                       onClick={() => handleEditPlan(plan)}
                     >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <Typography
-                            variant="headline-sm"
-                            className="text-text-primary mb-1"
-                          >
-                            {plan.name}
-                          </Typography>
-                          <Typography
-                            variant="body-sm"
-                            className="text-text-secondary"
-                          >
-                            vs {plan.opponent}
-                          </Typography>
-                          <Typography
-                            variant="body-sm"
-                            className="text-text-muted"
-                          >
-                            {plan.gameDate
-                              ? new Date(plan.gameDate).toLocaleDateString()
-                              : "Date TBD"}
-                          </Typography>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleExportPDF(plan);
-                            }}
-                            className="p-1 text-text-muted hover:text-text-info transition-colors"
-                            title="Export PDF"
-                          >
-                            <Icon name="download" className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDuplicatePlan(plan);
-                            }}
-                            className="p-1 text-text-muted hover:text-text-secondary transition-colors"
-                            title="Duplicate plan"
-                          >
-                            <Icon name="copy" className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditPlan(plan);
-                            }}
-                            className="p-1 text-text-muted hover:text-text-secondary transition-colors"
-                            title="Edit plan"
-                          >
-                            <Icon name="edit" className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleArchivePlan(plan);
-                            }}
-                            className="p-1 text-text-muted hover:text-text-warning transition-colors"
-                            title="Archive plan"
-                          >
-                            <Icon name="folder" className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeletePlan(plan.id);
-                            }}
-                            className="p-1 text-text-muted hover:text-text-error transition-colors"
-                            title="Delete plan"
-                          >
-                            <Icon name="delete" className="h-4 w-4" />
-                          </button>
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0 space-y-1.5">
+                            <Typography
+                              variant="headline-sm"
+                              className="text-text-primary font-semibold leading-tight line-clamp-2"
+                            >
+                              {plan.name}
+                            </Typography>
+                            <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                              {plan.opponent && (
+                                <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                                  vs {plan.opponent}
+                                </span>
+                              )}
+                              <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                                {plan.gameDate
+                                  ? new Date(plan.gameDate).toLocaleDateString()
+                                  : "Date TBD"}
+                              </span>
+                              {plan.gameLocation && (
+                                <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                                  {plan.gameLocation}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleExportPDF(plan);
+                              }}
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-info focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              title="Export PDF"
+                              aria-label="Export plan as PDF"
+                            >
+                              <Icon name="download" className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDuplicatePlan(plan);
+                              }}
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              title="Duplicate plan"
+                              aria-label="Duplicate plan"
+                            >
+                              <Icon name="copy" className="h-5 w-5" />
+                            </button>
+                            {!isMobile && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditPlan(plan);
+                                }}
+                                className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                                title="Edit plan"
+                                aria-label="Edit plan"
+                              >
+                                <Icon name="edit" className="h-5 w-5" />
+                              </button>
+                            )}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleArchivePlan(plan);
+                              }}
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-warning focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              title="Archive plan"
+                              aria-label="Archive plan"
+                            >
+                              <Icon name="folder" className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeletePlan(plan.id);
+                              }}
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-error focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              title="Delete plan"
+                              aria-label="Delete plan"
+                            >
+                              <Icon name="delete" className="h-5 w-5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between text-sm text-text-secondary">
-                        <span>{getTotalPlays(plan)} plays</span>
-                        <span>{plan.updatedAt.toLocaleDateString()}</span>
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-text-secondary">
+                        <span className="inline-flex items-center gap-2 font-medium">
+                          <Icon name="list" className="h-4 w-4" />
+                          {getTotalPlays(plan)} plays
+                        </span>
+                        <span className="inline-flex items-center gap-2">
+                          <Icon name="clock" className="h-4 w-4" />
+                          {new Date(plan.updatedAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -700,32 +761,48 @@ export default function GamePlansPage() {
                 >
                   Archived Game Plans ({archivedPlans.length})
                 </Typography>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
                   {archivedPlans.map((plan) => (
                     <div
                       key={plan.id}
-                      className="bg-surface-secondary rounded-lg border border-border p-6 opacity-75"
+                      className="bg-surface-secondary/80 rounded-2xl border border-border p-5 opacity-90"
                     >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0 space-y-1.5">
                           <Typography
                             variant="headline-sm"
-                            className="text-text-primary mb-1"
+                            className="text-text-primary font-semibold leading-tight line-clamp-2"
                           >
                             {plan.name}
                           </Typography>
-                          <button
-                            onClick={() => handleArchivePlan(plan)}
-                            className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
-                            title="Restore plan"
-                          >
-                            <Icon name="inbox" className="h-4 w-4" />
-                          </button>
                         </div>
+                        <button
+                          onClick={() => handleArchivePlan(plan)}
+                          className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-primary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                          title="Restore plan"
+                          aria-label="Restore plan"
+                        >
+                          <Icon name="inbox" className="h-5 w-5" />
+                        </button>
                       </div>
-                      <Typography variant="body-sm" className="text-text-muted">
-                        {getTotalPlays(plan)} plays • Archived
-                      </Typography>
+                      <div className="mt-4 space-y-2 text-sm text-text-secondary">
+                        <span className="inline-flex items-center gap-2">
+                          <Icon name="list" className="h-4 w-4" />
+                          {getTotalPlays(plan)} plays
+                        </span>
+                        {plan.opponent && (
+                          <span className="inline-flex items-center gap-2">
+                            <Icon name="users" className="h-4 w-4" />
+                            vs {plan.opponent}
+                          </span>
+                        )}
+                        <span className="inline-flex items-center gap-2">
+                          <Icon name="calendar" className="h-4 w-4" />
+                          {plan.gameDate
+                            ? new Date(plan.gameDate).toLocaleDateString()
+                            : "Date TBD"}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>

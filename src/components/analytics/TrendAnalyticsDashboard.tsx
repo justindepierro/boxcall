@@ -1,82 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 import { Typography } from "../design-system/Typography";
-import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
 import { Icon } from "../ui/Icon";
-import { ConfidenceTrendChart } from "./charts/ConfidenceTrendChart";
-import { FormationTrendChart } from "./charts/FormationTrendChart";
-import { SessionAnalyticsService } from "../../services/sessionAnalyticsService";
-import type {
-  PlayTrendData,
-  FormationTrendData,
+import { SuccessRateBarChart } from "./charts/SuccessRateBarChart";
+import {
+  SessionAnalyticsService,
+  type PlayTrendData,
 } from "../../services/sessionAnalyticsService";
+import { PlaybookAnalyticsService } from "../../services/playAnalyticsService";
 
 interface TrendAnalyticsDashboardProps {
-  playId?: string;
-  formationId?: string;
+  playId: string;
   teamId: string;
-  startDate?: string;
-  endDate?: string;
-  className?: string;
-  onExport?: () => void;
 }
 
+/**
+ * TrendAnalyticsDashboard - Full trend analysis for plays and formations
+ *
+ * Shows trend analysis over time including:
+ * - Play success rate trends
+ * - Formation effectiveness over time
+ * - Player performance trends
+ * - Comparative analysis across sessions
+ *
+ * @param playId - The play ID to analyze trends for
+ * @param teamId - The team ID for context
+ */
 export const TrendAnalyticsDashboard: React.FC<
   TrendAnalyticsDashboardProps
-> = ({
-  playId,
-  formationId,
-  teamId,
-  startDate,
-  endDate,
-  className = "",
-  onExport,
-}) => {
-  const [playTrend, setPlayTrend] = useState<PlayTrendData[]>([]);
-  const [formationTrend, setFormationTrend] = useState<FormationTrendData[]>(
-    []
-  );
+> = ({ playId, teamId }) => {
+  const [trendData, setTrendData] = useState<PlayTrendData[]>([]);
+  const [formationData, setFormationData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadTrends = async () => {
+    const loadTrendData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const promises: Promise<any>[] = [];
+        // Load play trend data
+        const playTrends = await SessionAnalyticsService.getPlayTrend(
+          playId,
+          teamId
+        );
 
-        if (playId) {
-          promises.push(
-            SessionAnalyticsService.getPlayTrend(
-              playId,
-              teamId,
-              startDate,
-              endDate
-            )
-          );
-        }
+        // Load playbook analytics for formation comparison
+        const playbookData =
+          await PlaybookAnalyticsService.getPlaybookAnalytics(playId);
 
-        if (formationId) {
-          promises.push(
-            SessionAnalyticsService.getFormationTrend(
-              formationId,
-              teamId,
-              startDate,
-              endDate
-            )
-          );
-        }
-
-        const results = await Promise.all(promises);
-
-        if (playId && results.length > 0) {
-          setPlayTrend(results[0]);
-        }
-
-        if (formationId) {
-          setFormationTrend(results[playId ? 1 : 0]);
-        }
+        setTrendData(playTrends);
+        setFormationData(
+          playbookData.formationAnalytics.map((f) => ({
+            name: f.formation,
+            successRate: f.successRate,
+            totalPlays: f.totalPlays,
+            successfulPlays: Math.round((f.totalPlays * f.successRate) / 100),
+          }))
+        );
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load trend data"
@@ -86,296 +78,269 @@ export const TrendAnalyticsDashboard: React.FC<
       }
     };
 
-    if (playId || formationId) {
-      loadTrends();
-    }
-  }, [playId, formationId, teamId, startDate, endDate]);
+    loadTrendData();
+  }, [playId, teamId]);
 
   if (loading) {
     return (
-      <div className={`p-8 text-center ${className}`}>
-        <div className="mx-auto mb-4">Loading...</div>
-        <Typography variant="body-sm" className="text-secondary">
-          Loading trend analytics...
-        </Typography>
+      <div className="flex items-center justify-center p-12">
+        <div className="text-center">
+          <Icon
+            name="refresh-cw"
+            className="h-8 w-8 animate-spin text-primary mx-auto mb-4"
+          />
+          <Typography variant="body-lg">Loading trend analytics...</Typography>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={`p-8 text-center ${className}`}>
-        <div className="text-error-500 mx-auto mb-4">⚠️</div>
-        <Typography variant="body-sm" className="text-error-600 mb-4">
+      <div className="p-6 text-center">
+        <Icon
+          name="alert-triangle"
+          className="h-12 w-12 text-error mx-auto mb-4"
+        />
+        <Typography variant="headline-sm" className="text-error mb-2">
+          Analytics Error
+        </Typography>
+        <Typography variant="body-sm" className="text-text-secondary">
           {error}
         </Typography>
-        <Button
-          onClick={() => window.location.reload()}
-          variant="secondary"
-          size="sm"
-        >
-          Retry
-        </Button>
       </div>
     );
   }
 
-  if (playTrend.length === 0 && formationTrend.length === 0) {
-    return (
-      <div className={`p-8 text-center ${className}`}>
-        <div className="text-secondary mx-auto mb-4">📊</div>
-        <Typography variant="body-sm" className="text-secondary">
-          No trend data available
-        </Typography>
-      </div>
-    );
-  }
+  // Calculate trend metrics
+  const totalTrendPoints = trendData.length;
+  const avgSuccessRate =
+    totalTrendPoints > 0
+      ? trendData.reduce((sum, d) => sum + d.successRate, 0) / totalTrendPoints
+      : 0;
+  const trendDirection =
+    totalTrendPoints > 1
+      ? trendData[totalTrendPoints - 1].successRate - trendData[0].successRate
+      : 0;
 
-  // Format date range for display
-  const dateRangeText =
-    startDate && endDate
-      ? `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`
-      : "All time";
+  // Format data for line chart
+  const chartData = trendData.map((point, index) => ({
+    week: `Week ${index + 1}`,
+    successRate: point.successRate,
+    executions: point.executions,
+    avgYards: point.avgYards,
+  }));
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-surface-secondary border border-border rounded-lg p-3 shadow-lg">
+          <Typography variant="body-sm" className="font-medium mb-1">
+            {label}
+          </Typography>
+          {payload.map((entry: any, index: number) => (
+            <Typography
+              key={index}
+              variant="body-xs"
+              className="text-text-secondary"
+            >
+              {entry.dataKey === "successRate" ? "Success Rate" : entry.dataKey}
+              :{" "}
+              {entry.dataKey === "successRate"
+                ? `${entry.value}%`
+                : entry.dataKey === "avgYards"
+                  ? `${entry.value.toFixed(1)} yds`
+                  : entry.value}
+            </Typography>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <div className={className}>
-      {/* Header */}
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <Typography variant="headline-lg" className="mb-2">
-            Trend Analytics
-          </Typography>
-          <Typography variant="body-sm" className="text-secondary">
-            {dateRangeText}
-          </Typography>
-        </div>
-        {onExport && (
-          <Button onClick={onExport} variant="secondary" size="sm">
-            <Icon name="download" className="mr-2" size={16} />
-            Export
-          </Button>
-        )}
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Icon name="trending-up" className="h-6 w-6 text-primary" />
+        <Typography variant="headline-lg">Trend Analytics</Typography>
       </div>
 
-      {/* Play Confidence Trend */}
-      {playTrend.length > 0 && (
-        <div className="mb-6">
-          <ConfidenceTrendChart
-            data={playTrend.map((p) => ({
-              weekLabel: new Date(p.date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              }),
-              weekStart: p.date,
-              confidence: p.confidence,
-              reps: p.executions,
-              successRate: p.successRate,
-              avgYards: p.avgYards,
-            }))}
-            title="Play Confidence Trend"
-            showSuccessRate={true}
-            showReps={true}
-            targetConfidence={80}
-          />
-
-          {/* Play Insights */}
-          {(() => {
-            const latestPoint = playTrend[playTrend.length - 1];
-            const bestWeek = [...playTrend].sort(
-              (a, b) => b.successRate - a.successRate
-            )[0];
-            const mostPracticed = [...playTrend].sort(
-              (a, b) => b.executions - a.executions
-            )[0];
-
-            return (
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="trending-up"
-                      className="text-brand-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Best Week
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {new Date(bestWeek.date).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    {bestWeek.successRate}% success •{" "}
-                    {bestWeek.avgYards.toFixed(1)} avg yards
-                  </Typography>
-                </div>
-
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="activity"
-                      className="text-success-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Most Practiced
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {new Date(mostPracticed.date).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    {mostPracticed.executions} reps
-                  </Typography>
-                </div>
-
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="target"
-                      className="text-warning-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Current Status
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {latestPoint.confidence}%
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    {latestPoint.confidence >= 80
-                      ? "Game ready"
-                      : latestPoint.confidence >= 60
-                        ? "Needs more practice"
-                        : "Not ready"}
-                  </Typography>
-                </div>
-              </div>
-            );
-          })()}
+      {/* Overview */}
+      <Card className="p-6">
+        <Typography variant="headline-md" className="mb-4">
+          Trend Analysis Overview
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-success-600">
+              {trendDirection >= 0 ? "+" : ""}
+              {trendDirection.toFixed(1)}%
+            </Typography>
+            <Typography variant="body-sm" className="text-text-secondary">
+              Success Rate Trend
+            </Typography>
+          </div>
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-primary">
+              {totalTrendPoints}
+            </Typography>
+            <Typography variant="body-sm" className="text-text-secondary">
+              Weeks Analyzed
+            </Typography>
+          </div>
+          <div className="text-center">
+            <Typography variant="headline-lg" className="text-info-600">
+              {avgSuccessRate.toFixed(1)}%
+            </Typography>
+            <Typography variant="body-sm" className="text-text-secondary">
+              Average Success
+            </Typography>
+          </div>
         </div>
+      </Card>
+
+      {/* Success Rate Trends Chart */}
+      {chartData.length > 0 && (
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-4">
+            Success Rate Trends Over Time
+          </Typography>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis
+                  dataKey="week"
+                  tick={{ fontSize: 12 }}
+                  className="text-text-secondary"
+                />
+                <YAxis
+                  tick={{ fontSize: 12 }}
+                  className="text-text-secondary"
+                  domain={[0, 100]}
+                  tickFormatter={(value) => `${value}%`}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="successRate"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6 }}
+                  name="Success Rate"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <Typography variant="body-xs" className="text-text-secondary mt-2">
+            Success rate progression over time
+          </Typography>
+        </Card>
       )}
 
-      {/* Formation Performance Trend */}
-      {formationTrend.length > 0 && (
-        <div className="mb-6">
-          <FormationTrendChart
-            data={formationTrend.map((f) => ({
-              weekLabel: new Date(f.date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              }),
-              weekStart: f.date,
-              attempts: f.totalPlays,
-              successRate: f.successRate,
-              avgYards: 0, // Not available in FormationTrendData
-            }))}
-            formationName={formationTrend[0]?.formationName || "Formation"}
-            targetSuccessRate={70}
-            showAvgYards={false}
-          />
-
-          {/* Formation Insights */}
-          {(() => {
-            const bestWeek = [...formationTrend].sort(
-              (a, b) => b.successRate - a.successRate
-            )[0];
-            const totalAttempts = formationTrend.reduce(
-              (sum, f) => sum + f.totalPlays,
-              0
-            );
-            const avgSuccess =
-              formationTrend.reduce((sum, f) => sum + f.successRate, 0) /
-              formationTrend.length;
-
-            return (
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="trending-up"
-                      className="text-brand-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Best Week
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {new Date(bestWeek.date).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    {bestWeek.successRate}% success
-                  </Typography>
-                </div>
-
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="bar-chart"
-                      className="text-success-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Total Usage
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {totalAttempts}
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    Attempts across all weeks
-                  </Typography>
-                </div>
-
-                <div className="p-4 bg-surface-secondary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Icon
-                      name="trending-up"
-                      className="text-warning-600"
-                      size={20}
-                    />
-                    <Typography variant="body-sm" className="font-semibold">
-                      Avg Success Rate
-                    </Typography>
-                  </div>
-                  <Typography variant="headline-md" className="mb-1">
-                    {avgSuccess.toFixed(1)}%
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary">
-                    Overall performance
-                  </Typography>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
+      {/* Formation Comparison */}
+      {formationData.length > 0 && (
+        <SuccessRateBarChart
+          data={formationData}
+          title="Formation Effectiveness Comparison"
+        />
       )}
 
-      {/* Practice Recommendations */}
-      {playTrend.length > 0 &&
-        playTrend[playTrend.length - 1].confidence < 80 && (
-          <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <Icon
-                name="alert-triangle"
-                className="text-warning-600 mt-0.5"
-                size={20}
-              />
-              <div>
-                <Typography variant="body-sm" className="font-semibold mb-1">
-                  Practice Recommendation
+      {/* Additional Trend Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-3">
+            Performance Metrics
+          </Typography>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Total Executions</Typography>
+              <Typography variant="body-sm" className="font-medium">
+                {trendData.reduce((sum, d) => sum + d.executions, 0)}
+              </Typography>
+            </div>
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Avg Yards/Play</Typography>
+              <div className="flex items-center gap-2">
+                <Typography variant="body-sm" className="font-medium">
+                  {trendData.length > 0
+                    ? (
+                        trendData.reduce((sum, d) => sum + d.avgYards, 0) /
+                        trendData.length
+                      ).toFixed(1)
+                    : "0.0"}
                 </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  {playTrend[playTrend.length - 1].confidence < 60
-                    ? `This play needs significant practice. Schedule ${Math.ceil((80 - playTrend[playTrend.length - 1].confidence) / 5)} more practice sessions with 5-10 reps each to reach game-ready confidence.`
-                    : `This play is close to game-ready. Schedule 2-3 more practice sessions with 5-7 reps each to reach 80% confidence.`}
+                <Typography variant="body-xs" className="text-text-secondary">
+                  yds
                 </Typography>
               </div>
             </div>
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Best Week</Typography>
+              <Typography
+                variant="body-sm"
+                className="font-medium text-success-600"
+              >
+                {trendData.length > 0
+                  ? Math.max(...trendData.map((d) => d.successRate)).toFixed(1)
+                  : "0.0"}
+                %
+              </Typography>
+            </div>
           </div>
-        )}
+        </Card>
+
+        <Card className="p-6">
+          <Typography variant="headline-sm" className="mb-3">
+            Trend Analysis
+          </Typography>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Consistency</Typography>
+              <Typography variant="body-sm" className="font-medium">
+                {calculateConsistency(trendData)}%
+              </Typography>
+            </div>
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Improvement Rate</Typography>
+              <div className="flex items-center gap-2">
+                <Typography
+                  variant="body-sm"
+                  className={`font-medium ${trendDirection >= 0 ? "text-success-600" : "text-error-600"}`}
+                >
+                  {trendDirection >= 0 ? "+" : ""}
+                  {trendDirection.toFixed(1)}%
+                </Typography>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <Typography variant="body-sm">Reliability</Typography>
+              <Typography variant="body-sm" className="font-medium">
+                {trendData.filter((d) => d.successRate >= 70).length}/
+                {trendData.length} weeks
+              </Typography>
+            </div>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
+
+// Helper function to calculate consistency (lower variance = higher consistency)
+function calculateConsistency(data: PlayTrendData[]): number {
+  if (data.length < 2) return 100;
+
+  const mean = data.reduce((sum, d) => sum + d.successRate, 0) / data.length;
+  const variance =
+    data.reduce((sum, d) => sum + Math.pow(d.successRate - mean, 2), 0) /
+    data.length;
+  const stdDev = Math.sqrt(variance);
+
+  // Convert to consistency score (lower std dev = higher consistency)
+  const consistency = Math.max(0, 100 - stdDev * 2);
+  return Math.round(consistency);
+}
