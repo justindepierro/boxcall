@@ -40,6 +40,8 @@ export interface PlayerRosterInsert {
 }
 
 export interface PlayerRosterUpdate {
+  first_name?: string;
+  last_name?: string;
   nickname?: string;
   jersey_number?: number;
   position?: string;
@@ -48,6 +50,9 @@ export interface PlayerRosterUpdate {
   weight_lbs?: number;
   is_active?: boolean;
   roster_status?: string;
+  email_address?: string;
+  phone_number?: string;
+  parent_contact?: string;
 }
 
 // Use centralized supabase client (browser-safe, avoids process reference)

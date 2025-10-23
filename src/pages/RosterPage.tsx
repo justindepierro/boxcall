@@ -190,6 +190,8 @@ export default function RosterPage() {
     }
 
     return {
+      first_name: playerForm.first_name.trim() || undefined,
+      last_name: playerForm.last_name.trim() || undefined,
       nickname: playerForm.nickname.trim() || undefined,
       jersey_number: playerForm.jersey_number
         ? parseInt(playerForm.jersey_number)
@@ -200,6 +202,9 @@ export default function RosterPage() {
       weight_lbs: playerForm.weight_lbs
         ? parseInt(playerForm.weight_lbs)
         : undefined,
+      email_address: playerForm.email_address.trim() || undefined,
+      phone_number: playerForm.phone_number.trim() || undefined,
+      parent_contact: playerForm.parent_contact.trim() || undefined,
     };
   };
 
@@ -238,13 +243,18 @@ export default function RosterPage() {
 
     // Only trigger autosave for fields that affect the update data
     if (
+      field === "first_name" ||
+      field === "last_name" ||
       field === "nickname" ||
       field === "position" ||
       field === "jersey_number" ||
       field === "grade_level" ||
       field === "heightFeet" ||
       field === "heightInches" ||
-      field === "weight_lbs"
+      field === "weight_lbs" ||
+      field === "email_address" ||
+      field === "phone_number" ||
+      field === "parent_contact"
     ) {
       // Trigger autosave with current form + new value
       const updatedForm = { ...playerForm, [field]: value };
@@ -258,6 +268,8 @@ export default function RosterPage() {
       }
 
       const updateData: PlayerRosterUpdate = {
+        first_name: updatedForm.first_name.trim() || undefined,
+        last_name: updatedForm.last_name.trim() || undefined,
         nickname: updatedForm.nickname.trim() || undefined,
         jersey_number: updatedForm.jersey_number
           ? parseInt(updatedForm.jersey_number)
@@ -268,6 +280,9 @@ export default function RosterPage() {
         weight_lbs: updatedForm.weight_lbs
           ? parseInt(updatedForm.weight_lbs)
           : undefined,
+        email_address: updatedForm.email_address.trim() || undefined,
+        phone_number: updatedForm.phone_number.trim() || undefined,
+        parent_contact: updatedForm.parent_contact.trim() || undefined,
       };
 
       autosavePlayer.triggerAutosave(updateData);
