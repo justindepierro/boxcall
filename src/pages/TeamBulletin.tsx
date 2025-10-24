@@ -426,299 +426,177 @@ const TeamBulletin: React.FC = React.memo(() => {
             id="main-content"
             role="main"
             aria-labelledby="team-dashboard-heading"
-            className="py-2"
+            className="pb-8"
           >
-            <div className="px-4 sm:px-6 lg:px-8">
-              <TeamBulletinHeader {...teamHeaderProps} />
-
-              {/* Enhanced Team Dashboard Layout */}
-              <div className="team-dashboard-container">
-                {/* Hero Stats Row */}
-                <div className="dashboard-hero-section mb-12">
-                  <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
-                    <div className="grid-hero">
-                      <AuroraTile
-                        title="Trophy Case"
-                        description="Celebrate helmet stickers, medals, and season milestones together."
-                        icon="award"
-                        iconClassName="text-amber-600"
-                        accentOverlayClass="bg-aurora-amber"
-                        glowClassName="glow-aurora-amber"
-                        statusBadge="Recognition"
-                        footnote="Badges & stickers"
-                        onOpen={() => setIsTrophyCaseModalOpen(true)}
-                      >
-                        <TeamTrophyCase teamId={teamId || ""} compact />
-                      </AuroraTile>
-
-                      <AuroraTile
-                        title="Goals & Progress"
-                        description="Plan season goals, track momentum, and keep everyone aligned."
-                        icon="target"
-                        iconClassName="text-emerald-600"
-                        accentOverlayClass="bg-aurora-emerald"
-                        glowClassName="glow-aurora-emerald"
-                        statusBadge="Collaboration"
-                        footnote="Shared goals"
-                        onOpen={() => setIsTeamGoalsModalOpen(true)}
-                      >
-                        <React.Suspense fallback={<DashboardCardSkeleton />}>
-                          {collaborationProps ? (
-                            <SharedGoalTracker
-                              {...collaborationProps}
-                              compact
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center text-sm font-medium text-text-secondary opacity-70">
-                              Set up your team to start tracking goals.
-                            </div>
-                          )}
-                        </React.Suspense>
-                      </AuroraTile>
-
-                      <AuroraTile
-                        title="Team Decisions"
-                        description="Launch quick votes and gather feedback without the group chat chaos."
-                        icon="message"
-                        iconClassName="text-indigo-600"
-                        accentOverlayClass="bg-aurora-indigo"
-                        glowClassName="glow-aurora-indigo"
-                        statusBadge="Alignment"
-                        footnote="Live voting"
-                        onOpen={() => setIsTeamVotesModalOpen(true)}
-                      >
-                        <React.Suspense fallback={<DashboardCardSkeleton />}>
-                          <TeamVoteWidget
-                            widgetId="team-bulletin-team-vote"
-                            userRole={
-                              profile?.role === "admin"
-                                ? "coach"
-                                : (userRole as "coach" | "player" | "family") ||
-                                  "player"
-                            }
-                            userId={user?.id || "anonymous"}
-                            userName={
-                              profile?.display_name ||
-                              profile?.full_name ||
-                              "Team Member"
-                            }
-                            compact
-                          />
-                        </React.Suspense>
-                      </AuroraTile>
-
-                      <AuroraTile
-                        title="Season Stats"
-                        description="See the win column climb and log new results in seconds."
-                        icon="trending-up"
-                        iconClassName="text-purple-600"
-                        accentOverlayClass="bg-aurora-violet"
-                        glowClassName="glow-aurora-violet"
-                        statusBadge="Performance"
-                        footnote="Tap for details"
-                        onOpen={() => setIsSeasonStatsModalOpen(true)}
-                      >
-                        <SeasonStatsCard
-                          teamId={teamId || ""}
-                          userRole={userRole}
-                          compact
-                        />
-                      </AuroraTile>
+            {/* Modern Clean Header - No Heavy Hero Section */}
+            <div className="bg-gradient-to-r from-jade-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border-b border-subtle">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <TeamBulletinHeader {...teamHeaderProps} />
+                
+                {/* Compact Stats Bar - Instagram/Twitter Style */}
+                <div className="mt-4 flex items-center gap-4 text-sm flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <Icon name="message" size="sm" className="text-jade-600" />
+                    <span className="font-medium text-primary">
+                      {activityStats.loading ? "..." : activityStats.newPostsToday} posts today
+                    </span>
+                  </div>
+                  {activityStats.onlineMembers > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                      <span className="font-medium text-primary">
+                        {activityStats.onlineMembers} online
+                      </span>
                     </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Icon name="users" size="sm" className="text-blue-600" />
+                    <span className="font-medium text-primary">
+                      {teamData?.memberCount || 0} members
+                    </span>
                   </div>
+                  <button
+                    onClick={() => setIsSeasonStatsModalOpen(true)}
+                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-full border border-subtle hover:shadow-md transition-all"
+                  >
+                    <Icon name="trending-up" size="sm" className="text-purple-600" />
+                    <span className="font-medium text-sm">{teamData.record.wins}-{teamData.record.losses}</span>
+                  </button>
                 </div>
+              </div>
+            </div>
 
-                {/* Main Content Area */}
-                <div className="dashboard-main-content bg-aurora-shell rounded-aurora p-5 border border/40 shadow-sm xl:p-6">
-                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 xl:gap-5">
-                    {/* Left Sidebar - Quick Actions & Tools */}
-                    <aside className="xl:col-span-3 order-2 xl:order-1">
-                      <div className="sticky top-6 space-y-6">
-                        <Card className="bc-card-padding quick-actions-card shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
-                          <Typography
-                            as="h2"
-                            variant="headline-md"
-                            className="mb-4 text-text-primary flex items-center gap-3 icon-text-safe"
-                          >
-                            <div className="p-2 bg-aurora-emerald rounded-lg flex-shrink-0 shadow-sm">
-                              <Icon
-                                name="zap"
-                                size="sm"
-                                className="text-jade-600"
-                              />
-                            </div>
-                            <span className="text-truncate font-semibold">
-                              Quick Actions
-                            </span>
+            {/* Main Social Feed Layout - Three Column */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                {/* Left Sidebar - Compact Widgets (Hidden on Mobile) */}
+                <aside className="hidden lg:block lg:col-span-3 space-y-4">
+                  <Card className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Icon name="zap" size="sm" className="text-jade-600" />
+                      <Typography variant="headline-sm" className="font-semibold">
+                        Quick Actions
+                      </Typography>
+                    </div>
+                    <TeamQuickActions teamId={teamId || ""} userRole={userRole} />
+                  </Card>
+
+                  <Card className="p-4">
+                    <button
+                      onClick={() => setIsTrophyCaseModalOpen(true)}
+                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon name="award" size="md" className="text-warning-600" />
+                        <div className="flex-1 min-w-0">
+                          <Typography variant="body-sm" className="font-semibold truncate">
+                            Trophy Case
                           </Typography>
-                          <TeamQuickActions
-                            teamId={teamId || ""}
-                            userRole={userRole}
-                          />
-                        </Card>
-
-                        <div className="collaboration-section rounded-xl">
-                          <div
-                            className="collaboration-progress p-1"
-                            role="region"
-                            aria-label="Team Progress"
-                          >
-                            <React.Suspense
-                              fallback={<DashboardCardSkeleton />}
-                            >
-                              <ProgressSharing
-                                widgetId="team-bulletin-progress-sharing"
-                                userRole={
-                                  profile?.role === "admin"
-                                    ? "coach"
-                                    : (userRole as
-                                        | "coach"
-                                        | "player"
-                                        | "family") || "player"
-                                }
-                                userId={user?.id || "anonymous"}
-                                userName={
-                                  profile?.display_name ||
-                                  profile?.full_name ||
-                                  "Team Member"
-                                }
-                              />
-                            </React.Suspense>
-                          </div>
+                          <Typography variant="body-xs" color="muted" className="truncate">
+                            View achievements
+                          </Typography>
                         </div>
                       </div>
-                    </aside>
-
-                    {/* Center - Team Activity Feed */}
-                    <main className="xl:col-span-6 order-1 xl:order-2">
-                      <div className="space-y-6">
-                        <div className="team-activity-header bg-aurora-emerald rounded-aurora p-8 border border-component-border-subtle shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
-                          <div className="text-center lg:text-left">
-                            <Typography
-                              variant="headline-lg"
-                              className="text-text-primary mb-3 flex items-center justify-center lg:justify-start gap-4 icon-text-safe"
-                            >
-                              <div className="p-3 bg-aurora-emerald rounded-xl flex-shrink-0 shadow-sm">
-                                <Icon
-                                  name="users"
-                                  size="lg"
-                                  className="text-jade-600"
-                                />
-                              </div>
-                              <span className="text-truncate font-bold">
-                                Team Hub
-                              </span>
-                            </Typography>
-                            <Typography
-                              variant="body-lg"
-                              color="muted"
-                              className="mb-6 text-truncate-2 leading-relaxed"
-                            >
-                              Stay connected with your team's latest updates,
-                              achievements, and announcements
-                            </Typography>
-
-                            {/* Team engagement stats */}
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-3 text-sm">
-                              <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-component-border-subtle shadow-sm hover:shadow-md transition-shadow badge-safe">
-                                <Icon
-                                  name="message"
-                                  size="xs"
-                                  className="text-component-badge-primary flex-shrink-0"
-                                />
-                                <span className="text-text-secondary text-truncate font-medium">
-                                  {activityStats.loading ? "..." : activityStats.newPostsToday} {activityStats.newPostsToday === 1 ? "new post" : "new posts"} today
-                                </span>
-                              </div>
-                              {activityStats.onlineMembers > 0 && (
-                                <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
-                                  <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 animate-pulse" />
-                                  <span className="text-text-secondary text-truncate font-medium">
-                                    {activityStats.onlineMembers} online now
-                                  </span>
-                                </div>
-                              )}
-                              <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-blue-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
-                                <Icon
-                                  name="calendar"
-                                  size="xs"
-                                  className="text-blue-500 flex-shrink-0"
-                                />
-                                <span className="text-text-secondary text-truncate font-medium">
-                                  {teamData?.memberCount || 0} {teamData?.memberCount === 1 ? "member" : "members"}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="team-activity-feed">
-                          <Card className="p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                            <AnnouncementsList
-                              teamId={teamId || ""}
-                            />
-                          </Card>
+                    </button>
+                    
+                    <button
+                      onClick={() => setIsTeamGoalsModalOpen(true)}
+                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors mt-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon name="target" size="md" className="text-emerald-600" />
+                        <div className="flex-1 min-w-0">
+                          <Typography variant="body-sm" className="font-semibold truncate">
+                            Team Goals
+                          </Typography>
+                          <Typography variant="body-xs" color="muted" className="truncate">
+                            Track progress
+                          </Typography>
                         </div>
                       </div>
-                    </main>
+                    </button>
 
-                    {/* Right Sidebar - Calendar & Roster */}
-                    <aside className="xl:col-span-3 order-3">
-                      <div className="sticky top-6 space-y-6">
-                        <div className="calendar-widget">
-                          <TeamCalendar teamId={teamId || ""} />
+                    <button
+                      onClick={() => setIsTeamVotesModalOpen(true)}
+                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors mt-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon name="message" size="md" className="text-indigo-600" />
+                        <div className="flex-1 min-w-0">
+                          <Typography variant="body-sm" className="font-semibold truncate">
+                            Team Votes
+                          </Typography>
+                          <Typography variant="body-xs" color="muted" className="truncate">
+                            Voice your opinion
+                          </Typography>
                         </div>
-
-                        <Card className="bc-card-padding roster-card shadow-lg hover:shadow-xl transition-all duration-300 card-overflow-safe">
-                          <div className="flex items-center justify-between mb-4 icon-text-safe">
-                            <Typography
-                              as="h2"
-                              variant="headline-md"
-                              className="text-text-primary flex items-center gap-3 icon-text-safe flex-1 min-w-0"
-                            >
-                              <div className="p-2 bg-aurora-indigo rounded-lg flex-shrink-0 shadow-sm">
-                                <Icon
-                                  name="users"
-                                  size="sm"
-                                  className="text-blue-600"
-                                />
-                              </div>
-                              <span className="text-truncate font-semibold">
-                                Team Roster
-                              </span>
-                            </Typography>
-                            <div className="text-xs text-text-secondary bg-surface-muted/80 px-3 py-1.5 rounded-full flex-shrink-0 badge-safe shadow-sm">
-                              <span className="text-truncate font-medium">
-                                {teamData?.memberCount || 0} members
-                              </span>
-                            </div>
-                          </div>
-                          <div className="max-h-64 overflow-y-auto">
-                            <PlayerRosterContainer teamId={teamId || ""} />
-                          </div>
-                        </Card>
-
-                        <Card className="p-6 border-orange-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
-                          <OnboardingHint
-                            icon="calendar"
-                            title="Upcoming Events"
-                            message="Once you add games, practices, and meetings they will be summarized here for quick reference."
-                            actions={[
-                              {
-                                label: "Open Calendar",
-                                variant: "primary",
-                                onClick: () =>
-                                  console.info(
-                                    "onboarding.upcoming.open_calendar"
-                                  ),
-                              },
-                            ]}
-                          />
-                        </Card>
                       </div>
-                    </aside>
+                    </button>
+                  </Card>
+                </aside>
+
+                {/* Center Feed - PROMINENT POSITION */}
+                <main className="lg:col-span-6 space-y-4">
+                  {/* Mobile Quick Actions Bar - Swipeable Icons */}
+                  <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    <button
+                      onClick={() => setIsTrophyCaseModalOpen(true)}
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-white dark:bg-slate-800 rounded-xl border border-subtle hover:shadow-md transition-all"
+                    >
+                      <Icon name="award" size="sm" className="text-warning-600" />
+                      <span className="text-xs font-medium text-secondary">Trophies</span>
+                    </button>
+                    <button
+                      onClick={() => setIsTeamGoalsModalOpen(true)}
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-white dark:bg-slate-800 rounded-xl border border-subtle hover:shadow-md transition-all"
+                    >
+                      <Icon name="target" size="sm" className="text-emerald-600" />
+                      <span className="text-xs font-medium text-secondary">Goals</span>
+                    </button>
+                    <button
+                      onClick={() => setIsTeamVotesModalOpen(true)}
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-white dark:bg-slate-800 rounded-xl border border-subtle hover:shadow-md transition-all"
+                    >
+                      <Icon name="message" size="sm" className="text-indigo-600" />
+                      <span className="text-xs font-medium text-secondary">Votes</span>
+                    </button>
+                    <button
+                      onClick={() => setIsSeasonStatsModalOpen(true)}
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-white dark:bg-slate-800 rounded-xl border border-subtle hover:shadow-md transition-all"
+                    >
+                      <Icon name="trending-up" size="sm" className="text-purple-600" />
+                      <span className="text-xs font-medium text-secondary">Stats</span>
+                    </button>
                   </div>
-                </div>
+
+                  {/* Feed takes center stage - No distractions */}
+                  <AnnouncementsList teamId={teamId || ""} />
+                </main>
+
+                {/* Right Sidebar - Calendar & Roster */}
+                <aside className="lg:col-span-3 space-y-4">
+                  <div className="sticky top-6 space-y-4">
+                    <TeamCalendar teamId={teamId || ""} />
+                    
+                    <Card className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Icon name="users" size="sm" className="text-blue-600" />
+                          <Typography variant="headline-sm" className="font-semibold">
+                            Roster
+                          </Typography>
+                        </div>
+                        <Typography variant="body-xs" color="muted">
+                          {teamData?.memberCount || 0}
+                        </Typography>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        <PlayerRosterContainer teamId={teamId || ""} />
+                      </div>
+                    </Card>
+                  </div>
+                </aside>
               </div>
             </div>
           </main>
