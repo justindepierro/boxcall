@@ -15,11 +15,12 @@ import type {
 import { AnnouncementsService } from "../../services/announcementsService";
 import { HashtagService } from "../../services/hashtagService";
 import type { HashtagCount } from "../../services/hashtagService";
+import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
 import { AnnouncementReactions } from "./AnnouncementReactions";
 import { AnnouncementComments } from "./AnnouncementComments";
 import { RichTextDisplay } from "./RichTextDisplay";
 import { format } from "date-fns";
-import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp, Hash, X } from "lucide-react";
+import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp, Hash, X, RefreshCw } from "lucide-react";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -41,6 +42,17 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
   const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasNewContent, setHasNewContent] = useState(false);
+
+  // Real-time subscriptions for live updates
+  const { isConnected } = useAnnouncementsRealtime({
+    teamId,
+    onNewAnnouncement: () => setHasNewContent(true),
+    onAnnouncementUpdate: () => loadAnnouncements(),
+    onReactionChange: () => loadAnnouncements(),
+    onCommentChange: () => loadAnnouncements(),
+    enabled: true,
+  });
 
   // Compute hashtag counts from all announcements
   const hashtagCounts = useMemo<HashtagCount[]>(() => {
@@ -188,6 +200,31 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
 
   return (
     <div className="space-y-4">
+      {/* New content banner */}
+      {hasNewContent && (
+        <div 
+          className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between shadow-sm animate-fade-in cursor-pointer hover:bg-blue-100 transition-colors"
+          onClick={() => {
+            setHasNewContent(false);
+            loadAnnouncements();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="flex items-center gap-3">
+            <RefreshCw className="w-5 h-5 text-blue-600" />
+            <div>
+              <p className="text-sm font-medium text-blue-900">New posts available</p>
+              <p className="text-xs text-blue-700">Click to refresh and see the latest updates</p>
+            </div>
+          </div>
+          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-200 transition-colors">
+            Refresh
+          </button>
+        </div>
+      )}
+      
       {/* Filter controls */}
       <div className="bg-white rounded-lg shadow p-4 space-y-4">
         {/* Search bar */}
