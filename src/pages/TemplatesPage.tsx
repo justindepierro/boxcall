@@ -105,7 +105,7 @@ const TemplatesPage: React.FC = () => {
         variant="detail"
       >
         <div className="mb-8">
-          <div className="rounded-xl border border/40 bg-aurora-shell p-5 shadow-md shadow-slate-200/40 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-slate-900/40 sm:p-6 xl:p-7">
+          <div className="rounded-xl bg-surface-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
               <Typography variant="headline-sm" className="text-text-primary">
                 Launch a template workspace

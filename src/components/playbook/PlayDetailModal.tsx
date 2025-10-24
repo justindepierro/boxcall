@@ -118,7 +118,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
           {/* Action Bar - Sticky on mobile, more compact */}
           <div
-            className={`flex items-center justify-between border-b border dark:border-slate-700/50 bg-surface-secondary/50 dark:bg-slate-800/30 flex-shrink-0 ${
+            className={`flex items-center justify-between border-b border-border-subtle bg-surface-secondary/50 flex-shrink-0 ${
               isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
             }`}
           >
@@ -211,35 +211,35 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                       isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
                     }`}
                   >
-                    <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
+                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                      <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Type
                       </div>
-                      <div className="text-lg font-bold text-primary dark:text-white">
+                      <div className="text-lg font-bold text-primary">
                         {play.p_type}
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
+                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                      <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Confidence
                       </div>
-                      <div className="text-lg font-bold text-jade-600 dark:text-jade-400">
+                      <div className="text-lg font-bold text-jade-600">
                         {play.confidence_base}%
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
+                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                      <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Called
                       </div>
-                      <div className="text-lg font-bold text-primary dark:text-white">
+                      <div className="text-lg font-bold text-primary">
                         {play.times_called}x
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-xl p-4 border border/50 dark:border-slate-700/50">
-                      <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
+                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                      <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Success
                       </div>
-                      <div className="text-lg font-bold text-electric-600 dark:text-electric-400">
+                      <div className="text-lg font-bold text-electric-600">
                         {play.times_called > 0
                           ? Math.round(
                               (play.times_successful / play.times_called) * 100
@@ -251,8 +251,8 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   </div>
 
                   {/* Key Information - More compact */}
-                  <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-2xl p-5 border border/50 dark:border-slate-700/50">
-                    <h3 className="text-lg font-bold text-primary dark:text-white mb-4 flex items-center gap-2">
+                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                    <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                       <Icon
                         name="shield"
                         className="w-4 h-4 text-electric-600"
@@ -262,7 +262,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                     <div className="grid grid-cols-2 gap-4">
                       {play.personnel && (
                         <div>
-                          <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
+                          <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                             Personnel
                           </div>
                           <div className="text-base font-semibold text-primary dark:text-white">
@@ -307,8 +307,8 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
               {activeTab === "details" && (
                 <div className="space-y-4">
-                  <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-2xl p-5">
-                    <h3 className="text-lg font-bold text-primary dark:text-white mb-4">
+                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                    <h3 className="text-lg font-bold text-primary mb-4">
                       Play Execution
                     </h3>
                     <div className="space-y-3">
@@ -341,8 +341,8 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
                   {/* Tags */}
                   {(play.p_tag1 || play.p_tag2 || play.ftag1 || play.ftag2) && (
-                    <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-2xl p-5">
-                      <h3 className="text-lg font-bold text-primary dark:text-white mb-3">
+                    <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                      <h3 className="text-lg font-bold text-primary mb-3">
                         Tags
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -351,7 +351,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                           .map((tag, i) => (
                             <span
                               key={i}
-                              className="px-3 py-1 rounded-lg bg-white dark:bg-slate-900 text-secondary dark:text-slate-300 text-sm font-medium"
+                              className="px-3 py-1 rounded-lg bg-surface-primary shadow-sm text-secondary text-sm font-medium"
                             >
                               {tag}
                             </span>
@@ -364,14 +364,14 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
               {activeTab === "analytics" && (
                 <div className="space-y-4">
-                  <div className="backdrop-blur-xl bg-surface-secondary dark:bg-slate-800/50 rounded-2xl p-5">
-                    <h3 className="text-lg font-bold text-primary dark:text-white mb-4">
+                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                    <h3 className="text-lg font-bold text-primary mb-4">
                       Performance Metrics
                     </h3>
                     <div className="space-y-4">
                       <div>
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm text-secondary dark:text-slate-400">
+                          <span className="text-sm text-secondary">
                             Success Rate
                           </span>
                           <span className="text-lg font-bold text-jade-600 dark:text-jade-400">
@@ -384,7 +384,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                             %
                           </span>
                         </div>
-                        <div className="w-full h-3 rounded-full bg-surface-muted dark:bg-slate-700 overflow-hidden">
+                        <div className="w-full h-3 rounded-full bg-surface-muted overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-jade-500 to-emerald-500 rounded-full transition-all duration-500"
                             style={{
