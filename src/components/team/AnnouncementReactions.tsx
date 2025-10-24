@@ -43,6 +43,25 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
   const handleToggleReaction = async (reactionType: ReactionType) => {
     if (loading) return;
 
+    // Optimistic update - update UI immediately
+    const currentSummary = summary.find((s) => s.reaction_type === reactionType);
+    const wasReacted = currentSummary?.user_has_reacted || false;
+    const currentCount = currentSummary?.count || 0;
+
+    // Update UI optimistically
+    setSummary((prev) => {
+      return prev.map((s) => {
+        if (s.reaction_type === reactionType) {
+          return {
+            ...s,
+            user_has_reacted: !wasReacted,
+            count: wasReacted ? Math.max(0, currentCount - 1) : currentCount + 1,
+          };
+        }
+        return s;
+      });
+    });
+
     setLoading(true);
     setAnimatingReaction(reactionType);
 
@@ -53,12 +72,17 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
       );
 
       if (result.success) {
+        // Reload to get accurate data from server
         await loadReactions();
         onReactionChange?.();
       } else {
+        // Revert optimistic update on error
+        await loadReactions();
         console.error("Failed to toggle reaction:", result.error);
       }
     } catch (error) {
+      // Revert optimistic update on error
+      await loadReactions();
       console.error("Error toggling reaction:", error);
     } finally {
       setLoading(false);
