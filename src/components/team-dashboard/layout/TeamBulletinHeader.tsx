@@ -6,6 +6,7 @@ import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
 import { Button } from "../../ui/Button"; // Import the shared Button component
 import { Icon } from "../../ui/Icon/Icon";
+import { NotificationBell } from "../../ui/NotificationBell";
 
 // Removed old inline edit button import usage after redesign
 
@@ -157,7 +158,12 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             )}
           </div>
         </div>
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
+          {/* Notification Bell */}
+          <div className="flex-shrink-0">
+            <NotificationBell />
+          </div>
+          
           <div className="text-right">
             <Typography
               variant="body-sm"

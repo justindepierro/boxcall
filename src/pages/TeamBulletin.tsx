@@ -17,7 +17,7 @@ import { SeasonStatsCard } from "../components/team-dashboard/SeasonStatsCard";
 import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
 import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
-import { TeamFeed } from "../components/team-dashboard/TeamFeed";
+import { AnnouncementsList } from "../components/team/AnnouncementsList";
 import { PlayerRosterContainer } from "../components/team/PlayerRosterContainer";
 import { OnboardingHint } from "../components/onboarding/OnboardingHint";
 import { Button, Card } from "../components/ui";
@@ -26,6 +26,7 @@ import { AuroraTile } from "../components/ui/AuroraTile";
 import { LogoIcon } from "../components/ui/Logo";
 import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
+import { useTeamActivity } from "../hooks/useTeamActivity";
 import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
 import { useRoles } from "../hooks/useRoles";
@@ -74,6 +75,7 @@ const TeamBulletin: React.FC = React.memo(() => {
   const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
   const navigate = useNavigate();
   const { data: membershipRole } = useTeamMembershipRole(teamId, profile?.id);
+  const activityStats = useTeamActivity(teamId || "");
 
   const computeAcademicYearDisplay = useCallback((baseYear?: number) => {
     if (typeof baseYear === "number" && !isNaN(baseYear)) {
@@ -625,19 +627,17 @@ const TeamBulletin: React.FC = React.memo(() => {
                                   className="text-component-badge-primary flex-shrink-0"
                                 />
                                 <span className="text-text-secondary text-truncate font-medium">
-                                  12 new posts
+                                  {activityStats.loading ? "..." : activityStats.newPostsToday} {activityStats.newPostsToday === 1 ? "new post" : "new posts"} today
                                 </span>
                               </div>
-                              <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
-                                <Icon
-                                  name="award"
-                                  size="xs"
-                                  className="text-emerald-500 flex-shrink-0"
-                                />
-                                <span className="text-text-secondary text-truncate font-medium">
-                                  3 achievements
-                                </span>
-                              </div>
+                              {activityStats.onlineMembers > 0 && (
+                                <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
+                                  <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 animate-pulse" />
+                                  <span className="text-text-secondary text-truncate font-medium">
+                                    {activityStats.onlineMembers} online now
+                                  </span>
+                                </div>
+                              )}
                               <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-blue-200/50 shadow-sm hover:shadow-md transition-shadow badge-safe">
                                 <Icon
                                   name="calendar"
@@ -645,7 +645,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                                   className="text-blue-500 flex-shrink-0"
                                 />
                                 <span className="text-text-secondary text-truncate font-medium">
-                                  2 upcoming events
+                                  {teamData?.memberCount || 0} {teamData?.memberCount === 1 ? "member" : "members"}
                                 </span>
                               </div>
                             </div>
@@ -654,9 +654,8 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                         <div className="team-activity-feed">
                           <Card className="p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                            <TeamFeed
+                            <AnnouncementsList
                               teamId={teamId || ""}
-                              userRole={userRole}
                             />
                           </Card>
                         </div>
