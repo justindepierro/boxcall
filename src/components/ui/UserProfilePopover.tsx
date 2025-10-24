@@ -32,7 +32,6 @@ interface PopoverProfile {
   display_name: string | null;
   avatar_url: string | null;
   role: string | null;
-  app_role: string | null;
   is_admin: boolean | null;
   subscription_tier: string | null;
   bio: string | null;
@@ -58,7 +57,6 @@ interface TeamMemberInfo {
 interface PlayerInfo {
   jersey_number: number | null;
   positions: string[] | null;
-  class_year: string | null;
   height: string | null;
   weight: number | null;
 }
@@ -96,7 +94,6 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
               display_name,
               avatar_url,
               role,
-              app_role,
               is_admin,
               subscription_tier,
               bio,
@@ -156,7 +153,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             try {
               const { data: playerData } = await supabase
                 .from("team_players")
-                .select("jersey_number, class_year, height, weight")
+                .select("jersey_number, height, weight")
                 .eq("team_id", teamId)
                 .eq("user_id", userId)
                 .single();
@@ -361,7 +358,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                     <div className="mt-1">
                       <MultiBadgeDisplay
                         isAdmin={profile.is_admin}
-                        appRole={profile.app_role || profile.role}
+                        appRole={profile.role}
                         subscriptionTier={profile.subscription_tier}
                         size="sm"
                         layout="wrap"
@@ -421,12 +418,6 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                               </span>
                             ))}
                           </div>
-                        </div>
-                      )}
-                      {playerInfo.class_year && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted">Class:</span>
-                          <span className="text-sm text-primary">{playerInfo.class_year}</span>
                         </div>
                       )}
                       <div className="flex gap-4">

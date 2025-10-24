@@ -53,7 +53,6 @@ export class CommentReactionsService {
       }
 
       // Fetch all reactions for this comment
-      // @ts-expect-error - comment_reactions table will exist after migration
       const { data: reactions, error } = await supabase
         .from("comment_reactions")
         .select("*")
@@ -101,7 +100,6 @@ export class CommentReactionsService {
       }
 
       // Check if user already reacted with this type
-      // @ts-expect-error - comment_reactions table will exist after migration
       const { data: existing, error: checkError } = await supabase
         .from("comment_reactions")
         .select("id")
@@ -156,7 +154,6 @@ export class CommentReactionsService {
         return { success: false, error: "User not authenticated" };
       }
 
-      // @ts-expect-error - comment_reactions table will exist after migration
       const { error } = await supabase.from("comment_reactions").insert({
         comment_id: commentId,
         user_id: user.user.id,
@@ -232,7 +229,6 @@ export class CommentReactionsService {
       if (!user.user) return {};
 
       // Fetch all reactions for these comments
-      // @ts-expect-error - comment_reactions table will exist after migration
       const { data: reactions, error } = await supabase
         .from("comment_reactions")
         .select("*")

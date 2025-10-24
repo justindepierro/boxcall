@@ -62,7 +62,7 @@ export class MentionsService {
       return (users || []).map((user) => ({
         id: user.id,
         display_name: user.display_name || "Unknown User",
-        avatar_url: user.avatar_url,
+        avatar_url: user.avatar_url ?? undefined,
         type: "user" as const,
       }));
     } catch (error) {
@@ -119,7 +119,7 @@ export class MentionsService {
           return {
             id: member.user_id,
             display_name: name + (player?.jersey_number ? ` (#${player.jersey_number})` : ""),
-            avatar_url: profile?.avatar_url || null,
+            avatar_url: profile?.avatar_url ?? undefined,
             type: "user" as const,
           };
         })
@@ -150,6 +150,7 @@ export class MentionsService {
         mention_position: mention.position,
       }));
 
+      // @ts-expect-error - mentions table not yet in generated types
       const { error } = await supabase.from("mentions").insert(mentionRecords);
 
       if (error) throw error;
@@ -161,6 +162,7 @@ export class MentionsService {
   // Get mentions for a user (for notifications)
   static async getMentionsForUser(userId: string, limit = 20): Promise<any[]> {
     try {
+      // @ts-expect-error - mentions table not yet in generated types
       const { data, error } = await supabase
         .from("mentions")
         .select(
