@@ -271,6 +271,24 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
       .toUpperCase();
   };
 
+  const getDisplayName = () => {
+    // If they're a coach on this team, show "Coach [Last Name]"
+    if (
+      teamMember &&
+      (teamMember.team_role === "head_coach" ||
+        teamMember.team_role === "assistant_coach" ||
+        teamMember.team_role === "coach")
+    ) {
+      const fullName = profile?.full_name || profile?.display_name || "";
+      const nameParts = fullName.trim().split(" ");
+      const lastName = nameParts[nameParts.length - 1];
+      return lastName ? `Coach ${lastName}` : "Coach";
+    }
+
+    // Otherwise use their display name or full name
+    return profile?.display_name || profile?.full_name || "Unknown User";
+  };
+
   const getPositionDisplay = () => {
     if (profile?.role === "coach" && profile?.years_coaching) {
       return `${profile.years_coaching} years coaching`;
@@ -350,7 +368,8 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
         <div
           ref={popoverRef}
           className={`
-            fixed z-[9999] w-80 bg-surface-primary rounded-lg shadow-2xl border border-border-subtle
+            fixed z-[9999] w-80 rounded-lg shadow-2xl border border-border-subtle
+            bg-surface-primary/95 backdrop-blur-xl
             transform transition-all duration-200 ease-out
           `}
           style={{
@@ -409,9 +428,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       variant="headline-sm"
                       className="text-white font-bold truncate"
                     >
-                      {profile.display_name ||
-                        profile.full_name ||
-                        "Unknown User"}
+                      {getDisplayName()}
                     </Typography>
                     <div className="mt-1">
                       <MultiBadgeDisplay
