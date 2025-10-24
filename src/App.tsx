@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
 import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
@@ -85,6 +86,7 @@ function App() {
               <UndoRedoProvider maxHistorySize={50}>
                 <PopoverProvider>
                   <div className="App">
+                    <Toaster position="top-right" richColors />
                     <DevHealthCheck />
                     <PendingSavesNotification />
                     <UndoRedoIndicator />
