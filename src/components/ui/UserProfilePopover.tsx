@@ -57,8 +57,8 @@ interface TeamMemberInfo {
 interface PlayerInfo {
   jersey_number: number | null;
   positions: string[] | null;
-  height: string | null;
-  weight: number | null;
+  height_inches: number | null;
+  weight_lbs: number | null;
 }
 
 export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
@@ -153,7 +153,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             try {
               const { data: playerData } = await supabase
                 .from("team_players")
-                .select("jersey_number, height, weight")
+                .select("jersey_number, height_inches, weight_lbs")
                 .eq("team_id", teamId)
                 .eq("user_id", userId)
                 .single();
@@ -421,16 +421,16 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                         </div>
                       )}
                       <div className="flex gap-4">
-                        {playerInfo.height && (
+                        {playerInfo.height_inches && (
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-muted">Height:</span>
-                            <span className="text-sm text-primary">{playerInfo.height}</span>
+                            <span className="text-sm text-primary">{Math.floor(playerInfo.height_inches / 12)}'{playerInfo.height_inches % 12}"</span>
                           </div>
                         )}
-                        {playerInfo.weight && (
+                        {playerInfo.weight_lbs && (
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-muted">Weight:</span>
-                            <span className="text-sm text-primary">{playerInfo.weight} lbs</span>
+                            <span className="text-sm text-primary">{playerInfo.weight_lbs} lbs</span>
                           </div>
                         )}
                       </div>
