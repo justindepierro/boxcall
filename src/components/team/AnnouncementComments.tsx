@@ -11,7 +11,7 @@ import {
   type CommentTree,
   type CommentWithAuthor,
 } from "../../services/commentsService";
-import { MessageCircle, Send, Edit2, Trash2, Reply } from "lucide-react";
+import { Send, Edit2, Trash2, Reply } from "lucide-react";
 import { format } from "date-fns";
 import { supabase } from "../../lib/supabase";
 import { CommentReactions } from "./CommentReactions";
@@ -204,10 +204,10 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     return (
       <div
         key={comment.id}
-        className={`${depth > 0 ? "ml-6 mt-2" : "mt-3"}`}
+        className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}
       >
         {/* Comment */}
-        <div className="rounded-lg p-3 bg-surface-subtle">
+        <div className="rounded-xl p-4 bg-white hover:bg-surface-subtle transition-colors border border-border-subtle">
           <div className="flex items-start gap-3 mb-2">
             {/* Avatar with Popover */}
             <UserProfilePopover
@@ -387,14 +387,8 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-2 text-primary font-medium">
-        <MessageCircle className="w-5 h-5" />
-        <span>Comments ({comments.length})</span>
-      </div>
-
       {/* New Comment Form */}
-      <form onSubmit={handleSubmitComment} className="space-y-2">
+      <form onSubmit={handleSubmitComment} className="space-y-3">
         <RichTextEditor
           content={newComment}
           onChange={setNewComment}
@@ -405,7 +399,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
         <button
           type="submit"
           disabled={submitting || !newComment.trim()}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-brand-jade text-white rounded-lg hover:from-blue-700 hover:to-jade-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium shadow-sm"
         >
           <Send className="w-4 h-4" />
           Post Comment

@@ -248,12 +248,16 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
           {/* Comments Toggle */}
           <button
             onClick={onToggleComments}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-blue-600 transition-colors"
+            className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-brand-jade transition-colors group"
             aria-expanded={isExpanded}
             aria-controls={`comments-${announcement.id}`}
           >
-            <MessageCircle className="w-4 h-4" />
-            <span>Comments ({announcement.comment_count || 0})</span>
+            <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <span>
+              {announcement.comment_count === 0
+                ? "Be the first to comment"
+                : `${announcement.comment_count} ${announcement.comment_count === 1 ? "comment" : "comments"}`}
+            </span>
             {isExpanded ? (
               <ChevronUp className="w-4 h-4" />
             ) : (
@@ -266,7 +270,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
         {isExpanded && (
           <div
             id={`comments-${announcement.id}`}
-            className="pt-4"
+            className="pt-6 mt-4 border-t border-border-subtle"
           >
             <AnnouncementComments
               announcementId={announcement.id}
