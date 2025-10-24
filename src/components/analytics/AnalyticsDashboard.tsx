@@ -179,7 +179,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     (complexityTotals.low || 0) +
     (complexityTotals.medium || 0) +
     (complexityTotals.high || 0);
-  const complexityFocus = totalComplexityCount
+  const complexityFocus: ["low" | "medium" | "high", number] = totalComplexityCount
     ? (
         Object.entries(complexityTotals) as Array<
           ["low" | "medium" | "high", number]
@@ -188,13 +188,17 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         "low",
         complexityTotals.low || 0,
       ] as ["low" | "medium" | "high", number])
-    : ["low", 0];
+    : (["low", 0] as ["low" | "medium" | "high", number]);
 
   const complexityCopy: Record<"low" | "medium" | "high", string> = {
     low: "Install ready",
     medium: "Balanced attack",
     high: "Advanced package",
   };
+
+  // Extract values for use in closures
+  const complexityFocusLevel: "low" | "medium" | "high" = complexityFocus[0];
+  const complexityFocusCount: number = complexityFocus[1];
 
   const heroTiles: Array<{
     key: AnalyticsView;
@@ -323,12 +327,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <div className="text-text-secondary">Focus</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
             <span className="font-semibold text-text-primary capitalize">
-              {complexityCopy[complexityFocus[0]]}
+              {complexityCopy[complexityFocusLevel]}
             </span>
             <span className="text-text-secondary">
               {totalComplexityCount
                 ? `${Math.round(
-                    (complexityFocus[1] / totalComplexityCount) * 100
+                    (complexityFocusCount / totalComplexityCount) * 100
                   )}% share`
                 : "0% share"}
             </span>

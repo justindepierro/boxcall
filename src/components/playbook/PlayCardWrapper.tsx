@@ -26,6 +26,7 @@ interface PlayCardWrapperProps {
   onOpenAssignments?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
+  onPostToTeamBulletin?: (play: Play) => void;
 
   // Selection state
   isSelected?: boolean;
@@ -58,6 +59,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   onOpenAssignments,
   onAddToPracticeScript,
   onAddToGamePlan,
+  onPostToTeamBulletin,
   isSelected,
   onSelectionChange,
   formationSuggestions,
@@ -88,6 +90,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     onOpenAssignments,
     onAddToPracticeScript,
     onAddToGamePlan,
+    onPostToTeamBulletin,
     isSelected,
     onSelectionChange,
     formationSuggestions,

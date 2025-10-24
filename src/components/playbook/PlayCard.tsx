@@ -44,6 +44,7 @@ interface PlayCardProps {
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   onOpenAssignments?: (play: PlayType) => void;
+  onPostToTeamBulletin?: (play: PlayType) => void;
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
@@ -120,6 +121,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onAddToPracticeScript,
   onAddToGamePlan,
   onOpenAssignments,
+  onPostToTeamBulletin,
   isSelected = false,
   onSelectionChange,
   density = "compact",
@@ -498,6 +500,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               onAddToPracticeScript={onAddToPracticeScript}
               onAddToGamePlan={onAddToGamePlan}
               onOpenAssignments={handleOpenAssignments}
+              onPostToTeamBulletin={onPostToTeamBulletin}
             />
 
             {/* Animated expansion for tile details */}
@@ -577,6 +580,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             onAddToPracticeScript={onAddToPracticeScript}
             onAddToGamePlan={onAddToGamePlan}
             onOpenAssignments={handleOpenAssignments}
+            onPostToTeamBulletin={onPostToTeamBulletin}
           />
         )}
 

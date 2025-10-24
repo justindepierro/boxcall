@@ -78,6 +78,7 @@ import { BottomSheet } from "../components/BottomSheet";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
 import { PullToRefresh } from "../components/PullToRefresh";
+import { PostToTeamBulletinModal } from "../components/playbook/PostToTeamBulletinModal";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { PlaybookBottomNav } from "../components/playbook/page/PlaybookBottomNav";
 import { MobilePlaybookHeader } from "../components/playbook/page/MobilePlaybookHeader";
@@ -254,6 +255,13 @@ export default function PlaybookPage() {
   const handleOpenAssignments = useCallback((play: Play) => {
     setAssignmentsPlay(play);
     debug("Opening assignments for play:", play);
+  }, []);
+
+  // Handle posting play to team bulletin
+  const handlePostToTeamBulletin = useCallback((play: Play) => {
+    setPlayToPost(play);
+    setShowPostToBulletinModal(true);
+    debug("Posting play to team bulletin:", play);
   }, []);
 
   // Load settings from localStorage or use defaults
@@ -481,6 +489,8 @@ export default function PlaybookPage() {
   const [showStatsSheet, setShowStatsSheet] = useState(false);
   const [showQuickPlaySheet, setShowQuickPlaySheet] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
+  const [showPostToBulletinModal, setShowPostToBulletinModal] = useState(false);
+  const [playToPost, setPlayToPost] = useState<Play | null>(null);
 
   const { combos: recentPlayCombos, addCombo: addRecentPlayCombo } =
     useRecentPlayCombos();
@@ -1430,6 +1440,7 @@ export default function PlaybookPage() {
                       onOpenBuilder={handleOpenBuilder}
                       onCreateDiagram={handleCreateDiagram}
                       onOpenAssignments={handleOpenAssignments}
+                      onPostToTeamBulletin={handlePostToTeamBulletin}
                       refreshTrigger={state.refreshTrigger}
                       onPlayCountChange={handlePlayCountChange}
                       formationSuggestions={suggestions.formations}
@@ -2219,6 +2230,22 @@ export default function PlaybookPage() {
               }
             />
           </Suspense>
+        )}
+
+        {/* Post to Team Bulletin Modal */}
+        {playToPost && activeTeamId && (
+          <PostToTeamBulletinModal
+            isOpen={showPostToBulletinModal}
+            onClose={() => {
+              setShowPostToBulletinModal(false);
+              setPlayToPost(null);
+            }}
+            play={playToPost}
+            teamId={activeTeamId}
+            onSuccess={() => {
+              toast.success("Posted to team bulletin!");
+            }}
+          />
         )}
 
         {/* Practice Script Builder Modal */}

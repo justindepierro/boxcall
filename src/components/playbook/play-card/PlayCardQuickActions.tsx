@@ -15,6 +15,7 @@ interface PlayCardQuickActionsProps {
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   onOpenAssignments?: (play: PlayType) => void;
+  onPostToTeamBulletin?: (play: PlayType) => void;
 }
 
 export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
@@ -23,6 +24,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
   onAddToPracticeScript,
   onAddToGamePlan,
   onOpenAssignments,
+  onPostToTeamBulletin,
 }) => {
   // Fetch play status indicators
   const status = usePlayStatus(play.id, play.playbook_id);
@@ -99,7 +101,6 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game
           Plan
         </Button>
-
         {/* Assignments Button with Check */}
         <Button
           variant="secondary"
@@ -116,6 +117,17 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
             <Icon name="check" className="h-3 w-3 mr-1 text-info-500 dark:text-info-400" />
           )}
           <Icon name="users" className="h-3 w-3 mr-spacing-xs" /> Assignments
+        </Button>
+
+        {/* Post to Team Bulletin */}
+        <Button
+          variant="secondary"
+          size="xs"
+          onClick={() => onPostToTeamBulletin?.(play)}
+          title="Share this play on the team bulletin"
+          className="surface-subtle hover:bg-brand-primary/10 text-brand-primary border-surface-primary"
+        >
+          <Icon name="message" className="h-3 w-3 mr-spacing-xs" /> Post
         </Button>
       </div>
     </div>

@@ -16,11 +16,13 @@ interface PlayerPlaceholderPopoverProps {
 
 /**
  * PlayerPlaceholderPopover
- * 
+ *
  * Shows placeholder information for players without user accounts
  * Provides invite/resend invite functionality
  */
-export const PlayerPlaceholderPopover: React.FC<PlayerPlaceholderPopoverProps> = ({
+export const PlayerPlaceholderPopover: React.FC<
+  PlayerPlaceholderPopoverProps
+> = ({
   playerId,
   playerName,
   position,
@@ -142,7 +144,10 @@ export const PlayerPlaceholderPopover: React.FC<PlayerPlaceholderPopoverProps> =
           onMouseEnter={handlePopoverMouseEnter}
           onMouseLeave={handlePopoverMouseLeave}
           className="fixed z-[9999] -translate-x-1/2"
-          style={{ top: `${popoverPosition.top}px`, left: `${popoverPosition.left}px` }}
+          style={{
+            top: `${popoverPosition.top}px`,
+            left: `${popoverPosition.left}px`,
+          }}
         >
           <div className="bg-surface-primary/95 backdrop-blur-xl border border-border shadow-2xl rounded-xl w-80 overflow-hidden">
             {/* Header */}
@@ -184,7 +189,8 @@ export const PlayerPlaceholderPopover: React.FC<PlayerPlaceholderPopoverProps> =
               </div>
 
               <p className="text-sm text-secondary mb-4">
-                This player hasn't been invited or hasn't accepted their invitation yet.
+                This player hasn't been invited or hasn't accepted their
+                invitation yet.
               </p>
 
               <Button
