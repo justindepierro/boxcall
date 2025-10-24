@@ -382,11 +382,11 @@ export const CreateTeam: React.FC = () => {
 
               {/* Address Suggestions */}
               {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-spacing-xs bg-white border border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-spacing-xs bg-surface-primary rounded-lg shadow-xl max-h-48 overflow-y-auto">
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-subtle last:border-b-0"
+                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-border-subtle last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">
@@ -471,7 +471,7 @@ export const CreateTeam: React.FC = () => {
                     </Typography>
 
                     {duplicateCheck.similarTeams.length > 0 && (
-                      <div className="bg-white rounded-lg border p-spacing-sm mb-spacing-sm">
+                      <div className="bg-surface-secondary rounded-lg p-spacing-sm mb-spacing-sm">
                         <Typography
                           variant="body-xs"
                           className="font-medium mb-spacing-xs"
@@ -691,7 +691,7 @@ export const CreateTeam: React.FC = () => {
           </div>
 
           {/* Step Content */}
-          <div className="bg-white shadow-lg rounded-lg p-spacing-lg mb-spacing-lg">
+          <div className="bg-surface-primary shadow-lg rounded-lg p-spacing-lg mb-spacing-lg">
             {renderStepContent()}
           </div>
 
@@ -728,7 +728,7 @@ export const CreateTeam: React.FC = () => {
           {/* Loading State */}
           {isLoading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-spacing-lg rounded-lg max-w-sm w-full mx-spacing-md text-center">
+              <div className="bg-surface-primary p-spacing-lg rounded-lg shadow-2xl max-w-sm w-full mx-spacing-md text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-spacing-md"></div>
                 <Typography variant="body-md">{loadingMessage}</Typography>
               </div>

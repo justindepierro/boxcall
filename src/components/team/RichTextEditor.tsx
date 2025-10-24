@@ -531,7 +531,7 @@ export function RichTextEditor({
             <ChevronDown className="w-3 h-3" />
           </button>
           {showFontMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 w-40">
+            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 w-40">
               {fonts.map((font) => (
                 <button
                   key={font.name}
@@ -571,7 +571,7 @@ export function RichTextEditor({
             <ChevronDown className="w-3 h-3" />
           </button>
           {showColorMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 p-2">
+            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 p-2">
               <div className="grid grid-cols-6 gap-1">
                 {colors.map((color) => (
                   <button
@@ -622,7 +622,7 @@ export function RichTextEditor({
             <ChevronDown className="w-3 h-3" />
           </button>
           {showHighlightMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 w-32">
+            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 w-32">
               {highlightColors.map((highlight) => (
                 <button
                   key={highlight.name}

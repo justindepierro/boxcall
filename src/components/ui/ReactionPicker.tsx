@@ -199,7 +199,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
 
         {/* Reaction picker dropdown */}
         {showPicker && (
-          <div className="absolute bottom-full left-0 mb-2 bg-white border rounded-lg shadow-xl p-2 z-50">
+          <div className="absolute bottom-full left-0 mb-2 bg-surface-primary rounded-lg shadow-xl p-2 z-50">
             <div className="grid grid-cols-4 gap-1">
               {allReactionTypes.map((type) => {
                 const existingSummary = summary.find(

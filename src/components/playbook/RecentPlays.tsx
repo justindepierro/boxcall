@@ -36,7 +36,7 @@ export const RecentPlays: React.FC<RecentPlaysProps> = ({
           <button
             key={play.id}
             onClick={() => onPlayClick?.(play)}
-            className="px-3 py-1 text-sm bg-white dark:bg-surface-base rounded border border-border hover:border-brand-primary hover:shadow-sm transition-all whitespace-nowrap flex-shrink-0"
+            className="px-3 py-1 text-sm bg-surface-primary rounded shadow-sm hover:shadow-md transition-all whitespace-nowrap flex-shrink-0"
             title={`View ${play.play_name || play.formation}`}
           >
             {play.play_name || play.formation || "Unnamed Play"}

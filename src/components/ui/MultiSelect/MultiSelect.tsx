@@ -153,7 +153,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border border-surface-secondary rounded-lg shadow-lg max-h-60 overflow-auto"
+          className="absolute z-50 mt-1 w-full bg-surface-primary rounded-lg shadow-xl max-h-60 overflow-auto"
           role="listbox"
           aria-multiselectable="true"
           aria-label={ariaLabel || "Select options"}

@@ -1003,7 +1003,7 @@ export default function RosterPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors"
+                className="px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface-primary text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors"
                 style={{ height: "42px" }}
               >
                 <option value="" className="text-text-secondary">

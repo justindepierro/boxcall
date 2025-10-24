@@ -71,7 +71,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className={`${config.container} rounded-full bg-white dark:bg-slate-900 border-2 dark:border-slate-600 shadow-lg flex items-center justify-center transition-colors ${
+      className={`${config.container} rounded-full bg-surface-primary shadow-lg flex items-center justify-center transition-colors ${
         disabled
           ? "cursor-not-allowed opacity-50"
           : "cursor-pointer hover:scale-110"

@@ -164,7 +164,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-spacing-xs px-3 py-2 bg-white hover:bg-surface-secondary dark:bg-surface-primary dark:hover:bg-surface-secondary border-2 border-emerald-500 rounded-xl transition-colors w-45 h-11 shadow-md"
+        className="flex items-center gap-spacing-xs px-3 py-2 bg-surface-primary hover:bg-surface-secondary border-2 border-emerald-500 rounded-xl transition-colors w-45 h-11 shadow-md"
       >
         <div className="flex-1 text-left">
           <Typography variant="caption" className="text-text-muted text-xs">
@@ -199,7 +199,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
             {/* Menu - Positioned at button location */}
             <div
-              className="fixed bg-white dark:bg-surface-primary border-2 border-border-primary rounded-lg shadow-2xl z-[110] max-h-96 overflow-y-auto"
+              className="fixed bg-surface-primary rounded-lg shadow-2xl z-[110] max-h-96 overflow-y-auto"
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,

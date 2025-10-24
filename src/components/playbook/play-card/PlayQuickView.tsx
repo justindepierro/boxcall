@@ -67,7 +67,7 @@ export const PlayQuickView: React.FC<PlayQuickViewProps> = ({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed z-50 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border-subtle p-4 min-w-72 max-w-80"
+          className="fixed z-50 bg-surface-primary rounded-lg shadow-xl p-4 min-w-72 max-w-80"
           style={{
             top: `${top}px`,
             left: `${left}px`,
@@ -75,7 +75,7 @@ export const PlayQuickView: React.FC<PlayQuickViewProps> = ({
           }}
         >
           {/* Arrow pointing down to tile */}
-          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 border-r border-b border-border-subtle rotate-45" />
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-surface-primary border-r border-b border-border-subtle rotate-45" />
 
           {/* Content */}
           <div className="space-y-3">

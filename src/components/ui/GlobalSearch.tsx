@@ -659,7 +659,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         createPortal(
           <div
             ref={resultsRef}
-            className="fixed bg-white dark:bg-gray-800 border-2 border-surface-secondary dark:border-gray-600 rounded-lg shadow-2xl z-[9999] max-h-80 overflow-y-auto"
+            className="fixed bg-surface-primary rounded-lg shadow-2xl z-[9999] max-h-80 overflow-y-auto"
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,

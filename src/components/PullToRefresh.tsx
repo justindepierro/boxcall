@@ -144,7 +144,7 @@ export function PullToRefresh({
         }}
       >
         <motion.div
-          className="bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg"
+          className="bg-surface-primary rounded-full p-3 shadow-lg"
           style={{
             scale,
             rotate: isRefreshing ? 0 : rotate,
