@@ -174,17 +174,17 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {visibleActions.map((a) => (
         <Button
           key={a.id}
           variant={a.variant || "outline"}
           size="sm"
-          className="w-full justify-start btn-overflow-safe icon-text-safe"
+          className="w-full justify-start gap-3"
           onClick={() => handleClick(a)}
         >
-          <Icon name={a.icon} className="w-5 h-5 mr-2 flex-shrink-0" />
-          <span className="flex-1 text-truncate">{a.label}</span>
+          <Icon name={a.icon} className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate">{a.label}</span>
         </Button>
       ))}
     </div>
