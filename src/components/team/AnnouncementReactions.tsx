@@ -106,13 +106,24 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
     "hundred",
   ];
 
+  // Get reactions with counts > 0 for display
+  const activeReactions = allReactionTypes
+    .map((type) => ({
+      type,
+      summary: summary.find((s) => s.reaction_type === type),
+    }))
+    .filter((r) => (r.summary?.count || 0) > 0)
+    .sort((a, b) => (b.summary?.count || 0) - (a.summary?.count || 0));
+
+  // Show compact picker with only the essentials
+  const quickReactions: ReactionType[] = ["like", "love", "celebrate", "fire"];
+
   return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {/* Always show all reaction types as inline buttons */}
-      {allReactionTypes.map((type) => {
-        const existingSummary = summary.find((s) => s.reaction_type === type);
-        const count = existingSummary?.count || 0;
-        const hasReacted = existingSummary?.user_has_reacted || false;
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {/* Active reactions with counts - compact bubbles */}
+      {activeReactions.map(({ type, summary }) => {
+        const count = summary?.count || 0;
+        const hasReacted = summary?.user_has_reacted || false;
         const isAnimating = animatingReaction === type;
 
         return (
@@ -121,33 +132,59 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
             onClick={() => handleToggleReaction(type)}
             disabled={loading}
             className={`
-              flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium
+              flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
               transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-brand-primary-light text-brand-primary-dark shadow-sm"
-                  : count > 0
-                    ? "bg-surface-primary text-text-primary hover:bg-jade-50"
-                    : "bg-transparent text-text-secondary hover:bg-surface-subtle"
+                  ? "bg-brand-primary-light text-brand-primary ring-1 ring-brand-primary/30"
+                  : "bg-surface-secondary text-text-secondary hover:bg-surface-muted"
               }
             `}
-            title={`${REACTION_LABELS[type]}${
-              hasReacted ? " (You reacted)" : ""
-            }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}
+            title={`${REACTION_LABELS[type]}${hasReacted ? " (You reacted)" : ""}`}
           >
             <span
               className={`
-                text-xl leading-none transition-all duration-200 
+                text-sm leading-none transition-all duration-200 
                 ${isAnimating ? "scale-125" : ""}
               `}
             >
               {REACTION_EMOJIS[type]}
             </span>
-            {count > 0 && <span className="font-semibold">{count}</span>}
+            <span className="font-semibold text-xs">{count}</span>
           </button>
         );
       })}
+
+      {/* Quick add buttons - only show if no reactions or on hover */}
+      <div className="flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity">
+        {quickReactions
+          .filter(
+            (type) => !activeReactions.find((r) => r.type === type)
+          )
+          .slice(0, 3)
+          .map((type) => {
+            const isAnimating = animatingReaction === type;
+            return (
+              <button
+                key={type}
+                onClick={() => handleToggleReaction(type)}
+                disabled={loading}
+                className={`
+                  p-1 rounded-full text-base
+                  transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+                  hover:bg-surface-secondary hover:scale-110
+                  ${isAnimating ? "scale-125" : "scale-100"}
+                `}
+                title={REACTION_LABELS[type]}
+              >
+                <span className="grayscale hover:grayscale-0 transition-all">
+                  {REACTION_EMOJIS[type]}
+                </span>
+              </button>
+            );
+          })}
+      </div>
     </div>
   );
 };

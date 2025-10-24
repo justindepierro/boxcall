@@ -16,17 +16,8 @@ import { AnnouncementsService } from "../../services/announcementsService";
 import { HashtagService } from "../../services/hashtagService";
 import type { HashtagCount } from "../../services/hashtagService";
 import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
-import { AnnouncementReactions } from "./AnnouncementReactions";
-import { AnnouncementComments } from "./AnnouncementComments";
-import { RichTextDisplay } from "./RichTextDisplay";
-import { format } from "date-fns";
+import { AnnouncementItem } from "./AnnouncementItem";
 import {
-  Pin,
-  Edit2,
-  Trash2,
-  MessageCircle,
-  ChevronDown,
-  ChevronUp,
   Hash,
   X,
   RefreshCw,
@@ -166,26 +157,6 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       console.error("Error deleting announcement:", err);
       alert("Failed to delete announcement. Please try again.");
     }
-  };
-
-  const getVisibilityLabel = (visibility: AnnouncementVisibility): string => {
-    const labels: Record<AnnouncementVisibility, string> = {
-      all: "Everyone",
-      staff_only: "Staff Only",
-      players_only: "Players Only",
-      families_only: "Families Only",
-    };
-    return labels[visibility];
-  };
-
-  const getVisibilityColor = (visibility: AnnouncementVisibility): string => {
-    const colors: Record<AnnouncementVisibility, string> = {
-      all: "bg-blue-100 text-blue-800",
-      staff_only: "bg-purple-100 text-purple-800",
-      players_only: "bg-green-100 text-green-800",
-      families_only: "bg-orange-100 text-orange-800",
-    };
-    return colors[visibility];
   };
 
   if (loading) {
@@ -344,148 +315,21 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
         )}
       </div>
 
-      {/* Announcements list */}
-      <div className="space-y-3">
+      {/* Announcements Feed - Compact, Twitter-style */}
+      <div className="bg-surface-primary rounded-lg shadow-sm border border-border-subtle overflow-hidden">
         {filteredAnnouncements.map((announcement) => (
-          <div
+          <AnnouncementItem
             key={announcement.id}
-            className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${
-              announcement.is_pinned
-                ? "border-yellow-400 bg-yellow-50"
-                : "border-blue-400"
-            }`}
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  {announcement.is_pinned && (
-                    <Pin className="w-4 h-4 text-warning-600 fill-yellow-600" />
-                  )}
-                  <h3 className="text-xl font-semibold text-primary">
-                    {announcement.title}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-secondary">
-                  <span>
-                    {format(
-                      new Date(announcement.created_at),
-                      "MMM d, yyyy 'at' h:mm a"
-                    )}
-                  </span>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${getVisibilityColor(announcement.visibility)}`}
-                  >
-                    {getVisibilityLabel(announcement.visibility)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleTogglePin(announcement.id)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    announcement.is_pinned
-                      ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                  title={announcement.is_pinned ? "Unpin" : "Pin"}
-                >
-                  <Pin className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => onEdit?.(announcement)}
-                  className="p-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                  title="Edit"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDelete(announcement.id)}
-                  className="p-2 rounded-lg bg-error-bg text-error-600 hover:bg-error-bg transition-colors"
-                  title="Delete"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="prose prose-sm max-w-none text-primary mb-4">
-              {announcement.content_json ? (
-                <RichTextDisplay
-                  content={announcement.content_json}
-                  onHashtagClick={handleHashtagClick}
-                />
-              ) : (
-                <p className="whitespace-pre-wrap">{announcement.content}</p>
-              )}
-            </div>
-
-            {/* Attachments */}
-            {announcement.attachments &&
-              announcement.attachments.length > 0 && (
-                <div className="mt-4 pt-4 border-t border">
-                  <p className="text-sm font-medium text-primary mb-2">
-                    Attachments:
-                  </p>
-                  <div className="space-y-2">
-                    {announcement.attachments.map(
-                      (attachment: any, idx: number) => (
-                        <a
-                          key={idx}
-                          href={attachment.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                        >
-                          <span>📎</span>
-                          <span>{attachment.name}</span>
-                          <span className="text-muted">
-                            ({(attachment.size / 1024).toFixed(1)} KB)
-                          </span>
-                        </a>
-                      )
-                    )}
-                  </div>
-                </div>
-              )}
-
-            {/* Reactions */}
-            <div className="mt-4 pt-4 border-t border">
-              <AnnouncementReactions
-                announcementId={announcement.id}
-                onReactionChange={loadAnnouncements}
-              />
-            </div>
-
-            {/* Comments Toggle */}
-            <div className="mt-4 pt-4 border-t border">
-              <button
-                onClick={() => toggleComments(announcement.id)}
-                className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Comments</span>
-                {expandedComments.has(announcement.id) ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
-              </button>
-
-              {/* Comments Section */}
-              {expandedComments.has(announcement.id) && (
-                <div className="mt-4">
-                  <AnnouncementComments
-                    announcementId={announcement.id}
-                    teamId={announcement.team_id}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+            announcement={announcement}
+            isExpanded={expandedComments.has(announcement.id)}
+            onToggleComments={() => toggleComments(announcement.id)}
+            onEdit={onEdit ? () => onEdit(announcement) : undefined}
+            onDelete={onDelete ? () => handleDelete(announcement.id) : undefined}
+            onTogglePin={onTogglePin ? () => handleTogglePin(announcement.id) : undefined}
+            onReactionChange={loadAnnouncements}
+            onHashtagClick={handleHashtagClick}
+            isCoach={true}
+          />
         ))}
       </div>
     </div>

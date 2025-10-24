@@ -105,171 +105,161 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
     const isPinned = isOptimisticPinned;
 
     return (
-      <article className="bg-surface-primary rounded-lg shadow-md overflow-hidden">
-        {/* Header */}
-        <div className="p-4 border-b border">
-          <div className="flex items-start justify-between">
-            <div className="flex-1 flex items-start gap-3">
-              {/* Avatar with Popover */}
-              <UserProfilePopover
-                userId={announcement.created_by}
-                teamId={announcement.team_id}
-                trigger={
-                  <Avatar
-                    src={authorAvatarUrl}
-                    name={announcement.author_name || "Unknown"}
-                    size="md"
-                  />
-                }
-                showOnHover={true}
-              />
+      <article className="bg-surface-primary border-b border-border-subtle hover:bg-surface-subtle/30 transition-colors">
+        {/* Compact Header - Twitter/LinkedIn style */}
+        <div className="px-4 py-3">
+          <div className="flex gap-3">
+            {/* Avatar */}
+            <UserProfilePopover
+              userId={announcement.created_by}
+              teamId={announcement.team_id}
+              trigger={
+                <Avatar
+                  src={authorAvatarUrl}
+                  name={announcement.author_name || "Unknown"}
+                  size="sm"
+                />
+              }
+              showOnHover={true}
+            />
 
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
+            {/* Content Column */}
+            <div className="flex-1 min-w-0">
+              {/* Header Row - Name, Time, Actions */}
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
                   <UserProfilePopover
                     userId={announcement.created_by}
                     teamId={announcement.team_id}
                     trigger={
-                      <h2 className="text-xl font-semibold text-primary hover:underline cursor-pointer">
-                        {announcement.title}
-                      </h2>
-                    }
-                    showOnHover={true}
-                  />
-                  {isPinned && (
-                    <Pin className="w-4 h-4 text-brand-primary fill-current" />
-                  )}
-                </div>
-                <div className="flex items-center gap-3 text-sm text-secondary">
-                  <UserProfilePopover
-                    userId={announcement.created_by}
-                    teamId={announcement.team_id}
-                    trigger={
-                      <span className="font-medium hover:underline cursor-pointer">
+                      <span className="font-semibold text-sm text-primary hover:underline cursor-pointer truncate">
                         {announcement.author_name || "Unknown"}
                       </span>
                     }
                     showOnHover={true}
                   />
-                  <span>•</span>
-                  <time dateTime={announcement.created_at}>
-                    {format(
+                  <span className="text-secondary text-xs">•</span>
+                  <time
+                    dateTime={announcement.created_at}
+                    className="text-secondary text-xs whitespace-nowrap"
+                    title={format(
                       new Date(announcement.created_at),
                       "MMM d, yyyy 'at' h:mm a"
                     )}
+                  >
+                    {format(new Date(announcement.created_at), "MMM d")}
                   </time>
-                  {announcement.visibility &&
-                    announcement.visibility !== "all" && (
-                      <>
-                        <span>•</span>
-                        <span className="capitalize">
-                          {announcement.visibility}
-                        </span>
-                      </>
+                  {isPinned && (
+                    <Pin className="w-3.5 h-3.5 text-brand-primary fill-current flex-shrink-0" />
+                  )}
+                </div>
+
+                {/* Action Buttons - Compact */}
+                {(onTogglePin || onEdit || onDelete) && (
+                  <div className="flex items-center gap-1">
+                    {onTogglePin && (
+                      <button
+                        onClick={handleTogglePin}
+                        className={`p-1.5 rounded-md transition-colors ${
+                          isPinned
+                            ? "text-brand-primary hover:bg-brand-primary-light"
+                            : "text-muted hover:text-primary hover:bg-surface-secondary"
+                        }`}
+                        title={isPinned ? "Unpin" : "Pin"}
+                      >
+                        <Pin className={`w-3.5 h-3.5 ${isPinned ? "fill-current" : ""}`} />
+                      </button>
                     )}
+                    {onEdit && (
+                      <button
+                        onClick={onEdit}
+                        className="p-1.5 text-muted hover:text-primary hover:bg-surface-secondary rounded-md transition-colors"
+                        title="Edit"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                    {onDelete && (
+                      <button
+                        onClick={() => onDelete(announcement.id)}
+                        className="p-1.5 text-muted hover:text-error-600 hover:bg-error-bg rounded-md transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Title - Compact */}
+              {announcement.title && (
+                <h2 className="text-base font-semibold text-primary mb-2 leading-tight">
+                  {announcement.title}
+                </h2>
+              )}
+
+              {/* Content - Compact */}
+              <div className="text-sm text-primary leading-relaxed mb-3">
+                {announcement.content_json ? (
+                  <RichTextDisplay
+                    content={announcement.content_json}
+                    onHashtagClick={onHashtagClick}
+                  />
+                ) : (
+                  <p className="whitespace-pre-wrap">{announcement.content}</p>
+                )}
+              </div>
+
+              {/* Engagement Bar - Twitter style inline actions */}
+              <div className="flex items-center justify-between pt-2">
+                {/* Left side - Reactions (compact inline) */}
+                <div className="flex-1">
+                  <AnnouncementReactions
+                    announcementId={announcement.id}
+                    onReactionChange={onReactionChange}
+                  />
+                </div>
+
+                {/* Right side - Comments & Read Receipts */}
+                <div className="flex items-center gap-4">
+                  {/* Read Receipts - Compact */}
+                  <div className="flex-shrink-0">
+                    <ReadReceipts
+                      announcementId={announcement.id}
+                      teamId={announcement.team_id}
+                      isCoach={isCoach}
+                    />
+                  </div>
+
+                  {/* Comments Toggle - Compact */}
+                  <button
+                    onClick={onToggleComments}
+                    className="flex items-center gap-1.5 text-xs font-medium text-secondary hover:text-brand-primary transition-colors group"
+                    aria-expanded={isExpanded}
+                    aria-controls={`comments-${announcement.id}`}
+                  >
+                    <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    <span>
+                      {announcement.comment_count || 0}
+                    </span>
+                    {isExpanded ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2">
-              {onTogglePin && (
-                <button
-                  onClick={handleTogglePin}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isPinned
-                      ? "text-brand-primary hover:bg-brand-primary-light"
-                      : "text-muted hover:bg-surface-secondary"
-                  }`}
-                  title={isPinned ? "Unpin" : "Pin"}
-                  aria-label={
-                    isPinned ? "Unpin announcement" : "Pin announcement"
-                  }
-                >
-                  <Pin
-                    className={`w-4 h-4 ${isPinned ? "fill-current" : ""}`}
-                  />
-                </button>
-              )}
-              {onEdit && (
-                                <button
-                  onClick={onEdit}
-                  className="p-2 text-muted hover:text-brand-primary hover:bg-brand-primary-light rounded-lg transition-colors"
-                  title="Edit announcement"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-              )}
-              {onDelete && (
-                <button
-                  onClick={() => onDelete(announcement.id)}
-                  className="p-2 text-muted hover:text-error-600 hover:bg-error-bg rounded-lg transition-colors"
-                  title="Delete"
-                  aria-label="Delete announcement"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
-            </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-4">
-          <div className="prose prose-sm max-w-none text-primary mb-4">
-            {announcement.content_json ? (
-              <RichTextDisplay
-                content={announcement.content_json}
-                onHashtagClick={onHashtagClick}
-              />
-            ) : (
-              <p className="whitespace-pre-wrap">{announcement.content}</p>
-            )}
-          </div>
-
-          {/* Reactions */}
-          <div className="mb-4">
-            <AnnouncementReactions
-              announcementId={announcement.id}
-              onReactionChange={onReactionChange}
-            />
-          </div>
-
-          {/* Read Receipts */}
-          <div className="mb-4">
-            <ReadReceipts
-              announcementId={announcement.id}
-              teamId={announcement.team_id}
-              isCoach={isCoach}
-            />
-          </div>
-
-          {/* Comments Toggle */}
-          <button
-            onClick={onToggleComments}
-            className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-brand-jade transition-colors group"
-            aria-expanded={isExpanded}
-            aria-controls={`comments-${announcement.id}`}
-          >
-            <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
-            <span>
-              {announcement.comment_count === 0
-                ? "Be the first to comment"
-                : `${announcement.comment_count} ${announcement.comment_count === 1 ? "comment" : "comments"}`}
-            </span>
-            {isExpanded ? (
-              <ChevronUp className="w-4 h-4" />
-            ) : (
-              <ChevronDown className="w-4 h-4" />
-            )}
-          </button>
-        </div>
-
-        {/* Comments Section */}
+        {/* Comments Section - Nested within same card */}
         {isExpanded && (
           <div
             id={`comments-${announcement.id}`}
-            className="pt-6 mt-4 border-t border-border-subtle"
+            className="border-t border-border-subtle bg-surface-subtle/50"
           >
             <AnnouncementComments
               announcementId={announcement.id}
