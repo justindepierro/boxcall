@@ -25,7 +25,8 @@ export interface Announcement {
   id: string;
   team_id: string;
   title: string;
-  content: string;
+  content: string; // Legacy plain text - kept for backward compatibility
+  content_json?: string; // Rich text content (TipTap JSON format)
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -38,7 +39,8 @@ export interface Announcement {
 export interface AnnouncementCreate {
   team_id: string;
   title: string;
-  content: string;
+  content?: string; // Optional - for backward compatibility
+  content_json?: string; // Rich text content (TipTap JSON format)
   is_pinned?: boolean;
   attachments?: Attachment[];
   visibility?: AnnouncementVisibility;
@@ -46,7 +48,8 @@ export interface AnnouncementCreate {
 
 export interface AnnouncementUpdate {
   title?: string;
-  content?: string;
+  content?: string; // Optional - for backward compatibility
+  content_json?: string; // Rich text content (TipTap JSON format)
   is_pinned?: boolean;
   attachments?: Attachment[];
   visibility?: AnnouncementVisibility;

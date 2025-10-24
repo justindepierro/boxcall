@@ -3,6 +3,7 @@
  * 
  * Displays team announcements with pinned items at the top
  * Supports filtering by visibility and date range
+ * Renders rich text content with inline images
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -14,6 +15,7 @@ import type {
 import { AnnouncementsService } from "../../services/announcementsService";
 import { AnnouncementReactions } from "./AnnouncementReactions";
 import { AnnouncementComments } from "./AnnouncementComments";
+import { RichTextDisplay } from "./RichTextDisplay";
 import { format } from "date-fns";
 import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 
@@ -232,7 +234,11 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
 
             {/* Content */}
             <div className="prose prose-sm max-w-none text-primary mb-4">
-              <p className="whitespace-pre-wrap">{announcement.content}</p>
+              {announcement.content_json ? (
+                <RichTextDisplay content={announcement.content_json} />
+              ) : (
+                <p className="whitespace-pre-wrap">{announcement.content}</p>
+              )}
             </div>
 
             {/* Attachments */}

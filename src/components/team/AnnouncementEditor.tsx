@@ -1,7 +1,7 @@
 /**
  * AnnouncementEditor Component
  * 
- * Modal for creating and editing team announcements
+ * Modal for creating and editing team announcements with rich text support
  */
 
 import React, { useState, useEffect } from "react";
@@ -14,6 +14,7 @@ import type {
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
 import { X } from "lucide-react";
+import { RichTextEditor } from "./RichTextEditor";
 
 interface AnnouncementEditorProps {
   teamId: string;
@@ -42,7 +43,8 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
   useEffect(() => {
     if (announcement) {
       setTitle(announcement.title);
-      setContent(announcement.content);
+      // Use content_json if available, otherwise fall back to content
+      setContent(announcement.content_json || announcement.content);
       setVisibility(announcement.visibility);
       setIsPinned(announcement.is_pinned);
       setAttachments(announcement.attachments || []);
@@ -78,7 +80,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
         // Update existing announcement
         const updates: AnnouncementUpdate = {
           title: title.trim(),
-          content: content.trim(),
+          content_json: content, // Save rich content as JSON
           visibility,
           is_pinned: isPinned,
           attachments,
@@ -89,7 +91,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
         const newAnnouncement: AnnouncementCreate = {
           team_id: teamId,
           title: title.trim(),
-          content: content.trim(),
+          content_json: content, // Save rich content as JSON
           visibility,
           is_pinned: isPinned,
           attachments,
@@ -171,14 +173,10 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
               <label htmlFor="content" className="block text-sm font-medium mb-1">
                 Content *
               </label>
-              <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Enter announcement content"
-                rows={8}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
-                required
+              <RichTextEditor
+                content={content}
+                onChange={setContent}
+                placeholder="Write your announcement... You can add images by dragging & dropping or pasting them!"
                 disabled={saving}
               />
             </div>
