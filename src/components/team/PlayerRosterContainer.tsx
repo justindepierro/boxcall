@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useRoster } from "../../hooks/useRoster";
-import { Button, Icon } from "../ui";
+import { Button } from "../ui";
 import { UserProfilePopover } from "../ui/UserProfilePopover";
 
 import { PlayerList } from "./PlayerList";
@@ -18,17 +17,17 @@ function mapRosterToTeamPlayer(view: RosterPlayerView): TeamPlayer {
     user_id: view.user_id || undefined,
     first_name: view.first_name || "Unknown",
     last_name: view.last_name || "Player",
-    email: view.email_address || undefined,
-    phone: view.phone_number || undefined,
-    parent_email: view.parent_contact || undefined,
+    email: undefined, // Not in RosterPlayerView
+    phone: undefined, // Not in RosterPlayerView
+    parent_email: undefined, // Not in RosterPlayerView
     positions: view.position ? [view.position] : [],
     jersey_number: view.jersey_number || undefined,
     height: view.height_inches
       ? `${Math.floor(view.height_inches / 12)}'${view.height_inches % 12}"`
       : undefined,
-    weight: view.weight_pounds || undefined,
-    graduation_year: view.graduation_year || undefined,
-    team_level: (view.class_year || "varsity") as TeamPlayer["team_level"],
+    weight: view.weight_lbs || undefined,
+    graduation_year: undefined, // Not in RosterPlayerView
+    team_level: (view.grade_level || "varsity") as TeamPlayer["team_level"],
     created_at: view.created_at || new Date().toISOString(),
     updated_at: view.updated_at || new Date().toISOString(),
   };
@@ -43,7 +42,6 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   teamId,
   compact = false,
 }) => {
-  const navigate = useNavigate();
   const { players: rosterPlayers, loading, error, refresh } = useRoster(teamId);
   const [visibleCount, setVisibleCount] = useState(10);
   const containerRef = useRef<HTMLDivElement>(null);
