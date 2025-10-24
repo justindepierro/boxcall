@@ -12,7 +12,7 @@ import { toast } from "sonner";
 interface PostToTeamBulletinModalProps {
   isOpen: boolean;
   onClose: () => void;
-  play: PlayType;
+  play: PlayType | null;
   teamId: string;
   onSuccess?: () => void;
 }
@@ -24,12 +24,24 @@ export const PostToTeamBulletinModal: React.FC<
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Debug logging
+  console.log("PostToTeamBulletinModal render:", { isOpen, play, teamId });
+
+  // Guard against null play
+  if (!play) {
+    console.warn("PostToTeamBulletinModal: play is null");
+    return null;
+  }
+
   const playDisplayName = getDisplayName(play, false, undefined, undefined, "full");
   const playUrl = `/playbook/${play.playbook_id}?play=${play.id}`;
 
   const handleSubmit = async () => {
+    console.log("🚀 handleSubmit called", { message, teamId, playId: play.id });
+    
     if (!message.trim()) {
       setError("Please add a message");
+      toast.error("Please add a message");
       return;
     }
 
