@@ -159,9 +159,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
       {/* Quick add buttons - only show if no reactions or on hover */}
       <div className="flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity">
         {quickReactions
-          .filter(
-            (type) => !activeReactions.find((r) => r.type === type)
-          )
+          .filter((type) => !activeReactions.find((r) => r.type === type))
           .slice(0, 3)
           .map((type) => {
             const isAnimating = animatingReaction === type;

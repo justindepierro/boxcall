@@ -1,6 +1,6 @@
 /**
  * Popover Context
- * 
+ *
  * Ensures only one popover is open at a time globally
  */
 
@@ -12,9 +12,13 @@ interface PopoverContextValue {
   unregisterPopover: (id: string) => void;
 }
 
-const PopoverContext = createContext<PopoverContextValue | undefined>(undefined);
+const PopoverContext = createContext<PopoverContextValue | undefined>(
+  undefined
+);
 
-export const PopoverProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PopoverProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [activePopoverId, setActivePopoverId] = useState<string | null>(null);
 
   const registerPopover = useCallback((id: string) => {
@@ -26,7 +30,9 @@ export const PopoverProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   return (
-    <PopoverContext.Provider value={{ activePopoverId, registerPopover, unregisterPopover }}>
+    <PopoverContext.Provider
+      value={{ activePopoverId, registerPopover, unregisterPopover }}
+    >
       {children}
     </PopoverContext.Provider>
   );

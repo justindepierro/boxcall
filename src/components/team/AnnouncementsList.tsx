@@ -17,11 +17,7 @@ import { HashtagService } from "../../services/hashtagService";
 import type { HashtagCount } from "../../services/hashtagService";
 import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
 import { AnnouncementItem } from "./AnnouncementItem";
-import {
-  Hash,
-  X,
-  RefreshCw,
-} from "lucide-react";
+import { Hash, X, RefreshCw } from "lucide-react";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -324,8 +320,12 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             isExpanded={expandedComments.has(announcement.id)}
             onToggleComments={() => toggleComments(announcement.id)}
             onEdit={onEdit ? () => onEdit(announcement) : undefined}
-            onDelete={onDelete ? () => handleDelete(announcement.id) : undefined}
-            onTogglePin={onTogglePin ? () => handleTogglePin(announcement.id) : undefined}
+            onDelete={
+              onDelete ? () => handleDelete(announcement.id) : undefined
+            }
+            onTogglePin={
+              onTogglePin ? () => handleTogglePin(announcement.id) : undefined
+            }
             onReactionChange={loadAnnouncements}
             onHashtagClick={handleHashtagClick}
             isCoach={true}

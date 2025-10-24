@@ -72,13 +72,13 @@ export function ReadReceipts({
           <span className="font-medium">
             {viewed_count}/{total_members}
           </span>
-          {isCoach && total_members > 0 && (
-            showDetails ? (
+          {isCoach &&
+            total_members > 0 &&
+            (showDetails ? (
               <ChevronUp className="w-3 h-3" />
             ) : (
               <ChevronDown className="w-3 h-3" />
-            )
-          )}
+            ))}
         </button>
 
         {/* Mini Progress Bar */}

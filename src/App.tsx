@@ -89,42 +89,44 @@ function App() {
                     <PendingSavesNotification />
                     <UndoRedoIndicator />
                     <SaveHistoryPanel />
-                  <ConflictOverlay />
-                  <AppGrid>
-                    <AuthGuard>
-                      <DataRouterApp />
-                    </AuthGuard>
-                  </AppGrid>
-                  <PWAIntegration />
-                  <OfflineIndicator />
-                  {showRQDevtools && (
-                    <ReactQueryDevtools
-                      initialIsOpen={false}
-                      position="bottom"
+                    <ConflictOverlay />
+                    <AppGrid>
+                      <AuthGuard>
+                        <DataRouterApp />
+                      </AuthGuard>
+                    </AppGrid>
+                    <PWAIntegration />
+                    <OfflineIndicator />
+                    {showRQDevtools && (
+                      <ReactQueryDevtools
+                        initialIsOpen={false}
+                        position="bottom"
+                      />
+                    )}
+                    <DevPanel
+                      isOpen={showDevPanel}
+                      onClose={() => setShowDevPanel(false)}
                     />
-                  )}
-                  <DevPanel
-                    isOpen={showDevPanel}
-                    onClose={() => setShowDevPanel(false)}
-                  />
-                  {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
-                  {import.meta.env.DEV && (
-                    <ToggleQueryDevtools
-                      onToggle={() => setShowRQDevtools((v) => !v)}
+                    {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
+                    {import.meta.env.DEV && (
+                      <ToggleQueryDevtools
+                        onToggle={() => setShowRQDevtools((v) => !v)}
+                      />
+                    )}
+                    {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
+                    <ToggleDevPanel
+                      onToggle={() => setShowDevPanel((v) => !v)}
                     />
-                  )}
-                  {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-                  <ToggleDevPanel onToggle={() => setShowDevPanel((v) => !v)} />
 
-                  {/* Analytics Debug Panel (dev only) */}
-                  <AnalyticsDebugger />
-                </div>
-              </PopoverProvider>
-            </UndoRedoProvider>
-          </SaveStateProvider>
-        </DevModeProvider>
-      </AnalyticsProvider>
-    </AppProvider>
+                    {/* Analytics Debug Panel (dev only) */}
+                    <AnalyticsDebugger />
+                  </div>
+                </PopoverProvider>
+              </UndoRedoProvider>
+            </SaveStateProvider>
+          </DevModeProvider>
+        </AnalyticsProvider>
+      </AppProvider>
     </ErrorBoundary>
   );
 }

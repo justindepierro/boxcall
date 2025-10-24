@@ -202,10 +202,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     const isOwnComment = currentUserId === comment.user_id;
 
     return (
-      <div
-        key={comment.id}
-        className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}
-      >
+      <div key={comment.id} className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}>
         {/* Comment */}
         <div className="rounded-xl p-4 bg-surface-primary hover:bg-surface-subtle transition-colors border border-border-subtle">
           <div className="flex items-start gap-3 mb-2">

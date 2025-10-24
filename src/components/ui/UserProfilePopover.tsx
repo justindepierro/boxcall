@@ -71,11 +71,15 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
   teamId,
 }) => {
   const navigate = useNavigate();
-  const { activePopoverId, registerPopover, unregisterPopover } = usePopoverContext();
-  const popoverId = useMemo(() => `popover-${userId}-${Math.random()}`, [userId]);
+  const { activePopoverId, registerPopover, unregisterPopover } =
+    usePopoverContext();
+  const popoverId = useMemo(
+    () => `popover-${userId}-${Math.random()}`,
+    [userId]
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-  
+
   const [isVisible, setIsVisible] = useState(false);
   const [profile, setProfile] = useState<PopoverProfile | null>(null);
   const [loading, setLoading] = useState(false);
@@ -86,7 +90,8 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
   const [computedPlacement, setComputedPlacement] = useState(placement);
 
   // Check if this popover should be visible
-  const shouldBeVisible = isVisible && (activePopoverId === null || activePopoverId === popoverId);
+  const shouldBeVisible =
+    isVisible && (activePopoverId === null || activePopoverId === popoverId);
 
   // Fetch profile data when popover becomes visible
   useEffect(() => {
@@ -188,17 +193,24 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
   // Calculate optimal placement on mount and when visibility changes
   useEffect(() => {
-    if (shouldBeVisible && containerRef.current && placement === "auto") {
-      const rect = containerRef.current.getBoundingClientRect();
+    if (shouldBeVisible && containerRef.current && popoverRef.current) {
+      const triggerRect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const spaceBelow = viewportHeight - rect.bottom;
-      const spaceAbove = rect.top;
+      const spaceBelow = viewportHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
 
-      // Choose placement based on available space
-      if (spaceBelow > 400 || spaceBelow > spaceAbove) {
-        setComputedPlacement("bottom");
+      if (placement === "auto") {
+        // Need at least 450px below to show comfortably, otherwise show above
+        if (spaceBelow >= 450) {
+          setComputedPlacement("bottom");
+        } else if (spaceAbove >= 450) {
+          setComputedPlacement("top");
+        } else {
+          // Not enough space either way, choose the side with more space
+          setComputedPlacement(spaceBelow > spaceAbove ? "bottom" : "top");
+        }
       } else {
-        setComputedPlacement("top");
+        setComputedPlacement(placement);
       }
     } else if (placement !== "auto") {
       setComputedPlacement(placement);
@@ -338,13 +350,22 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
         <div
           ref={popoverRef}
           className={`
-            absolute z-50 w-80 bg-surface-primary rounded-lg shadow-2xl border border-border-subtle
+            fixed z-[9999] w-80 bg-surface-primary rounded-lg shadow-2xl border border-border-subtle
             transform transition-all duration-200 ease-out
-            ${computedPlacement === "bottom" ? "top-full mt-2 left-0" : ""}
-            ${computedPlacement === "top" ? "bottom-full mb-2 left-0" : ""}
-            ${computedPlacement === "left" ? "right-full mr-2 top-0" : ""}
-            ${computedPlacement === "right" ? "left-full ml-2 top-0" : ""}
           `}
+          style={{
+            top:
+              computedPlacement === "bottom"
+                ? `${containerRef.current?.getBoundingClientRect().bottom ?? 0}px`
+                : "auto",
+            bottom:
+              computedPlacement === "top"
+                ? `${window.innerHeight - (containerRef.current?.getBoundingClientRect().top ?? 0)}px`
+                : "auto",
+            left: `${containerRef.current?.getBoundingClientRect().left ?? 0}px`,
+            marginTop: computedPlacement === "bottom" ? "8px" : "0",
+            marginBottom: computedPlacement === "top" ? "8px" : "0",
+          }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >

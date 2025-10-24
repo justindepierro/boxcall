@@ -7,6 +7,7 @@
 ## Executive Summary
 
 **Problem Identified**: Inconsistent card/widget styling throughout the application
+
 - Some components use solid borders only
 - Some use drop shadows only
 - Some use both borders AND shadows
@@ -23,6 +24,7 @@
 ### ❌ Inconsistencies Found
 
 #### 1. **Border + Shadow Combinations** (REMOVE)
+
 ```tsx
 // AnnouncementsList.tsx - Line 319
 <div className="bg-surface-primary rounded-lg shadow-sm border border-border-subtle">
@@ -41,6 +43,7 @@
 ```
 
 #### 2. **Border-Only Cards** (CONVERT TO SHADOW)
+
 ```tsx
 // PlayerPerformanceDashboard.tsx - Line 167
 <div className="border rounded-lg p-4">
@@ -56,6 +59,7 @@
 ```
 
 #### 3. **Hardcoded `bg-white`** (USE DESIGN TOKENS)
+
 ```tsx
 // Found in 50+ files:
 - AnnouncementsList.tsx
@@ -69,6 +73,7 @@
 ```
 
 #### 4. **Mixed Shadow Classes**
+
 - `shadow-sm` (subtle)
 - `shadow-md` (medium)
 - `shadow-lg` (large)
@@ -108,21 +113,21 @@ surfaces: {
     elevation: 'shadow-md',                // Standard card shadow
     hover: 'hover:shadow-lg',              // Lift on hover
   },
-  
+
   // Secondary surfaces (sidebars, panels)
   secondary: {
     background: 'bg-surface-secondary',    // Gray-50/dark equivalent
     elevation: 'shadow-sm',                // Subtle shadow
     hover: 'hover:shadow-md',              // Slight lift
   },
-  
+
   // Muted surfaces (backgrounds, disabled states)
   muted: {
     background: 'bg-surface-muted',        // Gray-100/dark equivalent
     elevation: 'shadow-none',              // No shadow
     hover: 'hover:shadow-sm',              // Minimal lift
   },
-  
+
   // Interactive surfaces (clickable cards)
   interactive: {
     background: 'bg-surface-primary',
@@ -140,17 +145,20 @@ surfaces: {
 ### ✅ When TO Use Borders
 
 1. **Form Inputs** - Borders required for input field definition
+
    ```tsx
    <input className="border border-border rounded-lg" />
    ```
 
 2. **Dividers** - Separating content within a container
+
    ```tsx
    <div className="border-t border-border" />
    <div className="border-b border-border-subtle" />
    ```
 
 3. **Outlined Buttons** - Secondary/ghost button variants
+
    ```tsx
    <button className="border border-border hover:border-brand-primary" />
    ```
@@ -190,6 +198,7 @@ surfaces: {
 ### Common Component Patterns
 
 #### Announcement/Post Cards
+
 ```tsx
 // BEFORE (inconsistent)
 <div className="border border-subtle shadow-sm">
@@ -199,6 +208,7 @@ surfaces: {
 ```
 
 #### Dashboard Widgets
+
 ```tsx
 // BEFORE (border + shadow)
 <div className="border border-border-medium shadow-lg">
@@ -208,6 +218,7 @@ surfaces: {
 ```
 
 #### Stat Cards
+
 ```tsx
 // BEFORE (mixed)
 <div className="bg-white border rounded-lg p-6">
@@ -217,6 +228,7 @@ surfaces: {
 ```
 
 #### Floating Elements (Dropdowns, Tooltips)
+
 ```tsx
 // BEFORE (border + shadow)
 <div className="bg-white border shadow-lg">
@@ -232,6 +244,7 @@ surfaces: {
 ### Global Density Scale: 87.5%
 
 **Current Implementation** (from recent changes):
+
 ```css
 :root {
   font-size: 87.5%; /* 14px base instead of 16px */
@@ -245,13 +258,19 @@ surfaces: {
 ```
 
 **Typography Tightening**:
+
 ```css
 body {
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   letter-spacing: -0.02em;
   line-height: 1.3;
 }
@@ -277,34 +296,34 @@ h1, h2, h3, h4, h5, h6 {
 
 export const surfaceTokens = {
   // Surface backgrounds
-  primary: 'bg-surface-primary',        // White/dark
-  secondary: 'bg-surface-secondary',    // Gray-50/dark
-  muted: 'bg-surface-muted',            // Gray-100/dark
-  subtle: 'bg-surface-subtle',          // Gray-50/dark
-  
+  primary: "bg-surface-primary", // White/dark
+  secondary: "bg-surface-secondary", // Gray-50/dark
+  muted: "bg-surface-muted", // Gray-100/dark
+  subtle: "bg-surface-subtle", // Gray-50/dark
+
   // Elevation shadows (no borders)
   elevation: {
-    none: 'shadow-none',
-    subtle: 'shadow-sm',         // 1px blur - barely there
-    card: 'shadow-md',           // 4px blur - standard cards
-    raised: 'shadow-lg',         // 8px blur - prominent elements
-    floating: 'shadow-xl',       // 16px blur - dropdowns, tooltips
-    modal: 'shadow-2xl',         // 24px blur - overlays, modals
+    none: "shadow-none",
+    subtle: "shadow-sm", // 1px blur - barely there
+    card: "shadow-md", // 4px blur - standard cards
+    raised: "shadow-lg", // 8px blur - prominent elements
+    floating: "shadow-xl", // 16px blur - dropdowns, tooltips
+    modal: "shadow-2xl", // 24px blur - overlays, modals
   },
-  
+
   // Interactive states
   hover: {
-    subtle: 'hover:shadow-md',
-    card: 'hover:shadow-lg',
-    raised: 'hover:shadow-xl',
+    subtle: "hover:shadow-md",
+    card: "hover:shadow-lg",
+    raised: "hover:shadow-xl",
   },
-  
+
   // Rounded corners (consistent)
   rounded: {
-    sm: 'rounded-md',      // 6px - small elements
-    md: 'rounded-lg',      // 8px - cards, panels
-    lg: 'rounded-xl',      // 12px - prominent cards
-    full: 'rounded-full',  // Circular
+    sm: "rounded-md", // 6px - small elements
+    md: "rounded-lg", // 8px - cards, panels
+    lg: "rounded-xl", // 12px - prominent cards
+    full: "rounded-full", // Circular
   },
 } as const;
 
@@ -312,45 +331,45 @@ export const surfaceTokens = {
 export const densityTokens = {
   // Global scale: 87.5% (14px base instead of 16px)
   // Mobile scale: 90% (14.4px base for readability)
-  
+
   spacing: {
     // Card padding (compact)
     card: {
-      sm: 'p-3',    // Small cards
-      md: 'p-4',    // Standard cards
-      lg: 'p-6',    // Large cards
+      sm: "p-3", // Small cards
+      md: "p-4", // Standard cards
+      lg: "p-6", // Large cards
     },
-    
+
     // Inline spacing (tight)
     inline: {
-      xs: 'px-2 py-1',   // Badges, tags
-      sm: 'px-3 py-2',   // Buttons, inputs
-      md: 'px-4 py-3',   // Standard inline
+      xs: "px-2 py-1", // Badges, tags
+      sm: "px-3 py-2", // Buttons, inputs
+      md: "px-4 py-3", // Standard inline
     },
-    
+
     // Gaps (compact)
     gap: {
-      xs: 'gap-1',   // 4px - very tight
-      sm: 'gap-2',   // 8px - tight
-      md: 'gap-3',   // 12px - standard
-      lg: 'gap-4',   // 16px - spacious
+      xs: "gap-1", // 4px - very tight
+      sm: "gap-2", // 8px - tight
+      md: "gap-3", // 12px - standard
+      lg: "gap-4", // 16px - spacious
     },
   },
-  
+
   typography: {
     // Font sizes (scaled down)
     size: {
-      xs: 'text-xs',     // 12px (was 12px) - captions
-      sm: 'text-sm',     // 14px (was 14px) - body small
-      base: 'text-base', // 16px (was 16px) - body standard (scales to 14px)
-      lg: 'text-lg',     // 18px (was 18px) - headings (rarely used)
+      xs: "text-xs", // 12px (was 12px) - captions
+      sm: "text-sm", // 14px (was 14px) - body small
+      base: "text-base", // 16px (was 16px) - body standard (scales to 14px)
+      lg: "text-lg", // 18px (was 18px) - headings (rarely used)
     },
-    
+
     // Line heights (tight)
     leading: {
-      tight: 'leading-tight',   // 1.25
-      snug: 'leading-snug',     // 1.375
-      normal: 'leading-normal', // 1.5
+      tight: "leading-tight", // 1.25
+      snug: "leading-snug", // 1.375
+      normal: "leading-normal", // 1.5
     },
   },
 } as const;
@@ -361,51 +380,61 @@ export const densityTokens = {
 ## Migration Plan
 
 ### Phase 1: Update Design Tokens ✅
+
 - [x] Add surface and elevation tokens
 - [x] Add density documentation
 - [ ] Document shadow-only standard
 
 ### Phase 2: Update Core Components
+
 - [ ] Update `Card.tsx` to use shadow-only variants
 - [ ] Remove border+shadow combinations
 - [ ] Use `surfaceTokens` consistently
 - [ ] Update all Card variant definitions
 
 ### Phase 3: Systematic Component Updates
+
 **Priority: High-visibility pages first**
 
 #### Team Bulletin & Announcements
+
 - [ ] `AnnouncementsList.tsx` - Remove border+shadow
 - [ ] `AnnouncementItem.tsx` - Shadow-only cards
 - [ ] `AnnouncementComments.tsx` - Consistent shadows
 - [ ] `TeamBulletinHeader.tsx` - Remove border
 
 #### Analytics Dashboards
+
 - [ ] `AnalyticsDashboard.tsx` - Shadow-only widgets
 - [ ] `TrendAnalyticsDashboard.tsx` - Consistent elevation
 - [ ] `GamePlanningDashboard.tsx` - Remove borders
 - [ ] `PlayerPerformanceDashboard.tsx` - Shadow cards
 
 #### Forms & Modals
+
 - [ ] `PracticePlannerModal` - Shadow-only panels
 - [ ] `AddBlockModal` - Consistent inputs
 - [ ] `PracticeScriptModal` - Shadow cards
 - [ ] All form inputs - Keep borders (required)
 
 #### Other High-Traffic Pages
+
 - [ ] `RosterPage.tsx` - Consistent cards
 - [ ] `PracticePlansPage.tsx` - Shadow widgets
 - [ ] `TeamBulletin.tsx` - Stats cards
 - [ ] `CreateTeam.tsx` - Form consistency
 
 ### Phase 4: Replace Hardcoded Colors
+
 **Target: All `bg-white`, `bg-gray-*` instances**
+
 - [ ] Replace with `bg-surface-primary`
 - [ ] Replace with `bg-surface-secondary`
 - [ ] Replace with `bg-surface-muted`
 - [ ] Use semantic tokens consistently
 
 ### Phase 5: Validation
+
 - [ ] Type check all changes
 - [ ] Visual regression testing
 - [ ] Mobile responsive check
@@ -417,6 +446,7 @@ export const densityTokens = {
 ## Files Requiring Updates
 
 ### Immediate Priority (Most Visible)
+
 1. `src/components/team/AnnouncementsList.tsx` - 319, 194
 2. `src/components/team/AnnouncementItem.tsx` - Card structure
 3. `src/components/team-dashboard/TeamBulletinHeader.tsx` - Line 85
@@ -424,18 +454,21 @@ export const densityTokens = {
 5. `src/pages/TeamBulletin.tsx` - Lines 454, 583, 596, 609, 622
 
 ### Secondary Priority (Analytics)
+
 6. `src/components/analytics/TrendAnalyticsDashboard.tsx` - Line 137
 7. `src/components/analytics/GamePlanningDashboard.tsx` - Line 402
 8. `src/components/analytics/PlayerPerformanceDashboard.tsx` - Multiple
 9. `src/components/analytics/charts/*` - All chart tooltips
 
 ### Tertiary Priority (Modals & Forms)
+
 10. `src/components/practice/PracticePlannerModal/index.tsx` - Line 59
 11. `src/components/practice/PracticeScriptModal/index.tsx` - Line 106
 12. `src/components/onboarding/TeamOnboardingWizard.tsx` - Line 294
 13. `src/components/dev/SaveHistoryPanel.tsx` - Lines 132, 157
 
 ### Low Priority (Dev/Admin)
+
 14. `src/components/dev/DevPanel.tsx` - Multiple error displays
 15. `src/components/dev/DatabasePerformanceMonitor.tsx` - Line 106
 16. `src/pages/AchievementAdminPage.tsx` - Line 269
@@ -445,18 +478,21 @@ export const densityTokens = {
 ## Expected Impact
 
 ### User Experience
+
 - ✅ **Cleaner visual environment** - Less visual noise from borders
 - ✅ **Professional SaaS aesthetic** - Modern shadow-based depth
 - ✅ **Consistent interactions** - Same hover effects everywhere
 - ✅ **Better hierarchy** - Clear depth through shadow levels
 
 ### Developer Experience
+
 - ✅ **Single source of truth** - `surfaceTokens` for all surfaces
 - ✅ **Clear guidelines** - When to use borders vs shadows
 - ✅ **Faster development** - Copy-paste surface patterns
 - ✅ **Easier maintenance** - Update tokens, not individual components
 
 ### Performance
+
 - ✅ **Smaller CSS** - Remove redundant border+shadow combinations
 - ✅ **Better consistency** - Reuse shadow classes
 - ✅ **No impact** - Shadow performance is negligible
@@ -513,6 +549,7 @@ export const densityTokens = {
 ---
 
 **Questions? Issues?**
+
 - Slack: #design-system
 - Documentation: `/docs/DESIGN_SYSTEM.md`
 - Examples: See updated `Card.tsx` and token definitions

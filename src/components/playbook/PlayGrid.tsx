@@ -141,9 +141,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const [reorderedPlays, setReorderedPlays] = useState<Play[]>([]);
 
   // Mobile progressive loading state
-  const [mobileVisibleCount, setMobileVisibleCount] = useState(
-    MOBILE_INITIAL_PLAYS
-  );
+  const [mobileVisibleCount, setMobileVisibleCount] =
+    useState(MOBILE_INITIAL_PLAYS);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // Get real data from database with refresh capability and pagination
@@ -792,10 +791,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   // Simulate loading delay for smooth UX
                   setTimeout(() => {
                     setMobileVisibleCount((prev) => {
-                      const next = Math.min(
-                        prev + 20,
-                        displayPlays.length
-                      );
+                      const next = Math.min(prev + 20, displayPlays.length);
                       if (next === displayPlays.length) {
                         onMobileListExpand?.();
                       }
@@ -834,8 +830,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
           {/* Mobile: All plays loaded message */}
           {isMobile &&
-            (mobileListExpanded ||
-              mobileVisibleCount >= displayPlays.length) &&
+            (mobileListExpanded || mobileVisibleCount >= displayPlays.length) &&
             displayPlays.length > MOBILE_INITIAL_PLAYS && (
               <div className="text-center py-8">
                 <Typography variant="body-sm" className="text-secondary">
@@ -844,7 +839,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               </div>
             )}
         </>
-      ) : !showEmpty && !loading && !error && (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
+      ) : !showEmpty &&
+        !loading &&
+        !error &&
+        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
         <>
           {isMobile ? (
             <div className="space-y-4 overflow-visible px-4" role="list">
@@ -919,7 +917,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 personnelSuggestions={
                                   collectedSuggestions.personnel
                                 }
-                                personnelConfigurations={personnelConfigurations}
+                                personnelConfigurations={
+                                  personnelConfigurations
+                                }
                                 directionDisplayFormat={directionDisplayFormat}
                                 expandedPlayId={expandedPlayId}
                                 onToggleExpand={handleToggleExpand}

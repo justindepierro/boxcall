@@ -1,6 +1,6 @@
 /**
  * Invitation Acceptance Page
- * 
+ *
  * Handles the full invitation acceptance flow:
  * 1. Token validation
  * 2. User authentication (sign up or sign in)
@@ -8,28 +8,28 @@
  * 4. Redirect to team dashboard
  */
 
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import {
   getInvitationByToken,
   acceptInvitation,
-} from '../services/invitationService';
-import { SignUpForm } from '../components/auth/SignUpForm';
-import { SignInForm } from '../components/auth/SignInForm';
-import { Button } from '../components/ui/Button';
-import { Alert } from '../components/ui/Alert';
-import { Loader2 } from 'lucide-react';
+} from "../services/invitationService";
+import { SignUpForm } from "../components/auth/SignUpForm";
+import { SignInForm } from "../components/auth/SignInForm";
+import { Button } from "../components/ui/Button";
+import { Alert } from "../components/ui/Alert";
+import { Loader2 } from "lucide-react";
 
 type PageState =
-  | 'loading'
-  | 'invalid-token'
-  | 'expired-token'
-  | 'already-accepted'
-  | 'auth-required'
-  | 'accepting'
-  | 'success'
-  | 'error';
+  | "loading"
+  | "invalid-token"
+  | "expired-token"
+  | "already-accepted"
+  | "auth-required"
+  | "accepting"
+  | "success"
+  | "error";
 
 interface InvitationData {
   id: string;
@@ -50,20 +50,20 @@ interface TeamData {
 export function InvitationAcceptPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
 
-  const [pageState, setPageState] = useState<PageState>('loading');
+  const [pageState, setPageState] = useState<PageState>("loading");
   const [invitation, setInvitation] = useState<InvitationData | null>(null);
   const [team, setTeam] = useState<TeamData | null>(null);
-  const [playerEmail, setPlayerEmail] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
+  const [playerEmail, setPlayerEmail] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [authMode, setAuthMode] = useState<"signup" | "signin">("signup");
 
   // Load invitation details
   useEffect(() => {
     async function loadInvitation() {
       if (!token) {
-        setPageState('invalid-token');
+        setPageState("invalid-token");
         return;
       }
 
@@ -77,26 +77,26 @@ export function InvitationAcceptPage() {
         const invitationData = await getInvitationByToken(token);
 
         if (!invitationData) {
-          setPageState('expired-token');
+          setPageState("expired-token");
           return;
         }
 
         // Check if already accepted
-        if (invitationData.invitation_status === 'accepted') {
-          setPageState('already-accepted');
+        if (invitationData.invitation_status === "accepted") {
+          setPageState("already-accepted");
           return;
         }
 
         // Get team details
         const { data: teamData, error: teamError } = await supabase
-          .from('teams')
-          .select('id, name, school_name')
-          .eq('id', invitationData.team_id || '')
+          .from("teams")
+          .select("id, name, school_name")
+          .eq("id", invitationData.team_id || "")
           .single();
 
         if (teamError || !teamData) {
-          setErrorMessage('Team not found');
-          setPageState('error');
+          setErrorMessage("Team not found");
+          setPageState("error");
           return;
         }
 
@@ -106,11 +106,11 @@ export function InvitationAcceptPage() {
         // Try to get email from linked profile if user_id exists
         if (invitationData.user_id) {
           const { data: profileData } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', invitationData.user_id)
+            .from("profiles")
+            .select("email")
+            .eq("id", invitationData.user_id)
             .single();
-          
+
           if (profileData?.email) {
             setPlayerEmail(profileData.email);
           }
@@ -122,12 +122,12 @@ export function InvitationAcceptPage() {
           // Auto-accept for logged-in users
           await handleAccept(user.id);
         } else {
-          setPageState('auth-required');
+          setPageState("auth-required");
         }
       } catch (error) {
-        console.error('Error loading invitation:', error);
-        setErrorMessage('Failed to load invitation details');
-        setPageState('error');
+        console.error("Error loading invitation:", error);
+        setErrorMessage("Failed to load invitation details");
+        setPageState("error");
       }
     }
 
@@ -139,32 +139,32 @@ export function InvitationAcceptPage() {
   async function handleAccept(userId: string) {
     if (!token) return;
 
-    setPageState('accepting');
+    setPageState("accepting");
 
     try {
       const result = await acceptInvitation(token, userId);
 
       if (!result.success) {
-        if (result.error === 'already_member') {
-          setErrorMessage('You are already a member of this team');
-          setPageState('already-accepted');
+        if (result.error === "already_member") {
+          setErrorMessage("You are already a member of this team");
+          setPageState("already-accepted");
         } else {
-          setErrorMessage(result.message || 'Failed to accept invitation');
-          setPageState('error');
+          setErrorMessage(result.message || "Failed to accept invitation");
+          setPageState("error");
         }
         return;
       }
 
-      setPageState('success');
+      setPageState("success");
 
       // Redirect to team dashboard after 2 seconds
       setTimeout(() => {
         navigate(`/teams/${result.teamId}`);
       }, 2000);
     } catch (error) {
-      console.error('Error accepting invitation:', error);
-      setErrorMessage('An unexpected error occurred');
-      setPageState('error');
+      console.error("Error accepting invitation:", error);
+      setErrorMessage("An unexpected error occurred");
+      setPageState("error");
     }
   }
 
@@ -184,7 +184,7 @@ export function InvitationAcceptPage() {
   }
 
   // Render different states
-  if (pageState === 'loading') {
+  if (pageState === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
         <div className="text-center">
@@ -195,7 +195,7 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'invalid-token') {
+  if (pageState === "invalid-token") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
@@ -203,7 +203,7 @@ export function InvitationAcceptPage() {
             <h2 className="text-lg font-semibold mb-2">Invalid Invitation</h2>
             <p>This invitation link is not valid.</p>
           </Alert>
-          <Button onClick={() => navigate('/')} className="w-full">
+          <Button onClick={() => navigate("/")} className="w-full">
             Go to Home
           </Button>
         </div>
@@ -211,7 +211,7 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'expired-token') {
+  if (pageState === "expired-token") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
@@ -222,7 +222,7 @@ export function InvitationAcceptPage() {
               a new invitation.
             </p>
           </Alert>
-          <Button onClick={() => navigate('/')} className="w-full">
+          <Button onClick={() => navigate("/")} className="w-full">
             Go to Home
           </Button>
         </div>
@@ -230,7 +230,7 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'already-accepted') {
+  if (pageState === "already-accepted") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
@@ -251,7 +251,7 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'accepting') {
+  if (pageState === "accepting") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
         <div className="text-center">
@@ -262,7 +262,7 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'success') {
+  if (pageState === "success") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
@@ -288,7 +288,7 @@ export function InvitationAcceptPage() {
             {invitation && team && (
               <>
                 <p className="text-secondary mb-4">
-                  You've successfully joined <strong>{team.name}</strong> as{' '}
+                  You've successfully joined <strong>{team.name}</strong> as{" "}
                   <strong>
                     {invitation.first_name} {invitation.last_name}
                   </strong>
@@ -305,15 +305,15 @@ export function InvitationAcceptPage() {
     );
   }
 
-  if (pageState === 'error') {
+  if (pageState === "error") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
           <Alert variant="error" className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Error</h2>
-            <p>{errorMessage || 'An unexpected error occurred'}</p>
+            <p>{errorMessage || "An unexpected error occurred"}</p>
           </Alert>
-          <Button onClick={() => navigate('/')} className="w-full">
+          <Button onClick={() => navigate("/")} className="w-full">
             Go to Home
           </Button>
         </div>
@@ -349,8 +349,10 @@ export function InvitationAcceptPage() {
                 )}
               </div>
               <div className="mt-4 text-xs text-muted">
-                Invitation expires:{' '}
-                {new Date(invitation.invitation_expires_at).toLocaleDateString()}
+                Invitation expires:{" "}
+                {new Date(
+                  invitation.invitation_expires_at
+                ).toLocaleDateString()}
               </div>
             </div>
           </div>
@@ -361,21 +363,21 @@ export function InvitationAcceptPage() {
           {/* Tab Switcher */}
           <div className="flex border-b border-border-subtle mb-6">
             <button
-              onClick={() => setAuthMode('signup')}
+              onClick={() => setAuthMode("signup")}
               className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-                authMode === 'signup'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-secondary hover:text-primary'
+                authMode === "signup"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-secondary hover:text-primary"
               }`}
             >
               Create Account
             </button>
             <button
-              onClick={() => setAuthMode('signin')}
+              onClick={() => setAuthMode("signin")}
               className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-                authMode === 'signin'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-secondary hover:text-primary'
+                authMode === "signin"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-secondary hover:text-primary"
               }`}
             >
               Sign In
@@ -383,7 +385,7 @@ export function InvitationAcceptPage() {
           </div>
 
           {/* Sign Up Form */}
-          {authMode === 'signup' && invitation && (
+          {authMode === "signup" && invitation && (
             <SignUpForm
               prefilledEmail={playerEmail}
               prefilledFirstName={invitation.first_name}
@@ -394,7 +396,7 @@ export function InvitationAcceptPage() {
           )}
 
           {/* Sign In Form */}
-          {authMode === 'signin' && (
+          {authMode === "signin" && (
             <SignInForm
               onSuccess={handleSignInSuccess}
               redirectTo={`/invite/accept?token=${token}`}

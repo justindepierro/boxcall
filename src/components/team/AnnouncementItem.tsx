@@ -167,7 +167,9 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                         }`}
                         title={isPinned ? "Unpin" : "Pin"}
                       >
-                        <Pin className={`w-3.5 h-3.5 ${isPinned ? "fill-current" : ""}`} />
+                        <Pin
+                          className={`w-3.5 h-3.5 ${isPinned ? "fill-current" : ""}`}
+                        />
                       </button>
                     )}
                     {onEdit && (
@@ -240,9 +242,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                     aria-controls={`comments-${announcement.id}`}
                   >
                     <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                    <span>
-                      {announcement.comment_count || 0}
-                    </span>
+                    <span>{announcement.comment_count || 0}</span>
                     {isExpanded ? (
                       <ChevronUp className="w-3 h-3" />
                     ) : (
