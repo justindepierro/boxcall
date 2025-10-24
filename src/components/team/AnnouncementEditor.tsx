@@ -59,6 +59,25 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
     setError(null);
   }, [announcement, isOpen]);
 
+  // Extract plain text from TipTap JSON for the content field
+  const getPlainText = (jsonContent: string): string => {
+    try {
+      const json = JSON.parse(jsonContent);
+      const extractText = (node: any): string => {
+        if (node.type === "text") {
+          return node.text || "";
+        }
+        if (node.content && Array.isArray(node.content)) {
+          return node.content.map(extractText).join("");
+        }
+        return "";
+      };
+      return extractText(json).trim() || jsonContent;
+    } catch {
+      return jsonContent;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -76,11 +95,14 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
       setSaving(true);
       setError(null);
 
+      const plainTextContent = getPlainText(content);
+
       if (announcement) {
         // Update existing announcement
         const updates: AnnouncementUpdate = {
           title: title.trim(),
-          content_json: content, // Save rich content as JSON
+          content: plainTextContent, // Plain text for backward compatibility
+          content_json: content, // Rich content as JSON
           visibility,
           is_pinned: isPinned,
           attachments,
@@ -91,7 +113,8 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
         const newAnnouncement: AnnouncementCreate = {
           team_id: teamId,
           title: title.trim(),
-          content_json: content, // Save rich content as JSON
+          content: plainTextContent, // Plain text for backward compatibility
+          content_json: content, // Rich content as JSON
           visibility,
           is_pinned: isPinned,
           attachments,
