@@ -1,13 +1,16 @@
 /**
  * ReadReceipts Component
- * 
+ *
  * Displays read receipt information for announcements
  * Shows who has viewed and percentage viewed
  * Coaches can see detailed list of viewers/non-viewers
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { AnnouncementViewsService, type ReadReceiptStats } from "../../services/announcementViewsService";
+import {
+  AnnouncementViewsService,
+  type ReadReceiptStats,
+} from "../../services/announcementViewsService";
 import { Eye, Users, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 
@@ -17,14 +20,21 @@ interface ReadReceiptsProps {
   isCoach?: boolean;
 }
 
-export function ReadReceipts({ announcementId, teamId, isCoach = false }: ReadReceiptsProps) {
+export function ReadReceipts({
+  announcementId,
+  teamId,
+  isCoach = false,
+}: ReadReceiptsProps) {
   const [stats, setStats] = useState<ReadReceiptStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
   const loadStats = useCallback(async () => {
     setLoading(true);
-    const data = await AnnouncementViewsService.getReadReceipts(announcementId, teamId);
+    const data = await AnnouncementViewsService.getReadReceipts(
+      announcementId,
+      teamId
+    );
     setStats(data);
     setLoading(false);
   }, [announcementId, teamId]);
@@ -46,7 +56,8 @@ export function ReadReceipts({ announcementId, teamId, isCoach = false }: ReadRe
     return null;
   }
 
-  const { viewed_count, total_members, view_percentage, viewers, non_viewers } = stats;
+  const { viewed_count, total_members, view_percentage, viewers, non_viewers } =
+    stats;
 
   return (
     <div className="space-y-2">
@@ -59,7 +70,7 @@ export function ReadReceipts({ announcementId, teamId, isCoach = false }: ReadRe
             <strong className="text-primary">{total_members}</strong> viewed
           </span>
         </div>
-        
+
         {/* Progress Bar */}
         <div className="flex-1 max-w-xs">
           <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
@@ -114,7 +125,10 @@ export function ReadReceipts({ announcementId, teamId, isCoach = false }: ReadRe
                         ({viewer.user_role})
                       </span>
                     </div>
-                    <time className="text-xs text-muted" dateTime={viewer.viewed_at}>
+                    <time
+                      className="text-xs text-muted"
+                      dateTime={viewer.viewed_at}
+                    >
                       {format(new Date(viewer.viewed_at), "MMM d 'at' h:mm a")}
                     </time>
                   </li>

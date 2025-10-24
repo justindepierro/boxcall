@@ -1,6 +1,6 @@
 /**
  * AnnouncementEditor Component
- * 
+ *
  * Modal for creating and editing team announcements with rich text support
  */
 
@@ -82,12 +82,12 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!title.trim()) {
       setError("Title is required");
       return;
     }
-    
+
     if (!content.trim()) {
       setError("Content is required");
       return;
@@ -100,7 +100,9 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
       const plainTextContent = getPlainText(content);
 
       // Get current user info for notifications
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       const { data: profile } = user
         ? await supabase
             .from("profiles")
@@ -109,7 +111,8 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
             .single()
         : { data: null };
 
-      const authorName = profile?.display_name || profile?.full_name || "Someone";
+      const authorName =
+        profile?.display_name || profile?.full_name || "Someone";
 
       if (announcement) {
         // Update existing announcement
@@ -145,7 +148,8 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
           is_pinned: isPinned,
           attachments,
         };
-        const result = await AnnouncementsService.createAnnouncement(newAnnouncement);
+        const result =
+          await AnnouncementsService.createAnnouncement(newAnnouncement);
 
         // Process mentions for notifications
         if (result.success && result.announcement && user) {
@@ -231,7 +235,10 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
             {/* Content */}
             <div>
-              <label htmlFor="content" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="content"
+                className="block text-sm font-medium mb-1"
+              >
                 Content *
               </label>
               <RichTextEditor
@@ -245,13 +252,18 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
             {/* Visibility */}
             <div>
-              <label htmlFor="visibility" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="visibility"
+                className="block text-sm font-medium mb-1"
+              >
                 Who can see this announcement?
               </label>
               <select
                 id="visibility"
                 value={visibility}
-                onChange={(e) => setVisibility(e.target.value as AnnouncementVisibility)}
+                onChange={(e) =>
+                  setVisibility(e.target.value as AnnouncementVisibility)
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={saving}
               >

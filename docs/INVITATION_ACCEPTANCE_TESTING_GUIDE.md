@@ -2,7 +2,7 @@
 
 **Date:** October 23, 2025  
 **Feature:** Player Invitation Acceptance  
-**Priority:** 🔴 CRITICAL  
+**Priority:** 🔴 CRITICAL
 
 ---
 
@@ -11,6 +11,7 @@
 This guide walks through testing the complete invitation acceptance flow, from receiving an invitation email to successfully joining a team.
 
 **What We're Testing:**
+
 - ✅ Token validation
 - ✅ Sign up flow (new users)
 - ✅ Sign in flow (existing users)
@@ -27,6 +28,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test that a new user can create an account and join a team via invitation.
 
 #### Steps:
+
 1. **Send Invitation**
    - Go to your team's roster page
    - Click "Invite Player" or "Invite Staff"
@@ -88,6 +90,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test that an existing user can sign in and join a team via invitation.
 
 #### Steps:
+
 1. **Send Invitation**
    - Send invitation to an email that's already registered in BoxCall
    - Use a different player name than the actual account
@@ -121,6 +124,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test auto-acceptance for users who are already logged in.
 
 #### Steps:
+
 1. **Log in to BoxCall**
    - Sign in to your account normally
 
@@ -141,6 +145,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test error handling for invalid tokens.
 
 #### Steps:
+
 1. **Manually Navigate**
    - Go to: `http://localhost:8888/invite/accept?token=invalid-token-123`
 
@@ -157,6 +162,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test error handling for expired invitations.
 
 #### Steps:
+
 1. **Create Expired Invitation** (Manual DB Edit)
    - Open Supabase → Table Editor → `team_invitations`
    - Find an invitation
@@ -179,6 +185,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test error handling when trying to accept an invitation twice.
 
 #### Steps:
+
 1. **Accept Invitation**
    - Accept an invitation normally (Scenario 1 or 2)
 
@@ -200,6 +207,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test that users can't join the same team twice via different invitations.
 
 #### Steps:
+
 1. **Accept First Invitation**
    - Accept invitation to join Team A
 
@@ -221,6 +229,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test that password validation works during sign-up.
 
 #### Steps:
+
 1. **Start Sign Up**
    - Open invitation link
    - Stay on "Create Account" tab
@@ -248,6 +257,7 @@ This guide walks through testing the complete invitation acceptance flow, from r
 **Goal:** Test that a user can join multiple teams via invitations.
 
 #### Steps:
+
 1. **Join First Team**
    - Accept invitation to Team A
    - Verify successful join
@@ -269,25 +279,31 @@ This guide walks through testing the complete invitation acceptance flow, from r
 ## 🔍 Things to Watch For
 
 ### **Console Logs**
+
 While testing, open browser console (F12) and watch for:
+
 - ❌ Any errors (should be minimal/none)
 - ℹ️ Auth state changes
 - ℹ️ Invitation acceptance logs
 - ⚠️ RLS policy violations (shouldn't happen)
 
 ### **Database State**
+
 After each acceptance, verify in Supabase:
+
 - `team_invitations.invitation_status = 'accepted'`
 - `team_members` row created
 - `profiles` row exists with correct metadata
 - No duplicate team members
 
 ### **Navigation**
+
 - URLs should update correctly
 - Back button should work (but shouldn't break flow)
 - Redirects should happen automatically
 
 ### **UI/UX**
+
 - Loading states should be clear
 - Error messages should be helpful
 - Forms should be intuitive
@@ -299,22 +315,27 @@ After each acceptance, verify in Supabase:
 ## 🐛 Common Issues & Fixes
 
 ### **Issue: "Failed to load invitation details"**
+
 **Cause:** Token doesn't exist in database  
 **Fix:** Verify token in `team_invitations` table, ensure `invitation_token` matches URL parameter
 
 ### **Issue: Stuck on "Accepting invitation..."**
+
 **Cause:** `acceptInvitation()` service call failing  
 **Fix:** Check console for errors, verify RLS policies allow INSERT into `team_members`
 
 ### **Issue: Redirect doesn't happen**
+
 **Cause:** JavaScript error or `teamId` is null  
 **Fix:** Check console, verify `result.teamId` is returned from acceptance
 
 ### **Issue: User joined but can't see team**
+
 **Cause:** RLS policies blocking team access  
 **Fix:** Verify `team_members.status = 'active'` and check SELECT policies
 
 ### **Issue: Email not pre-filling**
+
 **Cause:** `user_id` not linked to invitation or profile missing  
 **Fix:** Check `team_invitations.user_id` and `profiles` table
 
@@ -364,6 +385,7 @@ Overall Status: ☐ Ready for Production  ☐ Needs Fixes
 ## 🚀 Next Steps After Testing
 
 Once this testing is complete:
+
 1. Mark "Test invitation acceptance flow" as ✅ complete
 2. Move to "Test complete end-to-end invitation flow"
 3. Test family permissions functionality

@@ -1,6 +1,6 @@
 /**
  * CommentReactions Component
- * 
+ *
  * Compact inline reactions for comments
  * Shows: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
  */
@@ -27,13 +27,13 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
 }) => {
   const [summary, setSummary] = useState<ReactionSummary[]>([]);
   const [loading, setLoading] = useState(false);
-  const [animatingReaction, setAnimatingReaction] = useState<ReactionType | null>(null);
+  const [animatingReaction, setAnimatingReaction] =
+    useState<ReactionType | null>(null);
 
   // Load reactions
   const loadReactions = async () => {
-    const { summary: reactionSummary } = await CommentReactionsService.getReactions(
-      commentId
-    );
+    const { summary: reactionSummary } =
+      await CommentReactionsService.getReactions(commentId);
     setSummary(reactionSummary);
   };
 
@@ -46,7 +46,9 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
     if (loading) return;
 
     // Optimistic update - update UI immediately
-    const currentSummary = summary.find((s) => s.reaction_type === reactionType);
+    const currentSummary = summary.find(
+      (s) => s.reaction_type === reactionType
+    );
     const wasReacted = currentSummary?.user_has_reacted || false;
     const currentCount = currentSummary?.count || 0;
 
@@ -57,7 +59,9 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
           return {
             ...s,
             user_has_reacted: !wasReacted,
-            count: wasReacted ? Math.max(0, currentCount - 1) : currentCount + 1,
+            count: wasReacted
+              ? Math.max(0, currentCount - 1)
+              : currentCount + 1,
           };
         }
         return s;
@@ -93,10 +97,21 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
     }
   };
 
-  const allReactionTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
+  const allReactionTypes: ReactionType[] = [
+    "like",
+    "love",
+    "celebrate",
+    "football",
+    "fire",
+    "clap",
+    "target",
+    "hundred",
+  ];
 
   return (
-    <div className={`flex items-center gap-1.5 flex-wrap ${compact ? "text-xs" : "text-sm"}`}>
+    <div
+      className={`flex items-center gap-1.5 flex-wrap ${compact ? "text-xs" : "text-sm"}`}
+    >
       {/* Always show all reaction types as inline buttons */}
       {allReactionTypes.map((type) => {
         const existingSummary = summary.find((s) => s.reaction_type === type);
@@ -116,22 +131,21 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-blue-100 text-blue-700 border border-blue-500 hover:bg-blue-200"
+                  ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
                   : count > 0
-                  ? "bg-surface-secondary text-secondary border hover:bg-surface-muted"
-                  : "bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100 hover:text-gray-600 hover:border-gray-300"
+                    ? "bg-surface-subtle text-text-primary hover:bg-jade-50"
+                    : "bg-surface-subtle text-text-secondary hover:bg-jade-50"
               }
             `}
             title={`${REACTION_LABELS[type]}${
               hasReacted ? " (You reacted)" : ""
             }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}
           >
-            <span 
+            <span
               className={`
                 leading-none transition-all duration-200 
                 ${isAnimating ? "scale-125" : ""} 
-                ${compact ? "text-sm" : "text-base"}
-                ${!hasReacted ? "opacity-40 grayscale" : "opacity-100"}
+                ${compact ? "text-base" : "text-lg"}
               `}
             >
               {REACTION_EMOJIS[type]}

@@ -23,17 +23,12 @@ import { uploadImage } from "../../services/imageUploadService";
 import { MentionsService } from "../../services/mentionsService";
 import { MentionList } from "../ui/MentionList";
 import type { MentionItem, MentionListRef } from "../ui/MentionList";
-import {
-  Type,
-  Palette,
-  Highlighter,
-  ChevronDown,
-} from "lucide-react";
+import { Type, Palette, Highlighter, ChevronDown } from "lucide-react";
 
 // Custom FontFamily extension with specific fonts
 const FontFamily = Extension.create({
   name: "fontFamily",
-  
+
   addOptions() {
     return {
       types: ["textStyle"],
@@ -47,7 +42,8 @@ const FontFamily = Extension.create({
         attributes: {
           fontFamily: {
             default: null,
-            parseHTML: (element) => element.style.fontFamily?.replace(/['"]+/g, ""),
+            parseHTML: (element) =>
+              element.style.fontFamily?.replace(/['"]+/g, ""),
             renderHTML: (attributes) => {
               if (!attributes.fontFamily) {
                 return {};
@@ -119,11 +115,7 @@ const Hashtag = TipTapMark.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "span",
-      { ...this.options.HTMLAttributes, ...HTMLAttributes },
-      0,
-    ];
+    return ["span", { ...this.options.HTMLAttributes, ...HTMLAttributes }, 0];
   },
 
   addInputRules() {
@@ -175,7 +167,7 @@ export function RichTextEditor({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.relative')) {
+      if (!target.closest(".relative")) {
         setShowFontMenu(false);
         setShowColorMenu(false);
         setShowHighlightMenu(false);
@@ -183,8 +175,9 @@ export function RichTextEditor({
     };
 
     if (showFontMenu || showColorMenu || showHighlightMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showFontMenu, showColorMenu, showHighlightMenu]);
 
@@ -225,7 +218,7 @@ export function RichTextEditor({
   const mentionSuggestion: Partial<SuggestionOptions> = {
     items: async ({ query }) => {
       if (!teamId) return [];
-      
+
       const suggestions = await MentionsService.getTeamMemberSuggestions(
         teamId,
         query,
@@ -413,7 +406,9 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={disabled}
           className={`p-2 rounded hover:bg-surface-muted transition-colors ${
-            editor.isActive("bold") ? "bg-surface-muted text-accent" : "text-secondary"
+            editor.isActive("bold")
+              ? "bg-surface-muted text-accent"
+              : "text-secondary"
           }`}
           title="Bold"
         >
@@ -438,7 +433,9 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={disabled}
           className={`p-2 rounded hover:bg-surface-muted transition-colors ${
-            editor.isActive("italic") ? "bg-surface-muted text-accent" : "text-secondary"
+            editor.isActive("italic")
+              ? "bg-surface-muted text-accent"
+              : "text-secondary"
           }`}
           title="Italic"
         >
@@ -615,7 +612,9 @@ export function RichTextEditor({
             }}
             disabled={disabled}
             className={`p-2 rounded hover:bg-surface-muted transition-colors flex items-center gap-1 ${
-              editor.isActive("highlight") ? "bg-surface-muted text-accent" : "text-secondary"
+              editor.isActive("highlight")
+                ? "bg-surface-muted text-accent"
+                : "text-secondary"
             }`}
             title="Highlight"
           >
@@ -630,7 +629,11 @@ export function RichTextEditor({
                   type="button"
                   onClick={() => {
                     if (highlight.value) {
-                      editor.chain().focus().toggleHighlight({ color: highlight.value }).run();
+                      editor
+                        .chain()
+                        .focus()
+                        .toggleHighlight({ color: highlight.value })
+                        .run();
                     } else {
                       editor.chain().focus().unsetHighlight().run();
                     }
@@ -640,7 +643,9 @@ export function RichTextEditor({
                 >
                   <span
                     className="w-4 h-4 rounded border border-border"
-                    style={{ backgroundColor: highlight.value || "transparent" }}
+                    style={{
+                      backgroundColor: highlight.value || "transparent",
+                    }}
                   />
                   {highlight.name}
                 </button>

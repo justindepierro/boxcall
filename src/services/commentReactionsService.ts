@@ -2,19 +2,23 @@
  * Comment Reactions Service
  * 
  * Handles emoji reactions on announcement comments
- * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
+ * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football), 🔥 (fire), 👏 (clap), 🎯 (target), 💯 (hundred)
  */
 
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 
-export type ReactionType = "like" | "love" | "celebrate" | "football";
+export type ReactionType = "like" | "love" | "celebrate" | "football" | "fire" | "clap" | "target" | "hundred";
 
 export const REACTION_EMOJIS: Record<ReactionType, string> = {
   like: "👍",
   love: "❤️",
   celebrate: "🎉",
   football: "🏈",
+  fire: "🔥",
+  clap: "👏",
+  target: "🎯",
+  hundred: "💯",
 };
 
 export const REACTION_LABELS: Record<ReactionType, string> = {
@@ -22,6 +26,10 @@ export const REACTION_LABELS: Record<ReactionType, string> = {
   love: "Love",
   celebrate: "Celebrate",
   football: "Football",
+  fire: "Fire",
+  clap: "Applause",
+  target: "On Target",
+  hundred: "Perfect",
 };
 
 export interface ReactionSummary {
@@ -63,7 +71,7 @@ export class CommentReactionsService {
 
       // Build summary
       const summary: ReactionSummary[] = [];
-      const allTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
+      const allTypes: ReactionType[] = ["like", "love", "celebrate", "football", "fire", "clap", "target", "hundred"];
 
       allTypes.forEach((type) => {
         const typeReactions = (reactions as CommentReaction[] | null)?.filter((r) => r.reaction_type === type) || [];

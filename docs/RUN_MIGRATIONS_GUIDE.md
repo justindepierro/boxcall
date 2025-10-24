@@ -31,11 +31,13 @@
 After running, verify in Supabase:
 
 ### Storage Bucket
+
 1. Go to: Storage → Buckets
 2. Should see: `announcement-images` bucket (public)
 3. Try uploading a test image
 
 ### Table Columns
+
 1. Go to: Table Editor → team_announcements
 2. Should see new column: `content_json` (jsonb, nullable)
 3. Go to: Table Editor → announcement_comments
@@ -44,13 +46,16 @@ After running, verify in Supabase:
 ## Troubleshooting
 
 ### "Bucket already exists"
+
 - Safe to ignore - bucket was created previously
 - Or: Delete bucket and re-run
 
 ### "Column already exists"
+
 - Safe to ignore - migrations use `IF NOT EXISTS`
 
 ### Permission errors
+
 - Make sure you're logged in as project owner
 - Check RLS policies are correct
 
@@ -70,6 +75,7 @@ After running, verify in Supabase:
 ## After Running
 
 Once all 3 migrations are run:
+
 - ✅ Drag & drop images into announcements
 - ✅ Paste images from clipboard
 - ✅ Rich text formatting (bold, italic, lists)

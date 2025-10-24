@@ -164,7 +164,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="flex-shrink-0">
             <NotificationBell />
           </div>
-          
+
           <div className="text-right">
             <Typography
               variant="body-sm"

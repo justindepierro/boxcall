@@ -48,6 +48,7 @@
 ## 🎨 Design Components
 
 ### 1. **Hero Section**
+
 - **Team Banner Image** (uploadable, default to team colors gradient)
 - **Team Logo** (large, prominent)
 - **Team Stats Card**
@@ -59,6 +60,7 @@
 ### 2. **Left Sidebar (Persistent)**
 
 #### Quick Stats Widget
+
 ```tsx
 ┌─────────────────────┐
 │ TEAM STATS          │
@@ -71,17 +73,20 @@
 ```
 
 #### Roster Quick View
+
 - Avatar grid (6-8 players)
 - "View Full Roster" button
 - Online indicators (green dot)
 
 #### Recent Activity
+
 - Mini feed of latest 5 activities
 - "Someone commented..."
 - "New announcement..."
 - "Player joined..."
 
 #### Upcoming Events
+
 - Next 3 games/practices
 - Countdown timers
 - Quick RSVP
@@ -89,6 +94,7 @@
 ### 3. **Main Feed (Center)**
 
 #### Post Composer (Top)
+
 ```tsx
 ┌─────────────────────────────────────┐
 │ 👤  What's happening with the team? │
@@ -103,7 +109,9 @@
 ```
 
 #### Feed Items
+
 Each announcement card:
+
 - **Header**
   - Author avatar + name (clickable → profile popover)
   - Post timestamp ("2 hours ago")
@@ -131,6 +139,7 @@ Each announcement card:
   - "Load more" for pagination
 
 #### Hashtag Filter Bar
+
 ```tsx
 ┌─────────────────────────────────────┐
 │ Trending: #gameday #practice #wins  │
@@ -141,16 +150,19 @@ Each announcement card:
 ### 4. **Right Sidebar (Optional, Desktop)**
 
 #### Who's Online
+
 - List of active team members
 - Green dot indicator
 - Quick DM button (future)
 
 #### Suggested Actions
+
 - "Complete your profile"
 - "Add your jersey number"
 - "RSVP to next game"
 
 #### Team Achievements
+
 - Recent badges earned
 - Milestones reached
 - Celebration cards
@@ -266,24 +278,32 @@ Each announcement card:
 ```typescript
 // Subscribe to new announcements
 supabase
-  .channel('team-feed')
-  .on('postgres_changes', {
-    event: 'INSERT',
-    schema: 'public',
-    table: 'team_announcements',
-    filter: `team_id=eq.${teamId}`
-  }, handleNewAnnouncement)
-  .subscribe()
+  .channel("team-feed")
+  .on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "team_announcements",
+      filter: `team_id=eq.${teamId}`,
+    },
+    handleNewAnnouncement
+  )
+  .subscribe();
 
 // Subscribe to new comments
 supabase
-  .channel('comments-feed')
-  .on('postgres_changes', {
-    event: 'INSERT',
-    schema: 'public',
-    table: 'announcement_comments'
-  }, handleNewComment)
-  .subscribe()
+  .channel("comments-feed")
+  .on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "announcement_comments",
+    },
+    handleNewComment
+  )
+  .subscribe();
 
 // Subscribe to reactions
 // ...similar pattern
@@ -294,6 +314,7 @@ supabase
 ## 🎨 UI/UX Enhancements
 
 ### Color Scheme
+
 - **Primary**: Team colors (customizable)
 - **Accent**: Blue for links/actions
 - **Success**: Green for reactions/confirmations
@@ -301,12 +322,14 @@ supabase
 - **Surface**: White cards on light gray background
 
 ### Typography
+
 - **Headers**: Bold, team spirit
 - **Body**: Clean, readable
 - **Timestamps**: Small, muted
 - **Usernames**: Semibold, clickable
 
 ### Cards
+
 - Rounded corners (12px)
 - Subtle shadows
 - Hover effects (lift slightly)
@@ -317,6 +340,7 @@ supabase
 ## 📱 Mobile Responsive
 
 ### Layout Adjustments
+
 - Stack sidebar content above feed
 - Collapsible sections
 - Bottom navigation bar
@@ -324,6 +348,7 @@ supabase
 - Pull to refresh
 
 ### Touch Interactions
+
 - Larger tap targets (44px min)
 - Swipe to react
 - Long press for more options
@@ -334,6 +359,7 @@ supabase
 ## 🚀 Implementation Plan
 
 ### Phase 1: Layout & Structure (Day 1)
+
 - [ ] Create TeamDashboard.tsx component
 - [ ] Build responsive layout (left sidebar + main feed)
 - [ ] Add hero section with team banner
@@ -343,6 +369,7 @@ supabase
 - [ ] Mobile responsive adjustments
 
 ### Phase 2: Social Features (Day 2)
+
 - [ ] Enhance post composer
 - [ ] Add "Who's Online" section
 - [ ] Create activity feed widget
@@ -351,6 +378,7 @@ supabase
 - [ ] Real-time updates for new posts
 
 ### Phase 3: Polish & Animations (Day 3)
+
 - [ ] Micro-interactions
 - [ ] Loading skeletons
 - [ ] Empty states
@@ -359,6 +387,7 @@ supabase
 - [ ] Accessibility audit
 
 ### Phase 4: Advanced Features (Future)
+
 - [ ] Polls
 - [ ] Video embeds
 - [ ] Event RSVP inline
@@ -371,6 +400,7 @@ supabase
 ## 🎯 Success Metrics
 
 ### Engagement
+
 - **Daily Active Users**: 70%+ of roster
 - **Posts per Day**: 5-10 announcements
 - **Comments per Post**: 3-5 average
@@ -378,11 +408,13 @@ supabase
 - **Read Rate**: 80%+ within 24 hours
 
 ### Performance
+
 - **Load Time**: < 2 seconds
 - **Scroll Performance**: 60fps
 - **Real-time Latency**: < 500ms
 
 ### User Satisfaction
+
 - "I check BoxCall every day"
 - "It's like a mini social network for my team"
 - "I feel more connected to my teammates"
@@ -402,6 +434,7 @@ supabase
 ## 🎨 Design Mockup Ideas
 
 ### Desktop View
+
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │ 🏈 Warriors Football    🔔3    👤 Coach Smith                 │
@@ -438,6 +471,7 @@ supabase
 ## ✅ Ready to Build?
 
 **Current Foundation:**
+
 - ✅ Announcements with reactions (8 types)
 - ✅ Comments with threading
 - ✅ @Mentions with notifications
@@ -451,6 +485,7 @@ supabase
 - ✅ Real-time notifications
 
 **What We're Adding:**
+
 - 🎨 Beautiful social feed layout
 - 📊 Team stats & activity widgets
 - 🔄 Real-time post updates

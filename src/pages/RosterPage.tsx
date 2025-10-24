@@ -136,7 +136,9 @@ export default function RosterPage() {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [playerToInvite, setPlayerToInvite] = useState<RosterPlayerView | null>(null);
+  const [playerToInvite, setPlayerToInvite] = useState<RosterPlayerView | null>(
+    null
+  );
 
   // Form state for add/edit
   const [playerForm, setPlayerForm] = useState({
@@ -534,7 +536,9 @@ export default function RosterPage() {
 
     // Check if player has required info
     if (!player.first_name || !player.last_name) {
-      toast.error("Player must have a first and last name to send an invitation");
+      toast.error(
+        "Player must have a first and last name to send an invitation"
+      );
       return;
     }
 
@@ -553,7 +557,7 @@ export default function RosterPage() {
     try {
       const isResend = playerToInvite.invitation_status === "pending";
       const playerName = `${playerToInvite.first_name} ${playerToInvite.last_name}`;
-      
+
       console.log("[RosterPage] Sending invitation with params:", {
         teamId,
         playerId: playerToInvite.id,
@@ -573,7 +577,7 @@ export default function RosterPage() {
       info(
         `[RosterPage] ${isResend ? "Resent" : "Sent"} invitation to ${playerToInvite.first_name} ${playerToInvite.last_name} at ${email}`
       );
-      
+
       toast.success(
         `Invitation ${isResend ? "resent" : "sent"} to ${playerToInvite.first_name} ${playerToInvite.last_name}`
       );
@@ -583,7 +587,9 @@ export default function RosterPage() {
     } catch (error) {
       logError("[RosterPage] Failed to send invitation:", error);
       console.error("[RosterPage] Invitation error details:", error);
-      toast.error(`Failed to send invitation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(
+        `Failed to send invitation: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
       throw error; // Re-throw so modal can show error
     }
   };

@@ -25,8 +25,11 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [animatingReaction, setAnimatingReaction] = useState<ReactionType | null>(null);
-  const [hoveredReaction, setHoveredReaction] = useState<ReactionType | null>(null);
+  const [animatingReaction, setAnimatingReaction] =
+    useState<ReactionType | null>(null);
+  const [hoveredReaction, setHoveredReaction] = useState<ReactionType | null>(
+    null
+  );
   const [reactionUsers, setReactionUsers] = useState<
     Map<ReactionType, Array<{ id: string; name: string; avatar_url?: string }>>
   >(new Map());
@@ -46,27 +49,34 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
   // Close picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
         setShowPicker(false);
       }
     };
 
     if (showPicker) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showPicker]);
 
   // Load reaction users when hovering
   const handleMouseEnter = async (type: ReactionType) => {
     setHoveredReaction(type);
-    
+
     const existingSummary = summary.find((s) => s.reaction_type === type);
     if (!existingSummary || existingSummary.count === 0) return;
 
     // Only fetch if we don't have the data yet
     if (!reactionUsers.has(type)) {
-      const users = await ReactionsService.getReactionUsers(announcementId, type);
+      const users = await ReactionsService.getReactionUsers(
+        announcementId,
+        type
+      );
       setReactionUsers((prev) => new Map(prev).set(type, users));
     }
   };
@@ -130,7 +140,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
                 }
               `}
             >
-              <span 
+              <span
                 className={`
                   text-lg leading-none transition-all duration-200 
                   ${isAnimating ? "scale-125" : ""}
@@ -192,7 +202,9 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
           <div className="absolute bottom-full left-0 mb-2 bg-white border rounded-lg shadow-xl p-2 z-50">
             <div className="grid grid-cols-4 gap-1">
               {allReactionTypes.map((type) => {
-                const existingSummary = summary.find((s) => s.reaction_type === type);
+                const existingSummary = summary.find(
+                  (s) => s.reaction_type === type
+                );
                 const hasReacted = existingSummary?.user_has_reacted || false;
 
                 return (

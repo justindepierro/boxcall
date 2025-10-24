@@ -30,7 +30,8 @@ const PERMISSION_TOGGLES: PermissionToggle[] = [
   {
     key: "canViewRoster",
     label: "View Roster",
-    description: "Allow family members to see player names and basic information",
+    description:
+      "Allow family members to see player names and basic information",
     icon: "users",
   },
   {
@@ -48,7 +49,8 @@ const PERMISSION_TOGGLES: PermissionToggle[] = [
   {
     key: "canRSVP",
     label: "RSVP to Events",
-    description: "Allow family members to confirm attendance for games and events",
+    description:
+      "Allow family members to confirm attendance for games and events",
     icon: "check-circle",
   },
   {
@@ -61,15 +63,13 @@ const PERMISSION_TOGGLES: PermissionToggle[] = [
 
 /**
  * FamilyPermissionsSettings Component
- * 
+ *
  * Allows coaches to configure what family members (parents/guardians) can access
  * Controls visibility and functionality for non-staff team members
  */
-export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps> = ({
-  teamId,
-  initialPermissions,
-  onSave,
-}) => {
+export const FamilyPermissionsSettings: React.FC<
+  FamilyPermissionsSettingsProps
+> = ({ teamId, initialPermissions, onSave }) => {
   const toast = useToast();
   const [permissions, setPermissions] = useState<FamilyPermissions>(
     initialPermissions || {
@@ -80,7 +80,8 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
       canFundraise: false,
     }
   );
-  const [originalPermissions, setOriginalPermissions] = useState<FamilyPermissions>(permissions);
+  const [originalPermissions, setOriginalPermissions] =
+    useState<FamilyPermissions>(permissions);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -95,7 +96,8 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
 
       setIsLoading(true);
       try {
-        const fetchedPermissions = await TeamService.getFamilyPermissions(teamId);
+        const fetchedPermissions =
+          await TeamService.getFamilyPermissions(teamId);
         setPermissions(fetchedPermissions);
         setOriginalPermissions(fetchedPermissions);
       } catch (error) {
@@ -110,7 +112,8 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
   }, [teamId, initialPermissions, toast]);
 
   // Check if permissions have changed from original
-  const hasChanges = JSON.stringify(permissions) !== JSON.stringify(originalPermissions);
+  const hasChanges =
+    JSON.stringify(permissions) !== JSON.stringify(originalPermissions);
 
   const handleToggle = (key: keyof FamilyPermissions) => {
     setPermissions((prev) => ({
@@ -126,7 +129,10 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
         await onSave(permissions);
       } else {
         // Use default teamService save method
-        const result = await TeamService.updateFamilyPermissions(teamId, permissions);
+        const result = await TeamService.updateFamilyPermissions(
+          teamId,
+          permissions
+        );
         if (!result.success) {
           throw new Error(result.error || "Failed to save permissions");
         }
@@ -137,7 +143,11 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
       toast.success("Family permissions updated successfully");
     } catch (error) {
       console.error("Failed to save family permissions:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to save permissions. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to save permissions. Please try again."
+      );
     } finally {
       setIsSaving(false);
     }
@@ -166,8 +176,9 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
           Family Member Permissions
         </Typography>
         <Typography variant="body-md" color="muted">
-          Control what family members (parents/guardians) can access when they join the team.
-          These settings apply to all family accounts linked to players.
+          Control what family members (parents/guardians) can access when they
+          join the team. These settings apply to all family accounts linked to
+          players.
         </Typography>
       </div>
 
@@ -190,7 +201,10 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
                 />
               </div>
               <div className="flex-1">
-                <Typography variant="body-md" className="font-medium mb-spacing-2xs">
+                <Typography
+                  variant="body-md"
+                  className="font-medium mb-spacing-2xs"
+                >
                   {toggle.label}
                 </Typography>
                 <Typography variant="caption" color="muted">
@@ -225,12 +239,18 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
       {/* Info Banner */}
       <div className="mb-spacing-lg p-spacing-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
         <div className="flex items-start gap-spacing-sm">
-          <Icon name="info" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+          <Icon
+            name="info"
+            className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5"
+          />
           <div className="flex-1">
-            <Typography variant="body-sm" className="text-blue-900 dark:text-blue-100">
-              <strong>How it works:</strong> Family members receive invitation emails and create
-              accounts linked to their player. These permissions determine what they can see and do
-              after joining.
+            <Typography
+              variant="body-sm"
+              className="text-blue-900 dark:text-blue-100"
+            >
+              <strong>How it works:</strong> Family members receive invitation
+              emails and create accounts linked to their player. These
+              permissions determine what they can see and do after joining.
             </Typography>
           </div>
         </div>
@@ -240,7 +260,10 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
       <div className="flex items-center justify-between">
         <div>
           {hasChanges && (
-            <Typography variant="caption" className="text-warning-600 dark:text-warning-400">
+            <Typography
+              variant="caption"
+              className="text-warning-600 dark:text-warning-400"
+            >
               <Icon name="alert-circle" className="h-4 w-4 inline mr-1" />
               You have unsaved changes
             </Typography>
@@ -267,7 +290,10 @@ export const FamilyPermissionsSettings: React.FC<FamilyPermissionsSettingsProps>
           >
             {isSaving ? (
               <>
-                <Icon name="loader" className="h-4 w-4 inline mr-2 animate-spin" />
+                <Icon
+                  name="loader"
+                  className="h-4 w-4 inline mr-2 animate-spin"
+                />
                 Saving...
               </>
             ) : (

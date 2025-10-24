@@ -1,6 +1,6 @@
 /**
  * Avatar Component
- * 
+ *
  * Displays user profile picture with fallback to initials
  * Supports different sizes and clickable variants
  */
@@ -23,9 +23,15 @@ const sizeClasses = {
   xl: "w-16 h-16 text-xl",
 };
 
-export function Avatar({ src, name, size = "md", className = "", onClick }: AvatarProps) {
+export function Avatar({
+  src,
+  name,
+  size = "md",
+  className = "",
+  onClick,
+}: AvatarProps) {
   const [imageError, setImageError] = useState(false);
-  
+
   // Get initials from name (first letter of first and last name)
   const getInitials = (fullName: string): string => {
     const parts = fullName.trim().split(" ");
@@ -49,7 +55,9 @@ export function Avatar({ src, name, size = "md", className = "", onClick }: Avat
       "bg-orange-500",
       "bg-cyan-500",
     ];
-    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = name
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colors[hash % colors.length];
   };
 
@@ -79,7 +87,11 @@ export function Avatar({ src, name, size = "md", className = "", onClick }: Avat
 
   // Show image with fallback
   return (
-    <div className={baseClasses} onClick={onClick} role={isClickable ? "button" : undefined}>
+    <div
+      className={baseClasses}
+      onClick={onClick}
+      role={isClickable ? "button" : undefined}
+    >
       <img
         src={src}
         alt={name}

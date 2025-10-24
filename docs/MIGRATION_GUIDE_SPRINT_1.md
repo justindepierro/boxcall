@@ -3,6 +3,7 @@
 ## 📋 Overview
 
 Two migrations need to be applied to enable Sprint 1 features:
+
 1. **007_create_notifications.sql** - Enables @mention notifications
 2. **008_add_announcement_status.sql** - Enables draft mode
 
@@ -19,14 +20,15 @@ Two migrations need to be applied to enable Sprint 1 features:
    - Click "New query"
 
 3. **Apply Migration 007 (Notifications)**
+
    ```bash
    # Copy entire content from:
    database/migrations/007_create_notifications.sql
-   
+
    # Paste into SQL Editor
    # Click "Run" or press Cmd+Enter
    ```
-   
+
    **Expected Result:**
    - Creates `notifications` table
    - Creates 5 indexes
@@ -35,14 +37,15 @@ Two migrations need to be applied to enable Sprint 1 features:
    - You should see: "Success. No rows returned"
 
 4. **Apply Migration 008 (Draft Mode)**
+
    ```bash
    # Copy entire content from:
    database/migrations/008_add_announcement_status.sql
-   
+
    # Paste into SQL Editor
    # Click "Run" or press Cmd+Enter
    ```
-   
+
    **Expected Result:**
    - Adds `status` column to `team_announcements`
    - Adds `scheduled_for` column
@@ -57,9 +60,10 @@ Two migrations need to be applied to enable Sprint 1 features:
 After applying migrations, verify they worked:
 
 ### Test Notifications Table
+
 ```sql
 -- Should return the notifications table schema
-SELECT * FROM information_schema.tables 
+SELECT * FROM information_schema.tables
 WHERE table_name = 'notifications';
 
 -- Should return 0 rows (table exists but empty)
@@ -67,16 +71,17 @@ SELECT COUNT(*) FROM notifications;
 ```
 
 ### Test Draft Mode Columns
+
 ```sql
 -- Should show new columns: status, scheduled_for
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_name = 'team_announcements' 
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'team_announcements'
   AND column_name IN ('status', 'scheduled_for');
 
 -- Should return all announcements with status 'published' (default)
-SELECT id, title, status 
-FROM team_announcements 
+SELECT id, title, status
+FROM team_announcements
 LIMIT 5;
 ```
 
@@ -85,15 +90,19 @@ LIMIT 5;
 ## 🔧 Troubleshooting
 
 ### Issue: "relation already exists"
+
 **Solution:** Migration already applied. Check if table/column exists.
 
 ### Issue: "permission denied"
+
 **Solution:** You need admin access to the database. Contact project owner.
 
 ### Issue: "syntax error"
+
 **Solution:** Make sure you copied the ENTIRE file content, including all comments.
 
 ### Issue: RLS policy conflicts
+
 ```sql
 -- Drop existing policies if needed
 DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
@@ -106,7 +115,9 @@ DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
 ## 🎯 What Each Migration Enables
 
 ### Migration 007: Notifications
+
 **Enables:**
+
 - @mention notifications in announcements
 - NotificationBell component shows unread count
 - Dropdown shows recent 10 notifications
@@ -114,6 +125,7 @@ DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
 - Real-time updates every 30 seconds
 
 **User Experience:**
+
 - Type `@` in announcement editor → Select user
 - On publish → Mentioned user gets notification
 - Bell icon shows red badge with count
@@ -123,13 +135,16 @@ DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
 ---
 
 ### Migration 008: Draft Mode
+
 **Enables:**
+
 - Save announcements as drafts
 - Drafts visible only to author
 - Schedule posts for future publish
 - Filter between draft/published/scheduled
 
 **User Experience:**
+
 - Create announcement → Save as draft (not visible to team)
 - Return later → Continue editing draft
 - Publish when ready → Changes status to 'published'
@@ -139,10 +154,10 @@ DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
 
 ## 📊 Migration Status Tracking
 
-| Migration | File | Status | Applied Date | Notes |
-|-----------|------|--------|--------------|-------|
-| 007 | create_notifications.sql | ⏳ Pending | - | Enables @mentions |
-| 008 | add_announcement_status.sql | ⏳ Pending | - | Enables drafts |
+| Migration | File                        | Status     | Applied Date | Notes             |
+| --------- | --------------------------- | ---------- | ------------ | ----------------- |
+| 007       | create_notifications.sql    | ⏳ Pending | -            | Enables @mentions |
+| 008       | add_announcement_status.sql | ⏳ Pending | -            | Enables drafts    |
 
 **Update this table after applying migrations!**
 
@@ -151,9 +166,10 @@ DROP POLICY IF EXISTS "Users can view team announcements" ON team_announcements;
 ## 🔄 Rollback (If Needed)
 
 ### Rollback Migration 008
+
 ```sql
 -- Remove new columns
-ALTER TABLE team_announcements 
+ALTER TABLE team_announcements
 DROP COLUMN IF EXISTS status,
 DROP COLUMN IF EXISTS scheduled_for;
 
@@ -172,6 +188,7 @@ CREATE POLICY "Users can view team announcements"
 ```
 
 ### Rollback Migration 007
+
 ```sql
 -- Drop notifications table (cascade deletes all related data)
 DROP TABLE IF EXISTS notifications CASCADE;

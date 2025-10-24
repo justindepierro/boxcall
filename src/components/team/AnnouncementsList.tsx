@@ -1,16 +1,16 @@
 /**
  * AnnouncementsList Component
- * 
+ *
  * Displays team announcements with pinned items at the top
  * Supports filtering by visibility and date range
  * Renders rich text content with inline images
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import type { 
-  Announcement, 
+import type {
+  Announcement,
   AnnouncementFilters,
-  AnnouncementVisibility 
+  AnnouncementVisibility,
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
 import { HashtagService } from "../../services/hashtagService";
@@ -20,7 +20,17 @@ import { AnnouncementReactions } from "./AnnouncementReactions";
 import { AnnouncementComments } from "./AnnouncementComments";
 import { RichTextDisplay } from "./RichTextDisplay";
 import { format } from "date-fns";
-import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp, Hash, X, RefreshCw } from "lucide-react";
+import {
+  Pin,
+  Edit2,
+  Trash2,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  Hash,
+  X,
+  RefreshCw,
+} from "lucide-react";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -39,7 +49,9 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<AnnouncementFilters>({});
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(
+    new Set()
+  );
   const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [hasNewContent, setHasNewContent] = useState(false);
@@ -62,26 +74,26 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   // Filter announcements by selected hashtag and search
   const filteredAnnouncements = useMemo(() => {
     let result = announcements;
-    
+
     // Apply hashtag filter
     if (selectedHashtag) {
       result = HashtagService.filterByHashtag(result, selectedHashtag);
     }
-    
+
     // Apply search filter (client-side for instant feedback)
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
       result = result.filter((announcement) => {
         // Search in title
         if (announcement.title.toLowerCase().includes(query)) return true;
-        
+
         // Search in content
         if (announcement.content?.toLowerCase().includes(query)) return true;
-        
+
         return false;
       });
     }
-    
+
     return result;
   }, [announcements, selectedHashtag, searchQuery]);
 
@@ -136,15 +148,18 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this announcement?")) return;
-    
+
     try {
       const result = await AnnouncementsService.deleteAnnouncement(id);
-      
+
       if (!result.success) {
-        alert(result.error || "Failed to delete announcement. You may not have permission.");
+        alert(
+          result.error ||
+            "Failed to delete announcement. You may not have permission."
+        );
         return;
       }
-      
+
       if (onDelete) onDelete(id);
       await loadAnnouncements();
     } catch (err) {
@@ -193,7 +208,9 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
     return (
       <div className="text-center py-12 text-muted">
         <p className="text-lg">No announcements yet</p>
-        <p className="text-sm mt-2">Create your first announcement to get started</p>
+        <p className="text-sm mt-2">
+          Create your first announcement to get started
+        </p>
       </div>
     );
   }
@@ -202,7 +219,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
     <div className="space-y-4">
       {/* New content banner */}
       {hasNewContent && (
-        <div 
+        <div
           className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between shadow-sm animate-fade-in cursor-pointer hover:bg-blue-100 transition-colors"
           onClick={() => {
             setHasNewContent(false);
@@ -215,8 +232,12 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           <div className="flex items-center gap-3">
             <RefreshCw className="w-5 h-5 text-blue-600" />
             <div>
-              <p className="text-sm font-medium text-blue-900">New posts available</p>
-              <p className="text-xs text-blue-700">Click to refresh and see the latest updates</p>
+              <p className="text-sm font-medium text-blue-900">
+                New posts available
+              </p>
+              <p className="text-xs text-blue-700">
+                Click to refresh and see the latest updates
+              </p>
             </div>
           </div>
           <button className="text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-200 transition-colors">
@@ -224,7 +245,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           </button>
         </div>
       )}
-      
+
       {/* Filter controls */}
       <div className="bg-white rounded-lg shadow p-4 space-y-4">
         {/* Search bar */}
@@ -253,7 +274,13 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           </label>
           <select
             value={filters.visibility || ""}
-            onChange={(e) => setFilters({ ...filters, visibility: e.target.value as AnnouncementVisibility || undefined })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                visibility:
+                  (e.target.value as AnnouncementVisibility) || undefined,
+              })
+            }
             className="rounded-md border shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
             <option value="">All</option>
@@ -263,13 +290,16 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             <option value="families_only">Families Only</option>
           </select>
 
-          <label className="text-sm font-medium ml-4">
-            Show pinned only:
-          </label>
+          <label className="text-sm font-medium ml-4">Show pinned only:</label>
           <input
             type="checkbox"
             checked={filters.pinnedOnly || false}
-            onChange={(e) => setFilters({ ...filters, pinnedOnly: e.target.checked || undefined })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                pinnedOnly: e.target.checked || undefined,
+              })
+            }
             className="rounded border shadow-sm"
           />
         </div>
@@ -296,7 +326,9 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
               {hashtagCounts.map(({ tag, count }) => (
                 <button
                   key={tag}
-                  onClick={() => setSelectedHashtag(tag === selectedHashtag ? null : tag)}
+                  onClick={() =>
+                    setSelectedHashtag(tag === selectedHashtag ? null : tag)
+                  }
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     tag === selectedHashtag
                       ? "bg-green-600 text-white"
@@ -318,7 +350,9 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           <div
             key={announcement.id}
             className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${
-              announcement.is_pinned ? "border-yellow-400 bg-yellow-50" : "border-blue-400"
+              announcement.is_pinned
+                ? "border-yellow-400 bg-yellow-50"
+                : "border-blue-400"
             }`}
           >
             {/* Header */}
@@ -333,8 +367,15 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                   </h3>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-secondary">
-                  <span>{format(new Date(announcement.created_at), "MMM d, yyyy 'at' h:mm a")}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getVisibilityColor(announcement.visibility)}`}>
+                  <span>
+                    {format(
+                      new Date(announcement.created_at),
+                      "MMM d, yyyy 'at' h:mm a"
+                    )}
+                  </span>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getVisibilityColor(announcement.visibility)}`}
+                  >
                     {getVisibilityLabel(announcement.visibility)}
                   </span>
                 </div>
@@ -373,7 +414,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             {/* Content */}
             <div className="prose prose-sm max-w-none text-primary mb-4">
               {announcement.content_json ? (
-                <RichTextDisplay 
+                <RichTextDisplay
                   content={announcement.content_json}
                   onHashtagClick={handleHashtagClick}
                 />
@@ -383,28 +424,33 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             </div>
 
             {/* Attachments */}
-            {announcement.attachments && announcement.attachments.length > 0 && (
-              <div className="mt-4 pt-4 border-t border">
-                <p className="text-sm font-medium text-primary mb-2">Attachments:</p>
-                <div className="space-y-2">
-                  {announcement.attachments.map((attachment: any, idx: number) => (
-                    <a
-                      key={idx}
-                      href={attachment.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                    >
-                      <span>📎</span>
-                      <span>{attachment.name}</span>
-                      <span className="text-muted">
-                        ({(attachment.size / 1024).toFixed(1)} KB)
-                      </span>
-                    </a>
-                  ))}
+            {announcement.attachments &&
+              announcement.attachments.length > 0 && (
+                <div className="mt-4 pt-4 border-t border">
+                  <p className="text-sm font-medium text-primary mb-2">
+                    Attachments:
+                  </p>
+                  <div className="space-y-2">
+                    {announcement.attachments.map(
+                      (attachment: any, idx: number) => (
+                        <a
+                          key={idx}
+                          href={attachment.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                        >
+                          <span>📎</span>
+                          <span>{attachment.name}</span>
+                          <span className="text-muted">
+                            ({(attachment.size / 1024).toFixed(1)} KB)
+                          </span>
+                        </a>
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Reactions */}
             <div className="mt-4 pt-4 border-t border">
@@ -432,7 +478,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
               {/* Comments Section */}
               {expandedComments.has(announcement.id) && (
                 <div className="mt-4">
-                  <AnnouncementComments 
+                  <AnnouncementComments
                     announcementId={announcement.id}
                     teamId={announcement.team_id}
                   />

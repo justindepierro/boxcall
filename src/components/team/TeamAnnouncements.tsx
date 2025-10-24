@@ -1,6 +1,6 @@
 /**
  * Team Announcements Page
- * 
+ *
  * Main page for viewing and managing team announcements
  */
 
@@ -14,7 +14,8 @@ import { Plus } from "lucide-react";
 export const TeamAnnouncements: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  const [editingAnnouncement, setEditingAnnouncement] =
+    useState<Announcement | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   if (!teamId) {
@@ -46,9 +47,7 @@ export const TeamAnnouncements: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Team Announcements</h1>
-          <p className="text-sm mt-1">
-            Share important updates with your team
-          </p>
+          <p className="text-sm mt-1">Share important updates with your team</p>
         </div>
         <button
           onClick={handleNewAnnouncement}

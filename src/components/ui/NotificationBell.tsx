@@ -13,7 +13,9 @@ import { useNavigate } from "react-router-dom";
 
 export const NotificationBell: React.FC = () => {
   const [unreadCount, setUnreadCount] = useState(0);
-  const [notifications, setNotifications] = useState<NotificationWithUser[]>([]);
+  const [notifications, setNotifications] = useState<NotificationWithUser[]>(
+    []
+  );
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,10 +37,10 @@ export const NotificationBell: React.FC = () => {
 
   useEffect(() => {
     loadUnreadCount();
-    
+
     // Poll for unread count every 30 seconds
     const interval = setInterval(loadUnreadCount, 30000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -52,18 +54,25 @@ export const NotificationBell: React.FC = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
 
     if (showDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showDropdown]);
 
-  const handleMarkAsRead = async (notificationId: string, event: React.MouseEvent) => {
+  const handleMarkAsRead = async (
+    notificationId: string,
+    event: React.MouseEvent
+  ) => {
     event.stopPropagation();
     await NotificationsService.markAsRead(notificationId);
     await loadNotifications();
@@ -76,7 +85,9 @@ export const NotificationBell: React.FC = () => {
     await loadUnreadCount();
   };
 
-  const handleNotificationClick = async (notification: NotificationWithUser) => {
+  const handleNotificationClick = async (
+    notification: NotificationWithUser
+  ) => {
     // Mark as read
     if (!notification.read) {
       await NotificationsService.markAsRead(notification.id);
@@ -90,7 +101,10 @@ export const NotificationBell: React.FC = () => {
     }
   };
 
-  const handleDeleteNotification = async (notificationId: string, event: React.MouseEvent) => {
+  const handleDeleteNotification = async (
+    notificationId: string,
+    event: React.MouseEvent
+  ) => {
     event.stopPropagation();
     await NotificationsService.deleteNotification(notificationId);
     await loadNotifications();
@@ -171,9 +185,12 @@ export const NotificationBell: React.FC = () => {
                           {notification.message}
                         </p>
                         <p className="text-xs text-muted mt-1">
-                          {formatDistanceToNow(new Date(notification.created_at), {
-                            addSuffix: true,
-                          })}
+                          {formatDistanceToNow(
+                            new Date(notification.created_at),
+                            {
+                              addSuffix: true,
+                            }
+                          )}
                         </p>
                       </div>
 
@@ -181,7 +198,9 @@ export const NotificationBell: React.FC = () => {
                       <div className="flex items-center gap-1">
                         {!notification.read && (
                           <button
-                            onClick={(e) => handleMarkAsRead(notification.id, e)}
+                            onClick={(e) =>
+                              handleMarkAsRead(notification.id, e)
+                            }
                             className="p-1 rounded hover:bg-surface-secondary transition-colors"
                             title="Mark as read"
                           >
@@ -189,7 +208,9 @@ export const NotificationBell: React.FC = () => {
                           </button>
                         )}
                         <button
-                          onClick={(e) => handleDeleteNotification(notification.id, e)}
+                          onClick={(e) =>
+                            handleDeleteNotification(notification.id, e)
+                          }
                           className="p-1 rounded hover:bg-surface-secondary transition-colors"
                           title="Delete"
                         >

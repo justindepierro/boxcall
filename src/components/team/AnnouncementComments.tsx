@@ -1,6 +1,6 @@
 /**
  * AnnouncementComments Component
- * 
+ *
  * Displays comments on announcements with threaded replies
  * Supports adding, editing, and deleting comments with rich text and inline images
  */
@@ -38,12 +38,16 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   const [editContent, setEditContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [avatarUrls, setAvatarUrls] = useState<Map<string, string | null>>(new Map());
+  const [avatarUrls, setAvatarUrls] = useState<Map<string, string | null>>(
+    new Map()
+  );
 
   // Get current user
   useEffect(() => {
     async function getCurrentUser() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setCurrentUserId(user?.id || null);
     }
     getCurrentUser();
@@ -115,7 +119,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
     setSubmitting(true);
     const plainTextContent = getPlainText(newComment);
-    
+
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
       content: plainTextContent,
@@ -136,7 +140,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
     setSubmitting(true);
     const plainTextContent = getPlainText(replyContent);
-    
+
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
       content: plainTextContent,
@@ -164,7 +168,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
     setSubmitting(true);
     const plainTextContent = getPlainText(editContent);
-    
+
     const result = await CommentsService.updateComment(commentId, {
       content: plainTextContent,
       content_json: editContent,
@@ -200,12 +204,10 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     return (
       <div
         key={comment.id}
-        className={`${depth > 0 ? "ml-8 mt-3" : "mt-4"} ${
-          depth > 0 ? "border-l-2 border-blue-200 pl-4" : ""
-        }`}
+        className={`${depth > 0 ? "ml-6 mt-2" : "mt-3"}`}
       >
         {/* Comment */}
-        <div className="bg-surface-secondary rounded-lg p-3">
+        <div className="rounded-lg p-3 bg-surface-subtle">
           <div className="flex items-start gap-3 mb-2">
             {/* Avatar with Popover */}
             <UserProfilePopover
@@ -302,11 +304,11 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                   <p className="whitespace-pre-wrap">{comment.content}</p>
                 )}
               </div>
-              
+
               {/* Reactions */}
               <div className="mb-2">
-                <CommentReactions 
-                  commentId={comment.id} 
+                <CommentReactions
+                  commentId={comment.id}
                   onReactionChange={loadComments}
                   compact={true}
                 />

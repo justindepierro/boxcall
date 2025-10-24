@@ -17,7 +17,7 @@ import { useEffect } from "react";
 // FontFamily extension (same as editor)
 const FontFamily = Extension.create({
   name: "fontFamily",
-  
+
   addOptions() {
     return {
       types: ["textStyle"],
@@ -31,7 +31,8 @@ const FontFamily = Extension.create({
         attributes: {
           fontFamily: {
             default: null,
-            parseHTML: (element) => element.style.fontFamily?.replace(/['"]+/g, ""),
+            parseHTML: (element) =>
+              element.style.fontFamily?.replace(/['"]+/g, ""),
             renderHTML: (attributes) => {
               if (!attributes.fontFamily) {
                 return {};
@@ -85,11 +86,7 @@ const Hashtag = TipTapMark.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "span",
-      { ...this.options.HTMLAttributes, ...HTMLAttributes },
-      0,
-    ];
+    return ["span", { ...this.options.HTMLAttributes, ...HTMLAttributes }, 0];
   },
 
   addInputRules() {
@@ -123,7 +120,10 @@ interface RichTextDisplayProps {
   onHashtagClick?: (hashtag: string) => void;
 }
 
-export function RichTextDisplay({ content, onHashtagClick }: RichTextDisplayProps) {
+export function RichTextDisplay({
+  content,
+  onHashtagClick,
+}: RichTextDisplayProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,

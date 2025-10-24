@@ -1,6 +1,7 @@
 # Announcements & Posts Feature Roadmap
 
 ## Overview
+
 Comprehensive enhancement plan for the team announcements and posts system, transforming it into a full-featured social engagement platform.
 
 ---
@@ -8,6 +9,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Phase 1: Social & Engagement Features ✅ IN PROGRESS
 
 ### 1.1 Enhanced Reactions System
+
 **Status:** Planning
 **Priority:** High
 **Effort:** Medium (2-3 hours)
@@ -19,6 +21,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Real-time reaction updates
 
 **Technical:**
+
 - Update `announcement_reactions` table with emoji type
 - Create `ReactionPicker` component
 - Add reaction tooltips showing user names
@@ -26,6 +29,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 1.2 @Mention Notifications
+
 **Status:** Planning
 **Priority:** High
 **Effort:** Medium (3-4 hours)
@@ -37,6 +41,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Notification center UI
 
 **Technical:**
+
 - Create `notifications` table (user_id, type, content, read, announcement_id)
 - Extract mentions from content_json on save
 - Create `NotificationsService`
@@ -45,6 +50,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 1.3 Clickable Hashtags in Content
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** Small (1-2 hours)
@@ -55,6 +61,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Smooth scroll to top when filtering
 
 **Technical:**
+
 - Add click handler to `.hashtag` CSS class
 - Pass `onHashtagClick` prop to `RichTextDisplay`
 - Update `AnnouncementsList` to handle hashtag clicks from content
@@ -62,6 +69,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 1.4 Share & Forward
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Medium (2-3 hours)
@@ -72,6 +80,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Generate shareable public links (optional)
 
 **Technical:**
+
 - Add share button to announcement actions
 - Create share modal with options
 - Generate unique URLs for announcements
@@ -81,6 +90,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Phase 2: Content Management Features
 
 ### 2.1 Draft Mode
+
 **Status:** Planning
 **Priority:** High
 **Effort:** Medium (2-3 hours)
@@ -92,6 +102,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Convert draft to published
 
 **Technical:**
+
 - Add `status` field to announcements table ('draft', 'published', 'scheduled')
 - Create `DraftsService`
 - Add auto-save logic to `AnnouncementEditor`
@@ -100,6 +111,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 2.2 Scheduled Posts
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** High (4-5 hours)
@@ -111,6 +123,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Edit/cancel scheduled posts
 
 **Technical:**
+
 - Add `scheduled_for` timestamp to announcements
 - Create Supabase Edge Function for scheduled publishing
 - Add scheduling UI to `AnnouncementEditor`
@@ -119,6 +132,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 2.3 Rich Media Support
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** Medium (3-4 hours)
@@ -130,6 +144,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] File size limits and validation
 
 **Technical:**
+
 - Extend `imageUploadService` to handle multiple file types
 - Add video player component
 - PDF preview with react-pdf
@@ -138,6 +153,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 2.4 Polls & Surveys
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** High (5-6 hours)
@@ -150,6 +166,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Single/multiple choice polls
 
 **Technical:**
+
 - Create `polls` table (announcement_id, question, options[], expires_at)
 - Create `poll_votes` table (poll_id, user_id, option_index)
 - Build `PollEditor` and `PollDisplay` components
@@ -158,6 +175,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 2.5 Announcement Templates
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Medium (2-3 hours)
@@ -168,6 +186,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Template variables (date, time, location)
 
 **Technical:**
+
 - Create `announcement_templates` table
 - Add template picker to editor
 - Variable substitution system
@@ -177,6 +196,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Phase 3: Organization & Discovery Features
 
 ### 3.1 Categories & Tags
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** Medium (2-3 hours)
@@ -188,6 +208,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Category-based permissions
 
 **Technical:**
+
 - Add `category` field to announcements
 - Create category enum/constants
 - Update filters UI
@@ -195,6 +216,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 3.2 Full-Text Search
+
 **Status:** Planning
 **Priority:** High
 **Effort:** Medium (3-4 hours)
@@ -206,6 +228,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Search suggestions
 
 **Technical:**
+
 - Add search input to `AnnouncementsList`
 - Use PostgreSQL full-text search or Supabase `.textSearch()`
 - Debounce search input
@@ -214,6 +237,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 3.3 Archive System
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Small (1-2 hours)
@@ -224,6 +248,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Archive indicator
 
 **Technical:**
+
 - Add `archived` boolean to announcements
 - Create archive button
 - Filter archived by default
@@ -232,6 +257,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 3.4 Sort Options
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Small (1 hour)
@@ -242,6 +268,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Sort by views count
 
 **Technical:**
+
 - Add sort dropdown to filters
 - Update Supabase query with `.order()` clauses
 
@@ -250,6 +277,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Phase 4: Advanced Features
 
 ### 4.1 Read Receipts Detail
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** Medium (2-3 hours)
@@ -261,6 +289,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Unread badge for users
 
 **Technical:**
+
 - Query `announcement_views` with user details
 - Create `ReadReceiptsList` component
 - Add export functionality
@@ -268,6 +297,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 4.2 Comment Threading
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** High (5-6 hours)
@@ -279,6 +309,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Notification for reply
 
 **Technical:**
+
 - Add `parent_comment_id` to comments table
 - Recursive query for comment threads
 - Update `AnnouncementComments` to handle threading
@@ -287,6 +318,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 4.3 Edit History
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Medium (3-4 hours)
@@ -298,6 +330,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Restore previous version
 
 **Technical:**
+
 - Create `announcement_history` table
 - Save snapshot on each edit
 - Build history viewer component
@@ -306,6 +339,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 4.4 Multiple Pinned Announcements
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** Small (1 hour)
@@ -316,6 +350,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Pinned section at top
 
 **Technical:**
+
 - Add `pin_order` field
 - Update pin logic to support multiple
 - Sort pinned by order
@@ -325,6 +360,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Phase 5: Analytics & Insights
 
 ### 5.1 Announcement Analytics
+
 **Status:** Planning
 **Priority:** Medium
 **Effort:** Medium (3-4 hours)
@@ -336,6 +372,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Export analytics data
 
 **Technical:**
+
 - Create `AnnouncementAnalytics` component
 - Build chart visualizations (recharts)
 - Aggregate queries for stats
@@ -343,6 +380,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ---
 
 ### 5.2 Team Engagement Dashboard
+
 **Status:** Planning
 **Priority:** Low
 **Effort:** High (4-5 hours)
@@ -354,6 +392,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 - [ ] Engagement trends
 
 **Technical:**
+
 - Create `/team/:id/analytics/announcements` route
 - Build dashboard with multiple charts
 - Cache analytics data for performance
@@ -363,6 +402,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 ## Implementation Priority
 
 ### Sprint 1 (High Priority - Core Features)
+
 1. Enhanced Reactions System (1.1)
 2. @Mention Notifications (1.2)
 3. Draft Mode (2.1)
@@ -371,6 +411,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 **Estimated Time:** 10-14 hours
 
 ### Sprint 2 (Medium Priority - Engagement)
+
 5. Clickable Hashtags (1.3)
 6. Scheduled Posts (2.2)
 7. Categories & Tags (3.1)
@@ -379,6 +420,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 **Estimated Time:** 10-13 hours
 
 ### Sprint 3 (Polish & Advanced)
+
 9. Rich Media Support (2.3)
 10. Polls & Surveys (2.4)
 11. Comment Threading (4.2)
@@ -387,6 +429,7 @@ Comprehensive enhancement plan for the team announcements and posts system, tran
 **Estimated Time:** 17-21 hours
 
 ### Sprint 4 (Nice-to-Have)
+
 13. Share & Forward (1.4)
 14. Templates (2.5)
 15. Archive System (3.3)

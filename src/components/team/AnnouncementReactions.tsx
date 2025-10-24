@@ -1,6 +1,6 @@
 /**
  * AnnouncementReactions Component
- * 
+ *
  * Displays reactions on announcements with picker for adding/removing reactions
  * Shows: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
  */
@@ -25,13 +25,13 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
 }) => {
   const [summary, setSummary] = useState<ReactionSummary[]>([]);
   const [loading, setLoading] = useState(false);
-  const [animatingReaction, setAnimatingReaction] = useState<ReactionType | null>(null);
+  const [animatingReaction, setAnimatingReaction] =
+    useState<ReactionType | null>(null);
 
   // Load reactions
   const loadReactions = async () => {
-    const { summary: reactionSummary } = await ReactionsService.getReactions(
-      announcementId
-    );
+    const { summary: reactionSummary } =
+      await ReactionsService.getReactions(announcementId);
     setSummary(reactionSummary);
   };
 
@@ -44,7 +44,9 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
     if (loading) return;
 
     // Optimistic update - update UI immediately
-    const currentSummary = summary.find((s) => s.reaction_type === reactionType);
+    const currentSummary = summary.find(
+      (s) => s.reaction_type === reactionType
+    );
     const wasReacted = currentSummary?.user_has_reacted || false;
     const currentCount = currentSummary?.count || 0;
 
@@ -55,7 +57,9 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
           return {
             ...s,
             user_has_reacted: !wasReacted,
-            count: wasReacted ? Math.max(0, currentCount - 1) : currentCount + 1,
+            count: wasReacted
+              ? Math.max(0, currentCount - 1)
+              : currentCount + 1,
           };
         }
         return s;
@@ -91,7 +95,16 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
     }
   };
 
-  const allReactionTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
+  const allReactionTypes: ReactionType[] = [
+    "like",
+    "love",
+    "celebrate",
+    "football",
+    "fire",
+    "clap",
+    "target",
+    "hundred",
+  ];
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
@@ -113,21 +126,20 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-blue-100 text-blue-700 border-2 border-blue-500 hover:bg-blue-200"
+                  ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
                   : count > 0
-                  ? "bg-surface-secondary text-secondary border hover:bg-surface-muted"
-                  : "bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100 hover:text-gray-600 hover:border-gray-300"
+                    ? "bg-surface-subtle text-text-primary hover:bg-jade-50"
+                    : "bg-surface-subtle text-text-secondary hover:bg-jade-50"
               }
             `}
             title={`${REACTION_LABELS[type]}${
               hasReacted ? " (You reacted)" : ""
             }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}
           >
-            <span 
+            <span
               className={`
-                text-lg leading-none transition-all duration-200 
+                text-xl leading-none transition-all duration-200 
                 ${isAnimating ? "scale-125" : ""}
-                ${!hasReacted ? "opacity-40 grayscale" : "opacity-100"}
               `}
             >
               {REACTION_EMOJIS[type]}
