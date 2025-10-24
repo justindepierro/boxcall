@@ -92,7 +92,7 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-blue-100 text-blue-700 border border-blue-500 hover:bg-blue-200 animate-pulse"
+                  ? "bg-blue-100 text-blue-700 border border-blue-500 hover:bg-blue-200"
                   : count > 0
                   ? "bg-surface-secondary text-secondary border hover:bg-surface-muted"
                   : "bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100 hover:text-gray-600 hover:border-gray-300"
@@ -102,7 +102,14 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
               hasReacted ? " (You reacted)" : ""
             }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}
           >
-            <span className={`leading-none transition-transform duration-200 ${isAnimating ? "scale-125" : ""} ${compact ? "text-sm" : "text-base"}`}>
+            <span 
+              className={`
+                leading-none transition-all duration-200 
+                ${isAnimating ? "scale-125" : ""} 
+                ${compact ? "text-sm" : "text-base"}
+                ${!hasReacted ? "opacity-40 grayscale" : "opacity-100"}
+              `}
+            >
               {REACTION_EMOJIS[type]}
             </span>
             {count > 0 && <span className="font-semibold">{count}</span>}
