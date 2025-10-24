@@ -62,7 +62,7 @@ export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-surface-secondary border border-border rounded-lg p-3 shadow-lg">
+        <div className="bg-surface-primary rounded-lg p-3 shadow-xl">
           <Typography variant="body-sm" className="font-medium mb-1">
             {label}
           </Typography>

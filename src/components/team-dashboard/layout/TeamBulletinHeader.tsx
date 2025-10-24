@@ -82,7 +82,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   }
 
   return (
-    <div className="bg-surface-secondary dark:bg-surface-secondary border border-subtle dark:border-text-tertiary rounded-none mb-3 shadow-card p-3">
+    <div className="bg-surface-secondary dark:bg-surface-secondary rounded-lg mb-3 shadow-md p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}

@@ -74,7 +74,7 @@ export const PlayTypeDistributionChart: React.FC<
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-surface-secondary border border-border rounded-lg p-3 shadow-lg">
+        <div className="bg-surface-primary rounded-lg p-3 shadow-xl">
           <Typography variant="body-sm" className="font-medium">
             {data.name}
           </Typography>

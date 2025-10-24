@@ -191,7 +191,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       {/* New content banner */}
       {hasNewContent && (
         <div
-          className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between shadow-sm animate-fade-in cursor-pointer hover:bg-blue-100 transition-colors"
+          className="bg-brand-primary-light rounded-lg p-3 flex items-center justify-between shadow-md animate-fade-in cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all"
           onClick={() => {
             setHasNewContent(false);
             loadAnnouncements();
@@ -218,7 +218,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       )}
 
       {/* Filter controls */}
-      <div className="bg-white rounded-lg shadow p-4 space-y-4">
+      <div className="bg-surface-primary rounded-lg shadow-md p-4 space-y-4">
         {/* Search bar */}
         <div className="flex items-center gap-2">
           <input
@@ -316,7 +316,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       </div>
 
       {/* Announcements Feed - Compact, Twitter-style */}
-      <div className="bg-surface-primary rounded-lg shadow-sm border border-border-subtle overflow-hidden">
+      <div className="bg-surface-primary rounded-lg shadow-md overflow-hidden">
         {filteredAnnouncements.map((announcement) => (
           <AnnouncementItem
             key={announcement.id}
