@@ -13,6 +13,8 @@ import type {
   Attachment,
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
+import { NotificationsService } from "../../services/notificationsService";
+import { supabase } from "../../lib/supabase";
 import { X } from "lucide-react";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -97,6 +99,18 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
       const plainTextContent = getPlainText(content);
 
+      // Get current user info for notifications
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: profile } = user
+        ? await supabase
+            .from("profiles")
+            .select("display_name, full_name")
+            .eq("id", user.id)
+            .single()
+        : { data: null };
+
+      const authorName = profile?.display_name || profile?.full_name || "Someone";
+
       if (announcement) {
         // Update existing announcement
         const updates: AnnouncementUpdate = {
@@ -108,6 +122,18 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
           attachments,
         };
         await AnnouncementsService.updateAnnouncement(announcement.id, updates);
+
+        // Process mentions for notifications
+        if (user) {
+          await NotificationsService.processMentions({
+            contentJson: content,
+            announcementId: announcement.id,
+            announcementTitle: title.trim(),
+            authorId: user.id,
+            authorName,
+            type: "announcement",
+          });
+        }
       } else {
         // Create new announcement
         const newAnnouncement: AnnouncementCreate = {
@@ -119,7 +145,19 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
           is_pinned: isPinned,
           attachments,
         };
-        await AnnouncementsService.createAnnouncement(newAnnouncement);
+        const result = await AnnouncementsService.createAnnouncement(newAnnouncement);
+
+        // Process mentions for notifications
+        if (result.success && result.announcement && user) {
+          await NotificationsService.processMentions({
+            contentJson: content,
+            announcementId: result.announcement.id,
+            announcementTitle: title.trim(),
+            authorId: user.id,
+            authorName,
+            type: "announcement",
+          });
+        }
       }
 
       onSave();
@@ -201,6 +239,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
                 onChange={setContent}
                 placeholder="Write your announcement... You can add images by dragging & dropping or pasting them!"
                 disabled={saving}
+                teamId={teamId}
               />
             </div>
 

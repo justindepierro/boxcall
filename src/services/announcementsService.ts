@@ -13,6 +13,7 @@ import { emitTelemetry } from "../lib/telemetry";
 // ============================================
 
 export type AnnouncementVisibility = "all" | "staff_only" | "players_only" | "families_only";
+export type AnnouncementStatus = "draft" | "published" | "scheduled";
 
 export interface Attachment {
   name: string;
@@ -33,6 +34,8 @@ export interface Announcement {
   is_pinned: boolean;
   attachments: Attachment[];
   visibility: AnnouncementVisibility;
+  status: AnnouncementStatus;
+  scheduled_for?: string | null;
   deleted_at: string | null;
 }
 
@@ -44,6 +47,8 @@ export interface AnnouncementCreate {
   is_pinned?: boolean;
   attachments?: Attachment[];
   visibility?: AnnouncementVisibility;
+  status?: AnnouncementStatus;
+  scheduled_for?: string | null;
 }
 
 export interface AnnouncementUpdate {
@@ -53,10 +58,13 @@ export interface AnnouncementUpdate {
   is_pinned?: boolean;
   attachments?: Attachment[];
   visibility?: AnnouncementVisibility;
+  status?: AnnouncementStatus;
+  scheduled_for?: string | null;
 }
 
 export interface AnnouncementFilters {
   visibility?: AnnouncementVisibility;
+  status?: AnnouncementStatus;
   pinnedOnly?: boolean;
   fromDate?: string;
   toDate?: string;
@@ -79,11 +87,22 @@ export class AnnouncementsService {
         .from("team_announcements" as any)
         .select("*")
         .eq("team_id", teamId)
-        .is("deleted_at", null)
+        .is("deleted_at", null);
+
+      // Filter by status (default to 'published' unless explicitly requesting drafts/scheduled)
+      if (filters?.status) {
+        query = query.eq("status", filters.status);
+      } else {
+        // Default: only show published announcements
+        query = query.eq("status", "published");
+      }
+
+      // Order: pinned first, then by date
+      query = query
         .order("is_pinned", { ascending: false })
         .order("created_at", { ascending: false });
 
-      // Apply filters
+      // Apply other filters
       if (filters?.visibility) {
         query = query.eq("visibility", filters.visibility);
       }
@@ -381,6 +400,207 @@ export class AnnouncementsService {
     } catch (error) {
       console.error("Error getting announcement stats:", error);
       return { total: 0, pinned: 0, recent: 0 };
+    }
+  }
+
+  /**
+   * Get drafts for current user
+   */
+  static async getDrafts(teamId: string): Promise<Announcement[]> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data, error } = await supabase
+        .from("team_announcements" as any)
+        .select("*")
+        .eq("team_id", teamId)
+        .eq("status", "draft")
+        .eq("created_by", user.id)
+        .is("deleted_at", null)
+        .order("updated_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching drafts:", error);
+        return [];
+      }
+
+      return (data || []) as unknown as Announcement[];
+    } catch (error) {
+      console.error("Error in getDrafts:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Save announcement as draft (create or update)
+   */
+  static async saveDraft(
+    announcement: AnnouncementCreate & { id?: string }
+  ): Promise<{ success: boolean; announcement?: Announcement; error?: string }> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        return {
+          success: false,
+          error: "User not authenticated",
+        };
+      }
+
+      const draftData = {
+        ...announcement,
+        status: "draft" as AnnouncementStatus,
+        created_by: user.id,
+        attachments: announcement.attachments || [],
+        visibility: announcement.visibility || "all",
+        is_pinned: announcement.is_pinned || false,
+      };
+
+      let data;
+      let error;
+
+      if (announcement.id) {
+        // Update existing draft
+        const updateResult = await supabase
+          .from("team_announcements" as any)
+          .update(draftData)
+          .eq("id", announcement.id)
+          .eq("created_by", user.id) // Ensure user owns the draft
+          .select()
+          .single();
+        
+        data = updateResult.data;
+        error = updateResult.error;
+      } else {
+        // Create new draft
+        const insertResult = await supabase
+          .from("team_announcements" as any)
+          .insert(draftData)
+          .select()
+          .single();
+        
+        data = insertResult.data;
+        error = insertResult.error;
+      }
+
+      if (error) {
+        console.error("Error saving draft:", error);
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      emitTelemetry("announcement.draft_saved", {
+        team_id: announcement.team_id,
+        is_new: !announcement.id,
+      });
+
+      return {
+        success: true,
+        announcement: data as unknown as Announcement,
+      };
+    } catch (error) {
+      console.error("Error in saveDraft:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
+   * Publish a draft
+   */
+  static async publishDraft(draftId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return { success: false, error: "Not authenticated" };
+      }
+
+      const { error } = await supabase
+        .from("team_announcements" as any)
+        .update({ status: "published" })
+        .eq("id", draftId)
+        .eq("created_by", user.id)
+        .eq("status", "draft");
+
+      if (error) {
+        console.error("Error publishing draft:", error);
+        return { success: false, error: error.message };
+      }
+
+      emitTelemetry("announcement.draft_published", { draft_id: draftId });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error in publishDraft:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
+   * Search announcements by text
+   */
+  static async searchAnnouncements(
+    teamId: string,
+    query: string,
+    filters?: AnnouncementFilters
+  ): Promise<Announcement[]> {
+    if (!query || query.trim().length === 0) {
+      return this.getAnnouncements(teamId, filters);
+    }
+
+    try {
+      const searchTerm = query.trim().toLowerCase();
+
+      // Get all announcements and filter client-side for better search
+      // (Could be optimized with PostgreSQL full-text search in production)
+      const announcements = await this.getAnnouncements(teamId, filters);
+
+      return announcements.filter((announcement) => {
+        // Search in title
+        if (announcement.title.toLowerCase().includes(searchTerm)) {
+          return true;
+        }
+
+        // Search in plain text content
+        if (announcement.content?.toLowerCase().includes(searchTerm)) {
+          return true;
+        }
+
+        // Search in JSON content (extract text first)
+        if (announcement.content_json) {
+          try {
+            const jsonContent = JSON.parse(announcement.content_json);
+            const extractText = (node: any): string => {
+              if (!node) return "";
+              if (typeof node === "string") return node;
+              if (node.text) return node.text;
+              if (node.content && Array.isArray(node.content)) {
+                return node.content.map(extractText).join(" ");
+              }
+              return "";
+            };
+            const text = extractText(jsonContent).toLowerCase();
+            if (text.includes(searchTerm)) {
+              return true;
+            }
+          } catch {
+            // Ignore JSON parse errors
+          }
+        }
+
+        return false;
+      });
+    } catch (error) {
+      console.error("Error searching announcements:", error);
+      return [];
     }
   }
 }

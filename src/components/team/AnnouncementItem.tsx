@@ -12,7 +12,10 @@ import { AnnouncementReactions } from "./AnnouncementReactions";
 import { AnnouncementComments } from "./AnnouncementComments";
 import { RichTextDisplay } from "./RichTextDisplay";
 import { ReadReceipts } from "./ReadReceipts";
+import { Avatar } from "../ui/Avatar";
+import { UserProfilePopover } from "../ui/UserProfilePopover";
 import { AnnouncementViewsService } from "../../services/announcementViewsService";
+import { supabase } from "../../lib/supabase";
 import { format } from "date-fns";
 import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 
@@ -30,6 +33,7 @@ interface AnnouncementItemProps {
   onDelete?: (id: string) => void;
   onTogglePin?: (id: string) => void;
   onReactionChange?: () => void;
+  onHashtagClick?: (hashtag: string) => void;
   isCoach?: boolean;
 }
 
@@ -41,9 +45,27 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(({
   onDelete,
   onTogglePin,
   onReactionChange,
+  onHashtagClick,
   isCoach = false,
 }) => {
   const [isOptimisticPinned, setIsOptimisticPinned] = useState(announcement.is_pinned);
+  const [authorAvatarUrl, setAuthorAvatarUrl] = useState<string | null>(null);
+
+  // Load author avatar
+  useEffect(() => {
+    const loadAvatar = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", announcement.created_by)
+        .single();
+      
+      if (data?.avatar_url) {
+        setAuthorAvatarUrl(data.avatar_url);
+      }
+    };
+    loadAvatar();
+  }, [announcement.created_by]);
 
   // Track view when component mounts
   useEffect(() => {
@@ -77,27 +99,59 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(({
       {/* Header */}
       <div className="p-4 border-b border">
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-xl font-semibold text-primary">
-                {announcement.title}
-              </h2>
-              {isPinned && (
-                <Pin className="w-4 h-4 text-blue-600 fill-current" />
-              )}
-            </div>
-            <div className="flex items-center gap-3 text-sm text-secondary">
-              <span className="font-medium">{announcement.author_name || "Unknown"}</span>
-              <span>•</span>
-              <time dateTime={announcement.created_at}>
-                {format(new Date(announcement.created_at), "MMM d, yyyy 'at' h:mm a")}
-              </time>
-              {announcement.visibility && announcement.visibility !== "all" && (
-                <>
-                  <span>•</span>
-                  <span className="capitalize">{announcement.visibility}</span>
-                </>
-              )}
+          <div className="flex-1 flex items-start gap-3">
+            {/* Avatar with Popover */}
+            <UserProfilePopover
+              userId={announcement.created_by}
+              teamId={announcement.team_id}
+              trigger={
+                <Avatar
+                  src={authorAvatarUrl}
+                  name={announcement.author_name || "Unknown"}
+                  size="md"
+                />
+              }
+              showOnHover={true}
+            />
+
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <UserProfilePopover
+                  userId={announcement.created_by}
+                  teamId={announcement.team_id}
+                  trigger={
+                    <h2 className="text-xl font-semibold text-primary hover:underline cursor-pointer">
+                      {announcement.title}
+                    </h2>
+                  }
+                  showOnHover={true}
+                />
+                {isPinned && (
+                  <Pin className="w-4 h-4 text-blue-600 fill-current" />
+                )}
+              </div>
+              <div className="flex items-center gap-3 text-sm text-secondary">
+                <UserProfilePopover
+                  userId={announcement.created_by}
+                  teamId={announcement.team_id}
+                  trigger={
+                    <span className="font-medium hover:underline cursor-pointer">
+                      {announcement.author_name || "Unknown"}
+                    </span>
+                  }
+                  showOnHover={true}
+                />
+                <span>•</span>
+                <time dateTime={announcement.created_at}>
+                  {format(new Date(announcement.created_at), "MMM d, yyyy 'at' h:mm a")}
+                </time>
+                {announcement.visibility && announcement.visibility !== "all" && (
+                  <>
+                    <span>•</span>
+                    <span className="capitalize">{announcement.visibility}</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -145,7 +199,10 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(({
       <div className="p-4">
         <div className="prose prose-sm max-w-none text-primary mb-4">
           {announcement.content_json ? (
-            <RichTextDisplay content={announcement.content_json} />
+            <RichTextDisplay 
+              content={announcement.content_json}
+              onHashtagClick={onHashtagClick}
+            />
           ) : (
             <p className="whitespace-pre-wrap">{announcement.content}</p>
           )}
@@ -191,7 +248,10 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(({
           id={`comments-${announcement.id}`}
           className="border-t border p-4 bg-surface-secondary"
         >
-          <AnnouncementComments announcementId={announcement.id} />
+          <AnnouncementComments 
+            announcementId={announcement.id}
+            teamId={announcement.team_id}
+          />
         </div>
       )}
     </article>

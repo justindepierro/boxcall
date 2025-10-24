@@ -32,6 +32,8 @@
 @import "./styles/typography-utilities.css";
 /* Component utility classes (design token-based) */
 @import "./styles/component-utilities.css";
+/* ProseMirror editor styles */
+@import "prosemirror-view/style/prosemirror.css";
 
 @tailwind base;
 @tailwind components;
@@ -948,5 +950,35 @@ body,
 
   .animate-genie-close {
     animation: genieClose 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  /* Rich Text Editor - Mention Styling */
+  .mention {
+    background-color: #E3F2FD;
+    color: #1976D2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .mention:hover {
+    background-color: #BBDEFB;
+  }
+
+  /* Rich Text Editor - Hashtag Styling */
+  .hashtag {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .hashtag:hover {
+    background-color: #C8E6C9;
   }
 }

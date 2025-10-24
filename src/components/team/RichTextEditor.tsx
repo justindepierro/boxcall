@@ -1,20 +1,162 @@
 /**
  * RichTextEditor Component
  * Facebook-style rich text editor with inline images using TipTap
+ * Now with advanced formatting: fonts, colors, highlights, mentions, hashtags
  */
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useCallback, useRef } from "react";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import { Highlight } from "@tiptap/extension-highlight";
+import Mention from "@tiptap/extension-mention";
+import { Extension } from "@tiptap/core";
+import { ReactRenderer } from "@tiptap/react";
+import type { SuggestionOptions } from "@tiptap/suggestion";
+import { Mark as TipTapMark, markInputRule, markPasteRule } from "@tiptap/core";
+import tippy from "tippy.js";
+import type { Instance as TippyInstance } from "tippy.js";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { uploadImage } from "../../services/imageUploadService";
+import { MentionsService } from "../../services/mentionsService";
+import { MentionList } from "../ui/MentionList";
+import type { MentionItem, MentionListRef } from "../ui/MentionList";
+import {
+  Type,
+  Palette,
+  Highlighter,
+  ChevronDown,
+} from "lucide-react";
+
+// Custom FontFamily extension with specific fonts
+const FontFamily = Extension.create({
+  name: "fontFamily",
+  
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontFamily: {
+            default: null,
+            parseHTML: (element) => element.style.fontFamily?.replace(/['"]+/g, ""),
+            renderHTML: (attributes) => {
+              if (!attributes.fontFamily) {
+                return {};
+              }
+              return {
+                style: `font-family: ${attributes.fontFamily}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      setFontFamily:
+        (fontFamily: string) =>
+        ({ chain }: any) => {
+          return chain().setMark("textStyle", { fontFamily }).run();
+        },
+      unsetFontFamily:
+        () =>
+        ({ chain }: any) => {
+          return chain()
+            .setMark("textStyle", { fontFamily: null })
+            .removeEmptyTextStyle()
+            .run();
+        },
+    };
+  },
+});
+
+// Custom Hashtag mark for #tag parsing
+const Hashtag = TipTapMark.create({
+  name: "hashtag",
+
+  addOptions() {
+    return {
+      HTMLAttributes: {
+        class: "hashtag",
+      },
+    };
+  },
+
+  addAttributes() {
+    return {
+      tag: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-tag"),
+        renderHTML: (attributes) => {
+          if (!attributes.tag) {
+            return {};
+          }
+          return {
+            "data-tag": attributes.tag,
+          };
+        },
+      },
+    };
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: "span[data-tag].hashtag",
+      },
+    ];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "span",
+      { ...this.options.HTMLAttributes, ...HTMLAttributes },
+      0,
+    ];
+  },
+
+  addInputRules() {
+    return [
+      markInputRule({
+        find: /(^|\s)(#[a-zA-Z0-9_]+)\s$/,
+        type: this.type,
+        getAttributes: (match) => ({
+          tag: match[2].substring(1), // Remove the # symbol
+        }),
+      }),
+    ];
+  },
+
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: /(^|\s)(#[a-zA-Z0-9_]+)/g,
+        type: this.type,
+        getAttributes: (match) => ({
+          tag: match[2].substring(1),
+        }),
+      }),
+    ];
+  },
+});
 
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  teamId?: string; // Optional: enables team-specific @mentions
 }
 
 export function RichTextEditor({
@@ -22,12 +164,144 @@ export function RichTextEditor({
   onChange,
   placeholder = "Write something...",
   disabled = false,
+  teamId,
 }: RichTextEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showFontMenu, setShowFontMenu] = useState(false);
+  const [showColorMenu, setShowColorMenu] = useState(false);
+  const [showHighlightMenu, setShowHighlightMenu] = useState(false);
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.relative')) {
+        setShowFontMenu(false);
+        setShowColorMenu(false);
+        setShowHighlightMenu(false);
+      }
+    };
+
+    if (showFontMenu || showColorMenu || showHighlightMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showFontMenu, showColorMenu, showHighlightMenu]);
+
+  const fonts = [
+    { name: "Default", value: "" },
+    { name: "Arial", value: "Arial, sans-serif" },
+    { name: "Times New Roman", value: "'Times New Roman', serif" },
+    { name: "Courier New", value: "'Courier New', monospace" },
+    { name: "Georgia", value: "Georgia, serif" },
+    { name: "Comic Sans", value: "'Comic Sans MS', cursive" },
+  ];
+
+  const colors = [
+    "#000000", // Black
+    "#FF0000", // Red
+    "#00FF00", // Green
+    "#0000FF", // Blue
+    "#FFFF00", // Yellow
+    "#FF00FF", // Magenta
+    "#00FFFF", // Cyan
+    "#FFA500", // Orange
+    "#800080", // Purple
+    "#008000", // Dark Green
+    "#000080", // Navy
+    "#808080", // Gray
+  ];
+
+  const highlightColors = [
+    { name: "None", value: "" },
+    { name: "Yellow", value: "#FFFF00" },
+    { name: "Green", value: "#90EE90" },
+    { name: "Blue", value: "#ADD8E6" },
+    { name: "Pink", value: "#FFB6C1" },
+    { name: "Orange", value: "#FFD700" },
+  ];
+
+  // Mention suggestion configuration
+  const mentionSuggestion: Partial<SuggestionOptions> = {
+    items: async ({ query }) => {
+      if (!teamId) return [];
+      
+      const suggestions = await MentionsService.getTeamMemberSuggestions(
+        teamId,
+        query,
+        10
+      );
+
+      return suggestions.map((s) => ({
+        id: s.id,
+        label: s.display_name,
+        avatar: s.avatar_url,
+      })) as MentionItem[];
+    },
+
+    render: () => {
+      let component: ReactRenderer<MentionListRef>;
+      let popup: TippyInstance[];
+
+      return {
+        onStart: (props: any) => {
+          component = new ReactRenderer(MentionList, {
+            props,
+            editor: props.editor,
+          });
+
+          popup = tippy("body", {
+            getReferenceClientRect: props.clientRect,
+            appendTo: () => document.body,
+            content: component.element,
+            showOnCreate: true,
+            interactive: true,
+            trigger: "manual",
+            placement: "bottom-start",
+          });
+        },
+
+        onUpdate(props: any) {
+          component.updateProps(props);
+
+          popup[0]?.setProps({
+            getReferenceClientRect: props.clientRect,
+          });
+        },
+
+        onKeyDown(props: any) {
+          if (props.event.key === "Escape") {
+            popup[0]?.hide();
+            return true;
+          }
+
+          return component.ref?.onKeyDown(props) || false;
+        },
+
+        onExit() {
+          popup[0]?.destroy();
+          component.destroy();
+        },
+      };
+    },
+  };
 
   const editor = useEditor({
     extensions: [
       StarterKit,
+      TextStyle,
+      Color,
+      FontFamily,
+      Highlight.configure({
+        multicolor: true,
+      }),
+      Hashtag,
+      Mention.configure({
+        HTMLAttributes: {
+          class: "mention",
+        },
+        suggestion: mentionSuggestion as any,
+      }),
       Image.configure({
         inline: true,
         allowBase64: false,
@@ -239,6 +513,141 @@ export function RichTextEditor({
             />
           </svg>
         </button>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-border mx-1" />
+
+        {/* Font Family */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setShowColorMenu(false);
+              setShowHighlightMenu(false);
+              setShowFontMenu(!showFontMenu);
+            }}
+            disabled={disabled}
+            className="p-2 rounded hover:bg-surface-muted transition-colors text-secondary flex items-center gap-1"
+            title="Font Family"
+          >
+            <Type className="w-4 h-4" />
+            <ChevronDown className="w-3 h-3" />
+          </button>
+          {showFontMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 w-40">
+              {fonts.map((font) => (
+                <button
+                  key={font.name}
+                  type="button"
+                  onClick={() => {
+                    if (font.value) {
+                      editor.chain().focus().setFontFamily(font.value).run();
+                    } else {
+                      editor.chain().focus().unsetFontFamily().run();
+                    }
+                    setShowFontMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-surface-muted text-sm"
+                  style={{ fontFamily: font.value || undefined }}
+                >
+                  {font.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Text Color */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setShowFontMenu(false);
+              setShowHighlightMenu(false);
+              setShowColorMenu(!showColorMenu);
+            }}
+            disabled={disabled}
+            className="p-2 rounded hover:bg-surface-muted transition-colors text-secondary flex items-center gap-1"
+            title="Text Color"
+          >
+            <Palette className="w-4 h-4" />
+            <ChevronDown className="w-3 h-3" />
+          </button>
+          {showColorMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 p-2">
+              <div className="grid grid-cols-6 gap-1">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => {
+                      editor.chain().focus().setColor(color).run();
+                      setShowColorMenu(false);
+                    }}
+                    className="w-6 h-6 rounded border border-border hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  editor.chain().focus().unsetColor().run();
+                  setShowColorMenu(false);
+                }}
+                className="w-full mt-2 px-2 py-1 text-xs bg-surface-muted hover:bg-surface-secondary rounded"
+              >
+                Reset Color
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Highlight */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setShowFontMenu(false);
+              setShowColorMenu(false);
+              setShowHighlightMenu(!showHighlightMenu);
+            }}
+            disabled={disabled}
+            className={`p-2 rounded hover:bg-surface-muted transition-colors flex items-center gap-1 ${
+              editor.isActive("highlight") ? "bg-surface-muted text-accent" : "text-secondary"
+            }`}
+            title="Highlight"
+          >
+            <Highlighter className="w-4 h-4" />
+            <ChevronDown className="w-3 h-3" />
+          </button>
+          {showHighlightMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-50 w-32">
+              {highlightColors.map((highlight) => (
+                <button
+                  key={highlight.name}
+                  type="button"
+                  onClick={() => {
+                    if (highlight.value) {
+                      editor.chain().focus().toggleHighlight({ color: highlight.value }).run();
+                    } else {
+                      editor.chain().focus().unsetHighlight().run();
+                    }
+                    setShowHighlightMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-surface-muted text-sm flex items-center gap-2"
+                >
+                  <span
+                    className="w-4 h-4 rounded border border-border"
+                    style={{ backgroundColor: highlight.value || "transparent" }}
+                  />
+                  {highlight.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Divider */}
         <div className="w-px h-6 bg-border mx-1" />

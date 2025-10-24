@@ -71,6 +71,68 @@ export class MentionsService {
     }
   }
 
+  // Get team member suggestions for mentions (team-specific)
+  static async getTeamMemberSuggestions(
+    teamId: string,
+    query: string,
+    limit = 10
+  ): Promise<MentionSuggestion[]> {
+    try {
+      // Get team members first
+      const { data: members, error: membersError } = await supabase
+        .from("team_members")
+        .select("user_id, team_role")
+        .eq("team_id", teamId)
+        .eq("status", "active")
+        .limit(limit);
+
+      if (membersError) throw membersError;
+      if (!members || members.length === 0) return [];
+
+      // Get user IDs
+      const userIds = members.map(m => m.user_id);
+
+      // Fetch profiles
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name, avatar_url")
+        .in("id", userIds);
+
+      // Fetch player info
+      const { data: players } = await supabase
+        .from("team_players")
+        .select("user_id, jersey_number")
+        .eq("team_id", teamId)
+        .in("user_id", userIds);
+
+      // Create lookup maps
+      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+      const playerMap = new Map(players?.map(p => [p.user_id, p]) || []);
+
+      // Combine data
+      return members
+        .map((member) => {
+          const profile = profileMap.get(member.user_id);
+          const player = playerMap.get(member.user_id);
+          const name = profile?.display_name || profile?.full_name || "Unknown";
+
+          return {
+            id: member.user_id,
+            display_name: name + (player?.jersey_number ? ` (#${player.jersey_number})` : ""),
+            avatar_url: profile?.avatar_url || null,
+            type: "user" as const,
+          };
+        })
+        .filter((suggestion) => {
+          // Client-side filtering by query
+          return suggestion.display_name.toLowerCase().includes(query.toLowerCase());
+        });
+    } catch (error) {
+      console.error("Failed to get team member suggestions:", error);
+      return [];
+    }
+  }
+
   // Save mentions to database when a comment is posted
   static async saveMentions(
     commentId: string,
@@ -151,5 +213,44 @@ export class MentionsService {
     }
 
     return result;
+  }
+
+  // Extract mentioned user IDs from TipTap JSON content
+  static extractMentionedUserIds(contentJson: string): string[] {
+    if (!contentJson) return [];
+
+    try {
+      const parsed = JSON.parse(contentJson);
+      const userIds: string[] = [];
+
+      // Recursively search for mention marks in the JSON structure
+      const findMentions = (node: any) => {
+        if (!node) return;
+
+        // Check if this is a text node with marks
+        if (node.marks && Array.isArray(node.marks)) {
+          for (const mark of node.marks) {
+            if (mark.type === "mention" && mark.attrs?.id) {
+              userIds.push(mark.attrs.id);
+            }
+          }
+        }
+
+        // Recurse into content
+        if (node.content && Array.isArray(node.content)) {
+          for (const child of node.content) {
+            findMentions(child);
+          }
+        }
+      };
+
+      findMentions(parsed);
+      
+      // Return unique user IDs
+      return Array.from(new Set(userIds));
+    } catch (error) {
+      console.error("Error extracting mentioned user IDs:", error);
+      return [];
+    }
   }
 }

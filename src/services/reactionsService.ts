@@ -12,7 +12,15 @@ import { emitTelemetry } from "../lib/telemetry";
 // TYPE DEFINITIONS
 // ============================================
 
-export type ReactionType = "like" | "love" | "celebrate" | "football";
+export type ReactionType = 
+  | "like" 
+  | "love" 
+  | "celebrate" 
+  | "football"
+  | "fire"
+  | "clap"
+  | "target"
+  | "hundred";
 
 export interface Reaction {
   id: string;
@@ -26,14 +34,19 @@ export interface ReactionSummary {
   reaction_type: ReactionType;
   count: number;
   user_has_reacted: boolean;
+  users?: Array<{ id: string; name: string; avatar_url?: string }>;
 }
 
-// Emoji mapping
+// Emoji mapping (expanded set)
 export const REACTION_EMOJIS: Record<ReactionType, string> = {
   like: "👍",
   love: "❤️",
   celebrate: "🎉",
   football: "🏈",
+  fire: "🔥",
+  clap: "👏",
+  target: "🎯",
+  hundred: "💯",
 };
 
 export const REACTION_LABELS: Record<ReactionType, string> = {
@@ -41,6 +54,10 @@ export const REACTION_LABELS: Record<ReactionType, string> = {
   love: "Love",
   celebrate: "Celebrate",
   football: "Football",
+  fire: "Fire",
+  clap: "Applause",
+  target: "On Target",
+  hundred: "Perfect",
 };
 
 // ============================================
@@ -287,13 +304,66 @@ export class ReactionsService {
   }
 
   /**
+   * Get detailed user information for reactions
+   */
+  static async getReactionUsers(
+    announcementId: string,
+    reactionType: ReactionType
+  ): Promise<Array<{ id: string; name: string; avatar_url?: string }>> {
+    try {
+      const { data, error } = await supabase
+        .from("announcement_reactions" as any)
+        .select("user_id")
+        .eq("announcement_id", announcementId)
+        .eq("reaction_type", reactionType);
+
+      if (error || !data) {
+        console.error("Error fetching reaction users:", error);
+        return [];
+      }
+
+      const userIds = data.map((r: any) => r.user_id);
+      if (userIds.length === 0) return [];
+
+      // Fetch user profiles
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name, avatar_url")
+        .in("id", userIds);
+
+      if (profilesError || !profiles) {
+        console.error("Error fetching user profiles:", profilesError);
+        return [];
+      }
+
+      return profiles.map((p: any) => ({
+        id: p.id,
+        name: p.display_name || p.full_name || "Unknown User",
+        avatar_url: p.avatar_url,
+      }));
+    } catch (error) {
+      console.error("Error in getReactionUsers:", error);
+      return [];
+    }
+  }
+
+  /**
    * Calculate reaction summary from reactions array
    */
   private static calculateSummary(
     reactions: Reaction[],
     currentUserId?: string
   ): ReactionSummary[] {
-    const reactionTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
+    const reactionTypes: ReactionType[] = [
+      "like",
+      "love",
+      "celebrate",
+      "football",
+      "fire",
+      "clap",
+      "target",
+      "hundred",
+    ];
     
     return reactionTypes.map((type) => {
       const typeReactions = reactions.filter((r) => r.reaction_type === type);

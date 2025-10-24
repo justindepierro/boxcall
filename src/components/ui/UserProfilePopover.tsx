@@ -7,7 +7,12 @@ import {
   Link2,
   Mail,
   Phone,
+  Shield,
+  Hash,
+  User,
+  Target,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system/Typography";
 import { MultiBadgeDisplay } from "./MultiBadgeDisplay";
@@ -18,6 +23,7 @@ interface UserProfilePopoverProps {
   placement?: "top" | "bottom" | "left" | "right";
   showOnHover?: boolean;
   className?: string;
+  teamId?: string; // Optional: for team-specific context
 }
 
 interface PopoverProfile {
@@ -43,17 +49,36 @@ interface PopoverProfile {
   created_at: string;
 }
 
+interface TeamMemberInfo {
+  team_role: string;
+  status: string | null;
+  assigned_at: string | null;
+}
+
+interface PlayerInfo {
+  jersey_number: number | null;
+  positions: string[] | null;
+  class_year: string | null;
+  height: string | null;
+  weight: number | null;
+}
+
 export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
   userId,
   trigger,
   placement = "bottom",
   showOnHover = true,
   className = "",
+  teamId,
 }) => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [profile, setProfile] = useState<PopoverProfile | null>(null);
   const [loading, setLoading] = useState(false);
   const [achievements, setAchievements] = useState<any[]>([]);
+  const [teamMember, setTeamMember] = useState<TeamMemberInfo | null>(null);
+  const [playerInfo, setPlayerInfo] = useState<PlayerInfo | null>(null);
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch profile data when popover becomes visible
   useEffect(() => {
@@ -98,15 +123,51 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
           setProfile(profileData);
 
-          // Fetch achievements (top 3)
-          const { data: achievementsData } = await supabase
-            .from("achievements")
-            .select("title, icon_name, category")
-            .eq("user_id", userId)
-            .eq("is_public", true)
-            .limit(3);
+          // Fetch achievements (top 3) - wrap in try/catch to handle if table doesn't exist
+          try {
+            const { data: achievementsData } = await supabase
+              .from("achievements")
+              .select("title, icon_name, category")
+              .eq("user_id", userId)
+              .eq("is_public", true)
+              .limit(3);
 
-          setAchievements(achievementsData || []);
+            setAchievements(achievementsData || []);
+          } catch (error) {
+            console.log("Achievements not available:", error);
+            setAchievements([]);
+          }
+
+          // Fetch team-specific data if teamId is provided
+          if (teamId) {
+            // Fetch team member info (role on this specific team)
+            const { data: memberData } = await supabase
+              .from("team_members")
+              .select("team_role, status, assigned_at")
+              .eq("team_id", teamId)
+              .eq("user_id", userId)
+              .single();
+
+            if (memberData) {
+              setTeamMember(memberData);
+            }
+
+            // Fetch player-specific info if they're a player - wrap in try/catch
+            try {
+              const { data: playerData } = await supabase
+                .from("team_players")
+                .select("jersey_number, class_year, height, weight")
+                .eq("team_id", teamId)
+                .eq("user_id", userId)
+                .single();
+
+              if (playerData) {
+                setPlayerInfo(playerData);
+              }
+            } catch (error) {
+              console.log("Player info not available:", error);
+            }
+          }
         } catch (error) {
           console.error("Error fetching profile data:", error);
         } finally {
@@ -116,17 +177,26 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     };
 
     fetchData();
-  }, [isVisible, userId, profile, loading]);
+  }, [isVisible, userId, profile, loading, teamId]);
 
   const handleMouseEnter = () => {
     if (showOnHover) {
+      // Clear any pending close timeout
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        setCloseTimeout(null);
+      }
       setIsVisible(true);
     }
   };
 
   const handleMouseLeave = () => {
     if (showOnHover) {
-      setIsVisible(false);
+      // Add a 300ms delay before closing
+      const timeout = setTimeout(() => {
+        setIsVisible(false);
+      }, 300);
+      setCloseTimeout(timeout);
     }
   };
 
@@ -179,6 +249,45 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     return links;
   };
 
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "head_coach":
+        return <Shield className="w-4 h-4 text-warning-500" />;
+      case "assistant_coach":
+        return <Shield className="w-4 h-4 text-blue-500" />;
+      case "coach":
+        return <Shield className="w-4 h-4 text-blue-400" />;
+      case "coordinator":
+        return <Target className="w-4 h-4 text-purple-500" />;
+      case "manager":
+        return <User className="w-4 h-4 text-success-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getRoleLabel = (role: string) => {
+    switch (role) {
+      case "head_coach":
+        return "Head Coach";
+      case "assistant_coach":
+        return "Assistant Coach";
+      case "coach":
+        return "Coach";
+      case "coordinator":
+        return "Coordinator";
+      case "manager":
+        return "Manager";
+      default:
+        return role;
+    }
+  };
+
+  const handleViewProfile = () => {
+    setIsVisible(false);
+    navigate(`/profile/${userId}`);
+  };
+
   return (
     <div
       className={`relative inline-block ${className}`}
@@ -198,6 +307,8 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             ${placement === "left" ? "right-full mr-2" : ""}
             ${placement === "right" ? "left-full ml-2" : ""}
           `}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           style={{
             boxShadow:
               "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
@@ -262,6 +373,80 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
               {/* Content */}
               <div className="p-4 space-y-4">
+                {/* Team Role (if teamId provided) */}
+                {teamMember && (
+                  <div className="p-3 bg-surface-secondary rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      {getRoleIcon(teamMember.team_role)}
+                      <Typography variant="body-sm" className="font-semibold text-primary">
+                        {getRoleLabel(teamMember.team_role)}
+                      </Typography>
+                      {teamMember.status === "active" && (
+                        <span className="px-2 py-0.5 text-xs bg-success-100 text-success-700 rounded-full">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Player Information (if they're a player) */}
+                {playerInfo && (
+                  <div className="p-3 bg-surface-secondary rounded-lg">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Hash className="w-4 h-4 text-blue-500" />
+                      <Typography variant="body-sm" className="font-semibold text-primary">
+                        Player Information
+                      </Typography>
+                    </div>
+                    <div className="space-y-2">
+                      {playerInfo.jersey_number && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted">Jersey:</span>
+                          <span className="text-sm font-medium text-primary">
+                            #{playerInfo.jersey_number}
+                          </span>
+                        </div>
+                      )}
+                      {playerInfo.positions && playerInfo.positions.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted">Positions:</span>
+                          <div className="flex gap-1 flex-wrap">
+                            {playerInfo.positions.map((pos) => (
+                              <span
+                                key={pos}
+                                className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full"
+                              >
+                                {pos}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {playerInfo.class_year && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted">Class:</span>
+                          <span className="text-sm text-primary">{playerInfo.class_year}</span>
+                        </div>
+                      )}
+                      <div className="flex gap-4">
+                        {playerInfo.height && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted">Height:</span>
+                            <span className="text-sm text-primary">{playerInfo.height}</span>
+                          </div>
+                        )}
+                        {playerInfo.weight && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted">Weight:</span>
+                            <span className="text-sm text-primary">{playerInfo.weight} lbs</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Position/Experience */}
                 {getPositionDisplay() && (
                   <div className="flex items-center text-secondary">
@@ -373,6 +558,17 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       Member since {formatMemberSince(profile.created_at)}
                     </Typography>
                   </div>
+                </div>
+
+                {/* View Profile Button */}
+                <div className="pt-2">
+                  <button
+                    onClick={handleViewProfile}
+                    className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    View Full Profile
+                  </button>
                 </div>
               </div>
             </>

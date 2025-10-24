@@ -6,18 +6,20 @@
  * Renders rich text content with inline images
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import type { 
   Announcement, 
   AnnouncementFilters,
   AnnouncementVisibility 
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
+import { HashtagService } from "../../services/hashtagService";
+import type { HashtagCount } from "../../services/hashtagService";
 import { AnnouncementReactions } from "./AnnouncementReactions";
 import { AnnouncementComments } from "./AnnouncementComments";
 import { RichTextDisplay } from "./RichTextDisplay";
 import { format } from "date-fns";
-import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Pin, Edit2, Trash2, MessageCircle, ChevronDown, ChevronUp, Hash, X } from "lucide-react";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -37,6 +39,39 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<AnnouncementFilters>({});
   const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+  const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Compute hashtag counts from all announcements
+  const hashtagCounts = useMemo<HashtagCount[]>(() => {
+    return HashtagService.getHashtagCounts(announcements);
+  }, [announcements]);
+
+  // Filter announcements by selected hashtag and search
+  const filteredAnnouncements = useMemo(() => {
+    let result = announcements;
+    
+    // Apply hashtag filter
+    if (selectedHashtag) {
+      result = HashtagService.filterByHashtag(result, selectedHashtag);
+    }
+    
+    // Apply search filter (client-side for instant feedback)
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
+      result = result.filter((announcement) => {
+        // Search in title
+        if (announcement.title.toLowerCase().includes(query)) return true;
+        
+        // Search in content
+        if (announcement.content?.toLowerCase().includes(query)) return true;
+        
+        return false;
+      });
+    }
+    
+    return result;
+  }, [announcements, selectedHashtag, searchQuery]);
 
   const toggleComments = (announcementId: string) => {
     setExpandedComments((prev) => {
@@ -49,6 +84,13 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       return next;
     });
   };
+
+  // Handle hashtag click in content
+  const handleHashtagClick = useCallback((hashtag: string) => {
+    setSelectedHashtag(hashtag);
+    // Smooth scroll to top of the list
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   // Fetch announcements
   const loadAnnouncements = useCallback(async () => {
@@ -147,36 +189,95 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   return (
     <div className="space-y-4">
       {/* Filter controls */}
-      <div className="bg-white rounded-lg shadow p-4 flex gap-4 items-center">
-        <label className="text-sm font-medium text-primary">
-          Filter by visibility:
-        </label>
-        <select
-          value={filters.visibility || ""}
-          onChange={(e) => setFilters({ ...filters, visibility: e.target.value as AnnouncementVisibility || undefined })}
-          className="rounded-md border shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option value="">All</option>
-          <option value="all">Everyone</option>
-          <option value="staff_only">Staff Only</option>
-          <option value="players_only">Players Only</option>
-          <option value="families_only">Families Only</option>
-        </select>
+      <div className="bg-white rounded-lg shadow p-4 space-y-4">
+        {/* Search bar */}
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Search announcements..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 rounded-md border border-border px-4 py-2 text-sm focus:border-accent focus:ring-accent"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="px-3 py-2 text-sm text-secondary hover:text-primary transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
 
-        <label className="text-sm font-medium ml-4">
-          Show pinned only:
-        </label>
-        <input
-          type="checkbox"
-          checked={filters.pinnedOnly || false}
-          onChange={(e) => setFilters({ ...filters, pinnedOnly: e.target.checked || undefined })}
-          className="rounded border shadow-sm"
-        />
+        {/* Existing filters */}
+        <div className="flex gap-4 items-center flex-wrap">
+          <label className="text-sm font-medium text-primary">
+            Filter by visibility:
+          </label>
+          <select
+            value={filters.visibility || ""}
+            onChange={(e) => setFilters({ ...filters, visibility: e.target.value as AnnouncementVisibility || undefined })}
+            className="rounded-md border shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="">All</option>
+            <option value="all">Everyone</option>
+            <option value="staff_only">Staff Only</option>
+            <option value="players_only">Players Only</option>
+            <option value="families_only">Families Only</option>
+          </select>
+
+          <label className="text-sm font-medium ml-4">
+            Show pinned only:
+          </label>
+          <input
+            type="checkbox"
+            checked={filters.pinnedOnly || false}
+            onChange={(e) => setFilters({ ...filters, pinnedOnly: e.target.checked || undefined })}
+            className="rounded border shadow-sm"
+          />
+        </div>
+
+        {/* Hashtag filter */}
+        {hashtagCounts.length > 0 && (
+          <div className="border-t pt-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Hash className="w-4 h-4 text-secondary" />
+              <label className="text-sm font-medium text-primary">
+                Filter by hashtag:
+              </label>
+              {selectedHashtag && (
+                <button
+                  onClick={() => setSelectedHashtag(null)}
+                  className="text-xs text-secondary hover:text-primary flex items-center gap-1"
+                >
+                  <X className="w-3 h-3" />
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {hashtagCounts.map(({ tag, count }) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedHashtag(tag === selectedHashtag ? null : tag)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    tag === selectedHashtag
+                      ? "bg-green-600 text-white"
+                      : "bg-green-100 text-green-800 hover:bg-green-200"
+                  }`}
+                >
+                  #{tag}
+                  <span className="ml-1.5 text-xs opacity-75">({count})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Announcements list */}
       <div className="space-y-3">
-        {announcements.map((announcement) => (
+        {filteredAnnouncements.map((announcement) => (
           <div
             key={announcement.id}
             className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${
@@ -235,7 +336,10 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             {/* Content */}
             <div className="prose prose-sm max-w-none text-primary mb-4">
               {announcement.content_json ? (
-                <RichTextDisplay content={announcement.content_json} />
+                <RichTextDisplay 
+                  content={announcement.content_json}
+                  onHashtagClick={handleHashtagClick}
+                />
               ) : (
                 <p className="whitespace-pre-wrap">{announcement.content}</p>
               )}
@@ -246,7 +350,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
               <div className="mt-4 pt-4 border-t border">
                 <p className="text-sm font-medium text-primary mb-2">Attachments:</p>
                 <div className="space-y-2">
-                  {announcement.attachments.map((attachment, idx) => (
+                  {announcement.attachments.map((attachment: any, idx: number) => (
                     <a
                       key={idx}
                       href={attachment.url}
@@ -291,7 +395,10 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
               {/* Comments Section */}
               {expandedComments.has(announcement.id) && (
                 <div className="mt-4">
-                  <AnnouncementComments announcementId={announcement.id} />
+                  <AnnouncementComments 
+                    announcementId={announcement.id}
+                    teamId={announcement.team_id}
+                  />
                 </div>
               )}
             </div>

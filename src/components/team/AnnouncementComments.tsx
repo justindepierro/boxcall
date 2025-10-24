@@ -17,13 +17,17 @@ import { supabase } from "../../lib/supabase";
 import { CommentReactions } from "./CommentReactions";
 import { RichTextEditor } from "./RichTextEditor";
 import { RichTextDisplay } from "./RichTextDisplay";
+import { Avatar } from "../ui/Avatar";
+import { UserProfilePopover } from "../ui/UserProfilePopover";
 
 interface AnnouncementCommentsProps {
   announcementId: string;
+  teamId?: string; // Optional: for team-specific context in popovers
 }
 
 export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   announcementId,
+  teamId,
 }) => {
   const [comments, setComments] = useState<CommentTree[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +38,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   const [editContent, setEditContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [avatarUrls, setAvatarUrls] = useState<Map<string, string | null>>(new Map());
 
   // Get current user
   useEffect(() => {
@@ -67,6 +72,35 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     setLoading(true);
     const tree = await CommentsService.getCommentsTree(announcementId);
     setComments(tree);
+
+    // Load avatars for all comment authors
+    const userIds = new Set<string>();
+    const collectUserIds = (nodes: CommentTree[]) => {
+      nodes.forEach((node) => {
+        userIds.add(node.comment.user_id);
+        if (node.replies.length > 0) {
+          collectUserIds(node.replies);
+        }
+      });
+    };
+    collectUserIds(tree);
+
+    // Fetch all avatars in one query
+    if (userIds.size > 0) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, avatar_url")
+        .in("id", Array.from(userIds));
+
+      if (data) {
+        const avatarMap = new Map<string, string | null>();
+        data.forEach((profile) => {
+          avatarMap.set(profile.id, profile.avatar_url);
+        });
+        setAvatarUrls(avatarMap);
+      }
+    }
+
     setLoading(false);
   }, [announcementId]);
 
@@ -172,36 +206,61 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
       >
         {/* Comment */}
         <div className="bg-surface-secondary rounded-lg p-3">
-          <div className="flex items-start justify-between mb-2">
-            <div>
-              <span className="font-medium text-primary">
-                {comment.author_name}
-              </span>
-              <span className="text-xs text-muted ml-2">
-                {format(new Date(comment.created_at), "MMM d 'at' h:mm a")}
-              </span>
-              {comment.updated_at !== comment.created_at && (
-                <span className="text-xs text-muted ml-1">(edited)</span>
-              )}
-            </div>
-            {isOwnComment && !isEditing && (
-              <div className="flex gap-1">
-                <button
-                  onClick={() => handleStartEdit(comment)}
-                  className="p-1 text-muted hover:text-primary transition-colors"
-                  title="Edit"
-                >
-                  <Edit2 className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(comment.id)}
-                  className="p-1 text-muted hover:text-error-600 transition-colors"
-                  title="Delete"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+          <div className="flex items-start gap-3 mb-2">
+            {/* Avatar with Popover */}
+            <UserProfilePopover
+              userId={comment.user_id}
+              teamId={teamId}
+              trigger={
+                <Avatar
+                  src={avatarUrls.get(comment.user_id) || null}
+                  name={comment.author_name}
+                  size="sm"
+                />
+              }
+              showOnHover={true}
+            />
+
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <UserProfilePopover
+                    userId={comment.user_id}
+                    teamId={teamId}
+                    trigger={
+                      <span className="font-medium text-primary hover:underline cursor-pointer">
+                        {comment.author_name}
+                      </span>
+                    }
+                    showOnHover={true}
+                  />
+                  <span className="text-xs text-muted">
+                    {format(new Date(comment.created_at), "MMM d 'at' h:mm a")}
+                  </span>
+                  {comment.updated_at !== comment.created_at && (
+                    <span className="text-xs text-muted">(edited)</span>
+                  )}
+                </div>
+                {isOwnComment && !isEditing && (
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleStartEdit(comment)}
+                      className="p-1 text-muted hover:text-primary transition-colors"
+                      title="Edit"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className="p-1 text-muted hover:text-error-600 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Comment Content or Edit Form */}
@@ -212,6 +271,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                 onChange={setEditContent}
                 placeholder="Edit your comment..."
                 disabled={submitting}
+                teamId={teamId}
               />
               <div className="flex gap-2">
                 <button
@@ -280,6 +340,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                 onChange={setReplyContent}
                 placeholder="Write a reply..."
                 disabled={submitting}
+                teamId={teamId}
               />
               <div className="flex gap-2">
                 <button
@@ -337,6 +398,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
           onChange={setNewComment}
           placeholder="Add a comment... You can add images by dragging & dropping or pasting them!"
           disabled={submitting}
+          teamId={teamId}
         />
         <button
           type="submit"
