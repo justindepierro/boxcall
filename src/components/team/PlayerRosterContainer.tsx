@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useRoster } from "../../hooks/useRoster";
-import { Button } from "../ui";
+import { Button, Icon } from "../ui";
+import { UserProfilePopover } from "../ui/UserProfilePopover";
 
 import { PlayerList } from "./PlayerList";
 
@@ -41,9 +43,44 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   teamId,
   compact = false,
 }) => {
+  const navigate = useNavigate();
   const { players: rosterPlayers, loading, error, refresh } = useRoster(teamId);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef(false);
 
   const mappedPlayers: TeamPlayer[] = rosterPlayers.map(mapRosterToTeamPlayer);
+
+  // Reset visible count when players change
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [rosterPlayers.length]);
+
+  // Infinite scroll handler
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || loadingRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+
+    // Load more when user scrolls past 80%
+    if (scrollPercentage > 0.8 && visibleCount < mappedPlayers.length) {
+      loadingRef.current = true;
+      // Add small delay to prevent multiple triggers
+      setTimeout(() => {
+        setVisibleCount((prev) => Math.min(prev + 10, mappedPlayers.length));
+        loadingRef.current = false;
+      }, 100);
+    }
+  }, [visibleCount, mappedPlayers.length]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   if (loading) return <div className="p-4 text-sm">Loading roster…</div>;
   if (error)
@@ -61,33 +98,56 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
       </div>
     );
 
-  // Compact list view for sidebar
+  const visiblePlayers = mappedPlayers.slice(0, visibleCount);
+  const hasMore = visibleCount < mappedPlayers.length;
+
+  // Compact list view for sidebar with infinite scroll
   if (compact) {
     return (
       <div className="space-y-2">
-        {mappedPlayers.slice(0, 10).map((player) => (
-          <div
-            key={player.id}
-            className="flex items-center gap-3 p-2 hover:bg-surface-secondary rounded-lg transition-colors cursor-pointer"
-          >
-            <div className="w-8 h-8 bg-brand-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-brand-primary flex-shrink-0">
-              {player.jersey_number || "?"}
+        <div ref={containerRef} className="space-y-2 max-h-96 overflow-y-auto">
+          {visiblePlayers.map((player) => {
+            const playerTrigger = (
+              <div
+                key={player.id}
+                className="flex items-center gap-3 p-2 hover:bg-surface-secondary rounded-lg transition-colors cursor-pointer"
+              >
+                <div className="w-8 h-8 bg-brand-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-brand-primary flex-shrink-0">
+                  {player.jersey_number || "?"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-primary truncate">
+                    {player.first_name} {player.last_name}
+                  </p>
+                  <p className="text-xs text-secondary truncate">
+                    {player.positions[0] || "Player"}
+                  </p>
+                </div>
+              </div>
+            );
+
+            // Show popover if player has user_id
+            if (player.user_id) {
+              return (
+                <UserProfilePopover
+                  key={player.id}
+                  userId={player.user_id}
+                  trigger={playerTrigger}
+                  showOnHover
+                  teamId={teamId}
+                />
+              );
+            }
+
+            return playerTrigger;
+          })}
+
+          {hasMore && (
+            <div className="text-center py-2 text-xs text-secondary">
+              Scroll for more ({visibleCount} of {mappedPlayers.length})
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-primary truncate">
-                {player.first_name} {player.last_name}
-              </p>
-              <p className="text-xs text-secondary truncate">
-                {player.positions[0] || "Player"}
-              </p>
-            </div>
-          </div>
-        ))}
-        {mappedPlayers.length > 10 && (
-          <button className="w-full text-center text-xs text-brand-primary hover:text-brand-secondary py-2">
-            View all {mappedPlayers.length} players
-          </button>
-        )}
+          )}
+        </div>
       </div>
     );
   }

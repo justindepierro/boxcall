@@ -656,13 +656,22 @@ const TeamBulletin: React.FC = React.memo(() => {
                             Roster
                           </Typography>
                         </div>
-                        <Typography variant="body-xs" color="muted">
-                          {teamData?.memberCount || 0}
-                        </Typography>
+                        <div className="flex items-center gap-2">
+                          <Typography variant="body-xs" color="muted">
+                            {teamData?.memberCount || 0}
+                          </Typography>
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            onClick={() => navigate(`/team/${teamId}/edit`)}
+                            className="gap-1"
+                          >
+                            <Icon name="edit" size="xs" />
+                            Edit
+                          </Button>
+                        </div>
                       </div>
-                      <div className="max-h-96 overflow-y-auto">
-                        <PlayerRosterContainer teamId={teamId || ""} compact />
-                      </div>
+                      <PlayerRosterContainer teamId={teamId || ""} compact />
                     </Card>
                   </div>
                 </aside>
