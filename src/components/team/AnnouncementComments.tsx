@@ -14,6 +14,7 @@ import {
 import { MessageCircle, Send, Edit2, Trash2, Reply } from "lucide-react";
 import { format } from "date-fns";
 import { supabase } from "../../lib/supabase";
+import { CommentReactions } from "./CommentReactions";
 
 interface AnnouncementCommentsProps {
   announcementId: string;
@@ -204,13 +205,23 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
             </div>
           ) : (
             <>
-              <p className="text-primary text-sm whitespace-pre-wrap">
+              <p className="text-primary text-sm whitespace-pre-wrap mb-3">
                 {comment.content}
               </p>
+              
+              {/* Reactions */}
+              <div className="mb-2">
+                <CommentReactions 
+                  commentId={comment.id} 
+                  onReactionChange={loadComments}
+                  compact={true}
+                />
+              </div>
+
               {!isReplying && (
                 <button
                   onClick={() => setReplyingTo(comment.id)}
-                  className="mt-2 flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
                 >
                   <Reply className="w-3 h-3" />
                   Reply

@@ -1,27 +1,29 @@
 /**
- * AnnouncementReactions Component
+ * CommentReactions Component
  * 
- * Displays reactions on announcements with picker for adding/removing reactions
+ * Compact inline reactions for comments
  * Shows: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
  */
 
 import React, { useState, useEffect } from "react";
 import {
-  ReactionsService,
+  CommentReactionsService,
   type ReactionType,
   type ReactionSummary,
   REACTION_EMOJIS,
   REACTION_LABELS,
-} from "../../services/reactionsService";
+} from "../../services/commentReactionsService";
 
-interface AnnouncementReactionsProps {
-  announcementId: string;
+interface CommentReactionsProps {
+  commentId: string;
   onReactionChange?: () => void;
+  compact?: boolean; // If true, use more compact styling
 }
 
-export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
-  announcementId,
+export const CommentReactions: React.FC<CommentReactionsProps> = ({
+  commentId,
   onReactionChange,
+  compact = true,
 }) => {
   const [summary, setSummary] = useState<ReactionSummary[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,8 +31,8 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
 
   // Load reactions
   const loadReactions = async () => {
-    const { summary: reactionSummary } = await ReactionsService.getReactions(
-      announcementId
+    const { summary: reactionSummary } = await CommentReactionsService.getReactions(
+      commentId
     );
     setSummary(reactionSummary);
   };
@@ -38,7 +40,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
   useEffect(() => {
     loadReactions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [announcementId]);
+  }, [commentId]);
 
   const handleToggleReaction = async (reactionType: ReactionType) => {
     if (loading) return;
@@ -47,8 +49,8 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
     setAnimatingReaction(reactionType);
 
     try {
-      const result = await ReactionsService.toggleReaction(
-        announcementId,
+      const result = await CommentReactionsService.toggleReaction(
+        commentId,
         reactionType
       );
 
@@ -56,10 +58,10 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
         await loadReactions();
         onReactionChange?.();
       } else {
-        console.error("Failed to toggle reaction:", result.error);
+        console.error("Failed to toggle comment reaction:", result.error);
       }
     } catch (error) {
-      console.error("Error toggling reaction:", error);
+      console.error("Error toggling comment reaction:", error);
     } finally {
       setLoading(false);
       // Keep animation class for a bit longer
@@ -70,7 +72,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
   const allReactionTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={`flex items-center gap-1.5 flex-wrap ${compact ? "text-xs" : "text-sm"}`}>
       {/* Always show all reaction types as inline buttons */}
       {allReactionTypes.map((type) => {
         const existingSummary = summary.find((s) => s.reaction_type === type);
@@ -84,12 +86,13 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
             onClick={() => handleToggleReaction(type)}
             disabled={loading}
             className={`
-              flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
+              flex items-center gap-1 rounded-full font-medium
               transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+              ${compact ? "px-2 py-0.5" : "px-3 py-1"}
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-blue-100 text-blue-700 border-2 border-blue-500 hover:bg-blue-200 animate-pulse"
+                  ? "bg-blue-100 text-blue-700 border border-blue-500 hover:bg-blue-200 animate-pulse"
                   : count > 0
                   ? "bg-surface-secondary text-secondary border hover:bg-surface-muted"
                   : "bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100 hover:text-gray-600 hover:border-gray-300"
@@ -99,7 +102,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
               hasReacted ? " (You reacted)" : ""
             }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}
           >
-            <span className={`text-lg leading-none transition-transform duration-200 ${isAnimating ? "scale-125" : ""}`}>
+            <span className={`leading-none transition-transform duration-200 ${isAnimating ? "scale-125" : ""} ${compact ? "text-sm" : "text-base"}`}>
               {REACTION_EMOJIS[type]}
             </span>
             {count > 0 && <span className="font-semibold">{count}</span>}
