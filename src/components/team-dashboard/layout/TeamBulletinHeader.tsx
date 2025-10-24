@@ -65,6 +65,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
         .getPublicUrl(filePath);
       const publicUrl = pub.publicUrl;
       // Persist on team row
+      // @ts-expect-error - logo_url exists in teams table but not in generated types yet
       const { error: updateError } = await supabase
         .from("teams")
         .update({ logo_url: publicUrl })
@@ -187,7 +188,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-xsrimary"
+              className="font-semibold text-text-primary"
             >
               {memberCount}
             </Typography>

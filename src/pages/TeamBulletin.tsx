@@ -13,16 +13,12 @@ import { useAuth } from "../app/auth-store";
 import { useDevMode } from "../app/dev-mode-hooks";
 import { Typography } from "../components/design-system";
 import { TeamBulletinHeader } from "../components/team-dashboard/layout/TeamBulletinHeader";
-import { SeasonStatsCard } from "../components/team-dashboard/SeasonStatsCard";
-import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
 import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
 import { AnnouncementsList } from "../components/team/AnnouncementsList";
 import { PlayerRosterContainer } from "../components/team/PlayerRosterContainer";
-import { OnboardingHint } from "../components/onboarding/OnboardingHint";
 import { Button, Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
-import { AuroraTile } from "../components/ui/AuroraTile";
 import { LogoIcon } from "../components/ui/Logo";
 import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
@@ -35,9 +31,6 @@ import { Aurora } from "../components/ui/Aurora";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 
 // Collaboration components and provider
-import { SharedGoalTracker } from "../components/collaboration/SharedGoalTracker";
-import { TeamVoteWidget } from "../components/collaboration/TeamVoteWidget";
-import { ProgressSharing } from "../components/collaboration/ProgressSharing";
 import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
 
 // Modal components (lazy loaded)
@@ -62,9 +55,6 @@ const TeamVotesModal = lazy(() =>
   }))
 );
 import { colorTokens } from "../design-system/tokens";
-
-// Loading skeleton for collaboration widgets
-import { DashboardCardSkeleton } from "../components/ui/Skeleton";
 
 // Team Bulletin Page (modular layout version)
 const TeamBulletin: React.FC = React.memo(() => {
@@ -263,18 +253,19 @@ const TeamBulletin: React.FC = React.memo(() => {
     [teamId, teamData, isCoach, userRole]
   );
 
-  const collaborationProps = useMemo(() => {
-    if (!teamId) return null;
-    return {
-      widgetId: "team-bulletin-shared-goals",
-      userRole:
-        profile?.role === "admin"
-          ? ("coach" as const)
-          : (userRole as "coach" | "player" | "family") || ("player" as const),
-      userId: user?.id || "anonymous",
-      teamId: teamId,
-    };
-  }, [profile?.role, userRole, user?.id, teamId]);
+  // Note: collaborationProps prepared for future use in modals
+  // const collaborationProps = useMemo(() => {
+  //   if (!teamId) return null;
+  //   return {
+  //     widgetId: "team-bulletin-shared-goals",
+  //     userRole:
+  //       profile?.role === "admin"
+  //         ? ("coach" as const)
+  //         : (userRole as "coach" | "player" | "family") || ("player" as const),
+  //     userId: user?.id || "anonymous",
+  //     teamId: teamId,
+  //   };
+  // }, [profile?.role, userRole, user?.id, teamId]);
 
   // Show loading screen while any data is loading
   if (isLoading) {

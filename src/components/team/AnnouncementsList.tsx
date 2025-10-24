@@ -45,7 +45,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [hasNewContent, setHasNewContent] = useState(false);
 
   // Real-time subscriptions for live updates
-  const { isConnected } = useAnnouncementsRealtime({
+  useAnnouncementsRealtime({
     teamId,
     onNewAnnouncement: () => setHasNewContent(true),
     onAnnouncementUpdate: () => loadAnnouncements(),
