@@ -105,7 +105,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
     const isPinned = isOptimisticPinned;
 
     return (
-      <article className="bg-white rounded-lg shadow-md overflow-hidden">
+      <article className="bg-surface-primary rounded-lg shadow-md overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border">
           <div className="flex items-start justify-between">
@@ -137,7 +137,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                     showOnHover={true}
                   />
                   {isPinned && (
-                    <Pin className="w-4 h-4 text-blue-600 fill-current" />
+                    <Pin className="w-4 h-4 text-brand-primary fill-current" />
                   )}
                 </div>
                 <div className="flex items-center gap-3 text-sm text-secondary">
@@ -178,7 +178,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                   onClick={handleTogglePin}
                   className={`p-2 rounded-lg transition-colors ${
                     isPinned
-                      ? "text-blue-600 hover:bg-blue-50"
+                      ? "text-brand-primary hover:bg-brand-primary-light"
                       : "text-muted hover:bg-surface-secondary"
                   }`}
                   title={isPinned ? "Unpin" : "Pin"}
@@ -192,11 +192,10 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                 </button>
               )}
               {onEdit && (
-                <button
-                  onClick={() => onEdit(announcement)}
-                  className="p-2 text-muted hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                  title="Edit"
-                  aria-label="Edit announcement"
+                                <button
+                  onClick={onEdit}
+                  className="p-2 text-muted hover:text-brand-primary hover:bg-brand-primary-light rounded-lg transition-colors"
+                  title="Edit announcement"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>

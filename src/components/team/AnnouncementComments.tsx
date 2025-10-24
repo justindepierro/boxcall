@@ -207,7 +207,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
         className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}
       >
         {/* Comment */}
-        <div className="rounded-xl p-4 bg-white hover:bg-surface-subtle transition-colors border border-border-subtle">
+        <div className="rounded-xl p-4 bg-surface-primary hover:bg-surface-subtle transition-colors border border-border-subtle">
           <div className="flex items-start gap-3 mb-2">
             {/* Avatar with Popover */}
             <UserProfilePopover
@@ -279,7 +279,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                 <button
                   onClick={() => handleSaveEdit(comment.id)}
                   disabled={submitting || !editContent.trim()}
-                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Save
                 </button>
@@ -317,7 +317,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
               {!isReplying && (
                 <button
                   onClick={() => setReplyingTo(comment.id)}
-                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+                  className="flex items-center gap-1 text-xs text-brand-primary hover:text-brand-primary-hover"
                 >
                   <Reply className="w-3 h-3" />
                   Reply
@@ -348,7 +348,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                 <button
                   type="submit"
                   disabled={submitting || !replyContent.trim()}
-                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                 >
                   <Send className="w-3 h-3" />
                   Reply

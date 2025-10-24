@@ -131,9 +131,9 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
               ${isAnimating ? "scale-110" : "scale-100"}
               ${
                 hasReacted
-                  ? "bg-blue-50 text-blue-700"
+                  ? "bg-brand-primary-light text-brand-primary-dark"
                   : count > 0
-                    ? "bg-white text-text-primary hover:bg-jade-50"
+                    ? "bg-surface-primary text-text-primary hover:bg-jade-50"
                     : "bg-transparent text-text-secondary hover:bg-surface-subtle"
               }
             `}
