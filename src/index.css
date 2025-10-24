@@ -39,6 +39,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global app scale - Makes entire app feel compact and information-dense */
+:root {
+  /* Scale everything to 87.5% (between 85-90%) for that "zoomed out" feel */
+  font-size: 87.5%; /* 14px base instead of 16px */
+}
+
+/* Maintain readable text on mobile */
+@media (max-width: 640px) {
+  :root {
+    font-size: 90%; /* Slightly larger on mobile for readability */
+  }
+}
+
+/* Global tighter defaults for compact feel */
+body {
+  letter-spacing: -0.01em; /* Slightly tighter letter spacing */
+  line-height: 1.5; /* Slightly tighter line height (was 1.6) */
+}
+
+/* Tighter heading spacing */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
 /* Line clamp utility for text truncation */
 @layer utilities {
   .line-clamp-2 {
