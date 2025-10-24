@@ -141,18 +141,48 @@ export class AnnouncementsService {
         .select("id, full_name, display_name")
         .in("id", authorIds);
 
-      // Create a map of author ID to name
-      const authorMap = new Map(
-        (profiles || []).map((p: any) => [
-          p.id,
-          p.display_name || p.full_name || "Unknown",
-        ])
+      // Fetch team member roles to check for coaches
+      const { data: teamMembers } = await supabase
+        .from("team_members")
+        .select("user_id, role")
+        .eq("team_id", teamId)
+        .in("user_id", authorIds);
+
+      // Create maps
+      const profileMap = new Map(
+        (profiles || []).map((p: any) => [p.id, p])
       );
 
-      // Enrich announcements with author names
+      const roleMap = new Map(
+        (teamMembers || []).map((m: any) => [m.user_id, m.role])
+      );
+
+      // Helper function to format author name based on role
+      const formatAuthorName = (authorId: string): string => {
+        const profile = profileMap.get(authorId);
+        const role = roleMap.get(authorId);
+
+        if (!profile) return "Unknown";
+
+        // Check if user is a coach
+        const isCoach = role && ["head_coach", "assistant_coach", "coach"].includes(role);
+
+        if (isCoach) {
+          // Extract last name for coaches
+          const fullName = profile.full_name || profile.display_name || "";
+          const nameParts = fullName.trim().split(/\s+/);
+          const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : fullName;
+          return `Coach ${lastName}`;
+        }
+
+        // For non-coaches, use display name or full name
+        return profile.display_name || profile.full_name || "Unknown";
+      };
+
+      // Enrich announcements with formatted author names
       const enrichedData = announcements.map((announcement: any) => ({
         ...announcement,
-        author_name: authorMap.get(announcement.created_by) || "Unknown",
+        author_name: formatAuthorName(announcement.created_by),
       }));
 
       return enrichedData as unknown as Announcement[];

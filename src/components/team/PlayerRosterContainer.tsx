@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRoster } from "../../hooks/useRoster";
 import { Button } from "../ui";
 import { UserProfilePopover } from "../ui/UserProfilePopover";
+import { PlayerPlaceholderPopover } from "../ui/PlayerPlaceholderPopover";
 
 import { PlayerList } from "./PlayerList";
 
@@ -124,7 +125,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
               </div>
             );
 
-            // Show popover if player has user_id
+            // Show popover - either user profile or placeholder
             if (player.user_id) {
               return (
                 <UserProfilePopover
@@ -137,7 +138,19 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
               );
             }
 
-            return playerTrigger;
+            // Show placeholder popover for players without accounts
+            return (
+              <PlayerPlaceholderPopover
+                key={player.id}
+                playerId={player.id}
+                playerName={`${player.first_name} ${player.last_name}`}
+                position={player.positions[0]}
+                jerseyNumber={player.jersey_number}
+                trigger={playerTrigger}
+                showOnHover
+                onInvite={(id) => console.info("Invite player", id)}
+              />
+            );
           })}
 
           {hasMore && (
