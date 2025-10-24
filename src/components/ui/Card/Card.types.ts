@@ -1,22 +1,33 @@
 /**
  * BoxCall Card Component Types
+ * 
+ * Shadow-based elevation system (no borders on cards)
  */
 import type { HTMLAttributes, ReactNode } from "react";
 
+/**
+ * Card Variants - Shadow-only design (NO BORDERS)
+ * 
+ * Removed: "outlined" variant (violates shadow-only standard)
+ * Added: "subtle" and "floating" for expanded elevation range
+ */
 export type CardVariant =
-  | "default" // Standard card
-  | "glass" // Glassmorphism effect
-  | "elevated" // Card with shadow
-  | "outlined" // Card with jade border
-  | "filled" // Card with background fill
-  | "accent"; // Card with navy accent theme
+  | "default"   // Standard card with medium shadow (MOST COMMON)
+  | "elevated"  // Stronger shadow for prominent cards
+  | "subtle"    // Minimal shadow for secondary content
+  | "glass"     // Glassmorphism with backdrop blur
+  | "filled"    // Muted background, minimal elevation
+  | "accent"    // Brand gradient with shadow
+  | "floating"; // Maximum shadow for modals/overlays
+
 export type CardSize =
-  | "sm" // Small padding
-  | "md" // Medium padding (default)
-  | "lg" // Large padding
-  | "xl"; // Extra large padding
+  | "sm"  // 12px padding - compact
+  | "md"  // 16px padding - standard (MOST COMMON)
+  | "lg"  // 24px padding - spacious
+  | "xl"; // 32px padding - hero sections
+
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  /** Card variant for styling */
+  /** Card variant for styling (shadow-based elevation) */
   variant?: CardVariant;
   /** Card size for padding */
   size?: CardSize;
@@ -24,7 +35,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   header?: ReactNode;
   /** Card footer content */
   footer?: ReactNode;
-  /** Whether card is interactive (adds hover effects) */
+  /** Whether card is interactive (adds hover effects and lift animation) */
   interactive?: boolean;
   /** Whether card is disabled */
   disabled?: boolean;
@@ -34,9 +45,10 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   contentClassName?: string;
   /** Additional CSS classes for the footer */
   footerClassName?: string;
-  /** Loading state */
+  /** Loading state (shows skeleton) */
   loading?: boolean;
 }
+
 export interface CardStylesConfig {
   base: string;
   variants: Record<CardVariant, string>;

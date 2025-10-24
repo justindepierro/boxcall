@@ -863,6 +863,201 @@ export const elevationTokens = {
 } as const;
 
 // ============================================================================
+// SURFACE & ELEVATION SYSTEM - Shadow-Based Depth (No Borders on Cards)
+// ============================================================================
+
+/**
+ * Surface and Elevation Tokens
+ * 
+ * Philosophy: Clean, modern interface with depth created through shadows only.
+ * Borders are reserved for inputs, dividers, and specific UI elements—NOT cards.
+ * 
+ * Design Standard: Shadow-only cards for a clean SaaS aesthetic
+ * - Similar to Linear, Notion, Figma (best-in-class SaaS apps)
+ * - Better dark mode support (shadows adapt better than borders)
+ * - Cleaner visual hierarchy (depth through shadow, not lines)
+ * - More professional appearance (modern, polished)
+ * 
+ * Global Density: 87.5% scale (14px base font size instead of 16px)
+ * Mobile Density: 90% scale (14.4px base for better readability)
+ * Applied in: src/index.css
+ */
+
+export const surfaceTokens = {
+  // Surface backgrounds - semantic color tokens
+  primary: 'bg-surface-primary',        // White in light mode, dark in dark mode
+  secondary: 'bg-surface-secondary',    // Gray-50 in light, dark gray in dark
+  muted: 'bg-surface-muted',            // Gray-100 in light, darker in dark
+  subtle: 'bg-surface-subtle',          // Very subtle background difference
+  
+  // Elevation shadows (shadow-only design - NO BORDERS)
+  // Use these instead of border+shadow combinations
+  elevation: {
+    none: 'shadow-none',                // Flat, no elevation (0px blur)
+    subtle: 'shadow-sm',                // Barely perceptible (0-1px blur, 1px offset)
+    card: 'shadow-md',                  // Standard cards (3-4px blur, 2-3px offset) - MOST COMMON
+    raised: 'shadow-lg',                // Elevated elements (8-10px blur, 4-5px offset)
+    floating: 'shadow-xl',              // Floating UI (16-20px blur, 8-10px offset)
+    modal: 'shadow-2xl',                // Modals, overlays (24-28px blur, 12-15px offset)
+  },
+  
+  // Interactive elevation changes (hover states)
+  // Combine with elevation for interactive cards
+  hover: {
+    subtle: 'hover:shadow-md',          // Lift from subtle to card
+    card: 'hover:shadow-lg',            // Lift from card to raised (MOST COMMON)
+    raised: 'hover:shadow-xl',          // Lift from raised to floating
+    withLift: 'hover:-translate-y-0.5', // Physical lift animation (2px up)
+  },
+  
+  // Active/pressed states
+  active: {
+    pressed: 'active:shadow-sm',        // Press down effect (reduce shadow)
+    flat: 'active:shadow-none',         // Completely flat when pressed
+    down: 'active:translate-y-0',       // Remove lift translation
+  },
+  
+  // Rounded corners (consistent across surfaces)
+  rounded: {
+    sm: 'rounded-md',                   // 6px - small elements, badges
+    md: 'rounded-lg',                   // 8px - standard cards, panels - MOST COMMON
+    lg: 'rounded-xl',                   // 12px - prominent cards, modals
+    full: 'rounded-full',               // Circular - avatars, pills
+  },
+  
+  // Common surface patterns (composable classes)
+  // These are pre-built combinations for common use cases
+  patterns: {
+    // Standard card (most common - use this as default)
+    card: 'bg-surface-primary rounded-lg shadow-md',
+    
+    // Interactive card (clickable, with hover lift)
+    cardInteractive: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all cursor-pointer',
+    
+    // Card with hover only (no lift, just shadow change)
+    cardHover: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow',
+    
+    // Panel (sidebar, secondary containers)
+    panel: 'bg-surface-secondary rounded-lg shadow-sm',
+    panelMuted: 'bg-surface-muted rounded-lg shadow-none',
+    
+    // Floating elements (dropdowns, tooltips, popovers)
+    floating: 'bg-surface-primary rounded-lg shadow-xl',
+    floatingLarge: 'bg-surface-primary rounded-lg shadow-2xl',
+    
+    // Modal/overlay
+    modal: 'bg-surface-primary rounded-xl shadow-2xl',
+    overlay: 'bg-surface-primary/95 backdrop-blur-sm rounded-xl shadow-2xl',
+    
+    // Stat cards (dashboard widgets)
+    stat: 'bg-surface-primary rounded-lg shadow-md p-6',
+    statInteractive: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6',
+  },
+} as const;
+
+/**
+ * Density Scale Documentation
+ * 
+ * Global scale: 87.5% (14px base instead of 16px)
+ * Mobile scale: 90% (14.4px base for readability)
+ * 
+ * Implementation in src/index.css:
+ * ```css
+ * :root {
+ *   font-size: 87.5%;
+ * }
+ * @media (max-width: 640px) {
+ *   :root {
+ *     font-size: 90%;
+ *   }
+ * }
+ * body {
+ *   letter-spacing: -0.01em;
+ *   line-height: 1.5;
+ * }
+ * h1, h2, h3, h4, h5, h6 {
+ *   letter-spacing: -0.02em;
+ *   line-height: 1.3;
+ * }
+ * ```
+ */
+export const densityScaleTokens = {
+  // Spacing scale for compact layouts
+  spacing: {
+    // Card padding (compact but breathable)
+    card: {
+      sm: 'p-3',              // 12px - small cards, badges
+      md: 'p-4',              // 16px - standard cards (MOST COMMON)
+      lg: 'p-6',              // 24px - large cards, prominent sections
+      xl: 'p-8',              // 32px - hero cards, full-page sections
+    },
+    
+    // Inline spacing (buttons, inputs, inline elements)
+    inline: {
+      xs: 'px-2 py-1',        // 8px/4px - badges, tags, tiny buttons
+      sm: 'px-3 py-2',        // 12px/8px - buttons, small inputs
+      md: 'px-4 py-3',        // 16px/12px - standard inline elements (MOST COMMON)
+      lg: 'px-6 py-4',        // 24px/16px - large buttons, prominent actions
+    },
+    
+    // Gaps (spacing between elements)
+    gap: {
+      xs: 'gap-1',            // 4px - very tight, icons next to text
+      sm: 'gap-2',            // 8px - tight, related elements (MOST COMMON)
+      md: 'gap-3',            // 12px - standard, general spacing
+      lg: 'gap-4',            // 16px - spacious, section spacing
+      xl: 'gap-6',            // 24px - loose, major sections
+    },
+    
+    // Stack spacing (vertical rhythm)
+    stack: {
+      xs: 'space-y-1',        // 4px - very compact lists
+      sm: 'space-y-2',        // 8px - compact lists, form fields
+      md: 'space-y-3',        // 12px - standard lists (MOST COMMON)
+      lg: 'space-y-4',        // 16px - relaxed lists
+      xl: 'space-y-6',        // 24px - sections, major groups
+    },
+  },
+  
+  // Typography scale (scaled to work with 87.5% base)
+  typography: {
+    // Font sizes (these scale down globally by 12.5%)
+    size: {
+      xs: 'text-xs',          // ~11px at 87.5% (caption, fine print)
+      sm: 'text-sm',          // ~12px at 87.5% (body small, labels) - COMMON
+      base: 'text-base',      // ~14px at 87.5% (body standard) - MOST COMMON
+      lg: 'text-lg',          // ~16px at 87.5% (headings, emphasis)
+      xl: 'text-xl',          // ~18px at 87.5% (large headings)
+      '2xl': 'text-2xl',      // ~21px at 87.5% (hero headings)
+    },
+    
+    // Line heights (tight for density)
+    leading: {
+      tight: 'leading-tight',     // 1.25 - headings, compact text
+      snug: 'leading-snug',       // 1.375 - captions
+      normal: 'leading-normal',   // 1.5 - body text (MOST COMMON)
+      relaxed: 'leading-relaxed', // 1.625 - comfortable reading
+    },
+    
+    // Letter spacing (slightly negative for professional feel)
+    tracking: {
+      tight: 'tracking-tight',    // -0.025em - headings
+      normal: 'tracking-normal',  // 0 - body text (MOST COMMON)
+      wide: 'tracking-wide',      // 0.025em - labels, all-caps
+    },
+  },
+  
+  // Icon sizes (proportional to text)
+  icons: {
+    xs: 'h-3 w-3',           // 12px - inline with xs text
+    sm: 'h-3.5 w-3.5',       // 14px - inline with sm text (COMMON)
+    base: 'h-4 w-4',         // 16px - inline with base text (MOST COMMON)
+    lg: 'h-5 w-5',           // 20px - inline with lg text
+    xl: 'h-6 w-6',           // 24px - prominent icons
+  },
+} as const;
+
+// ============================================================================
 // ENHANCED CONTRAST SYSTEM - "Industry-Leading Accessibility"
 // ============================================================================
 

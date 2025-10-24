@@ -1,35 +1,60 @@
 /**
  * BoxCall Card Component
  *
- * Masculine, square card component with jade/navy accents
- * Professional, confident design for football team management
+ * Shadow-based elevation system for clean, professional UI
+ * NO BORDERS on cards - shadows create depth instead
+ * Follows design system surfaceTokens standard
  */
 import { forwardRef } from "react";
 
 import type { CardProps, CardStylesConfig } from "./Card.types";
-// Card styles configuration - Using component token system (Priority 5)
+
+/**
+ * Card styles configuration - Shadow-only design (NO BORDERS)
+ * 
+ * Philosophy: Clean SaaS aesthetic with shadow-based depth
+ * - Similar to Linear, Notion, Figma
+ * - Borders reserved for inputs, dividers only
+ * - Shadows create visual hierarchy
+ * 
+ * Uses surfaceTokens from design-system/tokens.ts
+ */
 const cardStyles: CardStylesConfig = {
-  base: "card rounded-xl transition-all duration-200 ease-in-out overflow-visible",
+  base: "rounded-lg transition-all duration-200 ease-in-out overflow-visible",
   variants: {
-    default: "card-interactive", // Uses component tokens for hover
-    glass: "bg-surface-base/80 hover:bg-surface-base/90 shadow-lg", // Custom glass effect (backdrop-blur removed for testing)
-    elevated: "card-elevated bg-white dark:bg-surface-secondary", // Uses component token shadow
-    outlined: "border-card-elevated bg-surface-secondary",
-    filled: "bg-surface-muted hover:bg-surface-muted/90 shadow-sm",
-    accent:
-      "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20 shadow-md",
+    // Default: Standard card with medium shadow (MOST COMMON)
+    default: "bg-surface-primary shadow-md hover:shadow-lg",
+    
+    // Elevated: Stronger shadow for prominent cards
+    elevated: "bg-surface-primary shadow-lg hover:shadow-xl",
+    
+    // Subtle: Minimal shadow for secondary content
+    subtle: "bg-surface-secondary shadow-sm hover:shadow-md",
+    
+    // Glass: Translucent with backdrop blur
+    glass: "bg-surface-primary/80 backdrop-blur-sm shadow-lg hover:shadow-xl",
+    
+    // Filled: Muted background, no elevation (for backgrounds)
+    filled: "bg-surface-muted shadow-none hover:shadow-sm",
+    
+    // Accent: Brand gradient with shadow
+    accent: "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20 shadow-md hover:shadow-lg",
+    
+    // Floating: Maximum shadow for modals/overlays
+    floating: "bg-surface-primary shadow-2xl",
   },
   sizes: {
-    sm: "p-3",
-    md: "p-4",
-    lg: "p-6",
-    xl: "p-8",
+    sm: "p-3",   // 12px - compact
+    md: "p-4",   // 16px - standard (MOST COMMON)
+    lg: "p-6",   // 24px - spacious
+    xl: "p-8",   // 32px - hero sections
   },
   interactive:
-    "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus:ring",
+    "cursor-pointer hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus:ring-2 focus:ring-brand-primary/20",
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };
+
 // Header and footer styles with theme awareness
 const getSectionStyles = (type: "header" | "footer", size: string) => {
   const sizes = {
@@ -40,14 +65,16 @@ const getSectionStyles = (type: "header" | "footer", size: string) => {
   };
   return sizes[size as keyof typeof sizes];
 };
+
 /**
  * Card Component
  *
- * A flexible card component for containing and organizing content:
- * - Multiple variants (default, elevated, outlined, filled)
+ * A flexible card component with shadow-based elevation:
+ * - Shadow-only design (no borders)
+ * - Multiple elevation variants (default, elevated, subtle, glass, filled, accent, floating)
  * - Size variants (sm, md, lg, xl)
  * - Header and footer support
- * - Interactive states
+ * - Interactive states with lift animation
  * - Loading states
  * - Dark mode support
  */
