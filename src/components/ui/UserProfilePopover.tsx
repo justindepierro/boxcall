@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Activity,
   Trophy,
@@ -16,11 +16,12 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system/Typography";
 import { MultiBadgeDisplay } from "./MultiBadgeDisplay";
+import { usePopoverContext } from "../../contexts/PopoverContext";
 
 interface UserProfilePopoverProps {
   userId: string;
   trigger: React.ReactNode;
-  placement?: "top" | "bottom" | "left" | "right";
+  placement?: "top" | "bottom" | "left" | "right" | "auto";
   showOnHover?: boolean;
   className?: string;
   teamId?: string; // Optional: for team-specific context
@@ -64,12 +65,17 @@ interface PlayerInfo {
 export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
   userId,
   trigger,
-  placement = "bottom",
+  placement = "auto",
   showOnHover = true,
   className = "",
   teamId,
 }) => {
   const navigate = useNavigate();
+  const { activePopoverId, registerPopover, unregisterPopover } = usePopoverContext();
+  const popoverId = useMemo(() => `popover-${userId}-${Math.random()}`, [userId]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  
   const [isVisible, setIsVisible] = useState(false);
   const [profile, setProfile] = useState<PopoverProfile | null>(null);
   const [loading, setLoading] = useState(false);
@@ -77,6 +83,10 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
   const [teamMember, setTeamMember] = useState<TeamMemberInfo | null>(null);
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo | null>(null);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [computedPlacement, setComputedPlacement] = useState(placement);
+
+  // Check if this popover should be visible
+  const shouldBeVisible = isVisible && (activePopoverId === null || activePopoverId === popoverId);
 
   // Fetch profile data when popover becomes visible
   useEffect(() => {
@@ -176,6 +186,25 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     fetchData();
   }, [isVisible, userId, profile, loading, teamId]);
 
+  // Calculate optimal placement on mount and when visibility changes
+  useEffect(() => {
+    if (shouldBeVisible && containerRef.current && placement === "auto") {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      // Choose placement based on available space
+      if (spaceBelow > 400 || spaceBelow > spaceAbove) {
+        setComputedPlacement("bottom");
+      } else {
+        setComputedPlacement("top");
+      }
+    } else if (placement !== "auto") {
+      setComputedPlacement(placement);
+    }
+  }, [shouldBeVisible, placement]);
+
   const handleMouseEnter = () => {
     if (showOnHover) {
       // Clear any pending close timeout
@@ -183,6 +212,8 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
         clearTimeout(closeTimeout);
         setCloseTimeout(null);
       }
+      // Register this popover as active (closes others)
+      registerPopover(popoverId);
       setIsVisible(true);
     }
   };
@@ -192,6 +223,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
       // Add a 300ms delay before closing
       const timeout = setTimeout(() => {
         setIsVisible(false);
+        unregisterPopover(popoverId);
       }, 300);
       setCloseTimeout(timeout);
     }
@@ -199,7 +231,13 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
   const handleClick = () => {
     if (!showOnHover) {
-      setIsVisible(!isVisible);
+      if (isVisible) {
+        setIsVisible(false);
+        unregisterPopover(popoverId);
+      } else {
+        registerPopover(popoverId);
+        setIsVisible(true);
+      }
     }
   };
 
@@ -282,11 +320,13 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
   const handleViewProfile = () => {
     setIsVisible(false);
+    unregisterPopover(popoverId);
     navigate(`/profile/${userId}`);
   };
 
   return (
     <div
+      ref={containerRef}
       className={`relative inline-block ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -294,22 +334,19 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     >
       {trigger}
 
-      {isVisible && (
+      {shouldBeVisible && (
         <div
+          ref={popoverRef}
           className={`
-            absolute z-50 w-80 bg-white rounded-lg shadow-lg
+            absolute z-50 w-80 bg-surface-primary rounded-lg shadow-2xl border border-border-subtle
             transform transition-all duration-200 ease-out
-            ${placement === "bottom" ? "top-full mt-2" : ""}
-            ${placement === "top" ? "bottom-full mb-2" : ""}
-            ${placement === "left" ? "right-full mr-2" : ""}
-            ${placement === "right" ? "left-full ml-2" : ""}
+            ${computedPlacement === "bottom" ? "top-full mt-2 left-0" : ""}
+            ${computedPlacement === "top" ? "bottom-full mb-2 left-0" : ""}
+            ${computedPlacement === "left" ? "right-full mr-2 top-0" : ""}
+            ${computedPlacement === "right" ? "left-full ml-2 top-0" : ""}
           `}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          style={{
-            boxShadow:
-              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-          }}
         >
           {loading ? (
             <div className="p-6 text-center">
@@ -329,10 +366,10 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       <img
                         src={profile.avatar_url}
                         alt={profile.full_name || "User"}
-                        className="w-16 h-16 rounded-full border-3 border-white object-cover"
+                        className="w-16 h-16 rounded-full border-3 border-surface-primary object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full border-3 border-white bg-white flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full border-3 border-surface-primary bg-surface-primary flex items-center justify-center">
                         <Typography
                           variant="body-lg"
                           className="text-secondary font-semibold"
@@ -342,7 +379,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       </div>
                     )}
                     {/* Online status indicator */}
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success-500 rounded-full border-2 border-surface-primary"></div>
                   </div>
 
                   {/* Name and role */}

@@ -108,7 +108,7 @@ export function ReadReceipts({
                 {viewers.map((viewer) => (
                   <li
                     key={viewer.user_id}
-                    className="text-sm flex items-center justify-between py-1 px-2 hover:bg-white rounded"
+                    className="text-sm flex items-center justify-between py-1 px-2 hover:bg-surface-secondary rounded"
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-primary">{viewer.user_name}</span>
@@ -139,7 +139,7 @@ export function ReadReceipts({
                 {non_viewers.map((member) => (
                   <li
                     key={member.user_id}
-                    className="text-sm flex items-center gap-2 py-1 px-2 hover:bg-white rounded"
+                    className="text-sm flex items-center gap-2 py-1 px-2 hover:bg-surface-secondary rounded"
                   >
                     <span className="text-muted">{member.user_name}</span>
                     <span className="text-xs text-muted capitalize">

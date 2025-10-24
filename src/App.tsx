@@ -18,6 +18,7 @@ import {
 import { AppProvider } from "./components/core";
 import { SaveStateProvider, useSaveState } from "./contexts/SaveStateContext";
 import { UndoRedoProvider } from "./contexts/UndoRedoContext";
+import { PopoverProvider } from "./contexts/PopoverContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
 import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
@@ -82,11 +83,12 @@ function App() {
           <DevModeProvider>
             <SaveStateProvider>
               <UndoRedoProvider maxHistorySize={50}>
-                <div className="App">
-                  <DevHealthCheck />
-                  <PendingSavesNotification />
-                  <UndoRedoIndicator />
-                  <SaveHistoryPanel />
+                <PopoverProvider>
+                  <div className="App">
+                    <DevHealthCheck />
+                    <PendingSavesNotification />
+                    <UndoRedoIndicator />
+                    <SaveHistoryPanel />
                   <ConflictOverlay />
                   <AppGrid>
                     <AuthGuard>
@@ -117,11 +119,12 @@ function App() {
                   {/* Analytics Debug Panel (dev only) */}
                   <AnalyticsDebugger />
                 </div>
-              </UndoRedoProvider>
-            </SaveStateProvider>
-          </DevModeProvider>
-        </AnalyticsProvider>
-      </AppProvider>
+              </PopoverProvider>
+            </UndoRedoProvider>
+          </SaveStateProvider>
+        </DevModeProvider>
+      </AnalyticsProvider>
+    </AppProvider>
     </ErrorBoundary>
   );
 }

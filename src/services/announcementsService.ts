@@ -126,7 +126,36 @@ export class AnnouncementsService {
         throw error;
       }
 
-      return (data || []) as unknown as Announcement[];
+      // Fetch author names separately
+      const announcements = data || [];
+      if (announcements.length === 0) {
+        return [];
+      }
+
+      // Get unique author IDs
+      const authorIds = [...new Set(announcements.map((a: any) => a.created_by))];
+
+      // Fetch author profiles
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name")
+        .in("id", authorIds);
+
+      // Create a map of author ID to name
+      const authorMap = new Map(
+        (profiles || []).map((p: any) => [
+          p.id,
+          p.display_name || p.full_name || "Unknown",
+        ])
+      );
+
+      // Enrich announcements with author names
+      const enrichedData = announcements.map((announcement: any) => ({
+        ...announcement,
+        author_name: authorMap.get(announcement.created_by) || "Unknown",
+      }));
+
+      return enrichedData as unknown as Announcement[];
     } catch (error) {
       console.error("Error in getAnnouncements:", error);
       throw error;

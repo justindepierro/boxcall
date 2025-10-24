@@ -49,23 +49,31 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
 
         // 4. Count online members (users active in last 5 minutes)
         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
-        const { count: onlineCount } = await supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .gte("last_active", fiveMinutesAgo)
-          .in(
-            "id",
-            supabase
-              .from("team_members")
-              .select("user_id")
-              .eq("team_id", teamId)
-          );
+        
+        // First get team member user IDs
+        const { data: teamMembers } = await supabase
+          .from("team_members")
+          .select("user_id")
+          .eq("team_id", teamId);
+
+        const userIds = (teamMembers || []).map((m) => m.user_id);
+
+        // Then count online members
+        let onlineCount = 0;
+        if (userIds.length > 0) {
+          const { count } = await supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .gte("last_active", fiveMinutesAgo)
+            .in("id", userIds);
+          onlineCount = count || 0;
+        }
 
         setStats({
           newPostsToday: postsCount || 0,
           recentAchievements,
           upcomingEvents,
-          onlineMembers: onlineCount || 0,
+          onlineMembers: onlineCount,
           loading: false,
         });
       } catch (error) {

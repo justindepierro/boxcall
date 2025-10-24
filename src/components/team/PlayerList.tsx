@@ -168,7 +168,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}
-                className="border border-subtle dark:border-border-medium rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="bg-surface-primary rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
               >
                 {/* Player Header */}
                 <div className="flex items-start justify-between mb-3">

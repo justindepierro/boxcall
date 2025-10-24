@@ -34,10 +34,12 @@ function mapRosterToTeamPlayer(view: RosterPlayerView): TeamPlayer {
 
 interface PlayerRosterContainerProps {
   teamId: string;
+  compact?: boolean; // For sidebar display
 }
 
 export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   teamId,
+  compact = false,
 }) => {
   const { players: rosterPlayers, loading, error, refresh } = useRoster(teamId);
 
@@ -58,6 +60,37 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
         </Button>
       </div>
     );
+
+  // Compact list view for sidebar
+  if (compact) {
+    return (
+      <div className="space-y-2">
+        {mappedPlayers.slice(0, 10).map((player) => (
+          <div
+            key={player.id}
+            className="flex items-center gap-3 p-2 hover:bg-surface-secondary rounded-lg transition-colors cursor-pointer"
+          >
+            <div className="w-8 h-8 bg-brand-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-brand-primary flex-shrink-0">
+              {player.jersey_number || "?"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-primary truncate">
+                {player.first_name} {player.last_name}
+              </p>
+              <p className="text-xs text-secondary truncate">
+                {player.positions[0] || "Player"}
+              </p>
+            </div>
+          </div>
+        ))}
+        {mappedPlayers.length > 10 && (
+          <button className="w-full text-center text-xs text-brand-primary hover:text-brand-secondary py-2">
+            View all {mappedPlayers.length} players
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <PlayerList

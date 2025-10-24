@@ -661,7 +661,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                         </Typography>
                       </div>
                       <div className="max-h-96 overflow-y-auto">
-                        <PlayerRosterContainer teamId={teamId || ""} />
+                        <PlayerRosterContainer teamId={teamId || ""} compact />
                       </div>
                     </Card>
                   </div>

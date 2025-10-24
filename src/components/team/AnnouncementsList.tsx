@@ -252,7 +252,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                   (e.target.value as AnnouncementVisibility) || undefined,
               })
             }
-            className="rounded-md border shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="rounded-md bg-surface-primary px-3 py-2 focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All</option>
             <option value="all">Everyone</option>
@@ -271,7 +271,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                 pinnedOnly: e.target.checked || undefined,
               })
             }
-            className="rounded border shadow-sm"
+            className="rounded focus:ring-2 focus:ring-brand-primary"
           />
         </div>
 

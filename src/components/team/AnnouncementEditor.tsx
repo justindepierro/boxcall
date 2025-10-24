@@ -191,7 +191,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+        <div className="relative bg-surface-primary rounded-lg shadow-2xl max-w-2xl w-full p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">
@@ -281,7 +281,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
                 type="checkbox"
                 checked={isPinned}
                 onChange={(e) => setIsPinned(e.target.checked)}
-                className="rounded border shadow-sm"
+                className="rounded focus:ring-2 focus:ring-brand-primary"
                 disabled={saving}
               />
               <label htmlFor="isPinned" className="text-sm font-medium">
