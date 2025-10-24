@@ -17,6 +17,7 @@ export interface Comment {
   announcement_id: string;
   user_id: string;
   content: string;
+  content_json?: string; // Rich text content (TipTap JSON)
   parent_id: string | null;
   created_at: string;
   updated_at: string;
@@ -30,12 +31,14 @@ export interface CommentWithAuthor extends Comment {
 
 export interface CommentCreate {
   announcement_id: string;
-  content: string;
+  content?: string; // Optional for backward compatibility
+  content_json?: string; // Rich text content
   parent_id?: string | null;
 }
 
 export interface CommentUpdate {
-  content: string;
+  content?: string; // Optional for backward compatibility
+  content_json?: string; // Rich text content
 }
 
 export interface CommentTree {
@@ -162,7 +165,8 @@ export class CommentsService {
       const newComment = {
         announcement_id: comment.announcement_id,
         user_id: user.id,
-        content: comment.content.trim(),
+        content: comment.content?.trim() || "",
+        content_json: comment.content_json,
         parent_id: comment.parent_id || null,
       };
 
@@ -220,9 +224,17 @@ export class CommentsService {
     updates: CommentUpdate
   ): Promise<{ success: boolean; comment?: CommentWithAuthor; error?: string }> {
     try {
+      const updateData: any = {};
+      if (updates.content) {
+        updateData.content = updates.content.trim();
+      }
+      if (updates.content_json) {
+        updateData.content_json = updates.content_json;
+      }
+
       const { data, error } = await supabase
         .from("announcement_comments" as any)
-        .update({ content: updates.content.trim() })
+        .update(updateData)
         .eq("id", commentId)
         .select()
         .single();

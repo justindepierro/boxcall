@@ -7,7 +7,6 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
 import { useCallback, useRef } from "react";
 import { uploadImage } from "../../services/imageUploadService";
 
@@ -33,13 +32,8 @@ export function RichTextEditor({
         inline: true,
         allowBase64: false,
         HTMLAttributes: {
-          class: "rounded-lg max-w-full h-auto my-2",
-        },
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: "text-accent hover:underline",
+          class: "rounded-lg max-w-full h-auto my-2 cursor-pointer",
+          style: "max-height: 400px; object-fit: contain;",
         },
       }),
       Placeholder.configure({

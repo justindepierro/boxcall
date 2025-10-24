@@ -6,7 +6,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
 import { useEffect } from "react";
 
 interface RichTextDisplayProps {
@@ -22,24 +21,12 @@ export function RichTextDisplay({ content, className = "" }: RichTextDisplayProp
         inline: true,
         HTMLAttributes: {
           class: "rounded-lg max-w-full h-auto my-2 cursor-pointer",
-        },
-      }),
-      Link.configure({
-        openOnClick: true,
-        HTMLAttributes: {
-          class: "text-accent hover:underline",
-          target: "_blank",
-          rel: "noopener noreferrer",
+          style: "max-height: 400px; object-fit: contain;",
         },
       }),
     ],
-    content,
     editable: false,
-    editorProps: {
-      attributes: {
-        class: `prose prose-sm max-w-none text-primary ${className}`,
-      },
-    },
+    content: "",
   });
 
   // Update content when it changes

@@ -2,10 +2,10 @@
  * AnnouncementComments Component
  * 
  * Displays comments on announcements with threaded replies
- * Supports adding, editing, and deleting comments
+ * Supports adding, editing, and deleting comments with rich text and inline images
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   CommentsService,
   type CommentTree,
@@ -15,6 +15,8 @@ import { MessageCircle, Send, Edit2, Trash2, Reply } from "lucide-react";
 import { format } from "date-fns";
 import { supabase } from "../../lib/supabase";
 import { CommentReactions } from "./CommentReactions";
+import { RichTextEditor } from "./RichTextEditor";
+import { RichTextDisplay } from "./RichTextDisplay";
 
 interface AnnouncementCommentsProps {
   announcementId: string;
@@ -42,26 +44,48 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     getCurrentUser();
   }, []);
 
-  // Load comments
-  useEffect(() => {
-    loadComments();
-  }, [announcementId]);
+  // Helper to extract plain text from TipTap JSON
+  const getPlainText = (jsonContent: string): string => {
+    try {
+      const json = JSON.parse(jsonContent);
+      const extractText = (node: any): string => {
+        if (node.type === "text") {
+          return node.text || "";
+        }
+        if (node.content && Array.isArray(node.content)) {
+          return node.content.map(extractText).join("");
+        }
+        return "";
+      };
+      return extractText(json).trim() || jsonContent;
+    } catch {
+      return jsonContent;
+    }
+  };
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     setLoading(true);
     const tree = await CommentsService.getCommentsTree(announcementId);
     setComments(tree);
     setLoading(false);
-  };
+  }, [announcementId]);
+
+  // Load comments
+  useEffect(() => {
+    loadComments();
+  }, [loadComments]);
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || submitting) return;
 
     setSubmitting(true);
+    const plainTextContent = getPlainText(newComment);
+    
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
-      content: newComment,
+      content: plainTextContent,
+      content_json: newComment,
     });
 
     if (result.success) {
@@ -77,9 +101,12 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     if (!replyContent.trim() || submitting) return;
 
     setSubmitting(true);
+    const plainTextContent = getPlainText(replyContent);
+    
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
-      content: replyContent,
+      content: plainTextContent,
+      content_json: replyContent,
       parent_id: parentId,
     });
 
@@ -95,15 +122,18 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
   const handleStartEdit = (comment: CommentWithAuthor) => {
     setEditingComment(comment.id);
-    setEditContent(comment.content);
+    setEditContent(comment.content_json || comment.content);
   };
 
   const handleSaveEdit = async (commentId: string) => {
     if (!editContent.trim() || submitting) return;
 
     setSubmitting(true);
+    const plainTextContent = getPlainText(editContent);
+    
     const result = await CommentsService.updateComment(commentId, {
-      content: editContent,
+      content: plainTextContent,
+      content_json: editContent,
     });
 
     if (result.success) {
@@ -177,10 +207,10 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
           {/* Comment Content or Edit Form */}
           {isEditing ? (
             <div className="space-y-2">
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                className="w-full border rounded-lg p-2 text-sm min-h-16 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              <RichTextEditor
+                content={editContent}
+                onChange={setEditContent}
+                placeholder="Edit your comment..."
                 disabled={submitting}
               />
               <div className="flex gap-2">
@@ -205,9 +235,13 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
             </div>
           ) : (
             <>
-              <p className="text-primary text-sm whitespace-pre-wrap mb-3">
-                {comment.content}
-              </p>
+              <div className="prose prose-sm max-w-none text-primary text-sm mb-3">
+                {comment.content_json ? (
+                  <RichTextDisplay content={comment.content_json} />
+                ) : (
+                  <p className="whitespace-pre-wrap">{comment.content}</p>
+                )}
+              </div>
               
               {/* Reactions */}
               <div className="mb-2">
@@ -241,13 +275,11 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
               }}
               className="space-y-2"
             >
-              <textarea
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
+              <RichTextEditor
+                content={replyContent}
+                onChange={setReplyContent}
                 placeholder="Write a reply..."
-                className="w-full border rounded-lg p-2 text-sm min-h-16 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 disabled={submitting}
-                autoFocus
               />
               <div className="flex gap-2">
                 <button
@@ -300,11 +332,10 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
       {/* New Comment Form */}
       <form onSubmit={handleSubmitComment} className="space-y-2">
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
-          className="w-full border rounded-lg p-3 text-sm min-h-20 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        <RichTextEditor
+          content={newComment}
+          onChange={setNewComment}
+          placeholder="Add a comment... You can add images by dragging & dropping or pasting them!"
           disabled={submitting}
         />
         <button
