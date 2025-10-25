@@ -1,8 +1,10 @@
 -- Create mentions table
 -- This table stores @mentions in announcements and comments
 -- Links mentioned users to the content where they were mentioned
+-- NOTE: This table was already created in the database before this migration was added
+-- This migration is kept for documentation purposes
 
-CREATE TABLE mentions (
+CREATE TABLE IF NOT EXISTS mentions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   
   -- User who was mentioned
@@ -37,11 +39,11 @@ CREATE TABLE mentions (
 );
 
 -- Create indexes for common queries
-CREATE INDEX idx_mentions_mentioned_user_id ON mentions(mentioned_user_id);
-CREATE INDEX idx_mentions_created_by_user_id ON mentions(created_by_user_id);
-CREATE INDEX idx_mentions_announcement_id ON mentions(announcement_id) WHERE announcement_id IS NOT NULL;
-CREATE INDEX idx_mentions_comment_id ON mentions(comment_id) WHERE comment_id IS NOT NULL;
-CREATE INDEX idx_mentions_created_at ON mentions(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_mentions_mentioned_user_id ON mentions(mentioned_user_id);
+CREATE INDEX IF NOT EXISTS idx_mentions_created_by_user_id ON mentions(created_by_user_id);
+CREATE INDEX IF NOT EXISTS idx_mentions_announcement_id ON mentions(announcement_id) WHERE announcement_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_mentions_comment_id ON mentions(comment_id) WHERE comment_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_mentions_created_at ON mentions(created_at DESC);
 
 -- Add table comment
 COMMENT ON TABLE mentions IS 'Stores @mentions in announcements and comments. Links mentioned users to content where they were mentioned.';

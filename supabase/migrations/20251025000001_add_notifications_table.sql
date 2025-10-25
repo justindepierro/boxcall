@@ -1,8 +1,10 @@
 -- Create notifications table
 -- This table stores in-app notifications for users
 -- Supports: mentions, comment replies, reactions, announcements
+-- NOTE: This table was already created in the database before this migration was added
+-- This migration is kept for documentation purposes
 
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   
   -- User who receives this notification
@@ -34,12 +36,12 @@ CREATE TABLE notifications (
 );
 
 -- Create indexes for common queries
-CREATE INDEX idx_notifications_user_id ON notifications(user_id);
-CREATE INDEX idx_notifications_read ON notifications(user_id, read) WHERE read = false;
-CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
-CREATE INDEX idx_notifications_type ON notifications(type);
-CREATE INDEX idx_notifications_announcement_id ON notifications(announcement_id) WHERE announcement_id IS NOT NULL;
-CREATE INDEX idx_notifications_comment_id ON notifications(comment_id) WHERE comment_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(user_id, read) WHERE read = false;
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_notifications_type ON notifications(type);
+CREATE INDEX IF NOT EXISTS idx_notifications_announcement_id ON notifications(announcement_id) WHERE announcement_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_notifications_comment_id ON notifications(comment_id) WHERE comment_id IS NOT NULL;
 
 -- Add table comment
 COMMENT ON TABLE notifications IS 'Stores in-app notifications for users. Supports mentions, replies, reactions, and announcements.';
