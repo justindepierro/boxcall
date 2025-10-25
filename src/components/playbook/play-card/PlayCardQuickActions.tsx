@@ -31,11 +31,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
 
   return (
     <div className="flex items-center justify-between pt-spacing-sm mt-spacing-sm divider-t">
-      <Typography
-        variant="label-md"
-        as="h4"
-        className="text-text-primary"
-      >
+      <Typography variant="label-md" as="h4" className="text-text-primary">
         QUICK ACTIONS
       </Typography>
       <div className="flex items-center gap-spacing-xs">
@@ -52,7 +48,10 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           }
         >
           {play.diagram_url && (
-            <Icon name="check" className="h-3 w-3 mr-1 text-success-500 dark:text-success-400" />
+            <Icon
+              name="check"
+              className="h-3 w-3 mr-1 text-success-500 dark:text-success-400"
+            />
           )}
           <Icon
             name={getDiagramButtonIcon(Boolean(play.diagram_url))}
@@ -98,8 +97,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               {status.gamePlanCount}
             </span>
           )}
-          <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game
-          Plan
+          <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game Plan
         </Button>
         {/* Assignments Button with Check */}
         <Button
@@ -114,7 +112,10 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           className="surface-subtle hover:bg-surface-info text-blue-500 border-surface-primary"
         >
           {status.hasAssignments && (
-            <Icon name="check" className="h-3 w-3 mr-1 text-info-500 dark:text-info-400" />
+            <Icon
+              name="check"
+              className="h-3 w-3 mr-1 text-info-500 dark:text-info-400"
+            />
           )}
           <Icon name="users" className="h-3 w-3 mr-spacing-xs" /> Assignments
         </Button>

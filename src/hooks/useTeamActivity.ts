@@ -33,12 +33,14 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         const todayStartISO = todayStart.toISOString();
 
         // 1. Count announcements created today
-        const { count: postsCount } = await supabase
-          .from("team_announcements")
-          .select("id", { count: "exact", head: true })
-          .eq("team_id", teamId)
-          .eq("status", "published")
-          .gte("created_at", todayStartISO);
+        // TODO: Implement team_announcements table and re-enable this query
+        const postsCount = 0;
+        // const { count: postsCount } = await supabase
+        //   .from("team_announcements")
+        //   .select("id", { count: "exact", head: true })
+        //   .eq("team_id", teamId)
+        //   .eq("status", "published")
+        //   .gte("created_at", todayStartISO);
 
         // 2. Count recent achievements (placeholder - you can wire this up to your achievements system)
         // For now, just show a static number or 0

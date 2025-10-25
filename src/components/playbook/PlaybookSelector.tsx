@@ -80,7 +80,6 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
     try {
       const { error } = await supabase
         .from("playbooks")
-        // @ts-expect-error - Supabase type inference issue with playbooks table
         .update({
           name: editingName.trim(),
           updated_at: new Date().toISOString(),
@@ -114,7 +113,6 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
     try {
       const { data, error } = await supabase
         .from("playbooks")
-        // @ts-expect-error - Supabase type inference issue with playbooks table
         .insert({
           team_id: teamId,
           name: name.trim(),

@@ -174,7 +174,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                     )}
                     {onEdit && (
                       <button
-                        onClick={onEdit}
+                        onClick={() => onEdit(announcement)}
                         className="p-1.5 text-muted hover:text-primary hover:bg-surface-secondary rounded-md transition-colors"
                         title="Edit"
                       >

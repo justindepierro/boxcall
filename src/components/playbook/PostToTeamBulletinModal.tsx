@@ -29,7 +29,13 @@ export const PostToTeamBulletinModal: React.FC<
     return null;
   }
 
-  const playDisplayName = getDisplayName(play, false, undefined, undefined, "full");
+  const playDisplayName = getDisplayName(
+    play,
+    false,
+    undefined,
+    undefined,
+    "full"
+  );
   const playUrl = `/playbook/${play.playbook_id}?play=${play.id}`;
 
   const handleSubmit = async () => {
@@ -99,7 +105,8 @@ export const PostToTeamBulletinModal: React.FC<
       }
     } catch (err) {
       console.error("Error posting to team bulletin:", err);
-      const errorMessage = err instanceof Error ? err.message : "Failed to post announcement";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to post announcement";
       toast.error(errorMessage);
       setError(errorMessage);
     } finally {

@@ -179,16 +179,17 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     (complexityTotals.low || 0) +
     (complexityTotals.medium || 0) +
     (complexityTotals.high || 0);
-  const complexityFocus: ["low" | "medium" | "high", number] = totalComplexityCount
-    ? (
-        Object.entries(complexityTotals) as Array<
-          ["low" | "medium" | "high", number]
-        >
-      ).reduce((best, entry) => (entry[1] > best[1] ? entry : best), [
-        "low",
-        complexityTotals.low || 0,
-      ] as ["low" | "medium" | "high", number])
-    : (["low", 0] as ["low" | "medium" | "high", number]);
+  const complexityFocus: ["low" | "medium" | "high", number] =
+    totalComplexityCount
+      ? (
+          Object.entries(complexityTotals) as Array<
+            ["low" | "medium" | "high", number]
+          >
+        ).reduce((best, entry) => (entry[1] > best[1] ? entry : best), [
+          "low",
+          complexityTotals.low || 0,
+        ] as ["low" | "medium" | "high", number])
+      : (["low", 0] as ["low" | "medium" | "high", number]);
 
   const complexityCopy: Record<"low" | "medium" | "high", string> = {
     low: "Install ready",

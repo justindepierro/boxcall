@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography } from "../../../components/design-system/Typography";
 import { AuroraTile } from "../../../components/ui/AuroraTile";
 import type { PracticeBlock } from "../../../types/practice";

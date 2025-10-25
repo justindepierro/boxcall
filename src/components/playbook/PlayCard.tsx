@@ -303,7 +303,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       }
     },
     // optimisticPlay is only used for logging, not needed in deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [onSave, play]
   );
 

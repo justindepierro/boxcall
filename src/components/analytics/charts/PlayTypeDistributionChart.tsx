@@ -14,6 +14,7 @@ interface PlayTypeData {
   name: string;
   value: number;
   color: string;
+  [key: string]: string | number; // Allow additional properties for Recharts compatibility
 }
 
 interface PlayTypeDistributionChartProps {

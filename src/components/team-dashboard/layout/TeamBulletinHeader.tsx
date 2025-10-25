@@ -65,12 +65,12 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
         .getPublicUrl(filePath);
       const publicUrl = pub.publicUrl;
       // Persist on team row
-      // @ts-expect-error - logo_url exists in teams table but not in generated types yet
-      const { error: updateError } = await supabase
-        .from("teams")
-        .update({ logo_url: publicUrl })
-        .eq("id", teamId);
-      if (updateError) throw updateError;
+      // TODO: Add logo_url column to teams table, then uncomment:
+      // const { error: updateError } = await supabase
+      //   .from("teams")
+      //   .update({ logo_url: publicUrl })
+      //   .eq("id", teamId);
+      // if (updateError) throw updateError;
       setLocalLogo(publicUrl);
     } catch (err) {
       console.warn("team.logo.upload.error", err);

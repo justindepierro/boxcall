@@ -4,10 +4,13 @@
  */
 
 import type { Play } from "../../../../types/play";
+import type { Database } from "../../../../types/database";
 import { info } from "../../../../utils/logger";
 
+type DatabasePlay = Database["public"]["Tables"]["plays"]["Row"];
+
 interface CreatePlaySaveHandlerProps {
-  updatePlay: (playId: string, updates: any) => Promise<void>;
+  updatePlay: (playId: string, updates: any) => Promise<DatabasePlay>;
   startSaving: () => void;
   finishSaving: (status: "success" | "error") => void;
 }

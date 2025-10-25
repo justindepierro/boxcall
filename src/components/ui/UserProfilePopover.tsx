@@ -109,8 +109,6 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
               display_name,
               avatar_url,
               role,
-              is_admin,
-              subscription_tier,
               bio,
               position,
               jersey_number,
@@ -168,13 +166,16 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             try {
               const { data: playerData } = await supabase
                 .from("team_players")
-                .select("jersey_number, height_inches, weight_lbs")
+                .select("jersey_number, position, height_inches, weight_lbs")
                 .eq("team_id", teamId)
                 .eq("user_id", userId)
                 .single();
 
               if (playerData) {
-                setPlayerInfo(playerData);
+                setPlayerInfo({
+                  ...playerData,
+                  positions: playerData.position ? [playerData.position] : null,
+                });
               }
             } catch (error) {
               console.log("Player info not available:", error);
