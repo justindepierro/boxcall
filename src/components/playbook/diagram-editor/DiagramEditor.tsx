@@ -25,6 +25,11 @@ import { supabase } from "../../../lib/supabase";
 import { Icon } from "../../../components/ui/Icon/Icon";
 import { TipsPopover } from "./components/TipsPopover";
 import { DIAGRAM_EDITOR_TIPS } from "./constants/editorTips";
+import { FormationPickerModal } from "./components/FormationPickerModal";
+import { useFormations } from "../../../hooks/useFormations";
+import { convertFormationToDiagramPlayers } from "../../../utils/formationDiagramHelpers";
+import { RouteToolbar } from "./components/RouteToolbar";
+import { FormationService } from "../../../services/formationService";
 import type { DiagramPixiApp } from "./core/PixiApp";
 import type { FieldColorMode } from "./layers/FieldLayer";
 import type { DiagramDocument } from "./types/DiagramTypes";
@@ -57,6 +62,16 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     "left" | "middle" | "right"
   >("middle");
 
+  // Route drawing state
+  const [selectedRouteType, setSelectedRouteType] = useState<
+    "primary" | "hot" | "check"
+  >("primary");
+
+  // Get route selection state and active tool from store
+  const selectedRouteId = useDiagramStore((state) => state.selectedRouteId);
+  const activeTool = useDiagramStore((state) => state.activeTool);
+  const setActiveTool = useDiagramStore((state) => state.setActiveTool);
+
   // Mobile state
   const breakpoint = useBreakpoint();
   const { isMobilePortrait } = useIsMobilePortrait();
@@ -71,6 +86,12 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     playbookId,
     personnelName
   );
+
+  // Fetch formations for formation picker
+  const { data: formations = [] } = useFormations(playbookId);
+
+  // Formation picker state
+  const [showFormationPicker, setShowFormationPicker] = useState(false);
 
   // Load personnel players into diagram when config is available
   useEffect(() => {
@@ -218,22 +239,39 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     []
   );
 
-  const { players } = useDiagramStore();
+  const { players, routes } = useDiagramStore();
 
   // Track if diagram has been modified
   useEffect(() => {
-    if (players.length > 0) {
+    if (players.length > 0 || routes.length > 0) {
       setIsDirty(true);
     }
-  }, [players]);
+  }, [players, routes]);
 
-  // Cleanup: Clear players when component unmounts
+  // Cleanup: Clear players and routes when component unmounts
   useEffect(() => {
     return () => {
       // Clear the store when diagram editor closes
-      useDiagramStore.getState().clearPlayers();
+      const store = useDiagramStore.getState();
+      store.clearPlayers();
+      store.clearRoutes();
     };
   }, []);
+
+  // Load routes from existing diagram data (if available)
+  useEffect(() => {
+    if (play?.diagram_data?.routes && Array.isArray(play.diagram_data.routes)) {
+      const { addRoute, clearRoutes } = useDiagramStore.getState();
+
+      // Clear existing routes first
+      clearRoutes();
+
+      // Load routes from saved diagram data
+      play.diagram_data.routes.forEach((route) => {
+        addRoute(route);
+      });
+    }
+  }, [play?.diagram_data]);
 
   // Enable keyboard controls (arrow keys, delete, escape)
   useKeyboardControls({ app, enabled: true });
@@ -283,6 +321,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
   // Enable autosave with debouncing (only for existing plays)
   const { status: saveStatus, lastSaved } = useAutosave(
     players,
+    routes,
     play?.play_name || "",
     {
       enabled: Boolean(play?.id), // Only enable autosave for existing plays
@@ -291,7 +330,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
       onSaveSuccess: () => {
         setIsDirty(false);
       },
-      onSaveError: (error) => {
+      onSaveError: (error: Error) => {
         console.error("❌ Autosave error:", error);
         // Don't show alert for autosave errors, just log them
       },
@@ -354,6 +393,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
         const diagramData: DiagramDocument = {
           version: 2,
           players,
+          routes: [], // TODO: Get routes from store when route system is implemented
           meta: {
             createdAt: play?.diagram_data?.meta?.createdAt || Date.now(),
             updatedAt: Date.now(),
@@ -588,6 +628,40 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
     []
   );
 
+  // Formation loading handler
+  const handleLoadFormation = useCallback(
+    async (formationId: string, mode: "replace" | "merge") => {
+      try {
+        // Fetch full formation with player positions
+        const formation = await FormationService.getFormationById(formationId);
+
+        if (!formation) {
+          showAlertModal("Error", "Formation not found");
+          return;
+        }
+
+        if (mode === "replace") {
+          // Clear existing players
+          useDiagramStore.getState().clearPlayers();
+        }
+
+        // Convert formation to diagram players using existing helper
+        const diagramPlayers = convertFormationToDiagramPlayers(formation);
+
+        // Add players to diagram
+        diagramPlayers.forEach((player) => {
+          useDiagramStore.getState().addPlayer(player);
+        });
+
+        setIsDirty(true);
+      } catch (error) {
+        console.error("Failed to load formation:", error);
+        showAlertModal("Error", "Failed to load formation. Please try again.");
+      }
+    },
+    [showAlertModal]
+  );
+
   // Get selected player count for conditional toolbar
   const selectedPlayerCount =
     app?.playersLayer?.getSelectedPlayerIds().length ?? 0;
@@ -708,6 +782,19 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
             </div>
           )}
 
+          {/* Route Drawing Tools */}
+          <RouteToolbar
+            activeTool={
+              activeTool === "draw-route" || activeTool === "edit-waypoint"
+                ? activeTool
+                : "select"
+            }
+            selectedRouteType={selectedRouteType}
+            isRouteSelected={!!selectedRouteId}
+            onToolChange={setActiveTool}
+            onRouteTypeChange={setSelectedRouteType}
+          />
+
           {/* Toolbar Controls */}
           <div className="flex items-center gap-2 pl-4 border-l border-border">
             {/* Add Players */}
@@ -726,6 +813,25 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
             >
               <Icon name="plus-circle" size="sm" />
               <span>Defense</span>
+            </button>
+
+            {/* Load Formation */}
+            <button
+              onClick={() => setShowFormationPicker(true)}
+              disabled={!formations || formations.length === 0}
+              className={`px-4 py-1.5 text-xs rounded-full font-medium transition-colors flex items-center gap-1.5 shadow-sm ${
+                formations && formations.length > 0
+                  ? "bg-jade-600 text-white hover:bg-jade-700"
+                  : "bg-surface-tertiary text-content-tertiary cursor-not-allowed opacity-50"
+              }`}
+              title={
+                formations && formations.length > 0
+                  ? "Load Formation (Ctrl+Shift+F)"
+                  : "No formations available"
+              }
+            >
+              <Icon name="grid" size="sm" />
+              <span>Load Formation</span>
             </button>
 
             {/* Divider */}
@@ -938,6 +1044,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
               // No pixelsPerYard - will be calculated responsively
               backgroundColor={0x222222}
               onReady={handleReady}
+              routeType={selectedRouteType}
             />
           </PixiErrorBoundary>
         </MobileLayout>
@@ -950,6 +1057,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
               // No pixelsPerYard - will be calculated responsively
               backgroundColor={0x222222}
               onReady={handleReady}
+              routeType={selectedRouteType}
             />
           </PixiErrorBoundary>
         </TabletLayout>
@@ -962,6 +1070,7 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
               // No pixelsPerYard - will be calculated responsively
               backgroundColor={0x222222}
               onReady={handleReady}
+              routeType={selectedRouteType}
             />
           </PixiErrorBoundary>
         </DesktopLayout>
@@ -1250,6 +1359,15 @@ const DiagramEditorComponent: React.FC<DiagramEditorProps> = ({
           </div>
         </div>
       )}
+
+      {/* Formation Picker Modal */}
+      <FormationPickerModal
+        isOpen={showFormationPicker}
+        onClose={() => setShowFormationPicker(false)}
+        formations={formations}
+        onSelectFormation={handleLoadFormation}
+        hasExistingContent={players.length > 0}
+      />
     </div>
   );
 };

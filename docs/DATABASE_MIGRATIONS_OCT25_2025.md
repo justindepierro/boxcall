@@ -7,6 +7,7 @@ Created database migrations for the social features infrastructure that were ref
 ## New Migrations Created
 
 ### 1. **Notifications Table** (`20251025000001_add_notifications_table.sql`)
+
 - **Purpose**: Stores in-app notifications for users
 - **Features**:
   - Supports 4 notification types: `mention`, `comment_reply`, `reaction`, `announcement`
@@ -19,6 +20,7 @@ Created database migrations for the social features infrastructure that were ref
 - **RLS Policies**: Users can only view/update their own notifications
 
 ### 2. **Mentions Table** (`20251025000002_add_mentions_table.sql`)
+
 - **Purpose**: Stores @mentions in announcements and comments
 - **Features**:
   - Links mentioned users to content where they were mentioned
@@ -32,6 +34,7 @@ Created database migrations for the social features infrastructure that were ref
 ## Existing Migrations (Already Applied)
 
 These migrations already exist in the database:
+
 - ✅ `20251106000001_add_team_announcements.sql` - Team announcements table
 - ✅ `20251106000004_add_comment_reactions.sql` - Comment reactions table
 
@@ -72,9 +75,9 @@ After applying, verify the tables exist:
 
 ```sql
 -- Check if tables exist
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN ('notifications', 'mentions');
 
 -- Check notifications table structure
@@ -157,12 +160,12 @@ DROP FUNCTION IF EXISTS get_unread_notification_count CASCADE;
 
 ## Migration Status
 
-| Migration | Status | Date Created | Applied |
-|-----------|--------|--------------|---------|
-| `20251025000001_add_notifications_table.sql` | ✅ Created | Oct 25, 2025 | ⏳ Pending |
-| `20251025000002_add_mentions_table.sql` | ✅ Created | Oct 25, 2025 | ⏳ Pending |
-| `20251106000001_add_team_announcements.sql` | ✅ Exists | Nov 6, 2025 (future) | ✅ Applied |
-| `20251106000004_add_comment_reactions.sql` | ✅ Exists | Nov 6, 2025 (future) | ✅ Applied |
+| Migration                                    | Status     | Date Created         | Applied    |
+| -------------------------------------------- | ---------- | -------------------- | ---------- |
+| `20251025000001_add_notifications_table.sql` | ✅ Created | Oct 25, 2025         | ⏳ Pending |
+| `20251025000002_add_mentions_table.sql`      | ✅ Created | Oct 25, 2025         | ⏳ Pending |
+| `20251106000001_add_team_announcements.sql`  | ✅ Exists  | Nov 6, 2025 (future) | ✅ Applied |
+| `20251106000004_add_comment_reactions.sql`   | ✅ Exists  | Nov 6, 2025 (future) | ✅ Applied |
 
 ---
 

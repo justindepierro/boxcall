@@ -10,6 +10,7 @@ import { Camera, type CameraConfig } from "./Camera";
 import { CoordinateSystem, type FieldDimensions } from "./CoordinateSystem";
 import type { FieldLayer } from "../layers/FieldLayer";
 import type { PlayersLayer } from "../layers/PlayersLayer";
+import type { RoutesLayer } from "../layers/RoutesLayer";
 import type { SpacingIndicatorLayer } from "../layers/SpacingIndicatorLayer";
 import {
   validateCanvas,
@@ -37,6 +38,7 @@ export class DiagramPixiApp {
   // Layer references (actual layer instances, not empty containers)
   public fieldLayer: FieldLayer | null = null;
   public playersLayer: PlayersLayer | null = null;
+  public routesLayer: RoutesLayer | null = null;
   public spacingIndicatorLayer: SpacingIndicatorLayer | null = null;
   // Future layers can be added as needed
 
@@ -203,6 +205,9 @@ export class DiagramPixiApp {
     }
     if (this.playersLayer) {
       this.playersLayer.destroy();
+    }
+    if (this.routesLayer) {
+      this.routesLayer.destroy();
     }
     if (this.spacingIndicatorLayer) {
       this.spacingIndicatorLayer.destroy();

@@ -26,7 +26,9 @@ import { PersonnelService } from "../../services/personnelService";
 import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
 import { FormationDirectionReviewPanel } from "./FormationDirectionReviewPanel";
 import { FormationDataDiagnostic } from "./FormationDataDiagnostic";
+import { FormationTemplateSelector } from "./FormationTemplateSelector";
 import { useBulkSelection } from "./BulkSelectionContext";
+import type { FormationTemplate } from "../../data/formationTemplates";
 import { supabase } from "../../lib/supabase";
 import { error as logError } from "../../utils/logger";
 import { useSaveState } from "../../contexts/SaveStateContext";
@@ -432,6 +434,84 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
         toast,
       ]);
 
+      /**
+       * Handle creating a new formation from a template
+       */
+      const handleCreateFromTemplate = useCallback(
+        async (template: FormationTemplate) => {
+          setSaving(true);
+          try {
+            // Create formation name from template
+            const formationName = template.name;
+
+            // Convert template player positions to formation format
+            const playerPositions = template.playerPositions.map((pos) => ({
+              position: pos.position,
+              x: pos.x,
+              y: pos.y,
+              label: pos.label,
+              role: pos.role,
+              jerseyNumber: pos.jerseyNumber,
+            }));
+
+            // Create the formation
+            const newFormation = await FormationService.createFormation({
+              playbook_id: playbookId,
+              name: formationName,
+              description: template.description,
+              category: template.category as FormationCategory,
+              formation_type: template.name.includes("Shotgun")
+                ? "Shotgun"
+                : template.name.includes("Pistol")
+                  ? "Pistol"
+                  : template.name.includes("I")
+                    ? "I Formation"
+                    : "Other",
+              player_positions: playerPositions,
+              run_strength: "balanced",
+              pass_strength: "balanced",
+              direction: null,
+              personnel_id: undefined, // Will be set by user after creation
+              tags: [template.personnel, template.category],
+            });
+
+            toast?.success(
+              `Created "${formationName}" from template!`,
+              "Formation Created"
+            );
+
+            // Reload formations
+            const formations =
+              await FormationService.getFormationsByPlaybook(playbookId);
+            setAllFormations(formations);
+
+            // Select the new formation
+            setSelectedFormation(newFormation);
+
+            // Fill in the form fields
+            setCategory(newFormation.category || "spread");
+            setFormationType(newFormation.formation_type || "Other");
+            setRunStrength(newFormation.run_strength);
+            setPassStrength(newFormation.pass_strength);
+            setTags((newFormation.tags || []).join(", "));
+            setDescription(newFormation.description || "");
+            setSelectedPersonnelIds(
+              [newFormation.personnel_id].filter(Boolean) as string[]
+            );
+
+            if (onFormationUpdated) {
+              onFormationUpdated(newFormation);
+            }
+          } catch (err) {
+            logError("Failed to create formation from template", err);
+            toast?.error("Failed to create formation from template");
+          } finally {
+            setSaving(false);
+          }
+        },
+        [playbookId, toast, onFormationUpdated]
+      );
+
       const handleSave = useCallback(async () => {
         if (!selectedFormation) {
           toast?.error("Please select a formation");
@@ -696,6 +776,30 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
               {/* Tab Content */}
               {activeTab === "details" && (
                 <div className="flex flex-col gap-spacing-md">
+                  {/* Quick Start: Insert NFL Template */}
+                  <div className="flex flex-col gap-spacing-xs">
+                    <Typography
+                      variant="body-md"
+                      className="text-text-primary font-medium"
+                    >
+                      Quick Start
+                    </Typography>
+                    <FormationTemplateSelector
+                      onSelectTemplate={(template) => {
+                        // Create new formation from template
+                        handleCreateFromTemplate(template);
+                      }}
+                      disabled={loading}
+                    />
+                    <Typography variant="caption" className="text-text-muted">
+                      Start with a professional NFL formation template, or
+                      select an existing formation below to edit.
+                    </Typography>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-t border-border-secondary"></div>
+
                   {/* Formation Details Content (original content) */}
 
                   {/* Formation Selector with Bulk Selection */}
@@ -1032,6 +1136,33 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
                   {selectedFormation && (
                     <>
+                      {/* Health Warning Banner */}
+                      {selectedPersonnelIds.length === 0 && (
+                        <div className="p-spacing-md bg-warning-50 border-2 border-warning-300 rounded-lg mb-spacing-md">
+                          <div className="flex items-start gap-spacing-sm">
+                            <AlertCircle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                              <Typography
+                                variant="body-sm"
+                                className="text-warning-800 font-semibold mb-spacing-xs"
+                              >
+                                {availablePersonnel.length === 0
+                                  ? "⚠️ Create Personnel First"
+                                  : "⚠️ Link Personnel for Better Experience"}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                className="text-warning-700"
+                              >
+                                {availablePersonnel.length === 0
+                                  ? "No personnel packages found. Create your default personnel in the Personnel Builder for a better experience."
+                                  : "Select at least one personnel package below to optimize this formation for your playbook."}
+                              </Typography>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Personnel Packages */}
                       <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
                         <Typography

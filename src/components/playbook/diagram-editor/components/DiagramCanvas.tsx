@@ -8,6 +8,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { usePixiApp } from "../hooks/usePixiApp";
 import { useGestures } from "../hooks/useGestures";
+import { useRouteDrawing } from "../hooks/useRouteDrawing";
+import { useWaypointEditing } from "../hooks/useWaypointEditing";
+import { useDiagramStore } from "../stores/diagramStore";
 import { LoadingSpinner } from "./LoadingSpinner";
 import {
   detectWebGLCapabilities,
@@ -21,6 +24,7 @@ export interface DiagramCanvasProps {
   backgroundColor?: number;
   className?: string;
   onReady?: (app: any) => void;
+  routeType?: "primary" | "hot" | "check"; // Current route type from toolbar
 }
 
 export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
@@ -29,10 +33,14 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   backgroundColor = 0xf5f7ed,
   className = "",
   onReady,
+  routeType = "primary",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglError, setWebglError] = useState<string | null>(null);
+
+  // Get active tool from store
+  const activeTool = useDiagramStore((state) => state.activeTool);
 
   // Check WebGL support on mount
   useEffect(() => {
@@ -54,15 +62,12 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
   }, []);
 
   // usePixiApp now handles ALL resize logic internally
-  const { app, isReady, debugCoordinates } = usePixiApp(
-    canvasRef,
-    containerRef,
-    {
+  const { app, isReady, playersLayer, routesLayer, debugCoordinates } =
+    usePixiApp(canvasRef, containerRef, {
       fieldWidth,
       fieldHeight,
       backgroundColor,
-    }
-  );
+    });
 
   // Log state changes for debugging
   useEffect(() => {
@@ -77,6 +82,21 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
     app,
     canvasRef,
     enabled: isReady,
+  });
+
+  // Enable route drawing when draw-route tool is active
+  useRouteDrawing({
+    app,
+    routesLayer,
+    playersLayer,
+    isEnabled: isReady && activeTool === "draw-route",
+    routeType,
+  });
+
+  // Enable waypoint editing when edit-waypoint tool is active
+  useWaypointEditing({
+    app,
+    isEnabled: isReady && activeTool === "edit-waypoint",
   });
 
   // Notify parent when ready

@@ -54,19 +54,54 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   }, [loadReactions]);
 
   const handleReaction = async (reactionType: ReactionType) => {
-    if (isLoading) return;
+    if (isLoading || !reactionSummary) return;
 
     setIsLoading(true);
+
+    // OPTIMISTIC UPDATE - Instant feedback like Facebook!
+    const previousSummary = { ...reactionSummary };
+    const wasUserReaction = reactionSummary.user_reaction === reactionType;
+
+    setReactionSummary({
+      ...reactionSummary,
+      user_reaction: wasUserReaction ? undefined : reactionType,
+      total_count: wasUserReaction
+        ? reactionSummary.total_count - 1
+        : reactionSummary.user_reaction
+          ? reactionSummary.total_count
+          : reactionSummary.total_count + 1,
+      reactions: {
+        ...reactionSummary.reactions,
+        // Remove old reaction if switching
+        ...(reactionSummary.user_reaction &&
+        reactionSummary.user_reaction !== reactionType
+          ? {
+              [reactionSummary.user_reaction]:
+                (reactionSummary.reactions[reactionSummary.user_reaction] ||
+                  1) - 1,
+            }
+          : {}),
+        // Add/remove new reaction
+        [reactionType]: wasUserReaction
+          ? (reactionSummary.reactions[reactionType] || 1) - 1
+          : (reactionSummary.reactions[reactionType] || 0) + 1,
+      },
+    });
+    setShowPicker(false);
+
     try {
+      // Background server update
       await socialService.toggleReaction({
         content_type: contentType,
         content_id: contentId,
         reaction_type: reactionType,
       });
+      // Verify with server (but don't block UI)
       await loadReactions();
-      setShowPicker(false);
     } catch (error) {
       console.error("Failed to toggle reaction:", error);
+      // REVERT on error
+      setReactionSummary(previousSummary);
     } finally {
       setIsLoading(false);
     }

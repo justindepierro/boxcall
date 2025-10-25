@@ -208,10 +208,23 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
     setShowConfirmModal(false);
     setSaving(true);
     try {
+      // Link the formations
       await FormationService.linkExistingFormations(
         leftFormation.id,
         rightFormation.id
       );
+
+      // Update personnel packages for both formations if any were selected
+      if (selectedPersonnelIds.length > 0) {
+        await Promise.all([
+          FormationService.updateFormation(leftFormation.id, {
+            personnel_packages: selectedPersonnelIds,
+          }),
+          FormationService.updateFormation(rightFormation.id, {
+            personnel_packages: selectedPersonnelIds,
+          }),
+        ]);
+      }
 
       toast?.success?.("Formations linked successfully!");
       await loadFormations();

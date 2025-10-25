@@ -9,7 +9,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useSaveState } from "../../../../contexts/SaveStateContext";
 import type { Player } from "../types/Player";
-import type { DiagramDocument } from "../types/DiagramTypes";
+import type { DiagramDocument, Route } from "../types/DiagramTypes";
 
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
@@ -74,6 +74,7 @@ export interface UseAutosaveReturn {
  */
 export function useAutosave(
   players: Player[],
+  routes: Route[],
   playName: string,
   options: UseAutosaveOptions
 ): UseAutosaveReturn {
@@ -95,6 +96,7 @@ export function useAutosave(
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isSavingRef = useRef(false);
   const lastPlayersRef = useRef<Player[]>(players);
+  const lastRoutesRef = useRef<Route[]>(routes);
   const lastPlayNameRef = useRef<string>(playName);
 
   // Create diagram document from current state
@@ -102,14 +104,15 @@ export function useAutosave(
     return {
       version: 2,
       players,
+      routes, // Include routes from store
       meta: {
         createdAt: lastSaved ? new Date(lastSaved).getTime() : Date.now(),
         updatedAt: Date.now(),
       },
     };
-  }, [players, lastSaved]);
+  }, [players, routes, lastSaved]);
 
-  // Perform the save
+  // Perform the save (OPTIMISTIC - Facebook-fast pattern)
   const performSave = useCallback(async () => {
     if (isSavingRef.current) {
       return;
@@ -120,53 +123,57 @@ export function useAutosave(
       return;
     }
 
-    try {
-      isSavingRef.current = true;
-      setStatus("saving");
-      setHasUnsavedChanges(false);
+    // 🚀 OPTIMISTIC UPDATE: Show success IMMEDIATELY
+    isSavingRef.current = true;
+    const now = new Date().toISOString();
+    setLastSaved(now);
+    setStatus("saved");
+    setHasUnsavedChanges(false);
+    lastPlayersRef.current = players;
+    lastRoutesRef.current = routes;
+    lastPlayNameRef.current = playName;
 
-      // Start global save indicator
-      startSaving();
+    // Start global save indicator
+    startSaving();
 
-      const diagramData = createDiagramDocument();
-      await onSave(diagramData);
+    // Reset status back to idle after 2 seconds (visual feedback)
+    const idleTimer = setTimeout(() => {
+      setStatus("idle");
+    }, 2000);
 
-      const now = new Date().toISOString();
-      setLastSaved(now);
-      setStatus("saved");
-      lastPlayersRef.current = players;
-      lastPlayNameRef.current = playName;
+    // 🔄 BACKGROUND SYNC: Save to server (non-blocking)
+    const diagramData = createDiagramDocument();
+    onSave(diagramData)
+      .then(() => {
+        // Silent success - user already saw "saved" indicator
+        onSaveSuccess?.();
+        finishSaving("success");
+      })
+      .catch((error) => {
+        // ❌ Only show error on failure
+        console.error("❌ Autosave failed:", error);
+        clearTimeout(idleTimer);
+        setStatus("error");
+        setHasUnsavedChanges(true);
 
-      onSaveSuccess?.();
+        // Finish with error status (auto-queues for retry)
+        finishSaving("error");
 
-      // Finish with success status
-      finishSaving("success");
+        onSaveError?.(
+          error instanceof Error ? error : new Error("Unknown error")
+        );
 
-      // Reset status back to idle after 2 seconds
-      setTimeout(() => {
-        setStatus("idle");
-      }, 2000);
-    } catch (error) {
-      console.error("❌ Autosave failed:", error);
-      setStatus("error");
-      setHasUnsavedChanges(true);
-
-      // Finish with error status (auto-queues for retry)
-      finishSaving("error");
-
-      onSaveError?.(
-        error instanceof Error ? error : new Error("Unknown error")
-      );
-
-      // Reset status back to idle after 5 seconds
-      setTimeout(() => {
-        setStatus("idle");
-      }, 5000);
-    } finally {
-      isSavingRef.current = false;
-    }
+        // Reset status back to idle after 5 seconds
+        setTimeout(() => {
+          setStatus("idle");
+        }, 5000);
+      })
+      .finally(() => {
+        isSavingRef.current = false;
+      });
   }, [
     players,
+    routes,
     playName,
     createDiagramDocument,
     onSave,
@@ -201,7 +208,7 @@ export function useAutosave(
     }, debounceMs);
   }, [enabled, debounceMs, performSave]);
 
-  // Watch for changes in players or play name
+  // Watch for changes in players, routes, or play name
   useEffect(() => {
     // Skip if autosave is disabled
     if (!enabled) return;
@@ -209,9 +216,11 @@ export function useAutosave(
     // Skip if no meaningful changes
     const playersChanged =
       JSON.stringify(players) !== JSON.stringify(lastPlayersRef.current);
+    const routesChanged =
+      JSON.stringify(routes) !== JSON.stringify(lastRoutesRef.current);
     const playNameChanged = playName !== lastPlayNameRef.current;
 
-    if (!playersChanged && !playNameChanged) {
+    if (!playersChanged && !routesChanged && !playNameChanged) {
       return;
     }
 
@@ -235,7 +244,7 @@ export function useAutosave(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [players, playName, enabled, debounceMs]);
+  }, [players, routes, playName, enabled, debounceMs]);
 
   // Cleanup on unmount
   useEffect(() => {

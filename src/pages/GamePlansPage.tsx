@@ -117,6 +117,32 @@ export default function GamePlansPage() {
     loadGamePlans();
   }, [loadGamePlans]);
 
+  // Phase 1.3: Preload heavy modals during idle time
+  useEffect(() => {
+    if (isLoading || gamePlans.length === 0) return;
+
+    // Preload modals after 2 seconds of idle time
+    const timer = setTimeout(() => {
+      console.debug(
+        "[GamePlansPage] Preloading heavy modals during idle time..."
+      );
+
+      // Preload GamePlanModal
+      import("../components/playbook/GamePlanModal").catch(() => {
+        console.debug("GamePlanModal preload failed (will load on demand)");
+      });
+
+      // Preload ImportGamePlansModal
+      import("../components/playbook/ImportGamePlansModal").catch(() => {
+        console.debug(
+          "ImportGamePlansModal preload failed (will load on demand)"
+        );
+      });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [isLoading, gamePlans.length]);
+
   const handleCreatePlan = useCallback(() => {
     setEditingPlan(undefined);
     setShowModal(true);
@@ -134,33 +160,97 @@ export default function GamePlansPage() {
     }
 
     try {
+      // 1. Show instant success feedback
+      toast.success(editingPlan ? "Game plan updated!" : "Game plan created!");
+
+      // 2. Optimistically update UI immediately
       if (editingPlan) {
-        // Update existing game plan
+        setGamePlans((prev) =>
+          prev.map((p) =>
+            p.id === plan.id ? { ...plan, updatedAt: new Date() } : p
+          )
+        );
+      } else {
+        // Create temporary ID for optimistic add
+        const tempId = `temp-${Date.now()}`;
+        const optimisticPlan: ModalGamePlan = {
+          ...plan,
+          id: tempId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isArchived: false,
+        };
+        setGamePlans((prev) => [optimisticPlan, ...prev]);
+      }
+
+      // 3. Close modal instantly
+      setShowModal(false);
+      setEditingPlan(undefined);
+
+      // 4. Sync with server in background (silent)
+      if (editingPlan) {
         await GamePlanService.updateGamePlan(plan.id, {
           name: plan.name,
           opponent: plan.opponent,
           gameDate: plan.gameDate,
           gameLocation: plan.gameLocation,
         });
-        toast.success("Game plan updated successfully");
       } else {
-        // Create new game plan
-        await GamePlanService.createGamePlan({
+        const newPlan = await GamePlanService.createGamePlan({
           teamId: activeTeamId,
           name: plan.name,
           opponent: plan.opponent,
           gameDate: plan.gameDate,
           gameLocation: plan.gameLocation,
         });
-        toast.success("Game plan created successfully");
-      }
 
-      // Reload game plans
-      await loadGamePlans();
-      setShowModal(false);
-      setEditingPlan(undefined);
+        // Replace temp ID with real ID from server
+        setGamePlans((prev) =>
+          prev.map((p) =>
+            p.id.startsWith("temp-")
+              ? {
+                  ...p,
+                  id: newPlan.id,
+                  createdAt: newPlan.createdAt,
+                  updatedAt: newPlan.updatedAt,
+                }
+              : p
+          )
+        );
+        setRawGamePlans((prev) => [newPlan, ...prev]);
+      }
     } catch (error) {
       console.error("Failed to save game plan:", error);
+
+      // 5. Rollback on error
+      if (editingPlan) {
+        // Revert to original from rawGamePlans
+        const original = rawGamePlans.find((p) => p.id === plan.id);
+        if (original) {
+          const mappedOriginal: ModalGamePlan = {
+            id: original.id,
+            name: original.name,
+            opponent: original.opponent || "",
+            gameDate: original.gameDate,
+            gameLocation: original.gameLocation as
+              | "Home"
+              | "Away"
+              | "Neutral"
+              | undefined,
+            situations: [],
+            createdAt: original.createdAt,
+            updatedAt: original.updatedAt,
+            isArchived: original.isArchived,
+          };
+          setGamePlans((prev) =>
+            prev.map((p) => (p.id === plan.id ? mappedOriginal : p))
+          );
+        }
+      } else {
+        // Remove optimistic add
+        setGamePlans((prev) => prev.filter((p) => !p.id.startsWith("temp-")));
+      }
+
       toast.error("Failed to save game plan");
     }
   };
@@ -168,27 +258,76 @@ export default function GamePlansPage() {
   const handleDuplicatePlan = async (plan: ModalGamePlan) => {
     try {
       const newName = `${plan.name} (Copy)`;
-      await GamePlanService.duplicateGamePlan(plan.id, newName);
-      await loadGamePlans();
-      toast.success("Game plan duplicated successfully");
+      const tempId = `temp-${Date.now()}`;
+
+      // 1. Instant UI update
+      const duplicatedPlan: ModalGamePlan = {
+        ...plan,
+        id: tempId,
+        name: newName,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      setGamePlans((prev) => [duplicatedPlan, ...prev]);
+      toast.success("Game plan duplicated!");
+
+      // 2. Background sync
+      const newPlan = await GamePlanService.duplicateGamePlan(plan.id, newName);
+
+      // 3. Replace temp with real ID
+      setGamePlans((prev) =>
+        prev.map((p) =>
+          p.id === tempId
+            ? { ...p, id: newPlan.id, createdAt: newPlan.createdAt }
+            : p
+        )
+      );
+      setRawGamePlans((prev) => [newPlan, ...prev]);
     } catch (error) {
       console.error("Failed to duplicate game plan:", error);
+
+      // Rollback
+      setGamePlans((prev) => prev.filter((p) => !p.id.startsWith("temp-")));
       toast.error("Failed to duplicate game plan");
     }
   };
 
   const handleArchivePlan = async (plan: ModalGamePlan) => {
+    const originalArchiveState = plan.isArchived;
+
     try {
+      // 1. Instant UI update
+      setGamePlans((prev) =>
+        prev.map((p) =>
+          p.id === plan.id ? { ...p, isArchived: !p.isArchived } : p
+        )
+      );
+      toast.success(
+        plan.isArchived ? "Game plan restored!" : "Game plan archived!"
+      );
+
+      // 2. Background sync
       if (plan.isArchived) {
         await GamePlanService.unarchiveGamePlan(plan.id);
-        toast.success("Game plan restored");
       } else {
         await GamePlanService.archiveGamePlan(plan.id);
-        toast.success("Game plan archived");
       }
-      await loadGamePlans();
+
+      // Update rawGamePlans
+      setRawGamePlans((prev) =>
+        prev.map((p) =>
+          p.id === plan.id ? { ...p, isArchived: !originalArchiveState } : p
+        )
+      );
     } catch (error) {
       console.error("Failed to archive/unarchive game plan:", error);
+
+      // Rollback
+      setGamePlans((prev) =>
+        prev.map((p) =>
+          p.id === plan.id ? { ...p, isArchived: originalArchiveState } : p
+        )
+      );
       toast.error("Failed to update game plan");
     }
   };
@@ -206,12 +345,27 @@ export default function GamePlansPage() {
   const handleDeletePlan = async (planId: string) => {
     if (!confirm("Are you sure you want to delete this game plan?")) return;
 
+    const deletedPlan = gamePlans.find((p) => p.id === planId);
+    const deletedRawPlan = rawGamePlans.find((p) => p.id === planId);
+
     try {
+      // 1. Instant UI update
+      setGamePlans((prev) => prev.filter((p) => p.id !== planId));
+      setRawGamePlans((prev) => prev.filter((p) => p.id !== planId));
+      toast.success("Game plan deleted!");
+
+      // 2. Background sync
       await GamePlanService.deleteGamePlan(planId);
-      await loadGamePlans();
-      toast.success("Game plan deleted successfully");
     } catch (error) {
       console.error("Failed to delete game plan:", error);
+
+      // Rollback
+      if (deletedPlan) {
+        setGamePlans((prev) => [...prev, deletedPlan]);
+      }
+      if (deletedRawPlan) {
+        setRawGamePlans((prev) => [...prev, deletedRawPlan]);
+      }
       toast.error("Failed to delete game plan");
     }
   };

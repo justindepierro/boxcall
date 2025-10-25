@@ -16,6 +16,7 @@ import { validatePlayerId, validatePlayerPosition } from "../utils/validation";
 import { findAlignmentGuides } from "../utils/alignmentGuides";
 import { applySnapToFeatures } from "../utils/snapToFeatures";
 import { applySmartSnap } from "../utils/smartSnap";
+import { snapToNearest } from "../utils/PositionSnapPoints";
 import type { AlignmentGuidesLayer } from "./AlignmentGuidesLayer";
 
 export interface PlayersLayerEvents {
@@ -223,6 +224,52 @@ export class PlayersLayer extends Container {
   }
 
   /**
+   * Select offensive line (5 players: LT, LG, C, RG, RT)
+   * Finds center, then selects 4 nearest offensive players on same Y coordinate
+   */
+  selectOffensiveLine(centerSprite: PlayerSprite): void {
+    this.clearSelection();
+
+    const center = centerSprite.getPlayer();
+    const LINE_OF_SCRIMMAGE_Y = 17.5;
+    const MAX_Y_DIFF = 1.0; // Players within 1 yard of LOS
+    const MAX_X_DISTANCE = 10; // Within 10 yards horizontally
+
+    // Find all offensive players on line of scrimmage near center
+    const linePlayersData: Array<{ id: string; x: number; distance: number }> =
+      [];
+
+    this.sprites.forEach((sprite) => {
+      const player = sprite.getPlayer();
+
+      // Check if player is on offensive line
+      if (
+        player.team === "offense" &&
+        Math.abs(player.y - LINE_OF_SCRIMMAGE_Y) < MAX_Y_DIFF &&
+        Math.abs(player.x - center.x) < MAX_X_DISTANCE
+      ) {
+        const distance = Math.abs(player.x - center.x);
+        linePlayersData.push({
+          id: player.id,
+          x: player.x,
+          distance,
+        });
+      }
+    });
+
+    // Sort by distance from center and select closest 5 (including center)
+    linePlayersData.sort((a, b) => a.distance - b.distance);
+    const oLineIds = linePlayersData.slice(0, 5).map((p) => p.id);
+
+    // Select all O-line players
+    oLineIds.forEach((id) => {
+      this.selectPlayer(id, true);
+    });
+
+    console.log(`🏈 Selected offensive line: ${oLineIds.length} players`);
+  }
+
+  /**
    * Clear all selections
    */
   clearSelection(): void {
@@ -285,12 +332,12 @@ export class PlayersLayer extends Container {
         player.team === "offense" &&
         timeSinceLastClick < DOUBLE_CLICK_THRESHOLD
       ) {
-        // Double-click detected on center - select all offensive players!
+        // Double-click detected on center - select offensive line (5 players)!
         console.log(
-          "🎯 Double-click detected on center! Selecting all offensive players..."
+          "🎯 Double-click detected on center! Selecting offensive line (LT, LG, C, RG, RT)..."
         );
         event.stopPropagation();
-        this.selectAllOffensivePlayers();
+        this.selectOffensiveLine(sprite);
         return; // Skip normal click handling
       }
 
@@ -582,6 +629,27 @@ export class PlayersLayer extends Container {
     this.off("pointermove", this.onDragMove);
     this.off("pointerup", this.onDragEnd);
     this.off("pointerupoutside", this.onDragEnd);
+
+    // SNAP TO INTELLIGENT POSITIONS when drag ends
+    this.dragState.playerIds.forEach((playerId) => {
+      const playerSprite = this.sprites.get(playerId);
+      if (!playerSprite) return;
+
+      const player = playerSprite.getPlayer();
+      
+      // Apply smart snap-to-grid based on player role
+      const snapResult = snapToNearest(player.x, player.y, player.role);
+      
+      if (snapResult.snapped && snapResult.snapPoint) {
+        // Update player position to snapped coordinates
+        playerSprite.updatePlayer({
+          x: snapResult.x,
+          y: snapResult.y,
+        });
+        
+        console.log(`🧲 Snapped ${player.role || player.jerseyNumber} to ${snapResult.snapPoint.label} (${snapResult.x.toFixed(1)}, ${snapResult.y.toFixed(1)})`);
+      }
+    });
 
     // End drag state for all players and notify of changes
     this.dragState.playerIds.forEach((playerId) => {

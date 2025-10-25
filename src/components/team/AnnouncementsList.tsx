@@ -17,6 +17,7 @@ import { HashtagService } from "../../services/hashtagService";
 import type { HashtagCount } from "../../services/hashtagService";
 import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
 import { AnnouncementItem } from "./AnnouncementItem";
+import { AnnouncementListSkeleton } from "../ui/Skeleton/AnnouncementSkeleton";
 import { Hash, X, RefreshCw } from "lucide-react";
 
 interface AnnouncementsListProps {
@@ -156,11 +157,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <AnnouncementListSkeleton count={5} />;
   }
 
   if (error) {

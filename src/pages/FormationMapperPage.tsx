@@ -12,7 +12,7 @@ import { useFormationAudit } from "../hooks/useFormationAudit";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import type { Play } from "../types/play";
 import { FormationSelector } from "../components/playbook/FormationSelector";
-import { FormationBuilderModal } from "../components/playbook/FormationBuilderModal/FormationBuilderModal";
+import { FormationBuilderModal } from "../components/playbook/FormationBuilderModal";
 import { ensureValidFormation } from "../utils/formationGuard";
 import { SecurePlaysService } from "../services/securePlaysService";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";

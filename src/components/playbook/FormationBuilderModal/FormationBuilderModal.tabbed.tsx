@@ -9,7 +9,7 @@
  * Clean, purpose-driven interface for coaches to manage formations.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Modal } from "../../ui/Modal/Modal";
 import { Link2, Pencil, Save } from "lucide-react";
 import { Typography } from "../../design-system/Typography";
@@ -50,6 +50,7 @@ export function FormationBuilderModal({
   const [selectedFormationId, setSelectedFormationId] = useState<
     string | undefined
   >(formationId);
+  const hasSetInitialTab = useRef(false); // Track if we've set initial tab
   const toast = useToast();
 
   // Update selected formation when prop changes
@@ -91,20 +92,33 @@ export function FormationBuilderModal({
     return () => {
       mounted = false;
     };
-  }, [selectedFormationId, isOpen, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFormationId, isOpen]); // toast is stable from useToast(), safe to omit
 
-  // Set initial tab when modal opens
+  // Set initial tab when modal opens (only ONCE per modal open, not on every state change)
   useEffect(() => {
-    if (!isOpen) return;
-
-    // If editing existing formation, go to draw tab
-    if (selectedFormationId) {
-      setActiveTab("draw");
-    } else {
-      // If creating new formation, start with edit tab
-      setActiveTab("edit");
+    if (!isOpen) {
+      // Reset flag when modal closes
+      hasSetInitialTab.current = false;
+      return;
     }
-  }, [selectedFormationId, isOpen]);
+
+    // Only set initial tab once per modal open
+    if (hasSetInitialTab.current) return;
+
+    hasSetInitialTab.current = true;
+
+    // Determine target tab based on whether we're editing or creating
+    const targetTab = selectedFormationId ? "draw" : "edit";
+
+    console.log(
+      "📑 Setting initial tab to",
+      targetTab,
+      "for formation:",
+      selectedFormationId || "new"
+    );
+    setActiveTab(targetTab);
+  }, [isOpen, selectedFormationId]); // Removed activeTab to prevent fighting with manual clicks
 
   const handleSuccess = (savedFormation?: Formation) => {
     if (onSaved) {
@@ -300,17 +314,17 @@ export function FormationBuilderModal({
           {/* Tab Content */}
           <div className="flex-1 overflow-auto">
             {/* Tab 1: Create/Edit Formation Details */}
-            {activeTab === "edit" && (
+            <div className={activeTab === "edit" ? "block h-full" : "hidden"}>
               <FormationBuilderPanel
                 playbookId={playbookId}
                 onFormationUpdated={(formation) => handleSuccess(formation)}
                 showHeader={false}
                 hideSubTabs={true}
               />
-            )}
+            </div>
 
             {/* Tab 2: Draw Formation (Visual Canvas) */}
-            {activeTab === "draw" && (
+            <div className={activeTab === "draw" ? "block h-full" : "hidden"}>
               <DrawFormationTab
                 playbookId={playbookId}
                 formationId={selectedFormationId}
@@ -323,17 +337,20 @@ export function FormationBuilderModal({
                   // Formation will auto-load via useEffect
                 }}
               />
-            )}
+            </div>
 
             {/* Tab 3: Link Left/Right Variants */}
-            {activeTab === "link" && (
+            <div className={activeTab === "link" ? "block h-full" : "hidden"}>
               <FormationLinkingPanel
                 playbookId={playbookId}
-                onSuccess={handleSuccess}
+                onSuccess={() => {
+                  console.log("✅ Formations linked successfully");
+                  toast.success("Formation variants linked");
+                }}
                 initialLeftFormation={null}
                 initialRightFormation={null}
               />
-            )}
+            </div>
           </div>
         </div>
 

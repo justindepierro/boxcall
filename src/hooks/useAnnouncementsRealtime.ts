@@ -1,6 +1,7 @@
 /**
  * useAnnouncementsRealtime Hook
  * Subscribes to real-time updates for announcements, reactions, and comments
+ * Optimized with tiered debouncing: 100ms for reactions/comments (instant feel), 300ms for announcements
  */
 
 import { useEffect, useRef, useCallback } from "react";
@@ -14,6 +15,8 @@ interface UseAnnouncementsRealtimeOptions {
   onReactionChange?: () => void;
   onCommentChange?: () => void;
   enabled?: boolean;
+  announcementDebounceMs?: number; // Default: 300ms for announcements
+  interactionDebounceMs?: number;  // Default: 100ms for reactions/comments (Facebook-fast!)
 }
 
 export function useAnnouncementsRealtime({
@@ -23,28 +26,65 @@ export function useAnnouncementsRealtime({
   onReactionChange,
   onCommentChange,
   enabled = true,
+  announcementDebounceMs = 300,
+  interactionDebounceMs = 100, // Much faster for social interactions!
 }: UseAnnouncementsRealtimeOptions) {
   const channelRef = useRef<RealtimeChannel | null>(null);
+  
+  // Debounce timers for each type of update
+  const newAnnouncementTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const announcementUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const reactionChangeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const commentChangeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Debounced handlers to batch rapid updates
   const handleNewAnnouncement = useCallback(() => {
-    console.info("[Realtime] New announcement received");
-    onNewAnnouncement?.();
-  }, [onNewAnnouncement]);
+    if (newAnnouncementTimerRef.current) {
+      clearTimeout(newAnnouncementTimerRef.current);
+    }
+    
+    newAnnouncementTimerRef.current = setTimeout(() => {
+      console.info("[Realtime] New announcement received (debounced 300ms)");
+      onNewAnnouncement?.();
+      newAnnouncementTimerRef.current = null;
+    }, announcementDebounceMs);
+  }, [onNewAnnouncement, announcementDebounceMs]);
 
   const handleAnnouncementUpdate = useCallback(() => {
-    console.info("[Realtime] Announcement updated");
-    onAnnouncementUpdate?.();
-  }, [onAnnouncementUpdate]);
+    if (announcementUpdateTimerRef.current) {
+      clearTimeout(announcementUpdateTimerRef.current);
+    }
+    
+    announcementUpdateTimerRef.current = setTimeout(() => {
+      console.info("[Realtime] Announcement updated (debounced 300ms)");
+      onAnnouncementUpdate?.();
+      announcementUpdateTimerRef.current = null;
+    }, announcementDebounceMs);
+  }, [onAnnouncementUpdate, announcementDebounceMs]);
 
   const handleReactionChange = useCallback(() => {
-    console.info("[Realtime] Reaction changed");
-    onReactionChange?.();
-  }, [onReactionChange]);
+    if (reactionChangeTimerRef.current) {
+      clearTimeout(reactionChangeTimerRef.current);
+    }
+    
+    reactionChangeTimerRef.current = setTimeout(() => {
+      console.info("[Realtime] Reaction changed (debounced 100ms - instant!)");
+      onReactionChange?.();
+      reactionChangeTimerRef.current = null;
+    }, interactionDebounceMs); // 100ms for instant feel!
+  }, [onReactionChange, interactionDebounceMs]);
 
   const handleCommentChange = useCallback(() => {
-    console.info("[Realtime] Comment changed");
-    onCommentChange?.();
-  }, [onCommentChange]);
+    if (commentChangeTimerRef.current) {
+      clearTimeout(commentChangeTimerRef.current);
+    }
+    
+    commentChangeTimerRef.current = setTimeout(() => {
+      console.info("[Realtime] Comment changed (debounced 100ms - instant!)");
+      onCommentChange?.();
+      commentChangeTimerRef.current = null;
+    }, interactionDebounceMs); // 100ms for instant feel!
+  }, [onCommentChange, interactionDebounceMs]);
 
   useEffect(() => {
     if (!enabled || !teamId) return;
@@ -114,7 +154,27 @@ export function useAnnouncementsRealtime({
 
     // Cleanup function
     return () => {
-      console.info("[Realtime] Cleaning up subscriptions");
+      console.info("[Realtime] Cleaning up subscriptions and timers");
+      
+      // Clear all pending timers
+      if (newAnnouncementTimerRef.current) {
+        clearTimeout(newAnnouncementTimerRef.current);
+        newAnnouncementTimerRef.current = null;
+      }
+      if (announcementUpdateTimerRef.current) {
+        clearTimeout(announcementUpdateTimerRef.current);
+        announcementUpdateTimerRef.current = null;
+      }
+      if (reactionChangeTimerRef.current) {
+        clearTimeout(reactionChangeTimerRef.current);
+        reactionChangeTimerRef.current = null;
+      }
+      if (commentChangeTimerRef.current) {
+        clearTimeout(commentChangeTimerRef.current);
+        commentChangeTimerRef.current = null;
+      }
+      
+      // Unsubscribe from channel
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;

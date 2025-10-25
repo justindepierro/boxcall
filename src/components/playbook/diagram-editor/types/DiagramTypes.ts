@@ -8,6 +8,31 @@
 import type { Player } from "./Player";
 
 /**
+ * Route types for professional playbook standards
+ */
+export type RouteType = "primary" | "hot" | "check";
+
+/**
+ * Route waypoint - a point along the route path
+ */
+export interface RouteWaypoint {
+  x: number; // X position in yards
+  y: number; // Y position in yards
+}
+
+/**
+ * Route - represents a player's path/assignment
+ */
+export interface Route {
+  id: string; // Unique identifier
+  playerId: string; // Player running this route
+  type: RouteType; // primary (main read), hot (if coverage), check (safety valve)
+  waypoints: RouteWaypoint[]; // Path points (min 2: start + end)
+  label?: string; // Optional route name (e.g., "Post", "Corner", "Slant")
+  distance?: number; // Calculated route distance in yards
+}
+
+/**
  * Diagram metadata - play information
  */
 export interface DiagramMetadata {
@@ -25,7 +50,7 @@ export interface DiagramMetadata {
 export interface DiagramDocument {
   version: 2;
   players: Player[];
-  // Future: routes, annotations, etc. will be added here
+  routes: Route[]; // Player routes/paths
   meta?: {
     createdAt: number;
     updatedAt: number;
@@ -41,6 +66,8 @@ export type ToolType =
   | "add-player-offense"
   | "add-player-defense"
   | "route"
+  | "draw-route"
+  | "edit-waypoint"
   | "annotation"
   | "delete";
 

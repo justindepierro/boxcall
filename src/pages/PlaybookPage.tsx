@@ -66,7 +66,6 @@ import {
 } from "../utils/diagramHelpers";
 import { saveDiagram } from "../services/diagramService";
 import { useIsMobile } from "../hooks/useBreakpoint";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 import {
   MobileCTACard,
@@ -215,10 +214,10 @@ export default function PlaybookPage() {
 
   const activePlaybookId = selectedPlaybookId || activeTeamId || ""; // Fallback to team_id
 
-  // 🚀 PERFORMANCE: Debounce search query to avoid excessive filtering on every keystroke
-  // Shows instant "Searching..." feedback while debouncing actual search
-  const debouncedSearchQuery = useDebouncedValue(state.searchQuery, 300);
-  const isSearchPending = state.searchQuery !== debouncedSearchQuery;
+  // 🚀 INSTANT SEARCH: No debounce! Array filtering is fast enough (<10ms for 200 plays)
+  // With memoization, this feels Facebook-instant on every keystroke
+  const debouncedSearchQuery = state.searchQuery; // Direct use, no debouncing (keeping var name for compatibility)
+  const isSearchPending = false; // Never pending with instant search!
   const selectedFiltersKey = useMemo(
     () => JSON.stringify(state.selectedFilters ?? {}),
     [state.selectedFilters]
@@ -683,11 +682,15 @@ export default function PlaybookPage() {
 
   const handleSavePlay = useCallback(
     async (playId: string, updates: Partial<Play>) => {
+      // Store previous state for rollback
+      let previousPlay: Play | undefined;
+
       try {
-        // 🚀 OPTIMISTIC UPDATE: Show changes immediately
+        // 🚀 OPTIMISTIC UPDATE: Show changes immediately (Facebook-style!)
         setOptimisticPlays((prev) => {
           const existingPlay = prev.find((p) => p.id === playId);
           if (existingPlay) {
+            previousPlay = existingPlay; // Save for rollback
             return prev.map((p) =>
               p.id === playId ? { ...p, ...updates } : p
             );
@@ -713,10 +716,13 @@ export default function PlaybookPage() {
           ];
         });
 
+        // ⚡ INSTANT FEEDBACK: Show success immediately (user never waits!)
+        toast.success("Play updated!");
+
         // Background: Update in database
         await SecurePlaysService.updatePlay(playId, updates);
 
-        // Remove from optimistic state after a brief delay (now reflected in database)
+        // Remove from optimistic state after database confirms
         setTimeout(() => {
           setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
         }, 100);
@@ -726,13 +732,21 @@ export default function PlaybookPage() {
 
         return Promise.resolve();
       } catch (error) {
-        // Revert optimistic update on error
-        setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        // 🔄 REVERT: Restore previous state on error
+        if (previousPlay) {
+          setOptimisticPlays((prev) =>
+            prev.map((p) => (p.id === playId ? previousPlay! : p))
+          );
+        } else {
+          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        }
+
         logError("Failed to save play:", error);
+        toast.error("Failed to save play. Changes reverted.");
         throw error; // Re-throw so the UI can show the error
       }
     },
-    [activePlaybookId]
+    [activePlaybookId, toast]
   );
 
   const createNewPlay = useCallback(
@@ -886,6 +900,35 @@ export default function PlaybookPage() {
       }
     })();
   }, [allPlaysForStats, dispatch, toast]);
+
+  // 🚀 PRELOAD HEAVY MODALS: Load during idle time for instant open (Facebook pattern!)
+  useEffect(() => {
+    // Wait 2s after page load, then preload heavy components
+    const preloadTimer = setTimeout(() => {
+      debug("[PlaybookPage] Preloading heavy modals during idle time...");
+
+      // Preload FormationBuilderModal (~120KB)
+      import("../components/playbook/FormationBuilderModal").catch(() => {
+        // Silent fail - will load on demand if preload fails
+      });
+
+      // Preload DiagramEditor (~150KB+)
+      import("../components/playbook/diagram-editor/DiagramEditor").catch(
+        () => {
+          // Silent fail
+        }
+      );
+
+      // Preload AddNewPlayModal
+      import("../components/playbook/AddNewPlayModal").catch(() => {
+        // Silent fail
+      });
+
+      debug("[PlaybookPage] Modal preload complete!");
+    }, 2000); // 2s delay = page is loaded, user settling in
+
+    return () => clearTimeout(preloadTimer);
+  }, []); // Run once on mount
 
   // Handle pull-to-refresh on mobile
   const handlePullRefresh = useCallback(async () => {

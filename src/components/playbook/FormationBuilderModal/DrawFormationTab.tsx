@@ -64,7 +64,8 @@ export const DrawFormationTab: React.FC<DrawFormationTabProps> = ({
     };
 
     loadFormations();
-  }, [playbookId, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playbookId]); // toast is stable from useToast(), safe to omit
 
   // Filter formations without diagrams (prioritize these)
   const formationsWithoutDiagrams = allFormations.filter(
@@ -77,24 +78,35 @@ export const DrawFormationTab: React.FC<DrawFormationTabProps> = ({
 
   // If already editing a formation, show the canvas
   if (formationId || formation) {
+    // Don't render canvas until we have a formationId (prevents premature mount)
+    if (!formationId && !formation?.id) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <Typography variant="body-md" className="text-text-muted">
+            Loading formation...
+          </Typography>
+        </div>
+      );
+    }
+
     return (
-      <div className="h-full">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full">
+      <div className="h-full relative">
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-surface-primary/80 z-10">
             <Typography variant="body-md" className="text-text-muted">
-              Loading formation...
+              Loading formation data...
             </Typography>
           </div>
-        ) : (
-          <FormationBuilderCanvas
-            playbookId={playbookId}
-            formationId={formationId}
-            formation={formation || null}
-            creationSource="formation_builder"
-            onSave={onSave}
-            onCancel={onCancel}
-          />
         )}
+        <FormationBuilderCanvas
+          key={formationId || "new"} // Key ONLY on formationId - don't use formation.id
+          playbookId={playbookId}
+          formationId={formationId}
+          formation={formation || null}
+          creationSource="formation_builder"
+          onSave={onSave}
+          onCancel={onCancel}
+        />
       </div>
     );
   }

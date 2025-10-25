@@ -4,14 +4,47 @@
  * Handles creation, updates, and cleanup of the Pixi app.
  */
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { DiagramPixiApp, type PixiAppConfig } from "../core/PixiApp";
 import { FieldLayer } from "../layers/FieldLayer";
 import { PlayersLayer } from "../layers/PlayersLayer";
+import { RoutesLayer } from "../layers/RoutesLayer";
 import { AlignmentGuidesLayer } from "../layers/AlignmentGuidesLayer";
 import { SpacingIndicatorLayer } from "../layers/SpacingIndicatorLayer";
 import { useDiagramStore } from "../stores/diagramStore";
 import type { CameraConfig } from "../core/Camera";
+
+/**
+ * Simple throttle utility for performance optimization
+ * Ensures function is called at most once per `wait` milliseconds
+ */
+function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): T {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastArgs: Parameters<T> | null = null;
+
+  return ((...args: Parameters<T>) => {
+    lastArgs = args;
+
+    if (!timeoutId) {
+      // Call immediately on first invocation
+      func(...args);
+      lastArgs = null;
+
+      // Set up throttle window
+      timeoutId = setTimeout(() => {
+        // If there were additional calls during throttle, execute with last args
+        if (lastArgs) {
+          func(...lastArgs);
+        }
+        timeoutId = null;
+        lastArgs = null;
+      }, wait);
+    }
+  }) as T;
+}
 
 export interface UsePixiAppOptions {
   fieldWidth: number;
@@ -37,10 +70,12 @@ export function usePixiApp(
   } | null>(null);
   const fieldLayerRef = useRef<FieldLayer | null>(null);
   const playersLayerRef = useRef<PlayersLayer | null>(null);
+  const routesLayerRef = useRef<RoutesLayer | null>(null);
   const initializingRef = useRef(false); // Flag to prevent duplicate initialization
 
   // Get store actions - use refs to prevent recreation
-  const { selectPlayer, updatePlayer, players } = useDiagramStore();
+  const { selectPlayer, updatePlayer, players, routes, selectedRouteId } =
+    useDiagramStore();
   const selectPlayerRef = useRef(selectPlayer);
   const updatePlayerRef = useRef(updatePlayer);
 
@@ -55,17 +90,19 @@ export function usePixiApp(
     selectPlayerRef.current(playerId);
   }, []);
 
-  const handlePlayerMoved = useCallback(
-    (playerId: string, x: number, y: number) => {
-      updatePlayerRef.current(playerId, { x, y });
+  // Throttled player movement handler for 60fps smooth dragging (memoized)
+  const handlePlayerMoved = useMemo(
+    () =>
+      throttle((playerId: string, x: number, y: number) => {
+        updatePlayerRef.current(playerId, { x, y });
 
-      // Update spacing indicator with new player positions
-      if (app?.spacingIndicatorLayer) {
-        app.spacingIndicatorLayer.updatePlayers(
-          useDiagramStore.getState().players
-        );
-      }
-    },
+        // Update spacing indicator with new player positions
+        if (app?.spacingIndicatorLayer) {
+          app.spacingIndicatorLayer.updatePlayers(
+            useDiagramStore.getState().players
+          );
+        }
+      }, 16), // 16ms = 60fps
     [app]
   );
 
@@ -335,6 +372,19 @@ export function usePixiApp(
         // Connect alignment guides to players layer
         playersLayer.setAlignmentGuidesLayer(alignmentGuidesLayer);
 
+        // Create and add routes layer (between players and spacing indicator)
+        const routesLayer = new RoutesLayer(pixiApp.coordinates, {
+          onRouteSelected: (routeId) => {
+            useDiagramStore.getState().selectRoute(routeId);
+          },
+          onRouteClicked: (routeId) => {
+            console.log("Route clicked:", routeId);
+          },
+        });
+        pixiApp.stage.addChild(routesLayer); // Add to stage
+        pixiApp.routesLayer = routesLayer; // Store reference
+        routesLayerRef.current = routesLayer;
+
         // Create and add spacing indicator layer (on top of everything)
         const spacingIndicatorLayer = new SpacingIndicatorLayer(
           pixiApp.coordinates
@@ -385,6 +435,7 @@ export function usePixiApp(
       setIsReady(false);
       fieldLayerRef.current = null;
       playersLayerRef.current = null;
+      routesLayerRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -532,11 +583,45 @@ export function usePixiApp(
     });
   }, [players]);
 
+  // Sync routes from store to RoutesLayer
+  useEffect(() => {
+    const routesLayer = routesLayerRef.current;
+    if (!routesLayer) return;
+
+    // Get current route IDs in the layer
+    const currentIds = new Set(routesLayer.getRouteIds());
+    const storeIds = new Set(routes.map((r) => r.id));
+
+    // Add new routes or update existing ones
+    routes.forEach((route) => {
+      if (!currentIds.has(route.id)) {
+        routesLayer.addRoute(route);
+        // Store route data for retrieval
+        routesLayer.setRouteData(route.id, route);
+      } else {
+        // Update existing route
+        routesLayer.setRouteData(route.id, route);
+        routesLayer.updateRoute(route);
+      }
+    });
+
+    // Remove deleted routes
+    currentIds.forEach((id) => {
+      if (!storeIds.has(id)) {
+        routesLayer.removeRoute(id);
+      }
+    });
+
+    // Update selection state
+    routesLayer.selectRoute(selectedRouteId);
+  }, [routes, selectedRouteId]);
+
   return {
     app,
     isReady,
     fieldLayer: fieldLayerRef.current,
     playersLayer: playersLayerRef.current,
+    routesLayer: routesLayerRef.current,
     debugCoordinates: () => app?.debugCoordinates(),
   };
 }
