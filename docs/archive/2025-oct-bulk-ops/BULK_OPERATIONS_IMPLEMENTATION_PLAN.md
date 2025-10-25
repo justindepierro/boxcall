@@ -1,6 +1,7 @@
 # Bulk Operations Implementation Plan
 
 ## Overview
+
 Enable coaches to efficiently manage multiple formations at once with bulk editing, direction assignment, and deletion capabilities.
 
 **Estimated Time:** 3-4 hours  
@@ -11,11 +12,13 @@ Enable coaches to efficiently manage multiple formations at once with bulk editi
 ## Phase 1: Multi-Select UI (45 min)
 
 ### Components to Create:
+
 1. **`BulkSelectionContext.tsx`** - Manage selection state
 2. **`FormationCheckbox.tsx`** - Individual checkbox component
 3. **Update FormationBuilderPanel** - Add checkboxes to list
 
 ### Features:
+
 - ✅ Checkbox on each formation row
 - ✅ "Select All" / "Select None" buttons
 - ✅ Visual highlight for selected items
@@ -24,6 +27,7 @@ Enable coaches to efficiently manage multiple formations at once with bulk editi
 - ✅ Clear selection after bulk action
 
 ### Selection State:
+
 ```typescript
 interface BulkSelectionState {
   selectedIds: Set<string>;
@@ -40,9 +44,11 @@ interface BulkSelectionState {
 ## Phase 2: Bulk Action Toolbar (30 min)
 
 ### Component:
+
 **`BulkActionToolbar.tsx`** - Floating action bar
 
 ### Features:
+
 - Shows when 1+ formations selected
 - Sticky position at bottom of screen
 - Actions:
@@ -52,6 +58,7 @@ interface BulkSelectionState {
   - ❌ **Clear Selection**
 
 ### UI Design:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ 🔲 5 formations selected                        │
@@ -64,13 +71,14 @@ interface BulkSelectionState {
 ## Phase 3: Bulk Metadata Editor (60 min)
 
 ### Component:
+
 **`BulkMetadataModal.tsx`** - Multi-formation editor
 
 ### Features:
+
 - **Edit Mode Selection:**
   - [ ] **Replace:** Overwrite existing values
   - [ ] **Merge:** Add to existing values (for tags)
-  
 - **Fields:**
   - Category (dropdown)
   - Personnel (dropdown with custom option)
@@ -83,25 +91,22 @@ interface BulkSelectionState {
   - Preview changes before applying
 
 ### Mutation:
+
 ```typescript
 const useBulkUpdateMetadata = () => {
   return useMutation({
-    mutationFn: async ({ 
-      formationIds, 
-      updates, 
-      mode 
-    }: BulkMetadataUpdate) => {
+    mutationFn: async ({ formationIds, updates, mode }: BulkMetadataUpdate) => {
       // Batch update via formationService
       return await formationService.bulkUpdateMetadata(
-        formationIds, 
-        updates, 
+        formationIds,
+        updates,
         mode
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['formations']);
+      queryClient.invalidateQueries(["formations"]);
       toast.success(`Updated ${count} formations`);
-    }
+    },
   });
 };
 ```
@@ -111,47 +116,48 @@ const useBulkUpdateMetadata = () => {
 ## Phase 4: Bulk Direction Assignment (45 min)
 
 ### Component:
+
 **`BulkDirectionModal.tsx`** - Direction setter
 
 ### Features:
+
 - **Direction Options:**
   - ⬅️ Left
   - ➡️ Right
   - ↔️ Both (auto-create opposites)
-  
 - **Smart Handling:**
   - If "Both" selected:
     - Check if opposite exists
     - Auto-create opposite if missing
     - Link formations bidirectionally
-  
 - **Preview:**
   - Show what will change
   - Highlight formations that already have opposites
   - Warn about creating new formations
 
 ### Mutation:
+
 ```typescript
 const useBulkSetDirection = () => {
   return useMutation({
-    mutationFn: async ({ 
-      formationIds, 
+    mutationFn: async ({
+      formationIds,
       direction,
-      autoCreateOpposites 
+      autoCreateOpposites,
     }: BulkDirectionUpdate) => {
       return await formationService.bulkSetDirection(
-        formationIds, 
+        formationIds,
         direction,
         autoCreateOpposites
       );
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['formations']);
+      queryClient.invalidateQueries(["formations"]);
       toast.success(
         `Set direction for ${data.updated} formations` +
-        (data.created > 0 ? `, created ${data.created} opposites` : '')
+          (data.created > 0 ? `, created ${data.created} opposites` : "")
       );
-    }
+    },
   });
 };
 ```
@@ -161,50 +167,45 @@ const useBulkSetDirection = () => {
 ## Phase 5: Bulk Delete (30 min)
 
 ### Component:
+
 **`BulkDeleteConfirmation.tsx`** - Smart delete modal
 
 ### Features:
+
 - **Confirmation UI:**
   - List formations to be deleted
   - Show linked opposites that will be affected
   - Warning if deleting formations with plays
-  
 - **Safety Features:**
   - Require explicit confirmation
   - Show impact count
   - Option to keep opposites vs delete them too
-  
 - **Undo Option:**
   - Store deleted formations temporarily
   - "Undo" button for 10 seconds
   - Auto-clear undo history
 
 ### Mutation:
+
 ```typescript
 const useBulkDelete = () => {
   const [undoData, setUndoData] = useState<Formation[] | null>(null);
-  
+
   return useMutation({
-    mutationFn: async ({ 
-      formationIds,
-      deleteOpposites 
-    }: BulkDeleteParams) => {
+    mutationFn: async ({ formationIds, deleteOpposites }: BulkDeleteParams) => {
       // Fetch formations first for undo
-      const formations = await formationService.getFormationsByIds(formationIds);
+      const formations =
+        await formationService.getFormationsByIds(formationIds);
       setUndoData(formations);
-      
-      return await formationService.bulkDelete(
-        formationIds, 
-        deleteOpposites
-      );
+
+      return await formationService.bulkDelete(formationIds, deleteOpposites);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['formations']);
-      toast.success(
-        `Deleted ${data.count} formations`,
-        { action: { label: 'Undo', onClick: handleUndo } }
-      );
-    }
+      queryClient.invalidateQueries(["formations"]);
+      toast.success(`Deleted ${data.count} formations`, {
+        action: { label: "Undo", onClick: handleUndo },
+      });
+    },
   });
 };
 ```
@@ -230,13 +231,13 @@ async bulkUpdateMetadata(
       .from('formations')
       .select('id, tags')
       .in('id', formationIds);
-    
+
     // Merge tags for each formation
     const mergedUpdates = existing.map(f => ({
       id: f.id,
       tags: [...new Set([...(f.tags || []), ...(updates.tags || [])])]
     }));
-    
+
     // Batch update
     for (const update of mergedUpdates) {
       await supabase
@@ -250,10 +251,10 @@ async bulkUpdateMetadata(
       .from('formations')
       .update(updates)
       .in('id', formationIds);
-    
+
     if (error) throw error;
   }
-  
+
   return { updated: formationIds.length };
 }
 
@@ -266,14 +267,14 @@ async bulkSetDirection(
   autoCreateOpposites: boolean
 ): Promise<{ updated: number; created: number }> {
   let created = 0;
-  
+
   if (direction === 'both' && autoCreateOpposites) {
     // Fetch formations to create opposites
     const { data: formations } = await supabase
       .from('formations')
       .select('*')
       .in('id', formationIds);
-    
+
     for (const formation of formations || []) {
       if (!formation.opposite_formation_id) {
         // Create opposite
@@ -288,7 +289,7 @@ async bulkSetDirection(
       .update({ direction })
       .in('id', formationIds);
   }
-  
+
   return { updated: formationIds.length, created };
 }
 
@@ -305,18 +306,18 @@ async bulkDelete(
       .from('formations')
       .select('opposite_formation_id')
       .in('id', formationIds);
-    
+
     const oppositeIds = formations
       ?.map(f => f.opposite_formation_id)
       .filter(Boolean) as string[];
-    
+
     const allIds = [...formationIds, ...oppositeIds];
-    
+
     const { error } = await supabase
       .from('formations')
       .delete()
       .in('id', allIds);
-    
+
     if (error) throw error;
     return { count: allIds.length };
   } else {
@@ -324,7 +325,7 @@ async bulkDelete(
       .from('formations')
       .delete()
       .in('id', formationIds);
-    
+
     if (error) throw error;
     return { count: formationIds.length };
   }
@@ -343,7 +344,7 @@ async bulkDelete(
  */
 export function useBulkUpdateMetadata(playbookId: string) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (params: BulkMetadataUpdate) => {
       return await formationService.bulkUpdateMetadata(
@@ -355,7 +356,7 @@ export function useBulkUpdateMetadata(playbookId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries(cacheKeys.byPlaybook(playbookId));
       queryClient.invalidateQueries(cacheKeys.incomplete(playbookId));
-    }
+    },
   });
 }
 
@@ -364,7 +365,7 @@ export function useBulkUpdateMetadata(playbookId: string) {
  */
 export function useBulkSetDirection(playbookId: string) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (params: BulkDirectionUpdate) => {
       return await formationService.bulkSetDirection(
@@ -376,7 +377,7 @@ export function useBulkSetDirection(playbookId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries(cacheKeys.byPlaybook(playbookId));
       queryClient.invalidateQueries(cacheKeys.directionReview(playbookId));
-    }
+    },
   });
 }
 
@@ -385,7 +386,7 @@ export function useBulkSetDirection(playbookId: string) {
  */
 export function useBulkDelete(playbookId: string) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (params: BulkDeleteParams) => {
       return await formationService.bulkDelete(
@@ -395,7 +396,7 @@ export function useBulkDelete(playbookId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(cacheKeys.byPlaybook(playbookId));
-    }
+    },
   });
 }
 ```
@@ -405,17 +406,20 @@ export function useBulkDelete(playbookId: string) {
 ## UI/UX Considerations
 
 ### Selection Persistence:
+
 - Keep selection when switching tabs
 - Clear selection after bulk action completes
 - Show selection count in toolbar
 
 ### Visual Feedback:
+
 - Highlight selected formations (blue border)
 - Disable non-bulk actions when items selected
 - Loading states during bulk operations
 - Success/error toasts with counts
 
 ### Performance:
+
 - Batch database updates
 - Optimistic UI updates
 - React Query cache invalidation
@@ -466,17 +470,20 @@ src/
 ## Expected Outcomes
 
 **Time Savings:**
+
 - Editing 20 formations: 10 minutes → 30 seconds (95% faster)
 - Setting directions for 15 formations: 5 minutes → 10 seconds (96% faster)
 - Deleting 10 formations: 2 minutes → 5 seconds (97% faster)
 
 **User Benefits:**
+
 - Massive productivity boost
 - Less repetitive clicking
 - Faster playbook setup
 - Professional bulk editing experience
 
 **Code Quality:**
+
 - React Query integration (automatic caching)
 - Type-safe bulk operations
 - Comprehensive error handling

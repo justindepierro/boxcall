@@ -1,19 +1,19 @@
 /**
  * useRosterStats Hook
- * 
+ *
  * Computes roster statistics with memoization for performance
  * - Total player count
  * - Active player count
  * - Position breakdown
  * - Grade level distribution
- * 
+ *
  * Performance:
  * - All calculations are memoized to prevent unnecessary recalculations
  * - Only recomputes when player data changes
  */
 
-import { useMemo } from 'react';
-import type { RosterPlayerView } from '../../../services/rosterService';
+import { useMemo } from "react";
+import type { RosterPlayerView } from "../../../services/rosterService";
 
 /**
  * Return type for useRosterStats hook
@@ -33,16 +33,18 @@ export interface UseRosterStatsReturn {
 
 /**
  * Hook for computing roster statistics with memoization
- * 
+ *
  * @param players - Array of roster players
  * @returns Computed statistics
- * 
+ *
  * @example
  * ```tsx
  * const { totalPlayers, activePlayerCount, positionBreakdown } = useRosterStats(players);
  * ```
  */
-export const useRosterStats = (players: RosterPlayerView[]): UseRosterStatsReturn => {
+export const useRosterStats = (
+  players: RosterPlayerView[]
+): UseRosterStatsReturn => {
   // Total player count
   const totalPlayers = useMemo(() => players.length, [players]);
 
@@ -60,11 +62,11 @@ export const useRosterStats = (players: RosterPlayerView[]): UseRosterStatsRetur
   // Position breakdown
   const positionBreakdown = useMemo(() => {
     const breakdown: Record<string, number> = {};
-    
+
     players.forEach((player) => {
       if (player.position) {
         // Handle multiple positions (comma-separated)
-        const positions = player.position.split(',').map((p) => p.trim());
+        const positions = player.position.split(",").map((p) => p.trim());
         positions.forEach((pos) => {
           breakdown[pos] = (breakdown[pos] || 0) + 1;
         });
@@ -77,10 +79,11 @@ export const useRosterStats = (players: RosterPlayerView[]): UseRosterStatsRetur
   // Grade level breakdown
   const gradeLevelBreakdown = useMemo(() => {
     const breakdown: Record<string, number> = {};
-    
+
     players.forEach((player) => {
       if (player.grade_level) {
-        breakdown[player.grade_level] = (breakdown[player.grade_level] || 0) + 1;
+        breakdown[player.grade_level] =
+          (breakdown[player.grade_level] || 0) + 1;
       }
     });
 

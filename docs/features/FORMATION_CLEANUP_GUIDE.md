@@ -13,6 +13,7 @@ Your database has **duplicate formations** with the same name:
 ```
 
 **Why this happened:**
+
 - Old formations were created without direction tracking
 - New formations have proper left/right direction and linking
 - Both exist in the database, causing confusion
@@ -30,6 +31,7 @@ node scripts/cleanup-formations-interactive.js
 ```
 
 This will:
+
 1. Ask for your playbook ID
 2. Show you what will be deleted
 3. Confirm before making changes
@@ -37,6 +39,7 @@ This will:
 5. Keep properly linked formations
 
 **Example session:**
+
 ```
 🧹 Formation Cleanup Tool
 ═══════════════════════════════════════════
@@ -92,6 +95,7 @@ node scripts/cleanup-duplicate-formations.js \
 ```
 
 **Options:**
+
 - `--playbook-id` (required) - Your playbook ID
 - `--dry-run` - Preview changes without making them
 - `--update-plays` - Update play references (use with caution)
@@ -134,7 +138,7 @@ const supabase = createClient(
     .from('formations')
     .select('name, direction, opposite_formation_id')
     .eq('playbook_id', 'YOUR_PLAYBOOK_ID');
-  
+
   console.table(data);
 })();
 "
@@ -168,6 +172,7 @@ After cleanup, you should have:
 ### "Error: Cannot find module '@supabase/supabase-js'"
 
 Install it:
+
 ```bash
 npm install @supabase/supabase-js
 ```
@@ -175,6 +180,7 @@ npm install @supabase/supabase-js
 ### "Error: VITE_SUPABASE_URL is undefined"
 
 Make sure you have a `.env` file with:
+
 ```
 VITE_SUPABASE_URL=your_url_here
 VITE_SUPABASE_ANON_KEY=your_key_here
@@ -183,6 +189,7 @@ VITE_SUPABASE_ANON_KEY=your_key_here
 ### "Warning: Formations have usage_count > 0"
 
 Some plays reference these formations. Options:
+
 1. **Safe**: Delete anyway (plays use formation NAME, not ID, so they'll still work)
 2. **Manual**: Update plays to reference the proper formation IDs first
 3. **Cancel**: Keep the duplicates for now
@@ -199,6 +206,7 @@ Some plays reference these formations. Options:
 4. ✅ Use the bulk operations to manage formations efficiently
 
 The new bulk operations system helps prevent this by:
+
 - Making it easy to set directions in bulk
 - Auto-creating opposites when needed
 - Providing clear visual feedback
@@ -219,16 +227,19 @@ After cleanup, you have:
 ## Summary
 
 **Fastest fix:**
+
 ```bash
 node scripts/cleanup-formations-interactive.js
 ```
 
 **Or use bulk operations in the app:**
+
 1. Select duplicates (30 sec)
 2. Delete (1 click)
 3. Done! ✅
 
 **Result:**
+
 - 4 formations → 2 formations
 - All properly linked
 - No more duplicates

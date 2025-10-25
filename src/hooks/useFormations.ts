@@ -1,8 +1,8 @@
 /**
  * Formation React Query Hooks
- * 
+ *
  * Custom hooks for fetching and caching formation data.
- * 
+ *
  * Benefits over useState/useEffect:
  * - ✅ Automatic caching (no refetch on remount)
  * - ✅ Background refetching
@@ -10,16 +10,19 @@
  * - ✅ Request deduplication
  * - ✅ Optimistic updates
  * - ✅ 70-90% faster on cached loads
- * 
+ *
  * Usage:
  * ```tsx
  * const { data: formations, isLoading } = useFormations(playbookId);
  * ```
  */
 
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { FormationService } from '../services/formationService';
-import { getIncompleteFormations, auditFormationDirections } from '../utils/formationAudit';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { FormationService } from "../services/formationService";
+import {
+  getIncompleteFormations,
+  auditFormationDirections,
+} from "../utils/formationAudit";
 import {
   queryClient,
   cacheKeys,
@@ -27,8 +30,13 @@ import {
   invalidateIncompleteFormations,
   invalidateDirectionReview,
   invalidateFormation,
-} from '../lib/queryClient';
-import type { FormationCreate, FormationUpdate, FormationCategory, FormationType } from '../types/formation';
+} from "../lib/queryClient";
+import type {
+  FormationCreate,
+  FormationUpdate,
+  FormationCategory,
+  FormationType,
+} from "../types/formation";
 
 // ===================================================================
 // QUERY HOOKS (Fetching Data)
@@ -40,7 +48,7 @@ import type { FormationCreate, FormationUpdate, FormationCategory, FormationType
  */
 export function useFormations(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.formations(playbookId || ''),
+    queryKey: cacheKeys.formations(playbookId || ""),
     queryFn: () => FormationService.getFormationsListByPlaybook(playbookId!),
     enabled: !!playbookId,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -53,7 +61,7 @@ export function useFormations(playbookId: string | undefined) {
  */
 export function useFormation(formationId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.formation(formationId || ''),
+    queryKey: cacheKeys.formation(formationId || ""),
     queryFn: () => FormationService.getFormationById(formationId!),
     enabled: !!formationId,
     staleTime: 5 * 60 * 1000,
@@ -66,7 +74,7 @@ export function useFormation(formationId: string | undefined) {
  */
 export function useIncompleteFormations(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.incompleteFormations(playbookId || ''),
+    queryKey: cacheKeys.incompleteFormations(playbookId || ""),
     queryFn: () => getIncompleteFormations(playbookId!),
     enabled: !!playbookId,
     staleTime: 2 * 60 * 1000, // 2 minutes (changes more frequently)
@@ -79,7 +87,7 @@ export function useIncompleteFormations(playbookId: string | undefined) {
  */
 export function useDirectionReview(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.directionReview(playbookId || ''),
+    queryKey: cacheKeys.directionReview(playbookId || ""),
     queryFn: () => auditFormationDirections(playbookId!),
     enabled: !!playbookId,
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -91,7 +99,7 @@ export function useDirectionReview(playbookId: string | undefined) {
  */
 export function useOppositeFormation(formationId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.oppositeFormation(formationId || ''),
+    queryKey: cacheKeys.oppositeFormation(formationId || ""),
     queryFn: async () => {
       if (!formationId) return null;
       return FormationService.getOppositeFormation(formationId);
@@ -111,7 +119,8 @@ export function useOppositeFormation(formationId: string | undefined) {
  */
 export function useCreateFormation(playbookId: string) {
   return useMutation({
-    mutationFn: (data: FormationCreate) => FormationService.createFormation(data),
+    mutationFn: (data: FormationCreate) =>
+      FormationService.createFormation(data),
     onSuccess: () => {
       // Invalidate all formation queries for this playbook
       invalidateFormations(playbookId);
@@ -127,7 +136,7 @@ export function useCreateFormation(playbookId: string) {
  */
 export function useUpdateFormation(playbookId: string, formationId: string) {
   return useMutation({
-    mutationFn: (data: FormationUpdate) => 
+    mutationFn: (data: FormationUpdate) =>
       FormationService.updateFormation(formationId, data),
     onSuccess: () => {
       // Invalidate specific formation and related queries
@@ -145,7 +154,8 @@ export function useUpdateFormation(playbookId: string, formationId: string) {
  */
 export function useDeleteFormation(playbookId: string) {
   return useMutation({
-    mutationFn: (formationId: string) => FormationService.deleteFormation(formationId),
+    mutationFn: (formationId: string) =>
+      FormationService.deleteFormation(formationId),
     onSuccess: () => {
       invalidateFormations(playbookId);
       invalidateDirectionReview(playbookId);
@@ -159,8 +169,13 @@ export function useDeleteFormation(playbookId: string) {
  */
 export function useCreateOppositeFormation(playbookId: string) {
   return useMutation({
-    mutationFn: ({ formationId, customName }: { formationId: string; customName?: string }) =>
-      FormationService.createOppositeFormation(formationId, customName),
+    mutationFn: ({
+      formationId,
+      customName,
+    }: {
+      formationId: string;
+      customName?: string;
+    }) => FormationService.createOppositeFormation(formationId, customName),
     onSuccess: () => {
       invalidateFormations(playbookId);
       invalidateDirectionReview(playbookId);
@@ -190,7 +205,9 @@ export function usePrefetchFormations(playbookId: string) {
  */
 export function useRefetchFormations(playbookId: string) {
   return () => {
-    queryClient.invalidateQueries({ queryKey: cacheKeys.formations(playbookId) });
+    queryClient.invalidateQueries({
+      queryKey: cacheKeys.formations(playbookId),
+    });
   };
 }
 
@@ -211,7 +228,7 @@ export function useBulkUpdateMetadata(playbookId: string) {
         tags: string[];
         formation_type: FormationType;
       }>;
-      mode: 'replace' | 'merge';
+      mode: "replace" | "merge";
     }) => {
       return await FormationService.bulkUpdateMetadata(
         params.formationIds,
@@ -235,7 +252,7 @@ export function useBulkSetDirection(playbookId: string) {
   return useMutation({
     mutationFn: async (params: {
       formationIds: string[];
-      direction: 'left' | 'right' | 'both';
+      direction: "left" | "right" | "both";
       autoCreateOpposites: boolean;
     }) => {
       return await FormationService.bulkSetDirection(

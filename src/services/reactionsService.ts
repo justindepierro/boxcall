@@ -1,6 +1,6 @@
 /**
  * Announcement Reactions Service
- * 
+ *
  * Handles adding, removing, and fetching reactions to team announcements
  * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
  */
@@ -12,10 +12,10 @@ import { emitTelemetry } from "../lib/telemetry";
 // TYPE DEFINITIONS
 // ============================================
 
-export type ReactionType = 
-  | "like" 
-  | "love" 
-  | "celebrate" 
+export type ReactionType =
+  | "like"
+  | "love"
+  | "celebrate"
   | "football"
   | "fire"
   | "clap"
@@ -73,8 +73,10 @@ export class ReactionsService {
     summary: ReactionSummary[];
   }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       const { data, error } = await supabase
         .from("announcement_reactions" as any)
         .select("*")
@@ -106,7 +108,9 @@ export class ReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; reaction?: Reaction; error?: string }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         return {
@@ -168,7 +172,9 @@ export class ReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         return {
@@ -213,9 +219,15 @@ export class ReactionsService {
   static async toggleReaction(
     announcementId: string,
     reactionType: ReactionType
-  ): Promise<{ success: boolean; action: "added" | "removed"; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    action: "added" | "removed";
+    error?: string;
+  }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         return {
@@ -268,7 +280,9 @@ export class ReactionsService {
     announcementIds: string[]
   ): Promise<Map<string, ReactionSummary[]>> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       const { data, error } = await supabase
         .from("announcement_reactions" as any)
@@ -293,7 +307,10 @@ export class ReactionsService {
       const summaries = new Map<string, ReactionSummary[]>();
       announcementIds.forEach((id) => {
         const announcementReactions = grouped.get(id) || [];
-        summaries.set(id, this.calculateSummary(announcementReactions, user?.id));
+        summaries.set(
+          id,
+          this.calculateSummary(announcementReactions, user?.id)
+        );
       });
 
       return summaries;
@@ -364,16 +381,18 @@ export class ReactionsService {
       "target",
       "hundred",
     ];
-    
-    return reactionTypes.map((type) => {
-      const typeReactions = reactions.filter((r) => r.reaction_type === type);
-      return {
-        reaction_type: type,
-        count: typeReactions.length,
-        user_has_reacted: currentUserId
-          ? typeReactions.some((r) => r.user_id === currentUserId)
-          : false,
-      };
-    }).filter((summary) => summary.count > 0 || summary.user_has_reacted); // Only show reactions that have been used or user reacted
+
+    return reactionTypes
+      .map((type) => {
+        const typeReactions = reactions.filter((r) => r.reaction_type === type);
+        return {
+          reaction_type: type,
+          count: typeReactions.length,
+          user_has_reacted: currentUserId
+            ? typeReactions.some((r) => r.user_id === currentUserId)
+            : false,
+        };
+      })
+      .filter((summary) => summary.count > 0 || summary.user_has_reacted); // Only show reactions that have been used or user reacted
   }
 }

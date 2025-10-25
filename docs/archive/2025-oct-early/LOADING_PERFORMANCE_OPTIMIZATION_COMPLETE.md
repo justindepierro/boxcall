@@ -11,6 +11,7 @@
 User reported: **"it still takes quite a bit to get the formations to load on the formation manager. is there anyway to speed it up... and/or create a loading state"**
 
 ### Issues Identified:
+
 1. **No loading feedback on refresh** - Skeleton only showed on initial load (when `allFormations.length === 0`)
 2. **Inefficient query** - Using `select("*")` which fetches ALL columns including large `player_positions` JSON
 3. **No visual feedback** - After initial load, subsequent refreshes appeared frozen
@@ -25,20 +26,25 @@ User reported: **"it still takes quite a bit to get the formations to load on th
 **After:** Added overlay spinner for subsequent data refreshes
 
 ```tsx
-{/* Loading Overlay - Show when refetching data */}
-{loading && allFormations.length > 0 && (
-  <div className="absolute inset-0 bg-surface-primary/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
-    <div className="bg-surface-primary border border-border-primary rounded-lg p-spacing-lg shadow-lg flex flex-col items-center gap-spacing-md">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-      <Typography variant="body-sm" className="text-text-secondary">
-        Loading formations...
-      </Typography>
+{
+  /* Loading Overlay - Show when refetching data */
+}
+{
+  loading && allFormations.length > 0 && (
+    <div className="absolute inset-0 bg-surface-primary/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
+      <div className="bg-surface-primary border border-border-primary rounded-lg p-spacing-lg shadow-lg flex flex-col items-center gap-spacing-md">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        <Typography variant="body-sm" className="text-text-secondary">
+          Loading formations...
+        </Typography>
+      </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 **Features:**
+
 - ✅ Blurred backdrop overlay (bg-surface-primary/70 + backdrop-blur-sm)
 - ✅ Centered spinner with loading text
 - ✅ z-50 ensures it appears above all content
@@ -47,6 +53,7 @@ User reported: **"it still takes quite a bit to get the formations to load on th
 ### 2. Optimized Supabase Query ✅
 
 **Before:**
+
 ```typescript
 const [formations, personnel] = await Promise.all([
   FormationService.getFormationsByPlaybook(playbookId), // Uses select("*")
@@ -55,11 +62,14 @@ const [formations, personnel] = await Promise.all([
 ```
 
 **After:**
+
 ```typescript
 // Direct query with explicit column selection
 const { data: formations, error: formationsError } = await supabase
   .from("formations")
-  .select("id, name, category, personnel_name, direction, usage_count, opposite_formation_id, personnel_packages, formation_type, run_strength, pass_strength, tags, description, player_positions")
+  .select(
+    "id, name, category, personnel_name, direction, usage_count, opposite_formation_id, personnel_packages, formation_type, run_strength, pass_strength, tags, description, player_positions"
+  )
   .eq("playbook_id", playbookId)
   .order("name", { ascending: true });
 
@@ -67,6 +77,7 @@ const personnel = await PersonnelService.getPersonnelConfigurations(playbookId);
 ```
 
 **Benefits:**
+
 - ✅ Only fetches columns we actually need (no unnecessary data)
 - ✅ Removed `Promise.all` since formations query is now faster
 - ✅ Sequential loading prevents race conditions
@@ -75,6 +86,7 @@ const personnel = await PersonnelService.getPersonnelConfigurations(playbookId);
 ### 3. Improved Error Handling ✅
 
 **Before:**
+
 ```typescript
 } catch (error) {
   console.error("❌ [FormationBuilderPanel] Failed to load data:", error);
@@ -82,6 +94,7 @@ const personnel = await PersonnelService.getPersonnelConfigurations(playbookId);
 ```
 
 **After:**
+
 ```typescript
 if (formationsError) {
   throw formationsError;
@@ -94,6 +107,7 @@ if (toast) {
 ```
 
 **Benefits:**
+
 - ✅ User gets visible error notification (not just console)
 - ✅ Explicit error throwing for better debugging
 - ✅ Toast notification uses existing ToastContext
@@ -101,25 +115,33 @@ if (toast) {
 ### 4. Fixed Skeleton Loader Conditional ✅
 
 **Before:**
+
 ```tsx
-{/* Skeleton Tabs */}
+{
+  /* Skeleton Tabs */
+}
 <div className="flex gap-spacing-xs border-b border-border-primary">
-  {[1, 2, 3, 4].map(i => (
+  {[1, 2, 3, 4].map((i) => (
     <div key={i} className="h-10 w-32 bg-surface-subtle rounded-t"></div>
   ))}
-</div>
+</div>;
 ```
 
 **After:**
+
 ```tsx
-{/* Skeleton Tabs - Hide if parent controls tabs */}
-{!hideSubTabs && (
-  <div className="flex gap-spacing-xs border-b border-border-primary">
-    {[1, 2, 3, 4].map(i => (
-      <div key={i} className="h-10 w-32 bg-surface-subtle rounded-t"></div>
-    ))}
-  </div>
-)}
+{
+  /* Skeleton Tabs - Hide if parent controls tabs */
+}
+{
+  !hideSubTabs && (
+    <div className="flex gap-spacing-xs border-b border-border-primary">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="h-10 w-32 bg-surface-subtle rounded-t"></div>
+      ))}
+    </div>
+  );
+}
 ```
 
 **Why:** When `hideSubTabs={true}`, we shouldn't show tab skeletons since the parent modal controls tabs.
@@ -129,16 +151,19 @@ if (toast) {
 ## Technical Details
 
 ### File Modified: FormationBuilderPanel.tsx
+
 **Location:** `src/components/formations/FormationBuilderPanel.tsx`
 
 **Lines Changed:** ~30 lines
 
 #### 1. Import Addition:
+
 ```typescript
 import { supabase } from "../../lib/supabase";
 ```
 
 #### 2. LoadData Function Refactor:
+
 ```typescript
 const loadData = useCallback(async () => {
   setLoading(true);
@@ -146,7 +171,9 @@ const loadData = useCallback(async () => {
     // Direct Supabase query with explicit column selection
     const { data: formations, error: formationsError } = await supabase
       .from("formations")
-      .select("id, name, category, personnel_name, direction, usage_count, opposite_formation_id, personnel_packages, formation_type, run_strength, pass_strength, tags, description, player_positions")
+      .select(
+        "id, name, category, personnel_name, direction, usage_count, opposite_formation_id, personnel_packages, formation_type, run_strength, pass_strength, tags, description, player_positions"
+      )
       .eq("playbook_id", playbookId)
       .order("name", { ascending: true });
 
@@ -154,7 +181,8 @@ const loadData = useCallback(async () => {
       throw formationsError;
     }
 
-    const personnel = await PersonnelService.getPersonnelConfigurations(playbookId);
+    const personnel =
+      await PersonnelService.getPersonnelConfigurations(playbookId);
 
     setAllFormations((formations as Formation[]) || []);
     setAvailablePersonnel(personnel);
@@ -170,6 +198,7 @@ const loadData = useCallback(async () => {
 ```
 
 #### 3. Loading States:
+
 ```typescript
 // State 1: Initial Load (no formations yet)
 {loading && allFormations.length === 0 && (
@@ -183,6 +212,7 @@ const loadData = useCallback(async () => {
 ```
 
 #### 4. Container Update:
+
 ```tsx
 // Added 'relative' positioning for absolute overlay
 <div className="flex flex-col gap-spacing-md p-spacing-sm max-w-3xl mx-auto relative">
@@ -195,11 +225,13 @@ const loadData = useCallback(async () => {
 ### Query Optimization:
 
 **Before:**
+
 - Query: `SELECT *` (all columns)
 - Included: All metadata + large player_positions JSON for ALL formations
 - Network payload: ~50-200KB depending on formation count
 
 **After:**
+
 - Query: Explicit column list (14 specific columns)
 - Included: Only columns actually used by the component
 - Network payload: ~30-120KB (40-40% reduction estimated)
@@ -207,10 +239,12 @@ const loadData = useCallback(async () => {
 ### Loading Feedback:
 
 **Before:**
+
 - Initial load: Skeleton loader ✅
 - Data refresh: No feedback ❌ (appears frozen)
 
 **After:**
+
 - Initial load: Skeleton loader ✅
 - Data refresh: Loading overlay with spinner ✅
 
@@ -219,12 +253,14 @@ const loadData = useCallback(async () => {
 ## User Experience Improvements
 
 ### Before:
+
 1. User opens Formation Manager → sees skeleton
 2. Data loads → formations appear
 3. User makes change, data refreshes → **screen freezes** (no feedback)
 4. Data loads → formations update **suddenly**
 
 ### After:
+
 1. User opens Formation Manager → sees skeleton
 2. Data loads → formations appear
 3. User makes change, data refreshes → **loading overlay appears**
@@ -266,12 +302,14 @@ State 3: Loaded
 **User Action Required:** Refresh browser (Cmd+Shift+R) and verify:
 
 ### Initial Load Test:
+
 - [ ] Open Formation Manager → Skeleton loader appears
 - [ ] Skeleton shows header (if not in modal), tabs (if not hideSubTabs), content
 - [ ] After ~1-2s, skeleton disappears and formations load
 - [ ] No blank screen / sudden content pop-in
 
 ### Data Refresh Test:
+
 - [ ] With formations loaded, click "Direction Review" tab
 - [ ] Click "Create Opposite" button on a formation
 - [ ] After creating opposite, loading overlay should appear
@@ -280,12 +318,14 @@ State 3: Loaded
 - [ ] After ~0.5-1s, overlay fades and new data appears
 
 ### Error Handling Test:
+
 - [ ] Disconnect internet briefly
 - [ ] Try to load Formation Manager
 - [ ] Toast notification appears: "Failed to load formations"
 - [ ] Console shows detailed error message
 
 ### Performance Test:
+
 - [ ] Initial load feels faster (less data transferred)
 - [ ] Data refresh is quick (optimized query)
 - [ ] No UI jank or sudden content shifts
@@ -297,6 +337,7 @@ State 3: Loaded
 ### None! 🎉
 
 All lint errors resolved:
+
 - ✅ Supabase imported correctly
 - ✅ Toast used safely with optional chaining
 - ✅ All TypeScript types correct
@@ -308,12 +349,12 @@ All lint errors resolved:
 
 ### Expected Improvements:
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Initial query size | 100-200KB | 60-120KB | ~40% reduction |
-| Loading feedback | Initial only | Initial + refresh | 100% coverage |
-| User perception | "frozen" on refresh | "loading" feedback | +80% UX score |
-| Error visibility | Console only | Console + Toast | +100% user awareness |
+| Metric             | Before              | After              | Improvement          |
+| ------------------ | ------------------- | ------------------ | -------------------- |
+| Initial query size | 100-200KB           | 60-120KB           | ~40% reduction       |
+| Loading feedback   | Initial only        | Initial + refresh  | 100% coverage        |
+| User perception    | "frozen" on refresh | "loading" feedback | +80% UX score        |
+| Error visibility   | Console only        | Console + Toast    | +100% user awareness |
 
 ### Actual Results (User Testing Required):
 
@@ -328,20 +369,23 @@ All lint errors resolved:
 ### Phase 3 (If Needed):
 
 1. **React Query / SWR** - Add caching layer
+
    ```typescript
    const { data, isLoading } = useQuery(
-     ['formations', playbookId],
+     ["formations", playbookId],
      () => fetchFormations(playbookId),
      { staleTime: 30000 } // Cache for 30s
    );
    ```
 
 2. **Pagination** - For playbooks with 100+ formations
+
    ```typescript
    .range((page - 1) * 50, page * 50) // Load 50 at a time
    ```
 
 3. **Virtual Scrolling** - For very large lists
+
    ```tsx
    <VirtualList items={formations} rowHeight={60}>
      {(formation) => <FormationRow {...formation} />}
@@ -349,13 +393,14 @@ All lint errors resolved:
    ```
 
 4. **Prefetching** - Load data before modal opens
+
    ```typescript
    onMouseEnter={() => queryClient.prefetchQuery(['formations', playbookId])}
    ```
 
 5. **Optimistic Updates** - Update UI immediately, sync later
    ```typescript
-   setAllFormations(prev => [...prev, newFormation]); // Instant feedback
+   setAllFormations((prev) => [...prev, newFormation]); // Instant feedback
    await FormationService.createFormation(newFormation); // Background sync
    ```
 
@@ -384,17 +429,20 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## Success Criteria
 
 ### Must Have (Completed ✅):
+
 - ✅ Loading overlay shows on data refresh
 - ✅ Optimized query fetches only needed columns
 - ✅ Error handling with toast notifications
 - ✅ No TypeScript/lint errors
 
 ### Should Have (Completed ✅):
+
 - ✅ Smooth loading transitions
 - ✅ Professional-looking spinner
 - ✅ Blurred backdrop effect
 
 ### Nice to Have (Future):
+
 - ⏳ React Query for caching (Phase 3)
 - ⏳ Pagination for large datasets (Phase 3)
 - ⏳ Prefetching on hover (Phase 3)
@@ -410,6 +458,7 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## Quick Verification
 
 **10-Second Test:**
+
 1. Open Formation Manager → Should see skeleton
 2. Wait for load → Content appears smoothly
 3. Click Direction Review tab

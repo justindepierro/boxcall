@@ -27,7 +27,7 @@ import { info, error as logError } from "./logger";
 /**
  * Normalizes a play name to identify unique base plays
  * Strips directional indicators, formation prefixes, and common variations
- * 
+ *
  * Examples:
  * - "Power Left" → "power"
  * - "I Form Counter Right" → "counter"
@@ -35,36 +35,53 @@ import { info, error as logError } from "./logger";
  */
 function normalizePlayName(playName: string): string {
   let normalized = playName.trim().toLowerCase();
-  
+
   // Remove common directional suffixes
   const directionalSuffixes = [
-    ' left', ' right', ' lt', ' rt',
-    ' strong', ' weak', ' str', ' wk',
-    ' open', ' closed',
+    " left",
+    " right",
+    " lt",
+    " rt",
+    " strong",
+    " weak",
+    " str",
+    " wk",
+    " open",
+    " closed",
   ];
-  
+
   for (const suffix of directionalSuffixes) {
     if (normalized.endsWith(suffix)) {
       normalized = normalized.slice(0, -suffix.length).trim();
     }
   }
-  
+
   // Remove common formation prefixes (e.g., "I Form Power" → "power")
   const formationPrefixes = [
-    'i form ', 'i-form ', 'ace ', 'singleback ', 'single back ',
-    'shotgun ', 'pistol ', 'wildcat ', 'empty ', 'trips ',
-    'doubles ', 'stack ', 'bunch ',
+    "i form ",
+    "i-form ",
+    "ace ",
+    "singleback ",
+    "single back ",
+    "shotgun ",
+    "pistol ",
+    "wildcat ",
+    "empty ",
+    "trips ",
+    "doubles ",
+    "stack ",
+    "bunch ",
   ];
-  
+
   for (const prefix of formationPrefixes) {
     if (normalized.startsWith(prefix)) {
       normalized = normalized.slice(prefix.length).trim();
     }
   }
-  
+
   // Remove extra whitespace
-  normalized = normalized.replace(/\s+/g, ' ').trim();
-  
+  normalized = normalized.replace(/\s+/g, " ").trim();
+
   return normalized;
 }
 
@@ -227,7 +244,9 @@ async function calculateFormationCompletenessScore(
       howToFix:
         "Formation Builder → Add personnel, category, tags, and player positions",
       pointsToGain: Math.round(
-        ((100 - avgCompleteness) / 100) * 20 * (incompleteFormations.length / totalFormations)
+        ((100 - avgCompleteness) / 100) *
+          20 *
+          (incompleteFormations.length / totalFormations)
       ),
     });
   }
@@ -336,7 +355,10 @@ async function calculateDataConsistencyScore(
     .eq("playbook_id", playbookId);
 
   if (playsError || formationsError) {
-    logError("[PlaybookHealth] Failed to fetch data:", playsError || formationsError);
+    logError(
+      "[PlaybookHealth] Failed to fetch data:",
+      playsError || formationsError
+    );
     return { score: 0, issues: [] };
   }
 
@@ -354,18 +376,18 @@ async function calculateDataConsistencyScore(
       severity: "warning",
       category: "Data Consistency",
       description: `${duplicateNames.length} duplicate play names found`,
-      affectedItems: plays
-        ?.filter((p) => duplicateNames.includes(p.play_name.toLowerCase()))
-        .map((p) => p.id) || [],
+      affectedItems:
+        plays
+          ?.filter((p) => duplicateNames.includes(p.play_name.toLowerCase()))
+          .map((p) => p.id) || [],
       howToFix: "Rename duplicate plays to be unique",
       pointsToGain: 5,
     });
   }
 
   // Check for formations missing opposite variants
-  const formationsNeedingOpposite = formations?.filter(
-    (f) => f.direction && !f.opposite_formation_id
-  ) || [];
+  const formationsNeedingOpposite =
+    formations?.filter((f) => f.direction && !f.opposite_formation_id) || [];
   if (formationsNeedingOpposite.length > 0) {
     score -= 5;
     issues.push({
@@ -436,14 +458,18 @@ async function calculateOrganizationQualityScore(
       severity: "info",
       category: "Organization Quality",
       description: `Only ${Math.round(tagRate * 100)}% of plays have tags`,
-      affectedItems: plays?.filter((p) => !p.tags || p.tags.length === 0).map((p) => p.id) || [],
+      affectedItems:
+        plays?.filter((p) => !p.tags || p.tags.length === 0).map((p) => p.id) ||
+        [],
       howToFix: "Add tags to plays for better filtering and organization",
       pointsToGain: Math.round((1 - tagRate) * 5),
     });
   }
 
   // Formation diversity (3 points)
-  const uniqueFormations = new Set(plays?.map((p) => p.formation).filter(Boolean));
+  const uniqueFormations = new Set(
+    plays?.map((p) => p.formation).filter(Boolean)
+  );
   const formationDiversity = Math.min(uniqueFormations.size / 10, 1); // Ideal: 10+ formations
   score += Math.round(formationDiversity * 3);
 
@@ -480,7 +506,10 @@ async function calculateOrganizationQualityScore(
 export async function calculatePlaybookHealth(
   playbookId: string
 ): Promise<PlaybookHealthScore> {
-  info("[PlaybookHealth] Starting health calculation for playbook:", playbookId);
+  info(
+    "[PlaybookHealth] Starting health calculation for playbook:",
+    playbookId
+  );
 
   // Run all calculations in parallel
   const [
@@ -522,19 +551,27 @@ export async function calculatePlaybookHealth(
 
   if (overall >= 90) {
     recommendations.push("🎉 Excellent! Your playbook is in great shape!");
-    recommendations.push("✅ All key metrics are strong. Keep maintaining this quality.");
+    recommendations.push(
+      "✅ All key metrics are strong. Keep maintaining this quality."
+    );
   } else if (overall >= 80) {
     recommendations.push("💪 Good job! Your playbook is well-organized.");
     recommendations.push("🎯 Focus on the issues below to reach 90+.");
   } else if (overall >= 70) {
     recommendations.push("📊 Your playbook has a solid foundation.");
-    recommendations.push("🔧 Address the critical and warning issues to improve analytics quality.");
+    recommendations.push(
+      "🔧 Address the critical and warning issues to improve analytics quality."
+    );
   } else if (overall >= 60) {
     recommendations.push("⚠️ Your playbook needs attention.");
-    recommendations.push("🚨 Prioritize linking plays to formations and completing required fields.");
+    recommendations.push(
+      "🚨 Prioritize linking plays to formations and completing required fields."
+    );
   } else {
     recommendations.push("🚀 Let's build a better playbook!");
-    recommendations.push("📝 Start by ensuring all plays have: name, type, and formation linked.");
+    recommendations.push(
+      "📝 Start by ensuring all plays have: name, type, and formation linked."
+    );
   }
 
   // Add specific recommendations based on top issues
@@ -563,9 +600,8 @@ export async function calculatePlaybookHealth(
     completeFormations:
       formations?.filter((f) => f.metadata_quality === "complete").length || 0,
     averagePlayQuality: playCompleteness.score * 4, // Convert 25-point scale to 100-point
-    uniquePlayNames: new Set(
-      plays?.map((p) => normalizePlayName(p.play_name))
-    ).size,
+    uniquePlayNames: new Set(plays?.map((p) => normalizePlayName(p.play_name)))
+      .size,
   };
 
   info("[PlaybookHealth] Calculation complete. Overall score:", overall);

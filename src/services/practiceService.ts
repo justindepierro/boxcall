@@ -48,19 +48,8 @@ export interface PracticeScriptPlay {
   // Game scenario configuration
   hash?: "left" | "middle" | "right";
   downDistance?: string; // e.g., "1st & 10", "3rd & 3"
-  fieldPosition?:
-    | "plus_territory"
-    | "red_zone"
-    | "backed_up"
-    | "midfield";
-  defensiveFront?:
-    | "base"
-    | "4-3"
-    | "3-4"
-    | "nickel"
-    | "dime"
-    | "bear"
-    | "tite";
+  fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
+  defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
   coverage?:
     | "cover_0"
     | "cover_1"
@@ -99,19 +88,8 @@ export interface AddPlayToPracticeScriptData {
   // Game scenario configuration
   hash?: "left" | "middle" | "right";
   downDistance?: string;
-  fieldPosition?:
-    | "plus_territory"
-    | "red_zone"
-    | "backed_up"
-    | "midfield";
-  defensiveFront?:
-    | "base"
-    | "4-3"
-    | "3-4"
-    | "nickel"
-    | "dime"
-    | "bear"
-    | "tite";
+  fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
+  defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
   coverage?:
     | "cover_0"
     | "cover_1"
@@ -739,7 +717,7 @@ export class PracticeService {
 
     // Invalidate team scripts cache
     await practiceScriptCache.invalidate(`scripts_team_${data.teamId}`);
-    
+
     return newScript;
   }
 
@@ -751,11 +729,12 @@ export class PracticeService {
     data: Partial<CreatePracticeScriptData>
   ): Promise<PracticeScript> {
     const updateData: any = {};
-    
+
     if (data.name !== undefined) updateData.title = data.name;
-    if (data.description !== undefined) updateData.description = data.description;
+    if (data.description !== undefined)
+      updateData.description = data.description;
     if (data.tags !== undefined) updateData.focus_areas = data.tags;
-    
+
     updateData.updated_at = new Date().toISOString();
 
     const { error } = await supabase
@@ -779,7 +758,7 @@ export class PracticeService {
     if (!fullScript) {
       throw new Error("Failed to retrieve updated practice script");
     }
-    
+
     return fullScript;
   }
 
@@ -845,21 +824,51 @@ export class PracticeService {
       hash?: "left" | "middle" | "right";
       downDistance?: string;
       fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
-      defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
-      coverage?: "cover_0" | "cover_1" | "cover_2" | "cover_3" | "cover_4" | "cover_6" | "quarters" | "man";
-      blitz?: "none" | "edge" | "a_gap" | "b_gap" | "sim_pressure" | "zone_blitz" | "all_out";
+      defensiveFront?:
+        | "base"
+        | "4-3"
+        | "3-4"
+        | "nickel"
+        | "dime"
+        | "bear"
+        | "tite";
+      coverage?:
+        | "cover_0"
+        | "cover_1"
+        | "cover_2"
+        | "cover_3"
+        | "cover_4"
+        | "cover_6"
+        | "quarters"
+        | "man";
+      blitz?:
+        | "none"
+        | "edge"
+        | "a_gap"
+        | "b_gap"
+        | "sim_pressure"
+        | "zone_blitz"
+        | "all_out";
     }
   ): Promise<void> {
-    console.log("[PracticeService] updateScriptPlay called with:", { scriptPlayId, data });
-    
+    console.log("[PracticeService] updateScriptPlay called with:", {
+      scriptPlayId,
+      data,
+    });
+
     const updateData: any = {};
-    
-    if (data.repetitions !== undefined) updateData.repetitions = data.repetitions;
-    if (data.notes !== undefined) updateData.coaching_points = data.notes ? [data.notes] : [];
+
+    if (data.repetitions !== undefined)
+      updateData.repetitions = data.repetitions;
+    if (data.notes !== undefined)
+      updateData.coaching_points = data.notes ? [data.notes] : [];
     if (data.hash !== undefined) updateData.hash = data.hash;
-    if (data.downDistance !== undefined) updateData.down_distance = data.downDistance;
-    if (data.fieldPosition !== undefined) updateData.field_position = data.fieldPosition;
-    if (data.defensiveFront !== undefined) updateData.defensive_front = data.defensiveFront;
+    if (data.downDistance !== undefined)
+      updateData.down_distance = data.downDistance;
+    if (data.fieldPosition !== undefined)
+      updateData.field_position = data.fieldPosition;
+    if (data.defensiveFront !== undefined)
+      updateData.defensive_front = data.defensiveFront;
     if (data.coverage !== undefined) updateData.coverage = data.coverage;
     if (data.blitz !== undefined) updateData.blitz = data.blitz;
 
@@ -891,10 +900,36 @@ export class PracticeService {
         notes?: string;
         hash?: "left" | "middle" | "right";
         downDistance?: string;
-        fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
-        defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
-        coverage?: "cover_0" | "cover_1" | "cover_2" | "cover_3" | "cover_4" | "cover_6" | "quarters" | "man";
-        blitz?: "none" | "edge" | "a_gap" | "b_gap" | "sim_pressure" | "zone_blitz" | "all_out";
+        fieldPosition?:
+          | "plus_territory"
+          | "red_zone"
+          | "backed_up"
+          | "midfield";
+        defensiveFront?:
+          | "base"
+          | "4-3"
+          | "3-4"
+          | "nickel"
+          | "dime"
+          | "bear"
+          | "tite";
+        coverage?:
+          | "cover_0"
+          | "cover_1"
+          | "cover_2"
+          | "cover_3"
+          | "cover_4"
+          | "cover_6"
+          | "quarters"
+          | "man";
+        blitz?:
+          | "none"
+          | "edge"
+          | "a_gap"
+          | "b_gap"
+          | "sim_pressure"
+          | "zone_blitz"
+          | "all_out";
       };
     }>
   ): Promise<void> {
@@ -908,13 +943,18 @@ export class PracticeService {
       await Promise.all(
         updates.map(async ({ scriptPlayId, data }) => {
           const updateData: any = {};
-          
-          if (data.repetitions !== undefined) updateData.repetitions = data.repetitions;
-          if (data.notes !== undefined) updateData.coaching_points = data.notes ? [data.notes] : [];
+
+          if (data.repetitions !== undefined)
+            updateData.repetitions = data.repetitions;
+          if (data.notes !== undefined)
+            updateData.coaching_points = data.notes ? [data.notes] : [];
           if (data.hash !== undefined) updateData.hash = data.hash;
-          if (data.downDistance !== undefined) updateData.down_distance = data.downDistance;
-          if (data.fieldPosition !== undefined) updateData.field_position = data.fieldPosition;
-          if (data.defensiveFront !== undefined) updateData.defensive_front = data.defensiveFront;
+          if (data.downDistance !== undefined)
+            updateData.down_distance = data.downDistance;
+          if (data.fieldPosition !== undefined)
+            updateData.field_position = data.fieldPosition;
+          if (data.defensiveFront !== undefined)
+            updateData.defensive_front = data.defensiveFront;
           if (data.coverage !== undefined) updateData.coverage = data.coverage;
           if (data.blitz !== undefined) updateData.blitz = data.blitz;
 
@@ -931,8 +971,12 @@ export class PracticeService {
       );
 
       const updateTime = performance.now() - startTime;
-      console.log(`✅ [PracticeService] Batch updated ${updates.length} plays in ${updateTime.toFixed(2)}ms`);
-      console.log(`   Average: ${(updateTime / updates.length).toFixed(2)}ms per play`);
+      console.log(
+        `✅ [PracticeService] Batch updated ${updates.length} plays in ${updateTime.toFixed(2)}ms`
+      );
+      console.log(
+        `   Average: ${(updateTime / updates.length).toFixed(2)}ms per play`
+      );
 
       // Invalidate all script caches once after batch
       await practiceScriptCache.invalidatePattern(/^script/);
@@ -947,7 +991,7 @@ export class PracticeService {
    */
   static async getPracticeScripts(teamId: string): Promise<PracticeScript[]> {
     const cacheKey = `scripts_team_${teamId}`;
-    
+
     // Check cache first
     const cached = await practiceScriptCache.get<PracticeScript[]>(cacheKey);
     if (cached) {
@@ -962,13 +1006,15 @@ export class PracticeService {
       // OPTIMIZATION: Single query with join to get scripts AND plays
       const { data: scriptsWithPlays, error: scriptsError } = await supabase
         .from("practice_scripts")
-        .select(`
+        .select(
+          `
           *,
           practice_script_plays (
             *,
             plays (*)
           )
-        `)
+        `
+        )
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
 
@@ -983,7 +1029,7 @@ export class PracticeService {
       }
 
       // Map directly to PracticeScript interface
-      const mappedScripts = scriptsWithPlays.map((script: any) => 
+      const mappedScripts = scriptsWithPlays.map((script: any) =>
         this.mapDatabaseScriptToPracticeScript(script)
       );
 
@@ -991,7 +1037,9 @@ export class PracticeService {
       await practiceScriptCache.set(cacheKey, mappedScripts, 1);
 
       const queryTime = performance.now() - startTime;
-      console.log(`✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`);
+      console.log(
+        `✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`
+      );
 
       return mappedScripts;
     } catch (error) {
@@ -1007,7 +1055,7 @@ export class PracticeService {
     scriptId: string
   ): Promise<PracticeScript | null> {
     const cacheKey = `script_${scriptId}`;
-    
+
     // Check cache first
     const cached = await practiceScriptCache.get<PracticeScript>(cacheKey);
     if (cached) {
@@ -1015,20 +1063,24 @@ export class PracticeService {
       return cached;
     }
 
-    console.log("🔍 [PracticeService] Cache miss, fetching script from database...");
+    console.log(
+      "🔍 [PracticeService] Cache miss, fetching script from database..."
+    );
     const startTime = performance.now();
 
     try {
       // OPTIMIZATION: Single query with join
       const { data: script, error: scriptError } = await supabase
         .from("practice_scripts")
-        .select(`
+        .select(
+          `
           *,
           practice_script_plays (
             *,
             plays (*)
           )
-        `)
+        `
+        )
         .eq("id", scriptId)
         .single();
 
@@ -1046,7 +1098,9 @@ export class PracticeService {
       await practiceScriptCache.set(cacheKey, mappedScript, 1);
 
       const queryTime = performance.now() - startTime;
-      console.log(`✅ [PracticeService] Fetched script in ${queryTime.toFixed(2)}ms`);
+      console.log(
+        `✅ [PracticeService] Fetched script in ${queryTime.toFixed(2)}ms`
+      );
 
       return mappedScript;
     } catch (error) {
@@ -1134,14 +1188,16 @@ export class PracticeService {
     scriptId: string,
     newName: string
   ): Promise<PracticeScript> {
-    console.log(`[PracticeService] Duplicating script ${scriptId} as "${newName}"`);
-    
+    console.log(
+      `[PracticeService] Duplicating script ${scriptId} as "${newName}"`
+    );
+
     // 1. Get original script with plays
     const original = await this.getPracticeScript(scriptId);
     if (!original) {
       throw new Error(`Script ${scriptId} not found`);
     }
-    
+
     // 2. Create new script
     const newScript = await this.createPracticeScript({
       name: newName,
@@ -1150,7 +1206,7 @@ export class PracticeService {
       tags: original.tags,
       isTemplate: original.isTemplate,
     });
-    
+
     // 3. Copy all plays with their configuration
     if (original.plays && original.plays.length > 0) {
       for (const play of original.plays) {
@@ -1173,9 +1229,11 @@ export class PracticeService {
         );
       }
     }
-    
-    console.log(`✅ [PracticeService] Duplicated script with ${original.plays?.length || 0} plays`);
-    
+
+    console.log(
+      `✅ [PracticeService] Duplicated script with ${original.plays?.length || 0} plays`
+    );
+
     // 4. Return the full duplicated script
     return this.getPracticeScript(newScript.id) as Promise<PracticeScript>;
   }
@@ -1185,24 +1243,24 @@ export class PracticeService {
    */
   static async archivePracticeScript(scriptId: string): Promise<void> {
     console.log(`[PracticeService] Archiving script ${scriptId}`);
-    
+
     const { error } = await supabase
       .from("practice_scripts")
-      .update({ 
+      .update({
         is_archived: true,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", scriptId);
-      
+
     if (error) {
       console.error("Error archiving script:", error);
       throw new Error("Failed to archive practice script");
     }
-    
+
     // Invalidate cache
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
-    
+
     console.log(`✅ [PracticeService] Archived script ${scriptId}`);
   }
 
@@ -1211,24 +1269,24 @@ export class PracticeService {
    */
   static async unarchivePracticeScript(scriptId: string): Promise<void> {
     console.log(`[PracticeService] Unarchiving script ${scriptId}`);
-    
+
     const { error } = await supabase
       .from("practice_scripts")
-      .update({ 
+      .update({
         is_archived: false,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", scriptId);
-      
+
     if (error) {
       console.error("Error unarchiving script:", error);
       throw new Error("Failed to unarchive practice script");
     }
-    
+
     // Invalidate cache
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
-    
+
     console.log(`✅ [PracticeService] Unarchived script ${scriptId}`);
   }
 
@@ -1238,21 +1296,21 @@ export class PracticeService {
    */
   static async deletePracticeScript(scriptId: string): Promise<void> {
     console.log(`[PracticeService] Deleting script ${scriptId}`);
-    
+
     const { error } = await supabase
       .from("practice_scripts")
       .delete()
       .eq("id", scriptId);
-      
+
     if (error) {
       console.error("Error deleting script:", error);
       throw new Error("Failed to delete practice script");
     }
-    
+
     // Invalidate cache
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
-    
+
     console.log(`✅ [PracticeService] Deleted script ${scriptId}`);
   }
 
@@ -1261,20 +1319,20 @@ export class PracticeService {
    */
   static async removePlayFromScript(scriptPlayId: string): Promise<void> {
     console.log(`[PracticeService] Removing play ${scriptPlayId} from script`);
-    
+
     const { error } = await supabase
       .from("practice_script_plays")
       .delete()
       .eq("id", scriptPlayId);
-      
+
     if (error) {
       console.error("Error removing play from script:", error);
       throw new Error("Failed to remove play from script");
     }
-    
+
     // Invalidate all script caches
     await practiceScriptCache.invalidatePattern(/^script/);
-    
+
     console.log(`✅ [PracticeService] Removed play from script`);
   }
 
@@ -1286,8 +1344,10 @@ export class PracticeService {
     scriptId: string,
     playIds: string[]
   ): Promise<void> {
-    console.log(`[PracticeService] Reordering ${playIds.length} plays in script ${scriptId}`);
-    
+    console.log(
+      `[PracticeService] Reordering ${playIds.length} plays in script ${scriptId}`
+    );
+
     // Update order for each play (1-indexed)
     await Promise.all(
       playIds.map(async (playId, index) => {
@@ -1296,17 +1356,17 @@ export class PracticeService {
           .update({ sequence_order: index + 1 })
           .eq("id", playId)
           .eq("practice_script_id", scriptId);
-          
+
         if (error) {
           console.error(`Error reordering play ${playId}:`, error);
           throw error;
         }
       })
     );
-    
+
     // Invalidate cache
     await practiceScriptCache.invalidate(`script_${scriptId}`);
-    
+
     console.log(`✅ [PracticeService] Reordered plays in script`);
   }
 

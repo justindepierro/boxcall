@@ -9,6 +9,7 @@
 ## Problem Statement
 
 User reported nested tabs causing confusion:
+
 - **Outer Modal Tabs:** Edit Details, Draw Formation, Link Formations, Health (4 tabs)
 - **Inner Panel Tabs:** Formation Details, Data Diagnostic, Direction Review, Incomplete Formations (4 tabs)
 - **Total:** 8 tabs across 2 levels = confusing UX
@@ -39,15 +40,15 @@ User reported nested tabs causing confusion:
 
 ### Tab Mapping
 
-| # | Tab Name | Icon | Purpose | Source |
-|---|----------|------|---------|--------|
-| 1 | **Formation Details** | 💾 Save | Create/Edit formation metadata | FormationBuilderPanel (details) |
-| 2 | **Draw Formation** | ✏️ Pencil | Visual canvas builder | DrawFormationTab (modal) |
-| 3 | **Direction Review** | ⚠️ AlertCircle | Fix formation directions | FormationDirectionReviewPanel |
-| 4 | **Link Formations** | 🔗 Link2 | Connect left/right variants | FormationLinkingPanel (modal) |
-| 5 | **Data Diagnostic** | ⚙️ Settings | Debug formation data | FormationDataDiagnostic |
-| 6 | **Health** | ❤️ HeartPulse | Formation health dashboard | FormationHealthDashboard (modal) |
-| 7 | **Incomplete** | ✅ CheckCircle | Future: Review incomplete formations | Placeholder (disabled) |
+| #   | Tab Name              | Icon           | Purpose                              | Source                           |
+| --- | --------------------- | -------------- | ------------------------------------ | -------------------------------- |
+| 1   | **Formation Details** | 💾 Save        | Create/Edit formation metadata       | FormationBuilderPanel (details)  |
+| 2   | **Draw Formation**    | ✏️ Pencil      | Visual canvas builder                | DrawFormationTab (modal)         |
+| 3   | **Direction Review**  | ⚠️ AlertCircle | Fix formation directions             | FormationDirectionReviewPanel    |
+| 4   | **Link Formations**   | 🔗 Link2       | Connect left/right variants          | FormationLinkingPanel (modal)    |
+| 5   | **Data Diagnostic**   | ⚙️ Settings    | Debug formation data                 | FormationDataDiagnostic          |
+| 6   | **Health**            | ❤️ HeartPulse  | Formation health dashboard           | FormationHealthDashboard (modal) |
+| 7   | **Incomplete**        | ✅ CheckCircle | Future: Review incomplete formations | Placeholder (disabled)           |
 
 ---
 
@@ -56,6 +57,7 @@ User reported nested tabs causing confusion:
 ### 1. FormationBuilderModal.tabbed.tsx
 
 **Changes:**
+
 - **Import additions:** Added `AlertCircle`, `CheckCircle`, `Save` icons
 - **Import additions:** Added `FormationDirectionReviewPanel`, `FormationDataDiagnostic` components
 - **Type update:** Extended `TabType` to include `"review" | "diagnostic" | "incomplete"`
@@ -63,6 +65,7 @@ User reported nested tabs causing confusion:
 - **Tab rendering:** Added render blocks for new tabs
 
 **New Tab Buttons:**
+
 ```tsx
 // Tab 3: Direction Review
 <button onClick={() => setActiveTab("review")}>
@@ -84,39 +87,54 @@ User reported nested tabs causing confusion:
 ```
 
 **New Content Rendering:**
+
 ```tsx
-{/* Tab 3: Direction Review */}
-{activeTab === "review" && (
-  <FormationDirectionReviewPanel
-    playbookId={playbookId}
-    onFixComplete={handleSuccess}
-  />
-)}
+{
+  /* Tab 3: Direction Review */
+}
+{
+  activeTab === "review" && (
+    <FormationDirectionReviewPanel
+      playbookId={playbookId}
+      onFixComplete={handleSuccess}
+    />
+  );
+}
 
-{/* Tab 5: Data Diagnostic */}
-{activeTab === "diagnostic" && (
-  <FormationDataDiagnostic playbookId={playbookId} />
-)}
+{
+  /* Tab 5: Data Diagnostic */
+}
+{
+  activeTab === "diagnostic" && (
+    <FormationDataDiagnostic playbookId={playbookId} />
+  );
+}
 
-{/* Tab 7: Incomplete (Placeholder) */}
-{activeTab === "incomplete" && (
-  <div className="p-spacing-lg">
-    <Typography variant="body" className="text-text-muted">
-      Incomplete Formations panel coming in Phase 2...
-    </Typography>
-  </div>
-)}
+{
+  /* Tab 7: Incomplete (Placeholder) */
+}
+{
+  activeTab === "incomplete" && (
+    <div className="p-spacing-lg">
+      <Typography variant="body" className="text-text-muted">
+        Incomplete Formations panel coming in Phase 2...
+      </Typography>
+    </div>
+  );
+}
 ```
 
 ### 2. FormationBuilderPanel.tsx
 
 **Changes:**
+
 - **Interface update:** Added `hideSubTabs?: boolean` prop
 - **Component signature:** Added `hideSubTabs = false` parameter
 - **Tab navigation:** Wrapped in `{!hideSubTabs && (<div>...</div>)}`
 - **Tab content:** Wrapped diagnostic/review/incomplete tabs in `{!hideSubTabs && ...}`
 
 **hideSubTabs Prop:**
+
 ```tsx
 interface FormationBuilderPanelProps {
   playbookId: string;
@@ -128,25 +146,35 @@ interface FormationBuilderPanelProps {
 ```
 
 **Conditional Rendering:**
-```tsx
-{/* Tab Navigation - Hide if parent modal has unified tabs */}
-{!hideSubTabs && (
-  <div className="flex gap-spacing-xs border-b border-border-primary">
-    {tabs.map(tab => (
-      <button key={tab.id} onClick={() => setActiveTab(tab.id)}>
-        {/* Tab button */}
-      </button>
-    ))}
-  </div>
-)}
 
-{/* Data Diagnostic Tab - Hide if parent modal has unified tabs */}
-{!hideSubTabs && activeTab === 'diagnostic' && (
-  <FormationDataDiagnostic playbookId={playbookId} />
-)}
+```tsx
+{
+  /* Tab Navigation - Hide if parent modal has unified tabs */
+}
+{
+  !hideSubTabs && (
+    <div className="flex gap-spacing-xs border-b border-border-primary">
+      {tabs.map((tab) => (
+        <button key={tab.id} onClick={() => setActiveTab(tab.id)}>
+          {/* Tab button */}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+{
+  /* Data Diagnostic Tab - Hide if parent modal has unified tabs */
+}
+{
+  !hideSubTabs && activeTab === "diagnostic" && (
+    <FormationDataDiagnostic playbookId={playbookId} />
+  );
+}
 ```
 
 **Modal Usage:**
+
 ```tsx
 <FormationBuilderPanel
   playbookId={playbookId}
@@ -161,30 +189,36 @@ interface FormationBuilderPanelProps {
 ## Files Modified
 
 ### 1. FormationBuilderModal.tabbed.tsx
+
 **Location:** `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tabbed.tsx`
 
 **Lines Changed:** ~50 lines
+
 - Added 3 new import statements
 - Expanded TabType definition
 - Restructured tab navigation (7 tabs with horizontal scroll)
 - Added 3 new tab content sections
 
 **Key Features:**
+
 - ✅ Horizontal scroll for tab bar (handles overflow on smaller screens)
 - ✅ Disabled "Incomplete" tab with tooltip hint
 - ✅ Consistent icon + label pattern across all tabs
 - ✅ Single source of truth for active tab state
 
 ### 2. FormationBuilderPanel.tsx
+
 **Location:** `src/components/formations/FormationBuilderPanel.tsx`
 
 **Lines Changed:** ~10 lines
+
 - Added `hideSubTabs` prop to interface
 - Added `hideSubTabs` parameter with default
 - Wrapped tab navigation in conditional
 - Wrapped non-details tab content in conditionals
 
 **Key Features:**
+
 - ✅ Backward compatible (hideSubTabs defaults to false)
 - ✅ Clean separation of concerns
 - ✅ Maintains all existing functionality when hideSubTabs=false
@@ -194,18 +228,21 @@ interface FormationBuilderPanelProps {
 ## User Experience Improvements
 
 ### Before (Nested Tabs):
+
 1. User opens Formation Manager modal → sees 4 outer tabs
 2. Clicks "Edit Details" → sees 4 MORE inner tabs
 3. **Total navigation depth:** 2 levels, 8 total tabs
 4. **Confusion:** "Which tab am I on?" / "Where's the direction review?"
 
 ### After (Unified Tabs):
+
 1. User opens Formation Manager modal → sees 7 tabs at ONE level
 2. All functionality accessible directly from top tab bar
 3. **Total navigation depth:** 1 level, 7 tabs
 4. **Clarity:** Clear single tab bar, no nesting, instant access
 
 ### Benefits:
+
 - ✅ **Reduced cognitive load** - One tab bar instead of two
 - ✅ **Faster navigation** - Direct access to all features
 - ✅ **Clearer hierarchy** - No confusion about tab levels
@@ -254,6 +291,7 @@ Tabs ordered by typical workflow:
 ### None! 🎉
 
 All lint errors resolved:
+
 - ✅ All imports used
 - ✅ All props defined correctly
 - ✅ Unused `onFormationCreated` renamed to `_onFormationCreated`
@@ -265,17 +303,21 @@ All lint errors resolved:
 ## Future Enhancements
 
 ### Phase 2: Incomplete Formations Tab
+
 When implemented, enable the "Incomplete" tab:
+
 1. Remove `disabled` prop from button
 2. Implement `IncompleteFormationsPanel` component
 3. Replace placeholder content with actual panel
 
 ### Potential Tab Additions:
+
 - **Formation Templates** - Library of common formations
 - **Formation Analytics** - Usage statistics and trends
 - **Formation Sharing** - Export/import formations between playbooks
 
 ### Tab Customization:
+
 - **User preferences** - Allow hiding unused tabs
 - **Role-based tabs** - Show/hide tabs based on user role
 - **Playbook-specific tabs** - Different tabs for different playbook types
@@ -301,11 +343,13 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## Performance Notes
 
 ### Tab Rendering:
+
 - ✅ Only active tab content is rendered
 - ✅ Conditional rendering prevents unnecessary component mounting
 - ✅ Tab bar uses flexbox with overflow-x-auto for responsive design
 
 ### No Performance Regression:
+
 - Same component lazy loading as before
 - No additional queries added
 - Skeleton loaders still active
@@ -316,11 +360,13 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## Documentation Updates
 
 ### Code Comments Added:
+
 - `hideSubTabs` prop documentation in FormationBuilderPanel
 - Tab navigation conditional rendering comments
 - Tab content section headers with "Hide if parent modal has unified tabs"
 
 ### Related Documentation:
+
 - `FORMATION_BUILDER_PERFORMANCE_OPTIMIZATION.md` - Performance improvements
 - `FORMATION_BUILDER_PERFORMANCE_FIX_SUMMARY.md` - Phase 1 skeleton loaders
 - `FORMATION_DIRECTION_REVIEW_IMPLEMENTATION.md` - Direction Review system
@@ -330,18 +376,21 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## Success Metrics
 
 ### Before:
+
 - **Tab levels:** 2 (nested)
 - **Total tabs:** 8 (4 outer + 4 inner)
 - **Navigation clicks:** 2 clicks to reach nested tabs
 - **User confusion:** High (nested structure unclear)
 
 ### After:
+
 - **Tab levels:** 1 (flat)
 - **Total tabs:** 7 (all at top level)
 - **Navigation clicks:** 1 click to reach any tab
 - **User confusion:** Low (clear single tab bar)
 
 ### Improvement:
+
 - ✅ **50% reduction in navigation depth** (2 levels → 1 level)
 - ✅ **12.5% reduction in tab count** (8 → 7)
 - ✅ **50% reduction in clicks** (2 → 1 to reach features)
@@ -352,11 +401,13 @@ git checkout HEAD -- src/components/formations/FormationBuilderPanel.tsx
 ## What The User Will See
 
 ### Before Opening Modal:
+
 ```
 Playbook → [+ New Formation button]
 ```
 
 ### After Opening Modal:
+
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  Formation Manager                                                  [✕]  │
@@ -389,6 +440,7 @@ Playbook → [+ New Formation button]
 ## Quick Verification
 
 **5-Second Test:**
+
 1. Open Formation Manager modal
 2. Count tab bars: Should see **1** (not 2)
 3. Count tabs: Should see **7** tabs

@@ -108,7 +108,9 @@ export function usePlaySelection({
     (playIds: string[]): boolean => {
       if (playIds.length === 0) return false;
       const selectedInList = playIds.filter((id) => selectedPlayIds.has(id));
-      return selectedInList.length > 0 && selectedInList.length < playIds.length;
+      return (
+        selectedInList.length > 0 && selectedInList.length < playIds.length
+      );
     },
     [selectedPlayIds]
   );

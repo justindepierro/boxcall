@@ -193,7 +193,7 @@ export interface FormationUpdate {
   pass_strength?: StrengthType;
   player_positions?: FormationPlayerPosition[];
   tags?: string[];
-  
+
   // NEW: Creation tracking (optional for updates)
   creation_source?: FormationCreationSource;
   creation_context?: FormationCreationContext;

@@ -1,6 +1,6 @@
 /**
  * Game Plan Service - Billick Situational Method
- * 
+ *
  * Manages game plans organized by down/distance/field zone using the database.
  * Replaces mock data with real Supabase integration.
  */
@@ -92,7 +92,7 @@ export class GamePlanService {
    */
   static async createGamePlan(data: CreateGamePlanData): Promise<GamePlan> {
     const { data: userData } = await supabase.auth.getUser();
-    
+
     const { data: gamePlan, error } = await supabase
       .from("game_plans")
       .insert({
@@ -136,10 +136,14 @@ export class GamePlanService {
   /**
    * Get all game plans for a team
    */
-  static async getGamePlans(teamId: string, includeArchived = false): Promise<GamePlan[]> {
+  static async getGamePlans(
+    teamId: string,
+    includeArchived = false
+  ): Promise<GamePlan[]> {
     let query = supabase
       .from("game_plans")
-      .select(`
+      .select(
+        `
         *,
         game_plan_situations (
           *,
@@ -148,7 +152,8 @@ export class GamePlanService {
             plays (*)
           )
         )
-      `)
+      `
+      )
       .eq("team_id", teamId)
       .order("game_date", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
@@ -173,7 +178,8 @@ export class GamePlanService {
   static async getGamePlan(gamePlanId: string): Promise<GamePlan> {
     const { data, error } = await supabase
       .from("game_plans")
-      .select(`
+      .select(
+        `
         *,
         game_plan_situations (
           *,
@@ -182,7 +188,8 @@ export class GamePlanService {
             plays (*)
           )
         )
-      `)
+      `
+      )
       .eq("id", gamePlanId)
       .single();
 
@@ -282,7 +289,9 @@ export class GamePlanService {
   /**
    * Add a play to a situation
    */
-  static async addPlayToSituation(data: AddPlayToGamePlanData): Promise<GamePlanPlay> {
+  static async addPlayToSituation(
+    data: AddPlayToGamePlanData
+  ): Promise<GamePlanPlay> {
     const { data: gamePlanPlay, error } = await supabase
       .from("game_plan_plays")
       .insert({
@@ -291,10 +300,12 @@ export class GamePlanService {
         priority: data.priority || 1,
         notes: data.notes || null,
       } as any)
-      .select(`
+      .select(
+        `
         *,
         plays (*)
-      `)
+      `
+      )
       .single();
 
     if (error) {
@@ -404,7 +415,10 @@ export class GamePlanService {
       situations: data.game_plan_situations
         ? data.game_plan_situations
             .map(this.mapSituationFromDb)
-            .sort((a: GamePlanSituation, b: GamePlanSituation) => a.displayOrder - b.displayOrder)
+            .sort(
+              (a: GamePlanSituation, b: GamePlanSituation) =>
+                a.displayOrder - b.displayOrder
+            )
         : undefined,
     };
   }

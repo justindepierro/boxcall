@@ -1,12 +1,12 @@
 /**
  * Email Service - Handles all email sending via serverless function
- * 
+ *
  * Features:
  * - Player invitation emails
  * - Invitation reminder emails
  * - Error handling and retry logic
  * - Delivery logging
- * 
+ *
  * Note: Calls serverless function to avoid CORS issues with Resend API
  */
 
@@ -27,20 +27,22 @@ export interface SendEmailResult {
 /**
  * Send a generic email via serverless function
  */
-export async function sendEmail(params: SendEmailParams): Promise<SendEmailResult> {
+export async function sendEmail(
+  params: SendEmailParams
+): Promise<SendEmailResult> {
   try {
     const { to, subject, html, text } = params;
-    
-    console.log('[EmailService] Sending email via serverless function:', {
+
+    console.log("[EmailService] Sending email via serverless function:", {
       to,
       subject,
     });
 
     // Call Netlify serverless function
-    const response = await fetch('/.netlify/functions/send-invitation-email', {
-      method: 'POST',
+    const response = await fetch("/.netlify/functions/send-invitation-email", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         to,
@@ -53,24 +55,24 @@ export async function sendEmail(params: SendEmailParams): Promise<SendEmailResul
     const result = await response.json();
 
     if (!response.ok || !result.success) {
-      console.error('[EmailService] Error sending email:', result.error);
+      console.error("[EmailService] Error sending email:", result.error);
       return {
         success: false,
-        error: result.error || 'Failed to send email',
+        error: result.error || "Failed to send email",
       };
     }
 
-    console.log('[EmailService] Email sent successfully:', result.messageId);
-    
+    console.log("[EmailService] Email sent successfully:", result.messageId);
+
     return {
       success: true,
       messageId: result.messageId,
     };
   } catch (error) {
-    console.error('[EmailService] Exception sending email:', error);
+    console.error("[EmailService] Exception sending email:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -148,14 +150,8 @@ export interface InvitationReminderEmailParams {
 export async function sendInvitationReminderEmail(
   params: InvitationReminderEmailParams
 ): Promise<SendEmailResult> {
-  const {
-    to,
-    playerName,
-    teamName,
-    teamLogoUrl,
-    invitationLink,
-    expiresAt,
-  } = params;
+  const { to, playerName, teamName, teamLogoUrl, invitationLink, expiresAt } =
+    params;
 
   const expiresInDays = Math.ceil(
     (expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -197,7 +193,14 @@ function generateInvitationHtml(params: {
   expiresInDays: number;
   invitedBy: string;
 }): string {
-  const { playerName, teamName, teamLogoUrl, invitationLink, expiresInDays, invitedBy } = params;
+  const {
+    playerName,
+    teamName,
+    teamLogoUrl,
+    invitationLink,
+    expiresInDays,
+    invitedBy,
+  } = params;
 
   return `
 <!DOCTYPE html>
@@ -217,9 +220,13 @@ function generateInvitationHtml(params: {
           <!-- Header with logo -->
           <tr>
             <td align="center" style="padding: 40px 40px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
-              ${teamLogoUrl ? `
+              ${
+                teamLogoUrl
+                  ? `
                 <img src="${teamLogoUrl}" alt="${teamName}" style="max-width: 120px; max-height: 120px; border-radius: 12px; margin-bottom: 20px; border: 3px solid #ffffff;" />
-              ` : ''}
+              `
+                  : ""
+              }
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; line-height: 1.3;">
                 You're Invited!
               </h1>
@@ -262,7 +269,7 @@ function generateInvitationHtml(params: {
                 <tr>
                   <td style="padding: 16px;">
                     <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.5;">
-                      ⏰ <strong>This invitation expires in ${expiresInDays} day${expiresInDays !== 1 ? 's' : ''}.</strong>
+                      ⏰ <strong>This invitation expires in ${expiresInDays} day${expiresInDays !== 1 ? "s" : ""}.</strong>
                       <br>
                       Click the button above to accept and get started!
                     </p>
@@ -302,7 +309,8 @@ function generateInvitationText(params: {
   expiresInDays: number;
   invitedBy: string;
 }): string {
-  const { playerName, teamName, invitationLink, expiresInDays, invitedBy } = params;
+  const { playerName, teamName, invitationLink, expiresInDays, invitedBy } =
+    params;
 
   return `
 You're Invited to ${teamName}!
@@ -316,7 +324,7 @@ BoxCall is the all-in-one platform for managing your team. Track plays, view sch
 Accept your invitation:
 ${invitationLink}
 
-⏰ This invitation expires in ${expiresInDays} day${expiresInDays !== 1 ? 's' : ''}. Click the link above to accept and get started!
+⏰ This invitation expires in ${expiresInDays} day${expiresInDays !== 1 ? "s" : ""}. Click the link above to accept and get started!
 
 Questions? Contact your coach or visit our help center.
 
@@ -334,7 +342,8 @@ function generateReminderHtml(params: {
   invitationLink: string;
   expiresInDays: number;
 }): string {
-  const { playerName, teamName, teamLogoUrl, invitationLink, expiresInDays } = params;
+  const { playerName, teamName, teamLogoUrl, invitationLink, expiresInDays } =
+    params;
 
   return `
 <!DOCTYPE html>
@@ -352,9 +361,13 @@ function generateReminderHtml(params: {
           
           <tr>
             <td align="center" style="padding: 40px 40px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
-              ${teamLogoUrl ? `
+              ${
+                teamLogoUrl
+                  ? `
                 <img src="${teamLogoUrl}" alt="${teamName}" style="max-width: 120px; max-height: 120px; border-radius: 12px; margin-bottom: 20px; border: 3px solid #ffffff;" />
-              ` : ''}
+              `
+                  : ""
+              }
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; line-height: 1.3;">
                 Reminder: Join Your Team
               </h1>
@@ -387,7 +400,7 @@ function generateReminderHtml(params: {
                 <tr>
                   <td style="padding: 16px;">
                     <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.5;">
-                      ⏰ <strong>Expires in ${expiresInDays} day${expiresInDays !== 1 ? 's' : ''}!</strong>
+                      ⏰ <strong>Expires in ${expiresInDays} day${expiresInDays !== 1 ? "s" : ""}!</strong>
                       <br>
                       Click the button above before your invitation expires.
                     </p>
@@ -439,7 +452,7 @@ Don't miss out! Accept your invitation to access your team's plays, schedule, an
 Accept your invitation:
 ${invitationLink}
 
-⏰ Expires in ${expiresInDays} day${expiresInDays !== 1 ? 's' : ''}! Click the link above before your invitation expires.
+⏰ Expires in ${expiresInDays} day${expiresInDays !== 1 ? "s" : ""}! Click the link above before your invitation expires.
 
 Questions? Contact your coach or visit our help center.
 
@@ -452,9 +465,9 @@ Questions? Contact your coach or visit our help center.
  */
 function stripHtml(html: string): string {
   return html
-    .replace(/<style[^>]*>.*?<\/style>/gi, '')
-    .replace(/<script[^>]*>.*?<\/script>/gi, '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
+    .replace(/<style[^>]*>.*?<\/style>/gi, "")
+    .replace(/<script[^>]*>.*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
     .trim();
 }

@@ -2,7 +2,7 @@
 
 **Date**: October 17, 2025  
 **Status**: ✅ 100% COMPLETE - Ready to Test  
-**Total Time**: ~3 hours  
+**Total Time**: ~3 hours
 
 ---
 
@@ -13,12 +13,14 @@ A complete bulk operations system for managing formations at scale!
 ### ✅ All Features Complete
 
 **Backend (Service Layer)**
+
 - ✅ `bulkUpdateMetadata()` - Edit multiple formations at once
 - ✅ `bulkSetDirection()` - Set direction with auto-opposite creation
 - ✅ `bulkDelete()` - Smart delete with opposite handling
 - ✅ `getFormationsByIds()` - For undo functionality
 
 **Frontend (React Components)**
+
 - ✅ `BulkSelectionContext` - Selection state management
 - ✅ `BulkActionToolbar` - Floating action bar (appears when items selected)
 - ✅ `BulkMetadataModal` - Bulk metadata editor with replace/merge modes
@@ -26,11 +28,13 @@ A complete bulk operations system for managing formations at scale!
 - ✅ `BulkDeleteConfirmation` - Smart delete confirmation
 
 **React Query Integration**
+
 - ✅ `useBulkUpdateMetadata()` - With automatic cache invalidation
 - ✅ `useBulkSetDirection()` - With automatic cache invalidation
 - ✅ `useBulkDelete()` - With automatic cache invalidation
 
 **UI Integration**
+
 - ✅ BulkSelectionProvider wraps FormationBuilderModal
 - ✅ BulkActionToolbar added to modal
 - ✅ Checkboxes added to formation list
@@ -41,6 +45,7 @@ A complete bulk operations system for managing formations at scale!
 - ✅ Shows opposite formation indicator
 
 **Data Cleanup Tools**
+
 - ✅ Interactive cleanup script (guided)
 - ✅ Advanced cleanup script (command-line)
 - ✅ Comprehensive cleanup guide
@@ -50,6 +55,7 @@ A complete bulk operations system for managing formations at scale!
 ## 📂 Files Created/Modified
 
 ### Created (9 files):
+
 1. `src/components/formations/BulkSelectionContext.tsx` - 110 lines
 2. `src/components/formations/BulkActionToolbar.tsx` - 125 lines
 3. `src/components/formations/BulkMetadataModal.tsx` - 175 lines
@@ -61,6 +67,7 @@ A complete bulk operations system for managing formations at scale!
 9. `BULK_OPERATIONS_IMPLEMENTATION_PLAN.md` - Detailed spec
 
 ### Modified (4 files):
+
 1. `src/services/formationService.ts` - +200 lines (4 new methods)
 2. `src/hooks/useFormations.ts` - +80 lines (3 new hooks)
 3. `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tabbed.tsx` - Wrapped with provider
@@ -87,6 +94,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### Step 2: Test Bulk Operations
 
 1. **Open the app:**
+
    ```bash
    npm run dev
    # Then visit http://localhost:5173
@@ -124,9 +132,11 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### Step 3: Verify Performance
 
 **Before bulk operations:**
+
 - Editing 20 formations: ~10 minutes (30 sec per formation)
 
 **After bulk operations:**
+
 - Select 20 formations: 5 seconds
 - Bulk update: 0.5 seconds
 - **Total: ~6 seconds** (99% faster!)
@@ -138,12 +148,14 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### Example 1: Update 15 Formations to Spread Category
 
 **Old way** (15 minutes):
+
 1. Click formation 1
 2. Set category to "spread"
 3. Save
-4. *(Repeat 14 more times...)*
+4. _(Repeat 14 more times...)_
 
 **New way** (20 seconds):
+
 1. Check 15 formations (10 sec)
 2. Click "Edit Metadata"
 3. Set category to "spread"
@@ -153,11 +165,13 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### Example 2: Set Direction for All Formations
 
 **Old way** (10 minutes):
+
 1. Create opposite for formation 1
 2. Link them
-3. *(Repeat for all formations...)*
+3. _(Repeat for all formations...)_
 
 **New way** (30 seconds):
+
 1. Select all formations (2 sec)
 2. Click "Set Direction"
 3. Choose "Both" with auto-create
@@ -167,11 +181,13 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### Example 3: Delete Old Formations
 
 **Old way** (5 minutes):
+
 1. Delete formation 1
 2. Delete formation 2
-3. *(Repeat...)*
+3. _(Repeat...)_
 
 **New way** (15 seconds):
+
 1. Select formations to delete (5 sec)
 2. Click "Delete"
 3. Confirm
@@ -182,22 +198,25 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ## 📊 Performance Metrics
 
 ### Database Operations
+
 - **Bulk update 20 formations**: ~300ms
 - **Bulk direction (with opposites)**: ~500ms
 - **Bulk delete**: ~200ms
 
 ### React Query Cache
+
 - **First load**: Uses existing optimizations (0.8-1.2s)
 - **Cached load**: <100ms (instant)
 - **After bulk mutation**: Automatic refresh
 
 ### Total Time Savings
-| Operation | Old Way | New Way | Savings |
-|-----------|---------|---------|---------|
-| Edit 20 formations | 10 min | 30 sec | 95% |
-| Set direction (15) | 5 min | 10 sec | 96% |
-| Delete 10 formations | 2 min | 5 sec | 97% |
-| **Average** | - | - | **96%** |
+
+| Operation            | Old Way | New Way | Savings |
+| -------------------- | ------- | ------- | ------- |
+| Edit 20 formations   | 10 min  | 30 sec  | 95%     |
+| Set direction (15)   | 5 min   | 10 sec  | 96%     |
+| Delete 10 formations | 2 min   | 5 sec   | 97%     |
+| **Average**          | -       | -       | **96%** |
 
 ---
 
@@ -212,6 +231,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 **Status**: Expected, won't affect runtime. These are necessary workarounds for Supabase's type system.
 
 **Example**:
+
 ```typescript
 .update({ direction: "both" } as any)
 ```
@@ -221,6 +241,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ## 🎨 UI/UX Features
 
 ### Visual Feedback
+
 - ✅ Blue highlight for selected formations
 - ✅ Green highlight for currently editing formation
 - ✅ Direction arrows (← → ↔️)
@@ -230,6 +251,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 - ✅ Success/error toasts with counts
 
 ### Smart Features
+
 - ✅ Auto-create opposites when setting direction to "Both"
 - ✅ Smart delete confirmation (shows impact)
 - ✅ Option to delete opposites or keep them
@@ -267,6 +289,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ## 🔮 Future Enhancements (Optional)
 
 ### Phase 3 Ideas:
+
 - **Undo/Redo**: Store bulk operations in undo queue
 - **Keyboard Shortcuts**: Ctrl+A for select all, Delete key for bulk delete
 - **Drag-to-Select**: Select multiple by dragging
@@ -282,6 +305,7 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 ### What You Have Now:
 
 ✅ **Complete bulk operations system**
+
 - 5 React components
 - 4 service methods
 - 3 React Query hooks
@@ -289,18 +313,21 @@ This will delete the 2 formations with `direction: null`, leaving you with clean
 - Data cleanup tools
 
 ✅ **Massive productivity boost**
+
 - 95-99% time savings
 - Professional bulk editing
 - Auto-opposite creation
 - Smart deletion
 
 ✅ **Production-ready code**
+
 - Type-safe with TypeScript
 - Automatic caching with React Query
 - Error handling throughout
 - Design system compliance
 
 ✅ **Clean database**
+
 - Duplicate formations identified
 - Cleanup scripts ready
 - Can be fixed in 30 seconds
@@ -342,7 +369,7 @@ Everything is complete, tested (TypeScript compilation), and documented. The bul
 **Total development time**: ~3 hours  
 **Expected time savings**: 95-99%  
 **Code quality**: Production-ready  
-**Documentation**: Comprehensive  
+**Documentation**: Comprehensive
 
 **Status**: ✅ COMPLETE - Ready for testing and deployment!
 

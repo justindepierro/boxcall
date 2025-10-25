@@ -1,16 +1,16 @@
 /**
  * SendInvitationModal Component
- * 
+ *
  * Modal for sending player invitations with email input
  * - Pre-fills email if player already has one
  * - Validates email format
  * - Shows loading state during send
  */
 
-import { useState, useEffect } from 'react';
-import { Modal, Button, Input } from '../ui';
-import { Typography } from '../design-system';
-import type { RosterPlayerView } from '../../services/rosterService';
+import { useState, useEffect } from "react";
+import { Modal, Button, Input } from "../ui";
+import { Typography } from "../design-system";
+import type { RosterPlayerView } from "../../services/rosterService";
 
 export interface SendInvitationModalProps {
   isOpen: boolean;
@@ -25,17 +25,17 @@ export function SendInvitationModal({
   onClose,
   player,
   onSend,
-  defaultEmail = '',
+  defaultEmail = "",
 }: SendInvitationModalProps) {
   const [email, setEmail] = useState(defaultEmail);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Reset form when modal opens/closes or player changes
   useEffect(() => {
     if (isOpen) {
       setEmail(defaultEmail);
-      setError('');
+      setError("");
     }
   }, [isOpen, defaultEmail]);
 
@@ -46,23 +46,25 @@ export function SendInvitationModal({
 
   const handleSend = async () => {
     if (!email.trim()) {
-      setError('Email is required');
+      setError("Email is required");
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
+      setError("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       await onSend(email);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send invitation');
+      setError(
+        err instanceof Error ? err.message : "Failed to send invitation"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -70,31 +72,40 @@ export function SendInvitationModal({
 
   if (!player) return null;
 
-  const isResend = player.invitation_status === 'pending';
+  const isResend = player.invitation_status === "pending";
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`${isResend ? 'Resend' : 'Send'} Invitation`}
+      title={`${isResend ? "Resend" : "Send"} Invitation`}
     >
       <div className="space-y-spacing-md">
         <div>
-          <Typography variant="body-md" className="text-text-secondary mb-spacing-sm">
+          <Typography
+            variant="body-md"
+            className="text-text-secondary mb-spacing-sm"
+          >
             Sending invitation to:
           </Typography>
           <Typography variant="headline-sm" className="font-semibold">
             {player.first_name} {player.last_name}
           </Typography>
           {player.nickname && (
-            <Typography variant="body-sm" className="text-text-secondary italic">
+            <Typography
+              variant="body-sm"
+              className="text-text-secondary italic"
+            >
               "{player.nickname}"
             </Typography>
           )}
         </div>
 
         <div>
-          <label htmlFor="invitation-email" className="block text-sm font-medium mb-spacing-xs">
+          <label
+            htmlFor="invitation-email"
+            className="block text-sm font-medium mb-spacing-xs"
+          >
             Email Address
           </label>
           <Input
@@ -103,11 +114,11 @@ export function SendInvitationModal({
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              setError('');
+              setError("");
             }}
             placeholder="player@example.com"
             disabled={isLoading}
-            className={error ? 'border-error' : ''}
+            className={error ? "border-error" : ""}
           />
           {error && (
             <Typography variant="body-sm" className="text-error mt-spacing-xs">
@@ -119,7 +130,8 @@ export function SendInvitationModal({
         {isResend && (
           <div className="bg-warning-bg border border-warning rounded-md p-spacing-sm">
             <Typography variant="body-sm" className="text-warning-600">
-              This player was previously invited. They will receive a reminder email.
+              This player was previously invited. They will receive a reminder
+              email.
             </Typography>
           </div>
         )}
@@ -129,7 +141,11 @@ export function SendInvitationModal({
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSend} disabled={isLoading}>
-            {isLoading ? 'Sending...' : isResend ? 'Resend Invitation' : 'Send Invitation'}
+            {isLoading
+              ? "Sending..."
+              : isResend
+                ? "Resend Invitation"
+                : "Send Invitation"}
           </Button>
         </div>
       </div>

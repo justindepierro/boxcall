@@ -173,9 +173,14 @@ export class PersonnelService {
   ): Promise<PersonnelConfiguration> {
     try {
       // Validate configuration data
-      const validation = await PersonnelValidationService.validatePersonnelConfigurationServer(config);
+      const validation =
+        await PersonnelValidationService.validatePersonnelConfigurationServer(
+          config
+        );
       if (!validation.valid) {
-        throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+        throw new Error(
+          `Validation failed: ${validation.errors.map((e) => e.message).join(", ")}`
+        );
       }
 
       // Validate QB is at index 0
@@ -436,7 +441,7 @@ export class PersonnelService {
         .order("sort_order");
 
       if (error) throw error;
-      return (data || []).map(player => ({
+      return (data || []).map((player) => ({
         ...player,
         player_position: player.player_position as PlayerPosition, // Cast string to enum
         is_wildcat_qb: player.is_wildcat_qb || false, // Convert null to false

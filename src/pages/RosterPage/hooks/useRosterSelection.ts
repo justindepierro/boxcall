@@ -1,6 +1,6 @@
 /**
  * useRosterSelection Hook
- * 
+ *
  * Manages player selection state for bulk operations
  * - Track selected player IDs
  * - Toggle individual selection
@@ -8,8 +8,8 @@
  * - Clear selection
  */
 
-import { useState } from 'react';
-import type { RosterPlayerView } from '../../../services/rosterService';
+import { useState } from "react";
+import type { RosterPlayerView } from "../../../services/rosterService";
 
 export interface UseRosterSelectionReturn {
   selectedPlayerIds: Set<string>;
@@ -20,7 +20,9 @@ export interface UseRosterSelectionReturn {
 }
 
 export const useRosterSelection = (): UseRosterSelectionReturn => {
-  const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(new Set());
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(
+    new Set()
+  );
 
   const togglePlayerSelection = (playerId: string) => {
     setSelectedPlayerIds((prev) => {
@@ -43,7 +45,10 @@ export const useRosterSelection = (): UseRosterSelectionReturn => {
   };
 
   const isAllSelected = (filteredPlayers: RosterPlayerView[]) => {
-    return filteredPlayers.length > 0 && selectedPlayerIds.size === filteredPlayers.length;
+    return (
+      filteredPlayers.length > 0 &&
+      selectedPlayerIds.size === filteredPlayers.length
+    );
   };
 
   return {

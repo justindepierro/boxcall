@@ -23,6 +23,7 @@ This document provides a complete solution for managing formation directions acr
 ### ✅ What's Already Working
 
 1. **Database Schema** - Robust direction system:
+
    ```sql
    direction TEXT CHECK (direction IN ('left', 'right') OR direction IS NULL)
    opposite_formation_id UUID REFERENCES formations(id)
@@ -63,12 +64,12 @@ This document provides a complete solution for managing formation directions acr
 ```typescript
 /**
  * Formation Audit Utilities
- * 
+ *
  * Identifies formations needing direction attention
  */
 
-import { supabase } from '../lib/supabase';
-import type { Formation } from '../types/formation';
+import { supabase } from "../lib/supabase";
+import type { Formation } from "../types/formation";
 
 export interface FormationAuditResult {
   id: string;
@@ -76,8 +77,8 @@ export interface FormationAuditResult {
   direction: string | null;
   opposite_formation_id: string | null;
   usage_count: number;
-  issue: 'missing_opposite' | 'missing_direction' | 'both';
-  severity: 'high' | 'medium' | 'low';
+  issue: "missing_opposite" | "missing_direction" | "both";
+  severity: "high" | "medium" | "low";
 }
 
 /**
@@ -87,10 +88,12 @@ export async function auditFormationDirections(
   playbookId: string
 ): Promise<FormationAuditResult[]> {
   const { data: formations, error } = await supabase
-    .from('formations')
-    .select('id, name, direction, opposite_formation_id, usage_count, player_positions')
-    .eq('playbook_id', playbookId)
-    .order('usage_count', { ascending: false });
+    .from("formations")
+    .select(
+      "id, name, direction, opposite_formation_id, usage_count, player_positions"
+    )
+    .eq("playbook_id", playbookId)
+    .order("usage_count", { ascending: false });
 
   if (error) throw new Error(`Audit failed: ${error.message}`);
 
@@ -98,37 +101,38 @@ export async function auditFormationDirections(
 
   for (const formation of formations || []) {
     // Check if formation has player positions (indicates it's not empty)
-    const hasPositions = Array.isArray(formation.player_positions) && 
-                        formation.player_positions.length > 0;
-    
+    const hasPositions =
+      Array.isArray(formation.player_positions) &&
+      formation.player_positions.length > 0;
+
     if (!hasPositions) continue; // Skip empty formations
 
     const hasDirection = formation.direction !== null;
     const hasOpposite = formation.opposite_formation_id !== null;
 
     // Determine severity based on usage
-    let severity: 'high' | 'medium' | 'low' = 'low';
-    if (formation.usage_count >= 10) severity = 'high';
-    else if (formation.usage_count >= 3) severity = 'medium';
+    let severity: "high" | "medium" | "low" = "low";
+    if (formation.usage_count >= 10) severity = "high";
+    else if (formation.usage_count >= 3) severity = "medium";
 
     // Identify issues
     if (!hasDirection && !hasOpposite) {
       results.push({
         ...formation,
-        issue: 'both',
+        issue: "both",
         severity,
       });
     } else if (hasDirection && !hasOpposite) {
       results.push({
         ...formation,
-        issue: 'missing_opposite',
+        issue: "missing_opposite",
         severity,
       });
     } else if (!hasDirection && hasOpposite) {
       // Edge case: has opposite but no direction (shouldn't happen)
       results.push({
         ...formation,
-        issue: 'missing_direction',
+        issue: "missing_direction",
         severity,
       });
     }
@@ -144,14 +148,15 @@ export async function getIncompleteFormations(
   playbookId: string
 ): Promise<Formation[]> {
   const { data, error } = await supabase
-    .from('formations')
-    .select('*')
-    .eq('playbook_id', playbookId)
-    .eq('creation_source', 'play_builder')
-    .in('metadata_quality', ['needs_work', 'incomplete'])
-    .order('created_at', { ascending: false });
+    .from("formations")
+    .select("*")
+    .eq("playbook_id", playbookId)
+    .eq("creation_source", "play_builder")
+    .in("metadata_quality", ["needs_work", "incomplete"])
+    .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`Failed to fetch incomplete formations: ${error.message}`);
+  if (error)
+    throw new Error(`Failed to fetch incomplete formations: ${error.message}`);
 
   return data as Formation[];
 }
@@ -159,9 +164,7 @@ export async function getIncompleteFormations(
 /**
  * Calculate completion stats for gamification
  */
-export async function getFormationCompletionStats(
-  playbookId: string
-): Promise<{
+export async function getFormationCompletionStats(playbookId: string): Promise<{
   total: number;
   complete: number;
   needs_work: number;
@@ -171,18 +174,23 @@ export async function getFormationCompletionStats(
   completionPercentage: number;
 }> {
   const { data: formations, error } = await supabase
-    .from('formations')
-    .select('metadata_quality, direction, opposite_formation_id')
-    .eq('playbook_id', playbookId);
+    .from("formations")
+    .select("metadata_quality, direction, opposite_formation_id")
+    .eq("playbook_id", playbookId);
 
   if (error) throw new Error(`Stats failed: ${error.message}`);
 
   const total = formations?.length || 0;
-  const complete = formations?.filter(f => f.metadata_quality === 'complete').length || 0;
-  const needs_work = formations?.filter(f => f.metadata_quality === 'needs_work').length || 0;
-  const incomplete = formations?.filter(f => f.metadata_quality === 'incomplete').length || 0;
-  const with_directions = formations?.filter(f => f.direction !== null).length || 0;
-  const with_opposites = formations?.filter(f => f.opposite_formation_id !== null).length || 0;
+  const complete =
+    formations?.filter((f) => f.metadata_quality === "complete").length || 0;
+  const needs_work =
+    formations?.filter((f) => f.metadata_quality === "needs_work").length || 0;
+  const incomplete =
+    formations?.filter((f) => f.metadata_quality === "incomplete").length || 0;
+  const with_directions =
+    formations?.filter((f) => f.direction !== null).length || 0;
+  const with_opposites =
+    formations?.filter((f) => f.opposite_formation_id !== null).length || 0;
 
   return {
     total,
@@ -203,30 +211,34 @@ export async function getFormationCompletionStats(
 ```tsx
 /**
  * FormationDirectionReviewPanel
- * 
+ *
  * Shows formations needing direction attention with quick-fix actions
  */
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/Button/Button';
-import { Typography } from '../design-system/Typography';
-import { AlertCircle, Check, ArrowLeftRight } from 'lucide-react';
-import { auditFormationDirections, type FormationAuditResult } from '../../utils/formationAudit';
-import { FormationService } from '../../services/formationService';
-import { CreateOppositeFormationModal } from './CreateOppositeFormationModal';
+import React, { useState, useEffect } from "react";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
+import { AlertCircle, Check, ArrowLeftRight } from "lucide-react";
+import {
+  auditFormationDirections,
+  type FormationAuditResult,
+} from "../../utils/formationAudit";
+import { FormationService } from "../../services/formationService";
+import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
 
 interface FormationDirectionReviewPanelProps {
   playbookId: string;
   onFixComplete?: () => void;
 }
 
-export const FormationDirectionReviewPanel: React.FC<FormationDirectionReviewPanelProps> = ({
-  playbookId,
-  onFixComplete,
-}) => {
+export const FormationDirectionReviewPanel: React.FC<
+  FormationDirectionReviewPanelProps
+> = ({ playbookId, onFixComplete }) => {
   const [loading, setLoading] = useState(true);
   const [issues, setIssues] = useState<FormationAuditResult[]>([]);
-  const [selectedFormation, setSelectedFormation] = useState<string | null>(null);
+  const [selectedFormation, setSelectedFormation] = useState<string | null>(
+    null
+  );
   const [showOppositeModal, setShowOppositeModal] = useState(false);
 
   useEffect(() => {
@@ -239,7 +251,7 @@ export const FormationDirectionReviewPanel: React.FC<FormationDirectionReviewPan
       const results = await auditFormationDirections(playbookId);
       setIssues(results);
     } catch (error) {
-      console.error('Failed to audit formations:', error);
+      console.error("Failed to audit formations:", error);
     } finally {
       setLoading(false);
     }
@@ -256,8 +268,8 @@ export const FormationDirectionReviewPanel: React.FC<FormationDirectionReviewPan
       await loadIssues(); // Refresh
       onFixComplete?.();
     } catch (error) {
-      console.error('Failed to mark as standalone:', error);
-      alert('Failed to mark as standalone');
+      console.error("Failed to mark as standalone:", error);
+      alert("Failed to mark as standalone");
     }
   };
 
@@ -290,9 +302,9 @@ export const FormationDirectionReviewPanel: React.FC<FormationDirectionReviewPan
   }
 
   // Group by severity
-  const highPriority = issues.filter(i => i.severity === 'high');
-  const mediumPriority = issues.filter(i => i.severity === 'medium');
-  const lowPriority = issues.filter(i => i.severity === 'low');
+  const highPriority = issues.filter((i) => i.severity === "high");
+  const mediumPriority = issues.filter((i) => i.severity === "medium");
+  const lowPriority = issues.filter((i) => i.severity === "low");
 
   return (
     <div className="space-y-spacing-lg">
@@ -302,10 +314,15 @@ export const FormationDirectionReviewPanel: React.FC<FormationDirectionReviewPan
           <AlertCircle className="w-6 h-6 text-warning-600 flex-shrink-0" />
           <div className="flex-1">
             <Typography variant="headline-md" className="text-warning-800">
-              {issues.length} formation{issues.length === 1 ? '' : 's'} need attention
+              {issues.length} formation{issues.length === 1 ? "" : "s"} need
+              attention
             </Typography>
-            <Typography variant="body-sm" className="text-warning-700 mt-spacing-xs">
-              These formations should have opposite-side versions for a complete playbook.
+            <Typography
+              variant="body-sm"
+              className="text-warning-700 mt-spacing-xs"
+            >
+              These formations should have opposite-side versions for a complete
+              playbook.
             </Typography>
           </div>
         </div>
@@ -373,7 +390,10 @@ const FormationIssueSection: React.FC<{
 }> = ({ title, issues, onCreateOpposite, onMarkAsStandalone }) => {
   return (
     <div>
-      <Typography variant="headline-sm" className="text-text-primary mb-spacing-md">
+      <Typography
+        variant="headline-sm"
+        className="text-text-primary mb-spacing-md"
+      >
         {title}
       </Typography>
       <div className="space-y-spacing-sm">
@@ -388,10 +408,12 @@ const FormationIssueSection: React.FC<{
                   {issue.name}
                 </Typography>
                 <Typography variant="body-xs" className="text-text-muted">
-                  Used in {issue.usage_count} play{issue.usage_count === 1 ? '' : 's'} •{' '}
-                  {issue.issue === 'missing_opposite' && 'Missing opposite formation'}
-                  {issue.issue === 'missing_direction' && 'Direction not set'}
-                  {issue.issue === 'both' && 'No direction or opposite'}
+                  Used in {issue.usage_count} play
+                  {issue.usage_count === 1 ? "" : "s"} •{" "}
+                  {issue.issue === "missing_opposite" &&
+                    "Missing opposite formation"}
+                  {issue.issue === "missing_direction" && "Direction not set"}
+                  {issue.issue === "both" && "No direction or opposite"}
                 </Typography>
               </div>
               <div className="flex gap-spacing-sm">
@@ -433,26 +455,25 @@ const FormationIssueSection: React.FC<{
 ```tsx
 /**
  * IncompleteFormationsPanel
- * 
+ *
  * Shows formations created during play building that need metadata completion
  */
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/Button/Button';
-import { Typography } from '../design-system/Typography';
-import { AlertTriangle, Edit, ArrowRight } from 'lucide-react';
-import { getIncompleteFormations } from '../../utils/formationAudit';
-import type { Formation } from '../../types/formation';
+import React, { useState, useEffect } from "react";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
+import { AlertTriangle, Edit, ArrowRight } from "lucide-react";
+import { getIncompleteFormations } from "../../utils/formationAudit";
+import type { Formation } from "../../types/formation";
 
 interface IncompleteFormationsPanelProps {
   playbookId: string;
   onEdit: (formation: Formation) => void;
 }
 
-export const IncompleteFormationsPanel: React.FC<IncompleteFormationsPanelProps> = ({
-  playbookId,
-  onEdit,
-}) => {
+export const IncompleteFormationsPanel: React.FC<
+  IncompleteFormationsPanelProps
+> = ({ playbookId, onEdit }) => {
   const [loading, setLoading] = useState(true);
   const [formations, setFormations] = useState<Formation[]>([]);
 
@@ -466,7 +487,7 @@ export const IncompleteFormationsPanel: React.FC<IncompleteFormationsPanelProps>
       const results = await getIncompleteFormations(playbookId);
       setFormations(results);
     } catch (error) {
-      console.error('Failed to load incomplete formations:', error);
+      console.error("Failed to load incomplete formations:", error);
     } finally {
       setLoading(false);
     }
@@ -500,7 +521,10 @@ export const IncompleteFormationsPanel: React.FC<IncompleteFormationsPanelProps>
           Formations Needing Completion
         </Typography>
         <div className="px-spacing-sm py-spacing-xs bg-warning-100 rounded-full">
-          <Typography variant="body-xs" className="text-warning-800 font-medium">
+          <Typography
+            variant="body-xs"
+            className="text-warning-800 font-medium"
+          >
             {formations.length} incomplete
           </Typography>
         </div>
@@ -511,8 +535,8 @@ export const IncompleteFormationsPanel: React.FC<IncompleteFormationsPanelProps>
         <div className="flex items-start gap-spacing-md">
           <AlertTriangle className="w-5 h-5 text-info-600 flex-shrink-0" />
           <Typography variant="body-sm" className="text-info-800">
-            These formations were created while building plays and need additional details
-            like personnel, category, and tags.
+            These formations were created while building plays and need
+            additional details like personnel, category, and tags.
           </Typography>
         </div>
       </div>
@@ -607,7 +631,7 @@ Add these features to the existing modal:
 
 ```tsx
 // Add to CreateOppositeFormationModal state
-const [customName, setCustomName] = useState('');
+const [customName, setCustomName] = useState("");
 const [useCustomName, setUseCustomName] = useState(false);
 
 // Add to the modal body (before action buttons)
@@ -620,7 +644,7 @@ const [useCustomName, setUseCustomName] = useState(false);
       onClick={() => setUseCustomName(!useCustomName)}
       className="text-sm text-primary-600 hover:text-primary-700"
     >
-      {useCustomName ? 'Use same name' : 'Use custom name'}
+      {useCustomName ? "Use same name" : "Use custom name"}
     </button>
   </div>
 
@@ -639,9 +663,10 @@ const [useCustomName, setUseCustomName] = useState(false);
   )}
 
   <Typography variant="body-xs" className="text-text-muted mt-spacing-xs">
-    💡 Tip: Teams use different naming: "Twins Right/Left", "Rip/Liz", "Red/Blue"
+    💡 Tip: Teams use different naming: "Twins Right/Left", "Rip/Liz",
+    "Red/Blue"
   </Typography>
-</div>
+</div>;
 
 // Update handleCreateOpposite to use custom name
 const handleCreateOpposite = async () => {
@@ -657,8 +682,10 @@ const handleCreateOpposite = async () => {
     onOppositeCreated?.(opposite);
     onClose();
   } catch (err) {
-    console.error('Failed to create opposite formation:', err);
-    setError(err instanceof Error ? err.message : 'Failed to create opposite formation');
+    console.error("Failed to create opposite formation:", err);
+    setError(
+      err instanceof Error ? err.message : "Failed to create opposite formation"
+    );
   } finally {
     setLoading(false);
   }
@@ -754,7 +781,7 @@ onFormationIdChange={(id, formation) => {
   // Track if this is a newly created formation
   if (formation && formation.creation_source === 'play_builder') {
     setNewFormationIds(prev => [...prev, formation.id]);
-    
+
     console.log('🆕 New formation created during play building:', {
       formation: formation.name,
       metadata_quality: formation.metadata_quality,
@@ -789,22 +816,22 @@ if (newFormationIds.length > 0 && !existingPlay) {
 ```tsx
 /**
  * FormationCompletionDashboard
- * 
+ *
  * Gamified progress tracker for formation completion
  */
 
-import React, { useState, useEffect } from 'react';
-import { Typography } from '../design-system/Typography';
-import { Trophy, Target, TrendingUp, Star } from 'lucide-react';
-import { getFormationCompletionStats } from '../../utils/formationAudit';
+import React, { useState, useEffect } from "react";
+import { Typography } from "../design-system/Typography";
+import { Trophy, Target, TrendingUp, Star } from "lucide-react";
+import { getFormationCompletionStats } from "../../utils/formationAudit";
 
 interface FormationCompletionDashboardProps {
   playbookId: string;
 }
 
-export const FormationCompletionDashboard: React.FC<FormationCompletionDashboardProps> = ({
-  playbookId,
-}) => {
+export const FormationCompletionDashboard: React.FC<
+  FormationCompletionDashboardProps
+> = ({ playbookId }) => {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<{
     total: number;
@@ -826,7 +853,7 @@ export const FormationCompletionDashboard: React.FC<FormationCompletionDashboard
       const results = await getFormationCompletionStats(playbookId);
       setStats(results);
     } catch (error) {
-      console.error('Failed to load stats:', error);
+      console.error("Failed to load stats:", error);
     } finally {
       setLoading(false);
     }
@@ -837,10 +864,17 @@ export const FormationCompletionDashboard: React.FC<FormationCompletionDashboard
   }
 
   const getBadge = (percentage: number) => {
-    if (percentage === 100) return { label: 'Master', color: 'text-yellow-600', icon: Trophy };
-    if (percentage >= 80) return { label: 'Expert', color: 'text-purple-600', icon: Star };
-    if (percentage >= 60) return { label: 'Intermediate', color: 'text-blue-600', icon: TrendingUp };
-    return { label: 'Beginner', color: 'text-gray-600', icon: Target };
+    if (percentage === 100)
+      return { label: "Master", color: "text-yellow-600", icon: Trophy };
+    if (percentage >= 80)
+      return { label: "Expert", color: "text-purple-600", icon: Star };
+    if (percentage >= 60)
+      return {
+        label: "Intermediate",
+        color: "text-blue-600",
+        icon: TrendingUp,
+      };
+    return { label: "Beginner", color: "text-gray-600", icon: Target };
   };
 
   const badge = getBadge(stats.completionPercentage);
@@ -873,23 +907,18 @@ export const FormationCompletionDashboard: React.FC<FormationCompletionDashboard
           />
         </div>
 
-        <Typography variant="body-sm" className="text-primary-700 mt-spacing-sm">
+        <Typography
+          variant="body-sm"
+          className="text-primary-700 mt-spacing-sm"
+        >
           {stats.complete} of {stats.total} formations complete
         </Typography>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-spacing-md">
-        <StatCard
-          label="Complete"
-          value={stats.complete}
-          color="green"
-        />
-        <StatCard
-          label="Needs Work"
-          value={stats.needs_work}
-          color="yellow"
-        />
+        <StatCard label="Complete" value={stats.complete} color="green" />
+        <StatCard label="Needs Work" value={stats.needs_work} color="yellow" />
         <StatCard
           label="With Directions"
           value={stats.with_directions}
@@ -907,7 +936,10 @@ export const FormationCompletionDashboard: React.FC<FormationCompletionDashboard
       {/* Next Steps */}
       {stats.completionPercentage < 100 && (
         <div className="p-spacing-md bg-surface-muted rounded-lg border border-border-secondary">
-          <Typography variant="label-md" className="text-text-primary mb-spacing-sm">
+          <Typography
+            variant="label-md"
+            className="text-text-primary mb-spacing-sm"
+          >
             📈 Next Steps to Level Up:
           </Typography>
           <ul className="space-y-spacing-xs text-sm text-text-secondary">
@@ -918,10 +950,16 @@ export const FormationCompletionDashboard: React.FC<FormationCompletionDashboard
               <li>• Finish {stats.needs_work} formation(s) needing work</li>
             )}
             {stats.with_directions < stats.total && (
-              <li>• Add directions to {stats.total - stats.with_directions} formation(s)</li>
+              <li>
+                • Add directions to {stats.total - stats.with_directions}{" "}
+                formation(s)
+              </li>
             )}
             {stats.with_opposites < stats.with_directions && (
-              <li>• Create opposite variants for {stats.with_directions - stats.with_opposites} formation(s)</li>
+              <li>
+                • Create opposite variants for{" "}
+                {stats.with_directions - stats.with_opposites} formation(s)
+              </li>
             )}
           </ul>
         </div>
@@ -952,13 +990,13 @@ const StatCard: React.FC<{
   label: string;
   value: number;
   total?: number;
-  color: 'green' | 'yellow' | 'blue' | 'purple';
+  color: "green" | "yellow" | "blue" | "purple";
 }> = ({ label, value, total, color }) => {
   const colors = {
-    green: 'bg-green-50 border-green-200 text-green-800',
-    yellow: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    blue: 'bg-blue-50 border-blue-200 text-blue-800',
-    purple: 'bg-purple-50 border-purple-200 text-purple-800',
+    green: "bg-green-50 border-green-200 text-green-800",
+    yellow: "bg-yellow-50 border-yellow-200 text-yellow-800",
+    blue: "bg-blue-50 border-blue-200 text-blue-800",
+    purple: "bg-purple-50 border-purple-200 text-purple-800",
   };
 
   return (
@@ -991,14 +1029,14 @@ Add new tab state and panels:
 
 ```tsx
 // Add to existing tab state
-type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
+type TabType = "edit" | "link" | "canvas" | "audit" | "incomplete" | "progress";
 
 // Add tab buttons
 <div className="flex border-b border-border-primary">
   {/* ... existing tabs ... */}
   <button
-    onClick={() => setActiveTab('audit')}
-    className={tabButtonClass('audit')}
+    onClick={() => setActiveTab("audit")}
+    className={tabButtonClass("audit")}
   >
     Direction Review
     {auditCount > 0 && (
@@ -1008,8 +1046,8 @@ type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
     )}
   </button>
   <button
-    onClick={() => setActiveTab('incomplete')}
-    className={tabButtonClass('incomplete')}
+    onClick={() => setActiveTab("incomplete")}
+    className={tabButtonClass("incomplete")}
   >
     Incomplete
     {incompleteCount > 0 && (
@@ -1019,34 +1057,40 @@ type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
     )}
   </button>
   <button
-    onClick={() => setActiveTab('progress')}
-    className={tabButtonClass('progress')}
+    onClick={() => setActiveTab("progress")}
+    className={tabButtonClass("progress")}
   >
     Progress
   </button>
-</div>
+</div>;
 
 // Add tab panels
-{activeTab === 'audit' && (
-  <FormationDirectionReviewPanel
-    playbookId={playbookId}
-    onFixComplete={loadAllFormations}
-  />
-)}
+{
+  activeTab === "audit" && (
+    <FormationDirectionReviewPanel
+      playbookId={playbookId}
+      onFixComplete={loadAllFormations}
+    />
+  );
+}
 
-{activeTab === 'incomplete' && (
-  <IncompleteFormationsPanel
-    playbookId={playbookId}
-    onEdit={(formation) => {
-      setSelectedFormation(formation);
-      setActiveTab('edit');
-    }}
-  />
-)}
+{
+  activeTab === "incomplete" && (
+    <IncompleteFormationsPanel
+      playbookId={playbookId}
+      onEdit={(formation) => {
+        setSelectedFormation(formation);
+        setActiveTab("edit");
+      }}
+    />
+  );
+}
 
-{activeTab === 'progress' && (
-  <FormationCompletionDashboard playbookId={playbookId} />
-)}
+{
+  activeTab === "progress" && (
+    <FormationCompletionDashboard playbookId={playbookId} />
+  );
+}
 ```
 
 ---
@@ -1054,39 +1098,46 @@ type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
 ## 📋 Implementation Checklist
 
 ### Phase 1: Foundation (2-3 hours)
+
 - [ ] Create `formationAudit.ts` utilities
 - [ ] Test audit queries on real data
 - [ ] Create `FormationDirectionReviewPanel.tsx`
 - [ ] Test with sample formations
 
 ### Phase 2: Incomplete Tracking (1-2 hours)
+
 - [ ] Create `IncompleteFormationsPanel.tsx`
 - [ ] Test with AddNewPlayModal-created formations
 - [ ] Verify metadata_quality tracking
 
 ### Phase 3: Enhanced Flip (1 hour)
+
 - [ ] Update `CreateOppositeFormationModal` with custom name input
 - [ ] Update `FormationService.createOppositeFormation()` signature
 - [ ] Test custom naming (Rip/Liz, Red/Blue, etc.)
 
 ### Phase 4: AddNewPlayModal (1 hour)
+
 - [ ] Add formation tracking to AddNewPlayModal
 - [ ] Test notification flow
 - [ ] Verify formations appear in incomplete list
 
 ### Phase 5: Gamification (2-3 hours)
+
 - [ ] Create `FormationCompletionDashboard.tsx`
 - [ ] Test stats calculation
 - [ ] Design achievement badges
 - [ ] Test progress tracking
 
 ### Phase 6: Integration (1 hour)
+
 - [ ] Add new tabs to FormationBuilderPanel
 - [ ] Test tab switching
 - [ ] Verify data reloads after actions
 - [ ] Polish UI/UX
 
 ### Phase 7: Testing & Polish (2-3 hours)
+
 - [ ] End-to-end testing of all workflows
 - [ ] Mobile responsiveness check
 - [ ] Performance optimization
@@ -1149,24 +1200,28 @@ type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
 ## 🎨 UI/UX Design Principles
 
 ### Visual Hierarchy
+
 - **High Priority** → Red/Orange indicators
 - **Medium Priority** → Yellow indicators
 - **Low Priority** → Gray indicators
 - **Complete** → Green checkmarks
 
 ### Progress Feedback
+
 - Real-time percentage updates
 - Smooth progress bar animations
 - Achievement unlocks
 - Toast notifications for completed actions
 
 ### Gamification Elements
+
 - **Badges**: Beginner → Intermediate → Expert → Master
 - **Progress Bar**: Visual completion tracking
 - **Stats Grid**: Clear metrics breakdown
 - **Next Steps**: Actionable guidance
 
 ### Accessibility
+
 - Clear labels and descriptions
 - Color + text indicators (not color alone)
 - Keyboard navigation support
@@ -1177,11 +1232,12 @@ type TabType = 'edit' | 'link' | 'canvas' | 'audit' | 'incomplete' | 'progress';
 ## 📊 Database Queries
 
 ### Find formations needing opposites (high priority)
+
 ```sql
-SELECT 
-  id, 
-  name, 
-  direction, 
+SELECT
+  id,
+  name,
+  direction,
   opposite_formation_id,
   usage_count
 FROM formations
@@ -1193,6 +1249,7 @@ ORDER BY usage_count DESC;
 ```
 
 ### Find incomplete formations from play builder
+
 ```sql
 SELECT *
 FROM formations
@@ -1203,8 +1260,9 @@ ORDER BY created_at DESC;
 ```
 
 ### Calculate playbook completion stats
+
 ```sql
-SELECT 
+SELECT
   COUNT(*) as total,
   COUNT(*) FILTER (WHERE metadata_quality = 'complete') as complete,
   COUNT(*) FILTER (WHERE metadata_quality = 'needs_work') as needs_work,
@@ -1224,42 +1282,48 @@ WHERE playbook_id = :playbook_id;
 ## 🚀 Benefits
 
 ### For Coaches
+
 ✅ **Fast Play Creation** - Create plays without stopping  
 ✅ **Guided Cleanup** - System tells you what needs attention  
 ✅ **Flexible Naming** - Support team-specific terminology (Rip/Liz, Red/Blue, etc.)  
 ✅ **Progress Visibility** - See completion percentage and earn badges  
-✅ **Consistent Playbook** - All formations properly configured  
+✅ **Consistent Playbook** - All formations properly configured
 
 ### For Development
+
 ✅ **Leverages Existing System** - Uses current database schema  
 ✅ **Progressive Enhancement** - Works with existing formations  
 ✅ **Clear Separation** - Each component has single responsibility  
 ✅ **Type Safe** - Full TypeScript coverage  
-✅ **Testable** - Pure functions and modular components  
+✅ **Testable** - Pure functions and modular components
 
 ### For Product
+
 ✅ **Improved Data Quality** - Complete formation metadata  
 ✅ **Better Analytics** - Track creation sources and completion rates  
 ✅ **User Engagement** - Gamification increases completion  
-✅ **Scalable** - System grows with playbook size  
+✅ **Scalable** - System grows with playbook size
 
 ---
 
 ## 📝 Success Metrics
 
 ### Before Implementation
+
 - ❌ Formations with no direction: Unknown
 - ❌ Formations without opposites: Unknown
 - ❌ Incomplete formations: Not tracked
 - ❌ Formation completion rate: 0% visibility
 
 ### After Implementation
+
 - ✅ Formations with directions: Audited and tracked
 - ✅ Formations with opposites: Auto-prompted
 - ✅ Incomplete formations: Visible in edit pool
 - ✅ Formation completion rate: Displayed with gamification
 
 ### Target Goals (30 days post-launch)
+
 - 🎯 80%+ formations have proper directions
 - 🎯 60%+ formations have opposite variants
 - 🎯 90%+ formations at "good" or "complete" quality

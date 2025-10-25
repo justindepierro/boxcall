@@ -105,7 +105,11 @@ export function detectDirectionInFormationName(
 
   // Pattern 3: Check for direction words at the START (only if multi-word)
   // e.g., "Right Slot" or "Left Wing"
-  if (lower.startsWith("right ") || lower.startsWith("rt ") || lower.startsWith("r ")) {
+  if (
+    lower.startsWith("right ") ||
+    lower.startsWith("rt ") ||
+    lower.startsWith("r ")
+  ) {
     const match = trimmed.match(/^(right|rt|r)\s+(.+)/i);
     if (match) {
       return {
@@ -118,7 +122,11 @@ export function detectDirectionInFormationName(
     }
   }
 
-  if (lower.startsWith("left ") || lower.startsWith("lt ") || lower.startsWith("l ")) {
+  if (
+    lower.startsWith("left ") ||
+    lower.startsWith("lt ") ||
+    lower.startsWith("l ")
+  ) {
     const match = trimmed.match(/^(left|lt|l)\s+(.+)/i);
     if (match) {
       return {
@@ -147,7 +155,9 @@ export function detectDirectionInFormationName(
  * @param result - Detection result from detectDirectionInFormationName
  * @returns User-friendly message explaining the issue
  */
-export function getDirectionWarningMessage(result: DirectionDetectionResult): string {
+export function getDirectionWarningMessage(
+  result: DirectionDetectionResult
+): string {
   if (!result.hasDirection) return "";
 
   const directionLabel = result.detectedDirection === "R" ? "Right" : "Left";

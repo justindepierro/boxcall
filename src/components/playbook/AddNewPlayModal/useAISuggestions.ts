@@ -72,20 +72,22 @@ export const useAISuggestions = (playbookId?: string) => {
     const loadBasicSuggestions = async () => {
       try {
         setIsLoading(true);
-        const [formations, playNames, personnel, playTypes] = await Promise.all([
-          PlaysService.getUniqueFormations(),
-          PlaysService.getUniquePlayNames(),
-          PlaysService.getUniquePersonnel(),
-          PlaysService.getUniquePlayTypes(),
-        ]);
+        const [formations, playNames, personnel, playTypes] = await Promise.all(
+          [
+            PlaysService.getUniqueFormations(),
+            PlaysService.getUniquePlayNames(),
+            PlaysService.getUniquePersonnel(),
+            PlaysService.getUniquePlayTypes(),
+          ]
+        );
 
         setSuggestions({
           formations: formations.filter(
             (formation) => validateFormationName(formation).isValid
           ),
           playNames,
-          personnel: personnel.filter((value) =>
-            validatePersonnelValue(value).isValid
+          personnel: personnel.filter(
+            (value) => validatePersonnelValue(value).isValid
           ),
           playTypes,
         });
@@ -109,14 +111,22 @@ export const useAISuggestions = (playbookId?: string) => {
         setIsAILoading(true);
 
         const [aiFormations, aiPlayNames, aiPersonnel] = await Promise.all([
-          PlaysService.getAISuggestedFormations(currentContext.formation, playbookId, 5),
+          PlaysService.getAISuggestedFormations(
+            currentContext.formation,
+            playbookId,
+            5
+          ),
           PlaysService.getAISuggestedPlayNames(
             currentContext.formation,
             currentContext.playType,
             playbookId,
             5
           ),
-          PlaysService.getAISuggestedPersonnel(currentContext.formation, playbookId, 5),
+          PlaysService.getAISuggestedPersonnel(
+            currentContext.formation,
+            playbookId,
+            5
+          ),
         ]);
 
         // Generate contextual play name suggestions
@@ -145,9 +155,12 @@ export const useAISuggestions = (playbookId?: string) => {
   }, [currentContext, playbookId, suggestions.playNames]);
 
   // Update context when form values change
-  const updateContext = useCallback((field: keyof typeof currentContext, value: string) => {
-    setCurrentContext(prev => ({ ...prev, [field]: value }));
-  }, []);
+  const updateContext = useCallback(
+    (field: keyof typeof currentContext, value: string) => {
+      setCurrentContext((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   // Filter basic suggestions based on input
   const filterBasicSuggestions = useCallback(
@@ -167,18 +180,21 @@ export const useAISuggestions = (playbookId?: string) => {
   // Get combined suggestions (AI + basic fuzzy search)
   const getCombinedSuggestions = useCallback(
     (type: keyof SuggestionState, input: string, maxResults = 8): string[] => {
-      const aiKey = `ai${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof AISuggestionState;
-      const generatedKey = type === 'playNames' ? 'generatedPlayNames' : null;
+      const aiKey =
+        `ai${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof AISuggestionState;
+      const generatedKey = type === "playNames" ? "generatedPlayNames" : null;
 
       const aiSuggestionsList = aiSuggestions[aiKey] as string[];
-      const generatedSuggestions = generatedKey ? (aiSuggestions[generatedKey] as string[]) : [];
+      const generatedSuggestions = generatedKey
+        ? (aiSuggestions[generatedKey] as string[])
+        : [];
       const basicFiltered = filterBasicSuggestions(type, input, maxResults);
 
       // Combine and deduplicate: AI suggestions first, then generated, then basic fuzzy matches
       const combined = [
         ...aiSuggestionsList,
         ...generatedSuggestions,
-        ...basicFiltered
+        ...basicFiltered,
       ];
 
       return [...new Set(combined)].slice(0, maxResults);
@@ -213,7 +229,9 @@ export const useAISuggestions = (playbookId?: string) => {
   const getSuggestionCounts = useCallback(() => {
     return {
       formations: aiSuggestions.aiFormations.length,
-      playNames: aiSuggestions.aiPlayNames.length + aiSuggestions.generatedPlayNames.length,
+      playNames:
+        aiSuggestions.aiPlayNames.length +
+        aiSuggestions.generatedPlayNames.length,
       personnel: aiSuggestions.aiPersonnel.length,
       playTypes: suggestions.playTypes.length, // AI not implemented for play types yet
     };

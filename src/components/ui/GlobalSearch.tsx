@@ -110,9 +110,10 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         created_at: new Date(play.created_at),
         updated_at: new Date(play.updated_at),
         // Parse diagram_data if it's a string (JSONB from database)
-        diagram_data: typeof play.diagram_data === 'string' 
-          ? JSON.parse(play.diagram_data) 
-          : play.diagram_data,
+        diagram_data:
+          typeof play.diagram_data === "string"
+            ? JSON.parse(play.diagram_data)
+            : play.diagram_data,
       })
     );
   }, [allPlays]);

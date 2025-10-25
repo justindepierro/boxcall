@@ -3,6 +3,7 @@
 ## Problem
 
 You're getting this error when trying to create formations:
+
 ```
 new row for relation "formations" violates check constraint "formations_variants_have_parent"
 ```
@@ -16,6 +17,7 @@ Your database has **old constraints** from a previous formation system that used
 Run this SQL in your **Supabase SQL Editor**:
 
 ### Step 1: Open Supabase Dashboard
+
 1. Go to https://supabase.com/dashboard
 2. Select your project
 3. Click "SQL Editor" in the left sidebar
@@ -44,6 +46,7 @@ SELECT '✅ Constraints dropped successfully' as result;
 ### Step 3: Verify
 
 After running the SQL, refresh your BoxCall app and try:
+
 1. Click "Data Diagnostic" tab
 2. Click "Show Raw Data (Debug Mode)"
 3. Check if it loads without errors
@@ -58,6 +61,7 @@ After running the SQL, refresh your BoxCall app and try:
 ## After the Fix
 
 Once this is done, your Formation Direction Review system will work properly and you'll be able to:
+
 - See formations that need opposites
 - Create opposite formations
 - Mark formations as standalone

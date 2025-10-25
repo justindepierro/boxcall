@@ -90,7 +90,7 @@ export class MentionsService {
       if (!members || members.length === 0) return [];
 
       // Get user IDs
-      const userIds = members.map(m => m.user_id);
+      const userIds = members.map((m) => m.user_id);
 
       // Fetch profiles
       const { data: profiles } = await supabase
@@ -106,8 +106,8 @@ export class MentionsService {
         .in("user_id", userIds);
 
       // Create lookup maps
-      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
-      const playerMap = new Map(players?.map(p => [p.user_id, p]) || []);
+      const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
+      const playerMap = new Map(players?.map((p) => [p.user_id, p]) || []);
 
       // Combine data
       return members
@@ -118,14 +118,18 @@ export class MentionsService {
 
           return {
             id: member.user_id,
-            display_name: name + (player?.jersey_number ? ` (#${player.jersey_number})` : ""),
+            display_name:
+              name +
+              (player?.jersey_number ? ` (#${player.jersey_number})` : ""),
             avatar_url: profile?.avatar_url ?? undefined,
             type: "user" as const,
           };
         })
         .filter((suggestion) => {
           // Client-side filtering by query
-          return suggestion.display_name.toLowerCase().includes(query.toLowerCase());
+          return suggestion.display_name
+            .toLowerCase()
+            .includes(query.toLowerCase());
         });
     } catch (error) {
       console.error("Failed to get team member suggestions:", error);
@@ -247,7 +251,7 @@ export class MentionsService {
       };
 
       findMentions(parsed);
-      
+
       // Return unique user IDs
       return Array.from(new Set(userIds));
     } catch (error) {

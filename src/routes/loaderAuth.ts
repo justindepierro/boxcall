@@ -21,7 +21,7 @@ export function createAuthLoader(
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
-  isSuperAdmin: isSuperAdminEmail(current.email),
+      isSuperAdmin: isSuperAdminEmail(current.email),
       ...authorizeOptions,
       // Merge teamId from params if not explicitly provided
       teamId: authorizeOptions.teamId || params.teamId,
@@ -110,7 +110,7 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 
     const res = await authorize({
       profile: { id: current.id, role: current.role },
-  isSuperAdmin: isSuperAdminEmail(current.email),
+      isSuperAdmin: isSuperAdminEmail(current.email),
       requiredRoles: allowedRoles,
     });
 

@@ -18,7 +18,10 @@ import { SecurePlaysService } from "../services/securePlaysService";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useToast } from "../hooks/useToast";
-import { useRecentPlayCombos, type PlayCombo } from "../hooks/useRecentPlayCombos";
+import {
+  useRecentPlayCombos,
+  type PlayCombo,
+} from "../hooks/useRecentPlayCombos";
 import type { Formation } from "../types/formation";
 import { FormationService } from "../services/formationService";
 import { cn } from "../lib/utils/cn";
@@ -60,11 +63,12 @@ export default function FormationMapperPage() {
   const [formationsLoading, setFormationsLoading] = useState(false);
   const [formationsError, setFormationsError] = useState<string | null>(null);
   const [assigning, setAssigning] = useState(false);
-  const [selectedPlayIds, setSelectedPlayIds] = useState<Set<string>>(new Set());
-  const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
-  const [bulkAssignFormation, setBulkAssignFormation] = useState<Formation | null>(
-    null
+  const [selectedPlayIds, setSelectedPlayIds] = useState<Set<string>>(
+    new Set()
   );
+  const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
+  const [bulkAssignFormation, setBulkAssignFormation] =
+    useState<Formation | null>(null);
 
   useEffect(() => {
     if (teamPlaybooks.length === 0) return;
@@ -88,29 +92,32 @@ export default function FormationMapperPage() {
     setSelectedPlayIds(new Set());
   };
 
-  const loadFormations = useCallback(async (playbookId: string | null | undefined) => {
-    if (!playbookId) {
-      setFormationCatalog([]);
-      return;
-    }
+  const loadFormations = useCallback(
+    async (playbookId: string | null | undefined) => {
+      if (!playbookId) {
+        setFormationCatalog([]);
+        return;
+      }
 
-    setFormationsLoading(true);
-    setFormationsError(null);
-    try {
-      const data = await FormationService.getFormationsByPlaybook(playbookId);
-      setFormationCatalog(data);
-    } catch (err) {
-      console.error("Failed to load formation catalog", err);
-      setFormationCatalog([]);
-      setFormationsError(
-        err instanceof Error
-          ? err.message
-          : "Failed to load formations for suggestions"
-      );
-    } finally {
-      setFormationsLoading(false);
-    }
-  }, []);
+      setFormationsLoading(true);
+      setFormationsError(null);
+      try {
+        const data = await FormationService.getFormationsByPlaybook(playbookId);
+        setFormationCatalog(data);
+      } catch (err) {
+        console.error("Failed to load formation catalog", err);
+        setFormationCatalog([]);
+        setFormationsError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load formations for suggestions"
+        );
+      } finally {
+        setFormationsLoading(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     void loadFormations(selectedPlaybookId || null);
@@ -141,7 +148,8 @@ export default function FormationMapperPage() {
       return new Map<string, FormationSuggestion[]>();
     }
 
-    const sanitize = (value?: string | null) => (value || "").trim().toLowerCase();
+    const sanitize = (value?: string | null) =>
+      (value || "").trim().toLowerCase();
     const normalize = (value?: string | null) =>
       sanitize(value).replace(/[^a-z0-9]/g, "");
 
@@ -224,9 +232,11 @@ export default function FormationMapperPage() {
         }
 
         const recentCombos = [
-          ...(formation.id ? combosByFormationId.get(formation.id) ?? [] : []),
+          ...(formation.id
+            ? (combosByFormationId.get(formation.id) ?? [])
+            : []),
           ...(formationNameNormalized
-            ? combosByName.get(formationNameNormalized) ?? []
+            ? (combosByName.get(formationNameNormalized) ?? [])
             : []),
         ];
 
@@ -290,17 +300,20 @@ export default function FormationMapperPage() {
   const canApplySuggestions = selectedSuggestionsCount > 0 && !assigning;
   const canBulkAssign = selectedCount > 0 && !assigning;
 
-  const handleSelectPlay = useCallback((playId: string, isSelected: boolean) => {
-    setSelectedPlayIds((prev) => {
-      const next = new Set(prev);
-      if (isSelected) {
-        next.add(playId);
-      } else {
-        next.delete(playId);
-      }
-      return next;
-    });
-  }, []);
+  const handleSelectPlay = useCallback(
+    (playId: string, isSelected: boolean) => {
+      setSelectedPlayIds((prev) => {
+        const next = new Set(prev);
+        if (isSelected) {
+          next.add(playId);
+        } else {
+          next.delete(playId);
+        }
+        return next;
+      });
+    },
+    []
+  );
 
   const handleClearSelection = useCallback(() => {
     setSelectedPlayIds(new Set());
@@ -391,8 +404,7 @@ export default function FormationMapperPage() {
 
         let defaultMessage: string;
         if (totalPlays === 1) {
-          const playName =
-            validGroups[0].plays[0].play_name || "play";
+          const playName = validGroups[0].plays[0].play_name || "play";
           defaultMessage = `Linked ${playName} to ${validGroups[0].formation.name}`;
         } else if (uniqueFormationNames.length === 1) {
           defaultMessage = `Linked ${totalPlays} plays to ${uniqueFormationNames[0]}`;
@@ -483,7 +495,10 @@ export default function FormationMapperPage() {
   const handleBulkApplySuggestions = useCallback(async () => {
     if (selectedPlays.length === 0) return;
 
-    const groupsMap = new Map<string, { formation: Formation; plays: Play[] }>();
+    const groupsMap = new Map<
+      string,
+      { formation: Formation; plays: Play[] }
+    >();
 
     selectedPlays.forEach((play) => {
       const suggestion = suggestionsByPlay.get(play.id)?.[0];
@@ -534,7 +549,13 @@ export default function FormationMapperPage() {
         );
       }
     }
-  }, [assignFormations, selectedPlays, selectedCount, suggestionsByPlay, toast]);
+  }, [
+    assignFormations,
+    selectedPlays,
+    selectedCount,
+    suggestionsByPlay,
+    toast,
+  ]);
 
   const renderPlayRow = (play: Play) => {
     const updatedAt = play.updated_at
@@ -694,7 +715,11 @@ export default function FormationMapperPage() {
                 {allSelected ? "Clear selection" : "Select all"}
               </Button>
             )}
-            <Button variant="secondary" onClick={() => navigate(-1)} disabled={assigning}>
+            <Button
+              variant="secondary"
+              onClick={() => navigate(-1)}
+              disabled={assigning}
+            >
               <Icon name="arrow-left" className="h-4 w-4 mr-2" /> Back
             </Button>
             <Button
@@ -724,7 +749,10 @@ export default function FormationMapperPage() {
                   ? `Playbook: ${selectedPlaybook.name}`
                   : "Select a playbook to review formation mappings."}
               </Typography>
-              <Typography variant="body-xs" className="text-text-secondary mt-1">
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary mt-1"
+              >
                 {unresolved === 0
                   ? "All plays are synced to formations."
                   : `${unresolved} play${unresolved === 1 ? "" : "s"} need formation mapping.`}
@@ -771,7 +799,8 @@ export default function FormationMapperPage() {
             <div className="flex items-center gap-3 text-warning-600">
               <Icon name="alert-triangle" className="h-5 w-5" />
               <Typography variant="body-sm">
-                {formationsError}. Suggestions may be limited until this reloads.
+                {formationsError}. Suggestions may be limited until this
+                reloads.
               </Typography>
             </div>
           </Card>
@@ -780,7 +809,10 @@ export default function FormationMapperPage() {
         {loading ? (
           <Card variant="glass" size="lg">
             <div className="flex items-center gap-2">
-              <Icon name="loader" className="h-5 w-5 animate-spin text-text-muted" />
+              <Icon
+                name="loader"
+                className="h-5 w-5 animate-spin text-text-muted"
+              />
               <Typography variant="body-sm" className="text-text-secondary">
                 Loading plays needing formation mapping...
               </Typography>
@@ -788,7 +820,10 @@ export default function FormationMapperPage() {
           </Card>
         ) : plays.length === 0 ? (
           <Card variant="glass" size="lg" className="text-center space-y-3">
-            <Icon name="check-circle" className="mx-auto h-10 w-10 text-success-500" />
+            <Icon
+              name="check-circle"
+              className="mx-auto h-10 w-10 text-success-500"
+            />
             <Typography variant="headline-sm" className="text-text-primary">
               All synced!
             </Typography>
@@ -939,7 +974,10 @@ export default function FormationMapperPage() {
             </Typography>
             <ul className="mt-2 space-y-1">
               {selectedPlays.slice(0, 6).map((play) => (
-                <li key={play.id} className="text-sm text-text-primary truncate">
+                <li
+                  key={play.id}
+                  className="text-sm text-text-primary truncate"
+                >
                   {play.play_name || "Untitled Play"}
                 </li>
               ))}
@@ -949,7 +987,9 @@ export default function FormationMapperPage() {
                 </li>
               )}
               {selectedCount === 0 && (
-                <li className="text-xs text-text-secondary">No plays selected</li>
+                <li className="text-xs text-text-secondary">
+                  No plays selected
+                </li>
               )}
             </ul>
           </div>
@@ -984,7 +1024,9 @@ export default function FormationMapperPage() {
             <Button
               variant="primary"
               onClick={handleBulkAssignConfirm}
-              disabled={!bulkAssignFormation || assigning || selectedCount === 0}
+              disabled={
+                !bulkAssignFormation || assigning || selectedCount === 0
+              }
             >
               Assign to selected
             </Button>

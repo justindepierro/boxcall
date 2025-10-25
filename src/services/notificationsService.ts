@@ -12,7 +12,11 @@ import { MentionsService } from "./mentionsService";
 // TYPE DEFINITIONS
 // ============================================
 
-export type NotificationType = "mention" | "comment_reply" | "reaction" | "announcement";
+export type NotificationType =
+  | "mention"
+  | "comment_reply"
+  | "reaction"
+  | "announcement";
 
 export interface Notification {
   id: string;
@@ -56,20 +60,18 @@ export class NotificationsService {
     commentId?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("notifications")
-        .insert({
-          user_id: params.mentionedUserId,
-          type: "mention",
-          title: `${params.triggeredByUserName} mentioned you`,
-          message: `You were mentioned in ${params.mentionedInType === "announcement" ? "an announcement" : "a comment"}: "${params.announcementTitle}"`,
-          announcement_id: params.announcementId,
-          comment_id: params.commentId || null,
-          triggered_by_user_id: params.triggeredByUserId,
-          data: {
-            mentioned_in: params.mentionedInType,
-          },
-        });
+      const { error } = await supabase.from("notifications").insert({
+        user_id: params.mentionedUserId,
+        type: "mention",
+        title: `${params.triggeredByUserName} mentioned you`,
+        message: `You were mentioned in ${params.mentionedInType === "announcement" ? "an announcement" : "a comment"}: "${params.announcementTitle}"`,
+        announcement_id: params.announcementId,
+        comment_id: params.commentId || null,
+        triggered_by_user_id: params.triggeredByUserId,
+        data: {
+          mentioned_in: params.mentionedInType,
+        },
+      });
 
       if (error) {
         console.error("Error creating mention notification:", error);
@@ -105,10 +107,14 @@ export class NotificationsService {
   }): Promise<void> {
     try {
       // Extract mention IDs from content
-      const mentionedUserIds = MentionsService.extractMentionedUserIds(params.contentJson);
+      const mentionedUserIds = MentionsService.extractMentionedUserIds(
+        params.contentJson
+      );
 
       // Don't notify yourself
-      const filteredIds = mentionedUserIds.filter((id) => id !== params.authorId);
+      const filteredIds = mentionedUserIds.filter(
+        (id) => id !== params.authorId
+      );
 
       // Create notifications for each mentioned user
       await Promise.all(
@@ -137,7 +143,9 @@ export class NotificationsService {
     limit?: number;
   }): Promise<NotificationWithUser[]> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
 
       let query = supabase
@@ -177,9 +185,7 @@ export class NotificationsService {
         .select("id, full_name, display_name, avatar_url")
         .in("id", userIds);
 
-      const profileMap = new Map(
-        (profiles || []).map((p: any) => [p.id, p])
-      );
+      const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
 
       return notifications.map((n) => ({
         ...n,
@@ -196,7 +202,9 @@ export class NotificationsService {
   /**
    * Mark notification as read
    */
-  static async markAsRead(notificationId: string): Promise<{ success: boolean; error?: string }> {
+  static async markAsRead(
+    notificationId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
         .from("notifications")
@@ -208,7 +216,9 @@ export class NotificationsService {
         return { success: false, error: error.message };
       }
 
-      emitTelemetry("notification.marked_read", { notification_id: notificationId });
+      emitTelemetry("notification.marked_read", {
+        notification_id: notificationId,
+      });
 
       return { success: true };
     } catch (error) {
@@ -225,7 +235,9 @@ export class NotificationsService {
    */
   static async markAllAsRead(): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         return { success: false, error: "Not authenticated" };
       }
@@ -256,7 +268,9 @@ export class NotificationsService {
   /**
    * Delete a notification
    */
-  static async deleteNotification(notificationId: string): Promise<{ success: boolean; error?: string }> {
+  static async deleteNotification(
+    notificationId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
         .from("notifications")
@@ -268,7 +282,9 @@ export class NotificationsService {
         return { success: false, error: error.message };
       }
 
-      emitTelemetry("notification.deleted", { notification_id: notificationId });
+      emitTelemetry("notification.deleted", {
+        notification_id: notificationId,
+      });
 
       return { success: true };
     } catch (error) {
@@ -285,7 +301,9 @@ export class NotificationsService {
    */
   static async getUnreadCount(): Promise<number> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return 0;
 
       const { count, error } = await supabase

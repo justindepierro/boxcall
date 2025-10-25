@@ -1,6 +1,6 @@
 /**
  * Enhanced Service Worker for BoxCall PWA
- * 
+ *
  * Features:
  * - Cache-first for static assets (HTML, CSS, JS, images)
  * - Network-first for API calls with fallback
@@ -10,11 +10,15 @@
  * - Push notifications (future)
  */
 
-import { precacheAndRoute } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { precacheAndRoute } from "workbox-precaching";
+import { registerRoute } from "workbox-routing";
+import {
+  CacheFirst,
+  NetworkFirst,
+  StaleWhileRevalidate,
+} from "workbox-strategies";
+import { ExpirationPlugin } from "workbox-expiration";
+import { CacheableResponsePlugin } from "workbox-cacheable-response";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -22,7 +26,7 @@ declare const self: ServiceWorkerGlobalScope;
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Cache names
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = "v1";
 const CACHE_NAMES = {
   static: `static-${CACHE_VERSION}`,
   api: `api-${CACHE_VERSION}`,
@@ -36,7 +40,8 @@ const CACHE_NAMES = {
 
 // Cache JavaScript and CSS files (versioned, immutable)
 registerRoute(
-  ({ request }) => request.destination === 'script' || request.destination === 'style',
+  ({ request }) =>
+    request.destination === "script" || request.destination === "style",
   new CacheFirst({
     cacheName: CACHE_NAMES.static,
     plugins: [
@@ -53,7 +58,7 @@ registerRoute(
 
 // Cache fonts (rarely change)
 registerRoute(
-  ({ request }) => request.destination === 'font',
+  ({ request }) => request.destination === "font",
   new CacheFirst({
     cacheName: CACHE_NAMES.fonts,
     plugins: [
@@ -74,7 +79,7 @@ registerRoute(
 
 // Cache images with stale-while-revalidate
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => request.destination === "image",
   new StaleWhileRevalidate({
     cacheName: CACHE_NAMES.images,
     plugins: [
@@ -95,7 +100,7 @@ registerRoute(
 
 // Supabase API calls - network-first with 3s timeout
 registerRoute(
-  ({ url }) => url.hostname.includes('supabase.co'),
+  ({ url }) => url.hostname.includes("supabase.co"),
   new NetworkFirst({
     cacheName: CACHE_NAMES.api,
     networkTimeoutSeconds: 3,
@@ -117,7 +122,7 @@ registerRoute(
 
 // HTML documents (app shell)
 registerRoute(
-  ({ request }) => request.mode === 'navigate',
+  ({ request }) => request.mode === "navigate",
   new NetworkFirst({
     cacheName: CACHE_NAMES.static,
     networkTimeoutSeconds: 3,
@@ -134,49 +139,46 @@ registerRoute(
 // =====================================================
 
 // Cache offline page during installation
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAMES.static).then((cache) => {
-      return cache.addAll([
-        '/offline.html',
-        '/favicon.ico',
-      ]).catch((err) => {
-        console.error('Failed to cache offline resources:', err);
+      return cache.addAll(["/offline.html", "/favicon.ico"]).catch((err) => {
+        console.error("Failed to cache offline resources:", err);
       });
     })
   );
-  
+
   // Skip waiting to activate immediately
   self.skipWaiting();
 });
 
 // Activate immediately
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           // Delete old caches
           if (!Object.values(CACHE_NAMES).includes(cacheName)) {
-            console.log('Deleting old cache:', cacheName);
+            console.log("Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  
+
   // Take control of all clients immediately
   return self.clients.claim();
 });
 
 // Serve offline page when network fails
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request).catch(() => {
-        return caches.match('/offline.html').then((response) => {
-          return response || new Response('Offline');
+        return caches.match("/offline.html").then((response) => {
+          return response || new Response("Offline");
         });
       })
     );
@@ -188,8 +190,8 @@ self.addEventListener('fetch', (event) => {
 // =====================================================
 
 // Register background sync for failed POST/PUT requests
-self.addEventListener('sync', (event: any) => {
-  if (event.tag === 'sync-failed-requests') {
+self.addEventListener("sync", (event: any) => {
+  if (event.tag === "sync-failed-requests") {
     event.waitUntil(
       // Retry failed requests from IndexedDB queue
       replayFailedRequests()
@@ -200,32 +202,30 @@ self.addEventListener('sync', (event: any) => {
 async function replayFailedRequests() {
   // Implementation would retrieve failed requests from IndexedDB
   // and retry them when network is available
-  console.log('Replaying failed requests...');
+  console.log("Replaying failed requests...");
 }
 
 // =====================================================
 // PUSH NOTIFICATIONS (future feature)
 // =====================================================
 
-self.addEventListener('push', (event) => {
+self.addEventListener("push", (event) => {
   const data = event.data?.json() ?? {};
-  
+
   event.waitUntil(
-    self.registration.showNotification(data.title || 'BoxCall Notification', {
-      body: data.body || '',
-      icon: '/icon-192x192.png',
-      badge: '/badge-72x72.png',
+    self.registration.showNotification(data.title || "BoxCall Notification", {
+      body: data.body || "",
+      icon: "/icon-192x192.png",
+      badge: "/badge-72x72.png",
       data: data.data,
     })
   );
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  
-  event.waitUntil(
-    self.clients.openWindow(event.notification.data?.url || '/')
-  );
+
+  event.waitUntil(self.clients.openWindow(event.notification.data?.url || "/"));
 });
 
 // =====================================================
@@ -237,15 +237,21 @@ if (import.meta.env.DEV) {
   let cacheHits = 0;
   let cacheMisses = 0;
 
-  self.addEventListener('fetch', (event) => {
+  self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
         if (response) {
           cacheHits++;
-          console.log(`✅ Cache hit (${cacheHits}/${cacheHits + cacheMisses}):`, event.request.url);
+          console.log(
+            `✅ Cache hit (${cacheHits}/${cacheHits + cacheMisses}):`,
+            event.request.url
+          );
         } else {
           cacheMisses++;
-          console.log(`❌ Cache miss (${cacheHits}/${cacheHits + cacheMisses}):`, event.request.url);
+          console.log(
+            `❌ Cache miss (${cacheHits}/${cacheHits + cacheMisses}):`,
+            event.request.url
+          );
         }
         return response || fetch(event.request);
       })
@@ -253,4 +259,6 @@ if (import.meta.env.DEV) {
   });
 }
 
-console.log('✅ BoxCall Service Worker registered with enhanced caching strategies');
+console.log(
+  "✅ BoxCall Service Worker registered with enhanced caching strategies"
+);

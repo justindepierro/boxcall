@@ -101,10 +101,7 @@ export class PlayConfidenceService {
       ? this.calculateSituationalSuccess(executions, situation)
       : historicalSuccess; // Fall back to overall if no situation
     const recentTrend = this.calculateRecentTrend(executions);
-    const practiceQuality = await this.calculatePracticeQuality(
-      playId,
-      teamId
-    );
+    const practiceQuality = await this.calculatePracticeQuality(playId, teamId);
 
     // Weighted average
     const overallScore = Math.round(
@@ -171,7 +168,7 @@ export class PlayConfidenceService {
     limit: number = 5
   ): Promise<ConfidenceScore[]> {
     const scores = await this.getBatchConfidence(playIds, teamId, situation);
-    
+
     return Array.from(scores.values())
       .sort((a, b) => b.overallScore - a.overallScore)
       .slice(0, limit);
@@ -190,7 +187,9 @@ export class PlayConfidenceService {
   ): number {
     if (executions.length === 0) return 50; // Neutral baseline
 
-    const successCount = executions.filter((e) => e.result === "success").length;
+    const successCount = executions.filter(
+      (e) => e.result === "success"
+    ).length;
     const totalCount = executions.filter((e) => e.result !== "skipped").length;
 
     if (totalCount === 0) return 50;
@@ -262,7 +261,10 @@ export class PlayConfidenceService {
    */
   private static calculateRecentTrend(executions: ExecutionRecord[]): number {
     // Get last 20 executions (or all if less)
-    const recentExecutions = executions.slice(0, Math.min(20, executions.length));
+    const recentExecutions = executions.slice(
+      0,
+      Math.min(20, executions.length)
+    );
 
     if (recentExecutions.length === 0) return 50;
 
@@ -273,7 +275,7 @@ export class PlayConfidenceService {
     recentExecutions.forEach((execution, index) => {
       const weight = recentExecutions.length - index; // Most recent has highest weight
       const score = this.getExecutionScore(execution);
-      
+
       weightedSum += score * weight;
       weightSum += weight;
     });
@@ -366,7 +368,7 @@ export class PlayConfidenceService {
   /**
    * Phase 12.4: Calculate practice-to-game analytics
    * Compares practice success rate vs game success rate
-   * 
+   *
    * Transfer rate calculation:
    * - Positive: Game performance better than practice
    * - Zero: Same performance
@@ -395,7 +397,9 @@ export class PlayConfidenceService {
         : 0;
 
     // Calculate game success rate
-    const gameSuccesses = gameExecs.filter((e) => e.result === "success").length;
+    const gameSuccesses = gameExecs.filter(
+      (e) => e.result === "success"
+    ).length;
     const gameSuccessRate =
       gameExecs.length > 0
         ? Math.round((gameSuccesses / gameExecs.length) * 100)
@@ -469,9 +473,7 @@ export class PlayConfidenceService {
     // Boost if practiced recently (last 7 days)
     const recentPracticeBonus = practiceExecutions.length >= 10 ? 10 : 0;
 
-    return Math.round(
-      Math.min(100, practiceSuccessRate + recentPracticeBonus)
-    );
+    return Math.round(Math.min(100, practiceSuccessRate + recentPracticeBonus));
   }
 
   // ==============================================
@@ -581,9 +583,7 @@ export class PlayConfidenceService {
   /**
    * Convert numeric score to recommendation level
    */
-  private static getRecommendation(
-    score: number
-  ): "high" | "medium" | "low" {
+  private static getRecommendation(score: number): "high" | "medium" | "low" {
     if (score >= 70) return "high";
     if (score >= 40) return "medium";
     return "low";

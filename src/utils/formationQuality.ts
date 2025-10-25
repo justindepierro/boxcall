@@ -5,10 +5,7 @@
  * These match the database trigger logic for consistency.
  */
 
-import type {
-  Formation,
-  FormationMetadataQuality,
-} from "../types/formation";
+import type { Formation, FormationMetadataQuality } from "../types/formation";
 
 /**
  * Calculate quality level from completeness percentage

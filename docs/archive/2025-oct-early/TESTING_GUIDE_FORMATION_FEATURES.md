@@ -2,7 +2,7 @@
 
 **Date:** October 17, 2024  
 **Dev Server:** http://localhost:5173  
-**Status:** ✅ Ready to Test  
+**Status:** ✅ Ready to Test
 
 ---
 
@@ -24,6 +24,7 @@ We've built 4 major improvements to test:
 **Goal:** Verify all 7 tabs work without nesting
 
 #### Steps:
+
 1. Open FormationBuilderModal (any way to access it)
 2. Verify you see **7 tabs** at the top:
    - Formation Details
@@ -38,6 +39,7 @@ We've built 4 major improvements to test:
 5. Verify each tab loads content correctly
 
 #### Expected Results:
+
 - ✅ Single row of 7 tabs
 - ✅ No second layer of tabs
 - ✅ Active tab highlighted with blue border
@@ -45,6 +47,7 @@ We've built 4 major improvements to test:
 - ✅ No layout shifting when switching tabs
 
 #### What to Look For:
+
 - ❌ Nested tab bars (this should NOT happen)
 - ❌ Missing tabs
 - ❌ Disabled tabs (except if intentional)
@@ -57,6 +60,7 @@ We've built 4 major improvements to test:
 **Goal:** Verify loading feedback during data refresh
 
 #### Steps:
+
 1. Open FormationBuilderModal
 2. Go to **Direction Review** tab
 3. If formations are missing opposites:
@@ -67,6 +71,7 @@ We've built 4 major improvements to test:
    - Watch for loading overlay
 
 #### Expected Results:
+
 - ✅ Semi-transparent overlay appears during loading
 - ✅ Overlay covers content
 - ✅ Overlay disappears when loading completes
@@ -74,6 +79,7 @@ We've built 4 major improvements to test:
 - ✅ No blank screens or flash of content
 
 #### What to Look For:
+
 - ❌ Blank screen with no feedback
 - ❌ Overlay stuck on screen
 - ❌ Content updating without overlay
@@ -86,9 +92,11 @@ We've built 4 major improvements to test:
 **Goal:** Verify auto-suggestion of opposite formation names
 
 #### Setup:
+
 You need a formation that **doesn't have an opposite** yet. Check Direction Review tab to find one.
 
 #### Steps:
+
 1. Open FormationBuilderModal
 2. Go to **Direction Review** tab
 3. Find a formation without an opposite (red dot indicator)
@@ -98,22 +106,25 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 #### Test Cases:
 
 ##### Test Case A: "Twins Left" → "Twins Right"
+
 1. Original formation: **Twins Left**
 2. Modal should show:
    - Input field pre-filled with **"Twins Right"**
-   - Blue hint: *"Detected pattern: 'Left' → 'Right'"*
+   - Blue hint: _"Detected pattern: 'Left' → 'Right'"_
    - Button: **"Create Twins Right (Suggested)"**
 3. ✅ Accept suggestion (click button)
 4. ✅ Verify new formation created with correct name
 
 ##### Test Case B: "Trips Rip" → "Trips Liz"
+
 1. Original formation: **Trips Rip**
 2. Modal should show:
    - Input field: **"Trips Liz"**
-   - Blue hint: *"Detected pattern: 'Rip' → 'Liz'"*
+   - Blue hint: _"Detected pattern: 'Rip' → 'Liz'"_
 3. ✅ Accept suggestion
 
 ##### Test Case C: Manual Override
+
 1. Original formation: **Twins Left**
 2. Modal pre-fills: **"Twins Right"**
 3. **Clear input** and type: **"Twins Right Pro"**
@@ -122,6 +133,7 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 6. ✅ Verify custom name used
 
 ##### Test Case D: No Pattern Detected
+
 1. Original formation: **Custom Formation XYZ**
 2. Modal should show:
    - Input field **empty** (no suggestion)
@@ -131,6 +143,7 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 4. ✅ Create formation
 
 #### Patterns to Test (if you have time):
+
 - Left/Right: "Twins Left" → "Twins Right" ✅
 - LT/RT: "Twins LT" → "Twins RT"
 - L/R: "Twins L" → "Twins R"
@@ -141,6 +154,7 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 - Over/Under: "Stack Over" → "Stack Under"
 
 #### Expected Results:
+
 - ✅ Correct pattern detected for common formations
 - ✅ Input pre-filled with suggestion
 - ✅ Blue hint explains which pattern was detected
@@ -150,6 +164,7 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 - ✅ No pattern detected → empty input, no hint
 
 #### What to Look For:
+
 - ❌ Wrong suggestion (Left → Blue instead of Left → Right)
 - ❌ No suggestion for obvious patterns
 - ❌ Hint box doesn't show
@@ -164,18 +179,22 @@ You need a formation that **doesn't have an opposite** yet. Check Direction Revi
 **Goal:** Verify panel shows incomplete formations and allows editing
 
 #### Setup:
+
 You need formations with poor metadata. Two ways:
 
 **Option A: Use Existing Data**
+
 - If you have formations from play building, they might already be incomplete
 
 **Option B: Create Test Data** (Manual)
+
 1. Create a new formation via play builder (if possible)
 2. Leave fields empty: personnel, category, tags, description
 3. Save formation
 4. It should appear in Incomplete panel
 
 #### Steps:
+
 1. Open FormationBuilderModal
 2. Click **"Incomplete"** tab (7th tab) ✨
 3. Observe the panel
@@ -183,6 +202,7 @@ You need formations with poor metadata. Two ways:
 #### Test Scenarios:
 
 ##### Scenario A: No Incomplete Formations (Empty State)
+
 1. If no incomplete formations exist
 2. Should see:
    - ✅ Green checkmark icon
@@ -191,6 +211,7 @@ You need formations with poor metadata. Two ways:
    - ✅ Back button (optional, if `onBack` prop passed)
 
 ##### Scenario B: Incomplete Formations Exist
+
 1. If incomplete formations exist
 2. Should see:
    - ✅ Warning icon with count: "⚠️ Incomplete Formations (5)"
@@ -207,6 +228,7 @@ You need formations with poor metadata. Two ways:
    - ✅ Help text at bottom
 
 ##### Scenario C: Edit Formation
+
 1. Click **Edit** button on any formation card
 2. Should:
    - ✅ Switch to **"Formation Details"** tab automatically
@@ -218,11 +240,13 @@ You need formations with poor metadata. Two ways:
 6. ✅ Formation should disappear from list (or move to "Needs Work" if still missing some fields)
 
 ##### Scenario D: Back Button
+
 1. If back button exists (depends on props)
 2. Click back button
 3. ✅ Should return to "Formation Details" tab
 
 #### Expected Results:
+
 - ✅ Panel loads without errors
 - ✅ Loading skeleton appears while fetching
 - ✅ Correct grouping (Needs Work vs Incomplete)
@@ -233,6 +257,7 @@ You need formations with poor metadata. Two ways:
 - ✅ Data refreshes after editing
 
 #### What to Look For:
+
 - ❌ Panel doesn't load
 - ❌ Empty state when formations exist
 - ❌ Wrong grouping (incomplete in needs work section)
@@ -248,24 +273,28 @@ You need formations with poor metadata. Two ways:
 ## 🐛 Common Issues to Watch For
 
 ### Layout Issues
+
 - Tab bar wrapping on narrow screens
 - Content overflow
 - Z-index conflicts (overlays behind tabs)
 - Scrolling not working
 
 ### Performance Issues
+
 - Slow loading (>3 seconds without feedback)
 - Multiple network requests
 - UI freezing during data fetch
 - Memory leaks (if testing repeatedly)
 
 ### Data Issues
+
 - Wrong formations displayed
 - Missing data not detected
 - Formations not updating after edit
 - Opposite formations not linking correctly
 
 ### UX Issues
+
 - Confusing navigation
 - No feedback on actions
 - Unclear error messages
@@ -284,6 +313,7 @@ When you find a bug, note:
 5. **Console errors** (open DevTools → Console)
 
 ### Example Bug Report:
+
 ```
 **Bug:** Smart naming doesn't detect "Rip/Liz" pattern
 
@@ -314,17 +344,20 @@ None
 If short on time, test in this order:
 
 ### Must Test (15 min)
+
 1. ✅ Tab consolidation - verify 7 tabs, no nesting
 2. ✅ Smart naming - test "Twins Left" → "Twins Right"
 3. ✅ Incomplete panel - verify panel loads and Edit works
 
 ### Should Test (30 min)
+
 4. ✅ Loading overlay - verify appears during refresh
 5. ✅ Smart naming - test manual override
 6. ✅ Incomplete panel - test empty state
 7. ✅ Tab navigation - switch between all tabs
 
 ### Nice to Test (45+ min)
+
 8. ✅ All smart naming patterns (8+ patterns)
 9. ✅ Edge cases (long names, special characters)
 10. ✅ Responsive design (narrow screens)
@@ -336,24 +369,28 @@ If short on time, test in this order:
 ## 🔧 Development Tools
 
 ### Open Browser DevTools:
+
 - **Chrome/Edge:** `Cmd + Option + I` (Mac) or `F12` (Windows)
 - **Firefox:** `Cmd + Option + I` (Mac) or `F12` (Windows)
 - **Safari:** Enable Developer Menu → `Cmd + Option + I`
 
 ### Useful Console Commands:
+
 ```javascript
 // Check if formation data loaded
 console.log(formations);
 
 // Check React component state (if React DevTools installed)
-$r.state
+$r.state;
 
 // Clear console
 console.clear();
 ```
 
 ### React DevTools:
+
 Install React DevTools browser extension for deeper debugging:
+
 - Chrome: https://chrome.google.com/webstore → "React Developer Tools"
 - Firefox: https://addons.mozilla.org/en-US/firefox/ → "React Developer Tools"
 
@@ -408,18 +445,21 @@ Copy this and fill it out:
 **Time Spent:** [Minutes]
 
 ### ✅ Tab Consolidation
+
 - [ ] 7 tabs visible
 - [ ] No nested tabs
 - [ ] All tabs clickable
 - Issues: [None / List issues]
 
 ### ✅ Loading Overlay
+
 - [ ] Overlay appears during loading
 - [ ] Overlay disappears when complete
 - [ ] No blank screens
 - Issues: [None / List issues]
 
 ### ✅ Smart Naming
+
 - [ ] Detects Left/Right pattern
 - [ ] Pre-fills input correctly
 - [ ] Shows hint box
@@ -428,6 +468,7 @@ Copy this and fill it out:
 - Issues: [None / List issues]
 
 ### ✅ Incomplete Formations Panel
+
 - [ ] Panel loads
 - [ ] Shows correct formations
 - [ ] Missing fields detected
@@ -437,12 +478,15 @@ Copy this and fill it out:
 - Issues: [None / List issues]
 
 ### 🐛 Bugs Found
+
 [List any bugs with steps to reproduce]
 
 ### 💡 Suggestions
+
 [Any UX improvements or feature ideas]
 
 ### 🎉 Overall Assessment
+
 [Pass / Fail / Needs Work]
 ```
 
@@ -462,4 +506,3 @@ Copy this and fill it out:
 **Happy Testing! 🧪🎉**
 
 Next step after testing: Fix any bugs found (Todo #2)
-

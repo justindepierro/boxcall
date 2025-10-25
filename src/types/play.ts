@@ -3,30 +3,30 @@ import type { DiagramDocument } from "../components/playbook/diagram-editor/type
 
 // Play creation source tracking
 export type PlayCreationSource =
-  | "add_play_modal"      // From AddNewPlayModal (hero tile)
-  | "diagram_editor"      // Created directly in diagram editor
-  | "play_card"          // Duplicated from existing play
-  | "bulk_import"        // CSV/bulk import
-  | "api"                // API creation
-  | "migration"          // Data migration
-  | "unknown";           // Legacy or undefined
+  | "add_play_modal" // From AddNewPlayModal (hero tile)
+  | "diagram_editor" // Created directly in diagram editor
+  | "play_card" // Duplicated from existing play
+  | "bulk_import" // CSV/bulk import
+  | "api" // API creation
+  | "migration" // Data migration
+  | "unknown"; // Legacy or undefined
 
 // Play creation context (JSONB structure)
 export interface PlayCreationContext {
-  active_tab?: string;           // Which tab was active (if applicable)
-  user_action?: string;          // Specific action taken
-  duplicated_from?: string;      // Play ID if duplicated
-  source_version?: string;       // App version
-  [key: string]: unknown;        // Allow additional context
+  active_tab?: string; // Which tab was active (if applicable)
+  user_action?: string; // Specific action taken
+  duplicated_from?: string; // Play ID if duplicated
+  source_version?: string; // App version
+  [key: string]: unknown; // Allow additional context
 }
 
 // Key player selection helper (for UI components)
 export interface KeyPlayerSelection {
-  position: string;              // Position name from key_positions (e.g., "X", "Y", "Z")
-  player_id: string;             // UUID from team_players table
-  player_name: string;           // Display name (first + last)
-  jersey_number?: number;        // For UI display
-  player_position?: string;      // Player's actual position (QB, WR, RB, etc.)
+  position: string; // Position name from key_positions (e.g., "X", "Y", "Z")
+  player_id: string; // UUID from team_players table
+  player_name: string; // Display name (first + last)
+  jersey_number?: number; // For UI display
+  player_position?: string; // Player's actual position (QB, WR, RB, etc.)
 }
 
 // Custom field types
@@ -403,18 +403,18 @@ export interface PlayAssignment {
   id: string; // UUID
   play_id: string; // UUID - references plays(id)
   playbook_id: string; // UUID - references playbooks(id)
-  
+
   // Position and instruction
   position: string; // e.g., "QB", "RB", "X", "Y", "Z", "LT", etc.
   assignment_text: string | null; // The actual assignment/instruction
-  
+
   // Tagging and categorization
   player_tags: PlayerTag[]; // Players mentioned in this assignment
   hashtags: string[]; // Hashtags for search/categorization
-  
+
   // Shared play notes
   play_notes: string | null; // General notes for the entire play
-  
+
   // Metadata
   created_by: string | null; // UUID - user who created
   updated_by: string | null; // UUID - user who last updated

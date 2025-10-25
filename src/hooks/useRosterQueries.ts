@@ -100,7 +100,9 @@ export function useAddPlayerMutation(teamId: string | null) {
       startSaving();
 
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({ queryKey: rosterKeys.team(teamId || "") });
+      await queryClient.cancelQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
 
       // Snapshot the previous value
       const previousRoster = queryClient.getQueryData<RosterPlayerView[]>(
@@ -131,16 +133,14 @@ export function useAddPlayerMutation(teamId: string | null) {
     // On success: Replace temp player with real player from server
     onSuccess: (newPlayer) => {
       info("[useAddPlayerMutation] Player added successfully");
-      
+
       // Update cache with real data from server
       queryClient.setQueryData<RosterPlayerView[]>(
         rosterKeys.team(teamId || ""),
         (old) => {
           if (!old) return [newPlayer];
           // Remove temp player and add real player
-          return old
-            .filter((p) => !p.id.startsWith("temp-"))
-            .concat(newPlayer);
+          return old.filter((p) => !p.id.startsWith("temp-")).concat(newPlayer);
         }
       );
 
@@ -164,7 +164,9 @@ export function useAddPlayerMutation(teamId: string | null) {
 
     // Always refetch after mutation completes (success or error)
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: rosterKeys.team(teamId || "") });
+      queryClient.invalidateQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
     },
   });
 }
@@ -193,7 +195,9 @@ export function useUpdatePlayerMutation(teamId: string | null) {
     onMutate: async ({ playerId, updates }) => {
       startSaving();
 
-      await queryClient.cancelQueries({ queryKey: rosterKeys.team(teamId || "") });
+      await queryClient.cancelQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
 
       const previousRoster = queryClient.getQueryData<RosterPlayerView[]>(
         rosterKeys.team(teamId || "")
@@ -204,9 +208,7 @@ export function useUpdatePlayerMutation(teamId: string | null) {
         rosterKeys.team(teamId || ""),
         (old) => {
           if (!old) return old;
-          return old.map((p) =>
-            p.id === playerId ? { ...p, ...updates } : p
-          );
+          return old.map((p) => (p.id === playerId ? { ...p, ...updates } : p));
         }
       );
 
@@ -232,7 +234,9 @@ export function useUpdatePlayerMutation(teamId: string | null) {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: rosterKeys.team(teamId || "") });
+      queryClient.invalidateQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
     },
   });
 }
@@ -254,7 +258,9 @@ export function useDeletePlayerMutation(teamId: string | null) {
     onMutate: async (playerId) => {
       startSaving();
 
-      await queryClient.cancelQueries({ queryKey: rosterKeys.team(teamId || "") });
+      await queryClient.cancelQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
 
       const previousRoster = queryClient.getQueryData<RosterPlayerView[]>(
         rosterKeys.team(teamId || "")
@@ -291,7 +297,9 @@ export function useDeletePlayerMutation(teamId: string | null) {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: rosterKeys.team(teamId || "") });
+      queryClient.invalidateQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
     },
   });
 }
@@ -311,15 +319,23 @@ export function useBulkUpdatePlayersMutation(teamId: string | null) {
       playerIds: string[];
       updates: PlayerRosterUpdate;
     }) => {
-      info("[useBulkUpdatePlayersMutation] Updating players:", playerIds.length);
-      const result = await rosterService.updateMultiplePlayers(playerIds, updates);
+      info(
+        "[useBulkUpdatePlayersMutation] Updating players:",
+        playerIds.length
+      );
+      const result = await rosterService.updateMultiplePlayers(
+        playerIds,
+        updates
+      );
       return { playerIds, updates, result };
     },
 
     onMutate: async ({ playerIds, updates }) => {
       startSaving();
 
-      await queryClient.cancelQueries({ queryKey: rosterKeys.team(teamId || "") });
+      await queryClient.cancelQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
 
       const previousRoster = queryClient.getQueryData<RosterPlayerView[]>(
         rosterKeys.team(teamId || "")
@@ -358,7 +374,9 @@ export function useBulkUpdatePlayersMutation(teamId: string | null) {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: rosterKeys.team(teamId || "") });
+      queryClient.invalidateQueries({
+        queryKey: rosterKeys.team(teamId || ""),
+      });
     },
   });
 }
@@ -378,10 +396,7 @@ export function invalidateRosterCache(
  * Helper function to prefetch roster data
  * Useful for improving perceived performance
  */
-export async function prefetchRoster(
-  queryClient: QueryClient,
-  teamId: string
-) {
+export async function prefetchRoster(queryClient: QueryClient, teamId: string) {
   await queryClient.prefetchQuery({
     queryKey: rosterKeys.team(teamId),
     queryFn: () => rosterService.listByTeam(teamId),

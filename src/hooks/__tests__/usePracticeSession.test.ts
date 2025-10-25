@@ -73,7 +73,7 @@ describe("usePracticeSession", () => {
 
       // Complete all reps for current play
       const totalReps = result.current.totalRepsForCurrentPlay;
-      
+
       for (let i = 0; i < totalReps; i++) {
         await act(async () => {
           await result.current.logRep({

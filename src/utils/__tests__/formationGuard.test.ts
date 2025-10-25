@@ -48,10 +48,12 @@ describe("ensureValidFormation", () => {
   });
 
   it("finds formation by name when custom not allowed", async () => {
-    mockFormationService.getFormationById = vi.fn().mockRejectedValue("not used");
-    mockFormationService.getFormationsByPlaybook = vi.fn().mockResolvedValue([
-      { id: "formation-2", name: "Trips Right" },
-    ]);
+    mockFormationService.getFormationById = vi
+      .fn()
+      .mockRejectedValue("not used");
+    mockFormationService.getFormationsByPlaybook = vi
+      .fn()
+      .mockResolvedValue([{ id: "formation-2", name: "Trips Right" }]);
 
     const result = await ensureValidFormation({
       playbookId: "playbook-1",
@@ -66,10 +68,12 @@ describe("ensureValidFormation", () => {
   });
 
   it("throws when custom not allowed and formation missing", async () => {
-    mockFormationService.getFormationById = vi.fn().mockRejectedValue("not used");
-    mockFormationService.getFormationsByPlaybook = vi.fn().mockResolvedValue([
-      { id: "formation-2", name: "Trips Right" },
-    ]);
+    mockFormationService.getFormationById = vi
+      .fn()
+      .mockRejectedValue("not used");
+    mockFormationService.getFormationsByPlaybook = vi
+      .fn()
+      .mockResolvedValue([{ id: "formation-2", name: "Trips Right" }]);
 
     await expect(
       ensureValidFormation({
@@ -83,7 +87,9 @@ describe("ensureValidFormation", () => {
   });
 
   it("returns trimmed formation when custom allowed", async () => {
-    mockFormationService.getFormationById = vi.fn().mockRejectedValue("not used");
+    mockFormationService.getFormationById = vi
+      .fn()
+      .mockRejectedValue("not used");
 
     const result = await ensureValidFormation({
       playbookId: "playbook-1",
@@ -97,7 +103,9 @@ describe("ensureValidFormation", () => {
   });
 
   it("validates personnel", async () => {
-    mockFormationService.getFormationById = vi.fn().mockRejectedValue("not used");
+    mockFormationService.getFormationById = vi
+      .fn()
+      .mockRejectedValue("not used");
 
     await expect(
       ensureValidFormation({

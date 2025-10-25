@@ -104,7 +104,9 @@ export function useAnnouncementsRealtime({
     channel.subscribe((status) => {
       console.info("[Realtime] Subscription status:", status);
       if (status === "SUBSCRIBED") {
-        console.info("[Realtime] Successfully subscribed to team announcements");
+        console.info(
+          "[Realtime] Successfully subscribed to team announcements"
+        );
       }
     });
 

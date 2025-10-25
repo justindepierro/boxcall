@@ -3,6 +3,7 @@
 ## 🎯 What Was Just Integrated
 
 ### Before (Original FormationBuilderPanel)
+
 ```
 ┌─────────────────────────────────────────┐
 │  Formation Details                      │
@@ -19,6 +20,7 @@
 ```
 
 ### After (New Tabbed Interface)
+
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  Formation Manager                              [+ New Formation]    │
@@ -60,6 +62,7 @@
 ## 🔄 User Flow: Creating an Opposite Formation
 
 ### Step 1: Navigate to Direction Review
+
 ```
 User clicks "Direction Review" tab
 ↓
@@ -73,6 +76,7 @@ Displays formations needing opposites
 ```
 
 ### Step 2: Click "Create Opposite"
+
 ```
 User clicks [Create Opposite] on "Twins Right"
 ↓
@@ -96,6 +100,7 @@ Shows side-by-side preview:
 ```
 
 ### Step 3: Formation Created
+
 ```
 User clicks [Create Opposite]
 ↓
@@ -302,6 +307,7 @@ FormationBuilderPanel
 ## 🧪 Testing Scenarios
 
 ### Scenario 1: First Time User (Empty Playbook)
+
 ```
 User opens Direction Review tab
 ↓
@@ -312,6 +318,7 @@ Shows empty state message:
 ```
 
 ### Scenario 2: All Formations Complete
+
 ```
 User opens Direction Review tab
 ↓
@@ -322,6 +329,7 @@ Shows success message:
 ```
 
 ### Scenario 3: Mixed State (Some Need Attention)
+
 ```
 User opens Direction Review tab
 ↓
@@ -340,6 +348,7 @@ Eventually shows success state
 ```
 
 ### Scenario 4: Mark as Standalone
+
 ```
 User has "Goal Line Right" formation
 ↓
@@ -362,12 +371,16 @@ Will never appear in audit again
 
 ```typescript
 // FormationBuilderPanel
-const [activeTab, setActiveTab] = useState<'details' | 'review' | 'incomplete'>('details');
+const [activeTab, setActiveTab] = useState<"details" | "review" | "incomplete">(
+  "details"
+);
 
 // FormationDirectionReviewPanel
 const [loading, setLoading] = useState(true);
 const [issues, setIssues] = useState<FormationAuditResult[]>([]);
-const [selectedFormation, setSelectedFormation] = useState<Formation | null>(null);
+const [selectedFormation, setSelectedFormation] = useState<Formation | null>(
+  null
+);
 const [showOppositeModal, setShowOppositeModal] = useState(false);
 const [actionLoading, setActionLoading] = useState<string | null>(null);
 ```
@@ -393,11 +406,11 @@ useEffect(() => {
 ```typescript
 try {
   await FormationService.markAsStandalone(formationId);
-  toast?.success('Formation marked as standalone');
+  toast?.success("Formation marked as standalone");
   await loadIssues();
 } catch (error) {
-  console.error('Failed to mark as standalone:', error);
-  toast?.error('Failed to update. Please try again.', 'Update Failed');
+  console.error("Failed to mark as standalone:", error);
+  toast?.error("Failed to update. Please try again.", "Update Failed");
 } finally {
   setActionLoading(null);
 }
@@ -408,16 +421,19 @@ try {
 ## 📱 Responsive Design
 
 ### Desktop (>768px)
+
 - Tabs display horizontally
 - Full formation names visible
 - Side-by-side action buttons
 
 ### Tablet (768px - 1024px)
+
 - Tabs remain horizontal (may wrap)
 - Formation names truncate with ellipsis
 - Buttons stack on smaller screens
 
 ### Mobile (<768px)
+
 - Tabs scroll horizontally
 - Single column layout
 - Buttons full-width
@@ -428,19 +444,21 @@ try {
 ## 🚀 Performance Optimizations
 
 ### Query Efficiency
+
 ```typescript
 // Single query fetches all needed data
 const { data, error } = await supabase
-  .from('formations')
-  .select('id, name, direction, opposite_formation_id, usage_count')
-  .eq('playbook_id', playbookId);
-  
+  .from("formations")
+  .select("id, name, direction, opposite_formation_id, usage_count")
+  .eq("playbook_id", playbookId);
+
 // No N+1 queries!
 // No separate queries per formation
 // All data loaded in one round-trip
 ```
 
 ### React Optimizations
+
 ```typescript
 // useCallback prevents unnecessary re-renders
 const loadIssues = useCallback(async () => { ... }, [playbookId, toast]);
@@ -453,12 +471,13 @@ useEffect(() => { ... }, [playbookId, loadIssues]);
 ```
 
 ### User Experience
+
 ```typescript
 // Optimistic UI updates
-setActionLoading(formationId);  // Show loading immediately
-await updateFormation();         // Wait for API
-await loadIssues();              // Refresh data
-setActionLoading(null);          // Hide loading
+setActionLoading(formationId); // Show loading immediately
+await updateFormation(); // Wait for API
+await loadIssues(); // Refresh data
+setActionLoading(null); // Hide loading
 
 // No page reloads needed - all data updates in place
 ```
@@ -468,6 +487,7 @@ setActionLoading(null);          // Hide loading
 ## ✨ What's Next?
 
 ### Immediate: Testing Phase 1
+
 1. Open dev server (already running)
 2. Navigate to Formation Builder
 3. Click "Direction Review" tab
@@ -475,12 +495,14 @@ setActionLoading(null);          // Hide loading
 5. Report any issues
 
 ### Phase 2: Incomplete Formations Panel (~2-3 hours)
+
 - Show formations created during play building
 - Display metadata quality indicators
 - Inline editing or "Edit Details" navigation
 - Track improvement progress
 
 ### Phase 3+: Advanced Features
+
 - Custom naming pattern detection
 - Gamification dashboard
 - Bulk actions

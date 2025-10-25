@@ -1,22 +1,22 @@
 /**
  * usePagination Hook
- * 
+ *
  * Generic pagination hook for managing page state and computing slices
  * - Current page state
  * - Total pages calculation
  * - Page navigation functions
  * - Data slicing for current page
  * - URL persistence support
- * 
+ *
  * @example
  * ```tsx
- * const { currentPage, totalPages, paginatedData, goToPage, nextPage, prevPage } = 
+ * const { currentPage, totalPages, paginatedData, goToPage, nextPage, prevPage } =
  *   usePagination(players, 50);
  * ```
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export interface UsePaginationOptions {
   /** Initial page number (1-based, default: 1) */
@@ -56,7 +56,7 @@ export interface UsePaginationReturn<T> {
 
 /**
  * Hook for pagination logic
- * 
+ *
  * @param data - Array of items to paginate
  * @param itemsPerPage - Number of items per page
  * @param options - Configuration options
@@ -70,7 +70,7 @@ export function usePagination<T>(
   const {
     initialPage = 1,
     persistInUrl = false,
-    urlParamName = 'page',
+    urlParamName = "page",
   } = options;
 
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export function usePagination<T>(
   const [currentPage, setCurrentPage] = useState(() => {
     if (persistInUrl) {
       const params = new URLSearchParams(location.search);
-      const urlPage = parseInt(params.get(urlParamName) || '', 10);
+      const urlPage = parseInt(params.get(urlParamName) || "", 10);
       return urlPage > 0 ? urlPage : initialPage;
     }
     return initialPage;
@@ -113,7 +113,7 @@ export function usePagination<T>(
   useEffect(() => {
     if (persistInUrl) {
       const params = new URLSearchParams(location.search);
-      
+
       if (currentPage === 1) {
         params.delete(urlParamName);
       } else {
@@ -122,10 +122,17 @@ export function usePagination<T>(
 
       const newSearch = params.toString();
       const newUrl = newSearch ? `?${newSearch}` : location.pathname;
-      
+
       navigate(newUrl, { replace: true });
     }
-  }, [currentPage, persistInUrl, urlParamName, navigate, location.pathname, location.search]);
+  }, [
+    currentPage,
+    persistInUrl,
+    urlParamName,
+    navigate,
+    location.pathname,
+    location.search,
+  ]);
 
   // Reset to page 1 when data changes (e.g., after filtering)
   useEffect(() => {

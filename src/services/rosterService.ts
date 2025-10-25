@@ -1,4 +1,7 @@
-import { type PostgrestError, type SupabaseClient } from "@supabase/supabase-js";
+import {
+  type PostgrestError,
+  type SupabaseClient,
+} from "@supabase/supabase-js";
 
 import { supabase as sharedClient } from "../lib/supabase";
 import type { Database } from "../types/database";
@@ -133,11 +136,11 @@ export class RosterService {
       is_active: playerData.is_active ?? true,
     };
 
-    const { data, error } = await ((this.client as any)
+    const { data, error } = await (this.client as any)
       .from("team_players")
       .insert([insertData])
       .select()
-      .single());
+      .single();
 
     if (error) throw error as PostgrestError;
     if (!data) throw new Error("Failed to create player - no data returned");
@@ -150,7 +153,7 @@ export class RosterService {
     playerId: string,
     updateData: PlayerRosterUpdate
   ): Promise<RosterPlayerView> {
-    const { data, error} = await ((this.client as any)
+    const { data, error } = await (this.client as any)
       .from("team_players")
       .update({
         ...updateData,
@@ -158,7 +161,7 @@ export class RosterService {
       })
       .eq("id", playerId)
       .select()
-      .single());
+      .single();
 
     if (error) throw error as PostgrestError;
     if (!data) throw new Error("Failed to update player - player not found");
@@ -191,9 +194,13 @@ export class RosterService {
     }
 
     // Update is_active based on status
-    const isActive = status === "active" || status === "injured" || status === "suspended" || status === "academic_probation";
+    const isActive =
+      status === "active" ||
+      status === "injured" ||
+      status === "suspended" ||
+      status === "academic_probation";
 
-    const { data, error } = await ((this.client as any)
+    const { data, error } = await (this.client as any)
       .from("team_players")
       .update({
         roster_status: status,
@@ -201,10 +208,10 @@ export class RosterService {
         updated_at: new Date().toISOString(),
       })
       .in("id", playerIds)
-      .select("id"));
+      .select("id");
 
     if (error) throw error as PostgrestError;
-    
+
     return data?.length || 0;
   }
 
@@ -245,14 +252,14 @@ export class RosterService {
       updateData.weight_lbs = updates.weight_lbs;
     }
 
-    const { data, error } = await ((this.client as any)
+    const { data, error } = await (this.client as any)
       .from("team_players")
       .update(updateData)
       .in("id", playerIds)
-      .select("id"));
+      .select("id");
 
     if (error) throw error as PostgrestError;
-    
+
     return data?.length || 0;
   }
 
@@ -273,7 +280,7 @@ export class RosterService {
       created_at?: string | null;
       updated_at?: string | null;
     }
-    
+
     const { data, error } = await this.client
       .from("team_players")
       .select("*")

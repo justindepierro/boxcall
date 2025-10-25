@@ -35,24 +35,27 @@ interface UseSessionReturn {
   state: SessionState;
   isLoading: boolean;
   error: string | null;
-  
+
   // Session control
   startSession: () => Promise<void>;
   endSession: () => Promise<void>;
   pauseSession: () => void;
   resumeSession: () => void;
-  
+
   // Execution tracking
   logExecution: (execution: Partial<CreatePlayExecutionData>) => Promise<void>;
-  updateExecution: (executionId: string, updates: Partial<PlayExecution>) => Promise<void>;
+  updateExecution: (
+    executionId: string,
+    updates: Partial<PlayExecution>
+  ) => Promise<void>;
   deleteExecution: (executionId: string) => Promise<void>;
-  
+
   // Navigation
   nextPlay: () => void;
   previousPlay: () => void;
   goToPlay: (index: number) => void;
   nextRep: () => void;
-  
+
   // Sync
   syncOfflineExecutions: () => Promise<void>;
   hasPendingSync: boolean;
@@ -65,7 +68,7 @@ export function useSession({
 }: UseSessionProps): UseSessionReturn {
   const { activeTeamId } = useAuth();
   // const { userId } = useAuth(); // Unused - removed
-  
+
   // Core state
   const [state, setState] = useState<SessionState>({
     sessionMode,
@@ -81,19 +84,19 @@ export function useSession({
     skippedExecutions: 0,
     successRate: 0,
   });
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasPendingSync, setHasPendingSync] = useState(false);
-  
+
   // Refs for auto-save and persistence
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const offlineQueue = useRef(new OfflineExecutionQueue());
-  
+
   // ================================================
   // PERSISTENCE
   // ================================================
-  
+
   // Load session from localStorage on mount
   useEffect(() => {
     const savedSession = localStorage.getItem(SESSION_STORAGE_KEY);
@@ -106,14 +109,14 @@ export function useSession({
       }
     }
   }, []);
-  
+
   // Save session to localStorage whenever state changes
   useEffect(() => {
     if (state.isActive) {
       localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state));
     }
   }, [state]);
-  
+
   // Check for pending offline executions
   useEffect(() => {
     const checkPending = async () => {
@@ -122,11 +125,11 @@ export function useSession({
     };
     checkPending();
   }, [state.executions]);
-  
+
   // ================================================
   // CALCULATE STATS
   // ================================================
-  
+
   const calculateStats = useCallback((executions: PlayExecution[]) => {
     const total = executions.length;
     const successful = executions.filter((e) => e.result === "success").length;
@@ -134,7 +137,7 @@ export function useSession({
     const neutral = executions.filter((e) => e.result === "neutral").length;
     const skipped = executions.filter((e) => e.result === "skipped").length;
     const successRate = total > 0 ? (successful / (total - skipped)) * 100 : 0;
-    
+
     return {
       totalExecutions: total,
       successfulExecutions: successful,
@@ -144,20 +147,20 @@ export function useSession({
       successRate: Math.round(successRate * 10) / 10, // Round to 1 decimal
     };
   }, []);
-  
+
   // ================================================
   // SESSION CONTROL
   // ================================================
-  
+
   const startSession = useCallback(async () => {
     if (!activeTeamId) {
       setError("No active team selected");
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Load practice script or game plan
       let loadedContent;
@@ -168,7 +171,7 @@ export function useSession({
         // TODO: Load game plan from GamePlanService
         loadedContent = { gamePlan: undefined };
       }
-      
+
       // Create session in database (TODO: implement when database schema ready)
       // const sessionData = {
       //   teamId: activeTeamId,
@@ -188,10 +191,10 @@ export function useSession({
       //         isHomeGame: true,
       //       }),
       // };
-      
+
       // TODO: Create session via ExecutionTrackingService
       const sessionId = crypto.randomUUID(); // Temporary
-      
+
       setState((prev) => ({
         ...prev,
         sessionId,
@@ -202,13 +205,12 @@ export function useSession({
         startedAt: new Date(),
         ...loadedContent,
       }));
-      
+
       // Start auto-save
       autoSaveIntervalRef.current = setInterval(() => {
         // Auto-save logic here
         console.log("Auto-saving session...");
       }, AUTO_SAVE_INTERVAL);
-      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to start session");
       console.error("Start session error:", err);
@@ -216,34 +218,33 @@ export function useSession({
       setIsLoading(false);
     }
   }, [activeTeamId, sessionType, sessionMode, scriptOrPlanId]);
-  
+
   const endSession = useCallback(async () => {
     if (!state.sessionId) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       // Stop auto-save
       if (autoSaveIntervalRef.current) {
         clearInterval(autoSaveIntervalRef.current);
         autoSaveIntervalRef.current = null;
       }
-      
+
       // Sync any pending offline executions
       await syncOfflineExecutions();
-      
+
       // Update session in database
       // TODO: Call ExecutionTrackingService.endSession()
-      
+
       setState((prev) => ({
         ...prev,
         isActive: false,
         endedAt: new Date(),
       }));
-      
+
       // Clear localStorage
       localStorage.removeItem(SESSION_STORAGE_KEY);
-      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to end session");
       console.error("End session error:", err);
@@ -251,34 +252,34 @@ export function useSession({
       setIsLoading(false);
     }
   }, [state.sessionId]); // syncOfflineExecutions is internal, doesn't need to be in deps
-  
+
   const pauseSession = useCallback(() => {
     setState((prev) => ({ ...prev, isPaused: true }));
-    
+
     // Pause auto-save
     if (autoSaveIntervalRef.current) {
       clearInterval(autoSaveIntervalRef.current);
       autoSaveIntervalRef.current = null;
     }
   }, []);
-  
+
   const resumeSession = useCallback(() => {
     setState((prev) => ({ ...prev, isPaused: false }));
-    
+
     // Resume auto-save
     autoSaveIntervalRef.current = setInterval(() => {
       console.log("Auto-saving session...");
     }, AUTO_SAVE_INTERVAL);
   }, []);
-  
+
   // ================================================
   // EXECUTION TRACKING
   // ================================================
-  
+
   const logExecution = useCallback(
     async (execution: Partial<CreatePlayExecutionData>) => {
       if (!activeTeamId || !state.sessionId) return;
-      
+
       const fullExecution: CreatePlayExecutionData = {
         ...execution,
         playId: execution.playId!,
@@ -298,17 +299,16 @@ export function useSession({
               distance: state.currentDistance || 10,
             }),
       };
-      
+
       try {
         // Check if online
         const isOnline = navigator.onLine;
-        
+
         if (isOnline) {
           // Save directly to database
-          const savedExecution = await ExecutionTrackingService.logExecution(
-            fullExecution
-          );
-          
+          const savedExecution =
+            await ExecutionTrackingService.logExecution(fullExecution);
+
           // Add to state
           setState((prev) => {
             const newExecutions = [...prev.executions, savedExecution];
@@ -322,7 +322,7 @@ export function useSession({
         } else {
           // Add to offline queue
           await offlineQueue.current.addExecution(fullExecution);
-          
+
           // Add to state with temporary ID
           const tempExecution: PlayExecution = {
             id: crypto.randomUUID(),
@@ -333,7 +333,7 @@ export function useSession({
             wasTurnover: fullExecution.wasTurnover || false,
             wasPenalty: fullExecution.wasPenalty || false,
           };
-          
+
           setState((prev) => {
             const newExecutions = [...prev.executions, tempExecution];
             return {
@@ -342,7 +342,7 @@ export function useSession({
               ...calculateStats(newExecutions),
             };
           });
-          
+
           setHasPendingSync(true);
         }
       } catch (err) {
@@ -352,14 +352,24 @@ export function useSession({
         setHasPendingSync(true);
       }
     },
-    [activeTeamId, state.sessionId, sessionMode, sessionType, state.currentRepNumber, state.currentQuarter, state.currentDown, state.currentDistance, calculateStats]
+    [
+      activeTeamId,
+      state.sessionId,
+      sessionMode,
+      sessionType,
+      state.currentRepNumber,
+      state.currentQuarter,
+      state.currentDown,
+      state.currentDistance,
+      calculateStats,
+    ]
   );
-  
+
   const updateExecution = useCallback(
     async (executionId: string, updates: Partial<PlayExecution>) => {
       try {
         // TODO: Call ExecutionTrackingService.updateExecution()
-        
+
         setState((prev) => {
           const newExecutions = prev.executions.map((e) =>
             e.id === executionId ? { ...e, ...updates } : e
@@ -377,14 +387,16 @@ export function useSession({
     },
     [calculateStats]
   );
-  
+
   const deleteExecution = useCallback(
     async (executionId: string) => {
       try {
         // TODO: Call ExecutionTrackingService.deleteExecution()
-        
+
         setState((prev) => {
-          const newExecutions = prev.executions.filter((e) => e.id !== executionId);
+          const newExecutions = prev.executions.filter(
+            (e) => e.id !== executionId
+          );
           return {
             ...prev,
             executions: newExecutions,
@@ -398,11 +410,11 @@ export function useSession({
     },
     [calculateStats]
   );
-  
+
   // ================================================
   // NAVIGATION
   // ================================================
-  
+
   const nextPlay = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -410,7 +422,7 @@ export function useSession({
       currentRepNumber: 1, // Reset rep counter
     }));
   }, []);
-  
+
   const previousPlay = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -418,7 +430,7 @@ export function useSession({
       currentRepNumber: 1,
     }));
   }, []);
-  
+
   const goToPlay = useCallback((index: number) => {
     setState((prev) => ({
       ...prev,
@@ -426,18 +438,18 @@ export function useSession({
       currentRepNumber: 1,
     }));
   }, []);
-  
+
   const nextRep = useCallback(() => {
     setState((prev) => ({
       ...prev,
       currentRepNumber: prev.currentRepNumber + 1,
     }));
   }, []);
-  
+
   // ================================================
   // OFFLINE SYNC
   // ================================================
-  
+
   const syncOfflineExecutions = useCallback(async () => {
     try {
       const synced = await offlineQueue.current.syncQueue();
@@ -450,11 +462,11 @@ export function useSession({
       setError("Failed to sync offline data");
     }
   }, []);
-  
+
   // ================================================
   // CLEANUP
   // ================================================
-  
+
   useEffect(() => {
     return () => {
       if (autoSaveIntervalRef.current) {
@@ -462,11 +474,11 @@ export function useSession({
       }
     };
   }, []);
-  
+
   // ================================================
   // RETURN
   // ================================================
-  
+
   return {
     state,
     isLoading,

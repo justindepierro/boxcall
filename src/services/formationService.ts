@@ -42,9 +42,12 @@ export class FormationService {
    */
   static async createFormation(data: FormationCreate): Promise<Formation> {
     // Validate before creating (both client and server-side)
-    const validation = await FormationValidationService.validateFormationServer(data);
+    const validation =
+      await FormationValidationService.validateFormationServer(data);
     if (!validation.valid) {
-      throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+      throw new Error(
+        `Validation failed: ${validation.errors.map((e) => e.message).join(", ")}`
+      );
     }
 
     // If offline, queue the operation
@@ -168,24 +171,34 @@ export class FormationService {
         query = query.limit(options.limit);
       }
       if (options?.offset) {
-        query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+        query = query.range(
+          options.offset,
+          options.offset + (options.limit || 100) - 1
+        );
       }
 
       const { data, error } = await query;
 
       if (error) {
         // Try to get from offline storage if online request fails
-        const offlineData = await offlineDataManager.getOfflineData("formation", `playbook-${playbookId}`);
+        const offlineData = await offlineDataManager.getOfflineData(
+          "formation",
+          `playbook-${playbookId}`
+        );
         if (offlineData.length > 0) {
           info("[FormationService] Using offline data for formations");
-          return offlineData.map(item => item.data) as Formation[];
+          return offlineData.map((item) => item.data) as Formation[];
         }
         throw error;
       }
 
       // Store successful response offline for future use
       if (data && data.length > 0) {
-        await offlineDataManager.storeOfflineData("formation", `playbook-${playbookId}`, data);
+        await offlineDataManager.storeOfflineData(
+          "formation",
+          `playbook-${playbookId}`,
+          data
+        );
       }
 
       info(
@@ -210,7 +223,8 @@ export class FormationService {
   ): Promise<FormationListItem[]> {
     let query = supabase
       .from("formations")
-      .select(`
+      .select(
+        `
         id,
         name,
         direction,
@@ -222,7 +236,8 @@ export class FormationService {
         metadata_quality,
         tags,
         created_at
-      `)
+      `
+      )
       .eq("playbook_id", playbookId)
       .order("name", { ascending: true });
 
@@ -230,7 +245,10 @@ export class FormationService {
       query = query.limit(options.limit);
     }
     if (options?.offset) {
-      query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+      query = query.range(
+        options.offset,
+        options.offset + (options.limit || 100) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -268,7 +286,10 @@ export class FormationService {
       .order("name", { ascending: true });
 
     if (error) {
-      logError("[FormationService] Error fetching formations by personnel:", error);
+      logError(
+        "[FormationService] Error fetching formations by personnel:",
+        error
+      );
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
@@ -497,7 +518,8 @@ export class FormationService {
         let score = 0;
         let nameMatch: "exact" | "similar" | "different" = "different";
         let directionMatch: "perfect" | "compatible" | "none" = "none";
-        const personnelMatch = formation.personnel_id === candidate.personnel_id;
+        const personnelMatch =
+          formation.personnel_id === candidate.personnel_id;
         const categoryMatch = formation.category === candidate.category;
 
         // Name match (100 points max)
@@ -574,9 +596,7 @@ export class FormationService {
    * Get unpaired formations (have direction but no opposite)
    * Useful for Formation Health dashboard
    */
-  static async getUnpairedFormations(
-    playbookId: string
-  ): Promise<Formation[]> {
+  static async getUnpairedFormations(playbookId: string): Promise<Formation[]> {
     const formations = await this.getFormationsByPlaybook(playbookId);
 
     return formations.filter(
@@ -715,9 +735,7 @@ export class FormationService {
   /**
    * Delete formation and its opposite (if linked)
    */
-  static async deleteFormationWithOpposite(
-    formationId: string
-  ): Promise<void> {
+  static async deleteFormationWithOpposite(formationId: string): Promise<void> {
     // Get the formation
     const formation = await this.getFormationById(formationId);
 
@@ -874,7 +892,9 @@ export class FormationService {
       playbookId = playbooks[0].id;
       info(`[FormationService] Found playbook ID: ${playbookId}`);
     } else {
-      debug(`[FormationService] No playbook found for team, using ID as-is: ${playbookId}`);
+      debug(
+        `[FormationService] No playbook found for team, using ID as-is: ${playbookId}`
+      );
     }
 
     // Get all plays for this playbook to extract formation names AND directions
@@ -909,39 +929,47 @@ export class FormationService {
 
       let formationName = play.formation.trim();
       let direction: "left" | "right" | null = null;
-      
+
       // Method 1: Check f_dir field first
       if (play.f_dir) {
         const dirLower = play.f_dir.toLowerCase().trim();
         if (dirLower === "left" || dirLower === "lt" || dirLower === "l") {
           direction = "left";
-        } else if (dirLower === "right" || dirLower === "rt" || dirLower === "r") {
+        } else if (
+          dirLower === "right" ||
+          dirLower === "rt" ||
+          dirLower === "r"
+        ) {
           direction = "right";
         }
       }
-      
+
       // Method 2: Parse direction from formation name itself
       // Examples: "Trips Rt", "Twins Lt", "I Form Right"
       if (!direction) {
         const nameLower = formationName.toLowerCase();
-        
+
         // Check for "Rt" / "Right" at the end
         if (nameLower.match(/\b(rt|right)\b$/)) {
           direction = "right";
           // Remove direction from name
-          formationName = formationName.replace(/\s+(Rt|Right|rt|right)$/i, '').trim();
+          formationName = formationName
+            .replace(/\s+(Rt|Right|rt|right)$/i, "")
+            .trim();
         }
-        // Check for "Lt" / "Left" at the end  
+        // Check for "Lt" / "Left" at the end
         else if (nameLower.match(/\b(lt|left)\b$/)) {
           direction = "left";
           // Remove direction from name
-          formationName = formationName.replace(/\s+(Lt|Left|lt|left)$/i, '').trim();
+          formationName = formationName
+            .replace(/\s+(Lt|Left|lt|left)$/i, "")
+            .trim();
         }
       }
 
       // Create a unique key for this combination
       const key = `${formationName}:${direction || "none"}`;
-      
+
       if (!formationVariants.has(key)) {
         formationVariants.set(key, {
           name: formationName,
@@ -950,10 +978,14 @@ export class FormationService {
       }
     });
 
-    info(`[FormationService] Found ${formationVariants.size} unique formation variants`);
+    info(
+      `[FormationService] Found ${formationVariants.size} unique formation variants`
+    );
 
     // Check which formations already exist (by name AND direction)
-    const uniqueNames = [...new Set([...formationVariants.values()].map(v => v.name))];
+    const uniqueNames = [
+      ...new Set([...formationVariants.values()].map((v) => v.name)),
+    ];
     const { data: existingFormations } = await supabase
       .from("formations")
       .select("name, direction")
@@ -962,14 +994,15 @@ export class FormationService {
 
     // Create a set of existing (name, direction) combinations
     const existingKeys = new Set(
-      existingFormations?.map((f: any) => 
-        `${f.name}:${f.direction || "none"}`
+      existingFormations?.map(
+        (f: any) => `${f.name}:${f.direction || "none"}`
       ) || []
     );
 
     // Filter to only formations that don't exist yet
     const formationsToCreate = [...formationVariants.values()].filter(
-      variant => !existingKeys.has(`${variant.name}:${variant.direction || "none"}`)
+      (variant) =>
+        !existingKeys.has(`${variant.name}:${variant.direction || "none"}`)
     );
 
     if (formationsToCreate.length === 0) {
@@ -989,7 +1022,9 @@ export class FormationService {
       };
     }
 
-    info(`[FormationService] Creating ${formationsToCreate.length} new formation variants`);
+    info(
+      `[FormationService] Creating ${formationsToCreate.length} new formation variants`
+    );
 
     // Create new formations with proper direction
     const newFormations = formationsToCreate.map((variant) => ({
@@ -998,7 +1033,7 @@ export class FormationService {
       created_by: createdBy,
       direction: variant.direction,
       category: "spread", // Default category (valid options: spread, pro, power, special, goal_line, short_yardage)
-      description: variant.direction 
+      description: variant.direction
         ? `Imported from plays (${variant.name} ${variant.direction})`
         : `Imported from plays (${variant.name})`,
       player_positions: [], // No positions initially
@@ -1021,7 +1056,9 @@ export class FormationService {
       .eq("playbook_id", playbookId)
       .in("name", uniqueNames);
 
-    info(`[FormationService] Import complete: ${formationsToCreate.length} created, ${existingKeys.size} existed`);
+    info(
+      `[FormationService] Import complete: ${formationsToCreate.length} created, ${existingKeys.size} existed`
+    );
 
     return {
       created: formationsToCreate.length,
@@ -1040,7 +1077,9 @@ export class FormationService {
    */
   static async bulkUpdateMetadata(
     formationIds: string[],
-    updates: Partial<Pick<Formation, "category" | "personnel_name" | "tags" | "formation_type">>,
+    updates: Partial<
+      Pick<Formation, "category" | "personnel_name" | "tags" | "formation_type">
+    >,
     mode: "replace" | "merge"
   ): Promise<{ updated: number }> {
     if (formationIds.length === 0) {
@@ -1061,14 +1100,18 @@ export class FormationService {
       // Merge tags for each formation individually
       for (const formation of existing || []) {
         const existingTags = (formation as Formation).tags || [];
-        const mergedTags = [...new Set([...existingTags, ...(updates.tags || [])])];
+        const mergedTags = [
+          ...new Set([...existingTags, ...(updates.tags || [])]),
+        ];
         const { error: updateError } = await supabase
           .from("formations")
           .update({ tags: mergedTags } as never)
           .eq("id", (formation as Formation).id);
 
         if (updateError) {
-          throw new Error(`Failed to update formation ${(formation as any).id}: ${updateError.message}`);
+          throw new Error(
+            `Failed to update formation ${(formation as any).id}: ${updateError.message}`
+          );
         }
       }
 
@@ -1122,7 +1165,10 @@ export class FormationService {
             await this.createOppositeFormation(f.id);
             created++;
           } catch (error) {
-            logError(`[FormationService] Failed to create opposite for ${f.name}:`, error);
+            logError(
+              `[FormationService] Failed to create opposite for ${f.name}:`,
+              error
+            );
             // Continue with other formations even if one fails
           }
         } else {
@@ -1133,7 +1179,10 @@ export class FormationService {
             .eq("id", f.id);
 
           if (updateError) {
-            logError(`[FormationService] Failed to update direction for ${f.name}:`, updateError);
+            logError(
+              `[FormationService] Failed to update direction for ${f.name}:`,
+              updateError
+            );
           }
         }
       }
@@ -1177,13 +1226,17 @@ export class FormationService {
       }
 
       // Collect all IDs to delete (selected + their opposites)
-      const oppositeIds = formations
-        ?.map((f) => (f as any).opposite_formation_id)
-        .filter((id): id is string => id !== null) || [];
+      const oppositeIds =
+        formations
+          ?.map((f) => (f as any).opposite_formation_id)
+          .filter((id): id is string => id !== null) || [];
 
       const allIds = [...new Set([...formationIds, ...oppositeIds])];
 
-      const { error } = await supabase.from("formations").delete().in("id", allIds);
+      const { error } = await supabase
+        .from("formations")
+        .delete()
+        .in("id", allIds);
 
       if (error) {
         throw new Error(`Bulk delete failed: ${error.message}`);
@@ -1203,7 +1256,10 @@ export class FormationService {
       }
 
       // Then delete the selected formations
-      const { error } = await supabase.from("formations").delete().in("id", formationIds);
+      const { error } = await supabase
+        .from("formations")
+        .delete()
+        .in("id", formationIds);
 
       if (error) {
         throw new Error(`Bulk delete failed: ${error.message}`);
@@ -1216,7 +1272,9 @@ export class FormationService {
   /**
    * Get formations by IDs (for undo functionality)
    */
-  static async getFormationsByIds(formationIds: string[]): Promise<Formation[]> {
+  static async getFormationsByIds(
+    formationIds: string[]
+  ): Promise<Formation[]> {
     const { data, error } = await supabase
       .from("formations")
       .select("*")
@@ -1231,12 +1289,12 @@ export class FormationService {
 
   /**
    * Normalize f_dir values in plays table for a given formation
-   * 
+   *
    * Converts all variations of direction (Left, Lt, L, Right, Rt, R) to the
    * standard format ("L" or "R") for consistent database storage.
-   * 
+   *
    * This is called after linking formations to ensure data consistency.
-   * 
+   *
    * @param playbookId - Playbook containing the plays
    * @param formationName - Name of the formation to normalize
    */
@@ -1253,7 +1311,10 @@ export class FormationService {
         .eq("formation", formationName);
 
       if (fetchError) {
-        logError("[FormationService] Failed to fetch plays for normalization:", fetchError);
+        logError(
+          "[FormationService] Failed to fetch plays for normalization:",
+          fetchError
+        );
         return;
       }
 
@@ -1267,7 +1328,7 @@ export class FormationService {
           if (!play.f_dir) return null;
 
           const normalized = this.normalizeDirection(play.f_dir);
-          
+
           // Only update if the value changed
           if (normalized && normalized !== play.f_dir) {
             return {
@@ -1278,7 +1339,10 @@ export class FormationService {
 
           return null;
         })
-        .filter((update): update is { id: string; f_dir: "R" | "L" } => update !== null);
+        .filter(
+          (update): update is { id: string; f_dir: "R" | "L" } =>
+            update !== null
+        );
 
       // Bulk update the plays
       if (updates.length > 0) {
@@ -1307,11 +1371,13 @@ export class FormationService {
 
   /**
    * Normalize a direction string to standard format
-   * 
+   *
    * @param direction - Raw direction string (Left, Lt, L, Right, Rt, R, etc.)
    * @returns Normalized direction ("R" or "L") or null if invalid
    */
-  private static normalizeDirection(direction: string | null | undefined): "R" | "L" | null {
+  private static normalizeDirection(
+    direction: string | null | undefined
+  ): "R" | "L" | null {
     if (!direction || direction.trim() === "") return null;
 
     const normalized = direction.trim().toLowerCase();
@@ -1337,7 +1403,7 @@ export class FormationService {
   /**
    * Get existing formation by name or create new one
    * Handles bidirectional opposite linking automatically
-   * 
+   *
    * @param formationName - Name of the formation to get or create
    * @param personnelId - Optional personnel configuration ID
    * @param oppositeFormationName - Optional opposite formation name for bidirectional linking
@@ -1357,22 +1423,22 @@ export class FormationService {
         info(`[FormationService] Found existing formation: ${formationName}`);
         return existing;
       }
-      
+
       info(`[FormationService] Creating new formation: ${formationName}`);
-      
+
       // 2. Create new formation
       const newFormation = await this.createFormation({
         name: formationName,
         playbook_id: playbookId,
         personnel_id: personnelId,
         player_positions: [], // Required field, can be empty for auto-created
-        creation_source: 'play_builder',
-        creation_context: { 
-          triggeredBy: 'play-creation',
-          timestamp: new Date().toISOString()
-        }
+        creation_source: "play_builder",
+        creation_context: {
+          triggeredBy: "play-creation",
+          timestamp: new Date().toISOString(),
+        },
       });
-      
+
       // 3. Handle opposite formation if provided
       if (oppositeFormationName) {
         // Recursively create opposite (without creating opposite's opposite to prevent infinite recursion)
@@ -1382,64 +1448,68 @@ export class FormationService {
           personnelId,
           undefined // Don't create opposite's opposite
         );
-        
+
         // Link bidirectionally
         await this.linkOppositeFormations(newFormation.id, opposite.id);
-        
-        info(`[FormationService] Linked "${formationName}" ↔ "${oppositeFormationName}"`);
-        
+
+        info(
+          `[FormationService] Linked "${formationName}" ↔ "${oppositeFormationName}"`
+        );
+
         // Refresh to get updated opposite_formation_id
         const refreshed = await this.getFormationById(newFormation.id);
         return refreshed;
       }
-      
+
       return newFormation;
-      
     } catch (err) {
-      logError('[FormationService] Error in getOrCreateFormation:', err);
-      throw new Error(`Failed to get or create formation: ${err instanceof Error ? err.message : String(err)}`);
+      logError("[FormationService] Error in getOrCreateFormation:", err);
+      throw new Error(
+        `Failed to get or create formation: ${err instanceof Error ? err.message : String(err)}`
+      );
     }
   }
 
   /**
    * Find formation by name (case-insensitive, handles spacing variations)
-   * 
+   *
    * @param name - Formation name to search for
    * @returns The found formation or null
    */
   static async getFormationByName(name: string): Promise<Formation | null> {
     try {
       // Normalize for comparison (lowercase, remove extra spaces)
-      const normalized = name.toLowerCase().trim().replace(/\s+/g, '');
-      
+      const normalized = name.toLowerCase().trim().replace(/\s+/g, "");
+
       // Get all formations
       const { data: formations, error } = await supabase
-        .from('formations')
-        .select('*');
-      
+        .from("formations")
+        .select("*");
+
       if (error) throw error;
       if (!formations || formations.length === 0) return null;
-      
+
       // Find exact match (case-insensitive, spacing-insensitive)
       const exactMatch = (formations as Formation[]).find(
-        f => f.name.toLowerCase().trim().replace(/\s+/g, '') === normalized
+        (f) => f.name.toLowerCase().trim().replace(/\s+/g, "") === normalized
       );
-      
+
       if (exactMatch) {
-        debug(`[FormationService] Found formation by name: ${name} → ${exactMatch.name}`);
+        debug(
+          `[FormationService] Found formation by name: ${name} → ${exactMatch.name}`
+        );
       }
-      
+
       return exactMatch || null;
-      
     } catch (err) {
-      logError('[FormationService] Error finding formation by name:', err);
+      logError("[FormationService] Error finding formation by name:", err);
       return null;
     }
   }
 
   /**
    * Link two formations as opposites (bidirectional)
-   * 
+   *
    * @param formationId - First formation ID
    * @param oppositeId - Second formation ID (opposite of first)
    */
@@ -1450,23 +1520,26 @@ export class FormationService {
     try {
       // Update both formations to point to each other
       const { error: error1 } = await supabase
-        .from('formations')
+        .from("formations")
         .update({ opposite_formation_id: oppositeId } as never)
-        .eq('id', formationId);
-      
+        .eq("id", formationId);
+
       const { error: error2 } = await supabase
-        .from('formations')
+        .from("formations")
         .update({ opposite_formation_id: formationId } as never)
-        .eq('id', oppositeId);
-      
+        .eq("id", oppositeId);
+
       if (error1 || error2) {
-        throw new Error(`Failed to link opposite formations: ${error1?.message || error2?.message}`);
+        throw new Error(
+          `Failed to link opposite formations: ${error1?.message || error2?.message}`
+        );
       }
-      
-      info(`[FormationService] Linked formations as opposites: ${formationId} ↔ ${oppositeId}`);
-      
+
+      info(
+        `[FormationService] Linked formations as opposites: ${formationId} ↔ ${oppositeId}`
+      );
     } catch (err) {
-      logError('[FormationService] Error linking opposite formations:', err);
+      logError("[FormationService] Error linking opposite formations:", err);
       throw err;
     }
   }

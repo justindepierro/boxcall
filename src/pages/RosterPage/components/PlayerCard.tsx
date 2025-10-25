@@ -177,12 +177,16 @@ export const PlayerCard = React.memo<PlayerCardProps>(
           <div className="mt-spacing-md pt-spacing-md border-t border-surface-border">
             <Button
               size="sm"
-              variant={player.invitation_status === "pending" ? "outline" : "primary"}
+              variant={
+                player.invitation_status === "pending" ? "outline" : "primary"
+              }
               onClick={(e) => onSendInvite(player, e)}
               className="w-full"
             >
               <Icon name="mail" className="w-4 h-4 mr-2" />
-              {player.invitation_status === "pending" ? "Resend Invite" : "Send Invite"}
+              {player.invitation_status === "pending"
+                ? "Resend Invite"
+                : "Send Invite"}
             </Button>
           </div>
         )}

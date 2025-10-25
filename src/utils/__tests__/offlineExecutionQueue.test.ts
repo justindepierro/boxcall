@@ -88,7 +88,7 @@ describe("OfflineExecutionQueue", () => {
 
       const stored = localStorage.getItem("boxcall_offline_executions");
       expect(stored).toBeDefined();
-      
+
       const parsed = JSON.parse(stored!);
       expect(parsed).toHaveLength(1);
       expect(parsed[0].data.playId).toBe("play-456");
@@ -378,7 +378,7 @@ describe("OfflineExecutionQueue", () => {
 
     it("should trigger sync when coming online", async () => {
       const syncCallback = vi.fn();
-      
+
       // Add some unsynced items
       OfflineExecutionQueue.add({
         practiceSessionId: "session-123",

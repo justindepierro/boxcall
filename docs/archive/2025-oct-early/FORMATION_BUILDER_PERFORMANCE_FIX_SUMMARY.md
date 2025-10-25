@@ -9,6 +9,7 @@
 ## Problem Statement
 
 User reported three performance issues with Formation Manager modal:
+
 1. **Nested Headers:** Multiple "Formation Manager" headers appearing in modal
 2. **Slow Loading:** 2-3 second blank screen during initial load
 3. **UI Flashing:** Content jumping/flashing during state updates
@@ -24,11 +25,13 @@ User reported three performance issues with Formation Manager modal:
 **Root Cause:** Both FormationBuilderModal and FormationBuilderPanel were rendering "Formation Manager" headers.
 
 **Fix:**
+
 - Added `showHeader?: boolean` prop to `FormationBuilderPanel` (default: `true`)
 - Updated modal wrappers to pass `showHeader={false}`
 - Header now conditionally renders: `{showHeader && (<div>Formation Manager</div>)}`
 
 **Files Changed:**
+
 - `src/components/features/FormationBuilder/FormationBuilderPanel.tsx`
 - `src/components/features/FormationBuilder/FormationBuilderModal.tsx`
 - `src/components/features/FormationBuilder/FormationBuilderModal.tabbed.tsx`
@@ -38,35 +41,39 @@ User reported three performance issues with Formation Manager modal:
 **Root Cause:** No loading feedback while queries execute, causing blank screens and UI flashing.
 
 **Fix - FormationBuilderPanel:**
+
 ```tsx
-{loading && allFormations.length === 0 ? (
-  <div className="space-y-spacing-lg animate-pulse">
-    {/* Skeleton Header (if showHeader) */}
-    {showHeader && (
-      <div className="flex items-center justify-between">
-        <div className="h-8 bg-surface-subtle rounded w-48"></div>
-        <div className="h-10 w-32 bg-surface-subtle rounded"></div>
+{
+  loading && allFormations.length === 0 ? (
+    <div className="space-y-spacing-lg animate-pulse">
+      {/* Skeleton Header (if showHeader) */}
+      {showHeader && (
+        <div className="flex items-center justify-between">
+          <div className="h-8 bg-surface-subtle rounded w-48"></div>
+          <div className="h-10 w-32 bg-surface-subtle rounded"></div>
+        </div>
+      )}
+      {/* Skeleton Tabs */}
+      <div className="flex gap-spacing-xs border-b border-border-primary">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-10 w-32 bg-surface-subtle rounded-t"></div>
+        ))}
       </div>
-    )}
-    {/* Skeleton Tabs */}
-    <div className="flex gap-spacing-xs border-b border-border-primary">
-      {[1, 2, 3, 4].map(i => (
-        <div key={i} className="h-10 w-32 bg-surface-subtle rounded-t"></div>
-      ))}
+      {/* Skeleton Content */}
+      <div className="space-y-spacing-md">
+        <div className="h-12 bg-surface-subtle rounded"></div>
+        <div className="h-64 bg-surface-subtle rounded"></div>
+        <div className="h-32 bg-surface-subtle rounded"></div>
+      </div>
     </div>
-    {/* Skeleton Content */}
-    <div className="space-y-spacing-md">
-      <div className="h-12 bg-surface-subtle rounded"></div>
-      <div className="h-64 bg-surface-subtle rounded"></div>
-      <div className="h-32 bg-surface-subtle rounded"></div>
-    </div>
-  </div>
-) : (
-  <>{/* Normal content */}</>
-)}
+  ) : (
+    <>{/* Normal content */}</>
+  );
+}
 ```
 
 **Fix - FormationDirectionReviewPanel:**
+
 ```tsx
 if (loading) {
   return (
@@ -92,6 +99,7 @@ if (loading) {
 ```
 
 **Files Changed:**
+
 - `src/components/features/FormationBuilder/FormationBuilderPanel.tsx`
 - `src/components/features/FormationBuilder/FormationDirectionReviewPanel.tsx`
 
@@ -100,11 +108,13 @@ if (loading) {
 **Issue:** `onSuccess` prop wasn't defined in interface but was used in component.
 
 **Fix:**
+
 - Updated interface: Added `onFormationCreated?: (formation: Formation) => void` and `onFormationUpdated?: (formation: Formation) => void`
 - Updated component destructuring: `onFormationCreated, onFormationUpdated, showHeader = true`
 - Updated callback: `if (onFormationUpdated) onFormationUpdated(selectedFormation)`
 
 **Remaining Lint Warning:**
+
 - `'onFormationCreated' is defined but never used` - Acceptable, reserved for future CREATE operation
 
 ---
@@ -112,27 +122,37 @@ if (loading) {
 ## Files Modified
 
 ### 1. FormationBuilderPanel.tsx
+
 **Lines Changed:** ~15 lines
+
 - Added `showHeader?: boolean` prop to interface
 - Made header conditional: `{showHeader && (...)}`
 - Added comprehensive skeleton loader
 - Fixed prop naming: `onSuccess` → `onFormationCreated, onFormationUpdated`
 
 ### 2. FormationBuilderModal.tsx
+
 **Lines Changed:** 1 line
+
 - Added `showHeader={false}` prop to FormationBuilderPanel
 
 ### 3. FormationBuilderModal.tabbed.tsx
+
 **Lines Changed:** 1 line
+
 - Added `showHeader={false}` prop to FormationBuilderPanel
 
 ### 4. FormationDirectionReviewPanel.tsx
+
 **Lines Changed:** ~30 lines
+
 - Enhanced skeleton loader with back button, summary, and formation list skeletons
 - Added loading text: "Scanning formations for direction issues..."
 
 ### 5. FORMATION_BUILDER_PERFORMANCE_OPTIMIZATION.md
+
 **Status:** New file
+
 - Comprehensive 3-phase optimization plan
 - Expected metrics: 68% faster initial load, 83% faster filter/search
 
@@ -141,11 +161,13 @@ if (loading) {
 ## Expected Improvements
 
 ### Immediate (Phase 1):
+
 - ✅ **No duplicate headers** - Only modal title shows "Formation Manager"
 - ✅ **Skeleton loaders** - Professional loading feedback instead of blank screens
 - ✅ **Smoother transitions** - No UI flashing when content loads
 
 ### Future (Phase 2-3):
+
 - **Memoization** - useMemo for filteredFormations, search results
 - **Debounced Search** - 300ms delay before filtering
 - **Lazy Loading** - Code-split heavy components (FormationDataDiagnostic)
@@ -183,15 +205,18 @@ if (loading) {
 ## Next Steps
 
 ### Immediate:
+
 1. **User Testing:** Verify Phase 1 improvements work as expected
 2. **Bug Fixes:** Address any issues discovered during testing
 
 ### Phase 2 (20-30 minutes):
+
 1. Memoize `filteredFormations` and search operations
 2. Add debounced search input (300ms delay)
 3. Lazy load FormationDataDiagnostic component
 
 ### Phase 3 (30+ minutes):
+
 1. Optimize FormationService queries (select only needed columns)
 2. Implement React Query for caching
 3. Add virtual scrolling for large formation lists
@@ -202,6 +227,7 @@ if (loading) {
 ## Technical Notes
 
 ### Conditional Header Pattern:
+
 ```tsx
 // Component signature
 interface FormationBuilderPanelProps {
@@ -228,23 +254,27 @@ const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 };
 
 // Modal usage
-<FormationBuilderPanel 
+<FormationBuilderPanel
   playbookId={playbookId}
   onFormationUpdated={handleSuccess}
   showHeader={false} // Hide header in modal context
-/>
+/>;
 ```
 
 ### Skeleton Loader Pattern:
+
 ```tsx
-{loading && allFormations.length === 0 ? (
-  <SkeletonLoader /> // Show during initial load only
-) : (
-  <ActualContent /> // Show once data arrives
-)}
+{
+  loading && allFormations.length === 0 ? (
+    <SkeletonLoader /> // Show during initial load only
+  ) : (
+    <ActualContent /> // Show once data arrives
+  );
+}
 ```
 
 **Why `allFormations.length === 0` check?**
+
 - Prevents skeleton from showing on subsequent loads (better UX)
 - Only shows skeleton on true initial load
 
@@ -253,12 +283,14 @@ const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 ## Success Metrics
 
 ### Phase 1 (Current):
+
 - Time to interactive: ~Same (actual loading time unchanged)
 - Perceived performance: **+50%** (skeleton feedback vs blank screen)
 - UI flashing: **Eliminated** (smooth transitions)
 - Code redundancy: **-1 header** (cleaner UI)
 
 ### Phase 2-3 (Future):
+
 - Initial load: **-68%** (1.5s → 0.5s with query optimization)
 - Search/filter: **-83%** (600ms → 100ms with memoization)
 - Memory usage: **-30%** (with React Query caching)
@@ -278,6 +310,7 @@ const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> = ({
 ## Rollback Plan
 
 If issues found, revert changes:
+
 ```bash
 git checkout HEAD -- src/components/features/FormationBuilder/FormationBuilderPanel.tsx
 git checkout HEAD -- src/components/features/FormationBuilder/FormationDirectionReviewPanel.tsx

@@ -3,11 +3,11 @@
  * Simplified registration form for accepting team invitations
  */
 
-import React, { useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../app/auth-store';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
+import React, { useState } from "react";
+import { supabase } from "../../lib/supabase";
+import { useAuth } from "../../app/auth-store";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 interface SignUpFormProps {
   prefilledEmail?: string;
@@ -18,9 +18,9 @@ interface SignUpFormProps {
 }
 
 export function SignUpForm({
-  prefilledEmail = '',
-  prefilledFirstName = '',
-  prefilledLastName = '',
+  prefilledEmail = "",
+  prefilledFirstName = "",
+  prefilledLastName = "",
   onSuccess,
 }: SignUpFormProps) {
   const { signUp, loading, error, clearError } = useAuth();
@@ -28,8 +28,8 @@ export function SignUpForm({
     firstName: prefilledFirstName,
     lastName: prefilledLastName,
     email: prefilledEmail,
-    password: '',
-    confirmPassword: '',
+    password: "",
+    confirmPassword: "",
   });
   const [validationErrors, setValidationErrors] = useState<{
     firstName?: string;
@@ -53,29 +53,29 @@ export function SignUpForm({
     const errors: typeof validationErrors = {};
 
     if (!formData.firstName.trim()) {
-      errors.firstName = 'First name is required';
+      errors.firstName = "First name is required";
     }
 
     if (!formData.lastName.trim()) {
-      errors.lastName = 'Last name is required';
+      errors.lastName = "Last name is required";
     }
 
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = "Password must be at least 6 characters";
     }
 
     if (!formData.confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password';
+      errors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+      errors.confirmPassword = "Passwords do not match";
     }
 
     setValidationErrors(errors);
@@ -91,7 +91,7 @@ export function SignUpForm({
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
-      role: 'player', // Default role for invited players
+      role: "player", // Default role for invited players
     });
 
     if (result.success) {
@@ -112,8 +112,8 @@ export function SignUpForm({
         label="First Name"
         placeholder="Enter your first name"
         value={formData.firstName}
-        onChange={(e) => handleInputChange('firstName', e.target.value)}
-        status={validationErrors.firstName ? 'error' : undefined}
+        onChange={(e) => handleInputChange("firstName", e.target.value)}
+        status={validationErrors.firstName ? "error" : undefined}
         errorMessage={validationErrors.firstName}
         required
         fullWidth
@@ -124,8 +124,8 @@ export function SignUpForm({
         label="Last Name"
         placeholder="Enter your last name"
         value={formData.lastName}
-        onChange={(e) => handleInputChange('lastName', e.target.value)}
-        status={validationErrors.lastName ? 'error' : undefined}
+        onChange={(e) => handleInputChange("lastName", e.target.value)}
+        status={validationErrors.lastName ? "error" : undefined}
         errorMessage={validationErrors.lastName}
         required
         fullWidth
@@ -136,8 +136,8 @@ export function SignUpForm({
         label="Email"
         placeholder="your@email.com"
         value={formData.email}
-        onChange={(e) => handleInputChange('email', e.target.value)}
-        status={validationErrors.email ? 'error' : undefined}
+        onChange={(e) => handleInputChange("email", e.target.value)}
+        status={validationErrors.email ? "error" : undefined}
         errorMessage={validationErrors.email}
         required
         fullWidth
@@ -149,8 +149,8 @@ export function SignUpForm({
         label="Password"
         placeholder="Create a password (min. 6 characters)"
         value={formData.password}
-        onChange={(e) => handleInputChange('password', e.target.value)}
-        status={validationErrors.password ? 'error' : undefined}
+        onChange={(e) => handleInputChange("password", e.target.value)}
+        status={validationErrors.password ? "error" : undefined}
         errorMessage={validationErrors.password}
         required
         fullWidth
@@ -161,8 +161,8 @@ export function SignUpForm({
         label="Confirm Password"
         placeholder="Re-enter your password"
         value={formData.confirmPassword}
-        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-        status={validationErrors.confirmPassword ? 'error' : undefined}
+        onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+        status={validationErrors.confirmPassword ? "error" : undefined}
         errorMessage={validationErrors.confirmPassword}
         required
         fullWidth
@@ -175,7 +175,7 @@ export function SignUpForm({
       )}
 
       <Button type="submit" fullWidth disabled={loading}>
-        {loading ? 'Creating Account...' : 'Create Account & Join Team'}
+        {loading ? "Creating Account..." : "Create Account & Join Team"}
       </Button>
 
       <p className="text-xs text-muted text-center">

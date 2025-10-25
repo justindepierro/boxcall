@@ -2,7 +2,7 @@
 
 **Goal:** Add performance indexes to formations table  
 **Expected Improvement:** 40-60% faster queries  
-**Time Required:** 2 minutes  
+**Time Required:** 2 minutes
 
 ---
 
@@ -63,9 +63,10 @@ After applying, you should see these indexes:
 7. ✅ `idx_formations_playbook_quality_source`
 
 **Check in SQL Editor:**
+
 ```sql
-SELECT indexname, indexdef 
-FROM pg_indexes 
+SELECT indexname, indexdef
+FROM pg_indexes
 WHERE tablename = 'formations'
 ORDER BY indexname;
 ```
@@ -75,11 +76,13 @@ ORDER BY indexname;
 ## Expected Results
 
 **Before:**
+
 - Formation queries: 2-3 seconds
 - Direction Review: Slow
 - Incomplete panel: Slow
 
 **After:**
+
 - Formation queries: 1-1.5 seconds (40-50% faster)
 - Direction Review: Much faster
 - Incomplete panel: Much faster
@@ -98,4 +101,3 @@ After indexes are applied:
 ---
 
 **Recommendation:** Use Option 1 (Supabase Dashboard) - it's the easiest and safest.
-

@@ -1,7 +1,7 @@
 /**
  * useViewMode Hook
  * Manages view mode (list/grid) with mobile detection
- * 
+ *
  * Uses centralized useIsMobile() hook for consistent breakpoint detection (< 768px)
  */
 
@@ -64,7 +64,7 @@ export function useViewMode() {
       newMode,
       previousMode: viewMode,
     });
-    
+
     // Only update if different to avoid unnecessary re-renders
     if (newMode !== viewMode) {
       setViewMode(newMode, false);

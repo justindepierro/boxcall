@@ -196,10 +196,14 @@ export default defineConfig({
         manualChunks: {
           // Core React
           "react-vendor": ["react", "react-dom", "react-router-dom"],
-          
+
           // Data & State Management
-          "data-vendor": ["@supabase/supabase-js", "@tanstack/react-query", "zustand"],
-          
+          "data-vendor": [
+            "@supabase/supabase-js",
+            "@tanstack/react-query",
+            "zustand",
+          ],
+
           // Heavy UI Libraries (lazy load these)
           calendar: [
             "@fullcalendar/core",
@@ -211,7 +215,7 @@ export default defineConfig({
           pixi: ["pixi.js"],
           pdf: ["@react-pdf/renderer", "jszip"],
           charts: ["recharts"],
-          
+
           // UI Components
           "ui-vendor": [
             "@headlessui/react",
@@ -220,13 +224,13 @@ export default defineConfig({
             "@hello-pangea/dnd",
             "lucide-react",
           ],
-          
+
           // Animations & Interactions
           animations: ["framer-motion", "@use-gesture/react"],
-          
+
           // Forms & Validation
           forms: ["react-hook-form", "@hookform/resolvers", "zod"],
-          
+
           // Utilities
           utils: ["date-fns", "fuse.js", "clsx"],
         },

@@ -9,7 +9,9 @@ interface UseFormationAuditResult {
   refresh: () => Promise<void>;
 }
 
-export function useFormationAudit(playbookId: string | null | undefined): UseFormationAuditResult {
+export function useFormationAudit(
+  playbookId: string | null | undefined
+): UseFormationAuditResult {
   const [plays, setPlays] = useState<Play[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,9 @@ export function useFormationAudit(playbookId: string | null | undefined): UseFor
     } catch (err) {
       console.error("useFormationAudit failed", err);
       setError(
-        err instanceof Error ? err.message : "Failed to load formation audit data"
+        err instanceof Error
+          ? err.message
+          : "Failed to load formation audit data"
       );
       setPlays([]);
     } finally {
@@ -52,4 +56,3 @@ export function useFormationAudit(playbookId: string | null | undefined): UseFor
 
   return { plays, loading, error, refresh: load };
 }
-

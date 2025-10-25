@@ -190,6 +190,7 @@ PlayerCard Display
 - Display nickname on player cards as 'FirstName \"Nickname\" LastName'
 - Fully backward compatible (nullable field)
 - Type-check passes with 0 errors"
+
   ```
 
   ```

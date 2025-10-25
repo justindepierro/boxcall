@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 
 /**
  * Enhanced React Query Client with Performance Optimizations
- * 
+ *
  * Features:
  * - Request deduplication (automatic with React Query)
  * - Intelligent retry logic (skip 4xx errors)
@@ -16,15 +16,15 @@ export const queryClient = new QueryClient({
       // Cache settings
       staleTime: 5 * 60 * 1000, // 5 minutes - data considered fresh
       gcTime: 10 * 60 * 1000, // 10 minutes - cache lifetime (formerly cacheTime)
-      
+
       // Refetch settings for freshness
       refetchOnWindowFocus: true, // Refetch when user returns to tab
       refetchOnReconnect: true, // Refetch when network reconnects
       refetchOnMount: true, // Refetch when component mounts
-      
+
       // Request deduplication (built-in)
       // Multiple components requesting same data = single network call
-      
+
       // Retry logic
       retry: (failureCount, error) => {
         // Don't retry on 4xx errors except 408, 429
@@ -41,7 +41,7 @@ export const queryClient = new QueryClient({
         }
         return failureCount < 3;
       },
-      
+
       // Retry delay with exponential backoff
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     },

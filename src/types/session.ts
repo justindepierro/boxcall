@@ -67,7 +67,7 @@ export interface PracticeSession extends BaseSession {
   type: "practice";
   practiceScriptId?: string;
   sessionDate: Date;
-  
+
   // Stats
   totalPlays: number;
   totalReps: number;
@@ -77,7 +77,7 @@ export interface PracticeSession extends BaseSession {
   neutralReps: number;
   successRate: number; // 0-100
   durationMinutes?: number;
-  
+
   // Optional: Loaded script data (from join)
   practiceScript?: {
     id: string;
@@ -104,11 +104,11 @@ export interface GameSession extends BaseSession {
   gameDate: Date;
   opponent: string;
   isHomeGame: boolean;
-  
+
   // Score
   teamScore?: number;
   opponentScore?: number;
-  
+
   // Stats
   totalPlays: number;
   successfulPlays: number;
@@ -118,7 +118,7 @@ export interface GameSession extends BaseSession {
   totalYards: number;
   totalTouchdowns: number;
   totalTurnovers: number;
-  
+
   // Optional: Loaded game plan data (from join)
   gamePlan?: {
     id: string;
@@ -151,19 +151,19 @@ export type Session = PracticeSession | GameSession;
 
 export interface PlayExecution {
   id: string;
-  
+
   // Session reference (one will be set)
   practiceSessionId?: string;
   gameSessionId?: string;
-  
+
   // Play reference
   playId: string;
   formationId?: string;
-  
+
   // Result
   result: ExecutionResult;
   yardsGained?: number; // Required for game, optional for practice
-  
+
   // Game context (only for game sessions)
   quarter?: number; // 1-4
   timeRemaining?: string; // "8:42"
@@ -172,33 +172,33 @@ export interface PlayExecution {
   yardLine?: number; // 0-100 (0 = own goal, 50 = midfield, 100 = opponent goal)
   hashMark?: HashMark;
   opponentCoverage?: OpponentCoverage; // Phase 13.2: Defensive coverage faced
-  
+
   // Practice context (only for practice sessions)
   repNumber?: number; // Which rep in sequence (1-10)
-  
+
   // Play outcome details
   wasTouchdown: boolean;
   wasTurnover: boolean;
   wasPenalty: boolean;
   penaltyYards?: number;
-  
+
   // Notes
   notes?: string;
   quickTags?: string[]; // e.g., ['good_timing', 'missed_block', 'great_throw']
-  
+
   // Confidence tracking (Phase 11)
   confidenceBefore?: number; // 0-100
   confidenceAfter?: number; // 0-100
-  
+
   // Timestamps
   executedAt: Date;
-  
+
   // Metadata
   teamId: string;
   recordedBy?: string;
   recordedMode: SessionMode;
   createdAt: Date;
-  
+
   // Optional: Joined play data
   play?: Play;
   formation?: Formation;
@@ -247,15 +247,15 @@ export interface CreatePlayExecutionData {
   // Session reference (one required)
   practiceSessionId?: string;
   gameSessionId?: string;
-  
+
   // Play reference
   playId: string;
   formationId?: string;
-  
+
   // Result
   result: ExecutionResult;
   yardsGained?: number;
-  
+
   // Game context
   quarter?: number;
   timeRemaining?: string;
@@ -264,20 +264,20 @@ export interface CreatePlayExecutionData {
   yardLine?: number;
   hashMark?: HashMark;
   opponentCoverage?: OpponentCoverage; // Phase 13.2
-  
+
   // Practice context
   repNumber?: number;
-  
+
   // Outcome details
   wasTouchdown?: boolean;
   wasTurnover?: boolean;
   wasPenalty?: boolean;
   penaltyYards?: number;
-  
+
   // Notes
   notes?: string;
   quickTags?: string[];
-  
+
   // Metadata
   teamId: string;
   recordedMode: SessionMode;
@@ -295,25 +295,25 @@ export interface SessionState {
   sessionMode: SessionMode;
   isActive: boolean;
   isPaused: boolean;
-  
+
   // Loaded content
   practiceScript?: PracticeSession["practiceScript"];
   gamePlan?: GameSession["gamePlan"];
-  
+
   // Current execution context
   currentPlayIndex: number;
   currentRepNumber: number;
-  
+
   // Game-specific state
   currentQuarter?: number;
   currentDown?: number;
   currentDistance?: number;
   currentYardLine?: number;
   currentHashMark?: HashMark;
-  
+
   // Execution history (in-memory for current session)
   executions: PlayExecution[];
-  
+
   // Stats (calculated from executions)
   totalExecutions: number;
   successfulExecutions: number;
@@ -321,7 +321,7 @@ export interface SessionState {
   neutralExecutions: number;
   skippedExecutions: number;
   successRate: number;
-  
+
   // Timestamps
   startedAt?: Date;
   lastSavedAt?: Date;
@@ -402,7 +402,9 @@ export interface SituationalStats {
 // TYPE GUARDS
 // ================================================
 
-export function isPracticeSession(session: Session): session is PracticeSession {
+export function isPracticeSession(
+  session: Session
+): session is PracticeSession {
   return session.type === "practice";
 }
 
@@ -412,7 +414,10 @@ export function isGameSession(session: Session): session is GameSession {
 
 export function isPracticeExecution(
   execution: PlayExecution
-): execution is PlayExecution & { practiceSessionId: string; repNumber: number } {
+): execution is PlayExecution & {
+  practiceSessionId: string;
+  repNumber: number;
+} {
   return execution.practiceSessionId !== undefined;
 }
 

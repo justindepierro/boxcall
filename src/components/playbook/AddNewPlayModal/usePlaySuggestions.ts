@@ -48,20 +48,22 @@ export const usePlaySuggestions = () => {
     const loadSuggestions = async () => {
       try {
         setIsLoading(true);
-        const [formations, playNames, personnel, playTypes] = await Promise.all([
-          PlaysService.getUniqueFormations(),
-          PlaysService.getUniquePlayNames(),
-          PlaysService.getUniquePersonnel(),
-          PlaysService.getUniquePlayTypes(),
-        ]);
+        const [formations, playNames, personnel, playTypes] = await Promise.all(
+          [
+            PlaysService.getUniqueFormations(),
+            PlaysService.getUniquePlayNames(),
+            PlaysService.getUniquePersonnel(),
+            PlaysService.getUniquePlayTypes(),
+          ]
+        );
 
         setSuggestions({
           formations: formations.filter(
             (formation) => validateFormationName(formation).isValid
           ),
           playNames,
-          personnel: personnel.filter((value) =>
-            validatePersonnelValue(value).isValid
+          personnel: personnel.filter(
+            (value) => validatePersonnelValue(value).isValid
           ),
           playTypes,
         });

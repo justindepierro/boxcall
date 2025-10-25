@@ -1,9 +1,9 @@
 /**
  * Prefetch Queries Hook
- * 
+ *
  * Provides utilities for prefetching data on hover to achieve zero perceived load time.
  * Uses React Query's prefetchQuery to preload data before navigation.
- * 
+ *
  * Features:
  * - Playbook prefetching on team hover
  * - Play details prefetching on play hover

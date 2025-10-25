@@ -5,12 +5,12 @@
  * Example: node apply_migration.js database/migrations/008_add_coverage_tracking.sql
  */
 
-import fs from 'fs';
-import { createClient } from '@supabase/supabase-js';
-import { config } from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import pg from 'pg';
+import fs from "fs";
+import { createClient } from "@supabase/supabase-js";
+import { config } from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import pg from "pg";
 
 const { Client } = pg;
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +25,9 @@ const migrationFile = process.argv[2];
 if (!migrationFile) {
   console.error("❌ Please provide a migration file path");
   console.error("Usage: node apply_migration.js <path-to-migration.sql>");
-  console.error("Example: node apply_migration.js database/migrations/008_add_coverage_tracking.sql");
+  console.error(
+    "Example: node apply_migration.js database/migrations/008_add_coverage_tracking.sql"
+  );
   process.exit(1);
 }
 
@@ -61,7 +63,9 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
   console.error('   VITE_SUPABASE_URL="https://your-project-ref.supabase.co"');
   console.error('   SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"');
   console.error("\n💡 Find your service role key at:");
-  console.error("   Supabase Dashboard → Project Settings → API → service_role key");
+  console.error(
+    "   Supabase Dashboard → Project Settings → API → service_role key"
+  );
   process.exit(1);
 }
 
@@ -75,13 +79,13 @@ async function runMigration() {
       // Direct PostgreSQL connection
       console.log("🔌 Using direct database connection...\n");
       const client = new Client({ connectionString: DB_URL });
-      
+
       await client.connect();
       console.log("✅ Connected to database\n");
-      
+
       console.log("📝 Executing migration...");
       await client.query(sqlContent);
-      
+
       await client.end();
       console.log("\n✅ Migration completed successfully!");
     } else {
@@ -96,18 +100,20 @@ async function runMigration() {
 
       // Split SQL into individual statements
       const statements = sqlContent
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0 && !s.startsWith('--'));
+        .split(";")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0 && !s.startsWith("--"));
 
-      console.log(`📝 Found ${statements.length} SQL statements to execute...\n`);
+      console.log(
+        `📝 Found ${statements.length} SQL statements to execute...\n`
+      );
 
       for (let i = 0; i < statements.length; i++) {
-        const statement = statements[i] + ';';
+        const statement = statements[i] + ";";
         console.log(`Executing statement ${i + 1}/${statements.length}...`);
-        
-        const { error } = await supabase.rpc('exec', { sql: statement });
-        
+
+        const { error } = await supabase.rpc("exec", { sql: statement });
+
         if (error) {
           console.error(`\n❌ Error in statement ${i + 1}:`, error.message);
           console.error("Statement:", statement.substring(0, 100) + "...");
@@ -120,9 +126,15 @@ async function runMigration() {
   } catch (error) {
     console.error("\n❌ Migration failed:", error.message);
     console.error("\n💡 Troubleshooting tips:");
-    console.error("   1. Add SUPABASE_DB_URL to your .env file for direct database access");
-    console.error("   2. Format: postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres");
-    console.error("   3. Find connection string: Supabase Dashboard → Project Settings → Database → Connection String");
+    console.error(
+      "   1. Add SUPABASE_DB_URL to your .env file for direct database access"
+    );
+    console.error(
+      "   2. Format: postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres"
+    );
+    console.error(
+      "   3. Find connection string: Supabase Dashboard → Project Settings → Database → Connection String"
+    );
     process.exit(1);
   }
 }

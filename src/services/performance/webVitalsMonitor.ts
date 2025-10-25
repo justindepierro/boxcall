@@ -1,21 +1,21 @@
 /**
  * Web Vitals Performance Monitoring
- * 
+ *
  * Tracks Core Web Vitals and custom performance metrics:
  * - LCP (Largest Contentful Paint) - Loading performance
  * - FID (First Input Delay) - Interactivity
  * - CLS (Cumulative Layout Shift) - Visual stability
  * - FCP (First Contentful Paint) - Initial render
  * - TTFB (Time to First Byte) - Server response
- * 
+ *
  * Also tracks custom metrics:
  * - API response times
  * - Component render times
  * - Database query performance
  */
 
-import { onCLS, onLCP, onFCP, onTTFB, onINP, type Metric } from 'web-vitals';
-import React from 'react';
+import { onCLS, onLCP, onFCP, onTTFB, onINP, type Metric } from "web-vitals";
+import React from "react";
 
 // Performance thresholds (milliseconds)
 // Note: INP (Interaction to Next Paint) replaces FID in web-vitals v4
@@ -30,7 +30,7 @@ const THRESHOLDS = {
 interface PerformanceMetric {
   name: string;
   value: number;
-  rating: 'good' | 'needs-improvement' | 'poor';
+  rating: "good" | "needs-improvement" | "poor";
   timestamp: number;
 }
 
@@ -40,7 +40,7 @@ class WebVitalsMonitor {
   private customMarks: Map<string, number> = new Map();
 
   constructor() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       this.initWebVitals();
     }
   }
@@ -49,11 +49,11 @@ class WebVitalsMonitor {
    * Initialize Web Vitals tracking
    */
   private initWebVitals(): void {
-    onLCP(this.handleMetric.bind(this, 'LCP'));
-    onINP(this.handleMetric.bind(this, 'INP')); // Replaces FID in web-vitals v4
-    onCLS(this.handleMetric.bind(this, 'CLS'));
-    onFCP(this.handleMetric.bind(this, 'FCP'));
-    onTTFB(this.handleMetric.bind(this, 'TTFB'));
+    onLCP(this.handleMetric.bind(this, "LCP"));
+    onINP(this.handleMetric.bind(this, "INP")); // Replaces FID in web-vitals v4
+    onCLS(this.handleMetric.bind(this, "CLS"));
+    onFCP(this.handleMetric.bind(this, "FCP"));
+    onTTFB(this.handleMetric.bind(this, "TTFB"));
   }
 
   /**
@@ -72,9 +72,10 @@ class WebVitalsMonitor {
 
     // Log to console in development
     if (import.meta.env.DEV) {
-      const icon = rating === 'good' ? '✅' : rating === 'needs-improvement' ? '⚠️' : '❌';
+      const icon =
+        rating === "good" ? "✅" : rating === "needs-improvement" ? "⚠️" : "❌";
       console.log(
-        `${icon} ${name}: ${metric.value.toFixed(2)}${name === 'CLS' ? '' : 'ms'} (${rating})`
+        `${icon} ${name}: ${metric.value.toFixed(2)}${name === "CLS" ? "" : "ms"} (${rating})`
       );
     }
 
@@ -87,13 +88,16 @@ class WebVitalsMonitor {
   /**
    * Determine rating based on thresholds
    */
-  private getRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
+  private getRating(
+    name: string,
+    value: number
+  ): "good" | "needs-improvement" | "poor" {
     const threshold = THRESHOLDS[name as keyof typeof THRESHOLDS];
-    if (!threshold) return 'good';
+    if (!threshold) return "good";
 
-    if (value <= threshold.good) return 'good';
-    if (value <= threshold.needsImprovement) return 'needs-improvement';
-    return 'poor';
+    if (value <= threshold.good) return "good";
+    if (value <= threshold.needsImprovement) return "needs-improvement";
+    return "poor";
   }
 
   /**
@@ -139,7 +143,9 @@ class WebVitalsMonitor {
    */
   trackRender(componentName: string, duration: number): void {
     if (duration > 50 && import.meta.env.DEV) {
-      console.warn(`🐌 Slow render: ${componentName} took ${duration.toFixed(2)}ms`);
+      console.warn(
+        `🐌 Slow render: ${componentName} took ${duration.toFixed(2)}ms`
+      );
     }
   }
 
@@ -147,7 +153,8 @@ class WebVitalsMonitor {
    * Get API metrics summary
    */
   getAPIMetrics(): Record<string, { count: number; avg: number; max: number }> {
-    const summary: Record<string, { count: number; avg: number; max: number }> = {};
+    const summary: Record<string, { count: number; avg: number; max: number }> =
+      {};
 
     this.apiMetrics.forEach((durations, endpoint) => {
       const count = durations.length;
@@ -172,16 +179,16 @@ class WebVitalsMonitor {
   getSummary(): {
     webVitals: PerformanceMetric[];
     apiMetrics: Record<string, { count: number; avg: number; max: number }>;
-    rating: 'good' | 'needs-improvement' | 'poor';
+    rating: "good" | "needs-improvement" | "poor";
   } {
-    const goodCount = this.metrics.filter((m) => m.rating === 'good').length;
+    const goodCount = this.metrics.filter((m) => m.rating === "good").length;
     const totalCount = this.metrics.length;
     const goodPercentage = totalCount > 0 ? goodCount / totalCount : 1;
 
-    let overallRating: 'good' | 'needs-improvement' | 'poor';
-    if (goodPercentage >= 0.75) overallRating = 'good';
-    else if (goodPercentage >= 0.5) overallRating = 'needs-improvement';
-    else overallRating = 'poor';
+    let overallRating: "good" | "needs-improvement" | "poor";
+    if (goodPercentage >= 0.75) overallRating = "good";
+    else if (goodPercentage >= 0.5) overallRating = "needs-improvement";
+    else overallRating = "poor";
 
     return {
       webVitals: this.getMetrics(),
@@ -196,11 +203,11 @@ class WebVitalsMonitor {
    */
   private sendToAnalytics(metric: PerformanceMetric): void {
     // Example: Send to Google Analytics
-    if (typeof window !== 'undefined' && 'gtag' in window) {
+    if (typeof window !== "undefined" && "gtag" in window) {
       const gtag = (window as any).gtag;
       if (gtag) {
-        gtag('event', metric.name, {
-          event_category: 'Web Vitals',
+        gtag("event", metric.name, {
+          event_category: "Web Vitals",
           event_label: metric.rating,
           value: Math.round(metric.value),
           non_interaction: true,
@@ -211,10 +218,10 @@ class WebVitalsMonitor {
     // Example: Send to custom analytics endpoint
     if (import.meta.env.VITE_ANALYTICS_ENDPOINT) {
       fetch(import.meta.env.VITE_ANALYTICS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: 'web-vitals',
+          type: "web-vitals",
           metric: metric.name,
           value: metric.value,
           rating: metric.rating,
@@ -225,7 +232,7 @@ class WebVitalsMonitor {
       }).catch((err) => {
         // Silently fail - don't disrupt user experience
         if (import.meta.env.DEV) {
-          console.error('Failed to send analytics:', err);
+          console.error("Failed to send analytics:", err);
         }
       });
     }
@@ -245,7 +252,7 @@ class WebVitalsMonitor {
 export const webVitalsMonitor = new WebVitalsMonitor();
 
 // Expose to window for debugging
-if (import.meta.env.DEV && typeof window !== 'undefined') {
+if (import.meta.env.DEV && typeof window !== "undefined") {
   (window as any).__webVitalsMonitor = webVitalsMonitor;
 }
 
@@ -263,7 +270,7 @@ export function usePerformanceMonitor(componentName: string) {
 
 /**
  * HOC for tracking component render performance
- * 
+ *
  * @example
  * const TrackedComponent = withPerformanceMonitoring(MyComponent, 'MyComponent');
  */
@@ -273,14 +280,14 @@ export function withPerformanceMonitoring<P extends object>(
 ): React.ComponentType<P> {
   const TrackedComponent = (props: P) => {
     const trackRender = usePerformanceMonitor(componentName);
-    
+
     React.useEffect(() => {
       trackRender();
     });
 
     return React.createElement(WrappedComponent, props);
   };
-  
+
   TrackedComponent.displayName = `WithPerformanceMonitoring(${componentName})`;
   return TrackedComponent;
 }

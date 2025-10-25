@@ -24,7 +24,7 @@ export class ExecutionTrackingService {
   // ================================================
   // PRACTICE SESSION CRUD
   // ================================================
-  
+
   static async createPracticeSession(
     data: CreatePracticeSessionData
   ): Promise<PracticeSession> {
@@ -43,31 +43,35 @@ export class ExecutionTrackingService {
       })
       .select()
       .single();
-    
-    if (error) throw new Error(`Failed to create practice session: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to create practice session: ${error.message}`);
+
     return this.mapPracticeSession(session);
   }
-  
+
   static async getPracticeSession(sessionId: string): Promise<PracticeSession> {
     const { data: session, error } = await supabase
       .from("practice_sessions")
-      .select(`
+      .select(
+        `
         *,
         practice_scripts (
           id,
           title,
           description
         )
-      `)
+      `
+      )
       .eq("id", sessionId)
       .single();
-    
-    if (error) throw new Error(`Failed to get practice session: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to get practice session: ${error.message}`);
+
     return this.mapPracticeSession(session);
   }
-  
+
   static async getPracticeSessions(
     teamId: string,
     filters?: { limit?: number; offset?: number; isArchived?: boolean }
@@ -77,26 +81,30 @@ export class ExecutionTrackingService {
       .select("*")
       .eq("team_id", teamId)
       .order("session_date", { ascending: false });
-    
+
     if (filters?.isArchived !== undefined) {
       query = query.eq("is_archived", filters.isArchived);
     }
-    
+
     if (filters?.limit) {
       query = query.limit(filters.limit);
     }
-    
+
     if (filters?.offset) {
-      query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 10) - 1
+      );
     }
-    
+
     const { data: sessions, error } = await query;
-    
-    if (error) throw new Error(`Failed to get practice sessions: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to get practice sessions: ${error.message}`);
+
     return sessions.map(this.mapPracticeSession);
   }
-  
+
   static async updatePracticeSession(
     sessionId: string,
     updates: UpdateSessionData
@@ -112,23 +120,25 @@ export class ExecutionTrackingService {
         updated_at: new Date().toISOString(),
       })
       .eq("id", sessionId);
-    
-    if (error) throw new Error(`Failed to update practice session: ${error.message}`);
+
+    if (error)
+      throw new Error(`Failed to update practice session: ${error.message}`);
   }
-  
+
   static async deletePracticeSession(sessionId: string): Promise<void> {
     const { error } = await supabase
       .from("practice_sessions")
       .delete()
       .eq("id", sessionId);
-    
-    if (error) throw new Error(`Failed to delete practice session: ${error.message}`);
+
+    if (error)
+      throw new Error(`Failed to delete practice session: ${error.message}`);
   }
-  
+
   // ================================================
   // GAME SESSION CRUD
   // ================================================
-  
+
   static async createGameSession(
     data: CreateGameSessionData
   ): Promise<GameSession> {
@@ -149,16 +159,18 @@ export class ExecutionTrackingService {
       })
       .select()
       .single();
-    
-    if (error) throw new Error(`Failed to create game session: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to create game session: ${error.message}`);
+
     return this.mapGameSession(session);
   }
-  
+
   static async getGameSession(sessionId: string): Promise<GameSession> {
     const { data: session, error } = await supabase
       .from("game_sessions")
-      .select(`
+      .select(
+        `
         *,
         game_plans (
           id,
@@ -167,15 +179,16 @@ export class ExecutionTrackingService {
           game_date,
           game_location
         )
-      `)
+      `
+      )
       .eq("id", sessionId)
       .single();
-    
+
     if (error) throw new Error(`Failed to get game session: ${error.message}`);
-    
+
     return this.mapGameSession(session);
   }
-  
+
   static async getGameSessions(
     teamId: string,
     filters?: { limit?: number; offset?: number; isArchived?: boolean }
@@ -185,26 +198,29 @@ export class ExecutionTrackingService {
       .select("*")
       .eq("team_id", teamId)
       .order("game_date", { ascending: false });
-    
+
     if (filters?.isArchived !== undefined) {
       query = query.eq("is_archived", filters.isArchived);
     }
-    
+
     if (filters?.limit) {
       query = query.limit(filters.limit);
     }
-    
+
     if (filters?.offset) {
-      query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 10) - 1
+      );
     }
-    
+
     const { data: sessions, error } = await query;
-    
+
     if (error) throw new Error(`Failed to get game sessions: ${error.message}`);
-    
+
     return sessions.map(this.mapGameSession);
   }
-  
+
   static async updateGameSession(
     sessionId: string,
     updates: UpdateSessionData
@@ -222,23 +238,25 @@ export class ExecutionTrackingService {
         updated_at: new Date().toISOString(),
       })
       .eq("id", sessionId);
-    
-    if (error) throw new Error(`Failed to update game session: ${error.message}`);
+
+    if (error)
+      throw new Error(`Failed to update game session: ${error.message}`);
   }
-  
+
   static async deleteGameSession(sessionId: string): Promise<void> {
     const { error } = await supabase
       .from("game_sessions")
       .delete()
       .eq("id", sessionId);
-    
-    if (error) throw new Error(`Failed to delete game session: ${error.message}`);
+
+    if (error)
+      throw new Error(`Failed to delete game session: ${error.message}`);
   }
-  
+
   // ================================================
   // PLAY EXECUTION CRUD
   // ================================================
-  
+
   static async logExecution(
     data: CreatePlayExecutionData
   ): Promise<PlayExecution> {
@@ -272,17 +290,17 @@ export class ExecutionTrackingService {
       })
       .select()
       .single();
-    
+
     if (error) throw new Error(`Failed to log execution: ${error.message}`);
-    
+
     return this.mapExecution(execution);
   }
-  
+
   static async bulkLogExecutions(
     executions: CreatePlayExecutionData[]
   ): Promise<PlayExecution[]> {
     const userId = (await supabase.auth.getUser()).data.user?.id;
-    
+
     const { data, error } = await supabase
       .from("play_executions")
       .insert(
@@ -314,63 +332,71 @@ export class ExecutionTrackingService {
         }))
       )
       .select();
-    
-    if (error) throw new Error(`Failed to bulk log executions: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to bulk log executions: ${error.message}`);
+
     return data.map(this.mapExecution);
   }
-  
-  static async getExecutions(filters: ExecutionFilters): Promise<PlayExecution[]> {
+
+  static async getExecutions(
+    filters: ExecutionFilters
+  ): Promise<PlayExecution[]> {
     let query = supabase
       .from("play_executions")
-      .select(`
+      .select(
+        `
         *,
         plays (*),
         formations (*)
-      `)
+      `
+      )
       .order("executed_at", { ascending: false });
-    
+
     if (filters.playId) {
       query = query.eq("play_id", filters.playId);
     }
-    
+
     if (filters.formationId) {
       query = query.eq("formation_id", filters.formationId);
     }
-    
+
     if (filters.result) {
       query = query.eq("result", filters.result);
     }
-    
+
     if (filters.sessionId) {
       query = query.or(
         `practice_session_id.eq.${filters.sessionId},game_session_id.eq.${filters.sessionId}`
       );
     }
-    
+
     if (filters.startDate) {
       query = query.gte("executed_at", filters.startDate.toISOString());
     }
-    
+
     if (filters.endDate) {
       query = query.lte("executed_at", filters.endDate.toISOString());
     }
-    
+
     if (filters.limit) {
       query = query.limit(filters.limit);
     }
-    
+
     if (filters.offset) {
-      query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 10) - 1
+      );
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) throw new Error(`Failed to get executions: ${error.message}`);
-    
+
     return data.map(this.mapExecution);
   }
-  
+
   static async updateExecution(
     executionId: string,
     updates: Partial<PlayExecution>
@@ -389,44 +415,52 @@ export class ExecutionTrackingService {
         penalty_yards: updates.penaltyYards,
       })
       .eq("id", executionId);
-    
+
     if (error) throw new Error(`Failed to update execution: ${error.message}`);
   }
-  
+
   static async deleteExecution(executionId: string): Promise<void> {
     const { error } = await supabase
       .from("play_executions")
       .delete()
       .eq("id", executionId);
-    
+
     if (error) throw new Error(`Failed to delete execution: ${error.message}`);
   }
-  
+
   // ================================================
   // ANALYTICS
   // ================================================
-  
-  static async getPlayStats(playId: string, teamId: string): Promise<ExecutionStats> {
+
+  static async getPlayStats(
+    playId: string,
+    teamId: string
+  ): Promise<ExecutionStats> {
     const { data, error } = await supabase
       .from("play_executions")
       .select("*")
       .eq("play_id", playId)
       .eq("team_id", teamId);
-    
+
     if (error) throw new Error(`Failed to get play stats: ${error.message}`);
-    
+
     const totalExecutions = data.length;
-    const successfulExecutions = data.filter((e) => e.result === "success").length;
+    const successfulExecutions = data.filter(
+      (e) => e.result === "success"
+    ).length;
     const failedExecutions = data.filter((e) => e.result === "failure").length;
     const neutralExecutions = data.filter((e) => e.result === "neutral").length;
-    const successRate = totalExecutions > 0 ? (successfulExecutions / totalExecutions) * 100 : 0;
-    const avgYardsGained = data.length > 0
-      ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) / data.length
-      : 0;
+    const successRate =
+      totalExecutions > 0 ? (successfulExecutions / totalExecutions) * 100 : 0;
+    const avgYardsGained =
+      data.length > 0
+        ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) / data.length
+        : 0;
     const touchdowns = data.filter((e) => e.was_touchdown).length;
     const turnovers = data.filter((e) => e.was_turnover).length;
-    const lastExecuted = data.length > 0 ? new Date(data[0].executed_at) : undefined;
-    
+    const lastExecuted =
+      data.length > 0 ? new Date(data[0].executed_at) : undefined;
+
     return {
       playId,
       totalExecutions,
@@ -459,16 +493,22 @@ export class ExecutionTrackingService {
       .eq("play_id", playId)
       .eq("team_id", teamId)
       .eq("opponent_coverage", coverage);
-    
-    if (error) throw new Error(`Failed to get coverage stats: ${error.message}`);
-    
+
+    if (error)
+      throw new Error(`Failed to get coverage stats: ${error.message}`);
+
     const executionCount = data.length;
-    const successfulExecutions = data.filter((e) => e.result === "success").length;
-    const successRate = executionCount > 0 ? (successfulExecutions / executionCount) * 100 : 0;
-    const avgYardsGained = executionCount > 0
-      ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) / executionCount
-      : 0;
-    
+    const successfulExecutions = data.filter(
+      (e) => e.result === "success"
+    ).length;
+    const successRate =
+      executionCount > 0 ? (successfulExecutions / executionCount) * 100 : 0;
+    const avgYardsGained =
+      executionCount > 0
+        ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) /
+          executionCount
+        : 0;
+
     return {
       successRate,
       avgYardsGained,
@@ -483,9 +523,21 @@ export class ExecutionTrackingService {
     playId: string,
     teamId: string
   ): Promise<{
-    left: { successRate: number; avgYardsGained: number; executionCount: number };
-    middle: { successRate: number; avgYardsGained: number; executionCount: number };
-    right: { successRate: number; avgYardsGained: number; executionCount: number };
+    left: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    middle: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    right: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
     bestHash?: "left" | "middle" | "right";
   }> {
     const { data, error } = await supabase
@@ -494,16 +546,22 @@ export class ExecutionTrackingService {
       .eq("play_id", playId)
       .eq("team_id", teamId)
       .not("hash_mark", "is", null);
-    
+
     if (error) throw new Error(`Failed to get hash stats: ${error.message}`);
-    
+
     const executions = data as any[];
-    
+
     // Calculate stats for each hash
     const hashStats = {
-      left: this.calculateHashMetrics(executions.filter((e) => e.hash_mark === "left")),
-      middle: this.calculateHashMetrics(executions.filter((e) => e.hash_mark === "middle")),
-      right: this.calculateHashMetrics(executions.filter((e) => e.hash_mark === "right")),
+      left: this.calculateHashMetrics(
+        executions.filter((e) => e.hash_mark === "left")
+      ),
+      middle: this.calculateHashMetrics(
+        executions.filter((e) => e.hash_mark === "middle")
+      ),
+      right: this.calculateHashMetrics(
+        executions.filter((e) => e.hash_mark === "right")
+      ),
     };
 
     // Determine best hash (minimum 3 executions required)
@@ -535,11 +593,16 @@ export class ExecutionTrackingService {
     executionCount: number;
   } {
     const executionCount = data.length;
-    const successfulExecutions = data.filter((e) => e.result === "success").length;
-    const successRate = executionCount > 0 ? (successfulExecutions / executionCount) * 100 : 0;
-    const avgYardsGained = executionCount > 0
-      ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) / executionCount
-      : 0;
+    const successfulExecutions = data.filter(
+      (e) => e.result === "success"
+    ).length;
+    const successRate =
+      executionCount > 0 ? (successfulExecutions / executionCount) * 100 : 0;
+    const avgYardsGained =
+      executionCount > 0
+        ? data.reduce((sum, e) => sum + (e.yards_gained || 0), 0) /
+          executionCount
+        : 0;
 
     return {
       successRate,
@@ -547,11 +610,11 @@ export class ExecutionTrackingService {
       executionCount,
     };
   }
-  
+
   // ================================================
   // MAPPING FUNCTIONS
   // ================================================
-  
+
   private static mapPracticeSession(data: any): PracticeSession {
     return {
       type: "practice",
@@ -579,7 +642,7 @@ export class ExecutionTrackingService {
       updatedAt: new Date(data.updated_at),
     };
   }
-  
+
   private static mapGameSession(data: any): GameSession {
     return {
       type: "game",
@@ -611,7 +674,7 @@ export class ExecutionTrackingService {
       updatedAt: new Date(data.updated_at),
     };
   }
-  
+
   private static mapExecution(data: any): PlayExecution {
     return {
       id: data.id,

@@ -3,10 +3,10 @@
  * Simplified login form for existing users accepting invitations
  */
 
-import React, { useState } from 'react';
-import { useAuth } from '../../app/auth-store';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
+import React, { useState } from "react";
+import { useAuth } from "../../app/auth-store";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 interface SignInFormProps {
   onSuccess?: () => void;
@@ -16,8 +16,8 @@ interface SignInFormProps {
 export function SignInForm({ onSuccess }: SignInFormProps) {
   const { signIn, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [validationErrors, setValidationErrors] = useState<{
     email?: string;
@@ -38,13 +38,13 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
     const errors: typeof validationErrors = {};
 
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     }
 
     setValidationErrors(errors);
@@ -70,8 +70,8 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
         label="Email"
         placeholder="your@email.com"
         value={formData.email}
-        onChange={(e) => handleInputChange('email', e.target.value)}
-        status={validationErrors.email ? 'error' : undefined}
+        onChange={(e) => handleInputChange("email", e.target.value)}
+        status={validationErrors.email ? "error" : undefined}
         errorMessage={validationErrors.email}
         required
         fullWidth
@@ -82,8 +82,8 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
         label="Password"
         placeholder="Enter your password"
         value={formData.password}
-        onChange={(e) => handleInputChange('password', e.target.value)}
-        status={validationErrors.password ? 'error' : undefined}
+        onChange={(e) => handleInputChange("password", e.target.value)}
+        status={validationErrors.password ? "error" : undefined}
         errorMessage={validationErrors.password}
         required
         fullWidth
@@ -96,7 +96,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
       )}
 
       <Button type="submit" fullWidth disabled={loading}>
-        {loading ? 'Signing In...' : 'Sign In & Join Team'}
+        {loading ? "Signing In..." : "Sign In & Join Team"}
       </Button>
 
       <p className="text-xs text-muted text-center">

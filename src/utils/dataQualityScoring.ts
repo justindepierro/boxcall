@@ -356,9 +356,7 @@ export function analyzePlaybookQuality(
   }
 
   if (gradeDistribution.A > plays.length * 0.5) {
-    recommendations.push(
-      "✅ Great job! Over 50% of plays have complete data."
-    );
+    recommendations.push("✅ Great job! Over 50% of plays have complete data.");
   }
 
   return {
@@ -392,7 +390,8 @@ export function getPriorityActions(play: Partial<Play>): string[] {
   if (score.breakdown.metadata < 20 && score.breakdown.required === 40) {
     if (!play.personnel) actions.push("Add personnel grouping");
     if (!play.tags || play.tags.length === 0) actions.push("Add tags");
-    if (!play.notes || play.notes.length < 20) actions.push("Add coaching notes");
+    if (!play.notes || play.notes.length < 20)
+      actions.push("Add coaching notes");
   }
 
   // Finally advanced fields

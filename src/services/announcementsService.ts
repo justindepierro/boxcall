@@ -1,6 +1,6 @@
 /**
  * Team Announcements Service
- * 
+ *
  * Handles CRUD operations for team announcements
  * Supports pinning, soft deletes, and visibility controls
  */
@@ -12,7 +12,11 @@ import { emitTelemetry } from "../lib/telemetry";
 // TYPE DEFINITIONS
 // ============================================
 
-export type AnnouncementVisibility = "all" | "staff_only" | "players_only" | "families_only";
+export type AnnouncementVisibility =
+  | "all"
+  | "staff_only"
+  | "players_only"
+  | "families_only";
 export type AnnouncementStatus = "draft" | "published" | "scheduled";
 
 export interface Attachment {
@@ -133,7 +137,9 @@ export class AnnouncementsService {
       }
 
       // Get unique author IDs
-      const authorIds = [...new Set(announcements.map((a: any) => a.created_by))];
+      const authorIds = [
+        ...new Set(announcements.map((a: any) => a.created_by)),
+      ];
 
       // Fetch author profiles
       const { data: profiles } = await supabase
@@ -149,9 +155,7 @@ export class AnnouncementsService {
         .in("user_id", authorIds);
 
       // Create maps
-      const profileMap = new Map(
-        (profiles || []).map((p: any) => [p.id, p])
-      );
+      const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
 
       const roleMap = new Map(
         (teamMembers || []).map((m: any) => [m.user_id, m.role])
@@ -165,13 +169,15 @@ export class AnnouncementsService {
         if (!profile) return "Unknown";
 
         // Check if user is a coach
-        const isCoach = role && ["head_coach", "assistant_coach", "coach"].includes(role);
+        const isCoach =
+          role && ["head_coach", "assistant_coach", "coach"].includes(role);
 
         if (isCoach) {
           // Extract last name for coaches
           const fullName = profile.full_name || profile.display_name || "";
           const nameParts = fullName.trim().split(/\s+/);
-          const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : fullName;
+          const lastName =
+            nameParts.length > 1 ? nameParts[nameParts.length - 1] : fullName;
           return `Coach ${lastName}`;
         }
 
@@ -195,7 +201,9 @@ export class AnnouncementsService {
   /**
    * Get a single announcement by ID
    */
-  static async getAnnouncement(announcementId: string): Promise<Announcement | null> {
+  static async getAnnouncement(
+    announcementId: string
+  ): Promise<Announcement | null> {
     try {
       const { data, error } = await supabase
         .from("team_announcements" as any)
@@ -221,10 +229,16 @@ export class AnnouncementsService {
    */
   static async createAnnouncement(
     announcement: AnnouncementCreate
-  ): Promise<{ success: boolean; announcement?: Announcement; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    announcement?: Announcement;
+    error?: string;
+  }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         return {
           success: false,
@@ -280,7 +294,11 @@ export class AnnouncementsService {
   static async updateAnnouncement(
     announcementId: string,
     updates: AnnouncementUpdate
-  ): Promise<{ success: boolean; announcement?: Announcement; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    announcement?: Announcement;
+    error?: string;
+  }> {
     try {
       const { data, error } = await supabase
         .from("team_announcements" as any)
@@ -318,11 +336,13 @@ export class AnnouncementsService {
   /**
    * Toggle pin status of an announcement
    */
-  static async togglePin(announcementId: string): Promise<{ success: boolean; error?: string }> {
+  static async togglePin(
+    announcementId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       // First get current state
       const announcement = await this.getAnnouncement(announcementId);
-      
+
       if (!announcement) {
         return {
           success: false,
@@ -361,7 +381,9 @@ export class AnnouncementsService {
   /**
    * Soft delete an announcement
    */
-  static async deleteAnnouncement(announcementId: string): Promise<{ success: boolean; error?: string }> {
+  static async deleteAnnouncement(
+    announcementId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       // First check if the announcement exists and get the team_id
       const { data: announcement, error: fetchError } = await supabase
@@ -374,7 +396,8 @@ export class AnnouncementsService {
         console.error("Error fetching announcement:", fetchError);
         return {
           success: false,
-          error: "Announcement not found or you don't have permission to delete it",
+          error:
+            "Announcement not found or you don't have permission to delete it",
         };
       }
 
@@ -388,11 +411,15 @@ export class AnnouncementsService {
         console.error("Error deleting announcement:", error);
         return {
           success: false,
-          error: "You don't have permission to delete this announcement. Only the creator or team head coaches can delete announcements.",
+          error:
+            "You don't have permission to delete this announcement. Only the creator or team head coaches can delete announcements.",
         };
       }
 
-      emitTelemetry("announcements", { action: "deleted", announcement_id: announcementId });
+      emitTelemetry("announcements", {
+        action: "deleted",
+        announcement_id: announcementId,
+      });
 
       return { success: true };
     } catch (error) {
@@ -407,7 +434,9 @@ export class AnnouncementsService {
   /**
    * Permanently delete an announcement (hard delete)
    */
-  static async permanentlyDelete(announcementId: string): Promise<{ success: boolean; error?: string }> {
+  static async permanentlyDelete(
+    announcementId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
         .from("team_announcements" as any)
@@ -467,7 +496,9 @@ export class AnnouncementsService {
    */
   static async getDrafts(teamId: string): Promise<Announcement[]> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
 
       const { data, error } = await supabase
@@ -496,10 +527,16 @@ export class AnnouncementsService {
    */
   static async saveDraft(
     announcement: AnnouncementCreate & { id?: string }
-  ): Promise<{ success: boolean; announcement?: Announcement; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    announcement?: Announcement;
+    error?: string;
+  }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         return {
           success: false,
@@ -528,7 +565,7 @@ export class AnnouncementsService {
           .eq("created_by", user.id) // Ensure user owns the draft
           .select()
           .single();
-        
+
         data = updateResult.data;
         error = updateResult.error;
       } else {
@@ -538,7 +575,7 @@ export class AnnouncementsService {
           .insert(draftData)
           .select()
           .single();
-        
+
         data = insertResult.data;
         error = insertResult.error;
       }
@@ -572,9 +609,13 @@ export class AnnouncementsService {
   /**
    * Publish a draft
    */
-  static async publishDraft(draftId: string): Promise<{ success: boolean; error?: string }> {
+  static async publishDraft(
+    draftId: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         return { success: false, error: "Not authenticated" };
       }

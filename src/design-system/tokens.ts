@@ -296,15 +296,15 @@ export const featureTokens = {
     totalBg: "bg-gradient-to-br from-navy-50 to-navy-100", // Total count (navy theme)
     totalBorder: colorTokens.navy[200],
     totalAccent: colorTokens.navy[600],
-    
+
     activeBg: "bg-gradient-to-br from-emerald-50 to-emerald-100", // Active items (success)
     activeBorder: colorTokens.emerald[200],
     activeAccent: colorTokens.emerald[600],
-    
+
     filteredBg: "bg-gradient-to-br from-blue-50 to-blue-100", // Filtered view (info)
     filteredBorder: colorTokens.blue[200],
     filteredAccent: colorTokens.blue[600],
-    
+
     selectedBg: "bg-gradient-to-br from-amber-50 to-amber-100", // Selected items (attention)
     selectedBorder: colorTokens.amber[200],
     selectedAccent: colorTokens.amber[600],
@@ -312,69 +312,69 @@ export const featureTokens = {
 
   // Badge Gradients - Enhanced badges with gradient backgrounds
   badges: {
-    jerseyFrom: colorTokens.jade[600],    // Jersey badge gradient start
-    jerseyTo: colorTokens.jade[700],      // Jersey badge gradient end
-    
-    positionFrom: colorTokens.blue[500],  // Position badge gradient start
-    positionTo: colorTokens.blue[600],    // Position badge gradient end
-    
-    gradeFrom: colorTokens.purple[500],   // Grade badge gradient start
-    gradeTo: colorTokens.purple[600],     // Grade badge gradient end
-    
+    jerseyFrom: colorTokens.jade[600], // Jersey badge gradient start
+    jerseyTo: colorTokens.jade[700], // Jersey badge gradient end
+
+    positionFrom: colorTokens.blue[500], // Position badge gradient start
+    positionTo: colorTokens.blue[600], // Position badge gradient end
+
+    gradeFrom: colorTokens.purple[500], // Grade badge gradient start
+    gradeTo: colorTokens.purple[600], // Grade badge gradient end
+
     activeFrom: colorTokens.emerald[500], // Active status gradient start
-    activeTo: colorTokens.emerald[600],   // Active status gradient end
-    
-    inactiveFrom: colorTokens.red[500],   // Inactive status gradient start
-    inactiveTo: colorTokens.red[600],     // Inactive status gradient end
+    activeTo: colorTokens.emerald[600], // Active status gradient end
+
+    inactiveFrom: colorTokens.red[500], // Inactive status gradient start
+    inactiveTo: colorTokens.red[600], // Inactive status gradient end
   },
 
   // Filter Indicators - Color-coded active filters
   filters: {
-    positionActive: colorTokens.blue[100],    // Position filter active background
-    positionBorder: colorTokens.blue[400],    // Position filter border
-    positionText: colorTokens.blue[700],      // Position filter text
-    
-    gradeActive: colorTokens.purple[100],     // Grade filter active background
-    gradeBorder: colorTokens.purple[400],     // Grade filter border
-    gradeText: colorTokens.purple[700],       // Grade filter text
-    
-    anyActive: colorTokens.amber[100],        // Any active filter highlight
-    clearHover: colorTokens.amber[600],       // Clear filters button hover
+    positionActive: colorTokens.blue[100], // Position filter active background
+    positionBorder: colorTokens.blue[400], // Position filter border
+    positionText: colorTokens.blue[700], // Position filter text
+
+    gradeActive: colorTokens.purple[100], // Grade filter active background
+    gradeBorder: colorTokens.purple[400], // Grade filter border
+    gradeText: colorTokens.purple[700], // Grade filter text
+
+    anyActive: colorTokens.amber[100], // Any active filter highlight
+    clearHover: colorTokens.amber[600], // Clear filters button hover
   },
 
   // Interactive States - Hover, focus, and active states
   interactive: {
-    hoverBg: colorTokens.cyan[50],            // Subtle hover background
-    hoverBorder: colorTokens.cyan[300],       // Hover border color
-    hoverGlow: colorTokens.jade[500],         // Glow effect color (use with opacity)
-    
-    focusRing: colorTokens.jade[500],         // Focus ring color
-    focusRingOffset: "#FFFFFF",               // Focus ring offset color
-    
-    activeBg: colorTokens.cyan[100],          // Active/pressed background
-    activeBorder: colorTokens.cyan[500],      // Active border color
-    
-    selectedBorder: colorTokens.cyan[400],    // Selected item border
-    selectedGlow: colorTokens.cyan[300],      // Selected item glow
+    hoverBg: colorTokens.cyan[50], // Subtle hover background
+    hoverBorder: colorTokens.cyan[300], // Hover border color
+    hoverGlow: colorTokens.jade[500], // Glow effect color (use with opacity)
+
+    focusRing: colorTokens.jade[500], // Focus ring color
+    focusRingOffset: "#FFFFFF", // Focus ring offset color
+
+    activeBg: colorTokens.cyan[100], // Active/pressed background
+    activeBorder: colorTokens.cyan[500], // Active border color
+
+    selectedBorder: colorTokens.cyan[400], // Selected item border
+    selectedGlow: colorTokens.cyan[300], // Selected item glow
   },
 
   // Action Buttons - Color hierarchy for button types
   actions: {
-    primaryBg: colorTokens.jade[600],         // Primary action (brand)
-    primaryHover: colorTokens.jade[700],      // Primary hover
-    primaryText: "#FFFFFF",                    // Primary text
-    
-    secondaryBg: colorTokens.blue[600],       // Secondary action (info)
-    secondaryHover: colorTokens.blue[700],    // Secondary hover
-    secondaryText: "#FFFFFF",                  // Secondary text
-    
-    attentionBg: colorTokens.amber[500],      // Attention action (highlight)
-    attentionHover: colorTokens.amber[600],   // Attention hover
-    attentionText: colorTokens.gray[900],     // Attention text (dark for contrast)
-    
-    destructiveBg: colorTokens.red[600],      // Destructive action (danger)
-    destructiveHover: colorTokens.red[700],   // Destructive hover
-    destructiveText: "#FFFFFF",                // Destructive text
+    primaryBg: colorTokens.jade[600], // Primary action (brand)
+    primaryHover: colorTokens.jade[700], // Primary hover
+    primaryText: "#FFFFFF", // Primary text
+
+    secondaryBg: colorTokens.blue[600], // Secondary action (info)
+    secondaryHover: colorTokens.blue[700], // Secondary hover
+    secondaryText: "#FFFFFF", // Secondary text
+
+    attentionBg: colorTokens.amber[500], // Attention action (highlight)
+    attentionHover: colorTokens.amber[600], // Attention hover
+    attentionText: colorTokens.gray[900], // Attention text (dark for contrast)
+
+    destructiveBg: colorTokens.red[600], // Destructive action (danger)
+    destructiveHover: colorTokens.red[700], // Destructive hover
+    destructiveText: "#FFFFFF", // Destructive text
   },
 
   // Playbook Feature Colors - Color-coded playbook elements
@@ -383,25 +383,25 @@ export const featureTokens = {
     offensiveBg: "bg-gradient-to-br from-blue-50 to-blue-100",
     offensiveBorder: colorTokens.blue[300],
     offensiveAccent: colorTokens.blue[600],
-    
+
     defensiveBg: "bg-gradient-to-br from-red-50 to-red-100",
     defensiveBorder: colorTokens.red[300],
     defensiveAccent: colorTokens.red[600],
-    
+
     specialBg: "bg-gradient-to-br from-amber-50 to-amber-100",
     specialBorder: colorTokens.amber[300],
     specialAccent: colorTokens.amber[600],
-    
+
     // Play category badges
     runPlayBg: colorTokens.emerald[100],
     runPlayText: colorTokens.emerald[700],
-    
+
     passPlayBg: colorTokens.blue[100],
     passPlayText: colorTokens.blue[700],
-    
+
     trickPlayBg: colorTokens.purple[100],
     trickPlayText: colorTokens.purple[700],
-    
+
     // Canvas tool colors
     routeTool: colorTokens.emerald[500],
     playerTool: colorTokens.blue[500],
@@ -868,16 +868,16 @@ export const elevationTokens = {
 
 /**
  * Surface and Elevation Tokens
- * 
+ *
  * Philosophy: Clean, modern interface with depth created through shadows only.
  * Borders are reserved for inputs, dividers, and specific UI elements—NOT cards.
- * 
+ *
  * Design Standard: Shadow-only cards for a clean SaaS aesthetic
  * - Similar to Linear, Notion, Figma (best-in-class SaaS apps)
  * - Better dark mode support (shadows adapt better than borders)
  * - Cleaner visual hierarchy (depth through shadow, not lines)
  * - More professional appearance (modern, polished)
- * 
+ *
  * Global Density: 87.5% scale (14px base font size instead of 16px)
  * Mobile Density: 90% scale (14.4px base for better readability)
  * Applied in: src/index.css
@@ -885,82 +885,85 @@ export const elevationTokens = {
 
 export const surfaceTokens = {
   // Surface backgrounds - semantic color tokens
-  primary: 'bg-surface-primary',        // White in light mode, dark in dark mode
-  secondary: 'bg-surface-secondary',    // Gray-50 in light, dark gray in dark
-  muted: 'bg-surface-muted',            // Gray-100 in light, darker in dark
-  subtle: 'bg-surface-subtle',          // Very subtle background difference
-  
+  primary: "bg-surface-primary", // White in light mode, dark in dark mode
+  secondary: "bg-surface-secondary", // Gray-50 in light, dark gray in dark
+  muted: "bg-surface-muted", // Gray-100 in light, darker in dark
+  subtle: "bg-surface-subtle", // Very subtle background difference
+
   // Elevation shadows (shadow-only design - NO BORDERS)
   // Use these instead of border+shadow combinations
   elevation: {
-    none: 'shadow-none',                // Flat, no elevation (0px blur)
-    subtle: 'shadow-sm',                // Barely perceptible (0-1px blur, 1px offset)
-    card: 'shadow-md',                  // Standard cards (3-4px blur, 2-3px offset) - MOST COMMON
-    raised: 'shadow-lg',                // Elevated elements (8-10px blur, 4-5px offset)
-    floating: 'shadow-xl',              // Floating UI (16-20px blur, 8-10px offset)
-    modal: 'shadow-2xl',                // Modals, overlays (24-28px blur, 12-15px offset)
+    none: "shadow-none", // Flat, no elevation (0px blur)
+    subtle: "shadow-sm", // Barely perceptible (0-1px blur, 1px offset)
+    card: "shadow-md", // Standard cards (3-4px blur, 2-3px offset) - MOST COMMON
+    raised: "shadow-lg", // Elevated elements (8-10px blur, 4-5px offset)
+    floating: "shadow-xl", // Floating UI (16-20px blur, 8-10px offset)
+    modal: "shadow-2xl", // Modals, overlays (24-28px blur, 12-15px offset)
   },
-  
+
   // Interactive elevation changes (hover states)
   // Combine with elevation for interactive cards
   hover: {
-    subtle: 'hover:shadow-md',          // Lift from subtle to card
-    card: 'hover:shadow-lg',            // Lift from card to raised (MOST COMMON)
-    raised: 'hover:shadow-xl',          // Lift from raised to floating
-    withLift: 'hover:-translate-y-0.5', // Physical lift animation (2px up)
+    subtle: "hover:shadow-md", // Lift from subtle to card
+    card: "hover:shadow-lg", // Lift from card to raised (MOST COMMON)
+    raised: "hover:shadow-xl", // Lift from raised to floating
+    withLift: "hover:-translate-y-0.5", // Physical lift animation (2px up)
   },
-  
+
   // Active/pressed states
   active: {
-    pressed: 'active:shadow-sm',        // Press down effect (reduce shadow)
-    flat: 'active:shadow-none',         // Completely flat when pressed
-    down: 'active:translate-y-0',       // Remove lift translation
+    pressed: "active:shadow-sm", // Press down effect (reduce shadow)
+    flat: "active:shadow-none", // Completely flat when pressed
+    down: "active:translate-y-0", // Remove lift translation
   },
-  
+
   // Rounded corners (consistent across surfaces)
   rounded: {
-    sm: 'rounded-md',                   // 6px - small elements, badges
-    md: 'rounded-lg',                   // 8px - standard cards, panels - MOST COMMON
-    lg: 'rounded-xl',                   // 12px - prominent cards, modals
-    full: 'rounded-full',               // Circular - avatars, pills
+    sm: "rounded-md", // 6px - small elements, badges
+    md: "rounded-lg", // 8px - standard cards, panels - MOST COMMON
+    lg: "rounded-xl", // 12px - prominent cards, modals
+    full: "rounded-full", // Circular - avatars, pills
   },
-  
+
   // Common surface patterns (composable classes)
   // These are pre-built combinations for common use cases
   patterns: {
     // Standard card (most common - use this as default)
-    card: 'bg-surface-primary rounded-lg shadow-md',
-    
+    card: "bg-surface-primary rounded-lg shadow-md",
+
     // Interactive card (clickable, with hover lift)
-    cardInteractive: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all cursor-pointer',
-    
+    cardInteractive:
+      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all cursor-pointer",
+
     // Card with hover only (no lift, just shadow change)
-    cardHover: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow',
-    
+    cardHover:
+      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow",
+
     // Panel (sidebar, secondary containers)
-    panel: 'bg-surface-secondary rounded-lg shadow-sm',
-    panelMuted: 'bg-surface-muted rounded-lg shadow-none',
-    
+    panel: "bg-surface-secondary rounded-lg shadow-sm",
+    panelMuted: "bg-surface-muted rounded-lg shadow-none",
+
     // Floating elements (dropdowns, tooltips, popovers)
-    floating: 'bg-surface-primary rounded-lg shadow-xl',
-    floatingLarge: 'bg-surface-primary rounded-lg shadow-2xl',
-    
+    floating: "bg-surface-primary rounded-lg shadow-xl",
+    floatingLarge: "bg-surface-primary rounded-lg shadow-2xl",
+
     // Modal/overlay
-    modal: 'bg-surface-primary rounded-xl shadow-2xl',
-    overlay: 'bg-surface-primary/95 backdrop-blur-sm rounded-xl shadow-2xl',
-    
+    modal: "bg-surface-primary rounded-xl shadow-2xl",
+    overlay: "bg-surface-primary/95 backdrop-blur-sm rounded-xl shadow-2xl",
+
     // Stat cards (dashboard widgets)
-    stat: 'bg-surface-primary rounded-lg shadow-md p-6',
-    statInteractive: 'bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6',
+    stat: "bg-surface-primary rounded-lg shadow-md p-6",
+    statInteractive:
+      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6",
   },
 } as const;
 
 /**
  * Density Scale Documentation
- * 
+ *
  * Global scale: 87.5% (14px base instead of 16px)
  * Mobile scale: 90% (14.4px base for readability)
- * 
+ *
  * Implementation in src/index.css:
  * ```css
  * :root {
@@ -986,74 +989,74 @@ export const densityScaleTokens = {
   spacing: {
     // Card padding (compact but breathable)
     card: {
-      sm: 'p-3',              // 12px - small cards, badges
-      md: 'p-4',              // 16px - standard cards (MOST COMMON)
-      lg: 'p-6',              // 24px - large cards, prominent sections
-      xl: 'p-8',              // 32px - hero cards, full-page sections
+      sm: "p-3", // 12px - small cards, badges
+      md: "p-4", // 16px - standard cards (MOST COMMON)
+      lg: "p-6", // 24px - large cards, prominent sections
+      xl: "p-8", // 32px - hero cards, full-page sections
     },
-    
+
     // Inline spacing (buttons, inputs, inline elements)
     inline: {
-      xs: 'px-2 py-1',        // 8px/4px - badges, tags, tiny buttons
-      sm: 'px-3 py-2',        // 12px/8px - buttons, small inputs
-      md: 'px-4 py-3',        // 16px/12px - standard inline elements (MOST COMMON)
-      lg: 'px-6 py-4',        // 24px/16px - large buttons, prominent actions
+      xs: "px-2 py-1", // 8px/4px - badges, tags, tiny buttons
+      sm: "px-3 py-2", // 12px/8px - buttons, small inputs
+      md: "px-4 py-3", // 16px/12px - standard inline elements (MOST COMMON)
+      lg: "px-6 py-4", // 24px/16px - large buttons, prominent actions
     },
-    
+
     // Gaps (spacing between elements)
     gap: {
-      xs: 'gap-1',            // 4px - very tight, icons next to text
-      sm: 'gap-2',            // 8px - tight, related elements (MOST COMMON)
-      md: 'gap-3',            // 12px - standard, general spacing
-      lg: 'gap-4',            // 16px - spacious, section spacing
-      xl: 'gap-6',            // 24px - loose, major sections
+      xs: "gap-1", // 4px - very tight, icons next to text
+      sm: "gap-2", // 8px - tight, related elements (MOST COMMON)
+      md: "gap-3", // 12px - standard, general spacing
+      lg: "gap-4", // 16px - spacious, section spacing
+      xl: "gap-6", // 24px - loose, major sections
     },
-    
+
     // Stack spacing (vertical rhythm)
     stack: {
-      xs: 'space-y-1',        // 4px - very compact lists
-      sm: 'space-y-2',        // 8px - compact lists, form fields
-      md: 'space-y-3',        // 12px - standard lists (MOST COMMON)
-      lg: 'space-y-4',        // 16px - relaxed lists
-      xl: 'space-y-6',        // 24px - sections, major groups
+      xs: "space-y-1", // 4px - very compact lists
+      sm: "space-y-2", // 8px - compact lists, form fields
+      md: "space-y-3", // 12px - standard lists (MOST COMMON)
+      lg: "space-y-4", // 16px - relaxed lists
+      xl: "space-y-6", // 24px - sections, major groups
     },
   },
-  
+
   // Typography scale (scaled to work with 87.5% base)
   typography: {
     // Font sizes (these scale down globally by 12.5%)
     size: {
-      xs: 'text-xs',          // ~11px at 87.5% (caption, fine print)
-      sm: 'text-sm',          // ~12px at 87.5% (body small, labels) - COMMON
-      base: 'text-base',      // ~14px at 87.5% (body standard) - MOST COMMON
-      lg: 'text-lg',          // ~16px at 87.5% (headings, emphasis)
-      xl: 'text-xl',          // ~18px at 87.5% (large headings)
-      '2xl': 'text-2xl',      // ~21px at 87.5% (hero headings)
+      xs: "text-xs", // ~11px at 87.5% (caption, fine print)
+      sm: "text-sm", // ~12px at 87.5% (body small, labels) - COMMON
+      base: "text-base", // ~14px at 87.5% (body standard) - MOST COMMON
+      lg: "text-lg", // ~16px at 87.5% (headings, emphasis)
+      xl: "text-xl", // ~18px at 87.5% (large headings)
+      "2xl": "text-2xl", // ~21px at 87.5% (hero headings)
     },
-    
+
     // Line heights (tight for density)
     leading: {
-      tight: 'leading-tight',     // 1.25 - headings, compact text
-      snug: 'leading-snug',       // 1.375 - captions
-      normal: 'leading-normal',   // 1.5 - body text (MOST COMMON)
-      relaxed: 'leading-relaxed', // 1.625 - comfortable reading
+      tight: "leading-tight", // 1.25 - headings, compact text
+      snug: "leading-snug", // 1.375 - captions
+      normal: "leading-normal", // 1.5 - body text (MOST COMMON)
+      relaxed: "leading-relaxed", // 1.625 - comfortable reading
     },
-    
+
     // Letter spacing (slightly negative for professional feel)
     tracking: {
-      tight: 'tracking-tight',    // -0.025em - headings
-      normal: 'tracking-normal',  // 0 - body text (MOST COMMON)
-      wide: 'tracking-wide',      // 0.025em - labels, all-caps
+      tight: "tracking-tight", // -0.025em - headings
+      normal: "tracking-normal", // 0 - body text (MOST COMMON)
+      wide: "tracking-wide", // 0.025em - labels, all-caps
     },
   },
-  
+
   // Icon sizes (proportional to text)
   icons: {
-    xs: 'h-3 w-3',           // 12px - inline with xs text
-    sm: 'h-3.5 w-3.5',       // 14px - inline with sm text (COMMON)
-    base: 'h-4 w-4',         // 16px - inline with base text (MOST COMMON)
-    lg: 'h-5 w-5',           // 20px - inline with lg text
-    xl: 'h-6 w-6',           // 24px - prominent icons
+    xs: "h-3 w-3", // 12px - inline with xs text
+    sm: "h-3.5 w-3.5", // 14px - inline with sm text (COMMON)
+    base: "h-4 w-4", // 16px - inline with base text (MOST COMMON)
+    lg: "h-5 w-5", // 20px - inline with lg text
+    xl: "h-6 w-6", // 24px - prominent icons
   },
 } as const;
 

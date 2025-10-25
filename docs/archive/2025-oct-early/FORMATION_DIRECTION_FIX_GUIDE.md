@@ -7,12 +7,12 @@ Your Data Diagnostic revealed the root cause:
 ```json
 {
   "formations": [
-    { "name": "Trips", "direction": null },  // ❌ Should be "right"
-    { "name": "Twins", "direction": null }   // ❌ Should be "left"
+    { "name": "Trips", "direction": null }, // ❌ Should be "right"
+    { "name": "Twins", "direction": null } // ❌ Should be "left"
   ],
   "plays": [
-    { "formation": "Twins", "f_dir": "L" },  // ✅ Has direction
-    { "formation": "Trips", "f_dir": "R" }   // ✅ Has direction
+    { "formation": "Twins", "f_dir": "L" }, // ✅ Has direction
+    { "formation": "Trips", "f_dir": "R" } // ✅ Has direction
   ]
 }
 ```
@@ -26,6 +26,7 @@ Your Data Diagnostic revealed the root cause:
 We'll create **directional variants** of your formations based on how they're used in plays:
 
 ### Before:
+
 ```
 formations table:
 ├─ "Trips" (direction: null)
@@ -33,11 +34,12 @@ formations table:
 ```
 
 ### After:
+
 ```
 formations table:
 ├─ "Trips" (direction: null)          ← Keep original
 ├─ "Trips" (direction: "right")        ← NEW! Created from 3 plays
-├─ "Twins" (direction: null)          ← Keep original  
+├─ "Twins" (direction: null)          ← Keep original
 └─ "Twins" (direction: "left")         ← NEW! Created from 4 plays
 ```
 
@@ -67,17 +69,18 @@ formations table:
 
 5. **Watch the Output**
    - You should see messages like:
+
      ```
      🔍 Processing formation: Twins
        - Plays with left: 4, Plays with right: 0
        ✅ Creating LEFT variant for Twins
        → Created left variant: <uuid>
-     
+
      🔍 Processing formation: Trips
        - Plays with left: 0, Plays with right: 3
        ✅ Creating RIGHT variant for Trips
        → Created right variant: <uuid>
-     
+
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      📊 Formation Migration Results
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -118,12 +121,13 @@ formations table:
 
 1. Click the **"Direction Review"** tab
 2. You should now see:
+
    ```
    📋 Formations Needing Opposites
-   
+
    🟡 Medium Priority (2-4 uses)
    ├─ Trips (Right) - 3 plays - [Create Opposite] [Mark as Standalone]
-   
+
    🔵 Low Priority (0-1 uses)
    └─ Twins (Left) - 4 plays - [Create Opposite] [Mark as Standalone]
    ```
@@ -146,6 +150,7 @@ These are the **original formations** you created. We kept them for backwards co
 ### Why don't they have opposite_formation_id set?
 
 Your plays only use **one direction** for each formation:
+
 - "Twins" only appears with `f_dir: "L"` (4 plays)
 - "Trips" only appears with `f_dir: "R"` (3 plays)
 
@@ -154,6 +159,7 @@ So we only created **one directional variant** for each. To create the opposite 
 ### What about the original formations with `direction: null`?
 
 You can either:
+
 1. **Delete them** (they're not being used by plays)
 2. **Mark as standalone** (set `opposite_formation_id = id`)
 3. **Keep them** (no harm, just clutter)
@@ -199,7 +205,7 @@ HAVING COUNT(*) > 1;
 Check the audit query directly:
 
 ```sql
-SELECT 
+SELECT
   id,
   name,
   direction,
@@ -212,6 +218,7 @@ WHERE direction IS NOT NULL              -- Has a direction
 ```
 
 If this returns no rows, it means:
+
 - All directional formations have opposites linked ✅
 - Or no formations have a direction set ❌
 
@@ -241,6 +248,7 @@ await FormationService.importFormationsFromPlays(playbookId, userId);
 ```
 
 This will:
+
 1. ✅ Extract formation name from `play.formation`
 2. ✅ Extract direction from `play.f_dir` (L/R/Lt/Rt)
 3. ✅ Normalize to "left"/"right"
@@ -258,7 +266,7 @@ This will:
 ✅ Opposite formations are linked via opposite_formation_id  
 ✅ No TypeScript errors  
 ✅ No SQL errors  
-✅ Ready for Phase 2 implementation  
+✅ Ready for Phase 2 implementation
 
 ---
 

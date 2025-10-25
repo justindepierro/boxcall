@@ -1,6 +1,6 @@
 /**
  * Announcement Comments Service
- * 
+ *
  * Handles CRUD operations for comments on team announcements
  * Supports threaded replies with parent_id
  */
@@ -54,7 +54,9 @@ export class CommentsService {
   /**
    * Get all comments for an announcement (flat list)
    */
-  static async getComments(announcementId: string): Promise<CommentWithAuthor[]> {
+  static async getComments(
+    announcementId: string
+  ): Promise<CommentWithAuthor[]> {
     try {
       // First get all comments
       const { data: comments, error } = await supabase
@@ -112,7 +114,9 @@ export class CommentsService {
   /**
    * Build a tree structure from flat comment list
    */
-  private static buildCommentTree(comments: CommentWithAuthor[]): CommentTree[] {
+  private static buildCommentTree(
+    comments: CommentWithAuthor[]
+  ): CommentTree[] {
     const commentMap = new Map<string, CommentTree>();
     const rootComments: CommentTree[] = [];
 
@@ -127,7 +131,7 @@ export class CommentsService {
     // Build the tree
     comments.forEach((comment) => {
       const node = commentMap.get(comment.id)!;
-      
+
       if (comment.parent_id) {
         // This is a reply - add to parent's replies
         const parent = commentMap.get(comment.parent_id);
@@ -151,9 +155,15 @@ export class CommentsService {
    */
   static async addComment(
     comment: CommentCreate
-  ): Promise<{ success: boolean; comment?: CommentWithAuthor; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    comment?: CommentWithAuthor;
+    error?: string;
+  }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         return {
@@ -194,7 +204,9 @@ export class CommentsService {
       const commentWithAuthor: CommentWithAuthor = {
         ...(data as any),
         author_name: profile
-          ? ((profile as any).display_name || (profile as any).full_name || "Unknown User")
+          ? (profile as any).display_name ||
+            (profile as any).full_name ||
+            "Unknown User"
           : "Unknown User",
       };
 
@@ -222,7 +234,11 @@ export class CommentsService {
   static async updateComment(
     commentId: string,
     updates: CommentUpdate
-  ): Promise<{ success: boolean; comment?: CommentWithAuthor; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    comment?: CommentWithAuthor;
+    error?: string;
+  }> {
     try {
       const updateData: any = {};
       if (updates.content) {
@@ -258,7 +274,9 @@ export class CommentsService {
       const commentWithAuthor: CommentWithAuthor = {
         ...comment,
         author_name: profile
-          ? ((profile as any).display_name || (profile as any).full_name || "Unknown User")
+          ? (profile as any).display_name ||
+            (profile as any).full_name ||
+            "Unknown User"
           : "Unknown User",
       };
 
@@ -357,7 +375,7 @@ export class CommentsService {
       // Count comments per announcement
       const counts = new Map<string, number>();
       announcementIds.forEach((id) => counts.set(id, 0));
-      
+
       (data || []).forEach((comment: any) => {
         const current = counts.get(comment.announcement_id) || 0;
         counts.set(comment.announcement_id, current + 1);

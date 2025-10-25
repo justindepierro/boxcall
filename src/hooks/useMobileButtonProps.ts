@@ -1,6 +1,6 @@
 /**
  * Mobile Button Props Hook
- * 
+ *
  * Forces touch-friendly button sizes on mobile devices
  * Minimum 44px touch targets per Apple/Google HIG
  */
@@ -10,7 +10,7 @@ import type { ButtonProps } from "../components/ui/Button/Button.types";
 
 /**
  * Returns mobile-optimized button props
- * 
+ *
  * On mobile: Forces size="lg" (44px) or size="xl" (48px) for primary actions
  * On desktop: Preserves original size
  */
@@ -40,13 +40,14 @@ export function useMobileButtonProps(
 
 /**
  * Returns mobile-optimized input props
- * 
+ *
  * On mobile: Forces size="lg" (48px height, 16px font)
  * On desktop: Preserves original size
  */
-export function useMobileInputProps(
-  size: "sm" | "md" | "lg" = "md"
-): { size: "sm" | "md" | "lg"; className?: string } {
+export function useMobileInputProps(size: "sm" | "md" | "lg" = "md"): {
+  size: "sm" | "md" | "lg";
+  className?: string;
+} {
   const isMobile = useIsMobile();
 
   if (!isMobile) {
@@ -59,12 +60,10 @@ export function useMobileInputProps(
 
 /**
  * Returns mobile-optimized touch target class names
- * 
+ *
  * Adds minimum 44px × 44px touch target on mobile
  */
-export function useMobileTouchTarget(
-  defaultClass = ""
-): string {
+export function useMobileTouchTarget(defaultClass = ""): string {
   const isMobile = useIsMobile();
 
   if (!isMobile) {

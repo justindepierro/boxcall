@@ -103,9 +103,10 @@ export function useRecentPlayCombos(limit: number = DEFAULT_LIMIT) {
           const sameType =
             (item.playType || "")?.toLowerCase() ===
             (trimmedCombo.playType || "")?.toLowerCase();
-          const sameId = item.formationId && trimmedCombo.formationId
-            ? item.formationId === trimmedCombo.formationId
-            : true;
+          const sameId =
+            item.formationId && trimmedCombo.formationId
+              ? item.formationId === trimmedCombo.formationId
+              : true;
           return !(sameName && samePersonnel && sameType && sameId);
         });
 

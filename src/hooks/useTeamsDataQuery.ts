@@ -1,7 +1,7 @@
 /**
  * React Query wrapper for useTeamsData
  * Provides automatic caching, background refetching, and stale-while-revalidate behavior
- * 
+ *
  * Performance improvements:
  * - Initial load: Same as useTeamsData
  * - Subsequent loads: Instant from cache (<200ms)
@@ -67,7 +67,8 @@ export const teamsDataKeys = {
   teams: () => [...teamsDataKeys.all, "teams"] as const,
   playbooks: () => [...teamsDataKeys.all, "playbooks"] as const,
   plays: () => [...teamsDataKeys.all, "plays"] as const,
-  playsPage: (page: number) => [...teamsDataKeys.plays(), "page", page] as const,
+  playsPage: (page: number) =>
+    [...teamsDataKeys.plays(), "page", page] as const,
   totalCount: () => [...teamsDataKeys.plays(), "totalCount"] as const,
 };
 
@@ -172,7 +173,7 @@ async function updatePlayInDB(
 
 /**
  * React Query hook for teams data with automatic caching
- * 
+ *
  * Features:
  * - Caches data for 5 minutes (staleTime)
  * - Refetches in background after cache goes stale
@@ -216,14 +217,21 @@ export function useTeamsDataQuery() {
 
   // Update play mutation with optimistic updates
   const updatePlayMutation = useMutation({
-    mutationFn: ({ playId, updates }: { playId: string; updates: Partial<DatabasePlay> }) =>
-      updatePlayInDB(playId, updates),
+    mutationFn: ({
+      playId,
+      updates,
+    }: {
+      playId: string;
+      updates: Partial<DatabasePlay>;
+    }) => updatePlayInDB(playId, updates),
     onMutate: async ({ playId, updates }) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: teamsDataKeys.plays() });
 
       // Snapshot the previous value
-      const previousPlays = queryClient.getQueryData(teamsDataKeys.playsPage(0));
+      const previousPlays = queryClient.getQueryData(
+        teamsDataKeys.playsPage(0)
+      );
 
       // Optimistically update the cache
       queryClient.setQueryData(
@@ -241,7 +249,10 @@ export function useTeamsDataQuery() {
     onError: (_err, _variables, context) => {
       // Rollback on error
       if (context?.previousPlays) {
-        queryClient.setQueryData(teamsDataKeys.playsPage(0), context.previousPlays);
+        queryClient.setQueryData(
+          teamsDataKeys.playsPage(0),
+          context.previousPlays
+        );
       }
     },
     onSuccess: () => {

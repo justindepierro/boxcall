@@ -28,7 +28,10 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
     return (
       <Card variant="glass" size={isMobile ? "md" : "lg"}>
         <div className="flex items-center gap-3">
-          <Icon name="loader" className="h-5 w-5 animate-spin text-text-muted" />
+          <Icon
+            name="loader"
+            className="h-5 w-5 animate-spin text-text-muted"
+          />
           <Typography variant="body-sm" className="text-text-secondary">
             Checking formation mappings...
           </Typography>
@@ -120,7 +123,11 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
       )}
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2">
-        <Button onClick={onOpenMapper} variant="primary" disabled={!onOpenMapper}>
+        <Button
+          onClick={onOpenMapper}
+          variant="primary"
+          disabled={!onOpenMapper}
+        >
           Open Formation Mapper
         </Button>
         <Button

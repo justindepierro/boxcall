@@ -66,7 +66,7 @@ export class HashtagService {
     for (const announcement of announcements) {
       // Try JSON content first
       let tags = this.extractHashtagsFromContent(announcement.content_json);
-      
+
       // Fallback to plain text if no JSON
       if (tags.length === 0 && announcement.content) {
         tags = this.extractHashtagsFromText(announcement.content);
@@ -90,7 +90,9 @@ export class HashtagService {
   static filterByHashtag(announcements: any[], hashtag: string): any[] {
     return announcements.filter((announcement) => {
       // Check JSON content
-      const jsonTags = this.extractHashtagsFromContent(announcement.content_json);
+      const jsonTags = this.extractHashtagsFromContent(
+        announcement.content_json
+      );
       if (jsonTags.includes(hashtag)) return true;
 
       // Check plain text

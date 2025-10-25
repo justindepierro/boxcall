@@ -29,7 +29,11 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
     async function loadStats() {
       try {
         const now = new Date();
-        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const todayStart = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
         const todayStartISO = todayStart.toISOString();
 
         // 1. Count announcements created today
@@ -50,8 +54,10 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         const upcomingEvents = 0;
 
         // 4. Count online members (users active in last 5 minutes)
-        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
-        
+        const fiveMinutesAgo = new Date(
+          now.getTime() - 5 * 60 * 1000
+        ).toISOString();
+
         // First get team member user IDs
         const { data: teamMembers } = await supabase
           .from("team_members")

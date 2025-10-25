@@ -22,7 +22,7 @@ describe("useGameSession", () => {
   describe("Situational Filtering", () => {
     it("should filter plays by down", () => {
       const { result } = renderHook(() => useGameSession());
-      
+
       // Mock some plays
       const mockPlays = [
         { id: "1", name: "Quick Slant", down: 1 },
@@ -49,9 +49,11 @@ describe("useGameSession", () => {
       });
 
       // Should show short-yardage plays
-      expect(result.current.filteredPlays.some((p) => 
-        p.tags?.includes("short-yardage")
-      )).toBe(true);
+      expect(
+        result.current.filteredPlays.some((p) =>
+          p.tags?.includes("short-yardage")
+        )
+      ).toBe(true);
     });
 
     it("should filter by field zone", () => {
@@ -63,9 +65,9 @@ describe("useGameSession", () => {
       });
 
       // Should show red zone plays
-      expect(result.current.filteredPlays.some((p) => 
-        p.tags?.includes("red-zone")
-      )).toBe(true);
+      expect(
+        result.current.filteredPlays.some((p) => p.tags?.includes("red-zone"))
+      ).toBe(true);
     });
 
     it("should combine multiple filters (Billick situations)", () => {
@@ -155,7 +157,7 @@ describe("useGameSession", () => {
       expect(result.current.situation.yardLine).toBe(25);
       expect(result.current.situation.down).toBe(1);
       expect(result.current.situation.distance).toBe(10);
-      
+
       // Should increment touchdown count
       expect(result.current.currentDrive.touchdowns).toBe(1);
     });

@@ -1,6 +1,6 @@
 /**
  * Comment Reactions Service
- * 
+ *
  * Handles emoji reactions on announcement comments
  * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football), 🔥 (fire), 👏 (clap), 🎯 (target), 💯 (hundred)
  */
@@ -8,7 +8,15 @@
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 
-export type ReactionType = "like" | "love" | "celebrate" | "football" | "fire" | "clap" | "target" | "hundred";
+export type ReactionType =
+  | "like"
+  | "love"
+  | "celebrate"
+  | "football"
+  | "fire"
+  | "clap"
+  | "target"
+  | "hundred";
 
 export const REACTION_EMOJIS: Record<ReactionType, string> = {
   like: "👍",
@@ -71,11 +79,25 @@ export class CommentReactionsService {
 
       // Build summary
       const summary: ReactionSummary[] = [];
-      const allTypes: ReactionType[] = ["like", "love", "celebrate", "football", "fire", "clap", "target", "hundred"];
+      const allTypes: ReactionType[] = [
+        "like",
+        "love",
+        "celebrate",
+        "football",
+        "fire",
+        "clap",
+        "target",
+        "hundred",
+      ];
 
       allTypes.forEach((type) => {
-        const typeReactions = (reactions as CommentReaction[] | null)?.filter((r) => r.reaction_type === type) || [];
-        const userHasReacted = typeReactions.some((r) => r.user_id === user.user?.id);
+        const typeReactions =
+          (reactions as CommentReaction[] | null)?.filter(
+            (r) => r.reaction_type === type
+          ) || [];
+        const userHasReacted = typeReactions.some(
+          (r) => r.user_id === user.user?.id
+        );
 
         summary.push({
           reaction_type: type,
@@ -100,11 +122,19 @@ export class CommentReactionsService {
   static async toggleReaction(
     commentId: string,
     reactionType: ReactionType
-  ): Promise<{ success: boolean; action: "added" | "removed" | null; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    action: "added" | "removed" | null;
+    error?: string;
+  }> {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) {
-        return { success: false, action: null, error: "User not authenticated" };
+        return {
+          success: false,
+          action: null,
+          error: "User not authenticated",
+        };
       }
 
       // Check if user already reacted with this type
@@ -246,14 +276,26 @@ export class CommentReactionsService {
 
       // Build summary map
       const result: Record<string, { summary: ReactionSummary[] }> = {};
-      const allTypes: ReactionType[] = ["like", "love", "celebrate", "football"];
+      const allTypes: ReactionType[] = [
+        "like",
+        "love",
+        "celebrate",
+        "football",
+      ];
 
       commentIds.forEach((commentId) => {
-        const commentReactions = (reactions as CommentReaction[] | null)?.filter((r) => r.comment_id === commentId) || [];
+        const commentReactions =
+          (reactions as CommentReaction[] | null)?.filter(
+            (r) => r.comment_id === commentId
+          ) || [];
 
         const summary: ReactionSummary[] = allTypes.map((type) => {
-          const typeReactions = commentReactions.filter((r) => r.reaction_type === type);
-          const userHasReacted = typeReactions.some((r) => r.user_id === user.user?.id);
+          const typeReactions = commentReactions.filter(
+            (r) => r.reaction_type === type
+          );
+          const userHasReacted = typeReactions.some(
+            (r) => r.user_id === user.user?.id
+          );
 
           return {
             reaction_type: type,

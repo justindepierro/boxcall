@@ -58,10 +58,7 @@ const NotesSchema = z
   });
 
 const UUIDSchema = z.string().uuid("Invalid UUID format").min(1, "ID required");
-const OptionalUUIDSchema = z
-  .string()
-  .uuid("Invalid UUID format")
-  .optional();
+const OptionalUUIDSchema = z.string().uuid("Invalid UUID format").optional();
 
 // ========================================
 // Diagram Data Schema

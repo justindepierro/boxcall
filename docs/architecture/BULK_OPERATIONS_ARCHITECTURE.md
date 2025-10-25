@@ -80,22 +80,22 @@ UI Auto-Refresh (no reload needed!)
 
 4. User clicks "Update 5 Formations"
    BulkMetadataModal → calls bulkUpdate.mutateAsync({...})
-   
+
 5. Hook processes mutation
    useBulkUpdateMetadata → FormationService.bulkUpdateMetadata(...)
-   
+
 6. Service updates database
    formationService.ts → supabase.update({ category: "spread" })
-   
+
 7. React Query invalidates cache
    onSuccess → invalidateFormations(playbookId)
-   
+
 8. UI refreshes automatically
    useFormations → refetches → Formation list updates
-   
+
 9. Success toast appears
    "Successfully updated 5 formations"
-   
+
 10. Selection clears
     BulkSelectionContext → clearSelection()
     Toolbar hides
@@ -142,26 +142,26 @@ Total time: <100ms (cached) or ~500ms (fresh)
 
 ```typescript
 FormationService {
-  
+
   // Bulk Operations (NEW)
   bulkUpdateMetadata(
     formationIds: string[],
     updates: Partial<FormationMetadata>,
     mode: 'replace' | 'merge'
   ) → { updated: number }
-  
+
   bulkSetDirection(
     playbookId: string,
     formationIds: string[],
     direction: 'left' | 'right' | 'both',
     autoCreateOpposites: boolean
   ) → { updated: number, created: number }
-  
+
   bulkDelete(
     formationIds: string[],
     deleteOpposites: boolean
   ) → { count: number }
-  
+
   getFormationsByIds(
     formationIds: string[]
   ) → Formation[]  // For undo
@@ -289,7 +289,7 @@ Hook Layer:
 UI Layer:
   {bulkUpdate.isPending && <LoadingSpinner />}
   {bulkUpdate.error && <ErrorMessage />}
-  
+
   Button disabled={bulkUpdate.isPending}
   Toast appears on success/error
 ```
@@ -297,12 +297,14 @@ UI Layer:
 ## Summary
 
 **Architecture**: Clean separation of concerns
+
 - Context → Selection state
 - Hooks → Data fetching/mutations
 - Service → Database operations
 - Components → UI presentation
 
 **Benefits**:
+
 - Type-safe with TypeScript
 - Automatic caching with React Query
 - Efficient Set-based selection

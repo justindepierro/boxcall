@@ -1,21 +1,21 @@
 /**
  * useRosterFilters Hook
- * 
+ *
  * Manages roster filtering logic and URL persistence
  * - Filter state (position, grade level, status, search)
  * - Filter toggle functions
  * - Computed filtered players list (with debounced search)
  * - URL persistence for shareable filter states
- * 
+ *
  * Performance:
  * - Search input is debounced (300ms) to prevent expensive filtering on every keystroke
  * - Filter computation is memoized to prevent unnecessary recalculations
  */
 
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
-import type { RosterPlayerView } from '../../../services/rosterService';
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import type { RosterPlayerView } from "../../../services/rosterService";
 
 export interface UseRosterFiltersReturn {
   // Filter state
@@ -27,11 +27,11 @@ export interface UseRosterFiltersReturn {
   setGradeLevelFilters: React.Dispatch<React.SetStateAction<string[]>>;
   statusFilter: string;
   setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
-  
+
   // Computed values
   filteredPlayers: RosterPlayerView[];
   hasActiveFilters: boolean;
-  
+
   // Filter actions
   togglePositionFilter: (position: string) => void;
   toggleGradeLevelFilter: (grade: string) => void;
@@ -43,7 +43,7 @@ export const useRosterFilters = (
 ): UseRosterFiltersReturn => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Filter state
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebouncedValue(searchTerm, 300); // Debounce expensive filtering
@@ -54,12 +54,13 @@ export const useRosterFilters = (
   // Read filters from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    
-    const urlPositions = params.get("positions")?.split(",").filter(Boolean) || [];
+
+    const urlPositions =
+      params.get("positions")?.split(",").filter(Boolean) || [];
     const urlGrades = params.get("grades")?.split(",").filter(Boolean) || [];
     const urlStatus = params.get("status") || "";
     const urlSearch = params.get("search") || "";
-    
+
     if (urlPositions.length > 0) setPositionFilters(urlPositions);
     if (urlGrades.length > 0) setGradeLevelFilters(urlGrades);
     if (urlStatus) setStatusFilter(urlStatus);
@@ -70,19 +71,28 @@ export const useRosterFilters = (
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams();
-    
-    if (positionFilters.length > 0) params.set("positions", positionFilters.join(","));
-    if (gradeLevelFilters.length > 0) params.set("grades", gradeLevelFilters.join(","));
+
+    if (positionFilters.length > 0)
+      params.set("positions", positionFilters.join(","));
+    if (gradeLevelFilters.length > 0)
+      params.set("grades", gradeLevelFilters.join(","));
     if (statusFilter) params.set("status", statusFilter);
     if (searchTerm) params.set("search", searchTerm);
-    
+
     const newSearch = params.toString();
     const currentSearch = location.search.slice(1);
-    
+
     if (newSearch !== currentSearch) {
       navigate(`?${newSearch}`, { replace: true });
     }
-  }, [positionFilters, gradeLevelFilters, statusFilter, searchTerm, navigate, location.search]);
+  }, [
+    positionFilters,
+    gradeLevelFilters,
+    statusFilter,
+    searchTerm,
+    navigate,
+    location.search,
+  ]);
 
   // Filter toggle functions
   const togglePositionFilter = (position: string) => {
@@ -95,9 +105,7 @@ export const useRosterFilters = (
 
   const toggleGradeLevelFilter = (grade: string) => {
     setGradeLevelFilters((prev) =>
-      prev.includes(grade)
-        ? prev.filter((g) => g !== grade)
-        : [...prev, grade]
+      prev.includes(grade) ? prev.filter((g) => g !== grade) : [...prev, grade]
     );
   };
 
@@ -112,7 +120,7 @@ export const useRosterFilters = (
   const filteredPlayers = useMemo(() => {
     // Performance monitoring
     if (import.meta.env.DEV) {
-      console.time('Filter Calculation');
+      console.time("Filter Calculation");
     }
 
     const result = players.filter((player) => {
@@ -122,8 +130,12 @@ export const useRosterFilters = (
         `${player.first_name} ${player.last_name}`
           .toLowerCase()
           .includes(debouncedSearch.toLowerCase()) ||
-        player.nickname?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        player.position?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        player.nickname
+          ?.toLowerCase()
+          .includes(debouncedSearch.toLowerCase()) ||
+        player.position
+          ?.toLowerCase()
+          .includes(debouncedSearch.toLowerCase()) ||
         player.jersey_number?.toString().includes(debouncedSearch);
 
       // Multi-select position filter (OR logic within positions)
@@ -145,17 +157,25 @@ export const useRosterFilters = (
         !statusFilter || player.is_active === (statusFilter === "active");
 
       // Combine with AND logic
-      return matchesSearch && matchesPosition && matchesGradeLevel && matchesStatus;
+      return (
+        matchesSearch && matchesPosition && matchesGradeLevel && matchesStatus
+      );
     });
 
     // Performance monitoring
     if (import.meta.env.DEV) {
-      console.timeEnd('Filter Calculation');
+      console.timeEnd("Filter Calculation");
       console.log(`Filtered ${players.length} → ${result.length} players`);
     }
 
     return result;
-  }, [players, debouncedSearch, positionFilters, gradeLevelFilters, statusFilter]);
+  }, [
+    players,
+    debouncedSearch,
+    positionFilters,
+    gradeLevelFilters,
+    statusFilter,
+  ]);
 
   // Check if any filters are active
   const hasActiveFilters =

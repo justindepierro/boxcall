@@ -205,7 +205,10 @@ export function exportToCSV(plays: Play[]): string {
   });
 
   // Combine headers and rows
-  const csvLines = [headers.map(escapeCSVField).join(","), ...rows.map((row) => row.join(","))];
+  const csvLines = [
+    headers.map(escapeCSVField).join(","),
+    ...rows.map((row) => row.join(",")),
+  ];
 
   return csvLines.join("\n");
 }
@@ -253,8 +256,7 @@ export function exportPlays(
 
   // Generate default filename
   const timestamp = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-  const defaultFilename =
-    filename || `boxcall-plays-${timestamp}.${format}`;
+  const defaultFilename = filename || `boxcall-plays-${timestamp}.${format}`;
 
   // Generate content based on format
   let content: string;

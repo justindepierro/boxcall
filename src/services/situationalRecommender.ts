@@ -3,7 +3,7 @@
  * Situational Recommender Service
  * Phase 13.1: "What should I call right now?" engine
  * Phase 13.2: Added coverage-based recommendations
- * 
+ *
  * Analyzes current game situation and recommends best plays based on:
  * - Confidence scores (from Phase 11)
  * - Situational match (down, distance, field zone)
@@ -42,9 +42,21 @@ export interface PlayRecommendation {
   };
   hashStats?: {
     // Phase 13.3: Hash preference analysis
-    left: { successRate: number; avgYardsGained: number; executionCount: number };
-    middle: { successRate: number; avgYardsGained: number; executionCount: number };
-    right: { successRate: number; avgYardsGained: number; executionCount: number };
+    left: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    middle: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    right: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
     bestHash?: "left" | "middle" | "right";
     currentHash?: "left" | "middle" | "right";
   };
@@ -70,11 +82,7 @@ export class SituationalRecommender {
     situation: GameSituation,
     options: RecommendationOptions = {}
   ): Promise<PlayRecommendation[]> {
-    const {
-      maxResults = 5,
-      minConfidence = 40,
-      includeStats = true,
-    } = options;
+    const { maxResults = 5, minConfidence = 40, includeStats = true } = options;
 
     // Calculate confidence scores for all plays
     const confidenceMap = await PlayConfidenceService.getBatchConfidence(
@@ -121,8 +129,14 @@ export class SituationalRecommender {
 
       // Phase 13.2: Get coverage-specific stats if opponent coverage is known
       const coverageStats =
-        includeStats && situation.opponentCoverage && situation.opponentCoverage !== "Unknown"
-          ? await this.getCoverageStats(play.id, teamId, situation.opponentCoverage)
+        includeStats &&
+        situation.opponentCoverage &&
+        situation.opponentCoverage !== "Unknown"
+          ? await this.getCoverageStats(
+              play.id,
+              teamId,
+              situation.opponentCoverage
+            )
           : undefined;
 
       // Phase 13.3: Get hash preference stats
@@ -171,14 +185,16 @@ export class SituationalRecommender {
     if (situation.down === 1) {
       // 1st down: Favor runs and high-percentage passes
       if (play.play_type === "run") score += 10;
-      if (play.play_type === "pass" && play.concept?.includes("quick")) score += 5;
+      if (play.play_type === "pass" && play.concept?.includes("quick"))
+        score += 5;
     } else if (situation.down === 2) {
       // 2nd down: Balanced
       score += 5;
     } else if (situation.down === 3) {
       // 3rd down: Favor plays that gain required yards
       if (play.play_type === "pass") score += 15;
-      if (situation.distance <= 3 && play.concept?.includes("quick")) score += 10;
+      if (situation.distance <= 3 && play.concept?.includes("quick"))
+        score += 10;
     } else if (situation.down === 4) {
       // 4th down: High confidence plays only
       score -= 20; // Start lower, add back based on confidence
@@ -189,7 +205,10 @@ export class SituationalRecommender {
     if (situation.distance <= 3) {
       // Short yardage
       if (play.play_type === "run") score += 10;
-      if (play.formation?.includes("I-Form") || play.formation?.includes("Heavy")) {
+      if (
+        play.formation?.includes("I-Form") ||
+        play.formation?.includes("Heavy")
+      ) {
         score += 5;
       }
     } else if (situation.distance <= 7) {
@@ -200,7 +219,10 @@ export class SituationalRecommender {
     } else {
       // Long yardage (8+)
       if (play.play_type === "pass") score += 15;
-      if (play.concept?.includes("vertical") || play.concept?.includes("deep")) {
+      if (
+        play.concept?.includes("vertical") ||
+        play.concept?.includes("deep")
+      ) {
         score += 10;
       }
     }
@@ -239,7 +261,10 @@ export class SituationalRecommender {
     }
 
     // Phase 13.2: Coverage-based bonus
-    if (situation.opponentCoverage && situation.opponentCoverage !== "Unknown") {
+    if (
+      situation.opponentCoverage &&
+      situation.opponentCoverage !== "Unknown"
+    ) {
       const coverageStats = await this.getCoverageStats(
         play.id,
         teamId,
@@ -357,7 +382,10 @@ export class SituationalRecommender {
     }
 
     // Phase 13.2: Coverage-specific reasoning
-    if (situation.opponentCoverage && situation.opponentCoverage !== "Unknown") {
+    if (
+      situation.opponentCoverage &&
+      situation.opponentCoverage !== "Unknown"
+    ) {
       const coverageStats = await this.getCoverageStats(
         play.id,
         teamId,
@@ -379,7 +407,9 @@ export class SituationalRecommender {
           );
         }
       } else if (coverageStats && coverageStats.executionCount > 0) {
-        reasons.push(`Limited data vs ${situation.opponentCoverage} (${coverageStats.executionCount} plays)`);
+        reasons.push(
+          `Limited data vs ${situation.opponentCoverage} (${coverageStats.executionCount} plays)`
+        );
       }
     }
 
@@ -490,16 +520,31 @@ export class SituationalRecommender {
     playId: string,
     teamId: string
   ): Promise<{
-    left: { successRate: number; avgYardsGained: number; executionCount: number };
-    middle: { successRate: number; avgYardsGained: number; executionCount: number };
-    right: { successRate: number; avgYardsGained: number; executionCount: number };
+    left: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    middle: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
+    right: {
+      successRate: number;
+      avgYardsGained: number;
+      executionCount: number;
+    };
     bestHash?: "left" | "middle" | "right";
   } | null> {
     try {
       const stats = await ExecutionTrackingService.getHashStats(playId, teamId);
 
       // Only return if we have some hash data
-      const totalExecutions = stats.left.executionCount + stats.middle.executionCount + stats.right.executionCount;
+      const totalExecutions =
+        stats.left.executionCount +
+        stats.middle.executionCount +
+        stats.right.executionCount;
       if (totalExecutions === 0) {
         return null;
       }

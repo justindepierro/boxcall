@@ -25,9 +25,7 @@ export interface ExportedGamePlan {
 /**
  * Export game plans to JSON format
  */
-export function exportGamePlans(
-  plans: GamePlan[]
-): ExportedGamePlan {
+export function exportGamePlans(plans: GamePlan[]): ExportedGamePlan {
   return {
     version: "1.0",
     exportedAt: new Date().toISOString(),
@@ -67,9 +65,11 @@ export function downloadJSON(data: ExportedGamePlan, filename: string) {
 /**
  * Validate imported JSON structure
  */
-export function validateGamePlanImport(
-  data: unknown
-): { valid: boolean; error?: string; data?: ExportedGamePlan } {
+export function validateGamePlanImport(data: unknown): {
+  valid: boolean;
+  error?: string;
+  data?: ExportedGamePlan;
+} {
   try {
     if (!data || typeof data !== "object") {
       return { valid: false, error: "Invalid JSON format" };
@@ -110,7 +110,10 @@ export function validateGamePlanImport(
       for (let j = 0; j < plan.situations.length; j++) {
         const situation = plan.situations[j];
 
-        if (!situation.situationName || typeof situation.situationName !== "string") {
+        if (
+          !situation.situationName ||
+          typeof situation.situationName !== "string"
+        ) {
           return {
             valid: false,
             error: `Plan "${plan.name}", Situation ${j + 1}: Missing or invalid situationName`,
@@ -149,9 +152,11 @@ export function validateGamePlanImport(
 /**
  * Parse JSON file from FileReader result
  */
-export function parseJSONFile(
-  content: string
-): { valid: boolean; error?: string; data?: ExportedGamePlan } {
+export function parseJSONFile(content: string): {
+  valid: boolean;
+  error?: string;
+  data?: ExportedGamePlan;
+} {
   try {
     const parsed = JSON.parse(content);
     return validateGamePlanImport(parsed);

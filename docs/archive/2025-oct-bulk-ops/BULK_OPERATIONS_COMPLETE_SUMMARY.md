@@ -10,12 +10,14 @@
 ## 🎯 What We Built
 
 A complete bulk operations system for formations that enables coaches to:
+
 - **Select multiple formations** with checkboxes
 - **Edit metadata in bulk** (category, personnel, tags, formation type)
 - **Set direction in bulk** (left/right/both with auto-opposite creation)
 - **Delete multiple formations** with smart confirmation
 
 **Expected Time Savings:**
+
 - Editing 20 formations: 10 min → 30 sec (95% faster)
 - Setting directions: 5 min → 10 sec (96% faster)
 - Deleting formations: 2 min → 5 sec (97% faster)
@@ -25,6 +27,7 @@ A complete bulk operations system for formations that enables coaches to:
 ## ✅ What's Complete
 
 ### 1. Service Layer Methods (formationService.ts)
+
 **Added 4 new methods:**
 
 ```typescript
@@ -56,6 +59,7 @@ static async getFormationsByIds(
 ```
 
 **Key Features:**
+
 - Merge vs Replace modes for tags
 - Auto-opposite creation when setting direction to "both"
 - Smart unlinking when deleting (optional opposite deletion)
@@ -64,20 +68,22 @@ static async getFormationsByIds(
 ---
 
 ### 2. React Query Hooks (useFormations.ts)
+
 **Added 3 new hooks:**
 
 ```typescript
 // Bulk update metadata with cache invalidation
-useBulkUpdateMetadata(playbookId)
+useBulkUpdateMetadata(playbookId);
 
 // Bulk set direction with cache invalidation
-useBulkSetDirection(playbookId)
+useBulkSetDirection(playbookId);
 
 // Bulk delete with cache invalidation
-useBulkDelete(playbookId)
+useBulkDelete(playbookId);
 ```
 
 **Benefits:**
+
 - Automatic cache invalidation after mutations
 - Loading/error states built-in
 - Type-safe with TypeScript
@@ -86,6 +92,7 @@ useBulkDelete(playbookId)
 ---
 
 ### 3. Selection Management (BulkSelectionContext.tsx)
+
 **Context Provider for selection state:**
 
 ```typescript
@@ -103,6 +110,7 @@ interface BulkSelectionContextValue {
 ```
 
 **Features:**
+
 - Efficient Set-based storage
 - Memoized operations (no unnecessary re-renders)
 - Select all/none helpers
@@ -111,6 +119,7 @@ interface BulkSelectionContextValue {
 ---
 
 ### 4. Floating Action Toolbar (BulkActionToolbar.tsx)
+
 **Smart toolbar that appears when formations are selected:**
 
 ```tsx
@@ -118,6 +127,7 @@ interface BulkSelectionContextValue {
 ```
 
 **Features:**
+
 - Shows selection count
 - 3 action buttons: Edit Metadata, Set Direction, Delete
 - Clear selection button
@@ -128,19 +138,23 @@ interface BulkSelectionContextValue {
 ---
 
 ### 5. Bulk Metadata Modal (BulkMetadataModal.tsx)
+
 **Modal for editing multiple formations at once:**
 
 **Fields:**
+
 - Category (dropdown)
 - Personnel (text input)
 - Tags (comma-separated)
 - Formation Type (dropdown)
 
 **Modes:**
+
 - **Replace**: Overwrite existing values
 - **Merge**: Add tags to existing (doesn't overwrite)
 
 **UX:**
+
 - Shows count in title: "Edit 5 Formations"
 - Clear mode selection (radio buttons)
 - Success/error toasts
@@ -150,14 +164,17 @@ interface BulkSelectionContextValue {
 ---
 
 ### 6. Bulk Direction Modal (BulkDirectionModal.tsx)
+
 **Modal for setting formation direction:**
 
 **Options:**
+
 - ⬅️ **Left** - Formation faces left
 - ➡️ **Right** - Formation faces right
 - ↔️ **Both** - Has left/right variants
 
 **Smart Features:**
+
 - Auto-create opposites checkbox (for "Both" mode)
 - Shows what will be created
 - Creates missing opposites automatically
@@ -165,6 +182,7 @@ interface BulkSelectionContextValue {
 - Success toast shows created count
 
 **Example:**
+
 - Select 10 formations
 - Set to "Both" with auto-create
 - Creates 6 new opposites (4 already had them)
@@ -174,19 +192,23 @@ interface BulkSelectionContextValue {
 ---
 
 ### 7. Bulk Delete Confirmation (BulkDeleteConfirmation.tsx)
+
 **Smart deletion with safety features:**
 
 **Safety:**
+
 - Shows warning with count
 - Explains impact
 - Requires explicit confirmation
 - Option to delete opposites too
 
 **Options:**
+
 - **Delete selected only**: Unlinks opposites (keeps them)
 - **Delete selected + opposites**: Removes entire pairs
 
 **Warning Text:**
+
 > "You are about to delete 5 formations. This action cannot be undone. Any plays using these formations will need to be updated."
 
 ---
@@ -205,7 +227,7 @@ export function FormationBuilderModal({ ... }) {
   return (
     <BulkSelectionProvider>
       {/* Existing modal content */}
-      
+
       {/* Add at bottom */}
       <BulkActionToolbar playbookId={playbookId} />
     </BulkSelectionProvider>
@@ -226,7 +248,7 @@ import { useBulkSelection } from "./BulkSelectionContext";
 
 export const FormationBuilderPanel = ({ playbookId, ... }) => {
   const { isSelected, toggleSelection, selectAll, clearSelection } = useBulkSelection();
-  
+
   return (
     <div>
       {/* Select All/Clear buttons */}
@@ -236,7 +258,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
         </button>
         <button onClick={clearSelection}>Clear</button>
       </div>
-      
+
       {/* Formation list */}
       {visibleFormations.map((formation) => (
         <div
@@ -297,6 +319,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 🔄 Data Flow
 
 ### Bulk Metadata Update:
+
 ```
 1. User selects 5 formations (checkboxes)
 2. Clicks "Edit Metadata" in toolbar
@@ -320,16 +343,18 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ### Scenario: Coach needs to update 20 formations to "11 Personnel"
 
 **Before Bulk Operations:**
+
 1. Click formation 1
 2. Change personnel to "11 Personnel"
 3. Click Save
 4. Click formation 2
 5. Change personnel to "11 Personnel"
 6. Click Save
-7. *(Repeat 18 more times...)*
+7. _(Repeat 18 more times...)_
 8. **Total time: ~10 minutes**
 
 **After Bulk Operations:**
+
 1. Check 20 formations (10 seconds)
 2. Click "Edit Metadata"
 3. Set personnel to "11 Personnel"
@@ -343,6 +368,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 🐛 Known Issues
 
 ### TypeScript Errors (Non-Blocking)
+
 **Location**: `formationService.ts`, `useFormations.ts`
 
 **Issue**: Supabase's strict typing requires `as any` casts for `.update()` operations
@@ -350,6 +376,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 **Status**: Expected, won't affect runtime
 
 **Example**:
+
 ```typescript
 // This is necessary workaround:
 .update({ direction: "both" } as any)
@@ -362,6 +389,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 📁 Files Created/Modified
 
 ### Created (6 files):
+
 1. ✅ `src/components/formations/BulkSelectionContext.tsx` (110 lines)
 2. ✅ `src/components/formations/BulkActionToolbar.tsx` (125 lines)
 3. ✅ `src/components/formations/BulkMetadataModal.tsx` (175 lines)
@@ -370,10 +398,12 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 6. ✅ `BULK_SELECTION_INTEGRATION_GUIDE.md` (comprehensive guide)
 
 ### Modified (2 files):
+
 1. ✅ `src/services/formationService.ts` (+200 lines - 4 new methods)
 2. ✅ `src/hooks/useFormations.ts` (+80 lines - 3 new hooks)
 
 ### Pending (2 files):
+
 1. 📝 `src/components/playbook/FormationBuilderModal/FormationBuilderModal.tabbed.tsx` (add provider)
 2. 📝 `src/components/formations/FormationBuilderPanel.tsx` (add checkboxes)
 
@@ -382,16 +412,19 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 🚀 Performance
 
 ### Database Operations:
+
 - **Bulk update**: ~200-500ms for 20 formations
 - **Bulk direction**: ~300-600ms (with opposite creation)
 - **Bulk delete**: ~100-300ms
 
 ### React Query Cache:
+
 - **First load**: Uses existing optimizations (40-60% faster)
 - **Cached load**: <100ms (instant)
 - **After mutation**: Automatic refresh
 
 ### Total Operation Time:
+
 - **Select 20 formations**: 5 seconds
 - **Bulk update**: 0.5 seconds
 - **UI refresh**: 0.1 seconds
@@ -413,6 +446,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 💡 Future Enhancements (Optional)
 
 ### Phase 3 Ideas:
+
 - **Undo/Redo**: Store operations in undo queue (already have UndoQueueContext)
 - **Keyboard shortcuts**: Ctrl+A for select all, Delete key for bulk delete
 - **Drag-to-select**: Select multiple formations by dragging
@@ -426,10 +460,12 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 ## 📚 Documentation
 
 **For Users:**
+
 - See `BULK_OPERATIONS_IMPLEMENTATION_PLAN.md` for full feature spec
 - See `BULK_SELECTION_INTEGRATION_GUIDE.md` for integration steps
 
 **For Developers:**
+
 - All components are fully typed with TypeScript
 - All mutations use React Query for cache management
 - All service methods have error handling
@@ -447,6 +483,7 @@ export const FormationBuilderPanel = ({ playbookId, ... }) => {
 📝 **Integration**: Just need to add provider + checkboxes (30 min)
 
 **Expected Impact:**
+
 - Massive productivity boost for coaches
 - 95-99% time savings on repetitive tasks
 - Professional bulk editing experience

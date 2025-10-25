@@ -689,7 +689,7 @@ export class TeamService {
 
       // Cast data to any to handle type mismatch until Supabase types are regenerated
       const teamData = data as any;
-      
+
       // Return stored permissions or defaults
       return (
         teamData?.family_permissions || {

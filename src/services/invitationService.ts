@@ -1,9 +1,9 @@
 /**
  * Player Invitation Service
- * 
+ *
  * Handles sending invitations to players to join a team.
  * Currently uses placeholder email (console.log) until email service is integrated.
- * 
+ *
  * @version 1.1.0 - Security improvements
  * - Email validation
  * - Rate limiting
@@ -124,10 +124,10 @@ async function logInvitationAttempt(
 
 /**
  * Send invitation to a player
- * 
+ *
  * MVP Implementation: Logs invitation details and updates database
  * Future: Integrate with email service (Resend, SendGrid, etc.)
- * 
+ *
  * Security features:
  * - Email validation
  * - Rate limiting (3 per email per 24h)
@@ -212,11 +212,8 @@ export async function sendPlayerInvitation(
     });
 
     if (!emailResult.success) {
-      logError(
-        "[invitationService] Email delivery failed:",
-        emailResult.error
-      );
-      
+      logError("[invitationService] Email delivery failed:", emailResult.error);
+
       // Update status to failed but don't throw - player is still in system
       await (supabase.from("team_players") as any)
         .update({ invitation_status: "failed" })
@@ -233,7 +230,7 @@ export async function sendPlayerInvitation(
     info(
       `[invitationService] Invitation email sent successfully to ${email} (Message ID: ${emailResult.messageId})`
     );
-    
+
     // Log successful attempt
     await logInvitationAttempt(teamId, playerId, email, true);
 

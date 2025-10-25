@@ -7,6 +7,7 @@
 **Overall Status**: ✅ **READY FOR PLAYER INVITATIONS** with some minor enhancements needed
 
 **Key Findings**:
+
 - ✅ Player invitation system **fully implemented** (MVP complete)
 - ✅ Roster management **production-ready**
 - ✅ Role & permission system **well-architected**
@@ -18,24 +19,25 @@
 
 ## 📊 Readiness Matrix
 
-| Feature | Status | Completeness | Blockers |
-|---------|--------|--------------|----------|
-| **Roster Management** | ✅ Ready | 95% | None |
-| **Player Invitations** | ⚠️ MVP | 60% | Email service, acceptance page |
-| **Role System** | ✅ Ready | 90% | Minor permission gaps |
-| **Team Settings** | ✅ Ready | 85% | Family permissions UI |
-| **Social Features** | ⚠️ Limited | 30% | Most features not built |
-| **Authentication** | ✅ Ready | 100% | None |
+| Feature                | Status     | Completeness | Blockers                       |
+| ---------------------- | ---------- | ------------ | ------------------------------ |
+| **Roster Management**  | ✅ Ready   | 95%          | None                           |
+| **Player Invitations** | ⚠️ MVP     | 60%          | Email service, acceptance page |
+| **Role System**        | ✅ Ready   | 90%          | Minor permission gaps          |
+| **Team Settings**      | ✅ Ready   | 85%          | Family permissions UI          |
+| **Social Features**    | ⚠️ Limited | 30%          | Most features not built        |
+| **Authentication**     | ✅ Ready   | 100%         | None                           |
 
 ---
 
 ## 🎯 Core Feature Assessment
 
-### 1. Roster Management 
+### 1. Roster Management
 
 **Status**: ✅ **PRODUCTION READY**
 
 #### What's Working
+
 - ✅ Full CRUD operations (Create, Read, Update, Delete)
 - ✅ Bulk selection and operations
 - ✅ CSV import functionality
@@ -48,6 +50,7 @@
 - ✅ Responsive mobile design
 
 #### Key Files
+
 ```
 src/pages/RosterPage.tsx              (1,732 lines - main implementation)
 src/pages/RosterPage/components/      (PlayerCard, RosterStats)
@@ -56,6 +59,7 @@ src/services/rosterService.ts         (Database operations)
 ```
 
 #### Features Available
+
 ```typescript
 - Add/Edit/Delete players
 - Bulk status changes
@@ -75,6 +79,7 @@ src/services/rosterService.ts         (Database operations)
 ```
 
 #### Database Schema
+
 ```sql
 team_players table:
   - id UUID PRIMARY KEY
@@ -97,11 +102,12 @@ team_players table:
   - invited_by UUID
 ```
 
-### 2. Player Invitation System 
+### 2. Player Invitation System
 
 **Status**: ⚠️ **MVP COMPLETE, NEEDS EMAIL SERVICE**
 
 #### What's Implemented (MVP)
+
 - ✅ Database fields for invitation tracking
 - ✅ "Invite to Team" button in add/edit modal
 - ✅ Invitation service with validation
@@ -114,6 +120,7 @@ team_players table:
 - ✅ Resend invitation capability
 
 #### What's Missing (Critical)
+
 - ❌ **Email service integration** (currently console.log)
 - ❌ **Invitation acceptance page** (`/invite/accept?token=xxx`)
 - ❌ **Player signup flow** from invitation link
@@ -121,6 +128,7 @@ team_players table:
 - ❌ **Auto-creation** of team_members record
 
 #### Key Files
+
 ```
 src/services/invitationService.ts     (Complete MVP implementation)
 src/pages/RosterPage.tsx              (Invitation UI integrated)
@@ -128,6 +136,7 @@ docs/archive/.../PLAYER_INVITATION_MVP_COMPLETE.md
 ```
 
 #### Current Flow (MVP)
+
 ```
 1. Coach adds player with email
 2. Coach clicks "Invite to Team" button
@@ -144,6 +153,7 @@ docs/archive/.../PLAYER_INVITATION_MVP_COMPLETE.md
 ```
 
 #### Planned Flow (Full Implementation)
+
 ```
 1-7. Same as above
 8. System sends email via Resend/SendGrid
@@ -160,6 +170,7 @@ docs/archive/.../PLAYER_INVITATION_MVP_COMPLETE.md
 ```
 
 #### Database Support
+
 ```sql
 -- RPC function already exists
 CREATE FUNCTION accept_player_invitation(
@@ -177,6 +188,7 @@ CREATE FUNCTION accept_player_invitation(
 ```
 
 #### Security Features
+
 ```typescript
 ✅ Email validation (regex)
 ✅ Rate limiting (3 per 24h)
@@ -186,11 +198,12 @@ CREATE FUNCTION accept_player_invitation(
 ✅ Duplicate email prevention (same team)
 ```
 
-### 3. Role & Permission System 
+### 3. Role & Permission System
 
 **Status**: ✅ **WELL-ARCHITECTED, PRODUCTION READY**
 
 #### Implementation Quality
+
 - ✅ Multi-layer role system (app-level + team-level)
 - ✅ Capability-based permissions (granular control)
 - ✅ Role service with comprehensive API
@@ -201,29 +214,32 @@ CREATE FUNCTION accept_player_invitation(
 #### Role Hierarchy
 
 **App-Level Roles** (`profiles.app_role`):
+
 ```typescript
-- super_admin      // Platform administrators
-- admin            // System administrators  
-- head_coach       // Team owners with subscription
-- coach            // Independent coaches
-- player           // Players
-- family           // Parents/guardians
+-super_admin - // Platform administrators
+  admin - // System administrators
+  head_coach - // Team owners with subscription
+  coach - // Independent coaches
+  player - // Players
+  family; // Parents/guardians
 ```
 
 **Team-Level Roles** (`team_members.team_role`):
+
 ```typescript
-- head_coach       // Team owner, full permissions
-- assistant_coach  // Can manage playbook, practices
-- coordinator      // Can manage logistics
-- manager          // Can manage equipment, events
-- player           // Team member, view-only
-- family           // Parent/guardian, limited view
-- alumni           // Former player, read-only
+-head_coach - // Team owner, full permissions
+  assistant_coach - // Can manage playbook, practices
+  coordinator - // Can manage logistics
+  manager - // Can manage equipment, events
+  player - // Team member, view-only
+  family - // Parent/guardian, limited view
+  alumni; // Former player, read-only
 ```
 
 #### Permissions System
 
 **Capability Flags** (team_members.capabilities):
+
 ```json
 {
   "can_manage_team": boolean,
@@ -238,12 +254,13 @@ CREATE FUNCTION accept_player_invitation(
 ```
 
 **UI Permissions** (computed from context):
+
 ```typescript
 interface UIPermissions {
   // Global
   canManageGlobalSettings: boolean;
   canAccessAdminPanel: boolean;
-  
+
   // Team
   canManageTeam: boolean;
   canManageRoster: boolean;
@@ -256,7 +273,7 @@ interface UIPermissions {
   canViewAnalytics: boolean;
   canManageAnalytics: boolean;
   canManageTeamSettings: boolean;
-  
+
   // Profile
   canEditOwnProfile: boolean;
   canEditOtherProfiles: boolean;
@@ -265,6 +282,7 @@ interface UIPermissions {
 ```
 
 #### Key Files
+
 ```
 src/types/permissions.ts              (Permission definitions)
 src/types/roles.ts                    (Role types & mappings)
@@ -276,20 +294,21 @@ docs/architecture/frontend/ROLE_SYSTEM_REDESIGN.md
 
 #### Default Permissions by Role
 
-| Role | Roster | Playbook | Calendar | Analytics | Settings |
-|------|--------|----------|----------|-----------|----------|
-| head_coach | ✅ Full | ✅ Full | ✅ Full | ✅ View/Manage | ✅ Full |
-| assistant_coach | ✅ View | ✅ Full | ✅ Full | ✅ View | ❌ |
-| coordinator | ✅ View | ✅ Edit | ✅ View | ✅ View | ❌ |
-| manager | ✅ View | ❌ | ✅ View | ❌ | ❌ |
-| player | ❌ | ✅ View | ✅ View | ❌ | ❌ |
-| family | ❌ | ❌ | ✅ View | ❌ | ❌ |
+| Role            | Roster  | Playbook | Calendar | Analytics      | Settings |
+| --------------- | ------- | -------- | -------- | -------------- | -------- |
+| head_coach      | ✅ Full | ✅ Full  | ✅ Full  | ✅ View/Manage | ✅ Full  |
+| assistant_coach | ✅ View | ✅ Full  | ✅ Full  | ✅ View        | ❌       |
+| coordinator     | ✅ View | ✅ Edit  | ✅ View  | ✅ View        | ❌       |
+| manager         | ✅ View | ❌       | ✅ View  | ❌             | ❌       |
+| player          | ❌      | ✅ View  | ✅ View  | ❌             | ❌       |
+| family          | ❌      | ❌       | ✅ View  | ❌             | ❌       |
 
-### 4. Team Settings 
+### 4. Team Settings
 
 **Status**: ✅ **READY, NEEDS FAMILY PERMISSIONS UI**
 
 #### What's Working
+
 - ✅ Team basic info (name, school, mascot, season)
 - ✅ Location management (address, city, state, zip)
 - ✅ Logo upload
@@ -299,12 +318,14 @@ docs/architecture/frontend/ROLE_SYSTEM_REDESIGN.md
 - ✅ Staff count management
 
 #### What's Missing
+
 - ❌ **Family permissions UI** (backend exists, UI not built)
 - ❌ Social settings configuration
 - ❌ Team privacy settings
 - ❌ Notification preferences
 
 #### Key Files
+
 ```
 src/components/team/TeamSettings.tsx
 src/types/team-management.ts
@@ -312,6 +333,7 @@ src/pages/TeamSettings.tsx (route handler)
 ```
 
 #### Team Settings Schema
+
 ```typescript
 interface TeamSettings {
   id: string;
@@ -343,17 +365,19 @@ interface TeamSettings {
 }
 ```
 
-### 5. Social Features 
+### 5. Social Features
 
 **Status**: ⚠️ **LIMITED IMPLEMENTATION**
 
 #### What Exists
+
 - ✅ Team bulletin board
 - ✅ Activity feed (basic)
 - ✅ Social features demo page (showcase)
 - ✅ User profiles with social links
 
 #### What's Missing
+
 - ❌ Direct messaging between coaches/players
 - ❌ Team announcements system
 - ❌ Parent communication portal
@@ -364,6 +388,7 @@ interface TeamSettings {
 - ❌ Notifications system
 
 #### Key Files
+
 ```
 src/pages/TeamBulletin.tsx            (Basic bulletin board)
 src/pages/SocialFeaturesDemo.tsx      (Demo/showcase)
@@ -379,7 +404,8 @@ src/components/dashboard/ActivityFeed.tsx
 **Critical for inviting players**
 
 #### Task 1.1: Email Service Integration
-```
+
+````
 Priority: 🔴 CRITICAL
 Files: src/services/invitationService.ts
 
@@ -406,20 +432,21 @@ export async function sendInvitationEmail(params) {
       subject: `Join ${params.teamName} on BoxCall!`,
       html: invitationEmailTemplate(params),
     });
-    
+
     if (error) {
       logError('Email send failed:', error);
       return { success: false, error };
     }
-    
+
     return { success: true, data };
   } catch (err) {
     return { success: false, error: err };
   }
 }
-```
+````
 
 #### Task 1.2: Build Invitation Acceptance Page
+
 ```
 Priority: 🔴 CRITICAL
 Files: src/pages/AcceptInvitationPage.tsx (NEW)
@@ -437,6 +464,7 @@ Route: /invite/accept?token=xxx
 ```
 
 #### Task 1.3: Player Signup Flow
+
 ```
 Priority: 🔴 CRITICAL
 
@@ -455,6 +483,7 @@ Steps:
 **Nice-to-have improvements**
 
 #### Task 2.1: Player Detail Page
+
 ```
 Priority: 🟡 MEDIUM
 Files: src/pages/PlayerDetailPage.tsx (EXISTS but needs work)
@@ -469,6 +498,7 @@ Add:
 ```
 
 #### Task 2.2: Bulk Invitation
+
 ```
 Priority: 🟡 MEDIUM
 Files: src/pages/RosterPage.tsx
@@ -482,6 +512,7 @@ Add:
 ```
 
 #### Task 2.3: Invitation Management Dashboard
+
 ```
 Priority: 🟢 LOW
 Files: src/pages/InvitationsPage.tsx (NEW)
@@ -499,6 +530,7 @@ Add:
 **Required for full social experience**
 
 #### Task 3.1: Team Announcements
+
 ```
 Priority: 🟡 MEDIUM
 Files: src/pages/AnnouncementsPage.tsx (NEW)
@@ -513,6 +545,7 @@ Features:
 ```
 
 #### Task 3.2: Parent Communication Portal
+
 ```
 Priority: 🟡 MEDIUM
 Files: src/pages/ParentPortalPage.tsx (NEW)
@@ -527,6 +560,7 @@ Features:
 ```
 
 #### Task 3.3: Direct Messaging
+
 ```
 Priority: 🟢 LOW
 Files: src/pages/MessagingPage.tsx (NEW)
@@ -541,6 +575,7 @@ Features:
 ```
 
 #### Task 3.4: Media Gallery
+
 ```
 Priority: 🟢 LOW
 Files: src/pages/MediaGalleryPage.tsx (NEW)
@@ -557,19 +592,21 @@ Features:
 ### Phase 4: Team Settings Enhancements (1 day)
 
 #### Task 4.1: Family Permissions UI
+
 ```
 Priority: 🟡 MEDIUM
 Files: src/components/team/TeamSettings.tsx
 
 Add section:
 - Toggle family roster visibility
-- Toggle family schedule visibility  
+- Toggle family schedule visibility
 - Toggle family stats visibility
 - Toggle family RSVP capability
 - Toggle family fundraising access
 ```
 
 #### Task 4.2: Social Settings
+
 ```
 Priority: 🟡 MEDIUM
 
@@ -635,15 +672,17 @@ Add:
 ### Production Dependencies
 
 **Email Services** (Choose one):
+
 ```json
 {
-  "resend": "^2.0.0",          // Recommended - Modern, simple API
-  "sendgrid": "^7.7.0",         // Alternative - Enterprise-grade
-  "@supabase/auth-helpers": "*"  // Already installed
+  "resend": "^2.0.0", // Recommended - Modern, simple API
+  "sendgrid": "^7.7.0", // Alternative - Enterprise-grade
+  "@supabase/auth-helpers": "*" // Already installed
 }
 ```
 
 ### Current Status
+
 - ✅ All core dependencies up to date
 - ✅ No critical security vulnerabilities
 - ✅ TypeScript: 0 errors
@@ -655,6 +694,7 @@ Add:
 ## 🧪 Testing Status
 
 ### Unit Tests
+
 ```
 Current: ~5% coverage
 Target: 70% coverage
@@ -666,6 +706,7 @@ Priority areas:
 ```
 
 ### Integration Tests
+
 ```
 Status: Not implemented
 Needed:
@@ -675,6 +716,7 @@ Needed:
 ```
 
 ### E2E Tests
+
 ```
 Status: Playwright configured, limited tests
 Needed:
@@ -688,6 +730,7 @@ Needed:
 ## 💾 Database Health
 
 ### Schema Status
+
 ✅ **PRODUCTION READY**
 
 - ✅ All tables properly indexed
@@ -697,33 +740,35 @@ Needed:
 - ✅ Backup system in place
 
 ### Missing Indexes (Recommendations)
+
 ```sql
 -- For faster invitation queries
-CREATE INDEX idx_team_players_invitation_status 
-  ON team_players(invitation_status) 
+CREATE INDEX idx_team_players_invitation_status
+  ON team_players(invitation_status)
   WHERE invitation_status != 'not_invited';
 
 -- For faster invitation lookup
-CREATE INDEX idx_team_players_invitation_token 
-  ON team_players(invitation_token) 
+CREATE INDEX idx_team_players_invitation_token
+  ON team_players(invitation_token)
   WHERE invitation_token IS NOT NULL;
 
 -- For audit queries
-CREATE INDEX idx_team_players_invited_by 
-  ON team_players(invited_by) 
+CREATE INDEX idx_team_players_invited_by
+  ON team_players(invited_by)
   WHERE invited_by IS NOT NULL;
 ```
 
 ### Database Cleanup Jobs Needed
+
 ```sql
 -- Expire old pending invitations (run daily)
-UPDATE team_players 
+UPDATE team_players
 SET invitation_status = 'expired'
 WHERE invitation_status = 'pending'
   AND invitation_expires_at < NOW();
 
 -- Clean up old expired invitations (run weekly)
-DELETE FROM team_players 
+DELETE FROM team_players
 WHERE invitation_status = 'expired'
   AND invitation_expires_at < NOW() - INTERVAL '30 days';
 ```
@@ -733,17 +778,20 @@ WHERE invitation_status = 'expired'
 ## 📱 Mobile Readiness
 
 ### Roster Page
+
 - ✅ Responsive design
 - ✅ Touch-friendly buttons
 - ✅ Mobile-optimized forms
 - ✅ Single-column layout on mobile
 
 ### Invitation Flow
+
 - ✅ Mobile-responsive email templates (needed)
 - ✅ Mobile-optimized acceptance page (needed)
 - ✅ Touch-friendly UI
 
 ### Team Settings
+
 - ✅ Mobile-responsive forms
 - ✅ Auto-save functionality
 - ✅ Collapsible sections
@@ -753,6 +801,7 @@ WHERE invitation_status = 'expired'
 ## 🎨 UX/UI Quality
 
 ### Roster Management
+
 **Rating**: ⭐⭐⭐⭐⭐ Excellent
 
 - ✅ Clear visual hierarchy
@@ -765,6 +814,7 @@ WHERE invitation_status = 'expired'
 - ✅ Search & filter
 
 ### Invitation System
+
 **Rating**: ⭐⭐⭐⭐ Good (pending email)
 
 - ✅ Clear invitation buttons
@@ -774,6 +824,7 @@ WHERE invitation_status = 'expired'
 - ⚠️ No acceptance page yet
 
 ### Team Settings
+
 **Rating**: ⭐⭐⭐⭐ Good
 
 - ✅ Auto-save UX
@@ -919,6 +970,7 @@ WHERE invitation_status = 'expired'
 ## 📞 Support & Resources
 
 ### Documentation
+
 - ✅ Role system fully documented
 - ✅ Invitation flow documented (MVP)
 - ✅ Database schema documented
@@ -926,6 +978,7 @@ WHERE invitation_status = 'expired'
 - ⚠️ Missing: Acceptance flow guide
 
 ### External Resources
+
 - [Resend Docs](https://resend.com/docs)
 - [Supabase Auth](https://supabase.com/docs/guides/auth)
 - [RLS Policies](https://supabase.com/docs/guides/auth/row-level-security)
@@ -935,6 +988,7 @@ WHERE invitation_status = 'expired'
 ## 🎉 Conclusion
 
 ### What You Can Do **RIGHT NOW**
+
 ✅ Add players to roster
 ✅ Manage team settings
 ✅ Configure roles & permissions
@@ -942,12 +996,14 @@ WHERE invitation_status = 'expired'
 ✅ Use team bulletin
 
 ### What You Can Do **THIS WEEK** (with email service)
+
 ✅ Send player invitations
 ✅ Players receive invitation emails
 ✅ Track invitation status
 ✅ Resend invitations
 
 ### What You Need **NEXT WEEK** (with acceptance page)
+
 ✅ Players accept invitations
 ✅ Players sign up/join team
 ✅ Players access dashboard
@@ -960,15 +1016,17 @@ WHERE invitation_status = 'expired'
 Track these after launch:
 
 ### Invitation Metrics
+
 - Invitations sent
 - Delivery rate
-- Open rate  
+- Open rate
 - Click-through rate
 - Acceptance rate
 - Time to acceptance
 - Bounce rate
 
 ### User Engagement
+
 - Active players per team
 - Daily active users
 - Feature usage
@@ -976,6 +1034,7 @@ Track these after launch:
 - Retention rate (7-day, 30-day)
 
 ### System Health
+
 - API response times
 - Error rates
 - Email delivery success
@@ -988,4 +1047,3 @@ Track these after launch:
 **Last Updated**: October 23, 2025
 **Status**: Ready for player invitations (pending email service)
 **Next Review**: After email service integration
-

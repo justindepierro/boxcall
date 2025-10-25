@@ -88,7 +88,7 @@ export async function exportToPDF(
   // TODO: Install jsPDF and jspdf-autotable packages
   // npm install jspdf jspdf-autotable
   // npm install --save-dev @types/jspdf
-  
+
   throw new Error(
     "PDF export is not yet implemented. Please use CSV export instead."
   );

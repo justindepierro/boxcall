@@ -1,6 +1,6 @@
 /**
  * Announcement Views Service
- * 
+ *
  * Tracks when users view announcements for read receipts
  * Provides analytics on who has/hasn't viewed announcements
  */

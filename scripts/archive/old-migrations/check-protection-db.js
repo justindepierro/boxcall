@@ -18,12 +18,16 @@ const serviceRoleKey =
   process.env.VITE_SUPABASE_SERVICE_KEY;
 
 if (!serviceRoleKey) {
-  console.error("❌ Error: SUPABASE_SERVICE_ROLE_KEY not found in .env or .env.local");
+  console.error(
+    "❌ Error: SUPABASE_SERVICE_ROLE_KEY not found in .env or .env.local"
+  );
   console.log("\n💡 To fix this:");
   console.log("1. Go to your Supabase dashboard");
   console.log("2. Settings → API → Service Role Key");
   console.log("3. Copy the key");
-  console.log("4. Add to .env or .env.local: SUPABASE_SERVICE_ROLE_KEY=your_key_here");
+  console.log(
+    "4. Add to .env or .env.local: SUPABASE_SERVICE_ROLE_KEY=your_key_here"
+  );
   process.exit(1);
 }
 

@@ -57,9 +57,8 @@ export async function ensureValidFormation({
   }
 
   if (!allowCustom) {
-    const formations = await FormationService.getFormationsByPlaybook(
-      playbookId
-    );
+    const formations =
+      await FormationService.getFormationsByPlaybook(playbookId);
     const match = formations.find(
       (formation) =>
         formation.name.trim().toLowerCase() === trimmedName.toLowerCase()
@@ -79,4 +78,3 @@ export async function ensureValidFormation({
     formationName: trimmedName,
   };
 }
-

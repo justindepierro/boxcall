@@ -3,39 +3,43 @@
  * Simple alert/notification component for displaying messages
  */
 
-import React from 'react';
-import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react';
+import React from "react";
+import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
 
 interface AlertProps {
-  variant?: 'info' | 'success' | 'warning' | 'error';
+  variant?: "info" | "success" | "warning" | "error";
   children: React.ReactNode;
   className?: string;
 }
 
-export function Alert({ variant = 'info', children, className = '' }: AlertProps) {
+export function Alert({
+  variant = "info",
+  children,
+  className = "",
+}: AlertProps) {
   const variants = {
     info: {
-      bg: 'bg-blue-50',
-      border: 'border-blue-200',
-      text: 'text-blue-800',
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-800",
       icon: Info,
     },
     success: {
-      bg: 'bg-success-bg',
-      border: 'border-success-200',
-      text: 'text-success-800',
+      bg: "bg-success-bg",
+      border: "border-success-200",
+      text: "text-success-800",
       icon: CheckCircle,
     },
     warning: {
-      bg: 'bg-yellow-50',
-      border: 'border-yellow-200',
-      text: 'text-yellow-800',
+      bg: "bg-yellow-50",
+      border: "border-yellow-200",
+      text: "text-yellow-800",
       icon: AlertTriangle,
     },
     error: {
-      bg: 'bg-error-bg',
-      border: 'border-error-200',
-      text: 'text-error-800',
+      bg: "bg-error-bg",
+      border: "border-error-200",
+      text: "text-error-800",
       icon: XCircle,
     },
   };

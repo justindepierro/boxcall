@@ -1,29 +1,29 @@
 /**
  * BoxCall Card Component Types
- * 
+ *
  * Shadow-based elevation system (no borders on cards)
  */
 import type { HTMLAttributes, ReactNode } from "react";
 
 /**
  * Card Variants - Shadow-only design (NO BORDERS)
- * 
+ *
  * Removed: "outlined" variant (violates shadow-only standard)
  * Added: "subtle" and "floating" for expanded elevation range
  */
 export type CardVariant =
-  | "default"   // Standard card with medium shadow (MOST COMMON)
-  | "elevated"  // Stronger shadow for prominent cards
-  | "subtle"    // Minimal shadow for secondary content
-  | "glass"     // Glassmorphism with backdrop blur
-  | "filled"    // Muted background, minimal elevation
-  | "accent"    // Brand gradient with shadow
+  | "default" // Standard card with medium shadow (MOST COMMON)
+  | "elevated" // Stronger shadow for prominent cards
+  | "subtle" // Minimal shadow for secondary content
+  | "glass" // Glassmorphism with backdrop blur
+  | "filled" // Muted background, minimal elevation
+  | "accent" // Brand gradient with shadow
   | "floating"; // Maximum shadow for modals/overlays
 
 export type CardSize =
-  | "sm"  // 12px padding - compact
-  | "md"  // 16px padding - standard (MOST COMMON)
-  | "lg"  // 24px padding - spacious
+  | "sm" // 12px padding - compact
+  | "md" // 16px padding - standard (MOST COMMON)
+  | "lg" // 24px padding - spacious
   | "xl"; // 32px padding - hero sections
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {

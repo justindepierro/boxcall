@@ -13,6 +13,7 @@ Navigate to: **Formation Builder → Data Diagnostic tab**
 You'll see:
 
 ### Overview Stats
+
 - **Total Formations** - How many formations exist
 - **With Direction** - How many have left/right direction set
 - **With Opposites** - How many are properly linked to opposites
@@ -20,17 +21,21 @@ You'll see:
 - **Needing Attention** - How many still need opposite variants
 
 ### Direction Breakdown
+
 - Left formations count
-- Right formations count  
+- Right formations count
 - No direction count
 
 ### Priority Breakdown (if any need attention)
+
 - 🔴 **High Priority** - Formations used in 5+ plays
 - 🟡 **Medium Priority** - Formations used in 2-4 plays
 - 🟢 **Low Priority** - Formations used in 0-1 plays
 
 ### Top 10 Formations
+
 Shows your most-used formations with:
+
 - Formation name
 - Direction (left/right/none)
 - Usage count
@@ -53,6 +58,7 @@ Shows your most-used formations with:
 ## 📝 What You'll Learn
 
 This diagnostic answers questions like:
+
 - "How many formations do I have?"
 - "How many need opposite variants?"
 - "Which formations are used most?"
@@ -104,6 +110,7 @@ Left: 10 | Right: 10 | No Direction: 4
 ## 🎓 For Testing Phase 1
 
 Use this diagnostic to:
+
 1. See current state before testing
 2. Identify which formations need fixes
 3. Watch the numbers change as you fix them

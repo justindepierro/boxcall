@@ -1,22 +1,22 @@
 /**
  * Mobile Component Library
- * 
+ *
  * Consolidated mobile components following industry-standard organization:
  * - core/: Navigation and layout (BottomNav, Drawer)
  * - ui/: Reusable UI components (Cards, Sections, Lists)
- * 
+ *
  * All components follow mobile-first design principles:
  * - Touch targets: 44px minimum (Apple HIG)
  * - Typography: 16px minimum for body text
  * - Spacing: Comfortable, mobile-optimized
  * - Animation: Smooth, native-feeling transitions
  * - Accessibility: WCAG 2.1 AA compliant
- * 
+ *
  * Breakpoints (aligned with tailwind.config.js):
  * - Mobile: < 768px (default, no prefix)
  * - Tablet: 768px+ (sm:)
  * - Desktop: 1024px+ (md:)
- * 
+ *
  * @module mobile
  */
 
@@ -25,9 +25,9 @@
 // ============================================================================
 
 export { MobileBottomNavigation } from "./core/MobileBottomNavigation";
-export type { 
+export type {
   MobileBottomNavigationProps,
-  MobileNavItem 
+  MobileNavItem,
 } from "./core/MobileBottomNavigation";
 
 export { MobileDrawer } from "./core/MobileDrawer";
@@ -41,7 +41,11 @@ export { MobileDrawer } from "./core/MobileDrawer";
 export { MobileCTACard } from "./ui/MobileCTACard";
 export type { MobileCTACardProps } from "./ui/MobileCTACard";
 
-export { MobileCard, MobileCardHeader, MobileCardFooter } from "./ui/MobileCard";
+export {
+  MobileCard,
+  MobileCardHeader,
+  MobileCardFooter,
+} from "./ui/MobileCard";
 export type {
   MobileCardProps,
   MobileCardHeaderProps,
@@ -62,7 +66,10 @@ export { MobileSection } from "./ui/MobileSection";
 export type { MobileSectionProps } from "./ui/MobileSection";
 
 // Interactive
-export { MobileQuickActions, MobileQuickActionRow } from "./ui/MobileQuickActions";
+export {
+  MobileQuickActions,
+  MobileQuickActionRow,
+} from "./ui/MobileQuickActions";
 export type {
   MobileQuickActionsProps,
   MobileQuickActionRowProps,
@@ -88,34 +95,34 @@ export type {
 
 /**
  * When to use mobile components:
- * 
+ *
  * 1. Use mobile/core components for:
  *    - Bottom navigation bars
  *    - Side drawers
  *    - Mobile-specific layouts
- * 
+ *
  * 2. Use mobile/ui components for:
  *    - Cards with mobile-optimized spacing
  *    - Sections with mobile-friendly layouts
  *    - Lists with swipe actions
  *    - Quick action grids
- * 
+ *
  * 3. For simple responsive styling:
  *    - Prefer Tailwind breakpoints (sm:, md:, lg:)
  *    - Only use components for complex mobile interactions
- * 
+ *
  * 4. For mobile detection logic:
  *    - Use useIsMobile() hook from hooks/useBreakpoint
  *    - Don't check window.innerWidth manually
- * 
+ *
  * Example:
  * ```tsx
  * import { MobileSection, MobileCTACard } from 'components/mobile';
  * import { useIsMobile } from 'hooks/useBreakpoint';
- * 
+ *
  * const MyComponent = () => {
  *   const isMobile = useIsMobile();
- *   
+ *
  *   return isMobile ? (
  *     <MobileSection>
  *       <MobileCTACard title="Action" onClick={handleClick} />

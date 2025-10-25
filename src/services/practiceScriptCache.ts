@@ -1,6 +1,6 @@
 /**
  * Practice Script Caching Service
- * 
+ *
  * High-performance caching layer for practice scripts with:
  * - In-memory cache for instant access
  * - IndexedDB for offline support
@@ -157,7 +157,9 @@ class PracticeScriptCacheService {
       (this.metrics.avgResponseTime * (total - 1) + responseTime) / total;
   }
 
-  private async getFromIndexedDB<T>(key: string): Promise<CacheEntry<T> | null> {
+  private async getFromIndexedDB<T>(
+    key: string
+  ): Promise<CacheEntry<T> | null> {
     if (!this.db) await this.initIndexedDB();
     if (!this.db) return null;
 
@@ -174,7 +176,10 @@ class PracticeScriptCacheService {
     });
   }
 
-  private async setInIndexedDB<T>(key: string, entry: CacheEntry<T>): Promise<void> {
+  private async setInIndexedDB<T>(
+    key: string,
+    entry: CacheEntry<T>
+  ): Promise<void> {
     if (!this.db) await this.initIndexedDB();
     if (!this.db) return;
 

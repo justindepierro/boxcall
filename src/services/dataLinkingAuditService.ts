@@ -1,11 +1,11 @@
 /**
  * Data Linking Audit Service
- * 
+ *
  * Provides access to database audit views and consistency checks
  * for formation-personnel linking integrity.
  */
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 
 export interface PlayMissingFormationLink {
   id: string;
@@ -45,7 +45,7 @@ export interface OrphanedPersonnelConfig {
 export interface FormationVariantIssue {
   formation_id: string;
   formation_name: string;
-  issue_type: 'broken_link' | 'personnel_mismatch' | 'missing_opposite';
+  issue_type: "broken_link" | "personnel_mismatch" | "missing_opposite";
   issue_description: string;
 }
 
@@ -55,7 +55,7 @@ export interface BatchLinkResult {
   formation_text: string;
   matched_formation_id: string;
   matched_formation_name: string;
-  action: 'WOULD UPDATE' | 'UPDATED';
+  action: "WOULD UPDATE" | "UPDATED";
 }
 
 /**
@@ -68,21 +68,22 @@ export class DataLinkingAuditService {
   static async getPlaysMissingFormationLink(
     playbookId?: string
   ): Promise<PlayMissingFormationLink[]> {
-    let query = supabase
-      .from('plays_missing_formation_link')
-      .select('*');
-    
+    let query = supabase.from("plays_missing_formation_link").select("*");
+
     if (playbookId) {
-      query = query.eq('playbook_id', playbookId);
+      query = query.eq("playbook_id", playbookId);
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to fetch plays missing formation link:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to fetch plays missing formation link:",
+        error
+      );
       return [];
     }
-    
+
     return data as PlayMissingFormationLink[];
   }
 
@@ -92,21 +93,22 @@ export class DataLinkingAuditService {
   static async getPlaysMissingPersonnelLink(
     playbookId?: string
   ): Promise<PlayMissingPersonnelLink[]> {
-    let query = supabase
-      .from('plays_missing_personnel_link')
-      .select('*');
-    
+    let query = supabase.from("plays_missing_personnel_link").select("*");
+
     if (playbookId) {
-      query = query.eq('playbook_id', playbookId);
+      query = query.eq("playbook_id", playbookId);
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to fetch plays missing personnel link:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to fetch plays missing personnel link:",
+        error
+      );
       return [];
     }
-    
+
     return data as PlayMissingPersonnelLink[];
   }
 
@@ -116,21 +118,22 @@ export class DataLinkingAuditService {
   static async getFormationsMissingPersonnel(
     playbookId?: string
   ): Promise<FormationMissingPersonnel[]> {
-    let query = supabase
-      .from('formations_missing_personnel')
-      .select('*');
-    
+    let query = supabase.from("formations_missing_personnel").select("*");
+
     if (playbookId) {
-      query = query.eq('playbook_id', playbookId);
+      query = query.eq("playbook_id", playbookId);
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to fetch formations missing personnel:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to fetch formations missing personnel:",
+        error
+      );
       return [];
     }
-    
+
     return data as FormationMissingPersonnel[];
   }
 
@@ -140,50 +143,71 @@ export class DataLinkingAuditService {
   static async getOrphanedPersonnelConfigs(
     playbookId?: string
   ): Promise<OrphanedPersonnelConfig[]> {
-    let query = supabase
-      .from('orphaned_personnel_configs')
-      .select('*');
-    
+    let query = supabase.from("orphaned_personnel_configs").select("*");
+
     if (playbookId) {
-      query = query.eq('playbook_id', playbookId);
+      query = query.eq("playbook_id", playbookId);
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to fetch orphaned personnel configs:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to fetch orphaned personnel configs:",
+        error
+      );
       return [];
     }
-    
+
     return data as OrphanedPersonnelConfig[];
   }
 
   /**
    * Check formation variant consistency
    */
-  static async checkFormationVariantConsistency(): Promise<FormationVariantIssue[]> {
-    const { data, error } = await supabase.rpc('check_formation_variant_consistency');
-    
+  static async checkFormationVariantConsistency(): Promise<
+    FormationVariantIssue[]
+  > {
+    const { data, error } = await supabase.rpc(
+      "check_formation_variant_consistency"
+    );
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to check formation variant consistency:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to check formation variant consistency:",
+        error
+      );
       return [];
     }
-    
+
     return data as FormationVariantIssue[];
   }
 
   /**
    * Fix broken formation variant links
    */
-  static async fixFormationVariantLinks(): Promise<{ fixed_formation_id: string; fixed_formation_name: string; fix_description: string }[]> {
-    const { data, error } = await supabase.rpc('fix_formation_variant_links');
-    
+  static async fixFormationVariantLinks(): Promise<
+    {
+      fixed_formation_id: string;
+      fixed_formation_name: string;
+      fix_description: string;
+    }[]
+  > {
+    const { data, error } = await supabase.rpc("fix_formation_variant_links");
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to fix formation variant links:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to fix formation variant links:",
+        error
+      );
       throw error;
     }
-    
-    return data as { fixed_formation_id: string; fixed_formation_name: string; fix_description: string }[];
+
+    return data as {
+      fixed_formation_id: string;
+      fixed_formation_name: string;
+      fix_description: string;
+    }[];
   }
 
   /**
@@ -194,16 +218,22 @@ export class DataLinkingAuditService {
     dryRun: boolean = true
   ): Promise<BatchLinkResult[]> {
     // @ts-expect-error - RPC function not in generated types yet
-    const { data, error } = await supabase.rpc('batch_link_plays_to_formations', {
-      p_playbook_id: playbookId,
-      dry_run: dryRun,
-    });
-    
+    const { data, error } = await supabase.rpc(
+      "batch_link_plays_to_formations",
+      {
+        p_playbook_id: playbookId,
+        dry_run: dryRun,
+      }
+    );
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to batch link plays to formations:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to batch link plays to formations:",
+        error
+      );
       throw error;
     }
-    
+
     return data as BatchLinkResult[];
   }
 
@@ -215,16 +245,22 @@ export class DataLinkingAuditService {
     dryRun: boolean = true
   ): Promise<BatchLinkResult[]> {
     // @ts-expect-error - RPC function not in generated types yet
-    const { data, error } = await supabase.rpc('batch_link_plays_to_personnel', {
-      p_playbook_id: playbookId,
-      dry_run: dryRun,
-    });
-    
+    const { data, error } = await supabase.rpc(
+      "batch_link_plays_to_personnel",
+      {
+        p_playbook_id: playbookId,
+        dry_run: dryRun,
+      }
+    );
+
     if (error) {
-      console.error('[DataLinkingAudit] Failed to batch link plays to personnel:', error);
+      console.error(
+        "[DataLinkingAudit] Failed to batch link plays to personnel:",
+        error
+      );
       throw error;
     }
-    
+
     return data as BatchLinkResult[];
   }
 

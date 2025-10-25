@@ -1,20 +1,20 @@
 /**
  * Netlify Function: Send Invitation Email
- * 
+ *
  * This serverless function handles sending invitation emails via Resend API
  * to avoid CORS issues and keep API keys secure.
  */
 
-const { Resend } = require('resend');
+const { Resend } = require("resend");
 
 const resend = new Resend(process.env.VITE_RESEND_API_KEY);
 
 exports.handler = async (event) => {
   // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
+  if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' }),
+      body: JSON.stringify({ error: "Method not allowed" }),
     };
   }
 
@@ -25,14 +25,17 @@ exports.handler = async (event) => {
     if (!to || !subject || !html) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Missing required fields: to, subject, html' }),
+        body: JSON.stringify({
+          error: "Missing required fields: to, subject, html",
+        }),
       };
     }
 
-    const fromEmail = process.env.VITE_RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-    const fromName = process.env.VITE_RESEND_FROM_NAME || 'BoxCall';
+    const fromEmail =
+      process.env.VITE_RESEND_FROM_EMAIL || "onboarding@resend.dev";
+    const fromName = process.env.VITE_RESEND_FROM_NAME || "BoxCall";
 
-    console.log('[SendInvitationEmail] Sending email:', {
+    console.log("[SendInvitationEmail] Sending email:", {
       to,
       subject,
       from: `${fromName} <${fromEmail}>`,
@@ -48,17 +51,17 @@ exports.handler = async (event) => {
     });
 
     if (response.error) {
-      console.error('[SendInvitationEmail] Error:', response.error);
+      console.error("[SendInvitationEmail] Error:", response.error);
       return {
         statusCode: 500,
-        body: JSON.stringify({ 
-          success: false, 
-          error: response.error.message 
+        body: JSON.stringify({
+          success: false,
+          error: response.error.message,
         }),
       };
     }
 
-    console.log('[SendInvitationEmail] Success:', response.data?.id);
+    console.log("[SendInvitationEmail] Success:", response.data?.id);
 
     return {
       statusCode: 200,
@@ -68,12 +71,12 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error('[SendInvitationEmail] Exception:', error);
+    console.error("[SendInvitationEmail] Exception:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({
         success: false,
-        error: error.message || 'Failed to send email',
+        error: error.message || "Failed to send email",
       }),
     };
   }
@@ -83,5 +86,8 @@ exports.handler = async (event) => {
  * Simple HTML tag stripper for plain text fallback
  */
 function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }

@@ -7,6 +7,7 @@
 **File:** `src/components/formations/CreateOppositeFormationModal.enhanced.tsx`
 
 **New Features:**
+
 - ✅ **Custom naming with pattern detection** - Detects team-specific patterns:
   - "Rip" ↔ "Liz"
   - "Red" ↔ "Blue"
@@ -32,9 +33,10 @@
   - Direction labels on both previews
 
 **Usage:**
+
 ```tsx
 // Replace old import with enhanced version
-import { CreateOppositeFormationModal } from './CreateOppositeFormationModal.enhanced';
+import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal.enhanced";
 ```
 
 ---
@@ -44,25 +46,39 @@ import { CreateOppositeFormationModal } from './CreateOppositeFormationModal.enh
 **Goal:** Add back button to easily navigate between tabs
 
 **Implementation Plan:**
+
 ```tsx
 // In FormationBuilderPanel.tsx
 const tabs = [
-  { id: 'details', label: 'Formation Details', icon: <Save /> },
-  { id: 'diagnostic', label: 'Data Diagnostic', icon: <AlertCircle />, showBack: true },
-  { id: 'review', label: 'Direction Review', icon: <AlertCircle />, showBack: true },
-  { id: 'incomplete', label: 'Incomplete Formations', icon: <CheckCircle />, showBack: true },
+  { id: "details", label: "Formation Details", icon: <Save /> },
+  {
+    id: "diagnostic",
+    label: "Data Diagnostic",
+    icon: <AlertCircle />,
+    showBack: true,
+  },
+  {
+    id: "review",
+    label: "Direction Review",
+    icon: <AlertCircle />,
+    showBack: true,
+  },
+  {
+    id: "incomplete",
+    label: "Incomplete Formations",
+    icon: <CheckCircle />,
+    showBack: true,
+  },
 ];
 
 // Add back button in tab content
-{activeTab !== 'details' && (
-  <Button
-    variant="ghost"
-    size="sm"
-    onClick={() => setActiveTab('details')}
-  >
-    ← Back to Details
-  </Button>
-)}
+{
+  activeTab !== "details" && (
+    <Button variant="ghost" size="sm" onClick={() => setActiveTab("details")}>
+      ← Back to Details
+    </Button>
+  );
+}
 ```
 
 ---
@@ -101,24 +117,25 @@ const tabs = [
 Try these formations to test pattern detection:
 
 | Original Name | Expected Suggestion |
-|--------------|---------------------|
-| "Rip"        | "Liz"              |
-| "Liz"        | "Rip"              |
-| "Red"        | "Blue"             |
-| "Blue"       | "Red"              |
-| "Trips Right"| "Trips"            |
-| "Twins Lt"   | "Twins"            |
-| "I Form R"   | "I Form"           |
+| ------------- | ------------------- |
+| "Rip"         | "Liz"               |
+| "Liz"         | "Rip"               |
+| "Red"         | "Blue"              |
+| "Blue"        | "Red"               |
+| "Trips Right" | "Trips"             |
+| "Twins Lt"    | "Twins"             |
+| "I Form R"    | "I Form"            |
 
 ---
 
 ## 📝 Phase 3 TODO (Custom Naming in API)
 
-Currently the enhanced modal shows custom naming UI, but the backend `createOppositeFormation()` doesn't support custom names yet. 
+Currently the enhanced modal shows custom naming UI, but the backend `createOppositeFormation()` doesn't support custom names yet.
 
 **To complete this in Phase 3:**
 
 1. Update `FormationService.createOppositeFormation()` signature:
+
 ```typescript
 static async createOppositeFormation(
   formationId: string,
@@ -127,19 +144,21 @@ static async createOppositeFormation(
 ```
 
 2. Use custom name when creating formation:
+
 ```typescript
 const opposite = await this.createFormation({
   // ... other fields
-  name: customName || original.name,  // Use custom name if provided
+  name: customName || original.name, // Use custom name if provided
   // ...
 });
 ```
 
 3. Update modal to pass custom name:
+
 ```typescript
 const opposite = await FormationService.createOppositeFormation(
   originalFormation.id,
-  customName  // Pass the custom name
+  customName // Pass the custom name
 );
 ```
 
@@ -160,12 +179,13 @@ mv src/components/formations/CreateOppositeFormationModal.enhanced.tsx src/compo
 ### Option 2: Import Enhanced Version Directly
 
 In `FormationDirectionReviewPanel.tsx`:
+
 ```tsx
 // Change this line:
-import { CreateOppositeFormationModal } from './CreateOppositeFormationModal';
+import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
 
 // To this:
-import { CreateOppositeFormationModal } from './CreateOppositeFormationModal.enhanced';
+import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal.enhanced";
 ```
 
 ---
@@ -173,6 +193,7 @@ import { CreateOppositeFormationModal } from './CreateOppositeFormationModal.enh
 ## 🎨 Visual Improvements Summary
 
 **Before:**
+
 - Simple modal with basic message
 - No name customization
 - Loading state just says "Creating..."
@@ -180,6 +201,7 @@ import { CreateOppositeFormationModal } from './CreateOppositeFormationModal.enh
 - No success confirmation
 
 **After:**
+
 - ✨ Pattern-aware name suggestions
 - ✏️ Editable formation name with reset
 - ⏳ Loading state shows exact name being created

@@ -164,9 +164,12 @@ export class PlaysService {
   static async createPlay(playData: Partial<Play>): Promise<Play> {
     try {
       // Validate play data
-      const validation = await PlayValidationService.validatePlayServer(playData);
+      const validation =
+        await PlayValidationService.validatePlayServer(playData);
       if (!validation.valid) {
-        throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(", ")}`);
+        throw new Error(
+          `Validation failed: ${validation.errors.map((e) => e.message).join(", ")}`
+        );
       }
 
       // Get current user for created_by field
@@ -345,7 +348,10 @@ export class PlaysService {
         query = query.limit(options.limit);
       }
       if (options?.offset) {
-        query = query.range(options.offset, options.offset + (options.limit || 100) - 1);
+        query = query.range(
+          options.offset,
+          options.offset + (options.limit || 100) - 1
+        );
       }
 
       const { data, error } = await query;
@@ -463,7 +469,7 @@ export class PlaysService {
         Object.entries(validUpdates).filter(([_, value]) => value !== undefined)
       );
 
-      const { data, error} = await supabase
+      const { data, error } = await supabase
         .from("plays")
         // @ts-expect-error - Supabase type issue with plays table update
         .update(cleanUpdates)
@@ -720,7 +726,10 @@ export class PlaysService {
       }
 
       // Analyze formation patterns
-      const formationStats = new Map<string, { count: number; playTypes: Set<string> }>();
+      const formationStats = new Map<
+        string,
+        { count: number; playTypes: Set<string> }
+      >();
 
       (data as any[]).forEach((play: any) => {
         const formation = play.formation;
@@ -735,8 +744,8 @@ export class PlaysService {
       // Sort formations by usage frequency and versatility
       const sortedFormations = Array.from(formationStats.entries())
         .sort((a, b) => {
-          const scoreA = a[1].count + (a[1].playTypes.size * 2); // Bonus for versatility
-          const scoreB = b[1].count + (b[1].playTypes.size * 2);
+          const scoreA = a[1].count + a[1].playTypes.size * 2; // Bonus for versatility
+          const scoreB = b[1].count + b[1].playTypes.size * 2;
           return scoreB - scoreA;
         })
         .map(([formation]) => formation);
@@ -744,11 +753,13 @@ export class PlaysService {
       // If current formation provided, prioritize similar formations
       if (currentFormation) {
         const baseCurrent = this.extractBaseFormation(currentFormation);
-        const similarFormations = sortedFormations.filter(f =>
-          this.extractBaseFormation(f) === baseCurrent && f !== currentFormation
+        const similarFormations = sortedFormations.filter(
+          (f) =>
+            this.extractBaseFormation(f) === baseCurrent &&
+            f !== currentFormation
         );
-        const otherFormations = sortedFormations.filter(f =>
-          this.extractBaseFormation(f) !== baseCurrent
+        const otherFormations = sortedFormations.filter(
+          (f) => this.extractBaseFormation(f) !== baseCurrent
         );
         return [...similarFormations, ...otherFormations].slice(0, limit);
       }
@@ -885,15 +896,26 @@ export class PlaysService {
 
     // Common play patterns by formation type
     const playPatterns: Record<string, string[]> = {
-      'shotgun': ['Shotgun', 'Shotgun Spread', 'Shotgun Trips', 'Shotgun Empty'],
-      'pistol': ['Pistol', 'Pistol Power', 'Pistol Read', 'Pistol Counter'],
-      'under center': ['Power', 'Counter', 'Trap', 'Draw', 'Keeper'],
-      'trips': ['Trips', 'Trips Wheel', 'Trips Corner', 'Trips Smash', 'Trips Out'],
-      'bunch': ['Bunch', 'Bunch Slants', 'Bunch Crossers', 'Bunch Outs'],
-      'empty': ['Empty', 'Empty Slants', 'Empty Wheels', 'Empty Corners'],
-      'ace': ['Ace', 'Ace Slants', 'Ace Outs', 'Ace Crossers'],
-      'doubles': ['Doubles', 'Doubles Slants', 'Doubles Outs', 'Doubles Crossers'],
-      'trio': ['Trio', 'Trio Slants', 'Trio Outs', 'Trio Crossers']
+      shotgun: ["Shotgun", "Shotgun Spread", "Shotgun Trips", "Shotgun Empty"],
+      pistol: ["Pistol", "Pistol Power", "Pistol Read", "Pistol Counter"],
+      "under center": ["Power", "Counter", "Trap", "Draw", "Keeper"],
+      trips: [
+        "Trips",
+        "Trips Wheel",
+        "Trips Corner",
+        "Trips Smash",
+        "Trips Out",
+      ],
+      bunch: ["Bunch", "Bunch Slants", "Bunch Crossers", "Bunch Outs"],
+      empty: ["Empty", "Empty Slants", "Empty Wheels", "Empty Corners"],
+      ace: ["Ace", "Ace Slants", "Ace Outs", "Ace Crossers"],
+      doubles: [
+        "Doubles",
+        "Doubles Slants",
+        "Doubles Outs",
+        "Doubles Crossers",
+      ],
+      trio: ["Trio", "Trio Slants", "Trio Outs", "Trio Crossers"],
     };
 
     // Find matching formation patterns
@@ -903,7 +925,7 @@ export class PlaysService {
 
     // Add direction-specific suggestions
     if (direction) {
-      matchingPatterns.forEach(pattern => {
+      matchingPatterns.forEach((pattern) => {
         if (!pattern.includes(direction)) {
           suggestions.push(`${pattern} ${direction}`);
         }
@@ -916,14 +938,14 @@ export class PlaysService {
     // Add play type specific suggestions
     if (playType) {
       const typePrefixes: Record<string, string[]> = {
-        'run': ['Power', 'Counter', 'Trap', 'Draw', 'Keeper', 'Read'],
-        'pass': ['Slants', 'Outs', 'Crossers', 'Corners', 'Wheels', 'Posts'],
-        'screen': ['Screen', 'Bubble Screen', 'Slip Screen'],
-        'play action': ['Play Action', 'PA Boot', 'PA Rollout']
+        run: ["Power", "Counter", "Trap", "Draw", "Keeper", "Read"],
+        pass: ["Slants", "Outs", "Crossers", "Corners", "Wheels", "Posts"],
+        screen: ["Screen", "Bubble Screen", "Slip Screen"],
+        "play action": ["Play Action", "PA Boot", "PA Rollout"],
       };
 
       const prefixes = typePrefixes[playType.toLowerCase()] || [];
-      prefixes.forEach(prefix => {
+      prefixes.forEach((prefix) => {
         suggestions.push(`${baseFormation} ${prefix}`);
         if (direction) {
           suggestions.push(`${baseFormation} ${prefix} ${direction}`);
@@ -933,7 +955,7 @@ export class PlaysService {
 
     // Filter out existing names and limit results
     return suggestions
-      .filter(name => !existingNames.includes(name))
+      .filter((name) => !existingNames.includes(name))
       .slice(0, 8);
   }
 
@@ -941,19 +963,41 @@ export class PlaysService {
    * Helper: Extract base formation name (remove direction keywords)
    */
   private static extractBaseFormation(formation: string): string {
-    const directionKeywords = ['left', 'right', 'l', 'r', 'lt', 'rt', 'lft', 'rgt', 'middle', 'mid', 'center', 'c'];
+    const directionKeywords = [
+      "left",
+      "right",
+      "l",
+      "r",
+      "lt",
+      "rt",
+      "lft",
+      "rgt",
+      "middle",
+      "mid",
+      "center",
+      "c",
+    ];
     const words = formation.toLowerCase().split(/\s+/);
-    return words
-      .filter(word => !directionKeywords.includes(word))
-      .join(' ');
+    return words.filter((word) => !directionKeywords.includes(word)).join(" ");
   }
 
   /**
    * Helper: Extract direction from formation name
    */
-  private static extractDirectionFromFormation(formation: string): string | null {
+  private static extractDirectionFromFormation(
+    formation: string
+  ): string | null {
     const words = formation.toLowerCase().split(/\s+/);
-    const directionKeywords = ['left', 'right', 'l', 'r', 'lt', 'rt', 'lft', 'rgt'];
+    const directionKeywords = [
+      "left",
+      "right",
+      "l",
+      "r",
+      "lt",
+      "rt",
+      "lft",
+      "rgt",
+    ];
 
     for (const word of words) {
       if (directionKeywords.includes(word)) {

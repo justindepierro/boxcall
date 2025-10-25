@@ -63,9 +63,11 @@ export function downloadJSON(data: ExportedPracticeScript, filename: string) {
 /**
  * Validate imported JSON structure
  */
-export function validatePracticeScriptImport(
-  data: unknown
-): { valid: boolean; error?: string; data?: ExportedPracticeScript } {
+export function validatePracticeScriptImport(data: unknown): {
+  valid: boolean;
+  error?: string;
+  data?: ExportedPracticeScript;
+} {
   try {
     if (!data || typeof data !== "object") {
       return { valid: false, error: "Invalid JSON format" };
@@ -149,9 +151,11 @@ export function validatePracticeScriptImport(
 /**
  * Parse JSON file from FileReader result
  */
-export function parseJSONFile(
-  content: string
-): { valid: boolean; error?: string; data?: ExportedPracticeScript } {
+export function parseJSONFile(content: string): {
+  valid: boolean;
+  error?: string;
+  data?: ExportedPracticeScript;
+} {
   try {
     const parsed = JSON.parse(content);
     return validatePracticeScriptImport(parsed);

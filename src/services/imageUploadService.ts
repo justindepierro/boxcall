@@ -85,7 +85,8 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return {
         success: false,
-        error: "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.",
+        error:
+          "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.",
       };
     }
 
@@ -166,7 +167,9 @@ export async function deleteImage(url: string): Promise<boolean> {
   try {
     // Extract path from URL
     const urlObj = new URL(url);
-    const pathParts = urlObj.pathname.split(`/storage/v1/object/public/${BUCKET_NAME}/`);
+    const pathParts = urlObj.pathname.split(
+      `/storage/v1/object/public/${BUCKET_NAME}/`
+    );
     if (pathParts.length !== 2) {
       console.error("Invalid URL format:", url);
       return false;
@@ -191,11 +194,15 @@ export async function deleteImage(url: string): Promise<boolean> {
 /**
  * Validate if a file can be uploaded
  */
-export function validateImageFile(file: File): { valid: boolean; error?: string } {
+export function validateImageFile(file: File): {
+  valid: boolean;
+  error?: string;
+} {
   if (!ALLOWED_TYPES.includes(file.type)) {
     return {
       valid: false,
-      error: "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.",
+      error:
+        "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.",
     };
   }
 

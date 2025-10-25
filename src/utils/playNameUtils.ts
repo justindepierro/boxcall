@@ -40,16 +40,19 @@ function formatDirectionsInText(
   if (!text) return "";
 
   // Split text into words and format any direction words
-  return text.split(/\s+/).map(word => {
-    const upperWord = word.toUpperCase();
-    if (upperWord === "LEFT" || upperWord === "L" || upperWord === "LT") {
-      return formatDirection("L", format);
-    }
-    if (upperWord === "RIGHT" || upperWord === "R" || upperWord === "RT") {
-      return formatDirection("R", format);
-    }
-    return word;
-  }).join(" ");
+  return text
+    .split(/\s+/)
+    .map((word) => {
+      const upperWord = word.toUpperCase();
+      if (upperWord === "LEFT" || upperWord === "L" || upperWord === "LT") {
+        return formatDirection("L", format);
+      }
+      if (upperWord === "RIGHT" || upperWord === "R" || upperWord === "RT") {
+        return formatDirection("R", format);
+      }
+      return word;
+    })
+    .join(" ");
 }
 
 /**
@@ -165,7 +168,10 @@ export function getDisplayName(
         let value = "";
         switch (fieldKey) {
           case "formation":
-            value = formatDirectionsInText(clean(play.formation), directionDisplayFormat);
+            value = formatDirectionsInText(
+              clean(play.formation),
+              directionDisplayFormat
+            );
             break;
           case "f_type":
             value = clean(play.f_type);

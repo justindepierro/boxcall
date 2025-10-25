@@ -3,6 +3,7 @@
 ## TL;DR - Get Started in 5 Minutes
 
 ### Step 1: Clean Up Duplicates (2 min)
+
 ```bash
 node scripts/cleanup-formations-interactive.js
 # Enter playbook ID: 291675df-b531-4754-b359-4bec6867542d
@@ -10,6 +11,7 @@ node scripts/cleanup-formations-interactive.js
 ```
 
 ### Step 2: Test Bulk Operations (3 min)
+
 ```bash
 npm run dev
 # Visit http://localhost:5173
@@ -32,13 +34,14 @@ npm run dev
 ✅ **Edit metadata** in bulk (category, personnel, tags)  
 ✅ **Set direction** for multiple formations (with auto-opposite creation)  
 ✅ **Delete multiple** formations (smart confirmation)  
-✅ **95-99% time savings** on repetitive tasks  
+✅ **95-99% time savings** on repetitive tasks
 
 ---
 
 ## Your Playbook Data
 
 **Before cleanup:**
+
 ```
 4 formations (2 duplicates)
 - Trips (null) ← DELETE
@@ -48,6 +51,7 @@ npm run dev
 ```
 
 **After cleanup:**
+
 ```
 2 formations (clean!)
 - Trips (right) ↔️ Twins (left)
@@ -59,22 +63,28 @@ npm run dev
 ## Common Tasks
 
 ### Update 20 formations to "11 Personnel"
+
 **Old**: 10 minutes (30 sec each)  
-**New**: 30 seconds total  
+**New**: 30 seconds total
+
 1. Select 20 formations
 2. Edit Metadata → Personnel = "11 Personnel"
 3. Update ✅
 
 ### Set direction for all formations
+
 **Old**: 10 minutes  
-**New**: 20 seconds  
+**New**: 20 seconds
+
 1. Select all formations
 2. Set Direction → "Both" (auto-create opposites)
 3. Done ✅
 
 ### Delete old formations
+
 **Old**: 5 minutes  
-**New**: 15 seconds  
+**New**: 15 seconds
+
 1. Select formations to delete
 2. Delete → Confirm
 3. Done ✅
@@ -84,6 +94,7 @@ npm run dev
 ## Files to Know
 
 📂 **Components**:
+
 - `src/components/formations/BulkSelectionContext.tsx`
 - `src/components/formations/BulkActionToolbar.tsx`
 - `src/components/formations/BulkMetadataModal.tsx`
@@ -91,10 +102,12 @@ npm run dev
 - `src/components/formations/BulkDeleteConfirmation.tsx`
 
 🔧 **Scripts**:
+
 - `scripts/cleanup-formations-interactive.js` (run this!)
 - `scripts/cleanup-duplicate-formations.js` (advanced)
 
 📚 **Docs**:
+
 - `BULK_OPERATIONS_FINAL_SUMMARY.md` (complete guide)
 - `FORMATION_CLEANUP_GUIDE.md` (cleanup instructions)
 
@@ -132,11 +145,11 @@ A: Run the cleanup script: `node scripts/cleanup-formations-interactive.js`
 
 ## Performance
 
-| Operation | Time | Improvement |
-|-----------|------|-------------|
-| Edit 20 formations | 30 sec | 95% faster |
-| Set 15 directions | 10 sec | 96% faster |
-| Delete 10 formations | 5 sec | 97% faster |
+| Operation            | Time   | Improvement |
+| -------------------- | ------ | ----------- |
+| Edit 20 formations   | 30 sec | 95% faster  |
+| Set 15 directions    | 10 sec | 96% faster  |
+| Delete 10 formations | 5 sec  | 97% faster  |
 
 **Average time savings: 96%** 🚀
 
@@ -147,7 +160,7 @@ A: Run the cleanup script: `node scripts/cleanup-formations-interactive.js`
 All code is TypeScript-safe ✅  
 All operations use React Query caching ✅  
 All changes have error handling ✅  
-All features documented ✅  
+All features documented ✅
 
 **Status: Production Ready** 🎉
 

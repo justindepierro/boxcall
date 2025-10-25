@@ -71,9 +71,7 @@ export function extractBaseFormation(name: string): string {
  *   "I-Form R" → "R"
  *   "Shotgun" → null
  */
-export function extractDirection(
-  name: string
-): "L" | "R" | "Middle" | null {
+export function extractDirection(name: string): "L" | "R" | "Middle" | null {
   const normalized = name.toLowerCase().trim();
   const words = normalized.split(/[\s-]+/);
 
@@ -102,13 +100,10 @@ export const FormationNameSchema = z
     /^[a-zA-Z0-9\s\-']+$/,
     "Formation name can only contain letters, numbers, spaces, hyphens, and apostrophes"
   )
-  .refine(
-    (name) => !hasDirectionKeyword(name),
-    {
-      message:
-        'Formation name cannot contain direction keywords like "Left", "Right", "L", "R". Use the direction field instead.',
-    }
-  );
+  .refine((name) => !hasDirectionKeyword(name), {
+    message:
+      'Formation name cannot contain direction keywords like "Left", "Right", "L", "R". Use the direction field instead.',
+  });
 
 /**
  * Formation direction schema
@@ -265,7 +260,9 @@ export function validateFormationWithSuggestions(
   // Check if direction is missing but could be extracted
   const detectedDirection = extractDirection(formationName);
   if (detectedDirection && !direction) {
-    warnings.push(`Direction "${detectedDirection}" detected in formation name`);
+    warnings.push(
+      `Direction "${detectedDirection}" detected in formation name`
+    );
     suggestions.push(
       `Consider setting direction to "${detectedDirection}" in the direction field`
     );

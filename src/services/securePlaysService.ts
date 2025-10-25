@@ -281,7 +281,8 @@ export class SecurePlaysService {
         formationId:
           // @ts-expect-error formation_id attached at runtime
           validated.formation_id ?? existingPlay.formation_id ?? undefined,
-        formationName: validated.formation ?? existingPlay.formation ?? undefined,
+        formationName:
+          validated.formation ?? existingPlay.formation ?? undefined,
         personnel: validated.personnel ?? undefined,
         allowCustom: true,
       });

@@ -9,10 +9,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "./useSession";
 import { PracticeService } from "../services/practiceService";
-import type { 
-  PracticeSession, 
+import type {
+  PracticeSession,
   ExecutionResult,
-  CreatePracticeSessionData 
+  CreatePracticeSessionData,
 } from "../types/session";
 import type { PracticeScript, PracticeScriptPlay } from "../types/practice";
 
@@ -27,37 +27,41 @@ interface UsePracticeSessionReturn {
   session: PracticeSession | null;
   isLoading: boolean;
   error: Error | null;
-  
+
   // Practice script
   practiceScript: PracticeScript | null;
   scriptPlays: PracticeScriptPlay[];
-  
+
   // Current play tracking
   currentPlayIndex: number;
   currentPlay: PracticeScriptPlay | null;
   currentRepNumber: number;
   totalRepsForCurrentPlay: number;
-  
+
   // Progress
   playProgress: number; // Percentage (0-100)
   overallProgress: number; // Percentage (0-100)
-  
+
   // Session controls
   startSession: () => Promise<void>;
   endSession: () => Promise<void>;
   pauseSession: () => void;
   resumeSession: () => void;
-  
+
   // Rep tracking (Phase 12.1: added tags)
-  logRep: (result: ExecutionResult, notes?: string, tags?: string[]) => Promise<void>;
+  logRep: (
+    result: ExecutionResult,
+    notes?: string,
+    tags?: string[]
+  ) => Promise<void>;
   skipRep: (notes?: string) => Promise<void>;
   nextRep: () => void;
-  
+
   // Play navigation
   nextPlay: () => void;
   previousPlay: () => void;
   goToPlay: (index: number) => void;
-  
+
   // State flags
   isSessionActive: boolean;
   isPaused: boolean;
@@ -75,7 +79,9 @@ export function usePracticeSession({
   mode,
   sessionDate = new Date(),
 }: UsePracticeSessionOptions): UsePracticeSessionReturn {
-  const [practiceScript, setPracticeScript] = useState<PracticeScript | null>(null);
+  const [practiceScript, setPracticeScript] = useState<PracticeScript | null>(
+    null
+  );
   const [scriptPlays, setScriptPlays] = useState<PracticeScriptPlay[]>([]);
   const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
   const [currentRepNumber, setCurrentRepNumber] = useState(1);
@@ -120,7 +126,9 @@ export function usePracticeSession({
       setScriptPlays(script.plays || []);
     } catch (err) {
       console.error("Error loading practice script:", err);
-      setError(err instanceof Error ? err : new Error("Failed to load practice script"));
+      setError(
+        err instanceof Error ? err : new Error("Failed to load practice script")
+      );
     } finally {
       setIsLoading(false);
     }
@@ -147,10 +155,11 @@ export function usePracticeSession({
   // Computed values (must be before callbacks that use them)
   const currentPlay = scriptPlays[currentPlayIndex] || null;
   const totalRepsForCurrentPlay = currentPlay?.reps || 10; // Default to 10 if not specified
-  
-  const playProgress = totalRepsForCurrentPlay > 0
-    ? (currentRepNumber / totalRepsForCurrentPlay) * 100
-    : 0;
+
+  const playProgress =
+    totalRepsForCurrentPlay > 0
+      ? (currentRepNumber / totalRepsForCurrentPlay) * 100
+      : 0;
 
   // Play navigation (must be defined before logRep which uses nextPlay)
   const nextPlay = useCallback(() => {
@@ -209,7 +218,14 @@ export function usePracticeSession({
         nextPlay();
       }
     },
-    [sessionState, currentPlay, currentRepNumber, logExecution, totalRepsForCurrentPlay, nextPlay]
+    [
+      sessionState,
+      currentPlay,
+      currentRepNumber,
+      logExecution,
+      totalRepsForCurrentPlay,
+      nextPlay,
+    ]
   );
 
   // Skip a rep (mark as skipped but still count it)
@@ -228,10 +244,16 @@ export function usePracticeSession({
   }, [currentRepNumber, totalRepsForCurrentPlay]);
 
   // Additional computed values
-  const totalReps = scriptPlays.reduce((sum, play) => sum + (play.reps || 10), 0);
-  const completedReps = scriptPlays
-    .slice(0, currentPlayIndex)
-    .reduce((sum, play) => sum + (play.reps || 10), 0) + currentRepNumber - 1;
+  const totalReps = scriptPlays.reduce(
+    (sum, play) => sum + (play.reps || 10),
+    0
+  );
+  const completedReps =
+    scriptPlays
+      .slice(0, currentPlayIndex)
+      .reduce((sum, play) => sum + (play.reps || 10), 0) +
+    currentRepNumber -
+    1;
   const overallProgress = totalReps > 0 ? (completedReps / totalReps) * 100 : 0;
 
   const isLastRep = currentRepNumber === totalRepsForCurrentPlay;

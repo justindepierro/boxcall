@@ -132,10 +132,14 @@ export class SessionAnalyticsService {
 
     // Calculate overall stats
     const totalPlays = executions.length;
-    const successCount = executions.filter((e) => e.result === "success")
-      .length;
+    const successCount = executions.filter(
+      (e) => e.result === "success"
+    ).length;
     const successRate = (successCount / totalPlays) * 100;
-    const totalYards = executions.reduce((sum, e) => sum + (e.yards_gained || 0), 0);
+    const totalYards = executions.reduce(
+      (sum, e) => sum + (e.yards_gained || 0),
+      0
+    );
     const avgYardsPerPlay = totalYards / totalPlays;
 
     // Calculate by down
@@ -278,7 +282,10 @@ export class SessionAnalyticsService {
     const downStats = [1, 2, 3, 4].map((down) => {
       const downExecs = executions.filter((e) => e.down === down);
       const successes = downExecs.filter((e) => e.result === "success").length;
-      const totalYards = downExecs.reduce((sum, e) => sum + (e.yards_gained || 0), 0);
+      const totalYards = downExecs.reduce(
+        (sum, e) => sum + (e.yards_gained || 0),
+        0
+      );
 
       return {
         down,
@@ -324,8 +331,7 @@ export class SessionAnalyticsService {
         type,
         count: stats.count,
         percentage: Math.round((stats.count / total) * 1000) / 10,
-        successRate:
-          Math.round((stats.successes / stats.count) * 1000) / 10,
+        successRate: Math.round((stats.successes / stats.count) * 1000) / 10,
         avgYards: Math.round((stats.totalYards / stats.count) * 10) / 10,
       }))
       .sort((a, b) => b.count - a.count);
@@ -355,8 +361,7 @@ export class SessionAnalyticsService {
       .map(([formationName, stats]) => ({
         formationName,
         attempts: stats.count,
-        successRate:
-          Math.round((stats.successes / stats.count) * 1000) / 10,
+        successRate: Math.round((stats.successes / stats.count) * 1000) / 10,
         avgYards: Math.round((stats.totalYards / stats.count) * 10) / 10,
       }))
       .sort((a, b) => b.attempts - a.attempts);
@@ -387,8 +392,7 @@ export class SessionAnalyticsService {
       .map(([coverage, stats]) => ({
         coverage,
         attempts: stats.count,
-        successRate:
-          Math.round((stats.successes / stats.count) * 1000) / 10,
+        successRate: Math.round((stats.successes / stats.count) * 1000) / 10,
         avgYards: Math.round((stats.totalYards / stats.count) * 10) / 10,
       }))
       .sort((a, b) => b.attempts - a.attempts);
@@ -423,8 +427,7 @@ export class SessionAnalyticsService {
         return {
           hash: hash as "left" | "middle" | "right",
           attempts: stats.count,
-          successRate:
-            Math.round((stats.successes / stats.count) * 1000) / 10,
+          successRate: Math.round((stats.successes / stats.count) * 1000) / 10,
           avgYards: Math.round((stats.totalYards / stats.count) * 10) / 10,
         };
       })
@@ -459,29 +462,36 @@ export class SessionAnalyticsService {
       { zone: "Goal Line", min: 90, max: 100 },
     ];
 
-    return zones.map((zoneConfig) => {
-      const zoneExecs = executions.filter((e) => {
-        const yardLine = e.yard_line || 50;
-        return yardLine >= zoneConfig.min && yardLine < zoneConfig.max;
-      });
+    return zones
+      .map((zoneConfig) => {
+        const zoneExecs = executions.filter((e) => {
+          const yardLine = e.yard_line || 50;
+          return yardLine >= zoneConfig.min && yardLine < zoneConfig.max;
+        });
 
-      const successes = zoneExecs.filter((e) => e.result === "success").length;
-      const totalYards = zoneExecs.reduce((sum, e) => sum + (e.yards_gained || 0), 0);
+        const successes = zoneExecs.filter(
+          (e) => e.result === "success"
+        ).length;
+        const totalYards = zoneExecs.reduce(
+          (sum, e) => sum + (e.yards_gained || 0),
+          0
+        );
 
-      return {
-        zone: zoneConfig.zone,
-        yardLine: (zoneConfig.min + zoneConfig.max) / 2,
-        attempts: zoneExecs.length,
-        successRate:
-          zoneExecs.length > 0
-            ? Math.round((successes / zoneExecs.length) * 1000) / 10
-            : 0,
-        avgYards:
-          zoneExecs.length > 0
-            ? Math.round((totalYards / zoneExecs.length) * 10) / 10
-            : 0,
-      };
-    }).filter((z) => z.attempts > 0);
+        return {
+          zone: zoneConfig.zone,
+          yardLine: (zoneConfig.min + zoneConfig.max) / 2,
+          attempts: zoneExecs.length,
+          successRate:
+            zoneExecs.length > 0
+              ? Math.round((successes / zoneExecs.length) * 1000) / 10
+              : 0,
+          avgYards:
+            zoneExecs.length > 0
+              ? Math.round((totalYards / zoneExecs.length) * 10) / 10
+              : 0,
+        };
+      })
+      .filter((z) => z.attempts > 0);
   }
 
   private static groupByWeek(data: any[]) {
