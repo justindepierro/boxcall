@@ -24,12 +24,8 @@ export const PostToTeamBulletinModal: React.FC<
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debug logging
-  console.log("PostToTeamBulletinModal render:", { isOpen, play, teamId });
-
   // Guard against null play
   if (!play) {
-    console.warn("PostToTeamBulletinModal: play is null");
     return null;
   }
 
@@ -37,8 +33,6 @@ export const PostToTeamBulletinModal: React.FC<
   const playUrl = `/playbook/${play.playbook_id}?play=${play.id}`;
 
   const handleSubmit = async () => {
-    console.log("🚀 handleSubmit called", { message, teamId, playId: play.id });
-    
     if (!message.trim()) {
       setError("Please add a message");
       toast.error("Please add a message");
@@ -92,8 +86,6 @@ export const PostToTeamBulletinModal: React.FC<
         visibility: "all",
         status: "published",
       });
-
-      console.log("Create announcement result:", result);
 
       if (result.success) {
         toast.success("Successfully posted to team bulletin!");

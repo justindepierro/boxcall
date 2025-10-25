@@ -142,17 +142,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   );
   const lastSyncedPlayRef = useRef<PlayType>(play);
   const lastSaveTimeRef = useRef<number>(0);
-
-  // Debug: Log when play prop changes
-  useEffect(() => {
-    console.log("[PlayCard] Play prop received/changed:", {
-      playId: play.id,
-      "play.f_dir": play.f_dir,
-      "play.p_dir": play.p_dir,
-      "play object": play,
-    });
-  }, [play]);
-
   // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
   const { isFavorite, toggleFavorite } = useFavoritePlays();
@@ -181,21 +170,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
   useEffect(() => {
-    console.log("[PlayCard] useEffect fired:", {
-      playId: play.id,
-      "savingFields.size": savingFields.size,
-      savingFieldsArray: Array.from(savingFields),
-      "play === lastSyncedPlayRef.current": play === lastSyncedPlayRef.current,
-      "play.f_dir": play.f_dir,
-      "play.p_dir": play.p_dir,
-      "optimisticPlay.f_dir": optimisticPlay.f_dir,
-      "optimisticPlay.p_dir": optimisticPlay.p_dir,
-    });
-
     // Only sync when play prop actually changes (new data from server)
     if (play !== lastSyncedPlayRef.current) {
       const timeSinceLastSave = Date.now() - lastSaveTimeRef.current;
-      console.log("[PlayCard] Time since last save:", timeSinceLastSave);
 
       lastSyncedPlayRef.current = play;
 
@@ -203,12 +180,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       // 1. We're currently saving any fields, OR
       // 2. We just finished saving within the last 500ms (optimistic update grace period)
       if (savingFields.size === 0 && timeSinceLastSave > 500) {
-        console.log("[PlayCard] ✅ Syncing optimisticPlay with new play prop");
         setOptimisticPlay(play);
-      } else {
-        console.log(
-          "[PlayCard] ⏸️ Skipping sync - either saving or recent save"
-        );
       }
     }
     // We intentionally don't include optimisticPlay in deps to avoid sync loops
@@ -303,56 +275,31 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     async (field: keyof PlayType, value: string | number | boolean) => {
       const fieldName = field as string;
 
-      console.log("[PlayCard] 🔵 handleInlineSave START:", {
-        field,
-        value,
-        playId: play.id,
-        currentPlayValue: play[field],
-        currentOptimisticValue: optimisticPlay[field],
-      });
-
       setOptimisticPlay((prev) => {
         const updated = { ...prev, [field]: value };
-        console.log("[PlayCard] 🟢 Set optimistic state:", {
-          field,
-          oldValue: prev[field],
-          newValue: value,
-        });
         return updated;
       });
 
-      console.log("[PlayCard] 🟡 Adding field to savingFields:", fieldName);
       setSavingFields((prev) => new Set(prev).add(fieldName));
 
       try {
         if (onSave) {
-          console.log("[PlayCard] 🟠 Calling onSave prop");
           await onSave(play.id, { [field]: value });
-          console.log("[PlayCard] 🟢 onSave completed successfully");
         }
       } catch (error) {
         console.error(
-          `[PlayCard] 🔴 Failed to save ${fieldName}, reverting:`,
+          `[PlayCard] Failed to save ${fieldName}, reverting:`,
           error
         );
         setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
       } finally {
-        console.log(
-          "[PlayCard] 🟣 Removing field from savingFields:",
-          fieldName
-        );
         setSavingFields((prev) => {
           const next = new Set(prev);
           next.delete(fieldName);
-          console.log(
-            "[PlayCard] 🟣 savingFields after removal:",
-            Array.from(next)
-          );
           return next;
         });
         // Track when the save completed to prevent immediate sync
         lastSaveTimeRef.current = Date.now();
-        console.log("[PlayCard] 🔵 handleInlineSave END");
       }
     },
     // optimisticPlay is only used for logging, not needed in deps

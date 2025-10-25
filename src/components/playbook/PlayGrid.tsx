@@ -477,17 +477,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         onCreateDiagram={onCreateDiagram}
         onOpenAssignments={onOpenAssignments}
         onPostToTeamBulletin={onPostToTeamBulletin}
-        isSelected={selectedPlayIds.has(play.id)}
-        onSelectionChange={enableBulkOperations ? handlePlaySelect : undefined}
-        formationSuggestions={collectedSuggestions.formations}
-        playNameSuggestions={collectedSuggestions.playNames}
-        playTypeSuggestions={collectedSuggestions.playTypes}
-        personnelSuggestions={collectedSuggestions.personnel}
-        personnelConfigurations={personnelConfigurations}
-        directionDisplayFormat={directionDisplayFormat}
-        expandedPlayId={expandedPlayId}
-        onToggleExpand={handleToggleExpand}
-      />
+          isSelected={selectedPlayIds.has(play.id)}
+          onSelectionChange={enableBulkOperations ? handlePlaySelect : undefined}
+          formationSuggestions={collectedSuggestions.formations}
+          playNameSuggestions={collectedSuggestions.playNames}
+          playTypeSuggestions={collectedSuggestions.playTypes}
+          personnelSuggestions={collectedSuggestions.personnel}
+          personnelConfigurations={personnelConfigurations}
+          directionDisplayFormat={directionDisplayFormat}
+          expandedPlayId={expandedPlayId}
+          onToggleExpand={handleToggleExpand}
+        />
     ),
     [
       showOneWordCalls,
@@ -753,6 +753,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onDuplicate={onDuplicate}
                               onCreateDiagram={onCreateDiagram}
                               onOpenAssignments={onOpenAssignments}
+                              onPostToTeamBulletin={onPostToTeamBulletin}
                               isSelected={selectedPlayIds.has(play.id)}
                               onSelectionChange={
                                 enableBulkOperations
@@ -907,6 +908,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 onDuplicate={onDuplicate}
                                 onCreateDiagram={onCreateDiagram}
                                 onOpenAssignments={onOpenAssignments}
+                                onPostToTeamBulletin={onPostToTeamBulletin}
                                 isSelected={selectedPlayIds.has(play.id)}
                                 onSelectionChange={handlePlaySelect}
                                 formationSuggestions={

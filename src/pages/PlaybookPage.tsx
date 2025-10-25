@@ -1428,31 +1428,39 @@ export default function PlaybookPage() {
                       </div>
                     }
                   >
-                    <PlayGrid
-                      searchQuery={debouncedSearchQuery}
-                      filters={state.selectedFilters}
-                      optimisticPlays={optimisticPlays}
-                      onAddToPracticeScript={handleAddToPracticeScript}
-                      onAddToGamePlan={handleAddToGamePlan}
-                      onEdit={handleEditPlay}
-                      onSave={handleSavePlay}
-                      onDuplicate={handleDuplicatePlay}
-                      onOpenBuilder={handleOpenBuilder}
-                      onCreateDiagram={handleCreateDiagram}
-                      onOpenAssignments={handleOpenAssignments}
-                      onPostToTeamBulletin={handlePostToTeamBulletin}
-                      refreshTrigger={state.refreshTrigger}
-                      onPlayCountChange={handlePlayCountChange}
-                      formationSuggestions={suggestions.formations}
-                      playNameSuggestions={suggestions.playNames}
-                      enableBulkOperations={state.enableBulkOperations}
-                      selectedPlayIds={state.selectedPlayIds}
-                      onPlaySelectionChange={(selection) =>
-                        dispatch({ type: "SET_SELECTION", selection })
-                      }
-                      mobileListExpanded={mobileListExpanded}
-                      onMobileListExpand={() => setMobileListExpanded(true)}
-                    />
+                    {/* Define common PlayGrid props once - single source of truth */}
+                    {(() => {
+                      const commonPlayGridProps = {
+                        searchQuery: debouncedSearchQuery,
+                        filters: state.selectedFilters,
+                        optimisticPlays: optimisticPlays,
+                        onAddToPracticeScript: handleAddToPracticeScript,
+                        onAddToGamePlan: handleAddToGamePlan,
+                        onEdit: handleEditPlay,
+                        onSave: handleSavePlay,
+                        onDuplicate: handleDuplicatePlay,
+                        onOpenBuilder: handleOpenBuilder,
+                        onCreateDiagram: handleCreateDiagram,
+                        onOpenAssignments: handleOpenAssignments,
+                        onPostToTeamBulletin: handlePostToTeamBulletin,
+                        refreshTrigger: state.refreshTrigger,
+                        onPlayCountChange: handlePlayCountChange,
+                        formationSuggestions: suggestions.formations,
+                        playNameSuggestions: suggestions.playNames,
+                        enableBulkOperations: state.enableBulkOperations,
+                        selectedPlayIds: state.selectedPlayIds,
+                        onPlaySelectionChange: (selection: Set<string>) =>
+                          dispatch({ type: "SET_SELECTION", selection }),
+                      };
+
+                      return (
+                        <PlayGrid
+                          {...commonPlayGridProps}
+                          mobileListExpanded={mobileListExpanded}
+                          onMobileListExpand={() => setMobileListExpanded(true)}
+                        />
+                      );
+                    })()}
                   </ErrorBoundary>
                 </PullToRefresh>
               </MobileSection>
@@ -1676,28 +1684,33 @@ export default function PlaybookPage() {
                         </div>
                       }
                     >
-                      <PlayGrid
-                        searchQuery={debouncedSearchQuery}
-                        filters={state.selectedFilters}
-                        optimisticPlays={optimisticPlays}
-                        onAddToPracticeScript={handleAddToPracticeScript}
-                        onAddToGamePlan={handleAddToGamePlan}
-                        onEdit={handleEditPlay}
-                        onSave={handleSavePlay}
-                        onDuplicate={handleDuplicatePlay}
-                        onOpenBuilder={handleOpenBuilder}
-                        onCreateDiagram={handleCreateDiagram}
-                        onOpenAssignments={handleOpenAssignments}
-                        refreshTrigger={state.refreshTrigger}
-                        onPlayCountChange={handlePlayCountChange}
-                        formationSuggestions={suggestions.formations}
-                        playNameSuggestions={suggestions.playNames}
-                        enableBulkOperations={state.enableBulkOperations}
-                        selectedPlayIds={state.selectedPlayIds}
-                        onPlaySelectionChange={(selection) =>
-                          dispatch({ type: "SET_SELECTION", selection })
-                        }
-                      />
+                      {/* Define common PlayGrid props once - single source of truth */}
+                      {(() => {
+                        const commonPlayGridProps = {
+                          searchQuery: debouncedSearchQuery,
+                          filters: state.selectedFilters,
+                          optimisticPlays: optimisticPlays,
+                          onAddToPracticeScript: handleAddToPracticeScript,
+                          onAddToGamePlan: handleAddToGamePlan,
+                          onEdit: handleEditPlay,
+                          onSave: handleSavePlay,
+                          onDuplicate: handleDuplicatePlay,
+                          onOpenBuilder: handleOpenBuilder,
+                          onCreateDiagram: handleCreateDiagram,
+                          onOpenAssignments: handleOpenAssignments,
+                          onPostToTeamBulletin: handlePostToTeamBulletin,
+                          refreshTrigger: state.refreshTrigger,
+                          onPlayCountChange: handlePlayCountChange,
+                          formationSuggestions: suggestions.formations,
+                          playNameSuggestions: suggestions.playNames,
+                          enableBulkOperations: state.enableBulkOperations,
+                          selectedPlayIds: state.selectedPlayIds,
+                          onPlaySelectionChange: (selection: Set<string>) =>
+                            dispatch({ type: "SET_SELECTION", selection }),
+                        };
+
+                        return <PlayGrid {...commonPlayGridProps} />;
+                      })()}
                     </ErrorBoundary>
                   )}
 
