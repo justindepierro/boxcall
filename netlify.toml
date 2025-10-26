@@ -10,10 +10,10 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Content Security Policy - Enhanced for security
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https: https://lvmuiqwihlpnwppdqqfl.supabase.co; connect-src 'self' https://lvmuiqwihlpnwppdqqfl.supabase.co wss://lvmuiqwihlpnwppdqqfl.supabase.co https://*.ingest.sentry.io https://api.ipify.org; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
+    # Content Security Policy - Enhanced for security and performance
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://*.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https: https://lvmuiqwihlpnwppdqqfl.supabase.co https://*.supabase.co; connect-src 'self' https://lvmuiqwihlpnwppdqqfl.supabase.co wss://lvmuiqwihlpnwppdqqfl.supabase.co https://*.ingest.sentry.io https://api.ipify.org https://*.netlify.app; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; prefetch-src 'self' https:; dns-prefetch-control 'on'"
     
-    # Security Headers (Enhanced)
+    # Security Headers (Enhanced for performance)
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
@@ -39,11 +39,48 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Cache rules for manifest
+# Advanced CDN Configuration for Phase 3 Optimization
+
+# HTTP/2 Server Push for critical resources
 [[headers]]
-  for = "/manifest.json"
+  for = "/index.html"
   [headers.values]
-    Cache-Control = "public, max-age=86400"
+    Link = "</assets/index-*.css>; rel=preload; as=style, </assets/index-*.js>; rel=preload; as=script, </assets/vendor-*.js>; rel=preload; as=script"
+
+# Aggressive caching for static assets with compression
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Encoding = "gzip, br"
+
+# Font optimization with preconnect
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Link = "<https://fonts.googleapis.com>; rel=preconnect; crossorigin, <https://fonts.gstatic.com>; rel=dns-prefetch"
+
+# Image optimization
+[[headers]]
+  for = "/assets/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+    Content-Encoding = "gzip, br"
+
+# API response caching for Supabase
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+
+# Performance monitoring endpoint (no cache)
+[[headers]]
+  for = "/api/performance/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
 
 [[redirects]]
   from = "/*"
@@ -63,3 +100,32 @@
 
 [build.processing.html]
   pretty_urls = true
+
+# Advanced CDN Edge Configuration
+[edge_functions]
+  directory = "netlify/edge-functions"
+
+# CDN Optimization Settings
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+  source_map = false
+
+[build.processing.js]
+  bundle = true
+  minify = true
+  source_map = false
+
+# Performance optimizations
+[build]
+  publish = "dist"
+  command = "npm run build"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  VITE_ENVIRONMENT = "production"

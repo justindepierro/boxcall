@@ -106,11 +106,7 @@ export function usePracticeSession({
   });
 
   // Load practice script
-  useEffect(() => {
-    loadPracticeScript();
-  }, [practiceScriptId]);
-
-  const loadPracticeScript = async () => {
+  const loadPracticeScript = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -132,7 +128,11 @@ export function usePracticeSession({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [practiceScriptId]);
+
+  useEffect(() => {
+    loadPracticeScript();
+  }, [practiceScriptId, loadPracticeScript]);
 
   // Start practice session
   const startSession = useCallback(async () => {

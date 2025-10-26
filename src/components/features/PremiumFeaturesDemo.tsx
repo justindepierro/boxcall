@@ -51,15 +51,15 @@ const PremiumFeature: React.FC<PremiumFeatureProps> = ({
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-blue-100 rounded-lg">{icon}</div>
           <div>
-            <h3 className="font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-600">{description}</p>
+            <h3 className="font-semibold text-primary">{title}</h3>
+            <p className="text-sm text-secondary">{description}</p>
           </div>
         </div>
         {requiresPremium && (
           <Badge
             className={
               isPremium
-                ? "bg-green-100 text-green-800"
+                ? "bg-success-bg text-success-600"
                 : "bg-orange-100 text-orange-800"
             }
           >
@@ -81,10 +81,10 @@ const PremiumFeature: React.FC<PremiumFeatureProps> = ({
       {requiresPremium ? (
         <PremiumGate
           fallback={
-            <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-              <Lock className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium mb-2">Premium Feature</p>
-              <p className="text-sm text-gray-500 mb-4">
+            <div className="text-center py-8 bg-surface-secondary rounded-lg border-2 border-dashed border-divider">
+              <Lock className="w-8 h-8 text-muted mx-auto mb-3" />
+              <p className="text-secondary font-medium mb-2">Premium Feature</p>
+              <p className="text-sm text-muted mb-4">
                 Upgrade to access this feature
               </p>
               <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
@@ -120,15 +120,15 @@ const AdvancedAnalytics: React.FC = () => {
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-blue-600">87%</div>
-            <div className="text-sm text-gray-600">Completion Rate</div>
+            <div className="text-sm text-secondary">Completion Rate</div>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-green-600">+15%</div>
-            <div className="text-sm text-gray-600">Improvement</div>
+          <div className="bg-success-bg p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold text-success-600">+15%</div>
+            <div className="text-sm text-secondary">Improvement</div>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-purple-600">342</div>
-            <div className="text-sm text-gray-600">Total Plays</div>
+            <div className="text-sm text-secondary">Total Plays</div>
           </div>
         </div>
         <Button className="w-full">
@@ -183,14 +183,14 @@ const VideoAnalysis: React.FC = () => {
     <PremiumFeature
       title="Video Analysis"
       description="Upload and analyze game footage with AI"
-      icon={<Video className="w-5 h-5 text-red-600" />}
+      icon={<Video className="w-5 h-5 text-error-600" />}
       requiresPremium={!can("canAccessVideoAnalysis")}
     >
       <div className="space-y-4">
-        <div className="bg-gray-100 aspect-video rounded-lg flex items-center justify-center">
+        <div className="bg-surface-muted aspect-video rounded-lg flex items-center justify-center">
           <div className="text-center">
-            <Video className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-600">Upload game footage</p>
+            <Video className="w-12 h-12 text-muted mx-auto mb-2" />
+            <p className="text-secondary">Upload game footage</p>
           </div>
         </div>
         <div className="flex space-x-2">
@@ -221,18 +221,18 @@ const TeamLimits: React.FC = () => {
   return (
     <Card className="p-6">
       <div className="flex items-center space-x-3 mb-4">
-        <div className="p-2 bg-green-100 rounded-lg">
-          <Users className="w-5 h-5 text-green-600" />
+        <div className="p-2 bg-success-bg rounded-lg">
+          <Users className="w-5 h-5 text-success-600" />
         </div>
         <div>
-          <h3 className="font-semibold text-gray-900">Team Limits</h3>
-          <p className="text-sm text-gray-600">Current subscription limits</p>
+          <h3 className="font-semibold text-primary">Team Limits</h3>
+          <p className="text-sm text-secondary">Current subscription limits</p>
         </div>
       </div>
 
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Max Teams</span>
+          <span className="text-sm text-secondary">Max Teams</span>
           <Badge
             className={
               isUnlimited
@@ -244,7 +244,7 @@ const TeamLimits: React.FC = () => {
           </Badge>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Max Players per Team</span>
+          <span className="text-sm text-secondary">Max Players per Team</span>
           <Badge
             className={
               maxPlayersPerTeam === -1
@@ -273,10 +273,10 @@ export const PremiumFeaturesDemo: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-primary mb-2">
           Premium Features
         </h1>
-        <p className="text-gray-600">
+        <p className="text-secondary">
           {isPremium
             ? "You have access to all premium features!"
             : "Upgrade to unlock powerful features for your team"}

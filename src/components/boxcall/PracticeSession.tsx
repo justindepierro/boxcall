@@ -6,13 +6,14 @@
 // @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
 import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { RepTracker } from "./RepTracker";
+import { MiniDiagram } from "./MiniDiagram";
 import { usePracticeSession } from "../../hooks/usePracticeSession";
 import type { ExecutionResult } from "../../types/session";
 
@@ -59,7 +60,7 @@ const PracticeSession: React.FC = () => {
     previousPlay,
     isSessionActive,
     isPaused,
-    isLastRep,
+    _isLastRep,
     isLastPlay,
     hasPendingSync,
   } = usePracticeSession({
@@ -376,6 +377,21 @@ const PracticeSession: React.FC = () => {
                 </>
               )}
             </Card>
+
+            {/* Phase 3: Mini Diagram Display */}
+            {currentPlay?.play?.diagram_data && (
+              <Card className="p-4">
+                <div className="flex items-center justify-center">
+                  <MiniDiagram
+                    players={
+                      Array.isArray(currentPlay.play.diagram_data)
+                        ? currentPlay.play.diagram_data
+                        : []
+                    }
+                  />
+                </div>
+              </Card>
+            )}
 
             {/* Rep Tracker */}
             <Card className="p-6">

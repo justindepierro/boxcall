@@ -40,7 +40,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           variant={play.diagram_url ? "primary" : "secondary"}
           size="xs"
           onClick={() => onCreateDiagram?.(play)}
-          title={getDiagramButtonText(Boolean(play.diagram_url))}
+          title={getDiagramButtonText(Boolean(play.diagram_data))}
           className={
             play.diagram_url
               ? ""
@@ -54,10 +54,10 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
             />
           )}
           <Icon
-            name={getDiagramButtonIcon(Boolean(play.diagram_url))}
+            name={getDiagramButtonIcon(Boolean(play.diagram_data))}
             className="h-3 w-3 mr-spacing-xs"
           />{" "}
-          {getDiagramButtonText(Boolean(play.diagram_url))}
+          {getDiagramButtonText(Boolean(play.diagram_data))}
         </Button>
 
         {/* Practice Button with Count */}

@@ -39,8 +39,6 @@ import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
 import { Modal } from "../components/ui/Modal";
-import type { DiagramMetadata } from "../components/playbook/diagram-editor/DiagramEditor";
-import type { DiagramDocument } from "../components/playbook/diagram-editor/types/types";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { AppIconTile } from "../components/ui/AppIconTile";
@@ -58,13 +56,6 @@ import {
 } from "../utils/playFieldValidation";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, warn, debug } from "../utils/logger";
-import {
-  createWhiteboardPlay,
-  getDiagramMode,
-  getDiagramActionText,
-  DiagramMode,
-} from "../utils/diagramHelpers";
-import { saveDiagram } from "../services/diagramService";
 import { useIsMobile } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 import {
@@ -72,13 +63,13 @@ import {
   MobileSection,
   MobileQuickActions,
 } from "../components/mobile";
-import { QuickPlaySheet } from "../components/playbook/QuickPlaySheet";
 import { BottomSheet } from "../components/BottomSheet";
 import { FloatingActionButton } from "../components/FloatingActionButton";
 import { FABPresets } from "../components/FABPresets";
 import { PullToRefresh } from "../components/PullToRefresh";
 import { PostToTeamBulletinModal } from "../components/playbook/PostToTeamBulletinModal";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
+import { smartPreloader } from "../services/smartPreloader";
 import { PlaybookBottomNav } from "../components/playbook/page/PlaybookBottomNav";
 import { MobilePlaybookHeader } from "../components/playbook/page/MobilePlaybookHeader";
 import { MobileStatsBottomSheet } from "../components/playbook/page/MobileStatsBottomSheet";
@@ -229,6 +220,7 @@ export default function PlaybookPage() {
   }, [isMobile, debouncedSearchQuery, selectedFiltersKey]);
 
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
+  const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
   const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
   const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
     useState(false);
@@ -486,7 +478,6 @@ export default function PlaybookPage() {
   const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
-  const [showQuickPlaySheet, setShowQuickPlaySheet] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
   const [showPostToBulletinModal, setShowPostToBulletinModal] = useState(false);
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
@@ -500,7 +491,11 @@ export default function PlaybookPage() {
 
   // 🚀 PERFORMANCE: Memoize handlers to prevent unnecessary re-renders of child components
   const handleViewChange = useCallback(
-    (view: CoachingView) => dispatch({ type: "SET_VIEW", view }),
+    (view: CoachingView) => {
+      dispatch({ type: "SET_VIEW", view });
+      // Record user action for smart preloading
+      smartPreloader.recordAction("change_view", `view_${view}`);
+    },
     [dispatch]
   );
 
@@ -580,7 +575,7 @@ export default function PlaybookPage() {
 
                   const selectedPlays = playsData
                     .filter((result) => result.data)
-                    .map((result) => result.data!);
+                    .map((result) => result.data! as unknown as Play);
 
                   if (selectedPlays.length > 0) {
                     exportPlays(selectedPlays, {
@@ -651,11 +646,14 @@ export default function PlaybookPage() {
   const handleOpenBuilder = useCallback(() => {
     triggerHapticFeedback("light");
     setShowAddNewPlayModal(true);
+    // Record user action for smart preloading
+    smartPreloader.recordAction("open_modal", "formation_builder");
   }, []);
 
   const handleOpenQuickCreate = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowQuickPlaySheet(true);
+    setDiagramMode("quick-play");
+    setDiagramPlay(null); // Clear any existing play
   }, []);
 
   // NEW: Handler to open diagram editor after play creation
@@ -663,91 +661,6 @@ export default function PlaybookPage() {
     // Auto-open diagram editor with the newly created play
     setDiagramPlay(play);
   }, []);
-
-  const handleOpenSettings = useCallback(() => {
-    triggerHapticFeedback("light");
-    setShowPlaybookSettingsModal(true);
-  }, []);
-
-  const handleOpenWhiteboard = useCallback(() => {
-    // Open diagram builder in whiteboard mode
-    const whiteboardPlay = createWhiteboardPlay(activeTeamId || "");
-    setDiagramPlay(whiteboardPlay);
-  }, [activeTeamId]);
-
-  const handleEditPlay = useCallback((play: Play) => {
-    setEditingPlay(play);
-    setShowAddNewPlayModal(true);
-  }, []);
-
-  const handleSavePlay = useCallback(
-    async (playId: string, updates: Partial<Play>) => {
-      // Store previous state for rollback
-      let previousPlay: Play | undefined;
-
-      try {
-        // 🚀 OPTIMISTIC UPDATE: Show changes immediately (Facebook-style!)
-        setOptimisticPlays((prev) => {
-          const existingPlay = prev.find((p) => p.id === playId);
-          if (existingPlay) {
-            previousPlay = existingPlay; // Save for rollback
-            return prev.map((p) =>
-              p.id === playId ? { ...p, ...updates } : p
-            );
-          }
-          // If not in optimistic state, create an optimistic entry
-          // (This handles edits from plays that came from database)
-          return [
-            {
-              ...updates,
-              id: playId,
-              playbook_id: activePlaybookId,
-              formation: updates.formation || "",
-              play_name: updates.play_name || "",
-              p_type: updates.p_type || "",
-              confidence_base: updates.confidence_base || 70,
-              times_called: updates.times_called || 0,
-              times_successful: updates.times_successful || 0,
-              created_by: updates.created_by || "",
-              created_at: updates.created_at || new Date(),
-              updated_at: new Date(),
-            } as Play,
-            ...prev,
-          ];
-        });
-
-        // ⚡ INSTANT FEEDBACK: Show success immediately (user never waits!)
-        toast.success("Play updated!");
-
-        // Background: Update in database
-        await SecurePlaysService.updatePlay(playId, updates);
-
-        // Remove from optimistic state after database confirms
-        setTimeout(() => {
-          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
-        }, 100);
-
-        // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
-        // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
-
-        return Promise.resolve();
-      } catch (error) {
-        // 🔄 REVERT: Restore previous state on error
-        if (previousPlay) {
-          setOptimisticPlays((prev) =>
-            prev.map((p) => (p.id === playId ? previousPlay! : p))
-          );
-        } else {
-          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
-        }
-
-        logError("Failed to save play:", error);
-        toast.error("Failed to save play. Changes reverted.");
-        throw error; // Re-throw so the UI can show the error
-      }
-    },
-    [activePlaybookId, toast]
-  );
 
   const createNewPlay = useCallback(
     async (playData: Partial<Play>) => {
@@ -828,20 +741,16 @@ export default function PlaybookPage() {
     [activePlaybookId, dispatch, toast]
   );
 
-  const handleQuickCreatePlay = useCallback(
-    async (data: {
-      formation_id: string;
-      formation: string;
-      play_name: string;
-      personnel?: string;
-      playType?: string;
-    }) => {
+  // Handle quick play creation from diagram editor
+  const handleQuickPlayCreated = useCallback(
+    async (diagramData: any) => {
+      // Create the play using the diagram data
       const createdPlay = await createNewPlay({
-        formation: data.formation,
-        formation_id: data.formation_id,
-        play_name: data.play_name,
-        personnel: data.personnel,
-        p_type: data.playType,
+        formation: diagramData.metadata.formation,
+        formation_id: diagramData.metadata.formation_id || "",
+        play_name: diagramData.name,
+        personnel: diagramData.metadata.personnel,
+        p_type: diagramData.metadata.p_type,
       });
 
       addRecentPlayCombo({
@@ -851,15 +760,96 @@ export default function PlaybookPage() {
         playType: createdPlay.p_type || undefined,
       });
 
-      handlePlayCreated(createdPlay);
+      // Switch to edit mode with the created play
+      setDiagramPlay(createdPlay);
+      setDiagramMode("edit");
     },
-    [createNewPlay, addRecentPlayCombo, handlePlayCreated]
+    [createNewPlay, addRecentPlayCombo]
   );
 
-  const handleOpenFormationBuilderModal = useCallback(() => {
+  const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowFormationBuilderModal(true);
+    setShowPlaybookSettingsModal(true);
   }, []);
+
+  const handleOpenWhiteboard = useCallback(() => {
+    // Open diagram builder in whiteboard mode - simplified for now
+    toast.info("Whiteboard mode coming soon!");
+  }, [toast]);
+
+  const handleEditPlay = useCallback((play: Play) => {
+    setEditingPlay(play);
+    setShowAddNewPlayModal(true);
+  }, []);
+
+  const handleSavePlay = useCallback(
+    async (playId: string, updates: Partial<Play>) => {
+      // Store previous state for rollback
+      let previousPlay: Play | undefined;
+
+      try {
+        // 🚀 OPTIMISTIC UPDATE: Show changes immediately (Facebook-style!)
+        setOptimisticPlays((prev) => {
+          const existingPlay = prev.find((p) => p.id === playId);
+          if (existingPlay) {
+            previousPlay = existingPlay; // Save for rollback
+            return prev.map((p) =>
+              p.id === playId ? { ...p, ...updates } : p
+            );
+          }
+          // If not in optimistic state, create an optimistic entry
+          // (This handles edits from plays that came from database)
+          return [
+            {
+              ...updates,
+              id: playId,
+              playbook_id: activePlaybookId,
+              formation: updates.formation || "",
+              play_name: updates.play_name || "",
+              p_type: updates.p_type || "",
+              confidence_base: updates.confidence_base || 70,
+              times_called: updates.times_called || 0,
+              times_successful: updates.times_successful || 0,
+              created_by: updates.created_by || "",
+              created_at: updates.created_at || new Date(),
+              updated_at: new Date(),
+            } as Play,
+            ...prev,
+          ];
+        });
+
+        // ⚡ INSTANT FEEDBACK: Show success immediately (user never waits!)
+        toast.success("Play updated!");
+
+        // Background: Update in database
+        await SecurePlaysService.updatePlay(playId, updates);
+
+        // Remove from optimistic state after database confirms
+        setTimeout(() => {
+          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        }, 100);
+
+        // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
+        // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
+
+        return Promise.resolve();
+      } catch (error) {
+        // 🔄 REVERT: Restore previous state on error
+        if (previousPlay) {
+          setOptimisticPlays((prev) =>
+            prev.map((p) => (p.id === playId ? previousPlay! : p))
+          );
+        } else {
+          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
+        }
+
+        logError("Failed to save play:", error);
+        toast.error("Failed to save play. Changes reverted.");
+        throw error; // Re-throw so the UI can show the error
+      }
+    },
+    [activePlaybookId, toast]
+  );
 
   useEffect(() => {
     if (!allPlaysForStats || allPlaysForStats.length === 0) return;
@@ -943,8 +933,9 @@ export default function PlaybookPage() {
     }
   }, [dispatch, toast]);
 
-  // Note: handleSaveDiagram is kept for future diagram saving functionality
-  // @ts-expect-error - Keeping for future use
+  // Note: handleSaveDiagram is commented out - old complex diagram functionality
+  // Keeping for reference but not using with new simple approach
+  /*
   const _handleSaveDiagram = useCallback(
     async ({
       doc,
@@ -1010,6 +1001,7 @@ export default function PlaybookPage() {
     },
     [diagramPlay, dispatch, toast, activeTeamId]
   );
+  */
 
   const handleDuplicatePlay = useCallback(
     async (play: Play, flip: boolean = false) => {
@@ -1037,7 +1029,8 @@ export default function PlaybookPage() {
             if (oppositeFormation) {
               duplicatedPlay.formation_id = oppositeFormation.id;
               duplicatedPlay.formation = oppositeFormation.name;
-              duplicatedPlay.formation_direction = oppositeFormation.direction;
+              duplicatedPlay.formation_direction =
+                oppositeFormation.direction as "base" | "left" | "right" | null;
             }
           }
 
@@ -1054,7 +1047,7 @@ export default function PlaybookPage() {
           if (play.diagram_data) {
             const flippedDiagram = flipDiagramPositions(play.diagram_data);
             if (flippedDiagram) {
-              duplicatedPlay.diagram_data = flippedDiagram as DiagramDocument;
+              duplicatedPlay.diagram_data = flippedDiagram as any;
             }
           }
 
@@ -1517,22 +1510,6 @@ export default function PlaybookPage() {
                   onGamePlan: handleQuickNewGamePlan,
                 })}
                 icon="plus"
-              />
-
-              <QuickPlaySheet
-                isOpen={showQuickPlaySheet}
-                onClose={() => setShowQuickPlaySheet(false)}
-                onCreate={async (data) => {
-                  await handleQuickCreatePlay(data);
-                }}
-                onOpenFullEditor={() => {
-                  setShowQuickPlaySheet(false);
-                  handleOpenBuilder();
-                }}
-                onOpenFormationBuilder={handleOpenFormationBuilderModal}
-                playbookId={activePlaybookId || undefined}
-                suggestions={suggestions}
-                recentCombos={recentPlayCombos}
               />
             </div>
 
@@ -2240,11 +2217,15 @@ export default function PlaybookPage() {
         </Suspense>
 
         {/* Diagram Builder Modal */}
-        {diagramPlay && (
+        {(diagramPlay || diagramMode === "quick-play") && (
           <Modal
             isOpen={!!diagramPlay}
             onClose={() => setDiagramPlay(null)}
-            title={`${diagramPlay.play_name} Diagram`}
+            title={
+              diagramPlay
+                ? `${diagramPlay.play_name} Diagram`
+                : "Quick Create Play"
+            }
             size="fullscreen"
             type="default"
             closeOnBackdropClick={false}
@@ -2266,8 +2247,13 @@ export default function PlaybookPage() {
               }
             >
               <PlayDiagramBuilder
-                onClose={() => setDiagramPlay(null)}
+                onClose={() => {
+                  setDiagramPlay(null);
+                  setDiagramMode("edit");
+                }}
                 play={diagramPlay}
+                mode={diagramMode}
+                onQuickPlaySave={handleQuickPlayCreated}
               />
             </Suspense>
           </Modal>

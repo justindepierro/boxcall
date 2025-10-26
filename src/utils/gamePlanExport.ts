@@ -160,7 +160,7 @@ export function parseJSONFile(content: string): {
   try {
     const parsed = JSON.parse(content);
     return validateGamePlanImport(parsed);
-  } catch (_err: unknown) {
+  } catch {
     return {
       valid: false,
       error: "Invalid JSON file format",

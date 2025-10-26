@@ -148,11 +148,7 @@ export function useGameSession({
   });
 
   // Load game plan
-  useEffect(() => {
-    loadGamePlan();
-  }, [gamePlanId]);
-
-  const loadGamePlan = async () => {
+  const loadGamePlan = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -175,7 +171,11 @@ export function useGameSession({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [gamePlanId]);
+
+  useEffect(() => {
+    loadGamePlan();
+  }, [gamePlanId, loadGamePlan]);
 
   // Start game session
   const startSession = useCallback(async () => {

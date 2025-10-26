@@ -45,17 +45,17 @@ export const ProfilePopoverDemo: React.FC = () => {
     <div className="content-medium p-6 space-y-8">
       {/* Header */}
       <div className="text-center">
-        <Typography variant="headline-lg" className="text-gray-900 mb-2">
+        <Typography variant="headline-lg" className="text-primary mb-2">
           Profile Popover System
         </Typography>
-        <Typography variant="body-md" className="text-gray-600">
+        <Typography variant="body-md" className="text-secondary">
           Hover over any avatar or name to see their profile information
         </Typography>
       </div>
 
       {/* Size Variations */}
       <div className="bg-white rounded-lg border p-6">
-        <Typography variant="headline-md" className="text-gray-900 mb-4">
+        <Typography variant="headline-md" className="text-primary mb-4">
           Avatar Sizes
         </Typography>
         <div className="flex items-center gap-6 flex-wrap">
@@ -67,7 +67,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               size="xs"
               showName={false}
             />
-            <Typography variant="caption" className="text-gray-500 mt-1 block">
+            <Typography variant="caption" className="text-muted mt-1 block">
               XS
             </Typography>
           </div>
@@ -79,7 +79,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               size="sm"
               showName={false}
             />
-            <Typography variant="caption" className="text-gray-500 mt-1 block">
+            <Typography variant="caption" className="text-muted mt-1 block">
               SM
             </Typography>
           </div>
@@ -91,7 +91,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               size="md"
               showName={false}
             />
-            <Typography variant="caption" className="text-gray-500 mt-1 block">
+            <Typography variant="caption" className="text-muted mt-1 block">
               MD
             </Typography>
           </div>
@@ -103,7 +103,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               size="lg"
               showName={false}
             />
-            <Typography variant="caption" className="text-gray-500 mt-1 block">
+            <Typography variant="caption" className="text-muted mt-1 block">
               LG
             </Typography>
           </div>
@@ -115,7 +115,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               size="xl"
               showName={false}
             />
-            <Typography variant="caption" className="text-gray-500 mt-1 block">
+            <Typography variant="caption" className="text-muted mt-1 block">
               XL
             </Typography>
           </div>
@@ -124,14 +124,14 @@ export const ProfilePopoverDemo: React.FC = () => {
 
       {/* Team Roster Example */}
       <div className="bg-white rounded-lg border p-6">
-        <Typography variant="headline-md" className="text-gray-900 mb-4">
+        <Typography variant="headline-md" className="text-primary mb-4">
           Team Roster Example
         </Typography>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {mockUsers.map((user) => (
             <div
               key={user.id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              className="flex items-center justify-between p-4 bg-surface-secondary rounded-lg"
             >
               <UserAvatar
                 userId={user.id}
@@ -143,7 +143,7 @@ export const ProfilePopoverDemo: React.FC = () => {
                 showOnHover={true}
               />
               <div className="text-right">
-                <Typography variant="body-sm" className="text-gray-500">
+                <Typography variant="body-sm" className="text-muted">
                   {user.role === "coach" || user.role === "assistant_coach"
                     ? "Coaching Staff"
                     : user.role === "player"
@@ -158,11 +158,11 @@ export const ProfilePopoverDemo: React.FC = () => {
 
       {/* Activity Feed Example */}
       <div className="bg-white rounded-lg border p-6">
-        <Typography variant="headline-md" className="text-gray-900 mb-4">
+        <Typography variant="headline-md" className="text-primary mb-4">
           Activity Feed Example
         </Typography>
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-start gap-3 p-4 bg-surface-secondary rounded-lg">
             <UserAvatar
               userId={mockUsers[0].id}
               name={mockUsers[0].name}
@@ -175,7 +175,7 @@ export const ProfilePopoverDemo: React.FC = () => {
               <div className="flex items-center gap-2 mb-1">
                 <Typography
                   variant="body-sm"
-                  className="font-semibold text-gray-900"
+                  className="font-semibold text-primary"
                 >
                   {mockUsers[0].name}
                 </Typography>
@@ -183,17 +183,17 @@ export const ProfilePopoverDemo: React.FC = () => {
                   Coach
                 </span>
               </div>
-              <Typography variant="body-sm" className="text-gray-700">
+              <Typography variant="body-sm" className="text-primary">
                 Posted a new practice plan for this week's games. Make sure to
                 review the special teams plays!
               </Typography>
-              <Typography variant="body-xs" className="text-gray-500 mt-1">
+              <Typography variant="body-xs" className="text-muted mt-1">
                 2 hours ago
               </Typography>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-start gap-3 p-4 bg-surface-secondary rounded-lg">
             <UserAvatar
               userId={mockUsers[1].id}
               name={mockUsers[1].name}
@@ -206,18 +206,18 @@ export const ProfilePopoverDemo: React.FC = () => {
               <div className="flex items-center gap-2 mb-1">
                 <Typography
                   variant="body-sm"
-                  className="font-semibold text-gray-900"
+                  className="font-semibold text-primary"
                 >
                   {mockUsers[1].name}
                 </Typography>
-                <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded-full text-xs font-medium">
+                <span className="text-success-600 bg-success-bg px-2 py-0.5 rounded-full text-xs font-medium">
                   Player
                 </span>
               </div>
-              <Typography variant="body-sm" className="text-gray-700">
+              <Typography variant="body-sm" className="text-primary">
                 Great practice today team! Looking forward to Friday's game. 🏈
               </Typography>
-              <Typography variant="body-xs" className="text-gray-500 mt-1">
+              <Typography variant="body-xs" className="text-muted mt-1">
                 5 hours ago
               </Typography>
             </div>
@@ -227,16 +227,16 @@ export const ProfilePopoverDemo: React.FC = () => {
 
       {/* New App Integration Examples */}
       <div className="bg-white rounded-lg border p-6">
-        <Typography variant="headline-md" className="text-gray-900 mb-4">
+        <Typography variant="headline-md" className="text-primary mb-4">
           App Integration Examples
         </Typography>
         <div className="space-y-6">
           {/* Staff Management Integration */}
           <div>
-            <Typography variant="headline-sm" className="text-gray-700 mb-3">
+            <Typography variant="headline-sm" className="text-primary mb-3">
               Staff Management Cards
             </Typography>
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-surface-secondary p-4 rounded-lg">
               <div className="flex items-center gap-3">
                 <UserAvatar
                   userId="staff-1"
@@ -247,14 +247,14 @@ export const ProfilePopoverDemo: React.FC = () => {
                 <div>
                   <Typography
                     variant="body-md"
-                    className="font-medium text-gray-900"
+                    className="font-medium text-primary"
                   >
                     Coach Anderson
                   </Typography>
-                  <Typography variant="body-sm" className="text-gray-600">
+                  <Typography variant="body-sm" className="text-secondary">
                     anderson@team.com
                   </Typography>
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full mt-1">
+                  <span className="inline-block px-2 py-1 bg-success-bg text-success-600 text-xs font-medium rounded-full mt-1">
                     Position Coach
                   </span>
                 </div>
@@ -264,15 +264,15 @@ export const ProfilePopoverDemo: React.FC = () => {
 
           {/* Playbook Creator Integration */}
           <div>
-            <Typography variant="headline-sm" className="text-gray-700 mb-3">
+            <Typography variant="headline-sm" className="text-primary mb-3">
               Play Creator Attribution
             </Typography>
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-surface-secondary p-4 rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography
                     variant="headline-md"
-                    className="font-mono font-bold text-gray-900"
+                    className="font-mono font-bold text-primary"
                   >
                     Smash Concept
                   </Typography>
@@ -280,11 +280,11 @@ export const ProfilePopoverDemo: React.FC = () => {
                     <span className="px-2 py-0.5 bg-purple-600 text-white rounded-full text-xs font-medium">
                       Pass
                     </span>
-                    <span className="px-2 py-0.5 bg-gray-100 text-gray-800 border border-gray-200 rounded-full text-xs font-medium">
+                    <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-xs font-medium">
                       85%
                     </span>
                     <div className="flex items-center gap-1">
-                      <Typography variant="body-xs" className="text-gray-500">
+                      <Typography variant="body-xs" className="text-muted">
                         by
                       </Typography>
                       <UserAvatar
@@ -304,10 +304,10 @@ export const ProfilePopoverDemo: React.FC = () => {
 
           {/* Calendar Comments Integration */}
           <div>
-            <Typography variant="headline-sm" className="text-gray-700 mb-3">
+            <Typography variant="headline-sm" className="text-primary mb-3">
               Calendar Event Comments
             </Typography>
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+            <div className="bg-surface-secondary p-4 rounded-lg space-y-3">
               <div className="flex items-start gap-2">
                 <UserAvatar
                   userId="coach-calendar"
@@ -320,11 +320,11 @@ export const ProfilePopoverDemo: React.FC = () => {
                     <Typography variant="body-sm" className="font-medium">
                       Coach Davis
                     </Typography>
-                    <Typography variant="body-xs" className="text-gray-500">
+                    <Typography variant="body-xs" className="text-muted">
                       1 hour ago
                     </Typography>
                   </div>
-                  <Typography variant="body-sm" className="text-gray-700">
+                  <Typography variant="body-sm" className="text-primary">
                     Make sure to focus on red zone execution in today's
                     practice.
                   </Typography>
@@ -342,11 +342,11 @@ export const ProfilePopoverDemo: React.FC = () => {
                     <Typography variant="body-sm" className="font-medium">
                       Jake Martinez
                     </Typography>
-                    <Typography variant="body-xs" className="text-gray-500">
+                    <Typography variant="body-xs" className="text-muted">
                       30 min ago
                     </Typography>
                   </div>
-                  <Typography variant="body-sm" className="text-gray-700">
+                  <Typography variant="body-sm" className="text-primary">
                     Got it, Coach! Ready to work on those fade routes.
                   </Typography>
                 </div>

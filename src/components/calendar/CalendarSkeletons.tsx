@@ -38,8 +38,7 @@ export const CalendarGridSkeleton: React.FC = () => (
         <div className="h-9 w-24 rounded-lg surface-subtle" />
       </div>
     </div>
-    {/* Fixed height (600px) matches calendar component for consistent skeleton loading */}
-    {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing -- Matches FullCalendar fixed height */}
+    {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing, boxcall-design/no-raw-tailwind-colors -- Matches FullCalendar fixed height */}
     <div className="grid grid-cols-7 gap-2 h-[600px] select-none">
       {Array.from({ length: 35 }).map((_, i) => (
         <div

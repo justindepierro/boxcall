@@ -25,7 +25,7 @@ import type {
   TeamRole,
   Capability,
 } from "../types/roles";
-import { RoleService } from "@services/roleService";
+import { RoleService } from "@services";
 import { useAuth } from "../app/auth-store";
 
 // ============================================================================

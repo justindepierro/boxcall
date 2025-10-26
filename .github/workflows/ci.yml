@@ -7,35 +7,65 @@ on:
     branches: [main]
 
 jobs:
-  validate:
+  # 🚀 FASTER: Parallel validation jobs
+  type-check:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
       - name: Type check
         run: npm run type-check
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
       - name: Lint
         run: npm run lint
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
       - name: Unit Tests
         run: npm run test:ci
         env:
-          NODE_OPTIONS: --max-old-space-size=2048
+          NODE_OPTIONS: --max-old-space-size=4096
 
+  build:
+    runs-on: ubuntu-latest
+    needs: [type-check, lint, test] # 🚀 FASTER: Wait for parallel jobs
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
       - name: Build
         run: npm run build
         env:

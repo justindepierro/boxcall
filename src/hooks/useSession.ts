@@ -251,7 +251,7 @@ export function useSession({
     } finally {
       setIsLoading(false);
     }
-  }, [state.sessionId]); // syncOfflineExecutions is internal, doesn't need to be in deps
+  }, [state.sessionId, syncOfflineExecutions]);
 
   const pauseSession = useCallback(() => {
     setState((prev) => ({ ...prev, isPaused: true }));

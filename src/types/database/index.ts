@@ -690,6 +690,9 @@ export type Database = {
           times_called: number | null;
           times_successful: number | null;
           updated_at: string | null;
+          current_version: number | null;
+          version_created_at: string | null;
+          version_created_by: string | null;
         };
         Insert: {
           back_align?: string | null;
@@ -731,6 +734,9 @@ export type Database = {
           times_called?: number | null;
           times_successful?: number | null;
           updated_at?: string | null;
+          current_version?: number | null;
+          version_created_at?: string | null;
+          version_created_by?: string | null;
         };
         Update: {
           back_align?: string | null;
@@ -772,6 +778,9 @@ export type Database = {
           times_called?: number | null;
           times_successful?: number | null;
           updated_at?: string | null;
+          current_version?: number | null;
+          version_created_at?: string | null;
+          version_created_by?: string | null;
         };
         Relationships: [
           {
@@ -779,6 +788,51 @@ export type Database = {
             columns: ["playbook_id"];
             isOneToOne: false;
             referencedRelation: "playbooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      play_versions: {
+        Row: {
+          change_description: string | null;
+          created_at: string | null;
+          created_by: string;
+          diagram_data: Json;
+          id: string;
+          play_id: string;
+          version_number: number;
+        };
+        Insert: {
+          change_description?: string | null;
+          created_at?: string | null;
+          created_by: string;
+          diagram_data: Json;
+          id?: string;
+          play_id: string;
+          version_number: number;
+        };
+        Update: {
+          change_description?: string | null;
+          created_at?: string | null;
+          created_by?: string;
+          diagram_data?: Json;
+          id?: string;
+          play_id?: string;
+          version_number?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_versions_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_versions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
             referencedColumns: ["id"];
           },
         ];

@@ -74,12 +74,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({
 
   return (
     <header className="page-header mb-6 md:mb-8 pt-6">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 sm:gap-8">
         <div className="flex-1 min-w-0">
           {title && (
             <Typography
               variant="display-lg"
-              className="text-text-primary mb-2"
+              className="text-text-primary mb-3"
               as="h1"
             >
               {title}

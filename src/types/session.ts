@@ -90,6 +90,13 @@ export interface PracticeSession extends BaseSession {
       repetitions: number;
       order: number;
       notes?: string;
+      // Phase 3: Include diagram data for live session display
+      diagramData?: {
+        id: string;
+        type: 'play' | 'formation' | 'template';
+        pixiData: any; // DiagramDocument
+        metadata: any;
+      };
     }>;
   };
 }
@@ -159,6 +166,21 @@ export interface PlayExecution {
   // Play reference
   playId: string;
   formationId?: string;
+
+  // Diagram data reference (Phase 3: Live Session Integration)
+  diagramData?: {
+    id: string;
+    type: 'play' | 'formation' | 'template';
+    version: number;
+  };
+
+  // Route-level execution tracking (Phase 3)
+  routeExecutions?: Array<{
+    routeId: string;
+    result: ExecutionResult;
+    notes?: string;
+    executedAt: Date;
+  }>;
 
   // Result
   result: ExecutionResult;

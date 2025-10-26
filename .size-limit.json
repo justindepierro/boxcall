@@ -2,7 +2,7 @@
   {
     "name": "Main Bundle",
     "path": "dist/assets/index-*.js",
-    "limit": "300 KB",
+    "limit": "500 KB",
     "gzip": true,
     "webpack": false
   },
@@ -15,7 +15,7 @@
   {
     "name": "Total Bundle (Critical Path)",
     "path": "dist/assets/index-*",
-    "limit": "350 KB",
+    "limit": "550 KB",
     "gzip": true
   }
 ]

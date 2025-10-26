@@ -184,9 +184,9 @@
   --semantic-diagram-minimap-background: #ffffff;
   --semantic-boxcall-brand: #047857;
   --semantic-coach-authority: #475569;
-  --font-family-display: Bebas Neue, system-ui, sans-serif;
-  --font-family-interface: Inter, system-ui, sans-serif;
-  --font-family-mono: JetBrains Mono, Consolas, monospace;
+  --font-family-display: Bebas Neue,system-ui,sans-serif;
+  --font-family-interface: Inter,system-ui,sans-serif;
+  --font-family-mono: JetBrains Mono,Consolas,monospace;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -219,6 +219,34 @@
   --semantic-typography-caption-letter-spacing: 0;
   --semantic-typography-display-line-height: 1;
   --semantic-typography-display-letter-spacing: -0.05em;
+  --semantic-typography-mobile-hero-font-size: 1.75rem;
+  --semantic-typography-mobile-hero-line-height: 2rem;
+  --semantic-typography-mobile-hero-font-weight: 700;
+  --semantic-typography-mobile-hero-letter-spacing: -0.02em;
+  --semantic-typography-mobile-h1-font-size: 1.5rem;
+  --semantic-typography-mobile-h1-line-height: 1.75rem;
+  --semantic-typography-mobile-h1-font-weight: 600;
+  --semantic-typography-mobile-h1-letter-spacing: -0.01em;
+  --semantic-typography-mobile-h2-font-size: 1.25rem;
+  --semantic-typography-mobile-h2-line-height: 1.5rem;
+  --semantic-typography-mobile-h2-font-weight: 600;
+  --semantic-typography-mobile-h2-letter-spacing: 0;
+  --semantic-typography-mobile-h3-font-size: 1.125rem;
+  --semantic-typography-mobile-h3-line-height: 1.375rem;
+  --semantic-typography-mobile-h3-font-weight: 600;
+  --semantic-typography-mobile-h3-letter-spacing: 0;
+  --semantic-typography-mobile-body-font-size: 1rem;
+  --semantic-typography-mobile-body-line-height: 1.5rem;
+  --semantic-typography-mobile-body-font-weight: 400;
+  --semantic-typography-mobile-body-letter-spacing: 0;
+  --semantic-typography-mobile-small-font-size: 0.875rem;
+  --semantic-typography-mobile-small-line-height: 1.25rem;
+  --semantic-typography-mobile-small-font-weight: 400;
+  --semantic-typography-mobile-small-letter-spacing: 0;
+  --semantic-typography-mobile-tiny-font-size: 0.75rem;
+  --semantic-typography-mobile-tiny-line-height: 1rem;
+  --semantic-typography-mobile-tiny-font-weight: 400;
+  --semantic-typography-mobile-tiny-letter-spacing: 0;
   --animation-duration-instant: 75ms;
   --animation-duration-quick: 150ms;
   --animation-duration-smooth: 300ms;
@@ -415,26 +443,18 @@
   --semantic-border-hover-style: solid;
   --elevation-none: none;
   --elevation-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --elevation-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --elevation-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --elevation-xl:
-    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --elevation-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --elevation-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --elevation-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --elevation-card-resting:
-    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --elevation-card-hover:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --elevation-card-resting: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --elevation-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --elevation-card-active: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --elevation-button-resting: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --elevation-button-hover:
-    0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --elevation-button-hover: 0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --elevation-button-active: inset 0 1px 2px 0 rgb(0 0 0 / 0.1);
-  --elevation-modal:
-    0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
-  --elevation-dropdown:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --elevation-modal: 0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
+  --elevation-dropdown: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --elevation-focus: 0 0 0 2px rgb(4 120 87 / 0.2);
   --contrast-text-on-light: #111827;
   --contrast-text-on-dark: #ffffff;
@@ -569,10 +589,8 @@
   --component-card-bg-selected: #ecfdf5;
   --component-card-border-selected: #00a86b;
   --component-card-shadow-flat: none;
-  --component-card-shadow-raised:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --component-card-shadow-elevated:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --component-card-shadow-raised: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --component-card-shadow-elevated: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --component-badge-neutral-bg: #f3f4f6;
   --component-badge-neutral-text: #374151;
   --component-badge-neutral-border: #e5e7eb;
@@ -595,8 +613,7 @@
   --component-modal-backdrop-blur: 8px;
   --component-modal-bg: #ffffff;
   --component-modal-border: #e5e7eb;
-  --component-modal-shadow:
-    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --component-modal-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --component-modal-header-bg: #ffffff;
   --component-modal-header-border: #e5e7eb;
   --component-modal-header-text: #111827;
@@ -621,8 +638,7 @@
   --component-navigation-sidebar-header-bg: #f9fafb;
   --component-tooltip-bg: #111827;
   --component-tooltip-text: #ffffff;
-  --component-tooltip-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --component-tooltip-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --component-tooltip-max-width: 320px;
   --component-tooltip-padding: 8px 12px;
   --component-tooltip-font-size: 0.875rem;
@@ -633,8 +649,7 @@
   --component-skeleton-border-radius: 8px;
   --component-dropdown-bg: #ffffff;
   --component-dropdown-border: #e5e7eb;
-  --component-dropdown-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --component-dropdown-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --component-dropdown-item-text: #111827;
   --component-dropdown-item-text-hover: #111827;
   --component-dropdown-item-text-selected: #00a86b;
@@ -666,7 +681,7 @@
   --component-z-index-tooltip: 1070;
   --component-z-index-toast: 1080;
   --component-z-index-max: 9999;
-  --component-focus-ring-color: #3b82f6;
+  --component-focus-ring-color: #00a86b;
   --component-focus-ring-width: 2px;
   --component-focus-ring-offset: 2px;
   --component-focus-ring-opacity: 0.5;

@@ -1,4 +1,4 @@
-import { FormationService } from "../services/formationService";
+import { supabase } from "../lib/supabase";
 import {
   validateFormationName,
   validatePersonnelValue,
@@ -36,7 +36,16 @@ export async function ensureValidFormation({
   }
 
   if (formationId) {
-    const formation = await FormationService.getFormationById(formationId);
+    const { data: formation, error } = await supabase
+      .from("formations")
+      .select("id, name, playbook_id")
+      .eq("id", formationId)
+      .single();
+
+    if (error) {
+      throw new Error(`Formation not found: ${error.message}`);
+    }
+
     if (formation.playbook_id !== playbookId) {
       throw new Error("Selected formation belongs to a different playbook.");
     }
@@ -57,9 +66,16 @@ export async function ensureValidFormation({
   }
 
   if (!allowCustom) {
-    const formations =
-      await FormationService.getFormationsByPlaybook(playbookId);
-    const match = formations.find(
+    const { data: formations, error } = await supabase
+      .from("formations")
+      .select("id, name")
+      .eq("playbook_id", playbookId);
+
+    if (error) {
+      throw new Error(`Failed to fetch formations: ${error.message}`);
+    }
+
+    const match = formations?.find(
       (formation) =>
         formation.name.trim().toLowerCase() === trimmedName.toLowerCase()
     );

@@ -87,7 +87,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     hideSuggestions,
     isSuggestionsVisible,
     updateContext,
-    getCombinedSuggestions,
   } = useAISuggestions(playbookId);
 
   // Rate limit feedback

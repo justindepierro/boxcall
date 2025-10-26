@@ -14,7 +14,7 @@ import type {
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 
 const QUEUE_STORAGE_KEY = "boxcall_offline_executions";
-const MAX_RETRY_ATTEMPTS = 3;
+const _MAX_RETRY_ATTEMPTS = 3;
 
 export class OfflineExecutionQueue {
   /**

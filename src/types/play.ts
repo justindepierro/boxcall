@@ -1,5 +1,5 @@
 // Import diagram types
-import type { DiagramDocument } from "../components/playbook/diagram-editor/types/DiagramTypes";
+import type { FormationPlayerPosition } from "./formation";
 
 // Play creation source tracking
 export type PlayCreationSource =
@@ -152,7 +152,7 @@ export interface Play {
   install_phase?: string; // e.g., 'install1','install2','install3','situational','gameplan'
 
   // Diagram fields (NEW - October 12, 2025)
-  diagram_data?: DiagramDocument | null; // JSONB - structured diagram document
+  diagram_data?: FormationPlayerPosition[] | null; // JSONB - array of player positions
   diagram_version?: number | null; // integer - diagram format version (1-10)
   diagram_url?: string | null; // text - PNG thumbnail URL only (not diagram JSON)
 

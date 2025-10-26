@@ -52,10 +52,10 @@ export const MultiBadgeDemo: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-primary mb-2">
           Multi-Badge System Demo
         </h1>
-        <p className="text-gray-600">
+        <p className="text-secondary">
           Shows how users can have multiple badges for admin status, roles, and
           subscriptions
         </p>
@@ -66,12 +66,12 @@ export const MultiBadgeDemo: React.FC = () => {
           <Card key={index} className="p-4">
             <div className="space-y-3">
               <div>
-                <h3 className="font-semibold text-gray-900">{user.name}</h3>
-                <p className="text-sm text-gray-600">{user.description}</p>
+                <h3 className="font-semibold text-primary">{user.name}</h3>
+                <p className="text-sm text-secondary">{user.description}</p>
               </div>
 
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">
+                <div className="text-sm font-medium text-primary mb-2">
                   Badges:
                 </div>
                 <MultiBadgeDisplay
@@ -83,7 +83,7 @@ export const MultiBadgeDemo: React.FC = () => {
                 />
               </div>
 
-              <div className="text-xs text-gray-500 space-y-1">
+              <div className="text-xs text-muted space-y-1">
                 <div>• is_admin: {user.isAdmin ? "true" : "false"}</div>
                 <div>• app_role: {user.appRole}</div>
                 <div>• subscription_tier: {user.subscriptionTier}</div>

@@ -443,7 +443,7 @@ export class PlayConfidenceService {
    */
   private static async calculatePracticeQuality(
     playId: string,
-    teamId: string
+    _teamId: string
   ): Promise<number> {
     // Get practice session executions only
     const { data: practiceExecutions, error } = await supabase

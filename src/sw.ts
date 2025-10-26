@@ -35,10 +35,10 @@ const CACHE_NAMES = {
 };
 
 // =====================================================
-// STRATEGY 1: Cache-First for Static Assets
+// STRATEGY 1: Cache-First for Static Assets (OPTIMIZED)
 // =====================================================
 
-// Cache JavaScript and CSS files (versioned, immutable)
+// Cache JavaScript and CSS files (versioned, immutable) - INCREASED CACHE SIZE
 registerRoute(
   ({ request }) =>
     request.destination === "script" || request.destination === "style",
@@ -49,14 +49,14 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        maxEntries: 100, // Increased from 60
+        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days (from 30)
       }),
     ],
   })
 );
 
-// Cache fonts (rarely change)
+// Cache fonts (rarely change) - OPTIMIZED
 registerRoute(
   ({ request }) => request.destination === "font",
   new CacheFirst({
@@ -66,7 +66,7 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 30,
+        maxEntries: 50, // Increased from 30
         maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
       }),
     ],
@@ -74,10 +74,10 @@ registerRoute(
 );
 
 // =====================================================
-// STRATEGY 2: Stale-While-Revalidate for Images
+// STRATEGY 2: Stale-While-Revalidate for Images (OPTIMIZED)
 // =====================================================
 
-// Cache images with stale-while-revalidate
+// Cache images with stale-while-revalidate - INCREASED CACHE SIZE
 registerRoute(
   ({ request }) => request.destination === "image",
   new StaleWhileRevalidate({
@@ -87,30 +87,54 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        maxEntries: 200, // Increased from 100
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days (from 7)
       }),
     ],
   })
 );
 
 // =====================================================
-// STRATEGY 3: Network-First for API Calls
+// STRATEGY 3: Network-First for API Calls (OPTIMIZED)
 // =====================================================
 
-// Supabase API calls - network-first with 3s timeout
+// Supabase API calls - network-first with optimized timeout and cache
 registerRoute(
   ({ url }) => url.hostname.includes("supabase.co"),
   new NetworkFirst({
     cacheName: CACHE_NAMES.api,
-    networkTimeoutSeconds: 3,
+    networkTimeoutSeconds: 5, // Increased from 3s for better reliability
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 100, // Increased from 50
+        maxAgeSeconds: 15 * 60, // 15 minutes (from 5)
+      }),
+    ],
+  })
+);
+
+// =====================================================
+// STRATEGY 4: Cache-First for External Resources
+// =====================================================
+
+// Cache external resources (CDNs, etc.) with longer timeout
+registerRoute(
+  ({ url }) =>
+    url.hostname !== location.hostname &&
+    !url.hostname.includes("supabase.co"),
+  new CacheFirst({
+    cacheName: "external-resources",
+    networkTimeoutSeconds: 10,
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
         maxEntries: 50,
-        maxAgeSeconds: 5 * 60, // 5 minutes
+        maxAgeSeconds: 24 * 60 * 60, // 24 hours
       }),
     ],
   })

@@ -16,7 +16,7 @@ import {
 } from "../pwa/PWAIntegration";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
-// Lazy load GlobalSearch to defer fuse.js (70KB) until user interacts
+// Lazy load GlobalSearch to defer search functionality until user interacts
 const GlobalSearch = lazy(() =>
   import("../ui/GlobalSearch").then((module) => ({
     default: module.GlobalSearch,
@@ -137,6 +137,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <div className="flex items-center h-16">
             {/* Global Search + Install CTA */}
             <div className="flex-1 flex items-center justify-center gap-3">
+              <Suspense
+                fallback={
+                  <div className="w-64 h-10 animate-pulse bg-surface-muted rounded-lg" />
+                }
+              >
+                <GlobalSearch className="w-64" />
+              </Suspense>
               {canInstallPWA && (
                 <Button
                   variant="gradient"
@@ -147,13 +154,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   <Icon name="download" size="sm" /> Install BoxCall
                 </Button>
               )}
-              <Suspense
-                fallback={
-                  <div className="w-64 h-10 animate-pulse bg-surface-muted rounded-lg" />
-                }
-              >
-                <GlobalSearch />
-              </Suspense>
             </div>
 
             {/* Right side - TeamSwitcher and User Actions */}

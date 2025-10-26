@@ -71,6 +71,22 @@ if (supabaseUrl && supabaseAnonKey) {
       autoRefreshToken: true,
       detectSessionInUrl: true,
     },
+    // 🚀 PERFORMANCE: Add global configuration for better performance
+    global: {
+      headers: {
+        'x-client-info': 'boxcall-web',
+      },
+    },
+    // 🚀 PERFORMANCE: Enable connection pooling and keep-alive
+    db: {
+      schema: 'public',
+    },
+    // 🚀 PERFORMANCE: Add realtime optimizations
+    realtime: {
+      params: {
+        eventsPerSecond: 10, // Limit realtime events for performance
+      },
+    },
   });
 } else if (import.meta.env.DEV) {
   console.log("⚠️ Using Supabase dev stub - environment variables missing");

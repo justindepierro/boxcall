@@ -11,6 +11,17 @@ interface WebVitalsMetric {
   value: number;
   rating: "good" | "needs-improvement" | "poor";
   timestamp: number;
+  sessionId: string;
+}
+
+// Performance regression detection
+interface PerformanceBaseline {
+  LCP: { p50: number; p75: number; p95: number };
+  INP: { p50: number; p75: number; p95: number };
+  CLS: { p50: number; p75: number; p95: number };
+  FCP: { p50: number; p75: number; p95: number };
+  TTFB: { p50: number; p75: number; p95: number };
+  lastUpdated: string;
 }
 
 // TypeScript definition for Chrome's memory API
@@ -39,12 +50,32 @@ class PerformanceMonitor {
   private metrics: PerformanceMetrics = {};
   private observers: PerformanceObserver[] = [];
   private isEnabled: boolean;
+  private sessionId: string;
+  private baseline: PerformanceBaseline | null = null;
 
   constructor() {
     this.isEnabled = !import.meta.env.DEV && "performance" in window;
+    this.sessionId = this.generateSessionId();
 
     if (this.isEnabled) {
       this.initializeMonitoring();
+      this.loadBaseline();
+    }
+  }
+
+  private generateSessionId(): string {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private async loadBaseline(): Promise<void> {
+    // Load baseline from localStorage or fetch from server
+    try {
+      const stored = localStorage.getItem('performance-baseline');
+      if (stored) {
+        this.baseline = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Failed to load performance baseline:', error);
     }
   }
 
@@ -85,6 +116,7 @@ class PerformanceMonitor {
       value: metric.value,
       rating,
       timestamp: Date.now(),
+      sessionId: this.sessionId,
     };
 
     // Store the metric with proper typing
@@ -140,6 +172,7 @@ class PerformanceMonitor {
               ? "needs-improvement"
               : "poor",
         timestamp: Date.now(),
+        sessionId: this.sessionId,
       });
     }
   }
@@ -163,6 +196,7 @@ class PerformanceMonitor {
               value: entry.duration,
               rating: "poor",
               timestamp: Date.now(),
+              sessionId: this.sessionId,
             });
           }
         });
@@ -181,6 +215,7 @@ class PerformanceMonitor {
               value: resource.duration,
               rating: "needs-improvement",
               timestamp: Date.now(),
+              sessionId: this.sessionId,
             });
           }
         });
@@ -210,6 +245,7 @@ class PerformanceMonitor {
               ? "needs-improvement"
               : "poor",
         timestamp: Date.now(),
+        sessionId: this.sessionId,
       });
     };
   }
@@ -237,6 +273,7 @@ class PerformanceMonitor {
                 ? "needs-improvement"
                 : "poor",
           timestamp: Date.now(),
+          sessionId: this.sessionId,
         });
       }
     };

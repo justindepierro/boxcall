@@ -29,12 +29,12 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
     async function loadStats() {
       try {
         const now = new Date();
-        const todayStart = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate()
-        );
-        const todayStartISO = todayStart.toISOString();
+        // const todayStart = new Date(
+        //   now.getFullYear(),
+        //   now.getMonth(),
+        //   now.getDate()
+        // );
+        // const todayStartISO = todayStart.toISOString(); // Not currently used
 
         // 1. Count announcements created today
         // TODO: Implement team_announcements table and re-enable this query
