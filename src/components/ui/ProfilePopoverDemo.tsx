@@ -280,7 +280,7 @@ export const ProfilePopoverDemo: React.FC = () => {
                     <span className="px-2 py-0.5 bg-purple-600 text-white rounded-full text-xs font-medium">
                       Pass
                     </span>
-                    <span className="px-2 py-0.5 bg-surface-muted text-primary border border rounded-full text-xs font-medium">
+                    <span className="px-2 py-0.5 bg-surface-muted text-primary border rounded-full text-xs font-medium">
                       85%
                     </span>
                     <div className="flex items-center gap-1">

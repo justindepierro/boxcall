@@ -22,12 +22,12 @@
 
 import React, {
   createContext,
-  useContext,
   useState,
   useCallback,
   useRef,
   useEffect,
 } from "react";
+import { info, error as logError } from "../utils/logger";
 import {
   persistOperation,
   loadOperations,
@@ -84,6 +84,8 @@ const SaveStateContext = createContext<SaveStateContextValue | undefined>(
   undefined
 );
 
+export { SaveStateContext };
+
 export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -117,7 +119,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const operations = await loadOperations();
         if (operations.length > 0) {
-          console.log(
+          info(
             `[SaveQueue] Found ${operations.length} pending operations from last session`
           );
           setHasPendingFromLastSession(true);
@@ -125,7 +127,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
           // They can click "Retry Pending Saves" button
         }
       } catch (error) {
-        console.error("[SaveQueue] Failed to load persisted queue:", error);
+        logError("[SaveQueue] Failed to load persisted queue:", error);
       }
     };
 
@@ -210,7 +212,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         setTimeout(processSaveQueue, 100);
       }
     } catch (error) {
-      console.error("[SaveQueue] Operation failed:", {
+      logError("[SaveQueue] Operation failed:", {
         id: operation.id,
         retries: operation.retries,
         maxRetries: operation.maxRetries,
@@ -224,7 +226,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
           30000
         );
 
-        console.log("[SaveQueue] Retrying after backoff:", {
+        info("[SaveQueue] Retrying after backoff:", {
           id: operation.id,
           retries: operation.retries + 1,
           backoffMs,
@@ -240,7 +242,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
         }, backoffMs);
       } else {
         // Max retries exceeded - remove from queue
-        console.error(
+        logError(
           "[SaveQueue] Max retries exceeded, removing from queue:",
           operation.id
         );
@@ -258,7 +260,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   // Queue a save operation
   const queueSave = useCallback(
     (operation: SaveOperation) => {
-      console.log("[SaveQueue] Queueing save:", {
+      info("[SaveQueue] Queueing save:", {
         id: operation.id,
         entityType: operation.entityType,
         entityId: operation.entityId,
@@ -274,7 +276,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Retry all failed saves
   const retryFailedSaves = useCallback(async () => {
-    console.log("[SaveQueue] Retrying all failed saves:", saveQueue.length);
+    info("[SaveQueue] Retrying all failed saves:", saveQueue.length);
 
     // Reset retry count for all operations
     setSaveQueue((prev) => prev.map((op) => ({ ...op, retries: 0 })));
@@ -286,7 +288,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Clear queue
   const clearQueue = useCallback(async () => {
-    console.log("[SaveQueue] Clearing queue:", saveQueue.length);
+    info("[SaveQueue] Clearing queue:", saveQueue.length);
     setSaveQueue([]);
     isProcessingQueue.current = false;
     setHasPendingFromLastSession(false);
@@ -294,9 +296,9 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
     // Clear persisted queue
     try {
       await clearAllOperations();
-      console.log("[SaveQueue] Cleared persisted queue from IndexedDB");
+      info("[SaveQueue] Cleared persisted queue from IndexedDB");
     } catch (error) {
-      console.error("[SaveQueue] Failed to clear persisted queue:", error);
+      logError("[SaveQueue] Failed to clear persisted queue:", error);
     }
   }, [saveQueue]);
 
@@ -322,11 +324,11 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
           await persistOperation(persistedOp);
         }
 
-        console.log(
+        info(
           `[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`
         );
       } catch (error) {
-        console.error("[SaveQueue] Failed to persist queue:", error);
+        logError("[SaveQueue] Failed to persist queue:", error);
       }
     };
 
@@ -338,7 +340,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   // Track online/offline status and auto-retry when back online
   useEffect(() => {
     const handleOnline = () => {
-      console.log("[SaveQueue] Back online - retrying queued operations");
+      info("[SaveQueue] Back online - retrying queued operations");
       setIsOnline(true);
       // Automatically retry queued operations when coming back online
       if (saveQueue.length > 0) {
@@ -347,7 +349,7 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const handleOffline = () => {
-      console.log("[SaveQueue] Gone offline");
+      info("[SaveQueue] Gone offline");
       setIsOnline(false);
     };
 
@@ -415,10 +417,3 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
  * }
  * ```
  */
-export const useSaveState = () => {
-  const context = useContext(SaveStateContext);
-  if (!context) {
-    throw new Error("useSaveState must be used within SaveStateProvider");
-  }
-  return context;
-};

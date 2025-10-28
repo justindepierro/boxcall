@@ -1,0 +1,16 @@
+/**
+ * Formation Positioning Engine
+ *
+ * Professional NFL positioning standards and formation templates
+ */
+
+export {
+  FormationPositioningEngine,
+  getFormationTemplates,
+  getTemplatesForPersonnel,
+  createFormationFromTemplate
+} from './FormationPositioningEngine';
+
+export type {
+  FormationTemplate
+} from './FormationPositioningEngine';

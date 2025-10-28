@@ -13,21 +13,15 @@
  * @version 1.0.0
  */
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import { createContext, useState, useCallback, useEffect, useRef } from "react";
 import type {
   Command,
   UndoRedoState,
   CommandHistoryEntry,
 } from "../types/undoRedo";
 import { canUndo, canRedo } from "../types/undoRedo";
-import { useSaveState } from "./SaveStateContext";
+import { useSaveState } from "../hooks/useSaveState";
+import { info, warn, error as logError } from "../utils/logger";
 
 interface UndoRedoContextValue {
   /** Current undo/redo state */
@@ -51,6 +45,8 @@ interface UndoRedoContextValue {
 const UndoRedoContext = createContext<UndoRedoContextValue | undefined>(
   undefined
 );
+
+export { UndoRedoContext };
 
 interface UndoRedoProviderProps {
   children: React.ReactNode;
@@ -83,7 +79,7 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
   const executeCommand = useCallback(
     async (command: Command) => {
       if (isExecuting.current) {
-        console.warn("[UndoRedo] Already executing, skipping...");
+        warn("[UndoRedo] Already executing, skipping...");
         return;
       }
 
@@ -91,7 +87,7 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       startSaving();
 
       try {
-        console.log("[UndoRedo] Executing command:", command.description);
+        info("[UndoRedo] Executing command:", command.description);
 
         // Execute the command
         await command.execute();
@@ -123,9 +119,9 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
         ]);
 
         finishSaving("success");
-        console.log("[UndoRedo] Command executed successfully");
+        info("[UndoRedo] Command executed successfully");
       } catch (error) {
-        console.error("[UndoRedo] Command execution failed:", error);
+        logError("[UndoRedo] Command execution failed:", error);
         finishSaving("error");
         throw error;
       } finally {
@@ -140,12 +136,12 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
    */
   const undo = useCallback(async () => {
     if (!canUndo(state)) {
-      console.warn("[UndoRedo] Cannot undo");
+      warn("[UndoRedo] Cannot undo");
       return;
     }
 
     if (isExecuting.current) {
-      console.warn("[UndoRedo] Already executing, skipping undo");
+      warn("[UndoRedo] Already executing, skipping undo");
       return;
     }
 
@@ -155,7 +151,7 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
 
     try {
       const command = state.undoStack[state.undoStack.length - 1];
-      console.log("[UndoRedo] Undoing command:", command.description);
+      info("[UndoRedo] Undoing command:", command.description);
 
       // Execute undo
       await command.undo();
@@ -179,9 +175,9 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       );
 
       finishSaving("success");
-      console.log("[UndoRedo] Undo successful");
+      info("[UndoRedo] Undo successful");
     } catch (error) {
-      console.error("[UndoRedo] Undo failed:", error);
+      logError("[UndoRedo] Undo failed:", error);
       setState((prev) => ({ ...prev, isUndoing: false }));
       finishSaving("error");
       throw error;
@@ -195,12 +191,12 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
    */
   const redo = useCallback(async () => {
     if (!canRedo(state)) {
-      console.warn("[UndoRedo] Cannot redo");
+      warn("[UndoRedo] Cannot redo");
       return;
     }
 
     if (isExecuting.current) {
-      console.warn("[UndoRedo] Already executing, skipping redo");
+      warn("[UndoRedo] Already executing, skipping redo");
       return;
     }
 
@@ -210,7 +206,7 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
 
     try {
       const command = state.redoStack[state.redoStack.length - 1];
-      console.log("[UndoRedo] Redoing command:", command.description);
+      info("[UndoRedo] Redoing command:", command.description);
 
       // Execute redo
       await command.redo();
@@ -234,9 +230,9 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       );
 
       finishSaving("success");
-      console.log("[UndoRedo] Redo successful");
+      info("[UndoRedo] Redo successful");
     } catch (error) {
-      console.error("[UndoRedo] Redo failed:", error);
+      logError("[UndoRedo] Redo failed:", error);
       setState((prev) => ({ ...prev, isRedoing: false }));
       finishSaving("error");
       throw error;
@@ -258,7 +254,7 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       maxHistorySize,
     });
     setHistory([]);
-    console.log("[UndoRedo] History cleared");
+    info("[UndoRedo] History cleared");
   }, [maxHistorySize]);
 
   /**
@@ -269,21 +265,21 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       // Cmd+Z (Mac) or Ctrl+Z (Windows/Linux)
       if ((e.metaKey || e.ctrlKey) && e.key === "z" && !e.shiftKey) {
         e.preventDefault();
-        console.log("[UndoRedo] Keyboard: Undo triggered");
+        info("[UndoRedo] Keyboard: Undo triggered");
         undo();
       }
 
       // Cmd+Shift+Z (Mac) or Ctrl+Shift+Z (Windows/Linux)
       if ((e.metaKey || e.ctrlKey) && e.key === "z" && e.shiftKey) {
         e.preventDefault();
-        console.log("[UndoRedo] Keyboard: Redo triggered");
+        info("[UndoRedo] Keyboard: Redo triggered");
         redo();
       }
 
       // Alternative: Cmd+Y or Ctrl+Y for redo
       if ((e.metaKey || e.ctrlKey) && e.key === "y") {
         e.preventDefault();
-        console.log("[UndoRedo] Keyboard: Redo triggered (Cmd+Y)");
+        info("[UndoRedo] Keyboard: Redo triggered (Cmd+Y)");
         redo();
       }
     };
@@ -311,15 +307,4 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
       {children}
     </UndoRedoContext.Provider>
   );
-};
-
-/**
- * Hook to access undo/redo functionality
- */
-export const useUndoRedo = () => {
-  const context = useContext(UndoRedoContext);
-  if (context === undefined) {
-    throw new Error("useUndoRedo must be used within UndoRedoProvider");
-  }
-  return context;
 };

@@ -44,19 +44,16 @@ export class PlaysService {
         .limit(1);
 
       if (existingTeams && existingTeams.length > 0) {
-        // @ts-expect-error - Supabase type issue with teams table select
         return existingTeams[0].id;
       }
 
       // Create appropriate default team based on user type
-      // @ts-expect-error - Supabase type issue with profiles table select
       const isCoach = profile?.role === "coach";
       const teamName = isCoach ? "Personal Playbook" : "My Team";
       const schoolName = isCoach ? "Personal Collection" : "Auto-Created Team";
 
       const { data: newTeam, error: teamError } = await supabase
         .from("teams")
-        // @ts-expect-error - Supabase type issue with teams table insert
         .insert({
           name: teamName,
           school_name: schoolName,
@@ -70,13 +67,10 @@ export class PlaysService {
       // Create team membership for the user as a coach
       const { error: membershipError } = await supabase
         .from("team_members")
-        // @ts-expect-error - Supabase type issue with team_members table insert
         .insert({
-          // @ts-expect-error - Supabase type issue with teams table select
           team_id: newTeam.id,
           user_id: user.id,
-          role: "coach",
-          is_active: true,
+          team_role: "coach",
         });
 
       if (membershipError) {
@@ -87,7 +81,6 @@ export class PlaysService {
         // Don't throw here - team was created successfully
       }
 
-      // @ts-expect-error - Supabase type issue with teams table select
       return newTeam.id;
     } catch (error) {
       console.error("Failed to ensure user has team:", error);
@@ -121,7 +114,6 @@ export class PlaysService {
         .limit(1);
 
       if (existingPlaybooks && existingPlaybooks.length > 0) {
-        // @ts-expect-error - Supabase type issue with playbooks table select
         return existingPlaybooks[0].id;
       }
 
@@ -129,7 +121,6 @@ export class PlaysService {
       const teamId = await this.ensureUserHasTeam();
 
       // Create appropriate playbook based on user type
-      // @ts-expect-error - Supabase type issue with profiles table select
       const isCoach = profile?.role === "coach";
       const playbookName = isCoach ? "Personal Playbook" : "My Playbook";
       const playbookDescription = isCoach
@@ -138,7 +129,6 @@ export class PlaysService {
 
       const { data: newPlaybook, error: playbookError } = await supabase
         .from("playbooks")
-        // @ts-expect-error - Supabase type issue with playbooks table insert
         .insert({
           name: playbookName,
           description: playbookDescription,
@@ -149,7 +139,6 @@ export class PlaysService {
         .single();
 
       if (playbookError) throw playbookError;
-      // @ts-expect-error - Supabase type issue with playbooks table select
       return newPlaybook.id;
     } catch (error) {
       console.error("Failed to ensure user has playbook:", error);
@@ -243,8 +232,8 @@ export class PlaysService {
         // Metadata
         is_archived: playData.is_archived || false,
         created_by: user.id, // Use actual authenticated user ID
-        created_at: new Date(),
-        updated_at: new Date(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         // Duplicate key supplied by domain layer when enforcing canonical uniqueness (optional)
         duplicate_key:
           typeof (playData as unknown as { duplicate_key?: string })
@@ -263,7 +252,6 @@ export class PlaysService {
       // Insert into Supabase
       let { data, error } = await supabase
         .from("plays")
-        // @ts-expect-error - Supabase type issue with plays table insert
         .insert([newPlay])
         .select()
         .single();
@@ -285,7 +273,6 @@ export class PlaysService {
 
           const retryResult = await supabase
             .from("plays")
-            // @ts-expect-error - Supabase type issue with plays table insert
             .insert([newPlay])
             .select()
             .single();
@@ -314,11 +301,8 @@ export class PlaysService {
       // Record activity for the created play
       await ActivityService.recordActivity({
         type: "created",
-        // @ts-expect-error - Supabase type issue with data return type
         playId: data.id,
-        // @ts-expect-error - Supabase type issue with data return type
         playName: data.play_name,
-        // @ts-expect-error - Supabase type issue with data return type
         teamId: data.team_id,
       });
 
@@ -396,6 +380,30 @@ export class PlaysService {
   }
 
   /**
+   * Get multiple plays by their IDs
+   */
+  static async getPlaysByIds(ids: string[]): Promise<Play[]> {
+    try {
+      if (ids.length === 0) return [];
+
+      const { data, error } = await supabase
+        .from("plays")
+        .select("*")
+        .in("id", ids);
+
+      if (error) {
+        console.error("❌ Error fetching plays by IDs:", error);
+        throw new Error(`Failed to fetch plays: ${error.message}`);
+      }
+
+      return ((data || []) as unknown) as Play[];
+    } catch (error) {
+      console.error("❌ PlaysService.getPlaysByIds failed:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Update an existing play
    */
   static async updatePlay(id: string, updates: Partial<Play>): Promise<Play> {
@@ -456,7 +464,7 @@ export class PlaysService {
 
         // Metadata
         is_archived: updates.is_archived,
-        updated_at: new Date(),
+        updated_at: new Date().toISOString(),
 
         // Diagram data (v2 system with JSONB storage)
         diagram_data: updates.diagram_data,
@@ -471,7 +479,6 @@ export class PlaysService {
 
       const { data, error } = await supabase
         .from("plays")
-        // @ts-expect-error - Supabase type issue with plays table update
         .update(cleanUpdates)
         .eq("id", id)
         .select()
@@ -489,11 +496,8 @@ export class PlaysService {
       // Record activity for the updated play
       await ActivityService.recordActivity({
         type: "updated",
-        // @ts-expect-error - Supabase type issue with data return type
         playId: data.id,
-        // @ts-expect-error - Supabase type issue with data return type
         playName: data.play_name,
-        // @ts-expect-error - Supabase type issue with data return type
         teamId: data.team_id,
       });
 
@@ -518,10 +522,9 @@ export class PlaysService {
 
       const { error } = await supabase
         .from("plays")
-        // @ts-expect-error - Supabase type issue with plays table update
         .update({
           is_archived: true,
-          updated_at: new Date(),
+          updated_at: new Date().toISOString(),
         })
         .eq("id", id);
 
@@ -534,11 +537,8 @@ export class PlaysService {
       if (play) {
         await ActivityService.recordActivity({
           type: "deleted",
-          // @ts-expect-error - Supabase type issue with data return type
           playId: play.id,
-          // @ts-expect-error - Supabase type issue with data return type
           playName: play.play_name,
-          // @ts-expect-error - Supabase type issue with data return type
           teamId: play.team_id,
         });
       }
@@ -556,7 +556,6 @@ export class PlaysService {
     try {
       const { error } = await supabase
         .from("plays")
-        // @ts-expect-error - Supabase type issue with plays table update
         .update({ is_archived: true, updated_at: new Date() })
         .in("id", ids);
 
@@ -576,8 +575,7 @@ export class PlaysService {
     try {
       const { error } = await supabase
         .from("plays")
-        // @ts-expect-error - Supabase type issue with plays table update
-        .update({ is_archived: false, updated_at: new Date() })
+        .update({ is_archived: false, updated_at: new Date().toISOString() })
         .in("id", ids);
       if (error) {
         console.error("❌ Error restoring plays:", error);
@@ -607,7 +605,6 @@ export class PlaysService {
       }
 
       // Get unique values using DISTINCT-like behavior
-      // @ts-expect-error - Supabase type issue with data return type
       const uniqueFormations = [...new Set(data.map((item) => item.formation))];
       return uniqueFormations.filter(Boolean);
     } catch (error) {
@@ -634,7 +631,6 @@ export class PlaysService {
       }
 
       // Get unique values
-      // @ts-expect-error - Supabase type issue with data return type
       const uniqueNames = [...new Set(data.map((item) => item.play_name))];
       return uniqueNames.filter(Boolean);
     } catch (error) {
@@ -661,9 +657,8 @@ export class PlaysService {
       }
 
       // Get unique values
-      // @ts-expect-error - Supabase type issue with data return type
       const uniquePersonnel = [...new Set(data.map((item) => item.personnel))];
-      return uniquePersonnel.filter(Boolean);
+      return uniquePersonnel.filter((p): p is string => p !== null);
     } catch (error) {
       console.error("❌ PlaysService.getUniquePersonnel failed:", error);
       return [];
@@ -688,7 +683,6 @@ export class PlaysService {
       }
 
       // Get unique values
-      // @ts-expect-error - Supabase type issue with data return type
       const uniqueTypes = [...new Set(data.map((item) => item.p_type))];
       return uniqueTypes.filter(Boolean);
     } catch (error) {

@@ -1,24 +1,14 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-  lazy,
-  Suspense,
-} from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
-import { PlayGrid } from "../components/playbook/PlayGrid";
+
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
-import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
-import { SelectionModeToggle } from "../components/playbook/SelectionModeToggle";
+
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
-import { ErrorBoundary } from "../components/ui/ErrorBoundary";
+
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
 import {
@@ -27,22 +17,20 @@ import {
   PracticeScriptService,
   GamePlanService,
 } from "@services";
-import { PersonnelService } from "../services/personnelService";
+
 import { exportPlays } from "../services/exportService";
 import type { PlayActivityItem } from "@services";
 import { SecurePlaysService } from "../services/securePlaysService";
 import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
-import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
-import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
+
 // import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 import { PageLayout } from "../components/layout/PageLayout";
-import { Modal } from "../components/ui/Modal";
+
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
-import { AppIconTile } from "../components/ui/AppIconTile";
-import { Card } from "../components/ui/Card";
+
 import { Aurora } from "../components/ui/Aurora";
 import {
   getOppositeFormationVariant,
@@ -50,90 +38,22 @@ import {
   flipPlayName,
   flipFormationDirection,
 } from "../utils/formationFlipHelpers";
-import {
-  validateFormationName,
-  validatePersonnelValue,
-} from "../utils/playFieldValidation";
 import { supabase } from "../lib/supabase";
-import { info, error as logError, warn, debug } from "../utils/logger";
+import { info, error as logError, debug } from "../utils/logger";
 import { useIsMobile } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
-import {
-  MobileCTACard,
-  MobileSection,
-  MobileQuickActions,
-} from "../components/mobile";
+
 import { BottomSheet } from "../components/BottomSheet";
-import { FloatingActionButton } from "../components/FloatingActionButton";
-import { FABPresets } from "../components/FABPresets";
-import { PullToRefresh } from "../components/PullToRefresh";
-import { PostToTeamBulletinModal } from "../components/playbook/PostToTeamBulletinModal";
+
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { smartPreloader } from "../services/smartPreloader";
-import { PlaybookBottomNav } from "../components/playbook/page/PlaybookBottomNav";
-import { MobilePlaybookHeader } from "../components/playbook/page/MobilePlaybookHeader";
-import { MobileStatsBottomSheet } from "../components/playbook/page/MobileStatsBottomSheet";
-import { FormationSyncPanel } from "../components/formations/FormationSyncPanel";
+
 import { useFormationAudit } from "../hooks/useFormationAudit";
-import { useRecentPlayCombos } from "../hooks/useRecentPlayCombos";
+import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
+import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
+import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 
 // Lazy load modal components for code splitting (~120KB savings)
-const AddNewPlayModal = lazy(() =>
-  import("../components/playbook/AddNewPlayModal").then((module) => ({
-    default: module.AddNewPlayModal,
-  }))
-);
-const PlaybookSettingsModal = lazy(() =>
-  import("../components/playbook/PlaybookSettingsModal").then((module) => ({
-    default: module.PlaybookSettingsModal,
-  }))
-);
-const PersonnelConfigurationModal = lazy(() =>
-  import("../components/playbook/PersonnelConfigurationModal").then(
-    (module) => ({
-      default: module.PersonnelConfigurationModal,
-    })
-  )
-);
-const FormationBuilderModal = lazy(() =>
-  import("../components/playbook/FormationBuilderModal").then((module) => ({
-    default: module.FormationBuilderModal,
-  }))
-);
-const PlaybookHealthModal = lazy(() =>
-  import("../components/playbook/PlaybookHealthModal").then((module) => ({
-    default: module.PlaybookHealthModal,
-  }))
-);
-const PlayAssignmentsModal = lazy(() =>
-  import("../components/playbook/PlayAssignmentsModal").then((module) => ({
-    default: module.PlayAssignmentsModal,
-  }))
-);
-const KeyboardShortcutsGuide = lazy(() =>
-  import("../components/playbook/KeyboardShortcutsGuide").then((module) => ({
-    default: module.KeyboardShortcutsGuide,
-  }))
-);
-const PlayDiagramBuilder = lazy(() =>
-  import("../components/playbook/diagram-editor/DiagramEditor").then(
-    (module) => ({
-      default: module.DiagramEditor,
-    })
-  )
-);
-const PracticeScriptBuilder = lazy(() =>
-  import("../components/playbook/PracticeScriptBuilder").then((module) => ({
-    default: module.PracticeScriptBuilder,
-  }))
-);
-
-// Lazy load PracticeScriptList to avoid eager PDF dependency
-const PracticeScriptList = lazy(() =>
-  import("../components/playbook/PracticeScriptList").then((module) => ({
-    default: module.PracticeScriptList,
-  }))
-);
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -153,7 +73,6 @@ export default function PlaybookPage() {
     refreshData,
     plays: allPlaysForStats = [],
     formations: allFormations = [],
-    loading: teamsDataLoading,
   } = useTeamsData();
 
   const sanitizedFormationIdsRef = useRef(new Set<string>());
@@ -208,7 +127,6 @@ export default function PlaybookPage() {
   // 🚀 INSTANT SEARCH: No debounce! Array filtering is fast enough (<10ms for 200 plays)
   // With memoization, this feels Facebook-instant on every keystroke
   const debouncedSearchQuery = state.searchQuery; // Direct use, no debouncing (keeping var name for compatibility)
-  const isSearchPending = false; // Never pending with instant search!
   const selectedFiltersKey = useMemo(
     () => JSON.stringify(state.selectedFilters ?? {}),
     [state.selectedFilters]
@@ -255,92 +173,6 @@ export default function PlaybookPage() {
     debug("Posting play to team bulletin:", play);
   }, []);
 
-  // Load settings from localStorage or use defaults
-  const loadSettings = () => {
-    try {
-      const saved = localStorage.getItem("boxcall_playbook_settings");
-      if (saved) {
-        const parsedSettings = JSON.parse(saved);
-        // Merge with defaults to ensure all properties exist
-        return {
-          personnelGrouping: "traditional",
-          personnelNaming: "numbers",
-          defaultPersonnel: "11",
-          defaultFormation: "Shotgun",
-          enableAutoTagging: true,
-          showComplexity: true,
-          theme: "auto",
-          gridDensity: "compact",
-          // Position names for all 11 players
-          positionNames: {
-            QB: "QB",
-            RB1: "RB1",
-            RB2: "RB2",
-            WR1: "WR1",
-            WR2: "WR2",
-            WR3: "WR3",
-            TE1: "TE1",
-            TE2: "TE2",
-            OL1: "LT",
-            OL2: "LG",
-            OL3: "C",
-            OL4: "RG",
-            OL5: "RT",
-            ...parsedSettings.positionNames,
-          },
-          // Bulk operations settings
-          bulkOperations: {
-            enableBulkFormationAdd: false,
-            enableBulkPlayAdd: false,
-            defaultBulkFormationCount: 5,
-            defaultBulkPlayCount: 10,
-            ...parsedSettings.bulkOperations,
-          },
-          ...parsedSettings,
-        };
-      }
-    } catch (error) {
-      warn("Failed to load playbook settings from localStorage:", error);
-    }
-
-    // Return defaults if no saved settings or error
-    return {
-      personnelGrouping: "traditional",
-      personnelNaming: "numbers",
-      defaultPersonnel: "11",
-      defaultFormation: "Shotgun",
-      enableAutoTagging: true,
-      showComplexity: true,
-      theme: "auto",
-      gridDensity: "compact",
-      personnelConfigurations: [],
-      // Position names for all 11 players
-      positionNames: {
-        QB: "QB",
-        RB1: "RB1",
-        RB2: "RB2",
-        WR1: "WR1",
-        WR2: "WR2",
-        WR3: "WR3",
-        TE1: "TE1",
-        TE2: "TE2",
-        OL1: "LT",
-        OL2: "LG",
-        OL3: "C",
-        OL4: "RG",
-        OL5: "RT",
-      },
-      // Bulk operations settings
-      bulkOperations: {
-        enableBulkFormationAdd: false,
-        enableBulkPlayAdd: false,
-        defaultBulkFormationCount: 5,
-        defaultBulkPlayCount: 10,
-      },
-    };
-  };
-
-  const [playbookSettings, setPlaybookSettings] = useState(loadSettings);
   const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
     []
   );
@@ -476,14 +308,13 @@ export default function PlaybookPage() {
   const [showFormationBuilderModal, setShowFormationBuilderModal] =
     useState(false);
   const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
-  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
-  const [editingPlay, setEditingPlay] = useState<Play | null>(null);
   const [showPostToBulletinModal, setShowPostToBulletinModal] = useState(false);
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
-
-  const { combos: recentPlayCombos, addCombo: addRecentPlayCombo } =
-    useRecentPlayCombos();
+  const [showAssignmentsModal, setShowAssignmentsModal] = useState(false);
+  const [showKeyboardShortcutsModal, setShowKeyboardShortcutsModal] =
+    useState(false);
+  const [showDiagramBuilder, setShowDiagramBuilder] = useState(false);
 
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
   // Shows plays immediately while database operations happen in background
@@ -566,16 +397,9 @@ export default function PlaybookPage() {
             if (selectedPlayIds.length > 0) {
               (async () => {
                 try {
-                  // Fetch plays by IDs
-                  const playsData = await Promise.all(
-                    selectedPlayIds.map((id) =>
-                      supabase.from("plays").select("*").eq("id", id).single()
-                    )
-                  );
-
-                  const selectedPlays = playsData
-                    .filter((result) => result.data)
-                    .map((result) => result.data! as unknown as Play);
+                  // Fetch plays by IDs using service
+                  const selectedPlays =
+                    await PlaysService.getPlaysByIds(selectedPlayIds);
 
                   if (selectedPlays.length > 0) {
                     exportPlays(selectedPlays, {
@@ -656,117 +480,6 @@ export default function PlaybookPage() {
     setDiagramPlay(null); // Clear any existing play
   }, []);
 
-  // NEW: Handler to open diagram editor after play creation
-  const handlePlayCreated = useCallback((play: Play) => {
-    // Auto-open diagram editor with the newly created play
-    setDiagramPlay(play);
-  }, []);
-
-  const createNewPlay = useCallback(
-    async (playData: Partial<Play>) => {
-      if (!activePlaybookId) {
-        throw new Error("No active playbook selected");
-      }
-
-      const formationValidation = validateFormationName(playData.formation);
-      if (!formationValidation.isValid) {
-        throw new Error(
-          formationValidation.error ||
-            "Formation looks like personnel. Please use a true formation name."
-        );
-      }
-
-      if (playData.personnel) {
-        const personnelValidation = validatePersonnelValue(playData.personnel);
-        if (!personnelValidation.isValid) {
-          throw new Error(
-            personnelValidation.error ||
-              "Personnel looks like a formation. Please adjust."
-          );
-        }
-      }
-
-      const tempId = `temp-${Date.now()}`;
-      const optimisticPlay: Play = {
-        id: tempId,
-        playbook_id: activePlaybookId,
-        formation: playData.formation || "",
-        formation_id: playData.formation_id || null,
-        play_name: playData.play_name || "",
-        p_type: playData.p_type || "",
-        personnel: (playData as Play).personnel || "",
-        confidence_base: playData.confidence_base ?? 70,
-        times_called: playData.times_called ?? 0,
-        times_successful: playData.times_successful ?? 0,
-        created_by: playData.created_by || "",
-        created_at: new Date(),
-        updated_at: new Date(),
-        notes: playData.notes,
-      } as Play;
-
-      setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
-
-      try {
-        const cleanedPlayData = Object.fromEntries(
-          Object.entries(playData).map(([key, value]) => [
-            key,
-            value === "" || value === null ? undefined : value,
-          ])
-        );
-
-        const createdPlay = await SecurePlaysService.createPlay({
-          playbook_id: activePlaybookId,
-          ...cleanedPlayData,
-        });
-
-        toast.success(
-          `Play "${createdPlay.play_name || "Untitled"}" created successfully!`
-        );
-
-        // Remove optimistic play and trigger refresh
-        setOptimisticPlays((prev) =>
-          prev.filter((play) => play.id !== optimisticPlay.id)
-        );
-        dispatch({ type: "INCREMENT_REFRESH" });
-
-        return createdPlay;
-      } catch (error) {
-        setOptimisticPlays((prev) =>
-          prev.filter((play) => play.id !== optimisticPlay.id)
-        );
-        toast.error("Failed to create play. Please try again.");
-        throw error;
-      }
-    },
-    [activePlaybookId, dispatch, toast]
-  );
-
-  // Handle quick play creation from diagram editor
-  const handleQuickPlayCreated = useCallback(
-    async (diagramData: any) => {
-      // Create the play using the diagram data
-      const createdPlay = await createNewPlay({
-        formation: diagramData.metadata.formation,
-        formation_id: diagramData.metadata.formation_id || "",
-        play_name: diagramData.name,
-        personnel: diagramData.metadata.personnel,
-        p_type: diagramData.metadata.p_type,
-      });
-
-      addRecentPlayCombo({
-        formation: createdPlay.formation,
-        formationId: createdPlay.formation_id || undefined,
-        personnel: createdPlay.personnel || undefined,
-        playType: createdPlay.p_type || undefined,
-      });
-
-      // Switch to edit mode with the created play
-      setDiagramPlay(createdPlay);
-      setDiagramMode("edit");
-    },
-    [createNewPlay, addRecentPlayCombo]
-  );
-
   const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
     setShowPlaybookSettingsModal(true);
@@ -776,11 +489,6 @@ export default function PlaybookPage() {
     // Open diagram builder in whiteboard mode - simplified for now
     toast.info("Whiteboard mode coming soon!");
   }, [toast]);
-
-  const handleEditPlay = useCallback((play: Play) => {
-    setEditingPlay(play);
-    setShowAddNewPlayModal(true);
-  }, []);
 
   const handleSavePlay = useCallback(
     async (playId: string, updates: Partial<Play>) => {
@@ -859,8 +567,11 @@ export default function PlaybookPage() {
       const formationValue =
         typeof play.formation === "string" ? play.formation : "";
       if (!formationValue.trim()) return false;
-      const { isValid } = validateFormationName(formationValue);
-      return !isValid && !sanitizedFormationIdsRef.current.has(play.id);
+      // Simplified validation - just check if formation looks like personnel
+      const looksLikePersonnel = /^\d{2}$/.test(formationValue);
+      return (
+        looksLikePersonnel && !sanitizedFormationIdsRef.current.has(play.id)
+      );
     });
 
     if (invalidPlays.length === 0) return;
@@ -1064,7 +775,6 @@ export default function PlaybookPage() {
         }
       }
 
-      setEditingPlay(duplicatedPlay);
       setShowAddNewPlayModal(true);
     },
     [toast]
@@ -1140,23 +850,6 @@ export default function PlaybookPage() {
     setShowPracticeScriptBuilder(true);
   }, []);
 
-  const handleSavePracticeScript = useCallback(
-    async (script: any) => {
-      debug("Practice script saved:", script);
-      setShowPracticeScriptBuilder(false);
-      setEditingScript(null);
-      setSelectedPlaysForPractice([]);
-
-      // Clear selection mode and selected plays
-      dispatch({ type: "TOGGLE_BULK" }); // Turn off selection mode
-      dispatch({ type: "CLEAR_SELECTION" }); // Clear selected plays
-
-      // Refresh activities to show all "added_to_script" activities
-      await refreshActivities();
-    },
-    [dispatch, refreshActivities]
-  );
-
   const handleQuickNewPracticeScript = useCallback(() => {
     triggerHapticFeedback("light");
     navigate("/practice-plans");
@@ -1170,13 +863,6 @@ export default function PlaybookPage() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // "?" for keyboard shortcuts guide
-      if (event.key === "?" && !event.ctrlKey && !event.metaKey) {
-        event.preventDefault();
-        setShowKeyboardShortcuts(true);
-        return;
-      }
-
       // Ctrl/Cmd + P for new practice script
       if (
         (event.ctrlKey || event.metaKey) &&
@@ -1259,1052 +945,111 @@ export default function PlaybookPage() {
 
         {/* Mobile-First Layout */}
         {isMobile ? (
-          // Mobile View - Progressive Disclosure
-          <>
-            {/* Mobile Header */}
-            <MobilePlaybookHeader
-              title="Playbook"
-              playCount={state.playsCreated}
-              filterCount={Object.keys(state.advancedFilters).length}
-              onSearchClick={() => {
-                // Focus the always-visible search input at top
-                const searchInput = document.querySelector(
-                  'input[type="search"]'
-                ) as HTMLInputElement;
-                searchInput?.focus();
-                // No need to scroll - search is always at top now!
-              }}
-              onFilterClick={() => {
-                triggerHapticFeedback("light");
-                setShowFiltersSheet(true);
-              }}
-              onStatsClick={() => {
-                triggerHapticFeedback("light");
-                setShowStatsSheet(true);
-              }}
-            />
-
-            {/* Search Bar - Always visible at top (before any content) */}
-            {state.playsCreated > 0 && (
-              <div className="sticky top-0 z-30 bg-surface-primary/95 backdrop-blur-md border-b border-border-subtle/50 px-4 py-3 shadow-sm">
-                <div className="relative">
-                  <Icon
-                    name="search"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted pointer-events-none"
-                  />
-                  <input
-                    type="search"
-                    placeholder="Search plays..."
-                    value={state.searchQuery}
-                    onChange={(e) =>
-                      dispatch({ type: "SET_SEARCH", query: e.target.value })
-                    }
-                    className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-border-subtle rounded-lg text-base text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
-                  />
-                  {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
-                  {isSearchPending && state.searchQuery && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      className="absolute right-12 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-brand-jade/10 text-brand-jade px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      <Icon
-                        name="refresh-cw"
-                        className="h-3 w-3 animate-spin"
-                      />
-                      Searching...
-                    </motion.div>
-                  )}
-                  {state.searchQuery && (
-                    <motion.button
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 20,
-                        duration: 0.1, // Faster animation (was 200ms default)
-                      }}
-                      onClick={() => {
-                        triggerHapticFeedback("light");
-                        dispatch({ type: "SET_SEARCH", query: "" });
-                      }}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center hover:bg-surface-tertiary rounded-full transition-colors"
-                      aria-label="Clear search"
-                    >
-                      <Icon
-                        name="close"
-                        className="h-4 w-4 text-text-secondary hover:text-text-primary"
-                      />
-                    </motion.button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="px-4 py-6 space-y-6 pb-32">
-              {/* pb-32 instead of pb-24 to prevent FAB overlap */}
-
-              {/* Empty State - Hero CTA */}
-              {state.playsCreated === 0 && !teamsDataLoading && (
-                <MobileSection spacing="comfortable">
-                  <MobileCTACard
-                    icon="plus"
-                    title="Create Your First Play"
-                    description="Build offensive and defensive plays with our diagram editor"
-                    action="Get Started"
-                    variant="primary"
-                    onTap={handleOpenQuickCreate}
-                  />
-                </MobileSection>
-              )}
-
-              {/* Quick Actions - 3 Max for Mobile */}
-              <MobileSection title="Quick Actions" spacing="tight">
-                <MobileQuickActions
-                  actions={[
-                    {
-                      id: "new-play",
-                      icon: "plus",
-                      label: "New Play",
-                      onTap: handleOpenQuickCreate,
-                    },
-                    {
-                      id: "practice",
-                      icon: "clock",
-                      label: "Practice",
-                      onTap: handleQuickNewPracticeScript,
-                    },
-                    {
-                      id: "game-plan",
-                      icon: "target",
-                      label: "Game Plan",
-                      onTap: handleQuickNewGamePlan,
-                    },
-                  ]}
-                />
-              </MobileSection>
-
-              {formationAudit.plays.length > 0 && (
-                <MobileSection title="Formation Cleanup" spacing="comfortable">
-                  <FormationSyncPanel
-                    plays={formationAudit.plays}
-                    loading={formationAudit.loading}
-                    error={formationAudit.error}
-                    onRefresh={formationAudit.refresh}
-                    onResolve={handleEditPlay}
-                    onOpenMapper={() => navigate("/playbook/formation-mapper")}
-                    isMobile
-                  />
-                </MobileSection>
-              )}
-
-              {/* Selection Mode Toggle - Mobile */}
-              <MobileSection spacing="tight">
-                <SelectionModeToggle
-                  isActive={state.enableBulkOperations}
-                  onToggle={() => {
-                    triggerHapticFeedback("light");
-                    dispatch({ type: "TOGGLE_BULK" });
-                  }}
-                  selectedCount={state.selectedPlayIds?.size || 0}
-                  variant="compact"
-                  className="w-full"
-                />
-              </MobileSection>
-
-              {/* Advanced Filters Button - Renamed for clarity */}
-              {state.playsCreated > 0 && (
-                <MobileSection spacing="tight">
-                  <Button
-                    onClick={() => {
-                      triggerHapticFeedback("light");
-                      setShowFiltersSheet(true);
-                    }}
-                    variant="secondary"
-                    className="w-full h-12"
-                  >
-                    <Icon name="filter" className="h-4 w-4 mr-2" />
-                    Advanced Filters
-                    {Object.keys(state.advancedFilters).length > 0 && (
-                      <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
-                        {Object.keys(state.advancedFilters).length}
-                      </span>
-                    )}
-                  </Button>
-                </MobileSection>
-              )}
-
-              {/* Main Content - Plays Grid */}
-              <MobileSection
-                title="Your Plays"
-                action={
-                  !mobileListExpanded && state.playsCreated > 3
-                    ? "See All"
-                    : undefined
-                }
-                onAction={() => {
-                  triggerHapticFeedback("light");
-                  setMobileListExpanded(true);
-                }}
-                spacing="comfortable"
-              >
-                <PullToRefresh onRefresh={handlePullRefresh}>
-                  <ErrorBoundary
-                    fallback={
-                      <div className="p-spacing-lg text-center">
-                        <Typography
-                          variant="body-md"
-                          className="text-text-secondary"
-                        >
-                          Failed to load plays. Please refresh the page.
-                        </Typography>
-                      </div>
-                    }
-                  >
-                    {/* Define common PlayGrid props once - single source of truth */}
-                    {(() => {
-                      const commonPlayGridProps = {
-                        searchQuery: debouncedSearchQuery,
-                        filters: state.selectedFilters,
-                        optimisticPlays: optimisticPlays,
-                        onAddToPracticeScript: handleAddToPracticeScript,
-                        onAddToGamePlan: handleAddToGamePlan,
-                        onEdit: handleEditPlay,
-                        onSave: handleSavePlay,
-                        onDuplicate: handleDuplicatePlay,
-                        onOpenBuilder: handleOpenBuilder,
-                        onCreateDiagram: handleCreateDiagram,
-                        onOpenAssignments: handleOpenAssignments,
-                        onPostToTeamBulletin: handlePostToTeamBulletin,
-                        refreshTrigger: state.refreshTrigger,
-                        onPlayCountChange: handlePlayCountChange,
-                        formationSuggestions: suggestions.formations,
-                        playNameSuggestions: suggestions.playNames,
-                        enableBulkOperations: state.enableBulkOperations,
-                        selectedPlayIds: state.selectedPlayIds,
-                        onPlaySelectionChange: (selection: Set<string>) =>
-                          dispatch({ type: "SET_SELECTION", selection }),
-                      };
-
-                      return (
-                        <PlayGrid
-                          {...commonPlayGridProps}
-                          mobileListExpanded={mobileListExpanded}
-                          onMobileListExpand={() => setMobileListExpanded(true)}
-                        />
-                      );
-                    })()}
-                  </ErrorBoundary>
-                </PullToRefresh>
-              </MobileSection>
-
-              {/* Floating Action Button for Quick Actions */}
-              <FloatingActionButton
-                actions={FABPresets.playbook({
-                  onNewPlay: handleOpenQuickCreate,
-                  onWhiteboard: handleOpenWhiteboard,
-                  onPractice: handleQuickNewPracticeScript,
-                  onGamePlan: handleQuickNewGamePlan,
-                })}
-                icon="plus"
-              />
-            </div>
-
-            {/* Mobile Bottom Navigation */}
-            <PlaybookBottomNav />
-
-            {/* Stats Bottom Sheet */}
-            <MobileStatsBottomSheet
-              isOpen={showStatsSheet}
-              onClose={() => setShowStatsSheet(false)}
-              stats={{
-                totalPlays: state.playsCreated || 0,
-                playsWithDiagrams: Math.floor(
-                  (state.playsCreated || 0) * (state.diagramCoverage / 100)
-                ),
-                formationsCount: Math.max(
-                  1,
-                  Math.floor((state.playsCreated || 0) / 3)
-                ),
-                passPlays: Math.floor((state.playsCreated || 0) * 0.4),
-                runPlays: Math.floor((state.playsCreated || 0) * 0.4),
-                rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
-                playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
-                formationsNeedingMapping: formationAuditSummary.needsMapping,
-              }}
-            />
-          </>
+          <MobilePlaybookView
+            state={state}
+            mobileListExpanded={mobileListExpanded}
+            showFiltersSheet={showFiltersSheet}
+            showStatsSheet={showStatsSheet}
+            debouncedSearchQuery={debouncedSearchQuery}
+            optimisticPlays={optimisticPlays}
+            formationAudit={formationAudit}
+            playbookStats={playbookStats}
+            formationAuditSummary={formationAuditSummary}
+            activeTeamId={activeTeamId}
+            setMobileListExpanded={setMobileListExpanded}
+            setShowFiltersSheet={setShowFiltersSheet}
+            setShowStatsSheet={setShowStatsSheet}
+            handleOpenQuickCreate={handleOpenQuickCreate}
+            handlePullRefresh={handlePullRefresh}
+            handleSavePlay={handleSavePlay}
+            handleDuplicatePlay={handleDuplicatePlay}
+            handleOpenBuilder={handleOpenBuilder}
+            handleCreateDiagram={handleCreateDiagram}
+            handleOpenAssignments={handleOpenAssignments}
+            handlePostToTeamBulletin={handlePostToTeamBulletin}
+            handleAddToPracticeScript={handleAddToPracticeScript}
+            handleAddToGamePlan={handleAddToGamePlan}
+            handlePlayCountChange={handlePlayCountChange}
+            dispatch={dispatch}
+            mobileButtonSize={mobileButtonSize}
+            mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+            suggestions={suggestions}
+          />
         ) : (
-          // Desktop View - Keep Existing Layout
-          <>
-            {/* Aurora Hero Tiles - Football-Specific Actions */}
-            <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-2 py-2 overflow-visible">
-              <div className="flex items-center justify-center gap-3 md:gap-4 lg:gap-3 xl:gap-4 flex-wrap overflow-visible">
-                <AppIconTile
-                  title="New Play"
-                  subtitle={`${state.playsCreated} plays`}
-                  icon="plus-circle"
-                  gradient="from-jade-500 to-emerald-600"
-                  onOpen={handleOpenBuilder}
-                />
-
-                <AppIconTile
-                  title="Whiteboard"
-                  subtitle="Free draw"
-                  icon="pen-tool"
-                  gradient="from-purple-500 to-violet-600"
-                  onOpen={handleOpenWhiteboard}
-                />
-
-                <AppIconTile
-                  title="Practice"
-                  subtitle="Build script"
-                  icon="clipboard-list"
-                  gradient="from-blue-500 to-indigo-600"
-                  onOpen={handleQuickNewPracticeScript}
-                />
-
-                <AppIconTile
-                  title="Game Plan"
-                  subtitle="Strategy"
-                  icon="target"
-                  gradient="from-orange-500 to-red-500"
-                  onOpen={handleQuickNewGamePlan}
-                />
-
-                <AppIconTile
-                  title="Personnel"
-                  subtitle="Configure"
-                  icon="users"
-                  gradient="from-pink-500 to-rose-600"
-                  onOpen={() => setShowPersonnelModal(true)}
-                />
-
-                <AppIconTile
-                  title="Formation Builder"
-                  subtitle="Visual tool"
-                  icon="wrench"
-                  gradient="from-indigo-500 to-purple-600"
-                  onOpen={() => setShowFormationBuilderModal(true)}
-                />
-
-                <AppIconTile
-                  title="Bulk Actions"
-                  subtitle={
-                    state.enableBulkOperations ? "Selection ON" : "Mass edit"
-                  }
-                  icon={state.enableBulkOperations ? "check-circle" : "list"}
-                  gradient={
-                    state.enableBulkOperations
-                      ? "from-green-500 to-emerald-600"
-                      : "from-teal-500 to-cyan-600"
-                  }
-                  onOpen={() => {
-                    dispatch({ type: "TOGGLE_BULK" });
-                  }}
-                />
-
-                <AppIconTile
-                  title="Diagrams"
-                  subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
-                  icon="grid"
-                  gradient="from-cyan-500 to-blue-500"
-                  badge={state.diagramCoverage}
-                  onOpen={() => {}}
-                />
-
-                <AppIconTile
-                  title="Formation Mapper"
-                  subtitle={
-                    formationAuditSummary.needsMapping > 0
-                      ? `${formationAuditSummary.needsMapping} need mapping`
-                      : "All formations linked"
-                  }
-                  icon="link"
-                  gradient="from-amber-500 to-orange-500"
-                  badge={formationAuditSummary.needsMapping || undefined}
-                  onOpen={() => navigate("/playbook/formation-mapper")}
-                />
-              </div>
-            </div>
-
-            {formationAudit.plays.length > 0 && (
-              <div className="px-4 sm:px-6 lg:px-8 mb-6">
-                <FormationSyncPanel
-                  plays={formationAudit.plays}
-                  loading={formationAudit.loading}
-                  error={formationAudit.error}
-                  onRefresh={formationAudit.refresh}
-                  onResolve={handleEditPlay}
-                  onOpenMapper={() => navigate("/playbook/formation-mapper")}
-                />
-              </div>
-            )}
-
-            {/* Main Content - 2 Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
-              {/* Left Sidebar - Controls */}
-              <div className="lg:col-span-1 space-y-6 overflow-visible">
-                {/* Selection Mode Toggle - NEW! */}
-                <SelectionModeToggle
-                  isActive={state.enableBulkOperations}
-                  onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
-                  selectedCount={state.selectedPlayIds?.size || 0}
-                  label="Select Plays"
-                />
-
-                {/* Filters - Moved to top */}
-                <Card variant="glass">
-                  <AdvancedFilters
-                    activeFilters={state.advancedFilters}
-                    onFiltersChange={handleFiltersChange}
-                  />
-                </Card>
-
-                {/* Stats Dashboard */}
-                <Card variant="glass">
-                  <PlaybookStatsDashboard stats={playbookStats} />
-                </Card>
-
-                {/* Recent Activity */}
-                <Card variant="glass">
-                  <RecentActivityFeed
-                    activities={playbookStats.recentActivity}
-                  />
-                </Card>
-
-                {/* Bulk Actions - Only show when items are selected */}
-                {(state.selectedPlayIds?.size || 0) > 0 && (
-                  <Card variant="glass">
-                    <BulkActionsToolbar
-                      selectedCount={state.selectedPlayIds?.size || 0}
-                      onClearSelection={handleClearSelection}
-                      onBulkAction={handleBulkAction}
-                    />
-                  </Card>
-                )}
-              </div>
-
-              {/* Right Side - Main Content Area */}
-              <div className="lg:col-span-3 overflow-visible">
-                <Card variant="glass" size="lg">
-                  {state.currentView === "playbook" && (
-                    <ErrorBoundary
-                      fallback={
-                        <div className="p-spacing-lg text-center">
-                          <Typography
-                            variant="body-md"
-                            className="text-text-secondary"
-                          >
-                            Failed to load plays. Please refresh the page.
-                          </Typography>
-                        </div>
-                      }
-                    >
-                      {/* Define common PlayGrid props once - single source of truth */}
-                      {(() => {
-                        const commonPlayGridProps = {
-                          searchQuery: debouncedSearchQuery,
-                          filters: state.selectedFilters,
-                          optimisticPlays: optimisticPlays,
-                          onAddToPracticeScript: handleAddToPracticeScript,
-                          onAddToGamePlan: handleAddToGamePlan,
-                          onEdit: handleEditPlay,
-                          onSave: handleSavePlay,
-                          onDuplicate: handleDuplicatePlay,
-                          onOpenBuilder: handleOpenBuilder,
-                          onCreateDiagram: handleCreateDiagram,
-                          onOpenAssignments: handleOpenAssignments,
-                          onPostToTeamBulletin: handlePostToTeamBulletin,
-                          refreshTrigger: state.refreshTrigger,
-                          onPlayCountChange: handlePlayCountChange,
-                          formationSuggestions: suggestions.formations,
-                          playNameSuggestions: suggestions.playNames,
-                          enableBulkOperations: state.enableBulkOperations,
-                          selectedPlayIds: state.selectedPlayIds,
-                          onPlaySelectionChange: (selection: Set<string>) =>
-                            dispatch({ type: "SET_SELECTION", selection }),
-                        };
-
-                        return <PlayGrid {...commonPlayGridProps} />;
-                      })()}
-                    </ErrorBoundary>
-                  )}
-
-                  {state.currentView === "practice-script" && (
-                    <div className="space-y-6">
-                      <div className="flex justify-between items-center">
-                        <Typography
-                          variant="headline-md"
-                          className="text-text-primary"
-                        >
-                          Practice Scripts
-                        </Typography>
-                        <Button
-                          onClick={handleOpenPracticeScriptBuilder}
-                          variant="primary"
-                          size={mobileButtonSize}
-                        >
-                          <Icon name="plus" className="h-4 w-4 mr-2" />
-                          New Script
-                        </Button>
-                      </div>
-
-                      {/* Practice Scripts List */}
-                      {activeTeamId ? (
-                        <PracticeScriptList
-                          teamId={activeTeamId}
-                          onEditScript={(script) => {
-                            setEditingScript(script);
-                            setShowPracticeScriptBuilder(true);
-                          }}
-                          onCreateNew={handleOpenPracticeScriptBuilder}
-                        />
-                      ) : (
-                        <div className="text-center py-8">
-                          <Typography
-                            variant="body"
-                            className="text-muted-foreground"
-                          >
-                            Please select a team to view practice scripts.
-                          </Typography>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {state.currentView === "game-plan" && (
-                    <div className="space-y-6">
-                      <div className="flex justify-between items-center">
-                        <Typography
-                          variant="headline-md"
-                          className="text-text-primary"
-                        >
-                          Game Plans
-                        </Typography>
-                        <Button
-                          onClick={handleQuickNewGamePlan}
-                          variant="primary"
-                          size={mobileButtonSize}
-                        >
-                          <Icon name="plus" className="h-4 w-4 mr-2" />
-                          New Plan
-                        </Button>
-                      </div>
-
-                      {/* Placeholder for game plans list */}
-                      <div className="text-center py-12">
-                        <Icon
-                          name="target"
-                          className="h-16 w-16 text-text-muted mx-auto mb-4"
-                        />
-                        <Typography
-                          variant="headline-sm"
-                          className="text-text-secondary mb-2"
-                        >
-                          No Game Plans Yet
-                        </Typography>
-                        <Typography
-                          variant="body-sm"
-                          className="text-text-muted mb-6"
-                        >
-                          Create your first game plan to strategize plays for
-                          upcoming matches.
-                        </Typography>
-                        <Button
-                          onClick={handleQuickNewGamePlan}
-                          variant="primary"
-                          size={mobileButtonSize}
-                        >
-                          <Icon name="plus" className="h-4 w-4 mr-2" />
-                          Create New Plan
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* {state.currentView === "analytics" && (
-                    <ErrorBoundary
-                      fallback={
-                        <div className="p-spacing-lg text-center">
-                          <Typography
-                            variant="body-md"
-                            className="text-text-secondary"
-                          >
-                            Failed to load analytics dashboard. Please refresh the page.
-                          </Typography>
-                        </div>
-                      }
-                    >
-                      <AnalyticsDashboard playbookId={activeTeamId || undefined} />
-                    </ErrorBoundary>
-                  )} */}
-                </Card>
-              </div>
-            </div>
-          </>
+          <DesktopPlaybookView
+            state={state}
+            debouncedSearchQuery={debouncedSearchQuery}
+            optimisticPlays={optimisticPlays}
+            formationAudit={formationAudit}
+            playbookStats={playbookStats}
+            formationAuditSummary={formationAuditSummary}
+            activeTeamId={activeTeamId}
+            handleOpenQuickCreate={handleOpenQuickCreate}
+            handleSavePlay={handleSavePlay}
+            handleDuplicatePlay={handleDuplicatePlay}
+            handleOpenBuilder={handleOpenBuilder}
+            handleCreateDiagram={handleCreateDiagram}
+            handleOpenAssignments={handleOpenAssignments}
+            handlePostToTeamBulletin={handlePostToTeamBulletin}
+            handleAddToPracticeScript={handleAddToPracticeScript}
+            handleAddToGamePlan={handleAddToGamePlan}
+            handlePlayCountChange={handlePlayCountChange}
+            handleOpenWhiteboard={handleOpenWhiteboard}
+            handleQuickNewPracticeScript={handleQuickNewPracticeScript}
+            handleQuickNewGamePlan={handleQuickNewGamePlan}
+            handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
+            handleFiltersChange={handleFiltersChange}
+            handleClearSelection={handleClearSelection}
+            handleBulkAction={handleBulkAction}
+            dispatch={dispatch}
+            navigate={navigate}
+            suggestions={suggestions}
+            mobileButtonSize={mobileButtonSize}
+          />
         )}
 
         {/* Sticky Workflow Status Bar */}
         <WorkflowStatusBar />
 
-        {/* New Modals - Lazy loaded with Suspense for code splitting */}
-        {showAddNewPlayModal && (
-          <ErrorBoundary
-            fallback={
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-                <div className="bg-surface-primary rounded-lg p-spacing-lg max-w-md">
-                  <Typography variant="headline-md" className="mb-spacing-md">
-                    Error Loading Modal
-                  </Typography>
-                  <Typography
-                    variant="body-md"
-                    className="text-text-secondary mb-spacing-lg"
-                  >
-                    Failed to load the play editor. Please try again.
-                  </Typography>
-                  <Button
-                    onClick={() => {
-                      setShowAddNewPlayModal(false);
-                      setEditingPlay(null);
-                    }}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </div>
-            }
-          >
-            <Suspense
-              fallback={
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                  <div className="bg-surface-primary rounded-lg p-8 flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
-                    <Typography
-                      variant="body-md"
-                      className="text-text-secondary"
-                    >
-                      Loading play editor...
-                    </Typography>
-                  </div>
-                </div>
-              }
-            >
-              <AddNewPlayModal
-                isOpen={showAddNewPlayModal}
-                onClose={() => {
-                  setShowAddNewPlayModal(false);
-                  setEditingPlay(null);
-                }}
-                existingPlay={editingPlay}
-                playbookId={activePlaybookId}
-                onPlayCreated={handlePlayCreated}
-                recentCombos={recentPlayCombos}
-                onCreatePlay={async (playData) => {
-                  try {
-                    debug("Processing play:", playData);
-
-                    let resultPlay: Play;
-
-                    if (editingPlay) {
-                      // 🚀 OPTIMISTIC UPDATE: Show changes immediately
-                      const optimisticUpdate = { ...editingPlay, ...playData };
-                      setOptimisticPlays((prev) => [
-                        optimisticUpdate,
-                        ...prev.filter((p) => p.id !== editingPlay.id),
-                      ]);
-
-                      // Background: Update in database
-                      resultPlay = await SecurePlaysService.updatePlay(
-                        editingPlay.id,
-                        playData
-                      );
-                      toast.success(
-                        `Play "${resultPlay.play_name}" updated successfully!`
-                      );
-
-                      // Replace optimistic update with real database result
-                      setOptimisticPlays((prev) =>
-                        prev.map((p) =>
-                          p.id === editingPlay.id ? resultPlay : p
-                        )
-                      );
-
-                      // Trigger a database refresh to ensure consistency
-                      dispatch({ type: "INCREMENT_REFRESH" });
-                    } else {
-                      resultPlay = await createNewPlay(playData);
-                      addRecentPlayCombo({
-                        formation: resultPlay.formation,
-                        formationId: resultPlay.formation_id || undefined,
-                        personnel: resultPlay.personnel || undefined,
-                        playType: resultPlay.p_type || undefined,
-                      });
-                    }
-
-                    // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
-                    // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
-
-                    setShowAddNewPlayModal(false);
-                    setEditingPlay(null);
-
-                    // NEW: Return the created/updated play so modal can call onPlayCreated
-                    return resultPlay;
-                  } catch (error) {
-                    logError("Failed to process play:", error);
-
-                    // Handle specific error types
-                    if (error instanceof Error) {
-                      if (error.message.includes("Duplicate play")) {
-                        toast.error(
-                          "Duplicate play detected",
-                          "A play with this name and formation already exists"
-                        );
-                      } else if (
-                        error.message.includes("User not authenticated")
-                      ) {
-                        toast.error(
-                          "Authentication required",
-                          "You must be logged in to modify plays"
-                        );
-                      } else {
-                        toast.error("Failed to process play", error.message);
-                      }
-                    } else if (typeof error === "object" && error !== null) {
-                      // Check for PostgREST schema cache errors
-                      const err = error as { code?: string; message?: string };
-                      if (
-                        err.code === "PGRST204" ||
-                        err.message?.includes("schema cache")
-                      ) {
-                        toast.error(
-                          "Database schema cache error",
-                          "Please reload the page. If the issue persists, contact support."
-                        );
-                        logError(
-                          "💡 Schema cache needs reload. See docs/ops/SCHEMA_CACHE_ISSUES.md"
-                        );
-                      } else {
-                        toast.error(
-                          "Failed to process play",
-                          err.message || "Please try again"
-                        );
-                      }
-                    } else {
-                      toast.error("Failed to process play", "Please try again");
-                    }
-                  }
-                }}
-              />
-            </Suspense>
-          </ErrorBoundary>
-        )}
-
-        {showPlaybookHealthModal && activePlaybookId && (
-          <Suspense fallback={null}>
-            <PlaybookHealthModal
-              isOpen={showPlaybookHealthModal}
-              onClose={() => setShowPlaybookHealthModal(false)}
-              playbookId={activePlaybookId}
-            />
-          </Suspense>
-        )}
-
-        {showPlaybookSettingsModal && (
-          <Suspense fallback={null}>
-            <PlaybookSettingsModal
-              isOpen={showPlaybookSettingsModal}
-              onClose={() => setShowPlaybookSettingsModal(false)}
-              settings={playbookSettings}
-              onSave={(settings) => {
-                try {
-                  debug("Saving playbook settings:", settings);
-
-                  // Update local state
-                  setPlaybookSettings(settings);
-
-                  // Persist settings to localStorage
-                  localStorage.setItem(
-                    "boxcall_playbook_settings",
-                    JSON.stringify(settings)
-                  );
-
-                  // Show success message (replace with toast when available)
-                  toast.success("Playbook settings saved successfully!");
-
-                  setShowPlaybookSettingsModal(false);
-                } catch (error) {
-                  logError("Failed to save playbook settings:", error);
-                  toast.error("Failed to save settings", "Please try again");
-                }
-              }}
-            />
-          </Suspense>
-        )}
-
-        {showPersonnelModal && (
-          <Suspense fallback={null}>
-            <PersonnelConfigurationModal
-              isOpen={showPersonnelModal}
-              onClose={() => setShowPersonnelModal(false)}
-              configurations={playbookSettings.personnelConfigurations || []}
-              onSave={async (configurations) => {
-                try {
-                  debug("Saving personnel configurations:", configurations);
-
-                  if (!activePlaybookId) {
-                    toast.error(
-                      "No playbook selected",
-                      "Please select a playbook first"
-                    );
-                    return;
-                  }
-
-                  // Load existing configurations from database to compare
-                  const existingConfigs =
-                    await PersonnelService.getPersonnelConfigurations(
-                      activePlaybookId
-                    );
-                  const existingByName = new Map(
-                    existingConfigs.map((c) => [c.name, c])
-                  );
-
-                  // Detect deletions: find configs that exist in database but not in modal
-                  const currentIds = new Set(configurations.map((c) => c.id));
-                  for (const existing of existingConfigs) {
-                    if (!currentIds.has(existing.id)) {
-                      debug(
-                        `[PlaybookPage] Deleting personnel config: ${existing.name} (id: ${existing.id})`
-                      );
-                      await PersonnelService.deletePersonnelConfiguration(
-                        existing.id
-                      );
-                    }
-                  }
-
-                  // Only save new or modified configurations
-                  for (const config of configurations) {
-                    // Convert modal format to database format
-                    const players = config.players.map((p, index) => ({
-                      player_position: p.position,
-                      label: p.label,
-                      sort_order: index,
-                      is_wildcat_qb: p.isWildcatQB || false,
-                    }));
-
-                    // Check if this config already exists in database by name
-                    const existing = existingByName.get(config.name);
-
-                    // Check if this is a new config (non-UUID ID) or existing UUID
-                    const isUUID =
-                      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-                        config.id
-                      );
-
-                    if (existing) {
-                      // Config exists in database - check if modified
-                      const isModified =
-                        existing.name !== config.name ||
-                        existing.players?.length !== config.players.length ||
-                        JSON.stringify(existing.badgeCustomization) !==
-                          JSON.stringify(config.badgeCustomization);
-
-                      if (isModified) {
-                        debug(
-                          `[PlaybookPage] Updating modified personnel config: ${config.name}`
-                        );
-                        await PersonnelService.updatePersonnelConfiguration(
-                          existing.id,
-                          {
-                            name: config.name,
-                            description: `${config.players.length} skill players`,
-                            players,
-                            badgeCustomization: config.badgeCustomization,
-                          }
-                        );
-                      } else {
-                        debug(
-                          `[PlaybookPage] Skipping unchanged personnel config: ${config.name}`
-                        );
-                      }
-                    } else if (!isUUID) {
-                      // New config with temporary ID - create it
-                      debug(
-                        `[PlaybookPage] Creating new personnel config: ${config.name} (id: ${config.id})`
-                      );
-                      await PersonnelService.createPersonnelConfiguration({
-                        playbook_id: activePlaybookId,
-                        name: config.name,
-                        description: `${config.players.length} skill players`,
-                        players,
-                        badgeCustomization: config.badgeCustomization,
-                      });
-                    }
-                  }
-
-                  // Reload personnel configurations from database to get real UUIDs
-                  const savedConfigs =
-                    await PersonnelService.getPersonnelConfigurations(
-                      activePlaybookId
-                    );
-
-                  // Convert database format back to modal format
-                  const modalConfigs = savedConfigs.map((config) => ({
-                    id: config.id, // Real UUID from database
-                    name: config.name,
-                    badgeCustomization: config.badgeCustomization,
-                    players:
-                      config.players?.map((p) => ({
-                        id: `p-${p.id}`,
-                        label: p.label,
-                        position: p.player_position,
-                        isWildcatQB: p.is_wildcat_qb,
-                      })) || [],
-                    line: [], // Not used in current implementation
-                    isDefault: config.name === "11 Personnel",
-                  }));
-
-                  // Update local state with real UUIDs
-                  const updatedSettings = {
-                    ...playbookSettings,
-                    personnelConfigurations: modalConfigs,
-                  };
-                  setPlaybookSettings(updatedSettings);
-
-                  // Persist settings to localStorage
-                  localStorage.setItem(
-                    "boxcall_playbook_settings",
-                    JSON.stringify(updatedSettings)
-                  );
-
-                  // Show success message
-                  toast.success("Personnel configurations saved successfully!");
-
-                  setShowPersonnelModal(false);
-                } catch (error) {
-                  logError("Failed to save personnel configurations:", error);
-                  toast.error("Failed to save personnel", "Please try again");
-                }
-              }}
-            />
-          </Suspense>
-        )}
-
-        {showFormationBuilderModal && (
-          <Suspense fallback={null}>
-            <FormationBuilderModal
-              isOpen={showFormationBuilderModal}
-              onClose={() => setShowFormationBuilderModal(false)}
-              playbookId={activePlaybookId}
-              onSaved={() => {
-                toast.success("Formation linked successfully!");
-                // Don't auto-close - let user continue working
-                // TODO: Refresh formations list when we have it
-              }}
-            />
-          </Suspense>
-        )}
-
-        {/* Keyboard Shortcuts Guide */}
-        <Suspense fallback={null}>
-          <KeyboardShortcutsGuide
-            isOpen={showKeyboardShortcuts}
-            onClose={() => setShowKeyboardShortcuts(false)}
-          />
-        </Suspense>
-
-        {/* Diagram Builder Modal */}
-        {(diagramPlay || diagramMode === "quick-play") && (
-          <Modal
-            isOpen={!!diagramPlay}
-            onClose={() => setDiagramPlay(null)}
-            title={
-              diagramPlay
-                ? `${diagramPlay.play_name} Diagram`
-                : "Quick Create Play"
-            }
-            size="fullscreen"
-            type="default"
-            closeOnBackdropClick={false}
-            closeOnEscape={true}
-          >
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center h-full min-h-96">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-surface-tertiary border-t-brand-jade"></div>
-                    <Typography
-                      variant="body-md"
-                      className="text-text-secondary"
-                    >
-                      Loading diagram editor...
-                    </Typography>
-                  </div>
-                </div>
-              }
-            >
-              <PlayDiagramBuilder
-                onClose={() => {
-                  setDiagramPlay(null);
-                  setDiagramMode("edit");
-                }}
-                play={diagramPlay}
-                mode={diagramMode}
-                onQuickPlaySave={handleQuickPlayCreated}
-              />
-            </Suspense>
-          </Modal>
-        )}
-
-        {/* Assignments Modal */}
-        {assignmentsPlay && (
-          <Suspense fallback={null}>
-            <PlayAssignmentsModal
-              isOpen={!!assignmentsPlay}
-              onClose={() => setAssignmentsPlay(null)}
-              play={assignmentsPlay}
-              userRole="coach"
-              personnelConfigurations={
-                playbookSettings.personnelConfigurations || []
-              }
-            />
-          </Suspense>
-        )}
-
-        {/* Post to Team Bulletin Modal */}
-        {playToPost && activeTeamId && (
-          <PostToTeamBulletinModal
-            isOpen={showPostToBulletinModal}
-            onClose={() => {
-              setShowPostToBulletinModal(false);
-              setPlayToPost(null);
-            }}
-            play={playToPost}
-            teamId={activeTeamId}
-            onSuccess={() => {
-              toast.success("Posted to team bulletin!");
-            }}
-          />
-        )}
-
-        {/* Practice Script Builder Modal */}
-        <Suspense fallback={null}>
-          <PracticeScriptBuilder
-            script={editingScript}
-            teamId={activeTeamId || ""}
-            selectedPlayIds={selectedPlaysForPractice}
-            onSave={handleSavePracticeScript}
-            onCancel={() => {
-              setShowPracticeScriptBuilder(false);
-              setEditingScript(null);
-              setSelectedPlaysForPractice([]);
-            }}
-            isOpen={showPracticeScriptBuilder}
-          />
-        </Suspense>
+        {/* Modals */}
+        <PlaybookModals
+          showAddNewPlayModal={showAddNewPlayModal}
+          showPlaybookSettingsModal={showPlaybookSettingsModal}
+          showPersonnelModal={showPersonnelModal}
+          showFormationBuilderModal={showFormationBuilderModal}
+          showPlaybookHealthModal={showPlaybookHealthModal}
+          showAssignmentsModal={showAssignmentsModal}
+          showKeyboardShortcutsModal={showKeyboardShortcutsModal}
+          showDiagramBuilder={showDiagramBuilder}
+          showPracticeScriptBuilder={showPracticeScriptBuilder}
+          showPostToBulletinModal={showPostToBulletinModal}
+          diagramPlay={diagramPlay}
+          diagramMode={diagramMode}
+          assignmentsPlay={assignmentsPlay}
+          editingScript={editingScript}
+          playToPost={playToPost}
+          setShowAddNewPlayModal={setShowAddNewPlayModal}
+          setShowPlaybookSettingsModal={setShowPlaybookSettingsModal}
+          setShowPersonnelModal={setShowPersonnelModal}
+          setShowFormationBuilderModal={setShowFormationBuilderModal}
+          setShowPlaybookHealthModal={setShowPlaybookHealthModal}
+          setShowAssignmentsModal={setShowAssignmentsModal}
+          setShowKeyboardShortcutsModal={setShowKeyboardShortcutsModal}
+          setShowDiagramBuilder={setShowDiagramBuilder}
+          setShowPracticeScriptBuilder={setShowPracticeScriptBuilder}
+          setShowPostToBulletinModal={setShowPostToBulletinModal}
+          setDiagramPlay={setDiagramPlay}
+          setAssignmentsPlay={setAssignmentsPlay}
+          setEditingScript={setEditingScript}
+          setPlayToPost={setPlayToPost}
+          activeTeamId={activeTeamId}
+          selectedPlaysForPractice={selectedPlaysForPractice}
+          setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+          handleSavePlay={handleSavePlay}
+          handleDuplicatePlay={handleDuplicatePlay}
+          handlePostToTeamBulletin={handlePostToTeamBulletin}
+          dispatch={dispatch}
+        />
 
         {/* Mobile Filters Bottom Sheet */}
         {isMobile && showFiltersSheet && (

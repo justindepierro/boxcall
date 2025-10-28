@@ -151,7 +151,7 @@ export class InteractionManager {
   private setupAccessibility(): void {
     if (!this.options.enableAccessibility) return;
 
-    const canvas = this.app.view as HTMLCanvasElement;
+    const canvas = this.app.canvas as HTMLCanvasElement;
 
     // Add ARIA labels and roles
     canvas.setAttribute('role', 'application');

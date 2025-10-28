@@ -11,11 +11,10 @@
 
 import { useEffect, useRef } from "react";
 import { Graphics } from "pixi.js";
-import type { ProfessionalPixiEngine } from "../core/ProfessionalPixiEngine";
-import type { PlayerSprite } from "../sprites/PlayerSprite";
+import type { PixiDiagramCanvas } from "../../../../services/canvas/DiagramCanvas";
 
 interface DragBoxSelectionProps {
-  app: ProfessionalPixiEngine | null;
+  app: PixiDiagramCanvas | null;
   enabled?: boolean;
 }
 

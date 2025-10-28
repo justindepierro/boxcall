@@ -1,64 +1,30 @@
-import { supabase } from "../lib/supabase";
+import { PlaybookViewPresetsService } from "../services/playbookViewPresetsService";
 import type {
   ServerPlaybookViewPreset,
   CreateServerPlaybookViewPresetInput,
   UpdateServerPlaybookViewPresetInput,
 } from "../types/playbookViewPreset";
 
-// CRUD utilities for server-backed playbook view presets
-// Note: caller ensures user is authenticated; RLS enforces ownership
-
-const TABLE = "playbook_view_presets";
-
 export async function listServerPresets(
   teamId?: string | null
 ): Promise<ServerPlaybookViewPreset[]> {
-  let q = supabase
-    .from(TABLE)
-    .select("*")
-    .order("updated_at", { ascending: false });
-  if (teamId) q = q.eq("team_id", teamId);
-  const { data, error } = await q;
-  if (error) throw error;
-  return data as ServerPlaybookViewPreset[];
+  return PlaybookViewPresetsService.listPresets(teamId);
 }
 
 export async function createServerPreset(
   input: CreateServerPlaybookViewPresetInput
 ): Promise<ServerPlaybookViewPreset> {
-  const { data, error } = await supabase
-    .from(TABLE)
-    .insert({
-      name: input.name,
-      filters: input.filters,
-      team_id: input.team_id ?? null,
-    })
-    .select()
-    .single();
-  if (error) throw error;
-  return data as ServerPlaybookViewPreset;
+  return PlaybookViewPresetsService.createPreset(input);
 }
 
 export async function updateServerPreset(
   input: UpdateServerPlaybookViewPresetInput
 ): Promise<ServerPlaybookViewPreset> {
-  const patch: Record<string, unknown> = {};
-  if (input.name !== undefined) patch.name = input.name;
-  if (input.filters !== undefined) patch.filters = input.filters;
-  if (input.archived !== undefined) patch.archived = input.archived;
-  const { data, error } = await supabase
-    .from(TABLE)
-    .update(patch)
-    .eq("id", input.id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data as ServerPlaybookViewPreset;
+  return PlaybookViewPresetsService.updatePreset(input);
 }
 
 export async function deleteServerPreset(id: string): Promise<void> {
-  const { error } = await supabase.from(TABLE).delete().eq("id", id);
-  if (error) throw error;
+  return PlaybookViewPresetsService.deletePreset(id);
 }
 
 export async function upsertImportedPresets(

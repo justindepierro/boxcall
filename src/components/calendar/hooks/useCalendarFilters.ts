@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useDebouncedValue } from "./useDebouncedValue";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 
 import type { CalendarFilters } from "../../../domain/calendar/types";
 

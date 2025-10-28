@@ -167,16 +167,6 @@ export interface Play {
   creation_context?: PlayCreationContext; // Additional creation context
 }
 
-// DEPRECATED - Legacy interface with extra fields not in database
-// TODO: Remove after migrating all components to use database-aligned Play interface
-export interface PlayLegacy {
-  // All fields from Play interface above, plus these extra ones:
-  success_rate?: number; // NOT in database
-  diagram_url?: string; // NOT in database
-  video_url?: string; // NOT in database
-  tags?: string[]; // NOT in database (no array support)
-  custom_fields?: CustomFieldValues; // NOT in database (no JSONB support)
-}
 // Play type enumeration matching database constraint (text field)
 export type PlayType =
   | "Pass"
