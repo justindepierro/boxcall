@@ -18,10 +18,7 @@ import { AdvancedFilters } from "../AdvancedFilters";
 import { BottomSheet } from "../../BottomSheet";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { Play } from "../../../types/play";
-import type {
-  CoachingView,
-  PlaybookState,
-} from "../../../contexts/PlaybookContext";
+import type { PlaybookState } from "../../../contexts/PlaybookContext";
 import type { FormationAuditResult } from "../../../hooks/useFormationAudit";
 
 interface MobilePlaybookViewProps {
@@ -39,9 +36,7 @@ interface MobilePlaybookViewProps {
     loading: boolean;
     error: string | null;
   };
-  playbookStats: any; // TODO: Type properly
   formationAuditSummary: any; // TODO: Type properly
-  activeTeamId: string | null;
 
   // Handlers
   setMobileListExpanded: (expanded: boolean) => void;
@@ -80,9 +75,7 @@ export function MobilePlaybookView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  playbookStats,
   formationAuditSummary,
-  activeTeamId,
   setMobileListExpanded,
   setShowFiltersSheet,
   setShowStatsSheet,

@@ -11,7 +11,7 @@
 
 import { useEffect, useRef } from "react";
 import { Graphics } from "pixi.js";
-import type { PixiDiagramCanvas } from "../../../../services/canvas/DiagramCanvas";
+import type { PixiDiagramCanvas, PlayerSprite } from "../../../../services/canvas/DiagramCanvas";
 
 interface DragBoxSelectionProps {
   app: PixiDiagramCanvas | null;
@@ -44,14 +44,18 @@ export function useDragBoxSelection({
   useEffect(() => {
     if (!app || !enabled) return;
 
-    const canvas = app.app.canvas;
-    const playersLayer = app.playersLayer;
+    const canvas = app.getCanvasElement();
+    const playersLayer = app.getPlayersLayer();
+
+    // Guard: canvas must exist
+    if (!canvas) return;
 
     // Guard: playersLayer must exist
     if (!playersLayer) return;
 
     // Guard: stage must exist
-    if (!app.app.stage) {
+    const canvasData = app.getCanvasData();
+    if (!canvasData.stage) {
       // This can happen during initialization - not an error
       console.log("⏸️  useDragBoxSelection: Waiting for stage...");
       return;
@@ -60,7 +64,7 @@ export function useDragBoxSelection({
     // Create selection box graphics
     const selectionBox = new Graphics();
     selectionBox.zIndex = 1000; // Above everything
-    app.app.stage.addChild(selectionBox);
+    canvasData.stage.addChild(selectionBox);
     selectionBoxRef.current = selectionBox;
 
     /**
@@ -157,8 +161,10 @@ export function useDragBoxSelection({
       selectionBox.clear();
 
       // Scale border and handles with pixelsPerYard for consistency
-      const borderWidth = 0.05 * app.coordinates.pixelsPerYard; // ~2px at 15 ppy, ~1px at 20 ppy
-      const handleSize = 0.15 * app.coordinates.pixelsPerYard; // ~6px at 15 ppy, ~3px at 20 ppy
+      // Default to 20 pixels per yard if not available from canvas
+      const pixelsPerYard = 20; // Reasonable default for selection UI
+      const borderWidth = 0.05 * pixelsPerYard; // ~1px at 20 ppy
+      const handleSize = 0.15 * pixelsPerYard; // ~3px at 20 ppy
 
       // Draw dashed border with semi-transparent fill
       selectionBox.lineStyle(borderWidth, 0x00bfff, 1); // Bright blue border

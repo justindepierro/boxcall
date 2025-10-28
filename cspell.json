@@ -14,7 +14,11 @@
     "Supabase",
     "playbook",
     "playbookid",
-    "Fundraise"
+    "Fundraise",
+    "redzone",
+    "goalline",
+    "NFHS",
+    "pointerupoutside"
   ],
   "ignoreWords": [
     "Pixi",

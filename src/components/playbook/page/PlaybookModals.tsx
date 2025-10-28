@@ -92,8 +92,6 @@ interface PlaybookModalsProps {
   selectedPlaysForPractice: string[];
   setSelectedPlaysForPractice: (plays: string[]) => void;
   handleSavePlay: (play: Play) => Promise<void>;
-  handleDuplicatePlay: (play: Play) => Promise<void>;
-  handlePostToTeamBulletin: (play: Play) => void;
   dispatch: any; // TODO: Type properly
 }
 
@@ -131,8 +129,6 @@ export function PlaybookModals({
   selectedPlaysForPractice,
   setSelectedPlaysForPractice,
   handleSavePlay,
-  handleDuplicatePlay,
-  handlePostToTeamBulletin,
   dispatch,
 }: PlaybookModalsProps) {
   return (

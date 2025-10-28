@@ -15,6 +15,89 @@ import type {
 } from '../../types/diagram';
 
 // ============================================================================
+// PLAYER SPRITE INTERFACE
+// ============================================================================
+
+/** Player sprite interface for diagram interactions */
+export interface PlayerSprite {
+  getBounds(): { x: number; y: number; width: number; height: number };
+  getId(): string;
+  getGlobalPosition(): { x: number; y: number };
+}
+
+// ============================================================================
+// PLAYERS LAYER INTERFACE
+// ============================================================================
+
+/** Players layer interface for drag box selection and sprite management */
+export interface IPlayersLayer {
+  getAllPlayers(): PlayerSprite[];
+  clearSelection(): void;
+  selectPlayer(id: string, additive?: boolean): void;
+}
+
+// ============================================================================
+// PLAYERS LAYER IMPLEMENTATION
+// ============================================================================
+
+/** Players layer implementation for sprite management */
+class PlayersLayer implements IPlayersLayer {
+  private canvas: PixiDiagramCanvas;
+  private selectedPlayerIds: Set<string> = new Set();
+
+  constructor(canvas: PixiDiagramCanvas) {
+    this.canvas = canvas;
+  }
+
+  getAllPlayers(): PlayerSprite[] {
+    const sprites: PlayerSprite[] = [];
+    this.canvas.getPlayerSprites().forEach((container, id) => {
+      sprites.push(new PlayerSpriteImpl(container, id));
+    });
+    return sprites;
+  }
+
+  clearSelection(): void {
+    this.selectedPlayerIds.clear();
+    this.canvas.selectPlayer(null);
+  }
+
+  selectPlayer(id: string, additive: boolean = false): void {
+    if (!additive) {
+      this.selectedPlayerIds.clear();
+    }
+    this.selectedPlayerIds.add(id);
+    this.canvas.selectPlayer(id);
+  }
+}
+
+/** Player sprite implementation wrapping PIXI.Container */
+class PlayerSpriteImpl implements PlayerSprite {
+  constructor(private container: PIXI.Container, private id: string) {}
+
+  getBounds(): { x: number; y: number; width: number; height: number } {
+    const bounds = this.container.getBounds();
+    return {
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height
+    };
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  getGlobalPosition(): { x: number; y: number } {
+    return {
+      x: this.container.worldTransform.tx,
+      y: this.container.worldTransform.ty
+    };
+  }
+}
+
+// ============================================================================
 // CORE CANVAS ABSTRACTION
 // ============================================================================
 
@@ -112,6 +195,9 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
 
   // Initialization state
   private isInitialized: boolean = false;
+
+  // Players layer instance for external access
+  private _playersLayerInstance: PlayersLayer | null = null;
 
   // Event callbacks
   private _onPlayerMoveCallback?: (id: string, position: FieldPosition) => void;
@@ -233,18 +319,43 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
   // FIELD RENDERING
   // ============================================================================
 
+  /**
+   * Field context for rendering (midfield, redzone, goalline, backed_up)
+   */
+  private fieldContext: "midfield" | "redzone" | "goalline" | "backed_up" = "midfield";
+
+  setFieldContext(context: "midfield" | "redzone" | "goalline" | "backed_up") {
+    this.fieldContext = context;
+    this.renderField();
+  }
+
   renderField(): void {
     if (!this.fieldLayer) return;
 
     // Clear existing field
     this.fieldLayer.removeChildren();
 
-    // NFHS Football Field Specifications (Vertical Orientation):
-    // - Length: 120 yards (360 feet) including 10-yard end zones - VERTICAL
-    // - Width: 53.33 yards (160 feet) - HORIZONTAL
-    // - Hash marks: 53 feet 4 inches from each sideline (every 5 yards)
-    // - Yard lines: Every 10 yards with numbers (horizontal across field)
-    // - Orientation: Looking up/down the field (end zones at top/bottom)
+    // Determine window for drawing area based on context
+    let windowStartY = 0;
+    let windowEndY = 120;
+    let scrimmageY = 20; // Default line of scrimmage (yards from top)
+    if (this.fieldContext === "midfield") {
+      windowStartY = 45;
+      windowEndY = 75;
+      scrimmageY = 60;
+    } else if (this.fieldContext === "redzone") {
+      windowStartY = 80;
+      windowEndY = 110;
+      scrimmageY = 90;
+    } else if (this.fieldContext === "goalline") {
+      windowStartY = 100;
+      windowEndY = 120;
+      scrimmageY = 110;
+    } else if (this.fieldContext === "backed_up") {
+      windowStartY = 10;
+      windowEndY = 40;
+      scrimmageY = 20;
+    }
 
     // Draw field background
     const fieldBg = new PIXI.Graphics();
@@ -252,27 +363,26 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
     fieldBg.rect(0, 0, this.config.width, this.config.height);
     this.fieldLayer.addChild(fieldBg);
 
-    // Draw yard lines (every 10 yards with numbers)
-    this.drawYardLines();
+    // Draw yard lines (every 10 yards with numbers) within window
+    this.drawYardLines(windowStartY, windowEndY);
 
-    // Draw hash marks (NFHS positioning)
-    this.drawHashMarks();
+    // Draw hash marks (NFHS positioning) within window
+    this.drawHashMarks(windowStartY, windowEndY);
 
-    // Draw end zones
-    this.drawEndZones();
+    // Draw end zones if visible
+    this.drawEndZones(windowStartY, windowEndY);
+
+    // Draw line of scrimmage (orange)
+    this.drawLineOfScrimmage(scrimmageY, windowStartY, windowEndY);
   }
 
-  private drawYardLines(): void {
+  private drawYardLines(startY = 0, endY = 120): void {
     const graphics = new PIXI.Graphics();
     graphics.setStrokeStyle({ width: 2, color: 0xffffff });
-
-    // Draw major yard lines every 10 yards (horizontal lines across the field)
-    for (let yard = 0; yard <= 120; yard += 10) {
-      const y = (yard / 120) * this.config.height;
+    for (let yard = Math.ceil(startY / 10) * 10; yard <= endY; yard += 10) {
+      const y = ((yard - startY) / (endY - startY)) * this.config.height;
       graphics.moveTo(0, y);
       graphics.lineTo(this.config.width, y);
-
-      // Add yard line numbers (skip 0 and 120 for end zones)
       if (yard > 0 && yard < 120) {
         const yardNumber = yard <= 50 ? yard : 100 - yard;
         const text = new PIXI.Text({
@@ -284,54 +394,60 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
             align: 'center'
           }
         });
-
         text.x = this.config.width / 2 - text.width / 2;
         text.y = y - text.height / 2;
         this.fieldLayer.addChild(text);
       }
     }
-
     this.fieldLayer.addChild(graphics);
   }
 
-  private drawHashMarks(): void {
+  private drawHashMarks(startY = 0, endY = 120): void {
     const graphics = new PIXI.Graphics();
     graphics.setStrokeStyle({ width: 1, color: 0xffffff });
-
-    // NFHS hash marks: positioned 53'4" from each sideline
-    // Field is 160 feet wide, hash marks at 53'4" from each sideline = 53.33 feet from center
-    const hashOffset = 0.333; // 53.33/160 = ~33.3% from each sideline
-
-    // Draw hash marks every 5 yards (horizontal lines across the field)
-    for (let yard = 0; yard <= 120; yard += 5) {
-      // Skip yard lines (they're drawn separately)
+    const hashOffset = 0.333;
+    for (let yard = Math.ceil(startY / 5) * 5; yard <= endY; yard += 5) {
       if (yard % 10 === 0) continue;
-
-      const y = (yard / 120) * this.config.height;
-
-      // Top hash marks (near top sideline)
+      const y = ((yard - startY) / (endY - startY)) * this.config.height;
       graphics.moveTo(this.config.width * hashOffset, y);
       graphics.lineTo(this.config.width * hashOffset + 8, y);
-
-      // Bottom hash marks (near bottom sideline)
       graphics.moveTo(this.config.width * (1 - hashOffset) - 8, y);
       graphics.lineTo(this.config.width * (1 - hashOffset), y);
     }
-
     this.fieldLayer.addChild(graphics);
   }
 
-  private drawEndZones(): void {
+  private drawEndZones(startY = 0, endY = 120): void {
     const graphics = new PIXI.Graphics();
+    // Only draw end zones if visible in window
+    if (startY <= 10 && endY > 0) {
+      // Top end zone
+      const topHeight = Math.min(10, endY) - startY;
+      if (topHeight > 0) {
+        graphics.fill(0x1e40af);
+        graphics.rect(0, 0, this.config.width, (topHeight / (endY - startY)) * this.config.height);
+      }
+    }
+    if (endY >= 110 && startY < 120) {
+      // Bottom end zone
+      const bottomStart = Math.max(110, startY);
+      const bottomHeight = endY - bottomStart;
+      if (bottomHeight > 0) {
+        graphics.fill(0x1e40af);
+        graphics.rect(0, ((bottomStart - startY) / (endY - startY)) * this.config.height, this.config.width, (bottomHeight / (endY - startY)) * this.config.height);
+      }
+    }
+    this.fieldLayer.addChild(graphics);
+  }
 
-    // Top end zone (defense)
-    graphics.fill(0x1e40af); // Blue
-    graphics.rect(0, 0, this.config.width, (10/120) * this.config.height);
-
-    // Bottom end zone (offense)
-    graphics.fill(0x1e40af); // Blue
-    graphics.rect(0, (110/120) * this.config.height, this.config.width, (10/120) * this.config.height);
-
+  private drawLineOfScrimmage(scrimmageY: number, windowStartY: number, windowEndY: number): void {
+    // Draw a thick orange line at the line of scrimmage
+    if (scrimmageY < windowStartY || scrimmageY > windowEndY) return;
+    const y = ((scrimmageY - windowStartY) / (windowEndY - windowStartY)) * this.config.height;
+    const graphics = new PIXI.Graphics();
+    graphics.setStrokeStyle({ width: 6, color: 0xff8800 }); // Orange
+    graphics.moveTo(0, y);
+    graphics.lineTo(this.config.width, y);
     this.fieldLayer.addChild(graphics);
   }
 
@@ -691,6 +807,23 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
   }
 
   // ============================================================================
+  // PLAYERS LAYER ACCESS
+  // ============================================================================
+
+  /** Get access to player sprites for drag box selection */
+  getPlayersLayer(): IPlayersLayer {
+    if (!this._playersLayerInstance) {
+      this._playersLayerInstance = new PlayersLayer(this);
+    }
+    return this._playersLayerInstance;
+  }
+
+  /** Get player sprite containers (for internal use) */
+  getPlayerSprites(): Map<string, PIXI.Container> {
+    return this.players;
+  }
+
+  // ============================================================================
   // EVENT HANDLING
   // ============================================================================
 
@@ -784,13 +917,16 @@ export class PixiDiagramCanvas implements IDiagramCanvas {
   private getPlayerColor(player: FormationPlayer): number {
     if (player.color) return this.parseColor(player.color);
 
-    // Default colors by position
+    // Accessible, colorblind-friendly palette using design tokens (semantic mapping)
     switch (player.playerPosition) {
-      case 'QB': return 0xff6b6b; // Red
-      case 'RB': case 'FB': return 0x4ecdc4; // Teal
-      case 'WR': case 'SLOT': case 'SE': return 0x45b7d1; // Blue
-      case 'TE': return 0x96ceb4; // Green
-      default: return 0xfeca57; // Yellow
+      case 'QB': return 0xffa500; // Orange (semantic: qb-primary)
+      case 'RB': case 'FB': return 0x009688; // Teal (semantic: rb-primary)
+      case 'WR': case 'SLOT': case 'SE': case 'FL': case 'X': case 'Y': case 'Z': case 'H':
+        return 0x1976d2; // Blue (semantic: wr-primary)
+      case 'TE': return 0x388e3c; // Green (semantic: te-primary)
+      case 'LT': case 'LG': case 'C': case 'RG': case 'RT':
+        return 0x757575; // Gray (semantic: ol-primary)
+      default: return 0xbdbdbd; // Neutral/gray fallback
     }
   }
 

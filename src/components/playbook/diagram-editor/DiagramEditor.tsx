@@ -19,9 +19,18 @@ import { PlayerManager } from "@services/PlayerManager";
 import { RouteDrawingEngine } from "@services/RouteDrawingEngine";
 import { createFormationFromTemplate } from "@services/FormationPositioningEngine";
 
+// Diagram editor components
+import { InteractionManager } from "./core/InteractionManager";
+import { FieldSettingsPanel } from "./FieldSettingsPanel";
+import type { FieldContext } from "./FieldSettingsPanel";
+
 // Types
 import type { UnifiedDiagramData, Route } from "../../../types/diagram";
 import type { RouteType } from "../../../types/field";
+
+// Hooks
+import { useCopyPaste } from "./hooks/useCopyPaste";
+import { useDragBoxSelection } from "./hooks/useDragBoxSelection";
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -68,6 +77,8 @@ interface DiagramEditorProps {
 }
 
 export const DiagramEditor: React.FC<DiagramEditorProps> = ({
+  // ...existing state declarations...
+
   initialData,
   diagramType = "play",
   onChange,
@@ -97,8 +108,11 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({
   const [routeEngine] = useState(() =>
     enableRoutes ? new RouteDrawingEngine(null as any) : null
   );
+  const [_interactionManager, _setInteractionManager] =
+    useState<InteractionManager | null>(null);
 
   // UI state
+  const [fieldContext, setFieldContext] = useState<FieldContext>("midfield");
   const [selectedTool, setSelectedTool] = useState<
     "select" | "player" | "route" | "formation"
   >("select");
@@ -107,6 +121,20 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({
   const [isDrawingRoute, setIsDrawingRoute] = useState(false);
   const [currentRouteType, setCurrentRouteType] =
     useState<RouteType>("primary");
+
+  // Update field context on canvas when changed
+  useEffect(() => {
+    if (canvas && fieldContext) {
+      canvas.setFieldContext(fieldContext);
+    }
+  }, [canvas, fieldContext]);
+
+  // Update field context on canvas when changed
+  useEffect(() => {
+    if (canvas && fieldContext) {
+      canvas.setFieldContext(fieldContext);
+    }
+  }, [canvas, fieldContext]);
 
   // ============================================================================
   // INITIALIZATION
@@ -126,6 +154,19 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({
       try {
         await newCanvas.initialize(canvasRef.current);
         setCanvas(newCanvas);
+
+        // Initialize interaction manager for advanced gestures
+        const canvasData = newCanvas.getCanvasData();
+        if (canvasData.app) {
+          const manager = new InteractionManager(canvasData.app, {
+            enableAdvancedGestures: true,
+            enableAccessibility: true,
+            gestureThreshold: 10,
+            multiTouchEnabled: true,
+          });
+          manager.initialize();
+          _setInteractionManager(manager);
+        }
       } catch (error) {
         console.error("Failed to initialize canvas:", error);
       }
@@ -188,8 +229,103 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({
   }, [canvas]);
 
   // ============================================================================
-  // DIAGRAM MANAGEMENT
+  // INTERACTION HOOKS
   // ============================================================================
+
+  // Enable drag box selection when select tool is active
+  useDragBoxSelection({
+    app: canvas,
+    enabled: selectedTool === "select" && !readOnly,
+  });
+
+  // Enable copy/paste functionality
+  useCopyPaste({
+    app: canvas,
+    enabled: !readOnly,
+  });
+
+  // ============================================================================
+  // KEYBOARD SHORTCUTS
+  // ============================================================================
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't handle if user is typing in an input
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable ||
+        target.closest('[role="dialog"]')
+      ) {
+        return;
+      }
+
+      const isCtrlOrCmd = event.ctrlKey || event.metaKey;
+
+      switch (event.key.toLowerCase()) {
+        case "a": {
+          if (isCtrlOrCmd && !readOnly) {
+            event.preventDefault();
+            // Select all players
+            if (canvas) {
+              const allPlayers = canvas.getAllPlayers();
+              allPlayers.forEach((player) => {
+                canvas.selectPlayer(player.id);
+              });
+              console.log(`🎯 Selected all ${allPlayers.length} players`);
+            }
+          }
+          break;
+        }
+
+        case "escape": {
+          if (!readOnly) {
+            event.preventDefault();
+            // Clear selection
+            if (canvas) {
+              canvas.selectPlayer(null);
+              setSelectedPlayerId(null);
+              setSelectedRouteId(null);
+            }
+          }
+          break;
+        }
+
+        case "delete":
+        case "backspace": {
+          if (!readOnly && selectedPlayerId) {
+            event.preventDefault();
+            // Remove selected player
+            if (canvas) {
+              canvas.removePlayer(selectedPlayerId);
+              setSelectedPlayerId(null);
+
+              // Update diagram data
+              if (diagramData) {
+                const updatedData = {
+                  ...diagramData,
+                  formation: {
+                    ...diagramData.formation,
+                    players: diagramData.formation.players.filter(
+                      (p) => p.id !== selectedPlayerId
+                    ),
+                  },
+                  updatedAt: new Date().toISOString(),
+                };
+                setDiagramData(updatedData);
+                onChange?.(updatedData);
+              }
+            }
+          }
+          break;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [canvas, selectedPlayerId, diagramData, onChange, readOnly]);
 
   const loadDiagram = useCallback(
     (data: UnifiedDiagramData) => {
@@ -370,6 +506,10 @@ export const DiagramEditor: React.FC<DiagramEditorProps> = ({
 
   return (
     <div className="diagram-editor flex flex-col h-full bg-neutral-900">
+      {/* Field Settings Panel */}
+      <div className="px-spacing-md pt-spacing-md">
+        <FieldSettingsPanel value={fieldContext} onChange={setFieldContext} />
+      </div>
       {/* Toolbar */}
       <DiagramToolbar
         selectedTool={selectedTool}

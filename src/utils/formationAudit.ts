@@ -100,7 +100,7 @@ export async function auditFormationDirections(
     player_positions: unknown[];
   };
 
-  for (const formation of formations as FormationRow[]) {
+  for (const formation of (formations as unknown as FormationRow[])) {
     // NOTE: Temporarily disabled position check for testing
     // In production, you may want to skip formations without positions
     // const hasPositions = Array.isArray(formation.player_positions) &&
@@ -223,7 +223,7 @@ export async function getIncompleteFormations(
 
   info(`[FormationAudit] Found ${data?.length || 0} incomplete formations`);
 
-  return (data as Formation[]) || [];
+  return (data as unknown as Formation[]) || [];
 }
 
 /**
@@ -262,20 +262,20 @@ export async function getFormationCompletionStats(
   // Calculate counts
   const total = formations?.length || 0;
   const complete =
-    (formations as StatsRow[])?.filter((f) => f.metadata_quality === "complete")
+    ((formations as unknown) as StatsRow[])?.filter((f) => f.metadata_quality === "complete")
       .length || 0;
   const needs_work =
-    (formations as StatsRow[])?.filter(
+    ((formations as unknown) as StatsRow[])?.filter(
       (f) => f.metadata_quality === "needs_work"
     ).length || 0;
   const incomplete =
-    (formations as StatsRow[])?.filter(
+    ((formations as unknown) as StatsRow[])?.filter(
       (f) => f.metadata_quality === "incomplete"
     ).length || 0;
   const with_directions =
-    (formations as StatsRow[])?.filter((f) => f.direction !== null).length || 0;
+    ((formations as unknown) as StatsRow[])?.filter((f) => f.direction !== null).length || 0;
   const with_opposites =
-    (formations as StatsRow[])?.filter((f) => f.opposite_formation_id !== null)
+    ((formations as unknown) as StatsRow[])?.filter((f) => f.opposite_formation_id !== null)
       .length || 0;
 
   // Calculate completion percentage
@@ -345,7 +345,7 @@ export async function formationNeedsAttention(
     player_positions: unknown[];
   };
 
-  const formationData = formation as CheckRow;
+  const formationData = formation as unknown as CheckRow;
 
   // Check if has positions (not empty)
   const hasPositions =

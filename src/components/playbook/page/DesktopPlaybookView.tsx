@@ -32,7 +32,6 @@ interface DesktopPlaybookViewProps {
   activeTeamId: string | null;
 
   // Handlers
-  handleOpenQuickCreate: () => void;
   handleEditPlay: (play: Play) => void;
   handleSavePlay: (play: Play) => Promise<void>;
   handleDuplicatePlay: (play: Play) => Promise<void>;
@@ -71,7 +70,6 @@ export function DesktopPlaybookView({
   playbookStats,
   formationAuditSummary,
   activeTeamId,
-  handleOpenQuickCreate,
   handleEditPlay,
   handleSavePlay,
   handleDuplicatePlay,
