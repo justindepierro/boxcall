@@ -8,7 +8,6 @@ import { PullToRefresh } from "../../PullToRefresh";
 import { FloatingActionButton } from "../../FloatingActionButton";
 import { FABPresets } from "../../FABPresets";
 import { PlaybookBottomNav } from "../page/PlaybookBottomNav";
-import { MobilePlaybookHeader } from "../page/MobilePlaybookHeader";
 import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobileCTACard, MobileSection, MobileQuickActions } from "../../mobile";
