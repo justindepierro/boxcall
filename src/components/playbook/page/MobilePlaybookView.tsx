@@ -96,32 +96,9 @@ export function MobilePlaybookView({
 }: MobilePlaybookViewProps) {
   return (
     <>
-      {/* Mobile Header */}
-      <MobilePlaybookHeader
-        title="Playbook"
-        playCount={state.playsCreated}
-        filterCount={Object.keys(state.advancedFilters).length}
-        onSearchClick={() => {
-          // Focus the always-visible search input at top
-          const searchInput = document.querySelector(
-            'input[type="search"]'
-          ) as HTMLInputElement;
-          searchInput?.focus();
-          // No need to scroll - search is always at top now!
-        }}
-        onFilterClick={() => {
-          triggerHapticFeedback("light");
-          setShowFiltersSheet(true);
-        }}
-        onStatsClick={() => {
-          triggerHapticFeedback("light");
-          setShowStatsSheet(true);
-        }}
-      />
-
-      {/* Search Bar - Always visible at top (before any content) */}
+      {/* Search Bar - FIXED at top (always visible, no scroll needed) */}
       {state.playsCreated > 0 && (
-        <div className="sticky top-0 z-30 bg-surface-primary/95 backdrop-blur-md border-b border-subtle/50 px-4 py-3 shadow-sm">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-md border-b border-muted px-4 py-3 shadow-md">
           <div className="relative">
             <Icon
               name="search"
@@ -176,8 +153,9 @@ export function MobilePlaybookView({
         </div>
       )}
 
-      <div className="px-4 py-6 space-y-6 pb-32">
-        {/* pb-32 instead of pb-24 to prevent FAB overlap */}
+      {/* Content area with padding for fixed search bar */}
+      <div className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? 'pt-20' : ''}`}>
+        {/* pt-20 (~80px) accounts for fixed search bar height. pb-32 prevents FAB overlap */}
 
         {/* Empty State - Hero CTA */}
         {state.playsCreated === 0 && (
