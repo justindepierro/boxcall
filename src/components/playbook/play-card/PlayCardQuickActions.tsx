@@ -54,7 +54,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               {status.practiceCount}
             </span>
           )}
-          <Icon name="calendar" className="h-3 w-3 mr-spacing-xs" /> Practice
+          <Icon name="calendar" className="h-3 w-3" />
         </Button>
 
         {/* Game Plan Button with Count */}
@@ -74,7 +74,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               {status.gamePlanCount}
             </span>
           )}
-          <Icon name="gamepad-2" className="h-3 w-3 mr-spacing-xs" /> Game Plan
+          <Icon name="gamepad-2" className="h-3 w-3" />
         </Button>
         {/* Assignments Button with Check */}
         <Button
@@ -94,7 +94,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               className="h-3 w-3 mr-1 text-info-500 dark:text-info-400"
             />
           )}
-          <Icon name="users" className="h-3 w-3 mr-spacing-xs" /> Assignments
+          <Icon name="users" className="h-3 w-3" />
         </Button>
 
         {/* Post to Team Bulletin */}

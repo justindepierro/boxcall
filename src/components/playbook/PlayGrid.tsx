@@ -505,7 +505,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   );
 
   return (
-    <div className="space-y-6" aria-live="polite">
+    <div className="space-y-4" aria-live="polite">
       {/* Loading State */}
       {loading && <PlayGridSkeleton count={8} viewMode={viewMode} />}
 
