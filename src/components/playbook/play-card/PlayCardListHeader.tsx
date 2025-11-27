@@ -115,66 +115,100 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             isCompact ? "mt-1.5" : "mt-2"
           }`}
         >
-          {/* Play type badge */}
-          <span
-            className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
-          >
-            {optimisticPlay.p_type}
-          </span>
-
-          {/* Wristband badge */}
-          {optimisticPlay.wristband_number && (
-            <WristbandBadge
-              wristbandNumber={optimisticPlay.wristband_number}
-              size="sm"
-            />
-          )}
-
-          {/* Personnel badge */}
-          {optimisticPlay.personnel && (
-            <PersonnelBadge
-              personnel={optimisticPlay.personnel}
-              size="sm"
-              badgeCustomization={personnelConfig?.badgeCustomization}
-            />
-          )}
-
-          {/* Installation phase badge */}
-          {phaseLabel && (
-            <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
-              {phaseLabel}
-            </span>
-          )}
-
-          {/* Confidence */}
-          <span
-            className={`text-xsssss font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
-          >
-            {optimisticPlay.confidence_base}%
-          </span>
-
-          {/* Quick Win: Usage stats badges */}
-          {optimisticPlay.times_called && optimisticPlay.times_called > 0 && (
+          {/* 🎯 COLLAPSED STATE: Show only essential info (Personnel + Play Type) */}
+          {!isExpanded && (
             <>
-              <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
-                <Icon name="trending-up" size={12} />
-                {optimisticPlay.times_called}x called
+              {/* Personnel badge - Most important identifier */}
+              {optimisticPlay.personnel && (
+                <PersonnelBadge
+                  personnel={optimisticPlay.personnel}
+                  size="sm"
+                  badgeCustomization={personnelConfig?.badgeCustomization}
+                />
+              )}
+
+              {/* Play type badge */}
+              <span
+                className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
+              >
+                {optimisticPlay.p_type}
               </span>
 
-              {optimisticPlay.times_successful !== undefined && (
-                <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
-                    optimisticPlay.times_successful /
-                      optimisticPlay.times_called
-                  )}`}
-                >
-                  {Math.round(
-                    (optimisticPlay.times_successful /
-                      optimisticPlay.times_called) *
-                      100
-                  )}
-                  % success
+              {/* Wristband badge (if exists - highly visible identifier) */}
+              {optimisticPlay.wristband_number && (
+                <WristbandBadge
+                  wristbandNumber={optimisticPlay.wristband_number}
+                  size="sm"
+                />
+              )}
+            </>
+          )}
+
+          {/* 📊 EXPANDED STATE: Show ALL badges and stats */}
+          {isExpanded && (
+            <>
+              {/* Personnel badge */}
+              {optimisticPlay.personnel && (
+                <PersonnelBadge
+                  personnel={optimisticPlay.personnel}
+                  size="sm"
+                  badgeCustomization={personnelConfig?.badgeCustomization}
+                />
+              )}
+
+              {/* Play type badge */}
+              <span
+                className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
+              >
+                {optimisticPlay.p_type}
+              </span>
+
+              {/* Wristband badge */}
+              {optimisticPlay.wristband_number && (
+                <WristbandBadge
+                  wristbandNumber={optimisticPlay.wristband_number}
+                  size="sm"
+                />
+              )}
+
+              {/* Installation phase badge */}
+              {phaseLabel && (
+                <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
+                  {phaseLabel}
                 </span>
+              )}
+
+              {/* Confidence */}
+              <span
+                className={`text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
+              >
+                {optimisticPlay.confidence_base}%
+              </span>
+
+              {/* Usage stats badges */}
+              {optimisticPlay.times_called && optimisticPlay.times_called > 0 && (
+                <>
+                  <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
+                    <Icon name="trending-up" size={12} />
+                    {optimisticPlay.times_called}x called
+                  </span>
+
+                  {optimisticPlay.times_successful !== undefined && (
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
+                        optimisticPlay.times_successful /
+                          optimisticPlay.times_called
+                      )}`}
+                    >
+                      {Math.round(
+                        (optimisticPlay.times_successful /
+                          optimisticPlay.times_called) *
+                          100
+                      )}
+                      % success
+                    </span>
+                  )}
+                </>
               )}
             </>
           )}

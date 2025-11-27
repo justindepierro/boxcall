@@ -13,36 +13,36 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "all",
     label: "All Plays",
-    icon: "grid",
+    icon: "grid-3x3",
     filters: [],
   },
   {
     id: "favorites",
-    label: "⭐ Favorites",
+    label: "Favorites",
     icon: "star",
     filters: [], // Handled specially in PlayGrid
   },
   {
     id: "most-used",
-    label: "🔥 Most Used",
-    icon: "trending-up",
+    label: "Most Used",
+    icon: "flame",
     filters: [], // Handled specially in PlayGrid with sorting
   },
   {
     id: "run",
-    label: "Run Only",
-    icon: "trending-up",
+    label: "Run Plays",
+    icon: "move-right",
     filters: [{ field: "playType", operator: "equals", value: "run" }],
   },
   {
     id: "pass",
-    label: "Pass Only",
+    label: "Pass Plays",
     icon: "zap",
     filters: [{ field: "playType", operator: "equals", value: "pass" }],
   },
   {
     id: "rpo",
-    label: "RPO Only",
+    label: "RPO Plays",
     icon: "shuffle",
     filters: [{ field: "playType", operator: "equals", value: "rpo" }],
   },
@@ -55,7 +55,7 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "thirddown",
     label: "3rd Down",
-    icon: "trending-up",
+    icon: "award",
     filters: [{ field: "down", operator: "equals", value: "3" }],
   },
 ];
