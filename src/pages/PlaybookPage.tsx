@@ -942,7 +942,6 @@ export default function PlaybookPage() {
             handleSavePlay={handleSavePlay}
             handleDuplicatePlay={handleDuplicatePlay}
             handleOpenBuilder={handleOpenBuilder}
-            handleCreateDiagram={handleCreateDiagram}
             handleOpenAssignments={handleOpenAssignments}
             handlePostToTeamBulletin={handlePostToTeamBulletin}
             handleAddToPracticeScript={handleAddToPracticeScript}
