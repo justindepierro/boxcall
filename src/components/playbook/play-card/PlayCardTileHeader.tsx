@@ -120,7 +120,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           ) : (
             /* Gradient with icon */
             <>
-              <div className={`absolute inset-0 bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)}`} />
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)}`}
+              />
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50" />
               <Icon
                 name={getTileIcon(optimisticPlay.p_type)}

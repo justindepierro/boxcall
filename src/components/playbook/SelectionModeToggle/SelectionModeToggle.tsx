@@ -158,7 +158,10 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
               : "bg-gradient-to-br from-jade-50 to-jade-100 text-jade-600 border-2 border-jade-200"
           }`}
         >
-          <Icon name={isActive ? "check-circle" : "circle"} className="w-6 h-6" />
+          <Icon
+            name={isActive ? "check-circle" : "circle"}
+            className="w-6 h-6"
+          />
         </div>
 
         {/* Label & Count */}
@@ -169,32 +172,38 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
               isActive ? "text-white" : "text-slate-800"
             }`}
           >
-          {label}
-        </Typography>
-        {isActive && selectedCount > 0 && (
-          <Typography variant="body-xs" className="text-white/90 mt-0.5 font-medium">
-            Click to exit selection
+            {label}
           </Typography>
-        )}
-        {!isActive && (
-          <Typography variant="body-xs" className="text-muted mt-0.5">
-            Select multiple plays
-          </Typography>
-        )}
+          {isActive && selectedCount > 0 && (
+            <Typography
+              variant="body-xs"
+              className="text-white/90 mt-0.5 font-medium"
+            >
+              Click to exit selection
+            </Typography>
+          )}
+          {!isActive && (
+            <Typography variant="body-xs" className="text-muted mt-0.5">
+              Select multiple plays
+            </Typography>
+          )}
+        </div>
       </div>
-    </div>
 
-    {/* Selection Count Badge */}
-    {isActive && selectedCount > 0 && (
-      <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-        <Typography variant="headline-sm" className="text-white font-bold">
-          {selectedCount}
-        </Typography>
-        <Typography variant="body-xs" className="text-white/80 uppercase tracking-wider">
-          Selected
-        </Typography>
-      </div>
-    )}
+      {/* Selection Count Badge */}
+      {isActive && selectedCount > 0 && (
+        <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+          <Typography variant="headline-sm" className="text-white font-bold">
+            {selectedCount}
+          </Typography>
+          <Typography
+            variant="body-xs"
+            className="text-white/80 uppercase tracking-wider"
+          >
+            Selected
+          </Typography>
+        </div>
+      )}
     </motion.button>
   );
 };

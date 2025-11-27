@@ -616,9 +616,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
             {/* One-word calls toggle */}
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-secondary">
-                One-word calls
-              </span>
+              <span className="text-sm text-secondary">One-word calls</span>
               <IconButton
                 aria-label={
                   showOneWordCalls
@@ -635,15 +633,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 size="sm"
               >
                 {showOneWordCalls ? (
-                  <Icon
-                    name="toggle-right"
-                    className="h-5 w-5 text-info"
-                  />
+                  <Icon name="toggle-right" className="h-5 w-5 text-info" />
                 ) : (
-                  <Icon
-                    name="toggle-left"
-                    className="h-5 w-5 text-tertiary"
-                  />
+                  <Icon name="toggle-left" className="h-5 w-5 text-tertiary" />
                 )}
               </IconButton>
               <span className="text-sm text-secondary">Full names</span>

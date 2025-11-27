@@ -101,7 +101,7 @@ export function DesktopPlaybookView({
               <Icon name="plus-circle" className="h-4 w-4 mr-2" />
               New Play
             </Button>
-            
+
             <Button
               onClick={handleQuickNewPracticeScript}
               variant="secondary"
@@ -111,7 +111,7 @@ export function DesktopPlaybookView({
               <Icon name="clipboard-list" className="h-4 w-4 mr-2" />
               Practice
             </Button>
-            
+
             <Button
               onClick={handleQuickNewGamePlan}
               variant="secondary"
@@ -121,7 +121,7 @@ export function DesktopPlaybookView({
               <Icon name="target" className="h-4 w-4 mr-2" />
               Game Plan
             </Button>
-            
+
             <Button
               onClick={() => navigate("/playbook/formation-mapper")}
               variant="ghost"
@@ -136,7 +136,7 @@ export function DesktopPlaybookView({
               )}
             </Button>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Typography variant="body-sm" className="text-muted">
               {state.playsCreated} plays total
@@ -161,174 +161,183 @@ export function DesktopPlaybookView({
       {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
       <div className="max-w-screen-2xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-spacing-lg px-8 py-6 overflow-visible">
-        {/* Left Sidebar - Controls (20% width on desktop) */}
-        <div className="lg:col-span-1 space-y-spacing-md overflow-visible">
-          {/* Selection Mode Toggle - NEW! */}
-          <Card variant="default" interactive className="border-jade-200/60 hover:border-jade-400">
-            <SelectionModeToggle
-              isActive={state.enableBulkOperations}
-              onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
-              selectedCount={state.selectedPlayIds?.size || 0}
-              label="Select Plays"
-            />
-          </Card>
-
-          {/* Filters - Moved to top */}
-          <Card variant="default" className="border-jade-200/60">
-            <AdvancedFilters
-              activeFilters={state.advancedFilters}
-              onFiltersChange={handleFiltersChange}
-            />
-          </Card>
-
-          {/* Stats Dashboard */}
-          <Card variant="elevated" className="border-jade-200/60">
-            <PlaybookStatsDashboard stats={playbookStats} />
-          </Card>
-
-          {/* Recent Activity */}
-          <Card variant="default" className="border-jade-200/60">
-            <RecentActivityFeed activities={playbookStats.recentActivity} />
-          </Card>
-
-          {/* Bulk Actions - Only show when items are selected */}
-          {(state.selectedPlayIds?.size || 0) > 0 && (
-            <Card variant="elevated" className="border-jade-500">
-              <BulkActionsToolbar
+          {/* Left Sidebar - Controls (20% width on desktop) */}
+          <div className="lg:col-span-1 space-y-spacing-md overflow-visible">
+            {/* Selection Mode Toggle - NEW! */}
+            <Card
+              variant="default"
+              interactive
+              className="border-jade-200/60 hover:border-jade-400"
+            >
+              <SelectionModeToggle
+                isActive={state.enableBulkOperations}
+                onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
                 selectedCount={state.selectedPlayIds?.size || 0}
-                onClearSelection={handleClearSelection}
-                onBulkAction={handleBulkAction}
+                label="Select Plays"
               />
             </Card>
-          )}
-        </div>
 
-        {/* Main Content Area (80% width on desktop) */}
-        <div className="lg:col-span-4 overflow-visible">
-          <Card variant="elevated" size="md" className="border-jade-200/60">
-            {state.currentView === "playbook" && (
-              <ErrorBoundary
-                fallback={
-                  <div className="p-spacing-lg text-center">
-                    <Typography variant="body-md" className="text-secondary">
-                      Failed to load plays. Please refresh the page.
-                    </Typography>
-                  </div>
-                }
-              >
-                {/* Define common PlayGrid props once - single source of truth */}
-                {(() => {
-                  const commonPlayGridProps = {
-                    searchQuery: debouncedSearchQuery,
-                    filters: state.selectedFilters,
-                    optimisticPlays: optimisticPlays,
-                    onAddToPracticeScript: handleAddToPracticeScript,
-                    onAddToGamePlan: handleAddToGamePlan,
-                    onEdit: handleEditPlay,
-                    onSave: async (playId: string, updates: Partial<Play>) => {
-                      // Adapter: PlayGrid expects (playId, updates), but handleSavePlay expects full play
-                      const fullPlay = optimisticPlays.find(p => p.id === playId);
-                      if (fullPlay) {
-                        await handleSavePlay({ ...fullPlay, ...updates });
-                      }
-                    },
-                    onDuplicate: handleDuplicatePlay,
-                    onOpenBuilder: handleOpenBuilder,
-                    onOpenAssignments: handleOpenAssignments,
-                    onPostToTeamBulletin: handlePostToTeamBulletin,
-                    refreshTrigger: state.refreshTrigger,
-                    onPlayCountChange: handlePlayCountChange,
-                    formationSuggestions: suggestions.formations,
-                    playNameSuggestions: suggestions.playNames,
-                    enableBulkOperations: state.enableBulkOperations,
-                    selectedPlayIds: state.selectedPlayIds,
-                    onPlaySelectionChange: (selection: Set<string>) =>
-                      dispatch({ type: "SET_SELECTION", selection }),
-                  };
+            {/* Filters - Moved to top */}
+            <Card variant="default" className="border-jade-200/60">
+              <AdvancedFilters
+                activeFilters={state.advancedFilters}
+                onFiltersChange={handleFiltersChange}
+              />
+            </Card>
 
-                  return <PlayGrid {...commonPlayGridProps} />;
-                })()}
-              </ErrorBoundary>
+            {/* Stats Dashboard */}
+            <Card variant="elevated" className="border-jade-200/60">
+              <PlaybookStatsDashboard stats={playbookStats} />
+            </Card>
+
+            {/* Recent Activity */}
+            <Card variant="default" className="border-jade-200/60">
+              <RecentActivityFeed activities={playbookStats.recentActivity} />
+            </Card>
+
+            {/* Bulk Actions - Only show when items are selected */}
+            {(state.selectedPlayIds?.size || 0) > 0 && (
+              <Card variant="elevated" className="border-jade-500">
+                <BulkActionsToolbar
+                  selectedCount={state.selectedPlayIds?.size || 0}
+                  onClearSelection={handleClearSelection}
+                  onBulkAction={handleBulkAction}
+                />
+              </Card>
             )}
+          </div>
 
-            {state.currentView === "practice-script" && (
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <Typography variant="headline-md" className="text-primary">
-                    Practice Scripts
-                  </Typography>
-                  <Button
-                    onClick={handleOpenPracticeScriptBuilder}
-                    variant="primary"
-                    size={mobileButtonSize}
-                  >
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    New Script
-                  </Button>
-                </div>
+          {/* Main Content Area (80% width on desktop) */}
+          <div className="lg:col-span-4 overflow-visible">
+            <Card variant="elevated" size="md" className="border-jade-200/60">
+              {state.currentView === "playbook" && (
+                <ErrorBoundary
+                  fallback={
+                    <div className="p-spacing-lg text-center">
+                      <Typography variant="body-md" className="text-secondary">
+                        Failed to load plays. Please refresh the page.
+                      </Typography>
+                    </div>
+                  }
+                >
+                  {/* Define common PlayGrid props once - single source of truth */}
+                  {(() => {
+                    const commonPlayGridProps = {
+                      searchQuery: debouncedSearchQuery,
+                      filters: state.selectedFilters,
+                      optimisticPlays: optimisticPlays,
+                      onAddToPracticeScript: handleAddToPracticeScript,
+                      onAddToGamePlan: handleAddToGamePlan,
+                      onEdit: handleEditPlay,
+                      onSave: async (
+                        playId: string,
+                        updates: Partial<Play>
+                      ) => {
+                        // Adapter: PlayGrid expects (playId, updates), but handleSavePlay expects full play
+                        const fullPlay = optimisticPlays.find(
+                          (p) => p.id === playId
+                        );
+                        if (fullPlay) {
+                          await handleSavePlay({ ...fullPlay, ...updates });
+                        }
+                      },
+                      onDuplicate: handleDuplicatePlay,
+                      onOpenBuilder: handleOpenBuilder,
+                      onOpenAssignments: handleOpenAssignments,
+                      onPostToTeamBulletin: handlePostToTeamBulletin,
+                      refreshTrigger: state.refreshTrigger,
+                      onPlayCountChange: handlePlayCountChange,
+                      formationSuggestions: suggestions.formations,
+                      playNameSuggestions: suggestions.playNames,
+                      enableBulkOperations: state.enableBulkOperations,
+                      selectedPlayIds: state.selectedPlayIds,
+                      onPlaySelectionChange: (selection: Set<string>) =>
+                        dispatch({ type: "SET_SELECTION", selection }),
+                    };
 
-                {/* Practice Scripts List */}
-                {activeTeamId ? (
-                  <div>Practice Scripts List Component Here</div> // TODO: Import and use PracticeScriptList
-                ) : (
-                  <div className="text-center py-8">
-                    <Typography
-                      variant="body"
-                      className="text-muted-foreground"
+                    return <PlayGrid {...commonPlayGridProps} />;
+                  })()}
+                </ErrorBoundary>
+              )}
+
+              {state.currentView === "practice-script" && (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <Typography variant="headline-md" className="text-primary">
+                      Practice Scripts
+                    </Typography>
+                    <Button
+                      onClick={handleOpenPracticeScriptBuilder}
+                      variant="primary"
+                      size={mobileButtonSize}
                     >
-                      Please select a team to view practice scripts.
-                    </Typography>
+                      <Icon name="plus" className="h-4 w-4 mr-2" />
+                      New Script
+                    </Button>
                   </div>
-                )}
-              </div>
-            )}
 
-            {state.currentView === "game-plan" && (
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <Typography variant="headline-md" className="text-primary">
-                    Game Plans
-                  </Typography>
-                  <Button
-                    onClick={handleQuickNewGamePlan}
-                    variant="primary"
-                    size={mobileButtonSize}
-                  >
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    New Plan
-                  </Button>
+                  {/* Practice Scripts List */}
+                  {activeTeamId ? (
+                    <div>Practice Scripts List Component Here</div> // TODO: Import and use PracticeScriptList
+                  ) : (
+                    <div className="text-center py-8">
+                      <Typography
+                        variant="body"
+                        className="text-muted-foreground"
+                      >
+                        Please select a team to view practice scripts.
+                      </Typography>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                {/* Placeholder for game plans list */}
-                <div className="text-center py-12">
-                  <Icon
-                    name="target"
-                    className="h-16 w-16 text-muted mx-auto mb-4"
-                  />
-                  <Typography
-                    variant="headline-sm"
-                    className="text-secondary mb-2"
-                  >
-                    No Game Plans Yet
-                  </Typography>
-                  <Typography variant="body-sm" className="text-muted mb-6">
-                    Create your first game plan to strategize plays for upcoming
-                    matches.
-                  </Typography>
-                  <Button
-                    onClick={handleQuickNewGamePlan}
-                    variant="primary"
-                    size={mobileButtonSize}
-                  >
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    Create New Plan
-                  </Button>
+              {state.currentView === "game-plan" && (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <Typography variant="headline-md" className="text-primary">
+                      Game Plans
+                    </Typography>
+                    <Button
+                      onClick={handleQuickNewGamePlan}
+                      variant="primary"
+                      size={mobileButtonSize}
+                    >
+                      <Icon name="plus" className="h-4 w-4 mr-2" />
+                      New Plan
+                    </Button>
+                  </div>
+
+                  {/* Placeholder for game plans list */}
+                  <div className="text-center py-12">
+                    <Icon
+                      name="target"
+                      className="h-16 w-16 text-muted mx-auto mb-4"
+                    />
+                    <Typography
+                      variant="headline-sm"
+                      className="text-secondary mb-2"
+                    >
+                      No Game Plans Yet
+                    </Typography>
+                    <Typography variant="body-sm" className="text-muted mb-6">
+                      Create your first game plan to strategize plays for
+                      upcoming matches.
+                    </Typography>
+                    <Button
+                      onClick={handleQuickNewGamePlan}
+                      variant="primary"
+                      size={mobileButtonSize}
+                    >
+                      <Icon name="plus" className="h-4 w-4 mr-2" />
+                      Create New Plan
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </Card>
+              )}
+            </Card>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

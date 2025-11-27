@@ -96,7 +96,10 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
               style={{ width: `${photoCoverage}%` }}
             />
           </div>
-          <Typography variant="body-xs" className="text-indigo-600 mt-2 font-medium">
+          <Typography
+            variant="body-xs"
+            className="text-indigo-600 mt-2 font-medium"
+          >
             {photoCoverage}% coverage
           </Typography>
         </div>

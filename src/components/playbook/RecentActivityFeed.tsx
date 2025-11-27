@@ -96,7 +96,10 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
             <Icon name="activity" className="h-8 w-8 text-muted" />
           </div>
-          <Typography variant="body-md" className="text-secondary font-medium mb-1">
+          <Typography
+            variant="body-md"
+            className="text-secondary font-medium mb-1"
+          >
             No recent activity
           </Typography>
           <Typography variant="body-xs" className="text-muted">
@@ -131,7 +134,10 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
                         {getActivityLabel(activity.type)}
                       </span>
                       {activity.details && (
-                        <Typography variant="body-xs" className="text-secondary">
+                        <Typography
+                          variant="body-xs"
+                          className="text-secondary"
+                        >
                           {activity.details}
                         </Typography>
                       )}
@@ -153,8 +159,12 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
       {activities.length > maxItems && (
         <div className="mt-4 pt-4 border-t-2 border-divider">
           <div className="text-center px-4 py-2 rounded-lg bg-gradient-to-r from-jade-50 to-emerald-50">
-            <Typography variant="body-xs" className="text-jade-700 font-semibold">
-              +{activities.length - maxItems} more {activities.length - maxItems === 1 ? 'activity' : 'activities'}
+            <Typography
+              variant="body-xs"
+              className="text-jade-700 font-semibold"
+            >
+              +{activities.length - maxItems} more{" "}
+              {activities.length - maxItems === 1 ? "activity" : "activities"}
             </Typography>
           </div>
         </div>
