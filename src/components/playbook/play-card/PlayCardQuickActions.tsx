@@ -24,11 +24,11 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
   const status = usePlayStatus(play.id, play.playbook_id);
 
   return (
-    <div className="flex items-center justify-between pt-spacing-sm mt-spacing-sm divider-t">
+    <div className="flex items-center justify-between pt-sm mt-sm divider-t">
       <Typography variant="label-md" as="h4" className="text-primary">
         QUICK ACTIONS
       </Typography>
-      <div className="flex items-center gap-spacing-xs">
+      <div className="flex items-center gap-2">
         {/* Photo indicator */}
         {play.diagram_image_url && (
           <div className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-md text-xs font-medium flex items-center gap-1">

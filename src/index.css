@@ -202,11 +202,11 @@ h6 {
 /* Directional divider utilities - iOS-style subtle separators */
 @layer components {
   .divider-t {
-    @apply border-t border-divider;
+    @apply border-t border-muted;
   }
 
   .divider-b {
-    @apply border-b border-divider;
+    @apply border-b border-muted;
   }
 
   .divider-l {
@@ -219,20 +219,20 @@ h6 {
 
   /* Medium strength dividers - still subtle */
   .divider-t-medium {
-    @apply border-t border-divider-medium;
+    @apply border-t border-secondary;
   }
 
   .divider-b-medium {
-    @apply border-b border-divider-medium;
+    @apply border-b border-secondary;
   }
 
   /* Strong dividers - for when you really need separation */
   .divider-t-strong {
-    @apply border-t border-divider-strong;
+    @apply border-t border-primary;
   }
 
   .divider-b-strong {
-    @apply border-b border-divider-strong;
+    @apply border-b border-primary;
   }
 }
 
