@@ -6,7 +6,8 @@ export * from "./customFieldsService";
 export * from "./csvService";
 export * from "./dashboardService";
 export * from "./dataSyncService";
-export * from "./gamePlanService"; // Now includes game results tracking
+export * from "./gamePlanService";
+export * from "./gameResultsService"; // Game results tracking
 export * from "./performanceAnalyticsService"; // Renamed from playerPerformanceAnalyticsService
 export * from "./playAnalyticsService"; // Consolidates game planning + playbook analytics
 export * from "./playsService"; // Now includes playbook search
