@@ -116,10 +116,10 @@ const BoxCall: React.FC = () => {
         {/* Session Type Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Practice Session Card */}
-          <Card className="p-6">
+          <Card className="p-6 shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300">
             <div className="flex items-start gap-4 mb-4">
-              <div className="bg-primary/10 p-3 rounded-lg">
-                <Icon name="clipboard-list" size="lg" color="primary" />
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-3 rounded-xl border-2 border-orange-200">
+                <Icon name="clipboard-list" size="lg" className="text-orange-600" />
               </div>
               <div className="flex-1">
                 <Typography variant="headline-md" className="mb-1">
@@ -183,10 +183,10 @@ const BoxCall: React.FC = () => {
           </Card>
 
           {/* Game Session Card */}
-          <Card className="p-6">
+          <Card className="p-6 shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300">
             <div className="flex items-start gap-4 mb-4">
-              <div className="bg-success/10 p-3 rounded-lg">
-                <Icon name="zap" size="lg" className="text-success" />
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-3 rounded-xl border-2 border-emerald-200">
+                <Icon name="zap" size="lg" className="text-emerald-600" />
               </div>
               <div className="flex-1">
                 <Typography variant="headline-md" className="mb-1">
@@ -251,7 +251,7 @@ const BoxCall: React.FC = () => {
         </div>
 
         {/* Recent Sessions */}
-        <Card className="p-6">
+        <Card className="p-6 shadow-md hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <Typography variant="headline-md">Recent Sessions</Typography>
             <Button

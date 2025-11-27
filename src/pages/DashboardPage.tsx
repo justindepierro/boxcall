@@ -109,11 +109,11 @@ export default function DashboardPage() {
             size="lg"
             interactive
             onClick={() => navigate("/profile")}
-            className="shadow-jade-md hover:shadow-jade-lg"
+            className="relative overflow-hidden bg-gradient-to-br from-white via-jade-50/20 to-transparent shadow-md shadow-jade-500/10 hover:shadow-2xl hover:shadow-jade-500/25 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className="p-4 bg-gradient-to-br from-jade-50 to-jade-100 rounded-xl">
-                <Icon name="user" className="text-jade-600 w-8 h-8" />
+              <div className="p-4 bg-gradient-to-br from-jade-50 to-jade-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <Icon name="user" className="text-jade-600 w-8 h-8 group-hover:scale-110 transition-transform" />
               </div>
               <span className="px-3 py-1.5 bg-gradient-to-r from-jade-500 to-jade-600 text-white text-xs font-bold rounded-lg shadow-jade-sm">
                 {userRole.replace("_", " ").toUpperCase()}
@@ -144,11 +144,11 @@ export default function DashboardPage() {
             size="lg"
             interactive
             onClick={() => navigate("/bulletin")}
-            className="shadow-orange-md hover:shadow-orange-lg"
+            className="relative overflow-hidden bg-gradient-to-br from-white via-orange-50/20 to-transparent shadow-md shadow-orange-500/10 hover:shadow-2xl hover:shadow-orange-500/25 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
-                <Icon name="users" className="text-orange-600 w-8 h-8" />
+              <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <Icon name="users" className="text-orange-600 w-8 h-8 group-hover:scale-110 transition-transform" />
               </div>
               <span className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold rounded-lg shadow-orange-sm">
                 LIVE
@@ -176,17 +176,17 @@ export default function DashboardPage() {
             size="lg"
             interactive
             onClick={() => navigate("/playbook")}
-            className="shadow-purple-md hover:shadow-purple-lg"
+            className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/20 to-transparent shadow-md shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/25 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-                <Icon name="book" className="text-purple-600 w-8 h-8" />
+              <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <Icon name="book" className="text-purple-600 w-8 h-8 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg shadow-purple-sm flex flex-col items-center">
-                <span className="text-2xl font-black leading-none">
+              <div className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/30 group-hover:shadow-xl group-hover:shadow-purple-500/40 transition-all duration-300 flex flex-col items-center">
+                <span className="text-3xl font-black leading-none bg-gradient-to-br from-white to-purple-100 bg-clip-text text-transparent">
                   {dashboardStats.totalPlays || 0}
                 </span>
-                <span className="text-xs font-medium opacity-90">PLAYS</span>
+                <span className="text-xs font-bold tracking-wider opacity-90">PLAYS</span>
               </div>
             </div>
             <Typography variant="headline-md" className="text-primary mb-2">
@@ -210,56 +210,64 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <button
             onClick={() => navigate("/playbook")}
-            className="group relative h-28 p-6 bg-gradient-to-br from-jade-50 to-jade-100 hover:from-jade-100 hover:to-jade-200 border-2 border-jade-200 hover:border-jade-300 rounded-2xl shadow-jade-sm hover:shadow-jade-md transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center gap-2"
+            className="group relative h-32 p-6 bg-gradient-to-br from-jade-100 via-jade-50 to-white border-2 border-jade-300 hover:border-jade-400 rounded-2xl shadow-lg shadow-jade-500/20 hover:shadow-2xl hover:shadow-jade-500/40 transition-all duration-300 hover:scale-[1.05] hover:-translate-y-1 flex flex-col items-center justify-center gap-3"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Icon
-              name="plus-circle"
-              className="w-7 h-7 text-jade-600 group-hover:scale-110 transition-transform relative z-10"
-            />
-            <span className="text-jade-900 font-bold relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-jade-500/0 via-jade-500/0 to-jade-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="p-2 bg-jade-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
+              <Icon
+                name="plus-circle"
+                className="w-6 h-6 text-white"
+              />
+            </div>
+            <span className="text-jade-900 font-bold text-base relative z-10">
               New Play
             </span>
           </button>
 
           <button
             onClick={() => navigate("/practice")}
-            className="group relative h-28 p-6 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 border-2 border-orange-200 hover:border-orange-300 rounded-2xl shadow-orange-sm hover:shadow-orange-md transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center gap-2"
+            className="group relative h-32 p-6 bg-gradient-to-br from-orange-100 via-orange-50 to-white border-2 border-orange-300 hover:border-orange-400 rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-300 hover:scale-[1.05] hover:-translate-y-1 flex flex-col items-center justify-center gap-3"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Icon
-              name="clipboard-list"
-              className="w-7 h-7 text-orange-600 group-hover:scale-110 transition-transform relative z-10"
-            />
-            <span className="text-orange-900 font-bold relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 via-orange-500/0 to-orange-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="p-2 bg-orange-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
+              <Icon
+                name="clipboard-list"
+                className="w-6 h-6 text-white"
+              />
+            </div>
+            <span className="text-orange-900 font-bold text-base relative z-10">
               Practice Plan
             </span>
           </button>
 
           <button
             onClick={() => navigate("/game-plans")}
-            className="group relative h-28 p-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200 hover:border-purple-300 rounded-2xl shadow-purple-sm hover:shadow-purple-md transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center gap-2"
+            className="group relative h-32 p-6 bg-gradient-to-br from-purple-100 via-purple-50 to-white border-2 border-purple-300 hover:border-purple-400 rounded-2xl shadow-lg shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 hover:scale-[1.05] hover:-translate-y-1 flex flex-col items-center justify-center gap-3"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Icon
-              name="target"
-              className="w-7 h-7 text-purple-600 group-hover:scale-110 transition-transform relative z-10"
-            />
-            <span className="text-purple-900 font-bold relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/0 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="p-2 bg-purple-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
+              <Icon
+                name="target"
+                className="w-6 h-6 text-white"
+              />
+            </div>
+            <span className="text-purple-900 font-bold text-base relative z-10">
               Game Plan
             </span>
           </button>
 
           <button
             onClick={() => navigate("/roster")}
-            className="group relative h-28 p-6 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-200 hover:border-blue-300 rounded-2xl shadow-blue-sm hover:shadow-blue-md transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center gap-2"
+            className="group relative h-32 p-6 bg-gradient-to-br from-blue-100 via-blue-50 to-white border-2 border-blue-300 hover:border-blue-400 rounded-2xl shadow-lg shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300 hover:scale-[1.05] hover:-translate-y-1 flex flex-col items-center justify-center gap-3"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Icon
-              name="users"
-              className="w-7 h-7 text-blue-600 group-hover:scale-110 transition-transform relative z-10"
-            />
-            <span className="text-blue-900 font-bold relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="p-2 bg-blue-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
+              <Icon
+                name="users"
+                className="w-6 h-6 text-white"
+              />
+            </div>
+            <span className="text-blue-900 font-bold text-base relative z-10">
               Roster
             </span>
           </button>

@@ -426,39 +426,41 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                 {/* Compact Stats Bar - Instagram/Twitter Style */}
                 <div className="mt-4 flex items-center gap-4 text-sm flex-wrap">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
                     <Icon name="message" size="sm" className="text-jade-600" />
-                    <span className="font-medium text-primary">
+                    <span className="font-semibold text-primary">
                       {activityStats.loading
                         ? "..."
                         : activityStats.newPostsToday}{" "}
-                      posts today
+                      <span className="font-normal text-secondary">posts today</span>
                     </span>
                   </div>
                   {activityStats.onlineMembers > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="font-medium text-primary">
-                        {activityStats.onlineMembers} online
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
+                      <span className="font-semibold text-primary">
+                        {activityStats.onlineMembers}{" "}
+                        <span className="font-normal text-secondary">online</span>
                       </span>
                     </div>
                   )}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
                     <Icon name="users" size="sm" className="text-blue-600" />
-                    <span className="font-medium text-primary">
-                      {teamData?.memberCount || 0} members
+                    <span className="font-semibold text-primary">
+                      {teamData?.memberCount || 0}{" "}
+                      <span className="font-normal text-secondary">members</span>
                     </span>
                   </div>
                   <button
                     onClick={() => setIsSeasonStatsModalOpen(true)}
-                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-all"
+                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full shadow-md shadow-purple-500/30 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-105 transition-all duration-200"
                   >
                     <Icon
                       name="trending-up"
                       size="sm"
-                      className="text-purple-600"
+                      className="text-white"
                     />
-                    <span className="font-medium text-sm">
+                    <span className="font-bold text-sm">
                       {teamData.record.wins}-{teamData.record.losses}
                     </span>
                   </button>
@@ -471,7 +473,7 @@ const TeamBulletin: React.FC = React.memo(() => {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Left Sidebar - Compact Widgets (Hidden on Mobile) */}
                 <aside className="hidden lg:block lg:col-span-3 space-y-4">
-                  <Card className="p-4">
+                  <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
                       <Icon name="zap" size="sm" className="text-jade-600" />
                       <Typography
@@ -487,16 +489,16 @@ const TeamBulletin: React.FC = React.memo(() => {
                     />
                   </Card>
 
-                  <Card className="p-4">
+                  <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
                     <button
                       onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors"
+                      className="group w-full text-left hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
                           name="award"
                           size="md"
-                          className="text-warning-600"
+                          className="text-warning-600 group-hover:scale-110 transition-transform"
                         />
                         <div className="flex-1 min-w-0">
                           <Typography
@@ -518,13 +520,13 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                     <button
                       onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors mt-2"
+                      className="group w-full text-left hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
                           name="target"
                           size="md"
-                          className="text-emerald-600"
+                          className="text-emerald-600 group-hover:scale-110 transition-transform"
                         />
                         <div className="flex-1 min-w-0">
                           <Typography
@@ -546,13 +548,13 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                     <button
                       onClick={() => setIsTeamVotesModalOpen(true)}
-                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors mt-2"
+                      className="group w-full text-left hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
                           name="message"
                           size="md"
-                          className="text-indigo-600"
+                          className="text-indigo-600 group-hover:scale-110 transition-transform"
                         />
                         <div className="flex-1 min-w-0">
                           <Typography
@@ -580,7 +582,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                   <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     <button
                       onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105 transition-all duration-200"
                     >
                       <Icon
                         name="award"
@@ -593,7 +595,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     </button>
                     <button
                       onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-200"
                     >
                       <Icon
                         name="target"
