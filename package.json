@@ -25,7 +25,8 @@
   ],
   "scripts": {
     "predev": "lsof -ti :5173 | xargs kill -9 2>/dev/null || true",
-    "dev": "npm run predev && vite --open",
+    "dev": "vite --open",
+    "dev:clean": "npm run predev && vite --open",
     "dev:debug": "npm run predev && vite --debug",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' tsc && vite build",
     "build:fast": "NODE_OPTIONS='--max-old-space-size=4096' vite build",

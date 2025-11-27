@@ -24,7 +24,24 @@ export default defineConfig({
     open: true, // Auto-open browser on server start
     hmr: {
       overlay: true, // Show error overlay for better debugging
+      protocol: 'ws', // Use WebSocket for HMR (more stable)
+      timeout: 30000, // Increase timeout to 30s (default: 5s)
     },
+    watch: {
+      // More efficient file watching
+      usePolling: false, // Use native file system events (faster)
+      interval: 100, // Poll interval if usePolling is true
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+        '**/reports/**',
+        '**/test-results/**',
+        '**/playwright-report/**',
+      ],
+    },
+    // Increase connection timeout for slower machines
+    cors: true,
   },
   resolve: {
     alias: {
@@ -194,12 +211,12 @@ export default defineConfig({
           "react-vendor": ["react", "react-dom"],
 
           // Router separate for better caching
-          "router": ["react-router-dom"],
+          router: ["react-router-dom"],
 
           // Data & State Management - Split for better granularity
-          "supabase": ["@supabase/supabase-js"],
+          supabase: ["@supabase/supabase-js"],
           "query-client": ["@tanstack/react-query"],
-          "zustand": ["zustand"],
+          zustand: ["zustand"],
 
           // Heavy UI Libraries (lazy load these) - Split further for better caching
           "calendar-core": ["@fullcalendar/core"],
@@ -211,13 +228,10 @@ export default defineConfig({
           ],
           "pdf-core": ["@react-pdf/renderer"],
           "pdf-utils": ["jszip"],
-          "charts": ["recharts"],
+          charts: ["recharts"],
 
           // UI Components - Split for better granularity
-          "ui-core": [
-            "@headlessui/react",
-            "@radix-ui/react-popover",
-          ],
+          "ui-core": ["@headlessui/react", "@radix-ui/react-popover"],
           "ui-icons": ["@heroicons/react", "lucide-react"],
           "ui-dnd": ["@hello-pangea/dnd"],
 
@@ -233,7 +247,11 @@ export default defineConfig({
           "style-utils": ["clsx"],
 
           // Large third-party libraries
-          "workbox": ["workbox-precaching", "workbox-routing", "workbox-strategies"],
+          workbox: [
+            "workbox-precaching",
+            "workbox-routing",
+            "workbox-strategies",
+          ],
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
